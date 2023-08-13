@@ -10,6 +10,60 @@ type TableCollectionResponse struct {
 
 type TableEntry map[string]interface{}
 
+type DisplayValue string
+type View string
+
+const (
+	TRUE  DisplayValue = "true"
+	FALSE DisplayValue = "false"
+	ALL   DisplayValue = "all"
+
+	DESKTOP View = "desktop"
+	MOBILE  View = "mobile"
+	BOTH    View = "both"
+)
+
+type TableRequestBuilderGetQueryParameters struct {
+	//Determines the type of data returned, either the actual values from the database or the display values of the fields.
+	//Display values are manipulated based on the actual value in the database and user or system settings and preferences.
+	//If returning display values, the value that is returned is dependent on the field type.
+	//- Choice fields: The database value may be a number, but the display value will be more descriptive.
+	//
+	//- Date fields: The database value is in UTC format, while the display value is based on the user's time zone.
+	//
+	//- Encrypted text: The database value is encrypted, while the displayed value is unencrypted based on the user's encryption context.
+	//
+	//- Reference fields: The database value is sys_id, but the display value is a display field of the referenced record.
+	DisplayValue DisplayValue `uriparametername:"%24sysparm_display_value"`
+	//Flag that indicates whether to exclude Table API links for reference fields.
+	//
+	//Valid values:
+	//
+	//- true: Exclude Table API links for reference fields.
+	//
+	//- false: Include Table API links for reference fields.
+	ExcludeReferenceLink bool `uriparametername:"%24sysparm_exclude_reference_link"`
+	//list of fields to return in the response.
+	Fields []string `uriparametername:"%24sysparm_fields"`
+	//Flag that indicates whether to restrict the record search to only the domains for which the logged in user is configured.
+	//
+	//Valid values:
+	//
+	//- false: Exclude the record if it is in a domain that the currently logged in user is not configured to access.
+	//
+	//- true: Include the record even if it is in a domain that the currently logged in user is not configured to access.
+	QueryNoDomain bool `uriparametername:"%24sysparm_query_no_domain"`
+	//	UI view for which to render the data. Determines the fields returned in the response.
+	//
+	//Valid values:
+	//
+	//- desktop
+	//- mobile
+	//- both
+	//If you also specify the sysparm_fields parameter, it takes precedent.
+	View View `uriparametername:"%24sysparm_view"`
+}
+
 // NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
 func NewTableRequestBuilder(url string, client *Client) *TableRequestBuilder {
@@ -29,7 +83,7 @@ func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
 // Get performs an HTTP GET request to the table URL using the Client's session.
 // It retrieves a collection of records from the table and decodes the response into a TableCollectionResponse.
 // It returns the TableCollectionResponse and any errors encountered during the request or decoding.
-func (T *TableRequestBuilder) Get() (*TableCollectionResponse, error) {
+func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
 	resp := &TableCollectionResponse{}
 	err := T.Client.Get(T.Url, resp)
 	if err != nil {
