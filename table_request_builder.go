@@ -17,6 +17,10 @@ func NewTableRequestBuilder(url string, client *Client) *TableRequestBuilder {
 	}
 }
 
+func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
+	return NewTableItemRequestBuilder(T.Url+"/"+sysId, T.Client)
+}
+
 func (T *TableRequestBuilder) Get() (*TableCollectionResponse, error) {
 
 	resp := &TableCollectionResponse{}

@@ -14,8 +14,8 @@ type Client struct {
 
 func NewClient(credential *UsernamePasswordCredential, instance string) *Client {
 
-	if !strings.HasSuffix(instance, ".service-now.com") {
-		instance += ".service-now.com"
+	if !strings.HasSuffix(instance, ".service-now.com/api") {
+		instance += ".service-now.com/api"
 	}
 
 	return &Client{
