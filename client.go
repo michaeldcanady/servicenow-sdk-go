@@ -12,8 +12,11 @@ type Client struct {
 	Session    http.Client
 }
 
+// NewClient creates a new instance of the ServiceNow client.
+// It accepts a UsernamePasswordCredential and an instance URL.
+// If the instance URL does not end with ".service-now.com/api", it appends the suffix.
+// It returns a pointer to the Client.
 func NewClient(credential *UsernamePasswordCredential, instance string) *Client {
-
 	if !strings.HasSuffix(instance, ".service-now.com/api") {
 		instance += ".service-now.com/api"
 	}
@@ -25,10 +28,16 @@ func NewClient(credential *UsernamePasswordCredential, instance string) *Client 
 	}
 }
 
+// Now returns a NowRequestBuilder associated with the Client.
+// It prepares the NowRequestBuilder with the base URL for the ServiceNow instance.
 func (C *Client) Now() *NowRequestBuilder {
 	return NewNowRequestBuilder(C.BaseUrl+"/now", C)
 }
 
+// Get performs an HTTP GET request to the specified URL using the Client's session.
+// It sets the Authorization header using the Credential's authentication method.
+// The response body is decoded into the provided target interface.
+// It returns any errors encountered during the request or decoding.
 func (C *Client) Get(url string, target interface{}) error {
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
