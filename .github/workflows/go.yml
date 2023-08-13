@@ -25,5 +25,5 @@ jobs:
         run: go build
         working-directory: ${{ env.relativePath }}
       - name: Run unit tests
-        run: go test
+        run: go test -v
         working-directory: tests
