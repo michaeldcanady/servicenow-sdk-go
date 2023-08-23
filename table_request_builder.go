@@ -61,7 +61,13 @@ type TableRequestBuilderGetQueryParameters struct {
 	//- mobile
 	//- both
 	//If you also specify the sysparm_fields parameter, it takes precedent.
-	View View `uriparametername:"sysparm_view"`
+	View                     View   `uriparametername:"sysparm_view"`
+	Limit                    int    `uriparametername:"sysparm_limit"`
+	NoCount                  bool   `uriparametername:"sysparm_no_count"`
+	Offset                   int    `uriparametername:"sysparm_offset"`
+	Query                    string `uriparametername:"sysparm_query"`
+	QueryCategory            string `uriparametername:"sysparm_query_category"`
+	SuppressPaginationHeader bool   `uriparameter:"sysparm_suppress_pagination_header"`
 }
 
 // NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.

@@ -51,3 +51,31 @@ func (C *Client) Get(url string, target interface{}) error {
 
 	return json.NewDecoder(resp.Body).Decode(target)
 }
+
+func (C *Client) Put(url string, input, target interface{}) error {
+	request, err := http.NewRequest(http.MethodPut, url, input)
+	if err != nil {
+		return err
+	}
+	request.Header.Add("Authorization", C.Credential.GetAuthentication())
+	resp, err := C.Session.Do(request)
+	if err != nil {
+		return err
+	}
+
+	return json.NewDecoder(resp.Body).Decode(target)
+}
+
+func (C *Client) Delete(url string, target interface{}) error {
+	request, err := http.NewRequest(http.MethodDelete, url, nil)
+	if err != nil {
+		return err
+	}
+	request.Header.Add("Authorization", C.Credential.GetAuthentication())
+	resp, err := C.Session.Do(request)
+	if err != nil {
+		return err
+	}
+
+	return json.NewDecoder(resp.Body).Decode(target)
+}
