@@ -28,5 +28,4 @@ import (
 )
 
 client := servicenowsdkgo.NewClient(cred, "instance")
-
 ```
