@@ -71,31 +71,45 @@ type TableItemRequestBuilderPutQueryParameters struct {
 
 // NewTableItemRequestBuilder creates a new instance of the TableItemRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableItemRequestBuilder.
-func NewTableItemRequestBuilder(url string, client *Client) *TableItemRequestBuilder {
-	requestBuilder := NewRequestBuilder(url, client)
+func NewTableItemRequestBuilder(client *Client, pathParameters map[string]string) *TableItemRequestBuilder {
+	requestBuilder := NewRequestBuilder(client, "{+baseurl}/table{/table}{/sysId}", pathParameters)
 	return &TableItemRequestBuilder{
 		*requestBuilder,
 	}
 }
 
 func (T *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
-	resp := &TableItemResponse{}
-	err := T.Client.Get(T.Url, resp)
+	requestInfo, err := T.ToGetRequestInformation(params)
 	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	T.Client.Send(requestInfo)
+	return nil, nil
 }
 
-func (T *TableItemRequestBuilder) Delete() error {
-	return T.Client.Delete(T.Url, nil)
-}
-
-func (T *TableItemRequestBuilder) Put(entry TableEntry, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
-	resp := &TableItemResponse{}
-	err := T.Client.Put(T.Url, entry, resp)
+func (T *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQueryParameters) error {
+	requestInfo, err := T.ToDeleteRequestInformation(params)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return resp, nil
+	T.Client.Send(requestInfo)
+	return nil
+}
+
+func (T *TableItemRequestBuilder) ToGetRequestInformation(params *TableItemRequestBuilderGetQueryParameters) (*RequestInformation, error) {
+	requestInfo := NewRequestInformation()
+	requestInfo.Method = GET
+	if params != nil {
+		requestInfo.AddQueryParameters(*(params))
+	}
+	return requestInfo, nil
+}
+
+func (T *TableItemRequestBuilder) ToDeleteRequestInformation(params *TableItemRequestBuilderDeleteQueryParameters) (*RequestInformation, error) {
+	requestInfo := NewRequestInformation()
+	requestInfo.Method = DELETE
+	if params != nil {
+		requestInfo.AddQueryParameters(*(params))
+	}
+	return requestInfo, nil
 }

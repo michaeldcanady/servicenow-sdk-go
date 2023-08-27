@@ -72,8 +72,8 @@ type TableRequestBuilderGetQueryParameters struct {
 
 // NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
-func NewTableRequestBuilder(url string, client *Client) *TableRequestBuilder {
-	requestBuilder := NewRequestBuilder(url, client)
+func NewTableRequestBuilder(client *Client, pathParameters map[string]string) *TableRequestBuilder {
+	requestBuilder := NewRequestBuilder(client, "{+baseurl}/table{/table}", pathParameters)
 	return &TableRequestBuilder{
 		*requestBuilder,
 	}
@@ -83,17 +83,28 @@ func NewTableRequestBuilder(url string, client *Client) *TableRequestBuilder {
 // It accepts the sysId of the record as a parameter and constructs the URL for the record.
 // The returned TableItemRequestBuilder can be used to build and execute requests for the specific record.
 func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
-	return NewTableItemRequestBuilder(T.AppendSegment(sysId), T.Client)
+	pathParameters := T.PathParameters
+	pathParameters["sysId"] = sysId
+	return NewTableItemRequestBuilder(T.Client, pathParameters)
 }
 
 // Get performs an HTTP GET request to the table URL using the Client's session.
 // It retrieves a collection of records from the table and decodes the response into a TableCollectionResponse.
 // It returns the TableCollectionResponse and any errors encountered during the request or decoding.
 func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
-	resp := &TableCollectionResponse{}
-	err := T.Client.Get(T.Url, resp)
+	requestInfo, err := T.ToGetRequestInformation(params)
 	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	T.Client.Send(requestInfo)
+	return nil, nil
+}
+
+func (T *TableRequestBuilder) ToGetRequestInformation(params *TableRequestBuilderGetQueryParameters) (*RequestInformation, error) {
+	requestInfo := NewRequestInformation()
+	requestInfo.Method = GET
+	if params != nil {
+		requestInfo.AddQueryParameters(*(params))
+	}
+	return requestInfo, nil
 }
