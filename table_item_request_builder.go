@@ -96,8 +96,15 @@ func (T *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQu
 	return nil
 }
 
-func (T *TableItemRequestBuilder) ToGetRequestInformation(params *TableItemRequestBuilderGetQueryParameters) (*RequestInformation, error) {
+func (T *TableItemRequestBuilder) toBaseRequestInformation() *RequestInformation {
 	requestInfo := NewRequestInformation()
+	requestInfo.UrlTemplate = T.UrlTemplate
+	requestInfo.PathParameters = T.PathParameters
+	return requestInfo
+}
+
+func (T *TableItemRequestBuilder) ToGetRequestInformation(params *TableItemRequestBuilderGetQueryParameters) (*RequestInformation, error) {
+	requestInfo := T.toBaseRequestInformation()
 	requestInfo.Method = GET
 	if params != nil {
 		requestInfo.AddQueryParameters(*(params))
@@ -106,7 +113,7 @@ func (T *TableItemRequestBuilder) ToGetRequestInformation(params *TableItemReque
 }
 
 func (T *TableItemRequestBuilder) ToDeleteRequestInformation(params *TableItemRequestBuilderDeleteQueryParameters) (*RequestInformation, error) {
-	requestInfo := NewRequestInformation()
+	requestInfo := T.toBaseRequestInformation()
 	requestInfo.Method = DELETE
 	if params != nil {
 		requestInfo.AddQueryParameters(*(params))
