@@ -83,7 +83,12 @@ func (T *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryPar
 	if err != nil {
 		return nil, err
 	}
-	T.Client.Send(requestInfo, nil)
+
+	_, err = T.Client.Send(requestInfo, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	return nil, nil
 }
 
@@ -92,7 +97,12 @@ func (T *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQu
 	if err != nil {
 		return err
 	}
-	T.Client.Send(requestInfo, nil)
+
+	_, err = T.Client.Send(requestInfo, nil)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

@@ -3,6 +3,7 @@ package servicenowsdkgo
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -97,6 +98,9 @@ func (C *Client) Send(requestInfo *RequestInformation, errorMapping ErrorMapping
 	}
 
 	response, err := C.Session.Do(request)
+	if err != nil {
+		return nil, fmt.Errorf("unable to complete request: %s", err)
+	}
 
 	err = C.throwIfFailedResponse(response, errorMapping)
 	if err != nil {
