@@ -30,7 +30,7 @@ import (
 client := servicenowsdkgo.NewClient(cred, "instance")
 ```
 
-### 3.1 Get query parameters
+### 2.3 Get query parameters
 
 ```golang
 import (
@@ -42,7 +42,7 @@ params := &servicenowsdkgo.TableRequestBuilderGetQueryParameters{
 	}
 ```
 
-### 3.2 Build request for table
+### 2.4 Build request for table
 
 ```golang
 import (
