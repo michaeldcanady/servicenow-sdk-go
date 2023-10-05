@@ -2,6 +2,8 @@
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/michaeldcanady/servicenow-sdk-go)](https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go)
 
+![servicenow-sdk-go](.github/servicenow-sdk-go_logo.png)
+
 ## 1. Installation
 
 ```Shell
