@@ -179,9 +179,9 @@ func (request *RequestInformation) AddQueryParameters(source interface{}) {
 		if ok && bl != nil {
 			request.QueryParameters[fieldName] = strconv.FormatBool(*bl)
 		}
-		it, ok := value.(*int32)
-		if ok && it != nil {
-			request.QueryParameters[fieldName] = strconv.FormatInt(int64(*it), 10)
+		it, ok := value.(int32)
+		if ok && it != 0 {
+			request.QueryParameters[fieldName] = strconv.FormatInt(int64(it), 10)
 		}
 		arr, ok := value.([]string)
 		if ok && len(arr) > 0 {

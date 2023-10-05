@@ -29,3 +29,28 @@ import (
 
 client := servicenowsdkgo.NewClient(cred, "instance")
 ```
+
+### 3.1 Get query parameters
+
+```golang
+import (
+    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+)
+
+params := &servicenowsdkgo.TableRequestBuilderGetQueryParameters{
+		Limit: int32(1),
+	}
+```
+
+### 3.2 Build request for table
+
+```golang
+import (
+    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+)
+
+records, err := client.Now().Table("table name").Get(params)
+if err != nil {
+    panic(err)
+}
+```
