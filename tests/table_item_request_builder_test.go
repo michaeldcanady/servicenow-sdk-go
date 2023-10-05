@@ -26,5 +26,5 @@ func TestTableItemUrl(t *testing.T) {
 
 	req := client.Now().Table("table1").ById("sysid")
 
-	assert.Equal(t, req.Url, "instance.service-now.com/api/now/table/table1/sysid")
+	assert.Equal(t, req.PathParameters, map[string]string{"baseurl": "instance.service-now.com", "table": "table1", "sysId": "sysid"})
 }

@@ -1,11 +1,24 @@
 package servicenowsdkgo
 
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
+	"net/http"
+	"reflect"
+)
+
 type TableRequestBuilder struct {
 	RequestBuilder
 }
 
 type TableCollectionResponse struct {
 	Result []*TableEntry
+}
+
+type TableResponse struct {
+	Result TableEntry
 }
 
 type TableEntry map[string]interface{}
@@ -62,7 +75,7 @@ type TableRequestBuilderGetQueryParameters struct {
 	//- both
 	//If you also specify the sysparm_fields parameter, it takes precedent.
 	View                     View   `uriparametername:"sysparm_view"`
-	Limit                    int    `uriparametername:"sysparm_limit"`
+	Limit                    int32  `uriparametername:"sysparm_limit"`
 	NoCount                  bool   `uriparametername:"sysparm_no_count"`
 	Offset                   int    `uriparametername:"sysparm_offset"`
 	Query                    string `uriparametername:"sysparm_query"`
@@ -70,10 +83,44 @@ type TableRequestBuilderGetQueryParameters struct {
 	SuppressPaginationHeader bool   `uriparameter:"sysparm_suppress_pagination_header"`
 }
 
+type TableRequestBuilderPostQueryParamters struct {
+	//Determines the type of data returned, either the actual values from the database or the display values of the fields.
+	//Display values are manipulated based on the actual value in the database and user or system settings and preferences.
+	//If returning display values, the value that is returned is dependent on the field type.
+	//- Choice fields: The database value may be a number, but the display value will be more descriptive.
+	//
+	//- Date fields: The database value is in UTC format, while the display value is based on the user's time zone.
+	//
+	//- Encrypted text: The database value is encrypted, while the displayed value is unencrypted based on the user's encryption context.
+	//
+	//- Reference fields: The database value is sys_id, but the display value is a display field of the referenced record.
+	DisplayValue DisplayValue `uriparametername:"sysparm_display_value"`
+	//Flag that indicates whether to exclude Table API links for reference fields.
+	//
+	//Valid values:
+	//
+	//- true: Exclude Table API links for reference fields.
+	//
+	//- false: Include Table API links for reference fields.
+	ExcludeReferenceLink bool `uriparametername:"sysparm_exclude_reference_link"`
+	//list of fields to return in the response.
+	Fields            []string `uriparametername:"sysparm_fields"`
+	InputDisplayValue bool     `uriparametername:"sysparm_input_display_value"`
+	//	UI view for which to render the data. Determines the fields returned in the response.
+	//
+	//Valid values:
+	//
+	//- desktop
+	//- mobile
+	//- both
+	//If you also specify the sysparm_fields parameter, it takes precedent.
+	View View `uriparametername:"sysparm_view"`
+}
+
 // NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
-func NewTableRequestBuilder(url string, client *Client) *TableRequestBuilder {
-	requestBuilder := NewRequestBuilder(url, client)
+func NewTableRequestBuilder(client *Client, pathParameters map[string]string) *TableRequestBuilder {
+	requestBuilder := NewRequestBuilder(client, "{+baseurl}/table{/table}{?sysparm_limit}", pathParameters)
 	return &TableRequestBuilder{
 		*requestBuilder,
 	}
@@ -83,17 +130,112 @@ func NewTableRequestBuilder(url string, client *Client) *TableRequestBuilder {
 // It accepts the sysId of the record as a parameter and constructs the URL for the record.
 // The returned TableItemRequestBuilder can be used to build and execute requests for the specific record.
 func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
-	return NewTableItemRequestBuilder(T.AppendSegment(sysId), T.Client)
+	pathParameters := T.PathParameters
+	pathParameters["sysId"] = sysId
+	return NewTableItemRequestBuilder(T.Client, pathParameters)
 }
 
 // Get performs an HTTP GET request to the table URL using the Client's session.
 // It retrieves a collection of records from the table and decodes the response into a TableCollectionResponse.
 // It returns the TableCollectionResponse and any errors encountered during the request or decoding.
 func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
-	resp := &TableCollectionResponse{}
-	err := T.Client.Get(T.Url, resp)
+	requestInfo, err := T.ToGetRequestInformation(params)
 	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+
+	errorMapping := ErrorMapping{"4XX": "hi"}
+
+	response, err := T.Client.Send(requestInfo, errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	var value TableCollectionResponse
+
+	err = fromJson(response, &value)
+	if err != nil {
+		return nil, err
+	}
+
+	return &value, nil
+}
+
+// Post
+func (T *TableRequestBuilder) POST(data map[string]interface{}, params *TableRequestBuilderPostQueryParamters) (*TableResponse, error) {
+	requestInfo, err := T.ToPostRequestInformation(data, params)
+	if err != nil {
+		return nil, err
+	}
+
+	errorMapping := ErrorMapping{"4XX": "hi"}
+
+	response, err := T.Client.Send(requestInfo, errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	var value TableResponse
+
+	err = fromJson(response, &value)
+	if err != nil {
+		return nil, err
+	}
+
+	return &value, nil
+}
+
+func (T *TableRequestBuilder) ToGetRequestInformation(params *TableRequestBuilderGetQueryParameters) (*RequestInformation, error) {
+	requestInfo := NewRequestInformation()
+	requestInfo.Method = GET
+	requestInfo.UrlTemplate = T.UrlTemplate
+	requestInfo.PathParameters = T.PathParameters
+	if params != nil {
+		requestInfo.AddQueryParameters(*(params))
+	}
+	return requestInfo, nil
+}
+
+func (T *TableRequestBuilder) ToPostRequestInformation(data map[string]interface{}, params *TableRequestBuilderPostQueryParamters) (*RequestInformation, error) {
+	requestInfo := NewRequestInformation()
+	requestInfo.Method = POST
+
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to marshal JSON: %s", err)
+	}
+
+	requestInfo.Content = jsonData
+	if params != nil {
+		requestInfo.AddQueryParameters(*(params))
+	}
+	return requestInfo, nil
+}
+
+func fromJson(response *http.Response, value interface{}) error {
+	if value == nil {
+		return errors.New("value is nil")
+	}
+
+	valueKind := reflect.ValueOf(value).Kind()
+	if valueKind != reflect.Ptr {
+		return errors.New("value must be a pointer")
+	}
+
+	if response == nil {
+		return errors.New("response is nil")
+	}
+
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal(body, value); err != nil {
+		return err
+	}
+
+	return nil
 }

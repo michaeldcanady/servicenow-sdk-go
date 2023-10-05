@@ -2,7 +2,10 @@ package servicenowsdkgo
 
 import (
 	"encoding/json"
+	"errors"
+	"io"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -21,6 +24,10 @@ func NewClient(credential *UsernamePasswordCredential, instance string) *Client 
 		instance += ".service-now.com/api"
 	}
 
+	if !strings.HasPrefix(instance, "https://") {
+		instance = "https://" + instance
+	}
+
 	return &Client{
 		Credential: credential,
 		BaseUrl:    instance,
@@ -34,48 +41,67 @@ func (C *Client) Now() *NowRequestBuilder {
 	return NewNowRequestBuilder(C.BaseUrl+"/now", C)
 }
 
-// Get performs an HTTP GET request to the specified URL using the Client's session.
-// It sets the Authorization header using the Credential's authentication method.
-// The response body is decoded into the provided target interface.
-// It returns any errors encountered during the request or decoding.
-func (C *Client) Get(url string, target interface{}) error {
-	request, err := http.NewRequest(http.MethodGet, url, nil)
-	if err != nil {
+func (C *Client) throwIfFailedResponse(response *http.Response, errorMappings ErrorMapping) error {
+
+	if response.StatusCode < 400 {
+		return nil
+	}
+
+	statusAsString := strconv.Itoa(response.StatusCode)
+	var errorCtor interface{} = nil
+
+	if len(errorMappings) != 0 {
+		if errorMappings[statusAsString] != "" {
+			errorCtor = errorMappings[statusAsString]
+		} else if response.StatusCode >= 400 && response.StatusCode < 500 && errorMappings["4XX"] != "" {
+			errorCtor = errorMappings["4XX"]
+		} else if response.StatusCode >= 500 && response.StatusCode < 600 && errorMappings["5XX"] != "" {
+			errorCtor = errorMappings["5XX"]
+		}
+	}
+
+	if errorCtor == nil {
+		err := &ApiError{
+			Message:            "The server returned an unexpected status code and no error factory is registered for this code: " + statusAsString,
+			ResponseStatusCode: response.StatusCode,
+		}
 		return err
 	}
-	request.Header.Add("Authorization", C.Credential.GetAuthentication())
-	resp, err := C.Session.Do(request)
+
+	var stringError ServiceNowError
+
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return err
 	}
 
-	return json.NewDecoder(resp.Body).Decode(target)
+	if err := json.Unmarshal(body, &stringError); err != nil {
+		return err
+	}
+
+	return &stringError
 }
 
-func (C *Client) Put(url string, input, target interface{}) error {
-	request, err := http.NewRequest(http.MethodPut, url, input)
-	if err != nil {
-		return err
+func (C *Client) Send(requestInfo *RequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
+	if requestInfo == nil {
+		return nil, errors.New("requestInfo cannot be nil")
 	}
+	request, err := requestInfo.toRequest()
 	request.Header.Add("Authorization", C.Credential.GetAuthentication())
-	resp, err := C.Session.Do(request)
+	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add("Accept", "application/json")
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return json.NewDecoder(resp.Body).Decode(target)
-}
+	response, err := C.Session.Do(request)
 
-func (C *Client) Delete(url string, target interface{}) error {
-	request, err := http.NewRequest(http.MethodDelete, url, nil)
+	err = C.throwIfFailedResponse(response, errorMapping)
 	if err != nil {
-		return err
-	}
-	request.Header.Add("Authorization", C.Credential.GetAuthentication())
-	resp, err := C.Session.Do(request)
-	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return json.NewDecoder(resp.Body).Decode(target)
+	return response, nil
 }

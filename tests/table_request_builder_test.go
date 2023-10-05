@@ -3,6 +3,7 @@ package tests
 import (
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"reflect"
 	"testing"
 
@@ -29,7 +30,7 @@ func TestTableUrl(t *testing.T) {
 
 	req := client.Now().Table("table1")
 
-	assert.Equal(t, req.Url, "instance.service-now.com/api/now/table/table1")
+	assert.Equal(t, req.PathParameters, map[string]string{"baseurl": "instance.service-now.com", "table": "table1"})
 }
 
 func TestTableRequestBuilder_Get(t *testing.T) {
@@ -126,7 +127,16 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
 	// Create an instance of TableRequestBuilder using the mock server URL
-	builder := servicenowsdkgo.NewTableRequestBuilder(mockServer.URL, client)
+
+	parsedUrl, err := url.Parse(mockServer.URL)
+	if err != nil {
+		t.Errorf("Expected no error, but got: %v", err)
+		return
+	}
+
+	pathParameters := map[string]string{"baseurl": parsedUrl.Host, "table": parsedUrl.Path}
+
+	builder := servicenowsdkgo.NewTableRequestBuilder(client, pathParameters)
 
 	// Call the Get method
 	resp, err := builder.Get(nil)
