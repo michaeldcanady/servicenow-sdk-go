@@ -30,7 +30,7 @@ func TestTableUrl(t *testing.T) {
 
 	req := client.Now().Table("table1")
 
-	assert.Equal(t, req.PathParameters, map[string]string{"baseurl": "instance.service-now.com", "table": "table1"})
+	assert.Equal(t, req.PathParameters, map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1"})
 }
 
 func TestTableRequestBuilder_Get(t *testing.T) {
