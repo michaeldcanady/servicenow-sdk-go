@@ -155,3 +155,47 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 		t.Errorf("Expected response of type %v, but got type %v", expectedType, reflect.TypeOf(resp))
 	}
 }
+
+func TestTableRequestBuilder_Count(t *testing.T) {
+	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Simulate successful response with the provided JSON
+		responseJSON := ``
+
+		w.WriteHeader(http.StatusOK)
+		w.Header().Add("X-Total-Count", "1")
+		_, _ = w.Write([]byte(responseJSON))
+	}))
+	defer mockServer.Close()
+
+	cred := servicenowsdkgo.NewUsernamePasswordCredential("username", "password")
+	client := servicenowsdkgo.NewClient(cred, "instance")
+
+	// Create an instance of TableRequestBuilder using the mock server URL
+
+	parsedUrl, err := url.Parse(mockServer.URL)
+	if err != nil {
+		t.Errorf("Expected no error, but got: %v", err)
+		return
+	}
+
+	pathParameters := map[string]string{"baseurl": parsedUrl.Host, "table": parsedUrl.Path}
+
+	builder := servicenowsdkgo.NewTableRequestBuilder(client, pathParameters)
+
+	// Call the Get method
+	count, err := builder.Count()
+	if err != nil {
+		t.Errorf("Expected no error, but got: %v", err)
+		return
+	}
+
+	// You can further validate the response if needed
+	if count == -1 {
+		t.Error("Expected a non-nil response, but got nil")
+	}
+
+	expectedType := reflect.TypeOf(reflect.Int64)
+	if reflect.TypeOf(count) != expectedType {
+		t.Errorf("Expected response of type %v, but got type %v", expectedType, reflect.TypeOf(count))
+	}
+}

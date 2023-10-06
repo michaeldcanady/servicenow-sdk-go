@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"reflect"
+	"strconv"
 )
 
 type TableRequestBuilder struct {
@@ -183,6 +184,40 @@ func (T *TableRequestBuilder) POST(data map[string]interface{}, params *TableReq
 	}
 
 	return &value, nil
+}
+
+func (T *TableRequestBuilder) Count() (int, error) {
+	requestInfo, err := T.ToHeadRequestInformation()
+	if err != nil {
+		return -1, err
+	}
+
+	errorMapping := ErrorMapping{"4XX": "hi"}
+
+	response, err := T.Client.Send(requestInfo, errorMapping)
+	if err != nil {
+		return -1, err
+	}
+
+	fmt.Println(response.Header)
+
+	count, err := strconv.Atoi(response.Header.Get("X-Total-Count"))
+	if err != nil {
+		count = 0
+	}
+
+	return count, nil
+}
+
+func (T *TableRequestBuilder) ToHeadRequestInformation() (*RequestInformation, error) {
+	requestInfo := NewRequestInformation()
+	requestInfo.Method = HEAD
+	requestInfo.UrlTemplate = T.UrlTemplate
+	requestInfo.PathParameters = T.PathParameters
+	//if params != nil {
+	//	requestInfo.AddQueryParameters(*(params))
+	//}
+	return requestInfo, nil
 }
 
 func (T *TableRequestBuilder) ToGetRequestInformation(params *TableRequestBuilderGetQueryParameters) (*RequestInformation, error) {
