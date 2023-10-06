@@ -22,6 +22,6 @@ func TestClientURL(t *testing.T) {
 
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
-	assert.Equal(t, client.BaseUrl, "instance.service-now.com/api")
+	assert.Equal(t, client.BaseUrl, "https://instance.service-now.com/api")
 
 }
