@@ -273,6 +273,7 @@ func fromJson(response *http.Response, value interface{}) error {
 	if err := json.Unmarshal(body, value); err != nil {
 		return err
 	}
+	defer response.Body.Close()
 
 	return nil
 }

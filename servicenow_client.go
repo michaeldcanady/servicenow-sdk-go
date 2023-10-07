@@ -73,8 +73,6 @@ func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 
 	var stringError abstraction.ServiceNowError
 
-	defer response.Body.Close()
-
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return err
@@ -92,12 +90,13 @@ func (C *ServiceNowClient) Send(requestInfo *abstraction.RequestInformation, err
 		return nil, errors.New("requestInfo cannot be nil")
 	}
 	request, err := requestInfo.ToRequest()
-	request.Header.Add("Authorization", C.Credential.GetAuthentication())
-	request.Header.Add("Content-Type", "application/json")
-	request.Header.Add("Accept", "application/json")
 	if err != nil {
 		return nil, err
 	}
+
+	request.Header.Add("Authorization", C.Credential.GetAuthentication())
+	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add("Accept", "application/json")
 
 	response, err := C.Session.Do(request)
 	if err != nil {

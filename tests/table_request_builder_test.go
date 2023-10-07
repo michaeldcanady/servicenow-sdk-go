@@ -135,7 +135,7 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 		return
 	}
 
-	pathParameters := map[string]string{"baseurl": parsedUrl.Host, "table": parsedUrl.Path}
+	pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host, "table": parsedUrl.Path}
 
 	builder := tableapi.NewTableRequestBuilder(client, pathParameters)
 
@@ -180,7 +180,7 @@ func TestTableRequestBuilder_Count(t *testing.T) {
 		return
 	}
 
-	pathParameters := map[string]string{"baseurl": parsedUrl.Host, "table": parsedUrl.Path}
+	pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host, "table": parsedUrl.Path}
 
 	builder := tableapi.NewTableRequestBuilder(client, pathParameters)
 
@@ -196,8 +196,9 @@ func TestTableRequestBuilder_Count(t *testing.T) {
 		t.Error("Expected a non-nil response, but got nil")
 	}
 
-	expectedType := reflect.TypeOf(reflect.Int64)
-	if reflect.TypeOf(count) != expectedType {
+	expectedType := reflect.Int
+
+	if reflect.TypeOf(count).Kind() != expectedType {
 		t.Errorf("Expected response of type %v, but got type %v", expectedType, reflect.TypeOf(count))
 	}
 }
