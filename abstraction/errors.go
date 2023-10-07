@@ -1,4 +1,4 @@
-package servicenowsdkgo
+package abstraction
 
 import "fmt"
 

@@ -1,7 +1,9 @@
 package servicenowsdkgo
 
+import "github.com/michaeldcanady/servicenow-sdk-go/abstraction"
+
 type TableItemRequestBuilder struct {
-	RequestBuilder
+	abstraction.RequestBuilder
 }
 
 type TableItemResponse struct {
@@ -71,8 +73,8 @@ type TableItemRequestBuilderPutQueryParameters struct {
 
 // NewTableItemRequestBuilder creates a new instance of the TableItemRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableItemRequestBuilder.
-func NewTableItemRequestBuilder(client *Client, pathParameters map[string]string) *TableItemRequestBuilder {
-	requestBuilder := NewRequestBuilder(client, "{+baseurl}/table{/table}{/sysId}", pathParameters)
+func NewTableItemRequestBuilder(client *ServiceNowClient, pathParameters map[string]string) *TableItemRequestBuilder {
+	requestBuilder := abstraction.NewRequestBuilder(client, "{+baseurl}/table{/table}{/sysId}", pathParameters)
 	return &TableItemRequestBuilder{
 		*requestBuilder,
 	}
@@ -106,25 +108,25 @@ func (T *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQu
 	return nil
 }
 
-func (T *TableItemRequestBuilder) toBaseRequestInformation() *RequestInformation {
-	requestInfo := NewRequestInformation()
+func (T *TableItemRequestBuilder) toBaseRequestInformation() *abstraction.RequestInformation {
+	requestInfo := abstraction.NewRequestInformation()
 	requestInfo.UrlTemplate = T.UrlTemplate
 	requestInfo.PathParameters = T.PathParameters
 	return requestInfo
 }
 
-func (T *TableItemRequestBuilder) ToGetRequestInformation(params *TableItemRequestBuilderGetQueryParameters) (*RequestInformation, error) {
+func (T *TableItemRequestBuilder) ToGetRequestInformation(params *TableItemRequestBuilderGetQueryParameters) (*abstraction.RequestInformation, error) {
 	requestInfo := T.toBaseRequestInformation()
-	requestInfo.Method = GET
+	requestInfo.Method = abstraction.GET
 	if params != nil {
 		requestInfo.AddQueryParameters(*(params))
 	}
 	return requestInfo, nil
 }
 
-func (T *TableItemRequestBuilder) ToDeleteRequestInformation(params *TableItemRequestBuilderDeleteQueryParameters) (*RequestInformation, error) {
+func (T *TableItemRequestBuilder) ToDeleteRequestInformation(params *TableItemRequestBuilderDeleteQueryParameters) (*abstraction.RequestInformation, error) {
 	requestInfo := T.toBaseRequestInformation()
-	requestInfo.Method = DELETE
+	requestInfo.Method = abstraction.DELETE
 	if params != nil {
 		requestInfo.AddQueryParameters(*(params))
 	}

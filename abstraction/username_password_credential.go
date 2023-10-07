@@ -1,4 +1,4 @@
-package servicenowsdkgo
+package abstraction
 
 type UsernamePasswordCredential struct {
 	Credential Credential

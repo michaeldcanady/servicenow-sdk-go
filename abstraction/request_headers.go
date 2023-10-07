@@ -1,4 +1,4 @@
-package servicenowsdkgo
+package abstraction
 
 //RequestHeaders represents a collection of request headers
 type RequestHeaders struct {

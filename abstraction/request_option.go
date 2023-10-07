@@ -1,4 +1,4 @@
-package servicenowsdkgo
+package abstraction
 
 // Represents a request option.
 type RequestOption interface {

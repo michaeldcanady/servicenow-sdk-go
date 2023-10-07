@@ -8,19 +8,27 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 )
 
-type Client struct {
-	Credential *UsernamePasswordCredential
+type ServiceNowClient struct {
+	Credential *abstraction.UsernamePasswordCredential
 	BaseUrl    string
 	Session    http.Client
+}
+
+// Now returns a NowRequestBuilder associated with the Client.
+// It prepares the NowRequestBuilder with the base URL for the ServiceNow instance.
+func (C *ServiceNowClient) Now() *NowRequestBuilder {
+	return NewNowRequestBuilder(C.BaseUrl+"/now", C)
 }
 
 // NewClient creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
 // It returns a pointer to the Client.
-func NewClient(credential *UsernamePasswordCredential, instance string) *Client {
+func NewClient(credential *abstraction.UsernamePasswordCredential, instance string) *ServiceNowClient {
 	if !strings.HasSuffix(instance, ".service-now.com/api") {
 		instance += ".service-now.com/api"
 	}
@@ -29,20 +37,14 @@ func NewClient(credential *UsernamePasswordCredential, instance string) *Client 
 		instance = "https://" + instance
 	}
 
-	return &Client{
+	return &ServiceNowClient{
 		Credential: credential,
 		BaseUrl:    instance,
 		Session:    http.Client{},
 	}
 }
 
-// Now returns a NowRequestBuilder associated with the Client.
-// It prepares the NowRequestBuilder with the base URL for the ServiceNow instance.
-func (C *Client) Now() *NowRequestBuilder {
-	return NewNowRequestBuilder(C.BaseUrl+"/now", C)
-}
-
-func (C *Client) throwIfFailedResponse(response *http.Response, errorMappings ErrorMapping) error {
+func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings abstraction.ErrorMapping) error {
 
 	if response.StatusCode < 400 {
 		return nil
@@ -62,14 +64,14 @@ func (C *Client) throwIfFailedResponse(response *http.Response, errorMappings Er
 	}
 
 	if errorCtor == nil {
-		err := &ApiError{
+		err := &abstraction.ApiError{
 			Message:            "The server returned an unexpected status code and no error factory is registered for this code: " + statusAsString,
 			ResponseStatusCode: response.StatusCode,
 		}
 		return err
 	}
 
-	var stringError ServiceNowError
+	var stringError abstraction.ServiceNowError
 
 	defer response.Body.Close()
 
@@ -85,11 +87,11 @@ func (C *Client) throwIfFailedResponse(response *http.Response, errorMappings Er
 	return &stringError
 }
 
-func (C *Client) Send(requestInfo *RequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
+func (C *ServiceNowClient) Send(requestInfo *abstraction.RequestInformation, errorMapping abstraction.ErrorMapping) (*http.Response, error) {
 	if requestInfo == nil {
 		return nil, errors.New("requestInfo cannot be nil")
 	}
-	request, err := requestInfo.toRequest()
+	request, err := requestInfo.ToRequest()
 	request.Header.Add("Authorization", C.Credential.GetAuthentication())
 	request.Header.Add("Content-Type", "application/json")
 	request.Header.Add("Accept", "application/json")

@@ -8,12 +8,13 @@ import (
 	"testing"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewTableRequestBuilder(t *testing.T) {
 
-	cred := servicenowsdkgo.NewUsernamePasswordCredential("username", "password")
+	cred := abstraction.NewUsernamePasswordCredential("username", "password")
 
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
@@ -24,7 +25,7 @@ func TestNewTableRequestBuilder(t *testing.T) {
 
 func TestTableUrl(t *testing.T) {
 
-	cred := servicenowsdkgo.NewUsernamePasswordCredential("username", "password")
+	cred := abstraction.NewUsernamePasswordCredential("username", "password")
 
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
@@ -121,9 +122,8 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(responseJSON))
 	}))
-	defer mockServer.Close()
 
-	cred := servicenowsdkgo.NewUsernamePasswordCredential("username", "password")
+	cred := abstraction.NewUsernamePasswordCredential("username", "password")
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
 	// Create an instance of TableRequestBuilder using the mock server URL
@@ -140,6 +140,7 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 
 	// Call the Get method
 	resp, err := builder.Get(nil)
+
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
 		return
@@ -167,7 +168,7 @@ func TestTableRequestBuilder_Count(t *testing.T) {
 	}))
 	defer mockServer.Close()
 
-	cred := servicenowsdkgo.NewUsernamePasswordCredential("username", "password")
+	cred := abstraction.NewUsernamePasswordCredential("username", "password")
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
 	// Create an instance of TableRequestBuilder using the mock server URL
