@@ -27,8 +27,8 @@ func (C *UsernamePasswordCredential) getAuthoizationType() string {
 // GetAuthentication returns the authentication string for UsernamePasswordCredential.
 // It uses the BasicAuth method from the underlying Credential to generate the encoded authentication string.
 // It returns the authentication string in the format "Basic <encoded-auth-string>".
-func (C *UsernamePasswordCredential) GetAuthentication() string {
-	return C.getAuthoizationType() + " " + C.getAuthoization()
+func (C *UsernamePasswordCredential) GetAuthentication() (string, error) {
+	return C.getAuthoizationType() + " " + C.getAuthoization(), nil
 }
 
 // BasicAuth returns a Basic Authentication string based on the provided username and password.

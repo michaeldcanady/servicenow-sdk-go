@@ -94,7 +94,12 @@ func (C *ServiceNowClient) Send(requestInfo *abstraction.RequestInformation, err
 		return nil, err
 	}
 
-	request.Header.Add("Authorization", C.Credential.GetAuthentication())
+	authHeader, err := C.Credential.GetAuthentication()
+	if err != nil {
+		return nil, err
+	}
+
+	request.Header.Add("Authorization", authHeader)
 	request.Header.Add("Content-Type", "application/json")
 	request.Header.Add("Accept", "application/json")
 

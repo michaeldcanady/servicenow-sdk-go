@@ -1,5 +1,5 @@
 package abstraction
 
 type Credential interface {
-	GetAuthentication() string
+	GetAuthentication() (string, error)
 }
