@@ -3,25 +3,17 @@ package credentials
 import "encoding/base64"
 
 type UsernamePasswordCredential struct {
-	username string
-	password string
+	Username string
+	Password string
 }
 
 // NewUsernamePasswordCredential creates a new instance of UsernamePasswordCredential.
 // It accepts the username and password as parameters and returns a pointer to the created UsernamePasswordCredential.
 func NewUsernamePasswordCredential(username, password string) *UsernamePasswordCredential {
 	return &UsernamePasswordCredential{
-		username: username,
-		password: password,
+		Username: username,
+		Password: password,
 	}
-}
-
-func (C *UsernamePasswordCredential) getAuthoization() string {
-	return C.BasicAuth(C.username, C.password)
-}
-
-func (C *UsernamePasswordCredential) getAuthoizationType() string {
-	return "Basic"
 }
 
 // GetAuthentication returns the authentication string for UsernamePasswordCredential.
@@ -37,4 +29,12 @@ func (C *UsernamePasswordCredential) GetAuthentication() (string, error) {
 func (C *UsernamePasswordCredential) BasicAuth(username, password string) string {
 	auth := username + ":" + password
 	return base64.StdEncoding.EncodeToString([]byte(auth))
+}
+
+func (C *UsernamePasswordCredential) getAuthoization() string {
+	return C.BasicAuth(C.Username, C.Password)
+}
+
+func (C *UsernamePasswordCredential) getAuthoizationType() string {
+	return "Basic"
 }

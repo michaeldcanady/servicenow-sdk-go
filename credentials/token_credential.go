@@ -34,6 +34,7 @@ func DefaultPrompt() (string, string, error) {
 	return username, password, nil
 }
 
+// NewTokenCredential creates a new token credential
 func NewTokenCredential(clientId, clientSecret, baseURL string, prompt func() (string, string, error)) (*TokenCredential, error) {
 
 	address := "localhost:5000"
@@ -72,6 +73,7 @@ func (tc *TokenCredential) promptUser() (string, string, error) {
 	return username, password, nil
 }
 
+// GetAuthentication gets the authentication header value
 func (tc *TokenCredential) GetAuthentication() (string, error) {
 
 	if tc.Token == nil {

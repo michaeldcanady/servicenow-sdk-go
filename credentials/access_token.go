@@ -11,6 +11,7 @@ type AccessToken struct {
 	TokenType    string `json:"token_type"`
 }
 
+//IsExpired Checks if the access token is expired
 func (t *AccessToken) IsExpired() bool {
 	return t.ExpiresAt.Before(time.Now())
 }
