@@ -1,6 +1,9 @@
 package servicenowsdkgo
 
-import "github.com/michaeldcanady/servicenow-sdk-go/abstraction"
+import (
+	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+)
 
 type NowRequestBuilder struct {
 	abstraction.RequestBuilder
@@ -19,7 +22,7 @@ func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuild
 // Table returns a TableRequestBuilder associated with the NowRequestBuilder.
 // It accepts a table name as a parameter and constructs the URL for table-related requests.
 // The returned TableRequestBuilder can be used to build and execute table-related requests.
-func (N *NowRequestBuilder) Table(tableName string) *TableRequestBuilder {
+func (N *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder {
 	N.PathParameters["table"] = tableName
-	return NewTableRequestBuilder(N.Client.(*ServiceNowClient), N.PathParameters)
+	return tableapi.NewTableRequestBuilder(N.Client.(*ServiceNowClient), N.PathParameters)
 }

@@ -1,4 +1,4 @@
-package servicenowsdkgo
+package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 
@@ -73,7 +73,7 @@ type TableItemRequestBuilderPutQueryParameters struct {
 
 // NewTableItemRequestBuilder creates a new instance of the TableItemRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableItemRequestBuilder.
-func NewTableItemRequestBuilder(client *ServiceNowClient, pathParameters map[string]string) *TableItemRequestBuilder {
+func NewTableItemRequestBuilder(client abstraction.Client, pathParameters map[string]string) *TableItemRequestBuilder {
 	requestBuilder := abstraction.NewRequestBuilder(client, "{+baseurl}/table{/table}{/sysId}", pathParameters)
 	return &TableItemRequestBuilder{
 		*requestBuilder,

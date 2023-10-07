@@ -1,4 +1,4 @@
-package servicenowsdkgo
+package tableapi
 
 import (
 	"encoding/json"
@@ -122,7 +122,7 @@ type TableRequestBuilderPostQueryParamters struct {
 
 // NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
-func NewTableRequestBuilder(client *ServiceNowClient, pathParameters map[string]string) *TableRequestBuilder {
+func NewTableRequestBuilder(client abstraction.Client, pathParameters map[string]string) *TableRequestBuilder {
 	requestBuilder := abstraction.NewRequestBuilder(client, "{+baseurl}/table{/table}{?sysparm_limit}", pathParameters)
 	return &TableRequestBuilder{
 		*requestBuilder,
@@ -135,7 +135,7 @@ func NewTableRequestBuilder(client *ServiceNowClient, pathParameters map[string]
 func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
 	pathParameters := T.PathParameters
 	pathParameters["sysId"] = sysId
-	return NewTableItemRequestBuilder(T.Client.(*ServiceNowClient), pathParameters)
+	return NewTableItemRequestBuilder(T.Client, pathParameters)
 }
 
 // Get performs an HTTP GET request to the table URL using the Client's session.

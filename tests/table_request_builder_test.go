@@ -9,6 +9,7 @@ import (
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
 	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -136,7 +137,7 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 
 	pathParameters := map[string]string{"baseurl": parsedUrl.Host, "table": parsedUrl.Path}
 
-	builder := servicenowsdkgo.NewTableRequestBuilder(client, pathParameters)
+	builder := tableapi.NewTableRequestBuilder(client, pathParameters)
 
 	// Call the Get method
 	resp, err := builder.Get(nil)
@@ -151,7 +152,7 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 		t.Error("Expected a non-nil response, but got nil")
 	}
 
-	expectedType := reflect.TypeOf(&servicenowsdkgo.TableCollectionResponse{})
+	expectedType := reflect.TypeOf(&tableapi.TableCollectionResponse{})
 	if reflect.TypeOf(resp) != expectedType {
 		t.Errorf("Expected response of type %v, but got type %v", expectedType, reflect.TypeOf(resp))
 	}
@@ -181,7 +182,7 @@ func TestTableRequestBuilder_Count(t *testing.T) {
 
 	pathParameters := map[string]string{"baseurl": parsedUrl.Host, "table": parsedUrl.Path}
 
-	builder := servicenowsdkgo.NewTableRequestBuilder(client, pathParameters)
+	builder := tableapi.NewTableRequestBuilder(client, pathParameters)
 
 	// Call the Get method
 	count, err := builder.Count()
