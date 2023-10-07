@@ -4,12 +4,13 @@ import (
 	"testing"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewClient(t *testing.T) {
 
-	cred := servicenowsdkgo.NewUsernamePasswordCredential("username", "password")
+	cred := abstraction.NewUsernamePasswordCredential("username", "password")
 
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
@@ -18,10 +19,10 @@ func TestNewClient(t *testing.T) {
 
 func TestClientURL(t *testing.T) {
 
-	cred := servicenowsdkgo.NewUsernamePasswordCredential("username", "password")
+	cred := abstraction.NewUsernamePasswordCredential("username", "password")
 
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
-	assert.Equal(t, client.BaseUrl, "instance.service-now.com/api")
+	assert.Equal(t, client.BaseUrl, "https://instance.service-now.com/api")
 
 }

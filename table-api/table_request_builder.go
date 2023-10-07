@@ -1,4 +1,4 @@
-package servicenowsdkgo
+package tableapi
 
 import (
 	"encoding/json"
@@ -7,10 +7,13 @@ import (
 	"io"
 	"net/http"
 	"reflect"
+	"strconv"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 )
 
 type TableRequestBuilder struct {
-	RequestBuilder
+	abstraction.RequestBuilder
 }
 
 type TableCollectionResponse struct {
@@ -119,8 +122,8 @@ type TableRequestBuilderPostQueryParamters struct {
 
 // NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
-func NewTableRequestBuilder(client *Client, pathParameters map[string]string) *TableRequestBuilder {
-	requestBuilder := NewRequestBuilder(client, "{+baseurl}/table{/table}{?sysparm_limit}", pathParameters)
+func NewTableRequestBuilder(client abstraction.Client, pathParameters map[string]string) *TableRequestBuilder {
+	requestBuilder := abstraction.NewRequestBuilder(client, "{+baseurl}/table{/table}{?sysparm_limit}", pathParameters)
 	return &TableRequestBuilder{
 		*requestBuilder,
 	}
@@ -144,7 +147,7 @@ func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters)
 		return nil, err
 	}
 
-	errorMapping := ErrorMapping{"4XX": "hi"}
+	errorMapping := abstraction.ErrorMapping{"4XX": "hi"}
 
 	response, err := T.Client.Send(requestInfo, errorMapping)
 	if err != nil {
@@ -168,7 +171,7 @@ func (T *TableRequestBuilder) POST(data map[string]interface{}, params *TableReq
 		return nil, err
 	}
 
-	errorMapping := ErrorMapping{"4XX": "hi"}
+	errorMapping := abstraction.ErrorMapping{"4XX": "hi"}
 
 	response, err := T.Client.Send(requestInfo, errorMapping)
 	if err != nil {
@@ -185,9 +188,43 @@ func (T *TableRequestBuilder) POST(data map[string]interface{}, params *TableReq
 	return &value, nil
 }
 
-func (T *TableRequestBuilder) ToGetRequestInformation(params *TableRequestBuilderGetQueryParameters) (*RequestInformation, error) {
-	requestInfo := NewRequestInformation()
-	requestInfo.Method = GET
+func (T *TableRequestBuilder) Count() (int, error) {
+	requestInfo, err := T.ToHeadRequestInformation()
+	if err != nil {
+		return -1, err
+	}
+
+	errorMapping := abstraction.ErrorMapping{"4XX": "hi"}
+
+	response, err := T.Client.Send(requestInfo, errorMapping)
+	if err != nil {
+		return -1, err
+	}
+
+	fmt.Println(response.Header)
+
+	count, err := strconv.Atoi(response.Header.Get("X-Total-Count"))
+	if err != nil {
+		count = 0
+	}
+
+	return count, nil
+}
+
+func (T *TableRequestBuilder) ToHeadRequestInformation() (*abstraction.RequestInformation, error) {
+	requestInfo := abstraction.NewRequestInformation()
+	requestInfo.Method = abstraction.HEAD
+	requestInfo.UrlTemplate = T.UrlTemplate
+	requestInfo.PathParameters = T.PathParameters
+	//if params != nil {
+	//	requestInfo.AddQueryParameters(*(params))
+	//}
+	return requestInfo, nil
+}
+
+func (T *TableRequestBuilder) ToGetRequestInformation(params *TableRequestBuilderGetQueryParameters) (*abstraction.RequestInformation, error) {
+	requestInfo := abstraction.NewRequestInformation()
+	requestInfo.Method = abstraction.GET
 	requestInfo.UrlTemplate = T.UrlTemplate
 	requestInfo.PathParameters = T.PathParameters
 	if params != nil {
@@ -196,9 +233,9 @@ func (T *TableRequestBuilder) ToGetRequestInformation(params *TableRequestBuilde
 	return requestInfo, nil
 }
 
-func (T *TableRequestBuilder) ToPostRequestInformation(data map[string]interface{}, params *TableRequestBuilderPostQueryParamters) (*RequestInformation, error) {
-	requestInfo := NewRequestInformation()
-	requestInfo.Method = POST
+func (T *TableRequestBuilder) ToPostRequestInformation(data map[string]interface{}, params *TableRequestBuilderPostQueryParamters) (*abstraction.RequestInformation, error) {
+	requestInfo := abstraction.NewRequestInformation()
+	requestInfo.Method = abstraction.POST
 
 	jsonData, err := json.Marshal(data)
 	if err != nil {
@@ -236,6 +273,7 @@ func fromJson(response *http.Response, value interface{}) error {
 	if err := json.Unmarshal(body, value); err != nil {
 		return err
 	}
+	defer response.Body.Close()
 
 	return nil
 }

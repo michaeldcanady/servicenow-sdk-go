@@ -1,4 +1,4 @@
-package servicenowsdkgo
+package abstraction
 
 import (
 	"bytes"
@@ -190,7 +190,7 @@ func (request *RequestInformation) AddQueryParameters(source interface{}) {
 	}
 }
 
-func (request *RequestInformation) toRequest() (*http.Request, error) {
+func (request *RequestInformation) ToRequest() (*http.Request, error) {
 
 	uri, err := request.GetUri()
 	if err != nil {

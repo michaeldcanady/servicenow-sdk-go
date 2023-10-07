@@ -4,12 +4,13 @@ import (
 	"testing"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewTableItemRequestBuilder(t *testing.T) {
 
-	cred := servicenowsdkgo.NewUsernamePasswordCredential("username", "password")
+	cred := abstraction.NewUsernamePasswordCredential("username", "password")
 
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
@@ -20,11 +21,11 @@ func TestNewTableItemRequestBuilder(t *testing.T) {
 
 func TestTableItemUrl(t *testing.T) {
 
-	cred := servicenowsdkgo.NewUsernamePasswordCredential("username", "password")
+	cred := abstraction.NewUsernamePasswordCredential("username", "password")
 
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
 	req := client.Now().Table("table1").ById("sysid")
 
-	assert.Equal(t, req.PathParameters, map[string]string{"baseurl": "instance.service-now.com", "table": "table1", "sysId": "sysid"})
+	assert.Equal(t, req.PathParameters, map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1", "sysId": "sysid"})
 }

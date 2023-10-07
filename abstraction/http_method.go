@@ -1,4 +1,4 @@
-package servicenowsdkgo
+package abstraction
 
 // Represents the HTTP method used by a request.
 type HttpMethod int
