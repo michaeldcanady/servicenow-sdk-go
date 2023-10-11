@@ -12,6 +12,10 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 )
 
+var (
+	ErrNilRequestInfo = errors.New("requestInfo cannot be nil")
+)
+
 type ServiceNowClient struct {
 	Credential abstraction.Credential
 	BaseUrl    string
@@ -44,6 +48,20 @@ func NewClient(credential abstraction.Credential, instance string) *ServiceNowCl
 	}
 }
 
+func (C *ServiceNowClient) unmarshallError(response *http.Response) error {
+	var stringError abstraction.ServiceNowError
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal(body, &stringError); err != nil {
+		return err
+	}
+	return &stringError
+}
+
 func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings abstraction.ErrorMapping) error {
 
 	if response.StatusCode < 400 {
@@ -71,24 +89,16 @@ func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 		return err
 	}
 
-	var stringError abstraction.ServiceNowError
+	stringError := C.unmarshallError(response)
 
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return err
-	}
-
-	if err := json.Unmarshal(body, &stringError); err != nil {
-		return err
-	}
-
-	return &stringError
+	return stringError
 }
 
-func (C *ServiceNowClient) Send(requestInfo *abstraction.RequestInformation, errorMapping abstraction.ErrorMapping) (*http.Response, error) {
+func (C *ServiceNowClient) toRequest(requestInfo *abstraction.RequestInformation) (*http.Request, error) {
 	if requestInfo == nil {
-		return nil, errors.New("requestInfo cannot be nil")
+		return nil, ErrNilRequestInfo
 	}
+
 	request, err := requestInfo.ToRequest()
 	if err != nil {
 		return nil, err
@@ -102,6 +112,15 @@ func (C *ServiceNowClient) Send(requestInfo *abstraction.RequestInformation, err
 	request.Header.Add("Authorization", authHeader)
 	request.Header.Add("Content-Type", "application/json")
 	request.Header.Add("Accept", "application/json")
+	return request, nil
+}
+
+func (C *ServiceNowClient) Send(requestInfo *abstraction.RequestInformation, errorMapping abstraction.ErrorMapping) (*http.Response, error) {
+
+	request, err := C.toRequest(requestInfo)
+	if err != nil {
+		return nil, err
+	}
 
 	response, err := C.Session.Do(request)
 	if err != nil {
