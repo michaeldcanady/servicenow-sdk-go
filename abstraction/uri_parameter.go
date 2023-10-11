@@ -73,23 +73,26 @@ func getFieldName(field reflect.StructField) string {
 // It handles types like *string, *bool, int32, and []string and returns their string representation.
 // If the value is not a valid type, it returns an empty string.
 func asString(value interface{}) string {
+
+	returnValue := ""
+
 	switch v := value.(type) {
 	case *string:
 		if v != nil && *v != "" {
-			return *v
+			returnValue = *v
 		}
 	case *bool:
 		if v != nil {
-			return strconv.FormatBool(*v)
+			returnValue = strconv.FormatBool(*v)
 		}
 	case int32:
 		if v != 0 {
-			return strconv.FormatInt(int64(v), 10)
+			returnValue = strconv.FormatInt(int64(v), 10)
 		}
 	case []string:
 		if len(v) > 0 {
-			return strings.Join(v, ",")
+			returnValue = strings.Join(v, ",")
 		}
 	}
-	return ""
+	return returnValue
 }

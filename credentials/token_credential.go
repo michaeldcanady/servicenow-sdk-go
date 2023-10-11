@@ -98,6 +98,35 @@ func (tc *TokenCredential) GetAuthentication() (string, error) {
 	return fmt.Sprintf("Bearer %s", tc.Token.AccessToken), nil
 }
 
+func decodeAccessToken(response *http.Response) (*AccessToken, error) {
+	defer response.Body.Close()
+	var accessToken AccessToken
+	if err := json.NewDecoder(response.Body).Decode(&accessToken); err != nil {
+		return nil, err
+	}
+
+	accessToken.ExpiresAt = time.Now().Add(time.Duration(accessToken.ExpiresIn) * time.Second)
+	return &accessToken, nil
+}
+
+func (tc *TokenCredential) GetOauth2Url() string {
+	return fmt.Sprintf("%s/oauth_token.do", tc.BaseURL)
+}
+
+func (tc *TokenCredential) requestToken(data url.Values) (*http.Response, error) {
+	// Make a POST request to [baseUrl]/oauth.do.
+	oauthURL := tc.GetOauth2Url()
+	resp, err := http.PostForm(oauthURL, data)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("OAuth2 token request failed with status code? %d", resp.StatusCode)
+	}
+	return resp, nil
+}
+
 func (tc *TokenCredential) retrieveOAuthToken() (*AccessToken, error) {
 
 	username, password, err := tc.promptUser()
@@ -112,26 +141,17 @@ func (tc *TokenCredential) retrieveOAuthToken() (*AccessToken, error) {
 	data.Set("username", username)
 	data.Set("password", password)
 
-	// Make a POST request to [baseUrl]/oauth.do.
-	oauthURL := fmt.Sprintf("%s/oauth_token.do", tc.BaseURL)
-	resp, err := http.PostForm(oauthURL, data)
+	resp, err := tc.requestToken(data)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("OAuth2 token request failed with status code? %d", resp.StatusCode)
-	}
-
-	var accessToken AccessToken
-	if err := json.NewDecoder(resp.Body).Decode(&accessToken); err != nil {
+	AccessToken, err := decodeAccessToken(resp)
+	if err != nil {
 		return nil, err
 	}
 
-	accessToken.ExpiresAt = time.Now().Add(time.Duration(accessToken.ExpiresIn) * time.Second)
-
-	return &accessToken, nil
+	return AccessToken, nil
 }
 
 func (tc *TokenCredential) refreshOAuthToken() (*AccessToken, error) {
