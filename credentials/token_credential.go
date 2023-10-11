@@ -10,6 +10,12 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 )
 
+var (
+	EmptyClientId     = NewOauth2Error("clientId is empty")
+	EmptyClientSecret = NewOauth2Error("clientSecret is empty")
+	EmptyBaseUrl      = NewOauth2Error("baseURL is empty")
+)
+
 // TokenCredential represents the OAuth2 token credentials.
 type TokenCredential struct {
 	ClientID     string
@@ -43,15 +49,15 @@ func NewTokenCredential(clientId, clientSecret, baseURL string, prompt func() (s
 	}
 
 	if clientId == "" {
-		return nil, NewCredentialError("clientId is empty")
+		return nil, EmptyClientId
 	}
 
 	if clientSecret == "" {
-		return nil, NewCredentialError("clientSecret is empty")
+		return nil, EmptyClientSecret
 	}
 
 	if baseURL == "" {
-		return nil, NewCredentialError("baseURL is empty")
+		return nil, EmptyBaseUrl
 	}
 
 	return &TokenCredential{
