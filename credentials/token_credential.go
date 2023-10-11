@@ -2,7 +2,6 @@ package credentials
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -44,15 +43,15 @@ func NewTokenCredential(clientId, clientSecret, baseURL string, prompt func() (s
 	}
 
 	if clientId == "" {
-		return nil, errors.New("clientId is empty")
+		return nil, NewCredentialError("clientId is empty")
 	}
 
 	if clientSecret == "" {
-		return nil, errors.New("clientSecret is empty")
+		return nil, NewCredentialError("clientSecret is empty")
 	}
 
 	if baseURL == "" {
-		return nil, errors.New("baseURL is empty")
+		return nil, NewCredentialError("baseURL is empty")
 	}
 
 	return &TokenCredential{
