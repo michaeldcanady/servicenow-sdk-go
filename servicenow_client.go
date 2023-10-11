@@ -13,7 +13,7 @@ import (
 )
 
 type ServiceNowClient struct {
-	Credential *abstraction.UsernamePasswordCredential
+	Credential abstraction.Credential
 	BaseUrl    string
 	Session    http.Client
 }
@@ -28,7 +28,7 @@ func (C *ServiceNowClient) Now() *NowRequestBuilder {
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
 // It returns a pointer to the Client.
-func NewClient(credential *abstraction.UsernamePasswordCredential, instance string) *ServiceNowClient {
+func NewClient(credential abstraction.Credential, instance string) *ServiceNowClient {
 	if !strings.HasSuffix(instance, ".service-now.com/api") {
 		instance += ".service-now.com/api"
 	}
@@ -94,7 +94,12 @@ func (C *ServiceNowClient) Send(requestInfo *abstraction.RequestInformation, err
 		return nil, err
 	}
 
-	request.Header.Add("Authorization", C.Credential.GetAuthentication())
+	authHeader, err := C.Credential.GetAuthentication()
+	if err != nil {
+		return nil, err
+	}
+
+	request.Header.Add("Authorization", authHeader)
 	request.Header.Add("Content-Type", "application/json")
 	request.Header.Add("Accept", "application/json")
 
