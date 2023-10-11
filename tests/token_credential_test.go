@@ -16,7 +16,7 @@ func TestNewTokenCredential(t *testing.T) {
 	// Test valid input.
 	credential, err := credentials.NewTokenCredential("clientID", "clientSecret", "http://example.com", nil)
 	if err != nil {
-		t.Errorf("Expected no error, got %v", err)
+		t.Errorf("Expected no error, got '%v'", err)
 	}
 	if credential == nil {
 		t.Error("Expected non-nil credential, got nil")
@@ -25,25 +25,25 @@ func TestNewTokenCredential(t *testing.T) {
 	// Test empty client ID.
 	_, err = credentials.NewTokenCredential("", "clientSecret", "http://example.com", nil)
 	if err == nil {
-		t.Error("Expected error for empty client ID, got nil")
-	} else if !errors.Is(err, errors.New("clientId is empty")) {
-		t.Errorf("Expected 'clientId is empty' error, got %v", err)
+		t.Error("Expected error for empty client Id, got nil")
+	} else if !errors.Is(err, credentials.NewCredentialError("clientId is empty")) {
+		t.Errorf("Expected 'clientId is empty' error, got '%v'", err)
 	}
 
 	// Test empty client secret.
 	_, err = credentials.NewTokenCredential("clientID", "", "http://example.com", nil)
 	if err == nil {
 		t.Error("Expected error for empty client secret, got nil")
-	} else if !errors.Is(err, errors.New("clientSecret is empty")) {
-		t.Errorf("Expected 'clientSecret is empty' error, got %v", err)
+	} else if !errors.Is(err, credentials.NewCredentialError("clientSecret is empty")) {
+		t.Errorf("Expected 'clientSecret is empty' error, got '%v'", err)
 	}
 
 	// Test empty base URL.
 	_, err = credentials.NewTokenCredential("clientID", "clientSecret", "", nil)
 	if err == nil {
 		t.Error("Expected error for empty base URL, got nil")
-	} else if !errors.Is(err, errors.New("baseURL is empty")) {
-		t.Errorf("Expected 'baseURL is empty' error, got %v", err)
+	} else if !errors.Is(err, credentials.NewCredentialError("baseURL is empty")) {
+		t.Errorf("Expected 'baseURL is empty' error, got '%v'", err)
 	}
 }
 
