@@ -4,13 +4,13 @@ import (
 	"testing"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
+	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewTableItemRequestBuilder(t *testing.T) {
 
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+	cred := abstraction.NewUsernamePasswordCredential("username", "password")
 
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
@@ -21,7 +21,7 @@ func TestNewTableItemRequestBuilder(t *testing.T) {
 
 func TestTableItemUrl(t *testing.T) {
 
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+	cred := abstraction.NewUsernamePasswordCredential("username", "password")
 
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
