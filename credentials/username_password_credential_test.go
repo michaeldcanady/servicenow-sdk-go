@@ -1,4 +1,4 @@
-package tests
+package credentials
 
 import (
 	"encoding/base64"
