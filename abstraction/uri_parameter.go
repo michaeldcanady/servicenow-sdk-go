@@ -62,7 +62,7 @@ func uriParamValue(source interface{}) (map[string]string, error) {
 // It takes a 'field' of type reflect.StructField and returns the field name as a string.
 func getFieldName(field reflect.StructField) string {
 	fieldName := field.Name
-	tagValue := field.Tag.Get("uriparametername")
+	tagValue := field.Tag.Get(tagValue)
 	if tagValue != "" {
 		fieldName = tagValue
 	}
