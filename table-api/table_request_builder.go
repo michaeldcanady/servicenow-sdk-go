@@ -79,7 +79,7 @@ func (T *TableRequestBuilder) POST(data map[string]interface{}, params *TableReq
 		return nil, err
 	}
 
-	value, err := abstraction.FromJson[TableResponse](response)
+	value, err := abstraction.FromJson[TableItemResponse](response)
 	if err != nil {
 		return nil, err
 	}
