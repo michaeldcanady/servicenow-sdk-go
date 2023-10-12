@@ -1,105 +1,218 @@
 package tableapi
 
 import (
-	"testing"
-	"net/http"
-	"net/url"
-	"io/ioutil"
-	"strings"
+	"strconv"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 )
 
-func TestNewTableRequestBuilder(t *testing.T) {
-	client := &MockClient{} // Use a pointer to the mock client.
-
-	pathParameters := map[string]string{"baseurl": "instance.service-now.com", "table": "table1"}
-
-	req := NewTableRequestBuilder(client, pathParameters)
-
-	assert.NotNil(t, req)
+type TableRequestBuilder struct {
+	abstraction.RequestBuilder
 }
 
-func TestTableRequestBuilder_ById(t *testing.T) {
-	client := &MockClient{} // Use a pointer to the mock client.
-
-	pathParameters := map[string]string{"baseurl": "instance.service-now.com", "table": "table1"}
-	req := NewTableRequestBuilder(client, pathParameters)
-
-	sysID := "sysid"
-	tableItemRequestBuilder := req.ById(sysID)
-
-	assert.NotNil(t, tableItemRequestBuilder)
-	assert.Equal(t, tableItemRequestBuilder.RequestBuilder.PathParameters["sysId"], sysID)
+type TableCollectionResponse struct {
+	Result []*TableEntry
 }
 
-func TestTableRequestBuilder_Get(t *testing.T) {
-	client := &MockClient{} // Use a pointer to the mock client.
-
-	pathParameters := map[string]string{"baseurl": "instance.service-now.com", "table": "table1"}
-	req := NewTableRequestBuilder(client, pathParameters)
-
-	params := &TableRequestBuilderGetQueryParameters{
-		DisplayValue:         TRUE,
-		ExcludeReferenceLink: true,
-		Fields:               []string{"field1", "field2"},
-		QueryNoDomain:        true,
-		View:                 DESKTOP,
-		Limit:                10,
-		NoCount:              false,
-		Offset:               0,
-		Query:                "field=value",
-		QueryCategory:        "category",
-		SuppressPaginationHeader: true,
-	}
-
-	response, err := req.Get(params)
-
-	assert.Nil(t, err)      // Assert that there's no error.
-	assert.NotNil(t, response) // Assert that the response is not nil.
+type TableResponse struct {
+	Result TableEntry
 }
 
-func TestTableRequestBuilder_POST(t *testing.T) {
-	client := &MockClient{} // Use a pointer to the mock client.
+type TableEntry map[string]interface{}
 
-	pathParameters := map[string]string{"baseurl": "instance.service-now.com", "table": "table1"}
-	req := NewTableRequestBuilder(client, pathParameters)
+type DisplayValue string
+type View string
 
-	data := map[string]interface{}{"field1": "value1", "field2": "value2"}
-	params := &TableRequestBuilderPostQueryParamters{
-		DisplayValue:         FALSE,
-		ExcludeReferenceLink: false,
-		Fields:               []string{"field1", "field2"},
-		InputDisplayValue:    true,
-		View:                 MOBILE,
-	}
+const (
+	TRUE  DisplayValue = "true"
+	FALSE DisplayValue = "false"
+	ALL   DisplayValue = "all"
 
-	response, err := req.POST(data, params)
+	DESKTOP View = "desktop"
+	MOBILE  View = "mobile"
+	BOTH    View = "both"
+)
 
-	assert.Nil(t, err)      // Assert that there's no error.
-	assert.NotNil(t, response) // Assert that the response is not nil.
+type TableRequestBuilderGetQueryParameters struct {
+	//Determines the type of data returned, either the actual values from the database or the display values of the fields.
+	//Display values are manipulated based on the actual value in the database and user or system settings and preferences.
+	//If returning display values, the value that is returned is dependent on the field type.
+	//- Choice fields: The database value may be a number, but the display value will be more descriptive.
+	//
+	//- Date fields: The database value is in UTC format, while the display value is based on the user's time zone.
+	//
+	//- Encrypted text: The database value is encrypted, while the displayed value is unencrypted based on the user's encryption context.
+	//
+	//- Reference fields: The database value is sys_id, but the display value is a display field of the referenced record.
+	DisplayValue DisplayValue `uriparametername:"sysparm_display_value"`
+	//Flag that indicates whether to exclude Table API links for reference fields.
+	//
+	//Valid values:
+	//
+	//- true: Exclude Table API links for reference fields.
+	//
+	//- false: Include Table API links for reference fields.
+	ExcludeReferenceLink bool `uriparametername:"sysparm_exclude_reference_link"`
+	//list of fields to return in the response.
+	Fields []string `uriparametername:"sysparm_fields"`
+	//Flag that indicates whether to restrict the record search to only the domains for which the logged in user is configured.
+	//
+	//Valid values:
+	//
+	//- false: Exclude the record if it is in a domain that the currently logged in user is not configured to access.
+	//
+	//- true: Include the record even if it is in a domain that the currently logged in user is not configured to access.
+	QueryNoDomain bool `uriparametername:"sysparm_query_no_domain"`
+	//	UI view for which to render the data. Determines the fields returned in the response.
+	//
+	//Valid values:
+	//
+	//- desktop
+	//- mobile
+	//- both
+	//If you also specify the sysparm_fields parameter, it takes precedent.
+	View                     View   `uriparametername:"sysparm_view"`
+	Limit                    int32  `uriparametername:"sysparm_limit"`
+	NoCount                  bool   `uriparametername:"sysparm_no_count"`
+	Offset                   int    `uriparametername:"sysparm_offset"`
+	Query                    string `uriparametername:"sysparm_query"`
+	QueryCategory            string `uriparametername:"sysparm_query_category"`
+	SuppressPaginationHeader bool   `uriparameter:"sysparm_suppress_pagination_header"`
 }
 
-func TestTableRequestBuilder_Count(t *testing.T) {
-	client := &MockClient{} // Use a pointer to the mock client.
+type TableRequestBuilderPostQueryParamters struct {
+	//Determines the type of data returned, either the actual values from the database or the display values of the fields.
+	//Display values are manipulated based on the actual value in the database and user or system settings and preferences.
+	//If returning display values, the value that is returned is dependent on the field type.
+	//- Choice fields: The database value may be a number, but the display value will be more descriptive.
+	//
+	//- Date fields: The database value is in UTC format, while the display value is based on the user's time zone.
+	//
+	//- Encrypted text: The database value is encrypted, while the displayed value is unencrypted based on the user's encryption context.
+	//
+	//- Reference fields: The database value is sys_id, but the display value is a display field of the referenced record.
+	DisplayValue DisplayValue `uriparametername:"sysparm_display_value"`
+	//Flag that indicates whether to exclude Table API links for reference fields.
+	//
+	//Valid values:
+	//
+	//- true: Exclude Table API links for reference fields.
+	//
+	//- false: Include Table API links for reference fields.
+	ExcludeReferenceLink bool `uriparametername:"sysparm_exclude_reference_link"`
+	//list of fields to return in the response.
+	Fields            []string `uriparametername:"sysparm_fields"`
+	InputDisplayValue bool     `uriparametername:"sysparm_input_display_value"`
+	//	UI view for which to render the data. Determines the fields returned in the response.
+	//
+	//Valid values:
+	//
+	//- desktop
+	//- mobile
+	//- both
+	//If you also specify the sysparm_fields parameter, it takes precedent.
+	View View `uriparametername:"sysparm_view"`
+}
 
-	pathParameters := map[string]string{"baseurl": "instance.service-now.com", "table": "table1"}
-	req := NewTableRequestBuilder(client, pathParameters)
-
-	// Create a mock response with a "X-Total-Count" header.
-	response := &http.Response{
-		StatusCode: 200,
-		Header:     http.Header{},
+// NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
+// It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
+func NewTableRequestBuilder(client abstraction.Client, pathParameters map[string]string) *TableRequestBuilder {
+	requestBuilder := abstraction.NewRequestBuilder(client, "{+baseurl}/table{/table}{?sysparm_limit}", pathParameters)
+	return &TableRequestBuilder{
+		*requestBuilder,
 	}
-	response.Header.Add("X-Total-Count", "42")
+}
 
-	// Mock the Send method to return the response.
-	client.Send = func(requestInfo *abstraction.RequestInformation, errorMapping abstraction.ErrorMapping) (*http.Response, error) {
-		return response, nil
+// ById returns a TableItemRequestBuilder for a specific record in the table.
+// It accepts the sysId of the record as a parameter and constructs the URL for the record.
+// The returned TableItemRequestBuilder can be used to build and execute requests for the specific record.
+func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
+	pathParameters := T.RequestBuilder.PathParameters
+	pathParameters["sysId"] = sysId
+	return NewTableItemRequestBuilder(T.RequestBuilder.Client, pathParameters)
+}
+
+// Get sends an HTTP GET request using the specified query parameters and returns a TableCollectionResponse.
+//
+// Parameters:
+//   - params: An instance of TableRequestBuilderGetQueryParameters to include in the GET request.
+//
+// Returns:
+//   - *TableCollectionResponse: The response data as a TableCollectionResponse.
+//   - error: An error if there was an issue with the request or response.
+func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
+	requestInfo, err := T.RequestBuilder.ToGetRequestInformation(params)
+	if err != nil {
+		return nil, err
 	}
 
-	count, err := req.Count()
+	errorMapping := abstraction.ErrorMapping{"4XX": "hi"}
 
-	assert.Nil(t, err)      // Assert that there's no error.
-	assert.Equal(t, count, 42) // Assert that the count is as expected.
+	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	value, err := abstraction.FromJson[TableCollectionResponse](response)
+	if err != nil {
+		return nil, err
+	}
+
+	return value, nil
+}
+
+// POST sends an HTTP POST request with the provided data and query parameters and returns a TableResponse.
+//
+// Parameters:
+//   - data: A map[string]interface{} representing data to be included in the request body.
+//   - params: An instance of TableRequestBuilderPostQueryParamters for query parameters.
+//
+// Returns:
+//   - *TableResponse: The response data as a TableResponse.
+//   - error: An error if there was an issue with the request or response.
+func (T *TableRequestBuilder) POST(data map[string]interface{}, params *TableRequestBuilderPostQueryParamters) (*TableResponse, error) {
+	requestInfo, err := T.RequestBuilder.ToPostRequestInformation(data, params)
+	if err != nil {
+		return nil, err
+	}
+
+	errorMapping := abstraction.ErrorMapping{"4XX": "hi"}
+
+	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	value, err := abstraction.FromJson[TableResponse](response)
+	if err != nil {
+		return nil, err
+	}
+
+	return value, nil
+}
+
+// Count sends an HTTP HEAD request and retrieves the value of "X-Total-Count" from the response header, which represents the count of items.
+//
+// Returns:
+//   - int: The count of items.
+//   - error: An error if there was an issue with the request or response.
+func (T *TableRequestBuilder) Count() (int, error) {
+	requestInfo, err := T.RequestBuilder.ToHeadRequestInformation()
+	if err != nil {
+		return -1, err
+	}
+
+	errorMapping := abstraction.ErrorMapping{"4XX": "hi"}
+
+	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
+	if err != nil {
+		return -1, err
+	}
+
+	count, err := strconv.Atoi(response.Header.Get("X-Total-Count"))
+	if err != nil {
+		count = 0
+	}
+
+	return count, nil
 }
