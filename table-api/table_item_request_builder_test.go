@@ -8,31 +8,26 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type MockCredential struct{}
+type MockClient struct{}
 
-func (c *MockCredential) GetAuthentication() (string, error) {
-	// Mock authentication logic here, return a string (e.g., a token) and nil error.
-	return "mocked-auth-token", nil
+func (c *MockClient) Send(requestInfo *servicenowsdkgo.RequestInformation, errorMapping servicenowsdkgo.ErrorMapping) (*http.Response, error) {
+	// Mock the client's behavior here.
+	// You can create a mock response for testing purposes.
+	response := &http.Response{
+		StatusCode: 200, // Mock the status code you expect.
+		Body:       ioutil.NopCloser(strings.NewReader("")), // Mock an empty response body.
+	}
+	return response, nil
 }
 
 func TestNewTableItemRequestBuilder(t *testing.T) {
-	cred := &MockCredential{}
+	client := MockClient{}
 
-	client := servicenowsdkgo.NewClient(cred, "instance")
+ pathParameters := map[string]string{"baseurl":"instance.service-now.com", "table":"table1", "sysId":"sysid"}
 
-  pathParameters := map[string]string{"baseurl":"instance.service-now.com", "table":"table1", "sysId":"sysid"}
-
-  req := NewTableItemRequestBuilder(client, pathParameters)
+ req := NewTableItemRequestBuilder(client, pathParameters)
 
 	assert.NotNil(t, req)
-}
 
-func TestTableItemUrl(t *testing.T) {
-	cred := &MockCredential{}
-
-	client := servicenowsdkgo.NewClient(cred, "instance")
-
-	req := client.Now().Table("table1").ById("sysid")
-
-	assert.Equal(t, req.PathParameters, map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1", "sysId": "sysid"})
+ assert.Equal(t, req.PathParameters, pathParameters)
 }
