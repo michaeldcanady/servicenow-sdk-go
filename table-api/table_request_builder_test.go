@@ -11,19 +11,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type MockClient struct{}
-
-func (c *MockClient) Send(requestInfo *abstraction.RequestInformation, errorMapping abstraction.ErrorMapping) (*http.Response, error) {
-	// Mock the client's behavior here.
-	// You can create a mock response for testing purposes.
-	response := &http.Response{
-		StatusCode: 200, // Mock the status code you expect.
-		Body:       ioutil.NopCloser(strings.NewReader("")), // Mock an empty response body.
-		Header:     make(http.Header),
-	}
-	return response, nil
-}
-
 func TestNewTableRequestBuilder(t *testing.T) {
 	client := &MockClient{} // Use a pointer to the mock client.
 
