@@ -10,10 +10,6 @@ type TableRequestBuilder struct {
 	abstraction.RequestBuilder
 }
 
-type TableCollectionResponse struct {
-	Result []*TableEntry
-}
-
 type TableResponse struct {
 	Result TableEntry
 }
