@@ -23,6 +23,6 @@ func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuild
 // It accepts a table name as a parameter and constructs the URL for table-related requests.
 // The returned TableRequestBuilder can be used to build and execute table-related requests.
 func (N *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder {
-	N.PathParameters["table"] = tableName
-	return tableapi.NewTableRequestBuilder(N.RequestBuilder.Client.(*ServiceNowClient), N.PathParameters)
+	N.RequestBuilder.PathParameters["table"] = tableName
+	return tableapi.NewTableRequestBuilder(N.RequestBuilder.Client.(*ServiceNowClient), N.RequestBuilder.PathParameters)
 }
