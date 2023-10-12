@@ -24,7 +24,7 @@ func TestNewTokenCredential(t *testing.T) {
 	_, err = NewTokenCredential("", "clientSecret", "http://example.com", nil)
 	if err == nil {
 		t.Error("Expected error for empty client Id, got nil")
-	} else if !errors.Is(err, credentials.EmptyClientId) {
+	} else if !errors.Is(err, EmptyClientId) {
 		t.Errorf("Expected 'clientId is empty' error, got '%v'", err)
 	}
 
@@ -32,7 +32,7 @@ func TestNewTokenCredential(t *testing.T) {
 	_, err = NewTokenCredential("clientID", "", "http://example.com", nil)
 	if err == nil {
 		t.Error("Expected error for empty client secret, got nil")
-	} else if !errors.Is(err, credentials.EmptyClientSecret) {
+	} else if !errors.Is(err, EmptyClientSecret) {
 		t.Errorf("Expected 'clientSecret is empty' error, got '%v'", err)
 	}
 
@@ -50,7 +50,7 @@ func TestTokenCredential_GetAuthentication(t *testing.T) {
 	credential, _ := NewTokenCredential("clientID", "clientSecret", "http://example.com", MockPrompt)
 
 	// Test obtaining a new access token.
-	authHeader, err := GetAuthentication()
+	authHeader, err := credential.GetAuthentication()
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -63,7 +63,7 @@ func TestTokenCredential_GetAuthentication(t *testing.T) {
 		AccessToken: "expired_token",
 		ExpiresIn:   1, // 1 second expiration for testing.
 	}
-	authHeader, err = GetAuthentication()
+	authHeader, err = credential.GetAuthentication()
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
