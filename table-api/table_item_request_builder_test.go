@@ -2,8 +2,11 @@ package tableapi
 
 import (
 	"testing"
+	"net/http"
+	"io/ioutil"
+	"strings"
 
- "github.com/michaeldcanady/servicenow-sdk-go/abstraction"
+	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,13 +23,13 @@ func (c *MockClient) Send(requestInfo *abstraction.RequestInformation, errorMapp
 }
 
 func TestNewTableItemRequestBuilder(t *testing.T) {
-	client := MockClient{}
+	client := &MockClient{} // Use a pointer to the mock client.
 
- pathParameters := map[string]string{"baseurl":"instance.service-now.com", "table":"table1", "sysId":"sysid"}
+	pathParameters := map[string]string{"baseurl": "instance.service-now.com", "table": "table1", "sysId": "sysid"}
 
- req := NewTableItemRequestBuilder(client, pathParameters)
+	req := NewTableItemRequestBuilder(client, pathParameters)
 
 	assert.NotNil(t, req)
 
- assert.Equal(t, req.PathParameters, pathParameters)
+	assert.Equal(t, req.PathParameters, pathParameters)
 }
