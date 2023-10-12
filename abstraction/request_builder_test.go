@@ -1,4 +1,4 @@
-package tests
+package abstraction
 
 import (
 	"net/http"
