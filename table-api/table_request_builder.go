@@ -129,7 +129,7 @@ func NewTableRequestBuilder(client abstraction.Client, pathParameters map[string
 func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
 	pathParameters := T.PathParameters
 	pathParameters["sysId"] = sysId
-	return NewTableItemRequestBuilder(T.Client, pathParameters)
+	return NewTableItemRequestBuilder(T.RequestBuilder.Client, pathParameters)
 }
 
 // Get sends an HTTP GET request using the specified query parameters and returns a TableCollectionResponse.
@@ -171,7 +171,7 @@ func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters)
 //   - *TableResponse: The response data as a TableResponse.
 //   - error: An error if there was an issue with the request or response.
 func (T *TableRequestBuilder) POST(data map[string]interface{}, params *TableRequestBuilderPostQueryParamters) (*TableResponse, error) {
-	requestInfo, err := T.ToPostRequestInformation(data, params)
+	requestInfo, err := T.RequestBuilder.ToPostRequestInformation(data, params)
 	if err != nil {
 		return nil, err
 	}
@@ -197,7 +197,7 @@ func (T *TableRequestBuilder) POST(data map[string]interface{}, params *TableReq
 //   - int: The count of items.
 //   - error: An error if there was an issue with the request or response.
 func (T *TableRequestBuilder) Count() (int, error) {
-	requestInfo, err := T.ToHeadRequestInformation()
+	requestInfo, err := T.RequestBuilder.ToHeadRequestInformation()
 	if err != nil {
 		return -1, err
 	}
