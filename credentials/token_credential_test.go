@@ -40,7 +40,7 @@ func TestNewTokenCredential(t *testing.T) {
 	_, err = NewTokenCredential("clientID", "clientSecret", "", nil)
 	if err == nil {
 		t.Error("Expected error for empty base URL, got nil")
-	} else if !errors.Is(err, credentials.EmptyBaseUrl) {
+	} else if !errors.Is(err, EmptyBaseUrl) {
 		t.Errorf("Expected 'baseURL is empty' error, got '%v'", err)
 	}
 }
