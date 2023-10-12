@@ -3,12 +3,13 @@ package tableapi
 import (
 	"testing"
 
+ "github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 	"github.com/stretchr/testify/assert"
 )
 
 type MockClient struct{}
 
-func (c *MockClient) Send(requestInfo *servicenowsdkgo.RequestInformation, errorMapping servicenowsdkgo.ErrorMapping) (*http.Response, error) {
+func (c *MockClient) Send(requestInfo *abstraction.RequestInformation, errorMapping abstraction.ErrorMapping) (*http.Response, error) {
 	// Mock the client's behavior here.
 	// You can create a mock response for testing purposes.
 	response := &http.Response{
