@@ -118,7 +118,7 @@ func TestToRequestInformation(t *testing.T) {
 	}
 
 	// Call the ToRequestInformation method for a GET request
-	requestInfo, err := builder.ToRequestInformation(abstraction.GET, nil, params)
+	requestInfo, err := builder.ToRequestInformation(GET, nil, params)
 
 	// Perform assertions to check the result
 	if err != nil {
@@ -130,7 +130,7 @@ func TestToRequestInformation(t *testing.T) {
 	// Add more assertions as needed
 
 	// Call the ToRequestInformation method for a POST request
-	requestInfo, err = builder.ToRequestInformation(abstraction.POST, data, params)
+	requestInfo, err = builder.ToRequestInformation(POST, data, params)
 
 	// Perform assertions to check the result
 	if err != nil {
