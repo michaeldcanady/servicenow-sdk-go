@@ -127,7 +127,7 @@ func NewTableRequestBuilder(client abstraction.Client, pathParameters map[string
 // It accepts the sysId of the record as a parameter and constructs the URL for the record.
 // The returned TableItemRequestBuilder can be used to build and execute requests for the specific record.
 func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
-	pathParameters := T.PathParameters
+	pathParameters := T.RequestBuilder.PathParameters
 	pathParameters["sysId"] = sysId
 	return NewTableItemRequestBuilder(T.RequestBuilder.Client, pathParameters)
 }
