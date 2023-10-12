@@ -141,14 +141,14 @@ func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
 //   - *TableCollectionResponse: The response data as a TableCollectionResponse.
 //   - error: An error if there was an issue with the request or response.
 func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
-	requestInfo, err := T.ToGetRequestInformation(params)
+	requestInfo, err := T.RequestBuilder.ToGetRequestInformation(params)
 	if err != nil {
 		return nil, err
 	}
 
 	errorMapping := abstraction.ErrorMapping{"4XX": "hi"}
 
-	response, err := T.Client.Send(requestInfo, errorMapping)
+	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -178,7 +178,7 @@ func (T *TableRequestBuilder) POST(data map[string]interface{}, params *TableReq
 
 	errorMapping := abstraction.ErrorMapping{"4XX": "hi"}
 
-	response, err := T.Client.Send(requestInfo, errorMapping)
+	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -204,7 +204,7 @@ func (T *TableRequestBuilder) Count() (int, error) {
 
 	errorMapping := abstraction.ErrorMapping{"4XX": "hi"}
 
-	response, err := T.Client.Send(requestInfo, errorMapping)
+	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
 		return -1, err
 	}
