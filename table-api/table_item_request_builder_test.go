@@ -1,4 +1,4 @@
-package testapi
+package tableapi
 
 import (
 	"testing"
