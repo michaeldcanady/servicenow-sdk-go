@@ -3,26 +3,24 @@ package tests
 import (
 	"testing"
 	"time"
-
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 )
 
 func TestAccessToken_IsExpired(t *testing.T) {
 	tests := []struct {
 		name     string
-		token    credentials.AccessToken
+		token    AccessToken
 		expected bool
 	}{
 		{
 			name: "ExpiredToken",
-			token: credentials.AccessToken{
+			token: AccessToken{
 				ExpiresAt: time.Now().Add(-time.Minute), // An expired token
 			},
 			expected: true,
 		},
 		{
 			name: "NonExpiredToken",
-			token: credentials.AccessToken{
+			token: AccessToken{
 				ExpiresAt: time.Now().Add(time.Minute), // A non-expired token
 			},
 			expected: false,
