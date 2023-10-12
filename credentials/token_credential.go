@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"net/url"
 	"time"
-
-	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 )
 
 var (
@@ -113,7 +111,7 @@ func (tc *TokenCredential) GetOauth2Url() string {
 	return fmt.Sprintf("%s/oauth_token.do", tc.BaseURL)
 }
 
-func (tc *TokenCredential) requestToken(data url.Values) (*http.Response, error) {
+func (tc *TokenCredential) requestToken(data url.Values) (*AccessToken, error) {
 	// Make a POST request to [baseUrl]/oauth.do.
 	oauthURL := tc.GetOauth2Url()
 	resp, err := http.PostForm(oauthURL, data)
@@ -124,7 +122,13 @@ func (tc *TokenCredential) requestToken(data url.Values) (*http.Response, error)
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("OAuth2 token request failed with status code? %d", resp.StatusCode)
 	}
-	return resp, nil
+
+	AccessToken, err := decodeAccessToken(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return AccessToken, nil
 }
 
 func (tc *TokenCredential) retrieveOAuthToken() (*AccessToken, error) {
@@ -141,17 +145,7 @@ func (tc *TokenCredential) retrieveOAuthToken() (*AccessToken, error) {
 	data.Set("username", username)
 	data.Set("password", password)
 
-	resp, err := tc.requestToken(data)
-	if err != nil {
-		return nil, err
-	}
-
-	AccessToken, err := decodeAccessToken(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	return AccessToken, nil
+	return tc.requestToken(data)
 }
 
 func (tc *TokenCredential) refreshOAuthToken() (*AccessToken, error) {
@@ -161,34 +155,5 @@ func (tc *TokenCredential) refreshOAuthToken() (*AccessToken, error) {
 	data.Set("client_secret", tc.ClientSecret)
 	data.Set("refresh_token ", tc.Token.RefreshToken)
 
-	// Make a POST request to [baseUrl]/oauth.do.
-	oauthURL := fmt.Sprintf("%s/oauth_token.do", tc.BaseURL)
-	resp, err := http.PostForm(oauthURL, data)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		var errVal map[string]string
-		if err := json.NewDecoder(resp.Body).Decode(&errVal); err != nil {
-			return nil, err
-		}
-
-		return nil, &abstraction.ServiceNowError{
-			Exception: abstraction.Exception{
-				Message: errVal["error"],
-				Detail:  errVal["error_description"],
-			},
-		}
-	}
-
-	var accessToken AccessToken
-	if err := json.NewDecoder(resp.Body).Decode(&accessToken); err != nil {
-		return nil, err
-	}
-
-	accessToken.ExpiresAt = time.Now().Add(time.Duration(accessToken.ExpiresIn) * time.Second)
-
-	return &accessToken, nil
+	return tc.requestToken(data)
 }
