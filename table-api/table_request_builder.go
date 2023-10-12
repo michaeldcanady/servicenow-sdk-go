@@ -10,14 +10,9 @@ type TableRequestBuilder struct {
 	abstraction.RequestBuilder
 }
 
-type DisplayValue string
 type View string
 
 const (
-	TRUE  DisplayValue = "true"
-	FALSE DisplayValue = "false"
-	ALL   DisplayValue = "all"
-
 	DESKTOP View = "desktop"
 	MOBILE  View = "mobile"
 	BOTH    View = "both"
