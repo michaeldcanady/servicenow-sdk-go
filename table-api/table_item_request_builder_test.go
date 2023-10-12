@@ -20,11 +20,9 @@ func TestNewTableItemRequestBuilder(t *testing.T) {
 
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
- pathParameters := map[string]string{"baseurl":"instance.service-now.com", "table":"table1", "sysId":"sysid"}
+  pathParameters := map[string]string{"baseurl":"instance.service-now.com", "table":"table1", "sysId":"sysid"}
 
- req := NewTableItemRequestBuilder(client, pathParameters)
-
-	req := client.Now().Table("table1").ById("sysid")
+  req := NewTableItemRequestBuilder(client, pathParameters)
 
 	assert.NotNil(t, req)
 }
