@@ -10,14 +10,6 @@ type TableRequestBuilder struct {
 	abstraction.RequestBuilder
 }
 
-type View string
-
-const (
-	DESKTOP View = "desktop"
-	MOBILE  View = "mobile"
-	BOTH    View = "both"
-)
-
 // NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
 func NewTableRequestBuilder(client abstraction.Client, pathParameters map[string]string) *TableRequestBuilder {
