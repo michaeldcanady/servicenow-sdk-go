@@ -1,4 +1,4 @@
-package tests
+package tableapi
 
 import (
 	"net/http"
@@ -9,7 +9,6 @@ import (
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 	"github.com/stretchr/testify/assert"
 )
 
