@@ -10,10 +10,6 @@ type TableRequestBuilder struct {
 	abstraction.RequestBuilder
 }
 
-type TableResponse struct {
-	Result TableEntry
-}
-
 type DisplayValue string
 type View string
 
