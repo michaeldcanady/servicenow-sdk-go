@@ -3,9 +3,6 @@ package tableapi
 import (
 	"testing"
 	"net/http"
-	"net/url"
-	"io/ioutil"
-	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 	"github.com/stretchr/testify/assert"
