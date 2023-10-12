@@ -80,6 +80,14 @@ func NewTableItemRequestBuilder(client abstraction.Client, pathParameters map[st
 	}
 }
 
+// Get sends an HTTP GET request using the specified query parameters and returns a TableItemResponse.
+//
+// Parameters:
+//   - params: An instance of TableItemRequestBuilderGetQueryParameters to include in the GET request.
+//
+// Returns:
+//   - *TableItemResponse: The response data as a TableItemResponse.
+//   - error: An error if there was an issue with the request or response.
 func (T *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
 	requestInfo, err := T.ToGetRequestInformation(params)
 	if err != nil {
@@ -94,6 +102,13 @@ func (T *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryPar
 	return nil, nil
 }
 
+// Delete sends an HTTP DELETE request using the specified query parameters and returns an error if the request or response encounters any issues.
+//
+// Parameters:
+//   - params: An instance of TableItemRequestBuilderDeleteQueryParameters to include in the DELETE request.
+//
+// Returns:
+//   - error: An error if there was an issue with the request or response, or nil if the request was successful.
 func (T *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQueryParameters) error {
 	requestInfo, err := T.ToDeleteRequestInformation(params)
 	if err != nil {
@@ -106,29 +121,4 @@ func (T *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQu
 	}
 
 	return nil
-}
-
-func (T *TableItemRequestBuilder) toBaseRequestInformation() *abstraction.RequestInformation {
-	requestInfo := abstraction.NewRequestInformation()
-	requestInfo.UrlTemplate = T.UrlTemplate
-	requestInfo.PathParameters = T.PathParameters
-	return requestInfo
-}
-
-func (T *TableItemRequestBuilder) ToGetRequestInformation(params *TableItemRequestBuilderGetQueryParameters) (*abstraction.RequestInformation, error) {
-	requestInfo := T.toBaseRequestInformation()
-	requestInfo.Method = abstraction.GET
-	if params != nil {
-		requestInfo.AddQueryParameters(*(params))
-	}
-	return requestInfo, nil
-}
-
-func (T *TableItemRequestBuilder) ToDeleteRequestInformation(params *TableItemRequestBuilderDeleteQueryParameters) (*abstraction.RequestInformation, error) {
-	requestInfo := T.toBaseRequestInformation()
-	requestInfo.Method = abstraction.DELETE
-	if params != nil {
-		requestInfo.AddQueryParameters(*(params))
-	}
-	return requestInfo, nil
 }
