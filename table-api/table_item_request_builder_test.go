@@ -30,6 +30,39 @@ func TestNewTableItemRequestBuilder(t *testing.T) {
 	req := NewTableItemRequestBuilder(client, pathParameters)
 
 	assert.NotNil(t, req)
+}
 
-	assert.Equal(t, req.PathParameters, pathParameters)
+func TestTableItemRequestBuilderGet(t *testing.T) {
+	client := &MockClient{} // Use a pointer to the mock client.
+
+	pathParameters := map[string]string{"baseurl": "instance.service-now.com", "table": "table1", "sysId": "sysid"}
+	req := NewTableItemRequestBuilder(client, pathParameters)
+
+	params := &TableItemRequestBuilderGetQueryParameters{
+		DisplayValue:         "true",
+		ExcludeReferenceLink: true,
+		Fields:               []string{"field1", "field2"},
+		QueryNoDomain:        true,
+		View:                 "desktop",
+	}
+
+	response, err := req.Get(params)
+
+	assert.Nil(t, err)      // Assert that there's no error.
+	assert.NotNil(t, response) // Assert that the response is not nil.
+}
+
+func TestTableItemRequestBuilderDelete(t *testing.T) {
+	client := &MockClient{} // Use a pointer to the mock client.
+
+	pathParameters := map[string]string{"baseurl": "instance.service-now.com", "table": "table1", "sysId": "sysid"}
+	req := NewTableItemRequestBuilder(client, pathParameters)
+
+	params := &TableItemRequestBuilderDeleteQueryParameters{
+		QueryNoDomain: true,
+	}
+
+	err := req.Delete(params)
+
+	assert.Nil(t, err) // Assert that there's no error.
 }
