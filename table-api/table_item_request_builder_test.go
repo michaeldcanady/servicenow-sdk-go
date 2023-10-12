@@ -3,14 +3,20 @@ package tableapi
 import (
 	"testing"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	"github.com/michaeldcanady/servicenow-sdk-go"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewTableItemRequestBuilder(t *testing.T) {
+type MockCredential struct{}
 
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+func (c *MockCredential) GetAuthentication() (string, error) {
+	// Mock authentication logic here, return a string (e.g., a token) and nil error.
+	return "mocked-auth-token", nil
+}
+
+func TestNewTableItemRequestBuilder(t *testing.T) {
+	cred := &MockCredential{}
 
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
@@ -20,8 +26,7 @@ func TestNewTableItemRequestBuilder(t *testing.T) {
 }
 
 func TestTableItemUrl(t *testing.T) {
-
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+	cred := &MockCredential{}
 
 	client := servicenowsdkgo.NewClient(cred, "instance")
 
