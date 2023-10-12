@@ -14,8 +14,6 @@ type TableResponse struct {
 	Result TableEntry
 }
 
-type TableEntry map[string]interface{}
-
 type DisplayValue string
 type View string
 
