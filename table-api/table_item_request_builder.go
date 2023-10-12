@@ -89,7 +89,7 @@ func NewTableItemRequestBuilder(client abstraction.Client, pathParameters map[st
 //   - *TableItemResponse: The response data as a TableItemResponse.
 //   - error: An error if there was an issue with the request or response.
 func (T *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
-	requestInfo, err := T.ToGetRequestInformation(params)
+	requestInfo, err := T.RequestBuilder.ToGetRequestInformation(params)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func (T *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryPar
 // Returns:
 //   - error: An error if there was an issue with the request or response, or nil if the request was successful.
 func (T *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQueryParameters) error {
-	requestInfo, err := T.ToDeleteRequestInformation(params)
+	requestInfo, err := T.RequestBuilder.ToDeleteRequestInformation(params)
 	if err != nil {
 		return err
 	}
