@@ -103,7 +103,11 @@ func (T *RequestBuilder) ToRequestInformation(method HttpMethod, data map[string
 		if paramsValue.Kind() == reflect.Ptr {
 			paramsValue = paramsValue.Elem()
 		}
-		requestInfo.AddQueryParameters(paramsValue)
+
+		err := requestInfo.AddQueryParameters(paramsValue)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return requestInfo, nil
 }
