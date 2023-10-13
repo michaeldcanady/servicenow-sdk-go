@@ -13,7 +13,7 @@ type TableRequestBuilder struct {
 // NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
 func NewTableRequestBuilder(client abstraction.Client, pathParameters map[string]string) *TableRequestBuilder {
-	requestBuilder := abstraction.NewRequestBuilder(client, "{+baseurl}/table{/table}{?sysparm_limit}", pathParameters)
+	requestBuilder := abstraction.NewRequestBuilder(client, "{+baseurl}/table{/table}{?sysparm_limit,sysparm_no_count}", pathParameters)
 	return &TableRequestBuilder{
 		*requestBuilder,
 	}

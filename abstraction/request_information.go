@@ -3,14 +3,15 @@ package abstraction
 import (
 	"bytes"
 	"errors"
+	"fmt"
+	"maps"
 
 	"strings"
 
 	"net/http"
 	u "net/url"
 
-	"maps"
-
+	"github.com/hetiansu5/urlquery"
 	t "github.com/yosida95/uritemplate/v3"
 )
 
@@ -84,6 +85,8 @@ func (request *RequestInformation) buildUriFromTemplate() (string, error) {
 
 	normalizedNames := request.normalizeVarNames(uriTemplate.Varnames())
 	values := request.buildValues(normalizedNames)
+
+	fmt.Println(values)
 
 	url, err := uriTemplate.Expand(values)
 	if err != nil {
@@ -242,17 +245,38 @@ func (request *RequestInformation) SetStreamContent(content []byte) {
 }
 
 // AddQueryParameters adds the query parameters to the request by reading the properties from the provided object.
-func (request *RequestInformation) AddQueryParameters(source interface{}) {
+func (request *RequestInformation) AddQueryParameters(source interface{}) error {
 	if source == nil || request == nil {
-		return
+		return errors.New("source or request is nil")
 	}
 
-	params, err := uriParamValue(source)
+	queryMap, err := toQueryMap(source)
 	if err != nil {
-		return
+		return err
 	}
 
-	maps.Copy(request.QueryParameters, params)
+	maps.Copy(request.QueryParameters, queryMap)
+
+	return nil
+}
+
+func toQueryMap(source interface{}) (map[string]string, error) {
+	if source == nil {
+		return nil, errors.New("source is nil")
+	}
+
+	queryBytes, err := urlquery.Marshal(source)
+	if err != nil {
+		return nil, err
+	}
+
+	var queryMap map[string]string
+	err = urlquery.Unmarshal(queryBytes, &queryMap)
+	if err != nil {
+		return nil, err
+	}
+
+	return queryMap, nil
 }
 
 func (request *RequestInformation) getContentReader() *bytes.Reader {
@@ -273,6 +297,8 @@ func (request *RequestInformation) ToRequest() (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println(uri)
 
 	contentReader := request.getContentReader()
 	methodString := request.Method.String()
