@@ -100,6 +100,9 @@ func decodeAccessToken(response *http.Response) (*AccessToken, error) {
 	defer response.Body.Close()
 	var accessToken AccessToken
 	if err := json.NewDecoder(response.Body).Decode(&accessToken); err != nil {
+		var value interface{}
+		json.NewDecoder(response.Body).Decode(&value)
+		fmt.Println(value)
 		return nil, err
 	}
 
@@ -112,7 +115,9 @@ func (tc *TokenCredential) GetOauth2Url() string {
 }
 
 func (tc *TokenCredential) requestToken(data url.Values) (*AccessToken, error) {
-	// Make a POST request to [baseUrl]/oauth.do.
+
+	tc.server.Start()
+
 	oauthURL := tc.GetOauth2Url()
 	resp, err := http.PostForm(oauthURL, data)
 	if err != nil {
