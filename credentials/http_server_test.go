@@ -1,16 +1,14 @@
-package tests
+package credentials
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 )
 
 func TestHTTPServer_StartStop(t *testing.T) {
 	// Create a new HTTP server for testing with a random port.
-	server := credentials.NewHTTPServer(":0")
+	server := NewHTTPServer(":0")
 
 	// Start the server in a goroutine.
 	go server.Start()
@@ -25,7 +23,7 @@ func TestOAuthRedirectHandler(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	// Call the OAuth redirect handler function.
-	credentials.OauthRedirectHandler(w, req)
+	OauthRedirectHandler(w, req)
 
 	// Check the response status code (200 OK is expected).
 	resp := w.Result()

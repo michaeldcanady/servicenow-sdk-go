@@ -1,10 +1,8 @@
-package tests
+package credentials
 
 import (
 	"encoding/base64"
 	"testing"
-
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 )
 
 func TestNewUsernamePasswordCredential(t *testing.T) {
@@ -12,7 +10,7 @@ func TestNewUsernamePasswordCredential(t *testing.T) {
 	password := "testpassword"
 
 	// Create a new UsernamePasswordCredential instance.
-	credential := credentials.NewUsernamePasswordCredential(username, password)
+	credential := NewUsernamePasswordCredential(username, password)
 
 	// Check if the credential fields are set correctly.
 	if credential.Username != username {
@@ -28,7 +26,7 @@ func TestUsernamePasswordCredential_GetAuthentication(t *testing.T) {
 	password := "testpassword"
 
 	// Create a new UsernamePasswordCredential instance.
-	credential := credentials.NewUsernamePasswordCredential(username, password)
+	credential := NewUsernamePasswordCredential(username, password)
 
 	// Test the GetAuthentication method.
 	authHeader, err := credential.GetAuthentication()
@@ -48,7 +46,7 @@ func TestUsernamePasswordCredential_BasicAuth(t *testing.T) {
 	password := "testpassword"
 
 	// Create a new UsernamePasswordCredential instance.
-	credential := credentials.NewUsernamePasswordCredential(username, password)
+	credential := NewUsernamePasswordCredential(username, password)
 
 	// Test the BasicAuth method.
 	authHeader := credential.BasicAuth(username, password)
