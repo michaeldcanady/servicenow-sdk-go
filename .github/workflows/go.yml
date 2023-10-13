@@ -3,39 +3,98 @@ name: Go CI
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    env:
-      relativePath: ./
+    name: Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ['1.21']
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
         with:
-          submodules: recursive
-      - uses: actions/setup-go@v4
-        with:
-          go-version: '^1.21'
+          go-version: ${{ matrix.go-version }}
+
       - name: Install dependencies
-        run: go install
-        working-directory: ${{ env.relativePath }}
+        run: go install ./...
+        working-directory: ${{ github.workspace }}
+
       - name: Build SDK project
-        run: go build
-        working-directory: ${{ env.relativePath }}
+        run: go build ./...
+        working-directory: ${{ github.workspace }}
+
       - name: Run unit tests
         run: go test ./... -v
+        working-directory: ${{ github.workspace }}
+
   golangci:
     name: lint
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ['1.21']
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
         with:
-          go-version: '1.21'
-          cache: false
+          go-version: ${{ matrix.go-version }}
+
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
           version: latest
+
+  vet:
+    name: vet
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ['1.21']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Run unit tests
+        run: go vet ./... -v
+
+  fmt:
+    name: fmt
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ['1.21']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Run unit tests
+        run: go fmt ./... -v
