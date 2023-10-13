@@ -1,9 +1,7 @@
 package tableapi
 
 import (
-	"io"
 	"net/http"
-	"strings"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
@@ -13,12 +11,19 @@ import (
 type MockClient struct{}
 
 func (c *MockClient) Send(requestInfo *abstraction.RequestInformation, errorMapping abstraction.ErrorMapping) (*http.Response, error) {
+
+	req, err := requestInfo.ToRequest()
+	if err != nil {
+		return nil, err
+	}
+
 	// Mock the client's behavior here.
 	// You can create a mock response for testing purposes.
-	response := &http.Response{
-		StatusCode: 200,                                 // Mock the status code you expect.
-		Body:       io.NopCloser(strings.NewReader("")), // Mock an empty response body.
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
 	}
+
 	return response, nil
 }
 
