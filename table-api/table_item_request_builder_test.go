@@ -1,10 +1,10 @@
 package tableapi
 
 import (
-	"testing"
+	"io"
 	"net/http"
-	"io/ioutil"
 	"strings"
+	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 	"github.com/stretchr/testify/assert"
@@ -16,8 +16,8 @@ func (c *MockClient) Send(requestInfo *abstraction.RequestInformation, errorMapp
 	// Mock the client's behavior here.
 	// You can create a mock response for testing purposes.
 	response := &http.Response{
-		StatusCode: 200, // Mock the status code you expect.
-		Body:       ioutil.NopCloser(strings.NewReader("")), // Mock an empty response body.
+		StatusCode: 200,                                 // Mock the status code you expect.
+		Body:       io.NopCloser(strings.NewReader("")), // Mock an empty response body.
 	}
 	return response, nil
 }
@@ -48,7 +48,7 @@ func TestTableItemRequestBuilderGet(t *testing.T) {
 
 	response, err := req.Get(params)
 
-	assert.Nil(t, err)      // Assert that there's no error.
+	assert.Nil(t, err)         // Assert that there's no error.
 	assert.NotNil(t, response) // Assert that the response is not nil.
 }
 
