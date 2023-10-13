@@ -3,10 +3,8 @@ package abstraction
 import (
 	"bytes"
 	"errors"
-
-	"strings"
-
 	"net/http"
+	"strings"
 
 	"github.com/hetiansu5/urlquery"
 	t "github.com/yosida95/uritemplate/v3"
@@ -15,7 +13,7 @@ import (
 const (
 	contentTypeHeader = "Content-Type"
 	binaryContentType = "application/octet-steam"
-	raw_url_key       = "request-raw-url"
+	rawUrlKey         = "request-raw-url"
 )
 
 // RequestInformation represents an abstract HTTP request.
@@ -27,25 +25,19 @@ type RequestInformation struct {
 	// The Request Body.
 	Content []byte
 	options map[string]RequestOption
-	uri     *RequestUri
+	uri     *UrlInformation
 }
-
-var (
-	ErrEmptyUri          = errors.New("uri cannot be empty")
-	ErrNilPathParameters = errors.New("uri template parameters cannot be nil")
-	ErrNilQueryParamters = errors.New("uri query parameters cannot be nil")
-)
 
 // NewRequestInformation creates a new RequestInformation object with default values.
 func NewRequestInformation() *RequestInformation {
 	return &RequestInformation{
 		Headers: NewRequestHeaders(),
 		options: make(map[string]RequestOption),
-		uri:     NewRequestUri(),
+		uri:     NewUrlInformation(),
 	}
 }
 
-// addParameterWithOriginalName adds the URI template parameter to the template using the right casing, because of go conventions, casing might have changed for the generated property
+// addParameterWithOriginalName adds the URI template parameter to the template using the right casing, because of Go conventions, casing might have changed for the generated property.
 func addParameterWithOriginalName(key string, value string, normalizedNames map[string]string, values t.Values) {
 	paramName := getOriginalParameterName(key, normalizedNames)
 	values.Set(paramName, t.String(value))
@@ -95,6 +87,7 @@ func (request *RequestInformation) SetStreamContent(content []byte) {
 	}
 }
 
+// AddQueryParameters adds the query parameters to the request by reading the properties from the provided object.
 func (request *RequestInformation) AddQueryParameters(source interface{}) error {
 	return request.uri.AddQueryParameters(source)
 }
@@ -122,13 +115,19 @@ func (request *RequestInformation) getContentReader() *bytes.Reader {
 	return bytes.NewReader(request.Content)
 }
 
+// ToRequest converts the RequestInformation object into an HTTP request.
 func (request *RequestInformation) ToRequest() (*http.Request, error) {
 
-	uri := request.uri.String()
+	uri, err := request.uri.ToUrl()
+	if err != nil {
+		return nil, err
+	}
+
+	url := uri.String()
 	contentReader := request.getContentReader()
 	methodString := request.Method.String()
 
-	req, err := http.NewRequest(methodString, uri, contentReader)
+	req, err := http.NewRequest(methodString, url, contentReader)
 	if err != nil {
 		return nil, err
 	}

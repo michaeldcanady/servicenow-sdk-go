@@ -154,6 +154,10 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 	if reflect.TypeOf(resp) != expectedType {
 		t.Errorf("Expected response of type %v, but got type %v", expectedType, reflect.TypeOf(resp))
 	}
+
+	if len(resp.Result) != 1 {
+		t.Errorf("Expected response with 1 result, but got %v", len(resp.Result))
+	}
 }
 
 func TestTableRequestBuilder_Count(t *testing.T) {
