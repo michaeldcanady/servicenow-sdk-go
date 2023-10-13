@@ -100,9 +100,6 @@ func decodeAccessToken(response *http.Response) (*AccessToken, error) {
 	defer response.Body.Close()
 	var accessToken AccessToken
 	if err := json.NewDecoder(response.Body).Decode(&accessToken); err != nil {
-		var value interface{}
-		json.NewDecoder(response.Body).Decode(&value)
-		fmt.Println(value)
 		return nil, err
 	}
 
