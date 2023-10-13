@@ -24,7 +24,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go-version }}
-
       - name: Install dependencies
         run: go install ./...
         working-directory: ${{ github.workspace }}
@@ -53,7 +52,7 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go-version }}
-
+          cache: false
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
