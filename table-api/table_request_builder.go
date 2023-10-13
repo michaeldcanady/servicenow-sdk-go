@@ -66,7 +66,7 @@ func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters)
 // Returns:
 //   - *TableResponse: The response data as a TableResponse.
 //   - error: An error if there was an issue with the request or response.
-func (T *TableRequestBuilder) POST(data map[string]interface{}, params *TableRequestBuilderPostQueryParamters) (*TableResponse, error) {
+func (T *TableRequestBuilder) POST(data map[string]interface{}, params *TableRequestBuilderPostQueryParamters) (*TableItemResponse, error) {
 	requestInfo, err := T.RequestBuilder.ToPostRequestInformation(data, params)
 	if err != nil {
 		return nil, err

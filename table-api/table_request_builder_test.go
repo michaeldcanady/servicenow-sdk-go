@@ -1,10 +1,9 @@
 package tableapi
 
 import (
-	"testing"
 	"net/http"
+	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -38,22 +37,22 @@ func TestTableRequestBuilderGet(t *testing.T) {
 	req := NewTableRequestBuilder(client, pathParameters)
 
 	params := &TableRequestBuilderGetQueryParameters{
-		DisplayValue:         TRUE,
-		ExcludeReferenceLink: true,
-		Fields:               []string{"field1", "field2"},
-		QueryNoDomain:        true,
-		View:                 DESKTOP,
-		Limit:                10,
-		NoCount:              false,
-		Offset:               0,
-		Query:                "field=value",
-		QueryCategory:        "category",
+		DisplayValue:             TRUE,
+		ExcludeReferenceLink:     true,
+		Fields:                   []string{"field1", "field2"},
+		QueryNoDomain:            true,
+		View:                     DESKTOP,
+		Limit:                    10,
+		NoCount:                  false,
+		Offset:                   0,
+		Query:                    "field=value",
+		QueryCategory:            "category",
 		SuppressPaginationHeader: true,
 	}
 
 	response, err := req.Get(params)
 
-	assert.Nil(t, err)      // Assert that there's no error.
+	assert.Nil(t, err)         // Assert that there's no error.
 	assert.NotNil(t, response) // Assert that the response is not nil.
 }
 
@@ -74,7 +73,7 @@ func TestTableRequestBuilderPOST(t *testing.T) {
 
 	response, err := req.POST(data, params)
 
-	assert.Nil(t, err)      // Assert that there's no error.
+	assert.Nil(t, err)         // Assert that there's no error.
 	assert.NotNil(t, response) // Assert that the response is not nil.
 }
 
@@ -92,12 +91,12 @@ func TestTableRequestBuilderCount(t *testing.T) {
 	response.Header.Add("X-Total-Count", "42")
 
 	// Mock the Send method to return the response.
-	client.Send = func(requestInfo *abstraction.RequestInformation, errorMapping abstraction.ErrorMapping) (*http.Response, error) {
-		return response, nil
-	}
+	//client.Send = func(requestInfo *abstraction.RequestInformation, errorMapping abstraction.ErrorMapping) (*http.Response, error) {
+	//	return response, nil
+	//}
 
 	count, err := req.Count()
 
-	assert.Nil(t, err)      // Assert that there's no error.
+	assert.Nil(t, err)         // Assert that there's no error.
 	assert.Equal(t, count, 42) // Assert that the count is as expected.
 }
