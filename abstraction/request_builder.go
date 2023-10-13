@@ -87,8 +87,8 @@ func (T *RequestBuilder) ToDeleteRequestInformation(params interface{}) (*Reques
 func (T *RequestBuilder) ToRequestInformation(method HttpMethod, data map[string]interface{}, params interface{}) (*RequestInformation, error) {
 	requestInfo := NewRequestInformation()
 	requestInfo.Method = method
-	requestInfo.PathParameters = T.PathParameters
-	requestInfo.UrlTemplate = T.UrlTemplate
+	requestInfo.uri.PathParameters = T.PathParameters
+	requestInfo.uri.UrlTemplate = T.UrlTemplate
 
 	if data != nil {
 		jsonData, err := json.Marshal(data)
