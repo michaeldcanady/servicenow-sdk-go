@@ -29,12 +29,17 @@ func (T *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryPar
 		return nil, err
 	}
 
-	_, err = T.RequestBuilder.Client.Send(requestInfo, nil)
+	response, err := T.RequestBuilder.Client.Send(requestInfo, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, nil
+	value, err := abstraction.FromJson[TableItemResponse](response)
+	if err != nil {
+		return nil, err
+	}
+
+	return value, nil
 }
 
 // Delete sends an HTTP DELETE request using the specified query parameters and returns an error if the request or response encounters any issues.

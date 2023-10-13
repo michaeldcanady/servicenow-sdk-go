@@ -37,7 +37,7 @@ func TestTableUrl(t *testing.T) {
 }
 
 func TestTableRequestBuilder_Get(t *testing.T) {
-	// Create a mock server
+
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Simulate successful response with the provided JSON
 		responseJSON := `{
@@ -126,8 +126,6 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 	}))
 
 	client := &MockClient{}
-
-	// Create an instance of TableRequestBuilder using the mock server URL
 
 	parsedUrl, err := url.Parse(mockServer.URL)
 	if err != nil {
