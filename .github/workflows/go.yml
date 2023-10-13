@@ -76,7 +76,7 @@ jobs:
           go-version: ${{ matrix.go-version }}
 
       - name: Run unit tests
-        run: go vet ./... -v
+        run: go vet ./...
 
   fmt:
     name: fmt
@@ -96,4 +96,4 @@ jobs:
           go-version: ${{ matrix.go-version }}
 
       - name: Run unit tests
-        run: go fmt ./... -v
+        run: go fmt ./...
