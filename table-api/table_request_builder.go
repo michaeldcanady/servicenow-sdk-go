@@ -37,6 +37,7 @@ func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
 //   - *TableCollectionResponse: The response data as a TableCollectionResponse.
 //   - error: An error if there was an issue with the request or response.
 func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
+
 	requestInfo, err := T.RequestBuilder.ToGetRequestInformation(params)
 	if err != nil {
 		return nil, err
@@ -57,7 +58,7 @@ func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters)
 	return value, nil
 }
 
-// POST sends an HTTP POST request with the provided data and query parameters and returns a TableResponse.
+// Post sends an HTTP Post request with the provided data and query parameters and returns a TableResponse.
 //
 // Parameters:
 //   - data: A map[string]interface{} representing data to be included in the request body.
@@ -66,7 +67,7 @@ func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters)
 // Returns:
 //   - *TableResponse: The response data as a TableResponse.
 //   - error: An error if there was an issue with the request or response.
-func (T *TableRequestBuilder) POST(data map[string]interface{}, params *TableRequestBuilderPostQueryParamters) (*TableItemResponse, error) {
+func (T *TableRequestBuilder) Post(data map[string]interface{}, params *TableRequestBuilderPostQueryParamters) (*TableItemResponse, error) {
 	requestInfo, err := T.RequestBuilder.ToPostRequestInformation(data, params)
 	if err != nil {
 		return nil, err

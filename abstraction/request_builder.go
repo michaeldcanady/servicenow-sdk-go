@@ -3,7 +3,6 @@ package abstraction
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 )
 
 type RequestBuilder struct {
@@ -99,12 +98,7 @@ func (T *RequestBuilder) ToRequestInformation(method HttpMethod, data map[string
 	}
 
 	if params != nil {
-		paramsValue := reflect.ValueOf(params)
-		if paramsValue.Kind() == reflect.Ptr {
-			paramsValue = paramsValue.Elem()
-		}
-
-		err := requestInfo.AddQueryParameters(paramsValue)
+		err := requestInfo.AddQueryParameters(params)
 		if err != nil {
 			return nil, err
 		}
