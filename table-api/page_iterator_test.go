@@ -4,13 +4,13 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
 // Mock client for testing
 type mockClient struct{}
 
-func (c *mockClient) Send(requestInformation *abstraction.RequestInformation, errorMapping abstraction.ErrorMapping) (*http.Response, error) {
+func (c *mockClient) Send(requestInformation *core.RequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 	// Implement mock Send method for testing
 	return nil, nil
 }

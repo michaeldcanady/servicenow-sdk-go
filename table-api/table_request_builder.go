@@ -3,17 +3,17 @@ package tableapi
 import (
 	"strconv"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
 type TableRequestBuilder struct {
-	abstraction.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
-func NewTableRequestBuilder(client abstraction.Client, pathParameters map[string]string) *TableRequestBuilder {
-	requestBuilder := abstraction.NewRequestBuilder(client, "{+baseurl}/table{/table}{?sysparm_limit,sysparm_no_count}", pathParameters)
+func NewTableRequestBuilder(client core.Client, pathParameters map[string]string) *TableRequestBuilder {
+	requestBuilder := core.NewRequestBuilder(client, "{+baseurl}/table{/table}{?sysparm_limit,sysparm_no_count}", pathParameters)
 	return &TableRequestBuilder{
 		*requestBuilder,
 	}
@@ -43,14 +43,14 @@ func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters)
 		return nil, err
 	}
 
-	errorMapping := abstraction.ErrorMapping{"4XX": "hi"}
+	errorMapping := core.ErrorMapping{"4XX": "hi"}
 
 	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
 		return nil, err
 	}
 
-	value, err := abstraction.FromJson[TableCollectionResponse](response)
+	value, err := core.FromJson[TableCollectionResponse](response)
 	if err != nil {
 		return nil, err
 	}
@@ -74,14 +74,14 @@ func (T *TableRequestBuilder) Post(data map[string]interface{}, params *TableReq
 		return nil, err
 	}
 
-	errorMapping := abstraction.ErrorMapping{"4XX": "hi"}
+	errorMapping := core.ErrorMapping{"4XX": "hi"}
 
 	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
 		return nil, err
 	}
 
-	value, err := abstraction.FromJson[TableItemResponse](response)
+	value, err := core.FromJson[TableItemResponse](response)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +100,7 @@ func (T *TableRequestBuilder) Count() (int, error) {
 		return -1, err
 	}
 
-	errorMapping := abstraction.ErrorMapping{"4XX": "hi"}
+	errorMapping := core.ErrorMapping{"4XX": "hi"}
 
 	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {

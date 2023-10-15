@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/url"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
 var (
@@ -17,7 +17,7 @@ var (
 // PageIterator represents an iterator for paginated results from a table.
 type PageIterator struct {
 	currentPage PageResult
-	client      abstraction.Client
+	client      core.Client
 	pauseIndex  int
 }
 
@@ -27,7 +27,7 @@ func defaultCallback(pageItem *TableEntry) bool {
 }
 
 // NewPageIterator creates a new PageIterator instance.
-func NewPageIterator(currentPage interface{}, client abstraction.Client) (*PageIterator, error) {
+func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator, error) {
 	if client == nil {
 		return nil, ErrNilClient
 	}
@@ -146,8 +146,8 @@ func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 		return collectionResp, errors.New("parsing nextLink url failed")
 	}
 
-	requestInformation := abstraction.NewRequestInformation()
-	requestInformation.Method = abstraction.GET
+	requestInformation := core.NewRequestInformation()
+	requestInformation.Method = core.GET
 	requestInformation.SetUri(nextLink)
 
 	resp, err := pI.client.Send(requestInformation, nil)
@@ -155,7 +155,7 @@ func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 		return nil, err
 	}
 
-	collectionResp, err = abstraction.FromJson[TableCollectionResponse](resp)
+	collectionResp, err = core.FromJson[TableCollectionResponse](resp)
 	if err != nil {
 		return nil, nil
 	}
