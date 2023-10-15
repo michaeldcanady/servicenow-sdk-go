@@ -1,4 +1,4 @@
-package abstraction
+package core
 
 // Represents a request option.
 type RequestOption interface {

@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
 var (
@@ -17,7 +17,7 @@ var (
 )
 
 type ServiceNowClient struct {
-	Credential abstraction.Credential
+	Credential core.Credential
 	BaseUrl    string
 	Session    http.Client
 }
@@ -32,7 +32,7 @@ func (C *ServiceNowClient) Now() *NowRequestBuilder {
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
 // It returns a pointer to the Client.
-func NewClient(credential abstraction.Credential, instance string) *ServiceNowClient {
+func NewClient(credential core.Credential, instance string) *ServiceNowClient {
 	if !strings.HasSuffix(instance, ".service-now.com/api") {
 		instance += ".service-now.com/api"
 	}
@@ -49,7 +49,7 @@ func NewClient(credential abstraction.Credential, instance string) *ServiceNowCl
 }
 
 func (C *ServiceNowClient) unmarshallError(response *http.Response) error {
-	var stringError abstraction.ServiceNowError
+	var stringError core.ServiceNowError
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
@@ -62,7 +62,7 @@ func (C *ServiceNowClient) unmarshallError(response *http.Response) error {
 	return &stringError
 }
 
-func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings abstraction.ErrorMapping) error {
+func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings core.ErrorMapping) error {
 
 	if response.StatusCode < 400 {
 		return nil
@@ -82,7 +82,7 @@ func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 	}
 
 	if errorCtor == nil {
-		err := &abstraction.ApiError{
+		err := &core.ApiError{
 			Message:            "The server returned an unexpected status code and no error factory is registered for this code: " + statusAsString,
 			ResponseStatusCode: response.StatusCode,
 		}
@@ -94,7 +94,7 @@ func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 	return stringError
 }
 
-func (C *ServiceNowClient) toRequest(requestInfo *abstraction.RequestInformation) (*http.Request, error) {
+func (C *ServiceNowClient) toRequest(requestInfo *core.RequestInformation) (*http.Request, error) {
 	if requestInfo == nil {
 		return nil, ErrNilRequestInfo
 	}
@@ -115,7 +115,7 @@ func (C *ServiceNowClient) toRequest(requestInfo *abstraction.RequestInformation
 	return request, nil
 }
 
-func (C *ServiceNowClient) Send(requestInfo *abstraction.RequestInformation, errorMapping abstraction.ErrorMapping) (*http.Response, error) {
+func (C *ServiceNowClient) Send(requestInfo *core.RequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 
 	request, err := C.toRequest(requestInfo)
 	if err != nil {

@@ -7,13 +7,13 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/abstraction"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/stretchr/testify/assert"
 )
 
 type MockClient struct{}
 
-func (c *MockClient) Send(requestInfo *abstraction.RequestInformation, errorMapping abstraction.ErrorMapping) (*http.Response, error) {
+func (c *MockClient) Send(requestInfo *core.RequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 
 	req, err := requestInfo.ToRequest()
 	if err != nil {

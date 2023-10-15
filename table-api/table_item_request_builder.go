@@ -1,15 +1,15 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/abstraction"
+import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
 type TableItemRequestBuilder struct {
-	abstraction.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewTableItemRequestBuilder creates a new instance of the TableItemRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableItemRequestBuilder.
-func NewTableItemRequestBuilder(client abstraction.Client, pathParameters map[string]string) *TableItemRequestBuilder {
-	requestBuilder := abstraction.NewRequestBuilder(client, "{+baseurl}/table{/table}{/sysId}", pathParameters)
+func NewTableItemRequestBuilder(client core.Client, pathParameters map[string]string) *TableItemRequestBuilder {
+	requestBuilder := core.NewRequestBuilder(client, "{+baseurl}/table{/table}{/sysId}", pathParameters)
 	return &TableItemRequestBuilder{
 		*requestBuilder,
 	}
@@ -34,7 +34,7 @@ func (T *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryPar
 		return nil, err
 	}
 
-	value, err := abstraction.FromJson[TableItemResponse](response)
+	value, err := core.FromJson[TableItemResponse](response)
 	if err != nil {
 		return nil, err
 	}
