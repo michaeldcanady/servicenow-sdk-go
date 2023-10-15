@@ -2,13 +2,18 @@ package core
 
 import "fmt"
 
+// ErrorMapping is a map that maps error codes to human-readable error messages.
 type ErrorMapping map[string]string
 
+// ApiError represents an error that occurs during API requests.
 type ApiError struct {
-	Message            string
+	// Message is the human-readable error message.
+	Message string
+	// ResponseStatusCode is the HTTP response status code associated with the error.
 	ResponseStatusCode int
 }
 
+// Error returns the error message as a string. If the message is empty, it returns a default error message.
 func (e *ApiError) Error() string {
 	if len(e.Message) > 0 {
 		return fmt.Sprint(e.Message)
@@ -17,16 +22,23 @@ func (e *ApiError) Error() string {
 	}
 }
 
+// Exception represents an exception in the ServiceNow error response.
 type Exception struct {
-	Detail  string
+	// Detail is a detailed description of the exception.
+	Detail string
+	// Message is a brief description of the exception.
 	Message string
 }
 
+// ServiceNowError represents an error response from the ServiceNow API.
 type ServiceNowError struct {
+	// Exception is the exception details in the error response.
 	Exception Exception `json:"error"`
-	Status    string
+	// Status is the status of the error response.
+	Status string
 }
 
+// Error returns a formatted error message that includes both the exception message and detail.
 func (e *ServiceNowError) Error() string {
 	return fmt.Sprintf("%s: %s", e.Exception.Message, e.Exception.Detail)
 }

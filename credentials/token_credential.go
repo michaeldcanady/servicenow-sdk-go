@@ -1,11 +1,9 @@
 package credentials
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
-	"time"
 )
 
 var (
@@ -94,17 +92,6 @@ func (tc *TokenCredential) GetAuthentication() (string, error) {
 	}
 
 	return fmt.Sprintf("Bearer %s", tc.Token.AccessToken), nil
-}
-
-func decodeAccessToken(response *http.Response) (*AccessToken, error) {
-	defer response.Body.Close()
-	var accessToken AccessToken
-	if err := json.NewDecoder(response.Body).Decode(&accessToken); err != nil {
-		return nil, err
-	}
-
-	accessToken.ExpiresAt = time.Now().Add(time.Duration(accessToken.ExpiresIn) * time.Second)
-	return &accessToken, nil
 }
 
 func (tc *TokenCredential) GetOauth2Url() string {
