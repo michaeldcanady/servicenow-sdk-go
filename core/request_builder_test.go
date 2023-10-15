@@ -58,11 +58,11 @@ func TestToPostRequestInformation(t *testing.T) {
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
 	// Create mock data and query parameters
-	data := map[string]interface{}{
+	data := map[string]string{
 		"key1": "value1",
 		"key2": "value2",
 	}
-	params := map[string]interface{}{
+	params := map[string]string{
 		"param1": "value1",
 		"param2": "value2",
 	}
@@ -108,7 +108,7 @@ func TestToRequestInformation(t *testing.T) {
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
 	// Create mock data and query parameters
-	data := map[string]interface{}{
+	data := map[string]string{
 		"key1": "value1",
 		"key2": "value2",
 	}
