@@ -1,4 +1,4 @@
-package abstraction
+package core
 
 //RequestHeaders represents a collection of request headers
 type RequestHeaders struct {

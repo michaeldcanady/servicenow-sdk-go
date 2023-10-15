@@ -1,4 +1,4 @@
-package abstraction
+package core
 
 // Represents the HTTP method used by a request.
 type HttpMethod int

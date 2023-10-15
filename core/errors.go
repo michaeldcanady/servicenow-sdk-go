@@ -1,4 +1,4 @@
-package abstraction
+package core
 
 import "fmt"
 
