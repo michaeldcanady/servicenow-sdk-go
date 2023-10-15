@@ -28,11 +28,11 @@ func (C *ServiceNowClient) Now() *NowRequestBuilder {
 	return NewNowRequestBuilder(C.BaseUrl+"/now", C)
 }
 
-// NewClient creates a new instance of the ServiceNow client.
+// NewServiceNowClient creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
 // It returns a pointer to the Client.
-func NewClient(credential core.Credential, instance string) *ServiceNowClient {
+func NewServiceNowClient(credential core.Credential, instance string) *ServiceNowClient {
 	if !strings.HasSuffix(instance, ".service-now.com/api") {
 		instance += ".service-now.com/api"
 	}

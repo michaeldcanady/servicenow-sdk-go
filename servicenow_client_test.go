@@ -11,7 +11,7 @@ func TestNewClient(t *testing.T) {
 
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
-	client := NewClient(cred, "instance")
+	client := NewServiceNowClient(cred, "instance")
 
 	assert.NotNil(t, client)
 }
@@ -20,7 +20,7 @@ func TestClientURL(t *testing.T) {
 
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
-	client := NewClient(cred, "instance")
+	client := NewServiceNowClient(cred, "instance")
 
 	assert.Equal(t, client.BaseUrl, "https://instance.service-now.com/api")
 
