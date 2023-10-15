@@ -44,6 +44,10 @@ func (T *RequestBuilder) ToGetRequestInformation(params interface{}) (*RequestIn
 	return T.ToRequestInformation(GET, nil, params)
 }
 
+func (T *RequestBuilder) ToPutRequestInformation(data map[string]string, params interface{}) (*RequestInformation, error) {
+	return T.ToRequestInformation(GET, data, params)
+}
+
 // ToPostRequestInformation creates a new HTTP POST request's RequestInformation object.
 // It sets the HTTP method to POST and includes the specified data in the request body
 // and query parameters.
@@ -55,7 +59,7 @@ func (T *RequestBuilder) ToGetRequestInformation(params interface{}) (*RequestIn
 // Returns:
 //   - *RequestInformation: A RequestInformation object representing the POST request.
 //   - error: An error if there was an issue creating the request information.
-func (T *RequestBuilder) ToPostRequestInformation(data map[string]interface{}, params interface{}) (*RequestInformation, error) {
+func (T *RequestBuilder) ToPostRequestInformation(data map[string]string, params interface{}) (*RequestInformation, error) {
 	return T.ToRequestInformation(POST, data, params)
 }
 
@@ -83,7 +87,7 @@ func (T *RequestBuilder) ToDeleteRequestInformation(params interface{}) (*Reques
 // Returns:
 //   - *RequestInformation: A RequestInformation object representing the HTTP request.
 //   - error: An error if there was an issue creating the request information.
-func (T *RequestBuilder) ToRequestInformation(method HttpMethod, data map[string]interface{}, params interface{}) (*RequestInformation, error) {
+func (T *RequestBuilder) ToRequestInformation(method HttpMethod, data map[string]string, params interface{}) (*RequestInformation, error) {
 	requestInfo := NewRequestInformation()
 	requestInfo.Method = method
 	requestInfo.uri.PathParameters = T.PathParameters
