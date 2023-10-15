@@ -4,16 +4,11 @@ import (
 	"bytes"
 	"errors"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/hetiansu5/urlquery"
 	t "github.com/yosida95/uritemplate/v3"
-)
-
-const (
-	contentTypeHeader = "Content-Type"
-	binaryContentType = "application/octet-steam"
-	rawUrlKey         = "request-raw-url"
 )
 
 // RequestInformation represents an abstract HTTP request.
@@ -113,6 +108,12 @@ func toQueryMap(source interface{}) (map[string]string, error) {
 
 func (request *RequestInformation) getContentReader() *bytes.Reader {
 	return bytes.NewReader(request.Content)
+}
+
+func (rI *RequestInformation) SetUri(url *url.URL) {
+
+	rI.uri.PathParameters = map[string]string{"request-raw-url": url.String()}
+
 }
 
 // ToRequest converts the RequestInformation object into an HTTP request.

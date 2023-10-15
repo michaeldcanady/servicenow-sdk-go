@@ -16,6 +16,12 @@ var (
 	ErrNilQueryParamters = errors.New("uri query parameters cannot be nil")
 )
 
+const (
+	contentTypeHeader = "Content-Type"
+	binaryContentType = "application/octet-steam"
+	rawUrlKey         = "request-raw-url"
+)
+
 // UrlInformation represents an abstract Url.
 type UrlInformation struct {
 	// The Query Parameters of the request.

@@ -39,7 +39,7 @@ type TableRequestBuilderGetQueryParameters struct {
 	//- both
 	//If you also specify the sysparm_fields parameter, it takes precedent.
 	View                     View   `query:"sysparm_view"`
-	Limit                    int32  `query:"sysparm_limit"`
+	Limit                    int    `query:"sysparm_limit"`
 	NoCount                  bool   `query:"sysparm_no_count"`
 	Offset                   int    `query:"sysparm_offset"`
 	Query                    string `query:"sysparm_query"`
