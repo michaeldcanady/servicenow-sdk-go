@@ -54,6 +54,7 @@ func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters)
 	if err != nil {
 		return nil, err
 	}
+	value.parsePaginationHeaders(response.Header)
 
 	return value, nil
 }
