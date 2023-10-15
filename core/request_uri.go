@@ -11,9 +11,11 @@ import (
 )
 
 var (
-	ErrEmptyUri          = errors.New("uri cannot be empty")
-	ErrNilPathParameters = errors.New("uri template parameters cannot be nil")
-	ErrNilQueryParamters = errors.New("uri query parameters cannot be nil")
+	ErrEmptyUri                = errors.New("uri cannot be empty")
+	ErrNilPathParameters       = errors.New("uri template parameters cannot be nil")
+	ErrNilQueryParamters       = errors.New("uri query parameters cannot be nil")
+	ErrMissingBasePathParam    = errors.New("pathParameters must contain a value for \"baseurl\" for the URL to be built")
+	ErrMissingBasePathTemplate = errors.New("template must contain a placeholder for \"{+baseurl}\" for the URL to be built")
 )
 
 const (
@@ -45,6 +47,11 @@ func (uI *UrlInformation) validateUrlTemplate() error {
 	if uI.UrlTemplate == "" {
 		return ErrEmptyUri
 	}
+
+	if strings.Contains(strings.ToLower(uI.UrlTemplate), "{+baseurl}") {
+		return ErrMissingBasePathTemplate
+	}
+
 	return nil
 }
 
@@ -53,6 +60,12 @@ func (uI *UrlInformation) validatePathParams() error {
 	if uI.PathParameters == nil {
 		return ErrNilPathParameters
 	}
+
+	_, baseurlExists := uI.PathParameters["baseurl"]
+	if !baseurlExists {
+		return ErrMissingBasePathParam
+	}
+
 	return nil
 }
 
@@ -91,36 +104,10 @@ func (uI *UrlInformation) getUriFromRaw() (*url.URL, error) {
 
 // buildValues builds the values for URI template expansion.
 func (uI *UrlInformation) buildValues(normalizedNames map[string]string) t.Values {
-	values := t.Values{}
+	params := uI.PathParameters
+	maps.Copy(params, uI.QueryParameters)
 
-	values = uI.buildPathParams(normalizedNames, values)
-	values = uI.buildQueryParams(normalizedNames, values)
-	return values
-}
-
-// normalizeVarNames normalizes variable names for URI template expansion.
-func (uI *UrlInformation) normalizeVarNames(varNames []string) map[string]string {
-	normalizedNames := make(map[string]string)
-	for _, varName := range varNames {
-		normalizedNames[strings.ToLower(varName)] = varName
-	}
-	return normalizedNames
-}
-
-// buildPathParams builds path parameters for URI template expansion.
-func (uI *UrlInformation) buildPathParams(normalizedNames map[string]string, values t.Values) t.Values {
-	for key, value := range uI.PathParameters {
-		addParameterWithOriginalName(key, value, normalizedNames, values)
-	}
-	return values
-}
-
-// buildQueryParams builds query parameters for URI template expansion.
-func (uI *UrlInformation) buildQueryParams(normalizedNames map[string]string, values t.Values) t.Values {
-	for key, value := range uI.QueryParameters {
-		addParameterWithOriginalName(key, value, normalizedNames, values)
-	}
-	return values
+	return addParametersWithOrignialNames(params, normalizedNames)
 }
 
 // buildUriFromTemplate builds the URI from the template.
@@ -130,7 +117,7 @@ func (uI *UrlInformation) buildUriFromTemplate() (string, error) {
 		return "", err
 	}
 
-	normalizedNames := uI.normalizeVarNames(uriTemplate.Varnames())
+	normalizedNames := normalizeVarNames(uriTemplate.Varnames())
 	values := uI.buildValues(normalizedNames)
 
 	url, err := uriTemplate.Expand(values)

@@ -5,10 +5,8 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strings"
 
 	"github.com/hetiansu5/urlquery"
-	t "github.com/yosida95/uritemplate/v3"
 )
 
 // RequestInformation represents an abstract HTTP request.
@@ -30,20 +28,6 @@ func NewRequestInformation() *RequestInformation {
 		options: make(map[string]RequestOption),
 		uri:     NewUrlInformation(),
 	}
-}
-
-// addParameterWithOriginalName adds the URI template parameter to the template using the right casing, because of Go conventions, casing might have changed for the generated property.
-func addParameterWithOriginalName(key string, value string, normalizedNames map[string]string, values t.Values) {
-	paramName := getOriginalParameterName(key, normalizedNames)
-	values.Set(paramName, t.String(value))
-}
-
-func getOriginalParameterName(key string, normalizedNames map[string]string) string {
-	lowercaseKey := strings.ToLower(key)
-	if paramName, ok := normalizedNames[lowercaseKey]; ok {
-		return paramName
-	}
-	return key
 }
 
 // AddRequestOptions adds an option to the request to be read by the middleware infrastructure.
