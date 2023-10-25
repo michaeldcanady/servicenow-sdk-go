@@ -1,6 +1,7 @@
 package servicenowsdkgo
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -94,6 +95,27 @@ func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 	return stringError
 }
 
+func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo *core.RequestInformation) (*http.Request, error) {
+	if requestInfo == nil {
+		return nil, ErrNilRequestInfo
+	}
+
+	request, err := requestInfo.ToRequestWithContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	authHeader, err := c.Credential.GetAuthentication()
+	if err != nil {
+		return nil, err
+	}
+
+	request.Header.Add("Authorization", authHeader)
+	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add("Accept", "application/json")
+	return request, nil
+}
+
 func (C *ServiceNowClient) toRequest(requestInfo *core.RequestInformation) (*http.Request, error) {
 	if requestInfo == nil {
 		return nil, ErrNilRequestInfo
@@ -115,19 +137,38 @@ func (C *ServiceNowClient) toRequest(requestInfo *core.RequestInformation) (*htt
 	return request, nil
 }
 
-func (C *ServiceNowClient) Send(requestInfo *core.RequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-
-	request, err := C.toRequest(requestInfo)
+func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo *core.RequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+	request, err := c.toRequestWithContext(ctx, requestInfo)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := C.Session.Do(request)
+	response, err := c.Session.Do(request)
 	if err != nil {
 		return nil, fmt.Errorf("unable to complete request: %s", err)
 	}
 
-	err = C.throwIfFailedResponse(response, errorMapping)
+	err = c.throwIfFailedResponse(response, errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+func (c *ServiceNowClient) Send(requestInfo *core.RequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+
+	request, err := c.toRequest(requestInfo)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := c.Session.Do(request)
+	if err != nil {
+		return nil, fmt.Errorf("unable to complete request: %s", err)
+	}
+
+	err = c.throwIfFailedResponse(response, errorMapping)
 	if err != nil {
 		return nil, err
 	}
