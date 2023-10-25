@@ -41,40 +41,40 @@ func NewUrlInformation() *UrlInformation {
 }
 
 // validateUrlTemplate checks if the URL template is empty.
-func (request *UrlInformation) validateUrlTemplate() error {
-	if request.UrlTemplate == "" {
+func (uI *UrlInformation) validateUrlTemplate() error {
+	if uI.UrlTemplate == "" {
 		return ErrEmptyUri
 	}
 	return nil
 }
 
 // validatePathParams checks if path parameters are nil.
-func (request *UrlInformation) validatePathParams() error {
-	if request.PathParameters == nil {
+func (uI *UrlInformation) validatePathParams() error {
+	if uI.PathParameters == nil {
 		return ErrNilPathParameters
 	}
 	return nil
 }
 
 // validateQueryParams checks if query parameters are nil.
-func (request *UrlInformation) validateQueryParams() error {
-	if request.QueryParameters == nil {
+func (uI *UrlInformation) validateQueryParams() error {
+	if uI.QueryParameters == nil {
 		return ErrNilQueryParamters
 	}
 	return nil
 }
 
 // validateParams checks all the required parameters.
-func (request *UrlInformation) validateParams() error {
-	err := request.validateUrlTemplate()
+func (uI *UrlInformation) validateParams() error {
+	err := uI.validateUrlTemplate()
 	if err != nil {
 		return err
 	}
-	err = request.validatePathParams()
+	err = uI.validatePathParams()
 	if err != nil {
 		return err
 	}
-	err = request.validateQueryParams()
+	err = uI.validateQueryParams()
 	if err != nil {
 		return err
 	}
@@ -82,24 +82,24 @@ func (request *UrlInformation) validateParams() error {
 }
 
 // getUriFromRaw retrieves the URI from the raw URL.
-func (r *UrlInformation) getUriFromRaw() (*url.URL, error) {
-	if rawURL := r.PathParameters[rawUrlKey]; rawURL != "" {
-		return r.parseRawURL(rawURL)
+func (uI *UrlInformation) getUriFromRaw() (*url.URL, error) {
+	if rawURL := uI.PathParameters[rawUrlKey]; rawURL != "" {
+		return uI.parseRawURL(rawURL)
 	}
 	return nil, nil
 }
 
 // buildValues builds the values for URI template expansion.
-func (request *UrlInformation) buildValues(normalizedNames map[string]string) t.Values {
+func (uI *UrlInformation) buildValues(normalizedNames map[string]string) t.Values {
 	values := t.Values{}
 
-	values = request.buildPathParams(normalizedNames, values)
-	values = request.buildQueryParams(normalizedNames, values)
+	values = uI.buildPathParams(normalizedNames, values)
+	values = uI.buildQueryParams(normalizedNames, values)
 	return values
 }
 
 // normalizeVarNames normalizes variable names for URI template expansion.
-func (request *UrlInformation) normalizeVarNames(varNames []string) map[string]string {
+func (uI *UrlInformation) normalizeVarNames(varNames []string) map[string]string {
 	normalizedNames := make(map[string]string)
 	for _, varName := range varNames {
 		normalizedNames[strings.ToLower(varName)] = varName
@@ -108,30 +108,30 @@ func (request *UrlInformation) normalizeVarNames(varNames []string) map[string]s
 }
 
 // buildPathParams builds path parameters for URI template expansion.
-func (request *UrlInformation) buildPathParams(normalizedNames map[string]string, values t.Values) t.Values {
-	for key, value := range request.PathParameters {
+func (uI *UrlInformation) buildPathParams(normalizedNames map[string]string, values t.Values) t.Values {
+	for key, value := range uI.PathParameters {
 		addParameterWithOriginalName(key, value, normalizedNames, values)
 	}
 	return values
 }
 
 // buildQueryParams builds query parameters for URI template expansion.
-func (request *UrlInformation) buildQueryParams(normalizedNames map[string]string, values t.Values) t.Values {
-	for key, value := range request.QueryParameters {
+func (uI *UrlInformation) buildQueryParams(normalizedNames map[string]string, values t.Values) t.Values {
+	for key, value := range uI.QueryParameters {
 		addParameterWithOriginalName(key, value, normalizedNames, values)
 	}
 	return values
 }
 
 // buildUriFromTemplate builds the URI from the template.
-func (request *UrlInformation) buildUriFromTemplate() (string, error) {
-	uriTemplate, err := t.New(request.UrlTemplate)
+func (uI *UrlInformation) buildUriFromTemplate() (string, error) {
+	uriTemplate, err := t.New(uI.UrlTemplate)
 	if err != nil {
 		return "", err
 	}
 
-	normalizedNames := request.normalizeVarNames(uriTemplate.Varnames())
-	values := request.buildValues(normalizedNames)
+	normalizedNames := uI.normalizeVarNames(uriTemplate.Varnames())
+	values := uI.buildValues(normalizedNames)
 
 	url, err := uriTemplate.Expand(values)
 	if err != nil {
@@ -142,31 +142,31 @@ func (request *UrlInformation) buildUriFromTemplate() (string, error) {
 }
 
 // checkBaseUrlRequirement checks if the "baseurl" parameter is required.
-func (request *UrlInformation) checkBaseUrlRequirement() error {
-	_, baseurlExists := request.PathParameters["baseurl"]
-	if !baseurlExists && strings.Contains(strings.ToLower(request.UrlTemplate), "{+baseurl}") {
+func (uI *UrlInformation) checkBaseUrlRequirement() error {
+	_, baseurlExists := uI.PathParameters["baseurl"]
+	if !baseurlExists && strings.Contains(strings.ToLower(uI.UrlTemplate), "{+baseurl}") {
 		return errors.New("pathParameters must contain a value for \"baseurl\" for the URL to be built")
 	}
 	return nil
 }
 
 // getUriFromTemplate retrieves the URI from the URL template.
-func (r *UrlInformation) getUriFromTemplate() (*url.URL, error) {
+func (uI *UrlInformation) getUriFromTemplate() (*url.URL, error) {
 
-	if err := r.checkBaseUrlRequirement(); err != nil {
+	if err := uI.checkBaseUrlRequirement(); err != nil {
 		return nil, err
 	}
 
-	uri, err := r.buildUriFromTemplate()
+	uri, err := uI.buildUriFromTemplate()
 	if err != nil {
 		return nil, err
 	}
 
-	return r.parseRawURL(uri)
+	return uI.parseRawURL(uri)
 }
 
 // parseRawURL parses a raw URL.
-func (r *UrlInformation) parseRawURL(rawURL string) (*url.URL, error) {
+func (uI *UrlInformation) parseRawURL(rawURL string) (*url.URL, error) {
 	uri, err := url.Parse(rawURL)
 	if err != nil {
 		return nil, err
@@ -175,24 +175,24 @@ func (r *UrlInformation) parseRawURL(rawURL string) (*url.URL, error) {
 }
 
 // ToUrl retrieves the URI, either from the raw URL or the URL template.
-func (r *UrlInformation) ToUrl() (*url.URL, error) {
+func (uI *UrlInformation) ToUrl() (*url.URL, error) {
 
-	err := r.validateParams()
+	err := uI.validateParams()
 	if err != nil {
 		return nil, err
 	}
 
-	uri, err := r.getUriFromRaw()
+	uri, err := uI.getUriFromRaw()
 	if uri != nil || err != nil {
 		return uri, err
 	}
 
-	return r.getUriFromTemplate()
+	return uI.getUriFromTemplate()
 }
 
 // AddQueryParameters adds the query parameters to the request by reading the properties from the provided object.
-func (request *UrlInformation) AddQueryParameters(source interface{}) error {
-	if source == nil || request == nil {
+func (uI *UrlInformation) AddQueryParameters(source interface{}) error {
+	if source == nil || uI == nil {
 		return errors.New("source or request is nil")
 	}
 
@@ -201,7 +201,7 @@ func (request *UrlInformation) AddQueryParameters(source interface{}) error {
 		return err
 	}
 
-	maps.Copy(request.QueryParameters, queryMap)
+	maps.Copy(uI.QueryParameters, queryMap)
 
 	return nil
 }
