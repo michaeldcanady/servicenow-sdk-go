@@ -60,7 +60,7 @@ func (rB *RequestBuilder) ToGetRequestInformation(params interface{}) (*RequestI
 //   - *TableItemResponse: A TableItemResponse containing the updated item data.
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
 func (rB *RequestBuilder) ToPutRequestInformation(data map[string]string, params interface{}) (*RequestInformation, error) {
-	return rB.ToRequestInformation(GET, data, params)
+	return rB.ToRequestInformation(PUT, data, params)
 }
 
 // ToPostRequestInformation creates a new HTTP POST request's RequestInformation object.
