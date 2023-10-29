@@ -1,28 +1,20 @@
 package tableapi
 
-import (
-	"errors"
-
-	"github.com/hetiansu5/urlquery"
-)
-
 type TableEntry map[string]interface{}
 
-func toQueryMap(source interface{}) (map[string]string, error) {
-	if source == nil {
-		return nil, errors.New("source or request is nil")
+func (tE TableEntry) Value(key string) *TableValue {
+	value, exists := tE[key]
+	if !exists {
+		return nil
 	}
 
-	queryBytes, err := urlquery.Marshal(source)
-	if err != nil {
-		return nil, err
-	}
+	var _v interface{}
 
-	var queryMap map[string]string
-	err = urlquery.Unmarshal(queryBytes, &queryMap)
-	if err != nil {
-		return nil, err
+	switch v := value.(type) {
+	case map[string]interface{}:
+		_v = v["value"]
+	case interface{}:
+		_v = v
 	}
-
-	return queryMap, nil
+	return &TableValue{value: _v}
 }
