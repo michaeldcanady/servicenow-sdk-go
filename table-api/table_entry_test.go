@@ -166,7 +166,10 @@ func TestTableEntry(t *testing.T) {
 
 	var entry TableEntry
 
-	json.Unmarshal([]byte(responseJSON), &entry)
+	err := json.Unmarshal([]byte(responseJSON), &entry)
+	if err != nil {
+		t.Errorf("Expected nil got '%s'", err)
+	}
 
 	assert.Equal(t, entry, expected)
 
