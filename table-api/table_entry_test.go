@@ -10,7 +10,6 @@ import (
 func TestTableEntry(t *testing.T) {
 
 	responseJSON := `{
-		  {
 			"parent": "",
 			"made_sla": "true",
 			"watch_list": "",
@@ -171,6 +170,6 @@ func TestTableEntry(t *testing.T) {
 		t.Errorf("Expected nil got '%s'", err)
 	}
 
-	assert.Equal(t, entry, expected)
+	assert.Equal(t, expected, entry)
 
 }
