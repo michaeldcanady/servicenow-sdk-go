@@ -11,6 +11,11 @@
 
 ![servicenow-sdk-go](.github/servicenow-sdk-go_logo.png)
 
+## Supported Service-Now APIs
+| API  | Supported |
+|------|-----------|
+|Tables|           |
+
 ## 1. Installation
 
 ```Shell
