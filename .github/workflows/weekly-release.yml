@@ -27,8 +27,10 @@ jobs:
 
     - name: Create Release
       id: create_release
-      uses: cli/cli@v1
+      uses: "marvinpinto/action-automatic-releases@latest"
       with:
-        args: release create -p -t "v$PREVIEW_VERSION" -n "Preview Release $PREVIEW_VERSION" dist/*.zip
+        automatic_release_tag: "v$PREVIEW_VERSION"
+        prerelease: true
+        title: Preview Release $PREVIEW_VERSION
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
