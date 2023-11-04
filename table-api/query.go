@@ -191,5 +191,8 @@ func (q *Query) String() string {
 
 		return true
 	})
+
+	sb.WriteString(q.orderBy)
+
 	return sb.String()
 }
