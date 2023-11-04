@@ -24,7 +24,7 @@ jobs:
       with:
         tag: "v$PREVIEW_VERSION"
         message: "Preview Release $PREVIEW_VERSION"
-        token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Create Release
       id: create_release
