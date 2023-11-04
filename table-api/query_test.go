@@ -66,8 +66,9 @@ func TestIsEmpty(t *testing.T) {
 
 func TestOrderBy(t *testing.T) {
 	q := NewQuery()
+	q.AddEqual("field1", true)
 	q.AddOrderBy("field4")
-	expected := ""
+	expected := "field1=true^ORDERBYfield4"
 	if result := q.String(); result != expected {
 		t.Errorf("Expected: %s, Got: %s", expected, result)
 	}
