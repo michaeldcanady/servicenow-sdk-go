@@ -19,14 +19,16 @@ jobs:
         echo "PREVIEW_VERSION=$unreleased_version-preview$(date +'%Y%m%d')" >> $GITHUB_ENV
       shell: bash
 
+    - name: Create and push tag
+      uses: actions/create-tag@v1
+      with:
+        tag: "v$PREVIEW_VERSION"
+        message: "Preview Release $PREVIEW_VERSION"
+
     - name: Create Release
       id: create_release
-      uses: softprops/action-gh-release@v1
+      uses: cli/cli@v1
       with:
-        files: ./*
-        draft: false
-        prerelease: true
-        tag_name: "v${PREVIEW_VERSION}"
+        args: release create -p -t "v$PREVIEW_VERSION" -n "Preview Release $PREVIEW_VERSION" dist/*.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        RELEASE_NAME: "Preview Release ${PREVIEW_VERSION}"
