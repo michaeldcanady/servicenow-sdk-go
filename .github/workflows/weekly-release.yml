@@ -20,7 +20,7 @@ jobs:
       shell: bash
 
     - name: Create and push tag
-      uses: negz/create-tag@v1
+      uses: rickstaa/action-create-tag@v1
       with:
         version: "v$PREVIEW_VERSION"
         message: "Preview Release $PREVIEW_VERSION"
