@@ -27,7 +27,7 @@ jobs:
         files: ./*
         draft: false
         prerelease: true
-        files_glob: ./*
+        tag_name: "v$preview_version"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         RELEASE_NAME: "Preview Release ${{ steps.read_version.outputs.version }}"
