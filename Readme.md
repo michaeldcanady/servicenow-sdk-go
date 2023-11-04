@@ -27,6 +27,15 @@ A Service-Now API client enabling Go programs to interact with Service-Now in a 
 | Appointment                          | ✖️     |        |
 | Attachment                           | ✖️     |        |
 | Advanced Work Assignment (AWA) Agent | ✖️     |        |
+| AWA Assignment                       | ✖️     |        |
+| AWA Routing                          | ✖️     |        |
+| Batch                                | ✖️     |        |
+| Case                                 | ✖️     |        |
+| Custom Chat Chatbot Interoperability Framework (CCCIF) Media Resource |
+| CdmApplicationsApi                   | ✖️     |        |
+| CdmChangesetsApi                     | ✖️     |        |
+| CdmEditorApi                         | ✖️     |        |
+| CdmPoliciesApi                       | ✖️     |        |
 | Tables                               | ✔️      | ![Table API Issues](https://img.shields.io/github/issues-raw/michaeldcanady/servicenow-sdk-go/table%20api?label=%20) |
 
 ---
