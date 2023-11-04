@@ -15,12 +15,9 @@ A Service-Now API client enabling Go programs to interact with Service-Now in a 
 
 ## Supported Service-Now APIs
 
-| API     | Status |
-| ------- | ------ |
-| Tables  | ✔️      |
-| Another | ♻️      |
-| Another | ✖️      |
-| Another | 🆕      |
+| API     | Status | Issues |
+| ------- | ------ | ------ |
+| Tables  | ✔️      | ![Table API Issues](https://img.shields.io/github/issues-raw/michaeldcanady/servicenow-sdk-go/table%20api?label=%20) |
 
 ---
 
