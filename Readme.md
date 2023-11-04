@@ -15,9 +15,19 @@ A Service-Now API client enabling Go programs to interact with Service-Now in a 
 
 ## Supported Service-Now APIs
 
-| API     | Status | Issues |
-| ------- | ------ | ------ |
-| Tables  | ✔️      | ![Table API Issues](https://img.shields.io/github/issues-raw/michaeldcanady/servicenow-sdk-go/table%20api?label=%20) |
+| API                                  | Status | Issues |
+| ------------------------------------ | ------ | ------ |
+| Account                              | ✖️     |        |
+| ActivitySubscriptions                | ✖️     |        |
+| Agent Client Collector               | ✖️     |        |
+| Aggregate                            | ✖️     |        |
+| AI Search External User Mapping      | ✖️     |        |
+| Alarm Management Open                | ✖️     |        |
+| Application Service                  | ✖️     |        |
+| Appointment                          | ✖️     |        |
+| Attachment                           | ✖️     |        |
+| Advanced Work Assignment (AWA) Agent | ✖️     |        |
+| Tables                               | ✔️      | ![Table API Issues](https://img.shields.io/github/issues-raw/michaeldcanady/servicenow-sdk-go/table%20api?label=%20) |
 
 ---
 
