@@ -36,8 +36,7 @@ A Service-Now API client enabling Go programs to interact with Service-Now in a 
 | CdmChangesetsApi                     | ✖️     |        |
 | CdmEditorApi                         | ✖️     |        |
 | CdmPoliciesApi                       | ✖️     |        |
-| Tables                               | ✔️      | ![Table API Issues](https://img.shields.io/github/issues-raw/michaeldcanady/servicenow-sdk-go/table%20api?label=%20) |
-
+| Tables                               | ✔️      | [![Table API Issues](https://img.shields.io/github/issues-raw/michaeldcanady/servicenow-sdk-go/table%20api?label=%20)](https://github.com/michaeldcanady/servicenow-sdk-go/labels/table%20api) |
 ---
 
 | Emoji | Meaning       |
