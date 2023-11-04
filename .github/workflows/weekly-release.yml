@@ -34,8 +34,8 @@ jobs:
       id: create_release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
-        automatic_release_tag: "v${PREVIEW_VERSION}"
+        automatic_release_tag: "v${{env.PREVIEW_VERSION}}"
         prerelease: true
         title: Preview Release $PREVIEW_VERSION
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
