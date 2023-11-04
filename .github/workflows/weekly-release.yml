@@ -20,10 +20,11 @@ jobs:
       shell: bash
 
     - name: Create and push tag
-      uses: actions/create-tag@v1
+      uses: negz/create-tag@v1
       with:
-        tag: "v$PREVIEW_VERSION"
+        version: "v$PREVIEW_VERSION"
         message: "Preview Release $PREVIEW_VERSION"
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Create Release
       id: create_release
