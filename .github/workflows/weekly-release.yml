@@ -16,8 +16,7 @@ jobs:
       id: read_version
       run: |
         unreleased_version=$(cat VERSION)
-        preview_version="$unreleased_version-preview$(date +'%Y%m%d')"
-        echo "::set-output name=version::$preview_version"
+        echo "PREVIEW_VERSION=$unreleased_version-preview$(date +'%Y%m%d')" >> $GITHUB_ENV
       shell: bash
 
     - name: Create Release
@@ -27,7 +26,7 @@ jobs:
         files: ./*
         draft: false
         prerelease: true
-        tag_name: "v$preview_version"
+        tag_name: "v${PREVIEW_VERSION}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        RELEASE_NAME: "Preview Release ${{ steps.read_version.outputs.version }}"
+        RELEASE_NAME: "Preview Release ${PREVIEW_VERSION}"
