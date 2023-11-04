@@ -21,10 +21,10 @@ jobs:
 
     - name: Create and push tag
       uses: rickstaa/action-create-tag@v1
-      id: "tag_create"
       with:
         tag: "v$PREVIEW_VERSION"
         message: "Preview Release $PREVIEW_VERSION"
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Create Release
       id: create_release
@@ -34,4 +34,4 @@ jobs:
         prerelease: true
         title: Preview Release $PREVIEW_VERSION
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
