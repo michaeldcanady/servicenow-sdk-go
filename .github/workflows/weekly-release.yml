@@ -1,0 +1,33 @@
+name: Create Weekly Preview Release
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Weekly on Sunday at midnight (UTC)
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Read VERSION file
+      id: read_version
+      run: |
+        unreleased_version=$(cat VERSION)
+        preview_version="$unreleased_version-preview$(date +'%Y%m%d')"
+        echo "::set-output name=version::$preview_version"
+      shell: bash
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ./*
+        draft: false
+        prerelease: true
+        files_glob: ./*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        RELEASE_NAME: "Preview Release ${{ steps.read_version.outputs.version }}"
