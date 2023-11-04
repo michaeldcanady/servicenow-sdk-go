@@ -192,7 +192,7 @@ func (q *Query) String() string {
 		return true
 	})
 
-	sb.WriteString(q.orderBy)
+	sb.WriteString(q.orderBy.String())
 
 	return sb.String()
 }
