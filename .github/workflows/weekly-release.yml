@@ -37,5 +37,4 @@ jobs:
         automatic_release_tag: "v${{env.PREVIEW_VERSION}}"
         prerelease: true
         title: Preview Release $PREVIEW_VERSION
-      env:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
