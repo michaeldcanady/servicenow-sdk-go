@@ -1,44 +1,14 @@
 package core
 
-import "fmt"
+import "errors"
 
-// ErrorMapping is a map that maps error codes to human-readable error messages.
-type ErrorMapping map[string]string
-
-// ApiError represents an error that occurs during API requests.
-type ApiError struct {
-	// Message is the human-readable error message.
-	Message string
-	// ResponseStatusCode is the HTTP response status code associated with the error.
-	ResponseStatusCode int
-}
-
-// Error returns the error message as a string. If the message is empty, it returns a default error message.
-func (e *ApiError) Error() string {
-	if len(e.Message) > 0 {
-		return fmt.Sprint(e.Message)
-	} else {
-		return "error status code received from the API"
-	}
-}
-
-// Exception represents an exception in the ServiceNow error response.
-type Exception struct {
-	// Detail is a detailed description of the exception.
-	Detail string
-	// Message is a brief description of the exception.
-	Message string
-}
-
-// ServiceNowError represents an error response from the ServiceNow API.
-type ServiceNowError struct {
-	// Exception is the exception details in the error response.
-	Exception Exception `json:"error"`
-	// Status is the status of the error response.
-	Status string
-}
-
-// Error returns a formatted error message that includes both the exception message and detail.
-func (e *ServiceNowError) Error() string {
-	return fmt.Sprintf("%s: %s", e.Exception.Message, e.Exception.Detail)
-}
+var (
+	ErrEmptyUri                = errors.New("uri cannot be empty")
+	ErrNilPathParameters       = errors.New("uri template parameters cannot be nil")
+	ErrNilQueryParamters       = errors.New("uri query parameters cannot be nil")
+	ErrMissingBasePathParam    = errors.New("pathParameters must contain a value for \"baseurl\" for the URL to be built")
+	ErrMissingBasePathTemplate = errors.New("template must contain a placeholder for \"{+baseurl}\" for the URL to be built")
+	ErrInvalidHeaderType       = errors.New("headers must be a pointer or an http.Header")
+	ErrEmptyRawUrl             = errors.New("empty raw URL")
+	ErrMissingSchema           = errors.New("URL is missing schema")
+)

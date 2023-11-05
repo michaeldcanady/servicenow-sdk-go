@@ -7,21 +7,7 @@ import (
 
 	"maps"
 
-	t "github.com/yosida95/uritemplate/v3"
-)
-
-var (
-	ErrEmptyUri                = errors.New("uri cannot be empty")
-	ErrNilPathParameters       = errors.New("uri template parameters cannot be nil")
-	ErrNilQueryParamters       = errors.New("uri query parameters cannot be nil")
-	ErrMissingBasePathParam    = errors.New("pathParameters must contain a value for \"baseurl\" for the URL to be built")
-	ErrMissingBasePathTemplate = errors.New("template must contain a placeholder for \"{+baseurl}\" for the URL to be built")
-)
-
-const (
-	contentTypeHeader = "Content-Type"
-	binaryContentType = "application/octet-steam"
-	rawUrlKey         = "request-raw-url"
+	"github.com/yosida95/uritemplate/v3"
 )
 
 // UrlInformation represents an abstract Url.
@@ -103,7 +89,7 @@ func (uI *UrlInformation) getUriFromRaw() (*url.URL, error) {
 }
 
 // buildValues builds the values for URI template expansion.
-func (uI *UrlInformation) buildValues(normalizedNames map[string]string) t.Values {
+func (uI *UrlInformation) buildValues(normalizedNames map[string]string) uritemplate.Values {
 
 	values := addParametersWithOrignialNames(uI.QueryParameters, normalizedNames, nil)
 	values = addParametersWithOrignialNames(uI.PathParameters, normalizedNames, &values)
@@ -113,7 +99,7 @@ func (uI *UrlInformation) buildValues(normalizedNames map[string]string) t.Value
 
 // buildUriFromTemplate builds the URI from the template.
 func (uI *UrlInformation) buildUriFromTemplate() (string, error) {
-	uriTemplate, err := t.New(uI.UrlTemplate)
+	uriTemplate, err := uritemplate.New(uI.UrlTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -155,7 +141,17 @@ func (uI *UrlInformation) getUriFromTemplate() (*url.URL, error) {
 
 // parseRawURL parses a raw URL.
 func (uI *UrlInformation) parseRawURL(rawURL string) (*url.URL, error) {
+
+	if rawURL == "" {
+		return nil, ErrEmptyRawUrl
+	}
+
 	uri, err := url.Parse(rawURL)
+
+	if uri.Scheme == "" {
+		return nil, ErrMissingSchema
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -184,7 +180,7 @@ func (uI *UrlInformation) AddQueryParameters(source interface{}) error {
 		return errors.New("source or request is nil")
 	}
 
-	queryMap, err := toQueryMap(source)
+	queryMap, err := ToQueryMap(source)
 	if err != nil {
 		return err
 	}

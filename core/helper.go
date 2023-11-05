@@ -9,8 +9,29 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/hetiansu5/urlquery"
 	"github.com/yosida95/uritemplate/v3"
 )
+
+// ToQueryMap converts a struct to query parameter map
+func ToQueryMap(source interface{}) (map[string]string, error) {
+	if source == nil {
+		return nil, errors.New("source is nil")
+	}
+
+	queryBytes, err := urlquery.Marshal(source)
+	if err != nil {
+		return nil, err
+	}
+
+	var queryMap map[string]string
+	err = urlquery.Unmarshal(queryBytes, &queryMap)
+	if err != nil {
+		return nil, err
+	}
+
+	return queryMap, nil
+}
 
 // normalizeVarNames normalizes variable names for URI template expansion.
 func normalizeVarNames(varNames []string) map[string]string {

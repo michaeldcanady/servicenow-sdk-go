@@ -3,11 +3,11 @@ package core
 import (
 	"bytes"
 	"context"
-	"errors"
 	"net/http"
 	"net/url"
+	"reflect"
 
-	"github.com/hetiansu5/urlquery"
+	"github.com/mozillazg/go-httpheader"
 )
 
 // RequestInformation represents an abstract HTTP request.
@@ -15,7 +15,7 @@ type RequestInformation struct {
 	// The HTTP method of the request.
 	Method HttpMethod
 	// The Request Headers.
-	Headers *RequestHeaders
+	Headers http.Header
 	// The Request Body.
 	Content []byte
 	options map[string]RequestOption
@@ -25,7 +25,7 @@ type RequestInformation struct {
 // NewRequestInformation creates a new RequestInformation object with default values.
 func NewRequestInformation() *RequestInformation {
 	return &RequestInformation{
-		Headers: NewRequestHeaders(),
+		Headers: make(http.Header),
 		options: make(map[string]RequestOption),
 		uri:     NewUrlInformation(),
 	}
@@ -72,25 +72,6 @@ func (rI *RequestInformation) AddQueryParameters(source interface{}) error {
 	return rI.uri.AddQueryParameters(source)
 }
 
-func toQueryMap(source interface{}) (map[string]string, error) {
-	if source == nil {
-		return nil, errors.New("source is nil")
-	}
-
-	queryBytes, err := urlquery.Marshal(source)
-	if err != nil {
-		return nil, err
-	}
-
-	var queryMap map[string]string
-	err = urlquery.Unmarshal(queryBytes, &queryMap)
-	if err != nil {
-		return nil, err
-	}
-
-	return queryMap, nil
-}
-
 func (rI *RequestInformation) getContentReader() *bytes.Reader {
 	return bytes.NewReader(rI.Content)
 }
@@ -115,6 +96,11 @@ func (rI *RequestInformation) ToRequest() (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if len(rI.Headers) > 0 {
+		req.Header = rI.Headers
+	}
+
 	return req, nil
 }
 
@@ -134,4 +120,35 @@ func (rI *RequestInformation) ToRequestWithContext(ctx context.Context) (*http.R
 		return nil, err
 	}
 	return req, nil
+}
+
+func (rI *RequestInformation) AddHeaders(rawHeaders interface{}) error {
+
+	var headers http.Header
+	var err error
+
+	val := reflect.ValueOf(rawHeaders)
+
+	if val.Kind() == reflect.Pointer {
+		// use the httpheader.Encode function from the httpheader package
+		// to encode the pointer value into an http.Header map
+		headers, err = httpheader.Encode(rawHeaders)
+		if err != nil {
+			return err
+		}
+	} else if val.Type() == reflect.TypeOf(http.Header{}) {
+		// if the value is already an http.Header map, just assign it to headers
+		headers = rawHeaders.(http.Header)
+	} else {
+		// otherwise, return an error
+		return ErrInvalidHeaderType
+	}
+
+	// iterate over the headers map and add each key-value pair to rI.Headers
+	for key, values := range headers {
+		for _, value := range values {
+			rI.Headers.Add(key, value)
+		}
+	}
+	return nil
 }
