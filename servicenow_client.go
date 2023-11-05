@@ -73,12 +73,10 @@ func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 	var errorCtor interface{} = nil
 
 	if len(errorMappings) != 0 {
-		if errorMappings[statusAsString] != "" {
-			errorCtor = errorMappings[statusAsString]
-		} else if response.StatusCode >= 400 && response.StatusCode < 500 && errorMappings["4XX"] != "" {
-			errorCtor = errorMappings["4XX"]
-		} else if response.StatusCode >= 500 && response.StatusCode < 600 && errorMappings["5XX"] != "" {
-			errorCtor = errorMappings["5XX"]
+		var isOk bool
+		errorCtor, isOk = errorMappings.Get(response.StatusCode)
+		if !isOk {
+			errorCtor = nil
 		}
 	}
 
