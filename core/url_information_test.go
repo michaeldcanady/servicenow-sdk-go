@@ -134,11 +134,11 @@ func TestUrlInformationGetUriFromTemplate(t *testing.T) {
 	assert.Equal(t, &url.URL{Scheme: "https", Opaque: "", User: (*url.Userinfo)(nil), Host: "example.com", Path: "/endpoint", RawPath: "", OmitHost: false, ForceQuery: false, RawQuery: "", Fragment: "", RawFragment: ""}, uri)
 
 	ui.UrlTemplate = "{+baseurl}/endpoint"
-	uri, err = ui.getUriFromTemplate()
-	assert.Nil(t, err)
+	_, err = ui.getUriFromTemplate()
+	assert.Error(t, err)
 
 	ui.PathParameters = map[string]string{}
-	uri, err = ui.getUriFromTemplate()
+	_, err = ui.getUriFromTemplate()
 	assert.Error(t, err)
 }
 
