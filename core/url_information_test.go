@@ -154,7 +154,7 @@ func TestUrlInformationParseRawURL(t *testing.T) {
 	assert.Equal(t, "/endpoint", uri.Path)
 
 	invalidRawURL := ""
-	uri, err = ui.parseRawURL(invalidRawURL)
+	_, err = ui.parseRawURL(invalidRawURL)
 	assert.Error(t, err)
 }
 
