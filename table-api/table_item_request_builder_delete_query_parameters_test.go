@@ -3,6 +3,7 @@ package tableapi
 import (
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,7 +13,7 @@ func TestTableItemRequestBuilderDeleteQueryParameters(t *testing.T) {
 		QueryNoDomain: true,
 	}
 
-	queryMap, err := toQueryMap(params)
+	queryMap, err := core.ToQueryMap(params)
 	if err != nil {
 		t.Error(err)
 	}
