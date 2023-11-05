@@ -33,7 +33,11 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Run unit tests
-        run: go test ./... -v -cover
+        run: go test ./.. -v -coverprofile="cover.out"
+        working-directory: ${{ github.workspace }}
+
+      - name: Generate Coverage File
+        run: go tool cover -html="cover.out" -o "cover.html"
         working-directory: ${{ github.workspace }}
       
       - name: Upload coverage reports to Codecov
