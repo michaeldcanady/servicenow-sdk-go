@@ -3,6 +3,7 @@ package attachmentapi
 import (
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,7 +21,7 @@ func TestAttachmentRequestBuilderGetQueryParameters(t *testing.T) {
 		Query:  "field1=value1",
 	}
 
-	actual, err := toQueryMap(params)
+	actual, err := core.ToQueryMap(params)
 	if err != nil {
 		t.Error(err)
 	}
