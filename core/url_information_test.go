@@ -169,7 +169,7 @@ func TestUrlInformationToUrl(t *testing.T) {
 	assert.Equal(t, "https://example.com/endpoint", url.String())
 
 	ui.PathParameters = map[string]string{}
-	url, err = ui.ToUrl()
+	_, err = ui.ToUrl()
 	assert.Error(t, err)
 }
 
