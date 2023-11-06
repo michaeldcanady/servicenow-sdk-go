@@ -83,14 +83,25 @@ func (rI *RequestInformation) SetUri(url *url.URL) {
 	rI.uri.PathParameters = map[string]string{"request-raw-url": url.String()}
 }
 
+func (rI *RequestInformation) Url() (string, error) {
+	uri, err := rI.uri.ToUrl()
+	if err != nil {
+		return "", err
+	}
+
+	url := uri.String()
+
+	return url, nil
+}
+
 // ToRequest converts the RequestInformation object into an HTTP request.
 func (rI *RequestInformation) ToRequest() (*http.Request, error) {
-	uri, err := rI.uri.ToUrl()
+
+	url, err := rI.Url()
 	if err != nil {
 		return nil, err
 	}
 
-	url := uri.String()
 	contentReader := rI.getContentReader()
 	methodString := rI.Method.String()
 
@@ -99,7 +110,6 @@ func (rI *RequestInformation) ToRequest() (*http.Request, error) {
 		return nil, err
 	}
 
-	// Add headers individually instead of replacing the entire request headers
 	for key, values := range rI.Headers {
 		for _, value := range values {
 			req.Header.Add(key, value)
@@ -111,12 +121,10 @@ func (rI *RequestInformation) ToRequest() (*http.Request, error) {
 
 // ToRequestWithContext converts the RequestInformation object into an HTTP request with context.
 func (rI *RequestInformation) ToRequestWithContext(ctx context.Context) (*http.Request, error) {
-	uri, err := rI.uri.ToUrl()
+	url, err := rI.Url()
 	if err != nil {
 		return nil, err
 	}
-
-	url := uri.String()
 	contentReader := rI.getContentReader()
 	methodString := rI.Method.String()
 
