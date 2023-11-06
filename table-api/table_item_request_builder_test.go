@@ -2,7 +2,6 @@ package tableapi
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"maps"
 	"net/http"
@@ -148,8 +147,6 @@ func TestTableItemRequestBuilder_Get(t *testing.T) {
 	}
 
 	response, err := req.Get(params)
-
-	fmt.Println(response)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, response)

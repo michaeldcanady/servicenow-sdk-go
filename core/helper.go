@@ -50,6 +50,11 @@ func getOriginalParameterName(key string, normalizedNames map[string]string) str
 }
 
 func addParametersWithOriginalNames(params map[string]string, normalizedNames map[string]string, values uritemplate.Values) uritemplate.Values {
+
+	if values == nil {
+		values = uritemplate.Values{}
+	}
+
 	for key, value := range params {
 		values.Set(getKeyWithOriginalName(key, normalizedNames), uritemplate.String(value))
 	}
