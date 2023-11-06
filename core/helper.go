@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"maps"
 	"net/http"
 	"reflect"
 	"strings"
@@ -57,19 +56,19 @@ func addParameterWithOriginalName(key string, value string, normalizedNames map[
 	values.Set(paramName, uritemplate.String(value))
 }
 
-func addParametersWithOrignialNames(params map[string]string, normalizedNames map[string]string, values *uritemplate.Values) uritemplate.Values {
-
-	output_value := uritemplate.Values{}
-
-	if values != nil {
-		maps.Copy(output_value, *(values))
-	}
-
+func addParametersWithOriginalNames(params map[string]string, normalizedNames map[string]string, values uritemplate.Values) uritemplate.Values {
 	for key, value := range params {
-		addParameterWithOriginalName(key, value, normalizedNames, output_value)
+		values.Set(getKeyWithOriginalName(key, normalizedNames), uritemplate.String(value))
 	}
+	return values
+}
 
-	return output_value
+func getKeyWithOriginalName(key string, normalizedNames map[string]string) string {
+	originalName, exists := normalizedNames[key]
+	if exists {
+		return originalName
+	}
+	return key
 }
 
 func IsPointer(value interface{}) bool {
