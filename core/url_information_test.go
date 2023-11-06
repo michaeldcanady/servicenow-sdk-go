@@ -20,6 +20,10 @@ func TestUrlInformationValidateUrlTemplate(t *testing.T) {
 	err := ui.validateUrlTemplate()
 	assert.Equal(t, ErrEmptyUri, err)
 
+	ui.UrlTemplate = "https://"
+	err = ui.validateUrlTemplate()
+	assert.Equal(t, ErrMissingBasePathTemplate, err)
+
 	ui.UrlTemplate = "https://{+baseurl}/endpoint"
 	err = ui.validateUrlTemplate()
 	assert.NoError(t, err)
@@ -63,7 +67,12 @@ func TestUrlInformationValidateParams(t *testing.T) {
 	err = ui.validateParams()
 	assert.Equal(t, ErrNilPathParameters, err)
 
-	ui.PathParameters = make(map[string]string)
+	ui.QueryParameters = nil
+	ui.PathParameters = map[string]string{"baseurl": "example.com"}
+	err = ui.validateParams()
+	assert.Equal(t, ErrNilQueryParamters, err)
+
+	ui.QueryParameters = make(map[string]string)
 	ui.PathParameters["baseurl"] = "example.com"
 	err = ui.validateParams()
 	assert.NoError(t, err)

@@ -91,8 +91,8 @@ func (uI *UrlInformation) getUriFromRaw() (*url.URL, error) {
 // buildValues builds the values for URI template expansion.
 func (uI *UrlInformation) buildValues(normalizedNames map[string]string) uritemplate.Values {
 
-	values := addParametersWithOrignialNames(uI.QueryParameters, normalizedNames, nil)
-	values = addParametersWithOrignialNames(uI.PathParameters, normalizedNames, &values)
+	values := addParametersWithOriginalNames(uI.QueryParameters, normalizedNames, nil)
+	values = addParametersWithOriginalNames(uI.PathParameters, normalizedNames, values)
 
 	return values
 }

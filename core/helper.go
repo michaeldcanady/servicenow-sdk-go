@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"maps"
 	"net/http"
 	"reflect"
 	"strings"
@@ -42,34 +41,24 @@ func normalizeVarNames(varNames []string) map[string]string {
 	return normalizedNames
 }
 
-func getOriginalParameterName(key string, normalizedNames map[string]string) string {
-	lowercaseKey := strings.ToLower(key)
-	if paramName, ok := normalizedNames[lowercaseKey]; ok {
-		return paramName
-	}
-	return key
-}
+func addParametersWithOriginalNames(params map[string]string, normalizedNames map[string]string, values uritemplate.Values) uritemplate.Values {
 
-// addParameterWithOriginalName adds the URI template parameter to the template using the right casing, because of Go conventions,
-// casing might have changed for the generated property.
-func addParameterWithOriginalName(key string, value string, normalizedNames map[string]string, values uritemplate.Values) {
-	paramName := getOriginalParameterName(key, normalizedNames)
-	values.Set(paramName, uritemplate.String(value))
-}
-
-func addParametersWithOrignialNames(params map[string]string, normalizedNames map[string]string, values *uritemplate.Values) uritemplate.Values {
-
-	output_value := uritemplate.Values{}
-
-	if values != nil {
-		maps.Copy(output_value, *(values))
+	if values == nil {
+		values = uritemplate.Values{}
 	}
 
 	for key, value := range params {
-		addParameterWithOriginalName(key, value, normalizedNames, output_value)
+		values.Set(getKeyWithOriginalName(key, normalizedNames), uritemplate.String(value))
 	}
+	return values
+}
 
-	return output_value
+func getKeyWithOriginalName(key string, normalizedNames map[string]string) string {
+	originalName, exists := normalizedNames[key]
+	if exists {
+		return originalName
+	}
+	return key
 }
 
 func IsPointer(value interface{}) bool {
