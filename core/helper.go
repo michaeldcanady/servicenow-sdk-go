@@ -49,13 +49,6 @@ func getOriginalParameterName(key string, normalizedNames map[string]string) str
 	return key
 }
 
-// addParameterWithOriginalName adds the URI template parameter to the template using the right casing, because of Go conventions,
-// casing might have changed for the generated property.
-func addParameterWithOriginalName(key string, value string, normalizedNames map[string]string, values uritemplate.Values) {
-	paramName := getOriginalParameterName(key, normalizedNames)
-	values.Set(paramName, uritemplate.String(value))
-}
-
 func addParametersWithOriginalNames(params map[string]string, normalizedNames map[string]string, values uritemplate.Values) uritemplate.Values {
 	for key, value := range params {
 		values.Set(getKeyWithOriginalName(key, normalizedNames), uritemplate.String(value))
