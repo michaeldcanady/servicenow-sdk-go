@@ -41,14 +41,6 @@ func normalizeVarNames(varNames []string) map[string]string {
 	return normalizedNames
 }
 
-func getOriginalParameterName(key string, normalizedNames map[string]string) string {
-	lowercaseKey := strings.ToLower(key)
-	if paramName, ok := normalizedNames[lowercaseKey]; ok {
-		return paramName
-	}
-	return key
-}
-
 func addParametersWithOriginalNames(params map[string]string, normalizedNames map[string]string, values uritemplate.Values) uritemplate.Values {
 
 	if values == nil {
