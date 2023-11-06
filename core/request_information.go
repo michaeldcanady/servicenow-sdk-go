@@ -77,12 +77,14 @@ func (rI *RequestInformation) getContentReader() *bytes.Reader {
 }
 
 func (rI *RequestInformation) SetUri(url *url.URL) {
+
+	//TODO: Add validation that url is valid
+
 	rI.uri.PathParameters = map[string]string{"request-raw-url": url.String()}
 }
 
 // ToRequest converts the RequestInformation object into an HTTP request.
 func (rI *RequestInformation) ToRequest() (*http.Request, error) {
-
 	uri, err := rI.uri.ToUrl()
 	if err != nil {
 		return nil, err
@@ -97,8 +99,11 @@ func (rI *RequestInformation) ToRequest() (*http.Request, error) {
 		return nil, err
 	}
 
-	if len(rI.Headers) > 0 {
-		req.Header = rI.Headers
+	// Add headers individually instead of replacing the entire request headers
+	for key, values := range rI.Headers {
+		for _, value := range values {
+			req.Header.Add(key, value)
+		}
 	}
 
 	return req, nil
