@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -16,6 +17,18 @@ import (
 var (
 	ErrNilRequestInfo = errors.New("requestInfo cannot be nil")
 )
+
+type IRequestInformation interface {
+	AddRequestOptions(options []core.RequestOption)
+	SetStreamContent(content []byte)
+	AddQueryParameters(source interface{}) error
+	SetUri(url *url.URL)
+	Url() (string, error)
+	ToRequest() (*http.Request, error)
+	ToRequestWithContext(ctx context.Context) (*http.Request, error)
+	AddHeaders(rawHeaders interface{}) error
+	GetRequestOptions() []core.RequestOption
+}
 
 type ServiceNowClient struct {
 	Credential core.Credential
@@ -114,7 +127,7 @@ func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo
 	return request, nil
 }
 
-func (C *ServiceNowClient) toRequest(requestInfo *core.RequestInformation) (*http.Request, error) {
+func (C *ServiceNowClient) toRequest(requestInfo IRequestInformation) (*http.Request, error) {
 	if requestInfo == nil {
 		return nil, ErrNilRequestInfo
 	}
