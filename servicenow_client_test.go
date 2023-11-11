@@ -14,18 +14,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Mock response for testing purposes
-type mockResponse struct {
-	Body   string
-	Header http.Header
-}
-
-// Mock HTTP client for testing
-type mockHTTPClient struct {
-	Response *mockResponse
-	Err      error
-}
-
 type MockRequestInformation struct {
 }
 
