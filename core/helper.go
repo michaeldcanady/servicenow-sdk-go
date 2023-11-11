@@ -72,7 +72,7 @@ func IsPointer(value interface{}) bool {
 	return valueKind == reflect.Ptr
 }
 
-func FromJson[T interface{}](response *http.Response) (*T, error) {
+func FromJson[T any](response *http.Response) (*T, error) {
 
 	if !IsPointer(response) {
 		return nil, errors.New("response is nil or not a pointer")
@@ -90,4 +90,26 @@ func FromJson[T interface{}](response *http.Response) (*T, error) {
 	}
 
 	return &value, nil
+}
+
+type Response interface {
+	ParseHeaders(headers http.Header)
+}
+
+func ParseHeaders(response Response, headers http.Header) {
+	response.ParseHeaders(headers)
+}
+
+// ParseResponse parses the HTTP Response to the provided type
+// TODO:change "T any" to more specific type interface
+func ParseResponse[T any](response *http.Response) (*T, error) {
+
+	responseObject, err := FromJson[T](response)
+	if err != nil {
+		return nil, err
+	}
+
+	ParseHeaders(any(responseObject).(Response), response.Header)
+
+	return responseObject, nil
 }
