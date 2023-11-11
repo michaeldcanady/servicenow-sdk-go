@@ -15,6 +15,7 @@ import (
 
 var (
 	ErrNilRequestInfo = errors.New("requestInfo cannot be nil")
+	ErrNilContext     = errors.New("ctx cannot be nil")
 )
 
 type ServiceNowClient struct {
@@ -96,6 +97,10 @@ func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo core.IRequestInformation) (*http.Request, error) {
 	if requestInfo == nil {
 		return nil, ErrNilRequestInfo
+	}
+
+	if ctx == nil {
+		return nil, ErrNilContext
 	}
 
 	request, err := requestInfo.ToRequestWithContext(ctx)
