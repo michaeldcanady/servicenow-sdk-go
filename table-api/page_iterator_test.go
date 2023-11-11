@@ -10,7 +10,7 @@ import (
 // Mock client for testing
 type mockClient struct{}
 
-func (c *mockClient) Send(requestInformation *core.RequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 	// Implement mock Send method for testing
 	return nil, nil
 }

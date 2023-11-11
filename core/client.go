@@ -1,7 +1,23 @@
 package core
 
-import "net/http"
+import (
+	"context"
+	"net/http"
+	"net/url"
+)
+
+type IRequestInformation interface {
+	AddRequestOptions(options []RequestOption)
+	SetStreamContent(content []byte)
+	AddQueryParameters(source interface{}) error
+	SetUri(url *url.URL)
+	Url() (string, error)
+	ToRequest() (*http.Request, error)
+	ToRequestWithContext(ctx context.Context) (*http.Request, error)
+	AddHeaders(rawHeaders interface{}) error
+	GetRequestOptions() []RequestOption
+}
 
 type Client interface {
-	Send(requestInfo *RequestInformation, errorMapping ErrorMapping) (*http.Response, error)
+	Send(requestInfo IRequestInformation, errorMapping ErrorMapping) (*http.Response, error)
 }
