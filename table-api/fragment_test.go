@@ -58,6 +58,20 @@ func TestFragmentIterate(t *testing.T) {
 	if fragments[0] != fragment1 || fragments[1] != fragment2 || fragments[2] != fragment3 {
 		t.Error("Fragments are not in the expected order")
 	}
+
+	fragments = []*Fragment{}
+	fragment1.Iterate(func(f *Fragment) bool {
+		fragments = append(fragments, f)
+		return false
+	})
+
+	if len(fragments) != 1 {
+		t.Errorf("Expected 1 fragments, got %d", len(fragments))
+	}
+
+	if fragments[0] != fragment1 {
+		t.Error("Fragments are not in the expected order")
+	}
 }
 
 func TestFragmentString(t *testing.T) {
@@ -65,6 +79,15 @@ func TestFragmentString(t *testing.T) {
 
 	expected := "exampleField!=exampleValue"
 	result := fragment.String()
+
+	if result != expected {
+		t.Errorf("Expected %s, got %s", expected, result)
+	}
+
+	fragment = NewFragment("exampleField", IsEmpty, nil)
+
+	expected = "exampleFieldISEMPTY"
+	result = fragment.String()
 
 	if result != expected {
 		t.Errorf("Expected %s, got %s", expected, result)
