@@ -101,20 +101,19 @@ func ParseHeaders(response Response, headers http.Header) {
 }
 
 // ParseResponse parses the HTTP Response to the provided type
-// TODO:change "T any" to more specific type interface
-func ParseResponse[T any](response *http.Response) (*T, error) {
+func ParseResponse[T Response](response *http.Response) (*T, error) {
 
 	responseObject, err := FromJson[T](response)
 	if err != nil {
 		return nil, err
 	}
 
-	ParseHeaders(any(responseObject).(Response), response.Header)
+	ParseHeaders(any(*responseObject).(Response), response.Header)
 
 	return responseObject, nil
 }
 
-func SendGet[T any](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) (*T, error) {
+func SendGet[T Response](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) (*T, error) {
 	requestInfo, err := requestBuilder.ToGetRequestInformation(params)
 	if err != nil {
 		return nil, err
@@ -128,7 +127,7 @@ func SendGet[T any](requestBuilder *RequestBuilder, params interface{}, errorMap
 	return ParseResponse[T](response)
 }
 
-func SendPost[T any](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping) (*T, error) {
+func SendPost[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping) (*T, error) {
 	requestInfo, err := requestBuilder.ToPostRequestInformation(data, params)
 	if err != nil {
 		return nil, err
@@ -156,7 +155,7 @@ func SendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping
 	return nil
 }
 
-func SendPut[T any](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping) (*T, error) {
+func SendPut[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping) (*T, error) {
 	requestInfo, err := requestBuilder.ToPutRequestInformation(data, params)
 	if err != nil {
 		return nil, err

@@ -6,12 +6,6 @@ import (
 	"net/url"
 )
 
-var (
-	EmptyClientId     = NewOauth2Error("clientId is empty")
-	EmptyClientSecret = NewOauth2Error("clientSecret is empty")
-	EmptyBaseUrl      = NewOauth2Error("baseURL is empty")
-)
-
 // TokenCredential represents the OAuth2 token credentials.
 type TokenCredential struct {
 	ClientID     string
