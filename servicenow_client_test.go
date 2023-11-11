@@ -152,7 +152,7 @@ func TestClient_ToRequestWithContext(t *testing.T) {
 	ctx := context.TODO()
 
 	client := NewServiceNowClient(cred, "instance")
-	request, err := client.toRequestWithContext(ctx, requestInfo) //nolint:SA1012
+	request, err := client.toRequestWithContext(ctx, requestInfo) //nolint:all
 	if err != nil {
 		t.Error(err)
 	}
@@ -171,6 +171,6 @@ func TestClient_ToRequestWithContext(t *testing.T) {
 	_, err = client.toRequestWithContext(context.TODO(), nil)
 	assert.Error(t, ErrNilRequestInfo, err)
 
-	_, err = client.toRequestWithContext(nil, requestInfo) //nolint:SA1012
+	_, err = client.toRequestWithContext(nil, requestInfo) //nolint:all
 	assert.Error(t, ErrNilContext, err)
 }
