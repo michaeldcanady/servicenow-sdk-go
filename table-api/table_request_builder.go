@@ -54,13 +54,7 @@ func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters)
 		return nil, err
 	}
 
-	value, err := core.FromJson[TableCollectionResponse](response)
-	if err != nil {
-		return nil, err
-	}
-	value.parsePaginationHeaders(response.Header)
-
-	return value, nil
+	return core.ParseResponse[TableCollectionResponse](response)
 }
 
 // Post sends an HTTP Post request with the provided data and query parameters and returns a TableResponse.
@@ -85,12 +79,7 @@ func (T *TableRequestBuilder) Post(data map[string]string, params *TableRequestB
 		return nil, err
 	}
 
-	value, err := core.FromJson[TableItemResponse](response)
-	if err != nil {
-		return nil, err
-	}
-
-	return value, nil
+	return core.ParseResponse[TableItemResponse](response)
 }
 
 // Count sends an HTTP HEAD request and retrieves the value of "X-Total-Count" from the response header, which represents the count of items.
