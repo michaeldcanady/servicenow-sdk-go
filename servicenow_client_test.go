@@ -149,10 +149,10 @@ func TestClient_ToRequestWithContext(t *testing.T) {
 
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
-	ctx := context.TODO() //nolint:SA1012
+	ctx := context.TODO()
 
 	client := NewServiceNowClient(cred, "instance")
-	request, err := client.toRequestWithContext(ctx, requestInfo)
+	request, err := client.toRequestWithContext(ctx, requestInfo) //nolint:SA1012
 	if err != nil {
 		t.Error(err)
 	}
