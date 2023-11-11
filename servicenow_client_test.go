@@ -135,6 +135,13 @@ func TestClient_unmarshallError(t *testing.T) {
 	err = client.unmarshallError(errorResp)
 	assert.IsType(t, &core.ServiceNowError{}, err)
 	assert.Equal(t, &properErr, err)
+
+	errorResp = &http.Response{
+		StatusCode: 404,
+		Body:       io.NopCloser(strings.NewReader("bad response")),
+	}
+	err = client.unmarshallError(errorResp)
+	assert.IsType(t, &json.SyntaxError{}, err)
 }
 
 func TestClient_ToRequestWithContext(t *testing.T) {
