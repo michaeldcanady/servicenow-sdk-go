@@ -27,23 +27,8 @@ func NewTableItemRequestBuilder(client core.Client, pathParameters map[string]st
 // Returns:
 //   - *TableItemResponse: The response data as a TableItemResponse.
 //   - error: An error if there was an issue with the request or response.
-func (T *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
-	requestInfo, err := T.RequestBuilder.ToGetRequestInformation(params)
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := T.RequestBuilder.Client.Send(requestInfo, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	value, err := core.FromJson[TableItemResponse](response)
-	if err != nil {
-		return nil, err
-	}
-
-	return value, nil
+func (rB *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
+	return core.SendGet[TableItemResponse](&rB.RequestBuilder, params, nil)
 }
 
 // Delete sends an HTTP DELETE request using the specified query parameters and returns an error if the request or response encounters any issues.
@@ -53,18 +38,8 @@ func (T *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryPar
 //
 // Returns:
 //   - error: An error if there was an issue with the request or response, or nil if the request was successful.
-func (T *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQueryParameters) error {
-	requestInfo, err := T.RequestBuilder.ToDeleteRequestInformation(params)
-	if err != nil {
-		return err
-	}
-
-	_, err = T.RequestBuilder.Client.Send(requestInfo, nil)
-	if err != nil {
-		return err
-	}
-
-	return nil
+func (rB *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQueryParameters) error {
+	return core.SendDelete(&rB.RequestBuilder, params, nil)
 }
 
 // Put updates a table item using an HTTP PUT request.
@@ -78,21 +53,6 @@ func (T *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQu
 // Returns:
 //   - *TableItemResponse: A TableItemResponse containing the updated item data.
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
-func (T *TableItemRequestBuilder) Put(tableEntry map[string]string, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
-	requestInfo, err := T.RequestBuilder.ToPutRequestInformation(tableEntry, params)
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := T.RequestBuilder.Client.Send(requestInfo, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	value, err := core.FromJson[TableItemResponse](response)
-	if err != nil {
-		return nil, err
-	}
-
-	return value, nil
+func (rB *TableItemRequestBuilder) Put(tableEntry map[string]string, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
+	return core.SendPut[TableItemResponse](&rB.RequestBuilder, tableEntry, params, nil)
 }

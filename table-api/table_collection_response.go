@@ -13,7 +13,7 @@ type TableCollectionResponse struct {
 	LastPageLink     string
 }
 
-func (cR TableCollectionResponse) parsePaginationHeaders(headers http.Header) {
+func (cR *TableCollectionResponse) parsePaginationHeaders(headers http.Header) {
 
 	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
 
