@@ -171,6 +171,6 @@ func TestClient_ToRequestWithContext(t *testing.T) {
 	_, err = client.toRequestWithContext(context.TODO(), nil)
 	assert.Error(t, ErrNilRequestInfo, err)
 
-	_, err = client.toRequestWithContext(nil, requestInfo)
+	_, err = client.toRequestWithContext(nil, requestInfo) //nolint:SA1012
 	assert.Error(t, ErrNilContext, err)
 }
