@@ -56,7 +56,7 @@ func (rI *MockRequestInformation) ToRequest() (*http.Request, error) {
 }
 
 func (rI *MockRequestInformation) ToRequestWithContext(ctx context.Context) (*http.Request, error) {
-	return &http.Request{}, nil
+	return http.NewRequestWithContext(ctx, "GET", "https://www.example.com", nil)
 }
 
 func (rI *MockRequestInformation) AddHeaders(rawHeaders interface{}) error {
@@ -154,8 +154,10 @@ func TestClient_ToRequestWithContext(t *testing.T) {
 
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
+	ctx := context.TODO()
+
 	client := NewServiceNowClient(cred, "instance")
-	request, err := client.toRequestWithContext(context.TODO(), requestInfo)
+	request, err := client.toRequestWithContext(ctx, requestInfo)
 	if err != nil {
 		t.Error(err)
 	}
@@ -169,6 +171,7 @@ func TestClient_ToRequestWithContext(t *testing.T) {
 	assert.Equal(t, expectedContentTypeHeader, request.Header.Get("Content-Type"))
 	assert.Equal(t, expectedAcceptHeader, request.Header.Get("Accept"))
 	assert.Equal(t, expectedAuthorizationHeader, request.Header.Get("Authorization"))
+	assert.Equal(t, ctx, request.Context())
 
 	_, err = client.toRequestWithContext(context.TODO(), nil)
 	assert.Error(t, ErrNilRequestInfo, err)
