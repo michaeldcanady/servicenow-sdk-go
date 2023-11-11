@@ -2,14 +2,29 @@ package servicenowsdkgo
 
 import (
 	"context"
+	"encoding/json"
+	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	"github.com/stretchr/testify/assert"
 )
+
+// Mock response for testing purposes
+type mockResponse struct {
+	Body   string
+	Header http.Header
+}
+
+// Mock HTTP client for testing
+type mockHTTPClient struct {
+	Response *mockResponse
+	Err      error
+}
 
 type MockRequestInformation struct {
 }
@@ -101,4 +116,32 @@ func TestClient_toRequest(t *testing.T) {
 	assert.Equal(t, expectedContentTypeHeader, request.Header.Get("Content-Type"))
 	assert.Equal(t, expectedAcceptHeader, request.Header.Get("Accept"))
 	assert.Equal(t, expectedAuthorizationHeader, request.Header.Get("Authorization"))
+}
+
+func TestClient_unmarshallError(t *testing.T) {
+	cred := credentials.NewUsernamePasswordCredential("username", "password")
+
+	client := NewServiceNowClient(cred, "instance")
+
+	properErr := core.ServiceNowError{
+		Exception: core.Exception{
+			Detail:  "Resource not found",
+			Message: "Resource not found",
+		},
+		Status: "404",
+	}
+
+	jsonBytes, err := json.Marshal(properErr)
+	if err != nil {
+		t.Error(err)
+	}
+
+	errorResp := &http.Response{
+		StatusCode: 404,
+		Body:       io.NopCloser(strings.NewReader(string(jsonBytes))),
+	}
+
+	err = client.unmarshallError(errorResp)
+	assert.IsType(t, &core.ServiceNowError{}, err)
+	assert.Equal(t, &properErr, err)
 }
