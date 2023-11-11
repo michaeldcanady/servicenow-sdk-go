@@ -26,7 +26,7 @@ A Service-Now API client enabling Go programs to interact with Service-Now in a 
 | Alarm Management Open                                                 | ✖️     |        |
 | Application Service                                                   | ✖️     |        |
 | Appointment                                                           | ✖️     |        |
-| Attachment                                                            | ♻️     | [![Attachment API Issues](https://img.shields.io/github/issues-raw/michaeldcanady/servicenow-sdk-go/attachment%20api?label=%20)](https://github.com/michaeldcanady/servicenow-sdk-go/labels/attachment%20api) |
+| [Attachment](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/attachment-api)                                                            | ♻️     | [![Attachment API Issues](https://img.shields.io/github/issues-raw/michaeldcanady/servicenow-sdk-go/attachment%20api?label=%20)](https://github.com/michaeldcanady/servicenow-sdk-go/labels/attachment%20api) |
 | Advanced Work Assignment (AWA) Agent                                  | ✖️     |        |
 | AWA Assignment                                                        | ✖️     |        |
 | AWA Routing                                                           | ✖️     |        |
@@ -37,15 +37,15 @@ A Service-Now API client enabling Go programs to interact with Service-Now in a 
 | CdmChangesetsApi                                                      | ✖️     |        |
 | CdmEditorApi                                                          | ✖️     |        |
 | CdmPoliciesApi                                                        | ✖️     |        |
-| Tables                                                                | ✔️     | [![Table API Issues](https://img.shields.io/github/issues-raw/michaeldcanady/servicenow-sdk-go/table%20api?label=%20)](https://github.com/michaeldcanady/servicenow-sdk-go/labels/table%20api) |
+| [Tables](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/table-api)                                                                | ✔️     | [![Table API Issues](https://img.shields.io/github/issues-raw/michaeldcanady/servicenow-sdk-go/table%20api?label=%20)](https://github.com/michaeldcanady/servicenow-sdk-go/labels/table%20api) |
 ---
 
 | Emoji | Meaning       |
 | ----- | ------------- |
-| ✔️     | Supported     |
-| 🆕     | Preview       |
-| ♻️     | In progress   |
-| ✖️     | Not supported |
+| ✔️    | Supported     |
+| 🆕    | Preview       |
+| ♻️    | In progress   |
+| ✖️    | Not supported |
 
 ## 1. Installation
 
@@ -85,8 +85,8 @@ import (
 )
 
 params := &servicenowsdkgo.TableRequestBuilderGetQueryParameters{
-		Limit: int32(1),
-	}
+        Limit: int32(1),
+    }
 ```
 
 ### 2.4 Build request for table

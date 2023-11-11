@@ -3,7 +3,6 @@ package servicenowsdkgo
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,11 +10,6 @@ import (
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-)
-
-var (
-	ErrNilRequestInfo = errors.New("requestInfo cannot be nil")
-	ErrNilContext     = errors.New("ctx cannot be nil")
 )
 
 type ServiceNowClient struct {
