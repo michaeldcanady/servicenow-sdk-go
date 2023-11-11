@@ -116,6 +116,9 @@ func TestClient_toRequest(t *testing.T) {
 	assert.Equal(t, expectedContentTypeHeader, request.Header.Get("Content-Type"))
 	assert.Equal(t, expectedAcceptHeader, request.Header.Get("Accept"))
 	assert.Equal(t, expectedAuthorizationHeader, request.Header.Get("Authorization"))
+
+	_, err = client.toRequest(nil)
+	assert.Error(t, ErrNilRequestInfo, err)
 }
 
 func TestClient_unmarshallError(t *testing.T) {
@@ -144,4 +147,32 @@ func TestClient_unmarshallError(t *testing.T) {
 	err = client.unmarshallError(errorResp)
 	assert.IsType(t, &core.ServiceNowError{}, err)
 	assert.Equal(t, &properErr, err)
+}
+
+func TestClient_ToRequestWithContext(t *testing.T) {
+	requestInfo := &MockRequestInformation{}
+
+	cred := credentials.NewUsernamePasswordCredential("username", "password")
+
+	client := NewServiceNowClient(cred, "instance")
+	request, err := client.toRequestWithContext(context.TODO(), requestInfo)
+	if err != nil {
+		t.Error(err)
+	}
+
+	expected := &url.URL{Scheme: "https", Opaque: "", User: (*url.Userinfo)(nil), Host: "www.example.com", Path: "", RawPath: "", OmitHost: false, ForceQuery: false, RawQuery: "", Fragment: "", RawFragment: ""}
+	expectedContentTypeHeader := "application/json"
+	expectedAcceptHeader := "application/json"
+	expectedAuthorizationHeader := "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+
+	assert.Equal(t, expected, request.URL)
+	assert.Equal(t, expectedContentTypeHeader, request.Header.Get("Content-Type"))
+	assert.Equal(t, expectedAcceptHeader, request.Header.Get("Accept"))
+	assert.Equal(t, expectedAuthorizationHeader, request.Header.Get("Authorization"))
+
+	_, err = client.toRequestWithContext(context.TODO(), nil)
+	assert.Error(t, ErrNilRequestInfo, err)
+
+	_, err = client.toRequestWithContext(nil, requestInfo)
+	assert.Error(t, ErrNilContext, err)
 }
