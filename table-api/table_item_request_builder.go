@@ -28,7 +28,10 @@ func NewTableItemRequestBuilder(client core.Client, pathParameters map[string]st
 //   - *TableItemResponse: The response data as a TableItemResponse.
 //   - error: An error if there was an issue with the request or response.
 func (rB *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
-	return core.SendGet[TableItemResponse](&rB.RequestBuilder, params, nil)
+
+	response, err := core.SendGet[*TableItemResponse](&rB.RequestBuilder, params, nil)
+
+	return (*response), err
 }
 
 // Delete sends an HTTP DELETE request using the specified query parameters and returns an error if the request or response encounters any issues.
@@ -54,5 +57,8 @@ func (rB *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQ
 //   - *TableItemResponse: A TableItemResponse containing the updated item data.
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
 func (rB *TableItemRequestBuilder) Put(tableEntry map[string]string, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
-	return core.SendPut[TableItemResponse](&rB.RequestBuilder, tableEntry, params, nil)
+
+	response, err := core.SendPut[*TableItemResponse](&rB.RequestBuilder, tableEntry, params, nil)
+
+	return (*response), err
 }

@@ -27,3 +27,9 @@ func NewCredentialError(message string) *CredentialError {
 func (e *CredentialError) Error() string {
 	return e.Message
 }
+
+var (
+	EmptyClientId     = NewOauth2Error("clientId is empty")
+	EmptyClientSecret = NewOauth2Error("clientSecret is empty")
+	EmptyBaseUrl      = NewOauth2Error("baseURL is empty")
+)
