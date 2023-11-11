@@ -8,7 +8,7 @@ import (
 // Create a mock client for testing purposes
 type mockClient struct{}
 
-func (c *mockClient) Send(requestInfo *RequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
+func (c *mockClient) Send(requestInfo IRequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
 	// Implement a mock Send function for testing
 	return nil, nil
 }

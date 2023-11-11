@@ -14,7 +14,7 @@ import (
 
 type MockClient struct{}
 
-func (c *MockClient) Send(requestInfo *core.RequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 
 	req, err := requestInfo.ToRequest()
 	if err != nil {

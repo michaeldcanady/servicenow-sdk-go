@@ -15,6 +15,7 @@ import (
 
 var (
 	ErrNilRequestInfo = errors.New("requestInfo cannot be nil")
+	ErrNilContext     = errors.New("ctx cannot be nil")
 )
 
 type ServiceNowClient struct {
@@ -93,9 +94,13 @@ func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 	return stringError
 }
 
-func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo *core.RequestInformation) (*http.Request, error) {
+func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo core.IRequestInformation) (*http.Request, error) {
 	if requestInfo == nil {
 		return nil, ErrNilRequestInfo
+	}
+
+	if ctx == nil {
+		return nil, ErrNilContext
 	}
 
 	request, err := requestInfo.ToRequestWithContext(ctx)
@@ -114,7 +119,7 @@ func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo
 	return request, nil
 }
 
-func (C *ServiceNowClient) toRequest(requestInfo *core.RequestInformation) (*http.Request, error) {
+func (C *ServiceNowClient) toRequest(requestInfo core.IRequestInformation) (*http.Request, error) {
 	if requestInfo == nil {
 		return nil, ErrNilRequestInfo
 	}
@@ -135,7 +140,7 @@ func (C *ServiceNowClient) toRequest(requestInfo *core.RequestInformation) (*htt
 	return request, nil
 }
 
-func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo *core.RequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 	request, err := c.toRequestWithContext(ctx, requestInfo)
 	if err != nil {
 		return nil, err
@@ -154,7 +159,7 @@ func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo *cor
 	return response, nil
 }
 
-func (c *ServiceNowClient) Send(requestInfo *core.RequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 
 	request, err := c.toRequest(requestInfo)
 	if err != nil {
