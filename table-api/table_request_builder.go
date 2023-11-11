@@ -40,21 +40,8 @@ func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
 // Returns:
 //   - *TableCollectionResponse: The response data as a TableCollectionResponse.
 //   - error: An error if there was an issue with the request or response.
-func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
-
-	requestInfo, err := T.RequestBuilder.ToGetRequestInformation(params)
-	if err != nil {
-		return nil, err
-	}
-
-	errorMapping := core.ErrorMapping{"4XX": "hi"}
-
-	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return nil, err
-	}
-
-	return core.ParseResponse[TableCollectionResponse](response)
+func (rB *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
+	return core.SendGet[TableCollectionResponse](&rB.RequestBuilder, params, nil)
 }
 
 // Post sends an HTTP Post request with the provided data and query parameters and returns a TableResponse.
@@ -66,20 +53,8 @@ func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters)
 // Returns:
 //   - *TableResponse: The response data as a TableResponse.
 //   - error: An error if there was an issue with the request or response.
-func (T *TableRequestBuilder) Post(data map[string]string, params *TableRequestBuilderPostQueryParamters) (*TableItemResponse, error) {
-	requestInfo, err := T.RequestBuilder.ToPostRequestInformation(data, params)
-	if err != nil {
-		return nil, err
-	}
-
-	errorMapping := core.ErrorMapping{"4XX": "hi"}
-
-	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return nil, err
-	}
-
-	return core.ParseResponse[TableItemResponse](response)
+func (rB *TableRequestBuilder) Post(data map[string]string, params *TableRequestBuilderPostQueryParamters) (*TableItemResponse, error) {
+	return core.SendPost[TableItemResponse](&rB.RequestBuilder, data, params, nil)
 }
 
 // Count sends an HTTP HEAD request and retrieves the value of "X-Total-Count" from the response header, which represents the count of items.

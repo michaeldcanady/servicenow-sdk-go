@@ -113,3 +113,59 @@ func ParseResponse[T any](response *http.Response) (*T, error) {
 
 	return responseObject, nil
 }
+
+func SendGet[T any](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) (*T, error) {
+	requestInfo, err := requestBuilder.ToGetRequestInformation(params)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	return ParseResponse[T](response)
+}
+
+func SendPost[T any](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping) (*T, error) {
+	requestInfo, err := requestBuilder.ToPostRequestInformation(data, params)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	return ParseResponse[T](response)
+}
+
+func SendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) error {
+	requestInfo, err := requestBuilder.ToDeleteRequestInformation(params)
+	if err != nil {
+		return err
+	}
+
+	_, err = requestBuilder.Client.Send(requestInfo, errorMapping)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func SendPut[T any](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping) (*T, error) {
+	requestInfo, err := requestBuilder.ToPutRequestInformation(data, params)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	return ParseResponse[T](response)
+}
