@@ -155,7 +155,7 @@ func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 		return nil, err
 	}
 
-	collectionResp, err = core.FromJson[TableCollectionResponse](resp)
+	err = core.FromJson(resp, collectionResp)
 	if err != nil {
 		return nil, nil
 	}
