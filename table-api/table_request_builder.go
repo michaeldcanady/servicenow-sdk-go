@@ -40,27 +40,16 @@ func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
 // Returns:
 //   - *TableCollectionResponse: The response data as a TableCollectionResponse.
 //   - error: An error if there was an issue with the request or response.
-func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
+func (rB *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
 
-	requestInfo, err := T.RequestBuilder.ToGetRequestInformation(params)
+	var response TableCollectionResponse
+
+	err := rB.SendGet(params, nil, &response)
 	if err != nil {
 		return nil, err
 	}
 
-	errorMapping := core.ErrorMapping{"4XX": "hi"}
-
-	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return nil, err
-	}
-
-	value, err := core.FromJson[TableCollectionResponse](response)
-	if err != nil {
-		return nil, err
-	}
-	value.parsePaginationHeaders(response.Header)
-
-	return value, nil
+	return &response, nil
 }
 
 // Post sends an HTTP Post request with the provided data and query parameters and returns a TableResponse.
@@ -72,25 +61,16 @@ func (T *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters)
 // Returns:
 //   - *TableResponse: The response data as a TableResponse.
 //   - error: An error if there was an issue with the request or response.
-func (T *TableRequestBuilder) Post(data map[string]string, params *TableRequestBuilderPostQueryParamters) (*TableItemResponse, error) {
-	requestInfo, err := T.RequestBuilder.ToPostRequestInformation(data, params)
+func (rB *TableRequestBuilder) Post(data map[string]string, params *TableRequestBuilderPostQueryParamters) (*TableItemResponse, error) {
+
+	var response TableItemResponse
+
+	err := rB.SendPut(data, params, nil, &response)
 	if err != nil {
 		return nil, err
 	}
 
-	errorMapping := core.ErrorMapping{"4XX": "hi"}
-
-	response, err := T.RequestBuilder.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return nil, err
-	}
-
-	value, err := core.FromJson[TableItemResponse](response)
-	if err != nil {
-		return nil, err
-	}
-
-	return value, nil
+	return &response, nil
 }
 
 // Count sends an HTTP HEAD request and retrieves the value of "X-Total-Count" from the response header, which represents the count of items.

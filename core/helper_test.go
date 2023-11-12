@@ -1,11 +1,67 @@
 package core
 
 import (
+	"errors"
+	"io"
+	"math/rand"
+	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/yosida95/uritemplate/v3"
 )
+
+func TestToQueryMap(t *testing.T) {
+
+	inputs := []struct {
+		Input       interface{}
+		ShouldError bool
+		Expected    map[string]string
+		CheckErr    func(error) bool
+	}{
+		{
+			Input: struct {
+				Param1 string `query:"param_1"`
+				Param2 int    `query:"param_2"`
+				Param3 bool   `query:"param_3"`
+			}{
+				Param1: "value1",
+				Param2: 5,
+				Param3: true,
+			},
+			ShouldError: false,
+			Expected:    map[string]string{"param_1": "value1", "param_2": "5", "param_3": "1"},
+			CheckErr:    nil,
+		},
+	}
+
+	for _, input := range inputs {
+
+		paramMap, err := ToQueryMap(input.Input)
+
+		if input.ShouldError {
+			if !input.CheckErr(err) {
+				t.Errorf("Expected error, got nil")
+			}
+		} else if err != nil {
+			t.Errorf("Unexpected error: %v", err)
+		}
+
+		assert.Equal(t, input.Expected, paramMap)
+
+	}
+}
+
+func TestNormalizeVarNames(t *testing.T) {
+
+	input := []string{"VaR1", "vAr2", "VAr3", "vAR4", "Var5", "vaR6", "VAR7"}
+	expected := map[string]string{"var1": "VaR1", "var2": "vAr2", "var3": "VAr3", "var4": "vAR4", "var5": "Var5", "var6": "vaR6", "var7": "VAR7"}
+
+	actual := normalizeVarNames(input)
+
+	assert.Equal(t, expected, actual)
+}
 
 func TestAddParametersWithOriginalNames(t *testing.T) {
 
@@ -16,4 +72,243 @@ func TestAddParametersWithOriginalNames(t *testing.T) {
 	expected := uritemplate.Values{"VaR1": uritemplate.String("val1"), "vAr2": uritemplate.String("val2")}
 
 	assert.Equal(t, expected, values)
+}
+
+func pick[M ~map[K]V, K comparable, V any](m M) K {
+
+	keys := make([]K, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+
+	index := rand.Intn(len(keys)) // generate a random index
+	return keys[index]
+}
+
+func TestGetKeyWithOriginalName(t *testing.T) {
+
+	normalizedNames := map[string]string{"var1": "VaR1", "var2": "vAr2", "var3": "VAr3", "var4": "vAR4", "var5": "Var5", "var6": "vaR6", "var7": "VAR7"}
+
+	randomKey := pick(normalizedNames)
+
+	value := getKeyWithOriginalName(randomKey, normalizedNames)
+
+	assert.Equal(t, normalizedNames[randomKey], value)
+}
+
+func TestIsPointer(t *testing.T) {
+
+	s := "test"
+	i := 42
+
+	f := func() {}
+
+	inputs := []struct {
+		Input    interface{}
+		Expected bool
+	}{
+		{
+			Input:    &s,
+			Expected: true,
+		},
+		{
+			Input:    s, // this is a string value, not a pointer
+			Expected: false,
+		},
+		{
+			Input:    i, // this is an int value, not a pointer
+			Expected: false,
+		},
+		{
+			Input:    &i, // this is a pointer to an int value
+			Expected: true,
+		},
+		{
+			Input:    nil, // this is a nil value, not a pointer
+			Expected: false,
+		},
+		{
+			Input:    (*int)(nil), // this is a nil pointer to an int type
+			Expected: true,
+		},
+		{
+			Input:    []int{1, 2, 3}, // this is a slice value, not a pointer
+			Expected: false,
+		},
+		{
+			Input:    &[3]int{1, 2, 3}, // this is a pointer to an array value
+			Expected: true,
+		},
+		{
+			Input:    map[string]int{"a": 1, "b": 2}, // this is a map value, not a pointer
+			Expected: false,
+		},
+		{
+			Input:    &map[string]int{"a": 1, "b": 2}, // this is a pointer to a map value
+			Expected: true,
+		},
+		{
+			Input:    f, // this is a function value, not a pointer
+			Expected: false,
+		},
+		{
+			Input:    &f, // this is a pointer to a function value
+			Expected: true,
+		},
+		{
+			Input:    struct{}{}, // this is a struct value, not a pointer
+			Expected: false,
+		},
+		{
+			Input:    &struct{}{}, // this is a pointer to a struct value
+			Expected: true,
+		},
+	}
+
+	for _, input := range inputs {
+		actual := IsPointer(input.Input)
+		assert.Equal(t, input.Expected, actual)
+	}
+}
+
+type TestData struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+}
+
+func TestFromJson(t *testing.T) {
+	testCases := []struct {
+		name          string
+		response      *http.Response
+		expectedValue TestData
+		expectedError error
+	}{
+		{
+			name: "Valid JSON",
+			response: &http.Response{
+				Body:       io.NopCloser(strings.NewReader(`{"name":"John","age":30}`)),
+				StatusCode: http.StatusOK,
+			},
+			expectedValue: TestData{Name: "John", Age: 30},
+			expectedError: nil,
+		},
+		{
+			name: "Invalid JSON",
+			response: &http.Response{
+				Body:       io.NopCloser(strings.NewReader(`invalid-json`)),
+				StatusCode: http.StatusOK,
+			},
+			expectedValue: TestData{},
+			expectedError: errors.New("invalid character 'i' looking for beginning of value"),
+		},
+		{
+			name:          "Nil Response",
+			response:      nil,
+			expectedValue: TestData{},
+			expectedError: ErrNilResponse,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+
+			var result TestData
+
+			err := FromJson(tc.response, &result)
+
+			if err != nil && tc.expectedError != nil {
+				if err.Error() != tc.expectedError.Error() {
+					t.Errorf("Expected error: %v, got: %v", tc.expectedError, err)
+				}
+			} else if err != nil || tc.expectedError != nil {
+				t.Errorf("Unexpected error. Expected: %v, got: %v", tc.expectedError, err)
+			}
+
+			if result != tc.expectedValue {
+				t.Errorf("Expected value: %v, got: %v", tc.expectedValue, result)
+			}
+		})
+	}
+}
+
+type MockParseResponse struct {
+	ParseHeadersCalled bool
+}
+
+func (m *MockParseResponse) ParseHeaders(headers http.Header) {
+	m.ParseHeadersCalled = true
+}
+
+func TestParseResponse(t *testing.T) {
+	testCases := []struct {
+		name           string
+		response       *http.Response
+		value          *MockParseResponse
+		expectedError  error
+		expectedCalled bool
+	}{
+		{
+			name: "Valid Response",
+			response: &http.Response{
+				Body:       io.NopCloser(strings.NewReader(`{"name":"John","age":30}`)),
+				StatusCode: http.StatusOK,
+				Header:     http.Header{"Content-Type": {"application/json"}},
+			},
+			value:          &MockParseResponse{},
+			expectedError:  nil,
+			expectedCalled: true,
+		},
+		{
+			name: "Invalid JSON",
+			response: &http.Response{
+				Body:       io.NopCloser(strings.NewReader(`invalid-json`)),
+				StatusCode: http.StatusOK,
+				Header:     http.Header{"Content-Type": {"application/json"}},
+			},
+			value:          &MockParseResponse{},
+			expectedError:  errors.New("invalid character 'i' looking for beginning of value"),
+			expectedCalled: false,
+		},
+		{
+			name:           "Nil Response",
+			response:       nil,
+			value:          &MockParseResponse{},
+			expectedError:  ErrNilResponse,
+			expectedCalled: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := ParseResponse(tc.response, &tc.value)
+
+			if err != nil && tc.expectedError != nil {
+				if err.Error() != tc.expectedError.Error() {
+					t.Errorf("Expected error: %v, got: %v", tc.expectedError, err)
+				}
+			} else if err != nil || tc.expectedError != nil {
+				t.Errorf("Unexpected error. Expected: %v, got: %v", tc.expectedError, err)
+			}
+
+			if tc.expectedCalled != tc.value.ParseHeadersCalled {
+				t.Errorf("Expected ParseHeaders to be called: %v, but it was not", tc.expectedCalled)
+			}
+		})
+	}
+}
+
+type MockClient struct {
+	DoFunc func(req *http.Request) (*http.Response, error)
+}
+
+func (c *MockClient) Send(requestInfo RequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
+
+	url, err := requestInfo.uri.ToUrl()
+	if err != nil {
+		return nil, err
+	}
+
+	req, _ := http.NewRequest(http.MethodGet, "", nil)
+	req.URL = url
+	return c.DoFunc(req)
 }

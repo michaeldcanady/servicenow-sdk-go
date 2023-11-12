@@ -11,4 +11,5 @@ var (
 	ErrInvalidHeaderType       = errors.New("headers must be a pointer or an http.Header")
 	ErrEmptyRawUrl             = errors.New("empty raw URL")
 	ErrMissingSchema           = errors.New("URL is missing schema")
+	ErrNilResponse             = errors.New("Response is nil")
 )

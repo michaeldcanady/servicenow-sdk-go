@@ -13,7 +13,7 @@ type TableCollectionResponse struct {
 	LastPageLink     string
 }
 
-func (T *TableCollectionResponse) parsePaginationHeaders(headers http.Header) {
+func (cR *TableCollectionResponse) parsePaginationHeaders(headers http.Header) {
 
 	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
 
@@ -42,8 +42,12 @@ func (T *TableCollectionResponse) parsePaginationHeaders(headers http.Header) {
 		}
 	}
 
-	T.FirstPageLink = links["firstPageLink"]
-	T.PreviousPageLink = links["previousPageLink"]
-	T.NextPageLink = links["nextPageLink"]
-	T.LastPageLink = links["lastPageLink"]
+	cR.FirstPageLink = links["firstPageLink"]
+	cR.PreviousPageLink = links["previousPageLink"]
+	cR.NextPageLink = links["nextPageLink"]
+	cR.LastPageLink = links["lastPageLink"]
+}
+
+func (cR *TableCollectionResponse) ParseHeaders(headers http.Header) {
+	cR.parsePaginationHeaders(headers)
 }
