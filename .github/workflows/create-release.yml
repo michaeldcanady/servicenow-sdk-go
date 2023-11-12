@@ -1,8 +1,7 @@
 name: Create GitHub release
 on:
   push:
-    tags: ['v*']
-    tags-ignore: ['v*-preview*']
+    tags: ["v[1-9]*.[1-9]*.[1-9]*$"]
 
 jobs:
   create_release:
