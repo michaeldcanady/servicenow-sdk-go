@@ -1,7 +1,11 @@
 package core
 
 import (
+	"errors"
+	"io"
 	"math/rand"
+	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -165,4 +169,146 @@ func TestIsPointer(t *testing.T) {
 		actual := IsPointer(input.Input)
 		assert.Equal(t, input.Expected, actual)
 	}
+}
+
+type TestData struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+}
+
+func TestFromJson(t *testing.T) {
+	testCases := []struct {
+		name          string
+		response      *http.Response
+		expectedValue TestData
+		expectedError error
+	}{
+		{
+			name: "Valid JSON",
+			response: &http.Response{
+				Body:       io.NopCloser(strings.NewReader(`{"name":"John","age":30}`)),
+				StatusCode: http.StatusOK,
+			},
+			expectedValue: TestData{Name: "John", Age: 30},
+			expectedError: nil,
+		},
+		{
+			name: "Invalid JSON",
+			response: &http.Response{
+				Body:       io.NopCloser(strings.NewReader(`invalid-json`)),
+				StatusCode: http.StatusOK,
+			},
+			expectedValue: TestData{},
+			expectedError: errors.New("invalid character 'i' looking for beginning of value"),
+		},
+		{
+			name:          "Nil Response",
+			response:      nil,
+			expectedValue: TestData{},
+			expectedError: ErrNilResponse,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+
+			var result TestData
+
+			err := FromJson(tc.response, &result)
+
+			if err != nil && tc.expectedError != nil {
+				if err.Error() != tc.expectedError.Error() {
+					t.Errorf("Expected error: %v, got: %v", tc.expectedError, err)
+				}
+			} else if err != nil || tc.expectedError != nil {
+				t.Errorf("Unexpected error. Expected: %v, got: %v", tc.expectedError, err)
+			}
+
+			if result != tc.expectedValue {
+				t.Errorf("Expected value: %v, got: %v", tc.expectedValue, result)
+			}
+		})
+	}
+}
+
+type MockParseResponse struct {
+	ParseHeadersCalled bool
+}
+
+func (m *MockParseResponse) ParseHeaders(headers http.Header) {
+	m.ParseHeadersCalled = true
+}
+
+func TestParseResponse(t *testing.T) {
+	testCases := []struct {
+		name           string
+		response       *http.Response
+		value          *MockParseResponse
+		expectedError  error
+		expectedCalled bool
+	}{
+		{
+			name: "Valid Response",
+			response: &http.Response{
+				Body:       io.NopCloser(strings.NewReader(`{"name":"John","age":30}`)),
+				StatusCode: http.StatusOK,
+				Header:     http.Header{"Content-Type": {"application/json"}},
+			},
+			value:          &MockParseResponse{},
+			expectedError:  nil,
+			expectedCalled: true,
+		},
+		{
+			name: "Invalid JSON",
+			response: &http.Response{
+				Body:       io.NopCloser(strings.NewReader(`invalid-json`)),
+				StatusCode: http.StatusOK,
+				Header:     http.Header{"Content-Type": {"application/json"}},
+			},
+			value:          &MockParseResponse{},
+			expectedError:  errors.New("invalid character 'i' looking for beginning of value"),
+			expectedCalled: false,
+		},
+		{
+			name:           "Nil Response",
+			response:       nil,
+			value:          &MockParseResponse{},
+			expectedError:  ErrNilResponse,
+			expectedCalled: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := ParseResponse(tc.response, &tc.value)
+
+			if err != nil && tc.expectedError != nil {
+				if err.Error() != tc.expectedError.Error() {
+					t.Errorf("Expected error: %v, got: %v", tc.expectedError, err)
+				}
+			} else if err != nil || tc.expectedError != nil {
+				t.Errorf("Unexpected error. Expected: %v, got: %v", tc.expectedError, err)
+			}
+
+			if tc.expectedCalled != tc.value.ParseHeadersCalled {
+				t.Errorf("Expected ParseHeaders to be called: %v, but it was not", tc.expectedCalled)
+			}
+		})
+	}
+}
+
+type MockClient struct {
+	DoFunc func(req *http.Request) (*http.Response, error)
+}
+
+func (c *MockClient) Send(requestInfo RequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
+
+	url, err := requestInfo.uri.ToUrl()
+	if err != nil {
+		return nil, err
+	}
+
+	req, _ := http.NewRequest(http.MethodGet, "", nil)
+	req.URL = url
+	return c.DoFunc(req)
 }

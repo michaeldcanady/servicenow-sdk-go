@@ -95,7 +95,7 @@ func FromJson[T any](response *http.Response, v *T) error {
 }
 
 // ParseResponse parses the HTTP Response to the provided type
-func ParseResponse2[T Response](response *http.Response, value *T) error {
+func ParseResponse[T Response](response *http.Response, value *T) error {
 
 	err := FromJson(response, &value)
 	if err != nil {
@@ -119,7 +119,7 @@ func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, err
 		return err
 	}
 
-	return ParseResponse2(response, value)
+	return ParseResponse(response, value)
 }
 
 func sendPost[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping, value *T) error {
@@ -134,7 +134,7 @@ func sendPost[T Response](requestBuilder *RequestBuilder, data map[string]string
 		return err
 	}
 
-	return ParseResponse2(response, value)
+	return ParseResponse(response, value)
 }
 
 func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) error {
@@ -162,5 +162,5 @@ func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string,
 		return err
 	}
 
-	return ParseResponse2(response, value)
+	return ParseResponse(response, value)
 }
