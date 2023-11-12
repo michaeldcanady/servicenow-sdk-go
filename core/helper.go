@@ -72,10 +72,32 @@ func IsPointer(value interface{}) bool {
 	return valueKind == reflect.Ptr
 }
 
+func FromJson2[T any](response *http.Response, v *T) error {
+	if response == nil {
+		return ErrNilResponse
+	}
+
+	if !IsPointer(v) {
+		return errors.New("v must be pointer")
+	}
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return err
+	}
+	defer response.Body.Close()
+
+	if err := json.Unmarshal(body, v); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func FromJson[T any](response *http.Response) (*T, error) {
 
-	if !IsPointer(response) {
-		return nil, errors.New("response is nil or not a pointer")
+	if response == nil {
+		return nil, ErrNilResponse
 	}
 
 	body, err := io.ReadAll(response.Body)
@@ -96,8 +118,17 @@ type Response interface {
 	ParseHeaders(headers http.Header)
 }
 
-func ParseHeaders(response Response, headers http.Header) {
-	response.ParseHeaders(headers)
+// ParseResponse parses the HTTP Response to the provided type
+func ParseResponse2[T Response](response *http.Response, value *T) error {
+
+	err := FromJson2(response, &value)
+	if err != nil {
+		return err
+	}
+
+	(*value).ParseHeaders(response.Header)
+
+	return nil
 }
 
 // ParseResponse parses the HTTP Response to the provided type
@@ -108,40 +139,42 @@ func ParseResponse[T Response](response *http.Response) (*T, error) {
 		return nil, err
 	}
 
-	ParseHeaders(any(*responseObject).(Response), response.Header)
+	(*responseObject).ParseHeaders(response.Header)
 
 	return responseObject, nil
 }
 
-func SendGet[T Response](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) (*T, error) {
+func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping, value *T) error {
+
 	requestInfo, err := requestBuilder.ToGetRequestInformation(params)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return ParseResponse[T](response)
+	return ParseResponse2(response, value)
 }
 
-func SendPost[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping) (*T, error) {
+func sendPost[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping, value *T) error {
+
 	requestInfo, err := requestBuilder.ToPostRequestInformation(data, params)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return ParseResponse[T](response)
+	return ParseResponse2(response, value)
 }
 
-func SendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) error {
+func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) error {
 	requestInfo, err := requestBuilder.ToDeleteRequestInformation(params)
 	if err != nil {
 		return err
@@ -155,16 +188,16 @@ func SendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping
 	return nil
 }
 
-func SendPut[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping) (*T, error) {
+func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping, value *T) error {
 	requestInfo, err := requestBuilder.ToPutRequestInformation(data, params)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return ParseResponse[T](response)
+	return ParseResponse2(response, value)
 }

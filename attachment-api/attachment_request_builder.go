@@ -28,7 +28,13 @@ func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]s
 //   - *AttachmentCollectionResponse: The response data as a AttachmentCollectionResponse.
 //   - error: An error if there was an issue with the request or response.
 func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQueryParameters) (*AttachmentCollectionResponse, error) {
-	response, err := core.SendGet[*AttachmentCollectionResponse](&rB.RequestBuilder, params, nil)
 
-	return (*response), err
+	var response AttachmentCollectionResponse
+
+	err := rB.SendGet(params, nil, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response, nil
 }

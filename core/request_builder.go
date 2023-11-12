@@ -124,3 +124,24 @@ func (rB *RequestBuilder) ToRequestInformation(method HttpMethod, data map[strin
 	}
 	return requestInfo, nil
 }
+
+func (rB *RequestBuilder) SendGet(params interface{}, errorMapping ErrorMapping, value Response) error {
+
+	err := sendGet(rB, params, errorMapping, &value)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (rB *RequestBuilder) SendPost(data map[string]string, params interface{}, errorMapping ErrorMapping, value Response) error {
+	return sendPost(rB, data, params, errorMapping, &value)
+}
+
+func (rB *RequestBuilder) SendDelete(params interface{}, errorMapping ErrorMapping) error {
+	return sendDelete(rB, params, errorMapping)
+}
+
+func (rB *RequestBuilder) SendPut(data map[string]string, params interface{}, errorMapping ErrorMapping, value Response) error {
+	return sendPut(rB, data, params, errorMapping, &value)
+}
