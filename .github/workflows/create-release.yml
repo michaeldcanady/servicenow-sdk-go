@@ -1,0 +1,22 @@
+name: Create GitHub release
+on:
+  push:
+    tags: ['v*']
+    tags-ignore: ['v*-preview*']
+
+jobs:
+  create_release:
+    name: Create Release
+    environment:
+      name: gh_releases
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Release
+        uses: anton-yurchenko/git-release@v5.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRAFT_RELEASE: "false"
+          PRE_RELEASE: "false"
+          CHANGELOG_FILE: "CHANGELOG.md"
+          ALLOW_EMPTY_CHANGELOG: "true"
