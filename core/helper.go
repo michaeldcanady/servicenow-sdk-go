@@ -72,7 +72,7 @@ func IsPointer(value interface{}) bool {
 	return valueKind == reflect.Ptr
 }
 
-func FromJson2[T any](response *http.Response, v *T) error {
+func FromJson[T any](response *http.Response, v *T) error {
 	if response == nil {
 		return ErrNilResponse
 	}
@@ -94,34 +94,10 @@ func FromJson2[T any](response *http.Response, v *T) error {
 	return nil
 }
 
-func FromJson[T any](response *http.Response) (*T, error) {
-
-	if response == nil {
-		return nil, ErrNilResponse
-	}
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return nil, err
-	}
-	defer response.Body.Close()
-
-	var value T
-	if err := json.Unmarshal(body, &value); err != nil {
-		return nil, err
-	}
-
-	return &value, nil
-}
-
-type Response interface {
-	ParseHeaders(headers http.Header)
-}
-
 // ParseResponse parses the HTTP Response to the provided type
 func ParseResponse2[T Response](response *http.Response, value *T) error {
 
-	err := FromJson2(response, &value)
+	err := FromJson(response, &value)
 	if err != nil {
 		return err
 	}
@@ -129,19 +105,6 @@ func ParseResponse2[T Response](response *http.Response, value *T) error {
 	(*value).ParseHeaders(response.Header)
 
 	return nil
-}
-
-// ParseResponse parses the HTTP Response to the provided type
-func ParseResponse[T Response](response *http.Response) (*T, error) {
-
-	responseObject, err := FromJson[T](response)
-	if err != nil {
-		return nil, err
-	}
-
-	(*responseObject).ParseHeaders(response.Header)
-
-	return responseObject, nil
 }
 
 func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping, value *T) error {
