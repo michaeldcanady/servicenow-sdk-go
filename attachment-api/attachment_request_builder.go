@@ -1,6 +1,10 @@
 package attachmentapi
 
 import (
+	"errors"
+	"fmt"
+	"os"
+
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
@@ -11,7 +15,7 @@ type AttachmentRequestBuilder struct {
 func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]string) *AttachmentRequestBuilder {
 	requestBuilder := core.NewRequestBuilder(
 		client,
-		"{+baseurl}/attachment{/attachment}",
+		"{+baseurl}/attachment{/attachment}{?encryption_context,file_name,table_name,table_sys_id}",
 		pathParameters,
 	)
 	return &AttachmentRequestBuilder{
@@ -37,4 +41,30 @@ func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQuery
 	}
 
 	return &response, nil
+}
+
+func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequestBuilderFileQueryParameters) (*AttachmentItemResponse, error) {
+
+	var value AttachmentItemResponse
+
+	if params == nil {
+		return nil, errors.New("params cannot be nil")
+	}
+
+	_, err := os.Stat(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("file path %s does not exist", filePath)
+	}
+
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	err = rB.SendPost2(data, params, nil, &value)
+	if err != nil {
+		return nil, err
+	}
+
+	return &value, nil
 }
