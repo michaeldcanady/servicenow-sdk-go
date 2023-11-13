@@ -1,7 +1,9 @@
 package core
 
 import (
+	"encoding/json"
 	"net/http"
+	"reflect"
 	"testing"
 )
 
@@ -101,6 +103,67 @@ func TestToDeleteRequestInformation(t *testing.T) {
 		t.Errorf("Expected method to be DELETE, but got %s", requestInfo.Method)
 	}
 	// Add more assertions as needed
+}
+
+func TestPrepareData(t *testing.T) {
+	t.Run("NilData", func(t *testing.T) {
+		rB := &RequestBuilder{}
+		data, err := rB.prepareData(nil)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if data != nil {
+			t.Fatalf("Expected nil data for nil input, got: %v", data)
+		}
+	})
+
+	t.Run("ByteData", func(t *testing.T) {
+		rB := &RequestBuilder{}
+		rawData := []byte("test data")
+		data, err := rB.prepareData(rawData)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if !reflect.DeepEqual(data, rawData) {
+			t.Fatalf("Expected %v, got: %v", rawData, data)
+		}
+	})
+
+	t.Run("MapData", func(t *testing.T) {
+		rB := &RequestBuilder{}
+		rawData := map[string]string{
+			"key": "value",
+		}
+		data, err := rB.prepareData(rawData)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		expectedData, err := json.Marshal(rawData)
+		if err != nil {
+			t.Fatalf("Error marshalling map data: %v", err)
+		}
+
+		if !reflect.DeepEqual(data, expectedData) {
+			t.Fatalf("Expected %v, got: %v", expectedData, data)
+		}
+	})
+
+	t.Run("UnsupportedType", func(t *testing.T) {
+		rB := &RequestBuilder{}
+		rawData := 42 // Unsupported type
+		_, err := rB.prepareData(rawData)
+		if err == nil {
+			t.Fatal("Expected an error for unsupported type, but got nil")
+		}
+
+		expectedError := "unsupported type: int"
+		if err.Error() != expectedError {
+			t.Fatalf("Expected error %q, got: %v", expectedError, err)
+		}
+	})
 }
 
 func TestToRequestInformation(t *testing.T) {
