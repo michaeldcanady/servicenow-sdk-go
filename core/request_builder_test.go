@@ -79,7 +79,6 @@ func TestToPostRequestInformation(t *testing.T) {
 	if requestInfo.Method != POST {
 		t.Errorf("Expected method to be POST, but got %s", requestInfo.Method)
 	}
-	// Add more assertions as needed
 }
 
 func TestToDeleteRequestInformation(t *testing.T) {
@@ -102,7 +101,58 @@ func TestToDeleteRequestInformation(t *testing.T) {
 	if requestInfo.Method != DELETE {
 		t.Errorf("Expected method to be DELETE, but got %s", requestInfo.Method)
 	}
-	// Add more assertions as needed
+}
+
+func TestToPostRequestInformation2(t *testing.T) {
+	// Create a mock RequestBuilder with a mock client
+	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
+
+	// Create mock data and query parameters
+	data := map[string]string{
+		"key1": "value1",
+		"key2": "value2",
+	}
+	params := map[string]string{
+		"param1": "value1",
+		"param2": "value2",
+	}
+
+	// Call the ToPostRequestInformation method
+	requestInfo, err := builder.ToPostRequestInformation2(data, params)
+
+	// Perform assertions to check the result
+	if err != nil {
+		t.Errorf("Expected no error, but got %v", err)
+	}
+	if requestInfo.Method != POST {
+		t.Errorf("Expected method to be POST, but got %s", requestInfo.Method)
+	}
+}
+
+func TestToPutRequestInformation2(t *testing.T) {
+	// Create a mock RequestBuilder with a mock client
+	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
+
+	// Create mock data and query parameters
+	data := map[string]string{
+		"key1": "value1",
+		"key2": "value2",
+	}
+	params := map[string]string{
+		"param1": "value1",
+		"param2": "value2",
+	}
+
+	// Call the ToPostRequestInformation method
+	requestInfo, err := builder.ToPutRequestInformation(data, params)
+
+	// Perform assertions to check the result
+	if err != nil {
+		t.Errorf("Expected no error, but got %v", err)
+	}
+	if requestInfo.Method != PUT {
+		t.Errorf("Expected method to be PUT, but got %s", requestInfo.Method)
+	}
 }
 
 func TestPrepareData(t *testing.T) {
@@ -190,7 +240,6 @@ func TestToRequestInformation(t *testing.T) {
 	if requestInfo.Method != GET {
 		t.Errorf("Expected method to be GET, but got %s", requestInfo.Method)
 	}
-	// Add more assertions as needed
 
 	// Call the ToRequestInformation method for a POST request
 	requestInfo, err = builder.ToRequestInformation(POST, data, params)
@@ -202,5 +251,4 @@ func TestToRequestInformation(t *testing.T) {
 	if requestInfo.Method != POST {
 		t.Errorf("Expected method to be POST, but got %s", requestInfo.Method)
 	}
-	// Add more assertions as needed
 }
