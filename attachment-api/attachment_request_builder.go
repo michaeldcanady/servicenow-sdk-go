@@ -1,8 +1,6 @@
 package attachmentapi
 
 import (
-	"errors"
-	"fmt"
 	"os"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -48,12 +46,12 @@ func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequ
 	var value AttachmentItemResponse
 
 	if params == nil {
-		return nil, errors.New("params cannot be nil")
+		return nil, ErrNilParams
 	}
 
 	_, err := os.Stat(filePath)
 	if err != nil {
-		return nil, fmt.Errorf("file path %s does not exist", filePath)
+		return nil, err
 	}
 
 	data, err := os.ReadFile(filePath)

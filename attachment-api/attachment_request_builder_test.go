@@ -2,7 +2,6 @@ package attachmentapi
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -201,8 +200,6 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 		//	return
 		//}
 
-		fmt.Println(r.URL.Query())
-
 		// Create a mock JSON response
 		mockResponse := map[string]interface{}{
 			"result": map[string]string{
@@ -269,18 +266,37 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 
 	builder := NewAttachmentRequestBuilder(client, pathParameters)
 
-	params := &AttachmentRequestBuilderFileQueryParameters{
-		FileName:   fileName,
-		TableName:  tableName,
-		TableSysId: tableSysId,
-	}
+	t.Run("Successful", func(t *testing.T) {
 
-	// Call the Get method
-	resp, err := builder.File(tempFile.Name(), params)
-	if err != nil {
-		t.Fatalf("Unexpected error: %v", err)
-	}
+		params := &AttachmentRequestBuilderFileQueryParameters{
+			FileName:   fileName,
+			TableName:  tableName,
+			TableSysId: tableSysId,
+		}
 
-	// Validate the response
-	assert.Equal(t, expected, resp)
+		// Call the Get method
+		resp, err := builder.File(tempFile.Name(), params)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		// Validate the response
+		assert.Equal(t, expected, resp)
+	})
+
+	t.Run("Nil params", func(t *testing.T) {
+		_, err := builder.File(tempFile.Name(), nil)
+		assert.ErrorIs(t, ErrNilParams, err)
+	})
+
+	t.Run("Bad file", func(t *testing.T) {
+		params := &AttachmentRequestBuilderFileQueryParameters{
+			FileName:   fileName,
+			TableName:  tableName,
+			TableSysId: tableSysId,
+		}
+
+		_, err := builder.File("bad-file.txt", params)
+		assert.Error(t, err)
+	})
 }
