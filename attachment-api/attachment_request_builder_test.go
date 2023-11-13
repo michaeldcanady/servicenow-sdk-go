@@ -88,7 +88,7 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 		  }`
 
 		w.WriteHeader(http.StatusOK)
-		_, err := w.Write([]byte(responseJSON)) //nolint:errcheck
+		_, err := w.Write([]byte(responseJSON)) //nolint:all
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
