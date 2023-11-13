@@ -88,7 +88,11 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 		  }`
 
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(responseJSON))
+		_, err := w.Write([]byte(responseJSON))
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+		}
 	}))
 
 	client := &MockClient{}
