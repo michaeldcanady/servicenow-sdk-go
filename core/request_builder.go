@@ -130,7 +130,7 @@ func (rB *RequestBuilder) prepareData(rawData interface{}) ([]byte, error) {
 		}
 	}
 
-	if reflect.TypeOf(rawData) != reflect.TypeOf([]byte{}) {
+	if reflect.TypeOf(data) != reflect.TypeOf([]byte{}) {
 		return data, fmt.Errorf("unsupported type: %t", rawData)
 	}
 
