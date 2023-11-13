@@ -115,8 +115,8 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 		},
 	}
 
-	updatedOn, _ := time.Parse("2006-01-02 15:04:05", "2009-05-21 04:12:21")
-	sysCreatedOn, _ := time.Parse("2006-01-02 15:04:05", "2009-05-21 04:12:21")
+	updatedOn, _ := time.Parse(DateTimeFormat, "2009-05-21 04:12:21")
+	sysCreatedOn, _ := time.Parse(DateTimeFormat, "2009-05-21 04:12:21")
 
 	(*expected.Result[0]).UpdatedOn = Time(updatedOn)
 	(*expected.Result[0]).SysCreatedOn = Time(sysCreatedOn)
@@ -158,8 +158,8 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 func TestAttachmentRequestBuilder_File(t *testing.T) {
 
 	fakeUser := "fakeuser"
-	today, _ := time.Parse("2006-01-02 15:04:05", "2009-05-21 04:12:21")
-	formattedToday := today.Format("2006-01-02 15:04:05")
+	today, _ := time.Parse(DateTimeFormat, "2009-05-21 04:12:21")
+	formattedToday := today.Format(DateTimeFormat)
 	tableName := "incident"
 	tableSysId := "INC00000000"
 	fileName := "testfile.txt"
