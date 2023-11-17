@@ -4,7 +4,6 @@ about: Suggest an idea for this project
 title: "[Feature]"
 labels: enhancement
 assignees: ''
-
 ---
 
 ### Description
@@ -48,7 +47,7 @@ assignees: ''
 Before submitting this feature request, please make sure you have completed the following:
 
 - [ ] I have searched for similar feature requests in the repository's issue tracker.
-- [ ] I have checked the latest version of the Go wrapper to see if this feature already exists.
+- [ ] I have checked the latest version of the Go SDK to see if this feature already exists.
 - [ ] I have provided a clear and descriptive title for this feature request.
 - [ ] I have provided a detailed description of the feature and its use case.
 - [ ] I have provided any relevant additional context or examples.
