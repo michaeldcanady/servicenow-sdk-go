@@ -122,9 +122,9 @@ func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, err
 	return ParseResponse(response, value)
 }
 
-func sendPost[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping, value *T) error {
+func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, params interface{}, errorMapping ErrorMapping, value *T) error {
 
-	requestInfo, err := requestBuilder.ToPostRequestInformation(data, params)
+	requestInfo, err := requestBuilder.ToPostRequestInformation2(data, params)
 	if err != nil {
 		return err
 	}

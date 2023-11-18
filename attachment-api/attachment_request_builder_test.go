@@ -1,9 +1,11 @@
 package attachmentapi
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
 	"reflect"
 	"testing"
 	"time"
@@ -85,7 +87,11 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 		  }`
 
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(responseJSON))
+		_, err := w.Write([]byte(responseJSON)) //nolint:all
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			_, _ = w.Write([]byte(err.Error())) //nolint:all
+		}
 	}))
 
 	client := &MockClient{}
@@ -112,8 +118,8 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 		},
 	}
 
-	updatedOn, _ := time.Parse("2006-01-02 15:04:05", "2009-05-21 04:12:21")
-	sysCreatedOn, _ := time.Parse("2006-01-02 15:04:05", "2009-05-21 04:12:21")
+	updatedOn, _ := time.Parse(DateTimeFormat, "2009-05-21 04:12:21")
+	sysCreatedOn, _ := time.Parse(DateTimeFormat, "2009-05-21 04:12:21")
 
 	(*expected.Result[0]).UpdatedOn = Time(updatedOn)
 	(*expected.Result[0]).SysCreatedOn = Time(sysCreatedOn)
@@ -150,4 +156,147 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 		t.Errorf("Expected response with 1 result, but got %v", len(resp.Result))
 	}
 	assert.Equal(t, expected, resp)
+}
+
+func TestAttachmentRequestBuilder_File(t *testing.T) {
+
+	fakeUser := "fakeuser"
+	today, _ := time.Parse(DateTimeFormat, "2009-05-21 04:12:21")
+	formattedToday := today.Format(DateTimeFormat)
+	tableName := "incident"
+	tableSysId := "INC00000000"
+	fileName := "testfile.txt"
+
+	expected := &AttachmentItemResponse{
+		Result: &Attachment{
+			AverageImageColor: "String",
+			Compressed:        false,
+			ContentType:       "String",
+			DownloadLink:      "String",
+			FileName:          fileName,
+			ImageHeight:       0,
+			ImageWidth:        0,
+			Size:              0,
+			SizeCompressed:    0,
+			SysCreatedBy:      fakeUser,
+			SysCreatedOn:      Time(today),
+			SysId:             "String",
+			SysModCount:       0,
+			SysTags:           "String",
+			SysUpdatedBy:      fakeUser,
+			UpdatedOn:         Time(today),
+			TableName:         tableName,
+			TableSysId:        tableSysId,
+			//updated_by_name:   fakeUser,
+		},
+	}
+
+	// Create an httptest.NewServer with a custom handler
+	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Read the request body
+		//_, err := io.ReadAll(r.Body)
+		//if err != nil {
+		//	http.Error(w, "Error reading request body", http.StatusInternalServerError)
+		//	return
+		//}
+
+		// Create a mock JSON response
+		mockResponse := map[string]interface{}{
+			"result": map[string]string{
+				"average_image_color": "String",
+				"compressed":          "false",
+				"content_type":        "String",
+				"created_by_name":     "String",
+				"download_link":       "String",
+				"file_name":           r.URL.Query()["file_name"][0],
+				"image_height":        "0",
+				"image_width":         "0",
+				"size_bytes":          "0",
+				"size_compressed":     "0",
+				"sys_created_by":      fakeUser,
+				"sys_created_on":      formattedToday,
+				"sys_id":              "String",
+				"sys_mod_count":       "0",
+				"sys_tags":            "String",
+				"sys_updated_by":      fakeUser,
+				"sys_updated_on":      formattedToday,
+				"table_name":          r.URL.Query()["table_name"][0],
+				"table_sys_id":        r.URL.Query()["table_sys_id"][0],
+				"updated_by_name":     fakeUser,
+			},
+		}
+
+		// Convert the mock response to JSON
+		responseJSON, err := json.Marshal(mockResponse)
+		if err != nil {
+			http.Error(w, "Error creating JSON response", http.StatusInternalServerError)
+			return
+		}
+
+		// Write the JSON response
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(responseJSON)
+	}))
+	defer mockServer.Close()
+
+	// Set up a temporary file for testing
+	tempFile, err := os.CreateTemp("", "testfile")
+	if err != nil {
+		t.Fatalf("Error creating temporary file: %v", err)
+	}
+	defer os.Remove(tempFile.Name())
+
+	// Write some data to the temporary file
+	testData := []byte("test data")
+	_, err = tempFile.Write(testData)
+	if err != nil {
+		t.Fatalf("Error writing to temporary file: %v", err)
+	}
+
+	parsedUrl, err := url.Parse(mockServer.URL)
+	if err != nil {
+		t.Errorf("Expected no error, but got: %v", err)
+		return
+	}
+
+	client := &MockClient{}
+
+	pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host}
+
+	builder := NewAttachmentRequestBuilder(client, pathParameters)
+
+	t.Run("Successful", func(t *testing.T) {
+
+		params := &AttachmentRequestBuilderFileQueryParameters{
+			FileName:   fileName,
+			TableName:  tableName,
+			TableSysId: tableSysId,
+		}
+
+		// Call the Get method
+		resp, err := builder.File(tempFile.Name(), params)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		// Validate the response
+		assert.Equal(t, expected, resp)
+	})
+
+	t.Run("Nil params", func(t *testing.T) {
+		_, err := builder.File(tempFile.Name(), nil)
+		assert.ErrorIs(t, ErrNilParams, err)
+	})
+
+	t.Run("Bad file", func(t *testing.T) {
+		params := &AttachmentRequestBuilderFileQueryParameters{
+			FileName:   fileName,
+			TableName:  tableName,
+			TableSysId: tableSysId,
+		}
+
+		_, err := builder.File("bad-file.txt", params)
+		assert.Error(t, err)
+	})
 }
