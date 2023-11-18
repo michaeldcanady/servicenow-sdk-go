@@ -30,6 +30,51 @@ func TestQuery_AddQuery(t *testing.T) {
 			Expected: "field!=true",
 			Actual:   NewQuery().AddNotEqual("field", true).String(),
 		},
+		{
+			Title:    "Test AddGreaterThan",
+			Expected: "field>true",
+			Actual:   NewQuery().AddGreaterThan("field", true).String(),
+		},
+		{
+			Title:    "Test AddLessThan",
+			Expected: "field<true",
+			Actual:   NewQuery().AddLessThan("field", true).String(),
+		},
+		{
+			Title:    "Test AddContains",
+			Expected: "fieldCONTAINStrue",
+			Actual:   NewQuery().AddContains("field", true).String(),
+		},
+		{
+			Title:    "Test AddNotContains",
+			Expected: "field!CONTAINStrue",
+			Actual:   NewQuery().AddNotContains("field", true).String(),
+		},
+		{
+			Title:    "Test AddStartsWith",
+			Expected: "fieldSTARTSWITHtrue",
+			Actual:   NewQuery().AddStartsWith("field", true).String(),
+		},
+		{
+			Title:    "Test AddEndsWith",
+			Expected: "fieldENDSWITHtrue",
+			Actual:   NewQuery().AddEndsWith("field", true).String(),
+		},
+		{
+			Title:    "Test AddBetween",
+			Expected: "fieldBETWEEN1@10",
+			Actual:   NewQuery().AddBetween("field", 1, 10).String(),
+		},
+		{
+			Title:    "Test AddIsSame",
+			Expected: "fieldSAMEASfield1",
+			Actual:   NewQuery().AddIsSame("field", "field1").String(),
+		},
+		{
+			Title:    "Test AddIsDifferent",
+			Expected: "fieldNSAMEASfield1",
+			Actual:   NewQuery().AddIsDifferent("field", "field1").String(),
+		},
 	}
 
 	for _, test := range tests {
