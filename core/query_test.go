@@ -167,3 +167,12 @@ func TestQuery_String(t *testing.T) {
 	expected := ""
 	assert.Equal(t, expected, actual)
 }
+
+func TestQuery_Encode(t *testing.T) {
+
+	query := NewQuery()
+
+	actual := query.Encoded()
+	expected := ""
+	assert.Equal(t, expected, actual)
+}
