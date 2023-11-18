@@ -1,4 +1,4 @@
-package tableapi
+package core
 
 import "fmt"
 
@@ -8,6 +8,7 @@ type OrderBy struct {
 	Field     string
 }
 
+//NewOrderBy Creates new order by
 func NewOrderBy() *OrderBy {
 	return &OrderBy{}
 }

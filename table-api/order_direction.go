@@ -1,10 +1,9 @@
 package tableapi
 
-// OrderDirection represents the order direction for sorting.
-type OrderDirection string
+import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
 const (
-	Unset OrderDirection = ""
-	Asc   OrderDirection = "^ORDERBY"
-	Desc  OrderDirection = "^ORDERBYDESC"
+	Unset = core.Unset
+	Asc   = core.Asc
+	Desc  = core.Desc
 )

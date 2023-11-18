@@ -1,8 +1,8 @@
 package tableapi
 
-type LogicalOperator string
+import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
 const (
-	And LogicalOperator = "^"
-	Or  LogicalOperator = "^OR"
+	And = core.And
+	Or  = core.Or
 )
