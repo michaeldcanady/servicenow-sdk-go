@@ -76,8 +76,6 @@ func (rB *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQ
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
 func (rB *TableItemRequestBuilder) Put(tableEntry map[string]string, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
 
-	var response TableItemResponse
-
 	config := &TableItemPutRequestConfiguration{
 		Header:          nil,
 		QueryParameters: params,
@@ -90,5 +88,5 @@ func (rB *TableItemRequestBuilder) Put(tableEntry map[string]string, params *Tab
 		return nil, err
 	}
 
-	return &response, nil
+	return config.response, nil
 }
