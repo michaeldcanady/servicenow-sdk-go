@@ -42,16 +42,23 @@ func (T *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder {
 //   - error: An error if there was an issue with the request or response.
 func (rB *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
 
-	var response TableCollectionResponse
+	config := &TableGetRequestConfiguration{
+		Header:          nil,
+		QueryParameters: params,
+		Data:            nil,
+		ErrorMapping:    nil,
+		response:        &TableCollectionResponse{},
+	}
 
-	err := rB.SendGet(params, nil, &response)
+	err := rB.SendGet2(config.toConfiguration())
 	if err != nil {
 		return nil, err
 	}
 
-	return &response, nil
+	return config.response, nil
 }
 
+// Deprecated: deprecated since v{version}. Use `Post2` instead.
 // Post sends an HTTP Post request with the provided data and query parameters and returns a TableResponse.
 //
 // Parameters:
@@ -71,6 +78,24 @@ func (rB *TableRequestBuilder) Post(data map[string]string, params *TableRequest
 	}
 
 	return &response, nil
+}
+
+func (rB *TableRequestBuilder) Post2(data map[string]string, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error) {
+
+	config := &TablePostRequestConfiguration{
+		Header:          nil,
+		QueryParameters: params,
+		Data:            data,
+		ErrorMapping:    nil,
+		response:        &TableItemResponse{},
+	}
+
+	err := rB.SendPut2(config.toConfiguration())
+	if err != nil {
+		return nil, err
+	}
+
+	return config.response, nil
 }
 
 // Count sends an HTTP HEAD request and retrieves the value of "X-Total-Count" from the response header, which represents the count of items.
