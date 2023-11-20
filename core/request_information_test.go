@@ -132,10 +132,11 @@ func TestNewRequestInformation_ToRequestWithContext(t *testing.T) {
 }
 
 type test struct {
-	title     string
-	headers   interface{}
-	expected  http.Header
-	shouldErr bool
+	title       string
+	headers     interface{}
+	expected    http.Header
+	shouldErr   bool
+	expectedErr error
 }
 
 func TestNewRequestInformation_AddHeaders(t *testing.T) {
@@ -172,6 +173,13 @@ func TestNewRequestInformation_AddHeaders(t *testing.T) {
 				"Header-3": []string{"value3"},
 			},
 			shouldErr: false,
+		},
+		{
+			title:       "Test string Headers",
+			headers:     "bad headers",
+			expected:    http.Header{},
+			shouldErr:   true,
+			expectedErr: ErrInvalidHeaderType,
 		},
 	}
 
