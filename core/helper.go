@@ -2,7 +2,6 @@ package core
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"net/http"
 	"reflect"
@@ -15,7 +14,7 @@ import (
 // ToQueryMap converts a struct to query parameter map
 func ToQueryMap(source interface{}) (map[string]string, error) {
 	if source == nil {
-		return nil, errors.New("source is nil")
+		return nil, ErrNilSource
 	}
 
 	queryBytes, err := urlquery.Marshal(source)
@@ -75,10 +74,6 @@ func IsPointer(value interface{}) bool {
 func FromJson[T any](response *http.Response, v *T) error {
 	if response == nil {
 		return ErrNilResponse
-	}
-
-	if !IsPointer(v) {
-		return errors.New("v must be pointer")
 	}
 
 	body, err := io.ReadAll(response.Body)
