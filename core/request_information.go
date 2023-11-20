@@ -80,7 +80,7 @@ func (rI *RequestInformation) SetUri(url *url.URL) {
 
 	//TODO: Add validation that url is valid
 
-	rI.uri.PathParameters = map[string]string{"request-raw-url": url.String()}
+	rI.uri.PathParameters = map[string]string{rawUrlKey: url.String()}
 }
 
 func (rI *RequestInformation) Url() (string, error) {
@@ -142,7 +142,7 @@ func (rI *RequestInformation) AddHeaders(rawHeaders interface{}) error {
 
 	val := reflect.ValueOf(rawHeaders)
 
-	if val.Kind() == reflect.Pointer {
+	if val.Kind() == reflect.Struct {
 		// use the httpheader.Encode function from the httpheader package
 		// to encode the pointer value into an http.Header map
 		headers, err = httpheader.Encode(rawHeaders)
