@@ -17,7 +17,7 @@ func (c *mockClient) Send(requestInfo IRequestInformation, errorMapping ErrorMap
 	return nil, nil
 }
 
-func TestRequestBuilder_ToHeadRequestInformation(t *testing.T) {
+func TestRequestBuilderToHeadRequestInformation(t *testing.T) {
 	// Create a mock RequestBuilder with a mock client
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
@@ -34,7 +34,7 @@ func TestRequestBuilder_ToHeadRequestInformation(t *testing.T) {
 	// Add more assertions as needed
 }
 
-func TestRequestBuilder_ToGetRequestInformation(t *testing.T) {
+func TestRequestBuilderToGetRequestInformation(t *testing.T) {
 	// Create a mock RequestBuilder with a mock client
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
@@ -53,7 +53,7 @@ func TestRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	assert.Equal(t, params, requestInfo.uri.QueryParameters)
 }
 
-func TestRequestBuilder_ToGetRequestInformation2(t *testing.T) {
+func TestRequestBuilderToGetRequestInformation2(t *testing.T) {
 	// Create a mock RequestBuilder with a mock client
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
@@ -80,7 +80,7 @@ func TestRequestBuilder_ToGetRequestInformation2(t *testing.T) {
 	assert.Equal(t, params, requestInfo.uri.QueryParameters)
 }
 
-func TestRequestBuilder_ToPostRequestInformation(t *testing.T) {
+func TestRequestBuilderToPostRequestInformation(t *testing.T) {
 	// Create a mock RequestBuilder with a mock client
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
@@ -109,7 +109,7 @@ func TestRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	assert.Equal(t, expectedJson, requestInfo.Content)
 }
 
-func TestRequestBuilder_ToPostRequestInformation2(t *testing.T) {
+func TestRequestBuilderToPostRequestInformation2(t *testing.T) {
 	// Create a mock RequestBuilder with a mock client
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
@@ -137,7 +137,7 @@ func TestRequestBuilder_ToPostRequestInformation2(t *testing.T) {
 	assert.Equal(t, expectedJson, requestInfo.Content)
 }
 
-func TestRequestBuilder_ToPostRequestInformation3(t *testing.T) {
+func TestRequestBuilderToPostRequestInformation3(t *testing.T) {
 	// Create a mock RequestBuilder with a mock client
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
@@ -171,7 +171,7 @@ func TestRequestBuilder_ToPostRequestInformation3(t *testing.T) {
 	assert.Equal(t, expectedJson, requestInfo.Content)
 }
 
-func TestRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
+func TestRequestBuilderToDeleteRequestInformation(t *testing.T) {
 	// Create a mock RequestBuilder with a mock client
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
@@ -189,7 +189,7 @@ func TestRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
 	assert.Equal(t, params, requestInfo.uri.QueryParameters)
 }
 
-func TestRequestBuilder_ToDeleteRequestInformation2(t *testing.T) {
+func TestRequestBuilderToDeleteRequestInformation2(t *testing.T) {
 	// Create a mock RequestBuilder with a mock client
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
@@ -211,7 +211,7 @@ func TestRequestBuilder_ToDeleteRequestInformation2(t *testing.T) {
 	assert.Equal(t, params, requestInfo.uri.QueryParameters)
 }
 
-func TestRequestBuilder_ToPutRequestInformation2(t *testing.T) {
+func TestRequestBuilderToPutRequestInformation2(t *testing.T) {
 	// Create a mock RequestBuilder with a mock client
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
@@ -237,7 +237,7 @@ func TestRequestBuilder_ToPutRequestInformation2(t *testing.T) {
 	}
 }
 
-func TestRequestBuilder_PrepareData(t *testing.T) {
+func TestRequestBuilderPrepareData(t *testing.T) {
 	t.Run("NilData", func(t *testing.T) {
 		rB := &RequestBuilder{}
 		data, err := rB.prepareData(nil)
@@ -298,7 +298,7 @@ func TestRequestBuilder_PrepareData(t *testing.T) {
 	})
 }
 
-func TestRequestBuilder_ToRequestInformation(t *testing.T) {
+func TestRequestBuilderToRequestInformation(t *testing.T) {
 	// Create a mock RequestBuilder with a mock client
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
@@ -341,7 +341,7 @@ type requestBuilderTest struct {
 	config RequestConfiguration
 }
 
-func TestRequestBuilder_ToRequestInformation3(t *testing.T) {
+func TestRequestBuilderToRequestInformation3(t *testing.T) {
 
 	tests := []requestBuilderTest{
 		{
