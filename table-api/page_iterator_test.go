@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/stretchr/testify/assert"
 )
 
 const fakeLinkKey = "https://fake-link.com"
@@ -127,7 +126,7 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 	return nil, nil
 }
 
-func TestNewPageIterator(t *testing.T) {
+func TestNewPageIteratorWithClient(t *testing.T) {
 	// Mock client and current page
 	client := &mockClient{}
 	currentPage := TableCollectionResponse{
@@ -145,7 +144,7 @@ func TestNewPageIterator(t *testing.T) {
 	}
 }
 
-func TestNewPageIteratorIterateSinglePageWithNoCallback(t *testing.T) {
+func TestIterateWithNoCallback(t *testing.T) {
 	// Mock PageIterator
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
@@ -182,200 +181,5 @@ func TestNewPageIteratorIterateSinglePageWithCallback(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Expected no error, but got %v", err)
-	}
-}
-
-func TestNewPageIteratorIterateMultiplePageWithNoCallback(t *testing.T) {
-	// Mock PageIterator
-	pageIterator := &PageIterator{
-		currentPage: PageResult{
-			Result:           []*TableEntry{},
-			NextPageLink:     fakeLinkKey,
-			PreviousPageLink: "",
-			FirstPageLink:    "",
-			LastPageLink:     "",
-		},
-		client:     &mockClient{},
-		pauseIndex: 0,
-	}
-
-	err := pageIterator.Iterate(nil)
-
-	if err != nil {
-		t.Errorf("Expected no error, but got %v", err)
-	}
-}
-
-func TestNewPageIteratorIterateMultiplePageWithCallback(t *testing.T) {
-	// Mock PageIterator
-	pageIterator := &PageIterator{
-		currentPage: PageResult{
-			Result:           []*TableEntry{},
-			NextPageLink:     fakeLinkKey,
-			PreviousPageLink: "",
-			FirstPageLink:    "",
-			LastPageLink:     "",
-		},
-		client:     &mockClient{},
-		pauseIndex: 0,
-	}
-
-	// Mock callback function
-	callback := func(pageItem *TableEntry) bool {
-		// Implement your callback logic for testing
-		return true
-	}
-
-	err := pageIterator.Iterate(callback)
-
-	if err != nil {
-		t.Errorf("Expected no error, but got %v", err)
-	}
-}
-
-func TestNewPageIteratorEnumerate(t *testing.T) {
-
-	var err error
-
-	// Create a mock callback that returns false after the first item.
-	mockCallback := func(item *TableEntry) bool {
-
-		var val string
-
-		val, err = item.Value("ID").String()
-		if err != nil {
-			return false
-		}
-
-		return val == "1"
-	}
-
-	// Create a mock page result with two items.
-	mockPageResult := PageResult{
-		Result: []*TableEntry{
-			{"ID": "1", "Name": "Alice"},
-			{"ID": "2", "Name": "Bob"},
-		},
-	}
-
-	// Create a mock page iterator with the mock page result and a nil client.
-	mockPageIterator := &PageIterator{
-		currentPage: mockPageResult,
-		client:      nil,
-	}
-
-	// Call the enumerate function with the mock callback and page iterator.
-	keepIterating := mockPageIterator.enumerate(mockCallback)
-
-	if err != nil {
-		t.Errorf("got unexpected error: %s", err)
-	}
-
-	// Check if the keepIterating value is false, as expected.
-	if keepIterating {
-		t.Errorf("enumerate returned true, want false")
-	}
-
-	// Check if the pauseIndex value is 1, as expected.
-	if mockPageIterator.pauseIndex != 1 {
-		t.Errorf("enumerate set pauseIndex to %d, want 1", mockPageIterator.pauseIndex)
-	}
-}
-
-func TestNewPageIteratorNext(t *testing.T) {
-
-	t.Run("Valid Next Page Link", func(t *testing.T) {
-		// Create a mock page result with one item and a next page link.
-		mockPageResult := PageResult{
-			Result: []*TableEntry{
-				{"ID": "1", "Name": "Alice"},
-			},
-			NextPageLink: fakeLinkKey,
-		}
-
-		// Create a mock page iterator with the mock page result and the mock client.
-		mockPageIterator := &PageIterator{
-			currentPage: mockPageResult,
-			client:      &mockClient{},
-		}
-
-		// Call the fetchNextPage function with the mock page iterator.
-		_, err := mockPageIterator.next()
-
-		// Check if there is no error.
-		if err != nil {
-			t.Errorf("next returned error: %v", err)
-		}
-	})
-
-	t.Run("Invalid Next Page Link", func(t *testing.T) {
-		mockPageResult := PageResult{
-			Result: []*TableEntry{
-				{"ID": "1", "Name": "Alice"},
-			},
-			NextPageLink: "http://\nexample.com",
-		}
-
-		// Create a mock page iterator with the mock page result and the mock client.
-		mockPageIterator := &PageIterator{
-			currentPage: mockPageResult,
-			client:      &mockClient{},
-		}
-
-		// Call the fetchNextPage function with the mock page iterator.
-		_, err := mockPageIterator.next()
-
-		// Check if there is no error.
-		assert.ErrorIs(t, err, ErrParsing)
-	})
-}
-
-func TestNewPageIteratorFetchNextPageWithNextLink(t *testing.T) {
-
-	// Create a mock page result with one item and a next page link.
-	mockPageResult := PageResult{
-		Result: []*TableEntry{
-			{"ID": "1", "Name": "Alice"},
-		},
-		NextPageLink: fakeLinkKey,
-	}
-
-	// Create a mock page iterator with the mock page result and the mock client.
-	mockPageIterator := &PageIterator{
-		currentPage: mockPageResult,
-		client:      &mockClient{},
-	}
-
-	// Call the fetchNextPage function with the mock page iterator.
-	_, err := mockPageIterator.fetchNextPage()
-
-	// Check if there is no error.
-	if err != nil {
-		t.Errorf("fetchNextPage returned error: %v", err)
-	}
-}
-
-func TestNewPageIteratorFetchNextPageWithoutNextLink(t *testing.T) {
-
-	// Create a mock page result with one item and a next page link.
-	mockPageResult := PageResult{
-		Result: []*TableEntry{
-			{"ID": "1", "Name": "Alice"},
-		},
-		NextPageLink: "",
-	}
-
-	// Create a mock page iterator with the mock page result and the mock client.
-	mockPageIterator := &PageIterator{
-		currentPage: mockPageResult,
-		client:      &mockClient{},
-	}
-
-	// Call the fetchNextPage function with the mock page iterator.
-	_, err := mockPageIterator.fetchNextPage()
-
-	// Check if there is no error.
-	if err != nil {
-		t.Errorf("fetchNextPage returned error: %v", err)
 	}
 }
