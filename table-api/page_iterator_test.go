@@ -46,6 +46,18 @@ func TestNewPageIteratorWithoutClient(t *testing.T) {
 	assert.Equal(t, ErrNilClient, err)
 }
 
+func TestPageIteratorNext(t *testing.T) {
+	//To Be Added
+}
+
+func TestPageIteratorFetchNextPage(t *testing.T) {
+	//To Be Added
+}
+
+func TestPageIteratorEnumerate(t *testing.T) {
+	//To Be Added
+}
+
 func TestIterateWithNoCallback(t *testing.T) {
 	// Mock PageIterator
 	pageIterator := &PageIterator{
