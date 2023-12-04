@@ -7,13 +7,6 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
-var (
-	ErrNilClient         = errors.New("client can't be nil")
-	ErrNilResponse       = errors.New("response can't be nil")
-	ErrNilResult         = errors.New("result property missing in response object")
-	ErrWrongResponseType = errors.New("incorrect Response Type")
-)
-
 // PageIterator represents an iterator for paginated results from a table.
 type PageIterator struct {
 	currentPage PageResult
