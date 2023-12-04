@@ -1,4 +1,4 @@
-package core
+package tableapi
 
 type RelationalOperator string
 

@@ -1,4 +1,4 @@
-package core
+package tableapi
 
 // OrderDirection represents the order direction for sorting.
 type OrderDirection string
