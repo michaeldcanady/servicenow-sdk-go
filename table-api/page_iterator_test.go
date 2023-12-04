@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/stretchr/testify/assert"
 )
 
 const fakeLinkKey = "https://fake-link.com"
@@ -142,6 +143,30 @@ func TestNewPageIteratorWithClient(t *testing.T) {
 	if pageIterator == nil {
 		t.Error("Expected PageIterator, but got nil")
 	}
+}
+
+func TestNewPageIteratorWithoutClient(t *testing.T) {
+	// Mock current page
+	currentPage := TableCollectionResponse{
+		// Initialize with test data
+	}
+
+	pageIterator, err := NewPageIterator(currentPage, nil)
+
+	assert.Equal(t, (*PageIterator)(nil), pageIterator)
+	assert.Equal(t, ErrNilClient, err)
+}
+
+func TestPageIteratorNext(t *testing.T) {
+	//To Be Added
+}
+
+func TestPageIteratorFetchNextPage(t *testing.T) {
+	//To Be Added
+}
+
+func TestPageIteratorEnumerate(t *testing.T) {
+	//To Be Added
 }
 
 func TestIterateWithNoCallback(t *testing.T) {
