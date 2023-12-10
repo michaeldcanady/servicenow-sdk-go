@@ -8,13 +8,13 @@ func (tE TableEntry) Value(key string) *TableValue {
 		return nil
 	}
 
-	var _v interface{}
+	var trueVal interface{}
 
 	switch v := value.(type) {
 	case map[string]interface{}:
-		_v = v["value"]
+		trueVal = v["value"]
 	case interface{}:
-		_v = v
+		trueVal = v
 	}
-	return &TableValue{value: _v}
+	return &TableValue{value: trueVal}
 }
