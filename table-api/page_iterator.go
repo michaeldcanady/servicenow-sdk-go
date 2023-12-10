@@ -3,6 +3,7 @@ package tableapi
 import (
 	"errors"
 	"net/url"
+	"reflect"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
@@ -118,6 +119,12 @@ func convertToPage(response interface{}) (PageResult, error) {
 		return page, ErrNilResponse
 	}
 
+	valType := reflect.ValueOf(response)
+
+	if valType.Kind() == reflect.Pointer {
+		response = reflect.Indirect(valType.Elem()).Interface()
+	}
+
 	collectionRep, ok := response.(TableCollectionResponse)
 	if !ok {
 		return page, ErrWrongResponseType
@@ -134,7 +141,7 @@ func convertToPage(response interface{}) (PageResult, error) {
 
 // fetchNextPage fetches the next page of results.
 func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
-	var collectionResp *TableCollectionResponse
+	var collectionResp TableCollectionResponse
 	var err error
 
 	if pI.currentPage.NextPageLink == "" {
@@ -143,7 +150,7 @@ func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 
 	nextLink, err := url.Parse(pI.currentPage.NextPageLink)
 	if err != nil {
-		return collectionResp, errors.New("parsing nextLink url failed")
+		return &collectionResp, errors.New("parsing nextLink url failed")
 	}
 
 	requestInformation := core.NewRequestInformation()
@@ -155,10 +162,10 @@ func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 		return nil, err
 	}
 
-	err = core.FromJson(resp, collectionResp)
+	err = core.FromJson(resp, &collectionResp)
 	if err != nil {
 		return nil, nil
 	}
 
-	return collectionResp, nil
+	return &collectionResp, nil
 }
