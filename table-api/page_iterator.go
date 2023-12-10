@@ -86,10 +86,27 @@ func (p *PageIterator) enumerate(callback func(item *TableEntry) bool) bool {
 }
 
 // next fetches the next page of results.
-func (p *PageIterator) next() (PageResult, error) {
+func (pI *PageIterator) next() (PageResult, error) {
 	var page PageResult
 
-	resp, err := p.fetchNextPage()
+	resp, err := pI.fetchNextPage()
+	if err != nil {
+		return page, err
+	}
+
+	page, err = convertToPage(resp)
+	if err != nil {
+		return page, err
+	}
+
+	return page, nil
+}
+
+// Last fethces the last page of results.
+func (pI *PageIterator) Last() (PageResult, error) {
+	var page PageResult
+
+	resp, err := pI.fetchLastPage()
 	if err != nil {
 		return page, err
 	}
@@ -104,21 +121,31 @@ func (p *PageIterator) next() (PageResult, error) {
 
 // fetchNextPage fetches the next page of results.
 func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
+	return pI.fetchPage(pI.currentPage.NextPageLink)
+}
+
+// fetchLastPage fetches the last page of results.
+func (pI *PageIterator) fetchLastPage() (*TableCollectionResponse, error) {
+	return pI.fetchPage(pI.currentPage.LastPageLink)
+}
+
+// fetchPage fetches the specified uri page of results.
+func (pI *PageIterator) fetchPage(uri string) (*TableCollectionResponse, error) {
 	var collectionResp TableCollectionResponse
 	var err error
 
-	if pI.currentPage.NextPageLink == "" {
+	if uri == "" {
 		return nil, nil
 	}
 
-	nextLink, err := url.Parse(pI.currentPage.NextPageLink)
+	parsedLink, err := url.Parse(uri)
 	if err != nil {
 		return &collectionResp, ErrParsing
 	}
 
 	requestInformation := core.NewRequestInformation()
 	requestInformation.Method = core.GET
-	requestInformation.SetUri(nextLink)
+	requestInformation.SetUri(parsedLink)
 
 	resp, err := pI.client.Send(requestInformation, nil)
 

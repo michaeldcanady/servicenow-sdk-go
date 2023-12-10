@@ -14,6 +14,15 @@ import (
 
 const fakeLinkKey = "https://fake-link.com"
 
+const (
+	fakeFirstPageLink    = "https://first-page.com"
+	fakePreviousPageLink = "https://previous-page.com"
+	fakeNextPageLink     = "https://next-page.com"
+	fakeLastPageLink     = "https://last-page.com"
+
+	errExpected = "Expected no error, but got %v"
+)
+
 // Mock client for testing
 type mockClient struct{}
 
@@ -24,9 +33,17 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 		return nil, fmt.Errorf("unable to parse URL: %s", err)
 	}
 
-	if url == fakeLinkKey {
+	var rawJson map[string]interface{}
 
-		rawJson := map[string]interface{}{
+	switch url {
+	case fakeFirstPageLink:
+		fallthrough
+	case fakePreviousPageLink:
+		fallthrough
+	case fakeNextPageLink:
+		fallthrough
+	case fakeLastPageLink:
+		rawJson = map[string]interface{}{
 			"result": []map[string]interface{}{
 				{
 					"parent":           "",
@@ -106,25 +123,23 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 				},
 			},
 		}
-
-		jsonData, _ := json.Marshal(rawJson)
-
-		// Create a http.Response with the JSON data as the body
-		resp := &http.Response{
-			Status:     "200 OK",
-			StatusCode: 200,
-			Proto:      "HTTP/1.1",
-			ProtoMajor: 1,
-			ProtoMinor: 1,
-			Header:     http.Header{},
-			Body:       io.NopCloser(strings.NewReader(string(jsonData))), // We will replace this later
-			Request:    nil,                                               // We don't need this for the example
-		}
-
-		return resp, nil
 	}
 
-	return nil, nil
+	jsonData, _ := json.Marshal(rawJson)
+
+	// Create a http.Response with the JSON data as the body
+	resp := &http.Response{
+		Status:     "200 OK",
+		StatusCode: 200,
+		Proto:      "HTTP/1.1",
+		ProtoMajor: 1,
+		ProtoMinor: 1,
+		Header:     http.Header{},
+		Body:       io.NopCloser(strings.NewReader(string(jsonData))), // We will replace this later
+		Request:    nil,                                               // We don't need this for the example
+	}
+
+	return resp, nil
 }
 
 func TestNewPageIteratorWithClient(t *testing.T) {
@@ -157,19 +172,7 @@ func TestNewPageIteratorWithoutClient(t *testing.T) {
 	assert.Equal(t, ErrNilClient, err)
 }
 
-func TestPageIteratorNext(t *testing.T) {
-	//To Be Added
-}
-
-func TestPageIteratorFetchNextPage(t *testing.T) {
-	//To Be Added
-}
-
-func TestPageIteratorEnumerate(t *testing.T) {
-	//To Be Added
-}
-
-func TestIterateWithNoCallback(t *testing.T) {
+func TestPageIteratorIterateWithNoCallback(t *testing.T) {
 	// Mock PageIterator
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
@@ -186,7 +189,7 @@ func TestIterateWithNoCallback(t *testing.T) {
 	}
 }
 
-func TestNewPageIteratorIterateSinglePageWithCallback(t *testing.T) {
+func TestPageIteratorIterateSinglePageWithCallback(t *testing.T) {
 	// Mock PageIterator
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
@@ -209,7 +212,7 @@ func TestNewPageIteratorIterateSinglePageWithCallback(t *testing.T) {
 	}
 }
 
-func TestIterateWithDefaultCallback(t *testing.T) {
+func TestPageIteratorIterateWithDefaultCallback(t *testing.T) {
 	// Mock PageIterator
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
@@ -223,5 +226,63 @@ func TestIterateWithDefaultCallback(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Expected no error, but got %v", err)
+	}
+}
+
+func TestPageIteratorEnumerate(t *testing.T) {
+	//To Be Added
+}
+
+func TestPageIteratorNext(t *testing.T) {
+	pageIterator := &PageIterator{
+		currentPage: PageResult{
+			NextPageLink: fakeNextPageLink,
+		},
+		client:     &mockClient{},
+		pauseIndex: 0,
+	}
+
+	_, err := pageIterator.next()
+
+	if err != nil {
+		t.Errorf(errExpected, err)
+	}
+}
+
+func TestPageIteratorLast(t *testing.T) {
+	pageIterator := &PageIterator{
+		currentPage: PageResult{
+			LastPageLink: fakeNextPageLink,
+		},
+		client:     &mockClient{},
+		pauseIndex: 0,
+	}
+
+	_, err := pageIterator.Last()
+
+	if err != nil {
+		t.Errorf(errExpected, err)
+	}
+}
+
+func TestPageIteratorFetchNextPage(t *testing.T) {
+	//To Be Added
+}
+
+func TestPageIteratorFetchLastPage(t *testing.T) {
+	//To Be Added
+}
+
+func TestPageIteratorFetchPage(t *testing.T) {
+	pageIterator := &PageIterator{
+		currentPage: PageResult{},
+		client:      &mockClient{},
+		pauseIndex:  0,
+	}
+
+	_, err := pageIterator.fetchPage(fakeFirstPageLink)
+
+	if err != nil {
+		t.Errorf(errExpected, err)
 	}
 }
