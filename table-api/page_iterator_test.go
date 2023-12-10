@@ -208,3 +208,20 @@ func TestNewPageIteratorIterateSinglePageWithCallback(t *testing.T) {
 		t.Errorf("Expected no error, but got %v", err)
 	}
 }
+
+func TestIterateWithDefaultCallback(t *testing.T) {
+	// Mock PageIterator
+	pageIterator := &PageIterator{
+		currentPage: PageResult{
+			// Initialize with test data
+		},
+		client:     &mockClient{},
+		pauseIndex: 0,
+	}
+
+	err := pageIterator.Iterate(defaultCallback)
+
+	if err != nil {
+		t.Errorf("Expected no error, but got %v", err)
+	}
+}
