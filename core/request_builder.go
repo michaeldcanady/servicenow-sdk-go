@@ -38,6 +38,7 @@ func (rB *RequestBuilder) ToHeadRequestInformation() (*RequestInformation, error
 	return rB.ToRequestInformation2(HEAD, nil, nil)
 }
 
+// Deprecated: deprecated as of {version} please utilize `ToGetRequestInformation2`
 // ToGetRequestInformation creates a new HTTP GET request's RequestInformation object.
 // It sets the HTTP method to GET and includes the specified query parameters.
 //
@@ -51,6 +52,11 @@ func (rB *RequestBuilder) ToGetRequestInformation(params interface{}) (*RequestI
 	return rB.ToRequestInformation2(GET, nil, params)
 }
 
+func (rB *RequestBuilder) ToGetRequestInformation2(config *RequestConfiguration) (*RequestInformation, error) {
+	return rB.ToRequestInformation3(GET, config)
+}
+
+// Deprecated: deprecated as of {version} please utilize `ToPutRequestInformation2`
 // Put updates a table item using an HTTP PUT request.
 // It takes a map of table entry data and optional query parameters to send in the request.
 // The method returns a TableItemResponse representing the updated item or an error if the request fails.
@@ -66,6 +72,11 @@ func (rB *RequestBuilder) ToPutRequestInformation(data map[string]string, params
 	return rB.ToRequestInformation2(PUT, data, params)
 }
 
+func (rB *RequestBuilder) ToPutRequestInformation2(config *RequestConfiguration) (*RequestInformation, error) {
+	return rB.ToRequestInformation3(PUT, config)
+}
+
+// Deprecated: deprecated as of {version} please utilize `ToPostRequestInformation3`
 // ToPostRequestInformation2 creates a new HTTP POST request's RequestInformation object.
 // It sets the HTTP method to POST and includes the specified data in the request body
 // and query parameters.
@@ -79,6 +90,10 @@ func (rB *RequestBuilder) ToPutRequestInformation(data map[string]string, params
 //   - error: An error if there was an issue creating the request information.
 func (rB *RequestBuilder) ToPostRequestInformation2(data interface{}, params interface{}) (*RequestInformation, error) {
 	return rB.ToRequestInformation2(POST, data, params)
+}
+
+func (rB *RequestBuilder) ToPostRequestInformation3(config *RequestConfiguration) (*RequestInformation, error) {
+	return rB.ToRequestInformation3(POST, config)
 }
 
 // Deprecated: deprecated as of {version} please utilize `ToPostRequestInformation2`
@@ -97,6 +112,7 @@ func (rB *RequestBuilder) ToPostRequestInformation(data map[string]string, param
 	return rB.ToRequestInformation2(POST, data, params)
 }
 
+// Deprecated: deprecated as of {version} please utilize `ToDeleteRequestInformation2`
 // ToDeleteRequestInformation creates a new HTTP DELETE request's RequestInformation object.
 // It sets the HTTP method to DELETE and includes the specified query parameters.
 //
@@ -108,6 +124,10 @@ func (rB *RequestBuilder) ToPostRequestInformation(data map[string]string, param
 //   - error: An error if there was an issue creating the request information.
 func (rB *RequestBuilder) ToDeleteRequestInformation(params interface{}) (*RequestInformation, error) {
 	return rB.ToRequestInformation2(DELETE, nil, params)
+}
+
+func (rB *RequestBuilder) ToDeleteRequestInformation2(config *RequestConfiguration) (*RequestInformation, error) {
+	return rB.ToRequestInformation3(DELETE, config)
 }
 
 func (rB *RequestBuilder) prepareData(rawData interface{}) ([]byte, error) {
@@ -137,6 +157,7 @@ func (rB *RequestBuilder) prepareData(rawData interface{}) ([]byte, error) {
 	return data, nil
 }
 
+// Deprecated: deprecated as of {version} please utilize `ToRequestInformation3`
 // ToRequestInformation2 creates a new HTTP request's RequestInformation object with the
 // specified HTTP method, data in the request body, and query parameters.
 //
@@ -175,6 +196,37 @@ func (rB *RequestBuilder) ToRequestInformation2(method HttpMethod, rawData inter
 	return requestInfo, nil
 }
 
+func (rB *RequestBuilder) ToRequestInformation3(method HttpMethod, config *RequestConfiguration) (*RequestInformation, error) {
+	requestInfo := NewRequestInformation()
+
+	if config != nil {
+		if config.QueryParameters != nil {
+			err := requestInfo.AddQueryParameters(config.QueryParameters)
+			if err != nil {
+				return nil, err
+			}
+		}
+		if config.Data != nil {
+			data, err := rB.prepareData(config.Data)
+			if err != nil {
+				return nil, err
+			}
+			if len(data) != 0 {
+				mime := mimetype.Detect(data)
+
+				requestInfo.Content = data
+				requestInfo.Headers.Add("Content-Type", mime.String())
+			}
+		}
+	}
+
+	requestInfo.Method = method
+	requestInfo.uri.PathParameters = rB.PathParameters
+	requestInfo.uri.UrlTemplate = rB.UrlTemplate
+
+	return requestInfo, nil
+}
+
 // Deprecated: deprecated as of {version} please utilize `ToRequestInformation2`
 // ToRequestInformation creates a new HTTP request's RequestInformation object with the
 // specified HTTP method, data in the request body, and query parameters.
@@ -210,6 +262,7 @@ func (rB *RequestBuilder) ToRequestInformation(method HttpMethod, data map[strin
 	return requestInfo, nil
 }
 
+// Deprecated: deprecated since v{version}. Please use SendGet2
 func (rB *RequestBuilder) SendGet(params interface{}, errorMapping ErrorMapping, value Response) error {
 
 	err := sendGet(rB, params, errorMapping, &value)
@@ -219,18 +272,42 @@ func (rB *RequestBuilder) SendGet(params interface{}, errorMapping ErrorMapping,
 	return nil
 }
 
+func (rB *RequestBuilder) SendGet2(config *RequestConfiguration) error {
+	err := SendGet2(rB, config)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Deprecated: deprecated since v{version}. Please use SendPost3
 func (rB *RequestBuilder) SendPost(data map[string]string, params interface{}, errorMapping ErrorMapping, value Response) error {
 	return sendPost(rB, data, params, errorMapping, &value)
 }
 
+func (rB *RequestBuilder) SendPost3(config *RequestConfiguration) error {
+	return SendPost2(rB, config)
+}
+
+// Deprecated: deprecated since v{version}. Please use SendPost3
 func (rB *RequestBuilder) SendPost2(data interface{}, params interface{}, errorMapping ErrorMapping, value Response) error {
 	return sendPost(rB, data, params, errorMapping, &value)
 }
 
+// Deprecated: deprecated since v{version}. Please use SendDelete2
 func (rB *RequestBuilder) SendDelete(params interface{}, errorMapping ErrorMapping) error {
 	return sendDelete(rB, params, errorMapping)
 }
 
+func (rB *RequestBuilder) SendDelete2(config *RequestConfiguration) error {
+	return sendDelete2(rB, config)
+}
+
+// Deprecated: deprecated since v{version}. Please use SendPut2
 func (rB *RequestBuilder) SendPut(data map[string]string, params interface{}, errorMapping ErrorMapping, value Response) error {
 	return sendPut(rB, data, params, errorMapping, &value)
+}
+
+func (rB *RequestBuilder) SendPut2(config *RequestConfiguration) error {
+	return sendPut2(rB, config)
 }

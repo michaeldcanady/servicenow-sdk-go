@@ -2,7 +2,6 @@ package core
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"net/http"
 	"reflect"
@@ -15,7 +14,7 @@ import (
 // ToQueryMap converts a struct to query parameter map
 func ToQueryMap(source interface{}) (map[string]string, error) {
 	if source == nil {
-		return nil, errors.New("source is nil")
+		return nil, ErrNilSource
 	}
 
 	queryBytes, err := urlquery.Marshal(source)
@@ -77,10 +76,6 @@ func FromJson[T any](response *http.Response, v *T) error {
 		return ErrNilResponse
 	}
 
-	if !IsPointer(v) {
-		return errors.New("v must be pointer")
-	}
-
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return err
@@ -107,6 +102,7 @@ func ParseResponse[T Response](response *http.Response, value *T) error {
 	return nil
 }
 
+// Deprecated: deprecated in version {version}. Please use SendGet2.
 func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping, value *T) error {
 
 	requestInfo, err := requestBuilder.ToGetRequestInformation(params)
@@ -122,6 +118,22 @@ func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, err
 	return ParseResponse(response, value)
 }
 
+func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
+
+	requestInfo, err := requestBuilder.ToGetRequestInformation2(config)
+	if err != nil {
+		return err
+	}
+
+	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	if err != nil {
+		return err
+	}
+
+	return ParseResponse(response, &config.Response)
+}
+
+// Deprecated: deprecated in version {version}. Please use SendPost2.
 func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, params interface{}, errorMapping ErrorMapping, value *T) error {
 
 	requestInfo, err := requestBuilder.ToPostRequestInformation2(data, params)
@@ -137,6 +149,21 @@ func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, para
 	return ParseResponse(response, value)
 }
 
+func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
+	requestInfo, err := requestBuilder.ToPostRequestInformation3(config)
+	if err != nil {
+		return err
+	}
+
+	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	if err != nil {
+		return err
+	}
+
+	return ParseResponse(response, &config.Response)
+}
+
+// Deprecated: deprecated in version {version}. Please use sendDelete2.
 func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) error {
 	requestInfo, err := requestBuilder.ToDeleteRequestInformation(params)
 	if err != nil {
@@ -151,6 +178,21 @@ func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping
 	return nil
 }
 
+func sendDelete2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
+	requestInfo, err := requestBuilder.ToDeleteRequestInformation2(config)
+	if err != nil {
+		return err
+	}
+
+	_, err = requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Deprecated: deprecated in version {version}. Please use sendPut2.
 func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping, value *T) error {
 	requestInfo, err := requestBuilder.ToPutRequestInformation(data, params)
 	if err != nil {
@@ -163,4 +205,18 @@ func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string,
 	}
 
 	return ParseResponse(response, value)
+}
+
+func sendPut2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
+	requestInfo, err := requestBuilder.ToPutRequestInformation2(config)
+	if err != nil {
+		return err
+	}
+
+	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	if err != nil {
+		return err
+	}
+
+	return ParseResponse(response, &config.Response)
 }

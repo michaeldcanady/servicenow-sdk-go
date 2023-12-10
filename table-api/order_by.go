@@ -1,22 +1,17 @@
 package tableapi
 
-import "fmt"
+import (
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
+)
 
 // OrderBy represents an order-by clause.
-type OrderBy struct {
-	Direction OrderDirection
-	Field     string
-}
+//
+// Deprecated: deprecated since {version}. Please use core.OrderBy instead.
+type OrderBy = core.OrderBy
 
+// NewOrderBy Creates new order by.
+//
+// Deprecated: deprecated since {version}. Please use core.NewOrderBy instead.
 func NewOrderBy() *OrderBy {
-	return &OrderBy{}
-}
-
-func (oB *OrderBy) String() string {
-
-	if oB.Direction == Unset {
-		return ""
-	}
-
-	return fmt.Sprintf("%s%s", oB.Direction, oB.Field)
+	return core.NewOrderBy()
 }

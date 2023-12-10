@@ -142,7 +142,7 @@ func (rI *RequestInformation) AddHeaders(rawHeaders interface{}) error {
 
 	val := reflect.ValueOf(rawHeaders)
 
-	if val.Kind() == reflect.Pointer {
+	if val.Kind() == reflect.Struct {
 		// use the httpheader.Encode function from the httpheader package
 		// to encode the pointer value into an http.Header map
 		headers, err = httpheader.Encode(rawHeaders)

@@ -39,6 +39,12 @@ func TestErrorMappingGetRelativeMatch(t *testing.T) {
 	if found || msg != "" {
 		t.Errorf("Expected not found and no message: got (%s)", msg)
 	}
+
+	eM.Set("5XX", "Server Error")
+	msg, found = eM.Get(502)
+	if !found || msg != "Server Error" {
+		t.Errorf("Expected to find '5XX' with message 'Server Error' for 400, but got %v with message %s", found, msg)
+	}
 }
 
 func TestErrorMappingGetNotFound(t *testing.T) {

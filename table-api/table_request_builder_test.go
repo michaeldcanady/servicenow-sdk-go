@@ -160,6 +160,104 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 	}
 }
 
+func TestTableRequestBuilder_Post(t *testing.T) {
+	t.Run("ValidRequest", func(t *testing.T) {
+		// Create a mock mockServer
+		mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Handle the request and send a mock response
+			// You can customize this based on your actual implementation
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(`{"some": "response"}`))
+		}))
+		defer mockServer.Close()
+
+		client := &MockClient{}
+
+		parsedUrl, err := url.Parse(mockServer.URL)
+		if err != nil {
+			t.Errorf("Expected no error, but got: %v", err)
+			return
+		}
+
+		pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host, "table": parsedUrl.Path}
+
+		builder := NewTableRequestBuilder(client, pathParameters)
+
+		// Call the Post method with valid parameters
+		response, err := builder.Post(map[string]string{"key": "value"}, &TableRequestBuilderPostQueryParamters{
+			DisplayValue:         "true",
+			ExcludeReferenceLink: true,
+			Fields:               []string{"field1", "field2"},
+			InputDisplayValue:    true,
+			View:                 "desktop",
+		})
+
+		// Check if there are no errors and the response is as expected
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		assert.IsType(t, &TableItemResponse{}, response)
+	})
+
+	t.Run("ValidRequestWithNilParams", func(t *testing.T) {
+		// ... Similar to the previous test but with nil parameters ...
+	})
+
+	t.Run("ServerError", func(t *testing.T) {
+		// ... Test when the server returns an error (e.g., 500 Internal Server Error) ...
+	})
+}
+
+func TestTableRequestBuilder_Post2(t *testing.T) {
+	t.Run("ValidRequest", func(t *testing.T) {
+		// Create a mock mockServer
+		mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Handle the request and send a mock response
+			// You can customize this based on your actual implementation
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(`{"some": "response"}`))
+		}))
+		defer mockServer.Close()
+
+		client := &MockClient{}
+
+		parsedUrl, err := url.Parse(mockServer.URL)
+		if err != nil {
+			t.Errorf("Expected no error, but got: %v", err)
+			return
+		}
+
+		pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host, "table": parsedUrl.Path}
+
+		builder := NewTableRequestBuilder(client, pathParameters)
+
+		// Call the Post method with valid parameters
+		response, err := builder.Post2(map[string]string{"key": "value"}, &TableRequestBuilderPostQueryParameters{
+			DisplayValue:         "true",
+			ExcludeReferenceLink: true,
+			Fields:               []string{"field1", "field2"},
+			InputDisplayValue:    true,
+			View:                 "desktop",
+		})
+
+		// Check if there are no errors and the response is as expected
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		assert.IsType(t, &TableItemResponse{}, response)
+	})
+
+	t.Run("ValidRequestWithNilParams", func(t *testing.T) {
+		// ... Similar to the previous test but with nil parameters ...
+	})
+
+	t.Run("ServerError", func(t *testing.T) {
+		// ... Test when the server returns an error (e.g., 500 Internal Server Error) ...
+	})
+}
+
 func TestTableRequestBuilder_Count(t *testing.T) {
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Simulate successful response with the provided JSON

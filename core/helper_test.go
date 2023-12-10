@@ -12,6 +12,46 @@ import (
 	"github.com/yosida95/uritemplate/v3"
 )
 
+type MockParseResponse struct {
+	ParseHeadersCalled bool
+}
+
+func (m *MockParseResponse) ParseHeaders(headers http.Header) {
+	m.ParseHeadersCalled = true
+}
+
+type MockClient struct {
+	DoFunc func(req *http.Request) (*http.Response, error)
+}
+
+func (c *MockClient) Send(requestInfo RequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
+
+	url, err := requestInfo.uri.ToUrl()
+	if err != nil {
+		return nil, err
+	}
+
+	req, _ := http.NewRequest(http.MethodGet, "", nil)
+	req.URL = url
+	return c.DoFunc(req)
+}
+
+func pick[M ~map[K]V, K comparable, V any](m M) K {
+
+	keys := make([]K, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+
+	index := rand.Intn(len(keys)) // generate a random index
+	return keys[index]
+}
+
+type TestData struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+}
+
 func TestToQueryMap(t *testing.T) {
 
 	inputs := []struct {
@@ -33,6 +73,12 @@ func TestToQueryMap(t *testing.T) {
 			ShouldError: false,
 			Expected:    map[string]string{"param_1": "value1", "param_2": "5", "param_3": "1"},
 			CheckErr:    nil,
+		},
+		{
+			Input:       nil,
+			ShouldError: true,
+			Expected:    nil,
+			CheckErr:    func(err error) bool { return assert.Equal(t, ErrNilSource, err) },
 		},
 	}
 
@@ -72,17 +118,6 @@ func TestAddParametersWithOriginalNames(t *testing.T) {
 	expected := uritemplate.Values{"VaR1": uritemplate.String("val1"), "vAr2": uritemplate.String("val2")}
 
 	assert.Equal(t, expected, values)
-}
-
-func pick[M ~map[K]V, K comparable, V any](m M) K {
-
-	keys := make([]K, 0, len(m))
-	for key := range m {
-		keys = append(keys, key)
-	}
-
-	index := rand.Intn(len(keys)) // generate a random index
-	return keys[index]
 }
 
 func TestGetKeyWithOriginalName(t *testing.T) {
@@ -171,11 +206,6 @@ func TestIsPointer(t *testing.T) {
 	}
 }
 
-type TestData struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
-}
-
 func TestFromJson(t *testing.T) {
 	testCases := []struct {
 		name          string
@@ -229,14 +259,6 @@ func TestFromJson(t *testing.T) {
 			}
 		})
 	}
-}
-
-type MockParseResponse struct {
-	ParseHeadersCalled bool
-}
-
-func (m *MockParseResponse) ParseHeaders(headers http.Header) {
-	m.ParseHeadersCalled = true
 }
 
 func TestParseResponse(t *testing.T) {
@@ -295,20 +317,4 @@ func TestParseResponse(t *testing.T) {
 			}
 		})
 	}
-}
-
-type MockClient struct {
-	DoFunc func(req *http.Request) (*http.Response, error)
-}
-
-func (c *MockClient) Send(requestInfo RequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
-
-	url, err := requestInfo.uri.ToUrl()
-	if err != nil {
-		return nil, err
-	}
-
-	req, _ := http.NewRequest(http.MethodGet, "", nil)
-	req.URL = url
-	return c.DoFunc(req)
 }
