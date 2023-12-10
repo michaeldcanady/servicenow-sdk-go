@@ -161,14 +161,14 @@ func (uI *UrlInformation) parseRawURL(rawURL string) (*url.URL, error) {
 // ToUrl retrieves the URI, either from the raw URL or the URL template.
 func (uI *UrlInformation) ToUrl() (*url.URL, error) {
 
-	err := uI.validateParams()
-	if err != nil {
-		return nil, err
-	}
-
 	uri, err := uI.getUriFromRaw()
 	if uri != nil || err != nil {
 		return uri, err
+	}
+
+	err = uI.validateParams()
+	if err != nil {
+		return nil, err
 	}
 
 	return uI.getUriFromTemplate()

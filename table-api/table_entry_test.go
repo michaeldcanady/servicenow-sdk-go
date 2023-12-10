@@ -7,6 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const keyName = "key1"
+
 func TestTableEntry(t *testing.T) {
 
 	responseJSON := `{
@@ -171,5 +173,50 @@ func TestTableEntry(t *testing.T) {
 	}
 
 	assert.Equal(t, expected, entry)
+}
 
+func TestTableEntryValueValidKey(t *testing.T) {
+
+	entry := TableEntry{
+		keyName: "value1",
+	}
+
+	value := entry.Value(keyName)
+
+	assert.NotNil(t, value)
+	assert.Equal(t, value, &TableValue{value: "value1"})
+
+	entry = TableEntry{
+		keyName: map[string]interface{}{
+			"link":  "https://instance.servicenow.com/api/now/table/cmdb_ci/55b35562c0a8010e01cff22378e0aea9",
+			"value": "55b35562c0a8010e01cff22378e0aea9",
+		},
+	}
+
+	value = entry.Value(keyName)
+
+	assert.NotNil(t, value)
+	assert.Equal(t, value, &TableValue{value: "55b35562c0a8010e01cff22378e0aea9"})
+}
+
+func TestTableEntryValueMissingKey(t *testing.T) {
+
+	entry := TableEntry{
+		"key2": "value1",
+	}
+
+	value := entry.Value(keyName)
+
+	assert.Nil(t, value)
+}
+
+func TestTableEntryKeys(t *testing.T) {
+	entry := TableEntry{
+		keyName: "value2",
+		"key2":  "value1",
+	}
+
+	keys := entry.Keys()
+
+	assert.Equal(t, []string{keyName, "key2"}, keys)
 }

@@ -1,0 +1,46 @@
+name: Go Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+    build:
+      name: Test
+      runs-on: ${{ matrix.os }}
+      strategy:
+        matrix:
+          os: [ubuntu-latest, macos-latest, windows-latest]
+          go-version: ['1.21']
+  
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+  
+        - name: Set up Go
+          uses: actions/setup-go@v4
+          with:
+            go-version: ${{ matrix.go-version }}
+        - name: Install dependencies
+          run: go install ./...
+          working-directory: ${{ github.workspace }}
+  
+        - name: Build SDK project
+          run: go build ./...
+          working-directory: ${{ github.workspace }}
+  
+        - name: Run unit tests
+          run: go test ./... -v -coverprofile="cover.out"
+          working-directory: ${{ github.workspace }}
+  
+        - name: Generate Coverage File
+          run: go tool cover -html="cover.out" -o "cover.html"
+          working-directory: ${{ github.workspace }}
+        
+        - name: Upload coverage reports to Codecov
+          uses: codecov/codecov-action@v3
+          env:
+            CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

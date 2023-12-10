@@ -2,6 +2,8 @@ package tableapi
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestConvertType(t *testing.T) {
@@ -26,4 +28,22 @@ func TestConvertType(t *testing.T) {
 	if invalidInt != 0 {
 		t.Errorf("Expected default value 0, got: %d", invalidInt)
 	}
+}
+
+func TestConvertToPageNilResponse(t *testing.T) {
+
+	page, err := convertToPage(nil)
+
+	assert.Equal(t, PageResult{}, page)
+	assert.ErrorIs(t, err, ErrNilResponse)
+}
+
+func TestConvertToPageWrongResponseType(t *testing.T) {
+
+	response := TableItemResponse{}
+
+	page, err := convertToPage(response)
+
+	assert.Equal(t, PageResult{}, page)
+	assert.ErrorIs(t, err, ErrWrongResponseType)
 }

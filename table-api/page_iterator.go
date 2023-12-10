@@ -12,6 +12,7 @@ var (
 	ErrNilResponse       = errors.New("response can't be nil")
 	ErrNilResult         = errors.New("result property missing in response object")
 	ErrWrongResponseType = errors.New("incorrect Response Type")
+	ErrParsing           = errors.New("parsing nextLink url failed")
 )
 
 // PageIterator represents an iterator for paginated results from a table.
@@ -110,31 +111,9 @@ func (p *PageIterator) next() (PageResult, error) {
 	return page, nil
 }
 
-// convertToPage converts a response into a PageResult.
-func convertToPage(response interface{}) (PageResult, error) {
-	var page PageResult
-
-	if response == nil {
-		return page, ErrNilResponse
-	}
-
-	collectionRep, ok := response.(TableCollectionResponse)
-	if !ok {
-		return page, ErrWrongResponseType
-	}
-
-	page.Result = collectionRep.Result
-	page.FirstPageLink = collectionRep.FirstPageLink
-	page.LastPageLink = collectionRep.LastPageLink
-	page.NextPageLink = collectionRep.NextPageLink
-	page.PreviousPageLink = collectionRep.PreviousPageLink
-
-	return page, nil
-}
-
 // fetchNextPage fetches the next page of results.
 func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
-	var collectionResp *TableCollectionResponse
+	var collectionResp TableCollectionResponse
 	var err error
 
 	if pI.currentPage.NextPageLink == "" {
@@ -143,7 +122,7 @@ func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 
 	nextLink, err := url.Parse(pI.currentPage.NextPageLink)
 	if err != nil {
-		return collectionResp, errors.New("parsing nextLink url failed")
+		return &collectionResp, ErrParsing
 	}
 
 	requestInformation := core.NewRequestInformation()
@@ -151,14 +130,15 @@ func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 	requestInformation.SetUri(nextLink)
 
 	resp, err := pI.client.Send(requestInformation, nil)
+
 	if err != nil {
 		return nil, err
 	}
 
-	err = core.FromJson(resp, collectionResp)
+	err = core.FromJson(resp, &collectionResp)
 	if err != nil {
 		return nil, nil
 	}
 
-	return collectionResp, nil
+	return &collectionResp, nil
 }
