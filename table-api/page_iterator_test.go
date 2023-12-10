@@ -413,3 +413,41 @@ func TestPageIteratorLast(t *testing.T) {
 
 	assert.Error(t, err)
 }
+
+func TestPageIteratorEnumerate(t *testing.T) {
+	//To Be Added
+}
+
+func TestPageIteratorNext(t *testing.T) {
+	pageIterator := &PageIterator{
+		currentPage: PageResult{
+			NextPageLink: fakeNextLink,
+		},
+		client:     &mockClient{},
+		pauseIndex: 0,
+	}
+
+	_, err := pageIterator.next()
+
+	assert.Error(t, err)
+}
+
+func TestPageIteratorFetchNextPage(t *testing.T) {
+	//To Be Added
+}
+
+func TestPageIteratorFetchLastPage(t *testing.T) {
+	//To Be Added
+}
+
+func TestPageIteratorFetchPage(t *testing.T) {
+	pageIterator := &PageIterator{
+		currentPage: PageResult{},
+		client:      &mockClient{},
+		pauseIndex:  0,
+	}
+
+	_, err := pageIterator.fetchPage(fakeNextLink)
+
+	assert.Error(t, err)
+}
