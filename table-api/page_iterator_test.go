@@ -135,15 +135,6 @@ func getFakeJson() []byte {
 	return jsonData
 }
 
-const (
-	fakeFirstPageLink    = "https://first-page.com"
-	fakePreviousPageLink = "https://previous-page.com"
-	fakeNextPageLink     = "https://next-page.com"
-	fakeLastPageLink     = "https://last-page.com"
-
-	errExpected = "Expected no error, but got %v"
-)
-
 // Mock client for testing
 type mockClient struct{}
 
@@ -351,20 +342,6 @@ func TestPageIteratorIterateMultiplePagesWithCallback(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestPageIteratorLast(t *testing.T) {
-	pageIterator := &PageIterator{
-		currentPage: PageResult{
-			LastPageLink: fakeNextLink,
-		},
-		client:     &mockClient{},
-		pauseIndex: 0,
-	}
-
-	_, err := pageIterator.Last()
-
-	assert.Error(t, err)
-}
-
 func TestPageFetchPageSendErr(t *testing.T) {
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
@@ -421,4 +398,18 @@ func TestPageIteratorFetchAndConvertPageWithoutLink(t *testing.T) {
 	assert.ErrorIs(t, err, core.ErrNilResponse)
 
 	assert.Equal(t, PageResult{}, page)
+}
+
+func TestPageIteratorLast(t *testing.T) {
+	pageIterator := &PageIterator{
+		currentPage: PageResult{
+			LastPageLink: fakeNextLink,
+		},
+		client:     &mockClient{},
+		pauseIndex: 0,
+	}
+
+	_, err := pageIterator.Last()
+
+	assert.Error(t, err)
 }
