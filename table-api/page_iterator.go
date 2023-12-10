@@ -12,6 +12,7 @@ var (
 	ErrNilResponse       = errors.New("response can't be nil")
 	ErrNilResult         = errors.New("result property missing in response object")
 	ErrWrongResponseType = errors.New("incorrect Response Type")
+	ErrParsing           = errors.New("parsing nextLink url failed")
 )
 
 // PageIterator represents an iterator for paginated results from a table.
@@ -121,7 +122,7 @@ func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 
 	nextLink, err := url.Parse(pI.currentPage.NextPageLink)
 	if err != nil {
-		return &collectionResp, errors.New("parsing nextLink url failed")
+		return &collectionResp, ErrParsing
 	}
 
 	requestInformation := core.NewRequestInformation()
@@ -129,6 +130,7 @@ func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 	requestInformation.SetUri(nextLink)
 
 	resp, err := pI.client.Send(requestInformation, nil)
+
 	if err != nil {
 		return nil, err
 	}
