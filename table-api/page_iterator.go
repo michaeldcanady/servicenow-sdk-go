@@ -86,10 +86,10 @@ func (p *PageIterator) enumerate(callback func(item *TableEntry) bool) bool {
 }
 
 // next fetches the next page of results.
-func (p *PageIterator) next() (PageResult, error) {
+func (pI *PageIterator) next() (PageResult, error) {
 	var page PageResult
 
-	resp, err := p.fetchNextPage()
+	resp, err := pI.fetchPage(pI.currentPage.NextPageLink)
 	if err != nil {
 		return page, err
 	}
@@ -102,12 +102,29 @@ func (p *PageIterator) next() (PageResult, error) {
 	return page, nil
 }
 
-// fetchNextPage fetches the next page of results.
-func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
+// Last fethces the last page of results.
+func (pI *PageIterator) Last() (PageResult, error) {
+	var page PageResult
+
+	resp, err := pI.fetchPage(pI.currentPage.LastPageLink)
+	if err != nil {
+		return page, err
+	}
+
+	page, err = convertToPage(resp)
+	if err != nil {
+		return page, err
+	}
+
+	return page, nil
+}
+
+// fetchPage fetches the specified uri page of results.
+func (pI *PageIterator) fetchPage(uri string) (*TableCollectionResponse, error) {
 	var collectionResp *TableCollectionResponse
 	var err error
 
-	if pI.currentPage.NextPageLink == "" {
+	if uri == "" {
 		return nil, nil
 	}
 
