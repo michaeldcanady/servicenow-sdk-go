@@ -134,6 +134,15 @@ func getFakeJson() []byte {
 	return jsonData
 }
 
+const (
+	fakeFirstPageLink    = "https://first-page.com"
+	fakePreviousPageLink = "https://previous-page.com"
+	fakeNextPageLink     = "https://next-page.com"
+	fakeLastPageLink     = "https://last-page.com"
+
+	errExpected = "Expected no error, but got %v"
+)
+
 // Mock client for testing
 type mockClient struct{}
 
@@ -326,7 +335,7 @@ func TestIterateWithNoCallback(t *testing.T) {
 	}
 }
 
-func TestNewPageIteratorIterateSinglePageWithCallback(t *testing.T) {
+func TestPageIteratorIterateSinglePageWithCallback(t *testing.T) {
 	// Mock PageIterator
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
@@ -349,7 +358,7 @@ func TestNewPageIteratorIterateSinglePageWithCallback(t *testing.T) {
 	}
 }
 
-func TestIterateWithDefaultCallback(t *testing.T) {
+func TestPageIteratorIterateWithDefaultCallback(t *testing.T) {
 	// Mock PageIterator
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
