@@ -3,7 +3,6 @@ package tableapi
 import (
 	"errors"
 	"net/url"
-	"reflect"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
@@ -107,34 +106,6 @@ func (p *PageIterator) next() (PageResult, error) {
 	if err != nil {
 		return page, err
 	}
-
-	return page, nil
-}
-
-// convertToPage converts a response into a PageResult.
-func convertToPage(response interface{}) (PageResult, error) {
-	var page PageResult
-
-	if response == nil {
-		return page, ErrNilResponse
-	}
-
-	valType := reflect.ValueOf(response)
-
-	if valType.Kind() == reflect.Pointer {
-		response = reflect.Indirect(valType.Elem()).Interface()
-	}
-
-	collectionRep, ok := response.(TableCollectionResponse)
-	if !ok {
-		return page, ErrWrongResponseType
-	}
-
-	page.Result = collectionRep.Result
-	page.FirstPageLink = collectionRep.FirstPageLink
-	page.LastPageLink = collectionRep.LastPageLink
-	page.NextPageLink = collectionRep.NextPageLink
-	page.PreviousPageLink = collectionRep.PreviousPageLink
 
 	return page, nil
 }
