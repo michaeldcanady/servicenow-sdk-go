@@ -80,7 +80,7 @@ func (rI *RequestInformation) SetUri(url *url.URL) {
 
 	//TODO: Add validation that url is valid
 
-	rI.uri.PathParameters = map[string]string{"request-raw-url": url.String()}
+	rI.uri.PathParameters = map[string]string{rawUrlKey: url.String()}
 }
 
 func (rI *RequestInformation) Url() (string, error) {
