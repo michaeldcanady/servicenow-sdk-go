@@ -10,10 +10,6 @@ type TableValue struct {
 	value interface{}
 }
 
-func (tV *TableValue) toValue() reflect.Value {
-	return reflect.ValueOf(tV.value)
-}
-
 // Deprecated: deprecated as of {version} please utilize `ToInt64`
 //
 // ToInt64 ...
