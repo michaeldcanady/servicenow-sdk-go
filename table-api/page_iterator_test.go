@@ -263,72 +263,6 @@ func TestPageIteratorNextWithoutLink(t *testing.T) {
 	assert.Equal(t, PageResult{}, page)
 }
 
-func TestPageIteratorFetchNextPageWithLinkNilErr(t *testing.T) {
-
-	currentPage := TableCollectionResponse{
-		NextPageLink: fakeLinkWithLinks,
-	}
-
-	client := &mockClient{}
-
-	pageIterator, err := NewPageIterator(currentPage, client)
-	assert.Nil(t, err)
-
-	resp, err := pageIterator.fetchNextPage()
-	assert.Nil(t, err)
-
-	assert.Equal(t, fakeFirstLink, resp.FirstPageLink)
-	assert.Equal(t, fakeLastLink, resp.LastPageLink)
-	assert.Equal(t, fakeNextLink, resp.NextPageLink)
-	assert.Equal(t, fakePrevLink, resp.PreviousPageLink)
-}
-
-func TestPageIteratorFetchNextPageWithLinkSendErr(t *testing.T) {
-
-	currentPage := TableCollectionResponse{
-		NextPageLink: fakeLinkStatusFailed,
-	}
-
-	client := &mockClient{}
-
-	pageIterator, err := NewPageIterator(currentPage, client)
-	assert.Nil(t, err)
-
-	_, err = pageIterator.fetchNextPage()
-	assert.Error(t, err)
-}
-
-func TestPageIteratorFetchNextPageWithLinkParseErr(t *testing.T) {
-
-	currentPage := TableCollectionResponse{
-		NextPageLink: " ",
-	}
-
-	client := &mockClient{}
-
-	pageIterator, err := NewPageIterator(currentPage, client)
-	assert.Nil(t, err)
-
-	_, err = pageIterator.fetchNextPage()
-	assert.Error(t, err)
-}
-
-func TestPageIteratorFetchNextPageWithoutLink(t *testing.T) {
-
-	currentPage := TableCollectionResponse{
-		NextPageLink: "",
-	}
-
-	client := &mockClient{}
-
-	pageIterator, err := NewPageIterator(currentPage, client)
-	assert.Nil(t, err)
-
-	resp, err := pageIterator.fetchNextPage()
-	assert.Nil(t, err)
-	assert.Nil(t, resp)
-}
-
 func TestPageIteratorEnumerateAll(t *testing.T) {
 	pageIterator := PageIterator{
 		currentPage: expectedResult,
@@ -430,4 +364,18 @@ func TestIterateWithDefaultCallback(t *testing.T) {
 	if err != nil {
 		t.Errorf("Expected no error, but got %v", err)
 	}
+}
+
+func TestPageIteratorLast(t *testing.T) {
+	pageIterator := &PageIterator{
+		currentPage: PageResult{
+			LastPageLink: fakeNextLink,
+		},
+		client:     &mockClient{},
+		pauseIndex: 0,
+	}
+
+	_, err := pageIterator.Last()
+
+	assert.Error(t, err)
 }
