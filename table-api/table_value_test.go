@@ -46,16 +46,19 @@ func TestTableValueToInt64(t *testing.T) {
 
 func TestTableValueInt(t *testing.T) {
 	tests := []struct {
+		title      string
 		value      interface{}
 		expected   int64
 		expectErr  bool
 		errorCheck func(error) bool
 	}{
-		{int64(42), 42, false, nil},
-		{int64(123), 123, false, nil},
-		{float32(3.14), 0, true, IsNotNilError},
-		{"not an integer", 0, true, IsNotNilError},
-		{nil, 0, true, IsNotNilError},
+		{"Int64", int64(4142), 4142, false, nil},
+		{"Int32", int32(123), 123, false, nil},
+		{"Int16", int16(4870), 4870, false, nil},
+		{"Int8", int8(98), 98, false, nil},
+		{"Float32", float32(3.14), 0, true, IsNotNilError},
+		{"String", "not an integer", 0, true, IsNotNilError},
+		{"Nil", nil, 0, true, IsNotNilError},
 	}
 
 	for _, test := range tests {
@@ -209,6 +212,40 @@ func TestTableValueString(t *testing.T) {
 
 			if result != test.expected {
 				t.Errorf("Expected %s, got %s", test.expected, result)
+			}
+		})
+	}
+}
+
+func TestTableValueToBool(t *testing.T) {
+	tests := []struct {
+		title      string
+		value      interface{}
+		expected   bool
+		expectErr  bool
+		errorCheck func(error) bool
+	}{
+		{"Bool", true, true, false, nil},
+		{"Int", 0, false, true, IsNotNilError},
+		{"String", "true", true, true, IsNotNilError},
+		{"Nil", nil, false, true, IsNotNilError},
+	}
+
+	for _, test := range tests {
+		t.Run(test.title, func(t *testing.T) {
+			tableValue := &TableValue{value: test.value}
+			result, err := tableValue.ToBool()
+
+			if test.errorCheck != nil {
+				if !test.errorCheck(err) {
+					t.Errorf("Expected error, got nil")
+				}
+			} else if err != nil {
+				t.Errorf("Unexpected error: %v", err)
+			}
+
+			if result != test.expected {
+				t.Errorf("Expected %v, got %v", test.expected, result)
 			}
 		})
 	}
