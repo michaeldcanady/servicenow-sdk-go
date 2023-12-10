@@ -2,6 +2,7 @@ package tableapi
 
 import (
 	"fmt"
+	"math"
 	"reflect"
 	"testing"
 )
@@ -56,6 +57,7 @@ func TestTableValueInt(t *testing.T) {
 		{"Int32", int32(123), 123, false, nil},
 		{"Int16", int16(4870), 4870, false, nil},
 		{"Int8", int8(98), 98, false, nil},
+		{"Int", int(9), 9, false, nil},
 		{"Float32", float32(3.14), 0, true, IsNotNilError},
 		{"String", "not an integer", 0, true, IsNotNilError},
 		{"Nil", nil, 0, true, IsNotNilError},
@@ -89,12 +91,14 @@ func TestTableValueToFloat64(t *testing.T) {
 		expectErr  bool
 		errorCheck func(error) bool
 	}{
-		//not working?? {"Float32", float32(3.14), 3.1400000, false, nil},
+		{"Float32", float32(3.14), 3.1400000, false, nil},
 		{"Float64", float64(2.71828), 2.71828, false, nil},
 		{"Int", int(42), 0, true, IsNotNilError},
 		{"String", "not a float", 0, true, IsNotNilError},
 		{"Nil", nil, 0, true, IsNotNilError},
 	}
+
+	const tolerance = 1e-6 // adjust this as needed
 
 	for _, test := range tests {
 		t.Run(test.title, func(t *testing.T) {
@@ -109,7 +113,7 @@ func TestTableValueToFloat64(t *testing.T) {
 				t.Errorf("Unexpected error: %v", err)
 			}
 
-			if result != test.expected {
+			if math.Abs(result-test.expected) > tolerance {
 				t.Errorf("Expected %f, got %f", test.expected, result)
 			}
 		})
@@ -124,12 +128,14 @@ func TestTableValueFloat(t *testing.T) {
 		expectErr  bool
 		errorCheck func(error) bool
 	}{
-		//not working?? {"Float32", float32(3.14), 3.1400000, false, nil},
+		{"Float32", float32(3.14), 3.1400000, false, nil},
 		{"Float64", float64(2.71828), 2.71828, false, nil},
 		{"Int", int(42), 0, true, IsNotNilError},
 		{"String", "not a float", 0, true, IsNotNilError},
 		{"Nil", nil, 0, true, IsNotNilError},
 	}
+
+	const tolerance = 1e-6 // adjust this as needed
 
 	for _, test := range tests {
 		t.Run(test.title, func(t *testing.T) {
@@ -144,7 +150,7 @@ func TestTableValueFloat(t *testing.T) {
 				t.Errorf("Unexpected error: %v", err)
 			}
 
-			if result != test.expected {
+			if math.Abs(result-test.expected) > tolerance {
 				t.Errorf("Expected %f, got %f", test.expected, result)
 			}
 		})
