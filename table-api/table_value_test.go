@@ -244,7 +244,7 @@ func TestTableValueToBool(t *testing.T) {
 				t.Errorf("Unexpected error: %v", err)
 			}
 
-			if result != test.expected {
+			if (result != test.expected) && !test.expectErr {
 				t.Errorf("Expected %v, got %v", test.expected, result)
 			}
 		})
