@@ -251,6 +251,40 @@ func TestTableValueToBool(t *testing.T) {
 	}
 }
 
+func TestTableValueBool(t *testing.T) {
+	tests := []struct {
+		title      string
+		value      interface{}
+		expected   bool
+		expectErr  bool
+		errorCheck func(error) bool
+	}{
+		{"Bool", true, true, false, nil},
+		{"Int", 0, false, true, IsNotNilError},
+		{"String", "true", true, true, IsNotNilError},
+		{"Nil", nil, false, true, IsNotNilError},
+	}
+
+	for _, test := range tests {
+		t.Run(test.title, func(t *testing.T) {
+			tableValue := &TableValue{value: test.value}
+			result, err := tableValue.Bool()
+
+			if test.errorCheck != nil {
+				if !test.errorCheck(err) {
+					t.Errorf("Expected error, got nil")
+				}
+			} else if err != nil {
+				t.Errorf("Unexpected error: %v", err)
+			}
+
+			if (result != test.expected) && !test.expectErr {
+				t.Errorf("Expected %v, got %v", test.expected, result)
+			}
+		})
+	}
+}
+
 func TestTableValueGetType(t *testing.T) {
 	tests := []struct {
 		value    interface{}
