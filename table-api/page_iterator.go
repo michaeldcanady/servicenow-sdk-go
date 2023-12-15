@@ -104,7 +104,7 @@ func (p *PageIterator) next() (PageResult, error) {
 
 // fetchNextPage fetches the next page of results.
 func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
-	var collectionResp TableCollectionResponse
+	var collectionResp *TableCollectionResponse
 	var err error
 
 	if pI.currentPage.NextPageLink == "" {
@@ -113,7 +113,7 @@ func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 
 	nextLink, err := url.Parse(pI.currentPage.NextPageLink)
 	if err != nil {
-		return &collectionResp, ErrParsing
+		return collectionResp, ErrParsing
 	}
 
 	requestInformation := core.NewRequestInformation()
@@ -126,10 +126,10 @@ func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 		return nil, err
 	}
 
- err = core.ParseResponse(resp, &collectionResp)
+	err = core.ParseResponse(resp, &collectionResp)
 	if err != nil {
 		return nil, nil
 	}
 
-	return &collectionResp, nil
+	return collectionResp, nil
 }
