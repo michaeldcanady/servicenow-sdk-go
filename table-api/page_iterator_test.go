@@ -16,10 +16,10 @@ const (
 	fakeLinkKey       = "https://fake-link.com"
 	fakeLinkWithLinks = "https://fake-link1.com"
 
-	fakeNextLink  = ""
-	fakePrevLink  = ""
-	fakeFirstLink = ""
-	fakeLastLink  = ""
+	fakeNextLink  = "https://fake-link.com?next"
+	fakePrevLink  = "https://fake-link.com?prev"
+	fakeFirstLink = "https://fake-link.com?first"
+	fakeLastLink  = "https://fake-link.com?last"
 )
 
 var (
@@ -111,6 +111,12 @@ var (
 		NextPageLink:     fakeNextLink,
 		PreviousPageLink: fakePrevLink,
 	}
+
+	expectedIterator = PageIterator{
+		currentPage: expectedResult,
+		client:      &mockClient{},
+		pauseIndex:  0,
+	}
 )
 
 func getFakeJson() []byte {
@@ -151,7 +157,7 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 		return resp, nil
 
 	case fakeLinkWithLinks:
-		var header http.Header
+		header := http.Header{}
 
 		header.Add("Link", "<"+fakeFirstLink+">;rel=\"first\"")
 		header.Add("Link", "<"+fakeNextLink+">;rel=\"next\"")
@@ -164,7 +170,7 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 			Proto:      "HTTP/1.1",
 			ProtoMajor: 1,
 			ProtoMinor: 1,
-			Header:     http.Header{},
+			Header:     header,
 			Body:       io.NopCloser(strings.NewReader(string(getFakeJson()))), // We will replace this later
 			Request:    nil,                                                    // We don't need this for the example
 		}
@@ -178,7 +184,11 @@ func TestNewPageIteratorWithClient(t *testing.T) {
 	// Mock client and current page
 	client := &mockClient{}
 	currentPage := TableCollectionResponse{
-		// Initialize with test data
+		Result:           []*TableEntry{&fakeEntry},
+		FirstPageLink:    fakeFirstLink,
+		LastPageLink:     fakeLastLink,
+		NextPageLink:     fakeNextLink,
+		PreviousPageLink: fakePrevLink,
 	}
 
 	pageIterator, err := NewPageIterator(currentPage, client)
@@ -190,6 +200,8 @@ func TestNewPageIteratorWithClient(t *testing.T) {
 	if pageIterator == nil {
 		t.Error("Expected PageIterator, but got nil")
 	}
+
+	assert.Equal(t, &expectedIterator, pageIterator)
 }
 
 func TestNewPageIteratorWithoutClient(t *testing.T) {
@@ -206,7 +218,7 @@ func TestNewPageIteratorWithoutClient(t *testing.T) {
 
 func TestPageIteratorNext(t *testing.T) {
 	currentPage := TableCollectionResponse{
-		NextPageLink: fakeLinkKey,
+		NextPageLink: fakeLinkWithLinks,
 	}
 
 	client := &mockClient{}
@@ -223,7 +235,7 @@ func TestPageIteratorNext(t *testing.T) {
 func TestPageIteratorFetchNextPage(t *testing.T) {
 
 	currentPage := TableCollectionResponse{
-		NextPageLink: fakeLinkKey,
+		NextPageLink: fakeLinkWithLinks,
 	}
 
 	client := &mockClient{}
