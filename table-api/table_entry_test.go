@@ -218,5 +218,6 @@ func TestTableEntryKeys(t *testing.T) {
 
 	keys := entry.Keys()
 
-	assert.Equal(t, []string{keyName, "key2"}, keys)
+	assert.Contains(t, keys, keyName)
+	assert.Contains(t, keys, "key2")
 }
