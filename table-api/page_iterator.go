@@ -105,10 +105,15 @@ func (p *PageIterator) next() (PageResult, error) {
 // fetchNextPage fetches the next page of results.
 func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 	var collectionResp *TableCollectionResponse
+	var err error
+
+	if pI.currentPage.NextPageLink == "" {
+		return nil, nil
+	}
 
 	nextLink, err := url.ParseRequestURI(pI.currentPage.NextPageLink)
 	if err != nil {
-		return nil, ErrParsing
+		return nil, err
 	}
 
 	requestInformation := core.NewRequestInformation()
