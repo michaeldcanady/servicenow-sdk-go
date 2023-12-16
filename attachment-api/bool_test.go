@@ -6,8 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBool_UnmarshalJSON_Success(t *testing.T) {
-
+func TestBoolUnmarshalJSON_Success(t *testing.T) {
 	rawJSON := []byte(`"true"`)
 
 	boolVal := Bool(false)
@@ -20,7 +19,7 @@ func TestBool_UnmarshalJSON_Success(t *testing.T) {
 	assert.Equal(t, Bool(true), boolVal)
 }
 
-func TestBool_UnmarshalJSON_Failed(t *testing.T) {
+func TestBoolUnmarshalJSON_Failed(t *testing.T) {
 	rawJSON := []byte(`"w"`)
 
 	boolVal := Bool(false)

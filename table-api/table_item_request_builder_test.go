@@ -97,7 +97,6 @@ var (
 )
 
 func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-
 	req, err := requestInfo.ToRequest()
 	if err != nil {
 		return nil, err
@@ -187,7 +186,6 @@ func TestTableItemRequestBuilderPut(t *testing.T) {
 
 	// Create a mock server for testing
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		resp := testResult
 
 		resp = maps.Clone[map[string]interface{}](resp)
@@ -231,7 +229,7 @@ func TestTableItemRequestBuilderPut(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(jsonData)) //nolint:errcheck
+		_, _ = w.Write(jsonData)
 	}))
 
 	// Parse the URL of the mock server

@@ -8,7 +8,6 @@ import (
 )
 
 func TestTableRequestBuilderGetQueryParameters(t *testing.T) {
-
 	params := &TableRequestBuilderGetQueryParameters{
 		Limit: 1,
 	}

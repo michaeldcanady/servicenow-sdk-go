@@ -8,7 +8,6 @@ import (
 )
 
 func TestAttachmentRequestBuilderGetQueryParameters(t *testing.T) {
-
 	expected := map[string]string{
 		"sysparm_limit":  "1000",
 		"sysparm_offset": "500",

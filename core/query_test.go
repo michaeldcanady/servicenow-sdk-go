@@ -12,8 +12,7 @@ type Test struct {
 	Actual   string
 }
 
-func TestQuery_AddQuery(t *testing.T) {
-
+func TestQueryAddQuery(t *testing.T) {
 	tests := []Test{
 		{
 			Title:    "Test AddQuery",
@@ -86,7 +85,7 @@ func TestQuery_AddQuery(t *testing.T) {
 	}
 }
 
-func TestQuery_AddOrQuery(t *testing.T) {
+func TestQueryAddOrQuery(t *testing.T) {
 	tests := []Test{
 		{
 			Title:    "Test AddOrQuery",
@@ -134,7 +133,7 @@ func TestQuery_AddOrQuery(t *testing.T) {
 	}
 }
 
-func TestQuery_IsEmpty(t *testing.T) {
+func TestQueryIsEmpty(t *testing.T) {
 	q := NewQuery()
 	q.IsEmpty("field3")
 	expected := "field3ISEMPTY"
@@ -143,7 +142,7 @@ func TestQuery_IsEmpty(t *testing.T) {
 	}
 }
 
-func TestQuery_OrderBy(t *testing.T) {
+func TestQueryOrderBy(t *testing.T) {
 	q := NewQuery()
 	q.AddEqual("field1", true)
 	q.AddOrderBy("field4")
@@ -161,15 +160,14 @@ func TestQuery_OrderBy(t *testing.T) {
 	}
 }
 
-func TestQuery_String(t *testing.T) {
+func TestQueryString(t *testing.T) {
 	query := NewQuery()
 	actual := query.String()
 	expected := ""
 	assert.Equal(t, expected, actual)
 }
 
-func TestQuery_Encode(t *testing.T) {
-
+func TestQueryEncode(t *testing.T) {
 	query := NewQuery()
 
 	actual := query.Encoded()

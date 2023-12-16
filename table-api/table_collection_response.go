@@ -14,7 +14,6 @@ type TableCollectionResponse struct {
 }
 
 func (cR *TableCollectionResponse) parsePaginationHeaders(headers http.Header) {
-
 	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
 
 	links := make(map[string]string)

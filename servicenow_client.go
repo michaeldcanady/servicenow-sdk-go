@@ -59,7 +59,6 @@ func (c *ServiceNowClient) unmarshallError(response *http.Response) error {
 }
 
 func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings core.ErrorMapping) error {
-
 	if response.StatusCode < 400 {
 		return nil
 	}
@@ -154,7 +153,6 @@ func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core
 }
 
 func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-
 	request, err := c.toRequest(requestInfo)
 	if err != nil {
 		return nil, err

@@ -52,5 +52,5 @@ func OauthRedirectHandler(w http.ResponseWriter, r *http.Request) {
 	// tokenCredential.Token = token
 
 	// Respond with a success message or a web page as needed.
-	fmt.Fprint(w, "OAuth2 token obtained successfully!")
+	_, _ = fmt.Fprint(w, "OAuth2 token obtained successfully!")
 }

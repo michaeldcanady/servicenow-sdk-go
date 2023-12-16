@@ -17,7 +17,6 @@ import (
 type MockClient struct{}
 
 func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-
 	req, err := requestInfo.ToRequest()
 	if err != nil {
 		return nil, err
@@ -32,7 +31,6 @@ func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping cor
 }
 
 func TestNewAttachmentRequestBuilder(t *testing.T) {
-
 	client := MockClient{}
 
 	pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now"}
@@ -43,7 +41,6 @@ func TestNewAttachmentRequestBuilder(t *testing.T) {
 }
 
 func TestAttachmentUrl(t *testing.T) {
-
 	client := MockClient{}
 
 	pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now"}
@@ -57,8 +54,7 @@ func TestAttachmentUrl(t *testing.T) {
 	}
 }
 
-func TestAttachmentRequestBuilder_Get(t *testing.T) {
-
+func TestAttachmentRequestBuilderGet(t *testing.T) {
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Simulate successful response with the provided JSON
 		responseJSON := `{
@@ -158,8 +154,7 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 	assert.Equal(t, expected, resp)
 }
 
-func TestAttachmentRequestBuilder_File(t *testing.T) {
-
+func TestAttachmentRequestBuilderFile(t *testing.T) {
 	fakeUser := "fakeuser"
 	today, _ := time.Parse(DateTimeFormat, "2009-05-21 04:12:21")
 	formattedToday := today.Format(DateTimeFormat)
@@ -236,7 +231,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 		// Write the JSON response
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write(responseJSON)
+		_, _ = w.Write(responseJSON)
 	}))
 	defer mockServer.Close()
 
@@ -245,7 +240,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error creating temporary file: %v", err)
 	}
-	defer os.Remove(tempFile.Name())
+	defer os.Remove(tempFile.Name()) //nolint:errcheck
 
 	// Write some data to the temporary file
 	testData := []byte("test data")
@@ -267,7 +262,6 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 	builder := NewAttachmentRequestBuilder(client, pathParameters)
 
 	t.Run("Successful", func(t *testing.T) {
-
 		params := &AttachmentRequestBuilderFileQueryParameters{
 			FileName:   fileName,
 			TableName:  tableName,

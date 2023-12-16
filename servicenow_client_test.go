@@ -52,7 +52,6 @@ func (rI *MockRequestInformation) AddHeaders(rawHeaders interface{}) error {
 }
 
 func TestNewClient(t *testing.T) {
-
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
@@ -61,7 +60,6 @@ func TestNewClient(t *testing.T) {
 }
 
 func TestClientURL(t *testing.T) {
-
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
@@ -69,8 +67,7 @@ func TestClientURL(t *testing.T) {
 	assert.Equal(t, client.BaseUrl, "https://instance.service-now.com/api")
 }
 
-func TestClient_Now(t *testing.T) {
-
+func TestClientNow(t *testing.T) {
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
@@ -82,8 +79,7 @@ func TestClient_Now(t *testing.T) {
 	assert.Equal(t, client, nowBuilder.Client)
 }
 
-func TestClient_toRequest(t *testing.T) {
-
+func TestClientToRequest(t *testing.T) {
 	requestInfo := &MockRequestInformation{}
 
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
@@ -109,7 +105,7 @@ func TestClient_toRequest(t *testing.T) {
 	assert.Error(t, ErrNilRequestInfo, err)
 }
 
-func TestClient_unmarshallError(t *testing.T) {
+func TestClientUnmarshallError(t *testing.T) {
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
@@ -144,7 +140,7 @@ func TestClient_unmarshallError(t *testing.T) {
 	assert.IsType(t, &json.SyntaxError{}, err)
 }
 
-func TestClient_ToRequestWithContext(t *testing.T) {
+func TestClientToRequestWithContext(t *testing.T) {
 	requestInfo := &MockRequestInformation{}
 
 	cred := credentials.NewUsernamePasswordCredential("username", "password")

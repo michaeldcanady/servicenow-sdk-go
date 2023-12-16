@@ -41,7 +41,6 @@ func normalizeVarNames(varNames []string) map[string]string {
 }
 
 func addParametersWithOriginalNames(params map[string]string, normalizedNames map[string]string, values uritemplate.Values) uritemplate.Values {
-
 	if values == nil {
 		values = uritemplate.Values{}
 	}
@@ -61,7 +60,6 @@ func getKeyWithOriginalName(key string, normalizedNames map[string]string) strin
 }
 
 func IsPointer(value interface{}) bool {
-
 	if value == nil {
 		return false
 	}
@@ -80,7 +78,7 @@ func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
 	if err != nil {
 		return err
 	}
-	defer response.Body.Close()
+	defer response.Body.Close() //nolint:errcheck
 
 	if len(body) == 0 {
 		return ErrNilResponseBody
@@ -95,7 +93,6 @@ func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
 
 // ParseResponse parses the HTTP Response to the provided type
 func ParseResponse[T Response](response *http.Response, value *T) error {
-
 	err := FromJson(response, &value)
 	if err != nil {
 		return err
@@ -108,7 +105,6 @@ func ParseResponse[T Response](response *http.Response, value *T) error {
 
 // Deprecated: deprecated in version {version}. Please use SendGet2.
 func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping, value *T) error {
-
 	requestInfo, err := requestBuilder.ToGetRequestInformation(params)
 	if err != nil {
 		return err
@@ -123,7 +119,6 @@ func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, err
 }
 
 func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
-
 	requestInfo, err := requestBuilder.ToGetRequestInformation2(config)
 	if err != nil {
 		return err
@@ -139,7 +134,6 @@ func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) erro
 
 // Deprecated: deprecated in version {version}. Please use SendPost2.
 func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, params interface{}, errorMapping ErrorMapping, value *T) error {
-
 	requestInfo, err := requestBuilder.ToPostRequestInformation2(data, params)
 	if err != nil {
 		return err

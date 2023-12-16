@@ -7,8 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTime_UnmarshalJSON_Success(t *testing.T) {
-
+func TestTimeUnmarshalJSON_Success(t *testing.T) {
 	rawJSON := []byte(`2006-01-02 15:04:05`)
 
 	actual := &Time{}

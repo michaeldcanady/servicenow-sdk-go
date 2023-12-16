@@ -32,7 +32,6 @@ func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator
 
 // Iterate iterates through pages and invokes the provided callback for each page item.
 func (p *PageIterator) Iterate(callback func(pageItem *TableEntry) bool) error {
-
 	if callback == nil {
 		return ErrNilCallback
 	}

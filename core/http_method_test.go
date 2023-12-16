@@ -5,7 +5,6 @@ import (
 )
 
 func TestHttpMethod_String(t *testing.T) {
-
 	tests := []Test{
 		{
 			Title:    "Test GET",

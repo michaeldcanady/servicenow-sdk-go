@@ -10,7 +10,6 @@ import (
 const keyName = "key1"
 
 func TestTableEntry(t *testing.T) {
-
 	responseJSON := `{
 			"parent": "",
 			"made_sla": "true",
@@ -176,7 +175,6 @@ func TestTableEntry(t *testing.T) {
 }
 
 func TestTableEntryValueValidKey(t *testing.T) {
-
 	entry := TableEntry{
 		keyName: "value1",
 	}
@@ -200,7 +198,6 @@ func TestTableEntryValueValidKey(t *testing.T) {
 }
 
 func TestTableEntryValueMissingKey(t *testing.T) {
-
 	entry := TableEntry{
 		"key2": "value1",
 	}

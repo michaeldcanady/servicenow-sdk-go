@@ -139,7 +139,6 @@ func getFakeJSON() []byte {
 type mockClient struct{}
 
 func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-
 	url, err := requestInformation.Url()
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse URL: %s", err)
@@ -250,7 +249,6 @@ func TestPageIteratorEnumerateAll(t *testing.T) {
 	enumCount := 0
 
 	keepIterating := pageIterator.enumerate(func(item *TableEntry) bool {
-
 		index := pageIterator.pauseIndex
 
 		result := expectedResult.Result[index]
@@ -273,7 +271,6 @@ func TestPageIteratorEnumerateOnce(t *testing.T) {
 	enumCount := 0
 
 	keepIterating := pageIterator.enumerate(func(item *TableEntry) bool {
-
 		index := pageIterator.pauseIndex
 
 		result := expectedResult.Result[index]
