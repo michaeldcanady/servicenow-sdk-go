@@ -18,6 +18,7 @@ const (
 	fakeLinkWithLinks    = "https://fake-link1.com"
 	fakeLinkWithLinksErr = "https://fake-link2.com"
 	fakeLinkStatusFailed = "https://fake-link3.com"
+	fakeLinkNilResponse  = "https://fake-link4.com"
 
 	fakeNextLink  = "https://fake-link.com?next"
 	fakePrevLink  = "https://fake-link.com?prev"
@@ -183,6 +184,8 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 		fallthrough
 	case fakeLinkWithLinksErr:
 		return resp, nil
+	case fakeLinkNilResponse:
+		return nil, nil
 	}
 
 	return nil, nil
@@ -388,7 +391,7 @@ func TestPageIteratorFetchAndConvertPageWithLinkErrNilResponseBody(t *testing.T)
 
 func TestPageIteratorFetchAndConvertPageWithoutLink(t *testing.T) {
 	currentPage := TableCollectionResponse{
-		NextPageLink: "",
+		NextPageLink: fakeLinkNilResponse,
 	}
 
 	client := &mockClient{}
@@ -397,7 +400,7 @@ func TestPageIteratorFetchAndConvertPageWithoutLink(t *testing.T) {
 	assert.Nil(t, err)
 
 	page, err := pageIterator.fetchAndConvertPage(pageIterator.currentPage.NextPageLink)
-	assert.ErrorIs(t, err, ErrNilResponse)
+	assert.ErrorIs(t, err, core.ErrNilResponse)
 
 	assert.Equal(t, PageResult{}, page)
 }
