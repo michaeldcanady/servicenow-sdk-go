@@ -125,15 +125,8 @@ func TestIterateWithNoCallback(t *testing.T) {
 	assert.ErrorIs(t, err, ErrNilCallback)
 }
 
-func TestPageIteratorIterateSinglePageWithCallback(t *testing.T) {
-	// Mock PageIterator
-	pageIterator := &PageIterator{
-		currentPage: PageResult{
-			// Initialize with test data
-		},
-		client:     &mockClient{},
-		pauseIndex: 0,
-	}
+func TestPageIteratorIterateSinglePageWithoutNextLinkWithoutCurrentPageWithCallback(t *testing.T) {
+	expectedIterator.currentPage = PageResult{}
 
 	// Mock callback function
 	callback := func(pageItem *TableEntry) bool {
@@ -141,7 +134,34 @@ func TestPageIteratorIterateSinglePageWithCallback(t *testing.T) {
 		return true
 	}
 
-	err := pageIterator.Iterate(callback)
+	err := expectedIterator.Iterate(callback)
+	assert.Nil(t, err)
+}
+
+func TestPageIteratorIterateSinglePageWithoutNextLinkWithCurrentPageWithCallback(t *testing.T) {
+	expectedIterator.currentPage.NextPageLink = ""
+
+	// Mock callback function
+	callback := func(pageItem *TableEntry) bool {
+		// Implement your callback logic for testing
+		return true
+	}
+
+	err := expectedIterator.Iterate(callback)
+	assert.Nil(t, err)
+}
+
+func TestPageIteratorIterateSinglePageWithNextLinkWithCurrentPageWithCallback(t *testing.T) {
+
+	expectedIterator.currentPage.NextPageLink = fakeLinkKey
+
+	// Mock callback function
+	callback := func(pageItem *TableEntry) bool {
+		// Implement your callback logic for testing
+		return true
+	}
+
+	err := expectedIterator.Iterate(callback)
 	assert.Nil(t, err)
 }
 
