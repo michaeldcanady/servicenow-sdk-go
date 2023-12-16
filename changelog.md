@@ -14,6 +14,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
+## [1.3.1] - (16/12/2023)
+
+### Added
+
+### Changed
+
+### Removed
+
+### Fixed
+
 - `TableRequestBuilder.Post`/`TableRequestBuilder.Post2` sending `PUT` request ([Issue #69](https://github.com/michaeldcanady/servicenow-sdk-go/issues/69))
 
 ## [1.2.2] - (15/12/2023)
