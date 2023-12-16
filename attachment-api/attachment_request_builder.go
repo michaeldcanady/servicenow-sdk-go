@@ -46,9 +46,8 @@ func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQuery
 	return configuration.response, nil
 }
 
+// File ...
 func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequestBuilderFileQueryParameters) (*AttachmentItemResponse, error) {
-	var value AttachmentItemResponse
-
 	if params == nil {
 		return nil, ErrNilParams
 	}
@@ -65,10 +64,17 @@ func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequ
 		return nil, err
 	}
 
-	err = rB.SendPost2(data, params, nil, &value)
+	config := &AttachmentCollectionFileRequestConfiguration{
+		Header:          nil,
+		QueryParameters: params,
+		Data:            data,
+		response:        &AttachmentItemResponse{},
+	}
+
+	err = rB.SendPost3(config.toConfiguration())
 	if err != nil {
 		return nil, err
 	}
 
-	return &value, nil
+	return config.response, nil
 }
