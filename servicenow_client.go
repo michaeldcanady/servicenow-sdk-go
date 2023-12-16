@@ -14,7 +14,7 @@ import (
 
 type ServiceNowClient struct {
 	Credential core.Credential
-	BaseUrl    string //nolint:stylecheck,ST1003
+	BaseUrl    string //nolint:stylecheck
 	Session    http.Client
 }
 

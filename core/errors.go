@@ -9,7 +9,7 @@ var (
 	ErrMissingBasePathParam    = errors.New("pathParameters must contain a value for \"baseurl\" for the URL to be built")
 	ErrMissingBasePathTemplate = errors.New("template must contain a placeholder for \"{+baseurl}\" for the URL to be built")
 	ErrInvalidHeaderType       = errors.New("headers must be a pointer or an http.Header")
-	ErrEmptyRawUrl             = errors.New("empty raw URL") //nolint:stylecheck,ST1003
+	ErrEmptyRawUrl             = errors.New("empty raw URL") //nolint:stylecheck
 	ErrMissingSchema           = errors.New("URL is missing schema")
 	ErrNilResponse             = errors.New("Response is nil")
 	ErrNilResponseBody         = errors.New("Response body is nil")

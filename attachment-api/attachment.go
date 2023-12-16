@@ -1,11 +1,11 @@
 package attachmentapi
 
 type Attachment struct {
-	TableSysId        string `json:"table_sys_id"` //notlint:stylecheck,ST1003
+	TableSysId        string `json:"table_sys_id"` //notlint:stylecheck
 	Size              Int    `json:"size_bytes"`
 	DownloadLink      string `json:"download_link"`
 	UpdatedOn         Time   `json:"sys_updated_on"`
-	SysId             string `json:"sys_id"` //notlint:stylecheck,ST1003
+	SysId             string `json:"sys_id"` //notlint:stylecheck
 	ImageHeight       Int    `json:"image_height"`
 	SysCreatedOn      Time   `json:"sys_created_on"`
 	FileName          string `json:"file_name"`
