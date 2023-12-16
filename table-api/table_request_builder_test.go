@@ -1,7 +1,6 @@
 package tableapi
 
 import (
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -39,12 +38,8 @@ func TestTableRequestBuilderGet(t *testing.T) {
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "GET", r.Method)
 
-		// Simulate successful response with the provided JSON
-		responseJSON, err := json.Marshal(fakeCollectionResult)
-		assert.Nil(t, err)
-
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(responseJSON) //nolint:errcheck
+		_, _ = w.Write(getFakeJSON())
 	}))
 
 	client := &MockClient{}
@@ -63,7 +58,7 @@ func TestTableRequestBuilderGet(t *testing.T) {
 	assert.NotNil(t, resp)
 	assert.IsType(t, &TableCollectionResponse{}, resp)
 	assert.Len(t, resp.Result, 1)
-	//assert.Equal(t, expectedTableEntry, resp.Result[0])
+	assert.Equal(t, &fakeEntry, resp.Result[0])
 }
 
 //nolint:dupl
@@ -83,10 +78,7 @@ func TestTableRequestBuilderPost(t *testing.T) {
 		client := &MockClient{}
 
 		parsedURL, err := url.Parse(mockServer.URL)
-		if err != nil {
-			t.Errorf("Expected no error, but got: %v", err)
-			return
-		}
+		assert.Nil(t, err)
 
 		pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
 
@@ -101,11 +93,7 @@ func TestTableRequestBuilderPost(t *testing.T) {
 			View:                 "desktop",
 		})
 
-		// Check if there are no errors and the response is as expected
-		if err != nil {
-			t.Fatalf("Unexpected error: %v", err)
-		}
-
+		assert.Nil(t, err)
 		assert.IsType(t, &TableItemResponse{}, response)
 	})
 
@@ -135,10 +123,7 @@ func TestTableRequestBuilderPost2(t *testing.T) {
 		client := &MockClient{}
 
 		parsedURL, err := url.Parse(mockServer.URL)
-		if err != nil {
-			t.Errorf("Expected no error, but got: %v", err)
-			return
-		}
+		assert.Nil(t, err)
 
 		pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
 
@@ -152,11 +137,7 @@ func TestTableRequestBuilderPost2(t *testing.T) {
 			InputDisplayValue:    true,
 			View:                 "desktop",
 		})
-
-		// Check if there are no errors and the response is as expected
-		if err != nil {
-			t.Fatalf("Unexpected error: %v", err)
-		}
+		assert.Nil(t, err)
 
 		assert.IsType(t, &TableItemResponse{}, response)
 	})
@@ -186,10 +167,7 @@ func TestTableRequestBuilderCount(t *testing.T) {
 	// Create an instance of TableRequestBuilder using the mock server URL
 
 	parsedURL, err := url.Parse(mockServer.URL)
-	if err != nil {
-		t.Errorf("Expected no error, but got: %v", err)
-		return
-	}
+	assert.Nil(t, err)
 
 	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
 
@@ -197,19 +175,7 @@ func TestTableRequestBuilderCount(t *testing.T) {
 
 	// Call the Get method
 	count, err := builder.Count()
-	if err != nil {
-		t.Errorf("Expected no error, but got: %v", err)
-		return
-	}
-
-	// You can further validate the response if needed
-	if count == -1 {
-		t.Error("Expected a non-nil response, but got nil")
-	}
-
-	expectedType := reflect.Int
-
-	if reflect.TypeOf(count).Kind() != expectedType {
-		t.Errorf("Expected response of type %v, but got type %v", expectedType, reflect.TypeOf(count))
-	}
+	assert.Nil(t, err)
+	assert.NotEqual(t, -1, count)
+	assert.IsType(t, 1, count)
 }
