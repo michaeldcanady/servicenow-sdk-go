@@ -159,6 +159,7 @@ func TestTableRequestBuilderGet(t *testing.T) {
 	}
 }
 
+//nolint:dupl
 func TestTableRequestBuilderPost(t *testing.T) {
 	t.Run("ValidRequest", func(t *testing.T) {
 		// Create a mock mockServer
@@ -210,6 +211,7 @@ func TestTableRequestBuilderPost(t *testing.T) {
 	})
 }
 
+//nolint:dupl
 func TestTableRequestBuilderPost2(t *testing.T) {
 	t.Run("ValidRequest", func(t *testing.T) {
 		// Create a mock mockServer
