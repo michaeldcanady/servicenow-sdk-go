@@ -10,4 +10,5 @@ var (
 	ErrNilResult         = errors.New("result property missing in response object")
 	ErrWrongResponseType = errors.New("incorrect Response Type")
 	ErrParsing           = errors.New("parsing nextLink url failed")
+	ErrEmptyUri          = errors.New("empty URI")
 )
