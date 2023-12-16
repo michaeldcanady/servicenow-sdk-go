@@ -378,6 +378,19 @@ func TestPageFetchPageSendErr(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func TestPageFetchPageEmptyUri(t *testing.T) {
+	pageIterator := &PageIterator{
+		currentPage: PageResult{
+			LastPageLink: fakeLinkStatusFailed,
+		},
+		client:     &mockClient{},
+		pauseIndex: 0,
+	}
+
+	_, err := pageIterator.fetchPage("")
+	assert.ErrorIs(t, err, ErrEmptyUri)
+}
+
 func TestPageIteratorFetchAndConvertPageWithLinkErrNilResponseBody(t *testing.T) {
 	currentPage := TableCollectionResponse{
 		NextPageLink: fakeLinkWithLinksErr,
