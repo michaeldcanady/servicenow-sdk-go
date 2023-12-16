@@ -97,7 +97,6 @@ func (uI *UrlInformation) getURIFromRaw() (*url.URL, error) {
 
 // buildValues builds the values for URI template expansion.
 func (uI *UrlInformation) buildValues(normalizedNames map[string]string) uritemplate.Values {
-
 	values := addParametersWithOriginalNames(uI.QueryParameters, normalizedNames, nil)
 	values = addParametersWithOriginalNames(uI.PathParameters, normalizedNames, values)
 
@@ -133,7 +132,6 @@ func (uI *UrlInformation) checkBaseURLRequirement() error {
 
 // getUriFromTemplate retrieves the URI from the URL template.
 func (uI *UrlInformation) getUriFromTemplate() (*url.URL, error) {
-
 	if err := uI.checkBaseURLRequirement(); err != nil {
 		return nil, err
 	}
@@ -148,7 +146,6 @@ func (uI *UrlInformation) getUriFromTemplate() (*url.URL, error) {
 
 // parseRawURL parses a raw URL.
 func (uI *UrlInformation) parseRawURL(rawURL string) (*url.URL, error) {
-
 	if rawURL == "" {
 		return nil, ErrEmptyRawUrl
 	}
@@ -167,7 +164,6 @@ func (uI *UrlInformation) parseRawURL(rawURL string) (*url.URL, error) {
 
 // ToUrl retrieves the URI, either from the raw URL or the URL template.
 func (uI *UrlInformation) ToUrl() (*url.URL, error) {
-
 	uri, err := uI.getURIFromRaw()
 	if uri != nil || err != nil {
 		return uri, err

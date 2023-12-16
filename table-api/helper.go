@@ -15,7 +15,7 @@ func convertType[T any](val interface{}) (T, error) {
 
 // isNil checks if a value is nil or a nil interface
 func isNil(a interface{}) bool {
-	defer func() { recover() }()
+	defer func() { _ = recover() }()
 	return a == nil || reflect.ValueOf(a).IsNil()
 }
 

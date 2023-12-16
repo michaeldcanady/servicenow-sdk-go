@@ -14,7 +14,6 @@ type TableValue struct {
 //
 // ToInt64 returns tV's underlying value, as an int64.
 func (tV *TableValue) ToInt64() (int64, error) {
-
 	return tV.Int()
 }
 

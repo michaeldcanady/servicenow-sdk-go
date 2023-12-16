@@ -11,7 +11,6 @@ import (
 )
 
 func TestNewTableRequestBuilder(t *testing.T) {
-
 	client := MockClient{}
 
 	pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1"}
@@ -22,7 +21,6 @@ func TestNewTableRequestBuilder(t *testing.T) {
 }
 
 func TestTableUrl(t *testing.T) {
-
 	client := MockClient{}
 
 	pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1"}
@@ -37,9 +35,7 @@ func TestTableUrl(t *testing.T) {
 }
 
 func TestTableRequestBuilderGet(t *testing.T) {
-
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		assert.Equal(t, "GET", r.Method)
 
 		// Simulate successful response with the provided JSON
@@ -167,13 +163,12 @@ func TestTableRequestBuilderPost(t *testing.T) {
 	t.Run("ValidRequest", func(t *testing.T) {
 		// Create a mock mockServer
 		mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 			assert.Equal(t, "POST", r.Method)
 
 			// Handle the request and send a mock response
 			// You can customize this based on your actual implementation
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(`{"some": "response"}`)) //nolint:errcheck
+			_, _ = w.Write([]byte(`{"some": "response"}`))
 		}))
 		defer mockServer.Close()
 
@@ -219,13 +214,12 @@ func TestTableRequestBuilderPost2(t *testing.T) {
 	t.Run("ValidRequest", func(t *testing.T) {
 		// Create a mock mockServer
 		mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 			assert.Equal(t, "POST", r.Method)
 
 			// Handle the request and send a mock response
 			// You can customize this based on your actual implementation
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(`{"some": "response"}`)) //nolint:errcheck
+			_, _ = w.Write([]byte(`{"some": "response"}`))
 		}))
 		defer mockServer.Close()
 

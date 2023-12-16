@@ -31,7 +31,6 @@ func TestConvertType(t *testing.T) {
 }
 
 func TestConvertToPageNilResponse(t *testing.T) {
-
 	page, err := convertToPage(nil)
 
 	assert.Equal(t, PageResult{}, page)
@@ -39,7 +38,6 @@ func TestConvertToPageNilResponse(t *testing.T) {
 }
 
 func TestConvertToPageWrongResponseType(t *testing.T) {
-
 	response := TableItemResponse{}
 
 	page, err := convertToPage(response)

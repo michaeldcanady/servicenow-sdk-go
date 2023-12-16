@@ -342,7 +342,6 @@ type requestBuilderTest struct {
 }
 
 func TestRequestBuilderToRequestInformation3(t *testing.T) {
-
 	tests := []requestBuilderTest{
 		{
 			title:  "Test GET",
@@ -375,7 +374,6 @@ func TestRequestBuilderToRequestInformation3(t *testing.T) {
 	}
 
 	for _, test := range tests {
-
 		expectedJSON, err := json.Marshal(test.config.Data)
 		assert.NoError(t, err)
 

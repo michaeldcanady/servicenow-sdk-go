@@ -15,7 +15,6 @@ func NewOrderBy() *OrderBy {
 
 // String ...
 func (oB *OrderBy) String() string {
-
 	if oB.Direction == Unset {
 		return ""
 	}

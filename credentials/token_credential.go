@@ -31,7 +31,6 @@ func DefaultPrompt() (string, string, error) {
 
 // NewTokenCredential creates a new token credential
 func NewTokenCredential(clientId, clientSecret, baseURL string, prompt func() (string, string, error)) (*TokenCredential, error) {
-
 	address := "localhost:5000"
 
 	if prompt == nil {
@@ -70,7 +69,6 @@ func (tc *TokenCredential) promptUser() (string, string, error) {
 
 // GetAuthentication gets the authentication header value
 func (tc *TokenCredential) GetAuthentication() (string, error) {
-
 	if tc.Token == nil {
 		token, err := tc.retrieveOAuthToken()
 		if err != nil {
@@ -93,7 +91,6 @@ func (tc *TokenCredential) GetOauth2Url() string {
 }
 
 func (tc *TokenCredential) requestToken(data url.Values) (*AccessToken, error) {
-
 	tc.server.Start()
 
 	oauthURL := tc.GetOauth2Url()
@@ -115,7 +112,6 @@ func (tc *TokenCredential) requestToken(data url.Values) (*AccessToken, error) {
 }
 
 func (tc *TokenCredential) retrieveOAuthToken() (*AccessToken, error) {
-
 	username, password, err := tc.promptUser()
 	if err != nil {
 		return nil, err

@@ -6,8 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestInt_UnmarshalJSON_Success(t *testing.T) {
-
+func TestIntUnmarshalJSON_Success(t *testing.T) {
 	rawJSON := []byte("\"1\"")
 
 	intVal := Int(0)
@@ -19,8 +18,7 @@ func TestInt_UnmarshalJSON_Success(t *testing.T) {
 	assert.Equal(t, intVal, Int(1))
 }
 
-func TestInt_UnmarshalJSON_Failed(t *testing.T) {
-
+func TestIntUnmarshalJSON_Failed(t *testing.T) {
 	rawJSON := []byte("\"s\"")
 
 	intVal := Int(0)

@@ -9,7 +9,6 @@ import (
 )
 
 func TestAttachmentMarshal(t *testing.T) {
-
 	var attachment Attachment
 
 	expected := Attachment{

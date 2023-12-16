@@ -38,7 +38,6 @@ func (q *Query) AddFragment(fragment *Fragment, operator LogicalOperator) *Query
 
 // AddQuery adds a query condition to the query.
 func (q *Query) AddQuery(field string, operator RelationalOperator, value interface{}) *Query {
-
 	q.AddFragment(NewFragment(field, operator, value), And)
 	return q
 }
@@ -187,7 +186,6 @@ func (q *Query) String() string {
 	}
 
 	q.head.Iterate(func(f *Fragment) bool {
-
 		sb.WriteString(f.String() + string(f.LogicalOperator))
 
 		return true

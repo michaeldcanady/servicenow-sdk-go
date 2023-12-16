@@ -41,7 +41,6 @@ func (rB *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder { //n
 //   - *TableCollectionResponse: The response data as a TableCollectionResponse.
 //   - error: An error if there was an issue with the request or response.
 func (rB *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
-
 	config := &TableGetRequestConfiguration{
 		Header:          nil,
 		QueryParameters: params,
@@ -69,7 +68,6 @@ func (rB *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters
 //   - *TableResponse: The response data as a TableResponse.
 //   - error: An error if there was an issue with the request or response.
 func (rB *TableRequestBuilder) Post(data map[string]string, params *TableRequestBuilderPostQueryParamters) (*TableItemResponse, error) {
-
 	var response TableItemResponse
 
 	err := rB.SendPost(data, params, nil, &response)
@@ -86,7 +84,6 @@ func (rB *TableRequestBuilder) Post(data map[string]string, params *TableRequest
 //   - data: A map[string]string representing data to be included in the request body.
 //   - params: An instance of `*TableRequestBuilderPostQueryParameters` for query parameters
 func (rB *TableRequestBuilder) Post2(data map[string]string, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error) {
-
 	config := &TablePostRequestConfiguration{
 		Header:          nil,
 		QueryParameters: params,

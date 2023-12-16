@@ -28,7 +28,6 @@ func NewTableItemRequestBuilder(client core.Client, pathParameters map[string]st
 //   - *TableItemResponse: The response data as a TableItemResponse.
 //   - error: An error if there was an issue with the request or response.
 func (rB *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
-
 	config := &TableItemGetRequestConfiguration{
 		Header:          nil,
 		QueryParameters: params,
@@ -52,7 +51,6 @@ func (rB *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryPa
 // Returns:
 //   - error: An error if there was an issue with the request or response, or nil if the request was successful.
 func (rB *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQueryParameters) error {
-
 	config := &TableItemDeleteRequestConfiguration{
 		Header:          nil,
 		QueryParameters: params,
@@ -75,7 +73,6 @@ func (rB *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQ
 //   - *TableItemResponse: A TableItemResponse containing the updated item data.
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
 func (rB *TableItemRequestBuilder) Put(tableEntry map[string]string, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
-
 	config := &TableItemPutRequestConfiguration{
 		Header:          nil,
 		QueryParameters: params,

@@ -25,7 +25,6 @@ type MockClient struct {
 }
 
 func (c *MockClient) Send(requestInfo RequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
-
 	url, err := requestInfo.uri.ToUrl()
 	if err != nil {
 		return nil, err
@@ -37,7 +36,6 @@ func (c *MockClient) Send(requestInfo RequestInformation, errorMapping ErrorMapp
 }
 
 func pick[M ~map[K]V, K comparable, V any](m M) K {
-
 	keys := make([]K, 0, len(m))
 	for key := range m {
 		keys = append(keys, key)
@@ -53,7 +51,6 @@ type TestData struct {
 }
 
 func TestToQueryMap(t *testing.T) {
-
 	inputs := []struct {
 		Input       interface{}
 		ShouldError bool
@@ -83,7 +80,6 @@ func TestToQueryMap(t *testing.T) {
 	}
 
 	for _, input := range inputs {
-
 		paramMap, err := ToQueryMap(input.Input)
 
 		if input.ShouldError {
@@ -95,12 +91,10 @@ func TestToQueryMap(t *testing.T) {
 		}
 
 		assert.Equal(t, input.Expected, paramMap)
-
 	}
 }
 
 func TestNormalizeVarNames(t *testing.T) {
-
 	input := []string{"VaR1", "vAr2", "VAr3", "vAR4", "Var5", "vaR6", "VAR7"}
 	expected := map[string]string{"var1": "VaR1", "var2": "vAr2", "var3": "VAr3", "var4": "vAR4", "var5": "Var5", "var6": "vaR6", "var7": "VAR7"}
 
@@ -110,7 +104,6 @@ func TestNormalizeVarNames(t *testing.T) {
 }
 
 func TestAddParametersWithOriginalNames(t *testing.T) {
-
 	params := map[string]string{"var1": "val1", "var2": "val2"}
 	normalizedNames := map[string]string{"var1": "VaR1", "var2": "vAr2"}
 
@@ -121,7 +114,6 @@ func TestAddParametersWithOriginalNames(t *testing.T) {
 }
 
 func TestGetKeyWithOriginalName(t *testing.T) {
-
 	normalizedNames := map[string]string{"var1": "VaR1", "var2": "vAr2", "var3": "VAr3", "var4": "vAR4", "var5": "Var5", "var6": "vaR6", "var7": "VAR7"}
 
 	randomKey := pick(normalizedNames)
@@ -132,7 +124,6 @@ func TestGetKeyWithOriginalName(t *testing.T) {
 }
 
 func TestIsPointer(t *testing.T) {
-
 	s := "test"
 	i := 42
 
@@ -250,7 +241,6 @@ func TestFromJson(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-
 			var result TestData
 
 			err := FromJson(tc.response, &result)

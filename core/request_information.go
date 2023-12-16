@@ -77,7 +77,6 @@ func (rI *RequestInformation) getContentReader() *bytes.Reader {
 }
 
 func (rI *RequestInformation) SetUri(url *url.URL) { //nolint:stylecheck
-
 	//TODO: Add validation that url is valid
 
 	rI.uri.PathParameters = map[string]string{rawURLKey: url.String()}
@@ -96,7 +95,6 @@ func (rI *RequestInformation) Url() (string, error) { //nolint:stylecheck
 
 // ToRequest converts the RequestInformation object into an HTTP request.
 func (rI *RequestInformation) ToRequest() (*http.Request, error) {
-
 	url, err := rI.Url()
 	if err != nil {
 		return nil, err
@@ -136,7 +134,6 @@ func (rI *RequestInformation) ToRequestWithContext(ctx context.Context) (*http.R
 }
 
 func (rI *RequestInformation) AddHeaders(rawHeaders interface{}) error {
-
 	var headers http.Header
 	var err error
 

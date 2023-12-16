@@ -2,6 +2,7 @@ package attachmentapi
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
@@ -30,7 +31,6 @@ func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]s
 //   - *AttachmentCollectionResponse: The response data as a AttachmentCollectionResponse.
 //   - error: An error if there was an issue with the request or response.
 func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQueryParameters) (*AttachmentCollectionResponse, error) {
-
 	configuration := &AttachmentCollectionGetRequestConfiguration{
 		Header:          nil,
 		QueryParameters: params,
@@ -47,19 +47,20 @@ func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQuery
 }
 
 func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequestBuilderFileQueryParameters) (*AttachmentItemResponse, error) {
-
 	var value AttachmentItemResponse
 
 	if params == nil {
 		return nil, ErrNilParams
 	}
 
-	_, err := os.Stat(filePath)
+	cleanPath := filepath.Clean(filePath)
+
+	_, err := os.Stat(cleanPath)
 	if err != nil {
 		return nil, err
 	}
 
-	data, err := os.ReadFile(filePath)
+	data, err := os.ReadFile(cleanPath)
 	if err != nil {
 		return nil, err
 	}

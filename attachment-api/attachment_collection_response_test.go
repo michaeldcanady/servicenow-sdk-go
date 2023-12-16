@@ -9,7 +9,6 @@ import (
 )
 
 func TestAttachmentCollectionRequestMarshal(t *testing.T) {
-
 	var attachmentCollectionResponse AttachmentCollectionResponse
 
 	expected := AttachmentCollectionResponse{
