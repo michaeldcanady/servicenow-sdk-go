@@ -231,38 +231,6 @@ func TestPageIteratorNextWithLinkNoError(t *testing.T) {
 	assert.Equal(t, expectedResult, page)
 }
 
-func TestPageIteratorNextWithLinkErrNilResponseBody(t *testing.T) {
-	currentPage := TableCollectionResponse{
-		NextPageLink: fakeLinkWithLinksErr,
-	}
-
-	client := &mockClient{}
-
-	pageIterator, err := NewPageIterator(currentPage, client)
-	assert.Nil(t, err)
-
-	page, err := pageIterator.next()
-	assert.ErrorIs(t, err, core.ErrNilResponseBody)
-
-	assert.Equal(t, PageResult{}, page)
-}
-
-func TestPageIteratorNextWithoutLink(t *testing.T) {
-	currentPage := TableCollectionResponse{
-		NextPageLink: "",
-	}
-
-	client := &mockClient{}
-
-	pageIterator, err := NewPageIterator(currentPage, client)
-	assert.Nil(t, err)
-
-	page, err := pageIterator.next()
-	assert.ErrorIs(t, err, ErrNilResponse)
-
-	assert.Equal(t, PageResult{}, page)
-}
-
 func TestPageIteratorEnumerateAll(t *testing.T) {
 	pageIterator := PageIterator{
 		currentPage: expectedResult,
@@ -378,4 +346,49 @@ func TestPageIteratorLast(t *testing.T) {
 	_, err := pageIterator.Last()
 
 	assert.Error(t, err)
+}
+
+func TestPageFetchPageSendErr(t *testing.T) {
+	pageIterator := &PageIterator{
+		currentPage: PageResult{
+			LastPageLink: fakeLinkStatusFailed,
+		},
+		client:     &mockClient{},
+		pauseIndex: 0,
+	}
+
+	_, err := pageIterator.fetchPage(fakeLinkStatusFailed)
+	assert.Error(t, err)
+}
+
+func TestPageIteratorFetchAndConvertPageWithLinkErrNilResponseBody(t *testing.T) {
+	currentPage := TableCollectionResponse{
+		NextPageLink: fakeLinkWithLinksErr,
+	}
+
+	client := &mockClient{}
+
+	pageIterator, err := NewPageIterator(currentPage, client)
+	assert.Nil(t, err)
+
+	page, err := pageIterator.fetchAndConvertPage(pageIterator.currentPage.NextPageLink)
+	assert.ErrorIs(t, err, core.ErrNilResponseBody)
+
+	assert.Equal(t, PageResult{}, page)
+}
+
+func TestPageIteratorFetchAndConvertPageWithoutLink(t *testing.T) {
+	currentPage := TableCollectionResponse{
+		NextPageLink: "",
+	}
+
+	client := &mockClient{}
+
+	pageIterator, err := NewPageIterator(currentPage, client)
+	assert.Nil(t, err)
+
+	page, err := pageIterator.fetchAndConvertPage(pageIterator.currentPage.NextPageLink)
+	assert.ErrorIs(t, err, ErrNilResponse)
+
+	assert.Equal(t, PageResult{}, page)
 }
