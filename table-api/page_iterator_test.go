@@ -152,7 +152,6 @@ func TestPageIteratorIterateSinglePageWithoutNextLinkWithCurrentPageWithCallback
 }
 
 func TestPageIteratorIterateSinglePageWithNextLinkWithCurrentPageWithCallback(t *testing.T) {
-
 	expectedIterator.currentPage.NextPageLink = fakeLinkKey
 
 	// Mock callback function

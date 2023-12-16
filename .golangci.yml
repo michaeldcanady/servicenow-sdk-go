@@ -1,9 +1,10 @@
 linters:
   enable:
     - dogsled
+    - dupword
     - dupl
+    - govet
     - gofmt
-    - goimports
     - gosec
     - misspell
     - nakedret
@@ -11,3 +12,4 @@ linters:
     - unconvert
     - unparam
     - whitespace
+    - gocognit
