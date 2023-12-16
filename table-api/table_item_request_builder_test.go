@@ -17,7 +17,7 @@ type MockClient struct{}
 
 var (
 	testResult = map[string]interface{}{
-		"result": fakeResult,
+		"result": fakeItemResult,
 	}
 )
 
@@ -188,13 +188,9 @@ func TestTableItemRequestBuilderPut(t *testing.T) {
 		t.Errorf("Expected no error, but got: %v", err)
 	}
 
-	expected := &TableItemResponse{
-		Result: &expectedTableEntry,
-	}
-
 	// You should assert that the updatedRecord matches your expected response here.
 	// You may need to unmarshal the JSON response and compare specific fields.
 	// For example: assert.Equal(t, expectedValue, updatedRecord.Field)
 
-	assert.Equal(t, expected, updatedRecord)
+	assert.Equal(t, fakeTableItemResponse, updatedRecord)
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
-func TestTableItemDeleteRequestConfiguration_toConfiguration(t *testing.T) {
+func TestTableItemDeleteRequestConfigurationToConfiguration(t *testing.T) {
 	t.Run("ValidConfiguration", func(t *testing.T) {
 		// Create a TableItemDeleteRequestConfiguration with valid parameters
 		rC := &TableItemDeleteRequestConfiguration{
