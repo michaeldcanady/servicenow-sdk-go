@@ -36,9 +36,12 @@ func TestTableUrl(t *testing.T) {
 	}
 }
 
-func TestTableRequestBuilder_Get(t *testing.T) {
+func TestTableRequestBuilderGet(t *testing.T) {
 
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		assert.Equal(t, "GET", r.Method)
+
 		// Simulate successful response with the provided JSON
 		responseJSON := `{
 		  "result": [
@@ -160,10 +163,13 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 	}
 }
 
-func TestTableRequestBuilder_Post(t *testing.T) {
+func TestTableRequestBuilderPost(t *testing.T) {
 	t.Run("ValidRequest", func(t *testing.T) {
 		// Create a mock mockServer
 		mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+			assert.Equal(t, "POST", r.Method)
+
 			// Handle the request and send a mock response
 			// You can customize this based on your actual implementation
 			w.WriteHeader(http.StatusOK)
@@ -209,10 +215,13 @@ func TestTableRequestBuilder_Post(t *testing.T) {
 	})
 }
 
-func TestTableRequestBuilder_Post2(t *testing.T) {
+func TestTableRequestBuilderPost2(t *testing.T) {
 	t.Run("ValidRequest", func(t *testing.T) {
 		// Create a mock mockServer
 		mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+			assert.Equal(t, "POST", r.Method)
+
 			// Handle the request and send a mock response
 			// You can customize this based on your actual implementation
 			w.WriteHeader(http.StatusOK)
@@ -258,7 +267,7 @@ func TestTableRequestBuilder_Post2(t *testing.T) {
 	})
 }
 
-func TestTableRequestBuilder_Count(t *testing.T) {
+func TestTableRequestBuilderCount(t *testing.T) {
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Simulate successful response with the provided JSON
 		responseJSON := ``

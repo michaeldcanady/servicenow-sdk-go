@@ -59,11 +59,11 @@ func (rB *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters
 }
 
 // Deprecated: deprecated since v{version}. Use `Post2` instead.
-// Post sends an HTTP Post request with the provided data and query parameters and returns a TableResponse.
+// Post sends an HTTP Post request with the provided data and query parameters and returns an `TableItemResponse`.
 //
 // Parameters:
 //   - data: A map[string]string representing data to be included in the request body.
-//   - params: An instance of TableRequestBuilderPostQueryParamters for query parameters.
+//   - params: An instance of `*TableRequestBuilderPostQueryParameters` for query parameters.
 //
 // Returns:
 //   - *TableResponse: The response data as a TableResponse.
@@ -72,7 +72,7 @@ func (rB *TableRequestBuilder) Post(data map[string]string, params *TableRequest
 
 	var response TableItemResponse
 
-	err := rB.SendPut(data, params, nil, &response)
+	err := rB.SendPost(data, params, nil, &response)
 	if err != nil {
 		return nil, err
 	}
@@ -80,6 +80,11 @@ func (rB *TableRequestBuilder) Post(data map[string]string, params *TableRequest
 	return &response, nil
 }
 
+// Post2 sends an HTTP Post request with the provided data and query paramters and returns an `TableItemResponse`.
+//
+// Parameters:
+//   - data: A map[string]string representing data to be included in the request body.
+//   - params: An instance of `*TableRequestBuilderPostQueryParameters` for query parameters
 func (rB *TableRequestBuilder) Post2(data map[string]string, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error) {
 
 	config := &TablePostRequestConfiguration{
@@ -90,7 +95,7 @@ func (rB *TableRequestBuilder) Post2(data map[string]string, params *TableReques
 		response:        &TableItemResponse{},
 	}
 
-	err := rB.SendPut2(config.toConfiguration())
+	err := rB.SendPost3(config.toConfiguration())
 	if err != nil {
 		return nil, err
 	}
