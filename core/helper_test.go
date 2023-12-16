@@ -71,7 +71,7 @@ func TestToQueryMap(t *testing.T) {
 				Param3: true,
 			},
 			ShouldError: false,
-			Expected:    map[string]string{"param_1": "value1", "param_2": "5", "param_3": "1"},
+			Expected:    map[string]string{"param_1": "value1", "param_2": "5", "param_3": "true"},
 			CheckErr:    nil,
 		},
 		{

@@ -39,18 +39,26 @@ func TestRequestBuilderToGetRequestInformation(t *testing.T) {
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
 	// Create mock query parameters
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
+	params := struct {
+		Param1 string `url:"param1"`
+		Param2 string `url:"param2"`
+	}{
+		Param1: "value1",
+		Param2: "value2",
 	}
 
 	// Call the ToGetRequestInformation method
 	requestInfo, err := builder.ToGetRequestInformation(params)
 
+	expectedParams := map[string]string{
+		"param1": "value1",
+		"param2": "value2",
+	}
+
 	// Perform assertions to check the result
 	assert.NoError(t, err)
 	assert.Equal(t, GET, requestInfo.Method)
-	assert.Equal(t, params, requestInfo.uri.QueryParameters)
+	assert.Equal(t, expectedParams, requestInfo.uri.QueryParameters)
 }
 
 func TestRequestBuilderToGetRequestInformation2(t *testing.T) {
@@ -58,9 +66,12 @@ func TestRequestBuilderToGetRequestInformation2(t *testing.T) {
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
 	// Create mock query parameters
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
+	params := struct {
+		Param1 string `url:"param1"`
+		Param2 string `url:"param2"`
+	}{
+		Param1: "value1",
+		Param2: "value2",
 	}
 
 	config := RequestConfiguration{
@@ -75,9 +86,14 @@ func TestRequestBuilderToGetRequestInformation2(t *testing.T) {
 		t.Errorf("Expected no error, but got %v", err)
 	}
 
+	expectedParams := map[string]string{
+		"param1": "value1",
+		"param2": "value2",
+	}
+
 	assert.NoError(t, err)
 	assert.Equal(t, GET, requestInfo.Method)
-	assert.Equal(t, params, requestInfo.uri.QueryParameters)
+	assert.Equal(t, expectedParams, requestInfo.uri.QueryParameters)
 }
 
 func TestRequestBuilderToPostRequestInformation(t *testing.T) {
@@ -95,9 +111,12 @@ func TestRequestBuilderToPostRequestInformation(t *testing.T) {
 		t.Error(err)
 	}
 
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
+	params := struct {
+		Param1 string `url:"param1"`
+		Param2 string `url:"param2"`
+	}{
+		Param1: "value1",
+		Param2: "value2",
 	}
 
 	// Call the ToPostRequestInformation method
@@ -123,9 +142,12 @@ func TestRequestBuilderToPostRequestInformation2(t *testing.T) {
 		t.Error(err)
 	}
 
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
+	params := struct {
+		Param1 string `url:"param1"`
+		Param2 string `url:"param2"`
+	}{
+		Param1: "value1",
+		Param2: "value2",
 	}
 
 	// Call the ToPostRequestInformation method
@@ -152,9 +174,12 @@ func TestRequestBuilderToPostRequestInformation3(t *testing.T) {
 		t.Error(err)
 	}
 
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
+	params := struct {
+		Param1 string `url:"param1"`
+		Param2 string `url:"param2"`
+	}{
+		Param1: "value1",
+		Param2: "value2",
 	}
 
 	config := RequestConfiguration{
@@ -176,17 +201,25 @@ func TestRequestBuilderToDeleteRequestInformation(t *testing.T) {
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
 	// Create mock query parameters
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
+	params := struct {
+		Param1 string `url:"param1"`
+		Param2 string `url:"param2"`
+	}{
+		Param1: "value1",
+		Param2: "value2",
 	}
 
 	// Call the ToDeleteRequestInformation method
 	requestInfo, err := builder.ToDeleteRequestInformation(params)
 
+	expectedParams := map[string]string{
+		"param1": "value1",
+		"param2": "value2",
+	}
+
 	// Perform assertions to check the result
 	assert.NoError(t, err)
-	assert.Equal(t, params, requestInfo.uri.QueryParameters)
+	assert.Equal(t, expectedParams, requestInfo.uri.QueryParameters)
 }
 
 func TestRequestBuilderToDeleteRequestInformation2(t *testing.T) {
@@ -194,9 +227,12 @@ func TestRequestBuilderToDeleteRequestInformation2(t *testing.T) {
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
 	// Create mock query parameters
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
+	params := struct {
+		Param1 string `url:"param1"`
+		Param2 string `url:"param2"`
+	}{
+		Param1: "value1",
+		Param2: "value2",
 	}
 
 	config := RequestConfiguration{
@@ -206,9 +242,14 @@ func TestRequestBuilderToDeleteRequestInformation2(t *testing.T) {
 	// Call the ToDeleteRequestInformation method
 	requestInfo, err := builder.ToDeleteRequestInformation2(&config)
 
+	expectedParams := map[string]string{
+		"param1": "value1",
+		"param2": "value2",
+	}
+
 	// Perform assertions to check the result
 	assert.NoError(t, err)
-	assert.Equal(t, params, requestInfo.uri.QueryParameters)
+	assert.Equal(t, expectedParams, requestInfo.uri.QueryParameters)
 }
 
 func TestRequestBuilderToPutRequestInformation2(t *testing.T) {
@@ -220,11 +261,13 @@ func TestRequestBuilderToPutRequestInformation2(t *testing.T) {
 		"key1": "value1",
 		"key2": "value2",
 	}
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
+	params := struct {
+		Param1 string `url:"param1"`
+		Param2 string `url:"param2"`
+	}{
+		Param1: "value1",
+		Param2: "value2",
 	}
-
 	// Call the ToPostRequestInformation method
 	requestInfo, err := builder.ToPutRequestInformation(data, params)
 
@@ -307,9 +350,12 @@ func TestRequestBuilderToRequestInformation(t *testing.T) {
 		"key1": "value1",
 		"key2": "value2",
 	}
-	params := map[string]interface{}{
-		"param1": "value1",
-		"param2": "value2",
+	params := struct {
+		Param1 string `url:"param1"`
+		Param2 string `url:"param2"`
+	}{
+		Param1: "value1",
+		Param2: "value2",
 	}
 
 	// Call the ToRequestInformation method for a GET request
@@ -348,9 +394,12 @@ func TestRequestBuilderToRequestInformation3(t *testing.T) {
 			title:  "Test GET",
 			method: GET,
 			config: RequestConfiguration{
-				QueryParameters: map[string]interface{}{
-					"param1": "value1",
-					"param2": "value2",
+				QueryParameters: struct {
+					Param1 string `url:"param1"`
+					Param2 string `url:"param2"`
+				}{
+					Param1: "value1",
+					Param2: "value2",
 				},
 				Data: map[string]string{
 					"key1": "value1",
@@ -362,9 +411,12 @@ func TestRequestBuilderToRequestInformation3(t *testing.T) {
 			title:  "Test POST",
 			method: POST,
 			config: RequestConfiguration{
-				QueryParameters: map[string]interface{}{
-					"param1": "value1",
-					"param2": "value2",
+				QueryParameters: struct {
+					Param1 string `url:"param1"`
+					Param2 string `url:"param2"`
+				}{
+					Param1: "value1",
+					Param2: "value2",
 				},
 				Data: map[string]string{
 					"key1": "value1",
