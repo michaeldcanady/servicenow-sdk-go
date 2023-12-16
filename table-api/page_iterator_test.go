@@ -123,7 +123,7 @@ var (
 	}
 )
 
-func getFakeJson() []byte {
+func getFakeJSON() []byte {
 	rawJson := map[string]interface{}{
 		"result": []map[string]interface{}{
 			fakeResult,
@@ -170,7 +170,7 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 
 		fallthrough
 	case fakeLinkKey: // Adds body
-		resp.Body = io.NopCloser(strings.NewReader(string(getFakeJson())))
+		resp.Body = io.NopCloser(strings.NewReader(string(getFakeJSON())))
 
 		fallthrough
 	case fakeLinkWithLinksErr:
@@ -365,7 +365,7 @@ func TestPageFetchPageEmptyUri(t *testing.T) {
 	}
 
 	_, err := pageIterator.fetchPage("")
-	assert.ErrorIs(t, err, ErrEmptyUri)
+	assert.ErrorIs(t, err, ErrEmptyURI)
 }
 
 func TestPageIteratorFetchAndConvertPageWithLinkErrNilResponseBody(t *testing.T) {

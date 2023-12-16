@@ -130,13 +130,13 @@ func TestTableRequestBuilderGet(t *testing.T) {
 
 	client := &MockClient{}
 
-	parsedUrl, err := url.Parse(mockServer.URL)
+	parsedURL, err := url.Parse(mockServer.URL)
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
 		return
 	}
 
-	pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host, "table": parsedUrl.Path}
+	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
 
 	builder := NewTableRequestBuilder(client, pathParameters)
 
@@ -179,13 +179,13 @@ func TestTableRequestBuilderPost(t *testing.T) {
 
 		client := &MockClient{}
 
-		parsedUrl, err := url.Parse(mockServer.URL)
+		parsedURL, err := url.Parse(mockServer.URL)
 		if err != nil {
 			t.Errorf("Expected no error, but got: %v", err)
 			return
 		}
 
-		pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host, "table": parsedUrl.Path}
+		pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
 
 		builder := NewTableRequestBuilder(client, pathParameters)
 
@@ -231,13 +231,13 @@ func TestTableRequestBuilderPost2(t *testing.T) {
 
 		client := &MockClient{}
 
-		parsedUrl, err := url.Parse(mockServer.URL)
+		parsedURL, err := url.Parse(mockServer.URL)
 		if err != nil {
 			t.Errorf("Expected no error, but got: %v", err)
 			return
 		}
 
-		pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host, "table": parsedUrl.Path}
+		pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
 
 		builder := NewTableRequestBuilder(client, pathParameters)
 
@@ -282,13 +282,13 @@ func TestTableRequestBuilderCount(t *testing.T) {
 
 	// Create an instance of TableRequestBuilder using the mock server URL
 
-	parsedUrl, err := url.Parse(mockServer.URL)
+	parsedURL, err := url.Parse(mockServer.URL)
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
 		return
 	}
 
-	pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host, "table": parsedUrl.Path}
+	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
 
 	builder := NewTableRequestBuilder(client, pathParameters)
 

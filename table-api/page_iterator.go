@@ -112,7 +112,7 @@ func (pI *PageIterator) fetchPage(uri string) (*TableCollectionResponse, error) 
 	var err error
 
 	if uri == "" {
-		return nil, ErrEmptyUri
+		return nil, ErrEmptyURI
 	}
 
 	nextLink, err := url.ParseRequestURI(pI.currentPage.NextPageLink)

@@ -39,7 +39,7 @@ func NewTokenCredential(clientId, clientSecret, baseURL string, prompt func() (s
 	}
 
 	if clientId == "" {
-		return nil, EmptyClientId
+		return nil, EmptyClientID
 	}
 
 	if clientSecret == "" {
@@ -47,7 +47,7 @@ func NewTokenCredential(clientId, clientSecret, baseURL string, prompt func() (s
 	}
 
 	if baseURL == "" {
-		return nil, EmptyBaseUrl
+		return nil, EmptyBaseURL
 	}
 
 	return &TokenCredential{

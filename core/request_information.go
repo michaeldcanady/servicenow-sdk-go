@@ -27,7 +27,7 @@ func NewRequestInformation() *RequestInformation {
 	return &RequestInformation{
 		Headers: make(http.Header),
 		options: make(map[string]RequestOption),
-		uri:     NewUrlInformation(),
+		uri:     NewURLInformation(),
 	}
 }
 

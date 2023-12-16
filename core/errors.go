@@ -3,7 +3,7 @@ package core
 import "errors"
 
 var (
-	ErrEmptyUri                = errors.New("uri cannot be empty")
+	ErrEmptyURI                = errors.New("uri cannot be empty")
 	ErrNilPathParameters       = errors.New("uri template parameters cannot be nil")
 	ErrNilQueryParamters       = errors.New("uri query parameters cannot be nil")
 	ErrMissingBasePathParam    = errors.New("pathParameters must contain a value for \"baseurl\" for the URL to be built")
