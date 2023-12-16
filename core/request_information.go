@@ -76,7 +76,7 @@ func (rI *RequestInformation) getContentReader() *bytes.Reader {
 	return bytes.NewReader(rI.Content)
 }
 
-func (rI *RequestInformation) SetUri(url *url.URL) { //notlint:stylecheck
+func (rI *RequestInformation) SetUri(url *url.URL) { //nolint:stylecheck
 
 	//TODO: Add validation that url is valid
 
