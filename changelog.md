@@ -10,9 +10,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- Migrated from [urlquery](github.com/hetiansu5/urlquery) to [go-querystring](https://github.com/google/go-querystring) ([Issue #66](https://github.com/michaeldcanady/servicenow-sdk-go/issues/66))
+
 ### Removed
 
 ### Fixed
+
+- Fields parameter not being included in URL ([Issue #66](https://github.com/michaeldcanady/servicenow-sdk-go/issues/66))
+- Migration corrected inproper conversion of `ExcludeReferenceLink` type `bool` ([Issue #67](https://github.com/michaeldcanady/servicenow-sdk-go/issues/67))
 
 ## [1.2.2] - (15/12/2023)
 
