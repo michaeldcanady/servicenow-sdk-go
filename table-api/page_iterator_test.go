@@ -227,6 +227,14 @@ func TestNewPageIteratorWithoutClient(t *testing.T) {
 	assert.Equal(t, ErrNilClient, err)
 }
 
+func TestNewPageIteratorNilCurrentPageWithClient(t *testing.T) {
+	client := &mockClient{}
+	pageIterator, err := NewPageIterator(nil, client)
+
+	assert.Equal(t, (*PageIterator)(nil), pageIterator)
+	assert.Equal(t, ErrNilResponse, err)
+}
+
 func TestPageIteratorNextWithLinkNoError(t *testing.T) {
 	currentPage := TableCollectionResponse{
 		NextPageLink: fakeLinkWithLinks,
@@ -323,27 +331,27 @@ func TestPageIteratorIterateSinglePageWithCallback(t *testing.T) {
 	}
 
 	err := pageIterator.Iterate(callback)
-
-	if err != nil {
-		t.Errorf("Expected no error, but got %v", err)
-	}
+	assert.Nil(t, err)
 }
 
-func TestPageIteratorIterateWithDefaultCallback(t *testing.T) {
+func TestPageIteratorIterateMultiplePagesWithCallback(t *testing.T) {
 	// Mock PageIterator
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
-			// Initialize with test data
+			NextPageLink: fakeLinkWithLinks,
 		},
 		client:     &mockClient{},
 		pauseIndex: 0,
 	}
 
-	err := pageIterator.Iterate(defaultCallback)
-
-	if err != nil {
-		t.Errorf("Expected no error, but got %v", err)
+	// Mock callback function
+	callback := func(pageItem *TableEntry) bool {
+		// Implement your callback logic for testing
+		return true
 	}
+
+	err := pageIterator.Iterate(callback)
+	assert.Nil(t, err)
 }
 
 func TestPageIteratorLast(t *testing.T) {
