@@ -13,11 +13,6 @@ type PageIterator struct {
 	pauseIndex  int
 }
 
-// defaultCallback is the default function to determine whether to continue iterating.
-func defaultCallback(pageItem *TableEntry) bool {
-	return true
-}
-
 // NewPageIterator creates a new PageIterator instance.
 func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator, error) {
 	if client == nil {
@@ -39,7 +34,7 @@ func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator
 func (p *PageIterator) Iterate(callback func(pageItem *TableEntry) bool) error {
 
 	if callback == nil {
-		callback = defaultCallback
+		return ErrNilCallback
 	}
 
 	for {
