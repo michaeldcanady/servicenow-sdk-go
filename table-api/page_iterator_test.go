@@ -308,10 +308,7 @@ func TestIterateWithNoCallback(t *testing.T) {
 	}
 
 	err := pageIterator.Iterate(nil)
-
-	if err != nil {
-		t.Errorf("Expected no error, but got %v", err)
-	}
+	assert.ErrorIs(t, err, ErrNilCallback)
 }
 
 func TestPageIteratorIterateSinglePageWithCallback(t *testing.T) {
