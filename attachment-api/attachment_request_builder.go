@@ -31,14 +31,19 @@ func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]s
 //   - error: An error if there was an issue with the request or response.
 func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQueryParameters) (*AttachmentCollectionResponse, error) {
 
-	var response AttachmentCollectionResponse
+	configuration := &AttachmentCollectionGetRequestConfiguration{
+		Header:          nil,
+		QueryParameters: params,
+		Data:            nil,
+		response:        &AttachmentCollectionResponse{},
+	}
 
-	err := rB.SendGet(params, nil, &response)
+	err := rB.SendGet2(configuration.toConfiguration())
 	if err != nil {
 		return nil, err
 	}
 
-	return &response, nil
+	return configuration.response, nil
 }
 
 func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequestBuilderFileQueryParameters) (*AttachmentItemResponse, error) {
