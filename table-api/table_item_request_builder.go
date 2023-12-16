@@ -36,7 +36,7 @@ func (rB *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryPa
 		response:        &TableItemResponse{},
 	}
 
-	err := rB.SendGet2(config.toConfiguration())
+	err := rB.SendGet2(config.toConfiguration()) //nolint:staticcheck,SA1019
 	if err != nil {
 		return nil, err
 	}
