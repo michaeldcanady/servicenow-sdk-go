@@ -135,15 +135,6 @@ func getFakeJson() []byte {
 	return jsonData
 }
 
-const (
-	fakeFirstPageLink    = "https://first-page.com"
-	fakePreviousPageLink = "https://previous-page.com"
-	fakeNextPageLink     = "https://next-page.com"
-	fakeLastPageLink     = "https://last-page.com"
-
-	errExpected = "Expected no error, but got %v"
-)
-
 // Mock client for testing
 type mockClient struct{}
 
