@@ -9,11 +9,11 @@ import (
 
 func TestTime_UnmarshalJSON_Success(t *testing.T) {
 
-	rawJson := []byte(`2006-01-02 15:04:05`)
+	rawJSON := []byte(`2006-01-02 15:04:05`)
 
 	actual := &Time{}
 
-	err := actual.UnmarshalJSON(rawJson)
+	err := actual.UnmarshalJSON(rawJSON)
 	if err != nil {
 		t.Error(err)
 	}
@@ -29,11 +29,11 @@ func TestTime_UnmarshalJSON_Success(t *testing.T) {
 }
 
 func TestTime_UnmarshallJSON_Failed(t *testing.T) {
-	rawJson := []byte(`2006-01-02 15:04:053`)
+	rawJSON := []byte(`2006-01-02 15:04:053`)
 
 	actual := &Time{}
 
-	err := actual.UnmarshalJSON(rawJson)
+	err := actual.UnmarshalJSON(rawJSON)
 	if err != nil {
 		assert.Error(t, err)
 	}

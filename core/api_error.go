@@ -3,7 +3,7 @@ package core
 import "fmt"
 
 // ApiError represents an error that occurs during API requests.
-type ApiError struct {
+type ApiError struct { //nolint:stylecheck,ST1003
 	// Message is the human-readable error message.
 	Message string
 	// ResponseStatusCode is the HTTP response status code associated with the error.

@@ -124,13 +124,13 @@ var (
 )
 
 func getFakeJSON() []byte {
-	rawJson := map[string]interface{}{
+	rawJSON := map[string]interface{}{
 		"result": []map[string]interface{}{
 			fakeResult,
 		},
 	}
 
-	jsonData, _ := json.Marshal(rawJson)
+	jsonData, _ := json.Marshal(rawJSON)
 
 	return jsonData
 }

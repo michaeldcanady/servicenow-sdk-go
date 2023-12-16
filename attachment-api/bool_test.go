@@ -8,11 +8,11 @@ import (
 
 func TestBool_UnmarshalJSON_Success(t *testing.T) {
 
-	rawJson := []byte(`"true"`)
+	rawJSON := []byte(`"true"`)
 
 	boolVal := Bool(false)
 
-	err := (&boolVal).UnmarshalJSON(rawJson)
+	err := (&boolVal).UnmarshalJSON(rawJSON)
 	if err != nil {
 		t.Error(err)
 	}
@@ -21,10 +21,10 @@ func TestBool_UnmarshalJSON_Success(t *testing.T) {
 }
 
 func TestBool_UnmarshalJSON_Failed(t *testing.T) {
-	rawJson := []byte(`"w"`)
+	rawJSON := []byte(`"w"`)
 
 	boolVal := Bool(false)
 
-	err := (&boolVal).UnmarshalJSON(rawJson)
+	err := (&boolVal).UnmarshalJSON(rawJSON)
 	assert.Error(t, err)
 }

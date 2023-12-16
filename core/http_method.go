@@ -1,7 +1,7 @@
 package core
 
 // Represents the HTTP method used by a request.
-type HttpMethod int
+type HttpMethod int //nolint:stylecheck,ST1003
 
 const (
 	// The HTTP GET method.
