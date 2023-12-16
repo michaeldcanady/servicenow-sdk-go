@@ -32,7 +32,7 @@ func (rI *MockRequestInformation) AddQueryParameters(source interface{}) error {
 	return nil
 }
 
-func (rI *MockRequestInformation) SetUri(url *url.URL) { //notlint:stylecheck
+func (rI *MockRequestInformation) SetUri(url *url.URL) { //nolint:stylecheck
 }
 
 func (rI *MockRequestInformation) Url() (string, error) {
