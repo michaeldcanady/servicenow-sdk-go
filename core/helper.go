@@ -82,6 +82,10 @@ func FromJson[T any](response *http.Response, v *T) error {
 	}
 	defer response.Body.Close()
 
+	if len(body) == 0 {
+		return ErrNilResponseBody
+	}
+
 	if err := json.Unmarshal(body, v); err != nil {
 		return err
 	}

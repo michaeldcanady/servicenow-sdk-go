@@ -13,11 +13,17 @@ func convertType[T any](val interface{}) (T, error) {
 	return v, nil
 }
 
+// isNil checks if a value is nil or a nil interface
+func isNil(a interface{}) bool {
+	defer func() { recover() }()
+	return a == nil || reflect.ValueOf(a).IsNil()
+}
+
 // convertToPage converts a response into a PageResult.
 func convertToPage(response interface{}) (PageResult, error) {
 	var page PageResult
 
-	if response == nil {
+	if isNil(response) {
 		return page, ErrNilResponse
 	}
 
