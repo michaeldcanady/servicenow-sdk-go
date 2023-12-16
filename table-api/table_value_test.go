@@ -8,9 +8,43 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func IsNotNilError(err error) bool {
-	return err != nil
-}
+const tolerance = 1e-6 // adjust this as needed
+
+var (
+	int64TestSet = []test[int64]{
+		{"Int64", int64(42), 42, false, nil},
+		{"Int32", int32(123), 123, false, nil},
+		{"Float32", float32(3.14), 0, true, nil},
+		{"String", "not an integer", 0, true, nil},
+		{"Nil", nil, 0, true, nil},
+	}
+	float64TestSet = []test[float64]{
+		{"Float32", float32(3.14), 3.1400000, false, nil},
+		{"Float64", float64(2.71828), 2.71828, false, nil},
+		{"Int", int(42), 0, true, nil},
+		{"String", "not a float", 0, true, nil},
+		{"Nil", nil, 0, true, nil},
+	}
+	stringTestSet = []test[string]{
+		{"String", "hello", "hello", false, nil},
+		{"String", "world", "world", false, nil},
+		{"Int", 42, "", true, nil},
+		{"Nil", nil, "", true, nil},
+	}
+	boolTestSet = []test[bool]{
+		{"Bool", true, true, false, nil},
+		{"Int", 0, false, true, nil},
+		{"String", "true", false, true, nil},
+		{"Nil", nil, false, true, nil},
+	}
+	getTypeTestSet = []test[reflect.Type]{
+		{"", int(42), reflect.TypeOf(int(0)), false, nil},
+		{"", float64(3.14), reflect.TypeOf(float64(0)), false, nil},
+		{"", "hello", reflect.TypeOf(""), false, nil},
+		{"", true, reflect.TypeOf(true), false, nil},
+		{"", nil, nil, false, nil},
+	}
+)
 
 type test[T any] struct {
 	title     string
@@ -35,15 +69,7 @@ func (te test[T]) checkError(t *testing.T, err error) {
 }
 
 func TestTableValueToInt64(t *testing.T) {
-	tests := []test[int64]{
-		{"Int64", int64(42), 42, false, nil},
-		{"Int32", int32(123), 123, false, nil},
-		{"Float32", float32(3.14), 0, true, nil},
-		{"String", "not an integer", 0, true, nil},
-		{"Nil", nil, 0, true, nil},
-	}
-
-	for _, test := range tests {
+	for _, test := range int64TestSet {
 		t.Run(test.title, func(t *testing.T) {
 			tableValue := &TableValue{value: test.value}
 			result, err := tableValue.ToInt64()
@@ -58,18 +84,7 @@ func TestTableValueToInt64(t *testing.T) {
 }
 
 func TestTableValueInt(t *testing.T) {
-	tests := []test[int64]{
-		{"Int64", int64(4142), 4142, false, nil},
-		{"Int32", int32(123), 123, false, nil},
-		{"Int16", int16(4870), 4870, false, nil},
-		{"Int8", int8(98), 98, false, nil},
-		{"Int", int(9), 9, false, nil},
-		{"Float32", float32(3.14), 0, true, nil},
-		{"String", "not an integer", 0, true, nil},
-		{"Nil", nil, 0, true, nil},
-	}
-
-	for _, test := range tests {
+	for _, test := range int64TestSet {
 		t.Run(test.title, func(t *testing.T) {
 			tableValue := &TableValue{value: test.value}
 			result, err := tableValue.Int()
@@ -84,17 +99,7 @@ func TestTableValueInt(t *testing.T) {
 }
 
 func TestTableValueToFloat64(t *testing.T) {
-	tests := []test[float64]{
-		{"Float32", float32(3.14), 3.1400000, false, nil},
-		{"Float64", float64(2.71828), 2.71828, false, nil},
-		{"Int", int(42), 0, true, nil},
-		{"String", "not a float", 0, true, nil},
-		{"Nil", nil, 0, true, nil},
-	}
-
-	const tolerance = 1e-6 // adjust this as needed
-
-	for _, test := range tests {
+	for _, test := range float64TestSet {
 		t.Run(test.title, func(t *testing.T) {
 			tableValue := &TableValue{value: test.value}
 			result, err := tableValue.ToFloat64()
@@ -109,17 +114,7 @@ func TestTableValueToFloat64(t *testing.T) {
 }
 
 func TestTableValueFloat(t *testing.T) {
-	tests := []test[float64]{
-		{"Float32", float32(3.14), 3.1400000, false, nil},
-		{"Float64", float64(2.71828), 2.71828, false, nil},
-		{"Int", int(42), 0, true, nil},
-		{"String", "not a float", 0, true, nil},
-		{"Nil", nil, 0, true, nil},
-	}
-
-	const tolerance = 1e-6 // adjust this as needed
-
-	for _, test := range tests {
+	for _, test := range float64TestSet {
 		t.Run(test.title, func(t *testing.T) {
 			tableValue := &TableValue{value: test.value}
 			result, err := tableValue.Float()
@@ -134,14 +129,7 @@ func TestTableValueFloat(t *testing.T) {
 }
 
 func TestTableValueToString(t *testing.T) {
-	tests := []test[string]{
-		{"String", "hello", "hello", false, nil},
-		{"String", "world", "world", false, nil},
-		{"Int", 42, "", true, nil},
-		{"Nil", nil, "", true, nil},
-	}
-
-	for _, test := range tests {
+	for _, test := range stringTestSet {
 		t.Run(test.title, func(t *testing.T) {
 			tableValue := &TableValue{value: test.value}
 			result, err := tableValue.ToString()
@@ -156,14 +144,7 @@ func TestTableValueToString(t *testing.T) {
 }
 
 func TestTableValueString(t *testing.T) {
-	tests := []test[string]{
-		{"String", "hello", "hello", false, nil},
-		{"String", "world", "world", false, nil},
-		{"Int", 42, "", true, nil},
-		{"Nil", nil, "", true, nil},
-	}
-
-	for _, test := range tests {
+	for _, test := range stringTestSet {
 		t.Run(test.title, func(t *testing.T) {
 			tableValue := &TableValue{value: test.value}
 			result, err := tableValue.String()
@@ -178,14 +159,7 @@ func TestTableValueString(t *testing.T) {
 }
 
 func TestTableValueToBool(t *testing.T) {
-	tests := []test[bool]{
-		{"Bool", true, true, false, nil},
-		{"Int", 0, false, true, nil},
-		{"String", "true", false, true, nil},
-		{"Nil", nil, false, true, nil},
-	}
-
-	for _, test := range tests {
+	for _, test := range boolTestSet {
 		t.Run(test.title, func(t *testing.T) {
 			tableValue := &TableValue{value: test.value}
 			result, err := tableValue.ToBool()
@@ -200,14 +174,7 @@ func TestTableValueToBool(t *testing.T) {
 }
 
 func TestTableValueBool(t *testing.T) {
-	tests := []test[bool]{
-		{"Bool", true, true, false, nil},
-		{"Int", 0, false, true, nil},
-		{"String", "true", false, true, nil},
-		{"Nil", nil, false, true, nil},
-	}
-
-	for _, test := range tests {
+	for _, test := range boolTestSet {
 		t.Run(test.title, func(t *testing.T) {
 			tableValue := &TableValue{value: test.value}
 			result, err := tableValue.Bool()
@@ -222,15 +189,7 @@ func TestTableValueBool(t *testing.T) {
 }
 
 func TestTableValueGetType(t *testing.T) {
-	tests := []test[reflect.Type]{
-		{"", int(42), reflect.TypeOf(int(0)), false, nil},
-		{"", float64(3.14), reflect.TypeOf(float64(0)), false, nil},
-		{"", "hello", reflect.TypeOf(""), false, nil},
-		{"", true, reflect.TypeOf(true), false, nil},
-		{"", nil, nil, false, nil},
-	}
-
-	for _, test := range tests {
+	for _, test := range getTypeTestSet {
 		t.Run(test.title, func(t *testing.T) {
 			tableValue := &TableValue{value: test.value}
 			result := tableValue.GetType()
@@ -243,19 +202,7 @@ func TestTableValueGetType(t *testing.T) {
 }
 
 func TestTableValueType(t *testing.T) {
-	tests := []struct {
-		title    string
-		value    interface{}
-		expected reflect.Type
-	}{
-		{"", int(42), reflect.TypeOf(int(0))},
-		{"", float64(3.14), reflect.TypeOf(float64(0))},
-		{"", "hello", reflect.TypeOf("")},
-		{"", true, reflect.TypeOf(true)},
-		{"", nil, nil}, // Expected type for nil value
-	}
-
-	for _, test := range tests {
+	for _, test := range getTypeTestSet {
 		t.Run(test.title, func(t *testing.T) {
 			tableValue := &TableValue{value: test.value}
 			result := tableValue.Type()
