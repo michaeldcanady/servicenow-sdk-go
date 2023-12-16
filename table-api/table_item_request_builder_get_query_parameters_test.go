@@ -9,9 +9,9 @@ import (
 func TestTableItemRequestBuilderGetQueryParametersDefaults(t *testing.T) {
 	params := &TableItemRequestBuilderGetQueryParameters{}
 
-	assert.Equal(t, "", params.DisplayValue)
+	assert.Equal(t, DisplayValue(""), params.DisplayValue)
 	assert.Equal(t, false, params.ExcludeReferenceLink)
 	assert.Equal(t, 0, len(params.Fields))
 	assert.Equal(t, false, params.QueryNoDomain)
-	assert.Equal(t, "", params.View)
+	assert.Equal(t, View(""), params.View)
 }
