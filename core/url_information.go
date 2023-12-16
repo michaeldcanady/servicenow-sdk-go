@@ -11,13 +11,13 @@ import (
 )
 
 // UrlInformation represents an abstract Url.
-type UrlInformation struct { //noline:stylecheck
+type UrlInformation struct { //nolint:stylecheck
 	// The Query Parameters of the request.
 	QueryParameters map[string]string
 	// The path parameters to use for the URL template when generating the URI.
 	PathParameters map[string]string
 	// The Url template for the current request.
-	UrlTemplate string
+	UrlTemplate string //nolint:stylecheck
 }
 
 // Deprecated: deprecated as of v{version}, use `NewURLInformation` instead.
