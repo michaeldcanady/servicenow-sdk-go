@@ -381,7 +381,7 @@ func TestRequestBuilderToRequestInformation3(t *testing.T) {
 		builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
 		// Call the ToRequestInformation method for a GET request
-		requestInfo, err := builder.ToRequestInformation3(test.method, &test.config)
+		requestInfo, err := builder.ToRequestInformation3(test.method, &test.config) //nolint:gosec
 
 		assert.NoError(t, err)
 		assert.Equal(t, test.method, requestInfo.Method)

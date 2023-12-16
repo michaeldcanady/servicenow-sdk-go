@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 // TokenCredential represents the OAuth2 token credentials.
@@ -30,14 +31,14 @@ func DefaultPrompt() (string, string, error) {
 }
 
 // NewTokenCredential creates a new token credential
-func NewTokenCredential(clientId, clientSecret, baseURL string, prompt func() (string, string, error)) (*TokenCredential, error) {
+func NewTokenCredential(clientID, clientSecret, baseURL string, prompt func() (string, string, error)) (*TokenCredential, error) {
 	address := "localhost:5000"
 
 	if prompt == nil {
 		prompt = DefaultPrompt
 	}
 
-	if clientId == "" {
+	if clientID == "" {
 		return nil, EmptyClientID
 	}
 
@@ -50,7 +51,7 @@ func NewTokenCredential(clientId, clientSecret, baseURL string, prompt func() (s
 	}
 
 	return &TokenCredential{
-		ClientID:     clientId,
+		ClientID:     clientID,
 		ClientSecret: clientSecret,
 		BaseURL:      baseURL,
 		Prompt:       prompt,
@@ -94,7 +95,14 @@ func (tc *TokenCredential) requestToken(data url.Values) (*AccessToken, error) {
 	tc.server.Start()
 
 	oauthURL := tc.GetOauth2Url()
-	resp, err := http.PostForm(oauthURL, data)
+	req, err := http.NewRequest("POST", oauthURL, strings.NewReader(data.Encode()))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}

@@ -17,8 +17,9 @@ func NewHTTPServer(address string) *HTTPServer {
 	mux.HandleFunc("/oauth_redirect.do", OauthRedirectHandler)
 
 	httpServer := &http.Server{
-		Addr:    address,
-		Handler: mux,
+		Addr:              address,
+		Handler:           mux,
+		ReadHeaderTimeout: 1000,
 	}
 
 	return &HTTPServer{server: httpServer}

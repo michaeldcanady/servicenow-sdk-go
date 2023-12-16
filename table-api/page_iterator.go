@@ -31,50 +31,50 @@ func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator
 }
 
 // Iterate iterates through pages and invokes the provided callback for each page item.
-func (p *PageIterator) Iterate(callback func(pageItem *TableEntry) bool) error {
+func (pI *PageIterator) Iterate(callback func(pageItem *TableEntry) bool) error {
 	if callback == nil {
 		return ErrNilCallback
 	}
 
 	for {
-		keepIterating := p.enumerate(callback)
+		keepIterating := pI.enumerate(callback)
 
 		if !keepIterating {
 			// Callback returned false, stop iterating through pages.
 			return nil
 		}
 
-		if p.currentPage.NextPageLink == "" {
+		if pI.currentPage.NextPageLink == "" {
 			return nil
 		}
 
-		nextPage, err := p.next()
+		nextPage, err := pI.next()
 		if err != nil {
 			return err
 		}
 
-		p.currentPage = nextPage
-		p.pauseIndex = 0
+		pI.currentPage = nextPage
+		pI.pauseIndex = 0
 	}
 }
 
 // enumerate iterates through the items on the current page and invokes the callback.
-func (p *PageIterator) enumerate(callback func(item *TableEntry) bool) bool {
+func (pI *PageIterator) enumerate(callback func(item *TableEntry) bool) bool {
 	keepIterating := true
 
-	pageItems := p.currentPage.Result
+	pageItems := pI.currentPage.Result
 	if pageItems == nil {
 		return false
 	}
 
-	for i := p.pauseIndex; i < len(pageItems); i++ {
+	for i := pI.pauseIndex; i < len(pageItems); i++ {
 		keepIterating = callback(pageItems[i])
 
 		if !keepIterating {
 			break
 		}
 
-		p.pauseIndex = i + 1
+		pI.pauseIndex = i + 1
 	}
 	return keepIterating
 }
