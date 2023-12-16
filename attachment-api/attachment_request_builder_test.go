@@ -87,10 +87,10 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 		  }`
 
 		w.WriteHeader(http.StatusOK)
-		_, err := w.Write([]byte(responseJSON)) //nolint:all
+		_, err := w.Write([]byte(responseJSON)) //nolint:errcheck
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte(err.Error())) //nolint:all
+			_, _ = w.Write([]byte(err.Error())) //nolint:errcheck
 		}
 	}))
 

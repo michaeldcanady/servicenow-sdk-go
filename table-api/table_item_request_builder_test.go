@@ -125,7 +125,7 @@ func TestTableItemRequestBuilder_Get(t *testing.T) {
 		  }`
 
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(responseJSON)) //nolint:all
+		_, _ = w.Write([]byte(responseJSON)) //nolint:errcheck
 	}))
 
 	parsedUrl, err := url.Parse(mockServer.URL)
@@ -160,7 +160,7 @@ func TestTableItemRequestBuilder_Delete(t *testing.T) {
 		responseJSON := ``
 
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(responseJSON)) //nolint:all
+		_, _ = w.Write([]byte(responseJSON)) //nolint:errcheck
 	}))
 
 	parsedUrl, err := url.Parse(mockServer.URL)
@@ -308,7 +308,7 @@ func TestTableItemRequestBuilder_Put(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(jsonData)) //nolint:all
+		_, _ = w.Write([]byte(jsonData)) //nolint:errcheck
 	}))
 
 	// Parse the URL of the mock server

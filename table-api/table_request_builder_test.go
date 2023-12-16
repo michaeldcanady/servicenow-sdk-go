@@ -125,7 +125,7 @@ func TestTableRequestBuilderGet(t *testing.T) {
 		}`
 
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(responseJSON)) //nolint:all
+		_, _ = w.Write([]byte(responseJSON)) //nolint:errcheck
 	}))
 
 	client := &MockClient{}
@@ -173,7 +173,7 @@ func TestTableRequestBuilderPost(t *testing.T) {
 			// Handle the request and send a mock response
 			// You can customize this based on your actual implementation
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(`{"some": "response"}`))
+			w.Write([]byte(`{"some": "response"}`)) //nolint:errcheck
 		}))
 		defer mockServer.Close()
 
@@ -225,7 +225,7 @@ func TestTableRequestBuilderPost2(t *testing.T) {
 			// Handle the request and send a mock response
 			// You can customize this based on your actual implementation
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(`{"some": "response"}`))
+			w.Write([]byte(`{"some": "response"}`)) //nolint:errcheck
 		}))
 		defer mockServer.Close()
 
@@ -274,7 +274,7 @@ func TestTableRequestBuilderCount(t *testing.T) {
 
 		w.WriteHeader(http.StatusOK)
 		w.Header().Add("X-Total-Count", "1")
-		_, _ = w.Write([]byte(responseJSON)) //nolint:all
+		_, _ = w.Write([]byte(responseJSON)) //nolint:errcheck
 	}))
 	defer mockServer.Close()
 
