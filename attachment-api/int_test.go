@@ -8,10 +8,10 @@ import (
 
 func TestInt_UnmarshalJSON_Success(t *testing.T) {
 
-	rawJson := []byte("\"1\"")
+	rawJSON := []byte("\"1\"")
 
 	intVal := Int(0)
-	err := (&intVal).UnmarshalJSON(rawJson)
+	err := (&intVal).UnmarshalJSON(rawJSON)
 	if err != nil {
 		t.Error(err)
 	}
@@ -21,9 +21,9 @@ func TestInt_UnmarshalJSON_Success(t *testing.T) {
 
 func TestInt_UnmarshalJSON_Failed(t *testing.T) {
 
-	rawJson := []byte("\"s\"")
+	rawJSON := []byte("\"s\"")
 
 	intVal := Int(0)
-	err := (&intVal).UnmarshalJSON(rawJson)
+	err := (&intVal).UnmarshalJSON(rawJSON)
 	assert.Error(t, err)
 }

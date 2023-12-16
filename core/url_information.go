@@ -23,7 +23,7 @@ type UrlInformation struct { //noline:stylecheck
 // Deprecated: deprecated as of v{version}, use `NewURLInformation` instead.
 //
 // NewUrlInformation creates a new RequestUri object.
-func NewUrlInformation() *UrlInformation { //nolint:stylecheck
+func NewUrlInformation() *UrlInformation { //nolint:stylecheck,ST1003
 	return NewURLInformation()
 }
 
@@ -89,7 +89,7 @@ func (uI *UrlInformation) validateParams() error {
 
 // getURIFromRaw retrieves the URI from the raw URL.
 func (uI *UrlInformation) getURIFromRaw() (*url.URL, error) {
-	if rawURL := uI.PathParameters[rawUrlKey]; rawURL != "" {
+	if rawURL := uI.PathParameters[rawURLKey]; rawURL != "" {
 		return uI.parseRawURL(rawURL)
 	}
 	return nil, nil

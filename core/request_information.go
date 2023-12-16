@@ -80,10 +80,10 @@ func (rI *RequestInformation) SetUri(url *url.URL) {
 
 	//TODO: Add validation that url is valid
 
-	rI.uri.PathParameters = map[string]string{rawUrlKey: url.String()}
+	rI.uri.PathParameters = map[string]string{rawURLKey: url.String()}
 }
 
-func (rI *RequestInformation) Url() (string, error) {
+func (rI *RequestInformation) Url() (string, error) { //nolint:stylecheck,ST1003
 	uri, err := rI.uri.ToUrl()
 	if err != nil {
 		return "", err

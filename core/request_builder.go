@@ -15,7 +15,7 @@ type RequestBuilder struct {
 	// Client is an instance of the HTTP client used to send requests.
 	Client Client
 	// UrlTemplate is the URL template for constructing the request URL.
-	UrlTemplate string //nolint:stylecheck
+	UrlTemplate string //nolint:stylecheck,ST1003
 }
 
 // NewRequestBuilder creates a new instance of the RequestBuilder associated with the given URL and Client.
