@@ -50,7 +50,7 @@ func (rB *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters
 		response:        &TableCollectionResponse{},
 	}
 
-	err := rB.SendGet2(config.toConfiguration())
+	err := rB.SendGet2(config.toConfiguration()) //nolint:staticcheck,SA1019
 	if err != nil {
 		return nil, err
 	}
