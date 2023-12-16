@@ -1,9 +1,10 @@
 package core
 
 import (
+	"crypto/rand"
 	"errors"
 	"io"
-	"math/rand"
+	"math/big"
 	"net/http"
 	"strings"
 	"testing"
@@ -41,8 +42,12 @@ func pick[M ~map[K]V, K comparable, V any](m M) K {
 		keys = append(keys, key)
 	}
 
-	index := rand.Intn(len(keys)) // generate a random index
-	return keys[index]
+	index, err := rand.Int(rand.Reader, big.NewInt(int64(len(keys))))
+	if err != nil {
+		panic(err)
+	}
+
+	return keys[index.Int64()]
 }
 
 type TestData struct {
@@ -301,6 +306,7 @@ func TestParseResponse(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			//nolint:gosec
 			err := ParseResponse(tc.response, &tc.value)
 
 			if err != nil && tc.expectedError != nil {
