@@ -26,7 +26,7 @@ jobs:
           latest-version: ${{ steps.version.outputs.version }}
           release-notes: "See [GitHub Release](https://docs.github.com/actions/using-workflows/manually-running-a-workflow) for details."
           compare-url-target-revision: ${{ steps.version.outputs.version }}
-          date: ${{ steps.date.outputs.date }}
+          release-date: ${{ steps.date.outputs.date }}
       - name: Add new section
         run: |
           sed -i '3i ## [Unreleased] - (dd/mm/yyyy)\n\n### Added\n\n### Changed\n\n### Removed\n\n### Fixed\n' CHANGELOG.md
