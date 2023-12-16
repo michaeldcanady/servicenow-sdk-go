@@ -237,6 +237,15 @@ func TestFromJson(t *testing.T) {
 			expectedValue: TestData{},
 			expectedError: ErrNilResponse,
 		},
+		{
+			name: "Nil Response Body",
+			response: &http.Response{
+				Body:       http.NoBody,
+				StatusCode: http.StatusOK,
+			},
+			expectedValue: TestData{},
+			expectedError: ErrNilResponseBody,
+		},
 	}
 
 	for _, tc := range testCases {

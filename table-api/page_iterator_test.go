@@ -2,6 +2,7 @@ package tableapi
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -16,6 +17,7 @@ const (
 	fakeLinkKey          = "https://fake-link.com"
 	fakeLinkWithLinks    = "https://fake-link1.com"
 	fakeLinkWithLinksErr = "https://fake-link2.com"
+	fakeLinkStatusFailed = "https://fake-link3.com"
 
 	fakeNextLink  = "https://fake-link.com?next"
 	fakePrevLink  = "https://fake-link.com?prev"
@@ -154,6 +156,8 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 	}
 
 	switch url {
+	case fakeLinkStatusFailed:
+		return nil, errors.New("net/http: nil Context")
 	case fakeLinkWithLinks: // Adds headers
 		header := http.Header{}
 
@@ -259,7 +263,7 @@ func TestPageIteratorNextWithoutLink(t *testing.T) {
 	assert.Equal(t, PageResult{}, page)
 }
 
-func TestPageIteratorFetchNextPageWithLink(t *testing.T) {
+func TestPageIteratorFetchNextPageWithLinkNilErr(t *testing.T) {
 
 	currentPage := TableCollectionResponse{
 		NextPageLink: fakeLinkWithLinks,
@@ -277,6 +281,21 @@ func TestPageIteratorFetchNextPageWithLink(t *testing.T) {
 	assert.Equal(t, fakeLastLink, resp.LastPageLink)
 	assert.Equal(t, fakeNextLink, resp.NextPageLink)
 	assert.Equal(t, fakePrevLink, resp.PreviousPageLink)
+}
+
+func TestPageIteratorFetchNextPageWithLinkErr(t *testing.T) {
+
+	currentPage := TableCollectionResponse{
+		NextPageLink: fakeLinkStatusFailed,
+	}
+
+	client := &mockClient{}
+
+	pageIterator, err := NewPageIterator(currentPage, client)
+	assert.Nil(t, err)
+
+	_, err = pageIterator.fetchNextPage()
+	assert.Error(t, err)
 }
 
 func TestPageIteratorFetchNextPageWithoutLink(t *testing.T) {
