@@ -87,26 +87,18 @@ func (p *PageIterator) enumerate(callback func(item *TableEntry) bool) bool {
 
 // next fetches the next page of results.
 func (pI *PageIterator) next() (PageResult, error) {
-	var page PageResult
-
-	resp, err := pI.fetchPage(pI.currentPage.NextPageLink)
-	if err != nil {
-		return page, err
-	}
-
-	page, err = convertToPage(resp)
-	if err != nil {
-		return page, err
-	}
-
-	return page, nil
+	return pI.fetchAndConvertPage(pI.currentPage.NextPageLink)
 }
 
 // Last fethces the last page of results.
 func (pI *PageIterator) Last() (PageResult, error) {
+	return pI.fetchAndConvertPage(pI.currentPage.LastPageLink)
+}
+
+func (pI *PageIterator) fetchAndConvertPage(uri string) (PageResult, error) {
 	var page PageResult
 
-	resp, err := pI.fetchPage(pI.currentPage.LastPageLink)
+	resp, err := pI.fetchPage(uri)
 	if err != nil {
 		return page, err
 	}
@@ -125,7 +117,7 @@ func (pI *PageIterator) fetchPage(uri string) (*TableCollectionResponse, error) 
 	var err error
 
 	if uri == "" {
-		return nil, nil
+		return nil, ErrEmptyUri
 	}
 
 	nextLink, err := url.ParseRequestURI(pI.currentPage.NextPageLink)
