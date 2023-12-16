@@ -14,14 +14,14 @@ import (
 
 type ServiceNowClient struct {
 	Credential core.Credential
-	BaseUrl    string
+	BaseUrl    string //nolint:stylecheck,ST1003
 	Session    http.Client
 }
 
 // Now returns a NowRequestBuilder associated with the Client.
 // It prepares the NowRequestBuilder with the base URL for the ServiceNow instance.
-func (C *ServiceNowClient) Now() *NowRequestBuilder {
-	return NewNowRequestBuilder(C.BaseUrl+"/now", C)
+func (c *ServiceNowClient) Now() *NowRequestBuilder {
+	return NewNowRequestBuilder(c.BaseUrl+"/now", c)
 }
 
 // NewServiceNowClient creates a new instance of the ServiceNow client.
@@ -44,7 +44,7 @@ func NewServiceNowClient(credential core.Credential, instance string) *ServiceNo
 	}
 }
 
-func (C *ServiceNowClient) unmarshallError(response *http.Response) error {
+func (c *ServiceNowClient) unmarshallError(response *http.Response) error {
 	var stringError core.ServiceNowError
 
 	body, err := io.ReadAll(response.Body)
@@ -58,7 +58,7 @@ func (C *ServiceNowClient) unmarshallError(response *http.Response) error {
 	return &stringError
 }
 
-func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings core.ErrorMapping) error {
+func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings core.ErrorMapping) error {
 
 	if response.StatusCode < 400 {
 		return nil
@@ -83,7 +83,7 @@ func (C *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 		return err
 	}
 
-	stringError := C.unmarshallError(response)
+	stringError := c.unmarshallError(response)
 
 	return stringError
 }
@@ -113,7 +113,7 @@ func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo
 	return request, nil
 }
 
-func (C *ServiceNowClient) toRequest(requestInfo core.IRequestInformation) (*http.Request, error) {
+func (c *ServiceNowClient) toRequest(requestInfo core.IRequestInformation) (*http.Request, error) {
 	if requestInfo == nil {
 		return nil, ErrNilRequestInfo
 	}
@@ -123,7 +123,7 @@ func (C *ServiceNowClient) toRequest(requestInfo core.IRequestInformation) (*htt
 		return nil, err
 	}
 
-	authHeader, err := C.Credential.GetAuthentication()
+	authHeader, err := c.Credential.GetAuthentication()
 	if err != nil {
 		return nil, err
 	}

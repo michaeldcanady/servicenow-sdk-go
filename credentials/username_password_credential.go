@@ -19,22 +19,22 @@ func NewUsernamePasswordCredential(username, password string) *UsernamePasswordC
 // GetAuthentication returns the authentication string for UsernamePasswordCredential.
 // It uses the BasicAuth method from the underlying Credential to generate the encoded authentication string.
 // It returns the authentication string in the format "Basic <encoded-auth-string>".
-func (C *UsernamePasswordCredential) GetAuthentication() (string, error) {
-	return C.getAuthoizationType() + " " + C.getAuthoization(), nil
+func (c *UsernamePasswordCredential) GetAuthentication() (string, error) {
+	return c.getAuthoizationType() + " " + c.getAuthoization(), nil
 }
 
 // BasicAuth returns a Basic Authentication string based on the provided username and password.
 // The function combines the username and password with a colon and encodes the result using base64.
 // It returns the encoded Basic Authentication string.
-func (C *UsernamePasswordCredential) BasicAuth(username, password string) string {
+func (c *UsernamePasswordCredential) BasicAuth(username, password string) string {
 	auth := username + ":" + password
 	return base64.StdEncoding.EncodeToString([]byte(auth))
 }
 
-func (C *UsernamePasswordCredential) getAuthoization() string {
-	return C.BasicAuth(C.Username, C.Password)
+func (c *UsernamePasswordCredential) getAuthoization() string {
+	return c.BasicAuth(c.Username, c.Password)
 }
 
-func (C *UsernamePasswordCredential) getAuthoizationType() string {
+func (c *UsernamePasswordCredential) getAuthoizationType() string {
 	return "Basic"
 }

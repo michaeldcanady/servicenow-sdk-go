@@ -85,7 +85,7 @@ func (pI *PageIterator) next() (PageResult, error) {
 	return pI.fetchAndConvertPage(pI.currentPage.NextPageLink)
 }
 
-// Last fethces the last page of results.
+// Last fetches the last page of results.
 func (pI *PageIterator) Last() (PageResult, error) {
 	return pI.fetchAndConvertPage(pI.currentPage.LastPageLink)
 }
