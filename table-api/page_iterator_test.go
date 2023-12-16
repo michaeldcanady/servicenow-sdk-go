@@ -216,7 +216,7 @@ func TestNewPageIteratorWithoutClient(t *testing.T) {
 	assert.Equal(t, ErrNilClient, err)
 }
 
-func TestPageIteratorNext(t *testing.T) {
+func TestPageIteratorNextWithLink(t *testing.T) {
 	currentPage := TableCollectionResponse{
 		NextPageLink: fakeLinkWithLinks,
 	}
@@ -232,7 +232,23 @@ func TestPageIteratorNext(t *testing.T) {
 	assert.Equal(t, expectedResult, page)
 }
 
-func TestPageIteratorFetchNextPage(t *testing.T) {
+func TestPageIteratorNextWithoutLink(t *testing.T) {
+	currentPage := TableCollectionResponse{
+		NextPageLink: "",
+	}
+
+	client := &mockClient{}
+
+	pageIterator, err := NewPageIterator(currentPage, client)
+	assert.Nil(t, err)
+
+	page, err := pageIterator.next()
+	assert.ErrorIs(t, err, ErrNilResponse)
+
+	assert.Equal(t, PageResult{}, page)
+}
+
+func TestPageIteratorFetchNextPageWithLink(t *testing.T) {
 
 	currentPage := TableCollectionResponse{
 		NextPageLink: fakeLinkWithLinks,
@@ -250,6 +266,22 @@ func TestPageIteratorFetchNextPage(t *testing.T) {
 	assert.Equal(t, fakeLastLink, resp.LastPageLink)
 	assert.Equal(t, fakeNextLink, resp.NextPageLink)
 	assert.Equal(t, fakePrevLink, resp.PreviousPageLink)
+}
+
+func TestPageIteratorFetchNextPageWithoutLink(t *testing.T) {
+
+	currentPage := TableCollectionResponse{
+		NextPageLink: "",
+	}
+
+	client := &mockClient{}
+
+	pageIterator, err := NewPageIterator(currentPage, client)
+	assert.Nil(t, err)
+
+	resp, err := pageIterator.fetchNextPage()
+	assert.Nil(t, err)
+	assert.Nil(t, resp)
 }
 
 func TestPageIteratorEnumerate(t *testing.T) {
