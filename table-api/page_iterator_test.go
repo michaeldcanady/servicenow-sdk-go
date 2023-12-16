@@ -326,7 +326,7 @@ func TestIterateWithNoCallback(t *testing.T) {
 	}
 }
 
-func TestNewPageIteratorIterateSinglePageWithCallback(t *testing.T) {
+func TestPageIteratorIterateSinglePageWithCallback(t *testing.T) {
 	// Mock PageIterator
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
@@ -349,7 +349,7 @@ func TestNewPageIteratorIterateSinglePageWithCallback(t *testing.T) {
 	}
 }
 
-func TestIterateWithDefaultCallback(t *testing.T) {
+func TestPageIteratorIterateWithDefaultCallback(t *testing.T) {
 	// Mock PageIterator
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
