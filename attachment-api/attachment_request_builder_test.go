@@ -124,13 +124,13 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 	(*expected.Result[0]).UpdatedOn = Time(updatedOn)
 	(*expected.Result[0]).SysCreatedOn = Time(sysCreatedOn)
 
-	parsedUrl, err := url.Parse(mockServer.URL)
+	parsedURL, err := url.Parse(mockServer.URL)
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
 		return
 	}
 
-	pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host, "table": parsedUrl.Path}
+	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
 
 	builder := NewAttachmentRequestBuilder(client, pathParameters)
 
@@ -254,7 +254,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 		t.Fatalf("Error writing to temporary file: %v", err)
 	}
 
-	parsedUrl, err := url.Parse(mockServer.URL)
+	parsedURL, err := url.Parse(mockServer.URL)
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
 		return
@@ -262,7 +262,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 
 	client := &MockClient{}
 
-	pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host}
+	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host}
 
 	builder := NewAttachmentRequestBuilder(client, pathParameters)
 

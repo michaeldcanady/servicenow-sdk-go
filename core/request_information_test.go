@@ -15,11 +15,11 @@ func TestNewRequestInformation(t *testing.T) {
 
 	expectedHeaders := make(http.Header)
 	expectedOptions := make(map[string]RequestOption)
-	expectedUri := NewUrlInformation()
+	expectedURI := NewURLInformation()
 
 	assert.Equal(t, expectedHeaders, requestInfo.Headers)
 	assert.Equal(t, expectedOptions, requestInfo.options)
-	assert.Equal(t, expectedUri, requestInfo.uri)
+	assert.Equal(t, expectedURI, requestInfo.uri)
 }
 
 func TestNewRequestInformation_SetStreamContenr(t *testing.T) {

@@ -128,13 +128,13 @@ func TestTableItemRequestBuilder_Get(t *testing.T) {
 		_, _ = w.Write([]byte(responseJSON)) //nolint:errcheck
 	}))
 
-	parsedUrl, err := url.Parse(mockServer.URL)
+	parsedURL, err := url.Parse(mockServer.URL)
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
 		return
 	}
 
-	pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host, "table": parsedUrl.Path, "sysId": "sysid"}
+	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path, "sysId": "sysid"}
 
 	req := NewTableItemRequestBuilder(client, pathParameters)
 
@@ -163,13 +163,13 @@ func TestTableItemRequestBuilder_Delete(t *testing.T) {
 		_, _ = w.Write([]byte(responseJSON)) //nolint:errcheck
 	}))
 
-	parsedUrl, err := url.Parse(mockServer.URL)
+	parsedURL, err := url.Parse(mockServer.URL)
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
 		return
 	}
 
-	pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host, "table": parsedUrl.Path, "sysId": "sysid"}
+	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path, "sysId": "sysid"}
 	req := NewTableItemRequestBuilder(client, pathParameters)
 
 	params := &TableItemRequestBuilderDeleteQueryParameters{

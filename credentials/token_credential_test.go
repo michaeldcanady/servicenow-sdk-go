@@ -24,7 +24,7 @@ func TestNewTokenCredential(t *testing.T) {
 	_, err = NewTokenCredential("", "clientSecret", "http://example.com", nil)
 	if err == nil {
 		t.Error("Expected error for empty client Id, got nil")
-	} else if !errors.Is(err, EmptyClientId) {
+	} else if !errors.Is(err, EmptyClientID) {
 		t.Errorf("Expected 'clientId is empty' error, got '%v'", err)
 	}
 
@@ -40,7 +40,7 @@ func TestNewTokenCredential(t *testing.T) {
 	_, err = NewTokenCredential("clientID", "clientSecret", "", nil)
 	if err == nil {
 		t.Error("Expected error for empty base URL, got nil")
-	} else if !errors.Is(err, EmptyBaseUrl) {
+	} else if !errors.Is(err, EmptyBaseURL) {
 		t.Errorf("Expected 'baseURL is empty' error, got '%v'", err)
 	}
 }

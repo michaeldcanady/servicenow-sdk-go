@@ -11,7 +11,7 @@ import (
 )
 
 // UrlInformation represents an abstract Url.
-type UrlInformation struct {
+type UrlInformation struct { //noline:stylecheck
 	// The Query Parameters of the request.
 	QueryParameters map[string]string
 	// The path parameters to use for the URL template when generating the URI.
@@ -20,18 +20,25 @@ type UrlInformation struct {
 	UrlTemplate string
 }
 
+// Deprecated: deprecated as of v{version}, use `NewURLInformation` instead.
+//
 // NewUrlInformation creates a new RequestUri object.
-func NewUrlInformation() *UrlInformation {
+func NewUrlInformation() *UrlInformation { //nolint:stylecheck
+	return NewURLInformation()
+}
+
+// NewURLInformation creates a new RequestUri object.
+func NewURLInformation() *UrlInformation {
 	return &UrlInformation{
 		QueryParameters: make(map[string]string),
 		PathParameters:  make(map[string]string),
 	}
 }
 
-// validateUrlTemplate checks if the URL template is empty.
-func (uI *UrlInformation) validateUrlTemplate() error {
+// validateURLTemplate checks if the URL template is empty.
+func (uI *UrlInformation) validateURLTemplate() error {
 	if uI.UrlTemplate == "" {
-		return ErrEmptyUri
+		return ErrEmptyURI
 	}
 
 	if !strings.Contains(strings.ToLower(uI.UrlTemplate), "{+baseurl}") {
@@ -65,7 +72,7 @@ func (uI *UrlInformation) validateQueryParams() error {
 
 // validateParams checks all the required parameters.
 func (uI *UrlInformation) validateParams() error {
-	err := uI.validateUrlTemplate()
+	err := uI.validateURLTemplate()
 	if err != nil {
 		return err
 	}
@@ -80,8 +87,8 @@ func (uI *UrlInformation) validateParams() error {
 	return nil
 }
 
-// getUriFromRaw retrieves the URI from the raw URL.
-func (uI *UrlInformation) getUriFromRaw() (*url.URL, error) {
+// getURIFromRaw retrieves the URI from the raw URL.
+func (uI *UrlInformation) getURIFromRaw() (*url.URL, error) {
 	if rawURL := uI.PathParameters[rawUrlKey]; rawURL != "" {
 		return uI.parseRawURL(rawURL)
 	}
@@ -97,8 +104,8 @@ func (uI *UrlInformation) buildValues(normalizedNames map[string]string) uritemp
 	return values
 }
 
-// buildUriFromTemplate builds the URI from the template.
-func (uI *UrlInformation) buildUriFromTemplate() (string, error) {
+// buildURIFromTemplate builds the URI from the template.
+func (uI *UrlInformation) buildURIFromTemplate() (string, error) {
 	uriTemplate, err := uritemplate.New(uI.UrlTemplate)
 	if err != nil {
 		return "", err
@@ -115,8 +122,8 @@ func (uI *UrlInformation) buildUriFromTemplate() (string, error) {
 	return url, nil
 }
 
-// checkBaseUrlRequirement checks if the "baseurl" parameter is required.
-func (uI *UrlInformation) checkBaseUrlRequirement() error {
+// checkBaseURLRequirement checks if the "baseurl" parameter is required.
+func (uI *UrlInformation) checkBaseURLRequirement() error {
 	_, baseurlExists := uI.PathParameters["baseurl"]
 	if !baseurlExists && strings.Contains(strings.ToLower(uI.UrlTemplate), "{+baseurl}") {
 		return errors.New("pathParameters must contain a value for \"baseurl\" for the URL to be built")
@@ -127,11 +134,11 @@ func (uI *UrlInformation) checkBaseUrlRequirement() error {
 // getUriFromTemplate retrieves the URI from the URL template.
 func (uI *UrlInformation) getUriFromTemplate() (*url.URL, error) {
 
-	if err := uI.checkBaseUrlRequirement(); err != nil {
+	if err := uI.checkBaseURLRequirement(); err != nil {
 		return nil, err
 	}
 
-	uri, err := uI.buildUriFromTemplate()
+	uri, err := uI.buildURIFromTemplate()
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +168,7 @@ func (uI *UrlInformation) parseRawURL(rawURL string) (*url.URL, error) {
 // ToUrl retrieves the URI, either from the raw URL or the URL template.
 func (uI *UrlInformation) ToUrl() (*url.URL, error) {
 
-	uri, err := uI.getUriFromRaw()
+	uri, err := uI.getURIFromRaw()
 	if uri != nil || err != nil {
 		return uri, err
 	}
