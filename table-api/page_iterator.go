@@ -128,7 +128,7 @@ func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
 
 	err = core.ParseResponse(resp, &collectionResp)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 
 	return collectionResp, nil

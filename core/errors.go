@@ -12,5 +12,6 @@ var (
 	ErrEmptyRawUrl             = errors.New("empty raw URL")
 	ErrMissingSchema           = errors.New("URL is missing schema")
 	ErrNilResponse             = errors.New("Response is nil")
+	ErrNilResponseBody         = errors.New("Response body is nil")
 	ErrNilSource               = errors.New("source is nil")
 )

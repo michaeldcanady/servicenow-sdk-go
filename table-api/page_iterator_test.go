@@ -13,8 +13,9 @@ import (
 )
 
 const (
-	fakeLinkKey       = "https://fake-link.com"
-	fakeLinkWithLinks = "https://fake-link1.com"
+	fakeLinkKey          = "https://fake-link.com"
+	fakeLinkWithLinks    = "https://fake-link1.com"
+	fakeLinkWithLinksErr = "https://fake-link2.com"
 
 	fakeNextLink  = "https://fake-link.com?next"
 	fakePrevLink  = "https://fake-link.com?prev"
@@ -141,39 +142,33 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 		return nil, fmt.Errorf("unable to parse URL: %s", err)
 	}
 
+	resp := &http.Response{
+		Status:     "200 OK",
+		StatusCode: 200,
+		Proto:      "HTTP/1.1",
+		ProtoMajor: 1,
+		ProtoMinor: 1,
+		Header:     http.Header{},
+		Body:       http.NoBody,
+		Request:    nil,
+	}
+
 	switch url {
-	case fakeLinkKey:
-		resp := &http.Response{
-			Status:     "200 OK",
-			StatusCode: 200,
-			Proto:      "HTTP/1.1",
-			ProtoMajor: 1,
-			ProtoMinor: 1,
-			Header:     http.Header{},
-			Body:       io.NopCloser(strings.NewReader(string(getFakeJson()))), // We will replace this later
-			Request:    nil,                                                    // We don't need this for the example
-		}
-
-		return resp, nil
-
-	case fakeLinkWithLinks:
+	case fakeLinkWithLinks: // Adds headers
 		header := http.Header{}
 
 		header.Add("Link", "<"+fakeFirstLink+">;rel=\"first\"")
 		header.Add("Link", "<"+fakeNextLink+">;rel=\"next\"")
 		header.Add("Link", "<"+fakePrevLink+">;rel=\"prev\"")
 		header.Add("Link", "<"+fakeLastLink+">;rel=\"last\"")
+		resp.Header = header
 
-		resp := &http.Response{
-			Status:     "200 OK",
-			StatusCode: 200,
-			Proto:      "HTTP/1.1",
-			ProtoMajor: 1,
-			ProtoMinor: 1,
-			Header:     header,
-			Body:       io.NopCloser(strings.NewReader(string(getFakeJson()))), // We will replace this later
-			Request:    nil,                                                    // We don't need this for the example
-		}
+		fallthrough
+	case fakeLinkKey: // Adds body
+		resp.Body = io.NopCloser(strings.NewReader(string(getFakeJson())))
+
+		fallthrough
+	case fakeLinkWithLinksErr:
 		return resp, nil
 	}
 
@@ -216,7 +211,7 @@ func TestNewPageIteratorWithoutClient(t *testing.T) {
 	assert.Equal(t, ErrNilClient, err)
 }
 
-func TestPageIteratorNextWithLink(t *testing.T) {
+func TestPageIteratorNextWithLinkNoError(t *testing.T) {
 	currentPage := TableCollectionResponse{
 		NextPageLink: fakeLinkWithLinks,
 	}
@@ -230,6 +225,22 @@ func TestPageIteratorNextWithLink(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, expectedResult, page)
+}
+
+func TestPageIteratorNextWithLinkErrNilResponseBody(t *testing.T) {
+	currentPage := TableCollectionResponse{
+		NextPageLink: fakeLinkWithLinksErr,
+	}
+
+	client := &mockClient{}
+
+	pageIterator, err := NewPageIterator(currentPage, client)
+	assert.Nil(t, err)
+
+	page, err := pageIterator.next()
+	assert.ErrorIs(t, err, core.ErrNilResponseBody)
+
+	assert.Equal(t, PageResult{}, page)
 }
 
 func TestPageIteratorNextWithoutLink(t *testing.T) {
@@ -284,10 +295,12 @@ func TestPageIteratorFetchNextPageWithoutLink(t *testing.T) {
 	assert.Nil(t, resp)
 }
 
-func TestPageIteratorEnumerate(t *testing.T) {
+func TestPageIteratorEnumerateAll(t *testing.T) {
 	pageIterator := PageIterator{
 		currentPage: expectedResult,
 	}
+
+	enumCount := 0
 
 	keepIterating := pageIterator.enumerate(func(item *TableEntry) bool {
 
@@ -297,10 +310,35 @@ func TestPageIteratorEnumerate(t *testing.T) {
 
 		assert.Equal(t, result, item)
 
+		enumCount += 1
+
 		return true
 	})
 	assert.Equal(t, true, keepIterating)
+	assert.Equal(t, len(expectedResult.Result), enumCount)
+}
 
+func TestPageIteratorEnumerateOnce(t *testing.T) {
+	pageIterator := PageIterator{
+		currentPage: expectedResult,
+	}
+
+	enumCount := 0
+
+	keepIterating := pageIterator.enumerate(func(item *TableEntry) bool {
+
+		index := pageIterator.pauseIndex
+
+		result := expectedResult.Result[index]
+
+		assert.Equal(t, result, item)
+
+		enumCount += 1
+
+		return false
+	})
+	assert.Equal(t, false, keepIterating)
+	assert.Equal(t, 1, enumCount)
 }
 
 func TestIterateWithNoCallback(t *testing.T) {
