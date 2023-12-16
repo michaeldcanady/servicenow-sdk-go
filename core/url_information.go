@@ -23,7 +23,7 @@ type UrlInformation struct { //noline:stylecheck
 // Deprecated: deprecated as of v{version}, use `NewURLInformation` instead.
 //
 // NewUrlInformation creates a new RequestUri object.
-func NewUrlInformation() *UrlInformation { //nolint:stylecheck,ST1003
+func NewUrlInformation() *UrlInformation { //nolint:stylecheck
 	return NewURLInformation()
 }
 
