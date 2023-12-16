@@ -35,7 +35,7 @@ func (rI *MockRequestInformation) AddQueryParameters(source interface{}) error {
 func (rI *MockRequestInformation) SetUri(url *url.URL) { //nolint:stylecheck
 }
 
-func (rI *MockRequestInformation) Url() (string, error) {
+func (rI *MockRequestInformation) Url() (string, error) { //nolint:stylecheck
 	return "https://www.example.com", nil
 }
 
