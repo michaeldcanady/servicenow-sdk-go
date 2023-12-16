@@ -10,6 +10,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+### Removed
+
+### Fixed
+
+## [1.2.2] - (15/12/2023)
+
 ### Fixed
 
 - Table Iteration ends after the second iteration ([Issue #70](https://github.com/michaeldcanady/servicenow-sdk-go/issues/70))
