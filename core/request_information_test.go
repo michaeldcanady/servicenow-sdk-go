@@ -36,7 +36,7 @@ func TestNewRequestInformation_SetStreamContenr(t *testing.T) {
 func TestNewRequestInformation_AddQueryParameters(t *testing.T) {
 
 	source := struct {
-		Var1 string `query:"var_1"`
+		Var1 string `url:"var_1"`
 	}{
 		Var1: "Val1",
 	}

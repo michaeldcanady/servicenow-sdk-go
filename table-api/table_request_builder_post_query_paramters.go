@@ -12,7 +12,7 @@ type TableRequestBuilderPostQueryParamters struct {
 	//- Encrypted text: The database value is encrypted, while the displayed value is unencrypted based on the user's encryption context.
 	//
 	//- Reference fields: The database value is sys_id, but the display value is a display field of the referenced record.
-	DisplayValue DisplayValue `query:"sysparm_display_value"`
+	DisplayValue DisplayValue `url:"sysparm_display_value"`
 	//Flag that indicates whether to exclude Table API links for reference fields.
 	//
 	//Valid values:
@@ -20,10 +20,10 @@ type TableRequestBuilderPostQueryParamters struct {
 	//- true: Exclude Table API links for reference fields.
 	//
 	//- false: Include Table API links for reference fields.
-	ExcludeReferenceLink bool `query:"sysparm_exclude_reference_link"`
+	ExcludeReferenceLink bool `url:"sysparm_exclude_reference_link"`
 	//list of fields to return in the response.
-	Fields            []string `query:"sysparm_fields"`
-	InputDisplayValue bool     `query:"sysparm_input_display_value"`
+	Fields            []string `url:"sysparm_fields"`
+	InputDisplayValue bool     `url:"sysparm_input_display_value"`
 	//	UI view for which to render the data. Determines the fields returned in the response.
 	//
 	//Valid values:
@@ -32,7 +32,7 @@ type TableRequestBuilderPostQueryParamters struct {
 	//- mobile
 	//- both
 	//If you also specify the sysparm_fields parameter, it takes precedent.
-	View View `query:"sysparm_view"`
+	View View `url:"sysparm_view"`
 }
 
 type TableRequestBuilderPostQueryParameters struct {
@@ -46,7 +46,7 @@ type TableRequestBuilderPostQueryParameters struct {
 	//- Encrypted text: The database value is encrypted, while the displayed value is unencrypted based on the user's encryption context.
 	//
 	//- Reference fields: The database value is sys_id, but the display value is a display field of the referenced record.
-	DisplayValue DisplayValue `query:"sysparm_display_value"`
+	DisplayValue DisplayValue `url:"sysparm_display_value"`
 	//Flag that indicates whether to exclude Table API links for reference fields.
 	//
 	//Valid values:
@@ -54,10 +54,10 @@ type TableRequestBuilderPostQueryParameters struct {
 	//- true: Exclude Table API links for reference fields.
 	//
 	//- false: Include Table API links for reference fields.
-	ExcludeReferenceLink bool `query:"sysparm_exclude_reference_link"`
+	ExcludeReferenceLink bool `url:"sysparm_exclude_reference_link"`
 	//list of fields to return in the response.
-	Fields            []string `query:"sysparm_fields"`
-	InputDisplayValue bool     `query:"sysparm_input_display_value"`
+	Fields            []string `url:"sysparm_fields"`
+	InputDisplayValue bool     `url:"sysparm_input_display_value"`
 	//	UI view for which to render the data. Determines the fields returned in the response.
 	//
 	//Valid values:
@@ -66,5 +66,5 @@ type TableRequestBuilderPostQueryParameters struct {
 	//- mobile
 	//- both
 	//If you also specify the sysparm_fields parameter, it takes precedent.
-	View View `query:"sysparm_view"`
+	View View `url:"sysparm_view"`
 }

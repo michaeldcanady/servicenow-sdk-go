@@ -8,5 +8,5 @@ type TableItemRequestBuilderDeleteQueryParameters struct {
 	//- false: Exclude the record if it is in a domain that the currently logged in user is not configured to access.
 	//
 	//- true: Include the record even if it is in a domain that the currently logged in user is not configured to access.
-	QueryNoDomain bool `query:"sysparm_query_no_domain"`
+	QueryNoDomain bool `url:"sysparm_query_no_domain"`
 }

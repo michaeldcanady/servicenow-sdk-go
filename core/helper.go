@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/hetiansu5/urlquery"
+	"github.com/google/go-querystring/query"
 	"github.com/yosida95/uritemplate/v3"
 )
 
@@ -17,18 +17,18 @@ func ToQueryMap(source interface{}) (map[string]string, error) {
 		return nil, ErrNilSource
 	}
 
-	queryBytes, err := urlquery.Marshal(source)
+	queryValues, err := query.Values(source)
 	if err != nil {
 		return nil, err
 	}
 
-	var queryMap map[string]string
-	err = urlquery.Unmarshal(queryBytes, &queryMap)
-	if err != nil {
-		return nil, err
+	queryParams := map[string]string{}
+
+	for key, values := range queryValues {
+		queryParams[key] = strings.Join(values, ",")
 	}
 
-	return queryMap, nil
+	return queryParams, nil
 }
 
 // normalizeVarNames normalizes variable names for URI template expansion.
