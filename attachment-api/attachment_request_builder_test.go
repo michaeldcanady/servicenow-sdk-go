@@ -164,7 +164,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 	today, _ := time.Parse(DateTimeFormat, "2009-05-21 04:12:21")
 	formattedToday := today.Format(DateTimeFormat)
 	tableName := "incident"
-	tableSysId := "INC00000000"
+	tableSysID := "INC00000000"
 	fileName := "testfile.txt"
 
 	expected := &AttachmentItemResponse{
@@ -186,7 +186,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 			SysUpdatedBy:      fakeUser,
 			UpdatedOn:         Time(today),
 			TableName:         tableName,
-			TableSysId:        tableSysId,
+			TableSysId:        tableSysID,
 			//updated_by_name:   fakeUser,
 		},
 	}
@@ -271,7 +271,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 		params := &AttachmentRequestBuilderFileQueryParameters{
 			FileName:   fileName,
 			TableName:  tableName,
-			TableSysId: tableSysId,
+			TableSysId: tableSysID,
 		}
 
 		// Call the Get method
@@ -293,7 +293,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 		params := &AttachmentRequestBuilderFileQueryParameters{
 			FileName:   fileName,
 			TableName:  tableName,
-			TableSysId: tableSysId,
+			TableSysId: tableSysID,
 		}
 
 		_, err := builder.File("bad-file.txt", params)
