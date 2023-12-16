@@ -283,10 +283,25 @@ func TestPageIteratorFetchNextPageWithLinkNilErr(t *testing.T) {
 	assert.Equal(t, fakePrevLink, resp.PreviousPageLink)
 }
 
-func TestPageIteratorFetchNextPageWithLinkErr(t *testing.T) {
+func TestPageIteratorFetchNextPageWithLinkSendErr(t *testing.T) {
 
 	currentPage := TableCollectionResponse{
 		NextPageLink: fakeLinkStatusFailed,
+	}
+
+	client := &mockClient{}
+
+	pageIterator, err := NewPageIterator(currentPage, client)
+	assert.Nil(t, err)
+
+	_, err = pageIterator.fetchNextPage()
+	assert.Error(t, err)
+}
+
+func TestPageIteratorFetchNextPageWithLinkParseErr(t *testing.T) {
+
+	currentPage := TableCollectionResponse{
+		NextPageLink: " ",
 	}
 
 	client := &mockClient{}
