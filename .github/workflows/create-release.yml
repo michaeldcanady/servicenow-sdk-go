@@ -6,8 +6,6 @@ on:
 jobs:
   create_release:
     name: Create Release
-    environment:
-      name: gh_releases
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

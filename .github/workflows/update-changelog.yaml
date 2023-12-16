@@ -1,0 +1,37 @@
+name: "Update Changelog"
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # This is the event trigger for manual runs
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Get version from VERSION file
+        id: version
+        run: echo "::set-output name=version::$(cat VERSION)"
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%d/%m/%Y')"
+      - name: Update changelog
+        id: changelog
+        uses: stefanzweifel/changelog-updater-action@v1
+        with:
+          latest-version: ${{ steps.version.outputs.version }}
+          release-notes: "See [GitHub Release](https://docs.github.com/actions/using-workflows/manually-running-a-workflow) for details."
+          compare-url-target-revision: ${{ steps.version.outputs.version }}
+          date: ${{ steps.date.outputs.date }}
+      - name: Add new section
+        run: |
+          sed -i '3i ## [Unreleased] - (dd/mm/yyyy)\n\n### Added\n\n### Changed\n\n### Removed\n\n### Fixed\n' CHANGELOG.md
+      - name: Commit updated CHANGELOG
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: main
+          commit_message: "docs (CHANGELOG): update release notes"
+          file_pattern: CHANGELOG.md
