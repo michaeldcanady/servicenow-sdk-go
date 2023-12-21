@@ -1,12 +1,10 @@
 # ServiceNow SDK for Go
 
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/michaeldcanady/servicenow-sdk-go?style=plastic)
-![example workflow](https://github.com/michaeldcanady/servicenow-sdk-go/actions/workflows/go.yml/badge.svg)
 [![GoDoc](https://img.shields.io/static/v1?style=plastic&label=godoc&message=reference&color=blue)](https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/michaeldcanady/servicenow-sdk-go?style=plastic)
 ![GitHub issues](https://img.shields.io/github/issues/michaeldcanady/servicenow-sdk-go?style=plastic)
 ![GitHub](https://img.shields.io/github/license/michaeldcanady/servicenow-sdk-go?style=plastic)
-![GitHub all releases](https://img.shields.io/github/downloads/michaeldcanady/servicenow-sdk-go/total?style=plastic)
 [![Code Climate](https://codeclimate.com/github/michaeldcanady/servicenow-sdk-go.svg)](https://codeclimate.com/github/michaeldcanady/servicenow-sdk-go)
 [![codecov](https://codecov.io/gh/michaeldcanady/servicenow-sdk-go/graph/badge.svg?token=MJPM1UAI78)](https://codecov.io/gh/michaeldcanady/servicenow-sdk-go)
 
