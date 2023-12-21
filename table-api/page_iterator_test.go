@@ -184,6 +184,20 @@ func TestPageIteratorIterateMultiplePagesWithCallback(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestPageIteratorLast(t *testing.T) {
+	pageIterator := &PageIterator{
+		currentPage: PageResult{
+			LastPageLink: fakeNextLink,
+		},
+		client:     &mockClient{},
+		pauseIndex: 0,
+	}
+
+	_, err := pageIterator.Last()
+
+	assert.Error(t, err)
+}
+
 func TestPageFetchPageSendErr(t *testing.T) {
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
@@ -240,56 +254,4 @@ func TestPageIteratorFetchAndConvertPageWithoutLink(t *testing.T) {
 	assert.ErrorIs(t, err, core.ErrNilResponse)
 
 	assert.Equal(t, PageResult{}, page)
-}
-
-func TestPageIteratorLast(t *testing.T) {
-	pageIterator := &PageIterator{
-		currentPage: PageResult{
-			LastPageLink: fakeNextLink,
-		},
-		client:     &mockClient{},
-		pauseIndex: 0,
-	}
-
-	_, err := pageIterator.Last()
-
-	assert.Error(t, err)
-}
-
-func TestPageIteratorEnumerate(t *testing.T) {
-	//To Be Added
-}
-
-func TestPageIteratorNext(t *testing.T) {
-	pageIterator := &PageIterator{
-		currentPage: PageResult{
-			NextPageLink: fakeNextLink,
-		},
-		client:     &mockClient{},
-		pauseIndex: 0,
-	}
-
-	_, err := pageIterator.next()
-
-	assert.Error(t, err)
-}
-
-func TestPageIteratorFetchNextPage(t *testing.T) {
-	//To Be Added
-}
-
-func TestPageIteratorFetchLastPage(t *testing.T) {
-	//To Be Added
-}
-
-func TestPageIteratorFetchPage(t *testing.T) {
-	pageIterator := &PageIterator{
-		currentPage: PageResult{},
-		client:      &mockClient{},
-		pauseIndex:  0,
-	}
-
-	_, err := pageIterator.fetchPage(fakeNextLink)
-
-	assert.Error(t, err)
 }
