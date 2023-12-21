@@ -9,28 +9,28 @@ import (
 )
 
 func TestNewUrlInformation(t *testing.T) {
-	ui := NewUrlInformation()
+	ui := NewURLInformation()
 	assert.NotNil(t, ui)
 	assert.Empty(t, ui.QueryParameters)
 	assert.Empty(t, ui.PathParameters)
 }
 
 func TestUrlInformationValidateUrlTemplate(t *testing.T) {
-	ui := NewUrlInformation()
-	err := ui.validateUrlTemplate()
-	assert.Equal(t, ErrEmptyUri, err)
+	ui := NewURLInformation()
+	err := ui.validateURLTemplate()
+	assert.Equal(t, ErrEmptyURI, err)
 
 	ui.UrlTemplate = "https://"
-	err = ui.validateUrlTemplate()
+	err = ui.validateURLTemplate()
 	assert.Equal(t, ErrMissingBasePathTemplate, err)
 
 	ui.UrlTemplate = "https://{+baseurl}/endpoint"
-	err = ui.validateUrlTemplate()
+	err = ui.validateURLTemplate()
 	assert.NoError(t, err)
 }
 
 func TestUrlInformationValidatePathParams(t *testing.T) {
-	ui := NewUrlInformation()
+	ui := NewURLInformation()
 	err := ui.validatePathParams()
 	assert.Equal(t, ErrMissingBasePathParam, err)
 
@@ -44,7 +44,7 @@ func TestUrlInformationValidatePathParams(t *testing.T) {
 }
 
 func TestUrlInformationValidateQueryParams(t *testing.T) {
-	ui := NewUrlInformation()
+	ui := NewURLInformation()
 	ui.QueryParameters = nil
 	err := ui.validateQueryParams()
 	assert.Equal(t, ErrNilQueryParamters, err)
@@ -55,9 +55,9 @@ func TestUrlInformationValidateQueryParams(t *testing.T) {
 }
 
 func TestUrlInformationValidateParams(t *testing.T) {
-	ui := NewUrlInformation()
+	ui := NewURLInformation()
 	err := ui.validateParams()
-	assert.Equal(t, ErrEmptyUri, err)
+	assert.Equal(t, ErrEmptyURI, err)
 
 	ui.UrlTemplate = "https://{+baseurl}/endpoint"
 	err = ui.validateParams()
@@ -83,7 +83,7 @@ func TestUrlInformationValidateParams(t *testing.T) {
 }
 
 func TestUrlInformationBuildValues(t *testing.T) {
-	ui := NewUrlInformation()
+	ui := NewURLInformation()
 	ui.QueryParameters = map[string]string{"param1": "value1", "param2": "value2"}
 	ui.PathParameters = map[string]string{"baseurl": "example.com"}
 
@@ -106,35 +106,35 @@ func TestUrlInformationBuildValues(t *testing.T) {
 }
 
 func TestUrlInformationBuildUriFromTemplate(t *testing.T) {
-	ui := NewUrlInformation()
+	ui := NewURLInformation()
 	ui.UrlTemplate = "https://{+baseurl}/endpoint{?param1}"
 	ui.PathParameters = map[string]string{"baseurl": "example.com"}
 	ui.QueryParameters = map[string]string{"param1": "value1"}
 
-	url, err := ui.buildUriFromTemplate()
+	url, err := ui.buildURIFromTemplate()
 	assert.NoError(t, err)
 	assert.Equal(t, "https://example.com/endpoint?param1=value1", url)
 
 	ui.UrlTemplate = "{+baseurl}/endpoint"
-	_, err = ui.buildUriFromTemplate()
+	_, err = ui.buildURIFromTemplate()
 	assert.Nil(t, err)
 }
 
 func TestUrlInformationCheckBaseUrlRequirement(t *testing.T) {
-	ui := NewUrlInformation()
+	ui := NewURLInformation()
 	ui.UrlTemplate = "{+baseurl}/endpoint"
 	ui.PathParameters = map[string]string{"baseurl": "example.com"}
 
-	err := ui.checkBaseUrlRequirement()
+	err := ui.checkBaseURLRequirement()
 	assert.NoError(t, err)
 
 	ui.PathParameters = map[string]string{}
-	err = ui.checkBaseUrlRequirement()
+	err = ui.checkBaseURLRequirement()
 	assert.Error(t, err)
 }
 
 func TestUrlInformationGetUriFromTemplate(t *testing.T) {
-	ui := NewUrlInformation()
+	ui := NewURLInformation()
 	ui.UrlTemplate = "https://{+baseurl}/endpoint"
 	ui.PathParameters = map[string]string{"baseurl": "example.com"}
 
@@ -152,7 +152,7 @@ func TestUrlInformationGetUriFromTemplate(t *testing.T) {
 }
 
 func TestUrlInformationParseRawURL(t *testing.T) {
-	ui := NewUrlInformation()
+	ui := NewURLInformation()
 	rawURL := "https://example.com/endpoint"
 
 	uri, err := ui.parseRawURL(rawURL)
@@ -168,7 +168,7 @@ func TestUrlInformationParseRawURL(t *testing.T) {
 }
 
 func TestUrlInformationToUrl(t *testing.T) {
-	ui := NewUrlInformation()
+	ui := NewURLInformation()
 	ui.UrlTemplate = "https://{+baseurl}/endpoint"
 	ui.PathParameters = map[string]string{"baseurl": "example.com"}
 
@@ -183,7 +183,7 @@ func TestUrlInformationToUrl(t *testing.T) {
 }
 
 func TestUrlInformationAddQueryParameters(t *testing.T) {
-	ui := NewUrlInformation()
+	ui := NewURLInformation()
 	ui.QueryParameters = make(map[string]string)
 	source := struct {
 		Param1 string `query:"param1"`

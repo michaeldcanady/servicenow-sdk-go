@@ -27,7 +27,7 @@ func NewRequestInformation() *RequestInformation {
 	return &RequestInformation{
 		Headers: make(http.Header),
 		options: make(map[string]RequestOption),
-		uri:     NewUrlInformation(),
+		uri:     NewURLInformation(),
 	}
 }
 
@@ -76,14 +76,13 @@ func (rI *RequestInformation) getContentReader() *bytes.Reader {
 	return bytes.NewReader(rI.Content)
 }
 
-func (rI *RequestInformation) SetUri(url *url.URL) {
-
+func (rI *RequestInformation) SetUri(url *url.URL) { //nolint:stylecheck
 	//TODO: Add validation that url is valid
 
-	rI.uri.PathParameters = map[string]string{rawUrlKey: url.String()}
+	rI.uri.PathParameters = map[string]string{rawURLKey: url.String()}
 }
 
-func (rI *RequestInformation) Url() (string, error) {
+func (rI *RequestInformation) Url() (string, error) { //nolint:stylecheck
 	uri, err := rI.uri.ToUrl()
 	if err != nil {
 		return "", err
@@ -96,7 +95,6 @@ func (rI *RequestInformation) Url() (string, error) {
 
 // ToRequest converts the RequestInformation object into an HTTP request.
 func (rI *RequestInformation) ToRequest() (*http.Request, error) {
-
 	url, err := rI.Url()
 	if err != nil {
 		return nil, err
@@ -136,7 +134,6 @@ func (rI *RequestInformation) ToRequestWithContext(ctx context.Context) (*http.R
 }
 
 func (rI *RequestInformation) AddHeaders(rawHeaders interface{}) error {
-
 	var headers http.Header
 	var err error
 

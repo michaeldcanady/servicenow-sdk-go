@@ -1,0 +1,13 @@
+{
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "go.addTags": {
+    "tags": "json,url,header",
+    "promptForTags": true
+  },
+  "go.coverOnSave": true,
+  "go.formatFlags": ["-s", "-w"],
+  "go.lintOnSave": "package",
+  "go.lintTool": "golangci-lint",
+  "go.lintFlags": []
+}

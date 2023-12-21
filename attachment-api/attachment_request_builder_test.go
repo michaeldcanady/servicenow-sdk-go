@@ -17,7 +17,6 @@ import (
 type MockClient struct{}
 
 func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-
 	req, err := requestInfo.ToRequest()
 	if err != nil {
 		return nil, err
@@ -32,7 +31,6 @@ func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping cor
 }
 
 func TestNewAttachmentRequestBuilder(t *testing.T) {
-
 	client := MockClient{}
 
 	pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now"}
@@ -43,7 +41,6 @@ func TestNewAttachmentRequestBuilder(t *testing.T) {
 }
 
 func TestAttachmentUrl(t *testing.T) {
-
 	client := MockClient{}
 
 	pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now"}
@@ -57,8 +54,7 @@ func TestAttachmentUrl(t *testing.T) {
 	}
 }
 
-func TestAttachmentRequestBuilder_Get(t *testing.T) {
-
+func TestAttachmentRequestBuilderGet(t *testing.T) {
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Simulate successful response with the provided JSON
 		responseJSON := `{
@@ -87,10 +83,10 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 		  }`
 
 		w.WriteHeader(http.StatusOK)
-		_, err := w.Write([]byte(responseJSON)) //nolint:all
+		_, err := w.Write([]byte(responseJSON)) //nolint:errcheck
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte(err.Error())) //nolint:all
+			_, _ = w.Write([]byte(err.Error())) //nolint:errcheck
 		}
 	}))
 
@@ -124,13 +120,13 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 	(*expected.Result[0]).UpdatedOn = Time(updatedOn)
 	(*expected.Result[0]).SysCreatedOn = Time(sysCreatedOn)
 
-	parsedUrl, err := url.Parse(mockServer.URL)
+	parsedURL, err := url.Parse(mockServer.URL)
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
 		return
 	}
 
-	pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host, "table": parsedUrl.Path}
+	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
 
 	builder := NewAttachmentRequestBuilder(client, pathParameters)
 
@@ -158,13 +154,12 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 	assert.Equal(t, expected, resp)
 }
 
-func TestAttachmentRequestBuilder_File(t *testing.T) {
-
+func TestAttachmentRequestBuilderFile(t *testing.T) {
 	fakeUser := "fakeuser"
 	today, _ := time.Parse(DateTimeFormat, "2009-05-21 04:12:21")
 	formattedToday := today.Format(DateTimeFormat)
 	tableName := "incident"
-	tableSysId := "INC00000000"
+	tableSysID := "INC00000000"
 	fileName := "testfile.txt"
 
 	expected := &AttachmentItemResponse{
@@ -186,7 +181,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 			SysUpdatedBy:      fakeUser,
 			UpdatedOn:         Time(today),
 			TableName:         tableName,
-			TableSysId:        tableSysId,
+			TableSysId:        tableSysID,
 			//updated_by_name:   fakeUser,
 		},
 	}
@@ -236,7 +231,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 		// Write the JSON response
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write(responseJSON)
+		_, _ = w.Write(responseJSON)
 	}))
 	defer mockServer.Close()
 
@@ -245,7 +240,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error creating temporary file: %v", err)
 	}
-	defer os.Remove(tempFile.Name())
+	defer os.Remove(tempFile.Name()) //nolint:errcheck
 
 	// Write some data to the temporary file
 	testData := []byte("test data")
@@ -254,7 +249,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 		t.Fatalf("Error writing to temporary file: %v", err)
 	}
 
-	parsedUrl, err := url.Parse(mockServer.URL)
+	parsedURL, err := url.Parse(mockServer.URL)
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
 		return
@@ -262,16 +257,15 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 
 	client := &MockClient{}
 
-	pathParameters := map[string]string{"baseurl": "http://" + parsedUrl.Host}
+	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host}
 
 	builder := NewAttachmentRequestBuilder(client, pathParameters)
 
 	t.Run("Successful", func(t *testing.T) {
-
 		params := &AttachmentRequestBuilderFileQueryParameters{
 			FileName:   fileName,
 			TableName:  tableName,
-			TableSysId: tableSysId,
+			TableSysId: tableSysID,
 		}
 
 		// Call the Get method
@@ -293,7 +287,7 @@ func TestAttachmentRequestBuilder_File(t *testing.T) {
 		params := &AttachmentRequestBuilderFileQueryParameters{
 			FileName:   fileName,
 			TableName:  tableName,
-			TableSysId: tableSysId,
+			TableSysId: tableSysID,
 		}
 
 		_, err := builder.File("bad-file.txt", params)

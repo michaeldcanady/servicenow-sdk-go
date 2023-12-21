@@ -14,7 +14,6 @@ const (
 type Time time.Time
 
 func (t *Time) UnmarshalJSON(data []byte) error {
-
 	parsedTime, err := time.Parse(DateTimeFormat, strings.Replace(string(data), "\"", "", -1))
 	if err != nil {
 		return err

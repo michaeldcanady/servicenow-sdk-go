@@ -90,7 +90,7 @@ func TestRequestBuilderToPostRequestInformation(t *testing.T) {
 		"key2": "value2",
 	}
 
-	expectedJson, err := json.Marshal(data)
+	expectedJSON, err := json.Marshal(data)
 	if err != nil {
 		t.Error(err)
 	}
@@ -106,7 +106,7 @@ func TestRequestBuilderToPostRequestInformation(t *testing.T) {
 	// Perform assertions to check the result
 	assert.NoError(t, err)
 	assert.Equal(t, POST, requestInfo.Method)
-	assert.Equal(t, expectedJson, requestInfo.Content)
+	assert.Equal(t, expectedJSON, requestInfo.Content)
 }
 
 func TestRequestBuilderToPostRequestInformation2(t *testing.T) {
@@ -118,7 +118,7 @@ func TestRequestBuilderToPostRequestInformation2(t *testing.T) {
 		"key1": "value1",
 		"key2": "value2",
 	}
-	expectedJson, err := json.Marshal(data)
+	expectedJSON, err := json.Marshal(data)
 	if err != nil {
 		t.Error(err)
 	}
@@ -134,7 +134,7 @@ func TestRequestBuilderToPostRequestInformation2(t *testing.T) {
 	// Perform assertions to check the result
 	assert.NoError(t, err)
 	assert.Equal(t, POST, requestInfo.Method)
-	assert.Equal(t, expectedJson, requestInfo.Content)
+	assert.Equal(t, expectedJSON, requestInfo.Content)
 }
 
 func TestRequestBuilderToPostRequestInformation3(t *testing.T) {
@@ -147,7 +147,7 @@ func TestRequestBuilderToPostRequestInformation3(t *testing.T) {
 		"key2": "value2",
 	}
 
-	expectedJson, err := json.Marshal(data)
+	expectedJSON, err := json.Marshal(data)
 	if err != nil {
 		t.Error(err)
 	}
@@ -168,7 +168,7 @@ func TestRequestBuilderToPostRequestInformation3(t *testing.T) {
 	// Perform assertions to check the result
 	assert.NoError(t, err)
 	assert.Equal(t, POST, requestInfo.Method)
-	assert.Equal(t, expectedJson, requestInfo.Content)
+	assert.Equal(t, expectedJSON, requestInfo.Content)
 }
 
 func TestRequestBuilderToDeleteRequestInformation(t *testing.T) {
@@ -342,7 +342,6 @@ type requestBuilderTest struct {
 }
 
 func TestRequestBuilderToRequestInformation3(t *testing.T) {
-
 	tests := []requestBuilderTest{
 		{
 			title:  "Test GET",
@@ -375,18 +374,17 @@ func TestRequestBuilderToRequestInformation3(t *testing.T) {
 	}
 
 	for _, test := range tests {
-
-		expectedJson, err := json.Marshal(test.config.Data)
+		expectedJSON, err := json.Marshal(test.config.Data)
 		assert.NoError(t, err)
 
 		// Create a mock RequestBuilder with a mock client
 		builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 
 		// Call the ToRequestInformation method for a GET request
-		requestInfo, err := builder.ToRequestInformation3(test.method, &test.config)
+		requestInfo, err := builder.ToRequestInformation3(test.method, &test.config) //nolint:gosec
 
 		assert.NoError(t, err)
 		assert.Equal(t, test.method, requestInfo.Method)
-		assert.Equal(t, expectedJson, requestInfo.Content)
+		assert.Equal(t, expectedJSON, requestInfo.Content)
 	}
 }

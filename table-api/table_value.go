@@ -14,13 +14,12 @@ type TableValue struct {
 //
 // ToInt64 returns tV's underlying value, as an int64.
 func (tV *TableValue) ToInt64() (int64, error) {
-
 	return tV.Int()
 }
 
 // Int returns tV's underlying value, as an int64.
-func (tv *TableValue) Int() (int64, error) {
-	switch v := tv.value.(type) {
+func (tV *TableValue) Int() (int64, error) {
+	switch v := tV.value.(type) {
 	case int:
 		return int64(v), nil
 	case int8:
@@ -32,7 +31,7 @@ func (tv *TableValue) Int() (int64, error) {
 	case int64:
 		return v, nil
 	default:
-		return 0, fmt.Errorf("unable to convert %T to int64", tv.value)
+		return 0, fmt.Errorf("unable to convert %T to int64", tV.value)
 	}
 }
 

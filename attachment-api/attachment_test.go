@@ -9,7 +9,6 @@ import (
 )
 
 func TestAttachmentMarshal(t *testing.T) {
-
 	var attachment Attachment
 
 	expected := Attachment{
@@ -36,7 +35,7 @@ func TestAttachmentMarshal(t *testing.T) {
 	expected.UpdatedOn = Time(updatedOn)
 	expected.SysCreatedOn = Time(sysCreatedOn)
 
-	rawJson := []byte(`{
+	rawJSON := []byte(`{
 		"table_sys_id": "5054b6f8c0a800060056addcf551ecf8",
 		"size_bytes": "462",
 		"download_link": "https://instance.service-now.com/api/now/attachment/615ea769c0a80166001cf5f2367302f5/file",
@@ -57,7 +56,7 @@ func TestAttachmentMarshal(t *testing.T) {
 		"size_compressed": "485"
 	  }`)
 
-	err := json.Unmarshal(rawJson, &attachment)
+	err := json.Unmarshal(rawJSON, &attachment)
 	if err != nil {
 		t.Error(err)
 	}

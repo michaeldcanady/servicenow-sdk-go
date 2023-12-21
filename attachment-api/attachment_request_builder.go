@@ -2,6 +2,7 @@ package attachmentapi
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
@@ -30,39 +31,50 @@ func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]s
 //   - *AttachmentCollectionResponse: The response data as a AttachmentCollectionResponse.
 //   - error: An error if there was an issue with the request or response.
 func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQueryParameters) (*AttachmentCollectionResponse, error) {
+	configuration := &AttachmentCollectionGetRequestConfiguration{
+		Header:          nil,
+		QueryParameters: params,
+		Data:            nil,
+		response:        &AttachmentCollectionResponse{},
+	}
 
-	var response AttachmentCollectionResponse
-
-	err := rB.SendGet(params, nil, &response)
+	err := rB.SendGet2(configuration.toConfiguration())
 	if err != nil {
 		return nil, err
 	}
 
-	return &response, nil
+	return configuration.response, nil
 }
 
+// File ...
 func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequestBuilderFileQueryParameters) (*AttachmentItemResponse, error) {
-
-	var value AttachmentItemResponse
-
 	if params == nil {
 		return nil, ErrNilParams
 	}
 
-	_, err := os.Stat(filePath)
+	cleanPath := filepath.Clean(filePath)
+
+	_, err := os.Stat(cleanPath)
 	if err != nil {
 		return nil, err
 	}
 
-	data, err := os.ReadFile(filePath)
+	data, err := os.ReadFile(cleanPath)
 	if err != nil {
 		return nil, err
 	}
 
-	err = rB.SendPost2(data, params, nil, &value)
+	config := &AttachmentCollectionFileRequestConfiguration{
+		Header:          nil,
+		QueryParameters: params,
+		Data:            data,
+		response:        &AttachmentItemResponse{},
+	}
+
+	err = rB.SendPost3(config.toConfiguration())
 	if err != nil {
 		return nil, err
 	}
 
-	return &value, nil
+	return config.response, nil
 }

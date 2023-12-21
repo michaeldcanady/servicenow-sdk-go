@@ -8,7 +8,6 @@ import (
 )
 
 func TestTableItemRequestBuilderDeleteQueryParameters(t *testing.T) {
-
 	params := &TableItemRequestBuilderDeleteQueryParameters{
 		QueryNoDomain: true,
 	}

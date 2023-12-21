@@ -13,11 +13,6 @@ type PageIterator struct {
 	pauseIndex  int
 }
 
-// defaultCallback is the default function to determine whether to continue iterating.
-func defaultCallback(pageItem *TableEntry) bool {
-	return true
-}
-
 // NewPageIterator creates a new PageIterator instance.
 func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator, error) {
 	if client == nil {
@@ -36,60 +31,68 @@ func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator
 }
 
 // Iterate iterates through pages and invokes the provided callback for each page item.
-func (p *PageIterator) Iterate(callback func(pageItem *TableEntry) bool) error {
-
+func (pI *PageIterator) Iterate(callback func(pageItem *TableEntry) bool) error {
 	if callback == nil {
-		callback = defaultCallback
+		return ErrNilCallback
 	}
 
 	for {
-		keepIterating := p.enumerate(callback)
+		keepIterating := pI.enumerate(callback)
 
 		if !keepIterating {
 			// Callback returned false, stop iterating through pages.
 			return nil
 		}
 
-		if p.currentPage.NextPageLink == "" {
+		if pI.currentPage.NextPageLink == "" {
 			return nil
 		}
 
-		nextPage, err := p.next()
+		nextPage, err := pI.next()
 		if err != nil {
 			return err
 		}
 
-		p.currentPage = nextPage
-		p.pauseIndex = 0
+		pI.currentPage = nextPage
+		pI.pauseIndex = 0
 	}
 }
 
 // enumerate iterates through the items on the current page and invokes the callback.
-func (p *PageIterator) enumerate(callback func(item *TableEntry) bool) bool {
+func (pI *PageIterator) enumerate(callback func(item *TableEntry) bool) bool {
 	keepIterating := true
 
-	pageItems := p.currentPage.Result
+	pageItems := pI.currentPage.Result
 	if pageItems == nil {
 		return false
 	}
 
-	for i := p.pauseIndex; i < len(pageItems); i++ {
+	for i := pI.pauseIndex; i < len(pageItems); i++ {
 		keepIterating = callback(pageItems[i])
 
 		if !keepIterating {
 			break
 		}
 
-		p.pauseIndex = i + 1
+		pI.pauseIndex = i + 1
 	}
 	return keepIterating
 }
 
 // next fetches the next page of results.
-func (p *PageIterator) next() (PageResult, error) {
+func (pI *PageIterator) next() (PageResult, error) {
+	return pI.fetchAndConvertPage(pI.currentPage.NextPageLink)
+}
+
+// Last fetches the last page of results.
+func (pI *PageIterator) Last() (PageResult, error) {
+	return pI.fetchAndConvertPage(pI.currentPage.LastPageLink)
+}
+
+func (pI *PageIterator) fetchAndConvertPage(uri string) (PageResult, error) {
 	var page PageResult
 
-	resp, err := p.fetchNextPage()
+	resp, err := pI.fetchPage(uri)
 	if err != nil {
 		return page, err
 	}
@@ -102,13 +105,13 @@ func (p *PageIterator) next() (PageResult, error) {
 	return page, nil
 }
 
-// fetchNextPage fetches the next page of results.
-func (pI *PageIterator) fetchNextPage() (*TableCollectionResponse, error) {
+// fetchPage fetches the specified uri page of results.
+func (pI *PageIterator) fetchPage(uri string) (*TableCollectionResponse, error) {
 	var collectionResp *TableCollectionResponse
 	var err error
 
-	if pI.currentPage.NextPageLink == "" {
-		return nil, nil
+	if uri == "" {
+		return nil, ErrEmptyURI
 	}
 
 	nextLink, err := url.ParseRequestURI(pI.currentPage.NextPageLink)

@@ -8,14 +8,13 @@ type OrderBy struct {
 	Field     string
 }
 
-//NewOrderBy Creates new order by
+// NewOrderBy Creates new order by
 func NewOrderBy() *OrderBy {
 	return &OrderBy{}
 }
 
 // String ...
 func (oB *OrderBy) String() string {
-
 	if oB.Direction == Unset {
 		return ""
 	}

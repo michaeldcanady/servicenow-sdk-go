@@ -25,15 +25,14 @@ func NewFragment(field string, operator RelationalOperator, value interface{}) *
 	}
 }
 
-//SetNext sets the next and Logical Operator value
+// SetNext sets the next and Logical Operator value
 func (f *Fragment) SetNext(fragment *Fragment, operator LogicalOperator) {
 	f.next = fragment
 	f.LogicalOperator = operator
 }
 
-//Iterate iterates over the fragments
+// Iterate iterates over the fragments
 func (f *Fragment) Iterate(callback func(*Fragment) bool) {
-
 	current := f
 
 	for current != nil {
@@ -46,7 +45,6 @@ func (f *Fragment) Iterate(callback func(*Fragment) bool) {
 
 // String returns a string representation of the query fragment in the format "field operator value".
 func (f *Fragment) String() string {
-
 	value := f.Value
 	if f.Value == nil {
 		value = ""

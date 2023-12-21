@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 // TokenCredential represents the OAuth2 token credentials.
@@ -30,16 +31,15 @@ func DefaultPrompt() (string, string, error) {
 }
 
 // NewTokenCredential creates a new token credential
-func NewTokenCredential(clientId, clientSecret, baseURL string, prompt func() (string, string, error)) (*TokenCredential, error) {
-
+func NewTokenCredential(clientID, clientSecret, baseURL string, prompt func() (string, string, error)) (*TokenCredential, error) {
 	address := "localhost:5000"
 
 	if prompt == nil {
 		prompt = DefaultPrompt
 	}
 
-	if clientId == "" {
-		return nil, EmptyClientId
+	if clientID == "" {
+		return nil, EmptyClientID
 	}
 
 	if clientSecret == "" {
@@ -47,11 +47,11 @@ func NewTokenCredential(clientId, clientSecret, baseURL string, prompt func() (s
 	}
 
 	if baseURL == "" {
-		return nil, EmptyBaseUrl
+		return nil, EmptyBaseURL
 	}
 
 	return &TokenCredential{
-		ClientID:     clientId,
+		ClientID:     clientID,
 		ClientSecret: clientSecret,
 		BaseURL:      baseURL,
 		Prompt:       prompt,
@@ -70,7 +70,6 @@ func (tc *TokenCredential) promptUser() (string, string, error) {
 
 // GetAuthentication gets the authentication header value
 func (tc *TokenCredential) GetAuthentication() (string, error) {
-
 	if tc.Token == nil {
 		token, err := tc.retrieveOAuthToken()
 		if err != nil {
@@ -93,11 +92,17 @@ func (tc *TokenCredential) GetOauth2Url() string {
 }
 
 func (tc *TokenCredential) requestToken(data url.Values) (*AccessToken, error) {
-
 	tc.server.Start()
 
 	oauthURL := tc.GetOauth2Url()
-	resp, err := http.PostForm(oauthURL, data)
+	req, err := http.NewRequest("POST", oauthURL, strings.NewReader(data.Encode()))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +120,6 @@ func (tc *TokenCredential) requestToken(data url.Values) (*AccessToken, error) {
 }
 
 func (tc *TokenCredential) retrieveOAuthToken() (*AccessToken, error) {
-
 	username, password, err := tc.promptUser()
 	if err != nil {
 		return nil, err

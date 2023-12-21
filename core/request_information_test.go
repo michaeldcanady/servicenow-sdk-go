@@ -15,15 +15,14 @@ func TestNewRequestInformation(t *testing.T) {
 
 	expectedHeaders := make(http.Header)
 	expectedOptions := make(map[string]RequestOption)
-	expectedUri := NewUrlInformation()
+	expectedURI := NewURLInformation()
 
 	assert.Equal(t, expectedHeaders, requestInfo.Headers)
 	assert.Equal(t, expectedOptions, requestInfo.options)
-	assert.Equal(t, expectedUri, requestInfo.uri)
+	assert.Equal(t, expectedURI, requestInfo.uri)
 }
 
-func TestNewRequestInformation_SetStreamContenr(t *testing.T) {
-
+func TestNewRequestInformationSetStreamContenr(t *testing.T) {
 	content := []byte("Testing Test")
 
 	requestInfo := NewRequestInformation()
@@ -33,8 +32,7 @@ func TestNewRequestInformation_SetStreamContenr(t *testing.T) {
 	assert.Equal(t, binaryContentType, requestInfo.Headers.Get(contentTypeHeader))
 }
 
-func TestNewRequestInformation_AddQueryParameters(t *testing.T) {
-
+func TestNewRequestInformationAddQueryParameters(t *testing.T) {
 	source := struct {
 		Var1 string `query:"var_1"`
 	}{
@@ -51,8 +49,7 @@ func TestNewRequestInformation_AddQueryParameters(t *testing.T) {
 	assert.Equal(t, expected, requestInfo.uri.QueryParameters)
 }
 
-func TestNewRequestInformation_SetUri(t *testing.T) {
-
+func TestNewRequestInformationSetUri(t *testing.T) {
 	url, err := url.Parse("https://www.example.com")
 	if err != nil {
 		t.Error(err)
@@ -66,15 +63,13 @@ func TestNewRequestInformation_SetUri(t *testing.T) {
 	assert.Equal(t, expected, requestInfo.uri.PathParameters)
 }
 
-func TestNewRequestInformation_getContentReader(t *testing.T) {
-
+func TestNewRequestInformationGetContentReader(t *testing.T) {
 	requestInfo := NewRequestInformation()
 	reader := requestInfo.getContentReader()
 	assert.IsType(t, &bytes.Reader{}, reader)
 }
 
-func TestNewRequestInformation_Url(t *testing.T) {
-
+func TestNewRequestInformationUrl(t *testing.T) {
 	url, err := url.Parse("https://www.example.com")
 	if err != nil {
 		t.Error(err)
@@ -109,8 +104,7 @@ func TestNewRequestInformation_ToRequest(t *testing.T) {
 	assert.Equal(t, expected.Body, request.Body)
 }
 
-func TestNewRequestInformation_ToRequestWithContext(t *testing.T) {
-
+func TestNewRequestInformationToRequestWithContext(t *testing.T) {
 	url, err := url.Parse("https://www.example.com")
 	if err != nil {
 		t.Error(err)
@@ -139,8 +133,7 @@ type test struct {
 	expectedErr error
 }
 
-func TestNewRequestInformation_AddHeaders(t *testing.T) {
-
+func TestNewRequestInformationAddHeaders(t *testing.T) {
 	tests := []test{
 		{
 			title: "Test Struct Headers",

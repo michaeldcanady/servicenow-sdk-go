@@ -15,7 +15,7 @@ type RequestBuilder struct {
 	// Client is an instance of the HTTP client used to send requests.
 	Client Client
 	// UrlTemplate is the URL template for constructing the request URL.
-	UrlTemplate string
+	UrlTemplate string //nolint:stylecheck
 }
 
 // NewRequestBuilder creates a new instance of the RequestBuilder associated with the given URL and Client.
@@ -131,7 +131,6 @@ func (rB *RequestBuilder) ToDeleteRequestInformation2(config *RequestConfigurati
 }
 
 func (rB *RequestBuilder) prepareData(rawData interface{}) ([]byte, error) {
-
 	var data []byte
 	var err error
 
@@ -264,7 +263,6 @@ func (rB *RequestBuilder) ToRequestInformation(method HttpMethod, data map[strin
 
 // Deprecated: deprecated since v{version}. Please use SendGet2
 func (rB *RequestBuilder) SendGet(params interface{}, errorMapping ErrorMapping, value Response) error {
-
 	err := sendGet(rB, params, errorMapping, &value)
 	if err != nil {
 		return err
