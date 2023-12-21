@@ -61,10 +61,10 @@ Create a credential object.
 
 ```golang
 import (
-    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
 )
 
-cred := servicenowsdkgo.NewUsernamePasswordCredential("username", "password")
+cred := credentials.NewUsernamePasswordCredential("username", "password")
 ```
 
 ### 2.2 Get a ServiceNow Client and Adapter object
@@ -74,17 +74,17 @@ import (
     servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
 )
 
-client := servicenowsdkgo.NewClient(cred, "instance")
+client := servicenowsdkgo.NewServiceNowClient(cred, "instance")
 ```
 
 ### 2.3 Get query parameters
 
 ```golang
 import (
-    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 )
 
-params := &servicenowsdkgo.TableRequestBuilderGetQueryParameters{
+params := &tableapi.TableRequestBuilderGetQueryParameters{
         Limit: int32(1),
     }
 ```
