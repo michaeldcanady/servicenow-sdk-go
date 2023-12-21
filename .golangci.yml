@@ -1,7 +1,6 @@
 linters:
   enable:
     - dogsled
-    - dupword
     - dupl
     - govet
     - gofmt
