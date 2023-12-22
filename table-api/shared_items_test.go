@@ -1,6 +1,7 @@
 package tableapi
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -17,6 +18,7 @@ const (
 	fakeLinkWithLinksErr = "https://fake-link2.com"
 	fakeLinkStatusFailed = "https://fake-link3.com"
 	fakeLinkNilResponse  = "https://fake-link4.com"
+	fakeLinkItemResult   = "https://fake-link5.com"
 
 	fakeNextLink  = "https://fake-link.com?next"
 	fakePrevLink  = "https://fake-link.com?prev"
@@ -102,8 +104,12 @@ var (
 		"location":                 "",
 	}
 
-	fakeCollectionResult = map[string]interface{}{
+	fakeCollectionResponse = map[string]interface{}{
 		"result": []map[string]interface{}{fakeItemResult},
+	}
+
+	fakeEntryResponse = map[string]interface{}{
+		"result": fakeItemResult,
 	}
 
 	fakeEntry TableEntry = fakeItemResult
@@ -130,7 +136,7 @@ var (
 )
 
 func getFakeJSON() []byte {
-	jsonData, _ := json.Marshal(fakeCollectionResult)
+	jsonData, _ := json.Marshal(fakeCollectionResponse)
 
 	return jsonData
 }
@@ -176,6 +182,22 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 		return resp, nil
 	case fakeLinkNilResponse:
 		return nil, nil
+	case fakeLinkItemResult:
+
+		rawJson, _ := json.Marshal(fakeEntryResponse)
+
+		resp := &http.Response{
+			Status:     "200 OK",
+			StatusCode: 200,
+			Proto:      "HTTP/1.1",
+			ProtoMajor: 1,
+			ProtoMinor: 1,
+			Header:     http.Header{},
+			Body:       io.NopCloser(bytes.NewReader(rawJson)),
+			Request:    nil,
+		}
+
+		return resp, nil
 	}
 
 	return nil, nil
