@@ -143,7 +143,6 @@ func TestPageIteratorIterateSinglePageWithoutNextLinkWithCurrentPageWithCallback
 
 	// Mock callback function
 	callback := func(pageItem *TableEntry) bool {
-		// Implement your callback logic for testing
 		return true
 	}
 
@@ -225,16 +224,9 @@ func TestPageFetchPageEmptyUri(t *testing.T) {
 }
 
 func TestPageIteratorFetchAndConvertPageWithLinkErrNilResponseBody(t *testing.T) {
-	currentPage := TableCollectionResponse{
-		NextPageLink: fakeLinkWithLinksErr,
-	}
+	expectedIterator.currentPage.NextPageLink = fakeLinkWithLinksErr
 
-	client := &mockClient{}
-
-	pageIterator, err := NewPageIterator(currentPage, client)
-	assert.Nil(t, err)
-
-	page, err := pageIterator.fetchAndConvertPage(pageIterator.currentPage.NextPageLink)
+	page, err := expectedIterator.fetchAndConvertPage(expectedIterator.currentPage.NextPageLink)
 	assert.ErrorIs(t, err, core.ErrNilResponseBody)
 
 	assert.Equal(t, PageResult{}, page)
