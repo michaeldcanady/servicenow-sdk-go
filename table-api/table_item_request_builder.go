@@ -61,6 +61,7 @@ func (rB *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQ
 	return rB.SendDelete2(config.toConfiguration())
 }
 
+// Deprecated: deprecated since v{version} please use Put2 instead.
 // Put updates a table item using an HTTP PUT request.
 // It takes a map of table entry data and optional query parameters to send in the request.
 // The method returns a TableItemResponse representing the updated item or an error if the request fails.
@@ -73,6 +74,33 @@ func (rB *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQ
 //   - *TableItemResponse: A TableItemResponse containing the updated item data.
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
 func (rB *TableItemRequestBuilder) Put(tableEntry map[string]string, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
+
+	var tableEntry2 = TableEntry{}
+
+	for key, value := range tableEntry {
+		tableEntry2.Set(key, value)
+	}
+
+	return rB.Put2(tableEntry2, params)
+}
+
+// Put2 updates a table item using an HTTP PUT request.
+// It takes a map of table entry data and optional query parameters to send in the request.
+// The method returns a TableItemResponse representing the updated item or an error if the request fails.
+//
+// Parameters:
+//   - tableEntry: A map containing the data to update the table item.
+//   - params: An optional pointer to TableItemRequestBuilderPutQueryParameters, which can be used to specify query parameters for the request.
+//
+// Returns:
+//   - *TableItemResponse: A TableItemResponse containing the updated item data.
+//   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
+func (rB *TableItemRequestBuilder) Put2(tableEntry TableEntry, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
+
+	if tableEntry.Len() == 0 {
+		return nil, ErrEmptyTableEntry
+	}
+
 	config := &TableItemPutRequestConfiguration{
 		Header:          nil,
 		QueryParameters: params,

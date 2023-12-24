@@ -21,6 +21,11 @@ func (tE TableEntry) Value(key string) *TableValue {
 	return &TableValue{value: trueVal}
 }
 
+// Set sets the provided key, value pair.
+func (tE TableEntry) Set(key string, value interface{}) {
+	tE[key] = value
+}
+
 // Keys returns a slice of the TableEntry's keys
 func (tE TableEntry) Keys() []string {
 	keys := make([]string, 0, len(tE))
@@ -28,4 +33,9 @@ func (tE TableEntry) Keys() []string {
 		keys = append(keys, k)
 	}
 	return keys
+}
+
+// Len returns the length of tE
+func (tE TableEntry) Len() int {
+	return len(tE)
 }

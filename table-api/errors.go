@@ -12,4 +12,5 @@ var (
 	ErrParsing           = errors.New("parsing nextLink url failed")
 	ErrEmptyURI          = errors.New("empty URI")
 	ErrNilCallback       = errors.New("callback can't be nil")
+	ErrEmptyTableEntry   = errors.New("TableEntry can't be of len 0")
 )
