@@ -184,7 +184,7 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 		return nil, nil
 	case fakeLinkItemResult:
 
-		rawJson, _ := json.Marshal(fakeEntryResponse)
+		rawJSON, _ := json.Marshal(fakeEntryResponse)
 
 		resp := &http.Response{
 			Status:     "200 OK",
@@ -193,7 +193,7 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 			ProtoMajor: 1,
 			ProtoMinor: 1,
 			Header:     http.Header{},
-			Body:       io.NopCloser(bytes.NewReader(rawJson)),
+			Body:       io.NopCloser(bytes.NewReader(rawJSON)),
 			Request:    nil,
 		}
 
