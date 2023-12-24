@@ -1,10 +1,24 @@
 package tableapi
 
+type tableEntry map[string]interface{}
+
+func NewTableEntry() tableEntry {
+  return tableEntry{}
+}
+
+type TableEntry2 interface {
+  Value(string) *TableValue
+  Set (key string, value interface)
+  Keys() []string
+  Len() int
+}
+
+// Deprecated: deprecated since v{version}.
 // TableEntry represents a single Service-Now Table Entry.
-type TableEntry map[string]interface{}
+type TableEntry = tableEntry
 
 // Value returns a TableValue if a valid key is provided.
-func (tE TableEntry) Value(key string) *TableValue {
+func (tE tableEntry) Value(key string) *TableValue {
 	value, exists := tE[key]
 	if !exists {
 		return nil
@@ -22,12 +36,12 @@ func (tE TableEntry) Value(key string) *TableValue {
 }
 
 // Set sets the provided key, value pair.
-func (tE TableEntry) Set(key string, value interface{}) {
+func (tE tableEntry) Set(key string, value interface{}) {
 	tE[key] = value
 }
 
 // Keys returns a slice of the TableEntry's keys
-func (tE TableEntry) Keys() []string {
+func (tE tableEntry) Keys() []string {
 	keys := make([]string, 0, len(tE))
 	for k := range tE {
 		keys = append(keys, k)
@@ -36,6 +50,6 @@ func (tE TableEntry) Keys() []string {
 }
 
 // Len returns the length of tE
-func (tE TableEntry) Len() int {
+func (tE tableEntry) Len() int {
 	return len(tE)
 }
