@@ -1,20 +1,74 @@
 package tableapi
 
+import (
+	"strconv"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
+)
+
 type TableRequestBuilder2[T TableEntry2] struct {
-  core.RequestBuilder
+	core.RequestBuilder
 }
 
-// NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
+// NewTableRequestBuilder2 creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
-func NewTableRequestBuilder[T TableEntry2](client core.Client, pathParameters map[string]string) *TableRequestBuilder[T] {
+func NewTableRequestBuilder2[T TableEntry2](client core.Client, pathParameters map[string]string) *TableRequestBuilder2[T] {
 	requestBuilder := core.NewRequestBuilder(
 		client,
 		"{+baseurl}/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}",
 		pathParameters,
 	)
-	return &TableRequestBuilder[T]{
+	return &TableRequestBuilder2[T]{
 		*requestBuilder,
 	}
+}
+
+// ById returns a TableItemRequestBuilder for a specific record in the table.
+// It accepts the sysId of the record as a parameter and constructs the URL for the record.
+// The returned TableItemRequestBuilder can be used to build and execute requests for the specific record.
+func (rB *TableRequestBuilder2[T]) ById(sysId string) *TableItemRequestBuilder2[T] { //nolint:stylecheck
+	pathParameters := rB.RequestBuilder.PathParameters
+	pathParameters["sysId"] = sysId
+	return NewTableItemRequestBuilder2[T](rB.RequestBuilder.Client, pathParameters)
+}
+
+// Deprecated: deprecated since v{version}. Use `Post2` instead.
+// Post sends an HTTP Post request with the provided data and query parameters and returns an `TableItemResponse`.
+//
+// Parameters:
+//   - data: A map[string]string representing data to be included in the request body.
+//   - params: An instance of `*TableRequestBuilderPostQueryParameters` for query parameters.
+//
+// Returns:
+//   - *TableResponse: The response data as a TableResponse.
+//   - error: An error if there was an issue with the request or response.
+func (rB *TableRequestBuilder2[T]) Post(data map[string]string, params *TableRequestBuilderPostQueryParamters) (*TableItemResponse2[T], error) {
+	params2 := &TableRequestBuilderPostQueryParameters{
+		DisplayValue:         params.DisplayValue,
+		ExcludeReferenceLink: params.ExcludeReferenceLink,
+		Fields:               params.Fields,
+		InputDisplayValue:    params.InputDisplayValue,
+		View:                 params.View,
+	}
+
+	return rB.Post2(data, params2)
+}
+
+// Deprecated: deprecated as of v{version}. Use `Post3` instead.
+// Post2 sends an HTTP Post request with the provided data and query parameters and returns an `TableItemResponse`.
+//
+// Parameters:
+//   - data: A map[string]string representing data to be included in the request body.
+//   - params: An instance of `*TableRequestBuilderPostQueryParameters` for query parameters
+func (rB *TableRequestBuilder2[T]) Post2(data map[string]string, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse2[T], error) {
+
+	var entry = *new(T)
+
+	for key, value := range data {
+		entry.Set(key, value)
+	}
+
+	return rB.Post3(entry, params)
 }
 
 // Get sends an HTTP GET request using the specified query parameters and returns a TableCollectionResponse.
@@ -26,12 +80,12 @@ func NewTableRequestBuilder[T TableEntry2](client core.Client, pathParameters ma
 //   - *TableCollectionResponse: The response data as a TableCollectionResponse.
 //   - error: An error if there was an issue with the request or response.
 func (rB *TableRequestBuilder2[T]) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse2[T], error) {
-	config := &TableGetRequestConfiguration2{
+	config := &TableGetRequestConfiguration2[T]{
 		Header:          nil,
 		QueryParameters: params,
 		Data:            nil,
 		ErrorMapping:    nil,
-		response:        &TableCollectionResponse[T]{},
+		response:        &TableCollectionResponse2[T]{},
 	}
 
 	err := rB.SendGet2(config.toConfiguration())
@@ -40,4 +94,52 @@ func (rB *TableRequestBuilder2[T]) Get(params *TableRequestBuilderGetQueryParame
 	}
 
 	return config.response, nil
+}
+
+// Post sends an HTTP Post request with the provided data and query parameters and returns an `TableItemResponse`.
+//
+// Parameters:
+//   - data: A map[string]string representing data to be included in the request body.
+//   - params: An instance of `*TableRequestBuilderPostQueryParameters` for query parameters
+func (rB *TableRequestBuilder2[T]) Post3(data T, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse2[T], error) {
+	config := &TablePostRequestConfiguration2[T]{
+		Header:          nil,
+		QueryParameters: params,
+		Data:            data,
+		ErrorMapping:    nil,
+		response:        &TableItemResponse2[T]{},
+	}
+
+	err := rB.SendPost3(config.toConfiguration())
+	if err != nil {
+		return nil, err
+	}
+
+	return config.response, nil
+}
+
+// Count sends an HTTP HEAD request and retrieves the value of "X-Total-Count" from the response header, which represents the count of items.
+//
+// Returns:
+//   - int: The count of items.
+//   - error: An error if there was an issue with the request or response.
+func (rB *TableRequestBuilder2[T]) Count() (int, error) {
+	requestInfo, err := rB.RequestBuilder.ToHeadRequestInformation()
+	if err != nil {
+		return -1, err
+	}
+
+	errorMapping := core.ErrorMapping{"4XX": "hi"}
+
+	response, err := rB.RequestBuilder.Client.Send(requestInfo, errorMapping)
+	if err != nil {
+		return -1, err
+	}
+
+	count, err := strconv.Atoi(response.Header.Get("X-Total-Count"))
+	if err != nil {
+		count = 0
+	}
+
+	return count, nil
 }

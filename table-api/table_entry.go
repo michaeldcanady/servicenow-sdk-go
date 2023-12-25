@@ -3,14 +3,14 @@ package tableapi
 type tableEntry map[string]interface{}
 
 func NewTableEntry() tableEntry {
-  return tableEntry{}
+	return tableEntry{}
 }
 
 type TableEntry2 interface {
-  Value(string) *TableValue
-  Set (key string, value interface)
-  Keys() []string
-  Len() int
+	Value(string) *TableValue
+	Set(string, interface{})
+	Keys() []string
+	Len() int
 }
 
 // Deprecated: deprecated since v{version}.
@@ -37,6 +37,11 @@ func (tE tableEntry) Value(key string) *TableValue {
 
 // Set sets the provided key, value pair.
 func (tE tableEntry) Set(key string, value interface{}) {
+
+	if tE == nil {
+		tE = make(tableEntry)
+	}
+
 	tE[key] = value
 }
 

@@ -1,9 +1,4 @@
 package tableapi
 
-import "net/http"
-
-type TableItemResponse struct {
-	Result *TableEntry
-}
-
-func (iR *TableItemResponse) ParseHeaders(headers http.Header) {}
+// Deprecated: deprecated since v{version}. Use TableItemResponse2[T] instead.
+type TableItemResponse = TableItemResponse2[TableEntry]

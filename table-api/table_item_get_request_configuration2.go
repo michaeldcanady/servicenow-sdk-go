@@ -2,15 +2,15 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
-type TableGetRequestConfiguration2[T TableEntry2] struct {
+type TableItemGetRequestConfiguration2[T TableEntry2] struct {
 	Header          interface{}
-	QueryParameters *TableRequestBuilderGetQueryParameters
+	QueryParameters *TableItemRequestBuilderGetQueryParameters
 	Data            interface{}
 	ErrorMapping    core.ErrorMapping
-	response        *TableCollectionResponse2[T]
+	response        *TableItemResponse2[T]
 }
 
-func (rC *TableGetRequestConfiguration2[T]) toConfiguration() *core.RequestConfiguration {
+func (rC *TableItemGetRequestConfiguration2[T]) toConfiguration() *core.RequestConfiguration {
 	return &core.RequestConfiguration{
 		Header:          rC.Header,
 		QueryParameters: rC.QueryParameters,
