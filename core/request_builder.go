@@ -150,7 +150,7 @@ func (rB *RequestBuilder) prepareData(rawData interface{}) ([]byte, error) {
 	return data, nil
 }
 
-// Deprecated: deprecated as of {version} please utilize `ToRequestInformation3`
+// Deprecated: deprecated as of v{version} please utilize `ToRequestInformation3`
 // ToRequestInformation2 creates a new HTTP request's RequestInformation object with the
 // specified HTTP method, data in the request body, and query parameters.
 //

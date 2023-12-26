@@ -19,6 +19,52 @@ var (
 	testResult = map[string]interface{}{
 		"result": fakeItemResult,
 	}
+	tableItemRequestMockServer = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		resp := testResult
+
+		resp = maps.Clone[map[string]interface{}](resp)
+
+		switch r.Method {
+		case http.MethodGet:
+			break
+		case http.MethodPut:
+			body := make(map[string]interface{})
+
+			// Read the request body into a []byte
+			requestBody, err := io.ReadAll(r.Body)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			err = json.Unmarshal(requestBody, &body) // Use &body to correctly update the 'body' map
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			result := resp["result"].(map[string]interface{})
+
+			for key, value := range body {
+				result[key] = value
+			}
+
+			resp["result"] = result // Update the 'result' in 'resp'
+
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			return
+		}
+
+		jsonData, err := json.Marshal(resp)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(jsonData)
+	}))
 )
 
 func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
@@ -109,56 +155,8 @@ func TestTableItemRequestBuilderPut(t *testing.T) {
 	// Create a mock client for testing
 	client := &MockClient{}
 
-	// Create a mock server for testing
-	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		resp := testResult
-
-		resp = maps.Clone[map[string]interface{}](resp)
-
-		switch r.Method {
-		case http.MethodGet:
-			break
-		case http.MethodPut:
-			body := make(map[string]interface{})
-
-			// Read the request body into a []byte
-			requestBody, err := io.ReadAll(r.Body)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-
-			err = json.Unmarshal(requestBody, &body) // Use &body to correctly update the 'body' map
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-
-			result := resp["result"].(map[string]interface{})
-
-			for key, value := range body {
-				result[key] = value
-			}
-
-			resp["result"] = result // Update the 'result' in 'resp'
-
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			return
-		}
-
-		jsonData, err := json.Marshal(resp)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(jsonData)
-	}))
-
 	// Parse the URL of the mock server
-	parsedURL, err := url.Parse(mockServer.URL)
+	parsedURL, err := url.Parse(tableItemRequestMockServer.URL)
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
 		return
@@ -199,56 +197,8 @@ func TestTableItemRequestBuilderPut2Valid(t *testing.T) {
 	// Create a mock client for testing
 	client := &MockClient{}
 
-	// Create a mock server for testing
-	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		resp := testResult
-
-		resp = maps.Clone[map[string]interface{}](resp)
-
-		switch r.Method {
-		case http.MethodGet:
-			break
-		case http.MethodPut:
-			body := make(map[string]interface{})
-
-			// Read the request body into a []byte
-			requestBody, err := io.ReadAll(r.Body)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-
-			err = json.Unmarshal(requestBody, &body) // Use &body to correctly update the 'body' map
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-
-			result := resp["result"].(map[string]interface{})
-
-			for key, value := range body {
-				result[key] = value
-			}
-
-			resp["result"] = result // Update the 'result' in 'resp'
-
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			return
-		}
-
-		jsonData, err := json.Marshal(resp)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(jsonData)
-	}))
-
 	// Parse the URL of the mock server
-	parsedURL, err := url.Parse(mockServer.URL)
+	parsedURL, err := url.Parse(tableItemRequestMockServer.URL)
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
 		return
