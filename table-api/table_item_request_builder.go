@@ -2,8 +2,8 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
-//Deprecated: deprecated since v{version}. Use `TableItemRequestBuilder2[T]` instead.
-//TableItemRequestBuilder Represents the base of a Table Item Request
+// Deprecated: deprecated since v{version}. Use `TableItemRequestBuilder2[T]` instead.
+// TableItemRequestBuilder Represents the base of a Table Item Request
 type TableItemRequestBuilder = TableItemRequestBuilder2[tableEntry]
 
 // Deprecated: deprecated since v{version}. Use `NewTableItemRequestBuilder2[T]` instead.
