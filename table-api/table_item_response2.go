@@ -7,4 +7,5 @@ type TableItemResponse2[T TableEntry2] struct {
 	Result *T
 }
 
+// ParseHeaders parses needed headers from Table Item Response.
 func (iR *TableItemResponse2[T]) ParseHeaders(headers http.Header) {}

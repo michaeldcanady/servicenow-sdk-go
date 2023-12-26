@@ -6,6 +6,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
+// TableRequestBuilder2[T] represents a Table Collection request base.
 type TableRequestBuilder2[T TableEntry2] struct {
 	core.RequestBuilder
 }
@@ -23,10 +24,19 @@ func NewTableRequestBuilder2[T TableEntry2](client core.Client, pathParameters m
 	}
 }
 
+// Deprecated: deprecated since v{version}. Use `TableRequestBuilder2[T].ByID` instead.
+//
 // ById returns a TableItemRequestBuilder for a specific record in the table.
 // It accepts the sysId of the record as a parameter and constructs the URL for the record.
 // The returned TableItemRequestBuilder can be used to build and execute requests for the specific record.
 func (rB *TableRequestBuilder2[T]) ById(sysId string) *TableItemRequestBuilder2[T] { //nolint:stylecheck
+	return rB.ByID(sysId)
+}
+
+// ByID returns a TableItemRequestBuilder for a specific record in the table.
+// It accepts the sysId of the record as a parameter and constructs the URL for the record.
+// The returned TableItemRequestBuilder can be used to build and execute requests for the specific record.
+func (rB *TableRequestBuilder2[T]) ByID(sysId string) *TableItemRequestBuilder2[T] {
 	pathParameters := rB.RequestBuilder.PathParameters
 	pathParameters["sysId"] = sysId
 	return NewTableItemRequestBuilder2[T](rB.RequestBuilder.Client, pathParameters)
@@ -61,7 +71,6 @@ func (rB *TableRequestBuilder2[T]) Post(data map[string]string, params *TableReq
 //   - data: A map[string]string representing data to be included in the request body.
 //   - params: An instance of `*TableRequestBuilderPostQueryParameters` for query parameters
 func (rB *TableRequestBuilder2[T]) Post2(data map[string]string, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse2[T], error) {
-
 	var entry = *new(T)
 
 	for key, value := range data {
@@ -124,22 +133,18 @@ func (rB *TableRequestBuilder2[T]) Post3(data T, params *TableRequestBuilderPost
 //   - int: The count of items.
 //   - error: An error if there was an issue with the request or response.
 func (rB *TableRequestBuilder2[T]) Count() (int, error) {
+	errorMapping := core.ErrorMapping{"4XX": "hi"}
 	requestInfo, err := rB.RequestBuilder.ToHeadRequestInformation()
 	if err != nil {
 		return -1, err
 	}
-
-	errorMapping := core.ErrorMapping{"4XX": "hi"}
-
 	response, err := rB.RequestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
 		return -1, err
 	}
-
 	count, err := strconv.Atoi(response.Header.Get("X-Total-Count"))
 	if err != nil {
 		count = 0
 	}
-
 	return count, nil
 }

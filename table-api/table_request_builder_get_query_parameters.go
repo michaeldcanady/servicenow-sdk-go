@@ -1,5 +1,6 @@
 package tableapi
 
+// TableRequestBuilderGetQueryParameters represents Query Parameters for a GET Table Collection request.
 type TableRequestBuilderGetQueryParameters struct {
 	//Determines the type of data returned, either the actual values from the database or the display values of the fields.
 	//Display values are manipulated based on the actual value in the database and user or system settings and preferences.

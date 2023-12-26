@@ -2,6 +2,9 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
+// Deprecated: deprecated since v{version}. Use `TablePostRequestConfiguration2[T]` instead.
+//
+// TablePostRequestConfiguration represents Request Configuration for POST Table Collection Request.
 type TablePostRequestConfiguration struct {
 	Header          interface{}
 	QueryParameters *TableRequestBuilderPostQueryParameters

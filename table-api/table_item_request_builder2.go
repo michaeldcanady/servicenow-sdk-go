@@ -2,6 +2,7 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
+//TableItemRequestBuilder2[T] Represents the base of a Table Item Request
 type TableItemRequestBuilder2[T TableEntry2] struct {
 	core.RequestBuilder
 }
@@ -74,7 +75,6 @@ func (rB *TableItemRequestBuilder2[T]) Delete(params *TableItemRequestBuilderDel
 //   - *TableItemResponse: A TableItemResponse containing the updated item data.
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
 func (rB *TableItemRequestBuilder2[T]) Put(tableEntry map[string]string, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse2[T], error) {
-
 	var tableEntry2 = TableEntry{}
 
 	for key, value := range tableEntry {
@@ -96,7 +96,6 @@ func (rB *TableItemRequestBuilder2[T]) Put(tableEntry map[string]string, params 
 //   - *TableItemResponse: A TableItemResponse containing the updated item data.
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
 func (rB *TableItemRequestBuilder2[T]) Put2(tableEntry TableEntry, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse2[T], error) {
-
 	if tableEntry.Len() == 0 {
 		return nil, ErrEmptyTableEntry
 	}

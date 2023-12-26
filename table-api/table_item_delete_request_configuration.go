@@ -2,6 +2,7 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
+// TableItemDeleteRequestConfiguration represents request configurations for a DELETE request.
 type TableItemDeleteRequestConfiguration struct {
 	Header          interface{}
 	QueryParameters *TableItemRequestBuilderDeleteQueryParameters

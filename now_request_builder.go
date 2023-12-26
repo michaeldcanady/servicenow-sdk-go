@@ -23,9 +23,9 @@ func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuild
 // Table returns a TableRequestBuilder associated with the NowRequestBuilder.
 // It accepts a table name as a parameter and constructs the URL for table-related requests.
 // The returned TableRequestBuilder can be used to build and execute table-related requests.
-func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder2[tableapi.TableEntry] {
+func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder2[*tableapi.TableEntry] {
 	rB.RequestBuilder.PathParameters["table"] = tableName
-	return tableapi.NewTableRequestBuilder2[tableapi.TableEntry](rB.RequestBuilder.Client.(*ServiceNowClient), rB.RequestBuilder.PathParameters)
+	return tableapi.NewTableRequestBuilder2[*tableapi.TableEntry](rB.RequestBuilder.Client.(*ServiceNowClient), rB.RequestBuilder.PathParameters)
 }
 
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.

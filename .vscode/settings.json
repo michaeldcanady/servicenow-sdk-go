@@ -6,7 +6,7 @@
     "promptForTags": true
   },
   "go.coverOnSave": true,
-  "go.formatFlags": ["-s", "-w"],
+  "go.formatFlags": ["-s"],
   "go.lintOnSave": "package",
   "go.lintTool": "golangci-lint",
   "go.lintFlags": []

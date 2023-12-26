@@ -13,7 +13,6 @@ type TableEntry2 interface {
 	Len() int
 }
 
-// Deprecated: deprecated since v{version}.
 // TableEntry represents a single Service-Now Table Entry.
 type TableEntry = tableEntry
 
@@ -37,7 +36,6 @@ func (tE tableEntry) Value(key string) *TableValue {
 
 // Set sets the provided key, value pair.
 func (tE tableEntry) Set(key string, value interface{}) {
-
 	if tE == nil {
 		tE = make(tableEntry)
 	}
@@ -47,7 +45,7 @@ func (tE tableEntry) Set(key string, value interface{}) {
 
 // Keys returns a slice of the TableEntry's keys
 func (tE tableEntry) Keys() []string {
-	keys := make([]string, 0, len(tE))
+	keys := make([]string, 0, tE.Len())
 	for k := range tE {
 		keys = append(keys, k)
 	}

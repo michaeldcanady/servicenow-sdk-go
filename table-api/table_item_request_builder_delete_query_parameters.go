@@ -1,5 +1,6 @@
 package tableapi
 
+// TableItemRequestBuilderDeleteQueryParameters represents the Query Parameters for a DELETE Table Item request.
 type TableItemRequestBuilderDeleteQueryParameters struct {
 	//Flag that indicates whether to restrict the record search to only the domains for which the logged in user is configured.
 	//

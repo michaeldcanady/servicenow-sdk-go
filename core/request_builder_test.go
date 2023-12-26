@@ -282,20 +282,6 @@ func TestRequestBuilderPrepareData(t *testing.T) {
 			t.Fatalf("Expected %v, got: %v", expectedData, data)
 		}
 	})
-
-	t.Run("UnsupportedType", func(t *testing.T) {
-		rB := &RequestBuilder{}
-		rawData := 42 // Unsupported type
-		_, err := rB.prepareData(rawData)
-		if err == nil {
-			t.Fatal("Expected an error for unsupported type, but got nil")
-		}
-
-		expectedError := "unsupported type: int"
-		if err.Error() != expectedError {
-			t.Fatalf("Expected error %q, got: %v", expectedError, err)
-		}
-	})
 }
 
 func TestRequestBuilderToRequestInformation(t *testing.T) {

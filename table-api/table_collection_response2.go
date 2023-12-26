@@ -5,14 +5,16 @@ import (
 	"regexp"
 )
 
+// TableCollectionResponse2[T] represents a collection of T table entries.
 type TableCollectionResponse2[T TableEntry2] struct {
-	Result           []T
+	Result           []*T
 	NextPageLink     string
 	PreviousPageLink string
 	FirstPageLink    string
 	LastPageLink     string
 }
 
+// parsePaginationHeaders parses the pagination headers from the response
 func (cR *TableCollectionResponse2[T]) parsePaginationHeaders(headers http.Header) {
 	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
 
@@ -47,6 +49,7 @@ func (cR *TableCollectionResponse2[T]) parsePaginationHeaders(headers http.Heade
 	cR.LastPageLink = links["lastPageLink"]
 }
 
+// ParseHeaders parses the needed headers from the response.
 func (cR *TableCollectionResponse2[T]) ParseHeaders(headers http.Header) {
 	cR.parsePaginationHeaders(headers)
 }
