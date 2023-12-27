@@ -221,13 +221,33 @@ func TestTableItemRequestBuilderPut2Valid(t *testing.T) {
 	updatedRecord, err := req.Put2(tableEntry, nil)
 
 	// Perform assertions and test the response
-	if err != nil {
-		t.Errorf("Expected no error, but got: %v", err)
-	}
+	assert.Nil(t, err)
 
 	// You should assert that the updatedRecord matches your expected response here.
 	// You may need to unmarshal the JSON response and compare specific fields.
 	// For example: assert.Equal(t, expectedValue, updatedRecord.Field)
 
 	assert.Equal(t, fakeTableItemResponse, updatedRecord)
+}
+
+func TestTableItemRequestBuilderPut2Nil(t *testing.T) {
+	// Create a mock client for testing
+	client := &MockClient{}
+
+	// Prepare path parameters
+	pathParameters := map[string]string{
+		"baseurl": "http://",
+		"table":   "table",
+		"sysId":   "sysid",
+	}
+
+	// Create a request builder
+	req := NewTableItemRequestBuilder(client, pathParameters)
+
+	tableEntry := TableEntry{}
+
+	// Send the PUT request to update the record
+	_, err := req.Put2(tableEntry, nil)
+	assert.Error(t, err)
+
 }
