@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -32,6 +33,27 @@ func TestTableUrl(t *testing.T) {
 	if !reflect.DeepEqual(req.PathParameters, pathParameters) {
 		t.Errorf("excepted: %s, got: %s", pathParameters, req.PathParameters)
 	}
+}
+
+func TestTableRequestBuilderByID(t *testing.T) {
+	client := &MockClient{}
+
+	parsedURL, err := url.Parse("example.com")
+	assert.Nil(t, err)
+
+	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
+
+	requestBuilder := NewTableRequestBuilder(client, pathParameters)
+
+	itemRequestBuilder := requestBuilder.ById("sys_id")
+
+	expected := pathParameters
+	expected["sysId"] = "sys_id"
+
+	assert.NotNil(t, itemRequestBuilder)
+	assert.IsType(t, &TableItemRequestBuilder2[internal.TableEntry]{}, itemRequestBuilder)
+	assert.Equal(t, expected, itemRequestBuilder.PathParameters)
+	assert.Equal(t, client, itemRequestBuilder.Client)
 }
 
 func TestTableRequestBuilderGet(t *testing.T) {
