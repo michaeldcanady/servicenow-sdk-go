@@ -4,7 +4,7 @@ import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
 // Deprecated: deprecated since v{version}. Use `TableItemRequestBuilder2[T]` instead.
 // TableItemRequestBuilder Represents the base of a Table Item Request
-type TableItemRequestBuilder = TableItemRequestBuilder2[tableEntry]
+type TableItemRequestBuilder = TableItemRequestBuilder2[TableEntry]
 
 // Deprecated: deprecated since v{version}. Use `NewTableItemRequestBuilder2[T]` instead.
 // NewTableItemRequestBuilder creates a new instance of the TableItemRequestBuilder associated with the given URL and Client.

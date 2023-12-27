@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,7 +24,7 @@ func TestTableEntry(t *testing.T) {
 
 func TestNewTableEntry(t *testing.T) {
 	entry := NewTableEntry()
-	assert.IsType(t, tableEntry{}, entry)
+	assert.IsType(t, internal.TableEntry{}, entry)
 	assert.IsType(t, TableEntry{}, entry)
 }
 
@@ -35,7 +36,7 @@ func TestTableEntryValueValidKey(t *testing.T) {
 	value := entry.Value(keyName)
 
 	assert.NotNil(t, value)
-	assert.Equal(t, value, &TableValue{value: "value1"})
+	assert.Equal(t, value, &TableValue{Value: "value1"})
 
 	entry = TableEntry{
 		keyName: map[string]interface{}{
@@ -47,7 +48,7 @@ func TestTableEntryValueValidKey(t *testing.T) {
 	value = entry.Value(keyName)
 
 	assert.NotNil(t, value)
-	assert.Equal(t, value, &TableValue{value: "55b35562c0a8010e01cff22378e0aea9"})
+	assert.Equal(t, value, &TableValue{Value: "55b35562c0a8010e01cff22378e0aea9"})
 }
 
 func TestTableEntryValueMissingKey(t *testing.T) {

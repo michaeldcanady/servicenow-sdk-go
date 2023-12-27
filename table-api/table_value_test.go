@@ -71,7 +71,7 @@ func (te test[T]) checkError(t *testing.T, err error) {
 func TestTableValueToInt64(t *testing.T) {
 	for _, test := range int64TestSet {
 		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+			tableValue := &TableValue{Value: test.value}
 			result, err := tableValue.ToInt64()
 
 			test.checkError(t, err)
@@ -86,7 +86,7 @@ func TestTableValueToInt64(t *testing.T) {
 func TestTableValueInt(t *testing.T) {
 	for _, test := range int64TestSet {
 		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+			tableValue := &TableValue{Value: test.value}
 			result, err := tableValue.Int()
 
 			test.checkError(t, err)
@@ -101,7 +101,7 @@ func TestTableValueInt(t *testing.T) {
 func TestTableValueToFloat64(t *testing.T) {
 	for _, test := range float64TestSet {
 		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+			tableValue := &TableValue{Value: test.value}
 			result, err := tableValue.ToFloat64()
 
 			test.checkError(t, err)
@@ -116,7 +116,7 @@ func TestTableValueToFloat64(t *testing.T) {
 func TestTableValueFloat(t *testing.T) {
 	for _, test := range float64TestSet {
 		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+			tableValue := &TableValue{Value: test.value}
 			result, err := tableValue.Float()
 
 			test.checkError(t, err)
@@ -131,7 +131,7 @@ func TestTableValueFloat(t *testing.T) {
 func TestTableValueToString(t *testing.T) {
 	for _, test := range stringTestSet {
 		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+			tableValue := &TableValue{Value: test.value}
 			result, err := tableValue.ToString()
 
 			test.checkError(t, err)
@@ -146,7 +146,7 @@ func TestTableValueToString(t *testing.T) {
 func TestTableValueString(t *testing.T) {
 	for _, test := range stringTestSet {
 		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+			tableValue := &TableValue{Value: test.value}
 			result, err := tableValue.String()
 
 			test.checkError(t, err)
@@ -161,7 +161,7 @@ func TestTableValueString(t *testing.T) {
 func TestTableValueToBool(t *testing.T) {
 	for _, test := range boolTestSet {
 		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+			tableValue := &TableValue{Value: test.value}
 			result, err := tableValue.ToBool()
 
 			test.checkError(t, err)
@@ -176,7 +176,7 @@ func TestTableValueToBool(t *testing.T) {
 func TestTableValueBool(t *testing.T) {
 	for _, test := range boolTestSet {
 		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+			tableValue := &TableValue{Value: test.value}
 			result, err := tableValue.Bool()
 
 			test.checkError(t, err)
@@ -191,7 +191,7 @@ func TestTableValueBool(t *testing.T) {
 func TestTableValueGetType(t *testing.T) {
 	for _, test := range getTypeTestSet {
 		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+			tableValue := &TableValue{Value: test.value}
 			result := tableValue.GetType()
 
 			if result != test.expected {
@@ -204,7 +204,7 @@ func TestTableValueGetType(t *testing.T) {
 func TestTableValueType(t *testing.T) {
 	for _, test := range getTypeTestSet {
 		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+			tableValue := &TableValue{Value: test.value}
 			result := tableValue.Type()
 
 			if result != test.expected {
