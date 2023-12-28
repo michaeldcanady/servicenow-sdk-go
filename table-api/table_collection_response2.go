@@ -6,7 +6,7 @@ import (
 )
 
 // TableCollectionResponse2[T] represents a collection of T table entries.
-type TableCollectionResponse2[T TableEntry2] struct {
+type TableCollectionResponse2[T Entry] struct {
 	Result           []*T
 	NextPageLink     string
 	PreviousPageLink string

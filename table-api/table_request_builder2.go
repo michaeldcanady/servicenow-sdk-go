@@ -7,13 +7,13 @@ import (
 )
 
 // TableRequestBuilder2[T] represents a Table Collection request base.
-type TableRequestBuilder2[T TableEntry2] struct {
+type TableRequestBuilder2[T Entry] struct {
 	core.RequestBuilder
 }
 
 // NewTableRequestBuilder2 creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
-func NewTableRequestBuilder2[T TableEntry2](client core.Client, pathParameters map[string]string) *TableRequestBuilder2[T] {
+func NewTableRequestBuilder2[T Entry](client core.Client, pathParameters map[string]string) *TableRequestBuilder2[T] {
 	requestBuilder := core.NewRequestBuilder(
 		client,
 		"{+baseurl}/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}",

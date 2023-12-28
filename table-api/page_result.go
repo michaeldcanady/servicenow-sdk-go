@@ -6,7 +6,7 @@ package tableapi
 type PageResult = PageResult2[TableEntry]
 
 // PageResult2[T] represents a single page of results from a table.
-type PageResult2[T TableEntry2] struct {
+type PageResult2[T Entry] struct {
 	Result           []*T
 	NextPageLink     string
 	PreviousPageLink string

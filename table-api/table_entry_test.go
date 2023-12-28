@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,7 +23,6 @@ func TestTableEntry(t *testing.T) {
 
 func TestNewTableEntry(t *testing.T) {
 	entry := NewTableEntry()
-	assert.IsType(t, internal.TableEntry{}, entry)
 	assert.IsType(t, TableEntry{}, entry)
 }
 

@@ -3,7 +3,7 @@ package tableapi
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
 // TableGetRequestConfiguration2 represents request configurations for GET request.
-type TableGetRequestConfiguration2[T TableEntry2] struct {
+type TableGetRequestConfiguration2[T Entry] struct {
 	Header          interface{}
 	QueryParameters *TableRequestBuilderGetQueryParameters
 	Data            interface{}

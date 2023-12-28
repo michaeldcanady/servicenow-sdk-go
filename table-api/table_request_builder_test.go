@@ -7,7 +7,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -51,7 +50,7 @@ func TestTableRequestBuilderByID(t *testing.T) {
 	expected["sysId"] = "sys_id"
 
 	assert.NotNil(t, itemRequestBuilder)
-	assert.IsType(t, &TableItemRequestBuilder2[internal.TableEntry]{}, itemRequestBuilder)
+	assert.IsType(t, &TableItemRequestBuilder2[TableEntry]{}, itemRequestBuilder)
 	assert.Equal(t, expected, itemRequestBuilder.PathParameters)
 	assert.Equal(t, client, itemRequestBuilder.Client)
 }

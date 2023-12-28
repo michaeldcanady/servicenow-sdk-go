@@ -3,13 +3,13 @@ package tableapi
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
 // TableItemRequestBuilder2[T] Represents the base of a Table Item Request
-type TableItemRequestBuilder2[T TableEntry2] struct {
+type TableItemRequestBuilder2[T Entry] struct {
 	core.RequestBuilder
 }
 
 // NewTableItemRequestBuilder creates a new instance of the TableItemRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableItemRequestBuilder.
-func NewTableItemRequestBuilder2[T TableEntry2](client core.Client, pathParameters map[string]string) *TableItemRequestBuilder2[T] {
+func NewTableItemRequestBuilder2[T Entry](client core.Client, pathParameters map[string]string) *TableItemRequestBuilder2[T] {
 	requestBuilder := core.NewRequestBuilder(
 		client,
 		"{+baseurl}/table{/table}{/sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_input_display_value,sysparm_query_no_domain,sysparm_view,sysparm_query_no_domain}",
