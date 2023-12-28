@@ -52,8 +52,31 @@ func (rB *RequestBuilder) ToGetRequestInformation(params interface{}) (*RequestI
 	return rB.ToRequestInformation2(GET, nil, params)
 }
 
+// Deprecated: deprecated as of {version} please utilize `ToGetRequestInformation3`
+// ToGetRequestInformation2 creates a new HTTP GET request's RequestInformation object.
+// It sets the HTTP method to GET and includes the specified query parameters.
+//
+// Parameters:
+//   - config: The Request Configurations.
+//
+// Returns:
+//   - *RequestInformation: A RequestInformation object representing the GET request.
+//   - error: An error if there was an issue creating the request information.
 func (rB *RequestBuilder) ToGetRequestInformation2(config *RequestConfiguration) (*RequestInformation, error) {
 	return rB.ToRequestInformation3(GET, config)
+}
+
+// ToGetRequestInformation3 creates a new HTTP GET request's RequestInformation object.
+// It sets the HTTP method to GET and includes the specified query parameters.
+//
+// Parameters:
+//   - config: The Request Configurations.
+//
+// Returns:
+//   - *RequestInformation: A RequestInformation object representing the GET request.
+//   - error: An error if there was an issue creating the request information.
+func (rB *RequestBuilder) ToGetRequestInformation3(config RequestConfiguration2) (*RequestInformation, error) {
+	return rB.ToRequestInformation4(GET, config)
 }
 
 // Deprecated: deprecated as of {version} please utilize `ToPutRequestInformation2`
@@ -76,6 +99,22 @@ func (rB *RequestBuilder) ToPutRequestInformation2(config *RequestConfiguration)
 	return rB.ToRequestInformation3(PUT, config)
 }
 
+// Deprecated: deprecated as of {version} please utilize `ToPostRequestInformation2`
+// ToPostRequestInformation creates a new HTTP POST request's RequestInformation object.
+// It sets the HTTP method to POST and includes the specified data in the request body
+// and query parameters.
+//
+// Parameters:
+//   - data: A map[string]interface{} representing data to be included in the request body.
+//   - params: An interface representing query parameters for the POST request.
+//
+// Returns:
+//   - *RequestInformation: A RequestInformation object representing the POST request.
+//   - error: An error if there was an issue creating the request information.
+func (rB *RequestBuilder) ToPostRequestInformation(data map[string]string, params interface{}) (*RequestInformation, error) {
+	return rB.ToRequestInformation2(POST, data, params)
+}
+
 // Deprecated: deprecated as of {version} please utilize `ToPostRequestInformation3`
 // ToPostRequestInformation2 creates a new HTTP POST request's RequestInformation object.
 // It sets the HTTP method to POST and includes the specified data in the request body
@@ -92,24 +131,13 @@ func (rB *RequestBuilder) ToPostRequestInformation2(data interface{}, params int
 	return rB.ToRequestInformation2(POST, data, params)
 }
 
+// Deprecated: deprecated as of {version} please utilize `ToPostRequestInformation4`
 func (rB *RequestBuilder) ToPostRequestInformation3(config *RequestConfiguration) (*RequestInformation, error) {
 	return rB.ToRequestInformation3(POST, config)
 }
 
-// Deprecated: deprecated as of {version} please utilize `ToPostRequestInformation2`
-// ToPostRequestInformation creates a new HTTP POST request's RequestInformation object.
-// It sets the HTTP method to POST and includes the specified data in the request body
-// and query parameters.
-//
-// Parameters:
-//   - data: A map[string]interface{} representing data to be included in the request body.
-//   - params: An interface representing query parameters for the POST request.
-//
-// Returns:
-//   - *RequestInformation: A RequestInformation object representing the POST request.
-//   - error: An error if there was an issue creating the request information.
-func (rB *RequestBuilder) ToPostRequestInformation(data map[string]string, params interface{}) (*RequestInformation, error) {
-	return rB.ToRequestInformation2(POST, data, params)
+func (rB *RequestBuilder) ToPostRequestInformation4(config RequestConfiguration2) (*RequestInformation, error) {
+	return rB.ToRequestInformation4(POST, config)
 }
 
 // Deprecated: deprecated as of {version} please utilize `ToDeleteRequestInformation2`
@@ -189,6 +217,17 @@ func (rB *RequestBuilder) ToRequestInformation2(method HttpMethod, rawData inter
 	return requestInfo, nil
 }
 
+// Deprecated: deprecated as of v{version} please utilize `ToRequestInformation4`
+// ToRequestInformation3 creates a new HTTP request's RequestInformation object with the
+// specified HTTP method, data in the request body, and query parameters.
+//
+// Parameters:
+//   - method: The HTTP method for the request (e.g., "GET", "POST", "HEAD", "DELETE").
+//   - config: The Request Configurations.
+//
+// Returns:
+//   - *RequestInformation: A RequestInformation object representing the HTTP request.
+//   - error: An error if there was an issue creating the request information.
 func (rB *RequestBuilder) ToRequestInformation3(method HttpMethod, config *RequestConfiguration) (*RequestInformation, error) {
 	requestInfo := NewRequestInformation()
 
@@ -201,6 +240,50 @@ func (rB *RequestBuilder) ToRequestInformation3(method HttpMethod, config *Reque
 		}
 		if config.Data != nil {
 			data, err := rB.prepareData(config.Data)
+			if err != nil {
+				return nil, err
+			}
+			if len(data) != 0 {
+				mime := mimetype.Detect(data)
+
+				requestInfo.Content = data
+				requestInfo.Headers.Add("Content-Type", mime.String())
+			}
+		}
+	}
+
+	requestInfo.Method = method
+	requestInfo.uri.PathParameters = rB.PathParameters
+	requestInfo.uri.UrlTemplate = rB.UrlTemplate
+
+	return requestInfo, nil
+}
+
+// ToRequestInformation4 creates a new HTTP request's RequestInformation object with the
+// specified HTTP method, data in the request body, and query parameters.
+//
+// Parameters:
+//   - method: The HTTP method for the request (e.g., "GET", "POST", "HEAD", "DELETE").
+//   - config: The Request Configurations.
+//
+// Returns:
+//   - *RequestInformation: A RequestInformation object representing the HTTP request.
+//   - error: An error if there was an issue creating the request information.
+func (rB *RequestBuilder) ToRequestInformation4(method HttpMethod, config RequestConfiguration2) (*RequestInformation, error) {
+	requestInfo := NewRequestInformation()
+
+	if config != nil {
+		// Add query parameters
+		if config.Query() != nil {
+			err := requestInfo.AddQueryParameters(config.Query())
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		// Add data
+		if config.Data() != nil {
+			data, err := rB.prepareData(config.Data())
 			if err != nil {
 				return nil, err
 			}
@@ -255,7 +338,7 @@ func (rB *RequestBuilder) ToRequestInformation(method HttpMethod, data map[strin
 	return requestInfo, nil
 }
 
-// Deprecated: deprecated since v{version}. Please use SendGet2
+// Deprecated: deprecated since v{version}. Please use `SendGet2`
 func (rB *RequestBuilder) SendGet(params interface{}, errorMapping ErrorMapping, value Response) error {
 	err := sendGet(rB, params, errorMapping, &value)
 	if err != nil {
@@ -264,8 +347,17 @@ func (rB *RequestBuilder) SendGet(params interface{}, errorMapping ErrorMapping,
 	return nil
 }
 
+// Deprecated: deprecated since v{version}. Please use `SendGet3`
 func (rB *RequestBuilder) SendGet2(config *RequestConfiguration) error {
 	err := SendGet2(rB, config)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (rB *RequestBuilder) SendGet3(config RequestConfiguration2) error {
+	err := SendGet3(rB, config)
 	if err != nil {
 		return err
 	}
@@ -277,8 +369,13 @@ func (rB *RequestBuilder) SendPost(data map[string]string, params interface{}, e
 	return sendPost(rB, data, params, errorMapping, &value)
 }
 
+// Deprecated: deprecated since v{version}. Please use SendPost4
 func (rB *RequestBuilder) SendPost3(config *RequestConfiguration) error {
 	return SendPost2(rB, config)
+}
+
+func (rB *RequestBuilder) SendPost4(config RequestConfiguration2) error {
+	return sendPost3(rB, config)
 }
 
 // Deprecated: deprecated since v{version}. Please use SendPost3

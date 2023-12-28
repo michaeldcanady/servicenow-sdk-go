@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/hetiansu5/urlquery"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	"github.com/yosida95/uritemplate/v3"
 )
 
@@ -103,7 +104,7 @@ func ParseResponse[T Response](response *http.Response, value *T) error {
 	return nil
 }
 
-// Deprecated: deprecated in version {version}. Please use SendGet2.
+// Deprecated: deprecated in version {version}. Please use `SendGet2`.
 func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping, value *T) error {
 	requestInfo, err := requestBuilder.ToGetRequestInformation(params)
 	if err != nil {
@@ -118,6 +119,7 @@ func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, err
 	return ParseResponse(response, value)
 }
 
+// Deprecated: deprecated in version {version}. Please use `SendGet3`.
 func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToGetRequestInformation2(config)
 	if err != nil {
@@ -132,7 +134,21 @@ func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) erro
 	return ParseResponse(response, &config.Response)
 }
 
-// Deprecated: deprecated in version {version}. Please use SendPost2.
+func SendGet3(requestBuilder *RequestBuilder, config RequestConfiguration2) error {
+	requestInfo, err := requestBuilder.ToGetRequestInformation3(config)
+	if err != nil {
+		return err
+	}
+
+	response, err := requestBuilder.Client.Send(requestInfo, config.Mapping())
+	if err != nil {
+		return err
+	}
+
+	return core.ParseResponse(response, config.Response())
+}
+
+// Deprecated: deprecated in version {version}. Please use `SendPost2`.
 func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, params interface{}, errorMapping ErrorMapping, value *T) error {
 	requestInfo, err := requestBuilder.ToPostRequestInformation2(data, params)
 	if err != nil {
@@ -147,6 +163,7 @@ func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, para
 	return ParseResponse(response, value)
 }
 
+// Deprecated: deprecated in version {version}.
 func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToPostRequestInformation3(config)
 	if err != nil {
@@ -159,6 +176,20 @@ func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) err
 	}
 
 	return ParseResponse(response, &config.Response)
+}
+
+func sendPost3(requestBuilder *RequestBuilder, config RequestConfiguration2) error {
+	requestInfo, err := requestBuilder.ToPostRequestInformation4(config)
+	if err != nil {
+		return err
+	}
+
+	response, err := requestBuilder.Client.Send(requestInfo, config.Mapping())
+	if err != nil {
+		return err
+	}
+
+	return core.ParseResponse(response, config.Response())
 }
 
 // Deprecated: deprecated in version {version}. Please use sendDelete2.
