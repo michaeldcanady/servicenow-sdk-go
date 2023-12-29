@@ -7,3 +7,9 @@ type InternalTest struct {
 	ShouldErr bool
 	Error     error
 }
+
+type Test struct {
+	Title    string
+	Expected string
+	Actual   string
+}

@@ -323,7 +323,7 @@ func TestRequestBuilderToRequestInformation(t *testing.T) {
 
 type requestBuilderTest struct {
 	title  string
-	method HttpMethod
+	method HTTPMethod
 	config RequestConfiguration
 }
 

@@ -4,72 +4,23 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-	"reflect"
-	"strings"
 
-	"github.com/hetiansu5/urlquery"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
-	"github.com/yosida95/uritemplate/v3"
 )
 
+// Deprecated: deprecated since v{version}. Will be removed from public API
+//
 // ToQueryMap converts a struct to query parameter map
 func ToQueryMap(source interface{}) (map[string]string, error) {
-	if source == nil {
-		return nil, ErrNilSource
-	}
-
-	queryBytes, err := urlquery.Marshal(source)
-	if err != nil {
-		return nil, err
-	}
-
-	var queryMap map[string]string
-	err = urlquery.Unmarshal(queryBytes, &queryMap)
-	if err != nil {
-		return nil, err
-	}
-
-	return queryMap, nil
+	return core.ToQueryMap(source)
 }
 
-// normalizeVarNames normalizes variable names for URI template expansion.
-func normalizeVarNames(varNames []string) map[string]string {
-	normalizedNames := make(map[string]string)
-	for _, varName := range varNames {
-		normalizedNames[strings.ToLower(varName)] = varName
-	}
-	return normalizedNames
-}
-
-func addParametersWithOriginalNames(params map[string]string, normalizedNames map[string]string, values uritemplate.Values) uritemplate.Values {
-	if values == nil {
-		values = uritemplate.Values{}
-	}
-
-	for key, value := range params {
-		values.Set(getKeyWithOriginalName(key, normalizedNames), uritemplate.String(value))
-	}
-	return values
-}
-
-func getKeyWithOriginalName(key string, normalizedNames map[string]string) string {
-	originalName, exists := normalizedNames[key]
-	if exists {
-		return originalName
-	}
-	return key
-}
-
+// Deprecated: deprecated since v{version}. Will be removed from public API
 func IsPointer(value interface{}) bool {
-	if value == nil {
-		return false
-	}
-
-	valueKind := reflect.ValueOf(value).Kind()
-
-	return valueKind == reflect.Ptr
+	return core.IsPointer(value)
 }
 
+// Deprecated: deprecated since v{version}. Will be removed from public API
 func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
 	if response == nil {
 		return ErrNilResponse
@@ -92,160 +43,28 @@ func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
 	return nil
 }
 
+// Deprecated: deprecated since v{version}. Will be removed from public API
+//
 // ParseResponse parses the HTTP Response to the provided type
-func ParseResponse[T Response](response *http.Response, value *T) error {
-	err := FromJson(response, &value)
-	if err != nil {
-		return err
-	}
-
-	(*value).ParseHeaders(response.Header)
-
-	return nil
+func ParseResponse[T core.Response](response *http.Response, value *T) error {
+	return core.ParseResponse[T](response, value)
 }
 
-// Deprecated: deprecated in version {version}. Please use `SendGet2`.
-func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping, value *T) error {
-	requestInfo, err := requestBuilder.ToGetRequestInformation(params)
-	if err != nil {
-		return err
-	}
-
-	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return err
-	}
-
-	return ParseResponse(response, value)
-}
-
+// Deprecated: deprecated since v{version}. Will be removed from public API
+//
 // Deprecated: deprecated in version {version}. Please use `SendGet3`.
-func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
-	requestInfo, err := requestBuilder.ToGetRequestInformation2(config)
-	if err != nil {
-		return err
-	}
-
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
-	if err != nil {
-		return err
-	}
-
-	return ParseResponse(response, &config.Response)
+func SendGet2(requestBuilder *core.RequestBuilder, config *core.RequestConfiguration) error {
+	return core.SendGet2(requestBuilder, config)
 }
 
-func SendGet3(requestBuilder *RequestBuilder, config RequestConfiguration2) error {
-	requestInfo, err := requestBuilder.ToGetRequestInformation3(config)
-	if err != nil {
-		return err
-	}
-
-	response, err := requestBuilder.Client.Send(requestInfo, config.Mapping())
-	if err != nil {
-		return err
-	}
-
-	return core.ParseResponse(response, config.Response())
+// Deprecated: deprecated since v{version}. Will be removed from public API
+//
+// SendGet3 Sends a GET request utilizing the provided RequestBuilder and RequestConfigurations
+func SendGet3(requestBuilder *core.RequestBuilder, config core.RequestConfiguration2) error {
+	return core.SendGet3(requestBuilder, config)
 }
 
-// Deprecated: deprecated in version {version}. Please use `SendPost2`.
-func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, params interface{}, errorMapping ErrorMapping, value *T) error {
-	requestInfo, err := requestBuilder.ToPostRequestInformation2(data, params)
-	if err != nil {
-		return err
-	}
-
-	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return err
-	}
-
-	return ParseResponse(response, value)
-}
-
-// Deprecated: deprecated in version {version}.
-func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
-	requestInfo, err := requestBuilder.ToPostRequestInformation3(config)
-	if err != nil {
-		return err
-	}
-
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
-	if err != nil {
-		return err
-	}
-
-	return ParseResponse(response, &config.Response)
-}
-
-func sendPost3(requestBuilder *RequestBuilder, config RequestConfiguration2) error {
-	requestInfo, err := requestBuilder.ToPostRequestInformation4(config)
-	if err != nil {
-		return err
-	}
-
-	response, err := requestBuilder.Client.Send(requestInfo, config.Mapping())
-	if err != nil {
-		return err
-	}
-
-	return core.ParseResponse(response, config.Response())
-}
-
-// Deprecated: deprecated in version {version}. Please use sendDelete2.
-func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) error {
-	requestInfo, err := requestBuilder.ToDeleteRequestInformation(params)
-	if err != nil {
-		return err
-	}
-
-	_, err = requestBuilder.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func sendDelete2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
-	requestInfo, err := requestBuilder.ToDeleteRequestInformation2(config)
-	if err != nil {
-		return err
-	}
-
-	_, err = requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// Deprecated: deprecated in version {version}. Please use sendPut2.
-func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping, value *T) error {
-	requestInfo, err := requestBuilder.ToPutRequestInformation(data, params)
-	if err != nil {
-		return err
-	}
-
-	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return err
-	}
-
-	return ParseResponse(response, value)
-}
-
-func sendPut2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
-	requestInfo, err := requestBuilder.ToPutRequestInformation2(config)
-	if err != nil {
-		return err
-	}
-
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
-	if err != nil {
-		return err
-	}
-
-	return ParseResponse(response, &config.Response)
+// Deprecated: deprecated since v{version}. Will be removed from public API
+func SendPost2(requestBuilder *core.RequestBuilder, config *core.RequestConfiguration) error {
+	return core.SendPost2(requestBuilder, config)
 }

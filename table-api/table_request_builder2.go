@@ -80,21 +80,21 @@ func (rB *TableRequestBuilder2[T]) Post2(data map[string]string, params *TableRe
 	return rB.Post3(entry, params)
 }
 
-// Post sends an HTTP Post request with the provided data and query parameters and returns an `TableItemResponse`.
+// Post3 sends an HTTP Post request with the provided data and query parameters and returns an `TableItemResponse`.
 //
 // Parameters:
 //   - data: A map[string]string representing data to be included in the request body.
 //   - params: An instance of `*TableRequestBuilderPostQueryParameters` for query parameters
 func (rB *TableRequestBuilder2[T]) Post3(data T, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse2[T], error) {
 	config := &TablePostRequestConfiguration2[T]{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            data,
-		ErrorMapping:    nil,
-		response:        &TableItemResponse2[T]{},
+		header:   nil,
+		query:    params,
+		data:     data,
+		mapping:  nil,
+		response: &TableItemResponse2[T]{},
 	}
 
-	_ = rB.SendPost3(config.toConfiguration()) //Can't identify good test, removing error check
+	_ = rB.SendPost4(config) //Can't identify good test, removing error check
 
 	return config.response, nil
 }
@@ -109,14 +109,14 @@ func (rB *TableRequestBuilder2[T]) Post3(data T, params *TableRequestBuilderPost
 //   - error: An error if there was an issue with the request or response.
 func (rB *TableRequestBuilder2[T]) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse2[T], error) {
 	config := &TableGetRequestConfiguration2[T]{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            nil,
-		ErrorMapping:    nil,
-		response:        &TableCollectionResponse2[T]{},
+		header:   nil,
+		query:    params,
+		data:     nil,
+		mapping:  nil,
+		response: &TableCollectionResponse2[T]{},
 	}
 
-	_ = rB.SendGet2(config.toConfiguration()) //Can't identify good test, removing error check
+	_ = rB.SendGet3(config) //Can't identify good test, removing error check
 
 	return config.response, nil
 }

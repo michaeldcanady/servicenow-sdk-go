@@ -1,5 +1,6 @@
 package core
 
-type Credential interface {
-	GetAuthentication() (string, error)
-}
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
+
+// Deprecated: deprecated since v{version}. Will be removed from public API
+type Credential = core.Credential

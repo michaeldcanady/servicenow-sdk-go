@@ -1,11 +1,11 @@
 package core
 
 // Represents the HTTP method used by a request.
-type HttpMethod int //nolint:stylecheck
+type HTTPMethod int
 
 const (
 	// The HTTP GET method.
-	GET HttpMethod = iota
+	GET HTTPMethod = iota
 	// The HTTP POST method.
 	POST
 	// The HTTP PATCH method.
@@ -25,6 +25,6 @@ const (
 )
 
 // String returns the string representation of the HTTP method.
-func (m HttpMethod) String() string {
+func (m HTTPMethod) String() string {
 	return []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS", "CONNECT", "PUT", "TRACE", "HEAD"}[m]
 }

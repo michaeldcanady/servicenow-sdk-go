@@ -30,13 +30,13 @@ func NewTableItemRequestBuilder2[T Entry](client core.Client, pathParameters map
 //   - error: An error if there was an issue with the request or response.
 func (rB *TableItemRequestBuilder2[T]) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse2[T], error) {
 	config := &TableItemGetRequestConfiguration2[T]{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            nil,
-		response:        &TableItemResponse2[T]{},
+		header:   nil,
+		query:    params,
+		data:     nil,
+		response: &TableItemResponse2[T]{},
 	}
 
-	_ = rB.SendGet2(config.toConfiguration()) //Can't identify good test, removing error check
+	_ = rB.SendGet3(config) //Can't identify good test, removing error check
 
 	return config.response, nil
 }
@@ -49,14 +49,14 @@ func (rB *TableItemRequestBuilder2[T]) Get(params *TableItemRequestBuilderGetQue
 // Returns:
 //   - error: An error if there was an issue with the request or response, or nil if the request was successful.
 func (rB *TableItemRequestBuilder2[T]) Delete(params *TableItemRequestBuilderDeleteQueryParameters) error {
-	config := &TableItemDeleteRequestConfiguration{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            nil,
-		response:        nil,
+	config := &TableItemDeleteRequestConfiguration2[T]{
+		header:   nil,
+		query:    params,
+		data:     nil,
+		response: nil,
 	}
 
-	return rB.SendDelete2(config.toConfiguration())
+	return rB.SendDelete3(config)
 }
 
 // Deprecated: deprecated since v{version} please use Put2 instead.
@@ -98,13 +98,13 @@ func (rB *TableItemRequestBuilder2[T]) Put2(tableEntry TableEntry, params *Table
 	}
 
 	config := &TableItemPutRequestConfiguration2[T]{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            tableEntry,
-		response:        &TableItemResponse2[T]{},
+		header:   nil,
+		query:    params,
+		data:     tableEntry,
+		response: &TableItemResponse2[T]{},
 	}
 
-	_ = rB.SendPut2(config.toConfiguration()) //Can't identify good test, removing error check
+	_ = rB.SendPut3(config) //Can't identify good test, removing error check
 
 	return config.response, nil
 }

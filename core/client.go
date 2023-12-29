@@ -1,9 +1,6 @@
 package core
 
-import (
-	"net/http"
-)
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 
-type Client interface {
-	Send(requestInfo IRequestInformation, errorMapping ErrorMapping) (*http.Response, error)
-}
+// Deprecated: deprecated since v{version}. Will be removed from public API
+type Client = core.Client

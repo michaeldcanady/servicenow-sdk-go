@@ -1,19 +1,6 @@
 package core
 
-import (
-	"context"
-	"net/http"
-	"net/url"
-)
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 
-type IRequestInformation interface {
-	AddRequestOptions(options []RequestOption)
-	SetStreamContent(content []byte)
-	AddQueryParameters(source interface{}) error
-	SetUri(url *url.URL)
-	Url() (string, error)
-	ToRequest() (*http.Request, error)
-	ToRequestWithContext(ctx context.Context) (*http.Request, error)
-	AddHeaders(rawHeaders interface{}) error
-	GetRequestOptions() []RequestOption
-}
+// Deprecated: deprecated since v{version}. Will be removed from public API
+type IRequestInformation = core.IRequestInformation

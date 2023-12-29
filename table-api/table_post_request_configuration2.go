@@ -4,19 +4,29 @@ import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
 // TablePostRequestConfiguration2[T] represents Request Configuration for POST Table Collection Request.
 type TablePostRequestConfiguration2[T Entry] struct {
-	Header          interface{}
-	QueryParameters *TableRequestBuilderPostQueryParameters
-	Data            T
-	ErrorMapping    core.ErrorMapping
-	response        *TableItemResponse2[T]
+	header   interface{}
+	query    *TableRequestBuilderPostQueryParameters
+	data     T
+	mapping  core.ErrorMapping
+	response *TableItemResponse2[T]
 }
 
-func (rC *TablePostRequestConfiguration2[T]) toConfiguration() *core.RequestConfiguration {
-	return &core.RequestConfiguration{
-		Header:          rC.Header,
-		QueryParameters: rC.QueryParameters,
-		Data:            rC.Data,
-		ErrorMapping:    rC.ErrorMapping,
-		Response:        rC.response,
-	}
+func (rC *TablePostRequestConfiguration2[T]) Header() interface{} {
+	return rC.header
+}
+
+func (rC *TablePostRequestConfiguration2[T]) Query() interface{} {
+	return rC.query
+}
+
+func (rC *TablePostRequestConfiguration2[T]) Data() interface{} {
+	return rC.data
+}
+
+func (rC *TablePostRequestConfiguration2[T]) Mapping() core.ErrorMapping {
+	return rC.mapping
+}
+
+func (rC *TablePostRequestConfiguration2[T]) Response() core.Response {
+	return rC.response
 }

@@ -1,9 +1,6 @@
 package core
 
-import (
-	"net/http"
-)
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 
-type Response interface {
-	ParseHeaders(headers http.Header)
-}
+// Deprecated: deprecated since v{version}. Will be removed from public API
+type Response = core.Response

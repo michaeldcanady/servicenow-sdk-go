@@ -1,17 +1,6 @@
 package core
 
-type RequestConfiguration struct {
-	Header          interface{}
-	QueryParameters interface{}
-	Data            interface{}
-	ErrorMapping    ErrorMapping
-	Response        Response
-}
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 
-type RequestConfiguration2 interface {
-	Header() interface{}
-	Query() interface{}
-	Data() interface{}
-	Mapping() ErrorMapping
-	Response() Response
-}
+// Deprecated: deprecated since v{version}. Will be removed from public API
+type RequestConfiguration = core.RequestConfiguration

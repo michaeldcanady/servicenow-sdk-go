@@ -1,17 +1,17 @@
 package core
 
-import "errors"
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 
 var (
-	ErrEmptyURI                = errors.New("uri cannot be empty")
-	ErrNilPathParameters       = errors.New("uri template parameters cannot be nil")
-	ErrNilQueryParamters       = errors.New("uri query parameters cannot be nil")
-	ErrMissingBasePathParam    = errors.New("pathParameters must contain a value for \"baseurl\" for the URL to be built")
-	ErrMissingBasePathTemplate = errors.New("template must contain a placeholder for \"{+baseurl}\" for the URL to be built")
-	ErrInvalidHeaderType       = errors.New("headers must be a pointer or an http.Header")
-	ErrEmptyRawUrl             = errors.New("empty raw URL") //nolint:stylecheck
-	ErrMissingSchema           = errors.New("URL is missing schema")
-	ErrNilResponse             = errors.New("Response is nil")
-	ErrNilResponseBody         = errors.New("Response body is nil")
-	ErrNilSource               = errors.New("source is nil")
+	ErrEmptyURI                = core.ErrEmptyURI
+	ErrNilPathParameters       = core.ErrNilPathParameters
+	ErrNilQueryParamters       = core.ErrNilQueryParamters
+	ErrMissingBasePathParam    = core.ErrMissingBasePathParam
+	ErrMissingBasePathTemplate = core.ErrMissingBasePathTemplate
+	ErrInvalidHeaderType       = core.ErrInvalidHeaderType
+	ErrEmptyRawUrl             = core.ErrEmptyRawURL //nolint:stylecheck
+	ErrMissingSchema           = core.ErrMissingSchema
+	ErrNilResponse             = core.ErrNilResponse
+	ErrNilResponseBody         = core.ErrNilResponseBody
+	ErrNilSource               = core.ErrNilSource
 )

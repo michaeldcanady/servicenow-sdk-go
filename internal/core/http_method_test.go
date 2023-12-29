@@ -2,10 +2,12 @@ package core
 
 import (
 	"testing"
+
+	inttesting "github.com/michaeldcanady/servicenow-sdk-go/internal/testing"
 )
 
 func TestHttpMethod_String(t *testing.T) {
-	tests := []Test{
+	tests := []inttesting.Test{
 		{
 			Title:    "Test GET",
 			Expected: "GET",

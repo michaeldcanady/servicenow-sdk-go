@@ -3,17 +3,12 @@ package core
 import (
 	"testing"
 
+	inttesting "github.com/michaeldcanady/servicenow-sdk-go/internal/testing"
 	"github.com/stretchr/testify/assert"
 )
 
-type Test struct {
-	Title    string
-	Expected string
-	Actual   string
-}
-
 func TestQueryAddQuery(t *testing.T) {
-	tests := []Test{
+	tests := []inttesting.Test{
 		{
 			Title:    "Test AddQuery",
 			Expected: "field1=value1",
@@ -86,7 +81,7 @@ func TestQueryAddQuery(t *testing.T) {
 }
 
 func TestQueryAddOrQuery(t *testing.T) {
-	tests := []Test{
+	tests := []inttesting.Test{
 		{
 			Title:    "Test AddOrQuery",
 			Expected: "field1=value1^ORfield2!=value2",
