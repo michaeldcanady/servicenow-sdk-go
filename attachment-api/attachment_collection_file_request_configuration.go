@@ -2,6 +2,7 @@ package attachmentapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
+// Deprecated: deprecated since v{version}. Use `AttachmentCollectionFileRequestConfiguration2` instead.
 type AttachmentCollectionFileRequestConfiguration struct {
 	Header          interface{}
 	QueryParameters *AttachmentRequestBuilderFileQueryParameters

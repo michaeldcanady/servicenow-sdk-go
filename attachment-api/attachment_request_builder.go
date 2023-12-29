@@ -31,14 +31,14 @@ func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]s
 //   - *AttachmentCollectionResponse: The response data as a AttachmentCollectionResponse.
 //   - error: An error if there was an issue with the request or response.
 func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQueryParameters) (*AttachmentCollectionResponse, error) {
-	configuration := &AttachmentCollectionGetRequestConfiguration{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            nil,
-		response:        &AttachmentCollectionResponse{},
+	configuration := &AttachmentCollectionGetRequestConfiguration2{
+		header:   nil,
+		query:    params,
+		data:     nil,
+		response: &AttachmentCollectionResponse{},
 	}
 
-	err := rB.SendGet2(configuration.toConfiguration())
+	err := rB.SendGet3(configuration)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQuery
 	return configuration.response, nil
 }
 
-// File ...
+// File Uploads the provided file to ServiceNow.
 func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequestBuilderFileQueryParameters) (*AttachmentItemResponse, error) {
 	if params == nil {
 		return nil, ErrNilParams
@@ -64,14 +64,14 @@ func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequ
 		return nil, err
 	}
 
-	config := &AttachmentCollectionFileRequestConfiguration{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            data,
-		response:        &AttachmentItemResponse{},
+	config := &AttachmentCollectionFileRequestConfiguration2{
+		header:   nil,
+		query:    params,
+		data:     data,
+		response: &AttachmentItemResponse{},
 	}
 
-	err = rB.SendPost3(config.toConfiguration())
+	err = rB.SendPost4(config)
 	if err != nil {
 		return nil, err
 	}
