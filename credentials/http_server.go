@@ -25,6 +25,8 @@ func NewHTTPServer(address string) *HTTPServer {
 	return &HTTPServer{server: httpServer}
 }
 
+// Deprecated: deprecated since v{version}. Use `Start2` instead.
+//
 // Start starts the HTTP Server
 func (s *HTTPServer) Start() {
 	go func() {
@@ -35,12 +37,37 @@ func (s *HTTPServer) Start() {
 	}()
 }
 
+// Start2 starts the HTTP Server and returns an error if it fails
+func (s *HTTPServer) Start2() error {
+	errCh := make(chan error)
+
+	go func() {
+		err := s.server.ListenAndServe()
+		if err != nil {
+			errCh <- err
+		}
+	}()
+
+	// Wait for the server to start or fail
+	select {
+	case err := <-errCh:
+		return err
+	default:
+		return nil
+	}
+}
+
 // Stop stops the HTTP Server
 func (s *HTTPServer) Stop() {
 	err := s.server.Shutdown(context.TODO())
 	if err != nil {
 		fmt.Println("Error shutting down HTTP server:", err)
 	}
+}
+
+// Stop2 stops the HTTP Server
+func (s *HTTPServer) Stop2() error {
+	return s.server.Shutdown(context.TODO())
 }
 
 func OauthRedirectHandler(w http.ResponseWriter, r *http.Request) {
