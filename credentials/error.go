@@ -1,5 +1,7 @@
 package credentials
 
+import "errors"
+
 // CredentialError represents an error related to credentials or authentication.
 type CredentialError struct {
 	// Message is the error message associated with the credential error.
@@ -29,7 +31,11 @@ func (e *CredentialError) Error() string {
 }
 
 var (
-	EmptyClientID     = NewOauth2Error("clientId is empty")
-	EmptyClientSecret = NewOauth2Error("clientSecret is empty")
-	EmptyBaseURL      = NewOauth2Error("baseURL is empty")
+	EmptyClientID          = NewOauth2Error("clientId is empty")
+	EmptyClientSecret      = NewOauth2Error("clientSecret is empty")
+	EmptyBaseURL           = NewOauth2Error("baseURL is empty")
+	ErrNotLocalHost        = errors.New("not a localhost URL")
+	ErrMissingPort         = errors.New("port is missing")
+	ErrMissingClientID     = errors.New("missing ClientID")
+	ErrMissingClientSecret = errors.New("missing ClientSecret")
 )
