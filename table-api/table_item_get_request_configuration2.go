@@ -1,6 +1,6 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/core"
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 
 // TableItemGetRequestConfiguration2 represents the Request Configurations for a GET Table Item request.
 type TableItemGetRequestConfiguration2[T Entry] struct {

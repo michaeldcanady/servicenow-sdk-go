@@ -1,6 +1,6 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/core"
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 
 // TablePostRequestConfiguration2[T] represents Request Configuration for POST Table Collection Request.
 type TablePostRequestConfiguration2[T Entry] struct {

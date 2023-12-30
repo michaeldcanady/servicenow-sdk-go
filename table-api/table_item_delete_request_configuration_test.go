@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
 func TestTableItemDeleteRequestConfigurationToConfiguration(t *testing.T) {

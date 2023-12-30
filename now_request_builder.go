@@ -2,7 +2,7 @@ package servicenowsdkgo
 
 import (
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 )
 

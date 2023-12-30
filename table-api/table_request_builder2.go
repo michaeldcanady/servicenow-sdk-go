@@ -3,7 +3,7 @@ package tableapi
 import (
 	"strconv"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
 // TableRequestBuilder2[T] represents a Table Collection request base.

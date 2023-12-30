@@ -8,7 +8,6 @@ import (
 )
 
 func TestNewQuery(t *testing.T) {
-
 	query := NewQuery()
 
 	assert.IsType(t, &core.Query{}, query)

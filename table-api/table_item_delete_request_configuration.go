@@ -1,6 +1,6 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/core"
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 
 // Deprecated: deprecated since v{version}. Use `TableItemDeleteRequestConfiguration2[T]` instead
 // TableItemDeleteRequestConfiguration represents request configurations for a DELETE request.

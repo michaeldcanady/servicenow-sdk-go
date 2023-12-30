@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
 type ServiceNowClient struct {

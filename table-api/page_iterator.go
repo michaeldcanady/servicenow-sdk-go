@@ -3,7 +3,7 @@ package tableapi
 import (
 	"net/url"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
 // PageIterator represents an iterator for paginated results from a table.

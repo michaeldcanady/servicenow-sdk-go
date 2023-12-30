@@ -1,6 +1,6 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/core"
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 
 // TableItemRequestBuilder2[T] Represents the base of a Table Item Request
 type TableItemRequestBuilder2[T Entry] struct {

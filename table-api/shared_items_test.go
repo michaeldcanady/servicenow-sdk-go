@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
 const (

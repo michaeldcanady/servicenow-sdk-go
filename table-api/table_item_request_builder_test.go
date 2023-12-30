@@ -9,7 +9,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -249,5 +249,4 @@ func TestTableItemRequestBuilderPut2Nil(t *testing.T) {
 	// Send the PUT request to update the record
 	_, err := req.Put2(tableEntry, nil)
 	assert.Error(t, err)
-
 }
