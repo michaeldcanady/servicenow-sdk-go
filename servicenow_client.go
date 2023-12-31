@@ -113,24 +113,7 @@ func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo
 }
 
 func (c *ServiceNowClient) toRequest(requestInfo core.IRequestInformation) (*http.Request, error) {
-	if requestInfo == nil {
-		return nil, ErrNilRequestInfo
-	}
-
-	request, err := requestInfo.ToRequest()
-	if err != nil {
-		return nil, err
-	}
-
-	authHeader, err := c.Credential.GetAuthentication()
-	if err != nil {
-		return nil, err
-	}
-
-	request.Header.Add("Authorization", authHeader)
-	request.Header.Add("Content-Type", "application/json")
-	request.Header.Add("Accept", "application/json")
-	return request, nil
+	return c.toRequestWithContext(context.Background(), requestInfo)
 }
 
 func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
@@ -153,20 +136,5 @@ func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core
 }
 
 func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-	request, err := c.toRequest(requestInfo)
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := c.Session.Do(request)
-	if err != nil {
-		return nil, fmt.Errorf("unable to complete request: %s", err)
-	}
-
-	err = c.throwIfFailedResponse(response, errorMapping)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
+	return c.SendWithContext(context.Background(),requestInfo, errorMapping)
 }
