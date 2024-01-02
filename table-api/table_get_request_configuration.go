@@ -2,7 +2,7 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
-// Deprecated: deprecated since v{version}. Use `TableGetRequestConfiguration2[T]` instead.
+// Deprecated: deprecated since v1.4.0. Use `TableGetRequestConfiguration2[T]` instead.
 //
 // TableGetRequestConfiguration represents request configurations GET request.
 type TableGetRequestConfiguration struct {

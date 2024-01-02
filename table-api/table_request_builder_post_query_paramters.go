@@ -1,6 +1,6 @@
 package tableapi
 
-// Deprecated: deprecated as of v{version}. use `TableRequestBuilderPostQueryParameters` instead
+// Deprecated: deprecated as of v1.4.0. use `TableRequestBuilderPostQueryParameters` instead
 //
 // TableRequestBuilderPostQueryParamters represents POST query parameters for a Table Item Request.
 type TableRequestBuilderPostQueryParamters struct {
