@@ -153,47 +153,72 @@ func TestTableRequestBuilder_Post2(t *testing.T) {
 
 //nolint:dupl
 func TestTableRequestBuilder_Post3(t *testing.T) {
-	t.Run("ValidRequest", func(t *testing.T) {
-		// Create a mock mockServer
-		mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			assert.Equal(t, "POST", r.Method)
 
-			// Handle the request and send a mock response
-			// You can customize this based on your actual implementation
-			w.WriteHeader(http.StatusOK)
-			_, _ = w.Write([]byte(`{"some": "response"}`))
-		}))
-		defer mockServer.Close()
+	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "POST", r.Method)
 
-		client := &MockClient{}
+		// Handle the request and send a mock response
+		// You can customize this based on your actual implementation
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"some": "response"}`))
+	}))
+	defer mockServer.Close()
 
-		parsedURL, err := url.Parse(mockServer.URL)
-		assert.Nil(t, err)
+	client := &MockClient{}
 
-		pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
+	parsedURL, err := url.Parse(mockServer.URL)
+	assert.Nil(t, err)
 
-		builder := NewTableRequestBuilder(client, pathParameters)
+	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
 
-		// Call the Post method with valid parameters
-		response, err := builder.Post3(map[string]string{"key": "value"}, &TableRequestBuilderPostQueryParameters{
-			DisplayValue:         "true",
-			ExcludeReferenceLink: true,
-			Fields:               []string{"field1", "field2"},
-			InputDisplayValue:    true,
-			View:                 "desktop",
+	builder := NewTableRequestBuilder(client, pathParameters)
+
+	queryParameters := &TableRequestBuilderPostQueryParameters{
+		DisplayValue:         "true",
+		ExcludeReferenceLink: true,
+		Fields:               []string{"field1", "field2"},
+		InputDisplayValue:    true,
+		View:                 "desktop",
+	}
+
+	tests := []test[*TableItemResponse2[TableEntry]]{
+		{
+			title:     "ValidRequest-map[string]string",
+			value:     map[string]string{"key": "value"},
+			expected:  nil,
+			expectErr: false,
+			Err:       nil,
+		},
+		{
+			title:     "ValidRequest-tableEntry",
+			value:     TableEntry{"key": "value"},
+			expected:  nil,
+			expectErr: false,
+			Err:       nil,
+		},
+		{
+			title:     "InvalidRequest",
+			value:     "bad",
+			expected:  nil,
+			expectErr: true,
+			Err:       nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.title, func(t *testing.T) {
+			response, err := builder.Post3(tt.value, queryParameters)
+
+			if tt.expectErr {
+				assert.Error(t, err)
+				return
+			}
+
+			assert.Nil(t, err)
+
+			assert.IsType(t, &TableItemResponse{}, response)
 		})
-		assert.Nil(t, err)
-
-		assert.IsType(t, &TableItemResponse{}, response)
-	})
-
-	t.Run("ValidRequestWithNilParams", func(t *testing.T) {
-		// ... Similar to the previous test but with nil parameters ...
-	})
-
-	t.Run("ServerError", func(t *testing.T) {
-		// ... Test when the server returns an error (e.g., 500 Internal Server Error) ...
-	})
+	}
 }
 
 func TestTableRequestBuilder_Count(t *testing.T) {
