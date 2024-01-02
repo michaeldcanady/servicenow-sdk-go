@@ -1,7 +1,7 @@
 package tableapi
 
-// TableRequestBuilderGetQueryParameters represents GET query parameters for a Table Item Request.
-type TableRequestBuilderGetQueryParameters struct {
+// TableRequestBuilderPostQueryParameters represents POST query parameters for a Table Item Request.
+type TableRequestBuilderPostQueryParameters struct {
 	//Determines the type of data returned, either the actual values from the database or the display values of the fields.
 	//Display values are manipulated based on the actual value in the database and user or system settings and preferences.
 	//If returning display values, the value that is returned is dependent on the field type.
@@ -22,15 +22,8 @@ type TableRequestBuilderGetQueryParameters struct {
 	//- false: Include Table API links for reference fields.
 	ExcludeReferenceLink bool `query:"sysparm_exclude_reference_link"`
 	//list of fields to return in the response.
-	Fields []string `query:"sysparm_fields"`
-	//Flag that indicates whether to restrict the record search to only the domains for which the logged in user is configured.
-	//
-	//Valid values:
-	//
-	//- false: Exclude the record if it is in a domain that the currently logged in user is not configured to access.
-	//
-	//- true: Include the record even if it is in a domain that the currently logged in user is not configured to access.
-	QueryNoDomain bool `query:"sysparm_query_no_domain"`
+	Fields            []string `query:"sysparm_fields"`
+	InputDisplayValue bool     `query:"sysparm_input_display_value"`
 	//	UI view for which to render the data. Determines the fields returned in the response.
 	//
 	//Valid values:
@@ -39,11 +32,5 @@ type TableRequestBuilderGetQueryParameters struct {
 	//- mobile
 	//- both
 	//If you also specify the sysparm_fields parameter, it takes precedent.
-	View                     View   `query:"sysparm_view"`
-	Limit                    int    `query:"sysparm_limit"`
-	NoCount                  bool   `query:"sysparm_no_count"`
-	Offset                   int    `query:"sysparm_offset"`
-	Query                    string `query:"sysparm_query"`
-	QueryCategory            string `query:"sysparm_query_category"`
-	SuppressPaginationHeader bool   `uriparameter:"sysparm_suppress_pagination_header"`
+	View View `query:"sysparm_view"`
 }
