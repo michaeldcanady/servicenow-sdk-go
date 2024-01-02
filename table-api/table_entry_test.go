@@ -24,7 +24,7 @@ func TestTableEntry(t *testing.T) {
 func TestNewTableEntry(t *testing.T) {
 	entry := NewTableEntry()
 
-	assert.IsType(t, &TableEntry{}, entry)
+	assert.IsType(t, TableEntry{}, entry)
 }
 
 func TestTableEntry_ValueValidKey(t *testing.T) {
