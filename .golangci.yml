@@ -4,6 +4,7 @@ linters:
     - dupl
     - govet
     - gosec
+    - gofmt
     - misspell
     - nakedret
     - stylecheck
