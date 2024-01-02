@@ -2,8 +2,8 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
-// TableItemDeleteRequestConfiguration2[T] represents request configurations DELETE request.
-type TableItemDeleteRequestConfiguration2[T Entry] struct {
+// tableItemDeleteRequestConfiguration2[T] represents request configurations DELETE request.
+type tableItemDeleteRequestConfiguration2[T Entry] struct {
 	header   interface{}
 	query    *TableItemRequestBuilderDeleteQueryParameters
 	data     interface{}
@@ -12,7 +12,7 @@ type TableItemDeleteRequestConfiguration2[T Entry] struct {
 }
 
 // toConfiguration converts rC to `core.RequestConfiguration`.
-func (rC *TableItemDeleteRequestConfiguration2[T]) toConfiguration() *core.RequestConfiguration {
+func (rC *tableItemDeleteRequestConfiguration2[T]) toConfiguration() *core.RequestConfiguration {
 	return &core.RequestConfiguration{
 		Header:          rC.header,
 		QueryParameters: rC.query,

@@ -23,14 +23,3 @@ func (rC *TableItemGetRequestConfiguration) toConfiguration() *core.RequestConfi
 		Response:        rC.response,
 	}
 }
-
-// toTableConfig2 converts rC to `TableItemDeleteRequestConfiguration2[TableEntry]`.
-func (rC *TableItemGetRequestConfiguration) toTableConfig2() *TableItemGetRequestConfiguration2[TableEntry] {
-	return &TableItemGetRequestConfiguration2[TableEntry]{
-		header:   rC.Header,
-		query:    rC.QueryParameters,
-		data:     rC.Data,
-		mapping:  rC.ErrorMapping,
-		response: rC.response,
-	}
-}

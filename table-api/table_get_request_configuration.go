@@ -23,14 +23,3 @@ func (rC *TableGetRequestConfiguration) toConfiguration() *core.RequestConfigura
 		Response:        rC.response,
 	}
 }
-
-// toTableConfig2 converts rC to `TableGetRequestConfiguration2[TableEntry]`.
-func (rC *TableGetRequestConfiguration) toTableConfig2() *TableGetRequestConfiguration2[TableEntry] {
-	return &TableGetRequestConfiguration2[TableEntry]{
-		header:   rC.Header,
-		query:    rC.QueryParameters,
-		data:     rC.Data,
-		mapping:  rC.ErrorMapping,
-		response: rC.response,
-	}
-}

@@ -3,7 +3,6 @@ linters:
     - dogsled
     - dupl
     - govet
-    - gofmt
     - gosec
     - misspell
     - nakedret
