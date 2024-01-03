@@ -61,7 +61,7 @@ func (rB *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQ
 	return rB.SendDelete2(config.toConfiguration())
 }
 
-// Deprecated: deprecated since v{version}. Use `Put2` instead.
+// Deprecated: deprecated since v1.4.0. Use `Put2` instead.
 //
 // Put updates a table item using an HTTP PUT request.
 // It takes a map of table entry data and optional query parameters to send in the request.
