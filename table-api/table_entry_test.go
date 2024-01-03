@@ -10,7 +10,7 @@ import (
 const keyName = "key1"
 
 func TestTableEntry(t *testing.T) {
-	responseJSON, err := json.Marshal(fakeItemResult)
+	responseJSON, err := json.Marshal(fakeResultItem)
 	assert.Nil(t, err)
 
 	var entry TableEntry
