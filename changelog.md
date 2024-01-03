@@ -20,6 +20,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- `PageIterator.fetchPage` does not parse provided uri ([Issue #83](https://github.com/michaeldcanady/servicenow-sdk-go/issues/83))
+
 ### Deprecated
 
 - `TableGetRequestConfiguration` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
