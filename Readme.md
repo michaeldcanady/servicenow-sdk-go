@@ -47,8 +47,15 @@ A Service-Now API client enabling Go programs to interact with Service-Now in a 
 
 ## 1. Installation
 
+Install latest
 ```Shell
 go get github.com/michaeldcanady/servicenow-sdk-go
+```
+or
+
+Install specific version
+```Shell
+go get github.com/michaeldcanady/servicenow-sdk-go@version
 ```
 
 ## 2. Getting Started
