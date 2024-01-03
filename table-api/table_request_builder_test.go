@@ -11,7 +11,6 @@ import (
 )
 
 func builder(uri string) (*TableRequestBuilder, error) {
-
 	client := &MockClient{}
 
 	parsedURL, err := url.Parse(uri)
@@ -258,6 +257,7 @@ func TestTableRequestBuilder_Count(t *testing.T) {
 	defer mockServer.Close()
 
 	builder, err := builder(mockServer.URL)
+	assert.Nil(t, err)
 
 	// Call the Get method
 	count, err := builder.Count()

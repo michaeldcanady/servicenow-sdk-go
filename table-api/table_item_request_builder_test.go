@@ -7,15 +7,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"strings"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/stretchr/testify/assert"
-)
-
-const (
-	tableItemRequestPost3Link = "https://www.fakelink.com/post3"
 )
 
 type MockClient struct{}
@@ -26,28 +21,10 @@ var (
 	}
 )
 
-func (c *MockClient) sendPost3(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-
-	return &http.Response{
-		Body:       io.NopCloser(strings.NewReader(`{"name":"John","age":30}`)),
-		StatusCode: http.StatusOK,
-	}, nil
-}
-
 func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 	req, err := requestInfo.ToRequest()
 	if err != nil {
 		return nil, err
-	}
-
-	uri, err := requestInfo.Url()
-	if err != nil {
-		return nil, err
-	}
-
-	switch uri {
-	case tableItemRequestPost3Link:
-		return c.sendPost3(requestInfo, errorMapping)
 	}
 
 	response, err := http.DefaultClient.Do(req)
