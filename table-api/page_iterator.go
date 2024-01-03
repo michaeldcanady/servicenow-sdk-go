@@ -114,17 +114,18 @@ func (pI *PageIterator) fetchPage(uri string) (*TableCollectionResponse, error) 
 		return nil, ErrEmptyURI
 	}
 
-	nextLink, err := url.ParseRequestURI(pI.currentPage.NextPageLink)
+	// parse provided link
+	nextLink, err := url.ParseRequestURI(uri)
 	if err != nil {
 		return nil, err
 	}
 
+	// build request information
 	requestInformation := core.NewRequestInformation()
 	requestInformation.Method = core.GET
 	requestInformation.SetUri(nextLink)
 
 	resp, err := pI.client.Send(requestInformation, nil)
-
 	if err != nil {
 		return nil, err
 	}
