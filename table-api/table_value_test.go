@@ -51,13 +51,13 @@ type test[T any] struct {
 	value     interface{}
 	expected  T
 	expectErr bool
-	Err       error
+	err       error
 }
 
 func (te test[T]) checkError(t *testing.T, err error) {
 	if te.expectErr && err == nil {
-		if te.Err != nil {
-			assert.ErrorIs(t, err, te.Err)
+		if te.err != nil {
+			assert.ErrorIs(t, err, te.err)
 		} else {
 			assert.Error(t, err)
 		}
