@@ -52,7 +52,7 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 		assert.Equal(t, "GET", r.Method)
 
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(getFakeJSON())
+		_, _ = w.Write(getFakeCollectionJSON())
 	}))
 
 	client := &MockClient{}
@@ -246,18 +246,11 @@ func TestTableRequestBuilder_Post3(t *testing.T) {
 }
 
 func TestTableRequestBuilder_Count(t *testing.T) {
-	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Simulate successful response with the provided JSON
-		responseJSON := ``
+	client := &mockClient{}
 
-		w.WriteHeader(http.StatusOK)
-		w.Header().Add("X-Total-Count", "1")
-		_, _ = w.Write([]byte(responseJSON)) //nolint:errcheck
-	}))
-	defer mockServer.Close()
+	pathParameters := map[string]string{"baseurl": fakeItemCountLinkKey, "table": "table1"}
 
-	builder, err := builder(mockServer.URL)
-	assert.Nil(t, err)
+	builder := NewTableRequestBuilder(client, pathParameters)
 
 	// Call the Get method
 	count, err := builder.Count()

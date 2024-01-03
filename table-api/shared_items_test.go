@@ -6,26 +6,31 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"slices"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
 const (
-	fakeLinkKey          = "https://fake-link.com"
-	fakeLinkWithLinks    = "https://fake-link1.com"
-	fakeLinkWithLinksErr = "https://fake-link2.com"
-	fakeLinkStatusFailed = "https://fake-link3.com"
-	fakeLinkNilResponse  = "https://fake-link4.com"
+	fakeCollectionLinkKey          = "https://fake-link.com"
+	fakeCollectionLinkWithLinks    = "https://fake-link1.com"
+	fakeCollectionLinkWithLinksErr = "https://fake-link2.com"
+	fakeCollectionLinkStatusFailed = "https://fake-link3.com"
+	fakeCollectionLinkNilResponse  = "https://fake-link4.com"
 
 	fakeNextLink  = "https://fake-link.com?next"
 	fakePrevLink  = "https://fake-link.com?prev"
 	fakeFirstLink = "https://fake-link.com?first"
 	fakeLastLink  = "https://fake-link.com?last"
+
+	fakeItemCountLinkKey = "https://fake-count-link.com"
+	fakeItemPost3LinkKey = "https://fake-post3-link.com"
 )
 
 var (
-	fakeItemResult = map[string]interface{}{
+	fakeResultItem = map[string]interface{}{
 		"parent":           "",
 		"made_sla":         "true",
 		"watch_list":       "",
@@ -103,10 +108,26 @@ var (
 	}
 
 	fakeCollectionResult = map[string]interface{}{
-		"result": []map[string]interface{}{fakeItemResult},
+		"result": []map[string]interface{}{fakeResultItem},
 	}
 
-	fakeEntry TableEntry = fakeItemResult
+	itemLinks = []string{
+		fakeItemCountLinkKey,
+	}
+
+	collectionLinks = []string{
+		fakeCollectionLinkKey,
+		fakeCollectionLinkWithLinks,
+		fakeCollectionLinkWithLinksErr,
+		fakeCollectionLinkStatusFailed,
+		fakeCollectionLinkNilResponse,
+	}
+
+	fakeItemResult = map[string]interface{}{
+		"result": fakeResultItem,
+	}
+
+	fakeEntry TableEntry = fakeResultItem
 
 	expectedResult = PageResult{
 		Result: []*TableEntry{
@@ -129,8 +150,14 @@ var (
 	}
 )
 
-func getFakeJSON() []byte {
+func getFakeCollectionJSON() []byte {
 	jsonData, _ := json.Marshal(fakeCollectionResult)
+
+	return jsonData
+}
+
+func getFakeItemJSON() []byte {
+	jsonData, _ := json.Marshal(fakeItemResult)
 
 	return jsonData
 }
@@ -138,7 +165,7 @@ func getFakeJSON() []byte {
 // Mock client for testing
 type mockClient struct{}
 
-func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *mockClient) sendCollection(requestInformation core.IRequestInformation) (*http.Response, error) {
 	url, err := requestInformation.Url()
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse URL: %s", err)
@@ -156,9 +183,9 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 	}
 
 	switch url {
-	case fakeLinkStatusFailed:
+	case fakeCollectionLinkStatusFailed:
 		return nil, errors.New("net/http: nil Context")
-	case fakeLinkWithLinks: // Adds headers
+	case fakeCollectionLinkWithLinks: // Adds headers
 		header := http.Header{}
 
 		header.Add("Link", "<"+fakeFirstLink+">;rel=\"first\"")
@@ -168,14 +195,63 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 		resp.Header = header
 
 		fallthrough
-	case fakeLinkKey: // Adds body
-		resp.Body = io.NopCloser(strings.NewReader(string(getFakeJSON())))
+	case fakeCollectionLinkKey: // Adds body
+		resp.Body = io.NopCloser(strings.NewReader(string(getFakeCollectionJSON())))
 
 		fallthrough
-	case fakeLinkWithLinksErr:
+	case fakeCollectionLinkWithLinksErr:
 		return resp, nil
-	case fakeLinkNilResponse:
+	case fakeCollectionLinkNilResponse:
 		return nil, nil
+	}
+
+	return nil, nil
+}
+
+func (c *mockClient) sendItem(requestInformation core.IRequestInformation) (*http.Response, error) {
+	uri, err := requestInformation.Url()
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse URL: %s", err)
+	}
+
+	parsedURI, _ := url.Parse(uri)
+
+	resp := &http.Response{
+		Status:     "200 OK",
+		StatusCode: 200,
+		Proto:      "HTTP/1.1",
+		ProtoMajor: 1,
+		ProtoMinor: 1,
+		Header:     http.Header{},
+		Body:       http.NoBody,
+		Request:    nil,
+	}
+
+	switch parsedURI.Scheme + "://" + parsedURI.Host {
+	case fakeItemCountLinkKey:
+		resp.Header.Add("X-Total-Count", "1")
+		return resp, nil
+	case fakeItemPost3LinkKey:
+		resp.Body = io.NopCloser(strings.NewReader(string(getFakeItemJSON())))
+		return resp, nil
+	}
+	return nil, nil
+}
+
+func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+	uri, err := requestInformation.Url()
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse URL: %s", err)
+	}
+
+	parsedURI, _ := url.Parse(uri)
+
+	if slices.Contains[[]string, string](collectionLinks, uri) {
+		return c.sendCollection(requestInformation)
+	}
+
+	if slices.Contains[[]string, string](itemLinks, parsedURI.Scheme+"://"+parsedURI.Host) {
+		return c.sendItem(requestInformation)
 	}
 
 	return nil, nil
