@@ -2,6 +2,9 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
+// Deprecated: deprecated since v1.4.0. Removed from public API.
+//
+// TableGetRequestConfiguration represents request configurations GET request.
 type TableGetRequestConfiguration struct {
 	Header          interface{}
 	QueryParameters *TableRequestBuilderGetQueryParameters
@@ -10,6 +13,7 @@ type TableGetRequestConfiguration struct {
 	response        *TableCollectionResponse
 }
 
+// toConfiguration converts rC to `core.RequestConfiguration`.
 func (rC *TableGetRequestConfiguration) toConfiguration() *core.RequestConfiguration {
 	return &core.RequestConfiguration{
 		Header:          rC.Header,

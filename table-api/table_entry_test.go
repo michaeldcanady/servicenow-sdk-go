@@ -10,7 +10,7 @@ import (
 const keyName = "key1"
 
 func TestTableEntry(t *testing.T) {
-	responseJSON, err := json.Marshal(fakeItemResult)
+	responseJSON, err := json.Marshal(fakeResultItem)
 	assert.Nil(t, err)
 
 	var entry TableEntry
@@ -21,7 +21,13 @@ func TestTableEntry(t *testing.T) {
 	assert.Equal(t, fakeEntry, entry)
 }
 
-func TestTableEntryValueValidKey(t *testing.T) {
+func TestNewTableEntry(t *testing.T) {
+	entry := NewTableEntry()
+
+	assert.IsType(t, TableEntry{}, entry)
+}
+
+func TestTableEntry_ValueValidKey(t *testing.T) {
 	entry := TableEntry{
 		keyName: "value1",
 	}
@@ -44,7 +50,15 @@ func TestTableEntryValueValidKey(t *testing.T) {
 	assert.Equal(t, value, &TableValue{value: "55b35562c0a8010e01cff22378e0aea9"})
 }
 
-func TestTableEntryValueMissingKey(t *testing.T) {
+func TestTableEntry_Set(t *testing.T) {
+	entry := TableEntry{}
+
+	entry.Set(keyName, "value2")
+
+	assert.Equal(t, TableEntry{keyName: "value2"}, entry)
+}
+
+func TestTableEntry_ValueMissingKey(t *testing.T) {
 	entry := TableEntry{
 		"key2": "value1",
 	}
@@ -54,7 +68,7 @@ func TestTableEntryValueMissingKey(t *testing.T) {
 	assert.Nil(t, value)
 }
 
-func TestTableEntryKeys(t *testing.T) {
+func TestTableEntry_Keys(t *testing.T) {
 	entry := TableEntry{
 		keyName: "value2",
 		"key2":  "value1",
@@ -64,4 +78,13 @@ func TestTableEntryKeys(t *testing.T) {
 
 	assert.Contains(t, keys, keyName)
 	assert.Contains(t, keys, "key2")
+}
+
+func TestTableEntry_Len(t *testing.T) {
+	entry := TableEntry{
+		keyName: "value2",
+		"key2":  "value1",
+	}
+
+	assert.Len(t, entry, 2)
 }

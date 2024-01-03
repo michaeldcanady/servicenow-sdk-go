@@ -9,8 +9,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - Added `PageIterator.Last` ([Issue #61](https://github.com/michaeldcanady/servicenow-sdk-go/issues/61))
+- `tableGetRequestConfiguration2[T]` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `tableItemDeleteRequestConfiguration2[T]` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `tableItemGetRequestConfiguration2[T]` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `tableItemPutRequestConfiguration2[T]` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `TableItemResponse2[T]` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `tablePostRequestConfiguration2[T]` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `TableRequestBuilder.Post3` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `TableItemRequestBuilder.Put2` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
 
 ### Changed
+
+### Deprecated
+
+- `TableGetRequestConfiguration` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `TableItemDeleteRequestConfiguration` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `TableItemGetRequestConfiguration` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `TableItemPutRequestConfiguration` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `TableItemResponse` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `TablePostRequestConfiguration` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `TableRequestBuilder.Post2` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
+- `TableItemRequestBuilder.Put` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
 
 ### Removed
 

@@ -103,7 +103,7 @@ func ParseResponse[T Response](response *http.Response, value *T) error {
 	return nil
 }
 
-// Deprecated: deprecated in version {version}. Please use SendGet2.
+// Deprecated: deprecated in version 1.4.0. Please use SendGet2.
 func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping, value *T) error {
 	requestInfo, err := requestBuilder.ToGetRequestInformation(params)
 	if err != nil {
@@ -132,7 +132,7 @@ func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) erro
 	return ParseResponse(response, &config.Response)
 }
 
-// Deprecated: deprecated in version {version}. Please use SendPost2.
+// Deprecated: deprecated in version 1.4.0. Please use SendPost2.
 func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, params interface{}, errorMapping ErrorMapping, value *T) error {
 	requestInfo, err := requestBuilder.ToPostRequestInformation2(data, params)
 	if err != nil {
@@ -161,7 +161,7 @@ func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) err
 	return ParseResponse(response, &config.Response)
 }
 
-// Deprecated: deprecated in version {version}. Please use sendDelete2.
+// Deprecated: deprecated in version 1.4.0. Please use sendDelete2.
 func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) error {
 	requestInfo, err := requestBuilder.ToDeleteRequestInformation(params)
 	if err != nil {
@@ -190,7 +190,7 @@ func sendDelete2(requestBuilder *RequestBuilder, config *RequestConfiguration) e
 	return nil
 }
 
-// Deprecated: deprecated in version {version}. Please use sendPut2.
+// Deprecated: deprecated in version 1.4.0. Please use sendPut2.
 func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping, value *T) error {
 	requestInfo, err := requestBuilder.ToPutRequestInformation(data, params)
 	if err != nil {

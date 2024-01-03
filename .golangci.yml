@@ -3,8 +3,8 @@ linters:
     - dogsled
     - dupl
     - govet
-    - gofmt
     - gosec
+    - gofmt
     - misspell
     - nakedret
     - stylecheck

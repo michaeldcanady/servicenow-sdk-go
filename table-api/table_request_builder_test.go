@@ -10,6 +10,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func builder(uri string) (*TableRequestBuilder, error) {
+	client := &MockClient{}
+
+	parsedURL, err := url.Parse(uri)
+	if err != nil {
+		return nil, err
+	}
+
+	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
+
+	return NewTableRequestBuilder(client, pathParameters), nil
+}
+
 func TestNewTableRequestBuilder(t *testing.T) {
 	client := MockClient{}
 
@@ -34,12 +47,12 @@ func TestTableUrl(t *testing.T) {
 	}
 }
 
-func TestTableRequestBuilderGet(t *testing.T) {
+func TestTableRequestBuilder_Get(t *testing.T) {
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "GET", r.Method)
 
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(getFakeJSON())
+		_, _ = w.Write(getFakeCollectionJSON())
 	}))
 
 	client := &MockClient{}
@@ -62,114 +75,180 @@ func TestTableRequestBuilderGet(t *testing.T) {
 }
 
 //nolint:dupl
-func TestTableRequestBuilderPost(t *testing.T) {
-	t.Run("ValidRequest", func(t *testing.T) {
-		// Create a mock mockServer
-		mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			assert.Equal(t, "POST", r.Method)
+func TestTableRequestBuilder_Post(t *testing.T) {
+	// Create a mock mockServer
+	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "POST", r.Method)
 
-			// Handle the request and send a mock response
-			// You can customize this based on your actual implementation
-			w.WriteHeader(http.StatusOK)
-			_, _ = w.Write([]byte(`{"some": "response"}`))
-		}))
-		defer mockServer.Close()
+		// Handle the request and send a mock response
+		// You can customize this based on your actual implementation
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"some": "response"}`))
+	}))
+	defer mockServer.Close()
 
-		client := &MockClient{}
+	builder, err := builder(mockServer.URL)
+	assert.Nil(t, err)
 
-		parsedURL, err := url.Parse(mockServer.URL)
-		assert.Nil(t, err)
+	queryParameters := &TableRequestBuilderPostQueryParamters{
+		DisplayValue:         "true",
+		ExcludeReferenceLink: true,
+		Fields:               []string{"field1", "field2"},
+		InputDisplayValue:    true,
+		View:                 "desktop",
+	}
 
-		pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
+	tests := []test[*TableItemResponse]{
+		{
+			title:     "ValidRequest",
+			value:     map[string]string{"key": "value"},
+			expected:  nil,
+			expectErr: false,
+			err:       nil,
+		},
+	}
 
-		builder := NewTableRequestBuilder(client, pathParameters)
+	for _, tt := range tests {
+		t.Run(tt.title, func(t *testing.T) {
+			response, err := builder.Post(tt.value.(map[string]string), queryParameters)
 
-		// Call the Post method with valid parameters
-		response, err := builder.Post(map[string]string{"key": "value"}, &TableRequestBuilderPostQueryParamters{
-			DisplayValue:         "true",
-			ExcludeReferenceLink: true,
-			Fields:               []string{"field1", "field2"},
-			InputDisplayValue:    true,
-			View:                 "desktop",
+			if tt.expectErr {
+				assert.Error(t, err)
+				return
+			}
+
+			assert.Nil(t, err)
+
+			assert.IsType(t, &TableItemResponse{}, response)
 		})
+	}
+}
 
+//nolint:dupl
+func TestTableRequestBuilder_Post2(t *testing.T) {
+	// Create a mock mockServer
+	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "POST", r.Method)
+
+		// Handle the request and send a mock response
+		// You can customize this based on your actual implementation
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"some": "response"}`))
+	}))
+	defer mockServer.Close()
+
+	builder, err := builder(mockServer.URL)
+	assert.Nil(t, err)
+
+	queryParameters := &TableRequestBuilderPostQueryParameters{
+		DisplayValue:         "true",
+		ExcludeReferenceLink: true,
+		Fields:               []string{"field1", "field2"},
+		InputDisplayValue:    true,
+		View:                 "desktop",
+	}
+
+	tests := []test[*TableItemResponse]{
+		{
+			title:     "ValidRequest",
+			value:     map[string]string{"key": "value"},
+			expected:  nil,
+			expectErr: false,
+			err:       nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.title, func(t *testing.T) {
+			response, err := builder.Post2(tt.value.(map[string]string), queryParameters)
+
+			if tt.expectErr {
+				assert.Error(t, err)
+				return
+			}
+
+			assert.Nil(t, err)
+
+			assert.IsType(t, &TableItemResponse{}, response)
+		})
+	}
+
+	t.Run("ValidRequest", func(t *testing.T) {
+		// Call the Post method with valid parameters
+		response, err := builder.Post2(map[string]string{"key": "value"}, queryParameters)
 		assert.Nil(t, err)
+
 		assert.IsType(t, &TableItemResponse{}, response)
-	})
-
-	t.Run("ValidRequestWithNilParams", func(t *testing.T) {
-		// ... Similar to the previous test but with nil parameters ...
-	})
-
-	t.Run("ServerError", func(t *testing.T) {
-		// ... Test when the server returns an error (e.g., 500 Internal Server Error) ...
 	})
 }
 
 //nolint:dupl
-func TestTableRequestBuilderPost2(t *testing.T) {
-	t.Run("ValidRequest", func(t *testing.T) {
-		// Create a mock mockServer
-		mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			assert.Equal(t, "POST", r.Method)
-
-			// Handle the request and send a mock response
-			// You can customize this based on your actual implementation
-			w.WriteHeader(http.StatusOK)
-			_, _ = w.Write([]byte(`{"some": "response"}`))
-		}))
-		defer mockServer.Close()
-
-		client := &MockClient{}
-
-		parsedURL, err := url.Parse(mockServer.URL)
-		assert.Nil(t, err)
-
-		pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
-
-		builder := NewTableRequestBuilder(client, pathParameters)
-
-		// Call the Post method with valid parameters
-		response, err := builder.Post2(map[string]string{"key": "value"}, &TableRequestBuilderPostQueryParameters{
-			DisplayValue:         "true",
-			ExcludeReferenceLink: true,
-			Fields:               []string{"field1", "field2"},
-			InputDisplayValue:    true,
-			View:                 "desktop",
-		})
-		assert.Nil(t, err)
-
-		assert.IsType(t, &TableItemResponse{}, response)
-	})
-
-	t.Run("ValidRequestWithNilParams", func(t *testing.T) {
-		// ... Similar to the previous test but with nil parameters ...
-	})
-
-	t.Run("ServerError", func(t *testing.T) {
-		// ... Test when the server returns an error (e.g., 500 Internal Server Error) ...
-	})
-}
-
-func TestTableRequestBuilderCount(t *testing.T) {
+func TestTableRequestBuilder_Post3(t *testing.T) {
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Simulate successful response with the provided JSON
-		responseJSON := ``
+		assert.Equal(t, "POST", r.Method)
 
+		// Handle the request and send a mock response
+		// You can customize this based on your actual implementation
 		w.WriteHeader(http.StatusOK)
-		w.Header().Add("X-Total-Count", "1")
-		_, _ = w.Write([]byte(responseJSON)) //nolint:errcheck
+		_, _ = w.Write([]byte(`{"some": "response"}`))
 	}))
 	defer mockServer.Close()
 
-	client := &MockClient{}
-
-	// Create an instance of TableRequestBuilder using the mock server URL
-
-	parsedURL, err := url.Parse(mockServer.URL)
+	builder, err := builder(mockServer.URL)
 	assert.Nil(t, err)
 
-	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
+	queryParameters := &TableRequestBuilderPostQueryParameters{
+		DisplayValue:         "true",
+		ExcludeReferenceLink: true,
+		Fields:               []string{"field1", "field2"},
+		InputDisplayValue:    true,
+		View:                 "desktop",
+	}
+
+	tests := []test[*TableItemResponse2[TableEntry]]{
+		{
+			title:     "ValidRequest-map[string]string",
+			value:     map[string]string{"key": "value"},
+			expected:  nil,
+			expectErr: false,
+			err:       nil,
+		},
+		{
+			title:     "ValidRequest-tableEntry",
+			value:     TableEntry{"key": "value"},
+			expected:  nil,
+			expectErr: false,
+			err:       nil,
+		},
+		{
+			title:     "InvalidRequest",
+			value:     "bad",
+			expected:  nil,
+			expectErr: true,
+			err:       nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.title, func(t *testing.T) {
+			response, err := builder.Post3(tt.value, queryParameters)
+
+			if tt.expectErr {
+				assert.Error(t, err)
+				return
+			}
+
+			assert.Nil(t, err)
+
+			assert.IsType(t, &TableItemResponse{}, response)
+		})
+	}
+}
+
+func TestTableRequestBuilder_Count(t *testing.T) {
+	client := &mockClient{}
+
+	pathParameters := map[string]string{"baseurl": fakeItemCountLinkKey, "table": "table1"}
 
 	builder := NewTableRequestBuilder(client, pathParameters)
 

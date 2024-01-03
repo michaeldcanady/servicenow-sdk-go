@@ -2,6 +2,9 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
+// Deprecated: deprecated since v1.4.0. Removed from public API.
+//
+// TableItemDeleteRequestConfiguration represents request configurations DELETE request.
 type TableItemDeleteRequestConfiguration struct {
 	Header          interface{}
 	QueryParameters *TableItemRequestBuilderDeleteQueryParameters
@@ -10,6 +13,7 @@ type TableItemDeleteRequestConfiguration struct {
 	response        *TableItemResponse
 }
 
+// toConfiguration converts rC to `core.RequestConfiguration`.
 func (rC *TableItemDeleteRequestConfiguration) toConfiguration() *core.RequestConfiguration {
 	return &core.RequestConfiguration{
 		Header:          rC.Header,

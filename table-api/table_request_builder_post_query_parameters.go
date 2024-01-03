@@ -1,9 +1,7 @@
 package tableapi
 
-// Deprecated: deprecated as of v1.4.0. use `TableRequestBuilderPostQueryParameters` instead
-//
-// TableRequestBuilderPostQueryParamters represents POST query parameters for a Table Item Request.
-type TableRequestBuilderPostQueryParamters struct {
+// TableRequestBuilderPostQueryParameters represents POST query parameters for a Table Item Request.
+type TableRequestBuilderPostQueryParameters struct {
 	//Determines the type of data returned, either the actual values from the database or the display values of the fields.
 	//Display values are manipulated based on the actual value in the database and user or system settings and preferences.
 	//If returning display values, the value that is returned is dependent on the field type.

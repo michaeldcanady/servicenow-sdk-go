@@ -53,7 +53,7 @@ func TestNewPageIteratorNilCurrentPageWithClient(t *testing.T) {
 
 func TestPageIteratorNextWithLinkNoError(t *testing.T) {
 	currentPage := TableCollectionResponse{
-		NextPageLink: fakeLinkWithLinks,
+		NextPageLink: fakeCollectionLinkWithLinks,
 	}
 
 	client := &mockClient{}
@@ -152,7 +152,7 @@ func TestPageIteratorIterateSinglePageWithoutNextLinkWithCurrentPageWithCallback
 }
 
 func TestPageIteratorIterateSinglePageWithNextLinkWithCurrentPageWithCallback(t *testing.T) {
-	expectedIterator.currentPage.NextPageLink = fakeLinkKey
+	expectedIterator.currentPage.NextPageLink = fakeCollectionLinkKey
 
 	// Mock callback function
 	callback := func(pageItem *TableEntry) bool {
@@ -168,7 +168,7 @@ func TestPageIteratorIterateMultiplePagesWithCallback(t *testing.T) {
 	// Mock PageIterator
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
-			NextPageLink: fakeLinkWithLinks,
+			NextPageLink: fakeCollectionLinkWithLinks,
 		},
 		client:     &mockClient{},
 		pauseIndex: 0,
@@ -201,20 +201,20 @@ func TestPageIteratorLast(t *testing.T) {
 func TestPageFetchPageSendErr(t *testing.T) {
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
-			LastPageLink: fakeLinkStatusFailed,
+			LastPageLink: fakeCollectionLinkStatusFailed,
 		},
 		client:     &mockClient{},
 		pauseIndex: 0,
 	}
 
-	_, err := pageIterator.fetchPage(fakeLinkStatusFailed)
+	_, err := pageIterator.fetchPage(fakeCollectionLinkStatusFailed)
 	assert.Error(t, err)
 }
 
 func TestPageFetchPageEmptyUri(t *testing.T) {
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
-			LastPageLink: fakeLinkStatusFailed,
+			LastPageLink: fakeCollectionLinkStatusFailed,
 		},
 		client:     &mockClient{},
 		pauseIndex: 0,
@@ -226,7 +226,7 @@ func TestPageFetchPageEmptyUri(t *testing.T) {
 
 func TestPageIteratorFetchAndConvertPageWithLinkErrNilResponseBody(t *testing.T) {
 	currentPage := TableCollectionResponse{
-		NextPageLink: fakeLinkWithLinksErr,
+		NextPageLink: fakeCollectionLinkWithLinksErr,
 	}
 
 	client := &mockClient{}
@@ -242,7 +242,7 @@ func TestPageIteratorFetchAndConvertPageWithLinkErrNilResponseBody(t *testing.T)
 
 func TestPageIteratorFetchAndConvertPageWithoutLink(t *testing.T) {
 	currentPage := TableCollectionResponse{
-		NextPageLink: fakeLinkNilResponse,
+		NextPageLink: fakeCollectionLinkNilResponse,
 	}
 
 	client := &mockClient{}

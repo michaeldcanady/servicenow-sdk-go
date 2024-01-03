@@ -28,11 +28,11 @@ func NewTableItemRequestBuilder(client core.Client, pathParameters map[string]st
 //   - *TableItemResponse: The response data as a TableItemResponse.
 //   - error: An error if there was an issue with the request or response.
 func (rB *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
-	config := &TableItemGetRequestConfiguration{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            nil,
-		response:        &TableItemResponse{},
+	config := &tableItemGetRequestConfiguration2[TableEntry]{
+		header:   nil,
+		query:    params,
+		data:     nil,
+		response: &TableItemResponse2[TableEntry]{},
 	}
 
 	err := rB.SendGet2(config.toConfiguration()) //nolint:staticcheck
@@ -51,16 +51,18 @@ func (rB *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryPa
 // Returns:
 //   - error: An error if there was an issue with the request or response, or nil if the request was successful.
 func (rB *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQueryParameters) error {
-	config := &TableItemDeleteRequestConfiguration{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            nil,
-		response:        nil,
+	config := &tableItemDeleteRequestConfiguration2[TableEntry]{
+		header:   nil,
+		query:    params,
+		data:     nil,
+		response: nil,
 	}
 
 	return rB.SendDelete2(config.toConfiguration())
 }
 
+// Deprecated: deprecated since v1.4.0. Use `Put2` instead.
+//
 // Put updates a table item using an HTTP PUT request.
 // It takes a map of table entry data and optional query parameters to send in the request.
 // The method returns a TableItemResponse representing the updated item or an error if the request fails.
@@ -73,14 +75,34 @@ func (rB *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQ
 //   - *TableItemResponse: A TableItemResponse containing the updated item data.
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
 func (rB *TableItemRequestBuilder) Put(tableEntry map[string]string, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
-	config := &TableItemPutRequestConfiguration{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            tableEntry,
-		response:        &TableItemResponse{},
+	return rB.Put2(tableEntry, params)
+}
+
+// Put2 updates a table item using an HTTP PUT request.
+// It takes a map of table entry data and optional query parameters to send in the request.
+// The method returns a TableItemResponse representing the updated item or an error if the request fails.
+//
+// Parameters:
+//   - tableEntry: A map[string]string or TableEntry containing the data to update the table item.
+//   - params: An optional pointer to TableItemRequestBuilderPutQueryParameters, which can be used to specify query parameters for the request.
+//
+// Returns:
+//   - *TableItemResponse: A TableItemResponse containing the updated item data.
+//   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
+func (rB *TableItemRequestBuilder) Put2(tableEntry interface{}, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
+	tableEntry, err := convertFromTableEntry(tableEntry)
+	if err != nil {
+		return nil, err
 	}
 
-	err := rB.SendPut2(config.toConfiguration())
+	config := &tableItemPutRequestConfiguration2[TableEntry]{
+		header:   nil,
+		query:    params,
+		data:     tableEntry,
+		response: &TableItemResponse2[TableEntry]{},
+	}
+
+	err = rB.SendPut2(config.toConfiguration())
 	if err != nil {
 		return nil, err
 	}

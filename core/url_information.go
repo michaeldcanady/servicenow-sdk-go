@@ -20,7 +20,7 @@ type UrlInformation struct { //nolint:stylecheck
 	UrlTemplate string //nolint:stylecheck
 }
 
-// Deprecated: deprecated as of v{version}, use `NewURLInformation` instead.
+// Deprecated: deprecated as of v1.4.0, use `NewURLInformation` instead.
 //
 // NewUrlInformation creates a new RequestUri object.
 func NewUrlInformation() *UrlInformation { //nolint:stylecheck

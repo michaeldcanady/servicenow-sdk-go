@@ -46,3 +46,32 @@ func convertToPage(response interface{}) (PageResult, error) {
 
 	return page, nil
 }
+
+func convertFromTableEntry(entry interface{}) (map[string]string, error) {
+	retVal := map[string]string{}
+
+	// Check if entry is a pointer
+	val := reflect.ValueOf(entry)
+	if val.Kind() == reflect.Ptr {
+		// Dereference the pointer and call the function again
+		return convertFromTableEntry(val.Elem().Interface())
+	}
+
+	switch v := entry.(type) {
+	case map[string]string:
+		retVal = v
+	case TableEntry:
+		for key, value := range v {
+			switch value := value.(type) {
+			case int:
+				retVal[key] = fmt.Sprintf("%d", value)
+			default:
+				retVal[key] = fmt.Sprintf("%v", value)
+			}
+		}
+	default:
+		return nil, fmt.Errorf("expected (%T) or (%T), not (%T)", map[string]string{}, TableEntry{}, entry)
+	}
+
+	return retVal, nil
+}
