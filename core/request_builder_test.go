@@ -2,18 +2,85 @@ package core
 
 import (
 	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
+	"net/url"
 	"reflect"
+	"slices"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	collectionLinks = []string{fakeLastLink, fakeNextLink}
+	itemLinks       = []string{}
+	baseResp        = &http.Response{
+		Status:     "200 OK",
+		StatusCode: 200,
+		Proto:      "HTTP/1.1",
+		ProtoMajor: 1,
+		ProtoMinor: 1,
+		Header:     http.Header{},
+		Body:       http.NoBody,
+		Request:    nil,
+	}
+)
+
 // Create a mock client for testing purposes
 type mockClient struct{}
 
-func (c *mockClient) Send(requestInfo IRequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
-	// Implement a mock Send function for testing
+func (c *mockClient) sendCollection(requestInformation IRequestInformation) (*http.Response, error) {
+	url, err := requestInformation.Url()
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse URL: %s", err)
+	}
+
+	switch url {
+	case fakeLastLink:
+		baseResp.Body = io.NopCloser(strings.NewReader(string(sharedCurrentPageToJSON())))
+	case fakeNextLink:
+		baseResp.Body = io.NopCloser(strings.NewReader(string(sharedCurrentPageToJSON())))
+	}
+
+	return baseResp, nil
+}
+
+func (c *mockClient) sendItem(requestInformation IRequestInformation) (*http.Response, error) {
+	uri, err := requestInformation.Url()
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse URL: %s", err)
+	}
+
+	parsedURI, _ := url.Parse(uri)
+
+	switch parsedURI.Scheme + "://" + parsedURI.Host {
+	}
+	return nil, nil
+}
+
+func (c *mockClient) Send(requestInformation IRequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
+	uri, err := requestInformation.Url()
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse URL: %s", err)
+	}
+
+	parsedURI, _ := url.Parse(uri)
+
+	if uri == fakeLinkNilResp {
+		return nil, nil
+	}
+
+	if slices.Contains[[]string, string](collectionLinks, uri) {
+		return c.sendCollection(requestInformation)
+	}
+
+	if slices.Contains[[]string, string](itemLinks, parsedURI.Scheme+"://"+parsedURI.Host) {
+		return c.sendItem(requestInformation)
+	}
+
 	return nil, nil
 }
 

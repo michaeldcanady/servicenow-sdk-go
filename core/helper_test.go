@@ -323,3 +323,75 @@ func TestParseResponse(t *testing.T) {
 		})
 	}
 }
+
+type person struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+}
+
+type personCollectionResponse struct {
+	Result []*person
+}
+
+func (r personCollectionResponse) ParseHeaders(header http.Header) {}
+
+func (r personCollectionResponse) ToPage() PageResult[person] {
+	return PageResult[person]{
+		Result:           r.Result,
+		NextPageLink:     "",
+		PreviousPageLink: "",
+		LastPageLink:     "",
+		FirstPageLink:    "",
+	}
+}
+
+func TestConvertToPage(t *testing.T) {
+	tests := []test[PageResult[person]]{
+		{
+			title: "Valid",
+			input: &personCollectionResponse{
+				Result: []*person{
+					{
+						Name: "bob",
+						Age:  25,
+					},
+				},
+			},
+			expected: PageResult[person]{
+				Result: []*person{
+					{
+						Name: "bob",
+						Age:  25,
+					},
+				},
+				NextPageLink:     "",
+				PreviousPageLink: "",
+				LastPageLink:     "",
+				FirstPageLink:    "",
+			},
+			shouldErr:   false,
+			expectedErr: nil,
+		},
+		{
+			title:       "Nil",
+			input:       (*personCollectionResponse)(nil),
+			expected:    PageResult[person]{},
+			shouldErr:   true,
+			expectedErr: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.title, func(t *testing.T) {
+			page, err := convertToPage[person](tt.input.(*personCollectionResponse))
+
+			if tt.shouldErr {
+				assert.Error(t, err)
+				return
+			}
+
+			assert.Nil(t, err)
+			assert.Equal(t, tt.expected, page)
+		})
+	}
+}

@@ -91,7 +91,7 @@ func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
 	return nil
 }
 
-// ParseResponse parses the HTTP Response to the provided type
+// ParseResponse[T] parses the HTTP Response to the provided type
 func ParseResponse[T Response](response *http.Response, value *T) error {
 	err := FromJson(response, &value)
 	if err != nil {
@@ -103,7 +103,7 @@ func ParseResponse[T Response](response *http.Response, value *T) error {
 	return nil
 }
 
-// Deprecated: deprecated in version 1.4.0. Please use SendGet2.
+// Deprecated: deprecated in v1.4.0. Please use SendGet2.
 func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping, value *T) error {
 	requestInfo, err := requestBuilder.ToGetRequestInformation(params)
 	if err != nil {
@@ -132,7 +132,7 @@ func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) erro
 	return ParseResponse(response, &config.Response)
 }
 
-// Deprecated: deprecated in version 1.4.0. Please use SendPost2.
+// Deprecated: deprecated in v1.4.0. Use `SendPost2` instead.
 func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, params interface{}, errorMapping ErrorMapping, value *T) error {
 	requestInfo, err := requestBuilder.ToPostRequestInformation2(data, params)
 	if err != nil {
@@ -161,7 +161,7 @@ func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) err
 	return ParseResponse(response, &config.Response)
 }
 
-// Deprecated: deprecated in version 1.4.0. Please use sendDelete2.
+// Deprecated: deprecated in v1.4.0. Use `sendDelete2` instead.
 func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) error {
 	requestInfo, err := requestBuilder.ToDeleteRequestInformation(params)
 	if err != nil {
@@ -190,7 +190,7 @@ func sendDelete2(requestBuilder *RequestBuilder, config *RequestConfiguration) e
 	return nil
 }
 
-// Deprecated: deprecated in version 1.4.0. Please use sendPut2.
+// Deprecated: deprecated in v1.4.0. Use `sendPut2` instead.
 func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping, value *T) error {
 	requestInfo, err := requestBuilder.ToPutRequestInformation(data, params)
 	if err != nil {
@@ -217,4 +217,21 @@ func sendPut2(requestBuilder *RequestBuilder, config *RequestConfiguration) erro
 	}
 
 	return ParseResponse(response, &config.Response)
+}
+
+// isNil checks if a value is nil or a nil interface
+func isNil(a interface{}) bool {
+	defer func() { _ = recover() }()
+	return a == nil || reflect.ValueOf(a).IsNil()
+}
+
+// convertToPage converts a response into a PageResult.
+func convertToPage[T any](response CollectionResponse[T]) (PageResult[T], error) {
+	var page PageResult[T]
+
+	if isNil(response) {
+		return page, ErrNilResponse
+	}
+
+	return response.ToPage(), nil
 }
