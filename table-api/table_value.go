@@ -5,6 +5,8 @@ import (
 	"reflect"
 )
 
+// Deprecated: deprecated since v{version}. Use `TableValue2` instead.
+//
 // TableValue is the reflection interface to a table value.
 type TableValue struct {
 	value interface{}

@@ -69,6 +69,15 @@ func convertFromTableEntry(entry interface{}) (map[string]string, error) {
 				retVal[key] = fmt.Sprintf("%v", value)
 			}
 		}
+	case TableEntry2:
+		for key, value := range v.value {
+			switch value := value.Value.value.(type) {
+			case int:
+				retVal[key] = fmt.Sprintf("%d", value)
+			default:
+				retVal[key] = fmt.Sprintf("%v", value)
+			}
+		}
 	default:
 		return nil, fmt.Errorf("expected (%T) or (%T), not (%T)", map[string]string{}, TableEntry{}, entry)
 	}

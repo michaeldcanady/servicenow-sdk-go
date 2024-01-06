@@ -62,7 +62,7 @@ func (rB *RequestBuilder) ToGetRequestInformation2(config *RequestConfiguration)
 // The method returns a TableItemResponse representing the updated item or an error if the request fails.
 //
 // Parameters:
-//   - tableEntry: A map containing the data to update the table item.
+//   - data: A map containing the data to update the table item.
 //   - params: An optional pointer to TableItemRequestBuilderPutQueryParameters, which can be used to specify query parameters for the request.
 //
 // Returns:

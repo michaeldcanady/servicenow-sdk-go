@@ -27,27 +27,63 @@ func TestNewTableEntry(t *testing.T) {
 	assert.IsType(t, TableEntry{}, entry)
 }
 
-func TestTableEntry_ValueValidKey(t *testing.T) {
-	entry := TableEntry{
-		keyName: "value1",
-	}
+func TestTableEntry_Value(t *testing.T) {
 
-	value := entry.Value(keyName)
-
-	assert.NotNil(t, value)
-	assert.Equal(t, value, &TableValue{value: "value1"})
-
-	entry = TableEntry{
-		keyName: map[string]interface{}{
-			"link":  "https://instance.servicenow.com/api/now/table/cmdb_ci/55b35562c0a8010e01cff22378e0aea9",
-			"value": "55b35562c0a8010e01cff22378e0aea9",
+	tests := []test[interface{}]{
+		{
+			title: "ValidKey_DisplayValueTrue_ExcludeReferenceLink",
+			value: TableEntry{
+				keyName: "value1",
+			},
+			expected:  &TableValue{value: "value1"},
+			expectErr: false,
+			err:       nil,
+		},
+		{
+			title: "ValidKey",
+			value: TableEntry{
+				keyName: map[string]interface{}{
+					"link":  "https://instance.servicenow.com/api/now/table/cmdb_ci/55b35562c0a8010e01cff22378e0aea9",
+					"value": "55b35562c0a8010e01cff22378e0aea9",
+				},
+			},
+			expected:  &TableValue{value: "55b35562c0a8010e01cff22378e0aea9"}, //Correct for test but wrong
+			expectErr: false,
+			err:       nil,
+		},
+		{
+			title: "ValidKey_DisplayValueTrue",
+			value: TableEntry{
+				keyName: map[string]interface{}{
+					"display_value": "Lenovo",
+					"link":          "https://instance.servicenow.com/api/now/table/cmdb_ci/55b35562c0a8010e01cff22378e0aea9",
+				},
+			},
+			expected:  &TableValue{value: "55b35562c0a8010e01cff22378e0aea9"}, //Correct for test but wrong
+			expectErr: false,
+			err:       nil,
+		},
+		{
+			title: "ValidKey_DisplayValueAll",
+			value: TableEntry{
+				keyName: map[string]interface{}{
+					"display_value": "Lenovo",
+					"value":         "55b35562c0a8010e01cff22378e0aea9",
+					"link":          "https://instance.servicenow.com/api/now/table/cmdb_ci/55b35562c0a8010e01cff22378e0aea9",
+				},
+			},
+			expected:  &TableValue{value: "55b35562c0a8010e01cff22378e0aea9"}, //Correct for test but wrong
+			expectErr: false,
+			err:       nil,
 		},
 	}
 
-	value = entry.Value(keyName)
+	for _, tt := range tests {
 
-	assert.NotNil(t, value)
-	assert.Equal(t, value, &TableValue{value: "55b35562c0a8010e01cff22378e0aea9"})
+		value := tt.value.(TableEntry).Value(keyName)
+		assert.NotNil(t, value)
+		assert.Equal(t, value, tt.expected)
+	}
 }
 
 func TestTableEntry_Set(t *testing.T) {

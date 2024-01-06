@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [unreleased] - (mm/dd/yyyy)
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- making more accessible ([Issue #68](https://github.com/michaeldcanady/servicenow-sdk-go/issues/68))
+
 ## [1.4.0] - (02/01/2024)
 
 ### Added
