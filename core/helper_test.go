@@ -325,19 +325,19 @@ func TestParseResponse(t *testing.T) {
 }
 
 type person struct {
-	name string
-	age  int
+	Name string `json:"name"`
+	Age  int    `json:"age"`
 }
 
 type personCollectionResponse struct {
-	result []*person
+	Result []*person
 }
 
 func (r personCollectionResponse) ParseHeaders(header http.Header) {}
 
 func (r personCollectionResponse) ToPage() PageResult[person] {
 	return PageResult[person]{
-		Result:           r.result,
+		Result:           r.Result,
 		NextPageLink:     "",
 		PreviousPageLink: "",
 		LastPageLink:     "",
@@ -350,18 +350,18 @@ func TestConvertToPage(t *testing.T) {
 		{
 			title: "Valid",
 			input: &personCollectionResponse{
-				result: []*person{
+				Result: []*person{
 					{
-						name: "bob",
-						age:  25,
+						Name: "bob",
+						Age:  25,
 					},
 				},
 			},
 			expected: PageResult[person]{
 				Result: []*person{
 					{
-						name: "bob",
-						age:  25,
+						Name: "bob",
+						Age:  25,
 					},
 				},
 				NextPageLink:     "",
