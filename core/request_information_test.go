@@ -126,7 +126,11 @@ func TestNewRequestInformationToRequestWithContext(t *testing.T) {
 }
 
 type test[T any] struct {
-	title       string
+	title string
+	// setup to make needed modifications for a specific test
+	setup func()
+	// cleanup to undo changes do to reusable items
+	cleanup     func()
 	input       interface{}
 	expected    T
 	shouldErr   bool
