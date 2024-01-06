@@ -14,4 +14,11 @@ var (
 	ErrNilResponse             = errors.New("Response is nil")
 	ErrNilResponseBody         = errors.New("Response body is nil")
 	ErrNilSource               = errors.New("source is nil")
+
+	//Page Iterator
+	ErrNilClient         = errors.New("client can't be nil")
+	ErrNilResult         = errors.New("result property missing in response object")
+	ErrWrongResponseType = errors.New("incorrect Response Type")
+	ErrParsing           = errors.New("parsing nextLink url failed")
+	ErrNilCallback       = errors.New("callback can't be nil")
 )

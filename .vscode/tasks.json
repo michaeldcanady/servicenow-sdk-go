@@ -4,9 +4,13 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Run gofmot",
+      "label": "Run gofmt",
       "type": "shell",
-      "command": "gofmt -s -w ./.."
+      "command": "gofmt -s -w ./..",
+      "problemMatcher": [],
+      "group": {
+        "isDefault": true
+      }
     },
     {
       "label": "Run golangci-lint",

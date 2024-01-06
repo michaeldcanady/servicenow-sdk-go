@@ -125,19 +125,19 @@ func TestNewRequestInformationToRequestWithContext(t *testing.T) {
 	assert.Equal(t, expected.Context(), request.Context())
 }
 
-type test struct {
+type test[T any] struct {
 	title       string
-	headers     interface{}
-	expected    http.Header
+	input       interface{}
+	expected    T
 	shouldErr   bool
 	expectedErr error
 }
 
 func TestNewRequestInformationAddHeaders(t *testing.T) {
-	tests := []test{
+	tests := []test[http.Header]{
 		{
 			title: "Test Struct Headers",
-			headers: struct {
+			input: struct {
 				Header1 string `header:"header-1"`
 				Header2 string `header:"header-2"`
 				Header3 string `header:"header-3"`
@@ -155,7 +155,7 @@ func TestNewRequestInformationAddHeaders(t *testing.T) {
 		},
 		{
 			title: "Test http.Header Headers",
-			headers: http.Header{
+			input: http.Header{
 				"Header-1": []string{"value1"},
 				"Header-2": []string{"value2"},
 				"Header-3": []string{"value3"},
@@ -169,7 +169,7 @@ func TestNewRequestInformationAddHeaders(t *testing.T) {
 		},
 		{
 			title:       "Test string Headers",
-			headers:     "bad headers",
+			input:       "bad headers",
 			expected:    http.Header{},
 			shouldErr:   true,
 			expectedErr: ErrInvalidHeaderType,
@@ -178,7 +178,7 @@ func TestNewRequestInformationAddHeaders(t *testing.T) {
 
 	for _, test := range tests {
 		requestInfo := NewRequestInformation()
-		err := requestInfo.AddHeaders(test.headers)
+		err := requestInfo.AddHeaders(test.input)
 
 		if !test.shouldErr {
 			assert.NoError(t, err)
