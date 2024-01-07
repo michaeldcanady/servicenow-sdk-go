@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -61,25 +60,6 @@ func (c *ServiceNowClient) unmarshallError(response *http.Response) error {
 func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings core.ErrorMapping) error {
 	if response.StatusCode < 400 {
 		return nil
-	}
-
-	statusAsString := strconv.Itoa(response.StatusCode)
-	var errorCtor interface{} = nil
-
-	if len(errorMappings) != 0 {
-		var isOk bool
-		errorCtor, isOk = errorMappings.Get(response.StatusCode)
-		if !isOk {
-			errorCtor = nil
-		}
-	}
-
-	if errorCtor == nil {
-		err := &core.ApiError{
-			Message:            "The server returned an unexpected status code and no error factory is registered for this code: " + statusAsString,
-			ResponseStatusCode: response.StatusCode,
-		}
-		return err
 	}
 
 	stringError := c.unmarshallError(response)
