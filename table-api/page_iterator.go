@@ -6,6 +6,8 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
+// Deprecated: deprecated since v{version}. Use `TablePageIterator[T]` instead.
+//
 // PageIterator represents an iterator for paginated results from a table.
 type PageIterator struct {
 	currentPage PageResult
@@ -13,6 +15,8 @@ type PageIterator struct {
 	pauseIndex  int
 }
 
+// Deprecated: deprecated since v{version}. Use `NewTablePageIterator[T]` instead.
+//
 // NewPageIterator creates a new PageIterator instance.
 func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator, error) {
 	if client == nil {

@@ -74,6 +74,33 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 	assert.Equal(t, &fakeEntry, resp.Result[0])
 }
 
+func TestTableRequestBuilder_Get2(t *testing.T) {
+	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "GET", r.Method)
+
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(getFakeCollectionJSON())
+	}))
+
+	client := &MockClient{}
+
+	parsedURL, err := url.Parse(mockServer.URL)
+	assert.Nil(t, err)
+
+	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
+
+	builder := NewTableRequestBuilder(client, pathParameters)
+
+	// Call the Get method
+	resp, err := builder.Get2(nil)
+	assert.Nil(t, err)
+
+	assert.NotNil(t, resp)
+	assert.IsType(t, &TableCollectionResponse3[TableEntry]{}, resp)
+	assert.Len(t, resp.Result, 1)
+	assert.Equal(t, &fakeEntry, resp.Result[0])
+}
+
 //nolint:dupl
 func TestTableRequestBuilder_Post(t *testing.T) {
 	// Create a mock mockServer

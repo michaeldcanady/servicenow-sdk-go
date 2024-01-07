@@ -3,21 +3,26 @@ package tableapi
 import (
 	"net/http"
 	"regexp"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
-// Deprecated: deprecated since v{version}. Use `TableCollectionResponse3` instead.
-//
-// TableCollectionResponse2[T] represents a collection of T table entries.
-type TableCollectionResponse2[T Entry] struct {
-	Result           []*T
-	NextPageLink     string
+// TableCollectionResponse3[T] represents a collection of T table entries.
+type TableCollectionResponse3[T Entry] struct {
+	// Result the list of page items from the current page.
+	Result []*T
+	// NextPageLink the URI for the next page.
+	NextPageLink string
+	// PreviousPageLink the URI for the previous page.
 	PreviousPageLink string
-	FirstPageLink    string
-	LastPageLink     string
+	// FirstPageLink the URI for the first page.
+	FirstPageLink string
+	// LastPageLink the URI for the last page.
+	LastPageLink string
 }
 
 // parsePaginationHeaders parses the pagination headers from the response
-func (r *TableCollectionResponse2[T]) parsePaginationHeaders(headers http.Header) {
+func (r TableCollectionResponse3[T]) parsePaginationHeaders(headers http.Header) {
 	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
 
 	links := make(map[string]string)
@@ -52,6 +57,17 @@ func (r *TableCollectionResponse2[T]) parsePaginationHeaders(headers http.Header
 }
 
 // ParseHeaders parses the needed headers from the response.
-func (r *TableCollectionResponse2[T]) ParseHeaders(headers http.Header) {
+func (r TableCollectionResponse3[T]) ParseHeaders(headers http.Header) {
 	r.parsePaginationHeaders(headers)
+}
+
+// ToPage converts r to `core.PageResult`
+func (r TableCollectionResponse3[T]) ToPage() core.PageResult[T] {
+	return core.PageResult[T]{
+		Result:           r.Result,
+		NextPageLink:     r.NextPageLink,
+		PreviousPageLink: r.PreviousPageLink,
+		LastPageLink:     r.LastPageLink,
+		FirstPageLink:    r.FirstPageLink,
+	}
 }

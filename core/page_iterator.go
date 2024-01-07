@@ -4,7 +4,7 @@ import (
 	"net/url"
 )
 
-// PageIterator
+// PageIterator represents an iterator object that can be used to get subsequent pages of a collection.
 type PageIterator[T any, C CollectionResponse[T]] struct {
 	currentPage PageResult[T]
 	client      Client

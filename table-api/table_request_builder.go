@@ -32,6 +32,8 @@ func (rB *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder { //n
 	return NewTableItemRequestBuilder(rB.RequestBuilder.Client, pathParameters)
 }
 
+// Deprecated: deprecated since v{version}. Use `Get2` instead.
+//
 // Get sends an HTTP GET request using the specified query parameters and returns a TableCollectionResponse.
 //
 // Parameters:
@@ -47,6 +49,31 @@ func (rB *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters
 		data:     nil,
 		mapping:  nil,
 		response: &TableCollectionResponse2[TableEntry]{},
+	}
+
+	err := rB.SendGet2(config.toConfiguration())
+	if err != nil {
+		return nil, err
+	}
+
+	return config.response, nil
+}
+
+// Get2 sends an HTTP GET request using the specified query parameters and returns a TableCollectionResponse.
+//
+// Parameters:
+//   - params: An instance of TableRequestBuilderGetQueryParameters to include in the GET request.
+//
+// Returns:
+//   - *TableCollectionResponse3: The response data as a TableCollectionResponse.
+//   - error: An error if there was an issue with the request or response.
+func (rB *TableRequestBuilder) Get2(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse3[TableEntry], error) {
+	config := &tableGetRequestConfiguration3[TableEntry]{
+		header:   nil,
+		query:    params,
+		data:     nil,
+		mapping:  nil,
+		response: &TableCollectionResponse3[TableEntry]{},
 	}
 
 	err := rB.SendGet2(config.toConfiguration())
