@@ -7,6 +7,7 @@ type TablePageIterator[T Entry] struct {
 	*core.PageIterator[T, TableCollectionResponse3[T]]
 }
 
+// NewTablePageIterator[T] creates a new page iterator.
 func NewTablePageIterator[T Entry](currentPage TableCollectionResponse3[T], client core.Client) (*TablePageIterator[T], error) {
 	pageIterator, err := core.NewPageIterator[T, TableCollectionResponse3[T]](currentPage, client)
 	if err != nil {
