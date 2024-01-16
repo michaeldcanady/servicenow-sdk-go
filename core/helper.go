@@ -57,7 +57,6 @@ func IsPointer(value interface{}) bool {
 //
 // FromJson[T] marshalls the provided response into v
 func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
-
 	err := internal.FromJSON[T](response, v)
 
 	return err

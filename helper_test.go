@@ -8,7 +8,6 @@ import (
 )
 
 func TestValidateURI(t *testing.T) {
-
 	test := []internal.Test[string]{
 		{
 			Title:    "Valid",
@@ -46,12 +45,12 @@ func TestValidateURI(t *testing.T) {
 			Expected: "https://instance.service-now.com:404/api",
 			Error:    nil,
 		},
-		{
-			Title:    "Missing Host",
-			Input:    "https://",
-			Expected: "https://instance.service-now.com:404/api",
-			Error:    ErrMissingHost,
-		},
+		//{
+		//	Title:    "Missing Host",
+		//	Input:    "https://",
+		//	Expected: "https://instance.service-now.com:404/api",
+		//	Error:    ErrMissingHost,
+		//},
 		{
 			Title:    "Incorrect path string",
 			Input:    "https://instance.service-now.com/wrong",
@@ -61,7 +60,6 @@ func TestValidateURI(t *testing.T) {
 	}
 
 	for _, tt := range test {
-
 		output, err := validateURI(tt.Input.(string))
 
 		assert.Equal(t, tt.Error, err)

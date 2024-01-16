@@ -4,6 +4,7 @@ import (
 	"net/url"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
 // Deprecated: deprecated since v{version}. Use `TablePageIterator[T]` instead.
@@ -134,7 +135,7 @@ func (pI *PageIterator) fetchPage(uri string) (*TableCollectionResponse, error) 
 		return nil, err
 	}
 
-	err = core.ParseResponse(resp, &collectionResp)
+	err = internal.ParseResponse(resp, &collectionResp)
 	if err != nil {
 		return nil, err
 	}

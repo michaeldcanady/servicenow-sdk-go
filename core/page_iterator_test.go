@@ -174,7 +174,7 @@ func TestPageIterator_Iterate(t *testing.T) {
 
 			err := sharedPageIterator.Iterate(tt.input.(func(*person) bool))
 
-			assert.ErrorIs(t, err, tt.expectedErr)
+			assert.Equal(t, err, tt.expectedErr)
 			assert.Equal(t, tt.expected, count)
 
 			if tt.cleanup != nil {
@@ -313,7 +313,7 @@ func TestPageIterator_fetchAndConvertPage(t *testing.T) {
 		t.Run(tt.title, func(t *testing.T) {
 			page, err := sharedPageIterator.fetchAndConvertPage(tt.input.(string))
 
-			assert.ErrorIs(t, err, tt.expectedErr)
+			assert.Equal(t, err, tt.expectedErr)
 			assert.Equal(t, tt.expected, page)
 		})
 	}

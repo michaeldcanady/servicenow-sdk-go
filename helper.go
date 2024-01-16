@@ -46,7 +46,6 @@ func remove[T any](slice []T, s int) []T {
 
 // validateHost validates the host string is {instance}.service-now.com or can be corrected to it.
 func validateHost(host string) (string, error) {
-
 	if host == "" {
 		return "", ErrMissingHost
 	}
@@ -94,7 +93,6 @@ func validateHost(host string) (string, error) {
 
 // validateURI validates that the provided URI is as it should be.
 func validateURI(uri string) (string, error) {
-
 	parsedURI, err := url.Parse(uri)
 	if err != nil {
 		return "", err
@@ -120,9 +118,4 @@ func validateURI(uri string) (string, error) {
 	}
 
 	return parsedURI.String(), nil
-}
-
-func isUrl(str string) bool {
-	_, err := url.ParseRequestURI(str)
-	return err == nil
 }

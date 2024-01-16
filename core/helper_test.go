@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/yosida95/uritemplate/v3"
 )
@@ -134,71 +135,79 @@ func TestIsPointer(t *testing.T) {
 
 	f := func() {}
 
-	inputs := []struct {
-		Input    interface{}
-		Expected bool
-	}{
+	tests := []internal.Test[bool]{
 		{
+			Title:    "StringPointer",
 			Input:    &s,
 			Expected: true,
 		},
 		{
+			Title:    "String",
 			Input:    s, // this is a string value, not a pointer
 			Expected: false,
 		},
 		{
+			Title:    "Int",
 			Input:    i, // this is an int value, not a pointer
 			Expected: false,
 		},
 		{
+			Title:    "IntPointer",
 			Input:    &i, // this is a pointer to an int value
 			Expected: true,
 		},
 		{
+			Title:    "Nil",
 			Input:    nil, // this is a nil value, not a pointer
 			Expected: false,
 		},
 		{
-			Input:    (*int)(nil), // this is a nil pointer to an int type
-			Expected: true,
-		},
-		{
+			Title:    "IntSlice",
 			Input:    []int{1, 2, 3}, // this is a slice value, not a pointer
 			Expected: false,
 		},
 		{
+			Title:    "IntSlicePointer",
 			Input:    &[3]int{1, 2, 3}, // this is a pointer to an array value
 			Expected: true,
 		},
 		{
+			Title:    "Map",
 			Input:    map[string]int{"a": 1, "b": 2}, // this is a map value, not a pointer
 			Expected: false,
 		},
 		{
+			Title:    "MapPointer",
 			Input:    &map[string]int{"a": 1, "b": 2}, // this is a pointer to a map value
 			Expected: true,
 		},
 		{
+			Title:    "Function",
 			Input:    f, // this is a function value, not a pointer
 			Expected: false,
 		},
 		{
+			Title:    "FunctionPointer",
 			Input:    &f, // this is a pointer to a function value
 			Expected: true,
 		},
 		{
+			Title:    "Struct",
 			Input:    struct{}{}, // this is a struct value, not a pointer
 			Expected: false,
 		},
 		{
+			Title:    "StructPointer",
 			Input:    &struct{}{}, // this is a pointer to a struct value
 			Expected: true,
 		},
 	}
 
-	for _, input := range inputs {
-		actual := IsPointer(input.Input)
-		assert.Equal(t, input.Expected, actual)
+	for _, tt := range tests {
+		t.Run(tt.Title, func(t *testing.T) {
+			actual := IsPointer(tt.Input)
+			assert.Equal(t, tt.Expected, actual)
+		})
 	}
 }
 

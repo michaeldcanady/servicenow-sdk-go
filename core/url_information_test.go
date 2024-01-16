@@ -186,8 +186,8 @@ func TestUrlInformationAddQueryParameters(t *testing.T) {
 	ui := NewURLInformation()
 	ui.QueryParameters = make(map[string]string)
 	source := struct {
-		Param1 string `query:"param1"`
-		Param2 string `query:"param2"`
+		Param1 string `url:"param1"`
+		Param2 string `url:"param2"`
 	}{Param1: "value1", Param2: "value2"}
 
 	err := ui.AddQueryParameters(source)
