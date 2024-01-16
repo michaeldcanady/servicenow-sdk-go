@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,64 +28,165 @@ func TestNewTableEntry(t *testing.T) {
 	assert.IsType(t, TableEntry{}, entry)
 }
 
-func TestTableEntry_ValueValidKey(t *testing.T) {
+func TestTableEntry_Value(t *testing.T) {
 	entry := TableEntry{
 		keyName: "value1",
 	}
 
-	value := entry.Value(keyName)
-
-	assert.NotNil(t, value)
-	assert.Equal(t, value, &TableValue{value: "value1"})
-
-	entry = TableEntry{
-		keyName: map[string]interface{}{
-			"link":  "https://instance.servicenow.com/api/now/table/cmdb_ci/55b35562c0a8010e01cff22378e0aea9",
-			"value": "55b35562c0a8010e01cff22378e0aea9",
+	tests := []internal.Test[*TableValue]{
+		{
+			Title:    "ValidKey",
+			Input:    keyName,
+			Expected: &TableValue{value: "value1"},
+		},
+		{
+			Title: "ValidKey",
+			Prepare: func() {
+				entry = TableEntry{
+					keyName: map[string]interface{}{
+						"link":  "https://instance.servicenow.com/api/now/table/cmdb_ci/55b35562c0a8010e01cff22378e0aea9",
+						"value": "55b35562c0a8010e01cff22378e0aea9",
+					},
+				}
+			},
+			Input:    keyName,
+			Expected: &TableValue{value: "55b35562c0a8010e01cff22378e0aea9"},
+		},
+		{
+			Title: "MissingKey",
+			Prepare: func() {
+				entry = TableEntry{
+					"key2": "value1",
+				}
+			},
+			Input: keyName,
 		},
 	}
 
-	value = entry.Value(keyName)
+	for _, tt := range tests {
+		t.Run(tt.Title, func(t *testing.T) {
+			if tt.Prepare != nil {
+				tt.Prepare()
+			}
 
-	assert.NotNil(t, value)
-	assert.Equal(t, value, &TableValue{value: "55b35562c0a8010e01cff22378e0aea9"})
+			value := entry.Value(tt.Input.(string))
+
+			assert.Equal(t, tt.Expected, value)
+		})
+	}
 }
 
 func TestTableEntry_Set(t *testing.T) {
 	entry := TableEntry{}
 
-	entry.Set(keyName, "value2")
-
-	assert.Equal(t, TableEntry{keyName: "value2"}, entry)
-}
-
-func TestTableEntry_ValueMissingKey(t *testing.T) {
-	entry := TableEntry{
-		"key2": "value1",
+	tests := []internal.Test[TableEntry]{
+		{
+			Title:    "",
+			Input:    []interface{}{keyName, "value2"},
+			Expected: TableEntry{keyName: "value2"},
+			Cleanup: func() {
+				entry = TableEntry{}
+			},
+		},
 	}
 
-	value := entry.Value(keyName)
+	for _, tt := range tests {
+		t.Run(tt.Title, func(t *testing.T) {
+			if tt.Prepare != nil {
+				tt.Prepare()
+			}
 
-	assert.Nil(t, value)
+			keyName := tt.Input.([]interface{})[0]
+			value := tt.Input.([]interface{})[1]
+
+			entry.Set(keyName.(string), value)
+
+			assert.Equal(t, tt.Expected, entry)
+
+			if tt.Cleanup != nil {
+				tt.Cleanup()
+			}
+		})
+	}
 }
 
 func TestTableEntry_Keys(t *testing.T) {
-	entry := TableEntry{
-		keyName: "value2",
-		"key2":  "value1",
+	// Define a slice of test cases
+	tests := []internal.Test[[]string]{
+		{
+			Title:    "OneKey",
+			Input:    TableEntry{keyName: "value2"},
+			Expected: []string{keyName},
+		},
+		{
+			Title:    "TwoKeys",
+			Input:    TableEntry{keyName: "value2", "key2": "value1"},
+			Expected: []string{keyName, "key2"},
+		},
 	}
 
-	keys := entry.Keys()
+	// Iterate over the test cases
+	for _, tt := range tests {
+		t.Run(tt.Title, func(t *testing.T) {
+			// Call the prepare function if it exists
+			if tt.Prepare != nil {
+				tt.Prepare()
+			}
 
-	assert.Contains(t, keys, keyName)
-	assert.Contains(t, keys, "key2")
+			// Call the function under test with the input
+			keys := tt.Input.(TableEntry).Keys()
+
+			// Compare the output with the expected value
+			for _, key := range tt.Expected {
+				assert.Contains(t, keys, key)
+			}
+
+			// Call the cleanup function if it exists
+			if tt.Cleanup != nil {
+				tt.Cleanup()
+			}
+		})
+	}
 }
 
 func TestTableEntry_Len(t *testing.T) {
-	entry := TableEntry{
-		keyName: "value2",
-		"key2":  "value1",
+	// Define a slice of test cases
+	tests := []internal.Test[int]{
+		{
+			Title:    "EmptyEntry",
+			Input:    TableEntry{},
+			Expected: 0,
+		},
+		{
+			Title:    "OneKeyEntry",
+			Input:    TableEntry{keyName: "value2"},
+			Expected: 1,
+		},
+		{
+			Title:    "TwoKeysEntry",
+			Input:    TableEntry{keyName: "value2", "key2": "value1"},
+			Expected: 2,
+		},
 	}
 
-	assert.Len(t, entry, 2)
+	// Iterate over the test cases
+	for _, tt := range tests {
+		t.Run(tt.Title, func(t *testing.T) {
+			// Call the prepare function if it exists
+			if tt.Prepare != nil {
+				tt.Prepare()
+			}
+
+			// Call the function under test with the input
+			length := tt.Input.(TableEntry).Len()
+
+			// Compare the output with the expected value
+			assert.Equal(t, length, tt.Expected)
+
+			// Call the cleanup function if it exists
+			if tt.Cleanup != nil {
+				tt.Cleanup()
+			}
+		})
+	}
 }

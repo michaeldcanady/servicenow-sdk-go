@@ -50,7 +50,7 @@ func TestNewPageIterator(t *testing.T) {
 	}
 }
 
-func TestPageIteratorNextWithLinkNoError(t *testing.T) {
+func TestPageIterator_Next(t *testing.T) {
 	currentPage := TableCollectionResponse{
 		NextPageLink: fakeCollectionLinkWithLinks,
 	}
@@ -60,32 +60,54 @@ func TestPageIteratorNextWithLinkNoError(t *testing.T) {
 	pageIterator, err := NewPageIterator(currentPage, client)
 	assert.Nil(t, err)
 
-	page, err := pageIterator.next()
-	assert.Nil(t, err)
+	tests := []internal.Test[PageResult]{
+		{
+			Title:    "LinkNoError",
+			Expected: expectedResult,
+		},
+	}
 
-	assert.Equal(t, expectedResult, page)
+	for _, tt := range tests {
+		page, err := pageIterator.next()
+
+		assert.Equal(t, tt.Error, err)
+		assert.Equal(t, tt.Expected, page)
+	}
 }
 
-func TestPageIteratorEnumerateAll(t *testing.T) {
+func TestPageIterator_Enumerate(t *testing.T) {
 	pageIterator := PageIterator{
 		currentPage: expectedResult,
 	}
 
 	enumCount := 0
 
-	keepIterating := pageIterator.enumerate(func(item *TableEntry) bool {
-		index := pageIterator.pauseIndex
+	tests := []internal.Test[int]{
+		{
+			Title: "All",
+			Input: func(item *TableEntry) bool {
+				index := pageIterator.pauseIndex
 
-		result := expectedResult.Result[index]
+				result := expectedResult.Result[index]
 
-		assert.Equal(t, result, item)
+				assert.Equal(t, result, item)
 
-		enumCount += 1
+				enumCount += 1
 
-		return true
-	})
-	assert.Equal(t, true, keepIterating)
-	assert.Equal(t, len(expectedResult.Result), enumCount)
+				return true
+			},
+			Expected: len(expectedResult.Result),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.Title, func(t *testing.T) {
+			enumCount = 0
+			_ = pageIterator.enumerate(tt.Input.(func(item *TableEntry) bool))
+
+			assert.Equal(t, tt.Expected, enumCount)
+		})
+	}
 }
 
 func TestPageIteratorEnumerateOnce(t *testing.T) {
@@ -110,8 +132,7 @@ func TestPageIteratorEnumerateOnce(t *testing.T) {
 	assert.Equal(t, 1, enumCount)
 }
 
-func TestIterateWithNoCallback(t *testing.T) {
-	// Mock PageIterator
+func TestPageIterator_Iterate(t *testing.T) {
 	pageIterator := &PageIterator{
 		currentPage: PageResult{
 			// Initialize with test data
@@ -120,67 +141,65 @@ func TestIterateWithNoCallback(t *testing.T) {
 		pauseIndex: 0,
 	}
 
-	err := pageIterator.Iterate(nil)
-	assert.ErrorIs(t, err, ErrNilCallback)
-}
-
-func TestPageIteratorIterateSinglePageWithoutNextLinkWithoutCurrentPageWithCallback(t *testing.T) {
-	expectedIterator.currentPage = PageResult{}
-
-	// Mock callback function
-	callback := func(pageItem *TableEntry) bool {
-		// Implement your callback logic for testing
-		return true
-	}
-
-	err := expectedIterator.Iterate(callback)
-	assert.Nil(t, err)
-}
-
-func TestPageIteratorIterateSinglePageWithoutNextLinkWithCurrentPageWithCallback(t *testing.T) {
-	expectedIterator.currentPage.NextPageLink = ""
-
-	// Mock callback function
-	callback := func(pageItem *TableEntry) bool {
-		// Implement your callback logic for testing
-		return true
-	}
-
-	err := expectedIterator.Iterate(callback)
-	assert.Nil(t, err)
-}
-
-func TestPageIteratorIterateSinglePageWithNextLinkWithCurrentPageWithCallback(t *testing.T) {
-	expectedIterator.currentPage.NextPageLink = fakeCollectionLinkKey
-
-	// Mock callback function
-	callback := func(pageItem *TableEntry) bool {
-		// Implement your callback logic for testing
-		return true
-	}
-
-	err := expectedIterator.Iterate(callback)
-	assert.Nil(t, err)
-}
-
-func TestPageIteratorIterateMultiplePagesWithCallback(t *testing.T) {
-	// Mock PageIterator
-	pageIterator := &PageIterator{
-		currentPage: PageResult{
-			NextPageLink: fakeCollectionLinkWithLinks,
+	tests := []internal.Test[any]{
+		{
+			Title: "NilCallback",
+			Input: (func(pageItem *TableEntry) bool)(nil),
+			Error: ErrNilCallback,
 		},
-		client:     &mockClient{},
-		pauseIndex: 0,
+		{
+			Title: "SinglePageWithoutNextLinkWithoutCurrentPageWithCallback",
+			Prepare: func() {
+				pageIterator.currentPage = PageResult{}
+			},
+			Input: func(pageItem *TableEntry) bool {
+				// Implement your callback logic for testing
+				return true
+			},
+			Error: nil,
+		},
+		{
+			Title: "SinglePageWithoutNextLinkWithCurrentPageWithCallback",
+			Prepare: func() {
+				pageIterator.currentPage.NextPageLink = ""
+			},
+			Input: func(pageItem *TableEntry) bool {
+				// Implement your callback logic for testing
+				return true
+			},
+			Error: nil,
+		},
+		{
+			Title: "SinglePageWithNextLinkWithCurrentPageWithCallback",
+			Prepare: func() {
+				pageIterator.currentPage.NextPageLink = fakeCollectionLinkKey
+			},
+			Input: func(pageItem *TableEntry) bool {
+				// Implement your callback logic for testing
+				return true
+			},
+			Error: nil,
+		},
+		{
+			Title: "MultiplePagesWithCallback",
+			Prepare: func() {
+				pageIterator.currentPage.NextPageLink = fakeCollectionLinkWithLinks
+			},
+			Input: func(pageItem *TableEntry) bool {
+				// Implement your callback logic for testing
+				return true
+			},
+			Error: nil,
+		},
 	}
 
-	// Mock callback function
-	callback := func(pageItem *TableEntry) bool {
-		// Implement your callback logic for testing
-		return true
-	}
+	for _, tt := range tests {
+		t.Run(tt.Title, func(t *testing.T) {
+			err := pageIterator.Iterate(tt.Input.(func(pageItem *TableEntry) bool))
 
-	err := pageIterator.Iterate(callback)
-	assert.Nil(t, err)
+			assert.Equal(t, tt.Error, err)
+		})
+	}
 }
 
 func TestPageIterator_Last(t *testing.T) {
