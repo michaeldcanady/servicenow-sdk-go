@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/gabriel-vasile/mimetype v1.4.3
-	github.com/hetiansu5/urlquery v1.2.7
+	github.com/google/go-querystring v1.1.0
 	github.com/mozillazg/go-httpheader v0.4.0
 	github.com/stretchr/testify v1.8.4
 	github.com/yosida95/uritemplate/v3 v3.0.2

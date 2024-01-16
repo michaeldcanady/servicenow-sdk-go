@@ -1,34 +1,17 @@
 package core
 
 import (
-	"encoding/json"
-	"io"
 	"net/http"
 	"reflect"
 	"strings"
 
-	"github.com/hetiansu5/urlquery"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/yosida95/uritemplate/v3"
 )
 
 // ToQueryMap converts a struct to query parameter map
 func ToQueryMap(source interface{}) (map[string]string, error) {
-	if source == nil {
-		return nil, ErrNilSource
-	}
-
-	queryBytes, err := urlquery.Marshal(source)
-	if err != nil {
-		return nil, err
-	}
-
-	var queryMap map[string]string
-	err = urlquery.Unmarshal(queryBytes, &queryMap)
-	if err != nil {
-		return nil, err
-	}
-
-	return queryMap, nil
+	return internal.ToQueryMap(source)
 }
 
 // normalizeVarNames normalizes variable names for URI template expansion.
@@ -59,8 +42,9 @@ func getKeyWithOriginalName(key string, normalizedNames map[string]string) strin
 	return key
 }
 
+// IsPointer checks if the provided type is a pointer
 func IsPointer(value interface{}) bool {
-	if value == nil {
+	if isNil(value) {
 		return false
 	}
 
@@ -69,38 +53,21 @@ func IsPointer(value interface{}) bool {
 	return valueKind == reflect.Ptr
 }
 
+// Deprecated: deprecated since v{version}. Removed from public API.
+//
+// FromJson[T] marshalls the provided response into v
 func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
-	if response == nil {
-		return ErrNilResponse
-	}
 
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return err
-	}
-	defer response.Body.Close() //nolint:errcheck
+	err := internal.FromJSON[T](response, v)
 
-	if len(body) == 0 {
-		return ErrNilResponseBody
-	}
-
-	if err := json.Unmarshal(body, v); err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
+// Deprecated: deprecated since v{version}. Removed from public API.
+//
 // ParseResponse[T] parses the HTTP Response to the provided type
 func ParseResponse[T Response](response *http.Response, value *T) error {
-	err := FromJson(response, &value)
-	if err != nil {
-		return err
-	}
-
-	(*value).ParseHeaders(response.Header)
-
-	return nil
+	return internal.ParseResponse(response, value)
 }
 
 // Deprecated: deprecated in v1.4.0. Please use SendGet2.
@@ -118,6 +85,11 @@ func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, err
 	return ParseResponse(response, value)
 }
 
+// SendGet2 sends a GET request using the given request builder and configuration.
+// It returns an error if the request or the response parsing fails.
+// The request builder is used to create the request information, which includes
+// the URL, the headers, and the query parameters.
+// The configuration specifies how to handle errors and how to parse the response.
 func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToGetRequestInformation2(config)
 	if err != nil {
@@ -147,6 +119,11 @@ func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, para
 	return ParseResponse(response, value)
 }
 
+// SendPost2 sends a POST request using the given request builder and configuration.
+// It returns an error if the request or the response parsing fails.
+// The request builder is used to create the request information, which includes
+// the URL, the headers, the body, and the query parameters.
+// The configuration specifies how to handle errors and how to parse the response.
 func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToPostRequestInformation3(config)
 	if err != nil {
@@ -205,6 +182,11 @@ func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string,
 	return ParseResponse(response, value)
 }
 
+// SendDelete2 sends a DELETE request using the given request builder and configuration.
+// It returns an error if the request or the response fails.
+// The request builder is used to create the request information, which includes
+// the URL, the headers, and the query parameters.
+// The configuration specifies how to handle errors.
 func sendPut2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToPutRequestInformation2(config)
 	if err != nil {

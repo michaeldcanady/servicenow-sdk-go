@@ -47,17 +47,17 @@ var (
 )
 
 type test[T any] struct {
-	title     string
-	value     interface{}
-	expected  T
+	Title     string
+	Input     interface{}
+	Expected  T
 	expectErr bool
-	err       error
+	Error     error
 }
 
 func (te test[T]) checkError(t *testing.T, err error) {
 	if te.expectErr && err == nil {
-		if te.err != nil {
-			assert.ErrorIs(t, err, te.err)
+		if te.Error != nil {
+			assert.ErrorIs(t, err, te.Error)
 		} else {
 			assert.Error(t, err)
 		}
@@ -70,14 +70,14 @@ func (te test[T]) checkError(t *testing.T, err error) {
 
 func TestTableValueToInt64(t *testing.T) {
 	for _, test := range int64TestSet {
-		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+		t.Run(test.Title, func(t *testing.T) {
+			tableValue := &TableValue{value: test.Input}
 			result, err := tableValue.ToInt64()
 
 			test.checkError(t, err)
 
-			if result != test.expected {
-				t.Errorf("Expected %d, got %d", test.expected, result)
+			if result != test.Expected {
+				t.Errorf("Expected %d, got %d", test.Expected, result)
 			}
 		})
 	}
@@ -85,14 +85,14 @@ func TestTableValueToInt64(t *testing.T) {
 
 func TestTableValueInt(t *testing.T) {
 	for _, test := range int64TestSet {
-		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+		t.Run(test.Title, func(t *testing.T) {
+			tableValue := &TableValue{value: test.Input}
 			result, err := tableValue.Int()
 
 			test.checkError(t, err)
 
-			if result != test.expected {
-				t.Errorf("Expected %d, got %d", test.expected, result)
+			if result != test.Expected {
+				t.Errorf("Expected %d, got %d", test.Expected, result)
 			}
 		})
 	}
@@ -100,14 +100,14 @@ func TestTableValueInt(t *testing.T) {
 
 func TestTableValueToFloat64(t *testing.T) {
 	for _, test := range float64TestSet {
-		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+		t.Run(test.Title, func(t *testing.T) {
+			tableValue := &TableValue{value: test.Input}
 			result, err := tableValue.ToFloat64()
 
 			test.checkError(t, err)
 
-			if math.Abs(result-test.expected) > tolerance {
-				assert.Equal(t, test.expected, result)
+			if math.Abs(result-test.Expected) > tolerance {
+				assert.Equal(t, test.Expected, result)
 			}
 		})
 	}
@@ -115,14 +115,14 @@ func TestTableValueToFloat64(t *testing.T) {
 
 func TestTableValueFloat(t *testing.T) {
 	for _, test := range float64TestSet {
-		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+		t.Run(test.Title, func(t *testing.T) {
+			tableValue := &TableValue{value: test.Input}
 			result, err := tableValue.Float()
 
 			test.checkError(t, err)
 
-			if math.Abs(result-test.expected) > tolerance {
-				assert.Equal(t, test.expected, result)
+			if math.Abs(result-test.Expected) > tolerance {
+				assert.Equal(t, test.Expected, result)
 			}
 		})
 	}
@@ -130,14 +130,14 @@ func TestTableValueFloat(t *testing.T) {
 
 func TestTableValueToString(t *testing.T) {
 	for _, test := range stringTestSet {
-		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+		t.Run(test.Title, func(t *testing.T) {
+			tableValue := &TableValue{value: test.Input}
 			result, err := tableValue.ToString()
 
 			test.checkError(t, err)
 
-			if result != test.expected {
-				assert.Equal(t, test.expected, result)
+			if result != test.Expected {
+				assert.Equal(t, test.Expected, result)
 			}
 		})
 	}
@@ -145,14 +145,14 @@ func TestTableValueToString(t *testing.T) {
 
 func TestTableValueString(t *testing.T) {
 	for _, test := range stringTestSet {
-		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+		t.Run(test.Title, func(t *testing.T) {
+			tableValue := &TableValue{value: test.Input}
 			result, err := tableValue.String()
 
 			test.checkError(t, err)
 
-			if result != test.expected {
-				assert.Equal(t, test.expected, result)
+			if result != test.Expected {
+				assert.Equal(t, test.Expected, result)
 			}
 		})
 	}
@@ -160,14 +160,14 @@ func TestTableValueString(t *testing.T) {
 
 func TestTableValueToBool(t *testing.T) {
 	for _, test := range boolTestSet {
-		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+		t.Run(test.Title, func(t *testing.T) {
+			tableValue := &TableValue{value: test.Input}
 			result, err := tableValue.ToBool()
 
 			test.checkError(t, err)
 
-			if result != test.expected {
-				assert.Equal(t, test.expected, result)
+			if result != test.Expected {
+				assert.Equal(t, test.Expected, result)
 			}
 		})
 	}
@@ -175,14 +175,14 @@ func TestTableValueToBool(t *testing.T) {
 
 func TestTableValueBool(t *testing.T) {
 	for _, test := range boolTestSet {
-		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+		t.Run(test.Title, func(t *testing.T) {
+			tableValue := &TableValue{value: test.Input}
 			result, err := tableValue.Bool()
 
 			test.checkError(t, err)
 
-			if result != test.expected {
-				assert.Equal(t, test.expected, result)
+			if result != test.Expected {
+				assert.Equal(t, test.Expected, result)
 			}
 		})
 	}
@@ -190,12 +190,12 @@ func TestTableValueBool(t *testing.T) {
 
 func TestTableValueGetType(t *testing.T) {
 	for _, test := range getTypeTestSet {
-		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+		t.Run(test.Title, func(t *testing.T) {
+			tableValue := &TableValue{value: test.Input}
 			result := tableValue.GetType()
 
-			if result != test.expected {
-				assert.Equal(t, test.expected, result)
+			if result != test.Expected {
+				assert.Equal(t, test.Expected, result)
 			}
 		})
 	}
@@ -203,12 +203,12 @@ func TestTableValueGetType(t *testing.T) {
 
 func TestTableValueType(t *testing.T) {
 	for _, test := range getTypeTestSet {
-		t.Run(test.title, func(t *testing.T) {
-			tableValue := &TableValue{value: test.value}
+		t.Run(test.Title, func(t *testing.T) {
+			tableValue := &TableValue{value: test.Input}
 			result := tableValue.Type()
 
-			if result != test.expected {
-				assert.Equal(t, test.expected, result)
+			if result != test.Expected {
+				assert.Equal(t, test.Expected, result)
 			}
 		})
 	}

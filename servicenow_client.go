@@ -116,6 +116,8 @@ func (c *ServiceNowClient) toRequest(requestInfo core.IRequestInformation) (*htt
 	return c.toRequestWithContext(context.Background(), requestInfo)
 }
 
+// SendWithContext sends the requestInfo to the API with the given context and errorMapping.
+// It returns the response or an error if the request or the response is invalid.
 func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 	request, err := c.toRequestWithContext(ctx, requestInfo)
 	if err != nil {
@@ -135,6 +137,8 @@ func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core
 	return response, nil
 }
 
+// Send sends the requestInfo to the API with the background context and errorMapping.
+// It returns the response or an error if the request or the response is invalid.
 func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 	return c.SendWithContext(context.Background(), requestInfo, errorMapping)
 }

@@ -64,16 +64,16 @@ func TestToQueryMap(t *testing.T) {
 	}{
 		{
 			Input: struct {
-				Param1 string `query:"param_1"`
-				Param2 int    `query:"param_2"`
-				Param3 bool   `query:"param_3"`
+				Param1 string `url:"param_1"`
+				Param2 int    `url:"param_2"`
+				Param3 bool   `url:"param_3"`
 			}{
 				Param1: "value1",
 				Param2: 5,
 				Param3: true,
 			},
 			ShouldError: false,
-			Expected:    map[string]string{"param_1": "value1", "param_2": "5", "param_3": "1"},
+			Expected:    map[string]string{"param_1": "value1", "param_2": "5", "param_3": "true"},
 			CheckErr:    nil,
 		},
 		{

@@ -127,17 +127,17 @@ func TestTableRequestBuilder_Post(t *testing.T) {
 
 	tests := []test[*TableItemResponse]{
 		{
-			title:     "ValidRequest",
-			value:     map[string]string{"key": "value"},
-			expected:  nil,
+			Title:     "ValidRequest",
+			Input:     map[string]string{"key": "value"},
+			Expected:  nil,
 			expectErr: false,
-			err:       nil,
+			Error:     nil,
 		},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.title, func(t *testing.T) {
-			response, err := builder.Post(tt.value.(map[string]string), queryParameters)
+		t.Run(tt.Title, func(t *testing.T) {
+			response, err := builder.Post(tt.Input.(map[string]string), queryParameters)
 
 			if tt.expectErr {
 				assert.Error(t, err)
@@ -177,17 +177,17 @@ func TestTableRequestBuilder_Post2(t *testing.T) {
 
 	tests := []test[*TableItemResponse]{
 		{
-			title:     "ValidRequest",
-			value:     map[string]string{"key": "value"},
-			expected:  nil,
+			Title:     "ValidRequest",
+			Input:     map[string]string{"key": "value"},
+			Expected:  nil,
 			expectErr: false,
-			err:       nil,
+			Error:     nil,
 		},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.title, func(t *testing.T) {
-			response, err := builder.Post2(tt.value.(map[string]string), queryParameters)
+		t.Run(tt.Title, func(t *testing.T) {
+			response, err := builder.Post2(tt.Input.(map[string]string), queryParameters)
 
 			if tt.expectErr {
 				assert.Error(t, err)
@@ -234,31 +234,31 @@ func TestTableRequestBuilder_Post3(t *testing.T) {
 
 	tests := []test[*TableItemResponse2[TableEntry]]{
 		{
-			title:     "ValidRequest-map[string]string",
-			value:     map[string]string{"key": "value"},
-			expected:  nil,
+			Title:     "ValidRequest-map[string]string",
+			Input:     map[string]string{"key": "value"},
+			Expected:  nil,
 			expectErr: false,
-			err:       nil,
+			Error:     nil,
 		},
 		{
-			title:     "ValidRequest-tableEntry",
-			value:     TableEntry{"key": "value"},
-			expected:  nil,
+			Title:     "ValidRequest-tableEntry",
+			Input:     TableEntry{"key": "value"},
+			Expected:  nil,
 			expectErr: false,
-			err:       nil,
+			Error:     nil,
 		},
 		{
-			title:     "InvalidRequest",
-			value:     "bad",
-			expected:  nil,
+			Title:     "InvalidRequest",
+			Input:     "bad",
+			Expected:  nil,
 			expectErr: true,
-			err:       nil,
+			Error:     nil,
 		},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.title, func(t *testing.T) {
-			response, err := builder.Post3(tt.value, queryParameters)
+		t.Run(tt.Title, func(t *testing.T) {
+			response, err := builder.Post3(tt.Input, queryParameters)
 
 			if tt.expectErr {
 				assert.Error(t, err)

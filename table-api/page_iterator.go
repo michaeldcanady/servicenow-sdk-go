@@ -19,7 +19,7 @@ type PageIterator struct {
 //
 // NewPageIterator creates a new PageIterator instance.
 func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator, error) {
-	if client == nil {
+	if isNil(client) {
 		return nil, ErrNilClient
 	}
 

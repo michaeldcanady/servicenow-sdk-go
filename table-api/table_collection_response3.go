@@ -22,7 +22,7 @@ type TableCollectionResponse3[T Entry] struct {
 }
 
 // parsePaginationHeaders parses the pagination headers from the response
-func (r TableCollectionResponse3[T]) parsePaginationHeaders(headers http.Header) {
+func (r *TableCollectionResponse3[T]) parsePaginationHeaders(headers http.Header) {
 	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
 
 	links := make(map[string]string)

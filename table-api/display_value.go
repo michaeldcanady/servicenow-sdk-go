@@ -3,7 +3,10 @@ package tableapi
 type DisplayValue string
 
 const (
-	TRUE  DisplayValue = "true"
+	// TRUE Returns the display values for all fields.
+	TRUE DisplayValue = "true"
+	// FALSE Returns the actual values from the database.
 	FALSE DisplayValue = "false"
-	ALL   DisplayValue = "all"
+	// ALL Returns both actual and display values.
+	ALL DisplayValue = "all"
 )
