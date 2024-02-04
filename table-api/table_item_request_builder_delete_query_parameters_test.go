@@ -3,7 +3,7 @@ package tableapi
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/RecoLabs/servicenow-sdk-go/core"
 	"github.com/stretchr/testify/assert"
 )
 

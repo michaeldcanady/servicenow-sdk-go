@@ -1,7 +1,7 @@
 package tableapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/RecoLabs/servicenow-sdk-go/core"
 )
 
 // OrderBy represents an order-by clause.

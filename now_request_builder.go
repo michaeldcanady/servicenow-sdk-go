@@ -6,11 +6,11 @@ import (
 	"net/url"
 	"strings"
 
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+	attachmentapi "github.com/RecoLabs/servicenow-sdk-go/attachment-api"
+	"github.com/RecoLabs/servicenow-sdk-go/core"
+	"github.com/RecoLabs/servicenow-sdk-go/internal"
+	intCore "github.com/RecoLabs/servicenow-sdk-go/internal/core"
+	tableapi "github.com/RecoLabs/servicenow-sdk-go/table-api"
 )
 
 type NowRequestBuilder struct {

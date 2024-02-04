@@ -10,10 +10,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
+	"github.com/RecoLabs/servicenow-sdk-go/core"
+	"github.com/RecoLabs/servicenow-sdk-go/credentials"
+	"github.com/RecoLabs/servicenow-sdk-go/internal"
+	intCore "github.com/RecoLabs/servicenow-sdk-go/internal/core"
 	"github.com/mozillazg/go-httpheader"
 	"github.com/stretchr/testify/assert"
 )

@@ -1,7 +1,7 @@
 package tableapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/RecoLabs/servicenow-sdk-go/core"
 )
 
 // Fragment represents a query fragment with a field, operator, and value.

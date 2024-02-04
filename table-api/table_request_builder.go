@@ -4,7 +4,7 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/RecoLabs/servicenow-sdk-go/core"
 )
 
 // Deprecated: deprecated since v{unreleased}. Use `TableRequestBuilder2` instead.

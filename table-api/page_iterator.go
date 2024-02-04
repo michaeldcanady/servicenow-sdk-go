@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/url"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/RecoLabs/servicenow-sdk-go/core"
 )
 
 // Deprecated: deprecated in v1.5.0. Use TablePageIterator[T] instead.
