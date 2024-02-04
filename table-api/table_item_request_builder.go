@@ -1,21 +1,27 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/core"
+import (
+	"context"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
+)
 
 type TableItemRequestBuilder struct {
+	context.Context
 	core.RequestBuilder
 }
 
 // NewTableItemRequestBuilder creates a new instance of the TableItemRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableItemRequestBuilder.
-func NewTableItemRequestBuilder(client core.Client, pathParameters map[string]string) *TableItemRequestBuilder {
+func NewTableItemRequestBuilder(ctx context.Context, client core.Client,
+	pathParameters map[string]string) *TableItemRequestBuilder {
 	requestBuilder := core.NewRequestBuilder(
 		client,
 		"{+baseurl}/table{/table}{/sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_input_display_value,sysparm_query_no_domain,sysparm_view,sysparm_query_no_domain}",
 		pathParameters,
 	)
 	return &TableItemRequestBuilder{
-		*requestBuilder,
+		Context:        ctx,
+		RequestBuilder: *requestBuilder,
 	}
 }
 
@@ -27,7 +33,8 @@ func NewTableItemRequestBuilder(client core.Client, pathParameters map[string]st
 // Returns:
 //   - *TableItemResponse: The response data as a TableItemResponse.
 //   - error: An error if there was an issue with the request or response.
-func (rB *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
+func (rB *TableItemRequestBuilder) Get(ctx context.Context, params *TableItemRequestBuilderGetQueryParameters) (
+	*TableItemResponse, error) {
 	config := &tableItemGetRequestConfiguration2[TableEntry]{
 		header:   nil,
 		query:    params,
@@ -35,7 +42,7 @@ func (rB *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryPa
 		response: &TableItemResponse2[TableEntry]{},
 	}
 
-	err := rB.SendGet2(config.toConfiguration()) //nolint:staticcheck
+	err := rB.SendGet2(ctx, config.toConfiguration()) //nolint:staticcheck
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +57,8 @@ func (rB *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryPa
 //
 // Returns:
 //   - error: An error if there was an issue with the request or response, or nil if the request was successful.
-func (rB *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQueryParameters) error {
+func (rB *TableItemRequestBuilder) Delete(ctx context.Context,
+	params *TableItemRequestBuilderDeleteQueryParameters) error {
 	config := &tableItemDeleteRequestConfiguration2[TableEntry]{
 		header:   nil,
 		query:    params,
@@ -58,7 +66,7 @@ func (rB *TableItemRequestBuilder) Delete(params *TableItemRequestBuilderDeleteQ
 		response: nil,
 	}
 
-	return rB.SendDelete2(config.toConfiguration())
+	return rB.SendDelete2(ctx, config.toConfiguration())
 }
 
 // Deprecated: deprecated since v1.4.0. Use `Put2` instead.
@@ -102,7 +110,7 @@ func (rB *TableItemRequestBuilder) Put2(tableEntry interface{}, params *TableIte
 		response: &TableItemResponse2[TableEntry]{},
 	}
 
-	err = rB.SendPut2(config.toConfiguration())
+	err = rB.SendPut2(rB.Context, config.toConfiguration())
 	if err != nil {
 		return nil, err
 	}

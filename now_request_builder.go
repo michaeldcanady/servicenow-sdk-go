@@ -1,22 +1,25 @@
 package servicenowsdkgo
 
 import (
+	"context"
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 )
 
 type NowRequestBuilder struct {
+	context.Context
 	core.RequestBuilder
 }
 
 // NewNowRequestBuilder creates a new instance of the NowRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created NowRequestBuiabstraction
-func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuilder {
+func NewNowRequestBuilder(ctx context.Context, url string, client *ServiceNowClient) *NowRequestBuilder {
 	pathParameters := map[string]string{"baseurl": url}
 	requestBuilder := core.NewRequestBuilder(client, "{+baseurl}/Now", pathParameters)
 	return &NowRequestBuilder{
-		*requestBuilder,
+		Context:        ctx,
+		RequestBuilder: *requestBuilder,
 	}
 }
 
@@ -25,7 +28,8 @@ func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuild
 // The returned TableRequestBuilder can be used to build and execute table-related requests.
 func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder {
 	rB.RequestBuilder.PathParameters["table"] = tableName
-	return tableapi.NewTableRequestBuilder(rB.RequestBuilder.Client.(*ServiceNowClient), rB.RequestBuilder.PathParameters)
+	return tableapi.NewTableRequestBuilder(rB.Context, rB.RequestBuilder.Client.(*ServiceNowClient),
+		rB.RequestBuilder.PathParameters)
 }
 
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.

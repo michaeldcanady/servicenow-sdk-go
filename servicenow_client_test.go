@@ -72,7 +72,7 @@ func TestClientNow(t *testing.T) {
 
 	client := NewServiceNowClient(cred, "instance")
 
-	nowBuilder := client.Now()
+	nowBuilder := client.Now(context.Background())
 
 	assert.IsType(t, &NowRequestBuilder{}, nowBuilder)
 	assert.Equal(t, client.BaseUrl+"/now", nowBuilder.PathParameters["baseurl"])

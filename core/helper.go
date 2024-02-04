@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -110,7 +111,7 @@ func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, err
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
+	response, err := requestBuilder.Client.Send(context.Background(), requestInfo, errorMapping)
 	if err != nil {
 		return err
 	}
@@ -118,13 +119,13 @@ func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, err
 	return ParseResponse(response, value)
 }
 
-func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
+func SendGet2(ctx context.Context, requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToGetRequestInformation2(config)
 	if err != nil {
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	response, err := requestBuilder.Client.Send(ctx, requestInfo, config.ErrorMapping)
 	if err != nil {
 		return err
 	}
@@ -139,7 +140,7 @@ func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, para
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
+	response, err := requestBuilder.Client.Send(context.Background(), requestInfo, errorMapping)
 	if err != nil {
 		return err
 	}
@@ -147,13 +148,13 @@ func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, para
 	return ParseResponse(response, value)
 }
 
-func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
+func SendPost2(ctx context.Context, requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToPostRequestInformation3(config)
 	if err != nil {
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	response, err := requestBuilder.Client.Send(ctx, requestInfo, config.ErrorMapping)
 	if err != nil {
 		return err
 	}
@@ -168,7 +169,7 @@ func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping
 		return err
 	}
 
-	_, err = requestBuilder.Client.Send(requestInfo, errorMapping)
+	_, err = requestBuilder.Client.Send(context.Background(), requestInfo, errorMapping)
 	if err != nil {
 		return err
 	}
@@ -176,13 +177,13 @@ func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping
 	return nil
 }
 
-func sendDelete2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
+func sendDelete2(ctx context.Context, requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToDeleteRequestInformation2(config)
 	if err != nil {
 		return err
 	}
 
-	_, err = requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	_, err = requestBuilder.Client.Send(ctx, requestInfo, config.ErrorMapping)
 	if err != nil {
 		return err
 	}
@@ -197,7 +198,7 @@ func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string,
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
+	response, err := requestBuilder.Client.Send(context.Background(), requestInfo, errorMapping)
 	if err != nil {
 		return err
 	}
@@ -205,13 +206,13 @@ func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string,
 	return ParseResponse(response, value)
 }
 
-func sendPut2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
+func sendPut2(ctx context.Context, requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToPutRequestInformation2(config)
 	if err != nil {
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	response, err := requestBuilder.Client.Send(ctx, requestInfo, config.ErrorMapping)
 	if err != nil {
 		return err
 	}

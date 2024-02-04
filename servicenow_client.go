@@ -20,8 +20,8 @@ type ServiceNowClient struct {
 
 // Now returns a NowRequestBuilder associated with the Client.
 // It prepares the NowRequestBuilder with the base URL for the ServiceNow instance.
-func (c *ServiceNowClient) Now() *NowRequestBuilder {
-	return NewNowRequestBuilder(c.BaseUrl+"/now", c)
+func (c *ServiceNowClient) Now(ctx context.Context) *NowRequestBuilder {
+	return NewNowRequestBuilder(ctx, c.BaseUrl+"/now", c)
 }
 
 // NewServiceNowClient creates a new instance of the ServiceNow client.
@@ -135,6 +135,7 @@ func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core
 	return response, nil
 }
 
-func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-	return c.SendWithContext(context.Background(), requestInfo, errorMapping)
+func (c *ServiceNowClient) Send(ctx context.Context, requestInfo core.IRequestInformation,
+	errorMapping core.ErrorMapping) (*http.Response, error) {
+	return c.SendWithContext(ctx, requestInfo, errorMapping)
 }

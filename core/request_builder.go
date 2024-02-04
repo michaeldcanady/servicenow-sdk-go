@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"reflect"
@@ -270,8 +271,8 @@ func (rB *RequestBuilder) SendGet(params interface{}, errorMapping ErrorMapping,
 	return nil
 }
 
-func (rB *RequestBuilder) SendGet2(config *RequestConfiguration) error {
-	err := SendGet2(rB, config)
+func (rB *RequestBuilder) SendGet2(ctx context.Context, config *RequestConfiguration) error {
+	err := SendGet2(ctx, rB, config)
 	if err != nil {
 		return err
 	}
@@ -283,8 +284,8 @@ func (rB *RequestBuilder) SendPost(data map[string]string, params interface{}, e
 	return sendPost(rB, data, params, errorMapping, &value)
 }
 
-func (rB *RequestBuilder) SendPost3(config *RequestConfiguration) error {
-	return SendPost2(rB, config)
+func (rB *RequestBuilder) SendPost3(ctx context.Context, config *RequestConfiguration) error {
+	return SendPost2(ctx, rB, config)
 }
 
 // Deprecated: deprecated since v1.4.0. Please use SendPost3
@@ -297,8 +298,8 @@ func (rB *RequestBuilder) SendDelete(params interface{}, errorMapping ErrorMappi
 	return sendDelete(rB, params, errorMapping)
 }
 
-func (rB *RequestBuilder) SendDelete2(config *RequestConfiguration) error {
-	return sendDelete2(rB, config)
+func (rB *RequestBuilder) SendDelete2(ctx context.Context, config *RequestConfiguration) error {
+	return sendDelete2(ctx, rB, config)
 }
 
 // Deprecated: deprecated since v1.4.0. Please use SendPut2
@@ -306,6 +307,6 @@ func (rB *RequestBuilder) SendPut(data map[string]string, params interface{}, er
 	return sendPut(rB, data, params, errorMapping, &value)
 }
 
-func (rB *RequestBuilder) SendPut2(config *RequestConfiguration) error {
-	return sendPut2(rB, config)
+func (rB *RequestBuilder) SendPut2(ctx context.Context, config *RequestConfiguration) error {
+	return sendPut2(ctx, rB, config)
 }

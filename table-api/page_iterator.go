@@ -1,6 +1,7 @@
 package tableapi
 
 import (
+	"context"
 	"net/url"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -8,13 +9,14 @@ import (
 
 // PageIterator represents an iterator for paginated results from a table.
 type PageIterator struct {
+	ctx         context.Context
 	currentPage PageResult
 	client      core.Client
 	pauseIndex  int
 }
 
 // NewPageIterator creates a new PageIterator instance.
-func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator, error) {
+func NewPageIterator(ctx context.Context, currentPage interface{}, client core.Client) (*PageIterator, error) {
 	if client == nil {
 		return nil, ErrNilClient
 	}
@@ -25,6 +27,7 @@ func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator
 	}
 
 	return &PageIterator{
+		ctx:         ctx,
 		currentPage: page,
 		client:      client,
 	}, nil
@@ -125,7 +128,7 @@ func (pI *PageIterator) fetchPage(uri string) (*TableCollectionResponse, error) 
 	requestInformation.Method = core.GET
 	requestInformation.SetUri(nextLink)
 
-	resp, err := pI.client.Send(requestInformation, nil)
+	resp, err := pI.client.Send(pI.ctx, requestInformation, nil)
 	if err != nil {
 		return nil, err
 	}
