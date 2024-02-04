@@ -1,6 +1,6 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/core"
+import "github.com/RecoLabs/servicenow-sdk-go/core"
 
 // OrderDirection represents the order direction for sorting.
 //

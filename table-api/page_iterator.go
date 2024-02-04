@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/url"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/RecoLabs/servicenow-sdk-go/core"
 )
 
 // PageIterator represents an iterator for paginated results from a table.

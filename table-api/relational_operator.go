@@ -1,6 +1,6 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/core"
+import "github.com/RecoLabs/servicenow-sdk-go/core"
 
 // Deprecated: deprecated since 1.4.0. Please use core.RelationalOperator instead.
 //

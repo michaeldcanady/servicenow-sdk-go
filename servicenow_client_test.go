@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
+	"github.com/RecoLabs/servicenow-sdk-go/core"
+	"github.com/RecoLabs/servicenow-sdk-go/credentials"
 	"github.com/stretchr/testify/assert"
 )
 

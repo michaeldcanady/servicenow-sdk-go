@@ -1,6 +1,6 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/core"
+import "github.com/RecoLabs/servicenow-sdk-go/core"
 
 // Query represents a ServiceNow query and its conditions.
 //

@@ -1,6 +1,6 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/core"
+import "github.com/RecoLabs/servicenow-sdk-go/core"
 
 // tableItemPutRequestConfiguration2[T] represents request configurations GET request.
 type tableItemPutRequestConfiguration2[T Entry] struct {

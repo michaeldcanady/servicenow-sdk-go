@@ -1,6 +1,6 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/core"
+import "github.com/RecoLabs/servicenow-sdk-go/core"
 
 // tableItemDeleteRequestConfiguration2[T] represents request configurations DELETE request.
 type tableItemDeleteRequestConfiguration2[T Entry] struct {
