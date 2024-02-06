@@ -6,6 +6,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
+// Deprecated: deprecated in v1.4.0. Use TablePageIterator[T] instead.
 // PageIterator represents an iterator for paginated results from a table.
 type PageIterator struct {
 	currentPage PageResult

@@ -17,7 +17,7 @@ func NewPageIterator[T any, C CollectionResponse[T]](currentPage CollectionRespo
 		return nil, ErrNilClient
 	}
 
-	page, err := convertToPage(currentPage)
+	page, err := convertToPage[T](currentPage)
 	if err != nil {
 		return nil, err
 	}
