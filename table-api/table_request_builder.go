@@ -6,6 +6,10 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
+const (
+	tableRequestURI = "{+baseurl}/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
+)
+
 type TableRequestBuilder struct {
 	core.RequestBuilder
 }
@@ -15,7 +19,7 @@ type TableRequestBuilder struct {
 func NewTableRequestBuilder(client core.Client, pathParameters map[string]string) *TableRequestBuilder {
 	requestBuilder := core.NewRequestBuilder(
 		client,
-		"{+baseurl}/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}",
+		tableRequestURI,
 		pathParameters,
 	)
 	return &TableRequestBuilder{

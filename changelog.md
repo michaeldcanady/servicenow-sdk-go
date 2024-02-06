@@ -8,11 +8,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- tableapi.TablePageIterator\[T\] ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
+- core.ForwardPageIterator[T, C] ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
+- core.ReversePageIterator[T, C] ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
+- core.NewForwardPageIterator[T, C] ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
+- core.NewReversePageIterator[T, C] ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
+
 ### Changed
 
-- update PageIterator implementation
+- update PageIterator implementation ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
 
 ### Deprecated
+
+ - tableapi.PageIterator ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
 
 ### Removed
 
