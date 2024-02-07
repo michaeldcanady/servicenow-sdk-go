@@ -199,13 +199,13 @@ func (rB *RequestBuilder) ToRequestInformation3(method HttpMethod, config *Reque
 	requestInfo := NewRequestInformation()
 
 	if config != nil {
-		if config.QueryParameters != nil {
+		if !isNil(config.QueryParameters) {
 			err := requestInfo.AddQueryParameters(config.QueryParameters)
 			if err != nil {
 				return nil, err
 			}
 		}
-		if config.Data != nil {
+		if !isNil(config.Data) {
 			data, err := rB.prepareData(config.Data)
 			if err != nil {
 				return nil, err
