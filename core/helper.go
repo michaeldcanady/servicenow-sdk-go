@@ -2,33 +2,57 @@ package core
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"reflect"
 	"strings"
 
-	"github.com/hetiansu5/urlquery"
+	"github.com/google/go-querystring/query"
 	"github.com/yosida95/uritemplate/v3"
 )
 
+func toQueryMapFromStruct(source interface{}) (map[string]string, error) {
+	queryValues, err := query.Values(source)
+	if err != nil {
+		return nil, err
+	}
+
+	queryParams := map[string]string{}
+
+	for key, values := range queryValues {
+		queryParams[key] = strings.Join(values, ",")
+	}
+
+	return queryParams, nil
+}
+
 // ToQueryMap converts a struct to query parameter map
 func ToQueryMap(source interface{}) (map[string]string, error) {
-	if source == nil {
+	var err error
+
+	if isNil(source) {
 		return nil, ErrNilSource
 	}
 
-	queryBytes, err := urlquery.Marshal(source)
-	if err != nil {
-		return nil, err
+	queryParams := make(map[string]string)
+
+	sourceType := reflect.TypeOf(source)
+
+	if sourceType.Kind() != reflect.Map {
+		source, err = toQueryMapFromStruct(source)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	var queryMap map[string]string
-	err = urlquery.Unmarshal(queryBytes, &queryMap)
-	if err != nil {
-		return nil, err
+	sourceValue := reflect.ValueOf(source)
+	for _, key := range sourceValue.MapKeys() {
+		strKey := fmt.Sprintf("%v", key.Interface())
+		strValue := fmt.Sprintf("%v", sourceValue.MapIndex(key).Interface())
+		queryParams[strKey] = strValue
 	}
-
-	return queryMap, nil
+	return queryParams, nil
 }
 
 // normalizeVarNames normalizes variable names for URI template expansion.

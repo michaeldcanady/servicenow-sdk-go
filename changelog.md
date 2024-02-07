@@ -22,6 +22,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
+- Incorrect marshalling of query parameters ([Issue #68](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
+- `ToRequestInformation3` not reporting values as nil when nil
+
 ## [1.4.0] - (02/01/2024)
 
 ### Added

@@ -17,7 +17,7 @@ func TestTableItemRequestBuilderDeleteQueryParameters(t *testing.T) {
 		t.Error(err)
 	}
 
-	expectedValue := map[string]string{"sysparm_query_no_domain": "1"}
+	expectedValue := map[string]string{"sysparm_query_no_domain": "true"}
 
 	assert.Equal(t, expectedValue, queryMap)
 }
