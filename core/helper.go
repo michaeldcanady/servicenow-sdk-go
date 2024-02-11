@@ -117,7 +117,18 @@ func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
 
 // ParseResponse[T] parses the HTTP Response to the provided type
 func ParseResponse[T Response](response *http.Response, value *T) error {
-	err := FromJson(response, &value)
+	var err error
+
+	if isNil(response) {
+		return ErrNilResponse
+	}
+
+	switch contentType := response.Header.Get(contentTypeHeader); contentType {
+	case jsonContentType:
+		err = FromJson(response, &value)
+	default:
+		err = fmt.Errorf("unsupported content type: %s", contentType)
+	}
 	if err != nil {
 		return err
 	}
