@@ -14,15 +14,15 @@ type BatchRequest interface {
 }
 
 type batchRequest struct {
-	ID       string             `json:"batch_request_id"`
-	Requests []BatchRequestItem `json:"rest_requests"`
+	ID       string      `json:"batch_request_id"`
+	Requests []BatchItem `json:"rest_requests"`
 	client   core.Client2
 }
 
 func NewBatchRequest(client core.Client2) BatchRequest {
 	return &batchRequest{
 		ID:       uuid.New().String(),
-		Requests: make([]BatchRequestItem, 0),
+		Requests: make([]BatchItem, 0),
 		client:   client,
 	}
 }
@@ -37,7 +37,7 @@ func (r *batchRequest) AddRequest(requestInfo internal.RequestInformation, exclu
 	return nil
 }
 
-func (r *batchRequest) toBatchItem(requestInfo internal.RequestInformation, excludeResponseHeaders bool) (BatchRequestItem, error) {
+func (r *batchRequest) toBatchItem(requestInfo internal.RequestInformation, excludeResponseHeaders bool) (BatchItem, error) {
 	// make sure base url is set accordingly
 
 	uri, err := requestInfo.Url()

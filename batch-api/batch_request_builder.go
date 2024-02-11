@@ -23,10 +23,10 @@ func NewBatchRequestBuilder(client core.Client, pathParameters map[string]string
 }
 
 // Post sends a batch request and returns the BatchResponse.
-func (rB *BatchRequestBuilder) Post(request BatchRequest) (BatchResponse, error) {
+func (rB *BatchRequestBuilder) Post(request BatchRequest) (*BatchResponse, error) {
 	config := &core.RequestConfiguration{
 		Data:     request,
-		Response: &batchResponse{},
+		Response: &BatchResponse{},
 	}
 
 	err := rB.SendPost3(config)
@@ -34,5 +34,5 @@ func (rB *BatchRequestBuilder) Post(request BatchRequest) (BatchResponse, error)
 		return nil, err
 	}
 
-	return config.Response.(*batchResponse), nil
+	return config.Response.(*BatchResponse), nil
 }

@@ -3,10 +3,12 @@ package core
 import (
 	"context"
 	"net/http"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
 type Client2 interface {
-	Send(IRequestInformation, ErrorMapping) (*http.Response, error)
-	SendWithContext(context.Context, IRequestInformation, ErrorMapping) (*http.Response, error)
+	Send(internal.RequestInformation, internal.ErrorMapping) (*http.Response, error)
+	SendWithContext(context.Context, internal.RequestInformation, internal.ErrorMapping) (*http.Response, error)
 	GetBaseURL() string
 }
