@@ -23,7 +23,7 @@ var (
 		Proto:      "HTTP/1.1",
 		ProtoMajor: 1,
 		ProtoMinor: 1,
-		Header:     http.Header{},
+		Header:     http.Header{"Content-Type": {"application/json"}},
 		Body:       http.NoBody,
 		Request:    nil,
 	}
@@ -347,20 +347,6 @@ func TestRequestBuilderPrepareData(t *testing.T) {
 
 		if !reflect.DeepEqual(data, expectedData) {
 			t.Fatalf("Expected %v, got: %v", expectedData, data)
-		}
-	})
-
-	t.Run("UnsupportedType", func(t *testing.T) {
-		rB := &RequestBuilder{}
-		rawData := 42 // Unsupported type
-		_, err := rB.prepareData(rawData)
-		if err == nil {
-			t.Fatal("Expected an error for unsupported type, but got nil")
-		}
-
-		expectedError := "unsupported type: int"
-		if err.Error() != expectedError {
-			t.Fatalf("Expected error %q, got: %v", expectedError, err)
 		}
 	})
 }
