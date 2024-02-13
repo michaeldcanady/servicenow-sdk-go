@@ -3,13 +3,24 @@ package batchapi
 import (
 	"encoding/base64"
 	"encoding/json"
+	"reflect"
 	"time"
 )
 
-type rawBatchResponseItem struct {
+type BatchResponseItem[T any] interface {
+	GetBody() (*T, error)
+	GetType() reflect.Type
+	GetExecutionTime() time.Duration
+	GetHeaders() []batchHeader
+	GetID() string
+	GetRedirectURL() string
+	GetStatusCode() int
+}
+
+type batchResponseItem struct {
 	Body          string        `json:"body"`
 	ErrorMessage  string        `json:"error_message"`
-	ExecutionTime time.Duration `json:"execution_time"` //make duration
+	ExecutionTime int64         `json:"execution_time"`
 	Headers       []batchHeader `json:"headers"`
 	ID            string        `json:"id"`
 	RedirectURL   string        `json:"redirect_url"`
@@ -17,43 +28,34 @@ type rawBatchResponseItem struct {
 	StatusText    string        `json:"status_text"`
 }
 
-type BatchResponseItem struct {
-	Body          map[string]interface{}
-	ErrorMessage  string
-	ExecutionTime time.Duration
-	Headers       []batchHeader
-	ID            string
-	RedirectURL   string
-	StatusCode    int
-	StatusText    string
+func (rI *batchResponseItem) GetBody() (*any, error) {
+	var body any
+
+	unencoded, err := base64.StdEncoding.DecodeString(rI.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	json.Unmarshal(unencoded, &body)
+
+	return &body, nil
 }
 
-func (r *BatchResponseItem) UnmarshalJSON(data []byte) error {
-
-	rawData := rawBatchResponseItem{}
-
-	err := json.Unmarshal(data, &rawData)
-	if err != nil {
-		return err
-	}
-
-	body, err := base64.StdEncoding.DecodeString(rawData.Body)
-	if err != nil {
-		return err
-	}
-
-	r.ErrorMessage = rawData.ErrorMessage
-	r.Headers = rawData.Headers
-	r.ID = rawData.ID
-	r.RedirectURL = rawData.RedirectURL
-	r.StatusCode = rawData.StatusCode
-	r.StatusText = rawData.StatusText
-	r.ExecutionTime = time.Duration(rawData.ExecutionTime) * time.Second
-
-	err = json.Unmarshal(body, &r.Body)
-	if err != nil {
-		return err
-	}
-
-	return nil
+func (rI *batchResponseItem) GetType() reflect.Type {
+	return reflect.TypeOf(rI.Body)
+}
+func (rI *batchResponseItem) GetExecutionTime() time.Duration {
+	return time.Duration(rI.ExecutionTime)
+}
+func (rI *batchResponseItem) GetHeaders() []batchHeader {
+	return rI.Headers
+}
+func (rI *batchResponseItem) GetID() string {
+	return rI.ID
+}
+func (rI *batchResponseItem) GetRedirectURL() string {
+	return rI.RedirectURL
+}
+func (rI *batchResponseItem) GetStatusCode() int {
+	return rI.StatusCode
 }
