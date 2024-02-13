@@ -54,6 +54,8 @@ func TestTableItemRequestBuilderGet(t *testing.T) {
 		responseJSON, err := json.Marshal(testResult)
 		assert.Nil(t, err)
 
+		w.Header().Set("Content-Type", "application/json")
+
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(responseJSON) //nolint:errcheck
 	}))
@@ -115,6 +117,8 @@ func TestTableItemRequestBuilderPut(t *testing.T) {
 		resp := testResult
 
 		resp = maps.Clone[map[string]interface{}](resp)
+
+		w.Header().Set("Content-Type", "application/json")
 
 		switch r.Method {
 		case http.MethodGet:
@@ -206,6 +210,8 @@ func TestTableItemRequestBuilderPut2(t *testing.T) {
 		resp := testResult
 
 		resp = maps.Clone[map[string]interface{}](resp)
+
+		w.Header().Set("Content-Type", "application/json")
 
 		switch r.Method {
 		case http.MethodGet:
