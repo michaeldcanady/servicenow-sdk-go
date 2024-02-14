@@ -3,6 +3,7 @@ package batchapi
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"reflect"
 	"time"
 )
@@ -33,29 +34,44 @@ func (rI *batchResponseItem) GetBody() (*any, error) {
 
 	unencoded, err := base64.StdEncoding.DecodeString(rI.Body)
 	if err != nil {
-		return nil, err
+		unencoded = []byte(rI.Body)
 	}
 
-	json.Unmarshal(unencoded, &body)
+	err = json.Unmarshal(unencoded, &body)
+	if err != nil {
+		return nil, err
+	}
 
 	return &body, nil
 }
 
 func (rI *batchResponseItem) GetType() reflect.Type {
-	return reflect.TypeOf(rI.Body)
+	body, _ := rI.GetBody()
+	rv := reflect.ValueOf(body)
+	for rv.Kind() == reflect.Ptr || rv.Kind() == reflect.Interface {
+		fmt.Println(rv.Kind(), rv.Type(), rv)
+		rv = rv.Elem()
+	}
+
+	return rv.Type()
 }
+
 func (rI *batchResponseItem) GetExecutionTime() time.Duration {
 	return time.Duration(rI.ExecutionTime)
 }
+
 func (rI *batchResponseItem) GetHeaders() []batchHeader {
 	return rI.Headers
 }
+
 func (rI *batchResponseItem) GetID() string {
 	return rI.ID
 }
+
 func (rI *batchResponseItem) GetRedirectURL() string {
 	return rI.RedirectURL
 }
+
 func (rI *batchResponseItem) GetStatusCode() int {
 	return rI.StatusCode
 }
