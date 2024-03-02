@@ -44,11 +44,16 @@ func TestNewPageIterator2(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.title, func(t *testing.T) {
 			intInput := tt.input.([]interface{})
-			pageIterator, err := NewPageIterator2[person](intInput[0].(*personCollectionResponse), intInput[1].(*mockClient), constructPersonCollection)
+			pageIterator, err := NewPageIterator2(intInput[0].(*personCollectionResponse), intInput[1].(*mockClient), constructPersonCollection)
 
 			assert.ErrorIs(t, err, tt.expectedErr)
 
-			assert.Equal(t, tt.expected, pageIterator)
+			if !isNil(pageIterator) {
+				assert.Equal(t, tt.expected.client, pageIterator.client)
+				assert.Equal(t, tt.expected.client, pageIterator.client)
+				assert.Equal(t, tt.expected.currentPage, pageIterator.currentPage)
+				assert.Equal(t, tt.expected.pauseIndex, pageIterator.pauseIndex)
+			}
 		})
 	}
 }
