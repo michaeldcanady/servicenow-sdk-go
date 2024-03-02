@@ -1,8 +1,9 @@
 name: Create GitHub release
 on:
-  push:
-    tags: ["v[1-9]*.[1-9]*.[1-9]*$"]
   workflow_dispatch:
+
+env:
+  VERSION:
 
 jobs:
   create_stable_release:
@@ -11,28 +12,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Get the version
+      - name: Get Version
         id: get_version
-        run: echo "::set-output name=version::$(cat VERSION)"
+        run: echo "VERSION=$(cat VERSION)"
 
       - name: Replace {unreleased} in .go files
         run: |
-          find . -name "*.go" -type f -exec sed -i "s/{unreleased}/${{ steps.get_version.outputs.version }}/g" {} \;
+          find . -name "*.go" -type f -exec sed -i "s/{unreleased}/${{ env.VERSION }}/g" {} \;
 
-      - name: Update changelog.md
+      - name: Update Changelog
         run: |
-          sed -i "s/Unreleased/${{ steps.get_version.outputs.version }}/g" changelog.md
-          sed -i "s#(\(dd-mm-yyyy\))#\($(date +'%d-%m-%Y')\)#g" changelog.md
+          sed -i "s/Unreleased/${{ env.VERSION }}/g" changelog.md
+          sed -i "s#(\(dd/mm/yyyy\))#\($(date +'%d/%m/%Y')\)#g" changelog.md
           perl -0777 -i -pe 's/### (Added|Changed|Deprecated|Removed|Fixed)\s*(?=###|##)//gs' changelog.md
 
-      #- name: Release
-      #  uses: anton-yurchenko/git-release@v5.0
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #    DRAFT_RELEASE: "false"
-      #    PRE_RELEASE: "false"
-      #    CHANGELOG_FILE: "CHANGELOG.md"
-      #    ALLOW_EMPTY_CHANGELOG: "true"
+      - name: Create Tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: "v${{env.VERSION}}"
+          message: "$VERSION"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        uses: anton-yurchenko/git-release@v5.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRAFT_RELEASE: "false"
+          PRE_RELEASE: "false"
+          CHANGELOG_FILE: "CHANGELOG.md"
+          ALLOW_EMPTY_CHANGELOG: "true"
 
       - name: Remove header
         run: |
@@ -40,7 +48,7 @@ jobs:
 
       - name: Add Unreleased section to CHANGELOG.md
         run: |
-          echo -e "# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on Keep a Changelog, and this project adheres to Semantic Versioning.\n\n## [Unreleased] - (dd/mm/yyyy)\n\n### Added\n\n### Changed\n\n### Deprecated\n\n### Removed\n\n### Fixed\n\n$(cat changelog.md)" > changelog.md
+          echo -e "# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n## [Unreleased] - (dd/mm/yyyy)\n\n### Added\n\n### Changed\n\n### Deprecated\n\n### Removed\n\n### Fixed\n\n$(cat changelog.md)" > changelog.md
 
       - name: Push updates
         run: |
