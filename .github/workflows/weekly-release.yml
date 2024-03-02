@@ -30,10 +30,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release
-        uses: anton-yurchenko/git-release@v5.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DRAFT_RELEASE: "false"
-          PRE_RELEASE: "true"
-          CHANGELOG_FILE: "changelog.md"
-          ALLOW_EMPTY_CHANGELOG: "true"
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          automatic_release_tag: "v${{env.PREVIEW_VERSION}}"
+          prerelease: true
+          title: Preview Release v${{env.PREVIEW_VERSION}}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            changelog.md

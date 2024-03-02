@@ -1,8 +1,6 @@
 name: Create GitHub release
 on:
-  push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
 
 env:
   VERSION:
@@ -28,14 +26,22 @@ jobs:
           sed -i "s#(\(dd/mm/yyyy\))#\($(date +'%d/%m/%Y')\)#g" changelog.md
           perl -0777 -i -pe 's/### (Added|Changed|Deprecated|Removed|Fixed)\s*(?=###|##)//gs' changelog.md
 
+      - name: Create Tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: "v${{env.VERSION}}"
+          message: "v${{env.VERSION}}"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create Release
-        uses: anton-yurchenko/git-release@v5.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DRAFT_RELEASE: "false"
-          PRE_RELEASE: "false"
-          CHANGELOG_FILE: "changelog.md"
-          ALLOW_EMPTY_CHANGELOG: "true"
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          automatic_release_tag: "v${{env.VERSION}}"
+          prerelease: true
+          title: Release v${{env.VERSION}}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            changelog.md
 
       - name: Remove header
         run: |
