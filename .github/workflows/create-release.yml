@@ -39,6 +39,7 @@ jobs:
           automatic_release_tag: "v${{env.VERSION}}"
           title: Release v${{env.VERSION}}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
           files: |
             changelog.md
 
@@ -56,4 +57,4 @@ jobs:
           git config --global user.name "GitHub Action"
           git add .
           git commit -m "Update version and CHANGELOG.md for release"
-          git push --force origin main
+          git push
