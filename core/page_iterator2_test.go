@@ -1,105 +1,42 @@
 package core
 
 import (
-	"encoding/json"
+	"net/http"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
-const (
-	fakeLastLink    = "https://fake-link.com?last"
-	fakeNextLink    = "https://fake-link.com?next_with_response"
-	fakeLinkNilResp = "https://fake-link.com?nil_resp"
-)
+func constructPersonCollection(response *http.Response) (CollectionResponse[person], error) {
+	resp := &personCollectionResponse{}
 
-var (
-	sharedClient      = &mockClient{}
-	sharedCurrentPage = &personCollectionResponse{
-		Result: []*person{
-			{
-				Name: "bob",
-				Age:  25,
-			},
-			{
-				Name: "steve",
-				Age:  38,
-			},
-			{
-				Name: "jerry",
-				Age:  50,
-			},
-			{
-				Name: "tom",
-				Age:  18,
-			},
-			{
-				Name: "mary",
-				Age:  22,
-			},
-			{
-				Name: "bill",
-				Age:  30,
-			},
-		},
+	err := internal.ParseResponse(response, resp)
+	if err != nil {
+		return nil, err
 	}
-	sharedPageIterator = &PageIterator[person, personCollectionResponse]{
-		currentPage: PageResult[person]{
-			Result:           sharedCurrentPage.Result,
-			NextPageLink:     "",
-			PreviousPageLink: "",
-			LastPageLink:     "",
-			FirstPageLink:    "",
-		},
-		client:     sharedClient,
-		pauseIndex: 0,
-	}
-	sharedPageIterator2 = &PageIterator2[person]{
-		currentPage: PageResult[person]{
-			Result:           sharedCurrentPage.Result,
-			NextPageLink:     "",
-			PreviousPageLink: "",
-			LastPageLink:     "",
-			FirstPageLink:    "",
-		},
-		client:          sharedClient,
-		pauseIndex:      0,
-		constructorFunc: constructPersonCollection,
-	}
-	sharedPageResult = PageResult[person]{
-		Result:           sharedCurrentPage.Result,
-		NextPageLink:     "",
-		PreviousPageLink: "",
-		LastPageLink:     "",
-		FirstPageLink:    "",
-	}
-)
-
-func sharedCurrentPageToJSON() []byte {
-	data, _ := json.Marshal(sharedCurrentPage)
-
-	return data
+	return resp, nil
 }
 
-func TestNewPageIterator(t *testing.T) {
-	tests := []test[*PageIterator[person, personCollectionResponse]]{
+func TestNewPageIterator2(t *testing.T) {
+	tests := []test[*PageIterator2[person]]{
 		{
 			title:       "Valid",
 			input:       []interface{}{sharedCurrentPage, sharedClient},
-			expected:    sharedPageIterator,
+			expected:    sharedPageIterator2,
 			shouldErr:   false,
 			expectedErr: nil,
 		},
 		{
 			title:       "Missing Client",
 			input:       []interface{}{sharedCurrentPage, (*mockClient)(nil)},
-			expected:    (*PageIterator[person, personCollectionResponse])(nil),
+			expected:    (*PageIterator2[person])(nil),
 			expectedErr: ErrNilClient,
 		},
 		{
 			title:       "Missing Current Page",
 			input:       []interface{}{(*personCollectionResponse)(nil), sharedClient},
-			expected:    (*PageIterator[person, personCollectionResponse])(nil),
+			expected:    (*PageIterator2[person])(nil),
 			expectedErr: ErrNilResponse,
 		},
 	}
@@ -107,7 +44,7 @@ func TestNewPageIterator(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.title, func(t *testing.T) {
 			intInput := tt.input.([]interface{})
-			pageIterator, err := NewPageIterator[person, personCollectionResponse](intInput[0].(*personCollectionResponse), intInput[1].(*mockClient))
+			pageIterator, err := NewPageIterator2[person](intInput[0].(*personCollectionResponse), intInput[1].(*mockClient), constructPersonCollection)
 
 			assert.ErrorIs(t, err, tt.expectedErr)
 
@@ -116,7 +53,7 @@ func TestNewPageIterator(t *testing.T) {
 	}
 }
 
-func TestPageIterator_Iterate(t *testing.T) {
+func TestPageIterator2_Iterate(t *testing.T) {
 	var count int
 
 	tests := []test[int]{
@@ -139,10 +76,10 @@ func TestPageIterator_Iterate(t *testing.T) {
 		{
 			title: "Missing Response",
 			setup: func() {
-				sharedPageIterator.currentPage.NextPageLink = fakeLinkNilResp
+				sharedPageIterator2.currentPage.NextPageLink = fakeLinkNilResp
 			},
 			cleanup: func() {
-				sharedPageIterator.currentPage.NextPageLink = ""
+				sharedPageIterator2.currentPage.NextPageLink = ""
 			},
 			input:       func(person *person) bool { return true },
 			expected:    0,
@@ -163,7 +100,7 @@ func TestPageIterator_Iterate(t *testing.T) {
 		{
 			title: "Single Page",
 			setup: func() {
-				sharedPageIterator.currentPage.NextPageLink = fakeNextLink
+				sharedPageIterator2.currentPage.NextPageLink = fakeNextLink
 			},
 			input: func(person *person) bool {
 				count += 1
@@ -178,13 +115,15 @@ func TestPageIterator_Iterate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.title, func(t *testing.T) {
 			count = 0
-			sharedPageIterator.pauseIndex = 0
+			sharedPageIterator2.pauseIndex = 0
 
 			if tt.setup != nil {
 				tt.setup()
 			}
 
-			err := sharedPageIterator.Iterate(tt.input.(func(*person) bool))
+			callback := tt.input.(func(*person) bool)
+
+			err := sharedPageIterator2.Iterate(callback, false)
 
 			assert.ErrorIs(t, err, tt.expectedErr)
 			assert.Equal(t, tt.expected, count)
@@ -196,7 +135,8 @@ func TestPageIterator_Iterate(t *testing.T) {
 	}
 }
 
-func TestPageIterator_enumerate(t *testing.T) {
+//nolint:dupl
+func TestPageIterator2_enumerate(t *testing.T) {
 	var count int
 
 	tests := []test[[]interface{}]{
@@ -225,7 +165,7 @@ func TestPageIterator_enumerate(t *testing.T) {
 		{
 			title: "Missing Page items",
 			setup: func() {
-				sharedPageIterator.currentPage.Result = nil
+				sharedPageIterator2.currentPage.Result = nil
 			},
 			input:       func(pageItem *person) bool { return true },
 			expected:    []interface{}{0, false},
@@ -235,14 +175,14 @@ func TestPageIterator_enumerate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.title, func(t *testing.T) {
-			count = 0                         // Reset the count between runs
-			sharedPageIterator.pauseIndex = 0 // Reset the pause index between runs
+			count = 0                          // Reset the count between runs
+			sharedPageIterator2.pauseIndex = 0 // Reset the pause index between runs
 
 			if tt.setup != nil {
 				tt.setup()
 			}
 
-			keepIterating := sharedPageIterator.enumerate(tt.input.(func(item *person) bool))
+			keepIterating := sharedPageIterator2.enumerate(tt.input.(func(item *person) bool))
 
 			assert.ErrorIs(t, nil, tt.expectedErr)
 			assert.Equal(t, tt.expected, []interface{}{count, keepIterating})
@@ -250,7 +190,7 @@ func TestPageIterator_enumerate(t *testing.T) {
 	}
 }
 
-func TestPageIterator_Next(t *testing.T) {
+func TestPageIterator2_Next(t *testing.T) {
 	tests := []test[PageResult[person]]{
 		// TODO: Needs "valid" test
 		{
@@ -262,7 +202,7 @@ func TestPageIterator_Next(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.title, func(t *testing.T) {
-			pageResult, err := sharedPageIterator.Next()
+			pageResult, err := sharedPageIterator2.Next()
 
 			assert.ErrorIs(t, err, tt.expectedErr)
 
@@ -271,12 +211,12 @@ func TestPageIterator_Next(t *testing.T) {
 	}
 }
 
-func TestPageIterator_Last(t *testing.T) {
+func TestPageIterator2_Last(t *testing.T) {
 	tests := []test[PageResult[person]]{
 		{
 			title: "Valid",
 			setup: func() {
-				sharedPageIterator.currentPage.LastPageLink = fakeLastLink
+				sharedPageIterator2.currentPage.LastPageLink = fakeLastLink
 			},
 			input:       nil,
 			expected:    sharedPageResult,
@@ -290,7 +230,7 @@ func TestPageIterator_Last(t *testing.T) {
 				tt.setup()
 			}
 
-			pageResult, err := sharedPageIterator.Last()
+			pageResult, err := sharedPageIterator2.Last()
 
 			assert.ErrorIs(t, err, tt.expectedErr)
 			assert.Equal(t, tt.expected, pageResult)
@@ -298,7 +238,7 @@ func TestPageIterator_Last(t *testing.T) {
 	}
 }
 
-func TestPageIterator_fetchAndConvertPage(t *testing.T) {
+func TestPageIterator2_fetchAndConvertPage(t *testing.T) {
 	tests := []test[PageResult[person]]{
 		{
 			title:       "Valid",
@@ -323,10 +263,42 @@ func TestPageIterator_fetchAndConvertPage(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.title, func(t *testing.T) {
-			page, err := sharedPageIterator.fetchAndConvertPage(tt.input.(string))
+			page, err := sharedPageIterator2.fetchAndConvertPage(tt.input.(string))
 
 			assert.ErrorIs(t, err, tt.expectedErr)
 			assert.Equal(t, tt.expected, page)
+		})
+	}
+}
+
+func TestPageIterator2_fetchPage(t *testing.T) {
+	tests := []test[CollectionResponse[person]]{
+		{
+			title:       "Valid",
+			input:       fakeLastLink,
+			expected:    sharedCurrentPage,
+			expectedErr: nil,
+		},
+		{
+			title:       "Missing URI",
+			input:       "",
+			expected:    nil,
+			expectedErr: ErrEmptyURI,
+		},
+		{
+			title:       "Nil Response",
+			input:       fakeLinkNilResp,
+			expected:    nil,
+			expectedErr: ErrNilResponse,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.title, func(t *testing.T) {
+			collection, err := sharedPageIterator2.fetchPage(tt.input.(string))
+
+			assert.ErrorIs(t, err, tt.expectedErr)
+			assert.Equal(t, tt.expected, collection)
 		})
 	}
 }

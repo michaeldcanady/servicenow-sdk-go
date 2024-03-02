@@ -10,13 +10,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - `tableapi.TablePageIterator[T]` ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
 - `tableapi.NewTablePageIterator[T]` ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
+- `core.PageIterator2[T]` ([Issue #58](https://github.com/michaeldcanady/servicenow-sdk-go/issues/58))
+- `core.NewPageIterator2[T]` ([Issue #58](https://github.com/michaeldcanady/servicenow-sdk-go/issues/58))
 
 ### Changed
 
 ### Deprecated
 
-- `tableapi.NewPageIterator`
-- `tableapi.PageIterator`
+- `tableapi.NewPageIterator` ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
+- `tableapi.PageIterator` ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
+- `core.PageIterator[T]` ([Issue #58](https://github.com/michaeldcanady/servicenow-sdk-go/issues/58))
+- `core.NewPageIterator[T]` ([Issue #58](https://github.com/michaeldcanady/servicenow-sdk-go/issues/58))
 
 ### Removed
 

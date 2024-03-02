@@ -48,6 +48,7 @@ func TestNewTablePageIterator(t *testing.T) {
 
 			iterator, err := NewTablePageIterator(page, client)
 
+			// Fails due to constructor function
 			assert.Equal(t, test.expected, iterator)
 			assert.Equal(t, test.err, err)
 		})
