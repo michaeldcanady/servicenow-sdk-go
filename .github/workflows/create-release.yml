@@ -30,8 +30,13 @@ jobs:
         uses: rickstaa/action-create-tag@v1
         with:
           tag: "v${{env.VERSION}}"
-          message: "$VERSION"
+          message: "v${{env.VERSION}}"
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout new tag
+        run: |
+          git fetch
+          git checkout "v${{env.VERSION}}"
 
       - name: Create Release
         uses: anton-yurchenko/git-release@v5.0
@@ -56,4 +61,4 @@ jobs:
           git config --global user.name "GitHub Action"
           git add .
           git commit -m "Update version and CHANGELOG.md for release"
-          git push
+          git push origin main
