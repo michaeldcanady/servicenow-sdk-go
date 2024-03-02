@@ -1,20 +1,22 @@
 package core
 
 import (
+	"net/http"
 	"net/url"
 )
 
-// Deprecated: deprecated in v{unreleased}. Please use PageIterator2[T].
-// PageIterator
-type PageIterator[T any, C CollectionResponse[T]] struct {
-	currentPage PageResult[T]
-	client      Client
-	pauseIndex  int
+type Parsable[T any] func(*http.Response) (CollectionResponse[T], error)
+
+// PageIterator2[T]
+type PageIterator2[T any] struct {
+	currentPage     PageResult[T]
+	client          Client
+	pauseIndex      int
+	constructorFunc Parsable[T]
 }
 
-// Deprecated: deprecated in v{unreleased}. Please use NewPageIterator2[T].
-// NewPageIterator creates a new PageIterator instance.
-func NewPageIterator[T any, C CollectionResponse[T]](currentPage CollectionResponse[T], client Client) (*PageIterator[T, C], error) {
+// NewPageIterator2[T] creates a new PageIterator instance.
+func NewPageIterator2[T any](currentPage CollectionResponse[T], client Client, constructorFunc Parsable[T]) (*PageIterator2[T], error) {
 	if isNil(client) {
 		return nil, ErrNilClient
 	}
@@ -24,14 +26,15 @@ func NewPageIterator[T any, C CollectionResponse[T]](currentPage CollectionRespo
 		return nil, err
 	}
 
-	return &PageIterator[T, C]{
-		currentPage: page,
-		client:      client,
+	return &PageIterator2[T]{
+		currentPage:     page,
+		client:          client,
+		constructorFunc: constructorFunc,
 	}, nil
 }
 
 // Iterate iterates through pages and invokes the provided callback for each page item.
-func (pI *PageIterator[T, C]) Iterate(callback func(pageItem *T) bool) error {
+func (pI *PageIterator2[T]) Iterate(callback func(pageItem *T) bool, reversed bool) error {
 	if callback == nil {
 		return ErrNilCallback
 	}
@@ -44,15 +47,13 @@ func (pI *PageIterator[T, C]) Iterate(callback func(pageItem *T) bool) error {
 			return nil
 		}
 
-		if pI.currentPage.NextPageLink == "" {
-			// NextPageLink is empty, stop iterating through pages.
-			return nil
-		}
-
-		// TODO: Add option for reverse
-		nextPage, err := pI.Next()
+		nextPage, err := pI.nextPage(reversed)
 		if err != nil {
 			return err
+		}
+
+		if len(nextPage.Result) == 0 {
+			return nil
 		}
 
 		pI.currentPage = nextPage
@@ -61,7 +62,7 @@ func (pI *PageIterator[T, C]) Iterate(callback func(pageItem *T) bool) error {
 }
 
 // enumerate iterates through the items on the current page and invokes the callback.
-func (pI *PageIterator[T, C]) enumerate(callback func(item *T) bool) bool {
+func (pI *PageIterator2[T]) enumerate(callback func(item *T) bool) bool {
 	keepIterating := true
 
 	pageItems := pI.currentPage.Result
@@ -81,18 +82,34 @@ func (pI *PageIterator[T, C]) enumerate(callback func(item *T) bool) bool {
 	return keepIterating
 }
 
+// nextPage fetches the next (or previous) page of results.
+// If reversed is true, it fetches the previous page; otherwise, it fetches the next page.
+// Returns an empty PageResult if there is no next (or previous) link.
+func (pI *PageIterator2[T]) nextPage(reversed bool) (PageResult[T], error) {
+	nextLink := pI.currentPage.NextPageLink
+	if reversed {
+		nextLink = pI.currentPage.PreviousPageLink
+	}
+
+	if nextLink == "" {
+		return PageResult[T]{}, nil
+	}
+
+	return pI.fetchAndConvertPage(nextLink)
+}
+
 // Next fetches the Next page of results.
-func (pI *PageIterator[T, C]) Next() (PageResult[T], error) {
+func (pI *PageIterator2[T]) Next() (PageResult[T], error) {
 	return pI.fetchAndConvertPage(pI.currentPage.NextPageLink)
 }
 
 // Last fetches the last page of results.
-func (pI *PageIterator[T, C]) Last() (PageResult[T], error) {
+func (pI *PageIterator2[T]) Last() (PageResult[T], error) {
 	return pI.fetchAndConvertPage(pI.currentPage.LastPageLink)
 }
 
 // fetchAndConvertPage fetches next page and converts it
-func (pI *PageIterator[T, C]) fetchAndConvertPage(uri string) (PageResult[T], error) {
+func (pI *PageIterator2[T]) fetchAndConvertPage(uri string) (PageResult[T], error) {
 	var page PageResult[T]
 
 	resp, err := pI.fetchPage(uri)
@@ -100,7 +117,7 @@ func (pI *PageIterator[T, C]) fetchAndConvertPage(uri string) (PageResult[T], er
 		return page, err
 	}
 
-	page, err = convertToPage[T]((*resp))
+	page, err = convertToPage(resp)
 	if err != nil {
 		return page, err
 	}
@@ -109,10 +126,7 @@ func (pI *PageIterator[T, C]) fetchAndConvertPage(uri string) (PageResult[T], er
 }
 
 // fetchPage fetches the specified uri page of results.
-func (pI *PageIterator[T, C]) fetchPage(uri string) (*C, error) {
-	var collectionResp C
-	var err error
-
+func (pI *PageIterator2[T]) fetchPage(uri string) (CollectionResponse[T], error) {
 	if uri == "" {
 		return nil, ErrEmptyURI
 	}
@@ -133,10 +147,10 @@ func (pI *PageIterator[T, C]) fetchPage(uri string) (*C, error) {
 		return nil, err
 	}
 
-	err = ParseResponse(resp, &collectionResp)
+	collectionResp, err := pI.constructorFunc(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &collectionResp, nil
+	return collectionResp, nil
 }

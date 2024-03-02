@@ -1,23 +1,36 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/core"
+import (
+	"net/http"
 
-// TablePageIterator[T] is an iterator over pages of table entries.
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+)
+
+// TablePageIterato2[T] is an iterator over pages of table entries.
 type TablePageIterator[T Entry] struct {
 	// pageIterator is the core page iterator that this table page iterator wraps.
-	pageIterator core.PageIterator[T, *TableCollectionResponse2[T]]
+	pageIterator core.PageIterator2[T]
 }
 
-// NewTablePageIterator creates a new TablePageIterator instance.
-// It takes the current page of results and a client, and returns a pointer to the new TablePageIterator.
-// If there is an error while creating the core page iterator, it returns the error.
-func NewTablePageIterator[T Entry](currentPage *TableCollectionResponse2[T], client core.Client) (*TablePageIterator[T], error) {
-	pageIterator, err := core.NewPageIterator[T, *TableCollectionResponse2[T]](currentPage, client)
+func constructTableCollection[T Entry](response *http.Response) (core.CollectionResponse[T], error) {
+	resp := &TableCollectionResponse2[T]{}
+
+	err := internal.ParseResponse(response, resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+// NewTablePageIterator[T] creates a new TablePageIterator2 instance.
+func NewTablePageIterator[T Entry](collection *TableCollectionResponse2[T], client core.Client) (*TablePageIterator[T], error) {
+	pageIterator, err := core.NewPageIterator2[T](collection, client, constructTableCollection[T])
 	if err != nil {
 		return nil, err
 	}
 
 	return &TablePageIterator[T]{
-		(*pageIterator),
+		pageIterator: (*pageIterator),
 	}, nil
 }
