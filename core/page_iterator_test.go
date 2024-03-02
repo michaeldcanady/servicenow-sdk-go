@@ -119,6 +119,7 @@ func TestNewPageIterator(t *testing.T) {
 func TestPageIterator_Iterate(t *testing.T) {
 	var count int
 
+	//nolint:dupl
 	tests := []test[int]{
 		{
 			title:       "Missing Callback",
@@ -196,6 +197,7 @@ func TestPageIterator_Iterate(t *testing.T) {
 	}
 }
 
+//nolint:dupl
 func TestPageIterator_enumerate(t *testing.T) {
 	var count int
 
