@@ -2,39 +2,38 @@ name: Create Weekly Preview Release
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Weekly on Sunday at midnight (UTC)
+    - cron: "0 0 * * 0" # Weekly on Sunday at midnight (UTC)
   workflow_dispatch: # Manual trigger
 
 env:
   PREVIEW_VERSION:
 
 jobs:
-  create_release:
+  create_preview_release:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Read VERSION file
-      id: read_version
-      run: |
-        unreleased_version=$(cat VERSION)
-        echo "PREVIEW_VERSION=$unreleased_version-preview$(date +'%Y%m%d')" >> $GITHUB_ENV
-      shell: bash
+      - name: Read VERSION file
+        id: read_version
+        run: |
+          unreleased_version=$(cat VERSION)
+          echo "PREVIEW_VERSION=$unreleased_version-preview$(date +'%Y%m%d')" >> $GITHUB_ENV
+        shell: bash
 
-    - name: Create and push tag
-      uses: rickstaa/action-create-tag@v1
-      with:
-        tag: "v${{env.PREVIEW_VERSION}}"
-        message: "Preview Release $PREVIEW_VERSION"
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create and push tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: "v${{env.PREVIEW_VERSION}}"
+          message: "Preview Release $PREVIEW_VERSION"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-
-    - name: Create Release
-      id: create_release
-      uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        automatic_release_tag: "v${{env.PREVIEW_VERSION}}"
-        prerelease: true
-        title: Preview Release ${{env.PREVIEW_VERSION}}
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release
+        id: create_release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          automatic_release_tag: "v${{env.PREVIEW_VERSION}}"
+          prerelease: true
+          title: Preview Release ${{env.PREVIEW_VERSION}}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
