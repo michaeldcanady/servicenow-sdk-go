@@ -2,6 +2,7 @@ package core
 
 import (
 	"net/http"
+	"net/url"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -297,13 +298,23 @@ func TestPageIterator2_fetchPage(t *testing.T) {
 			expected:    nil,
 			expectedErr: ErrNilResponse,
 		},
+		{
+			title:    "Bad Request URI",
+			input:    "https://www.badrequesturi.com#fragment",
+			expected: nil,
+			expectedErr: &url.Error{
+				Op:  "parse",
+				URL: "https://www.badrequesturi.com#fragment",
+				Err: url.InvalidHostError("#"),
+			},
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.title, func(t *testing.T) {
 			collection, err := sharedPageIterator2.fetchPage(tt.input.(string))
 
-			assert.ErrorIs(t, err, tt.expectedErr)
+			assert.Equal(t, err, tt.expectedErr)
 			assert.Equal(t, tt.expected, collection)
 		})
 	}
