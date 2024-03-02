@@ -37,7 +37,6 @@ jobs:
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           automatic_release_tag: "v${{env.VERSION}}"
-          prerelease: true
           title: Release v${{env.VERSION}}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           files: |
@@ -57,4 +56,4 @@ jobs:
           git config --global user.name "GitHub Action"
           git add .
           git commit -m "Update version and CHANGELOG.md for release"
-          git push origin main
+          git push --force origin main
