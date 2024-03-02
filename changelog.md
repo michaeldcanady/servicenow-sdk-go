@@ -8,12 +8,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+## [1.5.0] - (02/03/2024)
+
+### Added
+
 - `tableapi.TablePageIterator[T]` ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
 - `tableapi.NewTablePageIterator[T]` ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
 - `core.PageIterator2[T]` ([Issue #58](https://github.com/michaeldcanady/servicenow-sdk-go/issues/58))
 - `core.NewPageIterator2[T]` ([Issue #58](https://github.com/michaeldcanady/servicenow-sdk-go/issues/58))
-
-### Changed
 
 ### Deprecated
 
@@ -21,8 +31,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `tableapi.PageIterator` ([Issue #91](https://github.com/michaeldcanady/servicenow-sdk-go/issues/91))
 - `core.PageIterator[T]` ([Issue #58](https://github.com/michaeldcanady/servicenow-sdk-go/issues/58))
 - `core.NewPageIterator[T]` ([Issue #58](https://github.com/michaeldcanady/servicenow-sdk-go/issues/58))
-
-### Removed
 
 ### Fixed
 
@@ -59,17 +67,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `TableRequestBuilder.Post2` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
 - `TableItemRequestBuilder.Put` ([Issue #81](https://github.com/michaeldcanady/servicenow-sdk-go/issues/81))
 
-### Removed
-
-### Fixed
-
 ## [1.3.1] - (16/12/2023)
-
-### Added
-
-### Changed
-
-### Removed
 
 ### Fixed
 

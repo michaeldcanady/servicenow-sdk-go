@@ -4,7 +4,7 @@ import (
 	"net/url"
 )
 
-// Deprecated: deprecated in v{unreleased}. Please use PageIterator2[T].
+// Deprecated: deprecated in v1.5.0. Please use PageIterator2[T].
 // PageIterator
 type PageIterator[T any, C CollectionResponse[T]] struct {
 	currentPage PageResult[T]
@@ -12,7 +12,7 @@ type PageIterator[T any, C CollectionResponse[T]] struct {
 	pauseIndex  int
 }
 
-// Deprecated: deprecated in v{unreleased}. Please use NewPageIterator2[T].
+// Deprecated: deprecated in v1.5.0. Please use NewPageIterator2[T].
 // NewPageIterator creates a new PageIterator instance.
 func NewPageIterator[T any, C CollectionResponse[T]](currentPage CollectionResponse[T], client Client) (*PageIterator[T, C], error) {
 	if isNil(client) {
