@@ -197,6 +197,32 @@ func TestPageIterator2_enumerate(t *testing.T) {
 	}
 }
 
+func TestPageIterator2_nextPage(t *testing.T) {
+	tests := []test[PageResult[person]]{
+		{
+			title:       "Normal",
+			input:       false,
+			expected:    PageResult[person]{},
+			expectedErr: nil,
+		},
+		{
+			title:       "Reversed",
+			input:       true,
+			expected:    PageResult[person]{},
+			expectedErr: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.title, func(t *testing.T) {
+			page, err := sharedPageIterator2.nextPage(tt.input.(bool))
+
+			assert.Equal(t, err, tt.expectedErr)
+			assert.Equal(t, tt.expected, page)
+		})
+	}
+}
+
 func TestPageIterator2_Next(t *testing.T) {
 	tests := []test[PageResult[person]]{
 		// TODO: Needs "valid" test
