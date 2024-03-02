@@ -2,18 +2,50 @@ name: Create GitHub release
 on:
   push:
     tags: ["v[1-9]*.[1-9]*.[1-9]*$"]
+  workflow_dispatch:
 
 jobs:
-  create_release:
+  create_stable_release:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Release
-        uses: anton-yurchenko/git-release@v5.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DRAFT_RELEASE: "false"
-          PRE_RELEASE: "false"
-          CHANGELOG_FILE: "CHANGELOG.md"
-          ALLOW_EMPTY_CHANGELOG: "true"
+
+      - name: Get the version
+        id: get_version
+        run: echo "::set-output name=version::$(cat VERSION)"
+
+      - name: Replace {unreleased} in .go files
+        run: |
+          find . -name "*.go" -type f -exec sed -i "s/{unreleased}/${{ steps.get_version.outputs.version }}/g" {} \;
+
+      - name: Update changelog.md
+        run: |
+          sed -i "s/Unreleased/${{ steps.get_version.outputs.version }}/g" changelog.md
+          sed -i "s#(\(dd-mm-yyyy\))#\($(date +'%d-%m-%Y')\)#g" changelog.md
+          perl -0777 -i -pe 's/### (Added|Changed|Deprecated|Removed|Fixed)\s*(?=###|##)//gs' changelog.md
+
+      #- name: Release
+      #  uses: anton-yurchenko/git-release@v5.0
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #    DRAFT_RELEASE: "false"
+      #    PRE_RELEASE: "false"
+      #    CHANGELOG_FILE: "CHANGELOG.md"
+      #    ALLOW_EMPTY_CHANGELOG: "true"
+
+      - name: Remove header
+        run: |
+          awk '/##/{flag=1} flag' changelog.md > temp && mv temp changelog.md
+
+      - name: Add Unreleased section to CHANGELOG.md
+        run: |
+          echo -e "# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on Keep a Changelog, and this project adheres to Semantic Versioning.\n\n## [Unreleased] - (dd/mm/yyyy)\n\n### Added\n\n### Changed\n\n### Deprecated\n\n### Removed\n\n### Fixed\n\n$(cat changelog.md)" > changelog.md
+
+      - name: Push updates
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Action"
+          git add .
+          git commit -m "Update version and CHANGELOG.md for release"
+          git push
