@@ -2,6 +2,7 @@ name: Create GitHub release
 on:
   push:
     tags: ["v[1-9]*.[1-9]*.[1-9]*$"]
+  workflow_dispatch:
 
 jobs:
   create_stable_release:
