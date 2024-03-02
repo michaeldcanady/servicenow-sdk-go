@@ -15,14 +15,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Read VERSION file
+      - name: Get Version
         id: read_version
         run: |
           unreleased_version=$(cat VERSION)
           echo "PREVIEW_VERSION=$unreleased_version-preview$(date +'%Y%m%d')" >> $GITHUB_ENV
         shell: bash
 
-      - name: Create and push tag
+      - name: Create Tag
         uses: rickstaa/action-create-tag@v1
         with:
           tag: "v${{env.PREVIEW_VERSION}}"
@@ -30,10 +30,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release
-        id: create_release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          automatic_release_tag: "v${{env.PREVIEW_VERSION}}"
-          prerelease: true
-          title: Preview Release ${{env.PREVIEW_VERSION}}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        uses: anton-yurchenko/git-release@v5.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRAFT_RELEASE: "false"
+          PRE_RELEASE: "true"
+          CHANGELOG_FILE: "CHANGELOG.md"
+          ALLOW_EMPTY_CHANGELOG: "true"
