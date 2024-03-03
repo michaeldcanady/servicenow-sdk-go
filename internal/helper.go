@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"reflect"
 )
 
 // FromJSON[T] Unmarshalls response body into v
@@ -39,4 +40,10 @@ func ParseResponse[T Response](response *http.Response, value T) error {
 	value.ParseHeaders(response.Header)
 
 	return nil
+}
+
+// IsNil checks if a value is nil or a nil interface
+func IsNil(a interface{}) bool {
+	defer func() { _ = recover() }()
+	return a == nil || reflect.ValueOf(a).IsNil()
 }
