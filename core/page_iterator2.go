@@ -108,7 +108,17 @@ func (pI *PageIterator2[T]) Last() (PageResult[T], error) {
 	return pI.fetchAndConvertPage(pI.currentPage.LastPageLink)
 }
 
-// fetchAndConvertPage fetches next page and converts it
+// First fetches the first page of results.
+func (pI *PageIterator2[T]) First() (PageResult[T], error) {
+	return pI.fetchAndConvertPage(pI.currentPage.FirstPageLink)
+}
+
+// Previous fetches the previous page of results.
+func (pI *PageIterator2[T]) Previous() (PageResult[T], error) {
+	return pI.fetchAndConvertPage(pI.currentPage.PreviousPageLink)
+}
+
+// fetchAndConvertPage fetches provided page and converts it
 func (pI *PageIterator2[T]) fetchAndConvertPage(uri string) (PageResult[T], error) {
 	var page PageResult[T]
 

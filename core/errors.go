@@ -7,23 +7,23 @@ import (
 )
 
 var (
-	ErrEmptyURI                = errors.New("uri cannot be empty")
-	ErrNilPathParameters       = errors.New("uri template parameters cannot be nil")
-	ErrNilQueryParamters       = errors.New("uri query parameters cannot be nil")
-	ErrMissingBasePathParam    = errors.New("pathParameters must contain a value for \"baseurl\" for the URL to be built")
-	ErrMissingBasePathTemplate = errors.New("template must contain a placeholder for \"{+baseurl}\" for the URL to be built")
-	ErrInvalidHeaderType       = errors.New("headers must be a pointer or an http.Header")
-	ErrEmptyRawUrl             = errors.New("empty raw URL") //nolint:stylecheck
-	ErrMissingSchema           = errors.New("URL is missing schema")
+	ErrEmptyURI                = internal.ErrEmptyURI
+	ErrNilPathParameters       = internal.ErrNilPathParameters
+	ErrNilQueryParamters       = internal.ErrNilQueryParamters
+	ErrMissingBasePathParam    = internal.ErrMissingBasePathParam
+	ErrMissingBasePathTemplate = internal.ErrMissingBasePathTemplate
+	ErrInvalidHeaderType       = internal.ErrInvalidHeaderType
+	ErrEmptyRawUrl             = internal.ErrEmptyRawURL //nolint:stylecheck
+	ErrMissingSchema           = internal.ErrMissingSchema
 	ErrNilResponse             = internal.ErrNilResponse
-	ErrNilResponseBody         = errors.New("Response body is nil")
-	ErrNilSource               = errors.New("source is nil")
+	ErrNilResponseBody         = internal.ErrNilResponseBody
+	ErrNilSource               = internal.ErrNilSource
 
 	//Page Iterator
-	ErrNilClient          = errors.New("client can't be nil")
-	ErrNilResult          = errors.New("result property missing in response object")
-	ErrWrongResponseType  = errors.New("incorrect Response Type")
-	ErrParsing            = errors.New("parsing nextLink url failed")
-	ErrNilCallback        = errors.New("callback can't be nil")
+	ErrNilClient          = internal.ErrNilClient
+	ErrNilResult          = internal.ErrNilResult
+	ErrWrongResponseType  = internal.ErrWrongResponseType
+	ErrParsing            = internal.ErrParsing
+	ErrNilCallback        = internal.ErrNilCallback
 	ErrNilConstructorFunc = errors.New("constructorFunc can't be nil")
 )

@@ -271,6 +271,60 @@ func TestPageIterator2_Last(t *testing.T) {
 	}
 }
 
+func TestPageIterator2_First(t *testing.T) {
+	tests := []test[PageResult[person]]{
+		{
+			title: "Valid",
+			setup: func() {
+				sharedPageIterator2.currentPage.FirstPageLink = fakeLastLink
+			},
+			input:       nil,
+			expected:    sharedPageResult,
+			shouldErr:   false,
+			expectedErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.title, func(t *testing.T) {
+			if tt.setup != nil {
+				tt.setup()
+			}
+
+			pageResult, err := sharedPageIterator2.First()
+
+			assert.ErrorIs(t, err, tt.expectedErr)
+			assert.Equal(t, tt.expected, pageResult)
+		})
+	}
+}
+
+func TestPageIterator2_Previous(t *testing.T) {
+	tests := []test[PageResult[person]]{
+		{
+			title: "Valid",
+			setup: func() {
+				sharedPageIterator2.currentPage.PreviousPageLink = fakeLastLink
+			},
+			input:       nil,
+			expected:    sharedPageResult,
+			shouldErr:   false,
+			expectedErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.title, func(t *testing.T) {
+			if tt.setup != nil {
+				tt.setup()
+			}
+
+			pageResult, err := sharedPageIterator2.Previous()
+
+			assert.ErrorIs(t, err, tt.expectedErr)
+			assert.Equal(t, tt.expected, pageResult)
+		})
+	}
+}
+
 func TestPageIterator2_fetchAndConvertPage(t *testing.T) {
 	tests := []test[PageResult[person]]{
 		{
