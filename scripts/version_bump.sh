@@ -26,19 +26,12 @@ else
   bug_fix=false
 fi
 
-# Check if the last version contains "-preview"
 if [[ $last_release == *"-preview"* ]]; then
-  # If the minor version is 0, increment the major version
-  if [[ $minor_version == 0 ]]; then
-    major_version=$((major_version + 1))
-  # If the patch version is 0, increment the minor version
-  elif [[ $patch_version == 0 ]]; then
-    minor_version=$((minor_version + 1))
-  fi
-  # Reset the patch version to 0
-  patch_version=0
+  exit 0
+fi
+
 # If any public API changes have been made, increment the minor version
-elif [[ -n $api_changes ]]; then
+if [[ -n $api_changes ]]; then
   minor_version=$((minor_version + 1))
   patch_version=0
 # If the current branch is a bug-fix and the minor version isn't incremented, increment the patch version

@@ -7,9 +7,16 @@
       "label": "Run gofmt",
       "type": "shell",
       "command": "gofmt -s -w ./..",
+      "options": {
+        "PATH": "${env:PATH};C:\\Program Files\\Git\\usr\\bin",
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": [],
       "group": {
         "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always"
       }
     },
     {
@@ -18,11 +25,11 @@
       "command": "golangci-lint run",
       "options": {
         "env": {
-          "PATH": "${env:PATH};C:\\Program Files\\Git\\usr\\bin"
+          "PATH": "${env:PATH};C:\\Program Files\\Git\\usr\\bin",
+          "cwd": "${workspaceFolder}"
         }
       },
       "group": {
-        "kind": "build",
         "isDefault": true
       },
       "presentation": {
