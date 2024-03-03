@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"reflect"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/mozillazg/go-httpheader"
 )
 
@@ -65,6 +66,20 @@ func (rI *RequestInformation) SetStreamContent(content []byte) {
 	if rI.Headers != nil {
 		rI.Headers.Add(contentTypeHeader, binaryContentType)
 	}
+}
+
+func (rI *RequestInformation) GetContent() []byte {
+	return rI.Content
+}
+
+func (rI *RequestInformation) GetHeaders() internal.RequestHeader {
+	headers := internal.NewRequestHeader()
+	headers.SetAll(rI.Headers)
+	return headers
+}
+
+func (rI *RequestInformation) GetMethod() string {
+	return rI.Method.String()
 }
 
 // AddQueryParameters adds the query parameters to the request by reading the properties from the provided object.

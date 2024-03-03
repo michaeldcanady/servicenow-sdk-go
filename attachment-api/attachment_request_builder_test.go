@@ -82,6 +82,8 @@ func TestAttachmentRequestBuilderGet(t *testing.T) {
 			]
 		  }`
 
+		w.Header().Set("Content-Type", "application/json")
+
 		w.WriteHeader(http.StatusOK)
 		_, err := w.Write([]byte(responseJSON)) //nolint:errcheck
 		if err != nil {
