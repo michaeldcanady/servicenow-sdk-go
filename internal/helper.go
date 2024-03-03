@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// FromJSON[T] Unmarshalls response body into v
 func FromJSON[T any](response *http.Response, v T) error {
 	if response == nil {
 		return ErrNilResponse
