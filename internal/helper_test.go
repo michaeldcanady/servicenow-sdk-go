@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type MockParseResponse struct {
@@ -14,6 +16,17 @@ type MockParseResponse struct {
 
 func (m *MockParseResponse) ParseHeaders(headers http.Header) {
 	m.ParseHeadersCalled = true
+}
+
+type Test[T any] struct {
+	Title string
+	// Setup to make needed modifications for a specific test
+	Setup func()
+	// Cleanup to undo changes do to reusable items
+	Cleanup     func()
+	Input       interface{}
+	Expected    T
+	expectedErr error
 }
 
 type TestData struct {
@@ -139,6 +152,24 @@ func TestParseResponse(t *testing.T) {
 			if tc.expectedCalled != tc.value.ParseHeadersCalled {
 				t.Errorf("Expected ParseHeaders to be called: %v, but it was not", tc.expectedCalled)
 			}
+		})
+	}
+}
+
+func TestIsNil(t *testing.T) {
+	testCases := []Test[bool]{
+		{
+			Title:       "Map",
+			Input:       nil,
+			expectedErr: nil,
+			Expected:    true,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.Title, func(t *testing.T) {
+			output := IsNil(tc.Input)
+			assert.Equal(t, tc.Expected, output)
 		})
 	}
 }

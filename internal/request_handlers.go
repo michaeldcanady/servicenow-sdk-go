@@ -10,6 +10,10 @@ type BaseHandler struct {
 	next RequestHandler
 }
 
+func NewBaseHandler() *BaseHandler {
+	return &BaseHandler{}
+}
+
 // SetNext method for BaseHandler
 func (b *BaseHandler) SetNext(handler RequestHandler) {
 	b.next = handler

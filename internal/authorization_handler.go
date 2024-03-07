@@ -1,8 +1,15 @@
 package internal
 
 type AuthorizationHandler struct {
-	handler  BaseHandler
+	*BaseHandler
 	provider AuthorizationProvider
+}
+
+func NewAuthorizationHandler(provider AuthorizationProvider) *AuthorizationHandler {
+	return &AuthorizationHandler{
+		BaseHandler: NewBaseHandler(),
+		provider:    provider,
+	}
 }
 
 func (a *AuthorizationHandler) Handle(request RequestInformation) error {
@@ -10,5 +17,5 @@ func (a *AuthorizationHandler) Handle(request RequestInformation) error {
 	if err != nil {
 		return err
 	}
-	return a.handler.Handle(request)
+	return a.BaseHandler.Handle(request)
 }
