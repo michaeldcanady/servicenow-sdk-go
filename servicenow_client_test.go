@@ -47,7 +47,6 @@ func (rI *MockRequestInformation) ToRequest() (*http.Request, error) {
 }
 
 func (rI *MockRequestInformation) ToRequestWithContext(ctx context.Context) (*http.Request, error) {
-
 	request, err := http.NewRequestWithContext(ctx, "GET", "https://www.example.com", nil)
 	if err != nil {
 		return nil, err
