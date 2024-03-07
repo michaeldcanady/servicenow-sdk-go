@@ -115,7 +115,9 @@ func TestClientNow(t *testing.T) {
 }
 
 func TestClientToRequest(t *testing.T) {
-	requestInfo := &MockRequestInformation{}
+	requestInfo := &MockRequestInformation{
+		Headers: http.Header{},
+	}
 
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
