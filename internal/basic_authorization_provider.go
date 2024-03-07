@@ -13,7 +13,6 @@ func NewBaseAuthorizationProvider(credential Credential) *BaseAuthorizationProvi
 }
 
 func (b *BaseAuthorizationProvider) AuthorizeRequest(request RequestInformation) error {
-
 	if IsNil(request) {
 		return ErrNilRequest
 	}
