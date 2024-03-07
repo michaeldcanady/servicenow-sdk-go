@@ -10,12 +10,15 @@ import (
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
 type ServiceNowClient struct {
-	Credential core.Credential
-	BaseUrl    string //nolint:stylecheck
-	Session    http.Client
+	// Deprecated: deprecated since v{unreleased}.
+	Credential   core.Credential
+	authProvider internal.BaseAuthorizationProvider
+	BaseUrl      string //nolint:stylecheck
+	Session      http.Client
 }
 
 // Now returns a NowRequestBuilder associated with the Client.
@@ -38,9 +41,10 @@ func NewServiceNowClient(credential core.Credential, instance string) *ServiceNo
 	}
 
 	return &ServiceNowClient{
-		Credential: credential,
-		BaseUrl:    instance,
-		Session:    http.Client{},
+		Credential:   credential,
+		authProvider: *internal.NewBaseAuthorizationProvider(credential),
+		BaseUrl:      instance,
+		Session:      http.Client{},
 	}
 }
 
@@ -96,17 +100,16 @@ func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo
 		return nil, ErrNilContext
 	}
 
+	err := c.authProvider.AuthorizeRequest(requestInfo)
+	if err != nil {
+		return nil, err
+	}
+
 	request, err := requestInfo.ToRequestWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	authHeader, err := c.Credential.GetAuthentication()
-	if err != nil {
-		return nil, err
-	}
-
-	request.Header.Add("Authorization", authHeader)
 	request.Header.Add("Content-Type", "application/json")
 	request.Header.Add("Accept", "application/json")
 	return request, nil
