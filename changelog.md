@@ -19,6 +19,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
+- Improperly embedded `core.PageIterator2[T]` in `tableapi.TablePageIterator` ([Issue #105](https://github.com/michaeldcanady/servicenow-sdk-go/issues/105))
+
 ## [1.5.0] - (02/03/2024)
 
 ### Added
