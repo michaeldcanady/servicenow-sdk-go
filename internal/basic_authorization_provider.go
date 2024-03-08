@@ -6,10 +6,15 @@ type BaseAuthorizationProvider struct {
 	credential Credential
 }
 
-func NewBaseAuthorizationProvider(credential Credential) *BaseAuthorizationProvider {
+func NewBaseAuthorizationProvider(credential Credential) (*BaseAuthorizationProvider, error) {
+
+	if IsNil(credential) {
+		return nil, errNilCredential
+	}
+
 	return &BaseAuthorizationProvider{
 		credential: credential,
-	}
+	}, nil
 }
 
 func (b *BaseAuthorizationProvider) AuthorizeRequest(request RequestInformation) error {

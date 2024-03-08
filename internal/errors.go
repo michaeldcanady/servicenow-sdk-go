@@ -14,6 +14,7 @@ var (
 	ErrNilResponse             = errors.New("Response is nil")
 	ErrNilResponseBody         = errors.New("response body is nil")
 	ErrNilSource               = errors.New("source is nil")
+	errNilCredential           = errors.New("credential is nil")
 
 	//Page Iterator
 	ErrNilClient         = errors.New("client can't be nil")
