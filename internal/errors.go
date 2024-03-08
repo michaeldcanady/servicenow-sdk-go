@@ -14,6 +14,7 @@ var (
 	ErrNilResponse             = errors.New("Response is nil")
 	ErrNilResponseBody         = errors.New("response body is nil")
 	ErrNilSource               = errors.New("source is nil")
+	ErrNilCredential           = errors.New("credential is nil")
 
 	//Page Iterator
 	ErrNilClient         = errors.New("client can't be nil")
@@ -21,4 +22,7 @@ var (
 	ErrWrongResponseType = errors.New("incorrect Response Type")
 	ErrParsing           = errors.New("parsing nextLink url failed")
 	ErrNilCallback       = errors.New("callback can't be nil")
+
+	//Authorization Provider
+	ErrNilRequest = errors.New("request can't be nil")
 )
