@@ -16,7 +16,7 @@ import (
 type ServiceNowClient struct {
 	// Deprecated: deprecated since v{unreleased}.
 	Credential   core.Credential
-	authProvider internal.BaseAuthorizationProvider
+	authProvider *internal.BaseAuthorizationProvider
 	BaseUrl      string //nolint:stylecheck
 	Session      http.Client
 }
@@ -27,6 +27,7 @@ func (c *ServiceNowClient) Now() *NowRequestBuilder {
 	return NewNowRequestBuilder(c.BaseUrl+"/now", c)
 }
 
+// Deprecated: deprecated since v{unreleased}. Please use `NewServiceNowClient2` instead.
 // NewServiceNowClient creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
@@ -40,12 +41,40 @@ func NewServiceNowClient(credential core.Credential, instance string) *ServiceNo
 		instance = "https://" + instance
 	}
 
+	authProvider, _ := internal.NewBaseAuthorizationProvider(credential)
+
 	return &ServiceNowClient{
 		Credential:   credential,
-		authProvider: *internal.NewBaseAuthorizationProvider(credential),
+		authProvider: authProvider,
 		BaseUrl:      instance,
 		Session:      http.Client{},
 	}
+}
+
+// NewServiceNowClient2 creates a new instance of the ServiceNow client.
+// It accepts a UsernamePasswordCredential and an instance URL.
+// If the instance URL does not end with ".service-now.com/api", it appends the suffix.
+// It returns a pointer to the Client.
+func NewServiceNowClient2(credential core.Credential, instance string) (*ServiceNowClient, error) {
+	if !strings.HasSuffix(instance, ".service-now.com/api") {
+		instance += ".service-now.com/api"
+	}
+
+	if !strings.HasPrefix(instance, "https://") {
+		instance = "https://" + instance
+	}
+
+	authProvider, err := internal.NewBaseAuthorizationProvider(credential)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ServiceNowClient{
+		Credential:   credential,
+		authProvider: authProvider,
+		BaseUrl:      instance,
+		Session:      http.Client{},
+	}, nil
 }
 
 func (c *ServiceNowClient) unmarshallError(response *http.Response) error {

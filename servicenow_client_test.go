@@ -12,8 +12,25 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/mozillazg/go-httpheader"
 	"github.com/stretchr/testify/assert"
+)
+
+type test[T any] struct {
+	Title string
+	// Setup to make needed modifications for a specific test
+	Setup func()
+	// Cleanup to undo changes do to reusable items
+	Cleanup     func()
+	Input       interface{}
+	Expected    T
+	expectedErr error
+}
+
+var (
+	sharedUsernameAndPasswordCred = credentials.NewUsernamePasswordCredential("username", "password")
+	sharedServiceNowClient        = ServiceNowClient{}
 )
 
 type MockRequestInformation struct {
@@ -92,6 +109,43 @@ func TestNewClient(t *testing.T) {
 	client := NewServiceNowClient(cred, "instance")
 
 	assert.NotNil(t, client)
+}
+
+func TestNewClient2(t *testing.T) {
+	authProvider, _ := internal.NewBaseAuthorizationProvider(sharedUsernameAndPasswordCred)
+
+	tests := []test[*ServiceNowClient]{
+		{
+			Title: "Valid",
+			Input: []interface{}{"instance", sharedUsernameAndPasswordCred},
+			Expected: &ServiceNowClient{
+				Credential:   sharedUsernameAndPasswordCred,
+				authProvider: authProvider,
+				BaseUrl:      "https://instance.service-now.com/api",
+				Session:      http.Client{},
+			},
+			expectedErr: nil,
+		},
+		{
+			Title:       "Nil Credential",
+			Input:       []interface{}{"instance", (*credentials.UsernamePasswordCredential)(nil)},
+			Expected:    nil,
+			expectedErr: internal.ErrNilCredential,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Title, func(t *testing.T) {
+			values := test.Input.([]interface{})
+
+			instance := values[0].(string)
+			cred := values[1].(core.Credential)
+
+			client, err := NewServiceNowClient2(cred, instance)
+			assert.Equal(t, test.Expected, client)
+			assert.Equal(t, test.expectedErr, err)
+		})
+	}
 }
 
 func TestClientURL(t *testing.T) {

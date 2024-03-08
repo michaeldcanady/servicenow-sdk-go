@@ -7,9 +7,8 @@ type BaseAuthorizationProvider struct {
 }
 
 func NewBaseAuthorizationProvider(credential Credential) (*BaseAuthorizationProvider, error) {
-
 	if IsNil(credential) {
-		return nil, errNilCredential
+		return nil, ErrNilCredential
 	}
 
 	return &BaseAuthorizationProvider{
