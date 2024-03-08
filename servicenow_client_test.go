@@ -30,7 +30,6 @@ type test[T any] struct {
 
 var (
 	sharedUsernameAndPasswordCred = credentials.NewUsernamePasswordCredential("username", "password")
-	sharedServiceNowClient        = ServiceNowClient{}
 )
 
 type MockRequestInformation struct {
