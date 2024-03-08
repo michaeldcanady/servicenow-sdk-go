@@ -25,14 +25,21 @@ func TestNewBaseAuthorizationProvider(t *testing.T) {
 			Title:       "Valid",
 			Input:       &sharedCredential,
 			Expected:    &sharedBaseAuthorizationProvider,
-			expectedErr: nil,
+			ExpectedErr: nil,
+		},
+		{
+			Title:       "Nil Credential",
+			Input:       (*MockCredential)(nil),
+			Expected:    nil,
+			ExpectedErr: ErrNilCredential,
 		},
 	}
+
 	for _, test := range tests {
 		t.Run(test.Title, func(t *testing.T) {
 			provider, err := NewBaseAuthorizationProvider(test.Input.(Credential))
 			assert.Equal(t, test.Expected, provider)
-			assert.Equal(t, test.expectedErr, err)
+			assert.Equal(t, test.ExpectedErr, err)
 		})
 	}
 }
@@ -49,20 +56,20 @@ func TestBaseAuthorizationProvider_AuthorizeRequest(t *testing.T) {
 					authorizationHeader: []string{"Bearer dfasdfdsfd"},
 				},
 			},
-			expectedErr: nil,
+			ExpectedErr: nil,
 		},
 		{
 			Title:       "Nil Request",
 			Input:       (*MockRequestInformation)(nil),
 			Expected:    nil,
-			expectedErr: ErrNilRequest,
+			ExpectedErr: ErrNilRequest,
 		},
 	}
 	for _, test := range tests {
 		t.Run(test.Title, func(t *testing.T) {
 			err := sharedBaseAuthorizationProvider.AuthorizeRequest(test.Input.(RequestInformation))
 			assert.Equal(t, test.Expected, test.Input)
-			assert.Equal(t, test.expectedErr, err)
+			assert.Equal(t, test.ExpectedErr, err)
 		})
 	}
 }

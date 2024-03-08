@@ -26,7 +26,7 @@ type Test[T any] struct {
 	Cleanup     func()
 	Input       interface{}
 	Expected    T
-	expectedErr error
+	ExpectedErr error
 }
 
 type TestData struct {
@@ -161,7 +161,7 @@ func TestIsNil(t *testing.T) {
 		{
 			Title:       "Map",
 			Input:       nil,
-			expectedErr: nil,
+			ExpectedErr: nil,
 			Expected:    true,
 		},
 	}

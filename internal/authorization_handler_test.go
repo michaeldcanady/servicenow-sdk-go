@@ -97,7 +97,7 @@ func TestAuthorizationHandler_Handler(t *testing.T) {
 		t.Run(test.Title, func(t *testing.T) {
 			err := sharedAuthorizationHandler.Handle(test.Input.(RequestInformation))
 
-			assert.Equal(t, test.expectedErr, err)
+			assert.Equal(t, test.ExpectedErr, err)
 		})
 	}
 }
