@@ -14,7 +14,7 @@ import (
 )
 
 type ServiceNowClient struct {
-	// Deprecated: deprecated since v{unreleased}.
+	// Deprecated: deprecated since v1.6.0.
 	Credential   core.Credential
 	authProvider *internal.BaseAuthorizationProvider
 	BaseUrl      string //nolint:stylecheck
@@ -27,7 +27,7 @@ func (c *ServiceNowClient) Now() *NowRequestBuilder {
 	return NewNowRequestBuilder(c.BaseUrl+"/now", c)
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use `NewServiceNowClient2` instead.
+// Deprecated: deprecated since v1.6.0. Please use `NewServiceNowClient2` instead.
 // NewServiceNowClient creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.

@@ -8,17 +8,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+## [1.6.0] - (08/03/2024)
+
+### Added
+
 - `core.PageIterator2[T].Previous` ([Issue #60](https://github.com/michaeldcanady/servicenow-sdk-go/issues/60))
 - `core.PageIterator2[T].First` ([Issue #60](https://github.com/michaeldcanady/servicenow-sdk-go/issues/60))
-
-### Changed
 
 ### Deprecated
 
 - `servicenowsdkgo.ServiceNowClient.Credential`
 - `servicenowsdkgo.NewServiceNowClient`
-
-### Removed
 
 ### Fixed
 
