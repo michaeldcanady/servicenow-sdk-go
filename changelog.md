@@ -16,6 +16,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
+## [1.6.1] - (09/03/2024)
+
+### Fixed
+
 - `core.RequestInformation.ToRequestWithContext` not including headers when converting to request ([Issue #107](https://github.com/michaeldcanady/servicenow-sdk-go/issues/107))
 
 ## [1.6.0] - (08/03/2024)
