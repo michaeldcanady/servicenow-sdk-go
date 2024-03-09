@@ -127,6 +127,7 @@ func (rI *RequestInformation) ToRequestWithContext(ctx context.Context) (*http.R
 	methodString := rI.Method.String()
 
 	req, err := http.NewRequestWithContext(ctx, methodString, url, contentReader)
+	req.Header = rI.Headers
 	if err != nil {
 		return nil, err
 	}
