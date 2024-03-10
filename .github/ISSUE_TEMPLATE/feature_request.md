@@ -1,6 +1,6 @@
 ---
 name: 🆕 Feature request
-about: Suggest an idea for this project
+about: Suggest a feature for this project
 title: "[Feature] "
 labels: ["type: feature"]
 assignees: ''
@@ -10,7 +10,7 @@ assignees: ''
 
 **Describe the feature you would like to request:**
 
-[Please provide a clear and concise description of the feature you're requesting.]
+[Please provide a clear and concise description of the feature, additional functionality, you're requesting.]
 
 ### Use Case
 
@@ -40,7 +40,7 @@ assignees: ''
 
 **Do you have a specific version in mind for this feature?**
 
-[If you have a preference for which version of the Go wrapper should include this feature, please specify.]
+[If you have a preference for which version of the SDK should include this feature, please specify.]
 
 ### Checklist
 
