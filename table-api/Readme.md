@@ -174,6 +174,8 @@ This method inserts a new record into a specified table. Note that this method d
 Update one record in the specified table.
 *Note: Make sure only the fields you intend on updating are included*
 
+[Try on Playground](https://go.dev/play/p/ZrGrIVfWd9I)
+
 ```golang
 ...
     pathParameters := {
