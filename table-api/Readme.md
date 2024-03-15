@@ -102,6 +102,8 @@ This method retrieves multiple records from a specified table.
 
 This method retrieves a specific record identified by its sys_id from a specified table.
 
+[Try on Playground](https://go.dev/play/p/gFlzIvA01ld)
+
 ```golang
 ...
     // Define the table and the sysId of the record you want to retrieve.
