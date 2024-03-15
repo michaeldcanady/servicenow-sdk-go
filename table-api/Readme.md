@@ -32,7 +32,7 @@ This method allows you to delete a specific record from a specified table.
     // Define the table and sysId of the record you want to delete.
     pathParameters := map[string]string{
         "baseurl": baseURL,
-        "table":   "incident",
+        "table":   "{tableName}",
         "sysId":   "{sysId}",
     }
 
@@ -64,7 +64,7 @@ This method retrieves multiple records from a specified table.
     // Define the table from which you want to retrieve records.
     pathParameters := map[string]string{
         "baseurl": baseURL,
-        "table":   "incident",
+        "table":   "{tableName}",
     }
 
     // Create a new TableRequestBuilder with your client and path parameters.
@@ -105,7 +105,7 @@ This method retrieves a specific record identified by its sys_id from a specifie
     // Define the table and the sysId of the record you want to retrieve.
     pathParameters := map[string]string{
         "baseurl": baseURL,
-        "table":   "incident",
+        "table":   "{tableName}",
         "sysId":   "{sysId}",
     }
 
@@ -136,7 +136,7 @@ This method inserts a new record into a specified table. Note that this method d
     // Define the table where you want to insert a new record.
     pathParameters := map[string]string{
         "baseurl": baseURL,
-        "table":   "incident",
+        "table":   "{tableName}",
     }
 
     // Define the data for the new record.
@@ -172,7 +172,7 @@ Update one record in the specified table.
 ...
     pathParameters := {
         "baseurl": baseURL,
-        "table": "incident",
+        "table": "{tableName}",
         "sysId": "{sysId}",
     }
 
