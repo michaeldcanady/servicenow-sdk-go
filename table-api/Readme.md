@@ -135,6 +135,8 @@ This method retrieves a specific record identified by its sys_id from a specifie
 
 This method inserts a new record into a specified table. Note that this method does not support the insertion of multiple records.
 
+[Try on Playground](https://go.dev/play/p/gbkVOBVivqr)
+
 ```golang
 ...
     // Define the table where you want to insert a new record.
