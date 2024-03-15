@@ -59,6 +59,8 @@ This method allows you to delete a specific record from a specified table.
 
 This method retrieves multiple records from a specified table.
 
+[Try on Playground](https://go.dev/play/p/Pn4npKdCGvU)
+
 ```golang
 ...
     // Define the table from which you want to retrieve records.
