@@ -23,7 +23,7 @@ func main() {
 
 ```
 
-## \[DELETE\] Removes a Record
+## \[DELETE\] Remove Record
 
 This method allows you to delete a specific record from a specified table.
 
@@ -133,7 +133,7 @@ This method retrieves a specific record identified by its sys_id from a specifie
 }
 ```
 
-## \[POST\] Create a Record
+## \[POST\] Create Record
 
 This method inserts a new record into a specified table. Note that this method does not support the insertion of multiple records.
 
@@ -171,7 +171,7 @@ This method inserts a new record into a specified table. Note that this method d
 }
 ```
 
-## \[PUT\] Update a Record
+## \[PUT\] Update Record
 
 Update one record in the specified table.
 *Note: Make sure only the fields you intend on updating are included*
