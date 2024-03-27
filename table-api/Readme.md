@@ -27,7 +27,7 @@ func main() {
 
 This method allows you to delete a specific record from a specified table.
 
-[Try on Playground](https://go.dev/play/p/iPn4PiVi1gm)
+[Try on Playground](https://go.dev/play/p/E-fg64fxTl7)
 
 ```golang
 ...
