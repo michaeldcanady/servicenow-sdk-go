@@ -7,34 +7,34 @@ import (
 )
 
 var (
-	sharedBaseHandler = &BaseHandler{}
+	sharedBaseHandler = &BaseHandler[any]{}
 )
 
 func TestBaseHandler_SetNext(t *testing.T) {
-	tests := []Test[*BaseHandler]{
+	tests := []Test[*BaseHandler[any]]{
 		{
 			Title:       "Valid",
-			Input:       &BaseHandler{},
-			Expected:    &BaseHandler{},
+			Input:       &BaseHandler[any]{},
+			Expected:    &BaseHandler[any]{},
 			ExpectedErr: nil,
 		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.Title, func(t *testing.T) {
-			sharedBaseHandler.SetNext(test.Input.(RequestHandler))
+			sharedBaseHandler.SetNext(test.Input.(Handler[any]))
 			assert.Equal(t, test.Expected, sharedBaseHandler.next)
 		})
 	}
 }
 
 func TestBaseHandler_Handle(t *testing.T) {
-	tests := []Test[*BaseHandler]{
+	tests := []Test[*BaseHandler[any]]{
 		{
 			Title: "Valid",
 			Input: &MockRequestInformation{},
 			Setup: func() {
-				sharedBaseHandler.SetNext(&BaseHandler{})
+				sharedBaseHandler.SetNext(&BaseHandler[any]{})
 			},
 			Expected:    nil,
 			ExpectedErr: nil,

@@ -1,31 +1,17 @@
 package internal
 
-type RequestHandler interface {
-	Handle(RequestInformation) error
-	SetNext(RequestHandler)
-	Next() RequestHandler
+type RequestHandler struct {
+	BaseHandler[RequestInformation]
+	next Handler[RequestInformation]
 }
 
-type BaseHandler struct {
-	next RequestHandler
-}
-
-func NewBaseHandler() *BaseHandler {
-	return &BaseHandler{}
-}
-
-// SetNext method for BaseHandler
-func (b *BaseHandler) SetNext(handler RequestHandler) {
-	b.next = handler
-}
-
-func (b *BaseHandler) Next() RequestHandler {
-	return b.next
-}
-
-func (b *BaseHandler) Handle(request RequestInformation) error {
-	if !IsNil(b.Next()) {
-		return b.Next().Handle(request)
+func NewRequestHandler() *RequestHandler {
+	return &RequestHandler{
+		*NewBaseHandler[RequestInformation](),
+		nil,
 	}
-	return nil
+}
+
+func (b *RequestHandler) Handle(request RequestInformation) error {
+	return b.BaseHandler.Handle(request)
 }

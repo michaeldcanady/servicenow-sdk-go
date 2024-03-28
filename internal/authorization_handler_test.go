@@ -62,8 +62,8 @@ func (m *MockRequestInformation) AddHeaders(rawHeaders interface{}) error {
 
 var (
 	sharedAuthorizationHandler = &AuthorizationHandler{
-		BaseHandler: &BaseHandler{},
-		provider:    &MockAuthorizationProvider{},
+		RequestHandler: &RequestHandler{},
+		provider:       &MockAuthorizationProvider{},
 	}
 )
 

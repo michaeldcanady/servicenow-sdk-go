@@ -25,4 +25,7 @@ var (
 
 	//Authorization Provider
 	ErrNilRequest = errors.New("request can't be nil")
+
+	ErrNilRequestInfo = errors.New("requestInfo cannot be nil")
+	ErrNilContext     = errors.New("ctx cannot be nil")
 )

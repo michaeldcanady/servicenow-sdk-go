@@ -1,14 +1,14 @@
 package internal
 
 type AuthorizationHandler struct {
-	*BaseHandler
+	*RequestHandler
 	provider AuthorizationProvider
 }
 
 func NewAuthorizationHandler(provider AuthorizationProvider) *AuthorizationHandler {
 	return &AuthorizationHandler{
-		BaseHandler: NewBaseHandler(),
-		provider:    provider,
+		RequestHandler: NewRequestHandler(),
+		provider:       provider,
 	}
 }
 
