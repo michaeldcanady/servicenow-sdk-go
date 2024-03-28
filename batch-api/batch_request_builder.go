@@ -10,11 +10,12 @@ type BatchRequestBuilder struct {
 }
 
 // NewBatchRequestBuilder creates a new BatchRequestBuilder.
-// It takes a client (IBaseClient) and pathParameters (map[string]string).
+// It takes a client (core.Client) and pathParameters (map[string]string).
 func NewBatchRequestBuilder(client core.Client, pathParameters map[string]string) *BatchRequestBuilder {
 	requestBuilder := core.NewRequestBuilder(
 		client,
-		"{+baseurl}/v1/batch", // Must be versioned
+		// Must be versioned
+		"{+baseurl}/v1/batch",
 		pathParameters,
 	)
 	return &BatchRequestBuilder{
