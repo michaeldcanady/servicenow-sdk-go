@@ -67,8 +67,19 @@ func (r *batchRequest) toBatchItem(requestInfo internal.RequestInformation, excl
 		return nil, err
 	}
 
-	var finalURL = strings.Replace(uri, baseURI.String(), "", 1)
-	// /api is required and as of 1.0, it is appended to the client base path.
+	var finalURL string
+	if strings.HasPrefix(uri, baseURI.String()) {
+		finalURL = strings.Replace(uri, baseURI.String(), "", 1)
+	} else {
+		finalURL = uri
+	}
+
+	// Ensure finalURL starts with "/"
+	if !strings.HasPrefix(finalURL, "/") {
+		finalURL = "/" + finalURL
+	}
+
+	// Ensure finalURL starts with "/api"
 	if !strings.HasPrefix(finalURL, "/api") {
 		finalURL = "/api" + finalURL
 	}

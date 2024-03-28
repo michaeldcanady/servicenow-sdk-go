@@ -1,4 +1,4 @@
-package batchapi
+package testing_int
 
 import (
 	"context"
@@ -25,16 +25,4 @@ func (c *MockClient) GetBaseURL() string {
 func (c *MockClient) SendWithContext(ctx context.Context, requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 	args := c.Called(ctx, requestInfo, errorMapping)
 	return args.Get(0).(*http.Response), args.Error(1)
-}
-
-type test[T any] struct {
-	title string
-	// setup to make needed modifications for a specific test
-	setup func()
-	// cleanup to undo changes do to reusable items
-	cleanup     func()
-	input       interface{}
-	expected    T
-	shouldErr   bool
-	expectedErr error
 }
