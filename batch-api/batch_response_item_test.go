@@ -19,10 +19,10 @@ func TestBatchResponseItem_GetBody(t *testing.T) {
 
 	body, err := response.GetBody()
 
-	expected := any(data)
+	expected := map[string]interface{}{"name": any("jeff")}
 
 	assert.Nil(t, err)
-	assert.Equal(t, &expected, body)
+	assert.Equal(t, expected, *body)
 }
 func TestBatchResponseItem_GetType(t *testing.T) {
 	response := &batchResponseItem{

@@ -2,6 +2,8 @@ package internal
 
 import (
 	"net/http"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
 // RequestHeader is a type alias for http request headers
@@ -9,8 +11,8 @@ type RequestHeader struct {
 	header http.Header
 }
 
-func NewRequestHeader() RequestHeader {
-	return RequestHeader{
+func NewRequestHeader() core.RequestHeader {
+	return &RequestHeader{
 		header: http.Header{},
 	}
 }

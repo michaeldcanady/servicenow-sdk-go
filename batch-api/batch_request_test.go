@@ -1,69 +1,14 @@
 package batchapi
 
 import (
-	"context"
 	"errors"
-	"net/http"
-	"net/url"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
-
-// Mocking RequestInformation
-type MockRequestInformation struct {
-	mock.Mock
-}
-
-func (m *MockRequestInformation) Url() (string, error) {
-	args := m.Called()
-	return args.String(0), args.Error(1)
-}
-
-func (m *MockRequestInformation) GetContent() []byte {
-	args := m.Called()
-	return args.Get(0).([]byte)
-}
-
-func (m *MockRequestInformation) GetMethod() string {
-	args := m.Called()
-	return args.String(0)
-}
-
-func (m *MockRequestInformation) GetHeaders() internal.RequestHeader {
-	args := m.Called()
-	return args.Get(0).(internal.RequestHeader)
-}
-
-func (m *MockRequestInformation) AddHeaders(headers interface{}) error {
-	args := m.Called(headers)
-	return args.Error(0)
-}
-
-func (m *MockRequestInformation) AddQueryParameters(params interface{}) error {
-	args := m.Called(params)
-	return args.Error(0)
-}
-
-func (m *MockRequestInformation) SetStreamContent(data []byte) {
-	m.Called(data)
-}
-
-func (m *MockRequestInformation) SetUri(uri *url.URL) {
-	m.Called(uri)
-}
-
-func (m *MockRequestInformation) ToRequest() (*http.Request, error) {
-	args := m.Called()
-	return args.Get(0).(*http.Request), args.Error(1)
-}
-
-func (m *MockRequestInformation) ToRequestWithContext(ctx context.Context) (*http.Request, error) {
-	args := m.Called(ctx)
-	return args.Get(0).(*http.Request), args.Error(1)
-}
 
 // Test for NewBatchRequest
 func TestNewBatchRequest(t *testing.T) {
@@ -80,7 +25,7 @@ func TestAddRequest(t *testing.T) {
 
 	batchReq := NewBatchRequest(client)
 
-	mockReqInfo := new(MockRequestInformation)
+	mockReqInfo := new(mocking.MockRequestInformation)
 	mockReqInfo.On("Url").Return("http://example.com", nil)
 	mockReqInfo.On("GetContent").Return([]byte(`{"key":"value"}`))
 	mockReqInfo.On("GetMethod").Return("GET")
@@ -100,15 +45,15 @@ func TestToBatchItem(t *testing.T) {
 	client := new(MockClient)
 	batchReq := NewBatchRequest(client).(*batchRequest)
 
-	var mockReqInfo *MockRequestInformation
-	var headers internal.RequestHeader
+	var mockReqInfo *mocking.MockRequestInformation
+	var headers core.RequestHeader
 
 	tests := []test[[]interface{}]{
 		{
 			title: "Successful",
 			setup: func() {
 				client.On("GetBaseURL").Return("https://instance.service-now.com")
-				mockReqInfo = new(MockRequestInformation)
+				mockReqInfo = new(mocking.MockRequestInformation)
 				mockReqInfo.On("Url").Return("table/test", nil)
 				mockReqInfo.On("GetContent").Return([]byte(`{"key":"value"}`))
 				mockReqInfo.On("GetMethod").Return("GET")
@@ -124,7 +69,7 @@ func TestToBatchItem(t *testing.T) {
 		{
 			title: "Url returns error",
 			setup: func() {
-				mockReqInfo = new(MockRequestInformation)
+				mockReqInfo = new(mocking.MockRequestInformation)
 				mockReqInfo.On("Url").Return("", errors.New("url error"))
 			},
 			expected:    nil,
@@ -133,7 +78,7 @@ func TestToBatchItem(t *testing.T) {
 		{
 			title: "GetContent returns invalid JSON",
 			setup: func() {
-				mockReqInfo = new(MockRequestInformation)
+				mockReqInfo = new(mocking.MockRequestInformation)
 				mockReqInfo.On("Url").Return("table/test", nil)
 				mockReqInfo.On("GetContent").Return([]byte(`{"key":`)) // invalid JSON
 				mockReqInfo.On("GetMethod").Return("GET")
@@ -149,7 +94,7 @@ func TestToBatchItem(t *testing.T) {
 		{
 			title: "Uri has base url as prefix",
 			setup: func() {
-				mockReqInfo = new(MockRequestInformation)
+				mockReqInfo = new(mocking.MockRequestInformation)
 				mockReqInfo.On("Url").Return(client.GetBaseURL()+"/table/test", nil)
 				mockReqInfo.On("GetContent").Return([]byte(`{"key":"value"}`))
 				mockReqInfo.On("GetMethod").Return("GET")
@@ -168,7 +113,7 @@ func TestToBatchItem(t *testing.T) {
 				client.On("GetBaseURL").Unset()
 				client.On("GetBaseURL").Return("http://a b.com")
 
-				mockReqInfo = new(MockRequestInformation)
+				mockReqInfo = new(mocking.MockRequestInformation)
 				mockReqInfo.On("Url").Return("table/test", nil)
 				mockReqInfo.On("GetContent").Return([]byte(`{"key":"value"}`))
 				mockReqInfo.On("GetMethod").Return("GET")

@@ -8,6 +8,7 @@ import (
 	"reflect"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	"github.com/mozillazg/go-httpheader"
 )
 
@@ -72,7 +73,7 @@ func (rI *RequestInformation) GetContent() []byte {
 	return rI.Content
 }
 
-func (rI *RequestInformation) GetHeaders() internal.RequestHeader {
+func (rI *RequestInformation) GetHeaders() core.RequestHeader {
 	headers := internal.NewRequestHeader()
 	headers.SetAll(rI.Headers)
 	return headers

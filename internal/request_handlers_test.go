@@ -3,6 +3,7 @@ package internal
 import (
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -32,7 +33,7 @@ func TestBaseHandler_Handle(t *testing.T) {
 	tests := []Test[*BaseHandler]{
 		{
 			Title: "Valid",
-			Input: &MockRequestInformation{},
+			Input: &mocking.MockRequestInformation{},
 			Setup: func() {
 				sharedBaseHandler.SetNext(&BaseHandler{})
 			},
