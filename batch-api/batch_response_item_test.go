@@ -2,27 +2,50 @@ package batchapi
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"reflect"
 	"testing"
 	"time"
 
 	"github.com/google/uuid"
+	intBatch "github.com/michaeldcanady/servicenow-sdk-go/batch-api/internal"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestBatchResponseItem_GetBody(t *testing.T) {
-	data := "{\"name\":\"jeff\"}"
-
-	response := &batchResponseItem{
-		Body: base64.StdEncoding.EncodeToString([]byte(data)),
+	tests := []intBatch.Test[map[string]interface{}]{
+		{
+			Title:    "Successful",
+			Input:    "{\"name\":\"jeff\"}",
+			Expected: map[string]interface{}{"name": any("jeff")},
+		},
+		{
+			Title:       "invalid JSON",
+			Input:       "invalid JSON",
+			Expected:    nil,
+			ExpectedErr: &json.SyntaxError{},
+		},
 	}
 
-	body, err := response.GetBody()
+	for _, test := range tests {
+		t.Run(test.Title, func(t *testing.T) {
+			response := &batchResponseItem{
+				Body: base64.StdEncoding.EncodeToString([]byte(test.Input.(string))),
+			}
+			body, err := response.GetBody()
+			if test.ExpectedErr != nil {
+				assert.NotNil(t, err)
+			} else {
+				assert.Nil(t, err)
+			}
 
-	expected := map[string]interface{}{"name": any("jeff")}
-
-	assert.Nil(t, err)
-	assert.Equal(t, expected, *body)
+			if body != nil {
+				assert.Equal(t, test.Expected, *body)
+			} else {
+				assert.Nil(t, test.Expected)
+			}
+		})
+	}
 }
 func TestBatchResponseItem_GetType(t *testing.T) {
 	response := &batchResponseItem{

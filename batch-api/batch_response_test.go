@@ -1,12 +1,36 @@
 package batchapi
 
 import (
+	"net/http"
 	"testing"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
+func TestBatchResponse_ParseHeaders(t *testing.T) {
+	id := "id"
+
+	response := &batchResponse{
+		ID:       &id,
+		Requests: make([]*batchResponseItem, 0),
+	}
+
+	headers := http.Header{}
+
+	response.ParseHeaders(headers)
+}
+
+func TestBatchResponse_GetID(t *testing.T) {
+	id := "id"
+
+	response := &batchResponse{
+		ID:       &id,
+		Requests: make([]*batchResponseItem, 0),
+	}
+
+	assert.Equal(t, &id, response.GetID())
+}
 func TestBatchResponseItem_GetResponses(t *testing.T) {
 	response := &batchResponse{
 		Requests: make([]*batchResponseItem, 0),
