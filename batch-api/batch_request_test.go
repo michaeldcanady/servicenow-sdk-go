@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	intBatch "github.com/michaeldcanady/servicenow-sdk-go/batch-api/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
@@ -12,46 +13,85 @@ import (
 
 // Test for NewBatchRequest
 func TestNewBatchRequest(t *testing.T) {
-	client := new(MockClient)
+	client := new(intBatch.MockClient)
 	batchReq := NewBatchRequest(client)
 	assert.NotNil(t, batchReq)
 }
 
 // Test for AddRequest
 func TestAddRequest(t *testing.T) {
-	client := new(MockClient)
-
-	client.On("GetBaseURL").Return("https://instance.service-now.com")
+	client := new(intBatch.MockClient)
+	mockReqInfo := new(mocking.MockRequestInformation)
 
 	batchReq := NewBatchRequest(client)
 
-	mockReqInfo := new(mocking.MockRequestInformation)
-	mockReqInfo.On("Url").Return("http://example.com", nil)
-	mockReqInfo.On("GetContent").Return([]byte(`{"key":"value"}`))
-	mockReqInfo.On("GetMethod").Return("GET")
+	tests := []intBatch.Test[any]{
+		{
+			Title: "Successful",
+			Setup: func() {
+				client.On("GetBaseURL").Return("https://instance.service-now.com")
 
-	headers := internal.NewRequestHeader()
-	headers.Set("Content-Type", "application/json")
+				headers := internal.NewRequestHeader()
+				headers.Set("Content-Type", "application/json")
 
-	mockReqInfo.On("GetHeaders").Return(headers)
+				mockReqInfo.On("Url").Return("http://example.com", nil)
+				mockReqInfo.On("GetContent").Return([]byte(`{"key":"value"}`))
+				mockReqInfo.On("GetMethod").Return("GET")
+				mockReqInfo.On("GetHeaders").Return(headers)
+			},
+			Cleanup: func() {
+				intBatch.ResetCalls(append(mockReqInfo.ExpectedCalls, client.ExpectedCalls...)...)
+			},
+			ExpectedErr: nil,
+		},
+		{
+			Title: "URL Error",
+			Setup: func() {
+				client.On("GetBaseURL").Return("https://instance.service-now.com")
 
-	err := batchReq.AddRequest(mockReqInfo, false)
-	assert.Nil(t, err)
-	assert.Equal(t, 1, len(batchReq.(*batchRequest).Requests))
+				headers := internal.NewRequestHeader()
+				headers.Set("Content-Type", "application/json")
+
+				mockReqInfo.On("Url").Return("", errors.New("unable to parse URL"))
+				mockReqInfo.On("GetContent").Return([]byte(`{"key":"value"}`))
+				mockReqInfo.On("GetMethod").Return("GET")
+				mockReqInfo.On("GetHeaders").Return(headers)
+			},
+			Cleanup: func() {
+				intBatch.ResetCalls(append(mockReqInfo.ExpectedCalls, client.ExpectedCalls...)...)
+			},
+			ExpectedErr: errors.New("unable to parse URL"),
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Title, func(t *testing.T) {
+			if test.Setup != nil {
+				test.Setup()
+			}
+
+			err := batchReq.AddRequest(mockReqInfo, false)
+			assert.Equal(t, test.ExpectedErr, err)
+
+			if test.Cleanup != nil {
+				test.Cleanup()
+			}
+		})
+	}
 }
 
 // Test for toBatchItem
 func TestToBatchItem(t *testing.T) {
-	client := new(MockClient)
+	client := new(intBatch.MockClient)
 	batchReq := NewBatchRequest(client).(*batchRequest)
 
 	var mockReqInfo *mocking.MockRequestInformation
 	var headers core.RequestHeader
 
-	tests := []test[[]interface{}]{
+	tests := []intBatch.Test[[]interface{}]{
 		{
-			title: "Successful",
-			setup: func() {
+			Title: "Successful",
+			Setup: func() {
 				client.On("GetBaseURL").Return("https://instance.service-now.com")
 				mockReqInfo = new(mocking.MockRequestInformation)
 				mockReqInfo.On("Url").Return("table/test", nil)
@@ -63,21 +103,21 @@ func TestToBatchItem(t *testing.T) {
 
 				mockReqInfo.On("GetHeaders").Return(headers)
 			},
-			expected:    []interface{}{"GET", "/api/table/test"},
-			expectedErr: nil,
+			Expected:    []interface{}{"GET", "/api/table/test"},
+			ExpectedErr: nil,
 		},
 		{
-			title: "Url returns error",
-			setup: func() {
+			Title: "Url returns error",
+			Setup: func() {
 				mockReqInfo = new(mocking.MockRequestInformation)
 				mockReqInfo.On("Url").Return("", errors.New("url error"))
 			},
-			expected:    nil,
-			expectedErr: errors.New("url error"),
+			Expected:    nil,
+			ExpectedErr: errors.New("url error"),
 		},
 		{
-			title: "GetContent returns invalid JSON",
-			setup: func() {
+			Title: "GetContent returns invalid JSON",
+			Setup: func() {
 				mockReqInfo = new(mocking.MockRequestInformation)
 				mockReqInfo.On("Url").Return("table/test", nil)
 				mockReqInfo.On("GetContent").Return([]byte(`{"key":`)) // invalid JSON
@@ -88,12 +128,12 @@ func TestToBatchItem(t *testing.T) {
 
 				mockReqInfo.On("GetHeaders").Return(headers)
 			},
-			expected:    nil,
-			expectedErr: errors.New("unexpected end of JSON input"), // error message from json.Unmarshal
+			Expected:    nil,
+			ExpectedErr: errors.New("unexpected end of JSON input"), // error message from json.Unmarshal
 		},
 		{
-			title: "Uri has base url as prefix",
-			setup: func() {
+			Title: "Uri has base url as prefix",
+			Setup: func() {
 				mockReqInfo = new(mocking.MockRequestInformation)
 				mockReqInfo.On("Url").Return(client.GetBaseURL()+"/table/test", nil)
 				mockReqInfo.On("GetContent").Return([]byte(`{"key":"value"}`))
@@ -104,12 +144,12 @@ func TestToBatchItem(t *testing.T) {
 
 				mockReqInfo.On("GetHeaders").Return(headers)
 			},
-			expected:    []interface{}{"GET", "/api/table/test"},
-			expectedErr: nil,
+			Expected:    []interface{}{"GET", "/api/table/test"},
+			ExpectedErr: nil,
 		},
 		{
-			title: "bad base url",
-			setup: func() {
+			Title: "bad base url",
+			Setup: func() {
 				client.On("GetBaseURL").Unset()
 				client.On("GetBaseURL").Return("http://a b.com")
 
@@ -123,28 +163,28 @@ func TestToBatchItem(t *testing.T) {
 
 				mockReqInfo.On("GetHeaders").Return(headers)
 			},
-			expected:    nil,
-			expectedErr: errors.New("parse \"http://a b.com\": invalid character \" \" in host name"),
+			Expected:    nil,
+			ExpectedErr: errors.New("parse \"http://a b.com\": invalid character \" \" in host name"),
 		},
 	}
 
 	for _, test := range tests {
-		t.Run(test.title, func(t *testing.T) {
-			if test.setup != nil {
-				test.setup()
+		t.Run(test.Title, func(t *testing.T) {
+			if test.Setup != nil {
+				test.Setup()
 			}
 
 			item, err := batchReq.toBatchItem(mockReqInfo, false)
 
-			if test.expectedErr != nil {
-				assert.ErrorContains(t, err, test.expectedErr.Error())
+			if test.ExpectedErr != nil {
+				assert.ErrorContains(t, err, test.ExpectedErr.Error())
 			} else {
-				assert.Nil(t, test.expectedErr, err)
+				assert.Nil(t, test.ExpectedErr, err)
 			}
 
-			if test.expected != nil {
-				method := test.expected[0].(string)
-				url := test.expected[1].(string)
+			if test.Expected != nil {
+				method := test.Expected[0].(string)
+				url := test.Expected[1].(string)
 
 				assert.NotNil(t, item)
 				assert.Equal(t, method, *item.GetMethod())
@@ -154,8 +194,8 @@ func TestToBatchItem(t *testing.T) {
 				assert.Nil(t, item)
 			}
 
-			if test.cleanup != nil {
-				test.cleanup()
+			if test.Cleanup != nil {
+				test.Cleanup()
 			}
 		})
 	}

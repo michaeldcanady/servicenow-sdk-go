@@ -1,12 +1,13 @@
 package batchapi
 
 import (
+	"github.com/michaeldcanady/servicenow-sdk-go/batch-api/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
 // BatchRequestBuilder constructs batch requests for the specified base URL.
 type BatchRequestBuilder struct {
-	core.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewBatchRequestBuilder creates a new BatchRequestBuilder.
@@ -19,7 +20,7 @@ func NewBatchRequestBuilder(client core.Client, pathParameters map[string]string
 		pathParameters,
 	)
 	return &BatchRequestBuilder{
-		RequestBuilder: *requestBuilder,
+		RequestBuilder: requestBuilder,
 	}
 }
 

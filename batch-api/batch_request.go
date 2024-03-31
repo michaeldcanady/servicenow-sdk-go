@@ -39,7 +39,6 @@ func (r *batchRequest) AddRequest(requestInfo internal.RequestInformation, exclu
 
 func (r *batchRequest) toBatchItem(requestInfo internal.RequestInformation, excludeResponseHeaders bool) (BatchRequestItem, error) {
 	// make sure base url is set accordingly
-
 	uri, err := requestInfo.Url()
 	if err != nil {
 		return nil, err

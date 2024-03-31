@@ -159,7 +159,7 @@ func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) erro
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping.(ErrorMapping))
 	if err != nil {
 		return err
 	}
@@ -188,7 +188,7 @@ func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) err
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping.(ErrorMapping))
 	if err != nil {
 		return err
 	}
@@ -217,7 +217,7 @@ func sendDelete2(requestBuilder *RequestBuilder, config *RequestConfiguration) e
 		return err
 	}
 
-	_, err = requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	_, err = requestBuilder.Client.Send(requestInfo, config.ErrorMapping.(ErrorMapping))
 	if err != nil {
 		return err
 	}
@@ -246,7 +246,7 @@ func sendPut2(requestBuilder *RequestBuilder, config *RequestConfiguration) erro
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping.(ErrorMapping))
 	if err != nil {
 		return err
 	}

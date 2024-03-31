@@ -13,7 +13,7 @@ type MockRequestInformation struct {
 	mock.Mock
 }
 
-func (m *MockRequestInformation) Url() (string, error) {
+func (m *MockRequestInformation) Url() (string, error) { //nolint:stylecheck
 	args := m.Called()
 	return args.String(0), args.Error(1)
 }
@@ -47,7 +47,7 @@ func (m *MockRequestInformation) SetStreamContent(data []byte) {
 	m.Called(data)
 }
 
-func (m *MockRequestInformation) SetUri(uri *url.URL) {
+func (m *MockRequestInformation) SetUri(uri *url.URL) { //nolint:stylecheck
 	m.Called(uri)
 }
 
