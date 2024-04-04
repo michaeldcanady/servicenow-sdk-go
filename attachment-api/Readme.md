@@ -1,11 +1,13 @@
 # Attachment API
 
-The Attachment API provides endpoints that allow you to upload and query file attachments.
+The `Attachment API` provides endpoints that allow you to upload and query file attachments.
 You can upload or retrieve a single file with each request.
 
-## \[GET\] /now/attachment
+## \[GET\] Retrieve an attachment
 
 Returns the metadata for multiple attachments.
+
+[Try on Playground](https://go.dev/play/p/m4bOojq8ODB)
 
 ```golang
 package main
@@ -17,7 +19,7 @@ import (
 func main() {
     
     //Implement credential and client.
-    pathParameters := {
+    pathParameters := map[string]string{
         "baseurl":"https://www.{instance}.service-now.com/api/now",
     }
 
