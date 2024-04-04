@@ -8,14 +8,9 @@ Sends multiple REST API requests in a single HTTP call. This can significantly i
 
 > **NOTE**: For performance reasons, avoid including long-running requests and requests that retrieve large amounts of data.
 
-### Prerequisites
-
-- Go, v1.21.0 or higher.
-- Access to a ServiceNow instance.
-
 ### Code Example
 
-Try in [playground](https://go.dev/play/p/ZED4jOzmNbE).
+[Try on Playground](https://go.dev/play/p/ZED4jOzmNbE).
 
 ```golang
 package main

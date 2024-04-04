@@ -45,24 +45,35 @@ A Service-Now API client enabling Go programs to interact with Service-Now in a 
 | ♻️     | In progress   |
 | ✖️     | Not supported |
 
+## Prerequisites
+
+Before you begin, ensure that you have the following:
+
+1. **Golang v1.21 or higher**: If you haven't already installed Go, you can do so by following the instructions [here](https://go.dev/doc/install).
+
 ## 1. Installation
 
-Install latest
+You can install the ServiceNow SDK using the following commands:
+
+### Install the Latest Version
+
 ```Shell
 go get github.com/michaeldcanady/servicenow-sdk-go
 ```
-or
 
-Install specific version
+### Install a Specific Version
+
+If you need a specific version, use the following command, replacing `version` with the desired version:
+
 ```Shell
 go get github.com/michaeldcanady/servicenow-sdk-go@version
 ```
 
 ## 2. Getting Started
 
-### 2.1 Create an AuthenticationProvider object
+### 2.1 Create an AuthenticationProvider Object
 
-Create a credential object.
+To authenticate with ServiceNow, create a credential object. Here's an example using username and password:
 
 ```golang
 import (
@@ -72,40 +83,27 @@ import (
 cred := credentials.NewUsernamePasswordCredential("username", "password")
 ```
 
-### 2.2 Get a ServiceNow Client and Adapter object
+### 2.2 Initialize a ServiceNow Client
 
-Create a client object.
+Create a client object to interact with ServiceNow APIs:
 
 ```golang
 import (
     servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
 )
 
-client := servicenowsdkgo.NewServiceNowClient(cred, "instance")
-```
-
-### 2.3 Get query parameters
-
-Build query parameter object.
-
-```golang
-import (
-    "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
-
-params := &tableapi.TableRequestBuilderGetQueryParameters{
-        Limit: int32(1),
-    }
-```
-
-### 2.4 Build request for table
-
-Formulate request and provide parameters.
-
-```golang
-
-records, err := client.Now().Table("table name").Get(params)
+client, err := servicenowsdkgo.NewServiceNowClient2(cred, "instance")
 if err != nil {
     panic(err)
 }
 ```
+
+### 2.3 Implement Your Preferred API SDK
+
+Choose the appropriate ServiceNow API SDK for your use case and start building your applications!
+
+1. [Table API](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/table-api): Interact with ServiceNow tables and records.
+2. [Attachment API](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/attachment-api): Manage attachments associated with records.
+3. [Batch API](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/batch-api): Perform batch operations efficiently.
+
+Select the submodule(s) that align with your requirements and start building your applications!

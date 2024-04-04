@@ -1,10 +1,10 @@
 # Table API
 
-The `Table API` provides endpoints that allow you to perform create, read, update, and delete (CRUD) operations on existing tables.
+The `Table API` is a powerful interface provided by ServiceNow, allowing developers to perform Create, Read, Update, and Delete (CRUD) operations on existing tables within a ServiceNow instance. This document provides a detailed guide on how to use the API endpoints with examples written in Go.
 
-## \[DELETE\] /now/table/{tableName}/{sys_id}
+## Common Setup
 
-Deletes the specified record from the specified table.
+Before you can interact with the API, you need to set up your environment. Here’s the common setup code that will be used in all the examples:
 
 ```golang
 package main
@@ -14,111 +14,176 @@ import (
 )
 
 func main() {
-    
-    //Implement credential and client.
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-        "table": "incident",
-        "sysId": "INC00000000",
+    // Define the base URL of your ServiceNow instance
+    baseURL := "https://www.{instance}.service-now.com/api/now"
+
+    // Implement your credential and client.
+    client := // Your client setup here
+...
+
+```
+
+## \[DELETE\] Remove Record
+
+This method allows you to delete a specific record from a specified table.
+
+[Try on Playground](https://go.dev/play/p/E-fg64fxTl7)
+
+```golang
+...
+    // Define the table and sysId of the record you want to delete.
+    pathParameters := map[string]string{
+        "baseurl": baseURL,
+        "table":   "{tableName}",
+        "sysId":   "{sysId}",
     }
 
-    // Instantiate new TableItemRequestBuilder.
+    // Create a new TableItemRequestBuilder with your client and path parameters.
     requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
 
-    // Call the delete method, with or without TableItemRequestBuilderDeleteQueryParameters.
-    err := requestBuilder.Delete(nil)
+    // Optional Query Parameters
+    params := &tableapi.TableItemRequestBuilderDeleteQueryParameters{
+        QueryNoDomain: true // Default false
+    }
 
-    // Since there is no record, the delete method only returns an error.
+    // Call the Delete method. You can pass nil if you don't have any query parameters.
+    err := requestBuilder.Delete(params)
+
+    // The Delete method only returns an error. If there's an error, it will be handled here.
     if err != nil {
         panic(err)
     }
 }
+
 ```
 
-## \[GET\] /now/table/{tableName}
+## \[GET\] Retrieve Multiple Records
 
-Retrieves multiple records for the specified table.
+This method retrieves multiple records from a specified table.
+
+[Try on Playground](https://go.dev/play/p/Pn4npKdCGvU)
 
 ```golang
-package main
-
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
-
-func main() {
-    
-    //Implement credential and client.
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-        "table": "incident",
+...
+    // Define the table from which you want to retrieve records.
+    pathParameters := map[string]string{
+        "baseurl": baseURL,
+        "table":   "{tableName}",
     }
 
-    // Instantiate new TableItemRequestBuilder.
+    // Create a new TableRequestBuilder with your client and path parameters.
     requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
 
-    // Call the get method, with or without TableRequestBuilderGetQueryParameters.
-    // Response is a TableCollectionResponse.
-    response, err := requestBuilder.Get(nil)
+    // Optional Query Parameters
+    params := &tableapi.TableRequestBuilderGetQueryParameters{
+        DisplayValue:             true,
+        ExcludeReferenceLink:     false,
+        Fields:                   []string{},
+        QueryNoDomain:            false,
+        View:
+        Limit:                    10,
+        NoCount:                  true,
+        Offset:                   20,
+        Query:                    "...",
+        QueryCategory:            "...",
+        SuppressPaginationHeader: false,
+    }
 
-    // Test err, should be nil
+    // Call the Get method. You can pass nil if you don't have any query parameters.
+    // The response will be a TableCollectionResponse.
+    response, err := requestBuilder.Get(params)
+
+    // Handle any errors.
     if err != nil {
         panic(err)
     }
 }
 ```
 
-## \[GET\] /now/table/{tableName}/{sys_id}
+## \[GET\] Retrieve a Specific Record
 
-Retrieves the record identified by the specified sys_id from the specified table.
+This method retrieves a specific record identified by its sys_id from a specified table.
+
+[Try on Playground](https://go.dev/play/p/gFlzIvA01ld)
 
 ```golang
-package main
-
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
-
-func main() {
-    
-    //Implement credential and client.
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-        "table": "incident",
-        "sysId": "INC00000000",
+...
+    // Define the table and the sysId of the record you want to retrieve.
+    pathParameters := map[string]string{
+        "baseurl": baseURL,
+        "table":   "{tableName}",
+        "sysId":   "{sysId}",
     }
 
-    // Instantiate new TableItemRequestBuilder.
+    // Create a new TableItemRequestBuilder with your client and path parameters.
     requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
 
-    // Call the get method, with or without TableItemRequestBuilderGetQueryParameters.
-    // record is of type TableItemResponse
-    record, err := requestBuilder.Get(nil)
+    params := &tableapi.TableItemRequestBuilderGetQueryParameters{
 
-    // evaluate err, should be nil
+    }
+
+    // Call the Get method. You can pass nil if you don't have any query parameters.
+    // The response will be a TableItemResponse.
+    record, err := requestBuilder.Get(params)
+
+    // Handle any errors.
     if err != nil {
         panic(err)
     }
 }
 ```
 
-## \[POST\] /now/table/{tableName}
+## \[POST\] Create a Record
 
-Inserts one record in the specified table. Multiple record insertion is not supported by this method.
+This method inserts a new record into a specified table. Note that this method does not support the insertion of multiple records.
+
+[Try on Playground](https://go.dev/play/p/gbkVOBVivqr)
 
 ```golang
-package main
+...
+    // Define the table where you want to insert a new record.
+    pathParameters := map[string]string{
+        "baseurl": baseURL,
+        "table":   "{tableName}",
+    }
 
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
+    // Define the data for the new record.
+    data := map[string]string{
+        "short_description": "example incident",
+        "description":       "incident created by servicenow-sdk-go",
+    }
 
-func main() {
-    
-    //Implement credential and client.
+    // Create a new TableRequestBuilder with your client and path parameters.
+    requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
+
+    param := &tableapi.TableRequestBuilderPostQueryParameters{
+
+    }
+
+    // Call the Post2 method with the data for the new record. You can pass nil if you don't have any query parameters.
+    // The response will be a TableItemResponse.
+    response, err := requestBuilder.Post2(data, param)
+
+    // Handle any errors.
+    if err != nil {
+        panic(err)
+    }
+}
+```
+
+## \[PUT\] Update a Record
+
+Update one record in the specified table.
+> *Note: Make sure only the fields you intend on updating are included*
+
+[Try on Playground](https://go.dev/play/p/ZrGrIVfWd9I)
+
+```golang
+...
     pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-        "table": "incident",
+        "baseurl": baseURL,
+        "table": "{tableName}",
+        "sysId": "{sysId}",
     }
 
     // data map of information you want to use for the new record
@@ -130,10 +195,15 @@ func main() {
     // Instantiate new TableItemRequestBuilder.
     requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
 
-    // Call the get method, with or without TableRequestBuilderPostQueryParamters.
-    // Make sure you include the data paramter
+    // Optional query parameters
+    params := &tableapi.TableItemRequestBuilderPutQueryParameters{
+
+    }
+
+    // Call the get method, with or without TableRequestBuilderPutQueryParameters.
+    // Make sure you include the data parameter
     // Response is a TableItemResponse.
-    response, err := requestBuilder.Post(data, nil)
+    response, err := requestBuilder.Put2(data, params)
 
     // Test err, should be nil
     if err != nil {
