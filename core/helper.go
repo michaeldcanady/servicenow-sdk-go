@@ -117,7 +117,18 @@ func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
 
 // ParseResponse[T] parses the HTTP Response to the provided type
 func ParseResponse[T Response](response *http.Response, value *T) error {
-	err := FromJson(response, &value)
+	var err error
+
+	if isNil(response) {
+		return ErrNilResponse
+	}
+
+	switch contentType := response.Header.Get(contentTypeHeader); contentType {
+	case jsonContentType:
+		err = FromJson(response, &value)
+	default:
+		err = fmt.Errorf("unsupported content type: %s", contentType)
+	}
 	if err != nil {
 		return err
 	}
@@ -148,7 +159,7 @@ func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) erro
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping.(ErrorMapping))
 	if err != nil {
 		return err
 	}
@@ -177,7 +188,7 @@ func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) err
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping.(ErrorMapping))
 	if err != nil {
 		return err
 	}
@@ -206,7 +217,7 @@ func sendDelete2(requestBuilder *RequestBuilder, config *RequestConfiguration) e
 		return err
 	}
 
-	_, err = requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	_, err = requestBuilder.Client.Send(requestInfo, config.ErrorMapping.(ErrorMapping))
 	if err != nil {
 		return err
 	}
@@ -235,7 +246,7 @@ func sendPut2(requestBuilder *RequestBuilder, config *RequestConfiguration) erro
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping.(ErrorMapping))
 	if err != nil {
 		return err
 	}

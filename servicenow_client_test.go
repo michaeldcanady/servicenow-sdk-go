@@ -13,6 +13,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	"github.com/mozillazg/go-httpheader"
 	"github.com/stretchr/testify/assert"
 )
@@ -100,6 +101,16 @@ func (rI *MockRequestInformation) AddHeaders(rawHeaders interface{}) error {
 		}
 	}
 	return nil
+}
+
+func (rI *MockRequestInformation) GetContent() []byte {
+	return nil
+}
+func (rI *MockRequestInformation) GetMethod() string {
+	return ""
+}
+func (rI *MockRequestInformation) GetHeaders() intCore.RequestHeader {
+	return &internal.RequestHeader{}
 }
 
 func TestNewClient(t *testing.T) {

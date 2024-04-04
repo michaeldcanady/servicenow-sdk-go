@@ -188,12 +188,15 @@ func (c *mockClient) sendCollection(requestInformation core.IRequestInformation)
 		Request:    nil,
 	}
 
+	resp.Header.Set("Content-Type", "application/json")
+
 	switch url {
 	case fakeCollectionLinkStatusFailed:
 		return nil, errors.New("net/http: nil Context")
 	case fakeCollectionLinkWithLinks: // Adds headers
 		header := http.Header{}
 
+		header.Set("Content-Type", "application/json")
 		header.Add("Link", "<"+fakeFirstLink+">;rel=\"first\"")
 		header.Add("Link", "<"+fakeNextLink+">;rel=\"next\"")
 		header.Add("Link", "<"+fakePrevLink+">;rel=\"prev\"")
@@ -232,6 +235,8 @@ func (c *mockClient) sendItem(requestInformation core.IRequestInformation) (*htt
 		Body:       http.NoBody,
 		Request:    nil,
 	}
+
+	resp.Header.Set("Content-Type", "application/json")
 
 	switch parsedURI.Scheme + "://" + parsedURI.Host {
 	case fakeItemCountLinkKey:
