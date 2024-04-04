@@ -48,6 +48,18 @@ func TestBatchItem_GetHeaders(t *testing.T) {
 	assert.Equal(t, expectedHeader, item.GetHeaders())
 }
 
+func TestBatchItem_SetHeaders(t *testing.T) {
+	item := NewBatchItem(false)
+	header := internal.NewRequestHeader()
+	header.Set(internal.ContentTypeHeader, "")
+	item.SetHeaders(header)
+
+	expectedHeader := header
+	expectedHeader.Set(internal.AcceptHeader, internal.JSONContentType)
+
+	assert.Equal(t, expectedHeader, item.GetHeaders())
+}
+
 func TestBatchItem_GetBody(t *testing.T) {
 	// Create a batchItem instance
 	item := NewBatchItem(false)
