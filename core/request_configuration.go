@@ -1,7 +1,9 @@
 package core
 
-import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
-)
-
-type RequestConfiguration = core.RequestConfiguration
+type RequestConfiguration struct {
+	Header          interface{}
+	QueryParameters interface{}
+	Data            interface{}
+	ErrorMapping    ErrorMapping
+	Response        Response
+}

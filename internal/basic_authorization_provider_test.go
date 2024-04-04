@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -46,38 +45,31 @@ func TestNewBaseAuthorizationProvider(t *testing.T) {
 }
 
 func TestBaseAuthorizationProvider_AuthorizeRequest(t *testing.T) {
-	reqInfo := &mocking.MockRequestInformation{}
-
-	tests := []Test[*mocking.MockRequestInformation]{
+	tests := []Test[*MockRequestInformation]{
 		{
 			Title: "Valid",
-			Setup: func() {
-				reqInfo.On("AddHeaders", http.Header{authorizationHeader: {"Bearer dfasdfdsfd"}}).Return(nil)
+			Input: &MockRequestInformation{
+				Headers: http.Header{},
 			},
-			Input:       reqInfo,
-			Expected:    nil,
+			Expected: &MockRequestInformation{
+				Headers: http.Header{
+					authorizationHeader: []string{"Bearer dfasdfdsfd"},
+				},
+			},
 			ExpectedErr: nil,
 		},
 		{
 			Title:       "Nil Request",
-			Input:       (*mocking.MockRequestInformation)(nil),
+			Input:       (*MockRequestInformation)(nil),
 			Expected:    nil,
 			ExpectedErr: ErrNilRequest,
 		},
 	}
 	for _, test := range tests {
 		t.Run(test.Title, func(t *testing.T) {
-			if test.Setup != nil {
-				test.Setup()
-			}
-
-			_ = sharedBaseAuthorizationProvider.AuthorizeRequest(test.Input.(RequestInformation))
-			//assert.Equal(t, test.Expected, test.Input)
-			//assert.Equal(t, test.ExpectedErr, err)
-
-			if test.Cleanup != nil {
-				test.Cleanup()
-			}
+			err := sharedBaseAuthorizationProvider.AuthorizeRequest(test.Input.(RequestInformation))
+			assert.Equal(t, test.Expected, test.Input)
+			assert.Equal(t, test.ExpectedErr, err)
 		})
 	}
 }

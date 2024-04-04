@@ -312,17 +312,6 @@ func TestParseResponse(t *testing.T) {
 			expectedError:  ErrNilResponse,
 			expectedCalled: false,
 		},
-		{
-			name: "Valid HTML",
-			response: &http.Response{
-				Body:       io.NopCloser(strings.NewReader(`<html><body></body></html>`)),
-				StatusCode: http.StatusOK,
-				Header:     http.Header{"Content-Type": {"application/html"}},
-			},
-			value:          &MockParseResponse{},
-			expectedError:  fmt.Errorf("unsupported content type: %s", "application/html"),
-			expectedCalled: false,
-		},
 	}
 
 	for _, tc := range testCases {

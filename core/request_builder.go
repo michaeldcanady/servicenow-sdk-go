@@ -142,9 +142,11 @@ func (rB *RequestBuilder) prepareData(rawData interface{}) ([]byte, error) {
 		return rawData.([]byte), nil
 	}
 
-	data, err = json.Marshal(rawData)
-	if err != nil {
-		return nil, fmt.Errorf("unable to marshal JSON: %s", err)
+	if reflect.TypeOf(rawData) == reflect.TypeOf(map[string]string{}) {
+		data, err = json.Marshal(rawData)
+		if err != nil {
+			return nil, fmt.Errorf("unable to marshal JSON: %s", err)
+		}
 	}
 
 	if len(data) == 0 {

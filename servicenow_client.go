@@ -170,7 +170,3 @@ func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core
 func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 	return c.SendWithContext(context.Background(), requestInfo, errorMapping)
 }
-
-func (c *ServiceNowClient) GetBaseURL() string {
-	return c.BaseUrl
-}

@@ -1,6 +1,6 @@
 # Table API
 
-The `Table API` provides endpoints that allow you to perform create, read, update, and delete (CRUD) operations on existing tables.
+The `Table` API provides endpoints that allow you to perform create, read, update, and delete (CRUD) operations on existing tables.
 
 ## \[DELETE\] /now/table/{tableName}/{sys_id}
 

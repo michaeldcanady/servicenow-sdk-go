@@ -4,8 +4,6 @@ import (
 	"context"
 	"net/http"
 	"net/url"
-
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
 type IRequestInformation interface {
@@ -18,7 +16,4 @@ type IRequestInformation interface {
 	ToRequestWithContext(ctx context.Context) (*http.Request, error)
 	AddHeaders(rawHeaders interface{}) error
 	GetRequestOptions() []RequestOption
-	GetContent() []byte
-	GetMethod() string
-	GetHeaders() core.RequestHeader
 }
