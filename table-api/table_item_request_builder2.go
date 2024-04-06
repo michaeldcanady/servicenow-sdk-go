@@ -9,6 +9,12 @@ type TableItemRequestBuilder2 struct {
 
 func NewTableItemRequestBuilder2(client core.Client, pathParameters map[string]string) *TableItemRequestBuilder2 {
    return &TableItemRequestBuilder2{
-        core.NewRequestBuilder(client, pathParameters, )
+        core.NewRequestBuilder(
+		client,
+		"{+baseurl}/table{/table}{/sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_input_display_value,sysparm_query_no_domain,sysparm_view,sysparm_query_no_domain}",
+		pathParameters,
+	)
    }
 }
+
+
