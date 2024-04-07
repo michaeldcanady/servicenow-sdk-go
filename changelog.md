@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `tableapi.NewTableItemRequestBuilder2`
 - `tableapi.TableRequestBuilder2`
 - `tableapi.NewTableRequestBuilder2`
+- `servicenowsdk.NowRequestBuilder.Table2`
 
 ### Changed
 
@@ -22,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `tableapi.NewTableItemRequestBuilder`
 - `tableapi.TableRequestBuilder`
 - `tableapi.NewTableRequestBuilder`
+- `servicenowsdk.NowRequestBuilder.Table`
 
 ### Removed
 

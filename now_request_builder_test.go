@@ -37,6 +37,17 @@ func TestNowRequestBuilderTable(t *testing.T) {
 	assert.Equal(t, expected, tableBuilder.RequestBuilder.PathParameters)
 }
 
+func TestNowRequestBuilderTable2(t *testing.T) {
+	client := &ServiceNowClient{} // Replace with your client implementation
+	url := "https://example.service-now.com/api"
+	builder := NewNowRequestBuilder(url, client)
+	tableName := "incident"
+
+	tableBuilder := builder.Table2(tableName)
+
+	assert.NotNil(t, tableBuilder)
+}
+
 func TestNowRequestBuilderAttachment(t *testing.T) {
 	client := &ServiceNowClient{} // Replace with your client implementation
 	url := "https://example.service-now.com/api"

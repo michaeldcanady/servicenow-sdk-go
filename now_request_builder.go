@@ -21,12 +21,22 @@ func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuild
 	}
 }
 
+// Deprecated: deprecated since v{unreleased}. Use `Table2` instead.
 // Table returns a TableRequestBuilder associated with the NowRequestBuilder.
 // It accepts a table name as a parameter and constructs the URL for table-related requests.
 // The returned TableRequestBuilder can be used to build and execute table-related requests.
 func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder {
 	rB.RequestBuilder.PathParameters["table"] = tableName
 	return tableapi.NewTableRequestBuilder(rB.RequestBuilder.Client.(*ServiceNowClient), rB.RequestBuilder.PathParameters)
+}
+
+// Table returns a TableRequestBuilder associated with the NowRequestBuilder.
+// It accepts a table name as a parameter and constructs the URL for table-related requests.
+// The returned TableRequestBuilder can be used to build and execute table-related requests.
+func (rB *NowRequestBuilder) Table2(tableName string) *tableapi.TableRequestBuilder2 {
+	rB.RequestBuilder.PathParameters["table"] = tableName
+	requestBuilder, _ := tableapi.NewTableRequestBuilder2(rB.RequestBuilder.Client.(*ServiceNowClient), rB.RequestBuilder.PathParameters)
+	return requestBuilder
 }
 
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
