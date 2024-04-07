@@ -6,6 +6,7 @@ import (
 	"reflect"
 
 	"github.com/gabriel-vasile/mimetype"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
 // RequestBuilder represents a builder for constructing HTTP request information.
@@ -197,13 +198,13 @@ func (rB *RequestBuilder) ToRequestInformation3(method HttpMethod, config *Reque
 	requestInfo := NewRequestInformation()
 
 	if config != nil {
-		if !isNil(config.QueryParameters) {
+		if !internal.IsNil(config.QueryParameters) {
 			err := requestInfo.AddQueryParameters(config.QueryParameters)
 			if err != nil {
 				return nil, err
 			}
 		}
-		if !isNil(config.Data) {
+		if !internal.IsNil(config.Data) {
 			data, err := rB.prepareData(config.Data)
 			if err != nil {
 				return nil, err
