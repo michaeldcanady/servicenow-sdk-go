@@ -85,6 +85,7 @@ func TestNewTableItemRequestBuilder2(t *testing.T) {
 	}
 }
 
+//nolint:dupl
 func TestTableItemRequestBuilder2_Get(t *testing.T) {
 	requestBuilder := &TableItemRequestBuilder2{RequestBuilder: &mockRequestBuilder{}}
 
