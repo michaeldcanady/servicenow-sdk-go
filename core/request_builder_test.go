@@ -176,7 +176,7 @@ func TestRequestBuilderToPostRequestInformation(t *testing.T) {
 	assert.Equal(t, expectedJSON, requestInfo.Content)
 }
 
-func TestRequestBuilderToPostRequestInformation2(t *testing.T) {
+func TestRequestBuilder_ToPostRequestInformation2(t *testing.T) {
 	// Create a mock RequestBuilder with a mock client
 	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
 

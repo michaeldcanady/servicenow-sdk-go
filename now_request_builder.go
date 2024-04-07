@@ -3,6 +3,7 @@ package servicenowsdkgo
 import (
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 )
 
@@ -13,7 +14,7 @@ type NowRequestBuilder struct {
 // NewNowRequestBuilder creates a new instance of the NowRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created NowRequestBuiabstraction
 func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuilder {
-	pathParameters := map[string]string{"baseurl": url}
+	pathParameters := map[string]string{internal.BasePathParameter: url}
 	requestBuilder := core.NewRequestBuilder(client, "{+baseurl}/Now", pathParameters)
 	return &NowRequestBuilder{
 		*requestBuilder,
