@@ -12,4 +12,6 @@ var (
 	ErrParsing           = errors.New("parsing nextLink url failed")
 	ErrEmptyURI          = errors.New("empty URI")
 	ErrNilCallback       = errors.New("callback can't be nil")
+	ErrNilParameterTable = errors.New("missing \"table\" parameter")
+	ErrNilParameterSysID = errors.New("missing \"sysId\" parameter")
 )

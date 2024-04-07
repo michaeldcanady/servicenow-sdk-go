@@ -6,10 +6,12 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
+// Deprecated: deprecated since v{unreleased}. Use `TableRequestBuilder2` instead.
 type TableRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// Deprecated: deprecated since v{unreleased}. Use `NewTableRequestBuilder2` instead.
 // NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
 func NewTableRequestBuilder(client core.Client, pathParameters map[string]string) *TableRequestBuilder {

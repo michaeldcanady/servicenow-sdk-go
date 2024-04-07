@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/google/go-querystring/query"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/yosida95/uritemplate/v3"
 )
 
@@ -31,7 +32,7 @@ func toQueryMapFromStruct(source interface{}) (map[string]string, error) {
 func ToQueryMap(source interface{}) (map[string]string, error) {
 	var err error
 
-	if isNil(source) {
+	if internal.IsNil(source) {
 		return nil, ErrNilSource
 	}
 
@@ -119,7 +120,7 @@ func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
 func ParseResponse[T Response](response *http.Response, value *T) error {
 	var err error
 
-	if isNil(response) {
+	if internal.IsNil(response) {
 		return ErrNilResponse
 	}
 
@@ -211,20 +212,6 @@ func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping
 	return nil
 }
 
-func sendDelete2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
-	requestInfo, err := requestBuilder.ToDeleteRequestInformation2(config)
-	if err != nil {
-		return err
-	}
-
-	_, err = requestBuilder.Client.Send(requestInfo, config.ErrorMapping.(ErrorMapping))
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 // Deprecated: deprecated in v1.4.0. Use `sendPut2` instead.
 func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping, value *T) error {
 	requestInfo, err := requestBuilder.ToPutRequestInformation(data, params)
@@ -240,31 +227,11 @@ func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string,
 	return ParseResponse(response, value)
 }
 
-func sendPut2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
-	requestInfo, err := requestBuilder.ToPutRequestInformation2(config)
-	if err != nil {
-		return err
-	}
-
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping.(ErrorMapping))
-	if err != nil {
-		return err
-	}
-
-	return ParseResponse(response, &config.Response)
-}
-
-// isNil checks if a value is nil or a nil interface
-func isNil(a interface{}) bool {
-	defer func() { _ = recover() }()
-	return a == nil || reflect.ValueOf(a).IsNil()
-}
-
 // convertToPage converts a response into a PageResult.
 func convertToPage[T any](response CollectionResponse[T]) (PageResult[T], error) {
 	var page PageResult[T]
 
-	if isNil(response) {
+	if internal.IsNil(response) {
 		return page, ErrNilResponse
 	}
 

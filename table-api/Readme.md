@@ -27,7 +27,7 @@ func main() {
 
 This method allows you to delete a specific record from a specified table.
 
-[Try on Playground](https://go.dev/play/p/E-fg64fxTl7)
+[Try on Playground](https://go.dev/play/p/kiIt77rWHn7)
 
 ```golang
 ...
@@ -38,8 +38,8 @@ This method allows you to delete a specific record from a specified table.
         "sysId":   "{sysId}",
     }
 
-    // Create a new TableItemRequestBuilder with your client and path parameters.
-    requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
+    // Create a new TableItemRequestBuilder2 with your client and path parameters.
+    requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
 
     // Optional Query Parameters
     params := &tableapi.TableItemRequestBuilderDeleteQueryParameters{
@@ -61,7 +61,7 @@ This method allows you to delete a specific record from a specified table.
 
 This method retrieves multiple records from a specified table.
 
-[Try on Playground](https://go.dev/play/p/Pn4npKdCGvU)
+[Try on Playground](https://go.dev/play/p/3OtdlSuaPEv)
 
 ```golang
 ...
@@ -72,7 +72,7 @@ This method retrieves multiple records from a specified table.
     }
 
     // Create a new TableRequestBuilder with your client and path parameters.
-    requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
+    requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
 
     // Optional Query Parameters
     params := &tableapi.TableRequestBuilderGetQueryParameters{
@@ -104,7 +104,7 @@ This method retrieves multiple records from a specified table.
 
 This method retrieves a specific record identified by its sys_id from a specified table.
 
-[Try on Playground](https://go.dev/play/p/gFlzIvA01ld)
+[Try on Playground](https://go.dev/play/p/UdZVsnPcPPH)
 
 ```golang
 ...
@@ -116,7 +116,7 @@ This method retrieves a specific record identified by its sys_id from a specifie
     }
 
     // Create a new TableItemRequestBuilder with your client and path parameters.
-    requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
+    requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
 
     params := &tableapi.TableItemRequestBuilderGetQueryParameters{
 
@@ -137,7 +137,7 @@ This method retrieves a specific record identified by its sys_id from a specifie
 
 This method inserts a new record into a specified table. Note that this method does not support the insertion of multiple records.
 
-[Try on Playground](https://go.dev/play/p/gbkVOBVivqr)
+[Try on Playground](https://go.dev/play/p/gYvf6NE0oxB)
 
 ```golang
 ...
@@ -154,7 +154,7 @@ This method inserts a new record into a specified table. Note that this method d
     }
 
     // Create a new TableRequestBuilder with your client and path parameters.
-    requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
+    requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
 
     param := &tableapi.TableRequestBuilderPostQueryParameters{
 
@@ -162,7 +162,7 @@ This method inserts a new record into a specified table. Note that this method d
 
     // Call the Post2 method with the data for the new record. You can pass nil if you don't have any query parameters.
     // The response will be a TableItemResponse.
-    response, err := requestBuilder.Post2(data, param)
+    response, err := requestBuilder.Post(data, param)
 
     // Handle any errors.
     if err != nil {
@@ -176,7 +176,7 @@ This method inserts a new record into a specified table. Note that this method d
 Update one record in the specified table.
 > *Note: Make sure only the fields you intend on updating are included*
 
-[Try on Playground](https://go.dev/play/p/ZrGrIVfWd9I)
+[Try on Playground](https://go.dev/play/p/d_gFYT6MjCn)
 
 ```golang
 ...
@@ -193,7 +193,7 @@ Update one record in the specified table.
     }
 
     // Instantiate new TableItemRequestBuilder.
-    requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
+    requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
 
     // Optional query parameters
     params := &tableapi.TableItemRequestBuilderPutQueryParameters{
@@ -203,7 +203,7 @@ Update one record in the specified table.
     // Call the get method, with or without TableRequestBuilderPutQueryParameters.
     // Make sure you include the data parameter
     // Response is a TableItemResponse.
-    response, err := requestBuilder.Put2(data, params)
+    response, err := requestBuilder.Put(data, params)
 
     // Test err, should be nil
     if err != nil {

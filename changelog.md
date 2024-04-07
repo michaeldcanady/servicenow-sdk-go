@@ -9,10 +9,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - `batchapi` module ([Issue #49](https://github.com/michaeldcanady/servicenow-sdk-go/issues/49))
+- `tableapi.TableItemRequestBuilder2`
+- `tableapi.NewTableItemRequestBuilder2`
+- `tableapi.TableRequestBuilder2`
+- `tableapi.NewTableRequestBuilder2`
+- `servicenowsdk.NowRequestBuilder.Table2`
 
 ### Changed
 
 ### Deprecated
+
+- `tableapi.TableItemRequestBuilder`
+- `tableapi.NewTableItemRequestBuilder`
+- `tableapi.TableRequestBuilder`
+- `tableapi.NewTableRequestBuilder`
+- `servicenowsdk.NowRequestBuilder.Table`
 
 ### Removed
 

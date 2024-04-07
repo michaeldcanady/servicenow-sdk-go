@@ -3,6 +3,7 @@ package servicenowsdkgo
 import (
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,7 +13,7 @@ func TestNewNowRequestBuilder(t *testing.T) {
 	builder := NewNowRequestBuilder(url, client)
 
 	expected := map[string]string{
-		"baseurl": url,
+		internal.BasePathParameter: url,
 	}
 
 	assert.NotNil(t, builder)
@@ -26,8 +27,8 @@ func TestNowRequestBuilderTable(t *testing.T) {
 	tableName := "incident"
 
 	expected := map[string]string{
-		"baseurl": url,
-		"table":   tableName,
+		internal.BasePathParameter: url,
+		"table":                    tableName,
 	}
 
 	tableBuilder := builder.Table(tableName)
@@ -36,13 +37,24 @@ func TestNowRequestBuilderTable(t *testing.T) {
 	assert.Equal(t, expected, tableBuilder.RequestBuilder.PathParameters)
 }
 
+func TestNowRequestBuilderTable2(t *testing.T) {
+	client := &ServiceNowClient{} // Replace with your client implementation
+	url := "https://example.service-now.com/api"
+	builder := NewNowRequestBuilder(url, client)
+	tableName := "incident"
+
+	tableBuilder := builder.Table2(tableName)
+
+	assert.NotNil(t, tableBuilder)
+}
+
 func TestNowRequestBuilderAttachment(t *testing.T) {
 	client := &ServiceNowClient{} // Replace with your client implementation
 	url := "https://example.service-now.com/api"
 	builder := NewNowRequestBuilder(url, client)
 
 	expected := map[string]string{
-		"baseurl": url,
+		internal.BasePathParameter: url,
 	}
 
 	attachmentBuilder := builder.Attachment()
