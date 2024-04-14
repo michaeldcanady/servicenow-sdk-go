@@ -9,9 +9,15 @@ const (
 )
 
 func (v View2) String() string {
-    return map[View2]string{
+    views := map[View2]string{
         ViewDesktop: "desktop",
         ViewMobile: "mobile",
         ViewBoth: "both",
-    }[v]
+    }
+
+    str, ok := views[v]
+    if !ok {
+        return "invalid"
+    }
+    return str
 }
