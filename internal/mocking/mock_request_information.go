@@ -60,3 +60,7 @@ func (m *MockRequestInformation) ToRequestWithContext(ctx context.Context) (*htt
 	args := m.Called(ctx)
 	return args.Get(0).(*http.Request), args.Error(1)
 }
+
+func (m *MockRequestInformation) SetContent(content []byte, contentType string) {
+	_ = m.Called(content, contentType)
+}
