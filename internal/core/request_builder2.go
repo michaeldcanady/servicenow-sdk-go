@@ -80,7 +80,7 @@ func (rB *requestBuilder2) Send(ctx context.Context, method HttpMethod, opts ...
 		return nil, fmt.Errorf("failed to create request information: %w", err)
 	}
 
-	response, err := rB.client.SendWithContext(ctx, requestInfo, config.ErrorMapping.(ErrorMapping))
+	response, err := rB.client.SendWithContext(ctx, requestInfo, config.ErrorMapping)
 	if err != nil {
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
