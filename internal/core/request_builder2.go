@@ -55,8 +55,10 @@ func (rB *requestBuilder2) ToRequestInformation(method HttpMethod, config *Reque
 		return requestInfo, nil
 	}
 
-	if err := requestInfo.AddQueryParameters(config.QueryParameters); err != nil {
-		return nil, fmt.Errorf("failed to add query parameters: %w", err)
+	if config.QueryParameters != nil {
+		if err := requestInfo.AddQueryParameters(config.QueryParameters); err != nil {
+			return nil, fmt.Errorf("failed to add query parameters: %w", err)
+		}
 	}
 
 	if config.Data != nil {

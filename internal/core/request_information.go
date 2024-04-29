@@ -26,7 +26,10 @@ type RequestInformation interface {
 
 // NewRequestInformation creates a new RequestInformation object with default values.
 func NewRequestInformation(opts ...requestInformationOption) RequestInformation {
-	reqInfo := &requestInformation{}
+	reqInfo := &requestInformation{
+		uri:     NewURLInformation(),
+		Headers: make(http.Header),
+	}
 
 	for _, opt := range opts {
 		opt(reqInfo)
@@ -37,7 +40,7 @@ func NewRequestInformation(opts ...requestInformationOption) RequestInformation 
 
 func NewRequestInformationWithMethod(method HttpMethod) RequestInformation {
 	return &requestInformation{
-		Headers: make(http.Header),
+		Headers: http.Header{},
 		Method:  method,
 		options: make(map[string]RequestOption),
 		uri:     NewURLInformation(),

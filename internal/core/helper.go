@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/google/go-querystring/query"
+	"github.com/stretchr/testify/mock"
 	"github.com/yosida95/uritemplate/v3"
 )
 
@@ -132,4 +133,12 @@ func ParseResponse[T Response](response *http.Response, value *T) error {
 	(*value).ParseHeaders(response.Header)
 
 	return nil
+}
+
+func ResetCalls(calls ...*mock.Call) {
+	for _, call := range calls {
+		if !IsNil(call) {
+			call.Unset()
+		}
+	}
 }
