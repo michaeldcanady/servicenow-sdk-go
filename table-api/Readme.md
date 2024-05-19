@@ -43,7 +43,7 @@ To remove a specific record from a table:
     }
 
     // Execute the delete operation
-    err := client.Now().Table("{tableName}").ById("{sysId}").Delete(params)
+    err := client.Now().Table2("{tableName}").ByID("{sysId}").Delete(params)
     if err != nil {
         panic(err)  // Error handling
     }
@@ -95,7 +95,7 @@ To fetch multiple records from a table:
     }
 
     // Execute the retrieval operation
-    response, err := client.Now().Table("{tableName}").Get(params)
+    response, err := client.Now().Table2("{tableName}").Get(params)
     if err != nil {
         panic(err) // Error handling
     }
@@ -145,7 +145,7 @@ This method retrieves a specific record identified by its sys_id from a specifie
     }
 
     // Execute the retrieval operation
-    record, err := client.Now().Table("{tableName}")ById("{sysId}").Get()
+    record, err := client.Now().Table2("{tableName}")ByID("{sysId}").Get()
     if err != nil {
         panic(err) // Error handling
     }
@@ -203,7 +203,7 @@ This method inserts a new record into a specified table.
     }
 
     // Execute the creation operation.
-    response, err := client.Now().Table("{tableName}").Post(data, param)
+    response, err := client.Now().Table2("{tableName}").Post(data, param)
     if err != nil {
         panic(err) // Error handling
     }
@@ -266,7 +266,7 @@ Update one record in the specified table.
     }
 
     // Execute the update operation.
-    response, err := client.Now().Table("{tableName}").ByID("{sysID}").Put(data, params)
+    response, err := client.Now().Table2("{tableName}").ByID("{sysID}").Put(data, params)
     if err != nil {
         panic(err) // Error handling
     }
