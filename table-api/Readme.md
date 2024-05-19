@@ -32,7 +32,7 @@ func main() {
 
 To remove a specific record from a table:
 
-### Fluent Interface Pattern
+### 1. Fluent Interface Pattern
 
 ```golang
 ...
@@ -50,7 +50,7 @@ To remove a specific record from a table:
 }
 ```
 
-### Building Requests
+### 2. Building Request
 
 [Try on Playground](https://go.dev/play/p/kiIt77rWHn7)
 
@@ -84,7 +84,7 @@ To remove a specific record from a table:
 
 To fetch multiple records from a table:
 
-### Fluent Interface Pattern
+### 1. Fluent Interface Pattern
 
 ```golang
 ...
@@ -102,7 +102,7 @@ To fetch multiple records from a table:
 }
 ```
 
-### Building Requests
+### 2. Building Request
 
 [Try on Playground](https://go.dev/play/p/3OtdlSuaPEv)
 
@@ -134,7 +134,7 @@ To fetch multiple records from a table:
 
 This method retrieves a specific record identified by its sys_id from a specified table.
 
-### Fluent Interface Pattern
+### 1. Fluent Interface Pattern
 
 ```golang
 ...
@@ -152,7 +152,7 @@ This method retrieves a specific record identified by its sys_id from a specifie
 }
 ```
 
-### Building Requests
+### 2. Building Request
 
 [Try on Playground](https://go.dev/play/p/UdZVsnPcPPH)
 
@@ -187,7 +187,7 @@ This method inserts a new record into a specified table.
 
 > *Note: that this method does not support the insertion of multiple records.*
 
-### Fluent Interface Pattern
+### 1. Fluent Interface Pattern
 
 ```golang
 ...
@@ -210,7 +210,7 @@ This method inserts a new record into a specified table.
 }
 ```
 
-### Building Requests
+### 2. Building Request
 
 [Try on Playground](https://go.dev/play/p/gYvf6NE0oxB)
 
@@ -249,7 +249,7 @@ This method inserts a new record into a specified table.
 Update one record in the specified table.
 > *Note: Make sure only the fields you intend on updating are included*
 
-### Fluent Interface Pattern
+### 1. Fluent Interface Pattern
 
 ```golang
 ...
@@ -273,7 +273,7 @@ Update one record in the specified table.
 }
 ```
 
-### Building Requests
+### 2. Building Request
 
 [Try on Playground](https://go.dev/play/p/d_gFYT6MjCn)
 
