@@ -1,67 +1,33 @@
-name: Create Weekly Preview Release
+name: Weekly Preview Release
 
 on:
   schedule:
-    - cron: "0 0 * * 0" # Weekly on Sunday at midnight (UTC)
-  workflow_dispatch: # Manual trigger
+    - cron: "0 0 * * 0" # This will run every Sunday at 00:00
 
 env:
-  PREVIEW_VERSION:
 
 jobs:
-  check_version:
-    runs-on: ubuntu-latest
-    outputs:
-      is_greater: ${{ steps.compare_versions.outputs.is_greater }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Get latest published version
-        id: latest_version
-        run: |
-          latest_version=$(git describe --tags $(git rev-list --tags --max-count=1))
-          echo "LATEST_PUBLISHED_VERSION=${latest_version}" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Get Version from VERSION file
-        id: read_version
-        run: |
-          unreleased_version=$(cat VERSION)
-          echo "UNRELEASED_VERSION=$unreleased_version" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Compare versions
-        id: compare_versions
-        run: |
-          if [[ "${{env.UNRELEASED_VERSION}}" > "${{env.LATEST_PUBLISHED_VERSION}}" ]]; then
-            echo "::set-output name=is_greater::true"
-          else
-            echo "::set-output name=is_greater::false"
-            echo "Version in VERSION file is not greater than the last published version. Stopping workflow."
-            exit 1
-          fi
-        shell: bash
-
-  create_preview_release:
-    needs: check_version
-    if: needs.check_version.outputs.is_greater == 'true'
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # This is required to get the full commit history
+
+      - name: Set up environment
+        run: |
+          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Run the script
+        run: |
+          chmod +x ./scripts/weekly-release.sh
+          ./scripts/weekly-release.sh
 
       - name: Set Preview Version
         run: |
           echo "PREVIEW_VERSION=${{env.UNRELEASED_VERSION}}-preview$(date +'%Y%m%d')" >> $GITHUB_ENV
         shell: bash
-
-      - name: Create Tag
-        uses: rickstaa/action-create-tag@v1
-        with:
-          tag: "v${{env.PREVIEW_VERSION}}"
-          message: "Preview Release $PREVIEW_VERSION"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
