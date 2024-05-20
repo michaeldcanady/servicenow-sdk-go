@@ -1,10 +1,11 @@
 package attachmentapi
 
 import (
-	"os"
-	"path/filepath"
-
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+)
+
+const (
+	attachmentRequestBuilderURLTemplate = "{+baseurl}/attachment{/attachment}{?encryption_context,file_name,table_name,table_sys_id}"
 )
 
 type AttachmentRequestBuilder struct {
@@ -14,7 +15,7 @@ type AttachmentRequestBuilder struct {
 func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]string) *AttachmentRequestBuilder {
 	requestBuilder := core.NewRequestBuilder(
 		client,
-		"{+baseurl}/attachment{/attachment}{?encryption_context,file_name,table_name,table_sys_id}",
+		attachmentRequestBuilderURLTemplate,
 		pathParameters,
 	)
 	return &AttachmentRequestBuilder{
@@ -47,34 +48,5 @@ func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQuery
 }
 
 // File ...
-func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequestBuilderFileQueryParameters) (*AttachmentItemResponse, error) {
-	if params == nil {
-		return nil, ErrNilParams
-	}
-
-	cleanPath := filepath.Clean(filePath)
-
-	_, err := os.Stat(cleanPath)
-	if err != nil {
-		return nil, err
-	}
-
-	data, err := os.ReadFile(cleanPath)
-	if err != nil {
-		return nil, err
-	}
-
-	config := &AttachmentCollectionFileRequestConfiguration{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            data,
-		response:        &AttachmentItemResponse{},
-	}
-
-	err = rB.SendPost3(config.toConfiguration())
-	if err != nil {
-		return nil, err
-	}
-
-	return config.response, nil
+func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequestBuilderFileQueryParameters) *AttachmentFileRequestBuilder {
 }
