@@ -87,7 +87,7 @@ func (rB *requestBuilder2) Send(ctx context.Context, method HttpMethod, opts ...
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
 
-	if method == DELETE || config.Response == nil {
+	if method == DELETE || response == nil {
 		return nil, nil
 	}
 

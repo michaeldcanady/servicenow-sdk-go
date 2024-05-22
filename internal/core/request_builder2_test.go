@@ -2,7 +2,9 @@ package core
 
 import (
 	"context"
+	"io"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -75,7 +77,27 @@ func TestSend(t *testing.T) {
 		{
 			Title: "Success",
 			Setup: func() {
-				client.On("SendWithContext", context.Background(), GET, []RequestConfigurationOption{WithData("test")}).Return("test", nil)
+				client.On(
+					"SendWithContext",
+					context.Background(),
+					&requestInformation{
+						Method:  GET,
+						Headers: http.Header{"Content-Type": []string{"application/json"}},
+						uri: &UrlInformation{
+							QueryParameters: make(map[string]string),
+							PathParameters:  builder.pathParameters,
+							UrlTemplate:     builder.urlTemplate,
+						},
+						Content: []byte("\"test\""),
+					},
+					nil,
+				).Return(
+					&http.Response{
+						Header: http.Header{"Content-Type": []string{"application/json"}},
+						Body:   io.NopCloser(strings.NewReader("\"test\"")),
+					},
+					nil,
+				)
 			},
 			ExpectedErr: nil,
 			Expected:    "test",

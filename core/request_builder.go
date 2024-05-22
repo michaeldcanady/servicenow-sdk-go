@@ -9,6 +9,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
+// Deprecated: deprecated since v{unreleased}.
 // RequestBuilder represents a builder for constructing HTTP request information.
 type RequestBuilder struct {
 	// PathParameters is a map of path parameters used in the URL template.
@@ -19,6 +20,7 @@ type RequestBuilder struct {
 	UrlTemplate string //nolint:stylecheck
 }
 
+// Deprecated: deprecated since v{unreleased}.
 // NewRequestBuilder creates a new instance of the RequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created RequestBuilder.
 func NewRequestBuilder(client Client, urlTemplate string, pathParameters map[string]string) *RequestBuilder {
