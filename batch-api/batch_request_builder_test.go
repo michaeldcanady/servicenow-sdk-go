@@ -17,11 +17,11 @@ func TestNewBatchRequestBuilder(t *testing.T) {
 
 	result := NewBatchRequestBuilder(mockClient, pathParameters)
 
-	assert.IsType(t, &core.RequestBuilder{}, result.RequestBuilder)
+	assert.IsType(t, &core.RequestBuilder{}, result.RequestBuilder) //nolint:staticcheck
 	assert.NotNil(t, result)
 	assert.IsType(t, &BatchRequestBuilder{}, result)
 
-	builder := result.RequestBuilder.(*core.RequestBuilder)
+	builder := result.RequestBuilder.(*core.RequestBuilder) //nolint:staticcheck
 
 	assert.Equal(t, "{+baseurl}/v1/batch", builder.UrlTemplate)
 	assert.Equal(t, pathParameters, builder.PathParameters)

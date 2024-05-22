@@ -36,7 +36,7 @@ func NewTableItemRequestBuilder2(client core.Client, pathParameters map[string]s
 	}
 
 	return &TableItemRequestBuilder2{
-		RequestBuilder: core.NewRequestBuilder(client, tableItemURLTemplate, pathParameters),
+		RequestBuilder: core.NewRequestBuilder(client, tableItemURLTemplate, pathParameters), //nolint:staticcheck
 	}, nil
 }
 

@@ -15,7 +15,7 @@ type NowRequestBuilder struct {
 // It accepts the URL and Client as parameters and returns a pointer to the created NowRequestBuiabstraction
 func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuilder {
 	pathParameters := map[string]string{internal.BasePathParameter: url}
-	requestBuilder := core.NewRequestBuilder(client, "{+baseurl}/Now", pathParameters)
+	requestBuilder := core.NewRequestBuilder(client, "{+baseurl}/Now", pathParameters) //nolint:staticcheck
 	return &NowRequestBuilder{
 		*requestBuilder,
 	}
