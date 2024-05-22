@@ -34,7 +34,7 @@ func NewTableRequestBuilder2(client core.Client, pathParameters map[string]strin
 	}
 
 	return &TableRequestBuilder2{
-		core.NewRequestBuilder(
+		core.NewRequestBuilder( //nolint:staticcheck
 			client,
 			tableURLTemplate,
 			pathParameters,
@@ -54,8 +54,8 @@ var _ TableService = (*TableRequestBuilder2)(nil)
 
 // ByID creates a TableItemRequestBuilder for a specific record in the table identified by sysID.
 func (rB *TableRequestBuilder2) ByID(sysID string) (*TableItemRequestBuilder2, error) {
-	pathParameters := rB.RequestBuilder.(*core.RequestBuilder).PathParameters
-	client := rB.RequestBuilder.(*core.RequestBuilder).Client
+	pathParameters := rB.RequestBuilder.(*core.RequestBuilder).PathParameters //nolint:staticcheck
+	client := rB.RequestBuilder.(*core.RequestBuilder).Client                 //nolint:staticcheck
 	pathParameters["sysId"] = sysID
 	return NewTableItemRequestBuilder2(client, pathParameters)
 }
@@ -110,7 +110,7 @@ func (rB *TableRequestBuilder2) Count() (int, error) {
 
 	errorMapping := core.ErrorMapping{"4XX": "hi"}
 
-	response, err := rB.RequestBuilder.(*core.RequestBuilder).Client.Send(requestInfo, errorMapping)
+	response, err := rB.RequestBuilder.(*core.RequestBuilder).Client.Send(requestInfo, errorMapping) //nolint:staticcheck
 	if err != nil {
 		return -1, err
 	}
