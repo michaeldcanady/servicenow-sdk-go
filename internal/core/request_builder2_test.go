@@ -30,6 +30,12 @@ func (c *mockClient2) GetBaseURL() string {
 	return args.String(0)
 }
 
+type MyResponse struct {
+	Test string `json:"test"`
+}
+
+func (r *MyResponse) ParseHeaders(headers http.Header) {}
+
 func TestNewRequestBuilder2(t *testing.T) {
 	client := &mockClient2{}
 	urlTemplate := "http://example.com/{param}"
@@ -88,19 +94,19 @@ func TestSend(t *testing.T) {
 							PathParameters:  builder.pathParameters,
 							UrlTemplate:     builder.urlTemplate,
 						},
-						Content: []byte("\"test\""),
+						Content: []byte("{\"test\":\"test1\"}"),
 					},
 					nil,
 				).Return(
 					&http.Response{
 						Header: http.Header{"Content-Type": []string{"application/json"}},
-						Body:   io.NopCloser(strings.NewReader("\"test\"")),
+						Body:   io.NopCloser(strings.NewReader("{\"test\":\"test1\"}")),
 					},
 					nil,
 				)
 			},
 			ExpectedErr: nil,
-			Expected:    "test",
+			Expected:    &MyResponse{Test: "test1"},
 			Cleanup: func() {
 				ResetCalls(client.ExpectedCalls...)
 			},
@@ -113,7 +119,14 @@ func TestSend(t *testing.T) {
 				test.Setup()
 			}
 
-			resp, err := builder.Send(context.Background(), GET, []RequestConfigurationOption{WithData("test")}...)
+			resp, err := builder.Send(
+				context.Background(),
+				GET,
+				[]RequestConfigurationOption{
+					WithData(map[string]string{"test": "test1"}),
+					WithResponse(&MyResponse{}),
+				}...,
+			)
 
 			assert.Equal(t, test.Expected, resp)
 			assert.Equal(t, test.ExpectedErr, err)
