@@ -11,53 +11,28 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
-type ServiceNowClient struct {
-	// Deprecated: deprecated since v1.6.0.
-	Credential   core.Credential
+type ServiceNowClient2 struct {
 	authProvider *internal.BaseAuthorizationProvider
-	BaseUrl      string //nolint:stylecheck
-	Session      http.Client
+	baseURL      string
+	session      http.Client
 }
 
 // Now returns a NowRequestBuilder associated with the Client.
 // It prepares the NowRequestBuilder with the base URL for the ServiceNow instance.
-func (c *ServiceNowClient) Now() *NowRequestBuilder {
-	return NewNowRequestBuilder(c.BaseUrl+"/now", c)
-}
-
-// Deprecated: deprecated since v1.6.0. Please use `NewServiceNowClient2` instead.
-// NewServiceNowClient creates a new instance of the ServiceNow client.
-// It accepts a UsernamePasswordCredential and an instance URL.
-// If the instance URL does not end with ".service-now.com/api", it appends the suffix.
-// It returns a pointer to the Client.
-func NewServiceNowClient(credential core.Credential, instance string) *ServiceNowClient {
-	if !strings.HasSuffix(instance, ".service-now.com/api") {
-		instance += ".service-now.com/api"
-	}
-
-	if !strings.HasPrefix(instance, "https://") {
-		instance = "https://" + instance
-	}
-
-	authProvider, _ := internal.NewBaseAuthorizationProvider(credential)
-
-	return &ServiceNowClient{
-		Credential:   credential,
-		authProvider: authProvider,
-		BaseUrl:      instance,
-		Session:      http.Client{},
-	}
+func (c *ServiceNowClient2) Now() *NowRequestBuilder2 {
+	return NewNowRequestBuilder2(c, map[string]string{"baseurl": c.GetBaseURL()})
 }
 
 // NewServiceNowClient2 creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
-// If the instance URL does not end with ".service-now.com/api", it appends the suffix.
+// If the instance URL does not end with ".service-now.com", it appends the suffix.
 // It returns a pointer to the Client.
-func NewServiceNowClient2(credential core.Credential, instance string) (*ServiceNowClient, error) {
-	if !strings.HasSuffix(instance, ".service-now.com/api") {
-		instance += ".service-now.com/api"
+func NewServiceNowClient3(credential core.Credential, instance string) (*ServiceNowClient2, error) {
+	if !strings.HasSuffix(instance, ".service-now.com") {
+		instance += ".service-now.com"
 	}
 
 	if !strings.HasPrefix(instance, "https://") {
@@ -69,15 +44,14 @@ func NewServiceNowClient2(credential core.Credential, instance string) (*Service
 		return nil, err
 	}
 
-	return &ServiceNowClient{
-		Credential:   credential,
+	return &ServiceNowClient2{
 		authProvider: authProvider,
-		BaseUrl:      instance,
-		Session:      http.Client{},
+		baseURL:      instance,
+		session:      http.Client{},
 	}, nil
 }
 
-func (c *ServiceNowClient) unmarshallError(response *http.Response) error {
+func (c *ServiceNowClient2) unmarshallError(response *http.Response) error {
 	var stringError core.ServiceNowError
 
 	body, err := io.ReadAll(response.Body)
@@ -91,7 +65,7 @@ func (c *ServiceNowClient) unmarshallError(response *http.Response) error {
 	return &stringError
 }
 
-func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings core.ErrorMapping) error {
+func (c *ServiceNowClient2) throwIfFailedResponse(response *http.Response, errorMappings intCore.ErrorMapping) error {
 	if response.StatusCode < 400 {
 		return nil
 	}
@@ -99,7 +73,7 @@ func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 	statusAsString := strconv.Itoa(response.StatusCode)
 	var errorCtor interface{} = nil
 
-	if len(errorMappings) != 0 {
+	if errorMappings.Len() != 0 {
 		var isOk bool
 		errorCtor, isOk = errorMappings.Get(response.StatusCode)
 		if !isOk {
@@ -120,7 +94,7 @@ func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 	return stringError
 }
 
-func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo core.IRequestInformation) (*http.Request, error) {
+func (c *ServiceNowClient2) toRequestWithContext(ctx context.Context, requestInfo intCore.RequestInformation) (*http.Request, error) {
 	if requestInfo == nil {
 		return nil, ErrNilRequestInfo
 	}
@@ -144,17 +118,17 @@ func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo
 	return request, nil
 }
 
-func (c *ServiceNowClient) toRequest(requestInfo core.IRequestInformation) (*http.Request, error) {
+func (c *ServiceNowClient2) toRequest(requestInfo intCore.RequestInformation) (*http.Request, error) {
 	return c.toRequestWithContext(context.Background(), requestInfo)
 }
 
-func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *ServiceNowClient2) SendWithContext(ctx context.Context, requestInfo intCore.RequestInformation, errorMapping intCore.ErrorMapping) (*http.Response, error) {
 	request, err := c.toRequestWithContext(ctx, requestInfo)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := c.Session.Do(request)
+	response, err := c.session.Do(request)
 	if err != nil {
 		return nil, fmt.Errorf("unable to complete request: %s", err)
 	}
@@ -167,11 +141,10 @@ func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core
 	return response, nil
 }
 
-func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-	//func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *ServiceNowClient2) Send(requestInfo intCore.RequestInformation, errorMapping intCore.ErrorMapping) (*http.Response, error) {
 	return c.SendWithContext(context.Background(), requestInfo, errorMapping)
 }
 
-func (c *ServiceNowClient) GetBaseURL() string {
-	return c.BaseUrl
+func (c *ServiceNowClient2) GetBaseURL() string {
+	return c.baseURL
 }

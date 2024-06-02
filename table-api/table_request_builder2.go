@@ -1,12 +1,13 @@
 package tableapi
 
 import (
+	"context"
 	"errors"
 	"strconv"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	intTable "github.com/michaeldcanady/servicenow-sdk-go/table-api/internal"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
 const (
@@ -15,11 +16,11 @@ const (
 
 // TableRequestBuilder is responsible for building requests for table operations.
 type TableRequestBuilder2 struct {
-	intTable.RequestBuilder
+	intCore.RequestBuilder2
 }
 
 // NewTableRequestBuilder initializes a new TableRequestBuilder with the given client and path parameters.
-func NewTableRequestBuilder2(client core.Client, pathParameters map[string]string) (*TableRequestBuilder2, error) {
+func NewTableRequestBuilder2(client intCore.Client2, pathParameters map[string]string) (*TableRequestBuilder2, error) {
 	if internal.IsNil(client) {
 		return nil, ErrNilClient
 	}
@@ -34,18 +35,14 @@ func NewTableRequestBuilder2(client core.Client, pathParameters map[string]strin
 	}
 
 	return &TableRequestBuilder2{
-		core.NewRequestBuilder( //nolint:staticcheck
-			client,
-			tableURLTemplate,
-			pathParameters,
-		),
+		intCore.NewRequestBuilder2(client, tableItemURLTemplate, pathParameters),
 	}, nil
 }
 
 // TableService defines the operations available for the table as a whole.
 type TableService interface {
 	Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error)
-	Post(data interface{}, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error)
+	Post(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableItemResponse, error)
 	Count() (int, error)
 }
 
@@ -54,56 +51,39 @@ var _ TableService = (*TableRequestBuilder2)(nil)
 
 // ByID creates a TableItemRequestBuilder for a specific record in the table identified by sysID.
 func (rB *TableRequestBuilder2) ByID(sysID string) (*TableItemRequestBuilder2, error) {
-	pathParameters := rB.RequestBuilder.(*core.RequestBuilder).PathParameters //nolint:staticcheck
-	client := rB.RequestBuilder.(*core.RequestBuilder).Client                 //nolint:staticcheck
+	pathParameters := rB.GetPathParameters()
+	client := rB.GetClient()
 	pathParameters["sysId"] = sysID
 	return NewTableItemRequestBuilder2(client, pathParameters)
 }
 
 // Get retrieves a collection of table items based on the provided query parameters.
-func (rB *TableRequestBuilder2) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
-	config := &tableGetRequestConfiguration2[TableEntry]{
-		header:   nil,
-		query:    params,
-		data:     nil,
-		mapping:  nil,
-		response: &TableCollectionResponse2[TableEntry]{},
-	}
+func (rB *TableRequestBuilder2) Get(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableCollectionResponse, error) {
+	opts = append(opts, intCore.WithResponse(&TableCollectionResponse2[TableEntry]{}))
 
-	err := rB.SendGet2(config.toConfiguration())
+	resp, err := rB.Send(ctx, intCore.GET, opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	return config.response, nil
+	return resp.(*TableCollectionResponse), nil
 }
 
 // Post creates a new table item with the provided data and query parameters.
-func (rB *TableRequestBuilder2) Post(data interface{}, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error) {
-	data, err := convertFromTableEntry(data)
+func (rB *TableRequestBuilder2) Post(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableItemResponse, error) {
+	opts = append(opts, intCore.WithResponse(&TableItemResponse2[TableEntry]{}))
+
+	resp, err := rB.Send(ctx, intCore.GET, opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	config := &tablePostRequestConfiguration2[TableEntry]{
-		header:   nil,
-		query:    params,
-		data:     data.(map[string]string),
-		mapping:  nil,
-		response: &TableItemResponse2[TableEntry]{},
-	}
-
-	err = rB.SendPost3(config.toConfiguration())
-	if err != nil {
-		return nil, err
-	}
-
-	return config.response, nil
+	return resp.(*TableItemResponse), nil
 }
 
 // Count retrieves the total count of items in the table.
 func (rB *TableRequestBuilder2) Count() (int, error) {
-	requestInfo, err := rB.RequestBuilder.ToHeadRequestInformation()
+	requestInfo, err := rB.ToHeadRequestInformation()
 	if err != nil {
 		return -1, err
 	}
