@@ -113,14 +113,6 @@ func (rI *MockRequestInformation) GetHeaders() intCore.RequestHeader {
 	return &internal.RequestHeader{}
 }
 
-func TestNewClient(t *testing.T) {
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
-
-	client := NewServiceNowClient(cred, "instance")
-
-	assert.NotNil(t, client)
-}
-
 func TestNewClient2(t *testing.T) {
 	authProvider, _ := internal.NewBaseAuthorizationProvider(sharedUsernameAndPasswordCred)
 
@@ -129,10 +121,9 @@ func TestNewClient2(t *testing.T) {
 			Title: "Valid",
 			Input: []interface{}{"instance", sharedUsernameAndPasswordCred},
 			Expected: &ServiceNowClient{
-				Credential:   sharedUsernameAndPasswordCred,
 				authProvider: authProvider,
-				BaseUrl:      "https://instance.service-now.com/api",
-				Session:      http.Client{},
+				baseURL:      "https://instance.service-now.com/api",
+				session:      http.Client{},
 			},
 			expectedErr: nil,
 		},

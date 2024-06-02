@@ -139,21 +139,6 @@ func ParseResponse[T Response](response *http.Response, value *T) error {
 	return nil
 }
 
-// Deprecated: deprecated in v1.4.0. Please use SendGet2.
-func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping, value *T) error {
-	requestInfo, err := requestBuilder.ToGetRequestInformation(params)
-	if err != nil {
-		return err
-	}
-
-	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return err
-	}
-
-	return ParseResponse(response, value)
-}
-
 func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToGetRequestInformation2(config)
 	if err != nil {
@@ -168,21 +153,6 @@ func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) erro
 	return ParseResponse(response, &config.Response)
 }
 
-// Deprecated: deprecated in v1.4.0. Use `SendPost2` instead.
-func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, params interface{}, errorMapping ErrorMapping, value *T) error {
-	requestInfo, err := requestBuilder.ToPostRequestInformation2(data, params)
-	if err != nil {
-		return err
-	}
-
-	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return err
-	}
-
-	return ParseResponse(response, value)
-}
-
 func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToPostRequestInformation3(config)
 	if err != nil {
@@ -195,36 +165,6 @@ func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) err
 	}
 
 	return ParseResponse(response, &config.Response)
-}
-
-// Deprecated: deprecated in v1.4.0. Use `sendDelete2` instead.
-func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping ErrorMapping) error {
-	requestInfo, err := requestBuilder.ToDeleteRequestInformation(params)
-	if err != nil {
-		return err
-	}
-
-	_, err = requestBuilder.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// Deprecated: deprecated in v1.4.0. Use `sendPut2` instead.
-func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string, params interface{}, errorMapping ErrorMapping, value *T) error {
-	requestInfo, err := requestBuilder.ToPutRequestInformation(data, params)
-	if err != nil {
-		return err
-	}
-
-	response, err := requestBuilder.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return err
-	}
-
-	return ParseResponse(response, value)
 }
 
 // convertToPage converts a response into a PageResult.

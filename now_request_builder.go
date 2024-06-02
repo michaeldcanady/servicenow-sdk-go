@@ -21,15 +21,6 @@ func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuild
 	}
 }
 
-// Deprecated: deprecated since v{unreleased}. Use `Table2` instead.
-// Table returns a TableRequestBuilder associated with the NowRequestBuilder.
-// It accepts a table name as a parameter and constructs the URL for table-related requests.
-// The returned TableRequestBuilder can be used to build and execute table-related requests.
-func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder {
-	rB.RequestBuilder.PathParameters["table"] = tableName
-	return tableapi.NewTableRequestBuilder(rB.RequestBuilder.Client.(*ServiceNowClient), rB.RequestBuilder.PathParameters)
-}
-
 // Table returns a TableRequestBuilder associated with the NowRequestBuilder.
 // It accepts a table name as a parameter and constructs the URL for table-related requests.
 // The returned TableRequestBuilder can be used to build and execute table-related requests.

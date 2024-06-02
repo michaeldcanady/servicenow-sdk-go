@@ -14,41 +14,15 @@ import (
 )
 
 type ServiceNowClient struct {
-	// Deprecated: deprecated since v1.6.0.
-	Credential   core.Credential
 	authProvider *internal.BaseAuthorizationProvider
-	BaseUrl      string //nolint:stylecheck
-	Session      http.Client
+	baseURL      string //nolint:stylecheck
+	session      http.Client
 }
 
 // Now returns a NowRequestBuilder associated with the Client.
 // It prepares the NowRequestBuilder with the base URL for the ServiceNow instance.
 func (c *ServiceNowClient) Now() *NowRequestBuilder {
-	return NewNowRequestBuilder(c.BaseUrl+"/now", c)
-}
-
-// Deprecated: deprecated since v1.6.0. Please use `NewServiceNowClient2` instead.
-// NewServiceNowClient creates a new instance of the ServiceNow client.
-// It accepts a UsernamePasswordCredential and an instance URL.
-// If the instance URL does not end with ".service-now.com/api", it appends the suffix.
-// It returns a pointer to the Client.
-func NewServiceNowClient(credential core.Credential, instance string) *ServiceNowClient {
-	if !strings.HasSuffix(instance, ".service-now.com/api") {
-		instance += ".service-now.com/api"
-	}
-
-	if !strings.HasPrefix(instance, "https://") {
-		instance = "https://" + instance
-	}
-
-	authProvider, _ := internal.NewBaseAuthorizationProvider(credential)
-
-	return &ServiceNowClient{
-		Credential:   credential,
-		authProvider: authProvider,
-		BaseUrl:      instance,
-		Session:      http.Client{},
-	}
+	return NewNowRequestBuilder(c.baseURL+"/now", c)
 }
 
 // NewServiceNowClient2 creates a new instance of the ServiceNow client.
@@ -70,10 +44,9 @@ func NewServiceNowClient2(credential core.Credential, instance string) (*Service
 	}
 
 	return &ServiceNowClient{
-		Credential:   credential,
 		authProvider: authProvider,
-		BaseUrl:      instance,
-		Session:      http.Client{},
+		baseURL:      instance,
+		session:      http.Client{},
 	}, nil
 }
 
@@ -154,7 +127,7 @@ func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core
 		return nil, err
 	}
 
-	response, err := c.Session.Do(request)
+	response, err := c.session.Do(request)
 	if err != nil {
 		return nil, fmt.Errorf("unable to complete request: %s", err)
 	}
@@ -172,5 +145,5 @@ func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMappi
 }
 
 func (c *ServiceNowClient) GetBaseURL() string {
-	return c.BaseUrl
+	return c.baseURL
 }
