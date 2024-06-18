@@ -29,7 +29,10 @@ func (e *CredentialError) Error() string {
 }
 
 var (
-	EmptyClientID     = NewOauth2Error("clientId is empty")
-	EmptyClientSecret = NewOauth2Error("clientSecret is empty")
-	EmptyBaseURL      = NewOauth2Error("baseURL is empty")
+	EmptyClientID       = NewOauth2Error("clientId is empty")
+	EmptyClientSecret   = NewOauth2Error("clientSecret is empty")
+	EmptyBaseURL        = NewOauth2Error("baseURL is empty")
+	EmptyUser           = NewOauth2Error("user is empty")
+	EmptyPrivateKeyPath = NewOauth2Error("privateKeyPath is empty")
+	EmptyKeyID          = NewOauth2Error("kid is empty")
 )
