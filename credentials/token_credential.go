@@ -183,7 +183,6 @@ func (tc *TokenCredential) requestToken(data url.Values) (*AccessToken, error) {
 
 	AccessToken, err := decodeAccessToken(resp)
 	if err != nil {
-		fmt.Println("Got token:", AccessToken.AccessToken)
 		return nil, err
 	}
 
