@@ -124,7 +124,7 @@ func ParseResponse[T Response](response *http.Response, value *T) error {
 		return ErrNilResponse
 	}
 
-	switch contentType := response.Header.Get(contentTypeHeader); contentType {
+	switch contentType := response.Header.Get(contentTypeHeader); contentTypeWithoutDirectives(contentType) {
 	case jsonContentType:
 		err = FromJson(response, &value)
 	default:
@@ -137,6 +137,14 @@ func ParseResponse[T Response](response *http.Response, value *T) error {
 	(*value).ParseHeaders(response.Header)
 
 	return nil
+}
+
+func contentTypeWithoutDirectives(contentType string) string {
+	if strings.Contains(contentType, ";") {
+		return strings.Split(contentType, ";")[0]
+	}
+
+	return contentType
 }
 
 // Deprecated: deprecated in v1.4.0. Please use SendGet2.

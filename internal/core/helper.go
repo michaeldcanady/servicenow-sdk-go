@@ -120,7 +120,7 @@ func ParseResponse[T Response](response *http.Response, value *T) error {
 		return ErrNilResponse
 	}
 
-	switch contentType := response.Header.Get(contentTypeHeader); contentType {
+	switch contentType := response.Header.Get(contentTypeHeader); contentTypeWithoutDirectives(contentType) {
 	case jsonContentType:
 		err = FromJSON(response, &value)
 	default:
@@ -141,4 +141,12 @@ func ResetCalls(calls ...*mock.Call) {
 			call.Unset()
 		}
 	}
+}
+
+func contentTypeWithoutDirectives(contentType string) string {
+	if strings.Contains(contentType, ";") {
+		return strings.Split(contentType, ";")[0]
+	}
+
+	return contentType
 }
