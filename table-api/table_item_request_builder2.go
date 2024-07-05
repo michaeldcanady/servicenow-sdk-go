@@ -9,9 +9,11 @@ import (
 )
 
 const (
+	// tableItemURLTemplate is the URL template for constructing table item URLs.
 	tableItemURLTemplate = "{+baseurl}/table{/table}{/sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_input_display_value,sysparm_query_no_domain,sysparm_view,sysparm_query_no_domain}"
 )
 
+// TableItemRequestBuilder2 represents a request builder for table items.
 type TableItemRequestBuilder2 struct {
 	intCore.RequestBuilder2
 }
@@ -41,16 +43,6 @@ func NewTableItemRequestBuilder2(client intCore.Client2, pathParameters map[stri
 		intCore.NewRequestBuilder2(client, tableItemURLTemplate, pathParameters),
 	}, nil
 }
-
-// TableItemService provides an interface for the service methods, adhering to the Interface Segregation Principle.
-type TableItemService interface {
-	Get(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableItemResponse, error)
-	Delete(ctx context.Context, opts ...intCore.RequestConfigurationOption) error
-	Put(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableItemResponse, error)
-}
-
-// Ensure that TableItemRequestBuilder implements TableItemService.
-var _ TableItemService = (*TableItemRequestBuilder2)(nil)
 
 // Get sends an HTTP GET request using the specified query parameters and returns a TableItemResponse.
 //
@@ -97,7 +89,7 @@ func (rB *TableItemRequestBuilder2) Delete(ctx context.Context, opts ...intCore.
 func (rB *TableItemRequestBuilder2) Put(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableItemResponse, error) {
 	opts = append(opts, intCore.WithResponse(&TableItemResponse2[TableEntry]{}))
 
-	resp, err := rB.Send(ctx, intCore.GET, opts...)
+	resp, err := rB.Send(ctx, intCore.PUT, opts...)
 	if err != nil {
 		return nil, err
 	}

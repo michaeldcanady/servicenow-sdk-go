@@ -1,68 +1,40 @@
 package tableapi
 
 import (
+	"context"
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/table-api/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
-type mockRequestBuilder struct {
-	mock.Mock
-}
-
-func (rB *mockRequestBuilder) SendDelete2(config *core.RequestConfiguration) error {
-	args := rB.Called(config)
-	return args.Error(0)
-}
-
-func (rB *mockRequestBuilder) SendGet2(config *core.RequestConfiguration) error {
-	args := rB.Called(config)
-	return args.Error(0)
-}
-
-func (rB *mockRequestBuilder) SendPost3(config *core.RequestConfiguration) error {
-	args := rB.Called(config)
-	return args.Error(0)
-}
-
-func (rB *mockRequestBuilder) SendPut2(config *core.RequestConfiguration) error {
-	args := rB.Called(config)
-	return args.Error(0)
-}
-
-func (rB *mockRequestBuilder) ToHeadRequestInformation() (*core.RequestInformation, error) {
-	args := rB.Called()
-	return args.Get(0).(*core.RequestInformation), args.Error(1)
-}
-
 func TestNewTableItemRequestBuilder2(t *testing.T) {
 	tests := []internal.Test[any]{
 		{
 			Title: "Successful",
-			Input: []interface{}{&mockClient{}, map[string]string{"baseurl": "baseurl", "table": "table", "sysId": "fdafsdfdsa"}},
+			Input: []interface{}{&intCore.MockClient2{}, map[string]string{"baseurl": "baseurl", "table": "table", "sysId": "fdafsdfdsa"}},
 		},
 		{
 			Title:       "missing sysId",
-			Input:       []interface{}{&mockClient{}, map[string]string{"baseurl": "baseurl", "table": "table"}},
+			Input:       []interface{}{&intCore.MockClient2{}, map[string]string{"baseurl": "baseurl", "table": "table"}},
 			ExpectedErr: errors.New("missing \"sysId\" parameter"),
 		},
 		{
 			Title:       "missing table",
-			Input:       []interface{}{&mockClient{}, map[string]string{"baseurl": "baseurl"}},
+			Input:       []interface{}{&intCore.MockClient2{}, map[string]string{"baseurl": "baseurl"}},
 			ExpectedErr: errors.New("missing \"table\" parameter"),
 		},
 		{
 			Title:       "missing baseurl",
-			Input:       []interface{}{&mockClient{}, map[string]string{}},
+			Input:       []interface{}{&intCore.MockClient2{}, map[string]string{}},
 			ExpectedErr: errors.New("pathParameters must contain a value for \"baseurl\" for the URL to be built"),
 		},
 		{
 			Title:       "missing client",
-			Input:       []interface{}{(*mockClient)(nil), map[string]string{}},
+			Input:       []interface{}{(*intCore.MockClient2)(nil), map[string]string{}},
 			ExpectedErr: errors.New("client can't be nil"),
 		},
 	}
@@ -75,7 +47,7 @@ func TestNewTableItemRequestBuilder2(t *testing.T) {
 
 			inputs := test.Input.([]interface{})
 
-			_, err := NewTableItemRequestBuilder2(inputs[0].(core.Client), inputs[1].(map[string]string))
+			_, err := NewTableItemRequestBuilder2(inputs[0].(intCore.Client2), inputs[1].(map[string]string))
 			assert.Equal(t, test.ExpectedErr, err)
 
 			if test.Cleanup != nil {
@@ -85,28 +57,21 @@ func TestNewTableItemRequestBuilder2(t *testing.T) {
 	}
 }
 
-//nolint:dupl
 func TestTableItemRequestBuilder2_Get(t *testing.T) {
-	requestBuilder := &TableItemRequestBuilder2{RequestBuilder: &mockRequestBuilder{}}
+	requestBuilder := &TableItemRequestBuilder2{RequestBuilder2: &intCore.MockRequestBuilder2{}}
 
 	tests := []internal.Test[any]{
 		{
 			Title: "Successful",
 			Setup: func() {
-				mockRB := &mockRequestBuilder{}
-				mockRB.On("SendGet2", mock.AnythingOfType("*core.RequestConfiguration")).Return(nil)
-
-				requestBuilder.RequestBuilder = mockRB
+				requestBuilder.RequestBuilder2.(*intCore.MockRequestBuilder2).On("Send", context.Background(), intCore.GET, mock.AnythingOfType("[]core.RequestConfigurationOption")).Return(&TableItemResponse2[TableEntry]{}, nil).Once()
 			},
 			ExpectedErr: nil,
 		},
 		{
 			Title: "Error",
 			Setup: func() {
-				mockRB := &mockRequestBuilder{}
-				mockRB.On("SendGet2", mock.AnythingOfType("*core.RequestConfiguration")).Return(errors.New("unable to send request"))
-
-				requestBuilder.RequestBuilder = mockRB
+				requestBuilder.RequestBuilder2.(*intCore.MockRequestBuilder2).On("Send", context.Background(), intCore.GET, mock.AnythingOfType("[]core.RequestConfigurationOption")).Return((*TableItemResponse2[TableEntry])(nil), errors.New("unable to send request")).Once()
 			},
 			ExpectedErr: errors.New("unable to send request"),
 		},
@@ -118,9 +83,9 @@ func TestTableItemRequestBuilder2_Get(t *testing.T) {
 				test.Setup()
 			}
 
-			_, err := requestBuilder.Get(nil)
+			_, err := requestBuilder.Get(context.Background(), nil)
 			assert.Equal(t, test.ExpectedErr, err)
-			requestBuilder.RequestBuilder.(*mockRequestBuilder).AssertExpectations(t)
+			requestBuilder.RequestBuilder2.(*intCore.MockRequestBuilder2).AssertExpectations(t)
 
 			if test.Cleanup != nil {
 				test.Cleanup()
@@ -130,26 +95,20 @@ func TestTableItemRequestBuilder2_Get(t *testing.T) {
 }
 
 func TestTableItemRequestBuilder2_Delete(t *testing.T) {
-	requestBuilder := &TableItemRequestBuilder2{RequestBuilder: &mockRequestBuilder{}}
+	requestBuilder := &TableItemRequestBuilder2{RequestBuilder2: &intCore.MockRequestBuilder2{}}
 
 	tests := []internal.Test[any]{
 		{
 			Title: "Successful",
 			Setup: func() {
-				mockRB := &mockRequestBuilder{}
-				mockRB.On("SendDelete2", mock.AnythingOfType("*core.RequestConfiguration")).Return(nil)
-
-				requestBuilder.RequestBuilder = mockRB
+				requestBuilder.RequestBuilder2.(*intCore.MockRequestBuilder2).On("Send", context.Background(), intCore.DELETE, mock.AnythingOfType("[]core.RequestConfigurationOption")).Return(nil, nil).Once()
 			},
 			ExpectedErr: nil,
 		},
 		{
 			Title: "Error",
 			Setup: func() {
-				mockRB := &mockRequestBuilder{}
-				mockRB.On("SendDelete2", mock.AnythingOfType("*core.RequestConfiguration")).Return(errors.New("unable to send request"))
-
-				requestBuilder.RequestBuilder = mockRB
+				requestBuilder.RequestBuilder2.(*intCore.MockRequestBuilder2).On("Send", context.Background(), intCore.DELETE, mock.AnythingOfType("[]core.RequestConfigurationOption")).Return(nil, errors.New("unable to send request")).Once()
 			},
 			ExpectedErr: errors.New("unable to send request"),
 		},
@@ -161,9 +120,9 @@ func TestTableItemRequestBuilder2_Delete(t *testing.T) {
 				test.Setup()
 			}
 
-			err := requestBuilder.Delete(nil)
+			err := requestBuilder.Delete(context.Background(), nil)
 			assert.Equal(t, test.ExpectedErr, err)
-			requestBuilder.RequestBuilder.(*mockRequestBuilder).AssertExpectations(t)
+			requestBuilder.RequestBuilder2.(*intCore.MockRequestBuilder2).AssertExpectations(t)
 
 			if test.Cleanup != nil {
 				test.Cleanup()
@@ -173,39 +132,31 @@ func TestTableItemRequestBuilder2_Delete(t *testing.T) {
 }
 
 func TestTableItemRequestBuilder2_Put(t *testing.T) {
-	requestBuilder := &TableItemRequestBuilder2{RequestBuilder: &mockRequestBuilder{}}
+	requestBuilder := &TableItemRequestBuilder2{RequestBuilder2: &intCore.MockRequestBuilder2{}}
 
 	tests := []internal.Test[any]{
 		{
 			Title: "Successful",
 			Setup: func() {
-				mockRB := &mockRequestBuilder{}
-				mockRB.On("SendPut2", mock.AnythingOfType("*core.RequestConfiguration")).Return(nil)
-
-				requestBuilder.RequestBuilder = mockRB
+				requestBuilder.RequestBuilder2.(*intCore.MockRequestBuilder2).On("Send", context.Background(), intCore.PUT, mock.AnythingOfType("[]core.RequestConfigurationOption")).Return(&TableItemResponse{}, nil).Once()
 			},
-			Input:       NewTableEntry(),
+			Input:       []intCore.RequestConfigurationOption{intCore.WithData(NewTableEntry())},
 			ExpectedErr: nil,
 		},
 		{
 			Title: "Error",
 			Setup: func() {
-				mockRB := &mockRequestBuilder{}
-				mockRB.On("SendPut2", mock.AnythingOfType("*core.RequestConfiguration")).Return(errors.New("unable to send request"))
-
-				requestBuilder.RequestBuilder = mockRB
+				requestBuilder.RequestBuilder2.(*intCore.MockRequestBuilder2).On("Send", context.Background(), intCore.PUT, mock.AnythingOfType("[]core.RequestConfigurationOption")).Return((*TableItemResponse)(nil), errors.New("unable to send request")).Once()
 			},
-			Input:       NewTableEntry(),
+			Input:       []intCore.RequestConfigurationOption{intCore.WithData(NewTableEntry())},
 			ExpectedErr: errors.New("unable to send request"),
 		},
 		{
 			Title: "Nil tableEntry",
 			Setup: func() {
-				mockRB := &mockRequestBuilder{}
-
-				requestBuilder.RequestBuilder = mockRB
+				requestBuilder.RequestBuilder2.(*intCore.MockRequestBuilder2).On("Send", context.Background(), intCore.PUT, mock.AnythingOfType("[]core.RequestConfigurationOption")).Return((*TableItemResponse)(nil), errors.New("entry is nil")).Once()
 			},
-			Input:       nil,
+			Input:       []intCore.RequestConfigurationOption{},
 			ExpectedErr: errors.New("entry is nil"),
 		},
 	}
@@ -216,9 +167,9 @@ func TestTableItemRequestBuilder2_Put(t *testing.T) {
 				test.Setup()
 			}
 
-			_, err := requestBuilder.Put(test.Input, nil)
+			_, err := requestBuilder.Put(context.Background(), test.Input.([]intCore.RequestConfigurationOption)...)
 			assert.Equal(t, test.ExpectedErr, err)
-			requestBuilder.RequestBuilder.(*mockRequestBuilder).AssertExpectations(t)
+			requestBuilder.RequestBuilder2.(*intCore.MockRequestBuilder2).AssertExpectations(t)
 
 			if test.Cleanup != nil {
 				test.Cleanup()

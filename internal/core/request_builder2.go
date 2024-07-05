@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/stretchr/testify/mock"
 )
 
 type RequestBuilder2 interface {
@@ -97,3 +99,32 @@ func (rB *requestBuilder2) Send(ctx context.Context, method HttpMethod, opts ...
 
 	return config.Response, nil
 }
+
+type MockRequestBuilder2 struct {
+	mock.Mock
+}
+
+func (rB *MockRequestBuilder2) ToRequestInformation(method HttpMethod, config *RequestConfiguration) (RequestInformation, error) {
+	args := rB.Called(method, config)
+	return args.Get(0).(RequestInformation), args.Error(1)
+}
+func (rB *MockRequestBuilder2) GetPathParameters() map[string]string {
+	args := rB.Called()
+	return args.Get(0).(map[string]string)
+}
+func (rB *MockRequestBuilder2) GetClient() Client2 {
+	args := rB.Called()
+	return args.Get(0).(Client2)
+}
+func (rB *MockRequestBuilder2) GetURLTemplate() string {
+	args := rB.Called()
+	return args.String(0)
+}
+func (rB *MockRequestBuilder2) Send(ctx context.Context, method HttpMethod, opts ...RequestConfigurationOption) (interface{}, error) {
+	args := rB.Called(ctx, method, opts)
+	return args.Get(0), args.Error(1)
+}
+
+// Ensure that requestBuilder2 implements RequestBuilder2.
+var _ RequestBuilder2 = (*requestBuilder2)(nil)
+var _ RequestBuilder2 = (*MockRequestBuilder2)(nil)

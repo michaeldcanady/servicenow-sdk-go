@@ -3,7 +3,6 @@ package tableapi
 import (
 	"context"
 	"errors"
-	"strconv"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -39,16 +38,6 @@ func NewTableRequestBuilder2(client intCore.Client2, pathParameters map[string]s
 	}, nil
 }
 
-// TableService defines the operations available for the table as a whole.
-type TableService interface {
-	Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error)
-	Post(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableItemResponse, error)
-	Count() (int, error)
-}
-
-// Ensure that TableRequestBuilder implements TableService.
-var _ TableService = (*TableRequestBuilder2)(nil)
-
 // ByID creates a TableItemRequestBuilder for a specific record in the table identified by sysID.
 func (rB *TableRequestBuilder2) ByID(sysID string) (*TableItemRequestBuilder2, error) {
 	pathParameters := rB.GetPathParameters()
@@ -73,7 +62,7 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, opts ...intCore.Request
 func (rB *TableRequestBuilder2) Post(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableItemResponse, error) {
 	opts = append(opts, intCore.WithResponse(&TableItemResponse2[TableEntry]{}))
 
-	resp, err := rB.Send(ctx, intCore.GET, opts...)
+	resp, err := rB.Send(ctx, intCore.POST, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -81,24 +70,13 @@ func (rB *TableRequestBuilder2) Post(ctx context.Context, opts ...intCore.Reques
 	return resp.(*TableItemResponse), nil
 }
 
-// Count retrieves the total count of items in the table.
-func (rB *TableRequestBuilder2) Count() (int, error) {
-	requestInfo, err := rB.ToHeadRequestInformation()
+func (rB *TableRequestBuilder2) Head(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableCollectionResponse, error) {
+	opts = append(opts, intCore.WithResponse(&TableCollectionResponse2[TableEntry]{}))
+
+	resp, err := rB.Send(ctx, intCore.HEAD, opts...)
 	if err != nil {
-		return -1, err
+		return nil, err
 	}
 
-	errorMapping := core.ErrorMapping{"4XX": "hi"}
-
-	response, err := rB.RequestBuilder.(*core.RequestBuilder).Client.Send(requestInfo, errorMapping) //nolint:staticcheck
-	if err != nil {
-		return -1, err
-	}
-
-	count, err := strconv.Atoi(response.Header.Get("X-Total-Count"))
-	if err != nil {
-		count = 0
-	}
-
-	return count, nil
+	return resp.(*TableCollectionResponse), nil
 }
