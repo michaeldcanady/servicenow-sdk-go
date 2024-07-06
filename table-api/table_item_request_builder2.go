@@ -44,6 +44,7 @@ func NewTableItemRequestBuilder2(client intCore.Client2, pathParameters map[stri
 	}, nil
 }
 
+// TODO: create specialized version of intCore.RequestConfigurationOption
 // Get sends an HTTP GET request using the specified query parameters and returns a TableItemResponse.
 //
 // Parameters:
@@ -63,6 +64,7 @@ func (rB *TableItemRequestBuilder2) Get(ctx context.Context, opts ...intCore.Req
 	return resp.(*TableItemResponse), nil
 }
 
+// TODO: create specialized version of intCore.RequestConfigurationOption
 // Delete sends an HTTP DELETE request using the specified query parameters and returns an error if the request or response encounters any issues.
 //
 // Parameters:
@@ -75,6 +77,7 @@ func (rB *TableItemRequestBuilder2) Delete(ctx context.Context, opts ...intCore.
 	return err
 }
 
+// TODO: create specialized version of intCore.RequestConfigurationOption
 // Put updates a table item using an HTTP PUT request.
 // It takes a map of table entry data and optional query parameters to send in the request.
 // The method returns a TableItemResponse representing the updated item or an error if the request fails.

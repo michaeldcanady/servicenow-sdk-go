@@ -34,7 +34,7 @@ func NewTableRequestBuilder2(client intCore.Client2, pathParameters map[string]s
 	}
 
 	return &TableRequestBuilder2{
-		intCore.NewRequestBuilder2(client, tableItemURLTemplate, pathParameters),
+		intCore.NewRequestBuilder2(client, tableURLTemplate, pathParameters),
 	}, nil
 }
 
@@ -46,6 +46,7 @@ func (rB *TableRequestBuilder2) ByID(sysID string) (*TableItemRequestBuilder2, e
 	return NewTableItemRequestBuilder2(client, pathParameters)
 }
 
+// TODO: create specialized version of intCore.RequestConfigurationOption
 // Get retrieves a collection of table items based on the provided query parameters.
 func (rB *TableRequestBuilder2) Get(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableCollectionResponse, error) {
 	opts = append(opts, intCore.WithResponse(&TableCollectionResponse2[TableEntry]{}))
@@ -58,8 +59,9 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, opts ...intCore.Request
 	return resp.(*TableCollectionResponse), nil
 }
 
+// TODO: create specialized version of intCore.RequestConfigurationOption
 // Post creates a new table item with the provided data and query parameters.
-func (rB *TableRequestBuilder2) Post(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableItemResponse, error) {
+func (rB *TableRequestBuilder2) Post(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableItemResponse2[TableEntry], error) {
 	opts = append(opts, intCore.WithResponse(&TableItemResponse2[TableEntry]{}))
 
 	resp, err := rB.Send(ctx, intCore.POST, opts...)
@@ -67,9 +69,11 @@ func (rB *TableRequestBuilder2) Post(ctx context.Context, opts ...intCore.Reques
 		return nil, err
 	}
 
-	return resp.(*TableItemResponse), nil
+	return resp.(*TableItemResponse2[TableEntry]), nil
 }
 
+// TODO: create specialized version of intCore.RequestConfigurationOption
+// Head creates a new table request with the provided query parameters and returns the header values
 func (rB *TableRequestBuilder2) Head(ctx context.Context, opts ...intCore.RequestConfigurationOption) (*TableCollectionResponse, error) {
 	opts = append(opts, intCore.WithResponse(&TableCollectionResponse2[TableEntry]{}))
 
