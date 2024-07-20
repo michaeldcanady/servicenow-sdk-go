@@ -2,7 +2,7 @@
 name: "❓ Question or Support Request"
 about: "Questions and requests for support."
 title: "[Question] "
-labels: ["type: question"]
+labels: ["type: question", "state: new"]
 assignees: 
 
 ---
