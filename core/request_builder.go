@@ -6,8 +6,10 @@ import (
 	"reflect"
 
 	"github.com/gabriel-vasile/mimetype"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
+// Deprecated: deprecated since v{unreleased}.
 // RequestBuilder represents a builder for constructing HTTP request information.
 type RequestBuilder struct {
 	// PathParameters is a map of path parameters used in the URL template.
@@ -18,6 +20,7 @@ type RequestBuilder struct {
 	UrlTemplate string //nolint:stylecheck
 }
 
+// Deprecated: deprecated since v{unreleased}.
 // NewRequestBuilder creates a new instance of the RequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created RequestBuilder.
 func NewRequestBuilder(client Client, urlTemplate string, pathParameters map[string]string) *RequestBuilder {
@@ -142,11 +145,9 @@ func (rB *RequestBuilder) prepareData(rawData interface{}) ([]byte, error) {
 		return rawData.([]byte), nil
 	}
 
-	if reflect.TypeOf(rawData) == reflect.TypeOf(map[string]string{}) {
-		data, err = json.Marshal(rawData)
-		if err != nil {
-			return nil, fmt.Errorf("unable to marshal JSON: %s", err)
-		}
+	data, err = json.Marshal(rawData)
+	if err != nil {
+		return nil, fmt.Errorf("unable to marshal JSON: %s", err)
 	}
 
 	if len(data) == 0 {
@@ -199,13 +200,13 @@ func (rB *RequestBuilder) ToRequestInformation3(method HttpMethod, config *Reque
 	requestInfo := NewRequestInformation()
 
 	if config != nil {
-		if !isNil(config.QueryParameters) {
+		if !internal.IsNil(config.QueryParameters) {
 			err := requestInfo.AddQueryParameters(config.QueryParameters)
 			if err != nil {
 				return nil, err
 			}
 		}
-		if !isNil(config.Data) {
+		if !internal.IsNil(config.Data) {
 			data, err := rB.prepareData(config.Data)
 			if err != nil {
 				return nil, err
@@ -271,11 +272,7 @@ func (rB *RequestBuilder) SendGet(params interface{}, errorMapping ErrorMapping,
 }
 
 func (rB *RequestBuilder) SendGet2(config *RequestConfiguration) error {
-	err := SendGet2(rB, config)
-	if err != nil {
-		return err
-	}
-	return nil
+	return rB.sendRequest(GET, config)
 }
 
 // Deprecated: deprecated since v1.4.0. Please use SendPost3
@@ -284,7 +281,7 @@ func (rB *RequestBuilder) SendPost(data map[string]string, params interface{}, e
 }
 
 func (rB *RequestBuilder) SendPost3(config *RequestConfiguration) error {
-	return SendPost2(rB, config)
+	return rB.sendRequest(POST, config)
 }
 
 // Deprecated: deprecated since v1.4.0. Please use SendPost3
@@ -298,7 +295,7 @@ func (rB *RequestBuilder) SendDelete(params interface{}, errorMapping ErrorMappi
 }
 
 func (rB *RequestBuilder) SendDelete2(config *RequestConfiguration) error {
-	return sendDelete2(rB, config)
+	return rB.sendRequest(DELETE, config)
 }
 
 // Deprecated: deprecated since v1.4.0. Please use SendPut2
@@ -307,5 +304,23 @@ func (rB *RequestBuilder) SendPut(data map[string]string, params interface{}, er
 }
 
 func (rB *RequestBuilder) SendPut2(config *RequestConfiguration) error {
-	return sendPut2(rB, config)
+	return rB.sendRequest(PUT, config)
+}
+
+func (rB *RequestBuilder) sendRequest(method HttpMethod, config *RequestConfiguration) error {
+	requestInfo, err := rB.ToRequestInformation3(method, config)
+	if err != nil {
+		return err
+	}
+
+	response, err := rB.Client.Send(requestInfo, config.ErrorMapping.(ErrorMapping))
+	if err != nil {
+		return err
+	}
+
+	if method != DELETE {
+		return ParseResponse(response, &config.Response)
+	}
+
+	return nil
 }

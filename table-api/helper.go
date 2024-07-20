@@ -1,8 +1,11 @@
 package tableapi
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
 func convertType[T any](val interface{}) (T, error) {
@@ -13,17 +16,11 @@ func convertType[T any](val interface{}) (T, error) {
 	return v, nil
 }
 
-// isNil checks if a value is nil or a nil interface
-func isNil(a interface{}) bool {
-	defer func() { _ = recover() }()
-	return a == nil || reflect.ValueOf(a).IsNil()
-}
-
 // convertToPage converts a response into a PageResult.
 func convertToPage(response interface{}) (PageResult, error) {
 	var page PageResult
 
-	if isNil(response) {
+	if internal.IsNil(response) {
 		return page, ErrNilResponse
 	}
 
@@ -49,6 +46,10 @@ func convertToPage(response interface{}) (PageResult, error) {
 
 func convertFromTableEntry(entry interface{}) (map[string]string, error) {
 	retVal := map[string]string{}
+
+	if internal.IsNil(entry) {
+		return nil, errors.New("entry is nil")
+	}
 
 	// Check if entry is a pointer
 	val := reflect.ValueOf(entry)

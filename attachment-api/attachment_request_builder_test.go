@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -33,7 +34,7 @@ func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping cor
 func TestNewAttachmentRequestBuilder(t *testing.T) {
 	client := MockClient{}
 
-	pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now"}
+	pathParameters := map[string]string{internal.BasePathParameter: "https://instance.service-now.com/api/now"}
 
 	req := NewAttachmentRequestBuilder(&client, pathParameters)
 
@@ -43,7 +44,7 @@ func TestNewAttachmentRequestBuilder(t *testing.T) {
 func TestAttachmentUrl(t *testing.T) {
 	client := MockClient{}
 
-	pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now"}
+	pathParameters := map[string]string{internal.BasePathParameter: "https://instance.service-now.com/api/now"}
 
 	req := NewAttachmentRequestBuilder(&client, pathParameters)
 
@@ -81,6 +82,8 @@ func TestAttachmentRequestBuilderGet(t *testing.T) {
 			  }
 			]
 		  }`
+
+		w.Header().Set("Content-Type", "application/json")
 
 		w.WriteHeader(http.StatusOK)
 		_, err := w.Write([]byte(responseJSON)) //nolint:errcheck
@@ -126,7 +129,7 @@ func TestAttachmentRequestBuilderGet(t *testing.T) {
 		return
 	}
 
-	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
+	pathParameters := map[string]string{internal.BasePathParameter: "http://" + parsedURL.Host, "table": parsedURL.Path}
 
 	builder := NewAttachmentRequestBuilder(client, pathParameters)
 
@@ -257,7 +260,7 @@ func TestAttachmentRequestBuilderFile(t *testing.T) {
 
 	client := &MockClient{}
 
-	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host}
+	pathParameters := map[string]string{internal.BasePathParameter: "http://" + parsedURL.Host}
 
 	builder := NewAttachmentRequestBuilder(client, pathParameters)
 

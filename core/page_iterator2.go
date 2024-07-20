@@ -3,6 +3,8 @@ package core
 import (
 	"net/http"
 	"net/url"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
 type Parsable[T any] func(*http.Response) (CollectionResponse[T], error)
@@ -17,7 +19,7 @@ type PageIterator2[T any] struct {
 
 // NewPageIterator2[T] creates a new PageIterator instance.
 func NewPageIterator2[T any](currentPage CollectionResponse[T], client Client, constructorFunc Parsable[T]) (*PageIterator2[T], error) {
-	if isNil(client) {
+	if internal.IsNil(client) {
 		return nil, ErrNilClient
 	}
 

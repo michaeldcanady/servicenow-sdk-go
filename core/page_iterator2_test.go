@@ -49,7 +49,7 @@ func TestNewPageIterator2(t *testing.T) {
 
 			assert.ErrorIs(t, err, tt.expectedErr)
 
-			if !isNil(pageIterator) {
+			if !internal.IsNil(pageIterator) {
 				assert.Equal(t, tt.expected.client, pageIterator.client)
 				assert.Equal(t, tt.expected.client, pageIterator.client)
 				assert.Equal(t, tt.expected.currentPage, pageIterator.currentPage)
