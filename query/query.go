@@ -1,65 +1,48 @@
 package query
 
-import "fmt"
+import (
+	"fmt"
 
-// Query represents a ServiceNow query
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+)
+
 type query struct {
-	head fragment
-	tail fragment
+	list internal.LinkedList[any]
 }
 
-// queryOption represents a query option
-type queryOption func(*query)
+func Query(opts ...option) string {
+	query := new()
 
-// BuildQuery creates a new Query with given options
-func BuildQuery(options ...queryOption) *query {
-	q := &query{}
-	for _, option := range options {
-		option(q)
+	for _, opt := range opts {
+		opt(query)
 	}
-	return q
+	return query.String()
 }
 
-// Query creates a new query string with given options
-func Query(options ...queryOption) string {
-	return BuildQuery(options...).String()
-}
-
-func (q *query) iterate(predicate func(fragment)) {
-	current := q.head
-	for ok := true; ok; ok = (current != nil) {
-		predicate(current)
-		current = current.getNext()
+func new() *query {
+	return &query{
+		list: internal.NewLinkedList[any](),
 	}
 }
 
-// addFragment adds a fragment to the query.
-func (q *query) addFragment(fragment fragment, operator logicalOperator) {
-	if q.head == nil {
-		q.head = fragment
-	}
-
-	if q.tail != nil {
-		q.tail.setNext(fragment, operator)
-	}
-
-	q.tail = fragment
+func (q *query) AddValue(val any) {
+	q.list.AddNode(internal.NewNode(val))
 }
 
-func (q *query) extend(sub *query, operator logicalOperator) {
-	sub.iterate(func(f fragment) {
-		if f == sub.head {
-			q.addFragment(f, operator)
-		}
-		q.addFragment(f, f.getLogicalOperator())
-	})
+func (q *query) GetHead() any {
+	return q.list.GetHead().GetValue()
+}
+
+func (q *query) GetTail() any {
+	return q.list.GetTail().GetValue()
 }
 
 func (q *query) String() string {
-	queryString := ""
-
-	q.iterate(func(f fragment) {
-		queryString += fmt.Sprintf("%v%v", f.String(), f.getLogicalOperator())
-	})
-	return queryString
+	query := ""
+	node := q.list.GetHead()
+	for node != nil && node.GetValue() != nil {
+		query += fmt.Sprintf("%s", node.GetValue())
+		node = node.GetNext()
+	}
+	return query
 }
