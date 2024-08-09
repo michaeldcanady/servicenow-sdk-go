@@ -14,6 +14,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `tableapi.TableRequestBuilder2`
 - `tableapi.NewTableRequestBuilder2`
 - `servicenowsdk.NowRequestBuilder.Table2`
+- `tableapi.DisplayValueAll`
+- `tableapi.DisplayValueTrue`
+- `tableapi.DisplayValueFalse`
+- `tableapi.ViewDesktop`
+- `tableapi.ViewMobile`
+- `tableapi.ViewBoth`
 
 ### Changed
 
@@ -24,6 +30,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `tableapi.TableRequestBuilder`
 - `tableapi.NewTableRequestBuilder`
 - `servicenowsdk.NowRequestBuilder.Table`
+- `tableapi.ALL`
+- `tableapi.TRUE`
+- `tableapi.FALSE`
+- `tableapi.VIEWDESKTOP`
+- `tableapi.VIEWMOBILE`
+- `tableapi.VIEWBOTH`
 
 ### Removed
 
