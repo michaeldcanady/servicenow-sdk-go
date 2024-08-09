@@ -14,21 +14,23 @@ func TestLogicalOperatorString(t *testing.T) {
 }
 
 func TestAndFunction(t *testing.T) {
-	q := &query{}
+	q := new()
 	v := 42
-	opt := And(func(q *query) { q.addFragment(newFragment[int]("age", is, &v), unset) })
+	opt := And(func(q *query) { q.AddValue(newCondition("age", is, &v)) })
 
 	opt(q)
 
-	assert.Equal(t, and, q.head.getLogicalOperator())
+	assert.Equal(t, newCondition("age", is, &v), q.GetHead())
+	assert.Equal(t, and, q.GetTail())
 }
 
 func TestOrFunction(t *testing.T) {
-	q := &query{}
+	q := new()
 	v := 42
-	opt := Or(func(q *query) { q.addFragment(newFragment[int]("age", is, &v), unset) })
+	opt := Or(func(q *query) { q.AddValue(newCondition("age", is, &v)) })
 
 	opt(q)
 
-	assert.Equal(t, or, q.head.getLogicalOperator())
+	assert.Equal(t, newCondition("age", is, &v), q.GetHead())
+	assert.Equal(t, or, q.GetTail())
 }
