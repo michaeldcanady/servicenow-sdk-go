@@ -3,16 +3,16 @@ package tableapi
 type View2 int64
 
 const (
-	ViewDesktop View2 = iota
-	ViewMobile
-	ViewBoth
+	ViewDesktop2 View2 = iota
+	ViewMobile2
+	ViewBoth2
 )
 
 func (v View2) String() string {
 	views := map[View2]string{
-		ViewDesktop: "desktop",
-		ViewMobile:  "mobile",
-		ViewBoth:    "both",
+		ViewDesktop2: "desktop",
+		ViewMobile2:  "mobile",
+		ViewBoth2:    "both",
 	}
 
 	str, ok := views[v]

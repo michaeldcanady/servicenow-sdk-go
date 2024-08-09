@@ -1,6 +1,10 @@
 package tableapi
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestDisplayValue(t *testing.T) {
 	testCases := []struct {
@@ -43,9 +47,7 @@ func TestDisplayValue(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.title, func(t *testing.T) {
 			result := tc.input
-			if string(result) != tc.expected {
-				t.Errorf("Expected %s, got %s", tc.expected, result)
-			}
+			assert.Equal(t, tc.expected, string(result))
 		})
 	}
 }
