@@ -1,23 +1,53 @@
 package tableapi
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestViewString(t *testing.T) {
 	tests := []struct {
-		view     View
+		title    string
+		input    View
 		expected string
 	}{
-		{DESKTOP, "desktop"},
-		{MOBILE, "mobile"},
-		{BOTH, "both"},
+		{
+			title:    "DESKTOP",
+			input:    DESKTOP,
+			expected: "desktop",
+		},
+		{
+			title:    "MOBILE",
+			input:    MOBILE,
+			expected: "mobile",
+		},
+		{
+			title:    "BOTH",
+			input:    BOTH,
+			expected: "both",
+		},
+		{
+			title:    "DESKTOP",
+			input:    ViewDesktop,
+			expected: "desktop",
+		},
+		{
+			title:    "MOBILE",
+			input:    ViewMobile,
+			expected: "mobile",
+		},
+		{
+			title:    "BOTH",
+			input:    ViewBoth,
+			expected: "both",
+		},
 	}
 
 	for _, test := range tests {
-		t.Run(string(test.view), func(t *testing.T) {
-			result := test.view
-			if string(result) != test.expected {
-				t.Errorf("Expected %s, got: %s", test.expected, result)
-			}
+		t.Run(test.title, func(t *testing.T) {
+			result := test.input
+			assert.Equal(t, test.expected, string(result))
 		})
 	}
 }
