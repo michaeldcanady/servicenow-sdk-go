@@ -4,17 +4,45 @@ import "testing"
 
 func TestDisplayValue(t *testing.T) {
 	testCases := []struct {
-		displayValue DisplayValue
-		expected     string
+		title    string
+		input    DisplayValue
+		expected string
 	}{
-		{TRUE, "true"},
-		{FALSE, "false"},
-		{ALL, "all"},
+		{
+			title:    "TRUE",
+			input:    TRUE,
+			expected: "true",
+		},
+		{
+			title:    "FALSE",
+			input:    FALSE,
+			expected: "false",
+		},
+		{
+			title:    "ALL",
+			input:    ALL,
+			expected: "all",
+		},
+		{
+			title:    "DisplayValueTrue",
+			input:    DisplayValueTrue,
+			expected: "true",
+		},
+		{
+			title:    "DisplayValueFalse",
+			input:    DisplayValueFalse,
+			expected: "false",
+		},
+		{
+			title:    "DisplayValueAll",
+			input:    DisplayValueAll,
+			expected: "all",
+		},
 	}
 
 	for _, tc := range testCases {
-		t.Run("String() for DisplayValue", func(t *testing.T) {
-			result := tc.displayValue
+		t.Run(tc.title, func(t *testing.T) {
+			result := tc.input
 			if string(result) != tc.expected {
 				t.Errorf("Expected %s, got %s", tc.expected, result)
 			}
