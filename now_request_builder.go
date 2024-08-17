@@ -33,7 +33,7 @@ func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuild
 // Table returns a TableRequestBuilder associated with the NowRequestBuilder.
 // It accepts a table name as a parameter and constructs the URL for table-related requests.
 // The returned TableRequestBuilder can be used to build and execute table-related requests.
-func (rB *NowRequestBuilder) Table2(tableName string) *tableapi.TableRequestBuilder2 {
+func (rB *NowRequestBuilder) Table2(tableName string) tableapi.TableRequestBuilder2 {
 	rB.RequestBuilder.PathParameters["table"] = tableName
 	requestBuilder, _ := tableapi.NewTableRequestBuilder2(rB.RequestBuilder.Client.(*ServiceNowClient), rB.RequestBuilder.PathParameters)
 	return requestBuilder

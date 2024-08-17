@@ -10,12 +10,19 @@ const (
 	tableItemURLTemplate = "{+baseurl}/table{/table}{/sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_input_display_value,sysparm_query_no_domain,sysparm_view,sysparm_query_no_domain}"
 )
 
-type TableItemRequestBuilder2 struct {
+// TableItemRequestBuilder2 provides an interface for the service methods, adhering to the Interface Segregation Principle.
+type TableItemRequestBuilder2 interface {
+	Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error)
+	Delete(params *TableItemRequestBuilderDeleteQueryParameters) error
+	Put(tableEntry interface{}, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error)
+}
+
+type tableItemRequestBuilder2 struct {
 	intTable.RequestBuilder
 }
 
 // NewTableItemRequestBuilder2 creates a new instance of TableItemRequestBuilder2.
-func NewTableItemRequestBuilder2(client core.Client, pathParameters map[string]string) (*TableItemRequestBuilder2, error) {
+func NewTableItemRequestBuilder2(client core.Client, pathParameters map[string]string) (TableItemRequestBuilder2, error) {
 	if internal.IsNil(client) {
 		return nil, ErrNilClient
 	}
@@ -35,20 +42,10 @@ func NewTableItemRequestBuilder2(client core.Client, pathParameters map[string]s
 		return nil, ErrNilParameterSysID
 	}
 
-	return &TableItemRequestBuilder2{
+	return &tableItemRequestBuilder2{
 		RequestBuilder: core.NewRequestBuilder(client, tableItemURLTemplate, pathParameters), //nolint:staticcheck
 	}, nil
 }
-
-// TableItemService provides an interface for the service methods, adhering to the Interface Segregation Principle.
-type TableItemService interface {
-	Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error)
-	Delete(params *TableItemRequestBuilderDeleteQueryParameters) error
-	Put(tableEntry interface{}, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error)
-}
-
-// Ensure that TableItemRequestBuilder implements TableItemService.
-var _ TableItemService = (*TableItemRequestBuilder2)(nil)
 
 // Get sends an HTTP GET request using the specified query parameters and returns a TableItemResponse.
 //
@@ -58,7 +55,7 @@ var _ TableItemService = (*TableItemRequestBuilder2)(nil)
 // Returns:
 //   - *TableItemResponse: The response data as a TableItemResponse.
 //   - error: An error if there was an issue with the request or response.
-func (rB *TableItemRequestBuilder2) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
+func (rB *tableItemRequestBuilder2) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
 	config := &tableItemGetRequestConfiguration2[TableEntry]{
 		header:   nil,
 		query:    params,
@@ -81,7 +78,7 @@ func (rB *TableItemRequestBuilder2) Get(params *TableItemRequestBuilderGetQueryP
 //
 // Returns:
 //   - error: An error if there was an issue with the request or response, or nil if the request was successful.
-func (rB *TableItemRequestBuilder2) Delete(params *TableItemRequestBuilderDeleteQueryParameters) error {
+func (rB *tableItemRequestBuilder2) Delete(params *TableItemRequestBuilderDeleteQueryParameters) error {
 	config := &tableItemDeleteRequestConfiguration2[TableEntry]{
 		header:   nil,
 		query:    params,
@@ -103,7 +100,7 @@ func (rB *TableItemRequestBuilder2) Delete(params *TableItemRequestBuilderDelete
 // Returns:
 //   - *TableItemResponse: A TableItemResponse containing the updated item data.
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
-func (rB *TableItemRequestBuilder2) Put(tableEntry interface{}, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
+func (rB *tableItemRequestBuilder2) Put(tableEntry interface{}, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
 	tableEntry, err := convertFromTableEntry(tableEntry)
 	if err != nil {
 		return nil, err

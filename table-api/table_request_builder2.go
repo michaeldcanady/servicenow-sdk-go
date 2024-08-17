@@ -13,13 +13,21 @@ const (
 	tableURLTemplate = "{+baseurl}/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
 )
 
+// TableRequestBuilder2 defines the operations available for the table as a whole.
+type TableRequestBuilder2 interface {
+	Get(*TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error)
+	ByID(string) (TableItemRequestBuilder2, error)
+	Post(interface{}, *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error)
+	Count() (int, error)
+}
+
 // TableRequestBuilder is responsible for building requests for table operations.
-type TableRequestBuilder2 struct {
+type tableRequestBuilder2 struct {
 	intTable.RequestBuilder
 }
 
 // NewTableRequestBuilder initializes a new TableRequestBuilder with the given client and path parameters.
-func NewTableRequestBuilder2(client core.Client, pathParameters map[string]string) (*TableRequestBuilder2, error) {
+func NewTableRequestBuilder2(client core.Client, pathParameters map[string]string) (TableRequestBuilder2, error) {
 	if internal.IsNil(client) {
 		return nil, ErrNilClient
 	}
@@ -33,7 +41,7 @@ func NewTableRequestBuilder2(client core.Client, pathParameters map[string]strin
 		return nil, errors.New("missing \"table\" parameter")
 	}
 
-	return &TableRequestBuilder2{
+	return &tableRequestBuilder2{
 		core.NewRequestBuilder( //nolint:staticcheck
 			client,
 			tableURLTemplate,
@@ -42,18 +50,8 @@ func NewTableRequestBuilder2(client core.Client, pathParameters map[string]strin
 	}, nil
 }
 
-// TableService defines the operations available for the table as a whole.
-type TableService interface {
-	Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error)
-	Post(data interface{}, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error)
-	Count() (int, error)
-}
-
-// Ensure that TableRequestBuilder implements TableService.
-var _ TableService = (*TableRequestBuilder2)(nil)
-
 // ByID creates a TableItemRequestBuilder for a specific record in the table identified by sysID.
-func (rB *TableRequestBuilder2) ByID(sysID string) (*TableItemRequestBuilder2, error) {
+func (rB *tableRequestBuilder2) ByID(sysID string) (TableItemRequestBuilder2, error) {
 	pathParameters := rB.RequestBuilder.(*core.RequestBuilder).PathParameters //nolint:staticcheck
 	client := rB.RequestBuilder.(*core.RequestBuilder).Client                 //nolint:staticcheck
 	pathParameters["sysId"] = sysID
@@ -61,7 +59,7 @@ func (rB *TableRequestBuilder2) ByID(sysID string) (*TableItemRequestBuilder2, e
 }
 
 // Get retrieves a collection of table items based on the provided query parameters.
-func (rB *TableRequestBuilder2) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
+func (rB *tableRequestBuilder2) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
 	config := &tableGetRequestConfiguration2[TableEntry]{
 		header:   nil,
 		query:    params,
@@ -79,7 +77,7 @@ func (rB *TableRequestBuilder2) Get(params *TableRequestBuilderGetQueryParameter
 }
 
 // Post creates a new table item with the provided data and query parameters.
-func (rB *TableRequestBuilder2) Post(data interface{}, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error) {
+func (rB *tableRequestBuilder2) Post(data interface{}, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error) {
 	data, err := convertFromTableEntry(data)
 	if err != nil {
 		return nil, err
@@ -102,7 +100,7 @@ func (rB *TableRequestBuilder2) Post(data interface{}, params *TableRequestBuild
 }
 
 // Count retrieves the total count of items in the table.
-func (rB *TableRequestBuilder2) Count() (int, error) {
+func (rB *tableRequestBuilder2) Count() (int, error) {
 	requestInfo, err := rB.RequestBuilder.ToHeadRequestInformation()
 	if err != nil {
 		return -1, err

@@ -87,7 +87,7 @@ func TestNewTableItemRequestBuilder2(t *testing.T) {
 
 //nolint:dupl
 func TestTableItemRequestBuilder2_Get(t *testing.T) {
-	requestBuilder := &TableItemRequestBuilder2{RequestBuilder: &mockRequestBuilder{}}
+	requestBuilder := &tableItemRequestBuilder2{RequestBuilder: &mockRequestBuilder{}}
 
 	tests := []internal.Test[any]{
 		{
@@ -130,7 +130,7 @@ func TestTableItemRequestBuilder2_Get(t *testing.T) {
 }
 
 func TestTableItemRequestBuilder2_Delete(t *testing.T) {
-	requestBuilder := &TableItemRequestBuilder2{RequestBuilder: &mockRequestBuilder{}}
+	requestBuilder := &tableItemRequestBuilder2{RequestBuilder: &mockRequestBuilder{}}
 
 	tests := []internal.Test[any]{
 		{
@@ -173,7 +173,7 @@ func TestTableItemRequestBuilder2_Delete(t *testing.T) {
 }
 
 func TestTableItemRequestBuilder2_Put(t *testing.T) {
-	requestBuilder := &TableItemRequestBuilder2{RequestBuilder: &mockRequestBuilder{}}
+	requestBuilder := &tableItemRequestBuilder2{RequestBuilder: &mockRequestBuilder{}}
 
 	tests := []internal.Test[any]{
 		{
