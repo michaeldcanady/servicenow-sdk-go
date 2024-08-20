@@ -19,3 +19,7 @@ func WithURITemplate(template string) requestInformationOption {
 		ri.uri.UrlTemplate = template
 	}
 }
+
+func WithURL(url string) requestInformationOption {
+	return WithPathParams(map[string]string{rawURLKey: url})
+}
