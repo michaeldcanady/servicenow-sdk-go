@@ -41,7 +41,7 @@ func TestNewTableRequestBuilder2(t *testing.T) {
 
 			inputs := test.Input.([]interface{})
 
-			_, err := NewTableRequestBuilder2(inputs[0].(core.Client), inputs[1].(map[string]string))
+			_, err := newTableRequestBuilder2(inputs[0].(core.Client), inputs[1].(map[string]string))
 			assert.Equal(t, test.ExpectedErr, err)
 
 			if test.Cleanup != nil {
