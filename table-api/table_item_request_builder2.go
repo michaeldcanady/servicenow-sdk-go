@@ -1,9 +1,11 @@
 package tableapi
 
 import (
+	"context"
+
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	intTable "github.com/michaeldcanady/servicenow-sdk-go/table-api/internal"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
 const (
@@ -12,17 +14,17 @@ const (
 
 // TableItemRequestBuilder2 provides an interface for the service methods, adhering to the Interface Segregation Principle.
 type TableItemRequestBuilder2 interface {
-	Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error)
-	Delete(params *TableItemRequestBuilderDeleteQueryParameters) error
-	Put(tableEntry interface{}, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error)
+	Get(context.Context, *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error)
+	Delete(context.Context, *TableItemRequestBuilderDeleteQueryParameters) error
+	Put(context.Context, interface{}, *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error)
 }
 
 type tableItemRequestBuilder2 struct {
-	intTable.RequestBuilder
+	intCore.Sendable
 }
 
 // NewTableItemRequestBuilder2 creates a new instance of TableItemRequestBuilder2.
-func NewTableItemRequestBuilder2(client core.Client, pathParameters map[string]string) (TableItemRequestBuilder2, error) {
+func NewTableItemRequestBuilder2(client intCore.SendableWithContext, pathParameters map[string]string) (TableItemRequestBuilder2, error) {
 	if internal.IsNil(client) {
 		return nil, ErrNilClient
 	}
@@ -43,7 +45,7 @@ func NewTableItemRequestBuilder2(client core.Client, pathParameters map[string]s
 	}
 
 	return &tableItemRequestBuilder2{
-		RequestBuilder: core.NewRequestBuilder(client, tableItemURLTemplate, pathParameters), //nolint:staticcheck
+		intCore.NewRequestBuilder2(client, tableURLTemplate, pathParameters),
 	}, nil
 }
 
@@ -55,7 +57,7 @@ func NewTableItemRequestBuilder2(client core.Client, pathParameters map[string]s
 // Returns:
 //   - *TableItemResponse: The response data as a TableItemResponse.
 //   - error: An error if there was an issue with the request or response.
-func (rB *tableItemRequestBuilder2) Get(params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
+func (rB *tableItemRequestBuilder2) Get(ctx context.Context, params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
 	config := &tableItemGetRequestConfiguration2[TableEntry]{
 		header:   nil,
 		query:    params,
@@ -63,12 +65,12 @@ func (rB *tableItemRequestBuilder2) Get(params *TableItemRequestBuilderGetQueryP
 		response: &TableItemResponse2[TableEntry]{},
 	}
 
-	err := rB.SendGet2(config.toConfiguration()) //nolint:staticcheck
+	resp, err := rB.Send(ctx, intCore.MethodGet, config.toConfiguration())
 	if err != nil {
 		return nil, err
 	}
 
-	return config.response, nil
+	return resp.(*TableItemResponse2[TableEntry]), nil
 }
 
 // Delete sends an HTTP DELETE request using the specified query parameters and returns an error if the request or response encounters any issues.
@@ -78,7 +80,7 @@ func (rB *tableItemRequestBuilder2) Get(params *TableItemRequestBuilderGetQueryP
 //
 // Returns:
 //   - error: An error if there was an issue with the request or response, or nil if the request was successful.
-func (rB *tableItemRequestBuilder2) Delete(params *TableItemRequestBuilderDeleteQueryParameters) error {
+func (rB *tableItemRequestBuilder2) Delete(ctx context.Context, params *TableItemRequestBuilderDeleteQueryParameters) error {
 	config := &tableItemDeleteRequestConfiguration2[TableEntry]{
 		header:   nil,
 		query:    params,
@@ -86,7 +88,9 @@ func (rB *tableItemRequestBuilder2) Delete(params *TableItemRequestBuilderDelete
 		response: nil,
 	}
 
-	return rB.SendDelete2(config.toConfiguration())
+	_, err := rB.Send(ctx, intCore.MethodDelete, config.toConfiguration())
+
+	return err
 }
 
 // Put updates a table item using an HTTP PUT request.
@@ -100,7 +104,7 @@ func (rB *tableItemRequestBuilder2) Delete(params *TableItemRequestBuilderDelete
 // Returns:
 //   - *TableItemResponse: A TableItemResponse containing the updated item data.
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
-func (rB *tableItemRequestBuilder2) Put(tableEntry interface{}, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
+func (rB *tableItemRequestBuilder2) Put(ctx context.Context, tableEntry interface{}, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
 	tableEntry, err := convertFromTableEntry(tableEntry)
 	if err != nil {
 		return nil, err
@@ -113,10 +117,10 @@ func (rB *tableItemRequestBuilder2) Put(tableEntry interface{}, params *TableIte
 		response: &TableItemResponse2[TableEntry]{},
 	}
 
-	err = rB.SendPut2(config.toConfiguration())
+	resp, err := rB.Send(ctx, intCore.MethodPut, config.toConfiguration())
 	if err != nil {
 		return nil, err
 	}
 
-	return config.response, nil
+	return resp.(*TableItemResponse2[TableEntry]), nil
 }

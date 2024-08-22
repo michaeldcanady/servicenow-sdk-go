@@ -1,10 +1,12 @@
 package tableapi
 
 import (
+	"context"
 	"errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/table-api/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -75,7 +77,7 @@ func TestNewTableItemRequestBuilder2(t *testing.T) {
 
 			inputs := test.Input.([]interface{})
 
-			_, err := NewTableItemRequestBuilder2(inputs[0].(core.Client), inputs[1].(map[string]string))
+			_, err := NewTableItemRequestBuilder2(inputs[0].(intCore.SendableWithContext), inputs[1].(map[string]string))
 			assert.Equal(t, test.ExpectedErr, err)
 
 			if test.Cleanup != nil {
@@ -118,7 +120,7 @@ func TestTableItemRequestBuilder2_Get(t *testing.T) {
 				test.Setup()
 			}
 
-			_, err := requestBuilder.Get(nil)
+			_, err := requestBuilder.Get(context.Background(), nil)
 			assert.Equal(t, test.ExpectedErr, err)
 			requestBuilder.RequestBuilder.(*mockRequestBuilder).AssertExpectations(t)
 
@@ -161,7 +163,7 @@ func TestTableItemRequestBuilder2_Delete(t *testing.T) {
 				test.Setup()
 			}
 
-			err := requestBuilder.Delete(nil)
+			err := requestBuilder.Delete(context.Background(), nil)
 			assert.Equal(t, test.ExpectedErr, err)
 			requestBuilder.RequestBuilder.(*mockRequestBuilder).AssertExpectations(t)
 
@@ -216,7 +218,7 @@ func TestTableItemRequestBuilder2_Put(t *testing.T) {
 				test.Setup()
 			}
 
-			_, err := requestBuilder.Put(test.Input, nil)
+			_, err := requestBuilder.Put(context.Background(), test.Input, nil)
 			assert.Equal(t, test.ExpectedErr, err)
 			requestBuilder.RequestBuilder.(*mockRequestBuilder).AssertExpectations(t)
 

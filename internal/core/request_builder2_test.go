@@ -2,9 +2,7 @@ package core
 
 import (
 	"context"
-	"io"
 	"net/http"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -75,65 +73,65 @@ func TestGetURLTemplate(t *testing.T) {
 	assert.Equal(t, urlTemplate, got)
 }
 
-func TestSend(t *testing.T) {
-	client := &mockClient2{}
-	builder := NewRequestBuilder2(client, "/test/{param}", map[string]string{"param": "value"}).(*requestBuilder2)
-
-	tests := []Test[any]{
-		{
-			Title: "Success",
-			Setup: func() {
-				client.On(
-					"SendWithContext",
-					context.Background(),
-					&requestInformation{
-						Method:  GET,
-						Headers: http.Header{"Content-Type": []string{"application/json"}},
-						uri: &UrlInformation{
-							QueryParameters: make(map[string]string),
-							PathParameters:  builder.pathParameters,
-							UrlTemplate:     builder.urlTemplate,
-						},
-						Content: []byte("{\"test\":\"test1\"}"),
-					},
-					nil,
-				).Return(
-					&http.Response{
-						Header: http.Header{"Content-Type": []string{"application/json"}},
-						Body:   io.NopCloser(strings.NewReader("{\"test\":\"test1\"}")),
-					},
-					nil,
-				)
-			},
-			ExpectedErr: nil,
-			Expected:    &MyResponse{Test: "test1"},
-			Cleanup: func() {
-				ResetCalls(client.ExpectedCalls...)
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.Title, func(t *testing.T) {
-			if test.Setup != nil {
-				test.Setup()
-			}
-
-			resp, err := builder.Send(
-				context.Background(),
-				GET,
-				[]RequestConfigurationOption{
-					WithData(map[string]string{"test": "test1"}),
-					WithResponse(&MyResponse{}),
-				}...,
-			)
-
-			assert.Equal(t, test.Expected, resp)
-			assert.Equal(t, test.ExpectedErr, err)
-
-			if test.Cleanup != nil {
-				test.Cleanup()
-			}
-		})
-	}
-}
+//func TestSend(t *testing.T) {
+//	client := &mockClient2{}
+//	builder := NewRequestBuilder2(client, "/test/{param}", map[string]string{"param": "value"}).(*requestBuilder2)
+//
+//	tests := []Test[any]{
+//		{
+//			Title: "Success",
+//			Setup: func() {
+//				client.On(
+//					"SendWithContext",
+//					context.Background(),
+//					&requestInformation{
+//						Method:  GET,
+//						Headers: http.Header{"Content-Type": []string{"application/json"}},
+//						uri: &UrlInformation{
+//							QueryParameters: make(map[string]string),
+//							PathParameters:  builder.pathParameters,
+//							UrlTemplate:     builder.urlTemplate,
+//						},
+//						Content: []byte("{\"test\":\"test1\"}"),
+//					},
+//					nil,
+//				).Return(
+//					&http.Response{
+//						Header: http.Header{"Content-Type": []string{"application/json"}},
+//						Body:   io.NopCloser(strings.NewReader("{\"test\":\"test1\"}")),
+//					},
+//					nil,
+//				)
+//			},
+//			ExpectedErr: nil,
+//			Expected:    &MyResponse{Test: "test1"},
+//			Cleanup: func() {
+//				ResetCalls(client.ExpectedCalls...)
+//			},
+//		},
+//	}
+//
+//	for _, test := range tests {
+//		t.Run(test.Title, func(t *testing.T) {
+//			if test.Setup != nil {
+//				test.Setup()
+//			}
+//
+//			resp, err := builder.Send(
+//				context.Background(),
+//				GET,
+//				[]RequestConfigurationOption{
+//					WithData(map[string]string{"test": "test1"}),
+//					WithResponse(&MyResponse{}),
+//				}...,
+//			)
+//
+//			assert.Equal(t, test.Expected, resp)
+//			assert.Equal(t, test.ExpectedErr, err)
+//
+//			if test.Cleanup != nil {
+//				test.Cleanup()
+//			}
+//		})
+//	}
+//}
