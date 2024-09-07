@@ -7,8 +7,9 @@ import (
 )
 
 // parseTableItemResponse3 parsable to create TableItemResponse3
+//
+//nolint:unused
 func parseTableItemResponse3(resp *http.Response) (intCore.Response, error) {
-
 	var itemResp *tableItemResponse3[*TableRecordImpl]
 
 	err := intCore.ParseResponse(resp, &itemResp)

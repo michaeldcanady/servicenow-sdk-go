@@ -3,3 +3,14 @@ adaptee
 michaeldcanady
 stretchr
 tableapi
+nolint
+sysparm
+dupl
+govet
+gosec
+gofmt
+nakedret
+stylecheck
+unconvert
+unparam
+gocognit

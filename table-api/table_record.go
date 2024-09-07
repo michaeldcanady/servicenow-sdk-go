@@ -21,13 +21,6 @@ type TableRecordImpl struct {
 	changedKeys []string
 }
 
-func newTableRecord() TableRecord {
-	return &TableRecordImpl{
-		map[string]interface{}{},
-		[]string{},
-	}
-}
-
 // Get retrieves a RecordElement for the specified field.
 func (tR *TableRecordImpl) Get(field string) RecordElement {
 	if internal.IsNil(tR) || len(tR.record) == 0 || !tR.HasAttribute(field) {

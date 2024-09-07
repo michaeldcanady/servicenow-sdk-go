@@ -30,6 +30,7 @@ var (
 	}
 )
 
+//nolint:unused
 type number interface {
 	int | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64
 }
@@ -138,7 +139,6 @@ func As[T any](in interface{}, out T) error {
 
 // isNumericType checks if the given type is a numeric type.
 func isNumericType(in interface{}) bool {
-
 	if in == nil {
 		return false
 	}
