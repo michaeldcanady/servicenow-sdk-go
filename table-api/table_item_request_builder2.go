@@ -13,18 +13,18 @@ const (
 )
 
 // TableItemRequestBuilder2 provides an interface for the service methods, adhering to the Interface Segregation Principle.
-type TableItemRequestBuilder2 interface {
+type TableItemRequestBuilder2[T TableRecord] interface {
 	Get(context.Context, *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error)
 	Delete(context.Context, *TableItemRequestBuilderDeleteQueryParameters) error
 	Put(context.Context, interface{}, *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error)
 }
 
-type tableItemRequestBuilder2 struct {
+type tableItemRequestBuilder2[T TableRecord] struct {
 	intCore.Sendable
 }
 
-// NewTableItemRequestBuilder2 creates a new instance of TableItemRequestBuilder2.
-func NewTableItemRequestBuilder2(client intCore.SendableWithContext, pathParameters map[string]string) (TableItemRequestBuilder2, error) {
+// newTableItemRequestBuilder2 creates a new instance of TableItemRequestBuilder2.
+func newTableItemRequestBuilder2[T TableRecord](client intCore.ClientSendable, pathParameters map[string]string) (TableItemRequestBuilder2[T], error) {
 	if internal.IsNil(client) {
 		return nil, ErrNilClient
 	}
@@ -44,8 +44,8 @@ func NewTableItemRequestBuilder2(client intCore.SendableWithContext, pathParamet
 		return nil, ErrNilParameterSysID
 	}
 
-	return &tableItemRequestBuilder2{
-		intCore.NewRequestBuilder2(client, tableURLTemplate, pathParameters),
+	return &tableItemRequestBuilder2[T]{
+		intCore.NewRequestBuilder2(client, tableItemURLTemplate, pathParameters),
 	}, nil
 }
 
@@ -57,15 +57,16 @@ func NewTableItemRequestBuilder2(client intCore.SendableWithContext, pathParamet
 // Returns:
 //   - *TableItemResponse: The response data as a TableItemResponse.
 //   - error: An error if there was an issue with the request or response.
-func (rB *tableItemRequestBuilder2) Get(ctx context.Context, params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
-	config := &tableItemGetRequestConfiguration2[TableEntry]{
-		header:   nil,
-		query:    params,
-		data:     nil,
-		response: &TableItemResponse2[TableEntry]{},
+func (rB *tableItemRequestBuilder2[T]) Get(ctx context.Context, params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
+	config := &intCore.RequestConfigurationImpl{
+		Header:          nil,
+		QueryParameters: interface{}(params),
+		Data:            nil,
+		ErrorMapping:    nil,
+		Response:        &tableItemResponse3[T]{},
 	}
 
-	resp, err := rB.Send(ctx, intCore.MethodGet, config.toConfiguration())
+	resp, err := rB.Send(ctx, intCore.MethodGet, config)
 	if err != nil {
 		return nil, err
 	}
@@ -80,15 +81,16 @@ func (rB *tableItemRequestBuilder2) Get(ctx context.Context, params *TableItemRe
 //
 // Returns:
 //   - error: An error if there was an issue with the request or response, or nil if the request was successful.
-func (rB *tableItemRequestBuilder2) Delete(ctx context.Context, params *TableItemRequestBuilderDeleteQueryParameters) error {
-	config := &tableItemDeleteRequestConfiguration2[TableEntry]{
-		header:   nil,
-		query:    params,
-		data:     nil,
-		response: nil,
+func (rB *tableItemRequestBuilder2[T]) Delete(ctx context.Context, params *TableItemRequestBuilderDeleteQueryParameters) error {
+	config := &intCore.RequestConfigurationImpl{
+		Header:          nil,
+		QueryParameters: interface{}(params),
+		Data:            nil,
+		ErrorMapping:    nil,
+		Response:        &tableItemResponse3[T]{},
 	}
 
-	_, err := rB.Send(ctx, intCore.MethodDelete, config.toConfiguration())
+	_, err := rB.Send(ctx, intCore.MethodDelete, config)
 
 	return err
 }
@@ -98,26 +100,27 @@ func (rB *tableItemRequestBuilder2) Delete(ctx context.Context, params *TableIte
 // The method returns a TableItemResponse representing the updated item or an error if the request fails.
 //
 // Parameters:
-//   - tableEntry: A map[string]string or TableEntry containing the data to update the table item.
+//   - entry: A map[string]string or TableEntry containing the data to update the table item.
 //   - params: An optional pointer to TableItemRequestBuilderPutQueryParameters, which can be used to specify query parameters for the request.
 //
 // Returns:
 //   - *TableItemResponse: A TableItemResponse containing the updated item data.
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
-func (rB *tableItemRequestBuilder2) Put(ctx context.Context, tableEntry interface{}, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
-	tableEntry, err := convertFromTableEntry(tableEntry)
+func (rB *tableItemRequestBuilder2[T]) Put(ctx context.Context, entry interface{}, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
+	entry, err := convertFromTableEntry(entry)
 	if err != nil {
 		return nil, err
 	}
 
-	config := &tableItemPutRequestConfiguration2[TableEntry]{
-		header:   nil,
-		query:    params,
-		data:     tableEntry,
-		response: &TableItemResponse2[TableEntry]{},
+	config := &intCore.RequestConfigurationImpl{
+		Header:          nil,
+		QueryParameters: interface{}(params),
+		Data:            entry,
+		ErrorMapping:    nil,
+		Response:        &tableItemResponse3[T]{},
 	}
 
-	resp, err := rB.Send(ctx, intCore.MethodPut, config.toConfiguration())
+	resp, err := rB.Send(ctx, intCore.MethodPut, config)
 	if err != nil {
 		return nil, err
 	}

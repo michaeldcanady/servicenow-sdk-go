@@ -16,7 +16,7 @@ const (
 // TableRequestBuilder2 defines the operations available for the table as a whole.
 type TableRequestBuilder2[T TableRecord] interface {
 	Get(context.Context, *TableRequestBuilderGetQueryParameters) (TableCollectionResponse3[T], error)
-	ByID(string) (TableItemRequestBuilder2, error)
+	ByID(string) (TableItemRequestBuilder2[T], error)
 	Post(context.Context, interface{}, *TableRequestBuilderPostQueryParameters) (TableItemResponse3[T], error)
 	Count(context.Context, *TableRequestBuilderGetQueryParameters) (int, error)
 }
@@ -26,12 +26,12 @@ type tableRequestBuilder2[T TableRecord] struct {
 	intCore.RequestBuilder2
 }
 
-func NewDefaultTableRequestBuilder2(client intCore.SendableWithContext, pathParameters map[string]string) (TableRequestBuilder2[*tableRecord], error) {
-	return newTableRequestBuilder2[*tableRecord](client, pathParameters)
+func NewDefaultTableRequestBuilder2(client intCore.ClientSendable, pathParameters map[string]string) (TableRequestBuilder2[*TableRecordImpl], error) {
+	return newTableRequestBuilder2[*TableRecordImpl](client, pathParameters)
 }
 
 // NewTableRequestBuilder initializes a new TableRequestBuilder with the given client and path parameters.
-func newTableRequestBuilder2[T TableRecord](client intCore.SendableWithContext, pathParameters map[string]string) (TableRequestBuilder2[T], error) {
+func newTableRequestBuilder2[T TableRecord](client intCore.ClientSendable, pathParameters map[string]string) (TableRequestBuilder2[T], error) {
 	if internal.IsNil(client) {
 		return nil, ErrNilClient
 	}
@@ -51,24 +51,31 @@ func newTableRequestBuilder2[T TableRecord](client intCore.SendableWithContext, 
 }
 
 // ByID creates a TableItemRequestBuilder for a specific record in the table identified by sysID.
-func (rB *tableRequestBuilder2[T]) ByID(sysID string) (TableItemRequestBuilder2, error) {
+func (rB *tableRequestBuilder2[T]) ByID(sysID string) (TableItemRequestBuilder2[T], error) {
 	pathParameters := rB.GetPathParameters()
 	client := rB.GetClient()
 	pathParameters["sysId"] = sysID
-	return NewTableItemRequestBuilder2(client, pathParameters)
+
+	builder, err := newTableItemRequestBuilder2[T](client, pathParameters)
+
+	return builder, err
 }
 
 // Get retrieves a collection of table items based on the provided query parameters.
 func (rB *tableRequestBuilder2[T]) Get(ctx context.Context, params *TableRequestBuilderGetQueryParameters) (TableCollectionResponse3[T], error) {
-	config := &tableGetRequestConfiguration2[TableEntry]{
-		header:   nil,
-		query:    params,
-		data:     nil,
-		mapping:  nil,
-		response: TableCollectionResponse3[T]{},
+	config := &intCore.RequestConfigurationImpl{
+		Header:          nil,
+		QueryParameters: interface{}(params),
+		Data:            nil,
+		ErrorMapping:    nil,
+		Response:        &tableCollectionResponse3[T]{},
 	}
 
-	resp, err := rB.Send(ctx, intCore.MethodGet, config.toConfiguration())
+	resp, err := rB.Send(
+		ctx,
+		intCore.MethodGet,
+		config,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -83,15 +90,15 @@ func (rB *tableRequestBuilder2[T]) Post(ctx context.Context, data interface{}, p
 		return nil, err
 	}
 
-	config := &tablePostRequestConfiguration2[TableEntry]{
-		header:   nil,
-		query:    params,
-		data:     data.(map[string]string),
-		mapping:  nil,
-		response: TableItemResponse3[T]{},
+	config := &intCore.RequestConfigurationImpl{
+		Header:          nil,
+		QueryParameters: interface{}(params),
+		Data:            data.(map[string]string),
+		ErrorMapping:    nil,
+		Response:        &tableItemResponse3[T]{},
 	}
 
-	resp, err := rB.Send(ctx, intCore.MethodPost, config.toConfiguration())
+	resp, err := rB.Send(ctx, intCore.MethodPost, config)
 	if err != nil {
 		return nil, err
 	}
@@ -102,15 +109,15 @@ func (rB *tableRequestBuilder2[T]) Post(ctx context.Context, data interface{}, p
 // Count retrieves the total count of items in the table.
 func (rB *tableRequestBuilder2[T]) Count(ctx context.Context, params *TableRequestBuilderGetQueryParameters) (int, error) {
 
-	config := &tableGetRequestConfiguration2[TableEntry]{
-		header:   nil,
-		query:    params,
-		data:     nil,
-		mapping:  nil,
-		response: TableCollectionResponse3[T]{},
+	config := &intCore.RequestConfigurationImpl{
+		Header:          nil,
+		QueryParameters: interface{}(params),
+		Data:            nil,
+		ErrorMapping:    nil,
+		Response:        &tableCollectionResponse3[T]{},
 	}
 
-	resp, err := rB.Send(ctx, intCore.MethodHead, config.toConfiguration())
+	resp, err := rB.Send(ctx, intCore.MethodHead, config)
 	if err != nil {
 		return -1, err
 	}

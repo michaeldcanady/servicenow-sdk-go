@@ -1,14 +1,41 @@
 package tableapi
 
 import (
+	"context"
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/table-api/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
+
+var _ intCore.RequestBuilder2 = (*mockRequestBuilder2)(nil)
+
+type mockRequestBuilder2 struct {
+	mock.Mock
+}
+
+func (rB *mockRequestBuilder2) Send(ctx context.Context, method intCore.HttpMethod, config intCore.RequestConfiguration) (interface{}, error) {
+	args := rB.Called(ctx, method, config)
+	return args.Get(0), args.Error(1)
+}
+
+func (rB *mockRequestBuilder2) GetPathParameters() map[string]string {
+	args := rB.Called()
+	return args.Get(0).(map[string]string)
+}
+
+func (rB *mockRequestBuilder2) GetClient() intCore.ClientSendable {
+	args := rB.Called()
+	return args.Get(0).(intCore.ClientSendable)
+}
+
+func (rB *mockRequestBuilder2) GetURLTemplate() string {
+	args := rB.Called()
+	return args.String(0)
+}
 
 func TestNewTableRequestBuilder2(t *testing.T) {
 	tests := []internal.Test[any]{
@@ -41,7 +68,7 @@ func TestNewTableRequestBuilder2(t *testing.T) {
 
 			inputs := test.Input.([]interface{})
 
-			_, err := newTableRequestBuilder2(inputs[0].(core.Client), inputs[1].(map[string]string))
+			_, err := newTableRequestBuilder2[*TableRecordImpl](inputs[0].(intCore.Client2), inputs[1].(map[string]string))
 			assert.Equal(t, test.ExpectedErr, err)
 
 			if test.Cleanup != nil {
@@ -53,26 +80,26 @@ func TestNewTableRequestBuilder2(t *testing.T) {
 
 //nolint:dupl
 func TestTableRequestBuilder2_Get(t *testing.T) {
-	requestBuilder := &tableRequestBuilder2{RequestBuilder: &mockRequestBuilder{}}
+	requestBuilder := &tableRequestBuilder2[*TableRecordImpl]{&mockRequestBuilder2{}}
 
 	tests := []internal.Test[any]{
 		{
 			Title: "Successful",
 			Setup: func() {
-				mockRB := &mockRequestBuilder{}
+				mockRB := &mockRequestBuilder2{}
 				mockRB.On("SendGet2", mock.AnythingOfType("*core.RequestConfiguration")).Return(nil)
 
-				requestBuilder.RequestBuilder = mockRB
+				requestBuilder.RequestBuilder2 = mockRB
 			},
 			ExpectedErr: nil,
 		},
 		{
 			Title: "Error",
 			Setup: func() {
-				mockRB := &mockRequestBuilder{}
+				mockRB := &mockRequestBuilder2{}
 				mockRB.On("SendGet2", mock.AnythingOfType("*core.RequestConfiguration")).Return(errors.New("unable to send request"))
 
-				requestBuilder.RequestBuilder = mockRB
+				requestBuilder.RequestBuilder2 = mockRB
 			},
 			ExpectedErr: errors.New("unable to send request"),
 		},
@@ -84,9 +111,9 @@ func TestTableRequestBuilder2_Get(t *testing.T) {
 				test.Setup()
 			}
 
-			_, err := requestBuilder.Get(nil)
+			_, err := requestBuilder.Get(context.Background(), nil)
 			assert.Equal(t, test.ExpectedErr, err)
-			requestBuilder.RequestBuilder.(*mockRequestBuilder).AssertExpectations(t)
+			requestBuilder.RequestBuilder2.(*mockRequestBuilder2).AssertExpectations(t)
 
 			if test.Cleanup != nil {
 				test.Cleanup()
@@ -96,16 +123,16 @@ func TestTableRequestBuilder2_Get(t *testing.T) {
 }
 
 func TestTableRequestBuilder2_Post(t *testing.T) {
-	requestBuilder := &tableRequestBuilder2{RequestBuilder: &mockRequestBuilder{}}
+	requestBuilder := &tableRequestBuilder2[*TableRecordImpl]{&mockRequestBuilder2{}}
 
 	tests := []internal.Test[any]{
 		{
 			Title: "Successful",
 			Setup: func() {
-				mockRB := &mockRequestBuilder{}
+				mockRB := &mockRequestBuilder2{}
 				mockRB.On("SendPost3", mock.AnythingOfType("*core.RequestConfiguration")).Return(nil)
 
-				requestBuilder.RequestBuilder = mockRB
+				requestBuilder.RequestBuilder2 = mockRB
 			},
 			ExpectedErr: nil,
 			Input:       NewTableEntry(),
@@ -113,10 +140,10 @@ func TestTableRequestBuilder2_Post(t *testing.T) {
 		{
 			Title: "Error",
 			Setup: func() {
-				mockRB := &mockRequestBuilder{}
+				mockRB := &mockRequestBuilder2{}
 				mockRB.On("SendPost3", mock.AnythingOfType("*core.RequestConfiguration")).Return(errors.New("unable to send request"))
 
-				requestBuilder.RequestBuilder = mockRB
+				requestBuilder.RequestBuilder2 = mockRB
 			},
 			ExpectedErr: errors.New("unable to send request"),
 			Input:       NewTableEntry(),
@@ -124,9 +151,9 @@ func TestTableRequestBuilder2_Post(t *testing.T) {
 		{
 			Title: "Nil tableEntry",
 			Setup: func() {
-				mockRB := &mockRequestBuilder{}
+				mockRB := &mockRequestBuilder2{}
 
-				requestBuilder.RequestBuilder = mockRB
+				requestBuilder.RequestBuilder2 = mockRB
 			},
 			Input:       nil,
 			ExpectedErr: errors.New("entry is nil"),
@@ -139,9 +166,9 @@ func TestTableRequestBuilder2_Post(t *testing.T) {
 				test.Setup()
 			}
 
-			_, err := requestBuilder.Post(test.Input, nil)
+			_, err := requestBuilder.Post(context.Background(), test.Input, nil)
 			assert.Equal(t, test.ExpectedErr, err)
-			requestBuilder.RequestBuilder.(*mockRequestBuilder).AssertExpectations(t)
+			requestBuilder.RequestBuilder2.(*mockRequestBuilder2).AssertExpectations(t)
 
 			if test.Cleanup != nil {
 				test.Cleanup()

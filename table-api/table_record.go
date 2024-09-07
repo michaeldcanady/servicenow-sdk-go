@@ -6,6 +6,8 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
+var _ TableRecord = (*TableRecordImpl)(nil)
+
 // TableRecord represents a record with attributes.
 type TableRecord interface {
 	Get(string) RecordElement
@@ -13,14 +15,21 @@ type TableRecord interface {
 	HasAttribute(string) bool
 }
 
-// tableRecord is an implementation of TableRecord.
-type tableRecord struct {
+// TableRecordImpl is an implementation of TableRecord.
+type TableRecordImpl struct {
 	record      map[string]interface{}
 	changedKeys []string
 }
 
+func newTableRecord() TableRecord {
+	return &TableRecordImpl{
+		map[string]interface{}{},
+		[]string{},
+	}
+}
+
 // Get retrieves a RecordElement for the specified field.
-func (tR *tableRecord) Get(field string) RecordElement {
+func (tR *TableRecordImpl) Get(field string) RecordElement {
 	if internal.IsNil(tR) || len(tR.record) == 0 || !tR.HasAttribute(field) {
 		return nil
 	}
@@ -42,7 +51,7 @@ func (tR *tableRecord) Get(field string) RecordElement {
 }
 
 // Set updates the value for the specified field.
-func (tR *tableRecord) Set(field string, value interface{}) {
+func (tR *TableRecordImpl) Set(field string, value interface{}) {
 	if internal.IsNil(tR) || len(tR.record) == 0 || !tR.HasAttribute(field) {
 		return
 	}
@@ -52,7 +61,7 @@ func (tR *tableRecord) Set(field string, value interface{}) {
 }
 
 // HasAttribute checks if the field exists in the record.
-func (tR *tableRecord) HasAttribute(field string) bool {
+func (tR *TableRecordImpl) HasAttribute(field string) bool {
 	if internal.IsNil(tR) || len(tR.record) == 0 {
 		return false
 	}
@@ -60,6 +69,6 @@ func (tR *tableRecord) HasAttribute(field string) bool {
 	return ok
 }
 
-func (tR *tableRecord) UnmarshalJSON(data []byte) error {
+func (tR *TableRecordImpl) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &tR.record)
 }

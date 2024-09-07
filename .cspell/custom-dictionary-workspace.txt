@@ -1,0 +1,5 @@
+# Custom Dictionary Words
+adaptee
+michaeldcanady
+stretchr
+tableapi

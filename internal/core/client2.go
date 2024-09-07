@@ -6,11 +6,11 @@ import (
 )
 
 type Client2 interface {
-	SendableWithContext
+	ClientSendable
 	Send(RequestInformation, ErrorMapping) (*http.Response, error)
 	GetBaseURL() string
 }
 
-type SendableWithContext interface {
+type ClientSendable interface {
 	SendWithContext(context.Context, RequestInformation, ErrorMapping) (*http.Response, error)
 }

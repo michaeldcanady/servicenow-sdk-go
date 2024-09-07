@@ -9,7 +9,7 @@ import (
 // parseTableItemResponse3 parsable to create TableItemResponse3
 func parseTableItemResponse3(resp *http.Response) (intCore.Response, error) {
 
-	var itemResp *tableItemResponse3[*tableRecord]
+	var itemResp *tableItemResponse3[*TableRecordImpl]
 
 	err := intCore.ParseResponse(resp, &itemResp)
 	if err != nil {

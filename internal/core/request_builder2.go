@@ -9,7 +9,7 @@ import (
 type RequestBuilder2 interface {
 	Sendable
 	GetPathParameters() map[string]string
-	GetClient() SendableWithContext
+	GetClient() ClientSendable
 	GetURLTemplate() string
 }
 
@@ -19,11 +19,11 @@ type Sendable interface {
 
 type requestBuilder2 struct {
 	pathParameters map[string]string
-	client         SendableWithContext
+	client         ClientSendable
 	urlTemplate    string
 }
 
-func NewRequestBuilder2(client SendableWithContext, urlTemplate string, pathParameters map[string]string) RequestBuilder2 {
+func NewRequestBuilder2(client ClientSendable, urlTemplate string, pathParameters map[string]string) RequestBuilder2 {
 	return &requestBuilder2{
 		client:         client,
 		urlTemplate:    urlTemplate,
@@ -39,7 +39,7 @@ func (rB *requestBuilder2) GetPathParameters() map[string]string {
 	return copy
 }
 
-func (rB *requestBuilder2) GetClient() SendableWithContext {
+func (rB *requestBuilder2) GetClient() ClientSendable {
 	return rB.client
 }
 
