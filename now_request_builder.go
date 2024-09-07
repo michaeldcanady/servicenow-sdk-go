@@ -39,7 +39,6 @@ func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuild
 var _ intCore.ClientSendableAdapterFunc[*ServiceNowClient] = sendableAdapter
 
 func sendableAdapter(adaptee *ServiceNowClient, ctx context.Context, info intCore.RequestInformation, mapping intCore.ErrorMapping) (*http.Response, error) {
-
 	oldInfo := core.NewRequestInformation()
 	oldHeaders := http.Header{}
 

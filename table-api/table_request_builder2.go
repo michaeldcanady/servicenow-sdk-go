@@ -108,7 +108,6 @@ func (rB *tableRequestBuilder2[T]) Post(ctx context.Context, data interface{}, p
 
 // Count retrieves the total count of items in the table.
 func (rB *tableRequestBuilder2[T]) Count(ctx context.Context, params *TableRequestBuilderGetQueryParameters) (int, error) {
-
 	config := &intCore.RequestConfigurationImpl{
 		Header:          nil,
 		QueryParameters: interface{}(params),
