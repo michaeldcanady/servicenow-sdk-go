@@ -190,16 +190,6 @@ func TestTableRequestBuilder2_Post(t *testing.T) {
 			Title: "Nil tableEntry",
 			Setup: func() {
 				mockRB := &mockRequestBuilder2{}
-				mockRB.On(
-					"Send",
-					context.Background(),
-					intCore.MethodPost,
-					mock.AnythingOfType("*core.RequestConfigurationImpl"),
-				).Return(
-					&tableItemResponse3[*TableRecordImpl]{},
-					errors.New("entry is nil"),
-				)
-
 				requestBuilder.RequestBuilder2 = mockRB
 			},
 			Input:       nil,
