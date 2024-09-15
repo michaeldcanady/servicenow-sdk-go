@@ -4,4 +4,4 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
-type RequestConfiguration = core.RequestConfiguration
+type RequestConfiguration = core.RequestConfigurationImpl

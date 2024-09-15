@@ -7,20 +7,23 @@ import (
 )
 
 type RequestBuilder2 interface {
-	ToRequestInformation(method HttpMethod, config *RequestConfiguration) (RequestInformation, error)
+	Sendable
 	GetPathParameters() map[string]string
-	GetClient() Client2
+	GetClient() ClientSendable
 	GetURLTemplate() string
-	Send(ctx context.Context, method HttpMethod, opts ...RequestConfigurationOption) (interface{}, error)
+}
+
+type Sendable interface {
+	Send(ctx context.Context, method HttpMethod, config RequestConfiguration) (interface{}, error)
 }
 
 type requestBuilder2 struct {
 	pathParameters map[string]string
-	client         Client2
+	client         ClientSendable
 	urlTemplate    string
 }
 
-func NewRequestBuilder2(client Client2, urlTemplate string, pathParameters map[string]string) RequestBuilder2 {
+func NewRequestBuilder2(client ClientSendable, urlTemplate string, pathParameters map[string]string) RequestBuilder2 {
 	return &requestBuilder2{
 		client:         client,
 		urlTemplate:    urlTemplate,
@@ -36,7 +39,7 @@ func (rB *requestBuilder2) GetPathParameters() map[string]string {
 	return copy
 }
 
-func (rB *requestBuilder2) GetClient() Client2 {
+func (rB *requestBuilder2) GetClient() ClientSendable {
 	return rB.client
 }
 
@@ -44,7 +47,7 @@ func (rB *requestBuilder2) GetURLTemplate() string {
 	return rB.urlTemplate
 }
 
-func (rB *requestBuilder2) ToRequestInformation(method HttpMethod, config *RequestConfiguration) (RequestInformation, error) {
+func (rB *requestBuilder2) toRequestInformation(method HttpMethod, config RequestConfiguration) (RequestInformation, error) {
 	requestInfo := NewRequestInformation(
 		WithMethod(method),
 		WithPathParams(rB.pathParameters),
@@ -55,14 +58,14 @@ func (rB *requestBuilder2) ToRequestInformation(method HttpMethod, config *Reque
 		return requestInfo, nil
 	}
 
-	if config.QueryParameters != nil {
-		if err := requestInfo.AddQueryParameters(config.QueryParameters); err != nil {
+	if config, ok := config.(SupportsQueryParams[any]); ok && config.GetQueryParams() != nil {
+		if err := requestInfo.AddQueryParameters(config.GetQueryParams()); err != nil {
 			return nil, fmt.Errorf("failed to add query parameters: %w", err)
 		}
 	}
 
-	if config.Data != nil {
-		data, err := json.Marshal(config.Data)
+	if config, ok := config.(SupportsData[any]); ok && config.GetData() != nil {
+		data, err := json.Marshal(config.GetData())
 		if err != nil {
 			return nil, fmt.Errorf("unable to marshal JSON: %w", err)
 		}
@@ -74,26 +77,50 @@ func (rB *requestBuilder2) ToRequestInformation(method HttpMethod, config *Reque
 	return requestInfo, nil
 }
 
-func (rB *requestBuilder2) Send(ctx context.Context, method HttpMethod, opts ...RequestConfigurationOption) (interface{}, error) {
-	config := ApplyOptions(opts...)
-
-	requestInfo, err := rB.ToRequestInformation(method, config)
+func (rB *requestBuilder2) Send(ctx context.Context, method HttpMethod, config RequestConfiguration) (interface{}, error) {
+	requestInfo, err := rB.toRequestInformation(method, config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request information: %w", err)
 	}
 
-	response, err := rB.client.SendWithContext(ctx, requestInfo, config.ErrorMapping)
+	response, err := rB.client.SendWithContext(ctx, requestInfo, config.GetErrorMapping())
 	if err != nil {
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
 
-	if method == DELETE || response == nil {
+	if method == MethodDelete || response == nil {
 		return nil, nil
 	}
 
-	if err = ParseResponse(response, &config.Response); err != nil {
+	rawResp := config.GetResponse()
+
+	if err = ParseResponse(response, &rawResp); err != nil {
 		return nil, fmt.Errorf("failed to parse response: %w", err)
 	}
 
-	return config.Response, nil
+	return rawResp, nil
 }
+
+//func (rB *requestBuilder2) Send(ctx context.Context, method HttpMethod, opts ...RequestConfigurationOption) (interface{}, error) {
+//	config := ApplyOptions(opts...)
+//
+//	requestInfo, err := rB.toRequestInformation(method, config)
+//	if err != nil {
+//		return nil, fmt.Errorf("failed to create request information: %w", err)
+//	}
+//
+//	response, err := rB.client.SendWithContext(ctx, requestInfo, config.ErrorMapping)
+//	if err != nil {
+//		return nil, fmt.Errorf("request failed: %w", err)
+//	}
+//
+//	if method == DELETE || response == nil {
+//		return nil, nil
+//	}
+//
+//	if err = ParseResponse(response, &config.Response); err != nil {
+//		return nil, fmt.Errorf("failed to parse response: %w", err)
+//	}
+//
+//	return config.Response, nil
+//}

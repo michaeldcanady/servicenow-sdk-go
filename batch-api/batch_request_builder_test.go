@@ -44,7 +44,7 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 		{
 			Title: "Successful Post",
 			Setup: func() {
-				mockBuilder.On("SendPost3", mock.AnythingOfType("*core.RequestConfiguration")).Return(nil)
+				mockBuilder.On("SendPost3", mock.AnythingOfType("*core.RequestConfigurationImpl")).Return(nil)
 			},
 		},
 		{

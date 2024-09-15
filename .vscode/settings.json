@@ -9,5 +9,13 @@
   "go.formatFlags": ["-s", "-w"],
   "go.lintOnSave": "package",
   "go.lintTool": "golangci-lint",
-  "go.lintFlags": []
+  "go.lintFlags": [],
+  "cSpell.customDictionaries": {
+    "custom-dictionary-workspace": {
+      "name": "custom-dictionary-workspace",
+      "path": "${workspaceFolder:servicenow-sdk-go}/.cspell/custom-dictionary-workspace.txt",
+      "addWords": true,
+      "scope": "workspace"
+    }
+  }
 }

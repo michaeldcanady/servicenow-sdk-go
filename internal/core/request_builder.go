@@ -1,14 +1,14 @@
 package core
 
 type RequestBuilder interface {
-	SendDelete2(config *RequestConfiguration) error
-	SendGet2(config *RequestConfiguration) error
-	SendPost3(config *RequestConfiguration) error
-	SendPut2(config *RequestConfiguration) error
+	SendDelete2(config *RequestConfigurationImpl) error
+	SendGet2(config *RequestConfigurationImpl) error
+	SendPost3(config *RequestConfigurationImpl) error
+	SendPut2(config *RequestConfigurationImpl) error
 	ToDeleteRequestInformation(params interface{}) (*RequestInformation, error)
-	ToDeleteRequestInformation2(config *RequestConfiguration) (*RequestInformation, error)
+	ToDeleteRequestInformation2(config *RequestConfigurationImpl) (*RequestInformation, error)
 	ToGetRequestInformation(params interface{}) (*RequestInformation, error)
-	ToGetRequestInformation2(config *RequestConfiguration) (*RequestInformation, error)
+	ToGetRequestInformation2(config *RequestConfigurationImpl) (*RequestInformation, error)
 	ToHeadRequestInformation() (*RequestInformation, error)
 	ToPostRequestInformation(data map[string]string, params interface{}) (*RequestInformation, error)
 	ToPostRequestInformation2(data interface{}, params interface{}) (*RequestInformation, error)

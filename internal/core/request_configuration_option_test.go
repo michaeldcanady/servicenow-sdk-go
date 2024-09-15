@@ -38,7 +38,7 @@ func (m *mockErrorMapping) Get(code int) (string, bool) {
 func TestWithHeader(t *testing.T) {
 	header := "TestHeader"
 	opt := WithHeader(header)
-	config := &RequestConfiguration{}
+	config := &RequestConfigurationImpl{}
 	opt(config)
 
 	assert.Equal(t, header, config.Header)
@@ -47,7 +47,7 @@ func TestWithHeader(t *testing.T) {
 func TestWithQueryParameters(t *testing.T) {
 	queryParams := "TestQueryParameters"
 	opt := WithQueryParameters(queryParams)
-	config := &RequestConfiguration{}
+	config := &RequestConfigurationImpl{}
 	opt(config)
 
 	assert.Equal(t, queryParams, config.QueryParameters)
@@ -56,7 +56,7 @@ func TestWithQueryParameters(t *testing.T) {
 func TestWithData(t *testing.T) {
 	data := "TestData"
 	opt := WithData(data)
-	config := &RequestConfiguration{}
+	config := &RequestConfigurationImpl{}
 	opt(config)
 
 	assert.Equal(t, data, config.Data)
@@ -65,7 +65,7 @@ func TestWithData(t *testing.T) {
 func TestWithErrorMapping(t *testing.T) {
 	errorMapping := &mockErrorMapping{}
 	opt := WithErrorMapping(errorMapping)
-	config := &RequestConfiguration{}
+	config := &RequestConfigurationImpl{}
 	opt(config)
 
 	assert.Equal(t, errorMapping, config.ErrorMapping)
@@ -74,7 +74,7 @@ func TestWithErrorMapping(t *testing.T) {
 func TestWithResponse(t *testing.T) {
 	response := &mockResponse{}
 	opt := WithResponse(response)
-	config := &RequestConfiguration{}
+	config := &RequestConfigurationImpl{}
 	opt(config)
 
 	if !reflect.DeepEqual(config.Response, response) {
