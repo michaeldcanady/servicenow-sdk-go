@@ -33,15 +33,6 @@ func (rB *mockRequestBuilder) Send(ctx context.Context, method intCore.HttpMetho
 	return args.Get(0), args.Error(1)
 }
 
-type mockClientSendable struct {
-	mock.Mock
-}
-
-func (rB *mockClientSendable) SendWithContext(ctx context.Context, info intCore.RequestInformation, mapping intCore.ErrorMapping) (*http.Response, error) {
-	args := rB.Called(ctx, info, mapping)
-	return args.Get(0).(*http.Response), args.Error(1)
-}
-
 func TestNewTableItemRequestBuilder2(t *testing.T) {
 	tests := []internal.Test[any]{
 		{
