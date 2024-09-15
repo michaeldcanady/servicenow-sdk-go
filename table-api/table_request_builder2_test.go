@@ -41,21 +41,27 @@ func TestNewTableRequestBuilder2(t *testing.T) {
 	tests := []internal.Test[any]{
 		{
 			Title: "Successful",
-			Input: []interface{}{&mockClient{}, map[string]string{"baseurl": "baseurl", "table": "table"}},
+			Input: []interface{}{
+				&mockClient2{},
+				map[string]string{"baseurl": "baseurl", "table": "table"},
+			},
 		},
 		{
-			Title:       "missing table",
-			Input:       []interface{}{&mockClient{}, map[string]string{"baseurl": "baseurl"}},
+			Title: "missing table",
+			Input: []interface{}{
+				&mockClient2{},
+				map[string]string{"baseurl": "baseurl"},
+			},
 			ExpectedErr: errors.New("missing \"table\" parameter"),
 		},
 		{
 			Title:       "missing baseurl",
-			Input:       []interface{}{&mockClient{}, map[string]string{}},
+			Input:       []interface{}{&mockClient2{}, map[string]string{}},
 			ExpectedErr: errors.New("pathParameters must contain a value for \"baseurl\" for the URL to be built"),
 		},
 		{
 			Title:       "missing client",
-			Input:       []interface{}{(*mockClient)(nil), map[string]string{}},
+			Input:       []interface{}{(*mockClient2)(nil), map[string]string{}},
 			ExpectedErr: errors.New("client can't be nil"),
 		},
 	}
@@ -68,7 +74,7 @@ func TestNewTableRequestBuilder2(t *testing.T) {
 
 			inputs := test.Input.([]interface{})
 
-			_, err := newTableRequestBuilder2[*TableRecordImpl](inputs[0].(intCore.Client2), inputs[1].(map[string]string))
+			_, err := newTableRequestBuilder2[*TableRecordImpl](inputs[0].(intCore.ClientSendable), inputs[1].(map[string]string))
 			assert.Equal(t, test.ExpectedErr, err)
 
 			if test.Cleanup != nil {
@@ -87,7 +93,15 @@ func TestTableRequestBuilder2_Get(t *testing.T) {
 			Title: "Successful",
 			Setup: func() {
 				mockRB := &mockRequestBuilder2{}
-				mockRB.On("SendGet2", mock.AnythingOfType("*core.RequestConfiguration")).Return(nil)
+				mockRB.On(
+					"Send",
+					context.Background(),
+					intCore.MethodGet,
+					mock.AnythingOfType("*core.RequestConfigurationImpl"),
+				).Return(
+					&tableCollectionResponse3[*TableRecordImpl]{},
+					nil,
+				)
 
 				requestBuilder.RequestBuilder2 = mockRB
 			},
@@ -97,7 +111,15 @@ func TestTableRequestBuilder2_Get(t *testing.T) {
 			Title: "Error",
 			Setup: func() {
 				mockRB := &mockRequestBuilder2{}
-				mockRB.On("SendGet2", mock.AnythingOfType("*core.RequestConfiguration")).Return(errors.New("unable to send request"))
+				mockRB.On(
+					"Send",
+					context.Background(),
+					intCore.MethodGet,
+					mock.AnythingOfType("*core.RequestConfigurationImpl"),
+				).Return(
+					&tableCollectionResponse3[*TableRecordImpl]{},
+					errors.New("unable to send request"),
+				)
 
 				requestBuilder.RequestBuilder2 = mockRB
 			},
@@ -130,7 +152,15 @@ func TestTableRequestBuilder2_Post(t *testing.T) {
 			Title: "Successful",
 			Setup: func() {
 				mockRB := &mockRequestBuilder2{}
-				mockRB.On("SendPost3", mock.AnythingOfType("*core.RequestConfiguration")).Return(nil)
+				mockRB.On(
+					"Send",
+					context.Background(),
+					intCore.MethodPost,
+					mock.AnythingOfType("*core.RequestConfigurationImpl"),
+				).Return(
+					&tableItemResponse3[*TableRecordImpl]{},
+					nil,
+				)
 
 				requestBuilder.RequestBuilder2 = mockRB
 			},
@@ -141,7 +171,15 @@ func TestTableRequestBuilder2_Post(t *testing.T) {
 			Title: "Error",
 			Setup: func() {
 				mockRB := &mockRequestBuilder2{}
-				mockRB.On("SendPost3", mock.AnythingOfType("*core.RequestConfiguration")).Return(errors.New("unable to send request"))
+				mockRB.On(
+					"Send",
+					context.Background(),
+					intCore.MethodPost,
+					mock.AnythingOfType("*core.RequestConfigurationImpl"),
+				).Return(
+					&tableItemResponse3[*TableRecordImpl]{},
+					errors.New("unable to send request"),
+				)
 
 				requestBuilder.RequestBuilder2 = mockRB
 			},
@@ -152,6 +190,15 @@ func TestTableRequestBuilder2_Post(t *testing.T) {
 			Title: "Nil tableEntry",
 			Setup: func() {
 				mockRB := &mockRequestBuilder2{}
+				mockRB.On(
+					"Send",
+					context.Background(),
+					intCore.MethodPost,
+					mock.AnythingOfType("*core.RequestConfigurationImpl"),
+				).Return(
+					&tableItemResponse3[*TableRecordImpl]{},
+					errors.New("entry is nil"),
+				)
 
 				requestBuilder.RequestBuilder2 = mockRB
 			},

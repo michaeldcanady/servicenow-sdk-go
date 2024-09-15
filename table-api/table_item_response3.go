@@ -33,3 +33,7 @@ type tableItemResponse3[T TableRecord] struct {
 func (r *tableItemResponse3[T]) ParseHeaders(headers http.Header) {
 	// no headers need parsing.
 }
+
+func (r *tableItemResponse3[T]) GetResult() T {
+	return r.Result
+}

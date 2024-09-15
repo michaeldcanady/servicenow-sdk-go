@@ -16,7 +16,7 @@ const (
 )
 
 type TableCollectionResponse3[T TableRecord] interface {
-	GetResults() []T
+	GetResults() []*T
 	GetNextPageLink() string
 	GetPreviousPageLink() string
 	GetFirstPageLink() string
@@ -87,4 +87,28 @@ func (cR *tableCollectionResponse3[T]) parseCountHeader(headers http.Header) {
 func (cR *tableCollectionResponse3[T]) ParseHeaders(headers http.Header) {
 	cR.parsePaginationHeaders(headers)
 	cR.parseCountHeader(headers)
+}
+
+func (cR *tableCollectionResponse3[T]) GetCount() int {
+	return cR.count
+}
+
+func (cR *tableCollectionResponse3[T]) GetNextPageLink() string {
+	return cR.nextPageLink
+}
+
+func (cR *tableCollectionResponse3[T]) GetPreviousPageLink() string {
+	return cR.previousPageLink
+}
+
+func (cR *tableCollectionResponse3[T]) GetFirstPageLink() string {
+	return cR.firstPageLink
+}
+
+func (cR *tableCollectionResponse3[T]) GetLastPageLink() string {
+	return cR.lastPageLink
+}
+
+func (cR *tableCollectionResponse3[T]) GetResults() []*T {
+	return cR.Result
 }

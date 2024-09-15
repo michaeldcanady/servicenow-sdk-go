@@ -14,9 +14,9 @@ const (
 
 // TableItemRequestBuilder2 provides an interface for the service methods, adhering to the Interface Segregation Principle.
 type TableItemRequestBuilder2[T TableRecord] interface {
-	Get(context.Context, *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error)
+	Get(context.Context, *TableItemRequestBuilderGetQueryParameters) (TableItemResponse3[T], error)
 	Delete(context.Context, *TableItemRequestBuilderDeleteQueryParameters) error
-	Put(context.Context, interface{}, *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error)
+	Put(context.Context, interface{}, *TableItemRequestBuilderPutQueryParameters) (TableItemResponse3[T], error)
 }
 
 type tableItemRequestBuilder2[T TableRecord] struct {
@@ -57,7 +57,7 @@ func newTableItemRequestBuilder2[T TableRecord](client intCore.ClientSendable, p
 // Returns:
 //   - *TableItemResponse: The response data as a TableItemResponse.
 //   - error: An error if there was an issue with the request or response.
-func (rB *tableItemRequestBuilder2[T]) Get(ctx context.Context, params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
+func (rB *tableItemRequestBuilder2[T]) Get(ctx context.Context, params *TableItemRequestBuilderGetQueryParameters) (TableItemResponse3[T], error) {
 	config := &intCore.RequestConfigurationImpl{
 		Header:          nil,
 		QueryParameters: interface{}(params),
@@ -71,7 +71,7 @@ func (rB *tableItemRequestBuilder2[T]) Get(ctx context.Context, params *TableIte
 		return nil, err
 	}
 
-	return resp.(*TableItemResponse2[TableEntry]), nil
+	return resp.(TableItemResponse3[T]), nil
 }
 
 // Delete sends an HTTP DELETE request using the specified query parameters and returns an error if the request or response encounters any issues.
@@ -106,7 +106,7 @@ func (rB *tableItemRequestBuilder2[T]) Delete(ctx context.Context, params *Table
 // Returns:
 //   - *TableItemResponse: A TableItemResponse containing the updated item data.
 //   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
-func (rB *tableItemRequestBuilder2[T]) Put(ctx context.Context, entry interface{}, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
+func (rB *tableItemRequestBuilder2[T]) Put(ctx context.Context, entry interface{}, params *TableItemRequestBuilderPutQueryParameters) (TableItemResponse3[T], error) {
 	entry, err := convertFromTableEntry(entry)
 	if err != nil {
 		return nil, err
@@ -125,5 +125,5 @@ func (rB *tableItemRequestBuilder2[T]) Put(ctx context.Context, entry interface{
 		return nil, err
 	}
 
-	return resp.(*TableItemResponse2[TableEntry]), nil
+	return resp.(TableItemResponse3[T]), nil
 }
