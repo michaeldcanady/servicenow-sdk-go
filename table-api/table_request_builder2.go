@@ -2,10 +2,8 @@ package tableapi
 
 import (
 	"context"
-	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
@@ -26,32 +24,22 @@ type tableRequestBuilder2[T TableRecord] struct {
 	intCore.RequestBuilder2
 }
 
-func NewDefaultTableRequestBuilder2(client intCore.ClientSendable, pathParameters map[string]string) (TableRequestBuilder2[*TableRecordImpl], error) {
+func NewDefaultTableRequestBuilder2(client intCore.ClientSendable, pathParameters map[string]string) TableRequestBuilder2[*TableRecordImpl] {
 	return newTableRequestBuilder2[*TableRecordImpl](client, pathParameters)
 }
 
 // NewTableRequestBuilder initializes a new TableRequestBuilder with the given client and path parameters.
-func newTableRequestBuilder2[T TableRecord](client intCore.ClientSendable, pathParameters map[string]string) (TableRequestBuilder2[T], error) {
-	if internal.IsNil(client) {
-		return nil, ErrNilClient
-	}
-
-	_, basePathOk := pathParameters[internal.BasePathParameter]
-	if !basePathOk {
-		return nil, core.ErrMissingBasePathParam
-	}
-	_, tableOk := pathParameters["table"]
-	if !tableOk {
-		return nil, errors.New("missing \"table\" parameter")
-	}
-
+func newTableRequestBuilder2[T TableRecord](client intCore.ClientSendable, pathParameters map[string]string) TableRequestBuilder2[T] {
 	return &tableRequestBuilder2[T]{
 		intCore.NewRequestBuilder2(client, tableURLTemplate, pathParameters),
-	}, nil
+	}
 }
 
 // ByID creates a TableItemRequestBuilder for a specific record in the table identified by sysID.
 func (rB *tableRequestBuilder2[T]) ByID(sysID string) (TableItemRequestBuilder2[T], error) {
+	if intCore.IsNil(rB) {
+		return nil, nil
+	}
 	pathParameters := rB.GetPathParameters()
 	client := rB.GetClient()
 	pathParameters["sysId"] = sysID
@@ -63,11 +51,15 @@ func (rB *tableRequestBuilder2[T]) ByID(sysID string) (TableItemRequestBuilder2[
 
 // Get retrieves a collection of table items based on the provided query parameters.
 func (rB *tableRequestBuilder2[T]) Get(ctx context.Context, params *TableRequestBuilderGetQueryParameters) (TableCollectionResponse3[T], error) {
+	if intCore.IsNil(rB) {
+		return nil, nil
+	}
+
 	config := &intCore.RequestConfigurationImpl{
 		Header:          nil,
 		QueryParameters: interface{}(params),
 		Data:            nil,
-		ErrorMapping:    nil,
+		ErrorMapping:    core.NewErrorMapping(),
 		Response:        &tableCollectionResponse3[T]{},
 	}
 
@@ -85,6 +77,10 @@ func (rB *tableRequestBuilder2[T]) Get(ctx context.Context, params *TableRequest
 
 // Post creates a new table item with the provided data and query parameters.
 func (rB *tableRequestBuilder2[T]) Post(ctx context.Context, data interface{}, params *TableRequestBuilderPostQueryParameters) (TableItemResponse3[T], error) {
+	if intCore.IsNil(rB) {
+		return nil, nil
+	}
+
 	data, err := convertFromTableEntry(data)
 	if err != nil {
 		return nil, err
@@ -108,6 +104,10 @@ func (rB *tableRequestBuilder2[T]) Post(ctx context.Context, data interface{}, p
 
 // Count retrieves the total count of items in the table.
 func (rB *tableRequestBuilder2[T]) Count(ctx context.Context, params *TableRequestBuilderGetQueryParameters) (int, error) {
+	if intCore.IsNil(rB) {
+		return -1, nil
+	}
+
 	config := &intCore.RequestConfigurationImpl{
 		Header:          nil,
 		QueryParameters: interface{}(params),

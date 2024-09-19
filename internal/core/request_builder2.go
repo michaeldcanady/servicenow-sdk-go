@@ -58,13 +58,13 @@ func (rB *requestBuilder2) toRequestInformation(method HttpMethod, config Reques
 		return requestInfo, nil
 	}
 
-	if config, ok := config.(SupportsQueryParams[any]); ok && config.GetQueryParams() != nil {
+	if config, ok := config.(SupportsQueryParams[any]); ok && !IsNil(config.GetQueryParams()) {
 		if err := requestInfo.AddQueryParameters(config.GetQueryParams()); err != nil {
 			return nil, fmt.Errorf("failed to add query parameters: %w", err)
 		}
 	}
 
-	if config, ok := config.(SupportsData[any]); ok && config.GetData() != nil {
+	if config, ok := config.(SupportsData[any]); ok && !IsNil(config.GetData()) {
 		data, err := json.Marshal(config.GetData())
 		if err != nil {
 			return nil, fmt.Errorf("unable to marshal JSON: %w", err)
