@@ -37,7 +37,5 @@ func (cred *CustomPromptTokenCredential) Prompt() (*AccessToken, error) {
 
 	defer cred.credential.server.Stop()
 
-	cred.op
-
 	return nil, errors.New("Prompt not implemented")
 }

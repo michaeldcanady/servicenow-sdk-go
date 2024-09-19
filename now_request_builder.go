@@ -91,11 +91,10 @@ func sendableAdapter(adaptee *ServiceNowClient, ctx context.Context, info intCor
 func (rB *NowRequestBuilder) Table2(tableName string) tableapi.TableRequestBuilder2[*tableapi.TableRecordImpl] {
 	rB.RequestBuilder.PathParameters["table"] = tableName
 
-	requestBuilder, _ := tableapi.NewDefaultTableRequestBuilder2(
+	return tableapi.NewDefaultTableRequestBuilder2(
 		intCore.NewClietSendableAdapter(sendableAdapter, rB.RequestBuilder.Client.(*ServiceNowClient)),
 		rB.RequestBuilder.PathParameters,
 	)
-	return requestBuilder
 }
 
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
