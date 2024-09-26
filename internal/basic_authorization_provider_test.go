@@ -21,7 +21,7 @@ func (c *MockCredential) GetAuthentication() (string, error) {
 }
 
 func TestNewBaseAuthorizationProvider(t *testing.T) {
-	tests := []Test[*BaseAuthorizationProvider]{
+	tests := []mocking.Test[*BaseAuthorizationProvider]{
 		{
 			Title:       "Valid",
 			Input:       &sharedCredential,
@@ -48,7 +48,7 @@ func TestNewBaseAuthorizationProvider(t *testing.T) {
 func TestBaseAuthorizationProvider_AuthorizeRequest(t *testing.T) {
 	reqInfo := &mocking.MockRequestInformation{}
 
-	tests := []Test[*mocking.MockRequestInformation]{
+	tests := []mocking.Test[*mocking.MockRequestInformation]{
 		{
 			Title: "Valid",
 			Setup: func() {

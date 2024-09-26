@@ -1,4 +1,4 @@
-package internal
+package http
 
 import (
 	"testing"
@@ -12,7 +12,7 @@ var (
 )
 
 func TestBaseHandler_SetNext(t *testing.T) {
-	tests := []Test[*BaseHandler]{
+	tests := []mocking.Test[*BaseHandler]{
 		{
 			Title:       "Valid",
 			Input:       &BaseHandler{},
@@ -30,7 +30,7 @@ func TestBaseHandler_SetNext(t *testing.T) {
 }
 
 func TestBaseHandler_Handle(t *testing.T) {
-	tests := []Test[*BaseHandler]{
+	tests := []mocking.Test[*BaseHandler]{
 		{
 			Title: "Valid",
 			Input: &mocking.MockRequestInformation{},

@@ -1,10 +1,6 @@
-package internal
+package http
 
-type RequestHandler interface {
-	Handle(RequestInformation) error
-	SetNext(RequestHandler)
-	Next() RequestHandler
-}
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 
 type BaseHandler struct {
 	next RequestHandler
@@ -24,8 +20,8 @@ func (b *BaseHandler) Next() RequestHandler {
 }
 
 func (b *BaseHandler) Handle(request RequestInformation) error {
-	if !IsNil(b.Next()) {
-		return b.Next().Handle(request)
+	if next := b.Next(); !core.IsNil(next) {
+		return next.Handle(request)
 	}
 	return nil
 }

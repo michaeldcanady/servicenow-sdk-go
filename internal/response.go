@@ -1,10 +1,6 @@
 package internal
 
-import (
-	"net/http"
-)
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 
 // Response represents all possible responses
-type Response interface {
-	ParseHeaders(headers http.Header)
-}
+type Response = http.Response

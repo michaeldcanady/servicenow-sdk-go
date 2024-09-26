@@ -1,4 +1,4 @@
-package internal
+package http
 
 type AuthorizationHandler struct {
 	*BaseHandler

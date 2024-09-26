@@ -1,4 +1,4 @@
-package internal
+package http
 
 import (
 	"errors"
@@ -25,7 +25,7 @@ var (
 )
 
 func TestNewAuthorizationHandler(t *testing.T) {
-	tests := []Test[*AuthorizationHandler]{
+	tests := []mocking.Test[*AuthorizationHandler]{
 		{
 			Title:    "Valid",
 			Input:    &MockAuthorizationProvider{},
@@ -55,12 +55,12 @@ func TestAuthorizationHandler_Handler(t *testing.T) {
 
 	authProvider := &mockAuthorizationProvider{}
 
-	authHander := &AuthorizationHandler{
+	authHandler := &AuthorizationHandler{
 		BaseHandler: &BaseHandler{},
 		provider:    authProvider,
 	}
 
-	tests := []Test[*AuthorizationHandler]{
+	tests := []mocking.Test[*AuthorizationHandler]{
 		{
 			Title: "Successful",
 			Setup: func() {
@@ -91,7 +91,7 @@ func TestAuthorizationHandler_Handler(t *testing.T) {
 				test.Setup()
 			}
 
-			err := authHander.Handle(test.Input.(core.RequestInformation))
+			err := authHandler.Handle(test.Input.(core.RequestInformation))
 
 			assert.Equal(t, test.ExpectedErr, err)
 

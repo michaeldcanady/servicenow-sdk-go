@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,17 +17,6 @@ type MockParseResponse struct {
 
 func (m *MockParseResponse) ParseHeaders(headers http.Header) {
 	m.ParseHeadersCalled = true
-}
-
-type Test[T any] struct {
-	Title string
-	// Setup to make needed modifications for a specific test
-	Setup func()
-	// Cleanup to undo changes do to reusable items
-	Cleanup     func()
-	Input       interface{}
-	Expected    T
-	ExpectedErr error
 }
 
 type TestData struct {
@@ -157,7 +147,7 @@ func TestParseResponse(t *testing.T) {
 }
 
 func TestIsNil(t *testing.T) {
-	testCases := []Test[bool]{
+	testCases := []mocking.Test[bool]{
 		{
 			Title:       "Map",
 			Input:       nil,

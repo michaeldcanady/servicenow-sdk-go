@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// Client2 interface designed to match core.Client2
 type Client2 interface {
 	ClientSendable
 	Send(RequestInformation, ErrorMapping) (*http.Response, error)
