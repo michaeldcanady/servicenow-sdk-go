@@ -7,7 +7,7 @@ type SilentCredentialsProvider struct {
 	clientSecret string
 }
 
-func NewSilentCredentialsProvider(clientID, clientSecret, username, password string) *SilentCredentialsProvider {
+func NewROPCCredentialProvider(clientID, clientSecret, username, password string) *SilentCredentialsProvider {
 	return &SilentCredentialsProvider{
 		username:     username,
 		password:     password,

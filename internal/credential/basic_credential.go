@@ -18,8 +18,11 @@ type BasicAuthStrategy struct {
 	password *string
 }
 
-func NewBasicAuthentication(strategy auth.AuthorizationStrategy) auth.Authentication {
-	return auth.NewAuthentication(basicAuthenticationType, strategy)
+func NewBasicAuthenticationStrategy(strategy auth.AuthorizationStrategy) auth.AuthenticationProvider {
+	return auth.NewAuthenticationProvider(
+		auth.NewStaticAuthTypeProvider(basicAuthenticationType),
+		strategy,
+	)
 }
 
 func NewInteractiveBasicCredential() *BasicAuthStrategy {
@@ -38,10 +41,9 @@ func NewNonInteractiveCredential(username string, password string) *BasicAuthStr
 
 func (cP *BasicAuthStrategy) GetAuth(ctx context.Context) (string, error) {
 	if cP.username == nil || cP.password == nil {
-		return "", errors.New("username or password is Nil")
+		return "", errors.New("username or password is nil")
 	}
 
 	auth := fmt.Sprintf("%s:%s", *cP.username, *cP.password)
-
 	return base64.StdEncoding.EncodeToString([]byte(auth)), nil
 }

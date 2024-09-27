@@ -6,11 +6,11 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
 )
 
-type Authentication = auth.Authentication
+type AuthenticationProvider = auth.AuthenticationProvider
 
-func NewSilentOauth2Credential(clientID, clientSecret, username, password, baseURL string) auth.Authentication {
+func NewROPCCrdential(clientID, clientSecret, username, password, baseURL string) auth.AuthenticationProvider {
 	strategy, _ := credential.NewServiceNowOauth2Strategy(
-		credential.NewSilentCredentialsProvider(
+		credential.NewROPCCredentialProvider(
 			clientID,
 			clientSecret,
 			username,
@@ -19,5 +19,5 @@ func NewSilentOauth2Credential(clientID, clientSecret, username, password, baseU
 		baseURL,
 	)
 
-	return credential.NewBearerAuthentication(oauth2.NewAuthorizationStrategy(strategy))
+	return auth.NewBearerAuthenticationStrategy(oauth2.NewAuthorizationStrategy(strategy))
 }

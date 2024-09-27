@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -53,18 +53,19 @@ func WithClient(client *http.Client) ServiceNowOauth2Option {
 }
 
 func NewServiceNowOauth2Strategy(creds CredentialsProvider, baseURL string, opts ...ServiceNowOauth2Option) (*ServiceNowOauth2Strategy, error) {
+	if creds == nil {
+		return nil, errors.New("creds can't be nil")
+	}
+
 	// TODO: Make an option
 	server, err := newServiceNowOauthServer("http://localhost")
 	if err != nil {
 		return nil, err
 	}
 
-	if core.IsNil(creds) {
-		return nil, errors.New("creds can't be nil")
-	}
-
 	strategy := &ServiceNowOauth2Strategy{
-		server:      server,
+		server: server,
+		// TODO: should use same request adapter as main client
 		client:      http.DefaultClient, // Default to http.DefaultClient
 		credentials: creds,
 		baseURL:     baseURL,
@@ -79,7 +80,7 @@ func NewServiceNowOauth2Strategy(creds CredentialsProvider, baseURL string, opts
 
 func (tS *ServiceNowOauth2Strategy) FetchToken(ctx context.Context) (oauth2.Oauth2Token, error) {
 	if core.IsNil(tS) || core.IsNil(tS.credentials) {
-		return nil, errors.New("CredentialsProvider or stategy is nil")
+		return nil, errors.New("CredentialsProvider or strategy is nil")
 	}
 
 	data := url.Values{}
@@ -130,18 +131,19 @@ func (tS *ServiceNowOauth2Strategy) getToken(values url.Values, ctx context.Cont
 
 	req.Header.Add(contentTypeHeaderKey, formURLEncodedContentType)
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := tS.client.Do(req)
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
+
 	if resp.StatusCode >= 400 {
-		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		bodyBytes, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return nil, err
 		}
 		return nil, errors.New(string(bodyBytes))
 	}
-	defer resp.Body.Close()
 
 	token, err := tS.decodeToken(resp)
 	if err != nil {

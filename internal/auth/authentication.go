@@ -5,26 +5,30 @@ import (
 	"fmt"
 )
 
-type Authentication interface {
+type AuthenticationProvider interface {
 	GetCredential(context.Context) (string, error)
 }
 
-type authenticationImpl struct {
-	authType string
-	strategy AuthorizationStrategy
+type AuthTypeProvider interface {
+	GetAuthType() string
 }
 
-func NewAuthentication(authType string, strategy AuthorizationStrategy) Authentication {
-	return &authenticationImpl{
-		authType: authType,
-		strategy: strategy,
+type authenticationProvider struct {
+	authTypeProvider AuthTypeProvider
+	strategy         AuthorizationStrategy
+}
+
+func NewAuthenticationProvider(authTypeProvider AuthTypeProvider, strategy AuthorizationStrategy) AuthenticationProvider {
+	return &authenticationProvider{
+		authTypeProvider: authTypeProvider,
+		strategy:         strategy,
 	}
 }
 
-func (a *authenticationImpl) GetCredential(ctx context.Context) (string, error) {
+func (a *authenticationProvider) GetCredential(ctx context.Context) (string, error) {
 	auth, err := a.strategy.GetAuth(ctx)
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("%s %s", a.authType, auth), nil
+	return fmt.Sprintf("%s %s", a.authTypeProvider.GetAuthType(), auth), nil
 }
