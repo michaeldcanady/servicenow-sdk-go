@@ -15,7 +15,7 @@ type Oauth2Token interface {
 }
 
 type HasRefreshToken interface {
-	GetRefreshToken() string
+	GetRefreshToken() Oauth2Token
 }
 
 type SupportsScopes interface {

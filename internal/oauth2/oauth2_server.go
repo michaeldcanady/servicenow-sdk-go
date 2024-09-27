@@ -20,6 +20,7 @@ var localhostNames = []string{"localhost", "127.0.0.1"}
 type Server interface {
 	ListenAndServe() error
 	Shutdown(ctx context.Context) error
+	GetURL() string
 }
 
 type oauthServer struct {
@@ -29,8 +30,6 @@ type oauthServer struct {
 func (s *oauthServer) GetURL() string {
 	return s.Addr
 }
-
-type ServerOption func(*serverConfig)
 
 type serverConfig struct {
 	hostname string
@@ -69,11 +68,10 @@ func NewOauthServer(address string, handler http.Handler, opts ...ServerOption) 
 			return nil, fmt.Errorf("failed to find open port: %w", err)
 		}
 		uri.Host = fmt.Sprintf("%s:%d", hostname, port)
-		address = uri.String()
 	}
 
 	return &oauthServer{
-		http.Server{
+		Server: http.Server{
 			Addr:    uri.Host,
 			Handler: handler,
 		},

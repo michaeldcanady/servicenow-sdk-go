@@ -1,0 +1,36 @@
+package oauth2
+
+import (
+	"context"
+	"net/http"
+	"net/url"
+)
+
+var _ TokenStrategy = (*AuthorizationCodeGrantStrategy)(nil)
+
+type AuthorizationCodeGrantStrategy struct {
+	client      *http.Client
+	credentials CredentialsProvider
+	decoder     TokenDecoder
+	tokenURL    string
+	redirectURL string
+}
+
+func (tS *AuthorizationCodeGrantStrategy) getAuthorization(ctx context.Context) (Oauth2Token, error) {
+	data := url.Values{}
+	data.Set(responseTypeKey, responseTypeCode)
+	data.Set(clientIDKey, tS.credentials.GetClientID())
+	data.Set(redirectURIKey, tS.redirectURL)
+	//data.Set(stateKey)
+}
+
+func (tS *AuthorizationCodeGrantStrategy) FetchToken(ctx context.Context) (Oauth2Token, error) {
+	data := url.Values{}
+	data.Set(grantTypeKey, grantTypePassword)
+	data.Set(clientIDKey, tS.credentials.GetClientID())
+	data.Set(clientSecretKey, tS.credentials.GetClientSecret())
+	data.Set(usernameKey, tS.credentials.GetUsername())
+	data.Set(passwordKey, tS.credentials.GetPassword())
+
+	return tS.getToken(data, ctx)
+}
