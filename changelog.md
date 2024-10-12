@@ -20,6 +20,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `tableapi.ViewDesktop`
 - `tableapi.ViewMobile`
 - `tableapi.ViewBoth`
+- `batchapi.NewBatchRequestBuilder2`
+- `servicenowsdk.NowRequestBuilder.Batch`
 
 ### Changed
 

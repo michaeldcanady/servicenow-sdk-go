@@ -35,13 +35,13 @@ func TestNewBatchRequestBuilder2(t *testing.T) {
 	mockClient := new(mockClient2)
 	pathParameters := map[string]string{"param1": "value1"}
 
-	result := NewBatchRequestBuilder2(mockClient, pathParameters)
+	result, _ := NewBatchRequestBuilder2(mockClient, pathParameters)
 
-	assert.Implements(t, (*intCore.Sendable)(nil), result.Sendable)
+	assert.Implements(t, (*intCore.Sendable)(nil), result.(*batchRequestBuilder2).Sendable)
 	assert.NotNil(t, result)
-	assert.IsType(t, &BatchRequestBuilder2{}, result)
+	assert.IsType(t, &batchRequestBuilder2{}, result)
 
-	builder := result.Sendable.(intCore.RequestBuilder2)
+	builder := result.(*batchRequestBuilder2).Sendable.(intCore.RequestBuilder2)
 
 	assert.Equal(t, "{+baseurl}/v1/batch", builder.GetURLTemplate())
 	assert.Equal(t, pathParameters, builder.GetPathParameters())
@@ -53,7 +53,7 @@ func TestBatchRequestBuilder2_Post(t *testing.T) {
 	mockBuilder := new(mockRequestBuilder2)
 
 	// Create a new batch request builder with the mock builder
-	rB := &BatchRequestBuilder2{
+	rB := &batchRequestBuilder2{
 		Sendable: mockBuilder,
 	}
 

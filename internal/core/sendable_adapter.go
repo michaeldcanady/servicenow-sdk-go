@@ -12,7 +12,7 @@ type clientSendableAdapter[T any] struct {
 	adaptee T
 }
 
-func NewClietSendableAdapter[T any](adapter ClientSendableAdapterFunc[T], adaptee T) ClientSendable {
+func NewClientSendableAdapter[T any](adapter ClientSendableAdapterFunc[T], adaptee T) ClientSendable {
 	return &clientSendableAdapter[T]{
 		adapter: adapter,
 		adaptee: adaptee,

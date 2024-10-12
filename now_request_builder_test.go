@@ -3,6 +3,7 @@ package servicenowsdkgo
 import (
 	"testing"
 
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 )
@@ -46,6 +47,17 @@ func TestNowRequestBuilderTable2(t *testing.T) {
 	tableBuilder := builder.Table2(tableName)
 
 	assert.NotNil(t, tableBuilder)
+}
+
+func TestNowRequestBuilderBatch(t *testing.T) {
+	client := &ServiceNowClient{} // Replace with your client implementation
+	url := "https://example.service-now.com/api"
+	builder := NewNowRequestBuilder(url, client)
+
+	tableBuilder := builder.Batch()
+
+	assert.NotNil(t, tableBuilder)
+	assert.Implements(t, (*batchapi.BatchRequestBuilder2)(nil), tableBuilder)
 }
 
 func TestNowRequestBuilderAttachment(t *testing.T) {

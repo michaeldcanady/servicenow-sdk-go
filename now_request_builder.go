@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
@@ -85,14 +86,24 @@ func sendableAdapter(adaptee *ServiceNowClient, ctx context.Context, info intCor
 	return adaptee.SendWithContext(ctx, oldInfo, mapping.(core.ErrorMapping))
 }
 
-// Table returns a TableRequestBuilder associated with the NowRequestBuilder.
+// Table2 returns a TableRequestBuilder associated with the NowRequestBuilder.
 // It accepts a table name as a parameter and constructs the URL for table-related requests.
 // The returned TableRequestBuilder can be used to build and execute table-related requests.
 func (rB *NowRequestBuilder) Table2(tableName string) tableapi.TableRequestBuilder2[*tableapi.TableRecordImpl] {
 	rB.RequestBuilder.PathParameters["table"] = tableName
 
 	requestBuilder, _ := tableapi.NewDefaultTableRequestBuilder2(
-		intCore.NewClietSendableAdapter(sendableAdapter, rB.RequestBuilder.Client.(*ServiceNowClient)),
+		intCore.NewClientSendableAdapter(sendableAdapter, rB.RequestBuilder.Client.(*ServiceNowClient)),
+		rB.RequestBuilder.PathParameters,
+	)
+	return requestBuilder
+}
+
+// Batch returns a batchapi.BatchRequestBuilder2 associated with the NowRequestBuilder.
+// The returned batchapi.BatchRequestBuilder2 can be used to build and execute batch-related requests.
+func (rB *NowRequestBuilder) Batch() batchapi.BatchRequestBuilder2 {
+	requestBuilder, _ := batchapi.NewBatchRequestBuilder2(
+		intCore.NewClientSendableAdapter(sendableAdapter, rB.RequestBuilder.Client.(*ServiceNowClient)),
 		rB.RequestBuilder.PathParameters,
 	)
 	return requestBuilder
