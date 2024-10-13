@@ -34,11 +34,11 @@ func (rC *RequestConfigurationImpl) GetResponse() Response {
 	return rC.Response
 }
 
-type SupportsHeaders[T any] interface {
-	GetHeaders() T
+type SupportsHeaders interface {
+	GetHeaders() interface{}
 }
 
-type SupportsQueryParams[T any] interface {
+type SupportsQueryParams interface {
 	GetQueryParams() interface{}
 }
 

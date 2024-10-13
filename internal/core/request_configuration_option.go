@@ -4,14 +4,14 @@ package core
 type RequestConfigurationOption func(*RequestConfigurationImpl)
 
 // WithHeader sets the header for the request.
-func WithHeader[T any](header T) RequestConfigurationOption {
+func WithHeader(header interface{}) RequestConfigurationOption {
 	return func(config *RequestConfigurationImpl) {
 		config.Header = header
 	}
 }
 
 // WithQueryParameters sets the query parameters for the request.
-func WithQueryParameters[T any](queryParams T) RequestConfigurationOption {
+func WithQueryParameters(queryParams interface{}) RequestConfigurationOption {
 	return func(config *RequestConfigurationImpl) {
 		config.QueryParameters = queryParams
 	}

@@ -7,16 +7,29 @@ import (
 	"reflect"
 )
 
+type RequestConverter interface {
+	Convert(ctx context.Context, info RequestInformation) (*http.Request, error)
+}
+
+type ResponseConverter interface {
+	Convert(resp *http.Response) (Response, error)
+}
+
 type RequestAdapter interface {
 	Send(ctx context.Context, info RequestInformation) (*http.Response, error)
 	AddHandler(handler RequestHandler) error
 	GetBaseURL() string
 }
 
+type Client[T any, R any] interface {
+	Send(T) (R, error)
+}
+
 type requestAdapter struct {
-	requestHandler  RequestHandler
-	client          *http.Client
-	responseHandler any
+	requestHandler RequestHandler
+	client         *http.Client
+	reqConverter   RequestConverter
+	respConverter  ResponseConverter
 }
 
 func NewClient2CompatibleRequestAdapter() Client2 {
@@ -29,17 +42,22 @@ func NewRequestAdapter() RequestAdapter {
 	}
 }
 
-func (rA *requestAdapter) Send(ctx context.Context, info RequestInformation) (*http.Response, error) {
+func (rA *requestAdapter) Send(ctx context.Context, info RequestInformation, parsable Parsable, mapping ErrorMapping) (interface{}, error) {
 	if err := rA.requestHandler.Handle(info); err != nil {
 		return nil, err
 	}
 
-	req, err := info.ToRequestWithContext(ctx)
+	req, err := rA.reqConverter.Convert(ctx, info)
 	if err != nil {
 		return nil, err
 	}
 
-	return rA.client.Do(req)
+	resp, err := rA.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return rA.respConverter.Convert(resp)
 }
 
 func (ra *requestAdapter) AddHandler(handler RequestHandler) error {

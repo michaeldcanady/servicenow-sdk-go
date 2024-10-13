@@ -8,6 +8,7 @@ import (
 
 type RequestBuilder2 interface {
 	Sendable
+	Sendable2
 	GetPathParameters() map[string]string
 	GetClient() ClientSendable
 	GetURLTemplate() string
@@ -15,6 +16,10 @@ type RequestBuilder2 interface {
 
 type Sendable interface {
 	Send(ctx context.Context, method HttpMethod, config RequestConfiguration) (interface{}, error)
+}
+
+type Sendable2 interface {
+	Send2(ctx context.Context, method HttpMethod, opts ...RequestConfigurationOption) (interface{}, error)
 }
 
 type requestBuilder2 struct {
@@ -58,7 +63,7 @@ func (rB *requestBuilder2) toRequestInformation(method HttpMethod, config Reques
 		return requestInfo, nil
 	}
 
-	if config, ok := config.(SupportsQueryParams[any]); ok && config.GetQueryParams() != nil {
+	if config, ok := config.(SupportsQueryParams); ok && config.GetQueryParams() != nil {
 		if err := requestInfo.AddQueryParameters(config.GetQueryParams()); err != nil {
 			return nil, fmt.Errorf("failed to add query parameters: %w", err)
 		}
@@ -101,26 +106,26 @@ func (rB *requestBuilder2) Send(ctx context.Context, method HttpMethod, config R
 	return rawResp, nil
 }
 
-//func (rB *requestBuilder2) Send(ctx context.Context, method HttpMethod, opts ...RequestConfigurationOption) (interface{}, error) {
-//	config := ApplyOptions(opts...)
-//
-//	requestInfo, err := rB.toRequestInformation(method, config)
-//	if err != nil {
-//		return nil, fmt.Errorf("failed to create request information: %w", err)
-//	}
-//
-//	response, err := rB.client.SendWithContext(ctx, requestInfo, config.ErrorMapping)
-//	if err != nil {
-//		return nil, fmt.Errorf("request failed: %w", err)
-//	}
-//
-//	if method == DELETE || response == nil {
-//		return nil, nil
-//	}
-//
-//	if err = ParseResponse(response, &config.Response); err != nil {
-//		return nil, fmt.Errorf("failed to parse response: %w", err)
-//	}
-//
-//	return config.Response, nil
-//}
+func (rB *requestBuilder2) Send2(ctx context.Context, method HttpMethod, opts ...RequestConfigurationOption) (interface{}, error) {
+	config := ApplyOptions(opts...)
+
+	requestInfo, err := rB.toRequestInformation(method, config)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request information: %w", err)
+	}
+
+	response, err := rB.client.SendWithContext(ctx, requestInfo, config.ErrorMapping)
+	if err != nil {
+		return nil, fmt.Errorf("request failed: %w", err)
+	}
+
+	if method == MethodDelete || response == nil {
+		return nil, nil
+	}
+
+	if err = ParseResponse(response, &config.Response); err != nil {
+		return nil, fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	return config.Response, nil
+}
