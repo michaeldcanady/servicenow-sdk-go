@@ -12,16 +12,25 @@ import (
 )
 
 const (
-	tableURLTemplate = "{+baseurl}/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
+	tableURLTemplate = "{+baseurl}/api/now/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
 )
 
+// TableRequestBuilder2 ...
 type TableRequestBuilder2 struct {
 	abstractions.BaseRequestBuilder
 	factory serialization.ParsableFactory
 }
 
-// NewRequestBuilder2Internal instantiates a new TableRequestBuilderKiota and sets the default values.
-func NewRequestBuilder2Internal(
+// NewDefaultTableRequestBuilder2Internal ...
+func NewDefaultTableRequestBuilder2Internal(
+	pathParameters map[string]string,
+	requestAdapter abstractions.RequestAdapter,
+) *TableRequestBuilder2 {
+	return newRequestBuilder2Internal(pathParameters, requestAdapter, CreateTableRecordFromDiscriminatorValue)
+}
+
+// newRequestBuilder2Internal instantiates a new TableRequestBuilderKiota and sets the default values.
+func newRequestBuilder2Internal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 	factory serialization.ParsableFactory,
@@ -33,15 +42,23 @@ func NewRequestBuilder2Internal(
 	return m
 }
 
-// NewRequestBuilderBuilder2 instantiates a new TableRequestBuilderKiota and sets the default values.
-func NewRequestBuilderBuilder2(
+// NewDefaultTableRequestBuilder2 ...
+func NewDefaultTableRequestBuilder2(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *TableRequestBuilder2 {
+	return newRequestBuilderBuilder2(rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
+}
+
+// newRequestBuilderBuilder2 instantiates a new TableRequestBuilderKiota and sets the default values.
+func newRequestBuilderBuilder2(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 	factory serialization.ParsableFactory,
 ) *TableRequestBuilder2 {
 	urlParams := make(map[string]string)
 	urlParams["request-raw-url"] = rawURL
-	return NewRequestBuilder2Internal(urlParams, requestAdapter, factory)
+	return newRequestBuilder2Internal(urlParams, requestAdapter, factory)
 }
 
 func (rB *TableRequestBuilder2) ByID(sysID string) *TableItemRequestBuilder2 {
@@ -85,6 +102,9 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *T
 	result, err := snRes.GetResult()
 	if err != nil {
 		return nil, err
+	}
+	if internal.IsNil(result) || len(result) == 0 {
+		return nil, nil
 	}
 
 	records, ok := interface{}(result).([]TableRecord)

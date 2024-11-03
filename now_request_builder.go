@@ -85,19 +85,6 @@ func sendableAdapter(adaptee *ServiceNowClient, ctx context.Context, info intCor
 	return adaptee.SendWithContext(ctx, oldInfo, mapping.(core.ErrorMapping))
 }
 
-// Table returns a TableRequestBuilder associated with the NowRequestBuilder.
-// It accepts a table name as a parameter and constructs the URL for table-related requests.
-// The returned TableRequestBuilder can be used to build and execute table-related requests.
-func (rB *NowRequestBuilder) Table2(tableName string) tableapi.TableRequestBuilder2[*tableapi.TableRecordImpl] {
-	rB.RequestBuilder.PathParameters["table"] = tableName
-
-	requestBuilder, _ := tableapi.NewDefaultTableRequestBuilder2(
-		intCore.NewClietSendableAdapter(sendableAdapter, rB.RequestBuilder.Client.(*ServiceNowClient)),
-		rB.RequestBuilder.PathParameters,
-	)
-	return requestBuilder
-}
-
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
 // It allows you to work with attachments and manage attachments in ServiceNow.
 func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilder {

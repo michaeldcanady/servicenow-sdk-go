@@ -15,7 +15,7 @@ func TestNewRequestBuilder2Internal(t *testing.T) {
 	requestAdapter := &mocking.RequestAdapter{}
 	factory := mocking.ParsableFactory
 
-	builder := NewRequestBuilder2Internal(pathParams, requestAdapter, factory)
+	builder := newRequestBuilder2Internal(pathParams, requestAdapter, factory)
 	assert.NotNil(t, builder)
 	assert.Equal(t, pathParams, builder.BaseRequestBuilder.PathParameters)
 	assert.Equal(t, requestAdapter, builder.BaseRequestBuilder.RequestAdapter)
@@ -26,7 +26,7 @@ func TestNewRequestBuilderBuilder2(t *testing.T) {
 	requestAdapter := &mocking.RequestAdapter{}
 	factory := mocking.ParsableFactory
 
-	builder := NewRequestBuilderBuilder2(rawURL, requestAdapter, factory)
+	builder := newRequestBuilderBuilder2(rawURL, requestAdapter, factory)
 	assert.NotNil(t, builder)
 	assert.Equal(t, rawURL, builder.BaseRequestBuilder.PathParameters["request-raw-url"])
 	assert.Equal(t, requestAdapter, builder.BaseRequestBuilder.RequestAdapter)
@@ -45,7 +45,7 @@ func TestTableRequestBuilder2_Get(t *testing.T) {
 	ctx := context.Background()
 
 	builder := getTestBuilder()
-	builder.RequestAdapter.(*mocking.RequestAdapter).On("Send", context.Background(), mock.AnythingOfType("*abstractions.RequestInformation"), mock.AnythingOfType("serialization.ParsableFactory"), abstractions.ErrorMappings{}).Return(new(ServiceNowCollectionResponse), nil)
+	builder.RequestAdapter.(*mocking.RequestAdapter).On("Send", context.Background(), mock.AnythingOfType("*abstractions.RequestInformation"), mock.AnythingOfType("serialization.ParsableFactory"), abstractions.ErrorMappings{}).Return(new(serviceNowCollectionResponse), nil)
 
 	_, err := builder.Get(ctx, requestConfiguration)
 	assert.Nil(t, err)
@@ -65,5 +65,5 @@ func getTestBuilder() *TableRequestBuilder2 {
 	pathParams := map[string]string{"test": "value"}
 	requestAdapter := &mocking.RequestAdapter{}
 	factory := mocking.ParsableFactory
-	return NewRequestBuilder2Internal(pathParams, requestAdapter, factory)
+	return newRequestBuilder2Internal(pathParams, requestAdapter, factory)
 }

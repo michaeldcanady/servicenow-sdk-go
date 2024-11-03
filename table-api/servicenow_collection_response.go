@@ -34,11 +34,22 @@ func CreateServiceNowCollectionResponseFromDiscriminatorValue(factory serializat
 }
 
 func (tE *serviceNowCollectionResponse) GetBackingStore() store.BackingStore {
+	if internal.IsNil(tE) {
+		return nil
+	}
+
+	if internal.IsNil(tE.backingStore) {
+		tE.backingStore = store.BackingStoreFactoryInstance()
+	}
+
 	return tE.backingStore
 }
 
 // Serialize writes the objects properties to the current writer.
 func (tE *serviceNowCollectionResponse) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(tE) {
+		return nil
+	}
 	return nil
 }
 
@@ -50,6 +61,9 @@ func (tE *serviceNowCollectionResponse) GetResult() ([]serialization.Parsable, e
 	val, err := tE.GetBackingStore().Get("Result")
 	if err != nil {
 		return nil, err
+	}
+	if internal.IsNil(val) {
+		return []serialization.Parsable{}, nil
 	}
 
 	typedVal, ok := val.([]serialization.Parsable)
@@ -69,6 +83,10 @@ func (tE *serviceNowCollectionResponse) setResult(result []serialization.Parsabl
 }
 
 func (tE *serviceNowCollectionResponse) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	if internal.IsNil(tE) {
+		return nil
+	}
+
 	return map[string]func(serialization.ParseNode) error{
 		"Result": func(pn serialization.ParseNode) error {
 			elem, err := pn.GetCollectionOfObjectValues(tE.factory)

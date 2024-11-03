@@ -5,8 +5,10 @@ gocognit
 gofmt
 gosec
 govet
+kiota
 michaeldcanady
 nakedret
+nethttplibrary
 nolint
 stretchr
 stylecheck
