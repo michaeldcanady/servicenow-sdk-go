@@ -2,128 +2,212 @@ package tableapi
 
 import (
 	"context"
+	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
+	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
 const (
 	tableItemURLTemplate = "{+baseurl}/table{/table}{/sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_input_display_value,sysparm_query_no_domain,sysparm_view,sysparm_query_no_domain}"
 )
 
-// TableItemRequestBuilder2 provides an interface for the service methods, adhering to the Interface Segregation Principle.
-type TableItemRequestBuilder2[T TableRecord] interface {
-	Get(context.Context, *TableItemRequestBuilderGetQueryParameters) (TableItemResponse3[T], error)
-	Delete(context.Context, *TableItemRequestBuilderDeleteQueryParameters) error
-	Put(context.Context, interface{}, *TableItemRequestBuilderPutQueryParameters) (TableItemResponse3[T], error)
+type TableItemRequestBuilder2 struct {
+	abstractions.BaseRequestBuilder
+	factory serialization.ParsableFactory
 }
 
-type tableItemRequestBuilder2[T TableRecord] struct {
-	intCore.Sendable
+// NewTableItemRequestBuilder2Internal instantiates a new TableItemRequestBuilder2 and sets the default values.
+func NewTableItemRequestBuilder2Internal(
+	pathParameters map[string]string,
+	requestAdapter abstractions.RequestAdapter,
+	factory serialization.ParsableFactory,
+) *TableItemRequestBuilder2 {
+	m := &TableItemRequestBuilder2{
+		factory:            factory,
+		BaseRequestBuilder: *abstractions.NewBaseRequestBuilder(requestAdapter, tableItemURLTemplate, pathParameters),
+	}
+	return m
 }
 
-// newTableItemRequestBuilder2 creates a new instance of TableItemRequestBuilder2.
-func newTableItemRequestBuilder2[T TableRecord](client intCore.ClientSendable, pathParameters map[string]string) (TableItemRequestBuilder2[T], error) {
-	if internal.IsNil(client) {
-		return nil, ErrNilClient
-	}
-
-	_, basePathOk := pathParameters[internal.BasePathParameter]
-	if !basePathOk {
-		return nil, core.ErrMissingBasePathParam
-	}
-
-	_, tableOk := pathParameters["table"]
-	if !tableOk {
-		return nil, ErrNilParameterTable
-	}
-
-	_, sysIDOk := pathParameters["sysId"]
-	if !sysIDOk {
-		return nil, ErrNilParameterSysID
-	}
-
-	return &tableItemRequestBuilder2[T]{
-		intCore.NewRequestBuilder2(client, tableItemURLTemplate, pathParameters),
-	}, nil
+// NewTableItemRequestBuilder2 instantiates a new TableItemRequestBuilder2 and sets the default values.
+func NewTableItemRequestBuilder2(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+	factory serialization.ParsableFactory,
+) *TableItemRequestBuilder2 {
+	urlParams := make(map[string]string)
+	urlParams["request-raw-url"] = rawURL
+	return NewTableItemRequestBuilder2Internal(urlParams, requestAdapter, factory)
 }
 
-// Get sends an HTTP GET request using the specified query parameters and returns a TableItemResponse.
-//
-// Parameters:
-//   - params: An instance of TableItemRequestBuilderGetQueryParameters to include in the GET request.
-//
-// Returns:
-//   - *TableItemResponse: The response data as a TableItemResponse.
-//   - error: An error if there was an issue with the request or response.
-func (rB *tableItemRequestBuilder2[T]) Get(ctx context.Context, params *TableItemRequestBuilderGetQueryParameters) (TableItemResponse3[T], error) {
-	config := &intCore.RequestConfigurationImpl{
-		Header:          nil,
-		QueryParameters: interface{}(params),
-		Data:            nil,
-		ErrorMapping:    nil,
-		Response:        &tableItemResponse3[T]{},
+func (rB *TableItemRequestBuilder2) Get(ctx context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (TableRecord, error) {
+	if internal.IsNil(rB) {
+		return nil, nil
 	}
 
-	resp, err := rB.Send(ctx, intCore.MethodGet, config)
+	requestInfo, err := rB.toGetRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return nil, err
 	}
 
-	return resp.(TableItemResponse3[T]), nil
-}
+	// TODO: add error factory
+	errorMapping := abstractions.ErrorMappings{}
 
-// Delete sends an HTTP DELETE request using the specified query parameters and returns an error if the request or response encounters any issues.
-//
-// Parameters:
-//   - params: An instance of TableItemRequestBuilderDeleteQueryParameters to include in the DELETE request.
-//
-// Returns:
-//   - error: An error if there was an issue with the request or response, or nil if the request was successful.
-func (rB *tableItemRequestBuilder2[T]) Delete(ctx context.Context, params *TableItemRequestBuilderDeleteQueryParameters) error {
-	config := &intCore.RequestConfigurationImpl{
-		Header:          nil,
-		QueryParameters: interface{}(params),
-		Data:            nil,
-		ErrorMapping:    nil,
-		Response:        &tableItemResponse3[T]{},
-	}
-
-	_, err := rB.Send(ctx, intCore.MethodDelete, config)
-
-	return err
-}
-
-// Put updates a table item using an HTTP PUT request.
-// It takes a map of table entry data and optional query parameters to send in the request.
-// The method returns a TableItemResponse representing the updated item or an error if the request fails.
-//
-// Parameters:
-//   - entry: A map[string]string or TableEntry containing the data to update the table item.
-//   - params: An optional pointer to TableItemRequestBuilderPutQueryParameters, which can be used to specify query parameters for the request.
-//
-// Returns:
-//   - *TableItemResponse: A TableItemResponse containing the updated item data.
-//   - error: An error, if the request fails at any point, such as request information creation or JSON deserialization.
-func (rB *tableItemRequestBuilder2[T]) Put(ctx context.Context, entry interface{}, params *TableItemRequestBuilderPutQueryParameters) (TableItemResponse3[T], error) {
-	entry, err := convertFromTableEntry(entry)
+	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowResponseFromDiscriminatorValue(rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
 
-	config := &intCore.RequestConfigurationImpl{
-		Header:          nil,
-		QueryParameters: interface{}(params),
-		Data:            entry,
-		ErrorMapping:    nil,
-		Response:        &tableItemResponse3[T]{},
+	if internal.IsNil(res) {
+		return nil, nil
 	}
 
-	resp, err := rB.Send(ctx, intCore.MethodPut, config)
+	snRes, ok := res.(ServiceNowResponse)
+	if !ok {
+		return nil, errors.New("res is not ServiceNowResponse")
+	}
+
+	result, err := snRes.GetResult()
 	if err != nil {
 		return nil, err
 	}
 
-	return resp.(TableItemResponse3[T]), nil
+	record, ok := result.(TableRecord)
+	if !ok {
+		return nil, errors.New("result is not TableRecord")
+	}
+
+	return record, nil
+}
+
+func (rB *TableItemRequestBuilder2) Delete(ctx context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) error {
+	if internal.IsNil(rB) {
+		return nil
+	}
+
+	requestInfo, err := rB.toDeleteRequestInformation(ctx, requestConfiguration)
+	if err != nil {
+		return err
+	}
+
+	// TODO: add error factory
+	errorMapping := abstractions.ErrorMappings{}
+
+	_, err = rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowResponseFromDiscriminatorValue(rB.factory), errorMapping)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (TableRecord, error) {
+	if internal.IsNil(rB) {
+		return nil, nil
+	}
+
+	requestInfo, err := rB.toPutRequestInformation(ctx, body, requestConfiguration)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: add error factory
+	errorMapping := abstractions.ErrorMappings{}
+
+	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowResponseFromDiscriminatorValue(rB.factory), errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	if internal.IsNil(res) {
+		return nil, nil
+	}
+
+	snRes, ok := res.(ServiceNowResponse)
+	if !ok {
+		return nil, errors.New("res is not ServiceNowResponse")
+	}
+
+	result, err := snRes.GetResult()
+	if err != nil {
+		return nil, err
+	}
+
+	record, ok := result.(TableRecord)
+	if !ok {
+		return nil, errors.New("result is not TableRecord")
+	}
+
+	return record, nil
+}
+
+func (rB *TableItemRequestBuilder2) toGetRequestInformation(ctx context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if internal.IsNil(rB) {
+		return nil, nil
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.UrlTemplate, rB.PathParameters)
+	kiotaRequestInfo := &intHttp.KiotaRequestInformation{RequestInformation: *requestInfo}
+	if !internal.IsNil(requestConfiguration) {
+		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
+			requestInfo.AddQueryParameters(*params)
+		}
+		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+	}
+	kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+	kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
+
+	return &kiotaRequestInfo.RequestInformation, nil
+}
+
+func (rB *TableItemRequestBuilder2) toDeleteRequestInformation(ctx context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if internal.IsNil(rB) {
+		return nil, nil
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.UrlTemplate, rB.PathParameters)
+	kiotaRequestInfo := &intHttp.KiotaRequestInformation{RequestInformation: *requestInfo}
+	if !internal.IsNil(requestConfiguration) {
+		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
+			kiotaRequestInfo.AddQueryParameters(*params)
+		}
+		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+	}
+	kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+	kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
+
+	return &kiotaRequestInfo.RequestInformation, nil
+}
+
+func (rB *TableItemRequestBuilder2) toPutRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if internal.IsNil(rB) {
+		return nil, nil
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.UrlTemplate, rB.PathParameters)
+	kiotaRequestInfo := &intHttp.KiotaRequestInformation{RequestInformation: *requestInfo}
+	if !internal.IsNil(requestConfiguration) {
+		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
+			kiotaRequestInfo.AddQueryParameters(*params)
+		}
+		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+	}
+	kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+	kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
+
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.BaseRequestBuilder.RequestAdapter, "application/json", body)
+	if err != nil {
+		return nil, err
+	}
+
+	return &kiotaRequestInfo.RequestInformation, nil
 }

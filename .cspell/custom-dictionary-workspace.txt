@@ -1,16 +1,17 @@
 # Custom Dictionary Words
 adaptee
-michaeldcanady
-stretchr
-tableapi
-nolint
-sysparm
 dupl
-govet
-gosec
+gocognit
 gofmt
+gosec
+govet
+michaeldcanady
 nakedret
+nolint
+stretchr
 stylecheck
+sysparm
+tableapi
 unconvert
 unparam
-gocognit
+uriparametername

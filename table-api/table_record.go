@@ -1,67 +1,119 @@
 package tableapi
 
 import (
-	"encoding/json"
+	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
+	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
-var _ TableRecord = (*TableRecordImpl)(nil)
-
-// TableRecord represents a record with attributes.
 type TableRecord interface {
-	Get(string) RecordElement
-	Set(string, interface{})
-	HasAttribute(string) bool
+	Get(string) (RecordElement, error)
+	Set(string, RecordElement) error
+	serialization.Parsable
+	store.BackedModel
 }
 
-// TableRecordImpl is an implementation of TableRecord.
-type TableRecordImpl struct {
-	record      map[string]interface{}
-	changedKeys []string
+type tableRecord struct {
+	backingStore store.BackingStore
 }
 
-// Get retrieves a RecordElement for the specified field.
-func (tR *TableRecordImpl) Get(field string) RecordElement {
-	if internal.IsNil(tR) || len(tR.record) == 0 || !tR.HasAttribute(field) {
+func NewTableRecord() TableRecord {
+	return &tableRecord{
+		backingStore: store.BackingStoreFactoryInstance(),
+	}
+}
+
+func CreateTableRecordFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+	raw, err := parseNode.GetRawValue()
+	if err != nil {
+		return nil, err
+	}
+	record, ok := raw.(map[string]interface{})
+	if !ok {
+		// TODO: define error
+		return nil, nil
+	}
+	tableRecord := NewTableRecord()
+
+	for key, _ := range record {
+		tableRecord.Set(key, nil)
+	}
+	return tableRecord, nil
+}
+
+func (tR *tableRecord) GetBackingStore() store.BackingStore {
+	return tR.backingStore
+}
+
+// Serialize writes the objects properties to the current writer.
+func (tE *tableRecord) Serialize(writer serialization.SerializationWriter) error {
+	return nil
+}
+
+func (tR *tableRecord) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	fieldDeserializers := map[string]func(serialization.ParseNode) error{}
+
+	for key, _ := range tR.backingStore.Enumerate() {
+		fieldDeserializers[key] = func(pn serialization.ParseNode) error {
+			tR.GetBackingStore().SetInitializationCompleted(false)
+			val, err := pn.GetRawValue()
+			if err != nil {
+				return nil
+			}
+			_, ok := val.(map[string]interface{})
+			var elem RecordElement
+			if !ok {
+				elem = NewRecordElement()
+				if err := elem.SetValue(val); err != nil {
+					return err
+				}
+			} else {
+				var ok bool
+				rawElem, err := pn.GetObjectValue(CreateRecordElementFromDiscriminatorValue)
+				if err != nil {
+					return err
+				}
+				elem, ok = rawElem.(RecordElement)
+				if !ok {
+					// TODO: define error
+					return nil
+				}
+			}
+			if err := tR.Set(key, elem); err != nil {
+				return err
+			}
+			tR.GetBackingStore().SetInitializationCompleted(true)
+			return nil
+		}
+	}
+
+	return fieldDeserializers
+}
+
+func (tR *tableRecord) Get(key string) (RecordElement, error) {
+	if internal.IsNil(tR) {
+		return nil, nil
+	}
+
+	val, err := tR.GetBackingStore().Get(key)
+	if err != nil {
+		return nil, err
+	}
+
+	elem, ok := val.(RecordElement)
+	if !ok {
+		return nil, errors.New("elem is not RecordElement")
+	}
+
+	return elem, nil
+}
+
+func (tR *tableRecord) Set(key string, elem RecordElement) error {
+	if internal.IsNil(tR) {
 		return nil
 	}
 
-	value := tR.record[field]
-
-	elem := recordElement{}
-
-	switch v := value.(type) {
-	case map[string]interface{}:
-		elem.displayValue = v["displayValue"]
-		elem.value = v["value"]
-		elem.link = v["link"].(string)
-	case interface{}:
-		elem.value = v
-	}
-
-	return &elem
-}
-
-// Set updates the value for the specified field.
-func (tR *TableRecordImpl) Set(field string, value interface{}) {
-	if internal.IsNil(tR) || len(tR.record) == 0 || !tR.HasAttribute(field) {
-		return
-	}
-
-	tR.record[field] = value
-	tR.changedKeys = append(tR.changedKeys, field)
-}
-
-// HasAttribute checks if the field exists in the record.
-func (tR *TableRecordImpl) HasAttribute(field string) bool {
-	if internal.IsNil(tR) || len(tR.record) == 0 {
-		return false
-	}
-	_, ok := tR.record[field]
-	return ok
-}
-
-func (tR *TableRecordImpl) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &tR.record)
+	return tR.GetBackingStore().Set(key, elem)
 }
