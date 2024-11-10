@@ -6,13 +6,25 @@ import (
 )
 
 const (
-	defaultServiceNowHost = "service-now.com" //nolint:unused
+	defaultServiceNowHost = "service-now.com"
 )
 
 type serviceNowServiceClientConfig struct {
 	instance                        string
-	host                            string
+	rawURL                          string
 	serviceNowRequestAdapterOptions []serviceNowRequestAdapterOption
+}
+
+func (c serviceNowServiceClientConfig) validate() error {
+	if c.instance != "" && c.rawURL != "" {
+		return errors.New("can't use both WithInstance and WithRawURL")
+	}
+
+	if c.instance == "" && c.rawURL == "" {
+		return errors.New("must use either WithInstance or WithRawURL")
+	}
+
+	return nil
 }
 
 type serviceNowServiceClientOption func(*serviceNowServiceClientConfig) error
@@ -31,16 +43,16 @@ func WithInstance(instance string) serviceNowServiceClientOption {
 	}
 }
 
-func WithHost(host string) serviceNowServiceClientOption {
-	host = strings.TrimSpace(host)
-	if host == "" {
+func WithRawURL(rawURL string) serviceNowServiceClientOption {
+	rawURL = strings.TrimSpace(rawURL)
+	if rawURL == "" {
 		return func(_ *serviceNowServiceClientConfig) error {
 			return errors.New("WithHost host can't be nil")
 		}
 	}
 
 	return func(config *serviceNowServiceClientConfig) error {
-		config.host = host
+		config.rawURL = rawURL
 		return nil
 	}
 }
@@ -56,4 +68,20 @@ func WithServiceNowRequestAdapterOptions(opts ...serviceNowRequestAdapterOption)
 		config.serviceNowRequestAdapterOptions = opts
 		return nil
 	}
+}
+
+func buildServiceClientConfig(opts ...serviceNowServiceClientOption) (*serviceNowServiceClientConfig, error) {
+	config := &serviceNowServiceClientConfig{}
+
+	for _, opt := range opts {
+		if err := opt(config); err != nil {
+			return nil, err
+		}
+	}
+
+	if err := config.validate(); err != nil {
+		return nil, err
+	}
+
+	return config, nil
 }

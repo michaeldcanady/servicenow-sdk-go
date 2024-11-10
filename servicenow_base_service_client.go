@@ -18,7 +18,11 @@ func (rB *ServiceNowBaseServiceClient) Now() NowRequestBuilder2 {
 	return *NewNowRequestBuilder2Internal(rB.BaseRequestBuilder.PathParameters, rB.BaseRequestBuilder.RequestAdapter)
 }
 
-func NewServiceNowBaseServiceClient(requestAdapter abstractions.RequestAdapter, backingStoreFactory store.BackingStoreFactory) *ServiceNowBaseServiceClient {
+func NewServiceNowBaseServiceClient(
+	requestAdapter abstractions.RequestAdapter,
+	backingStoreFactory store.BackingStoreFactory,
+	baseURL string,
+) *ServiceNowBaseServiceClient {
 	m := &ServiceNowBaseServiceClient{
 		BaseRequestBuilder: *abstractions.NewBaseRequestBuilder(requestAdapter, "{+baseurl}", map[string]string{}),
 	}
@@ -35,6 +39,8 @@ func NewServiceNowBaseServiceClient(requestAdapter abstractions.RequestAdapter, 
 	abstractions.RegisterDefaultSerializer(func() serialization.SerializationWriterFactory {
 		return multipartserialization.NewMultipartSerializationWriterFactory()
 	})
+
+	m.BaseRequestBuilder.RequestAdapter.SetBaseUrl(baseURL)
 
 	abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return jsonserialization.NewJsonParseNodeFactory() })
 	abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return textserialization.NewTextParseNodeFactory() })

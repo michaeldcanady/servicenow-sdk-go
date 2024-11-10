@@ -3,6 +3,7 @@ package servicenowsdkgo
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -58,7 +59,17 @@ func NewServiceNowServiceClient2(authenticationProvider authentication.Authentic
 		return nil, err
 	}
 
+	config, err := buildServiceClientConfig(opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	var baseURL = config.rawURL
+	if config.instance != "" {
+		baseURL = fmt.Sprintf("https://%s.%s", config.instance, defaultServiceNowHost)
+	}
+
 	return &ServiceNowServiceClient{
-		ServiceNowBaseServiceClient: *NewServiceNowBaseServiceClient(requestAdapter, store.BackingStoreFactoryInstance),
+		ServiceNowBaseServiceClient: *NewServiceNowBaseServiceClient(requestAdapter, store.BackingStoreFactoryInstance, baseURL),
 	}, nil
 }
