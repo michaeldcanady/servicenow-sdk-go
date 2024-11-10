@@ -10,6 +10,14 @@ import (
 
 type ServiceNowCollectionResponse interface {
 	GetResult() ([]serialization.Parsable, error)
+	GetNextLink() (*string, error)
+	GetPreviousLink() (*string, error)
+	GetFirstLink() (*string, error)
+	GetLastLink() (*string, error)
+	setNextLink(*string) error
+	setPreviousLink(*string) error
+	setFirstLink(*string) error
+	setLastLink(*string) error
 	setResult([]serialization.Parsable) error
 	serialization.Parsable
 	store.BackedModel
@@ -101,4 +109,120 @@ func (tE *serviceNowCollectionResponse) GetFieldDeserializers() map[string]func(
 			return nil
 		},
 	}
+}
+
+func (tE *serviceNowCollectionResponse) GetNextLink() (*string, error) {
+	if internal.IsNil(tE) {
+		return nil, nil
+	}
+
+	val, err := tE.GetBackingStore().Get(nextLinkHeaderKey)
+	if err != nil {
+		return nil, err
+	}
+	if internal.IsNil(val) {
+		return nil, nil
+	}
+
+	typedVal, ok := val.(*string)
+	if !ok {
+		return nil, errors.New("val is not *string")
+	}
+
+	return typedVal, nil
+}
+
+func (tE *serviceNowCollectionResponse) GetPreviousLink() (*string, error) {
+	if internal.IsNil(tE) {
+		return nil, nil
+	}
+
+	val, err := tE.GetBackingStore().Get(prevLinkHeaderKey)
+	if err != nil {
+		return nil, err
+	}
+	if internal.IsNil(val) {
+		return nil, nil
+	}
+
+	typedVal, ok := val.(*string)
+	if !ok {
+		return nil, errors.New("val is not *string")
+	}
+
+	return typedVal, nil
+}
+
+func (tE *serviceNowCollectionResponse) GetFirstLink() (*string, error) {
+	if internal.IsNil(tE) {
+		return nil, nil
+	}
+
+	val, err := tE.GetBackingStore().Get(firstLinkHeaderKey)
+	if err != nil {
+		return nil, err
+	}
+	if internal.IsNil(val) {
+		return nil, nil
+	}
+
+	typedVal, ok := val.(*string)
+	if !ok {
+		return nil, errors.New("val is not *string")
+	}
+
+	return typedVal, nil
+}
+
+func (tE *serviceNowCollectionResponse) GetLastLink() (*string, error) {
+	if internal.IsNil(tE) {
+		return nil, nil
+	}
+
+	val, err := tE.GetBackingStore().Get(lastLinkHeaderKey)
+	if err != nil {
+		return nil, err
+	}
+	if internal.IsNil(val) {
+		return nil, nil
+	}
+
+	typedVal, ok := val.(*string)
+	if !ok {
+		return nil, errors.New("val is not *string")
+	}
+
+	return typedVal, nil
+}
+
+func (tE *serviceNowCollectionResponse) setNextLink(nextLink *string) error {
+	if internal.IsNil(tE) {
+		return nil
+	}
+
+	return tE.GetBackingStore().Set(nextLinkHeaderKey, nextLink)
+}
+
+func (tE *serviceNowCollectionResponse) setPreviousLink(previousLink *string) error {
+	if internal.IsNil(tE) {
+		return nil
+	}
+
+	return tE.GetBackingStore().Set(prevLinkHeaderKey, previousLink)
+}
+
+func (tE *serviceNowCollectionResponse) setFirstLink(firstLink *string) error {
+	if internal.IsNil(tE) {
+		return nil
+	}
+
+	return tE.GetBackingStore().Set(firstLinkHeaderKey, firstLink)
+}
+
+func (tE *serviceNowCollectionResponse) setLastLink(lastLink *string) error {
+	if internal.IsNil(tE) {
+		return nil
+	}
+
+	return tE.GetBackingStore().Set(lastLinkHeaderKey, lastLink)
 }

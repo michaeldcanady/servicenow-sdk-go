@@ -16,12 +16,13 @@ type serviceNowClientOption func(*serviceNowClientConfig) error
 func getDefaultMiddleware() []nethttplibrary.Middleware {
 	kiotaMiddlewares := nethttplibrary.GetDefaultMiddlewares()
 
-	graphMiddlewares := []nethttplibrary.Middleware{
+	serviceNowMiddlewares := []nethttplibrary.Middleware{
 		//NewGraphTelemetryHandler(options),
+		nethttplibrary.NewHeadersInspectionHandler(),
 	}
-	graphMiddlewaresLen := len(graphMiddlewares)
+	graphMiddlewaresLen := len(serviceNowMiddlewares)
 	resultMiddlewares := make([]nethttplibrary.Middleware, len(kiotaMiddlewares)+graphMiddlewaresLen)
-	copy(resultMiddlewares, graphMiddlewares)
+	copy(resultMiddlewares, serviceNowMiddlewares)
 	copy(resultMiddlewares[graphMiddlewaresLen:], kiotaMiddlewares)
 	return resultMiddlewares
 }

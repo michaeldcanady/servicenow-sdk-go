@@ -4,11 +4,13 @@ import (
 	"context"
 	"errors"
 	"maps"
+	"regexp"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
 const (
@@ -72,10 +74,19 @@ func (rB *TableRequestBuilder2) ByID(sysID string) *TableItemRequestBuilder2 {
 	return NewTableItemRequestBuilder2Internal(pathParameters, rB.BaseRequestBuilder.RequestAdapter, rB.factory)
 }
 
-func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) ([]TableRecord, error) {
+func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (ServiceNowCollectionResponse, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
+
+	if internal.IsNil(requestConfiguration) {
+		requestConfiguration = &TableRequestBuilder2GetRequestConfiguration{}
+	}
+
+	opts := nethttplibrary.NewHeadersInspectionOptions()
+	opts.InspectResponseHeaders = true
+
+	requestConfiguration.Options = append(requestConfiguration.Options, opts)
 
 	requestInfo, err := rB.toGetRequestInformation(ctx, requestConfiguration)
 	if err != nil {
@@ -99,20 +110,11 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *T
 		return nil, errors.New("res is not ServiceNowResponse")
 	}
 
-	result, err := snRes.GetResult()
-	if err != nil {
+	if err := parseNavLinkHeaders(opts.ResponseHeaders.Get("Link"), snRes); err != nil {
 		return nil, err
 	}
-	if internal.IsNil(result) || len(result) == 0 {
-		return nil, nil
-	}
 
-	records, ok := interface{}(result).([]TableRecord)
-	if !ok {
-		return nil, errors.New("result is not TableRecord")
-	}
-
-	return records, nil
+	return snRes, nil
 }
 
 func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (TableRecord, error) {
@@ -200,4 +202,44 @@ func (rB *TableRequestBuilder2) toPostRequestInformation(ctx context.Context, bo
 	}
 
 	return &kiotaRequestInfo.RequestInformation, nil
+}
+
+const (
+	firstLinkHeaderKey = "first"
+	prevLinkHeaderKey  = "prev"
+	nextLinkHeaderKey  = "next"
+	lastLinkHeaderKey  = "last"
+)
+
+var (
+	linkHeaderRegex = regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
+)
+
+func parseNavLinkHeaders(hearderLinks []string, resp ServiceNowCollectionResponse) error {
+	for _, header := range hearderLinks {
+		linkMatches := linkHeaderRegex.FindAllStringSubmatch(header, -1)
+
+		for _, match := range linkMatches {
+			link := match[1]
+			rel := match[2]
+
+			var err error
+			// Determine the type of link based on the 'rel' attribute
+			switch rel {
+			case firstLinkHeaderKey:
+				err = resp.setFirstLink(&link)
+			case prevLinkHeaderKey:
+				err = resp.setPreviousLink(&link)
+			case nextLinkHeaderKey:
+				err = resp.setNextLink(&link)
+			case lastLinkHeaderKey:
+				err = resp.setLastLink(&link)
+			}
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }

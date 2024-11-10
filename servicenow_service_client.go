@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/url"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
@@ -17,10 +17,10 @@ type serviceNowAuthorizationProvider interface {
 	GetAuthorization(context.Context, *url.URL, map[string]interface{}) (string, error)
 }
 
-func NewServiceNowServiceClient2(credentials internal.Credential, opts ...serviceNowServiceClientOption) (*ServiceNowServiceClient, error) {
+func NewServiceNowServiceClient2(authenticationProvider authentication.AuthenticationProvider, opts ...serviceNowServiceClientOption) (*ServiceNowServiceClient, error) {
 
-	// TODO: make credential to request adapter convertion
-	requestAdapter, err := NewServiceNowRequestAdapterBase()
+	// TODO: make credential to request adapter conversion
+	requestAdapter, err := NewServiceNowRequestAdapterBase(authenticationProvider)
 	if err != nil {
 		return nil, err
 	}
