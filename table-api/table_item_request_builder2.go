@@ -160,7 +160,7 @@ func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, r
 }
 
 // toGetRequestInformation converts request configurations to Get request information.
-func (rB *TableItemRequestBuilder2) toGetRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *TableItemRequestBuilder2) toGetRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -182,7 +182,7 @@ func (rB *TableItemRequestBuilder2) toGetRequestInformation(_ context.Context, r
 }
 
 // toDeleteRequestInformation converts request configurations to Delete request information.
-func (rB *TableItemRequestBuilder2) toDeleteRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *TableItemRequestBuilder2) toDeleteRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -204,7 +204,7 @@ func (rB *TableItemRequestBuilder2) toDeleteRequestInformation(_ context.Context
 }
 
 // toPutRequestInformation converts request configurations to Put request information.
-func (rB *TableItemRequestBuilder2) toPutRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *TableItemRequestBuilder2) toPutRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:dupl
 	if internal.IsNil(rB) {
 		return nil, nil
 	}

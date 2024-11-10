@@ -22,7 +22,6 @@ type credentialAuthorizationProviderAdapter struct {
 }
 
 func (provider *credentialAuthorizationProviderAdapter) AuthenticateRequest(ctx context.Context, request *abstractions.RequestInformation, _ map[string]interface{}) error {
-
 	if request == nil {
 		return errors.New("request is nil")
 	}
