@@ -35,16 +35,16 @@ func CreateRecordElementFromDiscriminatorValue(parseNode serialization.ParseNode
 	return tableRecord, nil
 }
 
-func (tE *recordElement) GetBackingStore() store.BackingStore {
-	return tE.backingStore
+func (rE *recordElement) GetBackingStore() store.BackingStore {
+	return rE.backingStore
 }
 
 // Serialize writes the objects properties to the current writer.
-func (tE *recordElement) Serialize(writer serialization.SerializationWriter) error {
+func (rE *recordElement) Serialize(writer serialization.SerializationWriter) error {
 	return nil
 }
 
-func (tE *recordElement) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (rE *recordElement) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{}
 }
 

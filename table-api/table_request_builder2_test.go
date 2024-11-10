@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -41,14 +42,44 @@ func TestTableRequestBuilder2_ByID(t *testing.T) {
 }
 
 func TestTableRequestBuilder2_Get(t *testing.T) {
-	requestConfiguration := &TableRequestBuilder2GetRequestConfiguration{}
-	ctx := context.Background()
-
 	builder := getTestBuilder()
-	builder.RequestAdapter.(*mocking.RequestAdapter).On("Send", context.Background(), mock.AnythingOfType("*abstractions.RequestInformation"), mock.AnythingOfType("serialization.ParsableFactory"), abstractions.ErrorMappings{}).Return(new(serviceNowCollectionResponse), nil)
 
-	_, err := builder.Get(ctx, requestConfiguration)
-	assert.Nil(t, err)
+	tests := []struct {
+		Title   string
+		Args    []interface{}
+		Setup   func()
+		Cleanup func()
+	}{
+		{
+			Title: "Successful",
+			Setup: func() {
+				builder.RequestAdapter.(*mocking.RequestAdapter).On("Send", context.Background(), mock.AnythingOfType("*abstractions.RequestInformation"), mock.AnythingOfType("serialization.ParsableFactory"), abstractions.ErrorMappings{}).Return(new(serviceNowCollectionResponse), nil)
+			},
+			Args: []interface{}{
+				context.Background(),
+				&TableRequestBuilder2GetRequestConfiguration{},
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Title, func(t *testing.T) {
+			if !internal.IsNil(test.Setup) {
+				test.Setup()
+			}
+
+			ctx := test.Args[0].(context.Context)
+			requestConfiguration := test.Args[1].(*TableRequestBuilder2GetRequestConfiguration)
+
+			_, err := builder.Get(ctx, requestConfiguration)
+
+			assert.Nil(t, err)
+
+			if !internal.IsNil(test.Cleanup) {
+				test.Cleanup()
+			}
+		})
+	}
 }
 
 func TestTableRequestBuilder2_Post(t *testing.T) {
