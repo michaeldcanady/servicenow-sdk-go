@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	defaultServiceNowHost = "service-now.com"
+	defaultServiceNowHost = "service-now.com" //nolint:unused
 )
 
 type serviceNowServiceClientConfig struct {
@@ -46,7 +46,7 @@ func WithHost(host string) serviceNowServiceClientOption {
 }
 
 func WithServiceNowRequestAdapterOptions(opts ...serviceNowRequestAdapterOption) serviceNowServiceClientOption {
-	if opts == nil || len(opts) == 0 {
+	if len(opts) == 0 {
 		return func(_ *serviceNowServiceClientConfig) error {
 			return errors.New("WithServiceNowRequestAdapterOptions opts can't be nil or empty")
 		}

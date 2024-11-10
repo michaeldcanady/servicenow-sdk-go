@@ -76,16 +76,3 @@ func convertFromTableEntry(entry interface{}) (map[string]string, error) {
 
 	return retVal, nil
 }
-
-func isNullable(value interface{}) bool {
-	if value == nil {
-		return true
-	}
-	val := reflect.ValueOf(value)
-	switch val.Kind() {
-	case reflect.Ptr, reflect.Slice, reflect.Map, reflect.Interface, reflect.Chan, reflect.Func:
-		return true
-	default:
-		return false
-	}
-}

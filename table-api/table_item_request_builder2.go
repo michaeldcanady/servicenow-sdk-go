@@ -11,16 +11,25 @@ import (
 )
 
 const (
-	tableItemURLTemplate = "{+baseurl}/table{/table}{/sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_input_display_value,sysparm_query_no_domain,sysparm_view,sysparm_query_no_domain}"
+	tableItemURLTemplate = "{+baseurl}/api/now/v2/table{/table}{/sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_input_display_value,sysparm_query_no_domain,sysparm_view,sysparm_query_no_domain}"
 )
 
+// TableItemRequestBuilder2 provides operations to manage Service-Now table entries.
 type TableItemRequestBuilder2 struct {
 	abstractions.BaseRequestBuilder
 	factory serialization.ParsableFactory
 }
 
-// NewTableItemRequestBuilder2Internal instantiates a new TableItemRequestBuilder2 and sets the default values.
-func NewTableItemRequestBuilder2Internal(
+// NewDefaultTableItemRequestBuilder2Internal instantiates a new TableItemRequestBuilder2 and sets the default values.
+func NewDefaultTableItemRequestBuilder2Internal(
+	pathParameters map[string]string,
+	requestAdapter abstractions.RequestAdapter,
+) *TableItemRequestBuilder2 {
+	return newTableItemRequestBuilder2Internal(pathParameters, requestAdapter, CreateTableRecordFromDiscriminatorValue)
+}
+
+// newTableItemRequestBuilder2Internal instantiates a new TableItemRequestBuilder2 with custom parsable for table entry.
+func newTableItemRequestBuilder2Internal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 	factory serialization.ParsableFactory,
@@ -32,17 +41,26 @@ func NewTableItemRequestBuilder2Internal(
 	return m
 }
 
-// NewTableItemRequestBuilder2 instantiates a new TableItemRequestBuilder2 and sets the default values.
-func NewTableItemRequestBuilder2(
+// NewDefaultTableItemRequestBuilder2 instantiates a new TableItemRequestBuilder2 and sets the default values.
+func NewDefaultTableItemRequestBuilder2(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *TableItemRequestBuilder2 {
+	return newTableItemRequestBuilder2(rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
+}
+
+// newTableItemRequestBuilder2 instantiates a new TableItemRequestBuilder2 with custom parsable for table entry.
+func newTableItemRequestBuilder2(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 	factory serialization.ParsableFactory,
 ) *TableItemRequestBuilder2 {
 	urlParams := make(map[string]string)
 	urlParams["request-raw-url"] = rawURL
-	return NewTableItemRequestBuilder2Internal(urlParams, requestAdapter, factory)
+	return newTableItemRequestBuilder2Internal(urlParams, requestAdapter, factory)
 }
 
+// Get Fetches a Table Record resource.
 func (rB *TableItemRequestBuilder2) Get(ctx context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (TableRecord, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
@@ -83,6 +101,7 @@ func (rB *TableItemRequestBuilder2) Get(ctx context.Context, requestConfiguratio
 	return record, nil
 }
 
+// Delete Deletes a Table Record resource.
 func (rB *TableItemRequestBuilder2) Delete(ctx context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) error {
 	if internal.IsNil(rB) {
 		return nil
@@ -96,15 +115,11 @@ func (rB *TableItemRequestBuilder2) Delete(ctx context.Context, requestConfigura
 	// TODO: add error factory
 	errorMapping := abstractions.ErrorMappings{}
 
-	_, err = rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowResponseFromDiscriminatorValue(rB.factory), errorMapping)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return rB.BaseRequestBuilder.RequestAdapter.SendNoContent(ctx, requestInfo, errorMapping)
 }
 
-func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (TableRecord, error) {
+// Put Updates a Table Record resource.
+func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (TableRecord, error) { //nolint:dupl
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -144,7 +159,8 @@ func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, r
 	return record, nil
 }
 
-func (rB *TableItemRequestBuilder2) toGetRequestInformation(ctx context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
+// toGetRequestInformation converts request configurations to Get request information.
+func (rB *TableItemRequestBuilder2) toGetRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -165,7 +181,8 @@ func (rB *TableItemRequestBuilder2) toGetRequestInformation(ctx context.Context,
 	return &kiotaRequestInfo.RequestInformation, nil
 }
 
-func (rB *TableItemRequestBuilder2) toDeleteRequestInformation(ctx context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
+// toDeleteRequestInformation converts request configurations to Delete request information.
+func (rB *TableItemRequestBuilder2) toDeleteRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -186,7 +203,8 @@ func (rB *TableItemRequestBuilder2) toDeleteRequestInformation(ctx context.Conte
 	return &kiotaRequestInfo.RequestInformation, nil
 }
 
-func (rB *TableItemRequestBuilder2) toPutRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (*abstractions.RequestInformation, error) {
+// toPutRequestInformation converts request configurations to Put request information.
+func (rB *TableItemRequestBuilder2) toPutRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:dupl
 	if internal.IsNil(rB) {
 		return nil, nil
 	}

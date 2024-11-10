@@ -37,8 +37,10 @@ func CreateTableRecordFromDiscriminatorValue(parseNode serialization.ParseNode) 
 	}
 	tableRecord := NewTableRecord()
 
-	for key, _ := range record {
-		tableRecord.Set(key, nil)
+	for key := range record {
+		if err := tableRecord.Set(key, nil); err != nil {
+			return nil, err
+		}
 	}
 	return tableRecord, nil
 }
@@ -48,14 +50,14 @@ func (tR *tableRecord) GetBackingStore() store.BackingStore {
 }
 
 // Serialize writes the objects properties to the current writer.
-func (tE *tableRecord) Serialize(writer serialization.SerializationWriter) error {
+func (tR *tableRecord) Serialize(writer serialization.SerializationWriter) error {
 	return nil
 }
 
 func (tR *tableRecord) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	fieldDeserializers := map[string]func(serialization.ParseNode) error{}
 
-	for key, _ := range tR.backingStore.Enumerate() {
+	for key := range tR.backingStore.Enumerate() {
 		fieldDeserializers[key] = func(pn serialization.ParseNode) error {
 			tR.GetBackingStore().SetInitializationCompleted(false)
 			val, err := pn.GetRawValue()

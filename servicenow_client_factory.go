@@ -28,7 +28,6 @@ func getDefaultMiddleware() []nethttplibrary.Middleware {
 }
 
 func GetDefaultClient(opts ...serviceNowClientOption) (*http.Client, error) {
-
 	config := serviceNowClientConfig{
 		middleware: []nethttplibrary.Middleware{},
 	}

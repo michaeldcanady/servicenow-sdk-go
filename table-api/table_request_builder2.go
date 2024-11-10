@@ -14,16 +14,16 @@ import (
 )
 
 const (
-	tableURLTemplate = "{+baseurl}/api/now/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
+	tableURLTemplate = "{+baseurl}/api/now/v2/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
 )
 
-// TableRequestBuilder2 ...
+// TableRequestBuilder2 provides operations to manage Service-Now tables.
 type TableRequestBuilder2 struct {
 	abstractions.BaseRequestBuilder
 	factory serialization.ParsableFactory
 }
 
-// NewDefaultTableRequestBuilder2Internal ...
+// NewDefaultTableRequestBuilder2Internal instantiates a new TableRequestBuilder2 and sets the default values.
 func NewDefaultTableRequestBuilder2Internal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
@@ -31,7 +31,7 @@ func NewDefaultTableRequestBuilder2Internal(
 	return newRequestBuilder2Internal(pathParameters, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
-// newRequestBuilder2Internal instantiates a new TableRequestBuilderKiota and sets the default values.
+// newRequestBuilder2Internal instantiates a new TableRequestBuilder2 with custom parsable for table entries.
 func newRequestBuilder2Internal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
@@ -44,7 +44,7 @@ func newRequestBuilder2Internal(
 	return m
 }
 
-// NewDefaultTableRequestBuilder2 ...
+// NewDefaultTableRequestBuilder2 instantiates a new TableRequestBuilder2 and sets the default values.
 func NewDefaultTableRequestBuilder2(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
@@ -52,7 +52,7 @@ func NewDefaultTableRequestBuilder2(
 	return newRequestBuilderBuilder2(rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
-// newRequestBuilderBuilder2 instantiates a new TableRequestBuilderKiota and sets the default values.
+// newRequestBuilderBuilder2 instantiates a new TableRequestBuilder2 with custom parsable for table entries.
 func newRequestBuilderBuilder2(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
@@ -63,6 +63,7 @@ func newRequestBuilderBuilder2(
 	return newRequestBuilder2Internal(urlParams, requestAdapter, factory)
 }
 
+// ByID instantiates a new TableItemRequestBuilder2 for the specific record sysID.
 func (rB *TableRequestBuilder2) ByID(sysID string) *TableItemRequestBuilder2 {
 	if internal.IsNil(rB) {
 		return nil
@@ -71,9 +72,10 @@ func (rB *TableRequestBuilder2) ByID(sysID string) *TableItemRequestBuilder2 {
 	pathParameters := maps.Clone(rB.BaseRequestBuilder.PathParameters)
 	pathParameters["sysid"] = sysID
 
-	return NewTableItemRequestBuilder2Internal(pathParameters, rB.BaseRequestBuilder.RequestAdapter, rB.factory)
+	return newTableItemRequestBuilder2Internal(pathParameters, rB.BaseRequestBuilder.RequestAdapter, rB.factory)
 }
 
+// Get Fetches a response containing Table Entry resources.
 func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (ServiceNowCollectionResponse, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
@@ -88,7 +90,7 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *T
 
 	requestConfiguration.Options = append(requestConfiguration.Options, opts)
 
-	requestInfo, err := rB.toGetRequestInformation(ctx, requestConfiguration)
+	requestInfo, err := rB.toGetRequestInformation(ctx, nil, requestConfiguration)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +119,8 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *T
 	return snRes, nil
 }
 
-func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (TableRecord, error) {
+// Post Creates a new Table Record resource.
+func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (TableRecord, error) { //nolint:dupl
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -157,7 +160,8 @@ func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requ
 	return record, nil
 }
 
-func (rB *TableRequestBuilder2) toGetRequestInformation(ctx context.Context, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
+// toGetRequestInformation converts request configurations to Get request information.
+func (rB *TableRequestBuilder2) toGetRequestInformation(_ context.Context, _ TableRecord, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -178,7 +182,8 @@ func (rB *TableRequestBuilder2) toGetRequestInformation(ctx context.Context, req
 	return &kiotaRequestInfo.RequestInformation, nil
 }
 
-func (rB *TableRequestBuilder2) toPostRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (*abstractions.RequestInformation, error) {
+// toPostRequestInformation converts request configurations to Post request information.
+func (rB *TableRequestBuilder2) toPostRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:dupl
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -215,6 +220,7 @@ var (
 	linkHeaderRegex = regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
 )
 
+// parseNavLinkHeaders parses navigational links and applies the to the provided response.
 func parseNavLinkHeaders(hearderLinks []string, resp ServiceNowCollectionResponse) error {
 	for _, header := range hearderLinks {
 		linkMatches := linkHeaderRegex.FindAllStringSubmatch(header, -1)
