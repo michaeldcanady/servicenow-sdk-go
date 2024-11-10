@@ -120,7 +120,7 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *T
 }
 
 // Post Creates a new Table Record resource.
-func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (TableRecord, error) {
+func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (TableRecord, error) { //nolint:dupl
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -161,8 +161,8 @@ func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requ
 }
 
 // toGetRequestInformation converts request configurations to Get request information.
-func (rB *TableRequestBuilder2) toGetRequestInformation(_ context.Context, _ TableRecord, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) { //nolint:unparam
+func (rB *TableRequestBuilder2) toGetRequestInformation(_ context.Context, _ TableRecord, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
+	if internal.IsNil(rB) {
 		return nil, nil
 	}
 
@@ -183,7 +183,7 @@ func (rB *TableRequestBuilder2) toGetRequestInformation(_ context.Context, _ Tab
 }
 
 // toPostRequestInformation converts request configurations to Post request information.
-func (rB *TableRequestBuilder2) toPostRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *TableRequestBuilder2) toPostRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:dupl
 	if internal.IsNil(rB) {
 		return nil, nil
 	}

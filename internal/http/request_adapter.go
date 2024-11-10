@@ -14,9 +14,8 @@ type RequestAdapter interface {
 }
 
 type requestAdapter struct {
-	requestHandler  RequestHandler
-	client          *http.Client
-	responseHandler any
+	requestHandler RequestHandler
+	client         *http.Client
 }
 
 func NewClient2CompatibleRequestAdapter() Client2 {
@@ -42,13 +41,13 @@ func (rA *requestAdapter) Send(ctx context.Context, info RequestInformation) (*h
 	return rA.client.Do(req)
 }
 
-func (ra *requestAdapter) AddHandler(handler RequestHandler) error {
-	if ra.requestHandler == nil {
-		ra.requestHandler = handler
+func (rA *requestAdapter) AddHandler(handler RequestHandler) error {
+	if rA.requestHandler == nil {
+		rA.requestHandler = handler
 		return nil
 	}
 
-	current := ra.requestHandler
+	current := rA.requestHandler
 	for current != nil {
 		if reflect.TypeOf(current) == reflect.TypeOf(handler) {
 			return errors.New("handler of this type already exists")
@@ -63,6 +62,6 @@ func (ra *requestAdapter) AddHandler(handler RequestHandler) error {
 	return nil
 }
 
-func (ra *requestAdapter) GetBaseURL() string {
+func (rA *requestAdapter) GetBaseURL() string {
 	return ""
 }

@@ -69,12 +69,12 @@ func (m *RequestAdapter) EnableBackingStore(factory store.BackingStoreFactory) {
 }
 
 // SetBaseUrl sets the base url for every request.
-func (m *RequestAdapter) SetBaseUrl(baseUrl string) {
+func (m *RequestAdapter) SetBaseUrl(baseUrl string) { //nolint:stylecheck
 	_ = m.Called(baseUrl)
 }
 
 // GetBaseUrl gets the base url for every request.
-func (m *RequestAdapter) GetBaseUrl() string {
+func (m *RequestAdapter) GetBaseUrl() string { //nolint:stylecheck
 	args := m.Called()
 	return args.String(0)
 }

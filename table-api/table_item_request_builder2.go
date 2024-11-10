@@ -119,7 +119,7 @@ func (rB *TableItemRequestBuilder2) Delete(ctx context.Context, requestConfigura
 }
 
 // Put Updates a Table Record resource.
-func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (TableRecord, error) {
+func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (TableRecord, error) { //nolint:dupl
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
