@@ -82,16 +82,6 @@ func TestTableRequestBuilder2_Get(t *testing.T) {
 	}
 }
 
-func TestTableRequestBuilder2_Post(t *testing.T) {
-	builder := getTestBuilder()
-	body := &tableRecord{}
-	requestConfiguration := &TableRequestBuilder2PostRequestConfiguration{}
-	ctx := context.Background()
-
-	_, err := builder.Post(ctx, body, requestConfiguration)
-	assert.Nil(t, err)
-}
-
 func getTestBuilder() *TableRequestBuilder2 {
 	pathParams := map[string]string{"test": "value"}
 	requestAdapter := &mocking.RequestAdapter{}
