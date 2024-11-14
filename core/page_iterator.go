@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"net/url"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -9,6 +10,7 @@ import (
 // Deprecated: deprecated in v1.5.0. Please use PageIterator2[T].
 // PageIterator
 type PageIterator[T any, C CollectionResponse[T]] struct {
+	ctx         context.Context
 	currentPage PageResult[T]
 	client      Client
 	pauseIndex  int
@@ -16,7 +18,8 @@ type PageIterator[T any, C CollectionResponse[T]] struct {
 
 // Deprecated: deprecated in v1.5.0. Please use NewPageIterator2[T].
 // NewPageIterator creates a new PageIterator instance.
-func NewPageIterator[T any, C CollectionResponse[T]](currentPage CollectionResponse[T], client Client) (*PageIterator[T, C], error) {
+func NewPageIterator[T any, C CollectionResponse[T]](ctx context.Context, currentPage CollectionResponse[T],
+	client Client) (*PageIterator[T, C], error) {
 	if internal.IsNil(client) {
 		return nil, ErrNilClient
 	}
@@ -27,6 +30,7 @@ func NewPageIterator[T any, C CollectionResponse[T]](currentPage CollectionRespo
 	}
 
 	return &PageIterator[T, C]{
+		ctx:         ctx,
 		currentPage: page,
 		client:      client,
 	}, nil
@@ -130,7 +134,7 @@ func (pI *PageIterator[T, C]) fetchPage(uri string) (*C, error) {
 	requestInformation.Method = GET
 	requestInformation.SetUri(nextLink)
 
-	resp, err := pI.client.Send(requestInformation, nil)
+	resp, err := pI.client.Send(pI.ctx, requestInformation, nil)
 	if err != nil {
 		return nil, err
 	}

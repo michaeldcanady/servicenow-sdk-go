@@ -14,16 +14,18 @@ import (
 )
 
 type NowRequestBuilder struct {
+	context.Context
 	core.RequestBuilder
 }
 
 // NewNowRequestBuilder creates a new instance of the NowRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created NowRequestBuiabstraction
-func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuilder {
+func NewNowRequestBuilder(ctx context.Context, url string, client *ServiceNowClient) *NowRequestBuilder {
 	pathParameters := map[string]string{internal.BasePathParameter: url}
 	requestBuilder := core.NewRequestBuilder(client, "{+baseurl}/Now", pathParameters) //nolint:staticcheck
 	return &NowRequestBuilder{
-		*requestBuilder,
+		Context:        ctx,
+		RequestBuilder: *requestBuilder,
 	}
 }
 
@@ -33,7 +35,8 @@ func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuild
 // The returned TableRequestBuilder can be used to build and execute table-related requests.
 func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder {
 	rB.RequestBuilder.PathParameters["table"] = tableName
-	return tableapi.NewTableRequestBuilder(rB.RequestBuilder.Client.(*ServiceNowClient), rB.RequestBuilder.PathParameters)
+	return tableapi.NewTableRequestBuilder(rB.Context, rB.RequestBuilder.Client.(*ServiceNowClient),
+		rB.RequestBuilder.PathParameters)
 }
 
 var _ intCore.ClientSendableAdapterFunc[*ServiceNowClient] = sendableAdapter

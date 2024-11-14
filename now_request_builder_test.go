@@ -1,6 +1,7 @@
 package servicenowsdkgo
 
 import (
+	"context"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -10,7 +11,7 @@ import (
 func TestNewNowRequestBuilder(t *testing.T) {
 	client := &ServiceNowClient{} // Replace with your client implementation
 	url := "https://example.service-now.com/api"
-	builder := NewNowRequestBuilder(url, client)
+	builder := NewNowRequestBuilder(context.Background(), url, client)
 
 	expected := map[string]string{
 		internal.BasePathParameter: url,
@@ -23,7 +24,7 @@ func TestNewNowRequestBuilder(t *testing.T) {
 func TestNowRequestBuilderTable(t *testing.T) {
 	client := &ServiceNowClient{} // Replace with your client implementation
 	url := "https://example.service-now.com/api"
-	builder := NewNowRequestBuilder(url, client)
+	builder := NewNowRequestBuilder(context.Background(), url, client)
 	tableName := "incident"
 
 	expected := map[string]string{
@@ -51,7 +52,7 @@ func TestNowRequestBuilderTable2(t *testing.T) {
 func TestNowRequestBuilderAttachment(t *testing.T) {
 	client := &ServiceNowClient{} // Replace with your client implementation
 	url := "https://example.service-now.com/api"
-	builder := NewNowRequestBuilder(url, client)
+	builder := NewNowRequestBuilder(context.Background(), url, client)
 
 	expected := map[string]string{
 		internal.BasePathParameter: url,

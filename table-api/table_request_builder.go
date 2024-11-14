@@ -1,6 +1,7 @@
 package tableapi
 
 import (
+	"context"
 	"strconv"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -8,30 +9,33 @@ import (
 
 // Deprecated: deprecated since v{unreleased}. Use `TableRequestBuilder2` instead.
 type TableRequestBuilder struct {
+	context.Context
 	core.RequestBuilder
 }
 
 // Deprecated: deprecated since v{unreleased}. Use `NewTableRequestBuilder2` instead.
 // NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
-func NewTableRequestBuilder(client core.Client, pathParameters map[string]string) *TableRequestBuilder {
+func NewTableRequestBuilder(ctx context.Context, client core.Client,
+	pathParameters map[string]string) *TableRequestBuilder {
 	requestBuilder := core.NewRequestBuilder(
 		client,
 		"{+baseurl}/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}",
 		pathParameters,
 	)
 	return &TableRequestBuilder{
-		*requestBuilder,
+		Context:        ctx,
+		RequestBuilder: *requestBuilder,
 	}
 }
 
 // ById returns a TableItemRequestBuilder for a specific record in the table.
 // It accepts the sysId of the record as a parameter and constructs the URL for the record.
 // The returned TableItemRequestBuilder can be used to build and execute requests for the specific record.
-func (rB *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder { //nolint:stylecheck
+func (rB *TableRequestBuilder) ById(ctx context.Context, sysId string) *TableItemRequestBuilder { //nolint:stylecheck
 	pathParameters := rB.RequestBuilder.PathParameters
 	pathParameters["sysId"] = sysId
-	return NewTableItemRequestBuilder(rB.RequestBuilder.Client, pathParameters)
+	return NewTableItemRequestBuilder(ctx, rB.RequestBuilder.Client, pathParameters)
 }
 
 // Get sends an HTTP GET request using the specified query parameters and returns a TableCollectionResponse.
@@ -42,7 +46,8 @@ func (rB *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder { //n
 // Returns:
 //   - *TableCollectionResponse: The response data as a TableCollectionResponse.
 //   - error: An error if there was an issue with the request or response.
-func (rB *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
+func (rB *TableRequestBuilder) Get(ctx context.Context, params *TableRequestBuilderGetQueryParameters) (
+	*TableCollectionResponse, error) {
 	config := &tableGetRequestConfiguration2[TableEntry]{
 		header:   nil,
 		query:    params,
@@ -51,7 +56,7 @@ func (rB *TableRequestBuilder) Get(params *TableRequestBuilderGetQueryParameters
 		response: &TableCollectionResponse2[TableEntry]{},
 	}
 
-	err := rB.SendGet2(config.toConfiguration())
+	err := rB.SendGet2(rB.Context, config.toConfiguration())
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +92,8 @@ func (rB *TableRequestBuilder) Post(data map[string]string, params *TableRequest
 // Parameters:
 //   - data: A map[string]string representing data to be included in the request body.
 //   - params: An instance of `*TableRequestBuilderPostQueryParameters` for query parameters
-func (rB *TableRequestBuilder) Post2(data map[string]string, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error) {
+func (rB *TableRequestBuilder) Post2(ctx context.Context, data map[string]string,
+	params *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error) {
 	config := &tablePostRequestConfiguration2[TableEntry]{
 		header:   nil,
 		query:    params,
@@ -96,7 +102,7 @@ func (rB *TableRequestBuilder) Post2(data map[string]string, params *TableReques
 		response: &TableItemResponse2[TableEntry]{},
 	}
 
-	err := rB.SendPost3(config.toConfiguration())
+	err := rB.SendPost3(rB.Context, config.toConfiguration())
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +129,7 @@ func (rB *TableRequestBuilder) Post3(data interface{}, params *TableRequestBuild
 		response: &TableItemResponse2[TableEntry]{},
 	}
 
-	err = rB.SendPost3(config.toConfiguration())
+	err = rB.SendPost3(rB.Context, config.toConfiguration())
 	if err != nil {
 		return nil, err
 	}
@@ -144,7 +150,7 @@ func (rB *TableRequestBuilder) Count() (int, error) {
 
 	errorMapping := core.ErrorMapping{"4XX": "hi"}
 
-	response, err := rB.RequestBuilder.Client.Send(requestInfo, errorMapping)
+	response, err := rB.RequestBuilder.Client.Send(rB.Context, requestInfo, errorMapping)
 	if err != nil {
 		return -1, err
 	}

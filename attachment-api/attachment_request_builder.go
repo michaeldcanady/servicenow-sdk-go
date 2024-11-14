@@ -1,6 +1,7 @@
 package attachmentapi
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 
@@ -30,7 +31,8 @@ func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]s
 // Returns:
 //   - *AttachmentCollectionResponse: The response data as a AttachmentCollectionResponse.
 //   - error: An error if there was an issue with the request or response.
-func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQueryParameters) (*AttachmentCollectionResponse, error) {
+func (rB *AttachmentRequestBuilder) Get(ctx context.Context, params *AttachmentRequestBuilderGetQueryParameters) (
+	*AttachmentCollectionResponse, error) {
 	configuration := &AttachmentCollectionGetRequestConfiguration{
 		Header:          nil,
 		QueryParameters: params,
@@ -38,7 +40,7 @@ func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQuery
 		response:        &AttachmentCollectionResponse{},
 	}
 
-	err := rB.SendGet2(configuration.toConfiguration())
+	err := rB.SendGet2(ctx, configuration.toConfiguration())
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +49,8 @@ func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQuery
 }
 
 // File ...
-func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequestBuilderFileQueryParameters) (*AttachmentItemResponse, error) {
+func (rB *AttachmentRequestBuilder) File(ctx context.Context, filePath string,
+	params *AttachmentRequestBuilderFileQueryParameters) (*AttachmentItemResponse, error) {
 	if params == nil {
 		return nil, ErrNilParams
 	}
@@ -71,7 +74,7 @@ func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequ
 		response:        &AttachmentItemResponse{},
 	}
 
-	err = rB.SendPost3(config.toConfiguration())
+	err = rB.SendPost3(ctx, config.toConfiguration())
 	if err != nil {
 		return nil, err
 	}

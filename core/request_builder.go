@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"reflect"
@@ -271,8 +272,8 @@ func (rB *RequestBuilder) SendGet(params interface{}, errorMapping ErrorMapping,
 	return nil
 }
 
-func (rB *RequestBuilder) SendGet2(config *RequestConfiguration) error {
-	return rB.sendRequest(GET, config)
+func (rB *RequestBuilder) SendGet2(ctx context.Context, config *RequestConfiguration) error {
+	return rB.sendRequest(ctx, GET, config)
 }
 
 // Deprecated: deprecated since v1.4.0. Please use SendPost3
@@ -280,8 +281,8 @@ func (rB *RequestBuilder) SendPost(data map[string]string, params interface{}, e
 	return sendPost(rB, data, params, errorMapping, &value)
 }
 
-func (rB *RequestBuilder) SendPost3(config *RequestConfiguration) error {
-	return rB.sendRequest(POST, config)
+func (rB *RequestBuilder) SendPost3(ctx context.Context, config *RequestConfiguration) error {
+	return rB.sendRequest(ctx, POST, config)
 }
 
 // Deprecated: deprecated since v1.4.0. Please use SendPost3
@@ -294,8 +295,8 @@ func (rB *RequestBuilder) SendDelete(params interface{}, errorMapping ErrorMappi
 	return sendDelete(rB, params, errorMapping)
 }
 
-func (rB *RequestBuilder) SendDelete2(config *RequestConfiguration) error {
-	return rB.sendRequest(DELETE, config)
+func (rB *RequestBuilder) SendDelete2(ctx context.Context, config *RequestConfiguration) error {
+	return rB.sendRequest(ctx, DELETE, config)
 }
 
 // Deprecated: deprecated since v1.4.0. Please use SendPut2
@@ -303,17 +304,17 @@ func (rB *RequestBuilder) SendPut(data map[string]string, params interface{}, er
 	return sendPut(rB, data, params, errorMapping, &value)
 }
 
-func (rB *RequestBuilder) SendPut2(config *RequestConfiguration) error {
-	return rB.sendRequest(PUT, config)
+func (rB *RequestBuilder) SendPut2(ctx context.Context, config *RequestConfiguration) error {
+	return rB.sendRequest(ctx, PUT, config)
 }
 
-func (rB *RequestBuilder) sendRequest(method HttpMethod, config *RequestConfiguration) error {
+func (rB *RequestBuilder) sendRequest(ctx context.Context, method HttpMethod, config *RequestConfiguration) error {
 	requestInfo, err := rB.ToRequestInformation3(method, config)
 	if err != nil {
 		return err
 	}
 
-	response, err := rB.Client.Send(requestInfo, config.ErrorMapping.(ErrorMapping))
+	response, err := rB.Client.Send(ctx, requestInfo, config.ErrorMapping.(ErrorMapping))
 	if err != nil {
 		return err
 	}
