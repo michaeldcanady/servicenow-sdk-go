@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/RecoLabs/servicenow-sdk-go/internal"
 	"github.com/gabriel-vasile/mimetype"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
 // Deprecated: deprecated since v{unreleased}.

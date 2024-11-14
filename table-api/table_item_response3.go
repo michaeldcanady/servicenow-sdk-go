@@ -3,7 +3,7 @@ package tableapi
 import (
 	"net/http"
 
-	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
+	intCore "github.com/RecoLabs/servicenow-sdk-go/internal/core"
 )
 
 // parseTableItemResponse3 parsable to create TableItemResponse3

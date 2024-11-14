@@ -4,10 +4,10 @@ import (
 	"errors"
 	"testing"
 
-	intBatch "github.com/michaeldcanady/servicenow-sdk-go/batch-api/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	intBatch "github.com/RecoLabs/servicenow-sdk-go/batch-api/internal"
+	"github.com/RecoLabs/servicenow-sdk-go/internal"
+	"github.com/RecoLabs/servicenow-sdk-go/internal/core"
+	"github.com/RecoLabs/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
 

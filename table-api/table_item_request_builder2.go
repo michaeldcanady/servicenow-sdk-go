@@ -3,9 +3,9 @@ package tableapi
 import (
 	"context"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
+	"github.com/RecoLabs/servicenow-sdk-go/core"
+	"github.com/RecoLabs/servicenow-sdk-go/internal"
+	intCore "github.com/RecoLabs/servicenow-sdk-go/internal/core"
 )
 
 const (

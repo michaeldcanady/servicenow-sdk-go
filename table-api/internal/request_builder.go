@@ -1,6 +1,6 @@
 package internal
 
-import "github.com/michaeldcanady/servicenow-sdk-go/core"
+import "github.com/RecoLabs/servicenow-sdk-go/core"
 
 type RequestBuilder interface {
 	SendGet2(*core.RequestConfiguration) error

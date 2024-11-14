@@ -4,7 +4,7 @@ import (
 	"net/url"
 	"testing"
 
-	intBatch "github.com/michaeldcanady/servicenow-sdk-go/batch-api/internal"
+	intBatch "github.com/RecoLabs/servicenow-sdk-go/batch-api/internal"
 	"github.com/stretchr/testify/assert"
 )
 

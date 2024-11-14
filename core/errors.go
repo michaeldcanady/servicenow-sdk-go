@@ -3,7 +3,7 @@ package core
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/RecoLabs/servicenow-sdk-go/internal"
 )
 
 var (

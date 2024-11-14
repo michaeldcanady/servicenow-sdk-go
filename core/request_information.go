@@ -7,8 +7,8 @@ import (
 	"net/url"
 	"reflect"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
+	"github.com/RecoLabs/servicenow-sdk-go/internal"
+	"github.com/RecoLabs/servicenow-sdk-go/internal/core"
 	"github.com/mozillazg/go-httpheader"
 )
 

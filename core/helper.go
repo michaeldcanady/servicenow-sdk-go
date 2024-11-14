@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/RecoLabs/servicenow-sdk-go/internal"
 	"github.com/google/go-querystring/query"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/yosida95/uritemplate/v3"
 )
 

@@ -3,7 +3,7 @@ package internal
 import (
 	"net/http"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
+	"github.com/RecoLabs/servicenow-sdk-go/internal/core"
 )
 
 // RequestHeader is a type alias for http request headers

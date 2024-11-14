@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/RecoLabs/servicenow-sdk-go/internal"
 )
 
 type Parsable[T any] func(*http.Response) (CollectionResponse[T], error)

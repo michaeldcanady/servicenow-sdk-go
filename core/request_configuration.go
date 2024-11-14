@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
+	"github.com/RecoLabs/servicenow-sdk-go/internal/core"
 )
 
 type RequestConfiguration = core.RequestConfigurationImpl

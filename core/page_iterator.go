@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/url"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/RecoLabs/servicenow-sdk-go/internal"
 )
 
 // Deprecated: deprecated in v1.5.0. Please use PageIterator2[T].

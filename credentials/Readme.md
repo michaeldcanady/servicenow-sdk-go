@@ -10,7 +10,7 @@ The credential module exists to provide various was to authenticate to the Servi
 
 ```golang
 import (
-    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
+    "github.com/RecoLabs/servicenow-sdk-go/credentials"
 )
 
 func main() {
@@ -29,7 +29,7 @@ func main() {
 
 ```golang
 import (
-    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
+    "github.com/RecoLabs/servicenow-sdk-go/credentials"
 )
 
 func main() {

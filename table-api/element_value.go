@@ -3,7 +3,7 @@ package tableapi
 import (
 	"fmt"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/RecoLabs/servicenow-sdk-go/internal"
 )
 
 // ElementValue represents a generic value.

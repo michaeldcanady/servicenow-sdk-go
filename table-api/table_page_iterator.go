@@ -3,8 +3,8 @@ package tableapi
 import (
 	"net/http"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/RecoLabs/servicenow-sdk-go/core"
+	"github.com/RecoLabs/servicenow-sdk-go/internal"
 )
 
 // TablePageIterator is a generic struct in Golang which is used to iterate over pages of entries.

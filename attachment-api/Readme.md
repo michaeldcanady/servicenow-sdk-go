@@ -13,7 +13,7 @@ Returns the metadata for multiple attachments.
 package main
 
 import (
-    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+    attachmentapi "github.com/RecoLabs/servicenow-sdk-go/attachment-api"
 )
 
 func main() {

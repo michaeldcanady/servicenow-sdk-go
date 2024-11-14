@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/RecoLabs/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
 

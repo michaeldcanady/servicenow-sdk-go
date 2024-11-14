@@ -15,7 +15,7 @@ To begin using the API, you must first configure your environment. Below is the 
 package main
 
 import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    tableapi "github.com/RecoLabs/servicenow-sdk-go/table-api"
 )
 
 func main() {

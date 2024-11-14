@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"testing"
 
-	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/table-api/internal"
+	intCore "github.com/RecoLabs/servicenow-sdk-go/internal/core"
+	"github.com/RecoLabs/servicenow-sdk-go/table-api/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

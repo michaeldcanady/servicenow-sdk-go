@@ -1,6 +1,6 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/internal"
+import "github.com/RecoLabs/servicenow-sdk-go/internal"
 
 // RecordElement represents an element within a record.
 type RecordElement interface {

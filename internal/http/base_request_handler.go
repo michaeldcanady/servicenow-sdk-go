@@ -1,6 +1,6 @@
 package http
 
-import "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
+import "github.com/RecoLabs/servicenow-sdk-go/internal/core"
 
 type BaseHandler struct {
 	next RequestHandler
