@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -61,7 +62,7 @@ func (c *mockClient) sendItem(requestInformation IRequestInformation) (*http.Res
 	return nil, nil
 }
 
-func (c *mockClient) Send(requestInformation IRequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
+func (c *mockClient) Send(ctx context.Context, requestInformation IRequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
 	uri, err := requestInformation.Url()
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse URL: %s", err)

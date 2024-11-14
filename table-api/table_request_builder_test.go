@@ -1,6 +1,7 @@
 package tableapi
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -20,7 +21,7 @@ func builder(uri string) (*TableRequestBuilder, error) {
 
 	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
 
-	return NewTableRequestBuilder(client, pathParameters), nil
+	return NewTableRequestBuilder(context.Background(), client, pathParameters), nil
 }
 
 func TestNewTableRequestBuilder(t *testing.T) {
@@ -28,7 +29,7 @@ func TestNewTableRequestBuilder(t *testing.T) {
 
 	pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1"}
 
-	req := NewTableItemRequestBuilder(&client, pathParameters)
+	req := NewTableItemRequestBuilder(context.Background(), &client, pathParameters)
 
 	assert.NotNil(t, req)
 }
@@ -38,7 +39,7 @@ func TestTableUrl(t *testing.T) {
 
 	pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1"}
 
-	req := NewTableItemRequestBuilder(&client, pathParameters)
+	req := NewTableItemRequestBuilder(context.Background(), &client, pathParameters)
 
 	assert.Equal(t, req.PathParameters, pathParameters)
 
@@ -64,10 +65,10 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 
 	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path}
 
-	builder := NewTableRequestBuilder(client, pathParameters)
+	builder := NewTableRequestBuilder(context.Background(), client, pathParameters)
 
 	// Call the Get method
-	resp, err := builder.Get(nil)
+	resp, err := builder.Get(context.Background(), nil)
 	assert.Nil(t, err)
 
 	assert.NotNil(t, resp)
@@ -162,7 +163,7 @@ func TestTableRequestBuilder_Post2(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.title, func(t *testing.T) {
-			response, err := builder.Post2(tt.value.(map[string]string), queryParameters)
+			response, err := builder.Post2(context.Background(), tt.value.(map[string]string), queryParameters)
 
 			if tt.expectErr {
 				assert.Error(t, err)
@@ -177,7 +178,7 @@ func TestTableRequestBuilder_Post2(t *testing.T) {
 
 	t.Run("ValidRequest", func(t *testing.T) {
 		// Call the Post method with valid parameters
-		response, err := builder.Post2(map[string]string{"key": "value"}, queryParameters)
+		response, err := builder.Post2(context.Background(), map[string]string{"key": "value"}, queryParameters)
 		assert.Nil(t, err)
 
 		assert.IsType(t, &TableItemResponse{}, response)
@@ -252,7 +253,7 @@ func TestTableRequestBuilder_Count(t *testing.T) {
 
 	pathParameters := map[string]string{"baseurl": fakeItemCountLinkKey, "table": "table1"}
 
-	builder := NewTableRequestBuilder(client, pathParameters)
+	builder := NewTableRequestBuilder(context.Background(), client, pathParameters)
 
 	// Call the Get method
 	count, err := builder.Count()

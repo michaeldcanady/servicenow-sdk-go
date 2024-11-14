@@ -41,7 +41,7 @@ func TestNowRequestBuilderTable(t *testing.T) {
 func TestNowRequestBuilderTable2(t *testing.T) {
 	client := &ServiceNowClient{} // Replace with your client implementation
 	url := "https://example.service-now.com/api"
-	builder := NewNowRequestBuilder(url, client)
+	builder := NewNowRequestBuilder(context.Background(), url, client)
 	tableName := "incident"
 
 	tableBuilder := builder.Table2(tableName)

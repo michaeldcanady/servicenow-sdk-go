@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"net/http"
 	"net/url"
 
@@ -154,7 +155,7 @@ func (pI *PageIterator2[T]) fetchPage(uri string) (CollectionResponse[T], error)
 	requestInformation.Method = GET
 	requestInformation.SetUri(nextLink)
 
-	resp, err := pI.client.Send(requestInformation, nil)
+	resp, err := pI.client.Send(context.Background(), requestInformation, nil)
 	if err != nil {
 		return nil, err
 	}

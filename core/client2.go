@@ -6,7 +6,7 @@ import (
 )
 
 type Client2 interface {
-	Send(IRequestInformation, ErrorMapping) (*http.Response, error)
+	Send(context.Context, IRequestInformation, ErrorMapping) (*http.Response, error)
 	SendWithContext(context.Context, IRequestInformation, ErrorMapping) (*http.Response, error)
 	GetBaseURL() string
 }

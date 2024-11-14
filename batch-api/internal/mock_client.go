@@ -12,8 +12,8 @@ type MockClient struct {
 	mock.Mock
 }
 
-func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-	args := c.Called(requestInfo, errorMapping)
+func (c *MockClient) Send(ctx context.Context, requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+	args := c.Called(ctx, requestInfo, errorMapping)
 	return args.Get(0).(*http.Response), args.Error(1)
 }
 

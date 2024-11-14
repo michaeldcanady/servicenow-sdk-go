@@ -1,6 +1,7 @@
 package tableapi
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -143,6 +144,7 @@ var (
 		currentPage: expectedResult,
 		client:      &mockClient{},
 		pauseIndex:  0,
+		ctx:         context.Background(),
 	}
 
 	fakeTableItemResponse = &TableItemResponse{
@@ -249,7 +251,7 @@ func (c *mockClient) sendItem(requestInformation core.IRequestInformation) (*htt
 	return nil, nil
 }
 
-func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *mockClient) Send(ctx context.Context, requestInformation core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 	uri, err := requestInformation.Url()
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse URL: %s", err)

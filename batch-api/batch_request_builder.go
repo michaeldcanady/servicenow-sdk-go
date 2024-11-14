@@ -1,6 +1,7 @@
 package batchapi
 
 import (
+	"context"
 	"github.com/RecoLabs/servicenow-sdk-go/batch-api/internal"
 	"github.com/RecoLabs/servicenow-sdk-go/core"
 )
@@ -25,13 +26,13 @@ func NewBatchRequestBuilder(client core.Client, pathParameters map[string]string
 }
 
 // Post sends a batch request and returns the BatchResponse.
-func (rB *BatchRequestBuilder) Post(request BatchRequest) (BatchResponse, error) {
+func (rB *BatchRequestBuilder) Post(ctx context.Context, request BatchRequest) (BatchResponse, error) {
 	config := &core.RequestConfiguration{
 		Data:     request,
 		Response: &batchResponse{},
 	}
 
-	err := rB.SendPost3(config)
+	err := rB.SendPost3(ctx, config)
 	if err != nil {
 		return nil, err
 	}

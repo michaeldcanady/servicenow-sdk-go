@@ -1,6 +1,7 @@
 package tableapi
 
 import (
+	"context"
 	"testing"
 
 	"github.com/RecoLabs/servicenow-sdk-go/core"
@@ -18,7 +19,7 @@ func TestNewPageIteratorWithClient(t *testing.T) {
 		PreviousPageLink: fakePrevLink,
 	}
 
-	pageIterator, err := NewPageIterator(currentPage, client)
+	pageIterator, err := NewPageIterator(context.Background(), currentPage, client)
 
 	if err != nil {
 		t.Errorf("Expected no error, but got %v", err)
@@ -37,7 +38,7 @@ func TestNewPageIteratorWithoutClient(t *testing.T) {
 		// Initialize with test data
 	}
 
-	pageIterator, err := NewPageIterator(currentPage, nil)
+	pageIterator, err := NewPageIterator(context.Background(), currentPage, nil)
 
 	assert.Equal(t, (*PageIterator)(nil), pageIterator)
 	assert.Equal(t, ErrNilClient, err)
@@ -45,7 +46,7 @@ func TestNewPageIteratorWithoutClient(t *testing.T) {
 
 func TestNewPageIteratorNilCurrentPageWithClient(t *testing.T) {
 	client := &mockClient{}
-	pageIterator, err := NewPageIterator(nil, client)
+	pageIterator, err := NewPageIterator(context.Background(), nil, client)
 
 	assert.Equal(t, (*PageIterator)(nil), pageIterator)
 	assert.Equal(t, ErrNilResponse, err)
@@ -58,7 +59,7 @@ func TestPageIteratorNextWithLinkNoError(t *testing.T) {
 
 	client := &mockClient{}
 
-	pageIterator, err := NewPageIterator(currentPage, client)
+	pageIterator, err := NewPageIterator(context.Background(), currentPage, client)
 	assert.Nil(t, err)
 
 	page, err := pageIterator.next()
@@ -231,7 +232,7 @@ func TestPageIteratorFetchAndConvertPageWithLinkErrNilResponseBody(t *testing.T)
 
 	client := &mockClient{}
 
-	pageIterator, err := NewPageIterator(currentPage, client)
+	pageIterator, err := NewPageIterator(context.Background(), currentPage, client)
 	assert.Nil(t, err)
 
 	page, err := pageIterator.fetchAndConvertPage(pageIterator.currentPage.NextPageLink)
@@ -247,7 +248,7 @@ func TestPageIteratorFetchAndConvertPageWithoutLink(t *testing.T) {
 
 	client := &mockClient{}
 
-	pageIterator, err := NewPageIterator(currentPage, client)
+	pageIterator, err := NewPageIterator(context.Background(), currentPage, client)
 	assert.Nil(t, err)
 
 	page, err := pageIterator.fetchAndConvertPage(pageIterator.currentPage.NextPageLink)

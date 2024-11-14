@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"encoding/json"
 	"testing"
 
@@ -53,6 +54,7 @@ var (
 		},
 		client:     sharedClient,
 		pauseIndex: 0,
+		ctx:        context.Background(),
 	}
 	sharedPageIterator2 = &PageIterator2[person]{
 		currentPage: PageResult[person]{
@@ -107,7 +109,7 @@ func TestNewPageIterator(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.title, func(t *testing.T) {
 			intInput := tt.input.([]interface{})
-			pageIterator, err := NewPageIterator[person, personCollectionResponse](intInput[0].(*personCollectionResponse), intInput[1].(*mockClient))
+			pageIterator, err := NewPageIterator[person, personCollectionResponse](context.Background(), intInput[0].(*personCollectionResponse), intInput[1].(*mockClient))
 
 			assert.ErrorIs(t, err, tt.expectedErr)
 

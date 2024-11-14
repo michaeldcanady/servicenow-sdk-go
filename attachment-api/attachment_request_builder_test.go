@@ -1,6 +1,7 @@
 package attachmentapi
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -17,7 +18,7 @@ import (
 
 type MockClient struct{}
 
-func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *MockClient) Send(ctx context.Context, requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 	req, err := requestInfo.ToRequest()
 	if err != nil {
 		return nil, err
@@ -134,7 +135,7 @@ func TestAttachmentRequestBuilderGet(t *testing.T) {
 	builder := NewAttachmentRequestBuilder(client, pathParameters)
 
 	// Call the Get method
-	resp, err := builder.Get(nil)
+	resp, err := builder.Get(context.Background(), nil)
 
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
@@ -272,7 +273,7 @@ func TestAttachmentRequestBuilderFile(t *testing.T) {
 		}
 
 		// Call the Get method
-		resp, err := builder.File(tempFile.Name(), params)
+		resp, err := builder.File(context.Background(), tempFile.Name(), params)
 		if err != nil {
 			t.Fatalf("Unexpected error: %v", err)
 		}
@@ -282,7 +283,7 @@ func TestAttachmentRequestBuilderFile(t *testing.T) {
 	})
 
 	t.Run("Nil params", func(t *testing.T) {
-		_, err := builder.File(tempFile.Name(), nil)
+		_, err := builder.File(context.Background(), tempFile.Name(), nil)
 		assert.ErrorIs(t, ErrNilParams, err)
 	})
 
@@ -293,7 +294,7 @@ func TestAttachmentRequestBuilderFile(t *testing.T) {
 			TableSysId: tableSysID,
 		}
 
-		_, err := builder.File("bad-file.txt", params)
+		_, err := builder.File(context.Background(), "bad-file.txt", params)
 		assert.Error(t, err)
 	})
 }

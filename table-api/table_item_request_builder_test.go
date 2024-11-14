@@ -1,6 +1,7 @@
 package tableapi
 
 import (
+	"context"
 	"encoding/json"
 	"io"
 	"maps"
@@ -21,7 +22,7 @@ var (
 	}
 )
 
-func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *MockClient) Send(ctx context.Context, requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
 	req, err := requestInfo.ToRequest()
 	if err != nil {
 		return nil, err
@@ -40,7 +41,7 @@ func TestNewTableItemRequestBuilder(t *testing.T) {
 
 	pathParameters := map[string]string{"baseurl": "instance.service-now.com", "table": "table1", "sysId": "sysid"}
 
-	req := NewTableItemRequestBuilder(client, pathParameters)
+	req := NewTableItemRequestBuilder(context.Background(), client, pathParameters)
 
 	assert.NotNil(t, req)
 }
@@ -65,7 +66,7 @@ func TestTableItemRequestBuilderGet(t *testing.T) {
 
 	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path, "sysId": "sysid"}
 
-	req := NewTableItemRequestBuilder(client, pathParameters)
+	req := NewTableItemRequestBuilder(context.Background(), client, pathParameters)
 
 	params := &TableItemRequestBuilderGetQueryParameters{
 		DisplayValue:         "true",
@@ -75,7 +76,7 @@ func TestTableItemRequestBuilderGet(t *testing.T) {
 		View:                 "desktop",
 	}
 
-	response, err := req.Get(params)
+	response, err := req.Get(context.Background(), params)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, response)
@@ -96,13 +97,13 @@ func TestTableItemRequestBuilderDelete(t *testing.T) {
 	assert.Nil(t, err)
 
 	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path, "sysId": "sysid"}
-	req := NewTableItemRequestBuilder(client, pathParameters)
+	req := NewTableItemRequestBuilder(context.Background(), client, pathParameters)
 
 	params := &TableItemRequestBuilderDeleteQueryParameters{
 		QueryNoDomain: true,
 	}
 
-	err = req.Delete(params)
+	err = req.Delete(context.Background(), params)
 
 	assert.Nil(t, err)
 }
@@ -177,7 +178,7 @@ func TestTableItemRequestBuilderPut(t *testing.T) {
 	}
 
 	// Create a request builder
-	req := NewTableItemRequestBuilder(client, pathParameters)
+	req := NewTableItemRequestBuilder(context.Background(), client, pathParameters)
 
 	// Prepare values to update the record
 	values := map[string]string{
@@ -270,7 +271,7 @@ func TestTableItemRequestBuilderPut2(t *testing.T) {
 	}
 
 	// Create a request builder
-	req := NewTableItemRequestBuilder(client, pathParameters)
+	req := NewTableItemRequestBuilder(context.Background(), client, pathParameters)
 
 	// Prepare values to update the record
 	values := map[string]string{

@@ -1,6 +1,7 @@
 package batchapi
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -66,7 +67,7 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 			}
 
 			// Call the function under test
-			_, err := rB.Post(request)
+			_, err := rB.Post(context.Background(), request)
 
 			// Check the result
 			assert.Equal(t, test.ExpectedErr, err)
