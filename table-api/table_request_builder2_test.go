@@ -16,7 +16,7 @@ func TestNewRequestBuilder2Internal(t *testing.T) {
 	requestAdapter := &mocking.RequestAdapter{}
 	factory := mocking.ParsableFactory
 
-	builder := newRequestBuilder2Internal(pathParams, requestAdapter, factory)
+	builder := newTableRequestBuilder2Internal(pathParams, requestAdapter, factory)
 	assert.NotNil(t, builder)
 	assert.Equal(t, pathParams, builder.BaseRequestBuilder.PathParameters)
 	assert.Equal(t, requestAdapter, builder.BaseRequestBuilder.RequestAdapter)
@@ -27,7 +27,7 @@ func TestNewRequestBuilderBuilder2(t *testing.T) {
 	requestAdapter := &mocking.RequestAdapter{}
 	factory := mocking.ParsableFactory
 
-	builder := newRequestBuilderBuilder2(rawURL, requestAdapter, factory)
+	builder := newTableRequestBuilder2(rawURL, requestAdapter, factory)
 	assert.NotNil(t, builder)
 	assert.Equal(t, rawURL, builder.BaseRequestBuilder.PathParameters["request-raw-url"])
 	assert.Equal(t, requestAdapter, builder.BaseRequestBuilder.RequestAdapter)
@@ -86,5 +86,5 @@ func getTestBuilder() *TableRequestBuilder2 {
 	pathParams := map[string]string{"test": "value"}
 	requestAdapter := &mocking.RequestAdapter{}
 	factory := mocking.ParsableFactory
-	return newRequestBuilder2Internal(pathParams, requestAdapter, factory)
+	return newTableRequestBuilder2Internal(pathParams, requestAdapter, factory)
 }

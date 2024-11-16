@@ -36,12 +36,24 @@ func CreateRecordElementFromDiscriminatorValue(parseNode serialization.ParseNode
 }
 
 func (rE *recordElement) GetBackingStore() store.BackingStore {
+	if internal.IsNil(rE) {
+		return nil
+	}
+
+	if internal.IsNil(rE.backingStore) {
+		rE.backingStore = store.NewInMemoryBackingStore()
+	}
+
 	return rE.backingStore
 }
 
 // Serialize writes the objects properties to the current writer.
 func (rE *recordElement) Serialize(writer serialization.SerializationWriter) error {
-	return nil
+	if internal.IsNil(rE) {
+		return nil
+	}
+
+	return errors.New("Serialize not implemented")
 }
 
 func (rE *recordElement) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
