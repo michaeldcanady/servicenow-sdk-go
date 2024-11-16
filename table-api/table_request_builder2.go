@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	tableURLTemplate = "{+baseurl}/api/now/v2/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
+	tableURLTemplate = "{+baseurl}/api/now/v2/table{/sysid}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
 )
 
 // TableRequestBuilder2 provides operations to manage Service-Now tables.
@@ -28,11 +28,11 @@ func NewDefaultTableRequestBuilder2Internal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 ) *TableRequestBuilder2 {
-	return newRequestBuilder2Internal(pathParameters, requestAdapter, CreateTableRecordFromDiscriminatorValue)
+	return newTableRequestBuilder2Internal(pathParameters, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
-// newRequestBuilder2Internal instantiates a new TableRequestBuilder2 with custom parsable for table entries.
-func newRequestBuilder2Internal(
+// newTableRequestBuilder2Internal instantiates a new TableRequestBuilder2 with custom parsable for table entries.
+func newTableRequestBuilder2Internal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 	factory serialization.ParsableFactory,
@@ -49,18 +49,18 @@ func NewDefaultTableRequestBuilder2(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 ) *TableRequestBuilder2 {
-	return newRequestBuilderBuilder2(rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
+	return newTableRequestBuilder2(rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
-// newRequestBuilderBuilder2 instantiates a new TableRequestBuilder2 with custom parsable for table entries.
-func newRequestBuilderBuilder2(
+// newTableRequestBuilder2 instantiates a new TableRequestBuilder2 with custom parsable for table entries.
+func newTableRequestBuilder2(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 	factory serialization.ParsableFactory,
 ) *TableRequestBuilder2 {
 	urlParams := make(map[string]string)
 	urlParams["request-raw-url"] = rawURL
-	return newRequestBuilder2Internal(urlParams, requestAdapter, factory)
+	return newTableRequestBuilder2Internal(urlParams, requestAdapter, factory)
 }
 
 // ByID instantiates a new TableItemRequestBuilder2 for the specific record sysID.

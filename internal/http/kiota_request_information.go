@@ -11,6 +11,11 @@ type KiotaRequestInformation struct {
 	abstractions.RequestInformation
 }
 
+func NewRequestInformationWithMethodAndURLTemplateAndPathParameters(method abstractions.HttpMethod, urlTemplate string, pathParameters map[string]string) *KiotaRequestInformation {
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(method, urlTemplate, pathParameters)
+	return &KiotaRequestInformation{RequestInformation: *requestInfo}
+}
+
 // AddQueryParameters adds the query parameters to the request by reading the properties from the provided object.
 func (request *KiotaRequestInformation) AddQueryParameters(source any) {
 	if source == nil || request == nil {
