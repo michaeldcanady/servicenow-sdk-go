@@ -15,13 +15,23 @@ type TableRecord interface {
 	store.BackedModel
 }
 
+type enumerationStyle int64
+
+const (
+	enumerationStyleAll enumerationStyle = iota
+	enumerationStyleOnlyChanged
+	enumerationStyleOnlyChangedToNil
+)
+
 type tableRecord struct {
-	backingStore store.BackingStore
+	backingStore     store.BackingStore
+	enumerationStyle enumerationStyle
 }
 
 func NewTableRecord() TableRecord {
 	return &tableRecord{
-		backingStore: store.BackingStoreFactoryInstance(),
+		backingStore:     store.BackingStoreFactoryInstance(),
+		enumerationStyle: enumerationStyleAll,
 	}
 }
 
@@ -51,7 +61,51 @@ func (tR *tableRecord) GetBackingStore() store.BackingStore {
 
 // Serialize writes the objects properties to the current writer.
 func (tR *tableRecord) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(tR) {
+		return nil
+	}
+
+	for key, value := range tR.enumerate() {
+		actualValue, err := value.value()
+		if err != nil {
+			return err
+		}
+		if err := writer.WriteAnyValue(key, actualValue); err != nil {
+			return err
+		}
+	}
 	return nil
+}
+
+func (tR *tableRecord) enumerate() map[string]RecordElement {
+	enumerator := make(map[string]RecordElement, 0)
+
+	// Helper function to enumerate with the current return mode
+	enumerateWithReturnMode := func(returnOnlyChangedValues bool) {
+		original := tR.GetBackingStore().GetReturnOnlyChangedValues()
+		tR.GetBackingStore().SetReturnOnlyChangedValues(returnOnlyChangedValues)
+		for key, value := range tR.GetBackingStore().Enumerate() {
+			typedValue, _ := value.(RecordElement)
+			enumerator[key] = typedValue
+		}
+		tR.GetBackingStore().SetReturnOnlyChangedValues(original)
+	}
+
+	switch tR.enumerationStyle {
+	case enumerationStyleOnlyChanged:
+		enumerateWithReturnMode(true)
+	case enumerationStyleAll:
+		enumerateWithReturnMode(false)
+	case enumerationStyleOnlyChangedToNil:
+		keys := tR.GetBackingStore().EnumerateKeysForValuesChangedToNil()
+		for _, key := range keys {
+			value, _ := tR.GetBackingStore().Get(key)
+			typedValue, _ := value.(RecordElement)
+			enumerator[key] = typedValue
+		}
+	}
+
+	return enumerator
 }
 
 func (tR *tableRecord) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {

@@ -66,7 +66,7 @@ func (rB *TableItemRequestBuilder2) Get(ctx context.Context, requestConfiguratio
 		return nil, nil
 	}
 
-	requestInfo, err := rB.toGetRequestInformation(ctx, requestConfiguration)
+	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ func (rB *TableItemRequestBuilder2) Delete(ctx context.Context, requestConfigura
 		return nil
 	}
 
-	requestInfo, err := rB.toDeleteRequestInformation(ctx, requestConfiguration)
+	requestInfo, err := rB.ToDeleteRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return err
 	}
@@ -124,7 +124,7 @@ func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, r
 		return nil, nil
 	}
 
-	requestInfo, err := rB.toPutRequestInformation(ctx, body, requestConfiguration)
+	requestInfo, err := rB.ToPutRequestInformation(ctx, body, requestConfiguration)
 	if err != nil {
 		return nil, err
 	}
@@ -159,8 +159,8 @@ func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, r
 	return record, nil
 }
 
-// toGetRequestInformation converts request configurations to Get request information.
-func (rB *TableItemRequestBuilder2) toGetRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
+// ToGetRequestInformation converts request configurations to Get request information.
+func (rB *TableItemRequestBuilder2) ToGetRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -171,18 +171,18 @@ func (rB *TableItemRequestBuilder2) toGetRequestInformation(_ context.Context, r
 		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
 			requestInfo.AddQueryParameters(*params)
 		}
-		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
 		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
 	}
-	kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
-	kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
 	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
 
 	return &kiotaRequestInfo.RequestInformation, nil
 }
 
-// toDeleteRequestInformation converts request configurations to Delete request information.
-func (rB *TableItemRequestBuilder2) toDeleteRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
+// ToDeleteRequestInformation converts request configurations to Delete request information.
+func (rB *TableItemRequestBuilder2) ToDeleteRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -193,7 +193,9 @@ func (rB *TableItemRequestBuilder2) toDeleteRequestInformation(_ context.Context
 		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
 			kiotaRequestInfo.AddQueryParameters(*params)
 		}
-		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
 		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
 	}
 	kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
@@ -203,23 +205,23 @@ func (rB *TableItemRequestBuilder2) toDeleteRequestInformation(_ context.Context
 	return &kiotaRequestInfo.RequestInformation, nil
 }
 
-// toPutRequestInformation converts request configurations to Put request information.
-func (rB *TableItemRequestBuilder2) toPutRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:dupl
+// ToPutRequestInformation converts request configurations to Put request information.
+func (rB *TableItemRequestBuilder2) ToPutRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:dupl
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
 
-	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.UrlTemplate, rB.PathParameters)
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.UrlTemplate, rB.PathParameters)
 	kiotaRequestInfo := &intHttp.KiotaRequestInformation{RequestInformation: *requestInfo}
 	if !internal.IsNil(requestConfiguration) {
 		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
 			kiotaRequestInfo.AddQueryParameters(*params)
 		}
-		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
 		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
 	}
-	kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
-	kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
 	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
 
 	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.BaseRequestBuilder.RequestAdapter, "application/json", body)
