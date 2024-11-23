@@ -64,22 +64,16 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 	// TODO: add error factory
 	errorMapping := abstractions.ErrorMappings{}
 
-	resp, err := rB.BaseRequestBuilder.RequestAdapter.SendPrimitiveCollection(ctx, requestInfo, "byte", errorMapping)
+	resp, err := rB.BaseRequestBuilder.RequestAdapter.SendPrimitive(ctx, requestInfo, "[]byte", errorMapping)
 	if err != nil {
 		return nil, err
 	}
-
 	if resp == nil {
 		return nil, nil
 	}
-
-	var data = make([]byte, 0, len(resp))
-	for _, elem := range resp {
-		byteElem, ok := elem.(byte)
-		if !ok {
-			return nil, errors.New("elem is not byte")
-		}
-		data = append(data, byteElem)
+	typedResp, ok := resp.([]byte)
+	if !ok {
+		return nil, errors.New("resp is not []byte")
 	}
 
 	metadata := opts.ResponseHeaders.Get("X-Attachment-Metadata")[0]
@@ -101,7 +95,7 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 		return nil, errors.New("file is not FileWithContentable")
 	}
 
-	if err := typedFile.setContent(data); err != nil {
+	if err := typedFile.setContent(typedResp); err != nil {
 		return nil, err
 	}
 

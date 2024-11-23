@@ -12,6 +12,7 @@ type ElementValue interface {
 	GetStringValue() (*string, error)
 	GetBoolValue() (*bool, error)
 	GetFloat64Value() (*float64, error)
+	GetRawValue() (interface{}, error)
 }
 
 // elementValue is an implementation of ElementValue.
@@ -69,4 +70,12 @@ func (eV *elementValue) GetFloat64Value() (*float64, error) {
 	}
 
 	return &val, nil
+}
+
+func (eV *elementValue) GetRawValue() (interface{}, error) {
+	if internal.IsNil(eV) || internal.IsNil(eV.val) {
+		return nil, nil
+	}
+
+	return eV.val, nil
 }

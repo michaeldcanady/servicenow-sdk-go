@@ -16,17 +16,22 @@ type RecordElement interface {
 	SetDisplayValue(interface{}) error
 	SetValue(interface{}) error
 	setLink(*string) error
+	value() (interface{}, error)
 	serialization.Parsable
 	store.BackedModel
 }
 
 func NewRecordElement() RecordElement {
-	return &recordElement{backingStore: store.BackingStoreFactoryInstance()}
+	return &recordElement{
+		backingStore:     store.BackingStoreFactoryInstance(),
+		displayValueOnly: false,
+	}
 }
 
 // recordElement is an implementation of RecordElement.
 type recordElement struct {
-	backingStore store.BackingStore
+	backingStore     store.BackingStore
+	displayValueOnly bool
 }
 
 func CreateRecordElementFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
@@ -147,4 +152,15 @@ func (rE *recordElement) setLink(val *string) error {
 	}
 
 	return nil
+}
+
+func (rE *recordElement) value() (interface{}, error) {
+	if rE.displayValueOnly {
+		return rE.GetDisplayValue()
+	}
+	eV, err := rE.GetValue()
+	if err != nil {
+		return nil, err
+	}
+	return eV.GetRawValue()
 }

@@ -2,6 +2,7 @@ package servicenowsdkgo
 
 import (
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -42,4 +43,8 @@ func (rB *NowRequestBuilder2) Table(table string) tableapi.TableRequestBuilder2 
 
 func (rB *NowRequestBuilder2) Attachment() attachmentapi.AttachmentRequestBuilder2 {
 	return *attachmentapi.NewAttachmentRequestBuilder2Internal(rB.BaseRequestBuilder.PathParameters, rB.BaseRequestBuilder.RequestAdapter)
+}
+
+func (rB *NowRequestBuilder2) Batch() batchapi.BatchRequestBuilder2 {
+	return *batchapi.NewBatchRequestBuilder2Internal(rB.BaseRequestBuilder.PathParameters, rB.BaseRequestBuilder.RequestAdapter)
 }

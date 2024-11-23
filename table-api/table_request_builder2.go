@@ -90,7 +90,7 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *T
 
 	requestConfiguration.Options = append(requestConfiguration.Options, opts)
 
-	requestInfo, err := rB.toGetRequestInformation(ctx, nil, requestConfiguration)
+	requestInfo, err := rB.ToGetRequestInformation(ctx, nil, requestConfiguration)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +125,9 @@ func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requ
 		return nil, nil
 	}
 
-	requestInfo, err := rB.toPostRequestInformation(ctx, body, requestConfiguration)
+	// TODO: make changes it body based on sysparm_input_display_value
+
+	requestInfo, err := rB.ToPostRequestInformation(ctx, body, requestConfiguration)
 	if err != nil {
 		return nil, err
 	}
@@ -160,8 +162,8 @@ func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requ
 	return record, nil
 }
 
-// toGetRequestInformation converts request configurations to Get request information.
-func (rB *TableRequestBuilder2) toGetRequestInformation(_ context.Context, _ TableRecord, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
+// ToGetRequestInformation converts request configurations to Get request information.
+func (rB *TableRequestBuilder2) ToGetRequestInformation(_ context.Context, _ TableRecord, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -172,18 +174,18 @@ func (rB *TableRequestBuilder2) toGetRequestInformation(_ context.Context, _ Tab
 		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
 			kiotaRequestInfo.AddQueryParameters(*params)
 		}
-		requestInfo.Headers.AddAll(requestConfiguration.Headers)
+		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
 		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
 	}
-	kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
-	kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
 	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
 
 	return &kiotaRequestInfo.RequestInformation, nil
 }
 
-// toPostRequestInformation converts request configurations to Post request information.
-func (rB *TableRequestBuilder2) toPostRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:dupl
+// ToPostRequestInformation converts request configurations to Post request information.
+func (rB *TableRequestBuilder2) ToPostRequestInformation(ctx context.Context, body TableRecord, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:dupl
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -194,11 +196,11 @@ func (rB *TableRequestBuilder2) toPostRequestInformation(ctx context.Context, bo
 		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
 			kiotaRequestInfo.AddQueryParameters(*params)
 		}
-		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
 		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
 	}
-	kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
-	kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
 	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
 
 	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.BaseRequestBuilder.RequestAdapter, "application/json", body)

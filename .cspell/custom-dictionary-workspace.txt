@@ -13,6 +13,8 @@ michaeldcanady
 nakedret
 nethttplibrary
 nolint
+Requestable
+Responseable
 stretchr
 stylecheck
 sysparm
