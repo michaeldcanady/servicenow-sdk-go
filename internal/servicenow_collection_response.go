@@ -203,7 +203,7 @@ func (tE *serviceNowCollectionResponse[T]) GetLastLink() (*string, error) {
 	return typedVal, nil
 }
 
-func (tE *serviceNowCollectionResponse[T]) setNextLink(nextLink *string) error {
+func (tE *serviceNowCollectionResponse[T]) setNextLink(nextLink *string) error { //nolint:unused
 	if IsNil(tE) {
 		return nil
 	}
@@ -211,7 +211,7 @@ func (tE *serviceNowCollectionResponse[T]) setNextLink(nextLink *string) error {
 	return tE.GetBackingStore().Set(nextLinkHeaderKey, nextLink)
 }
 
-func (tE *serviceNowCollectionResponse[T]) setPreviousLink(previousLink *string) error {
+func (tE *serviceNowCollectionResponse[T]) setPreviousLink(previousLink *string) error { //nolint:unused
 	if IsNil(tE) {
 		return nil
 	}
@@ -219,7 +219,7 @@ func (tE *serviceNowCollectionResponse[T]) setPreviousLink(previousLink *string)
 	return tE.GetBackingStore().Set(prevLinkHeaderKey, previousLink)
 }
 
-func (tE *serviceNowCollectionResponse[T]) setFirstLink(firstLink *string) error {
+func (tE *serviceNowCollectionResponse[T]) setFirstLink(firstLink *string) error { //nolint:unused
 	if IsNil(tE) {
 		return nil
 	}
@@ -227,7 +227,7 @@ func (tE *serviceNowCollectionResponse[T]) setFirstLink(firstLink *string) error
 	return tE.GetBackingStore().Set(firstLinkHeaderKey, firstLink)
 }
 
-func (tE *serviceNowCollectionResponse[T]) setLastLink(lastLink *string) error {
+func (tE *serviceNowCollectionResponse[T]) setLastLink(lastLink *string) error { //nolint:unused
 	if IsNil(tE) {
 		return nil
 	}
