@@ -30,25 +30,20 @@ var (
 	}
 )
 
-//nolint:unused
-type number interface {
-	int | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64
-}
-
-// FromJSON[T] Unmarshalls response body into v
+// FromJSON unmarshals response body into v
 func FromJSON[T any](response *http.Response, v T) error {
 	if response == nil {
-		return ErrNilResponse
+		return fmt.Errorf("response is nil")
 	}
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return err
 	}
-	defer response.Body.Close() //nolint:errcheck
+	defer response.Body.Close()
 
 	if len(body) == 0 {
-		return ErrNilResponseBody
+		return fmt.Errorf("response body is empty")
 	}
 
 	if err := json.Unmarshal(body, v); err != nil {
@@ -58,7 +53,7 @@ func FromJSON[T any](response *http.Response, v T) error {
 	return nil
 }
 
-// ParseResponse[T] parses the HTTP Response to the provided type
+// ParseResponse parses the HTTP Response to the provided type
 func ParseResponse[T Response](response *http.Response, value T) error {
 	err := FromJSON(response, value)
 	if err != nil {
@@ -90,26 +85,23 @@ func IsNil(a interface{}) bool {
 }
 
 // isCompatible checks if the value is compatible with the type tp.
-// It intentionally excludes checking if types are pointers to allow for possibility.
-func isCompatible(value interface{}, tp reflect.Type) bool {
-	// Can't join with lower, number types are always "convertible" just not losslessly.
+func isCompatible(value interface{}, tp reflect.Type, strict bool) bool {
 	if isNumericType(value) && isNumericType(tp) {
-		//NOTE: no need to check if number is compatible with another, always yes, just overflows
-		//Check if number value is TRULY compatible
 		return isCompatibleInt(value, tp)
 	}
 
+	if strict {
+		return reflect.TypeOf(value) == tp
+	}
 	return reflect.TypeOf(value).ConvertibleTo(tp)
 }
 
 // As converts the value to the type T.
 func As[T any](in interface{}, out T) error {
-	// No point in trying anything if already nil
 	if IsNil(in) {
 		return nil
 	}
 
-	// Make sure nothing is a pointer
 	valValue := reflect.ValueOf(in)
 	for valValue.Kind() == reflect.Ptr {
 		valValue = valValue.Elem()
@@ -122,14 +114,46 @@ func As[T any](in interface{}, out T) error {
 	}
 
 	nestedOutVal := outVal.Elem()
-	// Handle the case where out is a pointer to an interface
 	if nestedOutVal.Kind() == reflect.Interface && !nestedOutVal.IsNil() {
 		nestedOutVal = nestedOutVal.Elem()
 	}
 
 	outType := nestedOutVal.Type()
 
-	if !isCompatible(in, outType) {
+	if !isCompatible(in, outType, true) {
+		return fmt.Errorf("value '%v' is not compatible with type %T", in, nestedOutVal.Interface())
+	}
+
+	outVal.Elem().Set(valValue.Convert(outType))
+	return nil
+}
+
+// As2 converts the input value to the specified type T and assigns it to out if compatible.
+// It supports strict and non-strict mode.
+func As2[T any](in interface{}, out T, strict bool) error {
+	if IsNil(in) {
+		return nil
+	}
+
+	valValue := reflect.ValueOf(in)
+	for valValue.Kind() == reflect.Ptr {
+		valValue = valValue.Elem()
+		in = valValue.Interface()
+	}
+
+	outVal := reflect.ValueOf(out)
+	if outVal.Kind() != reflect.Pointer || IsNil(out) {
+		return fmt.Errorf("out is not pointer or is nil")
+	}
+
+	nestedOutVal := outVal.Elem()
+	if nestedOutVal.Kind() == reflect.Interface && !nestedOutVal.IsNil() {
+		nestedOutVal = nestedOutVal.Elem()
+	}
+
+	outType := nestedOutVal.Type()
+
+	if !isCompatible(in, outType, strict) {
 		return fmt.Errorf("value '%v' is not compatible with type %T", in, nestedOutVal.Interface())
 	}
 
@@ -159,8 +183,6 @@ func isNumericType(in interface{}) bool {
 }
 
 // isCompatibleInt checks if the given value is compatible with the specified integer type.
-// It returns true if the value falls within the valid range for the type and has no decimal places.
-// Otherwise, it returns false.
 func isCompatibleInt(in interface{}, tp reflect.Type) bool {
 	if !isNumericType(in) || !isNumericType(tp) {
 		return false
@@ -178,8 +200,6 @@ func isCompatibleInt(in interface{}, tp reflect.Type) bool {
 }
 
 // hasDecimalPlace checks if the given float64 value has a decimal place.
-// It returns true if the fractional part of the value is greater than 0.0 (indicating a decimal).
-// Otherwise, it returns false.
 func hasDecimalPlace(value float64) bool {
 	return value != float64(int64(value))
 }
