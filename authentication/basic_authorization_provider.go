@@ -19,6 +19,12 @@ type basicAuthorizationProvider struct {
 	userPassProvider UserPassProvider
 }
 
+func newBasicAuthorizationProvider(userPassProvider UserPassProvider) *basicAuthorizationProvider {
+	return &basicAuthorizationProvider{
+		userPassProvider: userPassProvider,
+	}
+}
+
 func (provider *basicAuthorizationProvider) GetAuthorization(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (string, error) {
 	if internal.IsNil(provider) {
 		return "", errors.New("provider is nil")
