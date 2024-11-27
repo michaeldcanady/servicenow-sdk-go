@@ -20,11 +20,11 @@ type externalJWTTokenProvider struct {
 }
 
 func newExternalJWTTokenProvider(tokenProvider authentication.AccessTokenProvider, clientID, clientSecret string) *externalJWTTokenProvider {
-	// TODO: add request adapter
 	return &externalJWTTokenProvider{
-		tokenProvider: tokenProvider,
-		clientID:      &clientID,
-		clientSecret:  &clientSecret,
+		tokenProvider:  tokenProvider,
+		requestAdapter: newRequestAdapter(),
+		clientID:       &clientID,
+		clientSecret:   &clientSecret,
 	}
 }
 

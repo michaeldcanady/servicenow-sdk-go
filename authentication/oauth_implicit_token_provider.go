@@ -60,7 +60,7 @@ type implicitTokenProvider struct {
 	clientID    string
 }
 
-func newImplicitTokenProvider(clientID string, port int, uriCallback func(string) error) *implicitTokenProvider {
+func newImplicitTokenProvider(uriCallback func(string) error, port int, clientID string) *implicitTokenProvider {
 	return &implicitTokenProvider{
 		uriCallback: uriCallback,
 		port:        port,

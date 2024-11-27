@@ -33,7 +33,56 @@ func (request *resourceOwnerRequest) GetFieldDeserializers() map[string]func(ser
 	return nil
 }
 func (request *resourceOwnerRequest) Serialize(writer serialization.SerializationWriter) error {
-	return errors.New("not implemented")
+	if internal.IsNil(request) {
+		return nil
+	}
+
+	fieldSerializers := []func(serialization.SerializationWriter) error{
+		func(writer serialization.SerializationWriter) error {
+			clientID, err := request.GetClientID()
+			if err != nil {
+				return err
+			}
+
+			return writer.WriteStringValue(clientIDKey, clientID)
+		},
+		func(writer serialization.SerializationWriter) error {
+			clientSecret, err := request.GetClientSecret()
+			if err != nil {
+				return err
+			}
+
+			return writer.WriteStringValue(clientSecretKey, clientSecret)
+		},
+		func(writer serialization.SerializationWriter) error {
+			username, err := request.GetUsername()
+			if err != nil {
+				return err
+			}
+
+			return writer.WriteStringValue(codeKey, username)
+		},
+		func(writer serialization.SerializationWriter) error {
+			password, err := request.GetPassword()
+			if err != nil {
+				return err
+			}
+
+			return writer.WriteStringValue("password", password)
+		},
+	}
+
+	for _, fieldSerializer := range fieldSerializers {
+		if err := fieldSerializer(writer); err != nil {
+			return err
+		}
+	}
+
+	if err := request.grantTypeRequestable.Serialize(writer); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (request *resourceOwnerRequest) GetClientID() (*string, error) {

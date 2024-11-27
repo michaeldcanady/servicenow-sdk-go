@@ -19,6 +19,16 @@ type resourceOwnerPasswordTokenProvider struct {
 	password       string
 }
 
+func newResourceOwnerPasswordTokenProvider(clientID, clientSecret, username, password string) *resourceOwnerPasswordTokenProvider {
+	return &resourceOwnerPasswordTokenProvider{
+		requestAdapter: newRequestAdapter(),
+		clientID:       clientID,
+		clientSecret:   clientSecret,
+		username:       username,
+		password:       password,
+	}
+}
+
 // GetAuthorizationToken returns the access token for the provided url.
 func (provider *resourceOwnerPasswordTokenProvider) GetAuthorizationToken(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (string, error) {
 	if internal.IsNil(provider) {

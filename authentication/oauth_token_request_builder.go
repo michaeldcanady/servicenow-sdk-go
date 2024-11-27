@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	oauthTokenURLTemplate = "{+baseurl}/oauth_token.do{?}"
+	oauthTokenURLTemplate = "{+baseurl}/oauth_token.do{?}" //nolint:gosec
 	rawURLKey             = "request-raw-url"
 )
 

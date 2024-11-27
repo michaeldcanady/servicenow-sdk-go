@@ -20,6 +20,12 @@ type bearerAuthorizationProvider struct {
 	accessTokenProvider authentication.AccessTokenProvider
 }
 
+func newBearerAuthorizationProvider(accessTokenProvider authentication.AccessTokenProvider) *bearerAuthorizationProvider {
+	return &bearerAuthorizationProvider{
+		accessTokenProvider: accessTokenProvider,
+	}
+}
+
 func (provider *bearerAuthorizationProvider) GetAuthorization(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (string, error) {
 	if internal.IsNil(provider) {
 		return "", errors.New("provider is nil")

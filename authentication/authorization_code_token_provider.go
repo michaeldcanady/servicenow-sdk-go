@@ -20,6 +20,16 @@ type authorizationCodeTokenProvider struct {
 	clientSecret   string
 }
 
+func newAuthorizationCodeTokenProvider(uriCallback func(string) error, port int, clientID string, clientSecret string) *authorizationCodeTokenProvider {
+	return &authorizationCodeTokenProvider{
+		requestAdapter: newRequestAdapter(),
+		uriCallback:    uriCallback,
+		port:           port,
+		clientID:       clientID,
+		clientSecret:   clientSecret,
+	}
+}
+
 func (provider *authorizationCodeTokenProvider) sendRequest(ctx context.Context, pathParameters map[string]string, code, redirectURI string) (string, error) {
 	if internal.IsNil(provider) {
 		return "", errors.New("provider is nil")
