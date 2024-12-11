@@ -14,7 +14,7 @@ type OauthAuthRequestBuilderGetRequestConfiguration struct {
 	// Options Request options
 	Options []abstractions.RequestOption
 
-	QueryParameters authorizationCodeQueryParameters
+	QueryParameters oauthAuthQueryParameters
 }
 
 type oauthAuthRequestBuilder struct {

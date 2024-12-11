@@ -1,6 +1,8 @@
 package authentication
 
 import (
+	"errors"
+
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
@@ -11,8 +13,8 @@ const (
 )
 
 type grantTypeRequestable interface {
-	GetGrantType() (*string, error)
-	setGrantType(*string) error
+	GetGrantType() (*grantType, error)
+	setGrantType(*grantType) error
 	serialization.Parsable
 	store.BackedModel
 }
@@ -70,7 +72,9 @@ func (request *grantTypeRequest) Serialize(writer serialization.SerializationWri
 				return err
 			}
 
-			return writer.WriteStringValue(grantTypeKey, grantType)
+			rawGrantType := grantType.String()
+
+			return writer.WriteStringValue(grantTypeKey, &rawGrantType)
 		},
 	}
 
@@ -87,26 +91,25 @@ func (request *grantTypeRequest) GetFieldDeserializers() map[string]func(seriali
 	return nil
 }
 
-func (request *grantTypeRequest) GetGrantType() (*string, error) {
+func (request *grantTypeRequest) GetGrantType() (*grantType, error) {
 	if internal.IsNil(request) {
 		return nil, nil
 	}
 
-	grantType, err := request.GetBackingStore().Get(grantTypeKey)
+	unknownGrantType, err := request.GetBackingStore().Get(grantTypeKey)
 	if err != nil {
 		return nil, err
 	}
 
-	var typedGrantType *string
-
-	if err := internal.As2(grantType, typedGrantType, true); err != nil {
-		return nil, err
+	typedGrantType, ok := unknownGrantType.(*grantType)
+	if !ok {
+		return nil, errors.New("grantType is not grantType")
 	}
 
 	return typedGrantType, nil
 }
 
-func (request *grantTypeRequest) setGrantType(grantType *string) error {
+func (request *grantTypeRequest) setGrantType(grantType *grantType) error {
 	if internal.IsNil(request) {
 		return nil
 	}

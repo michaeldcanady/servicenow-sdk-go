@@ -18,7 +18,7 @@ const (
 	oauthAuthURLTemplate = "{+baseurl}/oauth_auth.do{?response_type,redirect_uri,client_id,state}"
 )
 
-func buildOauthURL(pathParameters map[string]string, queryParameters *authorizationCodeQueryParameters) (string, error) {
+func buildOauthURL(pathParameters map[string]string, queryParameters *oauthAuthQueryParameters) (string, error) {
 	substitutions := make(map[string]any)
 
 	for key, value := range pathParameters {
@@ -94,8 +94,8 @@ func (provider *implicitTokenProvider) GetAuthorizationToken(context context.Con
 		return "", err
 	}
 
-	params := &authorizationCodeQueryParameters{
-		responseType: "token",
+	params := &oauthAuthQueryParameters{
+		responseType: responseTypeToken,
 		redirectURI:  server.Addr,
 		clientID:     provider.clientID,
 		state:        state,

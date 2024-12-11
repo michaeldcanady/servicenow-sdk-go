@@ -9,35 +9,27 @@ import (
 )
 
 const (
-	redirectURIKey       = "redirect_url"
-	authorizationCodeKey = "authorization_code"
-	codeKey              = "code"
-	clientIDKey          = "client_id"
-	clientSecretKey      = "client_secret"
+	refreshTokenKey = "refresh_token"
 )
 
-type authorizationCodeRequestable interface {
+type refreshTokenRequestable interface {
 	grantTypeRequestable
 	GetClientID() (*string, error)
 	SetClientID(*string) error
 	GetClientSecret() (*string, error)
 	SetClientSecret(*string) error
-	GetCode() (*string, error)
-	SetCode(*string) error
-	GetRedirectURI() (*string, error)
-	SetRedirectURI(*string) error
+	GetRefreshToken() (*string, error)
+	SetRefreshToken(*string) error
 	serialization.Parsable
 	store.BackedModel
 }
 
-type authorizationCodeRequest struct {
+type refreshTokenRequest struct {
 	grantTypeRequestable
 }
 
-type authorizationCodeRequestOption func(*authorizationCodeRequest) //nolint:unused
-
-func newAuthorizationCodeRequest(opts ...grantTypeRequestOption) authorizationCodeRequestable {
-	req := &authorizationCodeRequest{
+func newRefreshTokenRequest(opts ...grantTypeRequestOption) refreshTokenRequestable {
+	req := &refreshTokenRequest{
 		grantTypeRequestable: newGrantTypeRequest(opts...),
 	}
 
@@ -45,7 +37,7 @@ func newAuthorizationCodeRequest(opts ...grantTypeRequestOption) authorizationCo
 }
 
 // Serialize writes the objects properties to the current writer.
-func (request *authorizationCodeRequest) Serialize(writer serialization.SerializationWriter) error {
+func (request *refreshTokenRequest) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(request) {
 		return nil
 	}
@@ -68,20 +60,12 @@ func (request *authorizationCodeRequest) Serialize(writer serialization.Serializ
 			return writer.WriteStringValue(clientSecretKey, clientSecret)
 		},
 		func(writer serialization.SerializationWriter) error {
-			code, err := request.GetCode()
+			code, err := request.GetRefreshToken()
 			if err != nil {
 				return err
 			}
 
-			return writer.WriteStringValue(codeKey, code)
-		},
-		func(writer serialization.SerializationWriter) error {
-			redirectURI, err := request.GetRedirectURI()
-			if err != nil {
-				return err
-			}
-
-			return writer.WriteStringValue(redirectURIKey, redirectURI)
+			return writer.WriteStringValue(refreshTokenKey, code)
 		},
 	}
 
@@ -99,11 +83,11 @@ func (request *authorizationCodeRequest) Serialize(writer serialization.Serializ
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (request *authorizationCodeRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (request *refreshTokenRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return nil
 }
 
-func (request *authorizationCodeRequest) GetClientID() (*string, error) {
+func (request *refreshTokenRequest) GetClientID() (*string, error) {
 	if internal.IsNil(request) {
 		return nil, nil
 	}
@@ -121,7 +105,7 @@ func (request *authorizationCodeRequest) GetClientID() (*string, error) {
 	return typedClientID, nil
 }
 
-func (request *authorizationCodeRequest) SetClientID(clientID *string) error {
+func (request *refreshTokenRequest) SetClientID(clientID *string) error {
 	if internal.IsNil(request) {
 		return nil
 	}
@@ -129,7 +113,7 @@ func (request *authorizationCodeRequest) SetClientID(clientID *string) error {
 	return request.GetBackingStore().Set(clientIDKey, clientID)
 }
 
-func (request *authorizationCodeRequest) GetClientSecret() (*string, error) {
+func (request *refreshTokenRequest) GetClientSecret() (*string, error) {
 	if internal.IsNil(request) {
 		return nil, nil
 	}
@@ -147,7 +131,7 @@ func (request *authorizationCodeRequest) GetClientSecret() (*string, error) {
 	return typedClientSecret, nil
 }
 
-func (request *authorizationCodeRequest) SetClientSecret(clientSecret *string) error {
+func (request *refreshTokenRequest) SetClientSecret(clientSecret *string) error {
 	if internal.IsNil(request) {
 		return nil
 	}
@@ -155,54 +139,28 @@ func (request *authorizationCodeRequest) SetClientSecret(clientSecret *string) e
 	return request.GetBackingStore().Set(clientSecretKey, clientSecret)
 }
 
-func (request *authorizationCodeRequest) GetCode() (*string, error) {
+func (request *refreshTokenRequest) GetRefreshToken() (*string, error) {
 	if internal.IsNil(request) {
 		return nil, nil
 	}
 
-	code, err := request.GetBackingStore().Get(codeKey)
+	code, err := request.GetBackingStore().Get(refreshTokenKey)
 	if err != nil {
 		return nil, err
 	}
 
-	typedCode, ok := code.(*string)
+	typedRefreshToken, ok := code.(*string)
 	if !ok {
 		return nil, errors.New("code is not *string")
 	}
 
-	return typedCode, nil
+	return typedRefreshToken, nil
 }
 
-func (request *authorizationCodeRequest) SetCode(code *string) error {
+func (request *refreshTokenRequest) SetRefreshToken(code *string) error {
 	if internal.IsNil(request) {
 		return nil
 	}
 
-	return request.GetBackingStore().Set(codeKey, code)
-}
-
-func (request *authorizationCodeRequest) GetRedirectURI() (*string, error) {
-	if internal.IsNil(request) {
-		return nil, nil
-	}
-
-	redirectURI, err := request.GetBackingStore().Get(redirectURIKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedRedirectURI, ok := redirectURI.(*string)
-	if !ok {
-		return nil, errors.New("redirectURI is not *string")
-	}
-
-	return typedRedirectURI, nil
-}
-
-func (request *authorizationCodeRequest) SetRedirectURI(redirectURI *string) error {
-	if internal.IsNil(request) {
-		return nil
-	}
-
-	return request.GetBackingStore().Set(redirectURIKey, redirectURI)
+	return request.GetBackingStore().Set(refreshTokenKey, code)
 }

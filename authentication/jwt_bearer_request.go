@@ -8,9 +8,8 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
-type externalJWTRequestable interface {
-	GetGrantType() (*string, error)
-	setGrantType(*string) error
+type JWTBearerRequestable interface {
+	grantTypeRequestable
 	GetClientID() (*string, error)
 	SetClientID(*string) error
 	GetClientSecret() (*string, error)
@@ -21,14 +20,14 @@ type externalJWTRequestable interface {
 	store.BackedModel
 }
 
-type externalJWTRequest struct {
+type JWTBearerRequest struct {
 	grantTypeRequestable
 }
 
-type externalJWTRequestOption func(*externalJWTRequest)
+type JWTBearerRequestOption func(*JWTBearerRequest)
 
-func newExternalJWTRequest(opts ...grantTypeRequestOption) externalJWTRequestable {
-	req := &externalJWTRequest{
+func newJWTBearerRequest(opts ...grantTypeRequestOption) JWTBearerRequestable {
+	req := &JWTBearerRequest{
 		grantTypeRequestable: newGrantTypeRequest(opts...),
 	}
 
@@ -36,51 +35,56 @@ func newExternalJWTRequest(opts ...grantTypeRequestOption) externalJWTRequestabl
 }
 
 // Serialize writes the objects properties to the current writer.
-func (request *externalJWTRequest) Serialize(writer serialization.SerializationWriter) error {
+func (request *JWTBearerRequest) Serialize(writer serialization.SerializationWriter) error {
 	return errors.New("not implemented")
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (request *externalJWTRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (request *JWTBearerRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return nil
 }
 
-func (request *externalJWTRequest) GetClientID() (*string, error) {
+func (request *JWTBearerRequest) GetClientID() (*string, error) {
 	if internal.IsNil(request) {
 		return nil, nil
 	}
 
 	return nil, errors.New("not implemented")
 }
-func (request *externalJWTRequest) SetClientID(*string) error {
+
+func (request *JWTBearerRequest) SetClientID(*string) error {
 	if internal.IsNil(request) {
 		return nil
 	}
 
 	return errors.New("not implemented")
 }
-func (request *externalJWTRequest) GetClientSecret() (*string, error) {
+
+func (request *JWTBearerRequest) GetClientSecret() (*string, error) {
 	if internal.IsNil(request) {
 		return nil, nil
 	}
 
 	return nil, errors.New("not implemented")
 }
-func (request *externalJWTRequest) SetClientSecret(*string) error {
+
+func (request *JWTBearerRequest) SetClientSecret(*string) error {
 	if internal.IsNil(request) {
 		return nil
 	}
 
 	return errors.New("not implemented")
 }
-func (request *externalJWTRequest) GetAssertion() (*string, error) {
+
+func (request *JWTBearerRequest) GetAssertion() (*string, error) {
 	if internal.IsNil(request) {
 		return nil, nil
 	}
 
 	return nil, errors.New("not implemented")
 }
-func (request *externalJWTRequest) SetAssertion(*string) error {
+
+func (request *JWTBearerRequest) SetAssertion(*string) error {
 	if internal.IsNil(request) {
 		return nil
 	}

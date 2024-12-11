@@ -31,6 +31,8 @@ func newAuthenticationTokenResponse() authenticationTokenResponsable {
 	}
 }
 
+// TODO: make a refreshable variation
+
 // CreateAuthenticationTokenResponseFromDiscriminatorValue is a parsable factory for creating a Fileable
 func CreateAuthenticationTokenResponseFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
 	return newAuthenticationTokenResponse(), nil
@@ -70,6 +72,7 @@ func (rE *authenticationTokenResponse) GetAccessToken() (*string, error) {
 
 	return nil, errors.New("not implemented")
 }
+
 func (rE *authenticationTokenResponse) setAccessToken(*string) error {
 	if internal.IsNil(rE) {
 		return nil
@@ -77,6 +80,7 @@ func (rE *authenticationTokenResponse) setAccessToken(*string) error {
 
 	return errors.New("not implemented")
 }
+
 func (rE *authenticationTokenResponse) GetScope() (*string, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
@@ -84,6 +88,7 @@ func (rE *authenticationTokenResponse) GetScope() (*string, error) {
 
 	return nil, errors.New("not implemented")
 }
+
 func (rE *authenticationTokenResponse) setScope(*string) error {
 	if internal.IsNil(rE) {
 		return nil
@@ -91,6 +96,7 @@ func (rE *authenticationTokenResponse) setScope(*string) error {
 
 	return errors.New("not implemented")
 }
+
 func (rE *authenticationTokenResponse) GetTokenType() (*string, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
@@ -98,6 +104,7 @@ func (rE *authenticationTokenResponse) GetTokenType() (*string, error) {
 
 	return nil, errors.New("not implemented")
 }
+
 func (rE *authenticationTokenResponse) setTokenType(*string) error {
 	if internal.IsNil(rE) {
 		return nil
@@ -105,6 +112,7 @@ func (rE *authenticationTokenResponse) setTokenType(*string) error {
 
 	return errors.New("not implemented")
 }
+
 func (rE *authenticationTokenResponse) GetExpiresIn() (*serialization.ISODuration, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
@@ -112,6 +120,7 @@ func (rE *authenticationTokenResponse) GetExpiresIn() (*serialization.ISODuratio
 
 	return nil, errors.New("not implemented")
 }
+
 func (rE *authenticationTokenResponse) setExpiresIn(*serialization.ISODuration) error {
 	if internal.IsNil(rE) {
 		return nil

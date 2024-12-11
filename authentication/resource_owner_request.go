@@ -32,6 +32,7 @@ func newResourceOwnerRequest() resourceOwnerRequestable {
 func (request *resourceOwnerRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return nil
 }
+
 func (request *resourceOwnerRequest) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(request) {
 		return nil
