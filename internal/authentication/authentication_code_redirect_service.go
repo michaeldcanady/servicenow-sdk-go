@@ -2,6 +2,7 @@ package authentication
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"html"
 	"net"
@@ -95,7 +96,7 @@ func NewAuthenticationCodeRedirectServer(reqState string, port int) (*authentica
 	return serv, nil
 }
 
-func (s *authenticationCodeRedirectServer) start(l net.Listener) error {
+func (s *authenticationCodeRedirectServer) start(l net.Listener) error { //nolint:unparam
 	go func() {
 		err := s.s.Serve(l)
 		if err != nil {
@@ -134,8 +135,6 @@ func (s *authenticationCodeRedirectServer) putResult(r authenticationCodeResult)
 }
 
 func (s *authenticationCodeRedirectServer) handler(w http.ResponseWriter, r *http.Request) {
-	// TODO: service now sends auth info as fragment but fragments aren't supported by golang... -_-
-	//https://stackoverflow.com/questions/25489843/http-server-get-url-fragment
 	q := r.URL.Query()
 
 	headerErr := q.Get("error")
@@ -144,7 +143,7 @@ func (s *authenticationCodeRedirectServer) handler(w http.ResponseWriter, r *htt
 		// Note: It is a little weird we handle some errors by not going to the failPage. If they all should,
 		// change this to s.error() and make s.error() write the failPage instead of an error code.
 		_, _ = w.Write([]byte(fmt.Sprintf(failPage, headerErr, desc)))
-		s.putResult(authenticationCodeResult{Err: fmt.Errorf(desc)})
+		s.putResult(authenticationCodeResult{Err: errors.New(desc)})
 		return
 	}
 
