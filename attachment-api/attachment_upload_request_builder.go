@@ -110,8 +110,6 @@ func (rB *AttachmentUploadRequestBuilder) toPostRequestInformation(ctx context.C
 		requestInfo.Headers.AddAll(requestConfiguration.Headers)
 		requestInfo.AddRequestOptions(requestConfiguration.Options)
 	}
-	requestInfo.Headers.AddAll(requestConfiguration.Headers)
-	requestInfo.AddRequestOptions(requestConfiguration.Options)
 	if err := requestInfo.SetContentFromParsable(ctx, rB.BaseRequestBuilder.RequestAdapter, "multipart/form-data", body); err != nil {
 		return nil, err
 	}
