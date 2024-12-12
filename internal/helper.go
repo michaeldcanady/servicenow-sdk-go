@@ -33,7 +33,7 @@ var (
 // FromJSON unmarshals response body into v
 func FromJSON[T any](response *http.Response, v T) error {
 	if response == nil {
-		return fmt.Errorf("response is nil")
+		return ErrNilResponse
 	}
 
 	body, err := io.ReadAll(response.Body)
@@ -43,7 +43,7 @@ func FromJSON[T any](response *http.Response, v T) error {
 	defer response.Body.Close()
 
 	if len(body) == 0 {
-		return fmt.Errorf("response body is empty")
+		return ErrNilResponseBody
 	}
 
 	if err := json.Unmarshal(body, v); err != nil {
