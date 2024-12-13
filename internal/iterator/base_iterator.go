@@ -3,7 +3,6 @@ package iterator
 type BaseIterator[T interface{}] struct {
 	pageInfo  *PageInfo
 	nextFunc  func() error
-	max       int
 	items     []T
 	prevItems []T
 }
@@ -44,7 +43,7 @@ func (it *BaseIterator[T]) bufLen() int {
 	return len(it.items)
 }
 
-func (it *BaseIterator[T]) setBuf(buf []T) {
+func (it *BaseIterator[T]) setBuf(buf []T) { // nolint: unused
 	it.items = buf
 }
 
