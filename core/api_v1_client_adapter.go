@@ -22,7 +22,6 @@ func NewAPIV1ClientAdapter(client Client) *APIV1ClientAdapter {
 
 // AuthenticateRequest authenticates the provided RequestInformation.
 func (c *APIV1ClientAdapter) AuthenticateRequest(context context.Context, request *abstractions.RequestInformation, additionalAuthenticationContext map[string]interface{}) error {
-
 	temp := NewRequestInformation()
 
 	_, _ = c.client.Send(temp, nil)
