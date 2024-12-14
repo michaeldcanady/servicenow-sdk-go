@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -16,6 +17,19 @@ const (
 // AttachmentUploadRequestBuilder provides operations to manage Service-Now attachments.
 type AttachmentUploadRequestBuilder struct {
 	abstractions.BaseRequestBuilder
+}
+
+// NewAPIV1CompatibleAttachmentUploadRequestBuilderInternal ...
+func NewAPIV1CompatibleAttachmentUploadRequestBuilderInternal(
+	pathParameters map[string]string,
+	client core.Client,
+) *AttachmentUploadRequestBuilder {
+	reqAdapter, _ := internal.NewServiceNowRequestAdapterBase(core.NewAPIV1ClientAdapter(client))
+
+	return NewAttachmentUploadRequestBuilderInternal(
+		pathParameters,
+		reqAdapter,
+	)
 }
 
 // NewAttachmentUploadRequestBuilderInternal instantiates a new AttachmentUploadRequestBuilder with custom parsable for table entries.

@@ -6,6 +6,7 @@ import (
 	"maps"
 	"regexp"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -21,6 +22,18 @@ const (
 type TableRequestBuilder2 struct {
 	abstractions.BaseRequestBuilder
 	factory serialization.ParsableFactory
+}
+
+func NewAPIV1CompatibleDefaultTableRequestBuilder2Internal(
+	pathParameters map[string]string,
+	client core.Client,
+) *TableRequestBuilder2 {
+	reqAdapter, _ := internal.NewServiceNowRequestAdapterBase(core.NewAPIV1ClientAdapter(client))
+
+	return NewDefaultTableRequestBuilder2Internal(
+		pathParameters,
+		reqAdapter,
+	)
 }
 
 // NewDefaultTableRequestBuilder2Internal instantiates a new TableRequestBuilder2 and sets the default values.

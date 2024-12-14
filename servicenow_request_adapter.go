@@ -1,30 +1,14 @@
 package servicenowsdkgo
 
 import (
-	"errors"
-
-	"github.com/microsoft/kiota-abstractions-go/authentication"
-	nethttplibrary "github.com/microsoft/kiota-http-go"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
 // ServiceNowRequestAdapter is the core service used by ServiceNowServiceClient to make requests to ServiceNow APIs.
-type ServiceNowRequestAdapter struct {
-	nethttplibrary.NetHttpRequestAdapter
-}
+type ServiceNowRequestAdapter = internal.ServiceNowRequestAdapter
 
-func NewServiceNowRequestAdapterBase(authenticationProvider authentication.AuthenticationProvider, opts ...serviceNowRequestAdapterOption) (*ServiceNowRequestAdapter, error) {
-	if authenticationProvider == nil {
-		return nil, errors.New("authenticationProvider cannot be nil")
-	}
+type serviceNowRequestAdapterOption = internal.ServiceNowRequestAdapterOption
 
-	config, err := buildConfig(opts...)
-	if err != nil {
-		return nil, err
-	}
-
-	baseAdapter, err := nethttplibrary.NewNetHttpRequestAdapterWithParseNodeFactoryAndSerializationWriterFactoryAndHttpClient(authenticationProvider, config.parseNodeFactory, config.serializationWriterFactory, config.client)
-	if err != nil {
-		return nil, err
-	}
-	return &ServiceNowRequestAdapter{NetHttpRequestAdapter: *baseAdapter}, nil
-}
+var (
+	NewServiceNowRequestAdapterBase = internal.NewServiceNowRequestAdapterBase
+)

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -19,7 +20,20 @@ type AttachmentItemRequestBuilder struct {
 	abstractions.BaseRequestBuilder
 }
 
-// newRequestBuilder2Internal instantiates a new AttachmentItemRequestBuilder with custom parsable for table entries.
+// NewAPIV1CompatibleAttachmentItemRequestBuilderInternal ...
+func NewAPIV1CompatibleAttachmentItemRequestBuilderInternal(
+	pathParameters map[string]string,
+	client core.Client,
+) *AttachmentItemRequestBuilder {
+	reqAdapter, _ := internal.NewServiceNowRequestAdapterBase(core.NewAPIV1ClientAdapter(client))
+
+	return NewAttachmentItemRequestBuilderInternal(
+		pathParameters,
+		reqAdapter,
+	)
+}
+
+// NewAttachmentItemRequestBuilderInternal instantiates a new AttachmentItemRequestBuilder with custom parsable for table entries.
 func NewAttachmentItemRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,

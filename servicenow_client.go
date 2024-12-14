@@ -27,6 +27,13 @@ func (c *ServiceNowClient) Now() *NowRequestBuilder {
 	return NewNowRequestBuilder(c.BaseUrl+"/now", c)
 }
 
+func (c *ServiceNowClient) Now2() *NowRequestBuilder2 {
+	pathParameters := map[string]string{
+		"baseurl": c.BaseUrl,
+	}
+	return NewAPIV1CompatibleNowRequestBuilder2Internal(pathParameters, c)
+}
+
 // Deprecated: deprecated since v1.6.0. Please use `NewServiceNowClient2` instead.
 // NewServiceNowClient creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
