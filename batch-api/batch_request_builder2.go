@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -15,6 +16,19 @@ const (
 // BatchRequestBuilder constructs batch requests for the specified base URL.
 type BatchRequestBuilder2 struct {
 	abstractions.BaseRequestBuilder
+}
+
+// NewAPIV1CompatibleBatchRequestBuilder2Internal ...
+func NewAPIV1CompatibleBatchRequestBuilder2Internal(
+	pathParameters map[string]string,
+	client core.Client,
+) *BatchRequestBuilder2 {
+	reqAdapter, _ := internal.NewServiceNowRequestAdapterBase(core.NewAPIV1ClientAdapter(client))
+
+	return NewBatchRequestBuilder2Internal(
+		pathParameters,
+		reqAdapter,
+	)
 }
 
 // NewBatchRequestBuilder2Internal instantiates a new BatchRequestBuilder2 with custom parsable for table entries.

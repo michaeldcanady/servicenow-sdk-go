@@ -3,6 +3,8 @@ package servicenowsdkgo
 import (
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
 	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -14,6 +16,19 @@ const (
 
 type NowRequestBuilder2 struct {
 	abstractions.BaseRequestBuilder
+}
+
+// NewAPIV1CompatibleNowRequestBuilder2Internal ...
+func NewAPIV1CompatibleNowRequestBuilder2Internal(
+	pathParameters map[string]string,
+	client core.Client,
+) *NowRequestBuilder2 {
+	reqAdapter, _ := internal.NewServiceNowRequestAdapterBase(core.NewAPIV1ClientAdapter(client))
+
+	return NewNowRequestBuilder2Internal(
+		pathParameters,
+		reqAdapter,
+	)
 }
 
 // NewNowRequestBuilder2Internal ...

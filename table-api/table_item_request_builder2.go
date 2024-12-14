@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -18,6 +19,18 @@ const (
 type TableItemRequestBuilder2 struct {
 	abstractions.BaseRequestBuilder
 	factory serialization.ParsableFactory
+}
+
+func NewAPIV1CompatibleDefaultTableItemRequestBuilder2Internal(
+	pathParameters map[string]string,
+	client core.Client,
+) *TableItemRequestBuilder2 {
+	reqAdapter, _ := internal.NewServiceNowRequestAdapterBase(core.NewAPIV1ClientAdapter(client))
+
+	return NewDefaultTableItemRequestBuilder2Internal(
+		pathParameters,
+		reqAdapter,
+	)
 }
 
 // NewDefaultTableItemRequestBuilder2Internal instantiates a new TableItemRequestBuilder2 and sets the default values.
