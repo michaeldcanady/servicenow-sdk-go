@@ -13,13 +13,14 @@ import (
 
 const authorizationHeader = "Authorization"
 
+// ServiceNowServiceClient is the core client for interacting with Service-Now's APIs
 type ServiceNowServiceClient struct {
 	ServiceNowBaseServiceClient
 }
 
 // TODO: will be new base for auth provider (credentials)
 type credentialAuthorizationProviderAdapter struct {
-	cred core.Credential
+	cred core.Credential //nolint: deprecated
 }
 
 func (provider *credentialAuthorizationProviderAdapter) AuthenticateRequest(ctx context.Context, request *abstractions.RequestInformation, _ map[string]interface{}) error {
@@ -45,6 +46,7 @@ func (provider *credentialAuthorizationProviderAdapter) AuthenticateRequest(ctx 
 	return nil
 }
 
+// NewServiceNowServiceClient2WithCredential creates ServiceNowClient2 with V1 API compatible credential
 func NewServiceNowServiceClient2WithCredential(credential core.Credential, opts ...serviceNowServiceClientOption) (*ServiceNowServiceClient, error) {
 	authenticationProvider := &credentialAuthorizationProviderAdapter{
 		cred: credential,
@@ -53,6 +55,7 @@ func NewServiceNowServiceClient2WithCredential(credential core.Credential, opts 
 	return NewServiceNowServiceClient2(authenticationProvider, opts...)
 }
 
+// NewServiceNowServiceClient2 creates new ServiceNowClient2 using provided parameters.
 func NewServiceNowServiceClient2(authenticationProvider authentication.AuthenticationProvider, opts ...serviceNowServiceClientOption) (*ServiceNowServiceClient, error) {
 	requestAdapter, err := NewServiceNowRequestAdapterBase(authenticationProvider)
 	if err != nil {

@@ -2,21 +2,28 @@ package servicenowsdkgo
 
 import (
 	"context"
+	"maps"
 	"net/http"
 	"net/url"
 	"strings"
 
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// NowRequestBuilder ...
 type NowRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // NewNowRequestBuilder creates a new instance of the NowRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created NowRequestBuiabstraction
 func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuilder {
@@ -28,12 +35,20 @@ func NewNowRequestBuilder(url string, client *ServiceNowClient) *NowRequestBuild
 }
 
 // Deprecated: deprecated since v{unreleased}. Use `Table2` instead.
+//
 // Table returns a TableRequestBuilder associated with the NowRequestBuilder.
 // It accepts a table name as a parameter and constructs the URL for table-related requests.
 // The returned TableRequestBuilder can be used to build and execute table-related requests.
 func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder {
 	rB.RequestBuilder.PathParameters["table"] = tableName
 	return tableapi.NewTableRequestBuilder(rB.RequestBuilder.Client.(*ServiceNowClient), rB.RequestBuilder.PathParameters)
+}
+
+// Table2 provides way to manage Service-Now table entries
+func (rB *NowRequestBuilder) Table2(tableName string) *tableapi.TableRequestBuilder2 {
+	pathParameters := maps.Clone(rB.RequestBuilder.PathParameters)
+	pathParameters["table"] = tableName
+	return tableapi.NewAPIV1CompatibleDefaultTableRequestBuilder2Internal(pathParameters, rB.RequestBuilder.Client)
 }
 
 var _ intCore.ClientSendableAdapterFunc[*ServiceNowClient] = sendableAdapter
@@ -85,8 +100,20 @@ func sendableAdapter(adaptee *ServiceNowClient, ctx context.Context, info intCor
 	return adaptee.SendWithContext(ctx, oldInfo, mapping.(core.ErrorMapping))
 }
 
+// Deprecated: deprecated since v{unreleased}. Use `Attachment2` instead.
+//
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
 // It allows you to work with attachments and manage attachments in ServiceNow.
 func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilder {
 	return attachmentapi.NewAttachmentRequestBuilder(rB.RequestBuilder.Client.(*ServiceNowClient), rB.RequestBuilder.PathParameters)
+}
+
+// Attachment2 provides way to manage Service-Now attachments
+func (rB *NowRequestBuilder) Attachment2() *attachmentapi.AttachmentRequestBuilder2 {
+	panic("not implemented")
+}
+
+// Batch providers way to manage Service-Now batch requests
+func (rB *NowRequestBuilder) Batch() batchapi.BatchRequestBuilder2 {
+	panic("not implemented")
 }

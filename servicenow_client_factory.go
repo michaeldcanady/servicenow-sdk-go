@@ -7,12 +7,16 @@ import (
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
+// serviceNowClientConfig represents configurations for the ServiceNowClient
 type serviceNowClientConfig struct {
+	// middleware middleware used by client
 	middleware []nethttplibrary.Middleware
 }
 
+// serviceNowClientOption represent options for the ServiceNowClient
 type serviceNowClientOption func(*serviceNowClientConfig) error
 
+// getDefaultMiddleware returns a slice of the default middleware for the ServiceNowClient
 func getDefaultMiddleware() []nethttplibrary.Middleware {
 	kiotaMiddlewares := nethttplibrary.GetDefaultMiddlewares()
 
@@ -27,6 +31,7 @@ func getDefaultMiddleware() []nethttplibrary.Middleware {
 	return resultMiddlewares
 }
 
+// GetDefaultClient creates new default http.Client using the provided options
 func GetDefaultClient(opts ...serviceNowClientOption) (*http.Client, error) {
 	config := serviceNowClientConfig{
 		middleware: []nethttplibrary.Middleware{},
@@ -45,6 +50,7 @@ func GetDefaultClient(opts ...serviceNowClientOption) (*http.Client, error) {
 	return nethttplibrary.GetDefaultClient(config.middleware...), nil
 }
 
+// WithMiddleware represents client option to apply desired middleware
 func WithMiddleware(middleware nethttplibrary.Middleware) serviceNowClientOption {
 	return func(config *serviceNowClientConfig) error {
 		if internal.IsNil(config.middleware) {

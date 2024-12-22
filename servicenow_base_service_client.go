@@ -1,6 +1,7 @@
 package servicenowsdkgo
 
 import (
+	now "github.com/michaeldcanady/servicenow-sdk-go/now"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
@@ -10,14 +11,17 @@ import (
 	textserialization "github.com/microsoft/kiota-serialization-text-go"
 )
 
+// ServiceNowBaseServiceClient is the core service used by ServiceNowServiceClient to make requests to Service-Now's APIs
 type ServiceNowBaseServiceClient struct {
 	abstractions.BaseRequestBuilder
 }
 
-func (rB *ServiceNowBaseServiceClient) Now() NowRequestBuilder2 {
-	return *NewNowRequestBuilder2Internal(rB.BaseRequestBuilder.PathParameters, rB.BaseRequestBuilder.RequestAdapter)
+// Now provides entrypoint into Service-Now's APIs
+func (rB *ServiceNowBaseServiceClient) Now() *now.NowRequestBuilder2 {
+	return now.NewNowRequestBuilder2Internal(rB.BaseRequestBuilder.PathParameters, rB.BaseRequestBuilder.RequestAdapter)
 }
 
+// NewServiceNowBaseServiceClient creates a new ServiceNowBaseServiceClient with the given parameters
 func NewServiceNowBaseServiceClient(
 	requestAdapter abstractions.RequestAdapter,
 	backingStoreFactory store.BackingStoreFactory,

@@ -11,8 +11,12 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	now "github.com/michaeldcanady/servicenow-sdk-go/now"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// ServiceNowClient ...
 type ServiceNowClient struct {
 	// Deprecated: deprecated since v1.6.0.
 	Credential   core.Credential
@@ -21,20 +25,24 @@ type ServiceNowClient struct {
 	Session      http.Client
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // Now returns a NowRequestBuilder associated with the Client.
 // It prepares the NowRequestBuilder with the base URL for the ServiceNow instance.
 func (c *ServiceNowClient) Now() *NowRequestBuilder {
 	return NewNowRequestBuilder(c.BaseUrl+"/now", c)
 }
 
-func (c *ServiceNowClient) Now2() *NowRequestBuilder2 {
+// Now provides entrypoint into Service-Now's APIs
+func (c *ServiceNowClient) Now2() *now.NowRequestBuilder2 {
 	pathParameters := map[string]string{
 		"baseurl": c.BaseUrl,
 	}
-	return NewAPIV1CompatibleNowRequestBuilder2Internal(pathParameters, c)
+	return now.NewAPIV1CompatibleNowRequestBuilder2Internal(pathParameters, c)
 }
 
 // Deprecated: deprecated since v1.6.0. Please use `NewServiceNowClient2` instead.
+//
 // NewServiceNowClient creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
@@ -58,6 +66,8 @@ func NewServiceNowClient(credential core.Credential, instance string) *ServiceNo
 	}
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // NewServiceNowClient2 creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
