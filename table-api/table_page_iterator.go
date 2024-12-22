@@ -7,6 +7,8 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // TablePageIterator is a generic struct in Golang which is used to iterate over pages of entries.
 // It embeds the core.PageIterator2 struct and can be used with any type that satisfies the Entry interface.
 //
@@ -21,6 +23,8 @@ type TablePageIterator[T Entry] struct {
 	*core.PageIterator2[T]
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // constructTableCollection is a generic function in Golang used to construct a collection of table entries.
 // It takes an http.Response pointer as input and returns a CollectionResponse of the specified Entry type and an error.
 //
@@ -59,6 +63,8 @@ func constructTableCollection[T Entry](response *http.Response) (core.Collection
 	return resp, nil
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // NewTablePageIterator is a function that creates a new instance of TablePageIterator.
 // It takes a TableCollectionResponse and a Client as input and returns a pointer to a TablePageIterator and an error.
 //

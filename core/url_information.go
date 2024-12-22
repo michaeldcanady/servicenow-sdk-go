@@ -10,6 +10,7 @@ import (
 	"github.com/yosida95/uritemplate/v3"
 )
 
+// Deprecated: deprecated since v{unreleased}.
 // UrlInformation represents an abstract Url.
 type UrlInformation struct { //nolint:stylecheck
 	// The Query Parameters of the request.
@@ -20,6 +21,7 @@ type UrlInformation struct { //nolint:stylecheck
 	UrlTemplate string //nolint:stylecheck
 }
 
+// Deprecated: deprecated since v{unreleased}.
 // Deprecated: deprecated as of v1.4.0, use `NewURLInformation` instead.
 //
 // NewUrlInformation creates a new RequestUri object.
@@ -27,6 +29,7 @@ func NewUrlInformation() *UrlInformation { //nolint:stylecheck
 	return NewURLInformation()
 }
 
+// Deprecated: deprecated since v{unreleased}.
 // NewURLInformation creates a new RequestUri object.
 func NewURLInformation() *UrlInformation {
 	return &UrlInformation{

@@ -1,5 +1,6 @@
 package core
 
+// Deprecated: deprecated since v{unreleased}.
 // Exception represents an exception in the ServiceNow error response.
 type Exception struct {
 	// Detail is a detailed description of the exception.

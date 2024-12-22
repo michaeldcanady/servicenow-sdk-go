@@ -2,6 +2,7 @@ package core
 
 import "fmt"
 
+// Deprecated: deprecated since v{unreleased}.
 // ApiError represents an error that occurs during API requests.
 type ApiError struct { //nolint:stylecheck
 	// Message is the human-readable error message.

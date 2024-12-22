@@ -2,22 +2,22 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
-// OrderDirection represents the order direction for sorting.
-//
 // Deprecated: deprecated since 1.4.0. Please use core.OrderDirection instead.
+//
+// OrderDirection represents the order direction for sorting.
 type OrderDirection = core.OrderDirection
 
 const (
-	// Unset ...
-	//
 	// Deprecated: deprecated since 1.4.0. Please use core.Unset instead.
+	//
+	// Unset ...
 	Unset OrderDirection = core.Unset
-	// Asc ...
-	//
 	// Deprecated: deprecated since 1.4.0. Please use core.Asc instead.
-	Asc OrderDirection = core.Asc
-	// Desc ...
 	//
+	// Asc ...
+	Asc OrderDirection = core.Asc
 	// Deprecated: deprecated since 1.4.0. Please use core.Desc instead.
+	//
+	// Desc ...
 	Desc OrderDirection = core.Desc
 )

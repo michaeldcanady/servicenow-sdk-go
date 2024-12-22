@@ -12,6 +12,7 @@ import (
 	"github.com/mozillazg/go-httpheader"
 )
 
+// Deprecated: deprecated since v{unreleased}.
 // RequestInformation represents an abstract HTTP request.
 type RequestInformation struct {
 	// The HTTP method of the request.
@@ -24,6 +25,7 @@ type RequestInformation struct {
 	uri     *UrlInformation
 }
 
+// Deprecated: deprecated since v{unreleased}.
 // NewRequestInformation creates a new RequestInformation object with default values.
 func NewRequestInformation() *RequestInformation {
 	return &RequestInformation{

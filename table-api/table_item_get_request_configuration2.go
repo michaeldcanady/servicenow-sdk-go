@@ -2,6 +2,8 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // tableItemGetRequestConfiguration2[T] represents request configurations GET request.
 type tableItemGetRequestConfiguration2[T Entry] struct {
 	header   interface{}

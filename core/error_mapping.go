@@ -2,9 +2,11 @@ package core
 
 import "strconv"
 
+// Deprecated: deprecated since v{unreleased}.
 // ErrorMapping is a map that maps error codes to human-readable error messages.
 type ErrorMapping map[string]string
 
+// Deprecated: deprecated since v{unreleased}.
 // NewErrorMapping creates a new instance of the ErrorMapping.
 // It initializes an empty map to store error code to error message mappings.
 func NewErrorMapping() ErrorMapping {

@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
+// Deprecated: deprecated since v{unreleased}.
 // TableCollectionResponse2 represents a collection of table entries.
 type TableCollectionResponse2[T Entry] struct {
 	// Result is a slice of pointers to table entries.

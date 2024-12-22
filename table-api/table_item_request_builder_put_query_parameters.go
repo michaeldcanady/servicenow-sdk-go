@@ -1,5 +1,7 @@
 package tableapi
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // TableItemRequestBuilderPutQueryParameters represents PUT query parameters for a Table Item Request.
 type TableItemRequestBuilderPutQueryParameters struct {
 	//DisplayValue determines the type of data returned, either the actual values from the database or the display values of the fields.

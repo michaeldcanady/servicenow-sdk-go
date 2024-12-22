@@ -8,6 +8,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
+// TableRecord represents a Service-Now table record
 type TableRecord interface {
 	Get(string) (RecordElement, error)
 	Set(string, RecordElement) error
@@ -15,26 +16,23 @@ type TableRecord interface {
 	store.BackedModel
 }
 
-type enumerationStyle int64
-
-const (
-	enumerationStyleAll enumerationStyle = iota
-	enumerationStyleOnlyChanged
-	enumerationStyleOnlyChangedToNil
-)
-
+// tableRecord implementation of TableRecord
 type tableRecord struct {
-	backingStore     store.BackingStore
-	enumerationStyle enumerationStyle
+	backingStore        store.BackingStore
+	backingStoreFactory store.BackingStoreFactory
+	enumerationStyle    enumerationStyle
 }
 
+// NewTableRecord creates a new instance of a TableRecord
 func NewTableRecord() TableRecord {
 	return &tableRecord{
-		backingStore:     store.BackingStoreFactoryInstance(),
-		enumerationStyle: enumerationStyleAll,
+		backingStore:        store.BackingStoreFactoryInstance(),
+		backingStoreFactory: store.BackingStoreFactoryInstance,
+		enumerationStyle:    enumerationStyleAll,
 	}
 }
 
+// CreateTableRecordFromDiscriminatorValue is a factory for creating a TableRecord
 func CreateTableRecordFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
 	raw, err := parseNode.GetRawValue()
 	if err != nil {
@@ -55,18 +53,14 @@ func CreateTableRecordFromDiscriminatorValue(parseNode serialization.ParseNode) 
 	return tableRecord, nil
 }
 
-func (tR *tableRecord) GetBackingStore() store.BackingStore {
-	return tR.backingStore
-}
-
-// Serialize writes the objects properties to the current writer.
+// Serialize writes the objects properties to the current writer
 func (tR *tableRecord) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(tR) {
 		return nil
 	}
 
 	for key, value := range tR.enumerate() {
-		actualValue, err := value.value()
+		actualValue, err := value.GetValue()
 		if err != nil {
 			return err
 		}
@@ -77,6 +71,61 @@ func (tR *tableRecord) Serialize(writer serialization.SerializationWriter) error
 	return nil
 }
 
+// GetFieldDeserializers returns the deserialization information for this object
+func (tR *tableRecord) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	fieldDeserializers := map[string]func(serialization.ParseNode) error{}
+
+	for key := range tR.backingStore.Enumerate() {
+		fieldDeserializers[key] = func(pn serialization.ParseNode) error {
+			tR.GetBackingStore().SetInitializationCompleted(false)
+			val, err := pn.GetRawValue()
+			if err != nil {
+				return nil
+			}
+			_, ok := val.(map[string]interface{})
+			var elem RecordElement
+			if !ok {
+				elem = NewRecordElement()
+				if err := elem.SetValue(newElementValue(val)); err != nil {
+					return err
+				}
+			} else {
+				var ok bool
+				rawElem, err := pn.GetObjectValue(CreateRecordElementFromDiscriminatorValue)
+				if err != nil {
+					return err
+				}
+				elem, ok = rawElem.(RecordElement)
+				if !ok {
+					// TODO: define error
+					return nil
+				}
+			}
+			if err := tR.Set(key, elem); err != nil {
+				return err
+			}
+			tR.GetBackingStore().SetInitializationCompleted(true)
+			return nil
+		}
+	}
+
+	return fieldDeserializers
+}
+
+// GetBackingStore returns the backing store of the record
+func (tR *tableRecord) GetBackingStore() store.BackingStore {
+	if internal.IsNil(tR) {
+		return nil
+	}
+
+	if internal.IsNil(tR.backingStore) {
+		tR.backingStore = tR.backingStoreFactory()
+	}
+
+	return tR.backingStore
+}
+
+// enumerate returns map of keys and corresponding record element
 func (tR *tableRecord) enumerate() map[string]RecordElement {
 	enumerator := make(map[string]RecordElement, 0)
 
@@ -108,46 +157,7 @@ func (tR *tableRecord) enumerate() map[string]RecordElement {
 	return enumerator
 }
 
-func (tR *tableRecord) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	fieldDeserializers := map[string]func(serialization.ParseNode) error{}
-
-	for key := range tR.backingStore.Enumerate() {
-		fieldDeserializers[key] = func(pn serialization.ParseNode) error {
-			tR.GetBackingStore().SetInitializationCompleted(false)
-			val, err := pn.GetRawValue()
-			if err != nil {
-				return nil
-			}
-			_, ok := val.(map[string]interface{})
-			var elem RecordElement
-			if !ok {
-				elem = NewRecordElement()
-				if err := elem.SetValue(val); err != nil {
-					return err
-				}
-			} else {
-				var ok bool
-				rawElem, err := pn.GetObjectValue(CreateRecordElementFromDiscriminatorValue)
-				if err != nil {
-					return err
-				}
-				elem, ok = rawElem.(RecordElement)
-				if !ok {
-					// TODO: define error
-					return nil
-				}
-			}
-			if err := tR.Set(key, elem); err != nil {
-				return err
-			}
-			tR.GetBackingStore().SetInitializationCompleted(true)
-			return nil
-		}
-	}
-
-	return fieldDeserializers
-}
-
+// Get returns associated record element of specified key
 func (tR *tableRecord) Get(key string) (RecordElement, error) {
 	if internal.IsNil(tR) {
 		return nil, nil
@@ -166,6 +176,7 @@ func (tR *tableRecord) Get(key string) (RecordElement, error) {
 	return elem, nil
 }
 
+// Set sets associated record element for key to the specified element
 func (tR *tableRecord) Set(key string, elem RecordElement) error {
 	if internal.IsNil(tR) {
 		return nil

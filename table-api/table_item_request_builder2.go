@@ -21,6 +21,7 @@ type TableItemRequestBuilder2 struct {
 	factory serialization.ParsableFactory
 }
 
+// NewAPIV1CompatibleDefaultTableItemRequestBuilder2Internal converts api v1 compatible elements into api v2 compatible elements
 func NewAPIV1CompatibleDefaultTableItemRequestBuilder2Internal(
 	pathParameters map[string]string,
 	client core.Client,

@@ -2,6 +2,8 @@ package tableapi
 
 import "net/http"
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // TableItemResponse2[T] represents a T Entry single table record response.
 type TableItemResponse2[T Entry] struct {
 	Result *T

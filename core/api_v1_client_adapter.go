@@ -10,10 +10,12 @@ import (
 
 var _ authentication.AuthenticationProvider = (*APIV1ClientAdapter)(nil)
 
+// APIV1ClientAdapter an adapter to adapt from a V1 client to a kiota RequestAdapter
 type APIV1ClientAdapter struct {
 	client Client
 }
 
+// NewAPIV1ClientAdapter instantiates an authentication provider using a V1 client.
 func NewAPIV1ClientAdapter(client Client) *APIV1ClientAdapter {
 	return &APIV1ClientAdapter{
 		client: client,
