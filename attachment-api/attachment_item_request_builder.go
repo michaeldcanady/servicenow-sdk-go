@@ -12,6 +12,7 @@ import (
 )
 
 const (
+	// attachmentItemURLTemplate the url template for Service-Now's attachment item endpoint
 	attachmentItemURLTemplate = "{+baseurl}/api/now/v1/attachment{/sys_id}"
 )
 
@@ -20,7 +21,7 @@ type AttachmentItemRequestBuilder struct {
 	abstractions.BaseRequestBuilder
 }
 
-// NewAPIV1CompatibleAttachmentItemRequestBuilderInternal ...
+// NewAPIV1CompatibleAttachmentItemRequestBuilderInternal converts api v1 compatible elements into api v2 compatible elements
 func NewAPIV1CompatibleAttachmentItemRequestBuilderInternal(
 	pathParameters map[string]string,
 	client core.Client,
@@ -54,6 +55,7 @@ func NewAttachmentItemRequestBuilder(
 	return NewAttachmentItemRequestBuilderInternal(urlParams, requestAdapter)
 }
 
+// File provides way to manage Service-Now's Attachment Item File endpoint
 func (rB *AttachmentItemRequestBuilder) File() *AttachmentItemFileRequestBuilder {
 	if internal.IsNil(rB) {
 		return nil
@@ -64,12 +66,13 @@ func (rB *AttachmentItemRequestBuilder) File() *AttachmentItemFileRequestBuilder
 	return NewAttachmentItemFileRequestBuilderInternal(pathParameters, rB.BaseRequestBuilder.RequestAdapter)
 }
 
+// Get returns an Attachment using the provided arguments
 func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfiguration *TableAttachmentItemRequestBuilderGetRequestConfiguration) (Attachmentable, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
 
-	requestInfo, err := rB.toGetRequestInformation(ctx, nil, requestConfiguration)
+	requestInfo, err := rB.ToGetRequestInformation(ctx, nil, requestConfiguration)
 	if err != nil {
 		return nil, err
 	}
@@ -94,13 +97,13 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 	return typedRes, nil
 }
 
-// Delete removes the attachment item.
+// Delete removes the attachment item using the provided arguments
 func (rB *AttachmentItemRequestBuilder) Delete(ctx context.Context, requestConfiguration *TableAttachmentItemRequestBuilderDeleteRequestConfiguration) error {
 	if internal.IsNil(rB) {
 		return nil
 	}
 
-	requestInfo, err := rB.toDeleteRequestInformation(ctx, nil, requestConfiguration)
+	requestInfo, err := rB.ToDeleteRequestInformation(ctx, nil, requestConfiguration)
 	if err != nil {
 		return err
 	}
@@ -111,8 +114,8 @@ func (rB *AttachmentItemRequestBuilder) Delete(ctx context.Context, requestConfi
 	return rB.BaseRequestBuilder.RequestAdapter.SendNoContent(ctx, requestInfo, errorMapping)
 }
 
-// toGetRequestInformation converts request configurations to Get request information.
-func (rB *AttachmentItemRequestBuilder) toGetRequestInformation(_ context.Context, _ Attachmentable, requestConfiguration *TableAttachmentItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
+// ToGetRequestInformation converts request configurations to Get request information.
+func (rB *AttachmentItemRequestBuilder) ToGetRequestInformation(_ context.Context, _ Attachmentable, requestConfiguration *TableAttachmentItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -129,8 +132,8 @@ func (rB *AttachmentItemRequestBuilder) toGetRequestInformation(_ context.Contex
 	return &requestInfo.RequestInformation, nil
 }
 
-// toDeleteRequestInformation converts request configurations to Delete request information.
-func (rB *AttachmentItemRequestBuilder) toDeleteRequestInformation(_ context.Context, _ Attachmentable, requestConfiguration *TableAttachmentItemRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
+// ToDeleteRequestInformation converts request configurations to Delete request information.
+func (rB *AttachmentItemRequestBuilder) ToDeleteRequestInformation(_ context.Context, _ Attachmentable, requestConfiguration *TableAttachmentItemRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}

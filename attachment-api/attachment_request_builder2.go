@@ -13,9 +13,12 @@ import (
 )
 
 const (
-	sysIDKey              = "sys_id"
+	// sysIDKey sys id path parameter key
+	sysIDKey = "sys_id"
+	// attachmentURLTemplate url template for the Service-Now Attachment endpoint
 	attachmentURLTemplate = "{+baseurl}/api/now/v1/attachment{?sysparm_limit,sysparm_offset,sysparm_query}"
-	rawURLKey             = "request-raw-url"
+	// rawURLKey raw url path parameter key
+	rawURLKey = "request-raw-url"
 )
 
 // AttachmentRequestBuilder2 provides operations to manage Service-Now attachments.
@@ -23,7 +26,7 @@ type AttachmentRequestBuilder2 struct {
 	abstractions.BaseRequestBuilder
 }
 
-// NewAPIV1CompatibleAttachmentRequestBuilder2Internal ...
+// NewAPIV1CompatibleAttachmentRequestBuilder2Internal converts api v1 compatible elements into api v2 compatible elements
 func NewAPIV1CompatibleAttachmentRequestBuilder2Internal(
 	pathParameters map[string]string,
 	client core.Client,
@@ -57,6 +60,7 @@ func NewAttachmentRequestBuilder2(
 	return NewAttachmentRequestBuilder2Internal(urlParams, requestAdapter)
 }
 
+// ByID provides the way to manage attachment item with provided sys id
 func (rB *AttachmentRequestBuilder2) ByID(sysID string) *AttachmentItemRequestBuilder {
 	if internal.IsNil(rB) {
 		return nil
@@ -68,6 +72,7 @@ func (rB *AttachmentRequestBuilder2) ByID(sysID string) *AttachmentItemRequestBu
 	return NewAttachmentItemRequestBuilderInternal(pathParameters, rB.BaseRequestBuilder.RequestAdapter)
 }
 
+// File provides the way to access Service-Now's attachment file API
 func (rB *AttachmentRequestBuilder2) File() *AttachmentFileRequestBuilder {
 	if internal.IsNil(rB) {
 		return nil
@@ -78,6 +83,7 @@ func (rB *AttachmentRequestBuilder2) File() *AttachmentFileRequestBuilder {
 	return NewAttachmentFileRequestBuilderInternal(pathParameters, rB.BaseRequestBuilder.RequestAdapter)
 }
 
+// Upload provides the way to access Service-Now's attachment upload API
 func (rB *AttachmentRequestBuilder2) Upload() *AttachmentUploadRequestBuilder {
 	if internal.IsNil(rB) {
 		return nil
@@ -88,6 +94,7 @@ func (rB *AttachmentRequestBuilder2) Upload() *AttachmentUploadRequestBuilder {
 	return NewAttachmentUploadRequestBuilderInternal(pathParameters, rB.BaseRequestBuilder.RequestAdapter)
 }
 
+// Get returns AttachmentCollectionResponse using provided arguments
 func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfiguration *TableAttachmentRequestBuilder2GetRequestConfiguration) (AttachmentCollectionResponse2, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
@@ -102,7 +109,7 @@ func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfigurati
 
 	requestConfiguration.Options = append(requestConfiguration.Options, opts)
 
-	requestInfo, err := rB.toGetRequestInformation(ctx, nil, requestConfiguration)
+	requestInfo, err := rB.ToGetRequestInformation(ctx, nil, requestConfiguration)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +117,7 @@ func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfigurati
 	// TODO: add error factory
 	errorMapping := abstractions.ErrorMappings{}
 
-	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateAttachmentCollectionResponse2FromDiscriminatorValue(), errorMapping)
+	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateAttachmentCollectionResponse2FromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -131,8 +138,8 @@ func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfigurati
 	return snRes, nil
 }
 
-// toGetRequestInformation converts request configurations to Get request information.
-func (rB *AttachmentRequestBuilder2) toGetRequestInformation(_ context.Context, _ Attachmentable, requestConfiguration *TableAttachmentRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
+// ToGetRequestInformation converts request configurations to Get request information.
+func (rB *AttachmentRequestBuilder2) ToGetRequestInformation(_ context.Context, _ Attachmentable, requestConfiguration *TableAttachmentRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}

@@ -11,6 +11,7 @@ import (
 )
 
 const (
+	// attachmentFileURLTemplate the url template for Service-Now's attachment file endpoint
 	attachmentFileURLTemplate = "{+baseurl}/api/now/v1/attachment/file{?encryption_context,file_name,table_name,table_sys_id}"
 )
 
@@ -19,7 +20,7 @@ type AttachmentFileRequestBuilder struct {
 	abstractions.BaseRequestBuilder
 }
 
-// NewAPIV1CompatibleAttachmentFileRequestBuilderInternal ...
+// NewAPIV1CompatibleAttachmentFileRequestBuilderInternal converts api v1 compatible elements into api v2 compatible elements
 func NewAPIV1CompatibleAttachmentFileRequestBuilderInternal(
 	pathParameters map[string]string,
 	client core.Client,
@@ -53,6 +54,7 @@ func NewAttachmentFileRequestBuilder(
 	return NewAttachmentFileRequestBuilderInternal(urlParams, requestAdapter)
 }
 
+// Post uploads provided content to Service-Now using provided parameters
 func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType string, data []byte, requestConfiguration *TableAttachmentFileRequestBuilderPostRequestConfiguration) (Fileable, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
@@ -62,19 +64,19 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType st
 		return nil, errors.New("requestConfiguration or requestConfiguration.QueryParameters can't be empty")
 	}
 
-	if requestConfiguration.QueryParameters.TableSysID == "" {
+	if requestConfiguration.QueryParameters.TableSysID == nil || *requestConfiguration.QueryParameters.TableSysID == "" {
 		return nil, errors.New("requestConfiguration.QueryParameters.TableSysId can't be empty")
 	}
 
-	if requestConfiguration.QueryParameters.TableName == "" {
+	if requestConfiguration.QueryParameters.TableName == nil || *requestConfiguration.QueryParameters.TableName == "" {
 		return nil, errors.New("requestConfiguration.QueryParameters.TableName can't be empty")
 	}
 
-	if requestConfiguration.QueryParameters.FileName == "" {
+	if requestConfiguration.QueryParameters.FileName == nil || *requestConfiguration.QueryParameters.FileName == "" {
 		return nil, errors.New("requestConfiguration.QueryParameters.FileName can't be empty")
 	}
 
-	requestInfo, err := rB.toPostRequestInformation(ctx, contentType, data, requestConfiguration)
+	requestInfo, err := rB.ToPostRequestInformation(ctx, contentType, data, requestConfiguration)
 	if err != nil {
 		return nil, err
 	}
@@ -95,8 +97,8 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType st
 	return typedResp, nil
 }
 
-// toPostRequestInformation converts request configurations to Get request information.
-func (rB *AttachmentFileRequestBuilder) toPostRequestInformation(_ context.Context, contentType string, data []byte, requestConfiguration *TableAttachmentFileRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
+// ToPostRequestInformation converts request configurations to Post request information.
+func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Context, contentType string, data []byte, requestConfiguration *TableAttachmentFileRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}

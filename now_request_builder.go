@@ -110,7 +110,8 @@ func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilde
 
 // Attachment2 provides way to manage Service-Now attachments
 func (rB *NowRequestBuilder) Attachment2() *attachmentapi.AttachmentRequestBuilder2 {
-	panic("not implemented")
+	pathParameters := maps.Clone(rB.RequestBuilder.PathParameters)
+	return attachmentapi.NewAPIV1CompatibleAttachmentRequestBuilder2Internal(pathParameters, rB.RequestBuilder.Client)
 }
 
 // Batch providers way to manage Service-Now batch requests

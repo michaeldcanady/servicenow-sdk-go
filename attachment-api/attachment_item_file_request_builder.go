@@ -13,6 +13,7 @@ import (
 )
 
 const (
+	// attachmentItemFileURLTemplate the url template for Service-Now's attachment item file endpoint
 	attachmentItemFileURLTemplate = "{+baseurl}/api/now/v1/attachment{/sys_id}/file"
 )
 
@@ -42,6 +43,7 @@ func NewAttachmentItemFileRequestBuilder(
 	return NewAttachmentItemFileRequestBuilderInternal(urlParams, requestAdapter)
 }
 
+// Get returns file with content using provided parameters
 func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConfiguration *TableAttachmentItemFileRequestBuilderGetRequestConfiguration) (FileWithContentable, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
@@ -56,7 +58,7 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 
 	requestConfiguration.Options = append(requestConfiguration.Options, opts)
 
-	requestInfo, err := rB.toGetRequestInformation(ctx, nil, requestConfiguration)
+	requestInfo, err := rB.ToGetRequestInformation(ctx, nil, requestConfiguration)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +104,8 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 	return typedFile, nil
 }
 
-func (rB *AttachmentItemFileRequestBuilder) toGetRequestInformation(_ context.Context, _ any, requestConfiguration *TableAttachmentItemFileRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
+// ToGetRequestInformation converts request configurations to Get request information.
+func (rB *AttachmentItemFileRequestBuilder) ToGetRequestInformation(_ context.Context, _ any, requestConfiguration *TableAttachmentItemFileRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}

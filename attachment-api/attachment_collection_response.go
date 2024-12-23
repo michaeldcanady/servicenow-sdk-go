@@ -2,6 +2,9 @@ package attachmentapi
 
 import "net/http"
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// AttachmentCollectionResponse ...
 type AttachmentCollectionResponse struct {
 	Result []*Attachment
 }
