@@ -7,6 +7,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -51,7 +52,7 @@ func NewAttachmentItemRequestBuilder(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentItemRequestBuilder {
 	urlParams := make(map[string]string)
-	urlParams["request-raw-url"] = rawURL
+	urlParams[intCore.RawURLKey] = rawURL
 	return NewAttachmentItemRequestBuilderInternal(urlParams, requestAdapter)
 }
 

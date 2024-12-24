@@ -22,6 +22,7 @@ const (
 	statusTextKey    = "status_text"
 )
 
+// ServicedRequestable represents Service-Now Batch API response's serviced request
 type ServicedRequestable interface {
 	GetBody(serialization.ParsableFactory) (serialization.Parsable, error)
 	GetRawBody() ([]byte, error)
@@ -45,12 +46,16 @@ type ServicedRequestable interface {
 }
 
 type servicedRequest struct {
+	// backingStoreFactory factory to create backingStore
+	backingStoreFactory store.BackingStoreFactory
+	// backingStore the store backing the model
 	backingStore store.BackingStore
 }
 
 func NewServicedRequest() ServicedRequestable {
 	return &servicedRequest{
-		backingStore: store.NewInMemoryBackingStore(),
+		backingStore:        store.NewInMemoryBackingStore(),
+		backingStoreFactory: store.NewInMemoryBackingStore,
 	}
 }
 
@@ -60,21 +65,21 @@ func CreateServicedRequestFromDiscriminatorValue(parseNode serialization.ParseNo
 }
 
 // GetBackingStore retrieves the backing store for the model.
-func (rE *servicedRequest) GetBackingStore() store.BackingStore {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) GetBackingStore() store.BackingStore {
+	if internal.IsNil(sR) {
 		return nil
 	}
 
-	if internal.IsNil(rE.backingStore) {
-		rE.backingStore = store.NewInMemoryBackingStore()
+	if internal.IsNil(sR.backingStore) {
+		sR.backingStore = sR.backingStoreFactory()
 	}
 
-	return rE.backingStore
+	return sR.backingStore
 }
 
 // Serialize writes the objects properties to the current writer.
-func (rE *servicedRequest) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(sR) {
 		return nil
 	}
 
@@ -82,8 +87,8 @@ func (rE *servicedRequest) Serialize(writer serialization.SerializationWriter) e
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (rE *servicedRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	if internal.IsNil(sR) {
 		return nil
 	}
 
@@ -99,7 +104,7 @@ func (rE *servicedRequest) GetFieldDeserializers() map[string]func(serialization
 				return err
 			}
 
-			return rE.setRawBody(body)
+			return sR.setRawBody(body)
 		},
 		errorMessageKey: func(pn serialization.ParseNode) error {
 			errorMessage, err := pn.GetStringValue()
@@ -107,7 +112,7 @@ func (rE *servicedRequest) GetFieldDeserializers() map[string]func(serialization
 				return err
 			}
 
-			return rE.setErrorMessage(errorMessage)
+			return sR.setErrorMessage(errorMessage)
 		},
 		executionTimeKey: func(pn serialization.ParseNode) error {
 			duration, err := pn.GetISODurationValue()
@@ -115,7 +120,7 @@ func (rE *servicedRequest) GetFieldDeserializers() map[string]func(serialization
 				return err
 			}
 
-			return rE.setExecutionTime(duration)
+			return sR.setExecutionTime(duration)
 		},
 		headersKey: func(pn serialization.ParseNode) error {
 			headers, err := pn.GetCollectionOfObjectValues(CreateBatchHeader2FromDiscriminatorValue)
@@ -132,7 +137,7 @@ func (rE *servicedRequest) GetFieldDeserializers() map[string]func(serialization
 				batchHeaders[index] = batchHeader
 			}
 
-			return rE.setHeaders(batchHeaders)
+			return sR.setHeaders(batchHeaders)
 		},
 		idKey: func(pn serialization.ParseNode) error {
 			id, err := pn.GetStringValue()
@@ -140,7 +145,7 @@ func (rE *servicedRequest) GetFieldDeserializers() map[string]func(serialization
 				return err
 			}
 
-			return rE.setID(id)
+			return sR.setID(id)
 		},
 		redirectURLKey: func(pn serialization.ParseNode) error {
 			redirectURL, err := pn.GetStringValue()
@@ -148,7 +153,7 @@ func (rE *servicedRequest) GetFieldDeserializers() map[string]func(serialization
 				return err
 			}
 
-			return rE.setRedirectURL(redirectURL)
+			return sR.setRedirectURL(redirectURL)
 		},
 		statusCodeKey: func(pn serialization.ParseNode) error {
 			statusCode, err := pn.GetInt64Value()
@@ -156,7 +161,7 @@ func (rE *servicedRequest) GetFieldDeserializers() map[string]func(serialization
 				return err
 			}
 
-			return rE.setStatusCode(statusCode)
+			return sR.setStatusCode(statusCode)
 		},
 		statusTextKey: func(pn serialization.ParseNode) error {
 			statusText, err := pn.GetStringValue()
@@ -164,27 +169,27 @@ func (rE *servicedRequest) GetFieldDeserializers() map[string]func(serialization
 				return err
 			}
 
-			return rE.setStatusText(statusText)
+			return sR.setStatusText(statusText)
 		},
 	}
 }
 
 // GetBody returns the body serialized.
-func (rE *servicedRequest) GetBody(constructor serialization.ParsableFactory) (serialization.Parsable, error) {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) GetBody(constructor serialization.ParsableFactory) (serialization.Parsable, error) {
+	if internal.IsNil(sR) {
 		return nil, nil
 	}
 
-	if err := throwErrors(rE, reflect.TypeOf(constructor).Elem().Name()); err != nil {
+	if err := throwErrors(sR, reflect.TypeOf(constructor).Elem().Name()); err != nil {
 		return nil, err
 	}
 
-	headers, err := rE.GetHeaders()
+	headers, err := sR.GetHeaders()
 	if err != nil {
 		return nil, err
 	}
 
-	body, err := rE.GetRawBody()
+	body, err := sR.GetRawBody()
 	if err != nil {
 		return nil, err
 	}
@@ -198,12 +203,12 @@ func (rE *servicedRequest) GetBody(constructor serialization.ParsableFactory) (s
 }
 
 // GetRawBody returns the raw body for the batch item.
-func (rE *servicedRequest) GetRawBody() ([]byte, error) {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) GetRawBody() ([]byte, error) {
+	if internal.IsNil(sR) {
 		return nil, nil
 	}
 
-	body, err := rE.GetBackingStore().Get(bodyKey)
+	body, err := sR.GetBackingStore().Get(bodyKey)
 	if err != nil {
 		return nil, err
 	}
@@ -217,21 +222,21 @@ func (rE *servicedRequest) GetRawBody() ([]byte, error) {
 }
 
 // setRawBody sets the raw body for the batch item.
-func (rE *servicedRequest) setRawBody(body []byte) error {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) setRawBody(body []byte) error {
+	if internal.IsNil(sR) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(bodyKey, body)
+	return sR.GetBackingStore().Set(bodyKey, body)
 }
 
 // GetErrorMessage returns, if present, the error messages.
-func (rE *servicedRequest) GetErrorMessage() (*string, error) {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) GetErrorMessage() (*string, error) {
+	if internal.IsNil(sR) {
 		return nil, nil
 	}
 
-	message, err := rE.GetBackingStore().Get(errorMessageKey)
+	message, err := sR.GetBackingStore().Get(errorMessageKey)
 	if err != nil {
 		return nil, err
 	}
@@ -245,21 +250,21 @@ func (rE *servicedRequest) GetErrorMessage() (*string, error) {
 }
 
 // setErrorMessage sets the error messages.
-func (rE *servicedRequest) setErrorMessage(errorMessage *string) error {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) setErrorMessage(errorMessage *string) error {
+	if internal.IsNil(sR) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(errorMessageKey, errorMessage)
+	return sR.GetBackingStore().Set(errorMessageKey, errorMessage)
 }
 
 // GetExecutionTime returns time it took to execute the batch item request.
-func (rE *servicedRequest) GetExecutionTime() (*serialization.ISODuration, error) {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) GetExecutionTime() (*serialization.ISODuration, error) {
+	if internal.IsNil(sR) {
 		return nil, nil
 	}
 
-	executionTime, err := rE.GetBackingStore().Get(executionTimeKey)
+	executionTime, err := sR.GetBackingStore().Get(executionTimeKey)
 	if err != nil {
 		return nil, err
 	}
@@ -273,21 +278,21 @@ func (rE *servicedRequest) GetExecutionTime() (*serialization.ISODuration, error
 }
 
 // setExecutionTime sets the time it took to execute the batch item request.
-func (rE *servicedRequest) setExecutionTime(executionTime *serialization.ISODuration) error {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) setExecutionTime(executionTime *serialization.ISODuration) error {
+	if internal.IsNil(sR) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(executionTimeKey, executionTime)
+	return sR.GetBackingStore().Set(executionTimeKey, executionTime)
 }
 
 // GetHeaders returns headers for the batch item.
-func (rE *servicedRequest) GetHeaders() ([]BatchHeaderable, error) {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) GetHeaders() ([]BatchHeaderable, error) {
+	if internal.IsNil(sR) {
 		return nil, nil
 	}
 
-	headers, err := rE.GetBackingStore().Get(headersKey)
+	headers, err := sR.GetBackingStore().Get(headersKey)
 	if err != nil {
 		return nil, err
 	}
@@ -301,21 +306,21 @@ func (rE *servicedRequest) GetHeaders() ([]BatchHeaderable, error) {
 }
 
 // setHeaders sets headers for the batch item.
-func (rE *servicedRequest) setHeaders(headers []BatchHeaderable) error {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) setHeaders(headers []BatchHeaderable) error {
+	if internal.IsNil(sR) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(headersKey, headers)
+	return sR.GetBackingStore().Set(headersKey, headers)
 }
 
 // GetID returns ID of the batch item that matches the `rest_requests.id` parameter in the request.
-func (rE *servicedRequest) GetID() (*string, error) {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) GetID() (*string, error) {
+	if internal.IsNil(sR) {
 		return nil, nil
 	}
 
-	id, err := rE.GetBackingStore().Get(idKey)
+	id, err := sR.GetBackingStore().Get(idKey)
 	if err != nil {
 		return nil, err
 	}
@@ -329,21 +334,21 @@ func (rE *servicedRequest) GetID() (*string, error) {
 }
 
 // setID sets the id of the batch item.
-func (rE *servicedRequest) setID(id *string) error {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) setID(id *string) error {
+	if internal.IsNil(sR) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(idKey, id)
+	return sR.GetBackingStore().Set(idKey, id)
 }
 
 // GetRedirectURL, if present, returns redirect url for batch item.
-func (rE *servicedRequest) GetRedirectURL() (*string, error) {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) GetRedirectURL() (*string, error) {
+	if internal.IsNil(sR) {
 		return nil, nil
 	}
 
-	redirectURL, err := rE.GetBackingStore().Get(redirectURLKey)
+	redirectURL, err := sR.GetBackingStore().Get(redirectURLKey)
 	if err != nil {
 		return nil, err
 	}
@@ -357,21 +362,21 @@ func (rE *servicedRequest) GetRedirectURL() (*string, error) {
 }
 
 // setRedirectURL sets redirect url for batch item.
-func (rE *servicedRequest) setRedirectURL(redirectURL *string) error {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) setRedirectURL(redirectURL *string) error {
+	if internal.IsNil(sR) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(redirectURLKey, redirectURL)
+	return sR.GetBackingStore().Set(redirectURLKey, redirectURL)
 }
 
 // GetStatusCode returns status code for batch item.
-func (rE *servicedRequest) GetStatusCode() (*int64, error) {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) GetStatusCode() (*int64, error) {
+	if internal.IsNil(sR) {
 		return nil, nil
 	}
 
-	statusCode, err := rE.GetBackingStore().Get(statusCodeKey)
+	statusCode, err := sR.GetBackingStore().Get(statusCodeKey)
 	if err != nil {
 		return nil, err
 	}
@@ -385,21 +390,21 @@ func (rE *servicedRequest) GetStatusCode() (*int64, error) {
 }
 
 // setStatusCode sets status code for batch item.
-func (rE *servicedRequest) setStatusCode(statusCode *int64) error {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) setStatusCode(statusCode *int64) error {
+	if internal.IsNil(sR) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(statusCodeKey, statusCode)
+	return sR.GetBackingStore().Set(statusCodeKey, statusCode)
 }
 
 // GetStatusText returns status text for batch item.
-func (rE *servicedRequest) GetStatusText() (*string, error) {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) GetStatusText() (*string, error) {
+	if internal.IsNil(sR) {
 		return nil, nil
 	}
 
-	statusText, err := rE.GetBackingStore().Get(statusTextKey)
+	statusText, err := sR.GetBackingStore().Get(statusTextKey)
 	if err != nil {
 		return nil, err
 	}
@@ -413,14 +418,15 @@ func (rE *servicedRequest) GetStatusText() (*string, error) {
 }
 
 // setStatusText sets status text for batch item.
-func (rE *servicedRequest) setStatusText(statusText *string) error {
-	if internal.IsNil(rE) {
+func (sR *servicedRequest) setStatusText(statusText *string) error {
+	if internal.IsNil(sR) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(statusTextKey, statusText)
+	return sR.GetBackingStore().Set(statusTextKey, statusText)
 }
 
+// throwErrors returns error is provided req is an error
 func throwErrors(req ServicedRequestable, typeName string) error {
 	code, err := req.GetStatusCode()
 	if err != nil {
@@ -446,6 +452,7 @@ func throwErrors(req ServicedRequestable, typeName string) error {
 	return internal.ThrowErrors(typeName, *code, contentType, []byte(*body))
 }
 
+// serializeContent serializes the provided content using the provided ParsableFactory
 func serializeContent[T serialization.Parsable](contentType string, content []byte, constructor serialization.ParsableFactory) (T, error) {
 	var res T
 
@@ -459,6 +466,7 @@ func serializeContent[T serialization.Parsable](contentType string, content []by
 	return result.(T), err
 }
 
+// getContentType gets the content type from a slice of BatchHeaderable
 func getContentType(headers []BatchHeaderable) string {
 	for _, header := range headers {
 		name, err := header.GetName()

@@ -6,12 +6,14 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
 const (
+	// tableItemURLTemplate the url template for Service-Now's table item endpoint
 	tableItemURLTemplate = "{+baseurl}/api/now/v2/table{/table}{/sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_input_display_value,sysparm_query_no_domain,sysparm_view,sysparm_query_no_domain}"
 )
 
@@ -24,7 +26,7 @@ type TableItemRequestBuilder2 struct {
 // NewAPIV1CompatibleDefaultTableItemRequestBuilder2Internal converts api v1 compatible elements into api v2 compatible elements
 func NewAPIV1CompatibleDefaultTableItemRequestBuilder2Internal(
 	pathParameters map[string]string,
-	client core.Client,
+	client core.Client, //nolint: default
 ) *TableItemRequestBuilder2 {
 	reqAdapter, _ := internal.NewServiceNowRequestAdapterBase(core.NewAPIV1ClientAdapter(client))
 
@@ -70,7 +72,7 @@ func newTableItemRequestBuilder2(
 	factory serialization.ParsableFactory,
 ) *TableItemRequestBuilder2 {
 	urlParams := make(map[string]string)
-	urlParams["request-raw-url"] = rawURL
+	urlParams[intCore.RawURLKey] = rawURL
 	return newTableItemRequestBuilder2Internal(urlParams, requestAdapter, factory)
 }
 

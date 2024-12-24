@@ -9,16 +9,25 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// BatchRequest ...
 type BatchRequest interface {
 	AddRequest(internal.RequestInformation, bool) error
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// batchRequest ...
 type batchRequest struct {
 	ID       string             `json:"batch_request_id"`
 	Requests []BatchRequestItem `json:"rest_requests"`
 	client   core.Client2
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// NewBatchRequest ...
 func NewBatchRequest(client core.Client2) BatchRequest {
 	return &batchRequest{
 		ID:       uuid.New().String(),

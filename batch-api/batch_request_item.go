@@ -9,6 +9,9 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// BatchRequestItem ...
 type BatchRequestItem interface {
 	GetID() *string
 	SetID(value *string)
@@ -24,6 +27,9 @@ type BatchRequestItem interface {
 	SetExcludeResponseHeaders(bool)
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// batchRequestItem ...
 type batchRequestItem struct {
 	ID                     *string       `json:"id"`
 	Method                 *string       `json:"method"`
@@ -33,6 +39,8 @@ type batchRequestItem struct {
 	Body                   string        `json:"body,omitempty"`
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // NewBatchItem creates an instance of BatchItem
 func NewBatchItem(excludeResponseHeaders bool) BatchRequestItem {
 	return &batchRequestItem{

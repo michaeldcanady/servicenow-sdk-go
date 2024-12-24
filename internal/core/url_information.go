@@ -89,7 +89,7 @@ func (uI *UrlInformation) validateParams() error {
 
 // getURIFromRaw retrieves the URI from the raw URL.
 func (uI *UrlInformation) getURIFromRaw() (*url.URL, error) {
-	if rawURL := uI.PathParameters[rawURLKey]; rawURL != "" {
+	if rawURL := uI.PathParameters[RawURLKey]; rawURL != "" {
 		return uI.parseRawURL(rawURL)
 	}
 	return nil, nil

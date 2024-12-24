@@ -7,6 +7,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
@@ -17,8 +18,6 @@ const (
 	sysIDKey = "sys_id"
 	// attachmentURLTemplate url template for the Service-Now Attachment endpoint
 	attachmentURLTemplate = "{+baseurl}/api/now/v1/attachment{?sysparm_limit,sysparm_offset,sysparm_query}"
-	// rawURLKey raw url path parameter key
-	rawURLKey = "request-raw-url"
 )
 
 // AttachmentRequestBuilder2 provides operations to manage Service-Now attachments.
@@ -56,7 +55,7 @@ func NewAttachmentRequestBuilder2(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentRequestBuilder2 {
 	urlParams := make(map[string]string)
-	urlParams[rawURLKey] = rawURL
+	urlParams[intCore.RawURLKey] = rawURL
 	return NewAttachmentRequestBuilder2Internal(urlParams, requestAdapter)
 }
 

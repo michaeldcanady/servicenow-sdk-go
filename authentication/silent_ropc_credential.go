@@ -5,6 +5,7 @@ import (
 	kauthentication "github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
+// NewSilentROPCCredential creates a new ROPCCredential
 func NewSilentROPCCredential(
 	clientID,
 	clientSecret,

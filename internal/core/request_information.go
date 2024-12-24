@@ -125,7 +125,7 @@ func (rI *requestInformation) getContentReader() *bytes.Reader {
 func (rI *requestInformation) SetUri(url *url.URL) { //nolint:stylecheck
 	//TODO: Add validation that url is valid
 
-	rI.uri.PathParameters = map[string]string{rawURLKey: url.String()}
+	rI.uri.PathParameters = map[string]string{RawURLKey: url.String()}
 }
 
 func (rI *requestInformation) Url() (string, error) { //nolint:stylecheck

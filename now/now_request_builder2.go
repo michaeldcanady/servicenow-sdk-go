@@ -5,6 +5,7 @@ import (
 	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -51,7 +52,7 @@ func NewNowRequestBuilder2(
 	requestAdapter abstractions.RequestAdapter,
 ) *NowRequestBuilder2 {
 	urlParams := make(map[string]string)
-	urlParams["request-raw-url"] = rawURL
+	urlParams[intCore.RawURLKey] = rawURL
 	return NewNowRequestBuilder2Internal(urlParams, requestAdapter)
 }
 

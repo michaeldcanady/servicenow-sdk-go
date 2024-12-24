@@ -6,10 +6,13 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
+	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
 const (
+	// batchURLTemplate the url template for Service-Now batch API
 	batchURLTemplate = "{+baseurl}/api/now/v1/batch"
 )
 
@@ -18,7 +21,7 @@ type BatchRequestBuilder2 struct {
 	abstractions.BaseRequestBuilder
 }
 
-// NewAPIV1CompatibleBatchRequestBuilder2Internal ...
+// NewAPIV1CompatibleBatchRequestBuilder2Internal converts api v1 compatible elements into api v2 compatible elements
 func NewAPIV1CompatibleBatchRequestBuilder2Internal(
 	pathParameters map[string]string,
 	client core.Client,
@@ -48,11 +51,11 @@ func NewBatchRequestBuilder2(
 	requestAdapter abstractions.RequestAdapter,
 ) *BatchRequestBuilder2 {
 	urlParams := make(map[string]string)
-	urlParams["request-raw-url"] = rawURL
+	urlParams[intCore.RawURLKey] = rawURL
 	return NewBatchRequestBuilder2Internal(urlParams, requestAdapter)
 }
 
-// Post
+// Post produces a batch response using the specified parameters
 func (rB *BatchRequestBuilder2) Post(ctx context.Context, body BatchRequestable, requestConfiguration *BatchRequestBuilder2PostRequestConfiguration) (BatchResponseable, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
@@ -87,6 +90,26 @@ func (rB *BatchRequestBuilder2) Post(ctx context.Context, body BatchRequestable,
 	return typedResp, nil
 }
 
-func (rB *BatchRequestBuilder2) toPostRequestInformation(_ context.Context, _ BatchRequestable, _ *BatchRequestBuilder2PostRequestConfiguration) (*abstractions.RequestInformation, error) {
-	return nil, errors.New("toPostRequestInformation is not implemented")
+// toPostRequestInformation converts provided parameters into request information
+func (rB *BatchRequestBuilder2) toPostRequestInformation(ctx context.Context, body BatchRequestable, requestConfiguration *BatchRequestBuilder2PostRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if internal.IsNil(rB) {
+		return nil, nil
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.UrlTemplate, rB.PathParameters)
+	kiotaRequestInfo := &intHttp.KiotaRequestInformation{RequestInformation: *requestInfo}
+	if !internal.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
+		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+	}
+	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
+
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.BaseRequestBuilder.RequestAdapter, "application/json", body)
+	if err != nil {
+		return nil, err
+	}
+
+	return &kiotaRequestInfo.RequestInformation, nil
 }

@@ -4,6 +4,9 @@ import (
 	"net/url"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// hasBaseURL ...
 type hasBaseURL interface {
 	GetBaseURL() string
 }

@@ -2,12 +2,18 @@ package batchapi
 
 import "net/http"
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// BatchResponse ...
 type BatchResponse interface {
 	GetID() *string
 	GetResponses() []BatchResponseItem[any]
 	GetResponse(id string) BatchResponseItem[any]
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// batchResponse ...
 type batchResponse struct {
 	ID       *string              `json:"batch_request_id"`
 	Requests []*batchResponseItem `json:"serviced_requests"`

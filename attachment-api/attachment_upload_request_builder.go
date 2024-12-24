@@ -6,6 +6,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -50,7 +51,7 @@ func NewAttachmentUploadRequestBuilder(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentUploadRequestBuilder {
 	urlParams := make(map[string]string)
-	urlParams[rawURLKey] = rawURL
+	urlParams[intCore.RawURLKey] = rawURL
 	return NewAttachmentUploadRequestBuilderInternal(urlParams, requestAdapter)
 }
 
