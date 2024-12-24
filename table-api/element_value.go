@@ -79,12 +79,11 @@ func (eV *elementValue) IsNil() bool {
 	return internal.IsNil(eV) || internal.IsNil(eV.val)
 }
 
-func (eV *elementValue) setValue(val interface{}) error {
+func (eV *elementValue) setValue(val interface{}) { //nolint: unused
 	if eV.IsNil() {
-		return nil
+		return
 	}
 	eV.val = val
-	return nil
 }
 
 // GetStringValue returns a String value from the element.
