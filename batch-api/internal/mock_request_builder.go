@@ -9,7 +9,7 @@ type MockRequestBuilder struct {
 	mock.Mock
 }
 
-func (m *MockRequestBuilder) SendPost3(config *core.RequestConfiguration) error {
+func (m *MockRequestBuilder) SendPost3(config *core.RequestConfiguration) error { //nolint: staticcheck
 	args := m.Called(config)
 	return args.Error(0)
 }

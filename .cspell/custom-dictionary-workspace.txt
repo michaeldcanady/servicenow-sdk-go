@@ -1,7 +1,10 @@
 # Custom Dictionary Words
 adaptee
+APIV1
 Attachmentable
 attachmentapi
+batchapi
+BatchHeaderable
 Contentable
 dupl
 gocognit
