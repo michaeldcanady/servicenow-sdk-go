@@ -20,7 +20,7 @@ type ServiceNowServiceClient struct {
 
 // TODO: will be new base for auth provider (credentials)
 type credentialAuthorizationProviderAdapter struct {
-	cred core.Credential //nolint: deprecated
+	cred core.Credential //nolint: staticcheck
 }
 
 func (provider *credentialAuthorizationProviderAdapter) AuthenticateRequest(ctx context.Context, request *abstractions.RequestInformation, _ map[string]interface{}) error {
@@ -47,7 +47,7 @@ func (provider *credentialAuthorizationProviderAdapter) AuthenticateRequest(ctx 
 }
 
 // NewServiceNowServiceClient2WithCredential creates ServiceNowClient2 with V1 API compatible credential
-func NewServiceNowServiceClient2WithCredential(credential core.Credential, opts ...serviceNowServiceClientOption) (*ServiceNowServiceClient, error) {
+func NewServiceNowServiceClient2WithCredential(credential core.Credential, opts ...serviceNowServiceClientOption) (*ServiceNowServiceClient, error) { //nolint: staticcheck
 	authenticationProvider := &credentialAuthorizationProviderAdapter{
 		cred: credential,
 	}

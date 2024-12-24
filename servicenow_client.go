@@ -95,7 +95,7 @@ func NewServiceNowClient2(credential core.Credential, instance string) (*Service
 }
 
 func (c *ServiceNowClient) unmarshallError(response *http.Response) error {
-	var stringError core.ServiceNowError
+	var stringError core.ServiceNowError //nolint: staticcheck
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
@@ -108,7 +108,7 @@ func (c *ServiceNowClient) unmarshallError(response *http.Response) error {
 	return &stringError
 }
 
-func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings core.ErrorMapping) error {
+func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings core.ErrorMapping) error { //nolint: staticcheck
 	if response.StatusCode < 400 {
 		return nil
 	}
@@ -125,7 +125,7 @@ func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 	}
 
 	if errorCtor == nil {
-		err := &core.ApiError{
+		err := &core.ApiError{ //nolint: staticcheck
 			Message:            "The server returned an unexpected status code and no error factory is registered for this code: " + statusAsString,
 			ResponseStatusCode: response.StatusCode,
 		}
@@ -137,7 +137,7 @@ func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 	return stringError
 }
 
-func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo core.IRequestInformation) (*http.Request, error) {
+func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo core.IRequestInformation) (*http.Request, error) { //nolint: staticcheck
 	if requestInfo == nil {
 		return nil, ErrNilRequestInfo
 	}
@@ -161,11 +161,11 @@ func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo
 	return request, nil
 }
 
-func (c *ServiceNowClient) toRequest(requestInfo core.IRequestInformation) (*http.Request, error) {
+func (c *ServiceNowClient) toRequest(requestInfo core.IRequestInformation) (*http.Request, error) { //nolint: staticcheck
 	return c.toRequestWithContext(context.Background(), requestInfo)
 }
 
-func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) { //nolint: staticcheck
 	request, err := c.toRequestWithContext(ctx, requestInfo)
 	if err != nil {
 		return nil, err
@@ -184,7 +184,7 @@ func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core
 	return response, nil
 }
 
-func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) { //nolint: staticcheck
 	return c.SendWithContext(context.Background(), requestInfo, errorMapping)
 }
 

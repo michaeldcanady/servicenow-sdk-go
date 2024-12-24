@@ -68,6 +68,7 @@ func (provider *AuthorizationCodeTokenProvider) GetAuthorizationToken(ctx contex
 	provider.config.Endpoint.AuthURL = authURL
 	provider.config.Endpoint.TokenURL = tokenURL
 
+	// TODO: add function to generate state
 	state := ""
 
 	// Token is either nil or expired; fetch a new one
