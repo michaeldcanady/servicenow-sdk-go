@@ -15,8 +15,8 @@ type TableRequestBuilder struct {
 //
 // NewTableRequestBuilder creates a new instance of the TableRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableRequestBuilder.
-func NewTableRequestBuilder(client core.Client, pathParameters map[string]string) *TableRequestBuilder {
-	requestBuilder := core.NewRequestBuilder(
+func NewTableRequestBuilder(client core.Client, pathParameters map[string]string) *TableRequestBuilder { //nolint: staticcheck
+	requestBuilder := core.NewRequestBuilder( //nolint: staticcheck
 		client,
 		"{+baseurl}/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}",
 		pathParameters,

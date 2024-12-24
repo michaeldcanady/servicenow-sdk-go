@@ -11,14 +11,14 @@ import (
 // PageIterator represents an iterator for paginated results from a table.
 type PageIterator struct {
 	currentPage PageResult
-	client      core.Client
+	client      core.Client //nolint: staticcheck
 	pauseIndex  int
 }
 
 // Deprecated: deprecated in v1.5.0. Use NewTablePageIterator[T] instead.
 //
 // NewPageIterator creates a new PageIterator instance.
-func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator, error) {
+func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator, error) { //nolint: staticcheck
 	if client == nil {
 		return nil, ErrNilClient
 	}

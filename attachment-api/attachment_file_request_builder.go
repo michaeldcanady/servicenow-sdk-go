@@ -24,7 +24,7 @@ type AttachmentFileRequestBuilder struct {
 // NewAPIV1CompatibleAttachmentFileRequestBuilderInternal converts api v1 compatible elements into api v2 compatible elements
 func NewAPIV1CompatibleAttachmentFileRequestBuilderInternal(
 	pathParameters map[string]string,
-	client core.Client,
+	client core.Client, //nolint: staticcheck
 ) *AttachmentFileRequestBuilder {
 	reqAdapter, _ := internal.NewServiceNowRequestAdapterBase(core.NewAPIV1ClientAdapter(client))
 

@@ -17,7 +17,7 @@ type AttachmentRequestBuilder struct {
 // Deprecated: deprecated since v{unreleased}.
 //
 // NewAttachmentRequestBuilder ...
-func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]string) *AttachmentRequestBuilder {
+func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]string) *AttachmentRequestBuilder { //nolint: staticcheck
 	requestBuilder := core.NewRequestBuilder( //nolint:staticcheck
 		client,
 		"{+baseurl}/attachment{/attachment}{?encryption_context,file_name,table_name,table_sys_id}",

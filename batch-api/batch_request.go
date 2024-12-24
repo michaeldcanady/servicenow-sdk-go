@@ -22,13 +22,13 @@ type BatchRequest interface {
 type batchRequest struct {
 	ID       string             `json:"batch_request_id"`
 	Requests []BatchRequestItem `json:"rest_requests"`
-	client   core.Client2
+	client   core.Client2       //nolint: staticcheck
 }
 
 // Deprecated: deprecated since v{unreleased}.
 //
 // NewBatchRequest ...
-func NewBatchRequest(client core.Client2) BatchRequest {
+func NewBatchRequest(client core.Client2) BatchRequest { //nolint: staticcheck
 	return &batchRequest{
 		ID:       uuid.New().String(),
 		Requests: make([]BatchRequestItem, 0),

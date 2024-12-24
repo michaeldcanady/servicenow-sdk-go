@@ -16,7 +16,7 @@ type BatchRequestBuilder struct {
 //
 // NewBatchRequestBuilder creates a new BatchRequestBuilder.
 // It takes a client (core.Client) and pathParameters (map[string]string).
-func NewBatchRequestBuilder(client core.Client, pathParameters map[string]string) *BatchRequestBuilder {
+func NewBatchRequestBuilder(client core.Client, pathParameters map[string]string) *BatchRequestBuilder { //nolint: staticcheck
 	requestBuilder := core.NewRequestBuilder( //nolint:staticcheck
 		client,
 		// Must be versioned

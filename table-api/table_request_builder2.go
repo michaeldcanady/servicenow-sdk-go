@@ -36,7 +36,7 @@ type TableRequestBuilder2 struct {
 // NewAPIV1CompatibleDefaultTableRequestBuilder2Internal converts api v1 compatible elements into api v2 compatible elements
 func NewAPIV1CompatibleDefaultTableRequestBuilder2Internal(
 	pathParameters map[string]string,
-	client core.Client,
+	client core.Client, //nolint: staticcheck
 ) *TableRequestBuilder2 {
 	reqAdapter, _ := internal.NewServiceNowRequestAdapterBase(core.NewAPIV1ClientAdapter(client))
 

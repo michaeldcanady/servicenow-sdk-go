@@ -92,7 +92,7 @@ func constructTableCollection[T Entry](response *http.Response) (core.Collection
 //			}
 //			// Use iter to iterate over the pages of entries
 //		}
-func NewTablePageIterator[T Entry](collection *TableCollectionResponse2[T], client core.Client) (*TablePageIterator[T], error) {
+func NewTablePageIterator[T Entry](collection *TableCollectionResponse2[T], client core.Client) (*TablePageIterator[T], error) { //nolint: staticcheck
 	pageIterator, err := core.NewPageIterator2[T](collection, client, constructTableCollection[T])
 	if err != nil {
 		return nil, err

@@ -24,7 +24,7 @@ type BatchRequestBuilder2 struct {
 // NewAPIV1CompatibleBatchRequestBuilder2Internal converts api v1 compatible elements into api v2 compatible elements
 func NewAPIV1CompatibleBatchRequestBuilder2Internal(
 	pathParameters map[string]string,
-	client core.Client,
+	client core.Client, //nolint: staticcheck
 ) *BatchRequestBuilder2 {
 	reqAdapter, _ := internal.NewServiceNowRequestAdapterBase(core.NewAPIV1ClientAdapter(client))
 
