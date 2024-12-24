@@ -91,6 +91,7 @@ type attachment struct {
 	backingStore store.BackingStore
 }
 
+// NewAttachment creates a new instance of Attachmentable
 func NewAttachment() Attachmentable {
 	return &attachment{
 		backingStore:        store.NewInMemoryBackingStore(),
@@ -620,6 +621,7 @@ func (rE *attachment) setSysUpdatedBy(username *string) error {
 	return rE.GetBackingStore().Set(sysUpdatedByKey, username)
 }
 
+// GetSysTags returns slice of tags
 func (rE *attachment) GetSysTags() ([]string, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
@@ -635,13 +637,15 @@ func (rE *attachment) GetSysTags() ([]string, error) {
 	return typedVal, nil
 }
 
-func (rE *attachment) setSysTags(val []string) error {
+// setSysTags sets the sys tags to the provided values
+func (rE *attachment) setSysTags(tags []string) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
-	return rE.GetBackingStore().Set(sysTagsKey, val)
+	return rE.GetBackingStore().Set(sysTagsKey, tags)
 }
 
+// GetTableName returns associated table name
 func (rE *attachment) GetTableName() (*string, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
@@ -657,13 +661,15 @@ func (rE *attachment) GetTableName() (*string, error) {
 	return typedVal, nil
 }
 
-func (rE *attachment) setTableName(val *string) error {
+// setTableName sets table name to provided value
+func (rE *attachment) setTableName(name *string) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
-	return rE.GetBackingStore().Set(tableNameKey, val)
+	return rE.GetBackingStore().Set(tableNameKey, name)
 }
 
+// GetImageWidth returns the width, if attachment is an image
 func (rE *attachment) GetImageWidth() (*float64, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
@@ -679,13 +685,15 @@ func (rE *attachment) GetImageWidth() (*float64, error) {
 	return typedVal, nil
 }
 
-func (rE *attachment) setImageWidth(val *float64) error {
+// setImageWidth sets the width to the provide value
+func (rE *attachment) setImageWidth(width *float64) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
-	return rE.GetBackingStore().Set(imageWidthKey, val)
+	return rE.GetBackingStore().Set(imageWidthKey, width)
 }
 
+// GetSysModCount returns the mod count
 func (rE *attachment) GetSysModCount() (*int64, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
@@ -701,13 +709,15 @@ func (rE *attachment) GetSysModCount() (*int64, error) {
 	return typedVal, nil
 }
 
-func (rE *attachment) setSysModCount(val *int64) error {
+// setSysModCount sets the count to the provided value
+func (rE *attachment) setSysModCount(count *int64) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
-	return rE.GetBackingStore().Set(sysModCountKey, val)
+	return rE.GetBackingStore().Set(sysModCountKey, count)
 }
 
+// GetContentType returns the content type of the attachment
 func (rE *attachment) GetContentType() (*string, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
@@ -723,13 +733,15 @@ func (rE *attachment) GetContentType() (*string, error) {
 	return typedVal, nil
 }
 
-func (rE *attachment) setContentType(val *string) error {
+// setContentType sets the content type to the provided value
+func (rE *attachment) setContentType(contentType *string) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
-	return rE.GetBackingStore().Set(contentTypeKey, val)
+	return rE.GetBackingStore().Set(contentTypeKey, contentType)
 }
 
+// GetSizeCompressed returns compressed size of attachment
 func (rE *attachment) GetSizeCompressed() (*int64, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
@@ -745,13 +757,15 @@ func (rE *attachment) GetSizeCompressed() (*int64, error) {
 	return typedVal, nil
 }
 
-func (rE *attachment) setSizeCompressed(val *int64) error {
+// setSizeCompressed sets compressed size to provided value
+func (rE *attachment) setSizeCompressed(size *int64) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
-	return rE.GetBackingStore().Set(sizeCompressedKey, val)
+	return rE.GetBackingStore().Set(sizeCompressedKey, size)
 }
 
+// GetChunkSizeBytes returns chunk size (in bytes) of attachment
 func (rE *attachment) GetChunkSizeBytes() (*string, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
@@ -767,13 +781,15 @@ func (rE *attachment) GetChunkSizeBytes() (*string, error) {
 	return typedVal, nil
 }
 
-func (rE *attachment) setChunkSizeBytes(val *string) error {
+// setChunkSizeBytes sets chunk size to provided value
+func (rE *attachment) setChunkSizeBytes(size *string) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
-	return rE.GetBackingStore().Set(chunkSizeBytesKey, val)
+	return rE.GetBackingStore().Set(chunkSizeBytesKey, size)
 }
 
+// GetHash returns hash of attachment
 func (rE *attachment) GetHash() (*string, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
@@ -789,11 +805,12 @@ func (rE *attachment) GetHash() (*string, error) {
 	return typedVal, nil
 }
 
-func (rE *attachment) setHash(val *string) error {
+// setHash sets has to provided value
+func (rE *attachment) setHash(hash *string) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
-	return rE.GetBackingStore().Set(hashKey, val)
+	return rE.GetBackingStore().Set(hashKey, hash)
 }
 
 func (rE *attachment) GetState() (*string, error) {

@@ -63,13 +63,18 @@ type Fileable interface {
 	store.BackedModel
 }
 
+// file implementation of Fileable
 type file struct {
+	// backingStoreFactory factory to create backingStore
+	backingStoreFactory store.BackingStoreFactory
+	// backingStore the store backing the model
 	backingStore store.BackingStore
 }
 
 func NewFile() Fileable {
 	return &file{
-		backingStore: store.NewInMemoryBackingStore(),
+		backingStore:        store.NewInMemoryBackingStore(),
+		backingStoreFactory: store.NewInMemoryBackingStore,
 	}
 }
 
@@ -79,27 +84,27 @@ func CreateFileFromDiscriminatorValue(parseNode serialization.ParseNode) (serial
 }
 
 // GetBackingStore retrieves the backing store for the model.
-func (rE *file) GetBackingStore() store.BackingStore {
-	if internal.IsNil(rE) {
+func (f *file) GetBackingStore() store.BackingStore {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	if internal.IsNil(rE.backingStore) {
-		rE.backingStore = store.NewInMemoryBackingStore()
+	if internal.IsNil(f.backingStore) {
+		f.backingStore = f.backingStoreFactory()
 	}
 
-	return rE.backingStore
+	return f.backingStore
 }
 
 // Serialize writes the objects properties to the current writer.
-func (rE *file) Serialize(writer serialization.SerializationWriter) error { //nolint:gocognit
-	if internal.IsNil(rE) {
+func (f *file) Serialize(writer serialization.SerializationWriter) error { //nolint:gocognit
+	if internal.IsNil(f) {
 		return nil
 	}
 
 	fieldSerializers := map[string]func(serialization.SerializationWriter) error{
 		averageImageColorKey: func(writer serialization.SerializationWriter) error {
-			averageImageColor, err := rE.GetAverageImageColor()
+			averageImageColor, err := f.GetAverageImageColor()
 			if err != nil {
 				return err
 			}
@@ -107,7 +112,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(averageImageColorKey, averageImageColor)
 		},
 		compressedKey: func(writer serialization.SerializationWriter) error {
-			compressed, err := rE.GetCompressed()
+			compressed, err := f.GetCompressed()
 			if err != nil {
 				return err
 			}
@@ -116,7 +121,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(compressedKey, &compressedString)
 		},
 		contentTypeKey: func(writer serialization.SerializationWriter) error {
-			contentType, err := rE.GetContentType()
+			contentType, err := f.GetContentType()
 			if err != nil {
 				return err
 			}
@@ -124,7 +129,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(contentTypeKey, contentType)
 		},
 		createdByNameKey: func(writer serialization.SerializationWriter) error {
-			createdByName, err := rE.GetCreatedByName()
+			createdByName, err := f.GetCreatedByName()
 			if err != nil {
 				return err
 			}
@@ -132,7 +137,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(createdByNameKey, createdByName)
 		},
 		downloadLinkKey: func(writer serialization.SerializationWriter) error {
-			downloadLink, err := rE.GetDownloadLink()
+			downloadLink, err := f.GetDownloadLink()
 			if err != nil {
 				return err
 			}
@@ -140,7 +145,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(createdByNameKey, downloadLink)
 		},
 		fileNameKey: func(writer serialization.SerializationWriter) error {
-			fileName, err := rE.GetFileName()
+			fileName, err := f.GetFileName()
 			if err != nil {
 				return err
 			}
@@ -148,7 +153,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(fileNameKey, fileName)
 		},
 		imageHeightKey: func(writer serialization.SerializationWriter) error {
-			imageHeight, err := rE.GetImageHeight()
+			imageHeight, err := f.GetImageHeight()
 			if err != nil {
 				return err
 			}
@@ -158,7 +163,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(imageHeightKey, &imageHeightString)
 		},
 		imageWidthKey: func(writer serialization.SerializationWriter) error {
-			imageWidth, err := rE.GetImageWidth()
+			imageWidth, err := f.GetImageWidth()
 			if err != nil {
 				return err
 			}
@@ -168,7 +173,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(imageHeightKey, &imageWidthString)
 		},
 		sizeBytesKey: func(writer serialization.SerializationWriter) error {
-			sizeBytes, err := rE.GetSizeBytes()
+			sizeBytes, err := f.GetSizeBytes()
 			if err != nil {
 				return err
 			}
@@ -178,7 +183,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(sizeBytesKey, &sizeBytesString)
 		},
 		sizeCompressedKey: func(serialization.SerializationWriter) error {
-			sizeCompressed, err := rE.GetSizeCompressed()
+			sizeCompressed, err := f.GetSizeCompressed()
 			if err != nil {
 				return err
 			}
@@ -188,7 +193,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(sizeBytesKey, &sizeCompressedString)
 		},
 		sysCreatedByKey: func(writer serialization.SerializationWriter) error {
-			sysCreatedBy, err := rE.GetFileName()
+			sysCreatedBy, err := f.GetFileName()
 			if err != nil {
 				return err
 			}
@@ -196,7 +201,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(sysCreatedByKey, sysCreatedBy)
 		},
 		sysCreatedOnKey: func(writer serialization.SerializationWriter) error {
-			sysCreatedOn, err := rE.GetSysCreatedOn()
+			sysCreatedOn, err := f.GetSysCreatedOn()
 			if err != nil {
 				return err
 			}
@@ -206,7 +211,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(sysCreatedOnKey, &sysCreatedOnString)
 		},
 		sysIDKey: func(writer serialization.SerializationWriter) error {
-			sysID, err := rE.GetFileName()
+			sysID, err := f.GetFileName()
 			if err != nil {
 				return err
 			}
@@ -214,7 +219,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(sysIDKey, sysID)
 		},
 		sysModCountKey: func(writer serialization.SerializationWriter) error {
-			sysModCount, err := rE.GetSysModCount()
+			sysModCount, err := f.GetSysModCount()
 			if err != nil {
 				return err
 			}
@@ -224,7 +229,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(sizeBytesKey, &sysModCountString)
 		},
 		sysTagsKey: func(writer serialization.SerializationWriter) error {
-			sysTags, err := rE.GetSysTags()
+			sysTags, err := f.GetSysTags()
 			if err != nil {
 				return err
 			}
@@ -235,7 +240,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(sysTagsKey, &sysTagsString)
 		},
 		sysUpdatedByKey: func(writer serialization.SerializationWriter) error {
-			sysUpdatedBy, err := rE.GetFileName()
+			sysUpdatedBy, err := f.GetFileName()
 			if err != nil {
 				return err
 			}
@@ -243,7 +248,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(sysUpdatedByKey, sysUpdatedBy)
 		},
 		sysUpdatedOnKey: func(writer serialization.SerializationWriter) error {
-			sysUpdatedOn, err := rE.GetSysCreatedOn()
+			sysUpdatedOn, err := f.GetSysCreatedOn()
 			if err != nil {
 				return err
 			}
@@ -253,7 +258,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(sysUpdatedOnKey, &sysUpdatedOnString)
 		},
 		tableNameKey: func(writer serialization.SerializationWriter) error {
-			tableName, err := rE.GetFileName()
+			tableName, err := f.GetFileName()
 			if err != nil {
 				return err
 			}
@@ -261,7 +266,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(tableNameKey, tableName)
 		},
 		tableSysIDKey: func(writer serialization.SerializationWriter) error {
-			tableSysID, err := rE.GetFileName()
+			tableSysID, err := f.GetFileName()
 			if err != nil {
 				return err
 			}
@@ -269,7 +274,7 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 			return writer.WriteStringValue(tableSysIDKey, tableSysID)
 		},
 		updatedByNameKey: func(writer serialization.SerializationWriter) error {
-			updatedByName, err := rE.GetFileName()
+			updatedByName, err := f.GetFileName()
 			if err != nil {
 				return err
 			}
@@ -288,9 +293,9 @@ func (rE *file) Serialize(writer serialization.SerializationWriter) error { //no
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
-	if internal.IsNil(rE) {
-		rE = NewFile().(*file)
+func (f *file) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
+	if internal.IsNil(f) {
+		f = NewFile().(*file)
 	}
 
 	return map[string]func(serialization.ParseNode) error{
@@ -300,7 +305,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setAverageImageColor(val)
+			return f.setAverageImageColor(val)
 		},
 		compressedKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -312,7 +317,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setCompressed(&boolVal)
+			return f.setCompressed(&boolVal)
 		},
 		contentTypeKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -320,7 +325,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setContentType(val)
+			return f.setContentType(val)
 		},
 		createdByNameKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -328,7 +333,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setCreatedByName(val)
+			return f.setCreatedByName(val)
 		},
 		downloadLinkKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -336,7 +341,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setDownloadLink(val)
+			return f.setDownloadLink(val)
 		},
 		fileNameKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -344,7 +349,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setFileName(val)
+			return f.setFileName(val)
 		},
 		imageHeightKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -357,7 +362,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setImageHeight(&floatVal)
+			return f.setImageHeight(&floatVal)
 		},
 		imageWidthKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -370,7 +375,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setImageWidth(&floatVal)
+			return f.setImageWidth(&floatVal)
 		},
 		sizeBytesKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -384,7 +389,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 			}
 			int64Val := int64(intVal)
 
-			return rE.setSizeBytes(&int64Val)
+			return f.setSizeBytes(&int64Val)
 		},
 		sizeCompressedKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -398,7 +403,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 			}
 			int64Val := int64(intVal)
 
-			return rE.setSizeCompressed(&int64Val)
+			return f.setSizeCompressed(&int64Val)
 		},
 		sysCreatedByKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -406,7 +411,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setSysCreatedBy(val)
+			return f.setSysCreatedBy(val)
 		},
 		sysCreatedOnKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -414,7 +419,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 			if internal.IsNil(val) || *val == "" {
-				return rE.setSysUpdatedOn(nil)
+				return f.setSysUpdatedOn(nil)
 			}
 
 			dateTime, err := time.Parse("2006-01-02 15:04:05", *val)
@@ -422,7 +427,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setSysCreatedOn(&dateTime)
+			return f.setSysCreatedOn(&dateTime)
 		},
 		sysIDKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -430,7 +435,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setSysID(val)
+			return f.setSysID(val)
 		},
 		sysModCountKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -444,7 +449,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 			}
 			int64Val := int64(intVal)
 
-			return rE.setSysModCount(&int64Val)
+			return f.setSysModCount(&int64Val)
 		},
 		sysTagsKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -455,7 +460,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 			// TODO: Figure out delimiter
 			tags := strings.Split(*val, " ")
 
-			return rE.setSysTags(tags)
+			return f.setSysTags(tags)
 		},
 		sysUpdatedByKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -463,7 +468,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setSysUpdatedBy(val)
+			return f.setSysUpdatedBy(val)
 		},
 		sysUpdatedOnKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -471,7 +476,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 			if internal.IsNil(val) || *val == "" {
-				return rE.setSysUpdatedOn(nil)
+				return f.setSysUpdatedOn(nil)
 			}
 
 			dateTime, err := time.Parse("2006-01-02 15:04:05", *val)
@@ -479,7 +484,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setSysUpdatedOn(&dateTime)
+			return f.setSysUpdatedOn(&dateTime)
 		},
 		tableNameKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -487,7 +492,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setTableName(val)
+			return f.setTableName(val)
 		},
 		tableSysIDKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -495,7 +500,7 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setTableSysID(val)
+			return f.setTableSysID(val)
 		},
 		updatedByNameKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
@@ -503,18 +508,18 @@ func (rE *file) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 				return err
 			}
 
-			return rE.setUpdatedByName(val)
+			return f.setUpdatedByName(val)
 		},
 	}
 }
 
 // GetAverageImageColor returns, If the attachment is an image, the sum of all colors.
-func (rE *file) GetAverageImageColor() (*string, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetAverageImageColor() (*string, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -528,21 +533,21 @@ func (rE *file) GetAverageImageColor() (*string, error) {
 }
 
 // setAverageImageColor sets the sum of all colors.
-func (rE *file) setAverageImageColor(averageImageColor *string) error {
-	if internal.IsNil(rE) {
+func (f *file) setAverageImageColor(averageImageColor *string) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(averageImageColorKey, averageImageColor)
+	return f.GetBackingStore().Set(averageImageColorKey, averageImageColor)
 }
 
 // GetCompressed return flag that indicates whether the attachment file has been compressed.
-func (rE *file) GetCompressed() (*bool, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetCompressed() (*bool, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -556,21 +561,21 @@ func (rE *file) GetCompressed() (*bool, error) {
 }
 
 // setCompressed sets flag that indicates whether the attachment file has been compressed.
-func (rE *file) setCompressed(compressed *bool) error {
-	if internal.IsNil(rE) {
+func (f *file) setCompressed(compressed *bool) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(compressedKey, compressed)
+	return f.GetBackingStore().Set(compressedKey, compressed)
 }
 
 // GetContentType returns content-type of the associated attachment file, such as image or jpeg or application/x-shockwave-flash.
-func (rE *file) GetContentType() (*string, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetContentType() (*string, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(contentTypeKey)
+	val, err := f.GetBackingStore().Get(contentTypeKey)
 	if err != nil {
 		return nil, err
 	}
@@ -584,21 +589,21 @@ func (rE *file) GetContentType() (*string, error) {
 }
 
 // setContentType sets content-type of the associated attachment file, such as image or jpeg or application/x-shockwave-flash.
-func (rE *file) setContentType(contentType *string) error {
-	if internal.IsNil(rE) {
+func (f *file) setContentType(contentType *string) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(contentTypeKey, contentType)
+	return f.GetBackingStore().Set(contentTypeKey, contentType)
 }
 
 // GetCreatedByName returns full name of entity that originally created the attachment file.
-func (rE *file) GetCreatedByName() (*string, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetCreatedByName() (*string, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(createdByNameKey)
+	val, err := f.GetBackingStore().Get(createdByNameKey)
 	if err != nil {
 		return nil, err
 	}
@@ -612,21 +617,21 @@ func (rE *file) GetCreatedByName() (*string, error) {
 }
 
 // setCreatedByName sets full name of entity that originally created the attachment file.
-func (rE *file) setCreatedByName(createdByName *string) error {
-	if internal.IsNil(rE) {
+func (f *file) setCreatedByName(createdByName *string) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(createdByNameKey, createdByName)
+	return f.GetBackingStore().Set(createdByNameKey, createdByName)
 }
 
 // GetDownloadLink returns download URL of the attachment on the ServiceNow instance.
-func (rE *file) GetDownloadLink() (*string, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetDownloadLink() (*string, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(downloadLinkKey)
+	val, err := f.GetBackingStore().Get(downloadLinkKey)
 	if err != nil {
 		return nil, err
 	}
@@ -640,21 +645,21 @@ func (rE *file) GetDownloadLink() (*string, error) {
 }
 
 // setDownloadLink sets download URL of the attachment on the ServiceNow instance.
-func (rE *file) setDownloadLink(downloadLink *string) error {
-	if internal.IsNil(rE) {
+func (f *file) setDownloadLink(downloadLink *string) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(downloadLinkKey, downloadLink)
+	return f.GetBackingStore().Set(downloadLinkKey, downloadLink)
 }
 
 // GetFileName returns the file name of the attachment.
-func (rE *file) GetFileName() (*string, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetFileName() (*string, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(fileNameKey)
+	val, err := f.GetBackingStore().Get(fileNameKey)
 	if err != nil {
 		return nil, err
 	}
@@ -668,21 +673,21 @@ func (rE *file) GetFileName() (*string, error) {
 }
 
 // setFileName sets the file name of the attachment.
-func (rE *file) setFileName(fileName *string) error {
-	if internal.IsNil(rE) {
+func (f *file) setFileName(fileName *string) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(fileNameKey, fileName)
+	return f.GetBackingStore().Set(fileNameKey, fileName)
 }
 
 // GetImageHeight returns if an image file, the height of the image.
-func (rE *file) GetImageHeight() (*float64, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetImageHeight() (*float64, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(imageHeightKey)
+	val, err := f.GetBackingStore().Get(imageHeightKey)
 	if err != nil {
 		return nil, err
 	}
@@ -696,21 +701,21 @@ func (rE *file) GetImageHeight() (*float64, error) {
 }
 
 // setImageHeight sets if an image file, the height of the image.
-func (rE *file) setImageHeight(imageHeight *float64) error {
-	if internal.IsNil(rE) {
+func (f *file) setImageHeight(imageHeight *float64) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(imageHeightKey, imageHeight)
+	return f.GetBackingStore().Set(imageHeightKey, imageHeight)
 }
 
 // GetImageWidth returns if an image file, the width of the image.
-func (rE *file) GetImageWidth() (*float64, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetImageWidth() (*float64, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(imageWidthKey)
+	val, err := f.GetBackingStore().Get(imageWidthKey)
 	if err != nil {
 		return nil, err
 	}
@@ -724,21 +729,21 @@ func (rE *file) GetImageWidth() (*float64, error) {
 }
 
 // setImageWidth sets if an image file, the width of the image.
-func (rE *file) setImageWidth(imageWidth *float64) error {
-	if internal.IsNil(rE) {
+func (f *file) setImageWidth(imageWidth *float64) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(imageWidthKey, imageWidth)
+	return f.GetBackingStore().Set(imageWidthKey, imageWidth)
 }
 
 // GetSizeBytes returns size of the attachment.
-func (rE *file) GetSizeBytes() (*int64, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetSizeBytes() (*int64, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -752,21 +757,21 @@ func (rE *file) GetSizeBytes() (*int64, error) {
 }
 
 // setSizeBytes sets size of the attachment.
-func (rE *file) setSizeBytes(sizeBytes *int64) error {
-	if internal.IsNil(rE) {
+func (f *file) setSizeBytes(sizeBytes *int64) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(sizeBytesKey, sizeBytes)
+	return f.GetBackingStore().Set(sizeBytesKey, sizeBytes)
 }
 
 // GetSizeCompressed returns size of the compressed attachment file. If the file is not compressed, empty.
-func (rE *file) GetSizeCompressed() (*int64, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetSizeCompressed() (*int64, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -780,21 +785,21 @@ func (rE *file) GetSizeCompressed() (*int64, error) {
 }
 
 // setSizeCompressed sets size of the compressed attachment file.
-func (rE *file) setSizeCompressed(sizeCompressed *int64) error {
-	if internal.IsNil(rE) {
+func (f *file) setSizeCompressed(sizeCompressed *int64) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(sizeCompressedKey, sizeCompressed)
+	return f.GetBackingStore().Set(sizeCompressedKey, sizeCompressed)
 }
 
 // GetSysCreatedBy returns the entity that originally created the attachment file.
-func (rE *file) GetSysCreatedBy() (*string, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetSysCreatedBy() (*string, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -808,21 +813,21 @@ func (rE *file) GetSysCreatedBy() (*string, error) {
 }
 
 // setSysCreatedBy sets the entity that originally created the attachment file.
-func (rE *file) setSysCreatedBy(sysCreatedBy *string) error {
-	if internal.IsNil(rE) {
+func (f *file) setSysCreatedBy(sysCreatedBy *string) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(sysCreatedByKey, sysCreatedBy)
+	return f.GetBackingStore().Set(sysCreatedByKey, sysCreatedBy)
 }
 
 // GetSysCreatedOn returns the date and time that the attachment file was initially saved to the instance.
-func (rE *file) GetSysCreatedOn() (*time.Time, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetSysCreatedOn() (*time.Time, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -836,21 +841,21 @@ func (rE *file) GetSysCreatedOn() (*time.Time, error) {
 }
 
 // setSysCreatedOn sets the date and time that the attachment file was initially saved to the instance.
-func (rE *file) setSysCreatedOn(sysCreatedOn *time.Time) error {
-	if internal.IsNil(rE) {
+func (f *file) setSysCreatedOn(sysCreatedOn *time.Time) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(sysCreatedOnKey, sysCreatedOn)
+	return f.GetBackingStore().Set(sysCreatedOnKey, sysCreatedOn)
 }
 
 // GetSysID returns the sys_id of the attachment file. Read-Only.
-func (rE *file) GetSysID() (*string, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetSysID() (*string, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -864,21 +869,21 @@ func (rE *file) GetSysID() (*string, error) {
 }
 
 // setSysID sets the sys_id of the attachment file.
-func (rE *file) setSysID(sysID *string) error {
-	if internal.IsNil(rE) {
+func (f *file) setSysID(sysID *string) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(sysCreatedOnKey, sysID)
+	return f.GetBackingStore().Set(sysCreatedOnKey, sysID)
 }
 
 // GetSysModCount returns the number of times the attachment file has been modified (uploaded to the instance).
-func (rE *file) GetSysModCount() (*int64, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetSysModCount() (*int64, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -892,21 +897,21 @@ func (rE *file) GetSysModCount() (*int64, error) {
 }
 
 // setSysModCount sets the number of times the attachment file has been modified (uploaded to the instance).
-func (rE *file) setSysModCount(sysModCount *int64) error {
-	if internal.IsNil(rE) {
+func (f *file) setSysModCount(sysModCount *int64) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(sysModCountKey, sysModCount)
+	return f.GetBackingStore().Set(sysModCountKey, sysModCount)
 }
 
 // GetSysTags returns any system tags associated with the attachment file.
-func (rE *file) GetSysTags() ([]string, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetSysTags() ([]string, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -920,21 +925,21 @@ func (rE *file) GetSysTags() ([]string, error) {
 }
 
 // setSysTags sets any system tags associated with the attachment file.
-func (rE *file) setSysTags(sysTags []string) error {
-	if internal.IsNil(rE) {
+func (f *file) setSysTags(sysTags []string) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(sysTagsKey, sysTags)
+	return f.GetBackingStore().Set(sysTagsKey, sysTags)
 }
 
 // GetSysUpdatedBy returns the entity that last updated the attachment file.
-func (rE *file) GetSysUpdatedBy() (*string, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetSysUpdatedBy() (*string, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -948,21 +953,21 @@ func (rE *file) GetSysUpdatedBy() (*string, error) {
 }
 
 // setSysUpdatedBy sets the entity that last updated the attachment file.
-func (rE *file) setSysUpdatedBy(sysUpdatedBy *string) error {
-	if internal.IsNil(rE) {
+func (f *file) setSysUpdatedBy(sysUpdatedBy *string) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(sysUpdatedByKey, sysUpdatedBy)
+	return f.GetBackingStore().Set(sysUpdatedByKey, sysUpdatedBy)
 }
 
 // GetSysUpdatedOn returns the date and time that the attachment file was last updated.
-func (rE *file) GetSysUpdatedOn() (*time.Time, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetSysUpdatedOn() (*time.Time, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -976,21 +981,21 @@ func (rE *file) GetSysUpdatedOn() (*time.Time, error) {
 }
 
 // setSysUpdatedOn sets the date and time that the attachment file was last updated.
-func (rE *file) setSysUpdatedOn(sysUpdatedOn *time.Time) error {
-	if internal.IsNil(rE) {
+func (f *file) setSysUpdatedOn(sysUpdatedOn *time.Time) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(sysUpdatedOnKey, sysUpdatedOn)
+	return f.GetBackingStore().Set(sysUpdatedOnKey, sysUpdatedOn)
 }
 
 // GetTableName returns the name of the table to which the attachment is associated.
-func (rE *file) GetTableName() (*string, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetTableName() (*string, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -1004,21 +1009,21 @@ func (rE *file) GetTableName() (*string, error) {
 }
 
 // setTableName sets the name of the table to which the attachment is associated.
-func (rE *file) setTableName(tableName *string) error {
-	if internal.IsNil(rE) {
+func (f *file) setTableName(tableName *string) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(tableNameKey, tableName)
+	return f.GetBackingStore().Set(tableNameKey, tableName)
 }
 
 // GetTableSysID returns the sys_id of the table associated with the attachment.
-func (rE *file) GetTableSysID() (*string, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetTableSysID() (*string, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -1032,21 +1037,21 @@ func (rE *file) GetTableSysID() (*string, error) {
 }
 
 // setTableSysID sets the sys_id of the table associated with the attachment.
-func (rE *file) setTableSysID(tableSysID *string) error {
-	if internal.IsNil(rE) {
+func (f *file) setTableSysID(tableSysID *string) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(tableSysIDKey, tableSysID)
+	return f.GetBackingStore().Set(tableSysIDKey, tableSysID)
 }
 
 // GetUpdatedByName returns the full name of entity that last updated the attachment file.
-func (rE *file) GetUpdatedByName() (*string, error) {
-	if internal.IsNil(rE) {
+func (f *file) GetUpdatedByName() (*string, error) {
+	if internal.IsNil(f) {
 		return nil, nil
 	}
 
-	val, err := rE.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(averageImageColorKey)
 	if err != nil {
 		return nil, err
 	}
@@ -1060,10 +1065,10 @@ func (rE *file) GetUpdatedByName() (*string, error) {
 }
 
 // setUpdatedByName sets the full name of entity that last updated the attachment file.
-func (rE *file) setUpdatedByName(updatedByName *string) error {
-	if internal.IsNil(rE) {
+func (f *file) setUpdatedByName(updatedByName *string) error {
+	if internal.IsNil(f) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(updatedByNameKey, updatedByName)
+	return f.GetBackingStore().Set(updatedByNameKey, updatedByName)
 }
