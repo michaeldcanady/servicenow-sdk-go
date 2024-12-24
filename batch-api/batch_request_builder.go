@@ -30,7 +30,7 @@ func NewBatchRequestBuilder(client core.Client, pathParameters map[string]string
 
 // Post sends a batch request and returns the BatchResponse.
 func (rB *BatchRequestBuilder) Post(request BatchRequest) (BatchResponse, error) {
-	config := &core.RequestConfiguration{
+	config := &core.RequestConfiguration{ //nolint: staticcheck
 		Data:     request,
 		Response: &batchResponse{},
 	}

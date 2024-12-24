@@ -21,7 +21,7 @@ var (
 	}
 )
 
-func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) { //nolint: staticcheck
 	req, err := requestInfo.ToRequest()
 	if err != nil {
 		return nil, err

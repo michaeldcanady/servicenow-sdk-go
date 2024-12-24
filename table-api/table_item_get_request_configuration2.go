@@ -9,13 +9,13 @@ type tableItemGetRequestConfiguration2[T Entry] struct {
 	header   interface{}
 	query    *TableItemRequestBuilderGetQueryParameters
 	data     interface{}
-	mapping  core.ErrorMapping
+	mapping  core.ErrorMapping //nolint: staticcheck
 	response *TableItemResponse2[T]
 }
 
 // toConfiguration converts rC to `core.RequestConfiguration`.
-func (rC *tableItemGetRequestConfiguration2[T]) toConfiguration() *core.RequestConfiguration {
-	return &core.RequestConfiguration{
+func (rC *tableItemGetRequestConfiguration2[T]) toConfiguration() *core.RequestConfiguration { //nolint: staticcheck
+	return &core.RequestConfiguration{ //nolint: staticcheck
 		Header:          rC.header,
 		QueryParameters: rC.query,
 		Data:            rC.data,

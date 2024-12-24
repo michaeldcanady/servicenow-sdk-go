@@ -19,7 +19,7 @@ import (
 // ServiceNowClient ...
 type ServiceNowClient struct {
 	// Deprecated: deprecated since v1.6.0.
-	Credential   core.Credential
+	Credential   core.Credential //nolint: staticcheck
 	authProvider *internal.BaseAuthorizationProvider
 	BaseUrl      string //nolint:stylecheck
 	Session      http.Client
@@ -47,7 +47,7 @@ func (c *ServiceNowClient) Now2() *now.NowRequestBuilder2 {
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
 // It returns a pointer to the Client.
-func NewServiceNowClient(credential core.Credential, instance string) *ServiceNowClient {
+func NewServiceNowClient(credential core.Credential, instance string) *ServiceNowClient { //nolint: staticcheck
 	if !strings.HasSuffix(instance, ".service-now.com/api") {
 		instance += ".service-now.com/api"
 	}
@@ -72,7 +72,7 @@ func NewServiceNowClient(credential core.Credential, instance string) *ServiceNo
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
 // It returns a pointer to the Client.
-func NewServiceNowClient2(credential core.Credential, instance string) (*ServiceNowClient, error) {
+func NewServiceNowClient2(credential core.Credential, instance string) (*ServiceNowClient, error) { //nolint: staticcheck
 	if !strings.HasSuffix(instance, ".service-now.com/api") {
 		instance += ".service-now.com/api"
 	}

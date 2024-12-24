@@ -9,12 +9,12 @@ type AttachmentCollectionFileRequestConfiguration struct {
 	Header          interface{}
 	QueryParameters *AttachmentRequestBuilderFileQueryParameters
 	Data            interface{}
-	ErrorMapping    core.ErrorMapping
+	ErrorMapping    core.ErrorMapping //nolint: staticcheck
 	response        *AttachmentItemResponse
 }
 
-func (rC *AttachmentCollectionFileRequestConfiguration) toConfiguration() *core.RequestConfiguration {
-	return &core.RequestConfiguration{
+func (rC *AttachmentCollectionFileRequestConfiguration) toConfiguration() *core.RequestConfiguration { //nolint: staticcheck
+	return &core.RequestConfiguration{ //nolint: staticcheck
 		Header:          rC.Header,
 		QueryParameters: rC.QueryParameters,
 		Data:            rC.Data,

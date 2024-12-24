@@ -12,7 +12,7 @@ func TestTableRequestBuilderGetQueryParameters(t *testing.T) {
 		Limit: 1,
 	}
 
-	queryMap, err := core.ToQueryMap(params)
+	queryMap, err := core.ToQueryMap(params) //nolint: staticcheck
 	if err != nil {
 		t.Error(err)
 	}

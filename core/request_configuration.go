@@ -5,4 +5,6 @@ import (
 )
 
 // Deprecated: deprecated since v{unreleased}.
-type RequestConfiguration = core.RequestConfigurationImpl
+//
+// RequestConfiguration ...
+type RequestConfiguration = core.RequestConfigurationImpl //nolint: staticcheck

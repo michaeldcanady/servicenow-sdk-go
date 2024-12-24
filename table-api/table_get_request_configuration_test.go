@@ -14,7 +14,7 @@ func TestToConfiguration(t *testing.T) {
 			Header:          map[string]string{"Authorization": "Bearer token"},
 			QueryParameters: &TableRequestBuilderGetQueryParameters{Limit: 10},
 			Data:            map[string]interface{}{"key": "value"},
-			ErrorMapping:    core.ErrorMapping{"4XX": "error"},
+			ErrorMapping:    core.ErrorMapping{"4XX": "error"}, //nolint: staticcheck
 			response:        &TableCollectionResponse{},
 		}
 
@@ -46,7 +46,7 @@ func TestToConfiguration(t *testing.T) {
 		rC := &TableGetRequestConfiguration{
 			Header:       map[string]string{"Authorization": "Bearer token"},
 			Data:         map[string]interface{}{"key": "value"},
-			ErrorMapping: core.ErrorMapping{"4XX": "error"},
+			ErrorMapping: core.ErrorMapping{"4XX": "error"}, //nolint: staticcheck
 			response:     &TableCollectionResponse{},
 		}
 

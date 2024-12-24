@@ -86,7 +86,7 @@ func TestToBatchItem(t *testing.T) {
 	batchReq := NewBatchRequest(client).(*batchRequest)
 
 	var mockReqInfo *mocking.MockRequestInformation
-	var headers core.RequestHeader
+	var headers core.RequestHeader //nolint: staticcheck
 
 	tests := []intBatch.Test[[]interface{}]{
 		{

@@ -235,7 +235,7 @@ func TestPageIteratorFetchAndConvertPageWithLinkErrNilResponseBody(t *testing.T)
 	assert.Nil(t, err)
 
 	page, err := pageIterator.fetchAndConvertPage(pageIterator.currentPage.NextPageLink)
-	assert.ErrorIs(t, err, core.ErrNilResponseBody)
+	assert.ErrorIs(t, err, core.ErrNilResponseBody) //nolint: staticcheck
 
 	assert.Equal(t, PageResult{}, page)
 }
@@ -251,7 +251,7 @@ func TestPageIteratorFetchAndConvertPageWithoutLink(t *testing.T) {
 	assert.Nil(t, err)
 
 	page, err := pageIterator.fetchAndConvertPage(pageIterator.currentPage.NextPageLink)
-	assert.ErrorIs(t, err, core.ErrNilResponse)
+	assert.ErrorIs(t, err, core.ErrNilResponse) //nolint: staticcheck
 
 	assert.Equal(t, PageResult{}, page)
 }

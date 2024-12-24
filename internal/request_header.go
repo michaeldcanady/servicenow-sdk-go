@@ -11,7 +11,7 @@ type RequestHeader struct {
 	header http.Header
 }
 
-func NewRequestHeader() core.RequestHeader {
+func NewRequestHeader() core.RequestHeader { //nolint: staticcheck
 	return &RequestHeader{
 		header: http.Header{},
 	}

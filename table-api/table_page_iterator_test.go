@@ -39,7 +39,7 @@ func TestNewTablePageIterator(t *testing.T) {
 			},
 			expected:  nil,
 			expectErr: false,
-			err:       core.ErrNilClient,
+			err:       core.ErrNilClient, //nolint: staticcheck
 		},
 	}
 
@@ -60,7 +60,7 @@ func TestNewTablePageIterator(t *testing.T) {
 }
 
 func TestConstructTableCollection(t *testing.T) {
-	tests := []test[core.CollectionResponse[TableEntry]]{
+	tests := []test[core.CollectionResponse[TableEntry]]{ //nolint: staticcheck
 		{
 			title: "Valid",
 			value: &http.Response{

@@ -14,7 +14,7 @@ func TestTableItemDeleteRequestConfigurationToConfiguration(t *testing.T) {
 			Header:          map[string]string{"Authorization": "Bearer token"},
 			QueryParameters: &TableItemRequestBuilderDeleteQueryParameters{},
 			Data:            map[string]interface{}{"key": "value"},
-			ErrorMapping:    core.ErrorMapping{"4XX": "error"},
+			ErrorMapping:    core.ErrorMapping{"4XX": "error"}, //nolint: staticcheck
 			response:        &TableItemResponse{},
 		}
 
@@ -22,7 +22,7 @@ func TestTableItemDeleteRequestConfigurationToConfiguration(t *testing.T) {
 		config := rC.toConfiguration()
 
 		// Check if the converted configuration is as expected
-		expectedConfig := &core.RequestConfiguration{
+		expectedConfig := &core.RequestConfiguration{ //nolint: staticcheck
 			Header:          rC.Header,
 			QueryParameters: rC.QueryParameters,
 			Data:            rC.Data,

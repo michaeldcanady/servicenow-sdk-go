@@ -8,7 +8,7 @@ import (
 
 // Deprecated: deprecated since v{unreleased}. Use `TableRequestBuilder2` instead.
 type TableRequestBuilder struct {
-	core.RequestBuilder
+	core.RequestBuilder //nolint: staticcheck
 }
 
 // Deprecated: deprecated since v{unreleased}. Use `NewTableRequestBuilder2` instead.
@@ -143,7 +143,7 @@ func (rB *TableRequestBuilder) Count() (int, error) {
 		return -1, err
 	}
 
-	errorMapping := core.ErrorMapping{"4XX": "hi"}
+	errorMapping := core.ErrorMapping{"4XX": "hi"} //nolint: staticcheck
 
 	response, err := rB.RequestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {

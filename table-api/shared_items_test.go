@@ -171,7 +171,7 @@ func getFakeItemJSON() []byte {
 // Mock client for testing
 type mockClient struct{}
 
-func (c *mockClient) sendCollection(requestInformation core.IRequestInformation) (*http.Response, error) {
+func (c *mockClient) sendCollection(requestInformation core.IRequestInformation) (*http.Response, error) { //nolint: staticcheck
 	url, err := requestInformation.Url()
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse URL: %s", err)
@@ -217,7 +217,7 @@ func (c *mockClient) sendCollection(requestInformation core.IRequestInformation)
 	return nil, nil
 }
 
-func (c *mockClient) sendItem(requestInformation core.IRequestInformation) (*http.Response, error) {
+func (c *mockClient) sendItem(requestInformation core.IRequestInformation) (*http.Response, error) { //nolint: staticcheck
 	uri, err := requestInformation.Url()
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse URL: %s", err)
@@ -249,7 +249,7 @@ func (c *mockClient) sendItem(requestInformation core.IRequestInformation) (*htt
 	return nil, nil
 }
 
-func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) { //nolint: staticcheck
 	uri, err := requestInformation.Url()
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse URL: %s", err)

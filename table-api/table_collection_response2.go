@@ -63,8 +63,8 @@ func (cR *TableCollectionResponse2[T]) ParseHeaders(headers http.Header) {
 }
 
 // ToPage converts a TableCollectionResponse2 to a PageResult
-func (cR *TableCollectionResponse2[T]) ToPage() core.PageResult[T] {
-	return core.PageResult[T]{
+func (cR *TableCollectionResponse2[T]) ToPage() core.PageResult[T] { //nolint: staticcheck
+	return core.PageResult[T]{ //nolint: staticcheck
 		Result:           cR.Result,
 		NextPageLink:     cR.NextPageLink,
 		PreviousPageLink: cR.PreviousPageLink,

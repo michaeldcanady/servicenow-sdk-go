@@ -20,7 +20,7 @@ func TestTableItemGetRequestConfiguration_toConfiguration(t *testing.T) {
 				View:                 "desktop",
 			},
 			Data:         map[string]interface{}{"key": "value"},
-			ErrorMapping: core.ErrorMapping{"4XX": "error"},
+			ErrorMapping: core.ErrorMapping{"4XX": "error"}, //nolint: staticcheck
 			response:     &TableItemResponse{},
 		}
 
@@ -28,7 +28,7 @@ func TestTableItemGetRequestConfiguration_toConfiguration(t *testing.T) {
 		config := rC.toConfiguration()
 
 		// Check if the converted configuration is as expected
-		expectedConfig := &core.RequestConfiguration{
+		expectedConfig := &core.RequestConfiguration{ //nolint: staticcheck
 			Header:          rC.Header,
 			QueryParameters: rC.QueryParameters,
 			Data:            rC.Data,

@@ -125,8 +125,8 @@ func (pI *PageIterator) fetchPage(uri string) (*TableCollectionResponse, error) 
 	}
 
 	// build request information
-	requestInformation := core.NewRequestInformation()
-	requestInformation.Method = core.GET
+	requestInformation := core.NewRequestInformation() //nolint: staticcheck
+	requestInformation.Method = core.GET               //nolint: staticcheck
 	requestInformation.SetUri(nextLink)
 
 	resp, err := pI.client.Send(requestInformation, nil)
@@ -134,7 +134,7 @@ func (pI *PageIterator) fetchPage(uri string) (*TableCollectionResponse, error) 
 		return nil, err
 	}
 
-	err = core.ParseResponse(resp, &collectionResp)
+	err = core.ParseResponse(resp, &collectionResp) //nolint: staticcheck
 	if err != nil {
 		return nil, err
 	}

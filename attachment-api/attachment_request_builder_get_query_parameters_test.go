@@ -20,7 +20,7 @@ func TestAttachmentRequestBuilderGetQueryParameters(t *testing.T) {
 		Query:  "field1=value1",
 	}
 
-	actual, err := core.ToQueryMap(params)
+	actual, err := core.ToQueryMap(params) //nolint: staticcheck
 	if err != nil {
 		t.Error(err)
 	}

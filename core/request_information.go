@@ -75,7 +75,7 @@ func (rI *RequestInformation) GetContent() []byte {
 	return rI.Content
 }
 
-func (rI *RequestInformation) GetHeaders() core.RequestHeader {
+func (rI *RequestInformation) GetHeaders() core.RequestHeader { //nolint: staticcheck
 	headers := internal.NewRequestHeader()
 	headers.SetAll(rI.Headers)
 	return headers

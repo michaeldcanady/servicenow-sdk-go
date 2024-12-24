@@ -19,7 +19,7 @@ import (
 //
 // NowRequestBuilder ...
 type NowRequestBuilder struct {
-	core.RequestBuilder
+	core.RequestBuilder //nolint: staticcheck
 }
 
 // Deprecated: deprecated since v{unreleased}.

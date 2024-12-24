@@ -37,11 +37,11 @@ type MockRequestInformation struct {
 	Headers http.Header
 }
 
-func (rI *MockRequestInformation) AddRequestOptions(options []core.RequestOption) {
+func (rI *MockRequestInformation) AddRequestOptions(options []core.RequestOption) { //nolint: staticcheck
 }
 
-func (rI *MockRequestInformation) GetRequestOptions() []core.RequestOption {
-	return []core.RequestOption{}
+func (rI *MockRequestInformation) GetRequestOptions() []core.RequestOption { //nolint: staticcheck
+	return []core.RequestOption{} //nolint: staticcheck
 }
 
 func (rI *MockRequestInformation) SetStreamContent(content []byte) {
@@ -91,7 +91,7 @@ func (rI *MockRequestInformation) AddHeaders(rawHeaders interface{}) error {
 		headers = rawHeaders.(http.Header)
 	} else {
 		// otherwise, return an error
-		return core.ErrInvalidHeaderType
+		return core.ErrInvalidHeaderType //nolint: staticcheck
 	}
 
 	// iterate over the headers map and add each key-value pair to rI.Headers
@@ -149,7 +149,7 @@ func TestNewClient2(t *testing.T) {
 			values := test.Input.([]interface{})
 
 			instance := values[0].(string)
-			cred := values[1].(core.Credential)
+			cred := values[1].(core.Credential) //nolint: staticcheck
 
 			client, err := NewServiceNowClient2(cred, instance)
 			assert.Equal(t, test.Expected, client)
@@ -211,8 +211,8 @@ func TestClientUnmarshallError(t *testing.T) {
 
 	client := NewServiceNowClient(cred, "instance")
 
-	properErr := core.ServiceNowError{
-		Exception: core.Exception{
+	properErr := core.ServiceNowError{ //nolint: staticcheck
+		Exception: core.Exception{ //nolint: staticcheck
 			Detail:  "Resource not found",
 			Message: "Resource not found",
 		},
@@ -230,7 +230,7 @@ func TestClientUnmarshallError(t *testing.T) {
 	}
 
 	err = client.unmarshallError(errorResp)
-	assert.IsType(t, &core.ServiceNowError{}, err)
+	assert.IsType(t, &core.ServiceNowError{}, err) //nolint: staticcheck
 	assert.Equal(t, &properErr, err)
 
 	errorResp = &http.Response{

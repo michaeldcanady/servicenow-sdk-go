@@ -21,5 +21,5 @@ type IRequestInformation interface {
 	GetRequestOptions() []RequestOption
 	GetContent() []byte
 	GetMethod() string
-	GetHeaders() core.RequestHeader
+	GetHeaders() core.RequestHeader //nolint: staticcheck
 }
