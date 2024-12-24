@@ -1,5 +1,7 @@
 package tableapi
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // TableItemRequestBuilderGetQueryParameters represents GET query parameters for a Table Item Request.
 type TableItemRequestBuilderGetQueryParameters struct {
 	//DisplayValue determines the type of data returned, either the actual values from the database or the display values of the fields.

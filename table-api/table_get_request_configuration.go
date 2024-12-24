@@ -9,13 +9,13 @@ type TableGetRequestConfiguration struct {
 	Header          interface{}
 	QueryParameters *TableRequestBuilderGetQueryParameters
 	Data            interface{}
-	ErrorMapping    core.ErrorMapping
+	ErrorMapping    core.ErrorMapping //nolint: staticcheck
 	response        *TableCollectionResponse
 }
 
 // toConfiguration converts rC to `core.RequestConfiguration`.
-func (rC *TableGetRequestConfiguration) toConfiguration() *core.RequestConfiguration {
-	return &core.RequestConfiguration{
+func (rC *TableGetRequestConfiguration) toConfiguration() *core.RequestConfiguration { //nolint: staticcheck
+	return &core.RequestConfiguration{ //nolint: staticcheck
 		Header:          rC.Header,
 		QueryParameters: rC.QueryParameters,
 		Data:            rC.Data,

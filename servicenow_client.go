@@ -11,35 +11,43 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	now "github.com/michaeldcanady/servicenow-sdk-go/now"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// ServiceNowClient ...
 type ServiceNowClient struct {
 	// Deprecated: deprecated since v1.6.0.
-	Credential   core.Credential
+	Credential   core.Credential //nolint: staticcheck
 	authProvider *internal.BaseAuthorizationProvider
 	BaseUrl      string //nolint:stylecheck
 	Session      http.Client
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // Now returns a NowRequestBuilder associated with the Client.
 // It prepares the NowRequestBuilder with the base URL for the ServiceNow instance.
 func (c *ServiceNowClient) Now() *NowRequestBuilder {
 	return NewNowRequestBuilder(c.BaseUrl+"/now", c)
 }
 
-func (c *ServiceNowClient) Now2() *NowRequestBuilder2 {
+// Now provides entrypoint into Service-Now's APIs
+func (c *ServiceNowClient) Now2() *now.NowRequestBuilder2 {
 	pathParameters := map[string]string{
 		"baseurl": c.BaseUrl,
 	}
-	return NewAPIV1CompatibleNowRequestBuilder2Internal(pathParameters, c)
+	return now.NewAPIV1CompatibleNowRequestBuilder2Internal(pathParameters, c)
 }
 
 // Deprecated: deprecated since v1.6.0. Please use `NewServiceNowClient2` instead.
+//
 // NewServiceNowClient creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
 // It returns a pointer to the Client.
-func NewServiceNowClient(credential core.Credential, instance string) *ServiceNowClient {
+func NewServiceNowClient(credential core.Credential, instance string) *ServiceNowClient { //nolint: staticcheck
 	if !strings.HasSuffix(instance, ".service-now.com/api") {
 		instance += ".service-now.com/api"
 	}
@@ -58,11 +66,13 @@ func NewServiceNowClient(credential core.Credential, instance string) *ServiceNo
 	}
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // NewServiceNowClient2 creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
 // It returns a pointer to the Client.
-func NewServiceNowClient2(credential core.Credential, instance string) (*ServiceNowClient, error) {
+func NewServiceNowClient2(credential core.Credential, instance string) (*ServiceNowClient, error) { //nolint: staticcheck
 	if !strings.HasSuffix(instance, ".service-now.com/api") {
 		instance += ".service-now.com/api"
 	}
@@ -85,7 +95,7 @@ func NewServiceNowClient2(credential core.Credential, instance string) (*Service
 }
 
 func (c *ServiceNowClient) unmarshallError(response *http.Response) error {
-	var stringError core.ServiceNowError
+	var stringError core.ServiceNowError //nolint: staticcheck
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
@@ -98,7 +108,7 @@ func (c *ServiceNowClient) unmarshallError(response *http.Response) error {
 	return &stringError
 }
 
-func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings core.ErrorMapping) error {
+func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorMappings core.ErrorMapping) error { //nolint: staticcheck
 	if response.StatusCode < 400 {
 		return nil
 	}
@@ -115,7 +125,7 @@ func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 	}
 
 	if errorCtor == nil {
-		err := &core.ApiError{
+		err := &core.ApiError{ //nolint: staticcheck
 			Message:            "The server returned an unexpected status code and no error factory is registered for this code: " + statusAsString,
 			ResponseStatusCode: response.StatusCode,
 		}
@@ -127,7 +137,7 @@ func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 	return stringError
 }
 
-func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo core.IRequestInformation) (*http.Request, error) {
+func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo core.IRequestInformation) (*http.Request, error) { //nolint: staticcheck
 	if requestInfo == nil {
 		return nil, ErrNilRequestInfo
 	}
@@ -151,11 +161,11 @@ func (c *ServiceNowClient) toRequestWithContext(ctx context.Context, requestInfo
 	return request, nil
 }
 
-func (c *ServiceNowClient) toRequest(requestInfo core.IRequestInformation) (*http.Request, error) {
+func (c *ServiceNowClient) toRequest(requestInfo core.IRequestInformation) (*http.Request, error) { //nolint: staticcheck
 	return c.toRequestWithContext(context.Background(), requestInfo)
 }
 
-func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) { //nolint: staticcheck
 	request, err := c.toRequestWithContext(ctx, requestInfo)
 	if err != nil {
 		return nil, err
@@ -174,7 +184,7 @@ func (c *ServiceNowClient) SendWithContext(ctx context.Context, requestInfo core
 	return response, nil
 }
 
-func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+func (c *ServiceNowClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) { //nolint: staticcheck
 	return c.SendWithContext(context.Background(), requestInfo, errorMapping)
 }
 

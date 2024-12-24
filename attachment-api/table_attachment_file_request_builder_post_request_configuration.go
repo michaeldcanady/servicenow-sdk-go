@@ -8,7 +8,6 @@ type TableAttachmentFileRequestBuilderPostRequestConfiguration struct {
 	Headers *abstractions.RequestHeaders
 	// Options Request options
 	Options []abstractions.RequestOption
-
 	// QueryParameters request query parameters
 	QueryParameters *AttachmentFileRequestBuilderPostQueryParameters
 }

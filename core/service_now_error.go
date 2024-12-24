@@ -2,6 +2,7 @@ package core
 
 import "fmt"
 
+// Deprecated: deprecated since v{unreleased}.
 // ServiceNowError represents an error response from the ServiceNow API.
 type ServiceNowError struct {
 	// Exception is the exception details in the error response.
@@ -10,6 +11,7 @@ type ServiceNowError struct {
 	Status string
 }
 
+// Deprecated: deprecated since v{unreleased}.
 // Error returns a formatted error message that includes both the exception message and detail.
 func (e *ServiceNowError) Error() string {
 	return fmt.Sprintf("%s: %s", e.Exception.Message, e.Exception.Detail)

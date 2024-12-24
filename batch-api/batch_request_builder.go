@@ -5,14 +5,18 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // BatchRequestBuilder constructs batch requests for the specified base URL.
 type BatchRequestBuilder struct {
 	internal.RequestBuilder
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // NewBatchRequestBuilder creates a new BatchRequestBuilder.
 // It takes a client (core.Client) and pathParameters (map[string]string).
-func NewBatchRequestBuilder(client core.Client, pathParameters map[string]string) *BatchRequestBuilder {
+func NewBatchRequestBuilder(client core.Client, pathParameters map[string]string) *BatchRequestBuilder { //nolint: staticcheck
 	requestBuilder := core.NewRequestBuilder( //nolint:staticcheck
 		client,
 		// Must be versioned
@@ -26,7 +30,7 @@ func NewBatchRequestBuilder(client core.Client, pathParameters map[string]string
 
 // Post sends a batch request and returns the BatchResponse.
 func (rB *BatchRequestBuilder) Post(request BatchRequest) (BatchResponse, error) {
-	config := &core.RequestConfiguration{
+	config := &core.RequestConfiguration{ //nolint: staticcheck
 		Data:     request,
 		Response: &batchResponse{},
 	}

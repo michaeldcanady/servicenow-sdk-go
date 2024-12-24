@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
+// Deprecated: deprecated since v{unreleased}.
 // TableCollectionResponse2 represents a collection of table entries.
 type TableCollectionResponse2[T Entry] struct {
 	// Result is a slice of pointers to table entries.
@@ -62,8 +63,8 @@ func (cR *TableCollectionResponse2[T]) ParseHeaders(headers http.Header) {
 }
 
 // ToPage converts a TableCollectionResponse2 to a PageResult
-func (cR *TableCollectionResponse2[T]) ToPage() core.PageResult[T] {
-	return core.PageResult[T]{
+func (cR *TableCollectionResponse2[T]) ToPage() core.PageResult[T] { //nolint: staticcheck
+	return core.PageResult[T]{ //nolint: staticcheck
 		Result:           cR.Result,
 		NextPageLink:     cR.NextPageLink,
 		PreviousPageLink: cR.PreviousPageLink,

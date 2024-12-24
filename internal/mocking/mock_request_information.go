@@ -28,9 +28,9 @@ func (m *MockRequestInformation) GetMethod() string {
 	return args.String(0)
 }
 
-func (m *MockRequestInformation) GetHeaders() core.RequestHeader {
+func (m *MockRequestInformation) GetHeaders() core.RequestHeader { //nolint: staticcheck
 	args := m.Called()
-	return args.Get(0).(core.RequestHeader)
+	return args.Get(0).(core.RequestHeader) //nolint: staticcheck
 }
 
 func (m *MockRequestInformation) AddHeaders(headers interface{}) error {

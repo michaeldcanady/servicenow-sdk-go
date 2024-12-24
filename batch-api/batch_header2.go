@@ -13,6 +13,7 @@ const (
 	valueKey = "value"
 )
 
+// BatchHeaderable represents a Service-Now batch header
 type BatchHeaderable interface {
 	GetName() (*string, error)
 	SetName(*string) error
@@ -22,13 +23,19 @@ type BatchHeaderable interface {
 	store.BackedModel
 }
 
+// batchHeader2 implementation of BatchHeaderable
 type batchHeader2 struct {
+	// backingStoreFactory factory to create backingStore
+	backingStoreFactory store.BackingStoreFactory
+	// backingStore the store backing the model
 	backingStore store.BackingStore
 }
 
+// NewBatchHeader2 creates new instance of BatchHeaderable
 func NewBatchHeader2() BatchHeaderable {
 	return &batchHeader2{
-		backingStore: store.NewInMemoryBackingStore(),
+		backingStore:        store.NewInMemoryBackingStore(),
+		backingStoreFactory: store.NewInMemoryBackingStore,
 	}
 }
 
@@ -38,34 +45,34 @@ func CreateBatchHeader2FromDiscriminatorValue(parseNode serialization.ParseNode)
 }
 
 // GetBackingStore retrieves the backing store for the model.
-func (rE *batchHeader2) GetBackingStore() store.BackingStore {
-	if internal.IsNil(rE) {
+func (bH *batchHeader2) GetBackingStore() store.BackingStore {
+	if internal.IsNil(bH) {
 		return nil
 	}
 
-	if internal.IsNil(rE.backingStore) {
-		rE.backingStore = store.NewInMemoryBackingStore()
+	if internal.IsNil(bH.backingStore) {
+		bH.backingStore = bH.backingStoreFactory()
 	}
 
-	return rE.backingStore
+	return bH.backingStore
 }
 
 // Serialize writes the objects properties to the current writer.
-func (rE *batchHeader2) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(rE) {
+func (bH *batchHeader2) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(bH) {
 		return nil
 	}
 
 	serializers := []func(serialization.SerializationWriter) error{
 		func(sw serialization.SerializationWriter) error {
-			name, err := rE.GetName()
+			name, err := bH.GetName()
 			if err != nil {
 				return err
 			}
 			return sw.WriteStringValue(nameKey, name)
 		},
 		func(sw serialization.SerializationWriter) error {
-			value, err := rE.GetValue()
+			value, err := bH.GetValue()
 			if err != nil {
 				return err
 			}
@@ -82,8 +89,8 @@ func (rE *batchHeader2) Serialize(writer serialization.SerializationWriter) erro
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (rE *batchHeader2) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	if internal.IsNil(rE) {
+func (bH *batchHeader2) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	if internal.IsNil(bH) {
 		return nil
 	}
 
@@ -97,12 +104,13 @@ func (rE *batchHeader2) GetFieldDeserializers() map[string]func(serialization.Pa
 	}
 }
 
-func (rE *batchHeader2) GetName() (*string, error) {
-	if internal.IsNil(rE) {
+// GetName returns the name of the header
+func (bH *batchHeader2) GetName() (*string, error) {
+	if internal.IsNil(bH) {
 		return nil, nil
 	}
 
-	name, err := rE.GetBackingStore().Get(nameKey)
+	name, err := bH.GetBackingStore().Get(nameKey)
 	if err != nil {
 		return nil, err
 	}
@@ -114,20 +122,23 @@ func (rE *batchHeader2) GetName() (*string, error) {
 
 	return typedName, nil
 }
-func (rE *batchHeader2) SetName(name *string) error {
-	if internal.IsNil(rE) {
+
+// SetName sets name to provided value
+func (bH *batchHeader2) SetName(name *string) error {
+	if internal.IsNil(bH) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(nameKey, name)
+	return bH.GetBackingStore().Set(nameKey, name)
 }
 
-func (rE *batchHeader2) GetValue() (*string, error) {
-	if internal.IsNil(rE) {
+// GetValue returns the value of the header
+func (bH *batchHeader2) GetValue() (*string, error) {
+	if internal.IsNil(bH) {
 		return nil, nil
 	}
 
-	value, err := rE.GetBackingStore().Get(valueKey)
+	value, err := bH.GetBackingStore().Get(valueKey)
 	if err != nil {
 		return nil, err
 	}
@@ -139,10 +150,12 @@ func (rE *batchHeader2) GetValue() (*string, error) {
 
 	return typedValue, nil
 }
-func (rE *batchHeader2) SetValue(value *string) error {
-	if internal.IsNil(rE) {
+
+// SetValue sets the value to the provided value
+func (bH *batchHeader2) SetValue(value *string) error {
+	if internal.IsNil(bH) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(valueKey, value)
+	return bH.GetBackingStore().Set(valueKey, value)
 }

@@ -9,6 +9,19 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
+const (
+	resultKey          = "result"
+	firstLinkHeaderKey = "first"
+	prevLinkHeaderKey  = "prev"
+	nextLinkHeaderKey  = "next"
+	lastLinkHeaderKey  = "last"
+)
+
+var (
+	linkHeaderRegex = regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
+)
+
+// AttachmentCollectionResponse2 represents a Service-Now attachment collection response
 type AttachmentCollectionResponse2 interface {
 	GetResult() ([]Attachmentable, error)
 	GetNextLink() (*string, error)
@@ -24,76 +37,56 @@ type AttachmentCollectionResponse2 interface {
 	store.BackedModel
 }
 
+// attachmentCollectionResponse2 implementation of AttachmentCollectionResponse2
 type attachmentCollectionResponse2 struct {
+	// backingStoreFactory factory to create backingStore
+	backingStoreFactory store.BackingStoreFactory
+	// backingStore the store backing the model
 	backingStore store.BackingStore
 }
 
-func NewAttachmentCollectionResponse2(node serialization.ParseNode) (serialization.Parsable, error) {
+// NewAttachmentCollectionResponse2 creates a new AttachmentCollectionResponse2
+func NewAttachmentCollectionResponse2() AttachmentCollectionResponse2 {
 	return &attachmentCollectionResponse2{
-		backingStore: store.NewInMemoryBackingStore(),
-	}, nil
+		backingStore:        store.NewInMemoryBackingStore(),
+		backingStoreFactory: store.NewInMemoryBackingStore,
+	}
 }
 
-func CreateAttachmentCollectionResponse2FromDiscriminatorValue() serialization.ParsableFactory {
-	return NewAttachmentCollectionResponse2
+// CreateAttachmentCollectionResponse2FromDiscriminatorValue is a factory for creating an AttachmentCollectionResponse2
+func CreateAttachmentCollectionResponse2FromDiscriminatorValue(node serialization.ParseNode) (serialization.Parsable, error) {
+	return NewAttachmentCollectionResponse2(), nil
 }
 
+// GetBackingStore returns the backing store of the record
 func (tE *attachmentCollectionResponse2) GetBackingStore() store.BackingStore {
 	if internal.IsNil(tE) {
 		return nil
 	}
 
 	if internal.IsNil(tE.backingStore) {
-		tE.backingStore = store.BackingStoreFactoryInstance()
+		tE.backingStore = tE.backingStoreFactory()
 	}
 
 	return tE.backingStore
 }
 
-// Serialize writes the objects properties to the current writer.
+// Serialize writes the objects properties to the current writer
 func (tE *attachmentCollectionResponse2) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(tE) {
 		return nil
 	}
-	return nil
+	return errors.New("not implemented")
 }
 
-func (tE *attachmentCollectionResponse2) GetResult() ([]Attachmentable, error) {
-	if internal.IsNil(tE) {
-		return nil, nil
-	}
-
-	val, err := tE.GetBackingStore().Get("Result")
-	if err != nil {
-		return nil, err
-	}
-	if internal.IsNil(val) {
-		return []Attachmentable{}, nil
-	}
-
-	typedVal, ok := val.([]Attachmentable)
-	if !ok {
-		return nil, errors.New("val is not Attachmentable")
-	}
-
-	return typedVal, nil
-}
-
-func (tE *attachmentCollectionResponse2) setResult(result []Attachmentable) error {
-	if internal.IsNil(tE) {
-		return nil
-	}
-
-	return tE.GetBackingStore().Set("Result", result)
-}
-
+// GetFieldDeserializers returns the deserialization information for this object
 func (tE *attachmentCollectionResponse2) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	if internal.IsNil(tE) {
 		return nil
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		"result": func(pn serialization.ParseNode) error {
+		resultKey: func(pn serialization.ParseNode) error {
 			elem, err := pn.GetCollectionOfObjectValues(CreateAttachmentFromDiscriminatorValue)
 			if err != nil {
 				return err
@@ -112,6 +105,38 @@ func (tE *attachmentCollectionResponse2) GetFieldDeserializers() map[string]func
 	}
 }
 
+// GetResult returns results, a slice of attachments
+func (tE *attachmentCollectionResponse2) GetResult() ([]Attachmentable, error) {
+	if internal.IsNil(tE) {
+		return nil, nil
+	}
+
+	val, err := tE.GetBackingStore().Get(resultKey)
+	if err != nil {
+		return nil, err
+	}
+	if internal.IsNil(val) {
+		return []Attachmentable{}, nil
+	}
+
+	typedVal, ok := val.([]Attachmentable)
+	if !ok {
+		return nil, errors.New("val is not Attachmentable")
+	}
+
+	return typedVal, nil
+}
+
+// setResult sets the result to the provided value
+func (tE *attachmentCollectionResponse2) setResult(result []Attachmentable) error {
+	if internal.IsNil(tE) {
+		return nil
+	}
+
+	return tE.GetBackingStore().Set(resultKey, result)
+}
+
+// GetNextLink returns next link, if it exists
 func (tE *attachmentCollectionResponse2) GetNextLink() (*string, error) {
 	if internal.IsNil(tE) {
 		return nil, nil
@@ -133,6 +158,7 @@ func (tE *attachmentCollectionResponse2) GetNextLink() (*string, error) {
 	return typedVal, nil
 }
 
+// GetPreviousLink returns previous link, if it exists
 func (tE *attachmentCollectionResponse2) GetPreviousLink() (*string, error) {
 	if internal.IsNil(tE) {
 		return nil, nil
@@ -154,6 +180,7 @@ func (tE *attachmentCollectionResponse2) GetPreviousLink() (*string, error) {
 	return typedVal, nil
 }
 
+// GetFirstLink returns first link, if it exists
 func (tE *attachmentCollectionResponse2) GetFirstLink() (*string, error) {
 	if internal.IsNil(tE) {
 		return nil, nil
@@ -175,6 +202,7 @@ func (tE *attachmentCollectionResponse2) GetFirstLink() (*string, error) {
 	return typedVal, nil
 }
 
+// GetLastLink returns last link, if it exists
 func (tE *attachmentCollectionResponse2) GetLastLink() (*string, error) {
 	if internal.IsNil(tE) {
 		return nil, nil
@@ -196,6 +224,7 @@ func (tE *attachmentCollectionResponse2) GetLastLink() (*string, error) {
 	return typedVal, nil
 }
 
+// setNextLink sets next link
 func (tE *attachmentCollectionResponse2) setNextLink(nextLink *string) error {
 	if internal.IsNil(tE) {
 		return nil
@@ -204,6 +233,7 @@ func (tE *attachmentCollectionResponse2) setNextLink(nextLink *string) error {
 	return tE.GetBackingStore().Set(nextLinkHeaderKey, nextLink)
 }
 
+// setPreviousLink sets previous link
 func (tE *attachmentCollectionResponse2) setPreviousLink(previousLink *string) error {
 	if internal.IsNil(tE) {
 		return nil
@@ -212,6 +242,7 @@ func (tE *attachmentCollectionResponse2) setPreviousLink(previousLink *string) e
 	return tE.GetBackingStore().Set(prevLinkHeaderKey, previousLink)
 }
 
+// setFirstLink sets first link
 func (tE *attachmentCollectionResponse2) setFirstLink(firstLink *string) error {
 	if internal.IsNil(tE) {
 		return nil
@@ -220,6 +251,7 @@ func (tE *attachmentCollectionResponse2) setFirstLink(firstLink *string) error {
 	return tE.GetBackingStore().Set(firstLinkHeaderKey, firstLink)
 }
 
+// setLastLink sets last link
 func (tE *attachmentCollectionResponse2) setLastLink(lastLink *string) error {
 	if internal.IsNil(tE) {
 		return nil
@@ -228,20 +260,9 @@ func (tE *attachmentCollectionResponse2) setLastLink(lastLink *string) error {
 	return tE.GetBackingStore().Set(lastLinkHeaderKey, lastLink)
 }
 
-const (
-	firstLinkHeaderKey = "first"
-	prevLinkHeaderKey  = "prev"
-	nextLinkHeaderKey  = "next"
-	lastLinkHeaderKey  = "last"
-)
-
-var (
-	linkHeaderRegex = regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
-)
-
 // parseNavLinkHeaders parses navigational links and applies the to the provided response.
-func parseNavLinkHeaders(hearderLinks []string, resp AttachmentCollectionResponse2) error {
-	for _, header := range hearderLinks {
+func parseNavLinkHeaders(headerLinks []string, resp AttachmentCollectionResponse2) error {
+	for _, header := range headerLinks {
 		linkMatches := linkHeaderRegex.FindAllStringSubmatch(header, -1)
 
 		for _, match := range linkMatches {

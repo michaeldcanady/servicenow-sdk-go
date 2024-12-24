@@ -4,7 +4,7 @@ const (
 	contentTypeHeader          = "Content-Type"
 	binaryContentType          = "application/octet-steam"
 	jsonContentType            = "application/json"
-	rawURLKey                  = "request-raw-url"
+	RawURLKey                  = "request-raw-url"
 	baseURLkey                 = "baseurl"
 	baseURLTemplatePlaceholder = "{+baseurl}"
 )

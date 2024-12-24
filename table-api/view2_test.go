@@ -14,17 +14,17 @@ func TestView2String(t *testing.T) {
 	}{
 		{
 			title:    "DESKTOP",
-			input:    ViewDesktop2,
+			input:    View2Desktop,
 			expected: "desktop",
 		},
 		{
 			title:    "MOBILE",
-			input:    ViewMobile2,
+			input:    View2Mobile,
 			expected: "mobile",
 		},
 		{
 			title:    "BOTH",
-			input:    ViewBoth2,
+			input:    View2Both,
 			expected: "both",
 		},
 	}

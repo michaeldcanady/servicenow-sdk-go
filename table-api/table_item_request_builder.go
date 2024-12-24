@@ -3,15 +3,18 @@ package tableapi
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
 // Deprecated: deprecated since v{unreleased}. Use `TableItemRequestBuilder2` instead.
+//
+// TableItemRequestBuilder ...
 type TableItemRequestBuilder struct {
 	core.RequestBuilder
 }
 
 // Deprecated: deprecated since v{unreleased}. Use `NewTableItemRequestBuilder2` instead.
+//
 // NewTableItemRequestBuilder creates a new instance of the TableItemRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableItemRequestBuilder.
-func NewTableItemRequestBuilder(client core.Client, pathParameters map[string]string) *TableItemRequestBuilder {
-	requestBuilder := core.NewRequestBuilder(
+func NewTableItemRequestBuilder(client core.Client, pathParameters map[string]string) *TableItemRequestBuilder { //nolint: staticcheck
+	requestBuilder := core.NewRequestBuilder( //nolint: staticcheck
 		client,
 		"{+baseurl}/table{/table}{/sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_input_display_value,sysparm_query_no_domain,sysparm_view,sysparm_query_no_domain}",
 		pathParameters,

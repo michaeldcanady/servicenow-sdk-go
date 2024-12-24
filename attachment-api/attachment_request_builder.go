@@ -7,11 +7,17 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// AttachmentRequestBuilder ...
 type AttachmentRequestBuilder struct {
 	core.RequestBuilder
 }
 
-func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]string) *AttachmentRequestBuilder {
+// Deprecated: deprecated since v{unreleased}.
+//
+// NewAttachmentRequestBuilder ...
+func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]string) *AttachmentRequestBuilder { //nolint: staticcheck
 	requestBuilder := core.NewRequestBuilder( //nolint:staticcheck
 		client,
 		"{+baseurl}/attachment{/attachment}{?encryption_context,file_name,table_name,table_sys_id}",

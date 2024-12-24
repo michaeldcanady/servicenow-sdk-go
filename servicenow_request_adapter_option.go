@@ -5,7 +5,10 @@ import (
 )
 
 var (
-	WithClient               = internal.WithClient
+	// WithClient option to use a custom http.Client for the ServiceNowRequestAdapter
+	WithClient = internal.WithClient
+	// WithSerializationFactory option to add additional serialization.SerializationFactories to the ServiceNowRequestAdapter
 	WithSerializationFactory = internal.WithSerializationFactory
-	WithParseNodeFactory     = internal.WithParseNodeFactory
+	// WithParseNodeFactory option to add additional serialization.ParseNodeFactories to the ServiceNowRequestAdapter
+	WithParseNodeFactory = internal.WithParseNodeFactory
 )

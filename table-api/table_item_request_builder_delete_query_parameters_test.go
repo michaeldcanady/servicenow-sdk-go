@@ -12,7 +12,7 @@ func TestTableItemRequestBuilderDeleteQueryParameters(t *testing.T) {
 		QueryNoDomain: true,
 	}
 
-	queryMap, err := core.ToQueryMap(params)
+	queryMap, err := core.ToQueryMap(params) //nolint: staticcheck
 	if err != nil {
 		t.Error(err)
 	}

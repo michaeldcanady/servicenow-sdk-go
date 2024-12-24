@@ -5,6 +5,9 @@ import (
 	"strings"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// Bool ...
 type Bool bool
 
 func (i *Bool) UnmarshalJSON(data []byte) error {

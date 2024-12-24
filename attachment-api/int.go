@@ -5,6 +5,9 @@ import (
 	"strings"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// Int ...
 type Int int
 
 func (i *Int) UnmarshalJSON(data []byte) error {

@@ -8,6 +8,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -15,7 +16,15 @@ import (
 )
 
 const (
-	tableURLTemplate = "{+baseurl}/api/now/v2/table{/sysid}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
+	tableURLTemplate   = "{+baseurl}/api/now/v2/table{/sysid}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
+	firstLinkHeaderKey = "first"
+	prevLinkHeaderKey  = "prev"
+	nextLinkHeaderKey  = "next"
+	lastLinkHeaderKey  = "last"
+)
+
+var (
+	linkHeaderRegex = regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
 )
 
 // TableRequestBuilder2 provides operations to manage Service-Now tables.
@@ -24,9 +33,10 @@ type TableRequestBuilder2 struct {
 	factory serialization.ParsableFactory
 }
 
+// NewAPIV1CompatibleDefaultTableRequestBuilder2Internal converts api v1 compatible elements into api v2 compatible elements
 func NewAPIV1CompatibleDefaultTableRequestBuilder2Internal(
 	pathParameters map[string]string,
-	client core.Client,
+	client core.Client, //nolint: staticcheck
 ) *TableRequestBuilder2 {
 	reqAdapter, _ := internal.NewServiceNowRequestAdapterBase(core.NewAPIV1ClientAdapter(client))
 
@@ -72,7 +82,7 @@ func newTableRequestBuilder2(
 	factory serialization.ParsableFactory,
 ) *TableRequestBuilder2 {
 	urlParams := make(map[string]string)
-	urlParams["request-raw-url"] = rawURL
+	urlParams[intCore.RawURLKey] = rawURL
 	return newTableRequestBuilder2Internal(urlParams, requestAdapter, factory)
 }
 
@@ -223,17 +233,6 @@ func (rB *TableRequestBuilder2) ToPostRequestInformation(ctx context.Context, bo
 
 	return &kiotaRequestInfo.RequestInformation, nil
 }
-
-const (
-	firstLinkHeaderKey = "first"
-	prevLinkHeaderKey  = "prev"
-	nextLinkHeaderKey  = "next"
-	lastLinkHeaderKey  = "last"
-)
-
-var (
-	linkHeaderRegex = regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
-)
 
 // parseNavLinkHeaders parses navigational links and applies the to the provided response.
 func parseNavLinkHeaders(hearderLinks []string, resp ServiceNowCollectionResponse) error {

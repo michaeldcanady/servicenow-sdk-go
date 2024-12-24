@@ -9,6 +9,9 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// BatchRequestItem ...
 type BatchRequestItem interface {
 	GetID() *string
 	SetID(value *string)
@@ -16,14 +19,17 @@ type BatchRequestItem interface {
 	SetMethod(value *string)
 	GetURL() *string
 	SetURL(value *string)
-	GetHeaders() core.RequestHeader
-	SetHeaders(value core.RequestHeader)
+	GetHeaders() core.RequestHeader      //nolint: staticcheck
+	SetHeaders(value core.RequestHeader) //nolint: staticcheck
 	GetBody() internal.RequestBody
 	SetBody(value internal.RequestBody)
 	GetExcludeResponseHeaders() bool
 	SetExcludeResponseHeaders(bool)
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// batchRequestItem ...
 type batchRequestItem struct {
 	ID                     *string       `json:"id"`
 	Method                 *string       `json:"method"`
@@ -33,6 +39,8 @@ type batchRequestItem struct {
 	Body                   string        `json:"body,omitempty"`
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // NewBatchItem creates an instance of BatchItem
 func NewBatchItem(excludeResponseHeaders bool) BatchRequestItem {
 	return &batchRequestItem{
@@ -72,7 +80,7 @@ func (bi *batchRequestItem) SetURL(value *string) {
 }
 
 // GetHeaders returns batch item `Header` as a map[string]string
-func (bi *batchRequestItem) GetHeaders() core.RequestHeader {
+func (bi *batchRequestItem) GetHeaders() core.RequestHeader { //nolint: staticcheck
 	headers := internal.NewRequestHeader()
 
 	for _, header := range bi.Headers {
@@ -83,7 +91,7 @@ func (bi *batchRequestItem) GetHeaders() core.RequestHeader {
 }
 
 // SetHeaders sets map[string]string value as batch item `Header` property
-func (bi *batchRequestItem) SetHeaders(value core.RequestHeader) {
+func (bi *batchRequestItem) SetHeaders(value core.RequestHeader) { //nolint: staticcheck
 	if value.Get(internal.ContentTypeHeader) == "" {
 		value.Set(internal.ContentTypeHeader, internal.JSONContentType)
 	}

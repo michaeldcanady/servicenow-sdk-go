@@ -21,7 +21,8 @@
         "golang.go",
         "msyrus.go-doc",
         "766b.go-outliner",
-        "yzhang.markdown-all-in-one"
+        "yzhang.markdown-all-in-one",
+        "Gruntfuggly.todo-tree"
       ]
     }
   },

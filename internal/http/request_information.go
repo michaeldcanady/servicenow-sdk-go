@@ -12,7 +12,7 @@ type RequestInformation interface {
 	SetStreamContent(content []byte)
 	GetContent() []byte
 	GetMethod() string
-	GetHeaders() core.RequestHeader
+	GetHeaders() core.RequestHeader //nolint: staticcheck
 	AddQueryParameters(source interface{}) error
 	SetUri(url *url.URL)
 	Url() (string, error)

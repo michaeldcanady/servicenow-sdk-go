@@ -4,4 +4,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
-type RequestConfiguration = core.RequestConfigurationImpl
+// Deprecated: deprecated since v{unreleased}.
+//
+// RequestConfiguration ...
+type RequestConfiguration = core.RequestConfigurationImpl //nolint: staticcheck

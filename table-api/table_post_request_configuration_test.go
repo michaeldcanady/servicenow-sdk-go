@@ -19,7 +19,7 @@ func TestTablePostRequestConfigurationToConfiguration(t *testing.T) {
 				View:              "desktop",
 			},
 			Data:         map[string]string{"key": "value"},
-			ErrorMapping: core.ErrorMapping{"4XX": "error"},
+			ErrorMapping: core.ErrorMapping{"4XX": "error"}, //nolint: staticcheck
 			response:     &TableItemResponse{},
 		}
 
@@ -52,7 +52,7 @@ func TestTablePostRequestConfigurationToConfiguration(t *testing.T) {
 			Header: map[string]string{"Authorization": "Bearer token"},
 			// Nil QueryParameters
 			Data:         map[string]string{"key": "value"},
-			ErrorMapping: core.ErrorMapping{"4XX": "error"},
+			ErrorMapping: core.ErrorMapping{"4XX": "error"}, //nolint: staticcheck
 			response:     &TableItemResponse{},
 		}
 

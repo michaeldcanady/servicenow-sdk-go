@@ -8,6 +8,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 )
 
+// Deprecated: deprecated since v{unreleased}.
 type IRequestInformation interface {
 	AddRequestOptions(options []RequestOption)
 	SetStreamContent(content []byte)
@@ -20,5 +21,5 @@ type IRequestInformation interface {
 	GetRequestOptions() []RequestOption
 	GetContent() []byte
 	GetMethod() string
-	GetHeaders() core.RequestHeader
+	GetHeaders() core.RequestHeader //nolint: staticcheck
 }

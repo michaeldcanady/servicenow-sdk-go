@@ -2,6 +2,9 @@ package core
 
 import "net/http"
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// RequestHeader
 type RequestHeader interface {
 	Set(key, value string)
 	Get(key string) string

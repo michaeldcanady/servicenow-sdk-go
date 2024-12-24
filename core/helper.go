@@ -13,6 +13,7 @@ import (
 	"github.com/yosida95/uritemplate/v3"
 )
 
+// Deprecated: deprecated since v{unreleased}.
 func toQueryMapFromStruct(source interface{}) (map[string]string, error) {
 	queryValues, err := query.Values(source)
 	if err != nil {
@@ -28,6 +29,7 @@ func toQueryMapFromStruct(source interface{}) (map[string]string, error) {
 	return queryParams, nil
 }
 
+// Deprecated: deprecated since v{unreleased}.
 // ToQueryMap converts a struct to query parameter map
 func ToQueryMap(source interface{}) (map[string]string, error) {
 	var err error
@@ -56,6 +58,7 @@ func ToQueryMap(source interface{}) (map[string]string, error) {
 	return queryParams, nil
 }
 
+// Deprecated: deprecated since v{unreleased}.
 // normalizeVarNames normalizes variable names for URI template expansion.
 func normalizeVarNames(varNames []string) map[string]string {
 	normalizedNames := make(map[string]string)
@@ -65,6 +68,7 @@ func normalizeVarNames(varNames []string) map[string]string {
 	return normalizedNames
 }
 
+// Deprecated: deprecated since v{unreleased}.
 func addParametersWithOriginalNames(params map[string]string, normalizedNames map[string]string, values uritemplate.Values) uritemplate.Values {
 	if values == nil {
 		values = uritemplate.Values{}
@@ -76,6 +80,7 @@ func addParametersWithOriginalNames(params map[string]string, normalizedNames ma
 	return values
 }
 
+// Deprecated: deprecated since v{unreleased}.
 func getKeyWithOriginalName(key string, normalizedNames map[string]string) string {
 	originalName, exists := normalizedNames[key]
 	if exists {
@@ -84,6 +89,7 @@ func getKeyWithOriginalName(key string, normalizedNames map[string]string) strin
 	return key
 }
 
+// Deprecated: deprecated since v{unreleased}.
 func IsPointer(value interface{}) bool {
 	if value == nil {
 		return false
@@ -94,6 +100,7 @@ func IsPointer(value interface{}) bool {
 	return valueKind == reflect.Ptr
 }
 
+// Deprecated: deprecated since v{unreleased}.
 func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
 	if response == nil {
 		return ErrNilResponse
@@ -116,6 +123,7 @@ func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
 	return nil
 }
 
+// Deprecated: deprecated since v{unreleased}.
 // ParseResponse[T] parses the HTTP Response to the provided type
 func ParseResponse[T Response](response *http.Response, value *T) error {
 	var err error
@@ -154,6 +162,7 @@ func sendGet[T Response](requestBuilder *RequestBuilder, params interface{}, err
 	return ParseResponse(response, value)
 }
 
+// Deprecated: deprecated since v{unreleased}.
 func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToGetRequestInformation2(config)
 	if err != nil {
@@ -183,6 +192,7 @@ func sendPost[T Response](requestBuilder *RequestBuilder, data interface{}, para
 	return ParseResponse(response, value)
 }
 
+// Deprecated: deprecated since v{unreleased}.
 func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
 	requestInfo, err := requestBuilder.ToPostRequestInformation3(config)
 	if err != nil {
@@ -227,6 +237,7 @@ func sendPut[T Response](requestBuilder *RequestBuilder, data map[string]string,
 	return ParseResponse(response, value)
 }
 
+// Deprecated: deprecated since v{unreleased}.
 // convertToPage converts a response into a PageResult.
 func convertToPage[T any](response CollectionResponse[T]) (PageResult[T], error) {
 	var page PageResult[T]

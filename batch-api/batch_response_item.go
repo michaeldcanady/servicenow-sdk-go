@@ -8,6 +8,9 @@ import (
 	"time"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// BatchResponseItem[T any] ...
 type BatchResponseItem[T any] interface {
 	GetBody() (*T, error)
 	GetType() reflect.Type
@@ -18,6 +21,9 @@ type BatchResponseItem[T any] interface {
 	GetStatusCode() int
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// batchResponseItem ...
 type batchResponseItem struct {
 	Body          string        `json:"body"`
 	ErrorMessage  string        `json:"error_message"`

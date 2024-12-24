@@ -20,6 +20,7 @@ const (
 	urlKey                    = "url"
 )
 
+// RestRequestable represents Service-Now Batch API request's request
 type RestRequestable interface {
 	GetBody() ([]byte, error)
 	SetBodyFromParsable(string, serialization.Parsable) error
@@ -38,16 +39,19 @@ type RestRequestable interface {
 	store.BackedModel
 }
 
+// restRequest implementation of RestRequestable
 type restRequest struct {
-	backingStore     store.BackingStore
-	storeConstructor func() store.BackingStore
+	// backingStoreFactory factory to create backingStore
+	backingStoreFactory store.BackingStoreFactory
+	// backingStore the store backing the model
+	backingStore store.BackingStore
 }
 
 // NewRestRequest creates a new rest request
 func NewRestRequest() RestRequestable {
 	return &restRequest{
-		backingStore:     store.NewInMemoryBackingStore(),
-		storeConstructor: store.NewInMemoryBackingStore,
+		backingStore:        store.NewInMemoryBackingStore(),
+		backingStoreFactory: store.NewInMemoryBackingStore,
 	}
 }
 
@@ -63,16 +67,18 @@ func (rE *restRequest) GetBackingStore() store.BackingStore {
 	}
 
 	if internal.IsNil(rE.backingStore) {
-		rE.backingStore = rE.storeConstructor()
+		rE.backingStore = rE.backingStoreFactory()
 	}
 
 	return rE.backingStore
 }
 
+// headers support headers types
 type headers interface {
 	*abstractions.RequestHeaders
 }
 
+// createBatchableHeadersFromHeaders converts headers to BatchHeaderable
 func createBatchableHeadersFromHeaders[h headers](headers h) ([]BatchHeaderable, error) {
 	batchHeaders := make([]BatchHeaderable, 0)
 

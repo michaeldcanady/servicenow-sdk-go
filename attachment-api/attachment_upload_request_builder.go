@@ -6,11 +6,13 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
 const (
+	// attachmentUploadURLTemplate url template for Service-Now's attachment upload endpoint
 	attachmentUploadURLTemplate = "{+baseurl}/api/now/v1/attachment/upload"
 )
 
@@ -19,10 +21,10 @@ type AttachmentUploadRequestBuilder struct {
 	abstractions.BaseRequestBuilder
 }
 
-// NewAPIV1CompatibleAttachmentUploadRequestBuilderInternal ...
+// NewAPIV1CompatibleAttachmentUploadRequestBuilderInternal converts api v1 compatible elements into api v2 compatible elements
 func NewAPIV1CompatibleAttachmentUploadRequestBuilderInternal(
 	pathParameters map[string]string,
-	client core.Client,
+	client core.Client, //nolint: staticcheck
 ) *AttachmentUploadRequestBuilder {
 	reqAdapter, _ := internal.NewServiceNowRequestAdapterBase(core.NewAPIV1ClientAdapter(client))
 
@@ -49,11 +51,11 @@ func NewAttachmentUploadRequestBuilder(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentUploadRequestBuilder {
 	urlParams := make(map[string]string)
-	urlParams["request-raw-url"] = rawURL
+	urlParams[intCore.RawURLKey] = rawURL
 	return NewAttachmentUploadRequestBuilderInternal(urlParams, requestAdapter)
 }
 
-// Post Uploads the provided attachment
+// Post Uploads the provided attachment using the provided arguments
 func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstractions.MultipartBody, requestConfiguration *AttachmentUploadRequestBuilderPostRequestConfiguration) (Fileable, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
@@ -88,7 +90,7 @@ func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstrac
 		return nil, errors.New("uploadFile is required")
 	}
 
-	requestInfo, err := rB.toPostRequestInformation(ctx, body, requestConfiguration)
+	requestInfo, err := rB.ToPostRequestInformation(ctx, body, requestConfiguration)
 	if err != nil {
 		return nil, err
 	}
@@ -113,8 +115,8 @@ func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstrac
 	return file, nil
 }
 
-// toPostRequestInformation converts request configurations to Get request information.
-func (rB *AttachmentUploadRequestBuilder) toPostRequestInformation(ctx context.Context, body abstractions.MultipartBody, requestConfiguration *AttachmentUploadRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
+// ToPostRequestInformation converts request configurations to Get request information.
+func (rB *AttachmentUploadRequestBuilder) ToPostRequestInformation(ctx context.Context, body abstractions.MultipartBody, requestConfiguration *AttachmentUploadRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}

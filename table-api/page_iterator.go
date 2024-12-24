@@ -7,16 +7,18 @@ import (
 )
 
 // Deprecated: deprecated in v1.5.0. Use TablePageIterator[T] instead.
+//
 // PageIterator represents an iterator for paginated results from a table.
 type PageIterator struct {
 	currentPage PageResult
-	client      core.Client
+	client      core.Client //nolint: staticcheck
 	pauseIndex  int
 }
 
 // Deprecated: deprecated in v1.5.0. Use NewTablePageIterator[T] instead.
+//
 // NewPageIterator creates a new PageIterator instance.
-func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator, error) {
+func NewPageIterator(currentPage interface{}, client core.Client) (*PageIterator, error) { //nolint: staticcheck
 	if client == nil {
 		return nil, ErrNilClient
 	}
@@ -123,8 +125,8 @@ func (pI *PageIterator) fetchPage(uri string) (*TableCollectionResponse, error) 
 	}
 
 	// build request information
-	requestInformation := core.NewRequestInformation()
-	requestInformation.Method = core.GET
+	requestInformation := core.NewRequestInformation() //nolint: staticcheck
+	requestInformation.Method = core.GET               //nolint: staticcheck
 	requestInformation.SetUri(nextLink)
 
 	resp, err := pI.client.Send(requestInformation, nil)
@@ -132,7 +134,7 @@ func (pI *PageIterator) fetchPage(uri string) (*TableCollectionResponse, error) 
 		return nil, err
 	}
 
-	err = core.ParseResponse(resp, &collectionResp)
+	err = core.ParseResponse(resp, &collectionResp) //nolint: staticcheck
 	if err != nil {
 		return nil, err
 	}

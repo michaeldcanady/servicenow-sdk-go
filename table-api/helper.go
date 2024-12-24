@@ -16,6 +16,8 @@ func convertType[T any](val interface{}) (T, error) {
 	return v, nil
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // convertToPage converts a response into a PageResult.
 func convertToPage(response interface{}) (PageResult, error) {
 	var page PageResult
@@ -44,6 +46,9 @@ func convertToPage(response interface{}) (PageResult, error) {
 	return page, nil
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// convertFromTableEntry ...
 func convertFromTableEntry(entry interface{}) (map[string]string, error) {
 	retVal := map[string]string{}
 

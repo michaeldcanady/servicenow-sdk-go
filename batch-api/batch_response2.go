@@ -14,6 +14,7 @@ const (
 	unservicedRequestsKey = "unserviced_requests"
 )
 
+// BatchResponseable representation of Service-Now Batch API response
 type BatchResponseable interface {
 	GetBatchRequestID() (*string, error)
 	GetServicedRequestByID(id string) (ServicedRequestable, error)
@@ -26,14 +27,19 @@ type BatchResponseable interface {
 	store.BackedModel
 }
 
+// batchResponse2 implementation of BatchResponseable
 type batchResponse2 struct {
+	// backingStoreFactory factory to create backingStore
+	backingStoreFactory store.BackingStoreFactory
+	// backingStore the store backing the model
 	backingStore store.BackingStore
 }
 
-// NewBatchResponse creates a new batch response.
+// NewBatchResponse creates a new batch response
 func NewBatchResponse() BatchResponseable {
 	return &batchResponse2{
-		backingStore: store.NewInMemoryBackingStore(),
+		backingStore:        store.NewInMemoryBackingStore(),
+		backingStoreFactory: store.NewInMemoryBackingStore,
 	}
 }
 
@@ -42,31 +48,31 @@ func CreateBatchResponseFromDiscriminatorValue(parseNode serialization.ParseNode
 	return NewBatchResponse(), nil
 }
 
-// GetBackingStore retrieves the backing store for the model.
-func (rE *batchResponse2) GetBackingStore() store.BackingStore {
-	if internal.IsNil(rE) {
+// GetBackingStore retrieves the backing store for the model
+func (bR *batchResponse2) GetBackingStore() store.BackingStore {
+	if internal.IsNil(bR) {
 		return nil
 	}
 
-	if internal.IsNil(rE.backingStore) {
-		rE.backingStore = store.NewInMemoryBackingStore()
+	if internal.IsNil(bR.backingStore) {
+		bR.backingStore = bR.backingStoreFactory()
 	}
 
-	return rE.backingStore
+	return bR.backingStore
 }
 
-// Serialize writes the objects properties to the current writer.
-func (rE *batchResponse2) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(rE) {
+// Serialize writes the objects properties to the current writer
+func (bR *batchResponse2) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(bR) {
 		return nil
 	}
 
 	return errors.New("Serialize not implemented")
 }
 
-// GetFieldDeserializers returns the deserialization information for this object.
-func (rE *batchResponse2) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	if internal.IsNil(rE) {
+// GetFieldDeserializers returns the deserialization information for this object
+func (bR *batchResponse2) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	if internal.IsNil(bR) {
 		return nil
 	}
 
@@ -83,12 +89,13 @@ func (rE *batchResponse2) GetFieldDeserializers() map[string]func(serialization.
 	}
 }
 
-func (rE *batchResponse2) GetBatchRequestID() (*string, error) {
-	if internal.IsNil(rE) {
+// GetBatchRequestID returns the id of the associated batch request
+func (bR *batchResponse2) GetBatchRequestID() (*string, error) {
+	if internal.IsNil(bR) {
 		return nil, nil
 	}
 
-	id, err := rE.GetBackingStore().Get(batchRequestIDKey)
+	id, err := bR.GetBackingStore().Get(batchRequestIDKey)
 	if err != nil {
 		return nil, err
 	}
@@ -101,19 +108,21 @@ func (rE *batchResponse2) GetBatchRequestID() (*string, error) {
 	return strID, nil
 }
 
-func (rE *batchResponse2) setBatchRequestID(id *string) error {
-	if internal.IsNil(rE) {
+// setBatchRequestID sets the id of the associated batch request
+func (bR *batchResponse2) setBatchRequestID(id *string) error {
+	if internal.IsNil(bR) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(batchRequestIDKey, id)
+	return bR.GetBackingStore().Set(batchRequestIDKey, id)
 }
 
-func (rE *batchResponse2) GetServicedRequests() ([]ServicedRequestable, error) {
-	if internal.IsNil(rE) {
+// GetServicedRequests returns serviced requests
+func (bR *batchResponse2) GetServicedRequests() ([]ServicedRequestable, error) {
+	if internal.IsNil(bR) {
 		return nil, nil
 	}
-	servicedRequests, err := rE.GetBackingStore().Get(servicedRequestsKey)
+	servicedRequests, err := bR.GetBackingStore().Get(servicedRequestsKey)
 	if err != nil {
 		return nil, err
 	}
@@ -126,12 +135,13 @@ func (rE *batchResponse2) GetServicedRequests() ([]ServicedRequestable, error) {
 	return typedServicedRequests, nil
 }
 
-func (rE *batchResponse2) GetServicedRequestByID(id string) (ServicedRequestable, error) {
-	if internal.IsNil(rE) {
+// GetServicedRequestByID returns the serviced request with the provided id
+func (bR *batchResponse2) GetServicedRequestByID(id string) (ServicedRequestable, error) {
+	if internal.IsNil(bR) {
 		return nil, nil
 	}
 
-	requests, err := rE.GetServicedRequests()
+	requests, err := bR.GetServicedRequests()
 	if err != nil {
 		return nil, err
 	}
@@ -149,20 +159,22 @@ func (rE *batchResponse2) GetServicedRequestByID(id string) (ServicedRequestable
 	return nil, errors.New("no requests with id")
 }
 
-func (rE *batchResponse2) setServicedRequests(requests []ServicedRequestable) error {
-	if internal.IsNil(rE) {
+// setServicedRequests sets the serviced requests to the provided values
+func (bR *batchResponse2) setServicedRequests(requests []ServicedRequestable) error {
+	if internal.IsNil(bR) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(servicedRequestsKey, requests)
+	return bR.GetBackingStore().Set(servicedRequestsKey, requests)
 }
 
-func (rE *batchResponse2) GetUnservicedRequests() ([]string, error) {
-	if internal.IsNil(rE) {
+// GetUnservicedRequests returns the unserviced requests' id
+func (bR *batchResponse2) GetUnservicedRequests() ([]string, error) {
+	if internal.IsNil(bR) {
 		return nil, nil
 	}
 
-	unservicedRequests, err := rE.GetBackingStore().Get(unservicedRequestsKey)
+	unservicedRequests, err := bR.GetBackingStore().Get(unservicedRequestsKey)
 	if err != nil {
 		return nil, err
 	}
@@ -175,10 +187,11 @@ func (rE *batchResponse2) GetUnservicedRequests() ([]string, error) {
 	return typedUnservicedRequests, nil
 }
 
-func (rE *batchResponse2) setUnservicedRequests(unservicedRequests []string) error {
-	if internal.IsNil(rE) {
+// setUnservicedRequests sets the ids of the unserviced requests to the provided value
+func (bR *batchResponse2) setUnservicedRequests(unservicedRequests []string) error {
+	if internal.IsNil(bR) {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(unservicedRequestsKey, unservicedRequests)
+	return bR.GetBackingStore().Set(unservicedRequestsKey, unservicedRequests)
 }

@@ -1,10 +1,14 @@
 package tableapi
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // NewTableEntry creates a new table entry instance.
 func NewTableEntry() TableEntry {
 	return TableEntry{}
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // TableEntry represents a single Service-Now Table Entry.
 type TableEntry map[string]interface{}
 
