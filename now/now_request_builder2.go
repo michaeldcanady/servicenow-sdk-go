@@ -14,7 +14,7 @@ const (
 	// nowDefaultURLTemplate is the unversioned url template for Service-Now's APIs
 	nowDefaultURLTemplate = "{+baseurl}/api/now"
 	// nowVersionedURLTemplate is the versioned url template for Service-Now's APIs
-	nowVersionedURLTemplate = "{+baseurl}/api/now/{version}"
+	nowVersionedURLTemplate = "{+baseurl}/api/now/{version}" // nolint: unused
 )
 
 // NowRequestBuilder2 provides fluent entrypoint in Service-Now's APIs

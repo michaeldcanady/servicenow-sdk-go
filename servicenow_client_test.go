@@ -109,7 +109,7 @@ func (rI *MockRequestInformation) GetContent() []byte {
 func (rI *MockRequestInformation) GetMethod() string {
 	return ""
 }
-func (rI *MockRequestInformation) GetHeaders() intCore.RequestHeader {
+func (rI *MockRequestInformation) GetHeaders() intCore.RequestHeader { //nolint: staticcheck
 	return &internal.RequestHeader{}
 }
 
