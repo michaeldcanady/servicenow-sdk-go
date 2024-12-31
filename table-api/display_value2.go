@@ -1,6 +1,9 @@
 package tableapi
 
-// DisplayValue2 Determines the type of data returned, either the actual values from the database or the display values of the fields. Display values are manipulated based on the actual value in the database and user or system settings and preferences.
+import "strings"
+
+// DisplayValue2 Determines the type of data returned, either the actual values from the database or the display values of the fields.
+// Display values are manipulated based on the actual value in the database and user or system settings and preferences.
 // If returning display values, the value that is returned is dependent on the field type.
 type DisplayValue2 int
 
@@ -14,6 +17,20 @@ const (
 	// DisplayValue2All represents both actual and display values
 	DisplayValue2All
 )
+
+// ParseDisplayValue2 converts provided string to a DisplayValue2
+func ParseDisplayValue2(str string) DisplayValue2 {
+	str = strings.ToLower(str)
+
+	for _, displayValue := range []DisplayValue2{DisplayValue2All, DisplayValue2False, DisplayValue2True, DisplayValue2Unknown} {
+		displayValueString := strings.ToLower(displayValue.String())
+		if str == displayValueString {
+			return displayValue
+		}
+	}
+
+	return DisplayValue2Unknown
+}
 
 // String returns display value as a string
 func (dV DisplayValue2) String() string {

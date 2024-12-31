@@ -35,7 +35,7 @@ type recordElement struct {
 	displayValueOnly    bool
 }
 
-// NewRecordElement creates a new Record Element instance.
+// NewRecordElement creates a new RecordElement instance.
 func NewRecordElement() RecordElement {
 	return &recordElement{
 		backingStore:        store.BackingStoreFactoryInstance(),
@@ -44,7 +44,7 @@ func NewRecordElement() RecordElement {
 	}
 }
 
-// CreateRecordElementFromDiscriminatorValue creates a new Record Element from a parse node.
+// CreateRecordElementFromDiscriminatorValue creates a new RecordElement from a parse node.
 func CreateRecordElementFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
 	tableRecord := NewRecordElement()
 
@@ -94,7 +94,7 @@ func (rE *recordElement) GetFieldDeserializers() map[string]func(serialization.P
 			return rE.SetDisplayValue(newElementValue(displayValue))
 		},
 		valueKey: func(pn serialization.ParseNode) error {
-			value, err := pn.GetObjectValue(CreateElementValuetFromDiscriminatorValue)
+			value, err := pn.GetObjectValue(CreateElementValueFromDiscriminatorValue)
 			if err != nil {
 				return err
 			}

@@ -46,6 +46,7 @@ type ElementValue interface {
 
 // elementValue is an implementation of ElementValue.
 type elementValue struct {
+	// val the actual value
 	val interface{}
 }
 
@@ -56,7 +57,8 @@ func newElementValue(val interface{}) ElementValue {
 	}
 }
 
-func CreateElementValuetFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+// CreateElementValueFromDiscriminatorValue creates a new ElementValue from a parse node.
+func CreateElementValueFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return newElementValue(nil), nil
 }
 
@@ -79,6 +81,7 @@ func (eV *elementValue) IsNil() bool {
 	return internal.IsNil(eV) || internal.IsNil(eV.val)
 }
 
+// setValue sets the actual value to the provided value
 func (eV *elementValue) setValue(val interface{}) { //nolint: unused
 	if eV.IsNil() {
 		return

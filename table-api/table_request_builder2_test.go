@@ -82,6 +82,37 @@ func TestTableRequestBuilder2_Get(t *testing.T) {
 	}
 }
 
+func TestTableRequestBuilder2_Post(t *testing.T) {
+	builder := getTestBuilder()
+
+	tests := []struct {
+		Title   string
+		Args    []interface{}
+		Setup   func()
+		Cleanup func()
+	}{}
+
+	for _, test := range tests {
+		t.Run(test.Title, func(t *testing.T) {
+			if !internal.IsNil(test.Setup) {
+				test.Setup()
+			}
+
+			ctx := test.Args[0].(context.Context)
+			requestConfiguration := test.Args[1].(*TableRequestBuilder2PostRequestConfiguration)
+			body := test.Args[2].(TableRecord)
+
+			_, err := builder.Post(ctx, body, requestConfiguration)
+
+			assert.Nil(t, err)
+
+			if !internal.IsNil(test.Cleanup) {
+				test.Cleanup()
+			}
+		})
+	}
+}
+
 func getTestBuilder() *TableRequestBuilder2 {
 	pathParams := map[string]string{"test": "value"}
 	requestAdapter := &mocking.RequestAdapter{}

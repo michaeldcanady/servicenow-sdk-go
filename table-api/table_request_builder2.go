@@ -10,13 +10,14 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	"github.com/michaeldcanady/servicenow-sdk-go/models"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
 const (
-	tableURLTemplate   = "{+baseurl}/api/now/v2/table{/sysid}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
+	tableURLTemplate   = "{+baseurl}/api/now/v2/table/{table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
 	firstLinkHeaderKey = "first"
 	prevLinkHeaderKey  = "prev"
 	nextLinkHeaderKey  = "next"
@@ -119,7 +120,10 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *T
 	}
 
 	// TODO: add error factory
-	errorMapping := abstractions.ErrorMappings{}
+	errorMapping := abstractions.ErrorMappings{
+		"400": models.NewServiceNowErrorFromDiscriminatorValue,
+		"401": models.NewServiceNowErrorFromDiscriminatorValue,
+	}
 
 	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowCollectionResponseFromDiscriminatorValue(rB.factory), errorMapping)
 	if err != nil {
@@ -193,16 +197,8 @@ func (rB *TableRequestBuilder2) ToGetRequestInformation(_ context.Context, _ Tab
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.UrlTemplate, rB.PathParameters)
 	kiotaRequestInfo := &intHttp.KiotaRequestInformation{RequestInformation: *requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
-			kiotaRequestInfo.AddQueryParameters(*params)
-		}
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
-	}
-	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	kiotaRequestInfo.Headers.TryAdd(headerAccept, contentTypeApplicationJSON)
 
 	return &kiotaRequestInfo.RequestInformation, nil
 }
@@ -215,18 +211,10 @@ func (rB *TableRequestBuilder2) ToPostRequestInformation(ctx context.Context, bo
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.UrlTemplate, rB.PathParameters)
 	kiotaRequestInfo := &intHttp.KiotaRequestInformation{RequestInformation: *requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
-			kiotaRequestInfo.AddQueryParameters(*params)
-		}
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
-	}
-	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	kiotaRequestInfo.Headers.TryAdd(headerAccept, contentTypeApplicationJSON)
 
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.BaseRequestBuilder.RequestAdapter, "application/json", body)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.BaseRequestBuilder.RequestAdapter, contentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}

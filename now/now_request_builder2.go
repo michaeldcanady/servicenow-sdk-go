@@ -57,17 +57,17 @@ func NewNowRequestBuilder2(
 }
 
 // Table provides way to manage Service-Now table entries
-func (rB *NowRequestBuilder2) Table(table string) tableapi.TableRequestBuilder2 {
+func (rB *NowRequestBuilder2) Table(table string) *tableapi.TableRequestBuilder2 {
 	rB.BaseRequestBuilder.PathParameters["table"] = table
-	return *tableapi.NewDefaultTableRequestBuilder2Internal(rB.BaseRequestBuilder.PathParameters, rB.BaseRequestBuilder.RequestAdapter)
+	return tableapi.NewDefaultTableRequestBuilder2Internal(rB.BaseRequestBuilder.PathParameters, rB.BaseRequestBuilder.RequestAdapter)
 }
 
 // Attachment provides way to manage Service-Now attachments
-func (rB *NowRequestBuilder2) Attachment() attachmentapi.AttachmentRequestBuilder2 {
-	return *attachmentapi.NewAttachmentRequestBuilder2Internal(rB.BaseRequestBuilder.PathParameters, rB.BaseRequestBuilder.RequestAdapter)
+func (rB *NowRequestBuilder2) Attachment() *attachmentapi.AttachmentRequestBuilder2 {
+	return attachmentapi.NewAttachmentRequestBuilder2Internal(rB.BaseRequestBuilder.PathParameters, rB.BaseRequestBuilder.RequestAdapter)
 }
 
 // Batch providers way to manage Service-Now batch requests
-func (rB *NowRequestBuilder2) Batch() batchapi.BatchRequestBuilder2 {
-	return *batchapi.NewBatchRequestBuilder2Internal(rB.BaseRequestBuilder.PathParameters, rB.BaseRequestBuilder.RequestAdapter)
+func (rB *NowRequestBuilder2) Batch() *batchapi.BatchRequestBuilder2 {
+	return batchapi.NewBatchRequestBuilder2Internal(rB.BaseRequestBuilder.PathParameters, rB.BaseRequestBuilder.RequestAdapter)
 }
