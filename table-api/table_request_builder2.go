@@ -119,7 +119,6 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *T
 		return nil, err
 	}
 
-	// TODO: add error factory
 	errorMapping := abstractions.ErrorMappings{
 		"400": models.NewServiceNowErrorFromDiscriminatorValue,
 		"401": models.NewServiceNowErrorFromDiscriminatorValue,

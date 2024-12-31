@@ -3,11 +3,13 @@ package tableapi
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	"github.com/michaeldcanady/servicenow-sdk-go/models"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
@@ -87,8 +89,11 @@ func (rB *TableItemRequestBuilder2) Get(ctx context.Context, requestConfiguratio
 		return nil, err
 	}
 
-	// TODO: add error factory
-	errorMapping := abstractions.ErrorMappings{}
+	errorMapping := abstractions.ErrorMappings{
+		"400": models.NewServiceNowErrorFromDiscriminatorValue,
+		"401": models.NewServiceNowErrorFromDiscriminatorValue,
+		"404": models.NewServiceNowErrorFromDiscriminatorValue,
+	}
 
 	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowResponseFromDiscriminatorValue(rB.factory), errorMapping)
 	if err != nil {
@@ -107,6 +112,10 @@ func (rB *TableItemRequestBuilder2) Get(ctx context.Context, requestConfiguratio
 	result, err := snRes.GetResult()
 	if err != nil {
 		return nil, err
+	}
+
+	if result == nil {
+		return nil, fmt.Errorf("no record with sysid %s", rB.PathParameters["sysid"])
 	}
 
 	record, ok := result.(TableRecord)

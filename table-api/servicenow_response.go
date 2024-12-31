@@ -96,6 +96,10 @@ func (tE *serviceNowResponse) GetResult() (serialization.Parsable, error) {
 		return nil, err
 	}
 
+	if val == nil {
+		return nil, nil
+	}
+
 	typedVal, ok := val.(serialization.Parsable)
 	if !ok {
 		return nil, errors.New("val is not serialization.Parsable")
