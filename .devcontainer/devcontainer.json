@@ -1,5 +1,6 @@
 {
   "image": "mcr.microsoft.com/devcontainers/go",
+  "runArgs": ["--userns=keep-id"],
   "customizations": {
     "vscode": {
       "settings": {
@@ -25,6 +26,9 @@
         "Gruntfuggly.todo-tree"
       ]
     }
+  },
+  "containerEnv": {
+    "HOME": "/home/vscode"
   },
   "remoteUser": "vscode",
   "features": {
