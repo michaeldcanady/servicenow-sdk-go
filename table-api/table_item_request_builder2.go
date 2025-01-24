@@ -192,16 +192,8 @@ func (rB *TableItemRequestBuilder2) ToGetRequestInformation(_ context.Context, r
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.UrlTemplate, rB.PathParameters)
 	kiotaRequestInfo := &intHttp.KiotaRequestInformation{RequestInformation: *requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
-			requestInfo.AddQueryParameters(*params)
-		}
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
-	}
-	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	kiotaRequestInfo.Headers.TryAdd(headerAccept, contentTypeApplicationJSON)
 
 	return &kiotaRequestInfo.RequestInformation, nil
 }
@@ -214,18 +206,8 @@ func (rB *TableItemRequestBuilder2) ToDeleteRequestInformation(_ context.Context
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.UrlTemplate, rB.PathParameters)
 	kiotaRequestInfo := &intHttp.KiotaRequestInformation{RequestInformation: *requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
-			kiotaRequestInfo.AddQueryParameters(*params)
-		}
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
-	}
-	kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
-	kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
-	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	kiotaRequestInfo.Headers.TryAdd(headerAccept, contentTypeApplicationJSON)
 
 	return &kiotaRequestInfo.RequestInformation, nil
 }
@@ -238,18 +220,10 @@ func (rB *TableItemRequestBuilder2) ToPutRequestInformation(ctx context.Context,
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.UrlTemplate, rB.PathParameters)
 	kiotaRequestInfo := &intHttp.KiotaRequestInformation{RequestInformation: *requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if params := requestConfiguration.QueryParameters; !internal.IsNil(params) {
-			kiotaRequestInfo.AddQueryParameters(*params)
-		}
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
-	}
-	kiotaRequestInfo.Headers.TryAdd("Accept", "application/json")
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	kiotaRequestInfo.Headers.TryAdd(headerAccept, contentTypeApplicationJSON)
 
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.BaseRequestBuilder.RequestAdapter, "application/json", body)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.BaseRequestBuilder.RequestAdapter, contentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}

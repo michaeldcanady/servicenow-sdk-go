@@ -36,18 +36,18 @@ type serviceNowCollectionResponse struct {
 }
 
 // NewServiceNowCollectionResponse creates a new instance of a ServiceNowCollectionResponse from a parsable factory.
-func NewServiceNowCollectionResponse(factory serialization.ParsableFactory) ServiceNowCollectionResponse {
+func NewServiceNowCollectionResponse(factory serialization.ParsableFactory, backingStoreFactory store.BackingStoreFactory) ServiceNowCollectionResponse {
 	return &serviceNowCollectionResponse{
 		factory:             factory,
-		backingStoreFactory: store.BackingStoreFactoryInstance,
-		backingStore:        store.BackingStoreFactoryInstance(),
+		backingStoreFactory: backingStoreFactory,
+		backingStore:        backingStoreFactory(),
 	}
 }
 
 // CreateServiceNowCollectionResponseFromDiscriminatorValue is a factory for creating a ServiceNowCollectionResponse
 func CreateServiceNowCollectionResponseFromDiscriminatorValue(factory serialization.ParsableFactory) serialization.ParsableFactory {
 	return func(parseNode serialization.ParseNode) (serialization.Parsable, error) {
-		return NewServiceNowCollectionResponse(factory), nil
+		return NewServiceNowCollectionResponse(factory, store.BackingStoreFactoryInstance), nil
 	}
 }
 
@@ -81,9 +81,10 @@ func (tE *serviceNowCollectionResponse) GetFieldDeserializers() map[string]func(
 	}
 }
 
+// TODO: has possible nil error
 // GetBackingStore returns the backing store of the record
 func (tE *serviceNowCollectionResponse) GetBackingStore() store.BackingStore {
-	if internal.IsNil(tE) {
+	if internal.IsNil(tE) || internal.IsNil(tE.backingStoreFactory) {
 		return nil
 	}
 
