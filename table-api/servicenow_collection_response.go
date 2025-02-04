@@ -2,6 +2,7 @@ package tableapi
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -12,67 +13,60 @@ const (
 	resultKey = "Result"
 )
 
-// ServiceNowCollectionResponse represents a Service-Now collection response
-type ServiceNowCollectionResponse interface {
-	GetResult() ([]serialization.Parsable, error)
-	GetNextLink() (*string, error)
-	GetPreviousLink() (*string, error)
-	GetFirstLink() (*string, error)
-	GetLastLink() (*string, error)
-	setNextLink(*string) error
-	setPreviousLink(*string) error
-	setFirstLink(*string) error
-	setLastLink(*string) error
-	setResult([]serialization.Parsable) error
-	serialization.Parsable
-	store.BackedModel
-}
+// TODO: move ServiceNowCollectionResponse to internal
+// TODO: make ServiceNowCollectionResponse generic for parsable type
 
-// serviceNowCollectionResponse implementation of ServiceNowCollectionResponse
-type serviceNowCollectionResponse struct {
-	factory             serialization.ParsableFactory
-	backingStoreFactory store.BackingStoreFactory
-	backingStore        store.BackingStore
+// ServiceNowCollectionResponse represents a collection of Service-Now items
+type ServiceNowCollectionResponse[T serialization.Parsable] struct {
+	ServiceNowResponse[[]T]
 }
 
 // NewServiceNowCollectionResponse creates a new instance of a ServiceNowCollectionResponse from a parsable factory.
-func NewServiceNowCollectionResponse(factory serialization.ParsableFactory, backingStoreFactory store.BackingStoreFactory) ServiceNowCollectionResponse {
-	return &serviceNowCollectionResponse{
-		factory:             factory,
-		backingStoreFactory: backingStoreFactory,
-		backingStore:        backingStoreFactory(),
+func NewServiceNowCollectionResponse[T serialization.Parsable](factory serialization.ParsableFactory, storeFactory store.BackingStoreFactory) *ServiceNowCollectionResponse[T] {
+	return &ServiceNowCollectionResponse[T]{
+		NewServiceNowResponse[[]T](ServiceNowResponseTypeCollection, factory, storeFactory),
 	}
 }
 
 // CreateServiceNowCollectionResponseFromDiscriminatorValue is a factory for creating a ServiceNowCollectionResponse
 func CreateServiceNowCollectionResponseFromDiscriminatorValue(factory serialization.ParsableFactory) serialization.ParsableFactory {
 	return func(parseNode serialization.ParseNode) (serialization.Parsable, error) {
-		return NewServiceNowCollectionResponse(factory, store.BackingStoreFactoryInstance), nil
+		return NewServiceNowCollectionResponse[serialization.Parsable](factory, store.BackingStoreFactoryInstance), nil
 	}
-}
-
-// Serialize writes the objects properties to the current writer
-func (tE *serviceNowCollectionResponse) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(tE) {
-		return nil
-	}
-	return nil
 }
 
 // GetFieldDeserializers returns the deserialization information for this object
-func (tE *serviceNowCollectionResponse) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (tE *ServiceNowCollectionResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	if internal.IsNil(tE) {
 		return nil
 	}
 
 	return map[string]func(serialization.ParseNode) error{
 		resultKey: func(pn serialization.ParseNode) error {
-			elem, err := pn.GetCollectionOfObjectValues(tE.factory)
+			factory, err := tE.GetFactory()
+			if err != nil {
+				return err
+			}
+			if internal.IsNil(factory) {
+				return errors.New("factory is nil")
+			}
+			elems, err := pn.GetCollectionOfObjectValues(factory)
 			if err != nil {
 				return err
 			}
 
-			if err := tE.setResult(elem); err != nil {
+			collection := make([]T, len(elems))
+
+			for index, item := range elems {
+				typedItem, ok := item.(T)
+				if !ok {
+					return fmt.Errorf("item at %v is not %v", index, new(T))
+				}
+
+				collection[index] = typedItem
+			}
+
+			if err := tE.SetResult(collection); err != nil {
 				return err
 			}
 
@@ -81,53 +75,8 @@ func (tE *serviceNowCollectionResponse) GetFieldDeserializers() map[string]func(
 	}
 }
 
-// TODO: has possible nil error
-// GetBackingStore returns the backing store of the record
-func (tE *serviceNowCollectionResponse) GetBackingStore() store.BackingStore {
-	if internal.IsNil(tE) || internal.IsNil(tE.backingStoreFactory) {
-		return nil
-	}
-
-	if internal.IsNil(tE.backingStore) {
-		tE.backingStore = tE.backingStoreFactory()
-	}
-
-	return tE.backingStore
-}
-
-// GetResult returns result slice from Service-Now Response
-func (tE *serviceNowCollectionResponse) GetResult() ([]serialization.Parsable, error) {
-	if internal.IsNil(tE) {
-		return nil, nil
-	}
-
-	val, err := tE.GetBackingStore().Get(resultKey)
-	if err != nil {
-		return nil, err
-	}
-	if internal.IsNil(val) {
-		return []serialization.Parsable{}, nil
-	}
-
-	typedVal, ok := val.([]serialization.Parsable)
-	if !ok {
-		return nil, errors.New("val is not serialization.Parsable")
-	}
-
-	return typedVal, nil
-}
-
-// setResult sets the result slice for the Service-Now Response
-func (tE *serviceNowCollectionResponse) setResult(result []serialization.Parsable) error {
-	if internal.IsNil(tE) {
-		return nil
-	}
-
-	return tE.GetBackingStore().Set(resultKey, result)
-}
-
 // GetNextLink returns next link, if it exists
-func (tE *serviceNowCollectionResponse) GetNextLink() (*string, error) {
+func (tE *ServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
 	if internal.IsNil(tE) {
 		return nil, nil
 	}
@@ -148,8 +97,17 @@ func (tE *serviceNowCollectionResponse) GetNextLink() (*string, error) {
 	return typedVal, nil
 }
 
+// setNextLink sets next link
+func (tE *ServiceNowCollectionResponse[T]) setNextLink(nextLink *string) error {
+	if internal.IsNil(tE) {
+		return nil
+	}
+
+	return tE.GetBackingStore().Set(nextLinkHeaderKey, nextLink)
+}
+
 // GetPreviousLink returns previous link, if it exists
-func (tE *serviceNowCollectionResponse) GetPreviousLink() (*string, error) {
+func (tE *ServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error) {
 	if internal.IsNil(tE) {
 		return nil, nil
 	}
@@ -170,8 +128,17 @@ func (tE *serviceNowCollectionResponse) GetPreviousLink() (*string, error) {
 	return typedVal, nil
 }
 
+// setPreviousLink sets previous link
+func (tE *ServiceNowCollectionResponse[T]) setPreviousLink(previousLink *string) error {
+	if internal.IsNil(tE) {
+		return nil
+	}
+
+	return tE.GetBackingStore().Set(prevLinkHeaderKey, previousLink)
+}
+
 // GetFirstLink returns first link, if it exists
-func (tE *serviceNowCollectionResponse) GetFirstLink() (*string, error) {
+func (tE *ServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
 	if internal.IsNil(tE) {
 		return nil, nil
 	}
@@ -192,8 +159,17 @@ func (tE *serviceNowCollectionResponse) GetFirstLink() (*string, error) {
 	return typedVal, nil
 }
 
+// setFirstLink sets first link
+func (tE *ServiceNowCollectionResponse[T]) setFirstLink(firstLink *string) error {
+	if internal.IsNil(tE) {
+		return nil
+	}
+
+	return tE.GetBackingStore().Set(firstLinkHeaderKey, firstLink)
+}
+
 // GetLastLink returns last link, if it exists
-func (tE *serviceNowCollectionResponse) GetLastLink() (*string, error) {
+func (tE *ServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
 	if internal.IsNil(tE) {
 		return nil, nil
 	}
@@ -214,35 +190,8 @@ func (tE *serviceNowCollectionResponse) GetLastLink() (*string, error) {
 	return typedVal, nil
 }
 
-// setNextLink sets next link
-func (tE *serviceNowCollectionResponse) setNextLink(nextLink *string) error {
-	if internal.IsNil(tE) {
-		return nil
-	}
-
-	return tE.GetBackingStore().Set(nextLinkHeaderKey, nextLink)
-}
-
-// setPreviousLink sets previous link
-func (tE *serviceNowCollectionResponse) setPreviousLink(previousLink *string) error {
-	if internal.IsNil(tE) {
-		return nil
-	}
-
-	return tE.GetBackingStore().Set(prevLinkHeaderKey, previousLink)
-}
-
-// setFirstLink sets first link
-func (tE *serviceNowCollectionResponse) setFirstLink(firstLink *string) error {
-	if internal.IsNil(tE) {
-		return nil
-	}
-
-	return tE.GetBackingStore().Set(firstLinkHeaderKey, firstLink)
-}
-
 // setLastLink sets last link
-func (tE *serviceNowCollectionResponse) setLastLink(lastLink *string) error {
+func (tE *ServiceNowCollectionResponse[T]) setLastLink(lastLink *string) error {
 	if internal.IsNil(tE) {
 		return nil
 	}

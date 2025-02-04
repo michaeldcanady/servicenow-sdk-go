@@ -95,7 +95,7 @@ func (rB *TableItemRequestBuilder2) Get(ctx context.Context, requestConfiguratio
 		"404": models.NewServiceNowErrorFromDiscriminatorValue,
 	}
 
-	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowResponseFromDiscriminatorValue(rB.factory), errorMapping)
+	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowItemResponseFromDiscriminatorValue[serialization.Parsable](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +104,7 @@ func (rB *TableItemRequestBuilder2) Get(ctx context.Context, requestConfiguratio
 		return nil, nil
 	}
 
-	snRes, ok := res.(ServiceNowResponse)
+	snRes, ok := res.(*ServiceNowItemResponse[serialization.Parsable])
 	if !ok {
 		return nil, errors.New("res is not ServiceNowResponse")
 	}
@@ -157,7 +157,7 @@ func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, r
 	// TODO: add error factory
 	errorMapping := abstractions.ErrorMappings{}
 
-	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowResponseFromDiscriminatorValue(rB.factory), errorMapping)
+	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowItemResponseFromDiscriminatorValue[serialization.Parsable](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +166,7 @@ func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, r
 		return nil, nil
 	}
 
-	snRes, ok := res.(ServiceNowResponse)
+	snRes, ok := res.(*ServiceNowItemResponse[serialization.Parsable])
 	if !ok {
 		return nil, errors.New("res is not ServiceNowResponse")
 	}

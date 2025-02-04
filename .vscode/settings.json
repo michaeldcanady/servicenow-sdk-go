@@ -5,11 +5,16 @@
     "tags": "json,url,header",
     "promptForTags": true
   },
+  "go.coverageDecorator": {
+    "type": "highlight",
+    "coveredHighlightColor": "rgba(64,128,128,0.5)",
+    "uncoveredHighlightColor": "rgba(128,64,64,0.25)",
+    "coveredGutterStyle": "blockgreen",
+    "uncoveredGutterStyle": "blockred"
+  },
+  "go.coverOnSingleTest": true,
   "go.coverOnSave": true,
-  "go.formatFlags": [
-    "-s",
-    "-w"
-  ],
+  "go.formatFlags": ["-s", "-w"],
   "go.lintOnSave": "package",
   "go.lintTool": "golangci-lint",
   "go.lintFlags": [],
@@ -21,7 +26,5 @@
       "scope": "workspace"
     }
   },
-  "cSpell.words": [
-    "Deserializers"
-  ]
+  "cSpell.words": ["Deserializers"]
 }

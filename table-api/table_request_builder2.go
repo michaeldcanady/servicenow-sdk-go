@@ -100,7 +100,7 @@ func (rB *TableRequestBuilder2) ByID(sysID string) *TableItemRequestBuilder2 {
 }
 
 // Get Fetches a response containing Table Entry resources.
-func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (ServiceNowCollectionResponse, error) {
+func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (*ServiceNowCollectionResponse[serialization.Parsable], error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -133,7 +133,7 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *T
 		return nil, nil
 	}
 
-	snRes, ok := res.(ServiceNowCollectionResponse)
+	snRes, ok := res.(*ServiceNowCollectionResponse[serialization.Parsable])
 	if !ok {
 		return nil, errors.New("res is not ServiceNowResponse")
 	}
@@ -161,7 +161,7 @@ func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requ
 	// TODO: add error factory
 	errorMapping := abstractions.ErrorMappings{}
 
-	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowResponseFromDiscriminatorValue(rB.factory), errorMapping)
+	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowItemResponseFromDiscriminatorValue[serialization.Parsable](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -170,7 +170,7 @@ func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requ
 		return nil, nil
 	}
 
-	snRes, ok := res.(ServiceNowResponse)
+	snRes, ok := res.(*ServiceNowItemResponse[serialization.Parsable])
 	if !ok {
 		return nil, errors.New("res is not ServiceNowResponse")
 	}
@@ -222,7 +222,7 @@ func (rB *TableRequestBuilder2) ToPostRequestInformation(ctx context.Context, bo
 }
 
 // parseNavLinkHeaders parses navigational links and applies the to the provided response.
-func parseNavLinkHeaders(hearderLinks []string, resp ServiceNowCollectionResponse) error {
+func parseNavLinkHeaders(hearderLinks []string, resp *ServiceNowCollectionResponse[serialization.Parsable]) error {
 	for _, header := range hearderLinks {
 		linkMatches := linkHeaderRegex.FindAllStringSubmatch(header, -1)
 
