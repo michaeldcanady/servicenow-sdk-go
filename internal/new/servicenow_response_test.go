@@ -1,4 +1,4 @@
-package tableapi
+package internal
 
 import (
 	"errors"

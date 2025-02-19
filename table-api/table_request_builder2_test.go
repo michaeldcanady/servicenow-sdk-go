@@ -6,6 +6,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	newInt "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -53,7 +54,7 @@ func TestTableRequestBuilder2_Get(t *testing.T) {
 		{
 			Title: "Successful",
 			Setup: func() {
-				builder.RequestAdapter.(*mocking.RequestAdapter).On("Send", context.Background(), mock.AnythingOfType("*abstractions.RequestInformation"), mock.AnythingOfType("serialization.ParsableFactory"), mock.AnythingOfType("abstractions.ErrorMappings")).Return(new(ServiceNowCollectionResponse[serialization.Parsable]), nil)
+				builder.RequestAdapter.(*mocking.RequestAdapter).On("Send", context.Background(), mock.AnythingOfType("*abstractions.RequestInformation"), mock.AnythingOfType("serialization.ParsableFactory"), mock.AnythingOfType("abstractions.ErrorMappings")).Return(new(newInt.ServiceNowCollectionResponse[serialization.Parsable]), nil)
 			},
 			Args: []interface{}{
 				context.Background(),

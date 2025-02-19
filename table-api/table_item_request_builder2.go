@@ -9,6 +9,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	newInt "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/michaeldcanady/servicenow-sdk-go/models"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -95,7 +96,7 @@ func (rB *TableItemRequestBuilder2) Get(ctx context.Context, requestConfiguratio
 		"404": models.NewServiceNowErrorFromDiscriminatorValue,
 	}
 
-	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowItemResponseFromDiscriminatorValue[serialization.Parsable](rB.factory), errorMapping)
+	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, newInt.CreateServiceNowItemResponseFromDiscriminatorValue[serialization.Parsable](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +105,7 @@ func (rB *TableItemRequestBuilder2) Get(ctx context.Context, requestConfiguratio
 		return nil, nil
 	}
 
-	snRes, ok := res.(*ServiceNowItemResponse[serialization.Parsable])
+	snRes, ok := res.(*newInt.ServiceNowItemResponse[serialization.Parsable])
 	if !ok {
 		return nil, errors.New("res is not ServiceNowResponse")
 	}
@@ -157,7 +158,7 @@ func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, r
 	// TODO: add error factory
 	errorMapping := abstractions.ErrorMappings{}
 
-	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowItemResponseFromDiscriminatorValue[serialization.Parsable](rB.factory), errorMapping)
+	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, newInt.CreateServiceNowItemResponseFromDiscriminatorValue[serialization.Parsable](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +167,7 @@ func (rB *TableItemRequestBuilder2) Put(ctx context.Context, body TableRecord, r
 		return nil, nil
 	}
 
-	snRes, ok := res.(*ServiceNowItemResponse[serialization.Parsable])
+	snRes, ok := res.(*newInt.ServiceNowItemResponse[serialization.Parsable])
 	if !ok {
 		return nil, errors.New("res is not ServiceNowResponse")
 	}

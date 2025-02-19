@@ -1,4 +1,4 @@
-package tableapi
+package internal
 
 import (
 	"errors"
@@ -12,9 +12,6 @@ import (
 const (
 	resultKey = "Result"
 )
-
-// TODO: move ServiceNowCollectionResponse to internal
-// TODO: make ServiceNowCollectionResponse generic for parsable type
 
 // ServiceNowCollectionResponse represents a collection of Service-Now items
 type ServiceNowCollectionResponse[T serialization.Parsable] struct {
@@ -33,6 +30,36 @@ func CreateServiceNowCollectionResponseFromDiscriminatorValue(factory serializat
 	return func(parseNode serialization.ParseNode) (serialization.Parsable, error) {
 		return NewServiceNowCollectionResponse[serialization.Parsable](factory, store.BackingStoreFactoryInstance), nil
 	}
+}
+
+// ParseNavLinkHeaders parses navigational links and applies the to the provided response.
+func ParseNavLinkHeaders(hearderLinks []string, resp *ServiceNowCollectionResponse[serialization.Parsable]) error {
+	for _, header := range hearderLinks {
+		linkMatches := linkHeaderRegex.FindAllStringSubmatch(header, -1)
+
+		for _, match := range linkMatches {
+			link := match[1]
+			rel := match[2]
+
+			var err error
+			// Determine the type of link based on the 'rel' attribute
+			switch rel {
+			case firstLinkHeaderKey:
+				err = resp.setFirstLink(&link)
+			case prevLinkHeaderKey:
+				err = resp.setPreviousLink(&link)
+			case nextLinkHeaderKey:
+				err = resp.setNextLink(&link)
+			case lastLinkHeaderKey:
+				err = resp.setLastLink(&link)
+			}
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
 
 // GetFieldDeserializers returns the deserialization information for this object

@@ -3,6 +3,7 @@ package tableapi
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -44,15 +45,32 @@ type ElementValue interface {
 	serialization.Parsable
 }
 
-// elementValue is an implementation of ElementValue.
-type elementValue struct {
+// TODO: introduce helper function so logic isn't repeated for each method
+
+// ElementValueImpl is an implementation of ElementValue.
+type ElementValueImpl struct {
 	// val the actual value
 	val interface{}
 }
 
 // newElementValue returns a new Element Value
-func newElementValue(val interface{}) ElementValue {
-	return &elementValue{
+func newElementValue(val interface{}) *ElementValueImpl {
+	// Check if val is a slice
+	if val != nil && reflect.TypeOf(val).Kind() == reflect.Slice {
+		// Create a new slice to hold the element values
+		elementSlice := []*ElementValueImpl{}
+
+		// Get the value of the slice and iterate over it
+		sliceVal := reflect.ValueOf(val)
+		for i := 0; i < sliceVal.Len(); i++ {
+			element := sliceVal.Index(i).Interface()
+			elementSlice = append(elementSlice, newElementValue(element))
+		}
+
+		val = elementSlice
+	}
+
+	return &ElementValueImpl{
 		val: val,
 	}
 }
@@ -63,7 +81,7 @@ func CreateElementValueFromDiscriminatorValue(_ serialization.ParseNode) (serial
 }
 
 // Serialize writes the objects properties to the current writer.
-func (eV *elementValue) Serialize(writer serialization.SerializationWriter) error {
+func (eV *ElementValueImpl) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(eV) {
 		return nil
 	}
@@ -71,52 +89,59 @@ func (eV *elementValue) Serialize(writer serialization.SerializationWriter) erro
 	return errors.New("Serialize not implemented")
 }
 
+// TODO: not sure how to test
+// TODO: implement for serializing single values
+
 // GetFieldDeserializers returns the deserialization information for this object.
-func (eV *elementValue) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (eV *ElementValueImpl) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{}
 }
 
 // IsNil returns whether the element is nil or not.
-func (eV *elementValue) IsNil() bool {
+func (eV *ElementValueImpl) IsNil() bool {
 	return internal.IsNil(eV) || internal.IsNil(eV.val)
 }
 
 // setValue sets the actual value to the provided value
-func (eV *elementValue) setValue(val interface{}) { //nolint: unused
-	if eV.IsNil() {
+func (eV *ElementValueImpl) setValue(val interface{}) { //nolint: unused
+	if internal.IsNil(eV) {
 		return
 	}
 	eV.val = val
 }
 
 // GetStringValue returns a String value from the element.
-func (eV *elementValue) GetStringValue() (*string, error) {
+func (eV *ElementValueImpl) GetStringValue() (*string, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
 
-	val, ok := eV.val.(*string)
-	if !ok {
-		return nil, fmt.Errorf("type '%T' is not compatible with type string", eV.val)
+	var val string
+
+	if err := internal.As(eV.val, &val); err != nil {
+		return nil, err
 	}
-	return val, nil
+
+	return &val, nil
 }
 
 // GetBoolValue returns a Bool value from the element.
-func (eV *elementValue) GetBoolValue() (*bool, error) {
+func (eV *ElementValueImpl) GetBoolValue() (*bool, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
 
-	val, ok := eV.val.(*bool)
-	if !ok {
-		return nil, fmt.Errorf("type '%T' is not compatible with type bool", eV.val)
+	var val bool
+
+	if err := internal.As(eV.val, &val); err != nil {
+		return nil, err
 	}
-	return val, nil
+
+	return &val, nil
 }
 
 // GetInt8Value returns a Int8 value from the element.
-func (eV *elementValue) GetInt8Value() (*int8, error) {
+func (eV *ElementValueImpl) GetInt8Value() (*int8, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -131,7 +156,7 @@ func (eV *elementValue) GetInt8Value() (*int8, error) {
 }
 
 // GetByteValue returns a Byte value from the element.
-func (eV *elementValue) GetByteValue() (*byte, error) {
+func (eV *ElementValueImpl) GetByteValue() (*byte, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -146,7 +171,7 @@ func (eV *elementValue) GetByteValue() (*byte, error) {
 }
 
 // GetFloat32Value returns a Float32 value from the element.
-func (eV *elementValue) GetFloat32Value() (*float32, error) {
+func (eV *ElementValueImpl) GetFloat32Value() (*float32, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -161,7 +186,7 @@ func (eV *elementValue) GetFloat32Value() (*float32, error) {
 }
 
 // GetFloat64Value returns a Float64 value from the element.
-func (eV *elementValue) GetFloat64Value() (*float64, error) {
+func (eV *ElementValueImpl) GetFloat64Value() (*float64, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -176,7 +201,7 @@ func (eV *elementValue) GetFloat64Value() (*float64, error) {
 }
 
 // GetInt32Value returns a Int32 value from the element.
-func (eV *elementValue) GetInt32Value() (*int32, error) {
+func (eV *ElementValueImpl) GetInt32Value() (*int32, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -191,7 +216,7 @@ func (eV *elementValue) GetInt32Value() (*int32, error) {
 }
 
 // GetInt64Value returns a Int64 value from the element.
-func (eV *elementValue) GetInt64Value() (*int64, error) {
+func (eV *ElementValueImpl) GetInt64Value() (*int64, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -206,7 +231,7 @@ func (eV *elementValue) GetInt64Value() (*int64, error) {
 }
 
 // GetTimeValue returns a Time value from the element.
-func (eV *elementValue) GetTimeValue() (*time.Time, error) {
+func (eV *ElementValueImpl) GetTimeValue() (*time.Time, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -214,16 +239,20 @@ func (eV *elementValue) GetTimeValue() (*time.Time, error) {
 	if err != nil {
 		return nil, err
 	}
-	if v == nil {
-		return nil, nil
-	}
 
 	parsed, err := time.Parse(time.RFC3339, *v)
+	if err != nil {
+		val := reflect.ValueOf(v)
+		if val.Kind() == reflect.Pointer {
+			val = val.Elem()
+		}
+		return nil, fmt.Errorf("value '%v' is not compatible with type time.Time", val.Interface())
+	}
 	return &parsed, err
 }
 
 // GetTimeOnlyValue returns a Time-only value from the element.
-func (eV *elementValue) GetTimeOnlyValue() (*serialization.TimeOnly, error) {
+func (eV *ElementValueImpl) GetTimeOnlyValue() (*serialization.TimeOnly, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -232,7 +261,7 @@ func (eV *elementValue) GetTimeOnlyValue() (*serialization.TimeOnly, error) {
 }
 
 // GetDateOnlyValue returns a Date-only value from the element.
-func (eV *elementValue) GetDateOnlyValue() (*serialization.DateOnly, error) {
+func (eV *ElementValueImpl) GetDateOnlyValue() (*serialization.DateOnly, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -241,7 +270,7 @@ func (eV *elementValue) GetDateOnlyValue() (*serialization.DateOnly, error) {
 }
 
 // GetEnumValue returns an enum value from the element.
-func (eV *elementValue) GetEnumValue(parser serialization.EnumFactory) (interface{}, error) {
+func (eV *ElementValueImpl) GetEnumValue(parser serialization.EnumFactory) (interface{}, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -252,14 +281,11 @@ func (eV *elementValue) GetEnumValue(parser serialization.EnumFactory) (interfac
 	if err != nil {
 		return nil, err
 	}
-	if s == nil {
-		return nil, nil
-	}
 	return parser(*s)
 }
 
 // GetCollectionOfPrimitiveValues returns a Collection of specified primitive values from the element.
-func (eV *elementValue) GetCollectionOfPrimitiveValues(targetType Primitive) ([]interface{}, error) {
+func (eV *ElementValueImpl) GetCollectionOfPrimitiveValues(targetType Primitive) ([]interface{}, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -268,19 +294,19 @@ func (eV *elementValue) GetCollectionOfPrimitiveValues(targetType Primitive) ([]
 		return nil, fmt.Errorf("target type can't be %s", PrimitiveUnknown)
 	}
 
-	rawCollection, ok := eV.val.([]interface{})
+	rawCollection, ok := eV.val.([]*ElementValueImpl)
 	if !ok {
 		return nil, errors.New("val is not a collection")
 	}
 
-	collection := make([]interface{}, 0, len(rawCollection))
+	collection := make([]interface{}, len(rawCollection))
 	for i, v := range rawCollection {
 		var (
 			val interface{}
 			err error
 		)
 		if v != nil {
-			val, err = eV.getPrimitiveValue(targetType)
+			val, err = v.getPrimitiveValue(targetType)
 			if err != nil {
 				return nil, err
 			}
@@ -292,7 +318,7 @@ func (eV *elementValue) GetCollectionOfPrimitiveValues(targetType Primitive) ([]
 }
 
 // getPrimitiveValue returns the element value as the specified primitive type or error if not of that type
-func (eV *elementValue) getPrimitiveValue(targetType Primitive) (interface{}, error) {
+func (eV *ElementValueImpl) getPrimitiveValue(targetType Primitive) (interface{}, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -326,7 +352,7 @@ func (eV *elementValue) getPrimitiveValue(targetType Primitive) (interface{}, er
 }
 
 // GetRawValue returns the value of the element as an interface.
-func (eV *elementValue) GetRawValue() (interface{}, error) {
+func (eV *ElementValueImpl) GetRawValue() (interface{}, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}

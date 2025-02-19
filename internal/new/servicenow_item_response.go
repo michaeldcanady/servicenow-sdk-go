@@ -1,4 +1,4 @@
-package tableapi
+package internal
 
 import (
 	"fmt"
@@ -6,8 +6,6 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
-
-// TODO: move ServiceNowCollectionResponse to internal
 
 // ServiceNowItemResponse implementation of ServiceNowResponse
 type ServiceNowItemResponse[T serialization.Parsable] struct {

@@ -4,12 +4,12 @@ import (
 	"context"
 	"errors"
 	"maps"
-	"regexp"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	intCore "github.com/michaeldcanady/servicenow-sdk-go/internal/core"
 	intHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	newInt "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/michaeldcanady/servicenow-sdk-go/models"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -22,10 +22,6 @@ const (
 	prevLinkHeaderKey  = "prev"
 	nextLinkHeaderKey  = "next"
 	lastLinkHeaderKey  = "last"
-)
-
-var (
-	linkHeaderRegex = regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
 )
 
 // TableRequestBuilder2 provides operations to manage Service-Now tables.
@@ -100,7 +96,7 @@ func (rB *TableRequestBuilder2) ByID(sysID string) *TableItemRequestBuilder2 {
 }
 
 // Get Fetches a response containing Table Entry resources.
-func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (*ServiceNowCollectionResponse[serialization.Parsable], error) {
+func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (*newInt.ServiceNowCollectionResponse[serialization.Parsable], error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -124,7 +120,7 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *T
 		"401": models.NewServiceNowErrorFromDiscriminatorValue,
 	}
 
-	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowCollectionResponseFromDiscriminatorValue(rB.factory), errorMapping)
+	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, newInt.CreateServiceNowCollectionResponseFromDiscriminatorValue(rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -133,12 +129,12 @@ func (rB *TableRequestBuilder2) Get(ctx context.Context, requestConfiguration *T
 		return nil, nil
 	}
 
-	snRes, ok := res.(*ServiceNowCollectionResponse[serialization.Parsable])
+	snRes, ok := res.(*newInt.ServiceNowCollectionResponse[serialization.Parsable])
 	if !ok {
 		return nil, errors.New("res is not ServiceNowResponse")
 	}
 
-	if err := parseNavLinkHeaders(opts.ResponseHeaders.Get("Link"), snRes); err != nil {
+	if err := newInt.ParseNavLinkHeaders(opts.ResponseHeaders.Get("Link"), snRes); err != nil {
 		return nil, err
 	}
 
@@ -161,7 +157,7 @@ func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requ
 	// TODO: add error factory
 	errorMapping := abstractions.ErrorMappings{}
 
-	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, CreateServiceNowItemResponseFromDiscriminatorValue[serialization.Parsable](rB.factory), errorMapping)
+	res, err := rB.BaseRequestBuilder.RequestAdapter.Send(ctx, requestInfo, newInt.CreateServiceNowItemResponseFromDiscriminatorValue[serialization.Parsable](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -170,7 +166,7 @@ func (rB *TableRequestBuilder2) Post(ctx context.Context, body TableRecord, requ
 		return nil, nil
 	}
 
-	snRes, ok := res.(*ServiceNowItemResponse[serialization.Parsable])
+	snRes, ok := res.(*newInt.ServiceNowItemResponse[serialization.Parsable])
 	if !ok {
 		return nil, errors.New("res is not ServiceNowResponse")
 	}
@@ -219,34 +215,4 @@ func (rB *TableRequestBuilder2) ToPostRequestInformation(ctx context.Context, bo
 	}
 
 	return &kiotaRequestInfo.RequestInformation, nil
-}
-
-// parseNavLinkHeaders parses navigational links and applies the to the provided response.
-func parseNavLinkHeaders(hearderLinks []string, resp *ServiceNowCollectionResponse[serialization.Parsable]) error {
-	for _, header := range hearderLinks {
-		linkMatches := linkHeaderRegex.FindAllStringSubmatch(header, -1)
-
-		for _, match := range linkMatches {
-			link := match[1]
-			rel := match[2]
-
-			var err error
-			// Determine the type of link based on the 'rel' attribute
-			switch rel {
-			case firstLinkHeaderKey:
-				err = resp.setFirstLink(&link)
-			case prevLinkHeaderKey:
-				err = resp.setPreviousLink(&link)
-			case nextLinkHeaderKey:
-				err = resp.setNextLink(&link)
-			case lastLinkHeaderKey:
-				err = resp.setLastLink(&link)
-			}
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
 }

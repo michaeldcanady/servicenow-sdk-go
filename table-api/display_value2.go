@@ -18,7 +18,7 @@ const (
 	DisplayValue2All
 )
 
-// ParseDisplayValue2 converts provided string to a DisplayValue2
+// ParseDisplayValue2 converts provided string to a DisplayValue2 or returns DisplayValue2Unknown
 func ParseDisplayValue2(str string) DisplayValue2 {
 	str = strings.ToLower(str)
 

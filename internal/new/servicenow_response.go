@@ -1,4 +1,4 @@
-package tableapi
+package internal
 
 import (
 	"errors"
@@ -8,13 +8,6 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
-)
-
-type ServiceNowResponseType int64
-
-const (
-	ServiceNowResponseTypeCollection ServiceNowResponseType = iota
-	ServiceNowResponseTypeItem
 )
 
 // ServiceNowResponse represents a Service-Now response

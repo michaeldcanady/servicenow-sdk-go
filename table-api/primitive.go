@@ -1,5 +1,7 @@
 package tableapi
 
+import "strings"
+
 // Primitive represents a base type in golang
 type Primitive int64
 
@@ -30,6 +32,20 @@ const (
 	PrimitiveString
 )
 
+// ParsePrimitive converts provided string to a Primitive
+func ParsePrimitive(str string) Primitive {
+	str = strings.ToLower(str)
+
+	for _, displayValue := range []Primitive{PrimitiveUnknown, PrimitiveBool, PrimitiveInt8, PrimitiveInt32, PrimitiveInt64, PrimitiveTime, PrimitiveByte, PrimitiveFloat32, PrimitiveFloat64, PrimitiveTimeOnly, PrimitiveDateOnly, PrimitiveString} {
+		displayValueString := strings.ToLower(displayValue.String())
+		if str == displayValueString {
+			return displayValue
+		}
+	}
+
+	return PrimitiveUnknown
+}
+
 // String return string representation
 func (p Primitive) String() string {
 	value, ok := map[Primitive]string{
@@ -48,7 +64,7 @@ func (p Primitive) String() string {
 	}[p]
 
 	if !ok {
-		return DisplayValue2Unknown.String()
+		return PrimitiveUnknown.String()
 	}
 
 	return value
