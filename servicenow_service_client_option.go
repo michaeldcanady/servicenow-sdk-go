@@ -72,7 +72,9 @@ func withInstance(instance string) serviceNowServiceClientOption {
 	}
 }
 
-func withBackingStore(backingStoreFactory store.BackingStoreFactory) serviceNowServiceClientOption {
+// withBackingStoreFactory creates an option to set the backingStoreFactory for the serviceNowServiceClient.
+// It returns an error if the provided factory is nil.
+func withBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) serviceNowServiceClientOption {
 	return func(config *serviceNowServiceClientConfig) error {
 		if internal.IsNil(backingStoreFactory) {
 			return errors.New("backingStoreFactory is nil")

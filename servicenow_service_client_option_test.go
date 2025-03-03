@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/microsoft/kiota-abstractions-go/store"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 	"github.com/stretchr/testify/assert"
 )
@@ -155,6 +156,44 @@ func TestWithInstance(t *testing.T) {
 
 				assert.Equal(t, errors.New("instance is empty"), err)
 				assert.Equal(t, "", config.instance)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestWithBackingStore(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(t *testing.T)
+	}{
+		{
+			name: "successful",
+			test: func(t *testing.T) {
+				backingStore := store.BackingStoreFactoryInstance
+				config := &serviceNowServiceClientConfig{}
+
+				option := withBackingStoreFactory(backingStore)
+				err := option(config)
+
+				assert.Nil(t, err)
+				// can't verify they're the same because they're functions
+				assert.NotNil(t, config.backingStoreFactory)
+			},
+		},
+		{
+			name: "nil factory",
+			test: func(t *testing.T) {
+				config := &serviceNowServiceClientConfig{}
+
+				option := withBackingStoreFactory(nil)
+				err := option(config)
+
+				assert.Equal(t, errors.New("backingStoreFactory is nil"), err)
+				assert.Nil(t, config.backingStoreFactory)
 			},
 		},
 	}

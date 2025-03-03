@@ -19,6 +19,8 @@
     "nethttplibrary",
     "nolint",
     "servicenowsdkgo",
+    "strct",
+    "stretchr",
     "stylecheck",
     "textserialization"
   ]

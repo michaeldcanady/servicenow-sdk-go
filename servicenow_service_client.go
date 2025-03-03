@@ -93,6 +93,6 @@ func newServiceNowServiceClient(
 	registerDefaultSerializers()
 	registerDefaultDeserializers()
 	return &serviceNowServiceClient{
-		BaseRequestBuilder: newInternal.NewRequestBuilder(requestAdapter, "{+baseurl}", pathParameters),
+		BaseRequestBuilder: newInternal.NewRequestBuilder(requestAdapter, baseURLVariable, pathParameters),
 	}
 }
