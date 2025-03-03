@@ -71,7 +71,13 @@ func NewServiceNowClient2(credential core.Credential, instance string) (*Service
 		return nil, err
 	}
 
-	client, err := newServiceNowServiceClientWithOptions(nil, withURL(strings.Replace(instance, "/api", "", -1)))
+	authenticationProvider, err := newCredentialAuthenticationProviderAdapter(credential)
+	if err != nil {
+		// can't test since if credential is nil, it will be picked up earlier
+		return nil, err
+	}
+
+	client, err := newServiceNowServiceClientWithOptions(authenticationProvider, withURL(strings.Replace(instance, "/api", "", -1)))
 	if err != nil {
 		return nil, err
 	}
