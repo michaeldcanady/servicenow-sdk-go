@@ -11,14 +11,16 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
 type ServiceNowClient struct {
 	// Deprecated: deprecated since v1.6.0.
-	Credential   core.Credential
-	authProvider *internal.BaseAuthorizationProvider
-	BaseUrl      string //nolint:stylecheck
-	Session      http.Client
+	Credential     core.Credential
+	authProvider   *internal.BaseAuthorizationProvider
+	BaseUrl        string //nolint:stylecheck
+	Session        http.Client
+	requestAdapter abstractions.RequestAdapter
 }
 
 // Now returns a NowRequestBuilder associated with the Client.
@@ -69,11 +71,17 @@ func NewServiceNowClient2(credential core.Credential, instance string) (*Service
 		return nil, err
 	}
 
+	client, err := newServiceNowServiceClientWithOptions(nil, withURL(strings.Replace(instance, "/api", "", -1)))
+	if err != nil {
+		return nil, err
+	}
+
 	return &ServiceNowClient{
-		Credential:   credential,
-		authProvider: authProvider,
-		BaseUrl:      instance,
-		Session:      http.Client{},
+		Credential:     credential,
+		authProvider:   authProvider,
+		BaseUrl:        instance,
+		Session:        http.Client{},
+		requestAdapter: client.GetRequestAdapter(),
 	}, nil
 }
 
