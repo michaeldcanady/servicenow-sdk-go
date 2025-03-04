@@ -26,6 +26,7 @@ func NewServiceNowRequestAdapter(authenticationProvider authentication.Authentic
 
 	baseAdapter, err := nethttplibrary.NewNetHttpRequestAdapterWithParseNodeFactoryAndSerializationWriterFactoryAndHttpClient(authenticationProvider, config.parseNodeFactory, config.serializationWriterFactory, config.client)
 	if err != nil {
+		// can't test
 		return nil, err
 	}
 	return &ServiceNowRequestAdapter{baseAdapter}, nil

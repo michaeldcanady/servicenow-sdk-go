@@ -37,6 +37,14 @@ func TestBuildServiceClientConfig(t *testing.T) {
 				assert.Nil(t, config)
 			},
 		},
+		{
+			name: "instance and raw uri",
+			test: func(t *testing.T) {
+				config, err := buildServiceClientConfig(withInstance("fdasfsda"), withURL("https://dafsfd.com"))
+				assert.Equal(t, errors.New("rawURL and instance cannot be used together"), err)
+				assert.Nil(t, config)
+			},
+		},
 	}
 
 	for _, test := range tests {
