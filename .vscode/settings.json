@@ -9,5 +9,19 @@
   "go.formatFlags": ["-s", "-w"],
   "go.lintOnSave": "package",
   "go.lintTool": "golangci-lint",
-  "go.lintFlags": []
+  "go.lintFlags": [],
+  "cSpell.words": [
+    "formserialization",
+    "jsonserialization",
+    "kiota",
+    "michaeldcanady",
+    "multipartserialization",
+    "nethttplibrary",
+    "nolint",
+    "servicenowsdkgo",
+    "strct",
+    "stretchr",
+    "stylecheck",
+    "textserialization"
+  ]
 }

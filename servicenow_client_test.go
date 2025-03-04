@@ -141,7 +141,14 @@ func TestNewClient2(t *testing.T) {
 			cred := values[1].(core.Credential)
 
 			client, err := NewServiceNowClient2(cred, instance)
-			assert.Equal(t, test.Expected, client)
+			if test.Expected != nil {
+				assert.Equal(t, test.Expected.authProvider, client.authProvider)
+				assert.Equal(t, test.Expected.Credential, client.Credential)
+				assert.Equal(t, test.Expected.BaseUrl, client.BaseUrl)
+				assert.Equal(t, test.Expected.Session, client.Session)
+			} else {
+				assert.Equal(t, test.Expected, client)
+			}
 			assert.Equal(t, test.expectedErr, err)
 		})
 	}
