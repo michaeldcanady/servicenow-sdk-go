@@ -44,7 +44,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Generate Coverage File
-        run: go tool cover -html="cover.out" -o "cover.html"
+        run: go tool cover -html="${COVERAGE_FILE}" -o "cover.html"
         working-directory: ${{ github.workspace }}
 
       - name: Upload coverage reports to Codecov
