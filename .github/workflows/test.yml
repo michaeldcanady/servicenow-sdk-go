@@ -37,10 +37,14 @@ jobs:
 
       - name: Run unit tests
         run: |
-          CGO_ENABLED=0 go test -count=1 -coverpkg=./... -covermode=atomic -coverprofile $COVERAGE_FILE  ./...
-          grep -v -E -f .covignore $COVERAGE_FILE > coverage.filtered.out
-          mv coverage.filtered.out $COVERAGE_FILE
-          CGO_ENABLED=0 go tool cover -func $COVERAGE_FILE
+          go test -count=1 -coverpkg=./... -covermode=atomic -coverprofile $COVERAGE_FILE  ./...
+          if [[ "$RUNNER_OS" == "Windows" ]]; then 
+            findstr /V /G:.covignore $COVERAGE_FILE > coverage.filtered.out 
+            move coverage.filtered.out $COVERAGE_FILE
+          else 
+            grep -v -E -f .covignore $COVERAGE_FILE > coverage.filtered.out && mv coverage.filtered.out $COVERAGE_FILE
+          fi
+          go tool cover -func $COVERAGE_FILE
         working-directory: ${{ github.workspace }}
 
       - name: Generate Coverage File
