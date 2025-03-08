@@ -7,6 +7,9 @@ on:
       - "**"
   pull_request:
 
+env:
+  COVERAGE_FILE: coverage.out
+
 jobs:
   build:
     name: Test
@@ -33,7 +36,11 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Run unit tests
-        run: go test ./... -v -coverprofile="cover.out"
+        run: |
+          CGO_ENABLED=0 go test -count=1 -coverpkg=./... -covermode=atomic -coverprofile $COVERAGE_FILE  ./...
+          grep -v -E -f .covignore $COVERAGE_FILE > coverage.filtered.out
+          mv coverage.filtered.out $COVERAGE_FILE
+          CGO_ENABLED=0 go tool cover -func $COVERAGE_FILE
         working-directory: ${{ github.workspace }}
 
       - name: Generate Coverage File
