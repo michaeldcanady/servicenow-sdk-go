@@ -6,12 +6,9 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	newInt "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
-)
-
-const (
-	authorizationHeader = "Authorization"
 )
 
 var _ authentication.AuthenticationProvider = (*credentialAuthenticationProviderAdapter)(nil)
@@ -33,20 +30,24 @@ func newCredentialAuthenticationProviderAdapter(credential core.Credential) (*cr
 }
 
 // AuthenticateRequest authenticates the provided RequestInformation.
-func (provider *credentialAuthenticationProviderAdapter) AuthenticateRequest(ctx context.Context, request *abstractions.RequestInformation, _ map[string]interface{}) error {
-	if request == nil {
+func (provider *credentialAuthenticationProviderAdapter) AuthenticateRequest(_ context.Context, request *abstractions.RequestInformation, _ map[string]interface{}) error {
+	if newInt.IsNil(provider) {
+		return nil
+	}
+
+	if newInt.IsNil(request) {
 		return errors.New("request is nil")
 	}
 	if request.Headers == nil {
 		request.Headers = abstractions.NewRequestHeaders()
 	}
-	if !request.Headers.ContainsKey(authorizationHeader) {
+	if !request.Headers.ContainsKey(newInt.RequestHeaderAuthorization.String()) {
 		authString, err := provider.cred.GetAuthentication()
 		if err != nil {
 			return err
 		}
 		if authString != "" {
-			request.Headers.Add(authorizationHeader, authString)
+			request.Headers.Add(newInt.RequestHeaderAuthorization.String(), authString)
 		}
 	}
 

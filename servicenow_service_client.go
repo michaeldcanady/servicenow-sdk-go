@@ -1,7 +1,9 @@
 package servicenowsdkgo
 
 import (
+	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
@@ -26,7 +28,7 @@ const (
 
 // serviceNowServiceClient is the core service used by ServiceNowServiceClient to make requests to Service-Now's APIs
 type serviceNowServiceClient struct {
-	newInternal.BaseRequestBuilder
+	newInternal.RequestBuilder
 }
 
 // registerDefaultSerializers registers default serializers
@@ -68,6 +70,10 @@ func newServiceNowServiceClientWithOptions(
 	}
 
 	var baseURL = config.rawURI
+	if baseURL == "" && config.instance == "" {
+		return nil, errors.New("have to use either withURL or WithInstance")
+	}
+
 	if config.instance != "" {
 		baseURL = fmt.Sprintf("https://%s.%s", config.instance, defaultServiceNowHost)
 	}
@@ -77,7 +83,7 @@ func newServiceNowServiceClientWithOptions(
 		backingStoreFactory = store.BackingStoreFactoryInstance
 	}
 
-	return newServiceNowServiceClient(requestAdapter, backingStoreFactory, baseURL), nil
+	return newServiceNowServiceClient(requestAdapter, backingStoreFactory, baseURL)
 }
 
 // newServiceNowServiceClient creates a new ServiceNowBaseServiceClient with the given parameters
@@ -85,14 +91,21 @@ func newServiceNowServiceClient(
 	requestAdapter abstractions.RequestAdapter,
 	backingStoreFactory store.BackingStoreFactory,
 	baseURL string,
-) *serviceNowServiceClient {
-	requestAdapter.EnableBackingStore(backingStoreFactory)
+) (*serviceNowServiceClient, error) {
+	baseURL = strings.TrimSpace(baseURL)
+	if baseURL == "" {
+		return nil, errors.New("baseURL is empty")
+	}
+	if !newInternal.IsNil(backingStoreFactory) {
+		requestAdapter.EnableBackingStore(backingStoreFactory)
+	}
+
 	requestAdapter.SetBaseUrl(baseURL)
-	pathParameters := map[string]string{baseURLParameter: requestAdapter.GetBaseUrl()}
+	pathParameters := map[string]string{baseURLParameter: baseURL}
 
 	registerDefaultSerializers()
 	registerDefaultDeserializers()
 	return &serviceNowServiceClient{
-		BaseRequestBuilder: newInternal.NewRequestBuilder(requestAdapter, baseURLVariable, pathParameters),
-	}
+		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, baseURLVariable, pathParameters),
+	}, nil
 }
