@@ -57,7 +57,7 @@ jobs:
 
       - name: Generate Coverage File
         if: runner.os == 'Windows'
-        run: go tool cover -html=$env:COVERAGE_FILE -o "cover.html"
+        run: go tool cover -html="$($env:COVERAGE_FILE)" -o "cover.html"
         working-directory: ${{ github.workspace }}
 
       - name: Upload coverage reports to Codecov
