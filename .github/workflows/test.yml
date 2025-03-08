@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        go-version: ["1.21", "1.22"]
+        go-version: ["1.21", "1.22", "1.23", "1.24"]
 
     steps:
       - name: Checkout code
@@ -47,7 +47,7 @@ jobs:
         run: |
           go test -count=1 -coverpkg=./... -covermode=atomic -coverprofile %COVERAGE_FILE%  ./...
           findstr /V /G:.covignore %COVERAGE_FILE% > coverage.filtered.out
-          move coverage.filtered.out %COVERAGE_FILE%
+          move coverage.filtered.out %COVERAGE_FILE% /y
         working-directory: ${{ github.workspace }}
 
       - name: Generate Coverage File
