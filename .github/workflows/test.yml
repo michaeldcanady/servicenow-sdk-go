@@ -47,7 +47,7 @@ jobs:
         run: |
           go test -count=1 -coverpkg=./... -covermode=atomic -coverprofile %COVERAGE_FILE%  ./...
           findstr /V /G:.covignore %COVERAGE_FILE% > coverage.filtered.out
-          move coverage.filtered.out %COVERAGE_FILE% /y
+          move /y coverage.filtered.out %COVERAGE_FILE%
         working-directory: ${{ github.workspace }}
 
       - name: Generate Coverage File
