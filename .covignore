@@ -1,1 +1,1 @@
-**/mocking/**
+^.*\/mocking\/.*$
