@@ -45,9 +45,9 @@ jobs:
       - name: Run unit tests on Windows systems
         if: runner.os == 'Windows'
         run: |
-          go test -count=1 -coverpkg=./... -covermode=atomic -coverprofile %COVERAGE_FILE%  ./...
-          findstr /V /G:.covignore %COVERAGE_FILE% > coverage.filtered.out
-          move /y coverage.filtered.out %COVERAGE_FILE%
+          go test -count=1 -coverpkg=./... -covermode=atomic -coverprofile $COVERAGE_FILE  ./...
+          findstr /V /G:.covignore $COVERAGE_FILE > coverage.filtered.out
+          Move-Item -Path coverage.filtered.out -Destination $COVERAGE_FILE -Force
         working-directory: ${{ github.workspace }}
 
       - name: Generate Coverage File
