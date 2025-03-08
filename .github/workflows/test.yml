@@ -7,6 +7,9 @@ on:
       - "**"
   pull_request:
 
+env:
+  COVERAGE_FILE: coverage.out
+
 jobs:
   build:
     name: Test
@@ -14,7 +17,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        go-version: ["1.21", "1.22"]
+        go-version: ["1.21", "1.22", "1.23", "1.24"]
 
     steps:
       - name: Checkout code
@@ -32,12 +35,29 @@ jobs:
         run: go build ./...
         working-directory: ${{ github.workspace }}
 
-      - name: Run unit tests
-        run: go test ./... -v -coverprofile="cover.out"
+      - name: Run unit tests on Unix systems
+        if: runner.os != 'Windows'
+        run: |
+          go test -count=1 -coverpkg=./... -covermode=atomic -coverprofile $COVERAGE_FILE  ./...
+          grep -v -E -f .covignore $COVERAGE_FILE > coverage.filtered.out && mv coverage.filtered.out $COVERAGE_FILE
+        working-directory: ${{ github.workspace }}
+
+      - name: Run unit tests on Windows systems
+        if: runner.os == 'Windows'
+        run: |
+          go test -count=1 -coverpkg=./... -covermode=atomic -coverprofile $env:COVERAGE_FILE  ./...
+          findstr /V /G:.covignore $env:COVERAGE_FILE > coverage.filtered.out
+          Move-Item -Path coverage.filtered.out -Destination $env:COVERAGE_FILE -Force
         working-directory: ${{ github.workspace }}
 
       - name: Generate Coverage File
-        run: go tool cover -html="cover.out" -o "cover.html"
+        if: runner.os != 'Windows'
+        run: go tool cover -html="${COVERAGE_FILE}" -o "cover.html"
+        working-directory: ${{ github.workspace }}
+
+      - name: Generate Coverage File
+        if: runner.os == 'Windows'
+        run: go tool cover -html="$($env:COVERAGE_FILE)" -o "cover.html"
         working-directory: ${{ github.workspace }}
 
       - name: Upload coverage reports to Codecov
