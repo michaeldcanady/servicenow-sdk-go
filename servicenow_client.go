@@ -121,6 +121,8 @@ func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 		}
 	}
 
+	stringError := c.unmarshallError(response)
+
 	if errorCtor == nil {
 		err := &core.ApiError{
 			Message:            "The server returned an unexpected status code and no error factory is registered for this code: " + statusAsString,
@@ -128,8 +130,6 @@ func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 		}
 		return err
 	}
-
-	stringError := c.unmarshallError(response)
 
 	return stringError
 }
