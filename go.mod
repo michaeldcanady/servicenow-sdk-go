@@ -9,7 +9,7 @@ require (
 	github.com/microsoft/kiota-abstractions-go v1.9.0
 	github.com/microsoft/kiota-http-go v1.5.0
 	github.com/microsoft/kiota-serialization-form-go v1.1.0
-	github.com/microsoft/kiota-serialization-json-go v1.0.9
+	github.com/microsoft/kiota-serialization-json-go v1.1.0
 	github.com/microsoft/kiota-serialization-multipart-go v1.1.0
 	github.com/microsoft/kiota-serialization-text-go v1.0.0
 	github.com/mozillazg/go-httpheader v0.4.0
