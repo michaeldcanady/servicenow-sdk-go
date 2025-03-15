@@ -19,8 +19,8 @@ type BatchRequestBuilder struct {
 	newInternal.RequestBuilder
 }
 
-// NewBatchRequestBuilder2Internal instantiates a new BatchRequestBuilder with custom parsable for table entries.
-func NewBatchRequestBuilder2Internal(
+// NewBatchRequestBuilderInternal instantiates a new BatchRequestBuilder with custom parsable for table entries.
+func NewBatchRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 ) *BatchRequestBuilder {
@@ -37,7 +37,7 @@ func NewBatchRequestBuilder2(
 ) *BatchRequestBuilder {
 	urlParams := make(map[string]string)
 	urlParams[newInternal.RawURLKey] = rawURL
-	return NewBatchRequestBuilder2Internal(urlParams, requestAdapter)
+	return NewBatchRequestBuilderInternal(urlParams, requestAdapter)
 }
 
 // Post produces a batch response using the specified parameters
