@@ -2,9 +2,11 @@ package batchapi
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -141,4 +143,32 @@ func (bH *BatchHeader) SetValue(value *string) error {
 	}
 
 	return bH.GetBackingStore().Set(valueKey, value)
+}
+
+// headers support headers types
+type headers interface {
+	*abstractions.RequestHeaders
+}
+
+// createBatchableHeadersFromHeaders converts headers to BatchHeaderable
+func createBatchableHeadersFromHeaders[h headers](headers h) ([]BatchHeaderable, error) {
+	batchHeaders := make([]BatchHeaderable, 0)
+
+	if requestHeaders, ok := interface{}(headers).(*abstractions.RequestHeaders); ok {
+		for _, key := range requestHeaders.ListKeys() {
+			batchHeader := NewBatchHeader()
+			values := requestHeaders.Get(key)
+			if err := batchHeader.SetName(&key); err != nil {
+				return nil, err
+			}
+			valuesString := strings.Join(values, ", ")
+			if err := batchHeader.SetValue(&valuesString); err != nil {
+				return nil, err
+			}
+			batchHeaders = append(batchHeaders, batchHeader)
+		}
+		return batchHeaders, nil
+	}
+
+	return nil, nil
 }

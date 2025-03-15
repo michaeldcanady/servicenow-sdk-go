@@ -53,36 +53,8 @@ func NewRestRequest() *RestRequest {
 }
 
 // CreateRestRequestFromDiscriminatorValue is a parsable factory for creating a BatchRequestable
-func CreateRestRequestFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+func CreateRestRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewRestRequest(), nil
-}
-
-// headers support headers types
-type headers interface {
-	*abstractions.RequestHeaders
-}
-
-// createBatchableHeadersFromHeaders converts headers to BatchHeaderable
-func createBatchableHeadersFromHeaders[h headers](headers h) ([]BatchHeaderable, error) {
-	batchHeaders := make([]BatchHeaderable, 0)
-
-	if requestHeaders, ok := interface{}(headers).(*abstractions.RequestHeaders); ok {
-		for _, key := range requestHeaders.ListKeys() {
-			batchHeader := NewBatchHeader()
-			values := requestHeaders.Get(key)
-			if err := batchHeader.SetName(&key); err != nil {
-				return nil, err
-			}
-			valuesString := strings.Join(values, ", ")
-			if err := batchHeader.SetValue(&valuesString); err != nil {
-				return nil, err
-			}
-			batchHeaders = append(batchHeaders, batchHeader)
-		}
-		return batchHeaders, nil
-	}
-
-	return nil, nil
 }
 
 // CreateRestRequestFromRequestInformation

@@ -21,10 +21,13 @@
     "nethttplibrary",
     "nolint",
     "Requestable",
+    "Responseable",
     "servicenowsdkgo",
     "strct",
     "stretchr",
     "stylecheck",
-    "textserialization"
+    "textserialization",
+    "unparam",
+    "Unserviced"
   ]
 }
