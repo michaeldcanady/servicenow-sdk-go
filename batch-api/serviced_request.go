@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"errors"
 	"reflect"
-	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
@@ -23,7 +22,7 @@ const (
 	statusTextKey    = "status_text"
 )
 
-// ServicedRequestable represents Service-Now Batch API response's serviced request
+// ServicedRequestable represents Service-Now Batch API response's serviced request.
 type ServicedRequestable interface {
 	GetBody(serialization.ParsableFactory) (serialization.Parsable, error)
 	GetRawBody() ([]byte, error)
@@ -46,18 +45,20 @@ type ServicedRequestable interface {
 	store.BackedModel
 }
 
+// ServicedRequest represents Service-Now Batch API response's serviced request.
 type ServicedRequest struct {
 	newInternal.Model
 }
 
-func NewServicedRequest() ServicedRequestable {
+// NewServicedRequest instantiates a new ServicedRequest.
+func NewServicedRequest() *ServicedRequest {
 	return &ServicedRequest{
 		newInternal.NewBaseModel(),
 	}
 }
 
-// CreateServicedRequestFromDiscriminatorValue is a parsable factory for creating a BatchResponseable
-func CreateServicedRequestFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+// CreateServicedRequestFromDiscriminatorValue is a parsable factory for creating a BatchResponseable.
+func CreateServicedRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewServicedRequest(), nil
 }
 
@@ -181,7 +182,7 @@ func (sR *ServicedRequest) GetBody(constructor serialization.ParsableFactory) (s
 		return nil, nil
 	}
 
-	contentType := getContentType(headers)
+	contentType := getHTTPHeader(headers, newInternal.HTTPHeaderContentType, "")
 
 	return serializeContent[serialization.Parsable](contentType, body, constructor)
 }
@@ -408,58 +409,4 @@ func (sR *ServicedRequest) setStatusText(statusText *string) error {
 	}
 
 	return sR.GetBackingStore().Set(statusTextKey, statusText)
-}
-
-// throwErrors returns error is provided req is an error
-func throwErrors(req ServicedRequestable, typeName string) error {
-	code, err := req.GetStatusCode()
-	if err != nil {
-		return err
-	}
-
-	if code != nil && *code < 400 {
-		return nil
-	}
-
-	body, err := req.GetErrorMessage()
-	if err != nil {
-		return err
-	}
-
-	headers, err := req.GetHeaders()
-	if err != nil {
-		return err
-	}
-
-	contentType := getContentType(headers)
-
-	return internal.ThrowErrors(typeName, *code, contentType, []byte(*body))
-}
-
-// serializeContent serializes the provided content using the provided ParsableFactory
-func serializeContent[T serialization.Parsable](contentType string, content []byte, constructor serialization.ParsableFactory) (T, error) {
-	var res T
-
-	parseNodeFactory := serialization.DefaultParseNodeFactoryInstance
-	parseNode, err := parseNodeFactory.GetRootParseNode(contentType, content)
-	if err != nil {
-		return res, err
-	}
-
-	result, err := parseNode.GetObjectValue(constructor)
-	return result.(T), err
-}
-
-// getContentType gets the content type from a slice of BatchHeaderable
-func getContentType(headers []BatchHeaderable) string {
-	for _, header := range headers {
-		name, err := header.GetName()
-		if err == nil && strings.ToLower(*name) == "content-type" {
-			value, err := header.GetValue()
-			if err == nil {
-				return *value
-			}
-		}
-	}
-	return ""
 }
