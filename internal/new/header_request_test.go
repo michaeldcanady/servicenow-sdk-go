@@ -24,6 +24,12 @@ func TestRequestHeader_String(t *testing.T) {
 			},
 		},
 		{
+			name: "RequestHeaderAccept",
+			test: func(t *testing.T) {
+				assert.Equal(t, "accept", RequestHeaderAccept.String())
+			},
+		},
+		{
 			name: "unknown RequestHeader",
 			test: func(t *testing.T) {
 				assert.Equal(t, "unknown", RequestHeader(-2).String())

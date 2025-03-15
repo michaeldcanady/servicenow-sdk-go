@@ -8,6 +8,7 @@ const (
 	// RequestHeaderUnknown the provided value is an unknown request header.
 	RequestHeaderUnknown RequestHeader = iota - 1
 	RequestHeaderAuthorization
+	RequestHeaderAccept
 )
 
 // String returns string representation of the request header
@@ -15,6 +16,7 @@ func (rH RequestHeader) String() string {
 	stringVal, ok := map[RequestHeader]string{
 		RequestHeaderUnknown:       "unknown",
 		RequestHeaderAuthorization: "authorization",
+		RequestHeaderAccept:        "accept",
 	}[rH]
 	if !ok {
 		return RequestHeaderUnknown.String()

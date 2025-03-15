@@ -21,7 +21,15 @@ type BaseRequestBuilder struct {
 	abstractions.BaseRequestBuilder
 }
 
-func NewBaseRequestBuilder(requestAdapter abstractions.RequestAdapter, urlTemplate string, pathParameters map[string]string) *BaseRequestBuilder {
+func NewBaseRequestBuilder(
+	requestAdapter abstractions.RequestAdapter,
+	urlTemplate string,
+	pathParameters map[string]string,
+) *BaseRequestBuilder {
+	if pathParameters == nil {
+		pathParameters = make(map[string]string)
+	}
+
 	return &BaseRequestBuilder{
 		abstractions.BaseRequestBuilder{
 			PathParameters: pathParameters,
