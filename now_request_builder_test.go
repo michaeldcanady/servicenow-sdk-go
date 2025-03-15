@@ -19,7 +19,7 @@ func TestNewNowRequestBuilder(t *testing.T) {
 	assert.Equal(t, expected, builder.RequestBuilder.PathParameters)
 }
 
-func TestNowRequestBuilderTable(t *testing.T) {
+func TestNowRequestBuilder_Table(t *testing.T) {
 	client := &ServiceNowClient{} // Replace with your client implementation
 	url := "https://example.service-now.com/api"
 	builder := NewNowRequestBuilder(url, client)
@@ -36,7 +36,7 @@ func TestNowRequestBuilderTable(t *testing.T) {
 	assert.Equal(t, expected, tableBuilder.RequestBuilder.PathParameters)
 }
 
-func TestNowRequestBuilderAttachment(t *testing.T) {
+func TestNowRequestBuilder_Attachment(t *testing.T) {
 	client := &ServiceNowClient{} // Replace with your client implementation
 	url := "https://example.service-now.com/api"
 	builder := NewNowRequestBuilder(url, client)
@@ -49,4 +49,16 @@ func TestNowRequestBuilderAttachment(t *testing.T) {
 
 	assert.NotNil(t, attachmentBuilder)
 	assert.Equal(t, expected, attachmentBuilder.RequestBuilder.PathParameters)
+}
+
+// TODO: add tests
+func TestNowRequestBuilder_Batch(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
 }
