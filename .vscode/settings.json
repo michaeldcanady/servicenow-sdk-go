@@ -25,6 +25,7 @@
     "michaeldcanady",
     "multipartserialization",
     "nethttplibrary",
+    "nocov",
     "nolint",
     "Requestable",
     "Responseable",

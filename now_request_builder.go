@@ -2,6 +2,7 @@ package servicenowsdkgo
 
 import (
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 )
@@ -32,4 +33,9 @@ func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuild
 // It allows you to work with attachments and manage attachments in ServiceNow.
 func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilder {
 	return attachmentapi.NewAttachmentRequestBuilder(rB.RequestBuilder.Client.(*ServiceNowClient), rB.RequestBuilder.PathParameters)
+}
+
+// Batch returns a BatchRequestBuilder, entrypoint into the batch api.
+func (rB *NowRequestBuilder) Batch() *batchapi.BatchRequestBuilder {
+	return batchapi.NewBatchRequestBuilderInternal(rB.RequestBuilder.PathParameters, rB.RequestBuilder.Client.(*ServiceNowClient).requestAdapter)
 }
