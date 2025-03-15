@@ -15,7 +15,7 @@ func TestIsNil(t *testing.T) {
 }
 
 // TODO: add tests
-func TesthrowErrors(t *testing.T) {
+func TestThrowErrors(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
