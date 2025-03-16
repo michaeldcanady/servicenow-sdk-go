@@ -128,10 +128,6 @@ func TestSerializeContent(t *testing.T) {
 	}
 }
 
-func toPointer[T any](value T) *T {
-	return &value
-}
-
 // TODO: add tests
 func TestGetHTTPHeader(t *testing.T) {
 	tests := []struct {
@@ -142,8 +138,8 @@ func TestGetHTTPHeader(t *testing.T) {
 			name: "Successful",
 			test: func(t *testing.T) {
 				header := mocking.NewMockBatchHeader()
-				header.On("GetName").Return(toPointer(newInternal.HTTPHeaderContentType.String()), nil)
-				header.On("GetValue").Return(toPointer("application/json"), nil)
+				header.On("GetName").Return(newInternal.ToPointer(newInternal.HTTPHeaderContentType.String()), nil)
+				header.On("GetValue").Return(newInternal.ToPointer("application/json"), nil)
 				headers := []BatchHeaderable{header}
 				defaultValue := ""
 				value := getHTTPHeader(headers, newInternal.HTTPHeaderContentType, defaultValue)
@@ -155,7 +151,7 @@ func TestGetHTTPHeader(t *testing.T) {
 			test: func(t *testing.T) {
 				header := mocking.NewMockBatchHeader()
 				header.On("GetName").Return((*string)(nil), errors.New("no name"))
-				header.On("GetValue").Return(toPointer("application/json"), nil)
+				header.On("GetValue").Return(newInternal.ToPointer("application/json"), nil)
 				headers := []BatchHeaderable{header}
 				defaultValue := ""
 				value := getHTTPHeader(headers, newInternal.HTTPHeaderContentType, defaultValue)

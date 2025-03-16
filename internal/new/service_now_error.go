@@ -23,7 +23,7 @@ func NewServicenowError() *ServicenowError {
 }
 
 // CreateServiceNowErrorFromDiscriminatorValue is a parsable factory for creating a ServicenowError
-func CreateServiceNowErrorFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+func CreateServiceNowErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewServicenowError(), nil
 }
 
@@ -50,7 +50,7 @@ func (exc *ServicenowError) GetFieldDeserializers() map[string]func(serializatio
 }
 
 // GetError returns the main error
-func (exc *ServicenowError) GetError() (*MainError, error) {
+func (exc *ServicenowError) GetError() (MainErrorable, error) {
 	if IsNil(exc) {
 		return nil, nil
 	}
@@ -60,9 +60,9 @@ func (exc *ServicenowError) GetError() (*MainError, error) {
 		return nil, err
 	}
 
-	mainErr, ok := rawMainErr.(*MainError)
+	mainErr, ok := rawMainErr.(MainErrorable)
 	if !ok {
-		return nil, errors.New("rawMainErr is not *string")
+		return nil, errors.New("rawMainErr is not MainErrorable")
 	}
 
 	return mainErr, nil

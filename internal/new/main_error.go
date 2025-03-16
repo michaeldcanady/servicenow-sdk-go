@@ -13,6 +13,9 @@ const (
 )
 
 type MainErrorable interface {
+	GetDetail() (*string, error)
+	GetMessage() (*string, error)
+	GetStatus() (*string, error)
 	Model
 	serialization.Parsable
 }
@@ -30,7 +33,7 @@ func NewMainError() *MainError {
 }
 
 // CreateBatchRequest2FromDiscriminatorValue is a parsable factory for creating a MainError
-func CreateMainErrorFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+func CreateMainErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewMainError(), nil
 }
 
@@ -90,7 +93,7 @@ func (exc *MainError) GetDetail() (*string, error) {
 	return detailStr, nil
 }
 
-// setDetail sets the eroror details.
+// setDetail sets the error details.
 func (exc *MainError) setDetail(detail *string) error {
 	if IsNil(exc) {
 		return nil
@@ -135,7 +138,7 @@ func (exc *MainError) setMessage(message *string) error {
 	if IsNil(backingStore) {
 		return errors.New("backingStore is nil")
 	}
-	return backingStore.Set(detailKey, message)
+	return backingStore.Set(messageKey, message)
 }
 
 // GetStatus returns the status.
@@ -171,5 +174,5 @@ func (exc *MainError) setStatus(status *string) error {
 	if IsNil(backingStore) {
 		return errors.New("backingStore is nil")
 	}
-	return backingStore.Set(detailKey, status)
+	return backingStore.Set(statusKey, status)
 }
