@@ -62,3 +62,7 @@ func ThrowErrors(typeName string, statusCode int64, contentType string, content 
 
 	return errValue
 }
+
+func ToPointer[T any](value T) *T {
+	return &value
+}
