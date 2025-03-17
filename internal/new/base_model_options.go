@@ -10,6 +10,7 @@ type ModelOption = Option[Model]
 
 type backingStoreSettableOption[T BackingStoreFactorySetter] func(T) error
 
+// WithBackingStoreFactory
 func WithBackingStoreFactory[T BackingStoreFactorySetter](factory store.BackingStoreFactory) backingStoreSettableOption[T] {
 	return func(config T) error {
 		if IsNil(config) {
