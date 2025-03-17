@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -16,13 +15,14 @@ func IsNil(a interface{}) bool {
 	return a == nil || reflect.ValueOf(a).IsNil()
 }
 
+// ThrowErrors
 func ThrowErrors(typeName string, statusCode int64, contentType string, content []byte) error {
 	var errorCtor serialization.ParsableFactory
 	statusAsString := strconv.Itoa(int(statusCode))
 
-	errorMappings, ok := getInstance().Get(typeName)
-	if !ok {
-		return errors.New("typeName doesn't have registered ErrorMapping")
+	errorMappings, err := GetErrorRegistryInstance().Get(typeName)
+	if err != nil {
+		return err
 	}
 
 	if factory, ok := errorMappings[statusAsString]; ok {
@@ -63,6 +63,7 @@ func ThrowErrors(typeName string, statusCode int64, contentType string, content 
 	return errValue
 }
 
+// ToPointer
 func ToPointer[T any](value T) *T {
 	return &value
 }

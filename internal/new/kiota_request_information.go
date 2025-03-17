@@ -7,10 +7,12 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
+// KiotaRequestInformation
 type KiotaRequestInformation struct {
 	*abstractions.RequestInformation
 }
 
+// NewRequestInformation
 func NewRequestInformation(opts ...KiotaRequestInformationOption) (*KiotaRequestInformation, error) {
 	defaultReqInfo := &KiotaRequestInformation{abstractions.NewRequestInformation()}
 	if err := ApplyOptions(defaultReqInfo, opts...); err != nil {
@@ -19,7 +21,7 @@ func NewRequestInformation(opts ...KiotaRequestInformationOption) (*KiotaRequest
 	return defaultReqInfo, nil
 }
 
-func NewRequestInformationWithMethodAndURLTemplateAndPathParameters(method abstractions.HttpMethod, urlTemplate string, pathParameters map[string]string) *KiotaRequestInformation {
+func NewRequestInformationWithMethodAndURLTemplateAndPathParameters(method abstractions.HttpMethod, urlTemplate string, pathParameters map[string]string) *KiotaRequestInformation { // nocov // there's no real functionality to test
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(method, urlTemplate, pathParameters)
 	return &KiotaRequestInformation{RequestInformation: requestInfo}
 }
