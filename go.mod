@@ -8,7 +8,7 @@ require (
 	github.com/google/go-querystring v1.1.0
 	github.com/microsoft/kiota-abstractions-go v1.9.1
 	github.com/microsoft/kiota-http-go v1.5.1
-	github.com/microsoft/kiota-serialization-form-go v1.1.0
+	github.com/microsoft/kiota-serialization-form-go v1.1.1
 	github.com/microsoft/kiota-serialization-json-go v1.1.1
 	github.com/microsoft/kiota-serialization-multipart-go v1.1.0
 	github.com/microsoft/kiota-serialization-text-go v1.1.0
