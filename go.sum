@@ -1,5 +1,3 @@
-github.com/cjlapao/common-go v0.0.48 h1:j2rMlSBoEG8P6WPV6aOoSHAWX6D9fl2jVpAqwnHKB4E=
-github.com/cjlapao/common-go v0.0.48/go.mod h1:wWif40/s6IIjaT+BO01Bo6VeYzz7IQ23BOj6xi/pAqw=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/gabriel-vasile/mimetype v1.4.8 h1:FfZ3gj38NjllZIeJAmMhr+qKL8Wu+nOoI3GqacKw1NM=
@@ -20,8 +18,8 @@ github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
 github.com/kr/text v0.2.0/go.mod h1:eLer722TekiGuMkidMxC/pM04lWEeraHUUmBw8l2grE=
-github.com/microsoft/kiota-abstractions-go v1.9.1 h1:vkeluAj3ZLvOvG1NY5HcuBclhA9UXkXPeLxcBhQ28cU=
-github.com/microsoft/kiota-abstractions-go v1.9.1/go.mod h1:rlWmh9TR1j4EvkEp1Bz0rYTWunlvHDG9s6IMlkpDNrc=
+github.com/microsoft/kiota-abstractions-go v1.9.2 h1:3U5VgN2YGe3lsu1pyuS0t5jxv1llxX2ophwX8ewE6wQ=
+github.com/microsoft/kiota-abstractions-go v1.9.2/go.mod h1:f06pl3qSyvUHEfVNkiRpXPkafx7khZqQEb71hN/pmuU=
 github.com/microsoft/kiota-http-go v1.5.1 h1:f260q6brp9/xHY4pECVPqzDYwoqieQhhcDiMMGc1ox0=
 github.com/microsoft/kiota-http-go v1.5.1/go.mod h1:r8HXDhMyLF4GJYdSmOGRquX3yI8KZpmbFCrTf78/kI0=
 github.com/microsoft/kiota-serialization-form-go v1.1.1 h1:Me4mmLB+aukCA1zToqVfT2meCOsmGgAWAUIrlGuteWM=
