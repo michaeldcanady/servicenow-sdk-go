@@ -6,19 +6,18 @@ toolchain go1.24.1
 require (
 	github.com/gabriel-vasile/mimetype v1.4.8
 	github.com/google/go-querystring v1.1.0
-	github.com/microsoft/kiota-abstractions-go v1.9.1
+	github.com/microsoft/kiota-abstractions-go v1.9.2
 	github.com/microsoft/kiota-http-go v1.5.1
 	github.com/microsoft/kiota-serialization-form-go v1.1.1
 	github.com/microsoft/kiota-serialization-json-go v1.1.1
 	github.com/microsoft/kiota-serialization-multipart-go v1.1.1
-	github.com/microsoft/kiota-serialization-text-go v1.1.1
+	github.com/microsoft/kiota-serialization-text-go v1.1.2
 	github.com/mozillazg/go-httpheader v0.4.0
 	github.com/stretchr/testify v1.10.0
 	github.com/yosida95/uritemplate/v3 v3.0.2
 )
 
 require (
-	github.com/cjlapao/common-go v0.0.48 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
