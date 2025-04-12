@@ -63,7 +63,7 @@ func CreateRestRequestFromRequestInformation(requestInfo *abstractions.RequestIn
 	if err := request.SetBody(requestInfo.Content); err != nil {
 		return nil, err
 	}
-	headers, err := createBatchableHeadersFromHeaders(requestInfo.Headers)
+	headers, err := createBatchHeaderableFromHeaders(requestInfo.Headers)
 	if err != nil {
 		return nil, err
 	}
