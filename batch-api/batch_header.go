@@ -2,6 +2,7 @@ package batchapi
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -17,9 +18,13 @@ const (
 
 // BatchHeaderable represents a Service-Now batch header
 type BatchHeaderable interface {
+	// GetName returns the key value for the header
 	GetName() (*string, error)
+	// setName sets the key value for the header
 	SetName(*string) error
+	// GetValue returns the value of the header
 	GetValue() (*string, error)
+	// SetValue sets the value of the header
 	SetValue(*string) error
 	serialization.Parsable
 	newInternal.Model
@@ -38,7 +43,7 @@ func NewBatchHeader() *BatchHeader {
 }
 
 // CreateBatchHeader2FromDiscriminatorValue is a parsable factory for creating a BatchRequestable
-func CreateBatchHeader2FromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+func CreateBatchHeader2FromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewBatchHeader(), nil
 }
 
@@ -46,6 +51,10 @@ func CreateBatchHeader2FromDiscriminatorValue(parseNode serialization.ParseNode)
 func (bH *BatchHeader) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(bH) {
 		return nil
+	}
+
+	if internal.IsNil(writer) {
+		return errors.New("write is nil")
 	}
 
 	serializers := []func(serialization.SerializationWriter) error{
@@ -81,10 +90,10 @@ func (bH *BatchHeader) GetFieldDeserializers() map[string]func(serialization.Par
 
 	return map[string]func(serialization.ParseNode) error{
 		nameKey: func(pn serialization.ParseNode) error {
-			return errors.New("deserializer (nameKey) not implemented")
+			return fmt.Errorf("deserializer (%s) not implemented", nameKey)
 		},
 		valueKey: func(pn serialization.ParseNode) error {
-			return errors.New("deserializer (valueKey) not implemented")
+			return fmt.Errorf("deserializer (%s) not implemented", valueKey)
 		},
 	}
 }
@@ -95,7 +104,12 @@ func (bH *BatchHeader) GetName() (*string, error) {
 		return nil, nil
 	}
 
-	name, err := bH.GetBackingStore().Get(nameKey)
+	backingStore := bH.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil, errors.New("backingStore is nil")
+	}
+
+	name, err := backingStore.Get(nameKey)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +128,12 @@ func (bH *BatchHeader) SetName(name *string) error {
 		return nil
 	}
 
-	return bH.GetBackingStore().Set(nameKey, name)
+	backingStore := bH.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return errors.New("backingStore is nil")
+	}
+
+	return backingStore.Set(nameKey, name)
 }
 
 // GetValue returns the value of the header
@@ -123,7 +142,12 @@ func (bH *BatchHeader) GetValue() (*string, error) {
 		return nil, nil
 	}
 
-	value, err := bH.GetBackingStore().Get(valueKey)
+	backingStore := bH.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil, errors.New("backingStore is nil")
+	}
+
+	value, err := backingStore.Get(valueKey)
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +166,12 @@ func (bH *BatchHeader) SetValue(value *string) error {
 		return nil
 	}
 
-	return bH.GetBackingStore().Set(valueKey, value)
+	backingStore := bH.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return errors.New("backingStore is nil")
+	}
+
+	return backingStore.Set(valueKey, value)
 }
 
 // headers support headers types
@@ -150,8 +179,8 @@ type headers interface {
 	*abstractions.RequestHeaders
 }
 
-// createBatchableHeadersFromHeaders converts headers to BatchHeaderable
-func createBatchableHeadersFromHeaders[h headers](headers h) ([]BatchHeaderable, error) {
+// createBatchHeaderableFromHeaders converts headers to BatchHeaderable
+func createBatchHeaderableFromHeaders[h headers](headers h) ([]BatchHeaderable, error) {
 	batchHeaders := make([]BatchHeaderable, 0)
 
 	if requestHeaders, ok := interface{}(headers).(*abstractions.RequestHeaders); ok {

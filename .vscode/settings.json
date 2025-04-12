@@ -11,6 +11,7 @@
   "go.lintTool": "golangci-lint",
   "go.lintFlags": [],
   "cSpell.words": [
+    "Batchable",
     "covermode",
     "coverpkg",
     "coverprofile",

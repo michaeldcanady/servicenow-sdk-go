@@ -30,8 +30,8 @@ type BatchRequest struct {
 	newInternal.Model
 }
 
-// NewBatchRequest2 creates a new BatchRequestable.
-func NewBatchRequest2() *BatchRequest {
+// NewBatchRequest creates a new BatchRequestable.
+func NewBatchRequest() *BatchRequest {
 	request := &BatchRequest{
 		newInternal.NewBaseModel(),
 	}
@@ -44,8 +44,8 @@ func NewBatchRequest2() *BatchRequest {
 }
 
 // CreateBatchRequest2FromDiscriminatorValue is a parsable factory for creating a BatchRequestable
-func CreateBatchRequest2FromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
-	return NewBatchRequest2(), nil
+func CreateBatchRequest2FromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewBatchRequest(), nil
 }
 
 // Serialize writes the objects properties to the current writer.
@@ -135,9 +135,16 @@ func (bR *BatchRequest) AddRequest(request RestRequestable) error {
 		return nil
 	}
 
+	if internal.IsNil(request) {
+		return errors.New("request is nil")
+	}
+
 	requests, err := bR.GetRestRequests()
 	if err != nil {
 		return err
+	}
+	if internal.IsNil(requests) {
+		requests = []RestRequestable{}
 	}
 
 	requests = append(requests, request)
