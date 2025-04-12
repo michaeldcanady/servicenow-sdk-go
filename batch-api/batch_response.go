@@ -41,7 +41,7 @@ func NewBatchResponse() *BatchResponse {
 }
 
 // CreateBatchResponseFromDiscriminatorValue is a parsable factory for creating a BatchResponseable
-func CreateBatchResponseFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+func CreateBatchResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewBatchResponse(), nil
 }
 
@@ -79,7 +79,12 @@ func (bR *BatchResponse) GetBatchRequestID() (*string, error) {
 		return nil, nil
 	}
 
-	id, err := bR.GetBackingStore().Get(batchRequestIDKey)
+	backingStore := bR.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil, nil
+	}
+
+	id, err := backingStore.Get(batchRequestIDKey)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +103,12 @@ func (bR *BatchResponse) setBatchRequestID(id *string) error {
 		return nil
 	}
 
-	return bR.GetBackingStore().Set(batchRequestIDKey, id)
+	backingStore := bR.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil
+	}
+
+	return backingStore.Set(batchRequestIDKey, id)
 }
 
 // GetServicedRequests returns serviced requests
@@ -106,14 +116,20 @@ func (bR *BatchResponse) GetServicedRequests() ([]ServicedRequestable, error) {
 	if internal.IsNil(bR) {
 		return nil, nil
 	}
-	servicedRequests, err := bR.GetBackingStore().Get(servicedRequestsKey)
+
+	backingStore := bR.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil, nil
+	}
+
+	servicedRequests, err := backingStore.Get(servicedRequestsKey)
 	if err != nil {
 		return nil, err
 	}
 
 	typedServicedRequests, ok := servicedRequests.([]ServicedRequestable)
 	if !ok {
-		return nil, errors.New("id is not []ServicedRequestable")
+		return nil, errors.New("servicedRequests is not []ServicedRequestable")
 	}
 
 	return typedServicedRequests, nil
@@ -149,7 +165,12 @@ func (bR *BatchResponse) setServicedRequests(requests []ServicedRequestable) err
 		return nil
 	}
 
-	return bR.GetBackingStore().Set(servicedRequestsKey, requests)
+	backingStore := bR.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil
+	}
+
+	return backingStore.Set(servicedRequestsKey, requests)
 }
 
 // GetUnservicedRequests returns the unserviced requests' id
