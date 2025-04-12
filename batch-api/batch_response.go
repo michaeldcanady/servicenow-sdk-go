@@ -135,30 +135,6 @@ func (bR *BatchResponse) GetServicedRequests() ([]ServicedRequestable, error) {
 	return typedServicedRequests, nil
 }
 
-// GetServicedRequestByID returns the serviced request with the provided id
-func (bR *BatchResponse) GetServicedRequestByID(id string) (ServicedRequestable, error) {
-	if internal.IsNil(bR) {
-		return nil, nil
-	}
-
-	requests, err := bR.GetServicedRequests()
-	if err != nil {
-		return nil, err
-	}
-
-	for _, req := range requests {
-		reqID, err := req.GetID()
-		if err != nil {
-			return nil, err
-		}
-		if *reqID == id {
-			return req, nil
-		}
-	}
-
-	return nil, errors.New("no requests with id")
-}
-
 // setServicedRequests sets the serviced requests to the provided values
 func (bR *BatchResponse) setServicedRequests(requests []ServicedRequestable) error {
 	if internal.IsNil(bR) {
@@ -179,7 +155,12 @@ func (bR *BatchResponse) GetUnservicedRequests() ([]string, error) {
 		return nil, nil
 	}
 
-	unservicedRequests, err := bR.GetBackingStore().Get(unservicedRequestsKey)
+	backingStore := bR.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil, nil
+	}
+
+	unservicedRequests, err := backingStore.Get(unservicedRequestsKey)
 	if err != nil {
 		return nil, err
 	}
@@ -198,5 +179,10 @@ func (bR *BatchResponse) setUnservicedRequests(unservicedRequests []string) erro
 		return nil
 	}
 
-	return bR.GetBackingStore().Set(unservicedRequestsKey, unservicedRequests)
+	backingStore := bR.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil
+	}
+
+	return backingStore.Set(unservicedRequestsKey, unservicedRequests)
 }
