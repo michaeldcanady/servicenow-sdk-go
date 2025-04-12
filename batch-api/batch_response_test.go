@@ -351,18 +351,6 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 	}
 }
 
-// TODO: add tests
-func TestBatchResponse_GetServicedRequestByID(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
-}
-
 func TestBatchResponse_setServicedRequests(t *testing.T) {
 	tests := []struct {
 		name string
@@ -447,24 +435,178 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				ret := []string{}
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Get", unservicedRequestsKey).Return(ret, nil)
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				resp := &BatchResponse{
+					intModel,
+				}
+
+				id, err := resp.GetUnservicedRequests()
+				assert.Nil(t, err)
+				assert.Equal(t, ret, id)
+			},
+		},
+		{
+			name: "Wrong type",
+			test: func(t *testing.T) {
+				ret := internal.ToPointer(true)
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Get", unservicedRequestsKey).Return(ret, nil)
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				resp := &BatchResponse{
+					intModel,
+				}
+
+				id, err := resp.GetUnservicedRequests()
+				assert.Equal(t, errors.New("unservicedRequests is not []string"), err)
+				assert.Nil(t, id)
+			},
+		},
+		{
+			name: "Error getting value",
+			test: func(t *testing.T) {
+				retErr := errors.New("failed to retrieve value")
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Get", unservicedRequestsKey).Return(nil, retErr)
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				resp := &BatchResponse{
+					intModel,
+				}
+
+				id, err := resp.GetUnservicedRequests()
+				assert.Equal(t, retErr, err)
+				assert.Nil(t, id)
+			},
+		},
+		{
+			name: "Nil backingStore",
+			test: func(t *testing.T) {
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
+
+				resp := &BatchResponse{
+					intModel,
+				}
+
+				id, err := resp.GetUnservicedRequests()
+				assert.Nil(t, err)
+				assert.Nil(t, id)
+			},
+		},
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				resp := (*BatchResponse)(nil)
+
+				id, err := resp.GetUnservicedRequests()
+				assert.Nil(t, err)
+				assert.Nil(t, id)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
 }
 
-// TODO: add tests
 func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				input := []string{}
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Set", unservicedRequestsKey, input).Return(nil)
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				resp := &BatchResponse{
+					intModel,
+				}
+
+				err := resp.setUnservicedRequests(input)
+				assert.Nil(t, err)
+
+				backingStore.AssertExpectations(t)
+				intModel.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Error setting object",
+			test: func(t *testing.T) {
+				input := []string{}
+				ret := errors.New("failed to set value")
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Set", unservicedRequestsKey, input).Return(ret)
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				resp := &BatchResponse{
+					intModel,
+				}
+
+				err := resp.setUnservicedRequests(input)
+				assert.Equal(t, ret, err)
+
+				backingStore.AssertExpectations(t)
+				intModel.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Nil backingStore",
+			test: func(t *testing.T) {
+				input := []string{}
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
+
+				resp := &BatchResponse{
+					intModel,
+				}
+
+				err := resp.setUnservicedRequests(input)
+				assert.Nil(t, err)
+
+				intModel.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				input := []string{}
+
+				resp := (*BatchResponse)(nil)
+
+				err := resp.setUnservicedRequests(input)
+				assert.Nil(t, err)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
