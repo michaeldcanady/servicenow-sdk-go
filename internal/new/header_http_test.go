@@ -6,27 +6,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRequestHeader_String(t *testing.T) {
+func TestHTTPHeader(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
 	}{
 		{
-			name: "RequestHeaderAuthorization",
+			name: "HTTPHeaderUnknown",
 			test: func(t *testing.T) {
-				assert.Equal(t, "authorization", RequestHeaderAuthorization.String())
+				assert.Equal(t, "unknown", HTTPHeaderUnknown.String())
 			},
 		},
 		{
-			name: "RequestHeaderUnknown",
+			name: "HTTPHeaderContentType",
 			test: func(t *testing.T) {
-				assert.Equal(t, "unknown", RequestHeaderUnknown.String())
+				assert.Equal(t, "content-type", HTTPHeaderContentType.String())
 			},
 		},
 		{
-			name: "unknown RequestHeader",
+			name: "Unknown",
 			test: func(t *testing.T) {
-				assert.Equal(t, "unknown", RequestHeader(-2).String())
+				assert.Equal(t, "unknown", HTTPHeader(-9999).String())
 			},
 		},
 	}
