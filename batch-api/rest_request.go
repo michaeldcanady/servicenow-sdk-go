@@ -207,7 +207,12 @@ func (rE *RestRequest) GetBody() ([]byte, error) {
 		return nil, nil
 	}
 
-	body, err := rE.GetBackingStore().Get(bodyKey)
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil, nil
+	}
+
+	body, err := backingStore.Get(bodyKey)
 	if err != nil {
 		return nil, err
 	}
@@ -275,7 +280,12 @@ func (rE *RestRequest) SetBody(body []byte) error {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(bodyKey, body)
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil
+	}
+
+	return backingStore.Set(bodyKey, body)
 }
 
 // GetExcludeResponseHeaders returns if the request will exclude response headers.
@@ -284,7 +294,12 @@ func (rE *RestRequest) GetExcludeResponseHeaders() (*bool, error) {
 		return nil, nil
 	}
 
-	excludeResponseHeaders, err := rE.GetBackingStore().Get(excludeResponseHeadersKey)
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil, nil
+	}
+
+	excludeResponseHeaders, err := backingStore.Get(excludeResponseHeadersKey)
 	if err != nil {
 		return nil, err
 	}
@@ -303,7 +318,12 @@ func (rE *RestRequest) SetExcludeResponseHeaders(excludeResponseHeaders *bool) e
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(excludeResponseHeadersKey, excludeResponseHeaders)
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil
+	}
+
+	return backingStore.Set(excludeResponseHeadersKey, excludeResponseHeaders)
 }
 
 // GetHeaders returns the headers of the request.
@@ -312,7 +332,12 @@ func (rE *RestRequest) GetHeaders() ([]BatchHeaderable, error) {
 		return nil, nil
 	}
 
-	headers, err := rE.GetBackingStore().Get(headersKey)
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil, nil
+	}
+
+	headers, err := backingStore.Get(headersKey)
 	if err != nil {
 		return nil, err
 	}
@@ -331,7 +356,12 @@ func (rE *RestRequest) SetHeaders(headers []BatchHeaderable) error {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(headersKey, headers)
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil
+	}
+
+	return backingStore.Set(headersKey, headers)
 }
 
 // GetID returns the id of the request.
@@ -340,7 +370,12 @@ func (rE *RestRequest) GetID() (*string, error) {
 		return nil, nil
 	}
 
-	id, err := rE.GetBackingStore().Get(idKey)
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil, nil
+	}
+
+	id, err := backingStore.Get(idKey)
 	if err != nil {
 		return nil, err
 	}
@@ -359,7 +394,12 @@ func (rE *RestRequest) SetID(id *string) error {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(idKey, id)
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil
+	}
+
+	return backingStore.Set(idKey, id)
 }
 
 // GetMethod returns the method of the request
@@ -368,7 +408,12 @@ func (rE *RestRequest) GetMethod() (*abstractions.HttpMethod, error) {
 		return nil, nil
 	}
 
-	method, err := rE.GetBackingStore().Get(methodKey)
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil, nil
+	}
+
+	method, err := backingStore.Get(methodKey)
 	if err != nil {
 		return nil, err
 	}
@@ -387,7 +432,12 @@ func (rE *RestRequest) SetMethod(method *abstractions.HttpMethod) error {
 		return nil
 	}
 
-	return rE.GetBackingStore().Set(methodKey, method)
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil
+	}
+
+	return backingStore.Set(methodKey, method)
 }
 
 // GetURL returns the relative URL of the request.
@@ -396,7 +446,12 @@ func (rE *RestRequest) GetURL() (*string, error) {
 		return nil, nil
 	}
 
-	url, err := rE.GetBackingStore().Get(urlKey)
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil, nil
+	}
+
+	url, err := backingStore.Get(urlKey)
 	if err != nil {
 		return nil, err
 	}
@@ -421,7 +476,7 @@ func (rE *RestRequest) SetURL(url *string) error {
 	}
 
 	// Ensure the URL is relative
-	if parsedURL.IsAbs() {
+	if parsedURL.IsAbs() || parsedURL.Host != "" {
 		parsedURL.Scheme = ""
 		parsedURL.Host = ""
 	}
@@ -433,5 +488,10 @@ func (rE *RestRequest) SetURL(url *string) error {
 		return errors.New("invalid URL: path doesn't begin with \"/api\"")
 	}
 
-	return rE.GetBackingStore().Set(urlKey, &relativeURL)
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil
+	}
+
+	return backingStore.Set(urlKey, &relativeURL)
 }

@@ -39,6 +39,7 @@
     "stretchr",
     "stylecheck",
     "textserialization",
+    "typedheaders",
     "unparam",
     "Unserviced"
   ]
