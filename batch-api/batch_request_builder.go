@@ -41,7 +41,7 @@ func NewBatchRequestBuilder2(
 }
 
 // Post produces a batch response using the specified parameters
-func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequestable, requestConfiguration *BatchRequestBuilderPostRequestConfiguration) (BatchResponseable, error) {
+func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requestConfiguration *BatchRequestBuilderPostRequestConfiguration) (*BatchResponseModel, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -70,16 +70,16 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequestable, 
 		return nil, nil
 	}
 
-	typedResp, ok := resp.(BatchResponseable)
+	typedResp, ok := resp.(*BatchResponseModel)
 	if !ok {
-		return nil, errors.New("resp is not BatchResponseable")
+		return nil, errors.New("resp is not *BatchResponse")
 	}
 
 	return typedResp, nil
 }
 
 // toPostRequestInformation converts provided parameters into request information
-func (rB *BatchRequestBuilder) toPostRequestInformation(ctx context.Context, body BatchRequestable, requestConfiguration *BatchRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *BatchRequestBuilder) toPostRequestInformation(ctx context.Context, body BatchRequest, requestConfiguration *BatchRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}

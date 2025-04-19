@@ -14,25 +14,25 @@ const (
 	restRequestsKey = "rest_requests"
 )
 
-// BatchRequestable represents a Service-Now Batch API request
-type BatchRequestable interface {
+// BatchRequest represents a Service-Now Batch API request
+type BatchRequest interface {
 	GetBatchRequestID() (*string, error)
 	SetBatchRequestID(*string) error
-	GetRestRequests() ([]RestRequestable, error)
-	SetRestRequests([]RestRequestable) error
-	AddRequest(RestRequestable) error
+	GetRestRequests() ([]RestRequest, error)
+	SetRestRequests([]RestRequest) error
+	AddRequest(RestRequest) error
 	serialization.Parsable
 	store.BackedModel
 }
 
-// BatchRequest implementation of BatchRequestable
-type BatchRequest struct {
+// BatchRequestModel implementation of BatchRequest
+type BatchRequestModel struct {
 	newInternal.Model
 }
 
-// NewBatchRequest creates a new BatchRequestable.
-func NewBatchRequest() *BatchRequest {
-	request := &BatchRequest{
+// NewBatchRequestModel creates a new BatchRequest.
+func NewBatchRequestModel() *BatchRequestModel {
+	request := &BatchRequestModel{
 		newInternal.NewBaseModel(),
 	}
 
@@ -43,13 +43,13 @@ func NewBatchRequest() *BatchRequest {
 	return request
 }
 
-// CreateBatchRequest2FromDiscriminatorValue is a parsable factory for creating a BatchRequestable
+// CreateBatchRequest2FromDiscriminatorValue is a parsable factory for creating a BatchRequest
 func CreateBatchRequest2FromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewBatchRequest(), nil
+	return NewBatchRequestModel(), nil
 }
 
 // Serialize writes the objects properties to the current writer.
-func (bR *BatchRequest) Serialize(writer serialization.SerializationWriter) error {
+func (bR *BatchRequestModel) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(bR) {
 		return nil
 	}
@@ -94,7 +94,7 @@ func (bR *BatchRequest) Serialize(writer serialization.SerializationWriter) erro
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (bR *BatchRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (bR *BatchRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	if internal.IsNil(bR) {
 		return nil
 	}
@@ -114,10 +114,10 @@ func (bR *BatchRequest) GetFieldDeserializers() map[string]func(serialization.Pa
 				return err
 			}
 
-			typedRequest := make([]RestRequestable, 0, len(requests))
+			typedRequest := make([]RestRequest, 0, len(requests))
 
 			for _, request := range requests {
-				request, ok := request.(RestRequestable)
+				request, ok := request.(RestRequest)
 				if !ok {
 					return errors.New("request is not RestRequestable")
 				}
@@ -130,7 +130,7 @@ func (bR *BatchRequest) GetFieldDeserializers() map[string]func(serialization.Pa
 }
 
 // AddRequest add request to the slice of requests.
-func (bR *BatchRequest) AddRequest(request RestRequestable) error {
+func (bR *BatchRequestModel) AddRequest(request RestRequest) error {
 	if internal.IsNil(bR) {
 		return nil
 	}
@@ -144,7 +144,7 @@ func (bR *BatchRequest) AddRequest(request RestRequestable) error {
 		return err
 	}
 	if internal.IsNil(requests) {
-		requests = []RestRequestable{}
+		requests = []RestRequest{}
 	}
 
 	requests = append(requests, request)
@@ -153,7 +153,7 @@ func (bR *BatchRequest) AddRequest(request RestRequestable) error {
 }
 
 // GetBatchRequestID returns the id of the request.
-func (bR *BatchRequest) GetBatchRequestID() (*string, error) {
+func (bR *BatchRequestModel) GetBatchRequestID() (*string, error) {
 	if internal.IsNil(bR) {
 		return nil, nil
 	}
@@ -172,7 +172,7 @@ func (bR *BatchRequest) GetBatchRequestID() (*string, error) {
 }
 
 // SetBatchRequestID sets the id of the request.
-func (bR *BatchRequest) SetBatchRequestID(id *string) error {
+func (bR *BatchRequestModel) SetBatchRequestID(id *string) error {
 	if internal.IsNil(bR) {
 		return nil
 	}
@@ -181,7 +181,7 @@ func (bR *BatchRequest) SetBatchRequestID(id *string) error {
 }
 
 // GetRestRequests returns batched requests.
-func (bR *BatchRequest) GetRestRequests() ([]RestRequestable, error) {
+func (bR *BatchRequestModel) GetRestRequests() ([]RestRequest, error) {
 	if internal.IsNil(bR) {
 		return nil, nil
 	}
@@ -191,7 +191,7 @@ func (bR *BatchRequest) GetRestRequests() ([]RestRequestable, error) {
 		return nil, err
 	}
 
-	typedRequests, ok := requests.([]RestRequestable)
+	typedRequests, ok := requests.([]RestRequest)
 	if !ok {
 		return nil, errors.New("requests is not []RestRequestable")
 	}
@@ -200,7 +200,7 @@ func (bR *BatchRequest) GetRestRequests() ([]RestRequestable, error) {
 }
 
 // SetRestRequests sets the batched requests.
-func (bR *BatchRequest) SetRestRequests(requests []RestRequestable) error {
+func (bR *BatchRequestModel) SetRestRequests(requests []RestRequest) error {
 	if internal.IsNil(bR) {
 		return nil
 	}

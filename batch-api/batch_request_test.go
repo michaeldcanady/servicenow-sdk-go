@@ -67,7 +67,7 @@ func TestBatchRequest_AddRequest(t *testing.T) {
 			test: func(t *testing.T) {
 				request := newMockRestRequest()
 
-				parsable := (*BatchRequest)(nil)
+				parsable := (*BatchRequestModel)(nil)
 
 				err := parsable.AddRequest(request)
 
@@ -79,7 +79,7 @@ func TestBatchRequest_AddRequest(t *testing.T) {
 			test: func(t *testing.T) {
 				model := mocking.NewMockModel()
 
-				parsable := &BatchRequest{model}
+				parsable := &BatchRequestModel{model}
 
 				err := parsable.AddRequest(nil)
 

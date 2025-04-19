@@ -20,7 +20,7 @@ func TestNewBatchHeader(t *testing.T) {
 				header := NewBatchHeader()
 
 				assert.NotNil(t, header)
-				assert.IsType(t, &BatchHeader{}, header)
+				assert.IsType(t, &RestRequestHeaderModel{}, header)
 			},
 		},
 	}
@@ -43,7 +43,7 @@ func TestCreateBatchHeader2FromDiscriminatorValue(t *testing.T) {
 				parsable, err := CreateBatchHeader2FromDiscriminatorValue(parseNode)
 				assert.Nil(t, err)
 				assert.NotNil(t, parsable)
-				assert.IsType(t, &BatchHeader{}, parsable)
+				assert.IsType(t, &RestRequestHeaderModel{}, parsable)
 			},
 		},
 		{
@@ -52,7 +52,7 @@ func TestCreateBatchHeader2FromDiscriminatorValue(t *testing.T) {
 				parsable, err := CreateBatchHeader2FromDiscriminatorValue(nil)
 				assert.Nil(t, err)
 				assert.NotNil(t, parsable)
-				assert.IsType(t, &BatchHeader{}, parsable)
+				assert.IsType(t, &RestRequestHeaderModel{}, parsable)
 			},
 		},
 	}
@@ -89,7 +89,7 @@ func TestBatchHeader_Serialize(t *testing.T) {
 
 				model := mocking.NewMockModel()
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				err := header.Serialize(writer)
 
@@ -101,7 +101,7 @@ func TestBatchHeader_Serialize(t *testing.T) {
 			test: func(t *testing.T) {
 				writer := (*mocking.MockSerializationWriter)(nil)
 
-				header := (*BatchHeader)(nil)
+				header := (*RestRequestHeaderModel)(nil)
 
 				err := header.Serialize(writer)
 
@@ -143,7 +143,7 @@ func TestBatchHeader_GetName(t *testing.T) {
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return(backingStore)
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				name, err := header.GetName()
 
@@ -165,7 +165,7 @@ func TestBatchHeader_GetName(t *testing.T) {
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return(backingStore)
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				name, err := header.GetName()
 
@@ -185,7 +185,7 @@ func TestBatchHeader_GetName(t *testing.T) {
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return(backingStore)
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				name, err := header.GetName()
 
@@ -204,7 +204,7 @@ func TestBatchHeader_GetName(t *testing.T) {
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return(backingStore)
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				name, err := header.GetName()
 
@@ -217,7 +217,7 @@ func TestBatchHeader_GetName(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				header := (*BatchHeader)(nil)
+				header := (*RestRequestHeaderModel)(nil)
 
 				name, err := header.GetName()
 
@@ -248,7 +248,7 @@ func TestBatchHeader_SetName(t *testing.T) {
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return(backingStore)
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				err := header.SetName(expName)
 
@@ -266,7 +266,7 @@ func TestBatchHeader_SetName(t *testing.T) {
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				err := header.SetName(expName)
 
@@ -280,7 +280,7 @@ func TestBatchHeader_SetName(t *testing.T) {
 			test: func(t *testing.T) {
 				expName := internal.ToPointer("name")
 
-				header := (*BatchHeader)(nil)
+				header := (*RestRequestHeaderModel)(nil)
 
 				err := header.SetName(expName)
 
@@ -311,7 +311,7 @@ func TestBatchHeader_GetValue(t *testing.T) {
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return(backingStore)
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				name, err := header.GetValue()
 
@@ -333,7 +333,7 @@ func TestBatchHeader_GetValue(t *testing.T) {
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return(backingStore)
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				name, err := header.GetValue()
 
@@ -353,7 +353,7 @@ func TestBatchHeader_GetValue(t *testing.T) {
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return(backingStore)
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				name, err := header.GetValue()
 
@@ -372,7 +372,7 @@ func TestBatchHeader_GetValue(t *testing.T) {
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return(backingStore)
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				name, err := header.GetValue()
 
@@ -385,7 +385,7 @@ func TestBatchHeader_GetValue(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				header := (*BatchHeader)(nil)
+				header := (*RestRequestHeaderModel)(nil)
 
 				name, err := header.GetValue()
 
@@ -416,7 +416,7 @@ func TestBatchHeader_SetValue(t *testing.T) {
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return(backingStore)
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				err := header.SetValue(expName)
 
@@ -434,7 +434,7 @@ func TestBatchHeader_SetValue(t *testing.T) {
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				header := &BatchHeader{model}
+				header := &RestRequestHeaderModel{model}
 
 				err := header.SetValue(expName)
 
@@ -448,7 +448,7 @@ func TestBatchHeader_SetValue(t *testing.T) {
 			test: func(t *testing.T) {
 				expName := internal.ToPointer("value")
 
-				header := (*BatchHeader)(nil)
+				header := (*RestRequestHeaderModel)(nil)
 
 				err := header.SetValue(expName)
 

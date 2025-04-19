@@ -15,38 +15,38 @@ const (
 	unservicedRequestsKey = "unserviced_requests"
 )
 
-// BatchResponseable representation of Service-Now Batch API response
-type BatchResponseable interface {
+// BatchResponse representation of Service-Now Batch API response
+type BatchResponse interface {
 	GetBatchRequestID() (*string, error)
-	GetServicedRequestByID(id string) (ServicedRequestable, error)
+	GetServicedRequestByID(id string) (ServicedRequest, error)
 	setBatchRequestID(*string) error
-	GetServicedRequests() ([]ServicedRequestable, error)
-	setServicedRequests([]ServicedRequestable) error
+	GetServicedRequests() ([]ServicedRequest, error)
+	setServicedRequests([]ServicedRequest) error
 	GetUnservicedRequests() ([]string, error)
 	setUnservicedRequests([]string) error
 	serialization.Parsable
 	store.BackedModel
 }
 
-// BatchResponse implementation of BatchResponseable
-type BatchResponse struct {
+// BatchResponseModel implementation of BatchResponse
+type BatchResponseModel struct {
 	newInternal.Model
 }
 
 // NewBatchResponse creates a new batch response
-func NewBatchResponse() *BatchResponse {
-	return &BatchResponse{
+func NewBatchResponse() *BatchResponseModel {
+	return &BatchResponseModel{
 		newInternal.NewBaseModel(),
 	}
 }
 
-// CreateBatchResponseFromDiscriminatorValue is a parsable factory for creating a BatchResponseable
+// CreateBatchResponseFromDiscriminatorValue is a parsable factory for creating a BatchResponse
 func CreateBatchResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewBatchResponse(), nil
 }
 
 // Serialize writes the objects properties to the current writer
-func (bR *BatchResponse) Serialize(writer serialization.SerializationWriter) error {
+func (bR *BatchResponseModel) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(bR) {
 		return nil
 	}
@@ -55,7 +55,7 @@ func (bR *BatchResponse) Serialize(writer serialization.SerializationWriter) err
 }
 
 // GetFieldDeserializers returns the deserialization information for this object
-func (bR *BatchResponse) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	if internal.IsNil(bR) {
 		return nil
 	}
@@ -74,7 +74,7 @@ func (bR *BatchResponse) GetFieldDeserializers() map[string]func(serialization.P
 }
 
 // GetBatchRequestID returns the id of the associated batch request
-func (bR *BatchResponse) GetBatchRequestID() (*string, error) {
+func (bR *BatchResponseModel) GetBatchRequestID() (*string, error) {
 	if internal.IsNil(bR) {
 		return nil, nil
 	}
@@ -98,7 +98,7 @@ func (bR *BatchResponse) GetBatchRequestID() (*string, error) {
 }
 
 // setBatchRequestID sets the id of the associated batch request
-func (bR *BatchResponse) setBatchRequestID(id *string) error {
+func (bR *BatchResponseModel) setBatchRequestID(id *string) error {
 	if internal.IsNil(bR) {
 		return nil
 	}
@@ -112,7 +112,7 @@ func (bR *BatchResponse) setBatchRequestID(id *string) error {
 }
 
 // GetServicedRequests returns serviced requests
-func (bR *BatchResponse) GetServicedRequests() ([]ServicedRequestable, error) {
+func (bR *BatchResponseModel) GetServicedRequests() ([]ServicedRequest, error) {
 	if internal.IsNil(bR) {
 		return nil, nil
 	}
@@ -127,7 +127,7 @@ func (bR *BatchResponse) GetServicedRequests() ([]ServicedRequestable, error) {
 		return nil, err
 	}
 
-	typedServicedRequests, ok := servicedRequests.([]ServicedRequestable)
+	typedServicedRequests, ok := servicedRequests.([]ServicedRequest)
 	if !ok {
 		return nil, errors.New("servicedRequests is not []ServicedRequestable")
 	}
@@ -136,7 +136,7 @@ func (bR *BatchResponse) GetServicedRequests() ([]ServicedRequestable, error) {
 }
 
 // setServicedRequests sets the serviced requests to the provided values
-func (bR *BatchResponse) setServicedRequests(requests []ServicedRequestable) error {
+func (bR *BatchResponseModel) setServicedRequests(requests []ServicedRequest) error {
 	if internal.IsNil(bR) {
 		return nil
 	}
@@ -150,7 +150,7 @@ func (bR *BatchResponse) setServicedRequests(requests []ServicedRequestable) err
 }
 
 // GetUnservicedRequests returns the unserviced requests' id
-func (bR *BatchResponse) GetUnservicedRequests() ([]string, error) {
+func (bR *BatchResponseModel) GetUnservicedRequests() ([]string, error) {
 	if internal.IsNil(bR) {
 		return nil, nil
 	}
@@ -174,7 +174,7 @@ func (bR *BatchResponse) GetUnservicedRequests() ([]string, error) {
 }
 
 // setUnservicedRequests sets the ids of the unserviced requests to the provided value
-func (bR *BatchResponse) setUnservicedRequests(unservicedRequests []string) error {
+func (bR *BatchResponseModel) setUnservicedRequests(unservicedRequests []string) error {
 	if internal.IsNil(bR) {
 		return nil
 	}

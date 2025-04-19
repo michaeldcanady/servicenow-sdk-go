@@ -47,11 +47,11 @@ func (mRR *mockRestRequest) SetExcludeResponseHeaders(exclude *bool) error {
 	args := mRR.Called(exclude)
 	return args.Error(0)
 }
-func (mRR *mockRestRequest) GetHeaders() ([]BatchHeaderable, error) {
+func (mRR *mockRestRequest) GetHeaders() ([]RestRequestHeader, error) {
 	args := mRR.Called()
-	return args.Get(0).([]BatchHeaderable), args.Error(1)
+	return args.Get(0).([]RestRequestHeader), args.Error(1)
 }
-func (mRR *mockRestRequest) SetHeaders(headers []BatchHeaderable) error {
+func (mRR *mockRestRequest) SetHeaders(headers []RestRequestHeader) error {
 	args := mRR.Called(headers)
 	return args.Error(0)
 }

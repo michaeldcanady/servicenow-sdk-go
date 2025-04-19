@@ -16,8 +16,8 @@ const (
 	valueKey = "value"
 )
 
-// BatchHeaderable represents a Service-Now batch header
-type BatchHeaderable interface {
+// RestRequestHeader represents a Service-Now batch header
+type RestRequestHeader interface {
 	// GetName returns the key value for the header
 	GetName() (*string, error)
 	// setName sets the key value for the header
@@ -30,25 +30,25 @@ type BatchHeaderable interface {
 	newInternal.Model
 }
 
-// BatchHeader implementation of BatchHeaderable
-type BatchHeader struct {
+// RestRequestHeaderModel implementation of RestRequestHeader
+type RestRequestHeaderModel struct {
 	newInternal.Model
 }
 
 // NewBatchHeader creates new instance of BatchHeader
-func NewBatchHeader() *BatchHeader {
-	return &BatchHeader{
+func NewBatchHeader() *RestRequestHeaderModel {
+	return &RestRequestHeaderModel{
 		newInternal.NewBaseModel(),
 	}
 }
 
-// CreateBatchHeader2FromDiscriminatorValue is a parsable factory for creating a BatchRequestable
+// CreateBatchHeader2FromDiscriminatorValue is a parsable factory for creating a BatchRequest
 func CreateBatchHeader2FromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewBatchHeader(), nil
 }
 
 // Serialize writes the objects properties to the current writer.
-func (bH *BatchHeader) Serialize(writer serialization.SerializationWriter) error {
+func (bH *RestRequestHeaderModel) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(bH) {
 		return nil
 	}
@@ -83,7 +83,7 @@ func (bH *BatchHeader) Serialize(writer serialization.SerializationWriter) error
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (bH *BatchHeader) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	if internal.IsNil(bH) {
 		return nil
 	}
@@ -99,7 +99,7 @@ func (bH *BatchHeader) GetFieldDeserializers() map[string]func(serialization.Par
 }
 
 // GetName returns the name of the header
-func (bH *BatchHeader) GetName() (*string, error) {
+func (bH *RestRequestHeaderModel) GetName() (*string, error) {
 	if internal.IsNil(bH) {
 		return nil, nil
 	}
@@ -123,7 +123,7 @@ func (bH *BatchHeader) GetName() (*string, error) {
 }
 
 // SetName sets name to provided value
-func (bH *BatchHeader) SetName(name *string) error {
+func (bH *RestRequestHeaderModel) SetName(name *string) error {
 	if internal.IsNil(bH) {
 		return nil
 	}
@@ -137,7 +137,7 @@ func (bH *BatchHeader) SetName(name *string) error {
 }
 
 // GetValue returns the value of the header
-func (bH *BatchHeader) GetValue() (*string, error) {
+func (bH *RestRequestHeaderModel) GetValue() (*string, error) {
 	if internal.IsNil(bH) {
 		return nil, nil
 	}
@@ -161,7 +161,7 @@ func (bH *BatchHeader) GetValue() (*string, error) {
 }
 
 // SetValue sets the value to the provided value
-func (bH *BatchHeader) SetValue(value *string) error {
+func (bH *RestRequestHeaderModel) SetValue(value *string) error {
 	if internal.IsNil(bH) {
 		return nil
 	}
@@ -179,9 +179,9 @@ type headers interface {
 	*abstractions.RequestHeaders
 }
 
-// createBatchHeaderableFromHeaders converts headers to BatchHeaderable
-func createBatchHeaderableFromHeaders[h headers](headers h) ([]BatchHeaderable, error) {
-	batchHeaders := make([]BatchHeaderable, 0)
+// createRestRequestHeaderFromHeaders converts headers to RestRequestHeader
+func createRestRequestHeaderFromHeaders[h headers](headers h) ([]RestRequestHeader, error) {
+	batchHeaders := make([]RestRequestHeader, 0)
 
 	if requestHeaders, ok := interface{}(headers).(*abstractions.RequestHeaders); ok {
 		for _, key := range requestHeaders.ListKeys() {
