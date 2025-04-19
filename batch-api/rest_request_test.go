@@ -86,7 +86,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -105,7 +105,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -124,7 +124,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -139,7 +139,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -151,7 +151,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				resp := (*RestRequest)(nil)
+				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetBody()
 				assert.Nil(t, err)
@@ -192,7 +192,7 @@ func TestRestRequest_SetBody(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -214,7 +214,7 @@ func TestRestRequest_SetBody(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -233,7 +233,7 @@ func TestRestRequest_SetBody(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -248,7 +248,7 @@ func TestRestRequest_SetBody(t *testing.T) {
 			test: func(t *testing.T) {
 				input := []byte{}
 
-				resp := (*RestRequest)(nil)
+				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetBody(input)
 				assert.Nil(t, err)
@@ -276,7 +276,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -295,7 +295,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -314,7 +314,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -329,7 +329,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -341,7 +341,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				resp := (*RestRequest)(nil)
+				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetExcludeResponseHeaders()
 				assert.Nil(t, err)
@@ -370,7 +370,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -392,7 +392,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -411,7 +411,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -426,7 +426,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 			test: func(t *testing.T) {
 				input := internal.ToPointer(true)
 
-				resp := (*RestRequest)(nil)
+				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetExcludeResponseHeaders(input)
 				assert.Nil(t, err)
@@ -447,14 +447,14 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				ret := make([]BatchHeaderable, 0)
+				ret := make([]RestRequestHeader, 0)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", headersKey).Return(ret, nil)
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -473,12 +473,12 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
 				id, err := resp.GetHeaders()
-				assert.Equal(t, errors.New("headers is not []BatchHeaderable"), err)
+				assert.Equal(t, errors.New("headers is not []RestRequestHeader"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -492,7 +492,7 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -507,7 +507,7 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -519,7 +519,7 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				resp := (*RestRequest)(nil)
+				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetHeaders()
 				assert.Nil(t, err)
@@ -541,14 +541,14 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				input := make([]BatchHeaderable, 0)
+				input := make([]RestRequestHeader, 0)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", headersKey, input).Return(nil)
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -562,7 +562,7 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 		{
 			name: "Error setting object",
 			test: func(t *testing.T) {
-				input := make([]BatchHeaderable, 0)
+				input := make([]RestRequestHeader, 0)
 				ret := errors.New("failed to set value")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", headersKey, input).Return(ret)
@@ -570,7 +570,7 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -584,12 +584,12 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				input := make([]BatchHeaderable, 0)
+				input := make([]RestRequestHeader, 0)
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -602,9 +602,9 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				input := make([]BatchHeaderable, 0)
+				input := make([]RestRequestHeader, 0)
 
-				resp := (*RestRequest)(nil)
+				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetHeaders(input)
 				assert.Nil(t, err)
@@ -632,7 +632,7 @@ func TestRestRequest_GetID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -651,7 +651,7 @@ func TestRestRequest_GetID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -670,7 +670,7 @@ func TestRestRequest_GetID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -685,7 +685,7 @@ func TestRestRequest_GetID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -697,7 +697,7 @@ func TestRestRequest_GetID(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				resp := (*RestRequest)(nil)
+				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetID()
 				assert.Nil(t, err)
@@ -726,7 +726,7 @@ func TestRestRequest_SetID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -748,7 +748,7 @@ func TestRestRequest_SetID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -767,7 +767,7 @@ func TestRestRequest_SetID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -782,7 +782,7 @@ func TestRestRequest_SetID(t *testing.T) {
 			test: func(t *testing.T) {
 				input := internal.ToPointer("id")
 
-				resp := (*RestRequest)(nil)
+				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetID(input)
 				assert.Nil(t, err)
@@ -810,7 +810,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -829,7 +829,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -848,7 +848,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -863,7 +863,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -875,7 +875,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				resp := (*RestRequest)(nil)
+				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetMethod()
 				assert.Nil(t, err)
@@ -904,7 +904,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -926,7 +926,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -945,7 +945,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -960,7 +960,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 			test: func(t *testing.T) {
 				input := internal.ToPointer(abstractions.GET)
 
-				resp := (*RestRequest)(nil)
+				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetMethod(input)
 				assert.Nil(t, err)
@@ -988,7 +988,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -1007,7 +1007,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -1026,7 +1026,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -1041,7 +1041,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -1053,7 +1053,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				resp := (*RestRequest)(nil)
+				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetURL()
 				assert.Nil(t, err)
@@ -1082,7 +1082,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -1100,7 +1100,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 
 				intModel := mocking.NewMockModel()
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -1121,7 +1121,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -1140,7 +1140,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &RestRequest{
+				resp := &RestRequestModel{
 					intModel,
 				}
 
@@ -1155,7 +1155,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 			test: func(t *testing.T) {
 				input := internal.ToPointer("https://service-now.com/api/now/table")
 
-				resp := (*RestRequest)(nil)
+				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetURL(input)
 				assert.Nil(t, err)

@@ -140,7 +140,7 @@ func TestGetHTTPHeader(t *testing.T) {
 				header := mocking.NewMockBatchHeader()
 				header.On("GetName").Return(newInternal.ToPointer(newInternal.HTTPHeaderContentType.String()), nil)
 				header.On("GetValue").Return(newInternal.ToPointer("application/json"), nil)
-				headers := []BatchHeaderable{header}
+				headers := []RestRequestHeader{header}
 				defaultValue := ""
 				value := getHTTPHeader(headers, newInternal.HTTPHeaderContentType, defaultValue)
 				assert.Equal(t, "application/json", value)
@@ -152,7 +152,7 @@ func TestGetHTTPHeader(t *testing.T) {
 				header := mocking.NewMockBatchHeader()
 				header.On("GetName").Return((*string)(nil), errors.New("no name"))
 				header.On("GetValue").Return(newInternal.ToPointer("application/json"), nil)
-				headers := []BatchHeaderable{header}
+				headers := []RestRequestHeader{header}
 				defaultValue := ""
 				value := getHTTPHeader(headers, newInternal.HTTPHeaderContentType, defaultValue)
 				assert.Equal(t, defaultValue, value)

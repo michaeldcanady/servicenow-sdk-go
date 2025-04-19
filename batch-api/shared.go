@@ -9,7 +9,7 @@ import (
 )
 
 // throwErrors returns error is provided req is an error
-func throwErrors(req ServicedRequestable, typeName string) error {
+func throwErrors(req ServicedRequest, typeName string) error {
 	code, err := req.GetStatusCode()
 	if err != nil {
 		return err
@@ -56,8 +56,8 @@ func serializeContent[T serialization.Parsable](contentType string, content []by
 	return typedResult, nil
 }
 
-// getHTTPHeader gets the requested header's value from a slice of BatchHeaderable
-func getHTTPHeader(headers []BatchHeaderable, httpHeader newInternal.HTTPHeader, defaultValue string) string { // nolint: unparam // httpHeader currently on receives one value; however, can be used for any header in the future.
+// getHTTPHeader gets the requested header's value from a slice of RestRequestHeader
+func getHTTPHeader(headers []RestRequestHeader, httpHeader newInternal.HTTPHeader, defaultValue string) string { // nolint: unparam // httpHeader currently on receives one value; however, can be used for any header in the future.
 	for _, header := range headers {
 		name, err := header.GetName()
 		if err != nil {

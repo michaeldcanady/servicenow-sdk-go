@@ -21,15 +21,15 @@ const (
 	urlKey                    = "url"
 )
 
-// RestRequestable represents Service-Now Batch API request's request
-type RestRequestable interface {
+// RestRequest represents Service-Now Batch API request's request
+type RestRequest interface {
 	GetBody() ([]byte, error)
 	SetBodyFromParsable(string, serialization.Parsable) error
 	SetBody([]byte) error
 	GetExcludeResponseHeaders() (*bool, error)
 	SetExcludeResponseHeaders(*bool) error
-	GetHeaders() ([]BatchHeaderable, error)
-	SetHeaders([]BatchHeaderable) error
+	GetHeaders() ([]RestRequestHeader, error)
+	SetHeaders([]RestRequestHeader) error
 	GetID() (*string, error)
 	SetID(*string) error
 	GetMethod() (*abstractions.HttpMethod, error)
@@ -40,30 +40,30 @@ type RestRequestable interface {
 	store.BackedModel
 }
 
-// RestRequest implementation of RestRequestable
-type RestRequest struct {
+// RestRequestModel implementation of RestRequestable
+type RestRequestModel struct {
 	newInternal.Model
 }
 
 // NewRestRequest creates a new rest request
-func NewRestRequest() *RestRequest {
-	return &RestRequest{
+func NewRestRequest() *RestRequestModel {
+	return &RestRequestModel{
 		newInternal.NewBaseModel(),
 	}
 }
 
-// CreateRestRequestFromDiscriminatorValue is a parsable factory for creating a BatchRequestable
+// CreateRestRequestFromDiscriminatorValue is a parsable factory for creating a BatchRequest
 func CreateRestRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewRestRequest(), nil
 }
 
 // CreateRestRequestFromRequestInformation
-func CreateRestRequestFromRequestInformation(requestInfo *abstractions.RequestInformation, excludeResponseHeaders bool) (RestRequestable, error) {
+func CreateRestRequestFromRequestInformation(requestInfo *abstractions.RequestInformation, excludeResponseHeaders bool) (RestRequest, error) {
 	request := NewRestRequest()
 	if err := request.SetBody(requestInfo.Content); err != nil {
 		return nil, err
 	}
-	headers, err := createBatchHeaderableFromHeaders(requestInfo.Headers)
+	headers, err := createRestRequestHeaderFromHeaders(requestInfo.Headers)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +93,7 @@ func CreateRestRequestFromRequestInformation(requestInfo *abstractions.RequestIn
 }
 
 // Serialize writes the objects properties to the current writer.
-func (rE *RestRequest) Serialize(writer serialization.SerializationWriter) error {
+func (rE *RestRequestModel) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
@@ -177,7 +177,7 @@ func (rE *RestRequest) Serialize(writer serialization.SerializationWriter) error
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (rE *RestRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (rE *RestRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
@@ -202,7 +202,7 @@ func (rE *RestRequest) GetFieldDeserializers() map[string]func(serialization.Par
 }
 
 // GetBody returns the requests body in bytes.
-func (rE *RestRequest) GetBody() ([]byte, error) {
+func (rE *RestRequestModel) GetBody() ([]byte, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
 	}
@@ -226,7 +226,7 @@ func (rE *RestRequest) GetBody() ([]byte, error) {
 }
 
 // SetBodyFromParsable serializes the provided parsable and sets the output to the request's body.
-func (rE *RestRequest) SetBodyFromParsable(contentType string, parsable serialization.Parsable) error {
+func (rE *RestRequestModel) SetBodyFromParsable(contentType string, parsable serialization.Parsable) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
@@ -244,7 +244,7 @@ func (rE *RestRequest) SetBodyFromParsable(contentType string, parsable serializ
 	}
 
 	if internal.IsNil(headers) {
-		headers = make([]BatchHeaderable, 0)
+		headers = make([]RestRequestHeader, 0)
 	}
 
 	if err := writer.WriteObjectValue("", parsable); err != nil {
@@ -275,7 +275,7 @@ func (rE *RestRequest) SetBodyFromParsable(contentType string, parsable serializ
 }
 
 // SetBody sets the requests body to the provided content.
-func (rE *RestRequest) SetBody(body []byte) error {
+func (rE *RestRequestModel) SetBody(body []byte) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
@@ -289,7 +289,7 @@ func (rE *RestRequest) SetBody(body []byte) error {
 }
 
 // GetExcludeResponseHeaders returns if the request will exclude response headers.
-func (rE *RestRequest) GetExcludeResponseHeaders() (*bool, error) {
+func (rE *RestRequestModel) GetExcludeResponseHeaders() (*bool, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
 	}
@@ -313,7 +313,7 @@ func (rE *RestRequest) GetExcludeResponseHeaders() (*bool, error) {
 }
 
 // SetExcludeResponseHeaders set if to include or exclude response headers.
-func (rE *RestRequest) SetExcludeResponseHeaders(excludeResponseHeaders *bool) error {
+func (rE *RestRequestModel) SetExcludeResponseHeaders(excludeResponseHeaders *bool) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
@@ -327,7 +327,7 @@ func (rE *RestRequest) SetExcludeResponseHeaders(excludeResponseHeaders *bool) e
 }
 
 // GetHeaders returns the headers of the request.
-func (rE *RestRequest) GetHeaders() ([]BatchHeaderable, error) {
+func (rE *RestRequestModel) GetHeaders() ([]RestRequestHeader, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
 	}
@@ -342,16 +342,16 @@ func (rE *RestRequest) GetHeaders() ([]BatchHeaderable, error) {
 		return nil, err
 	}
 
-	typedheaders, ok := headers.([]BatchHeaderable)
+	typedheaders, ok := headers.([]RestRequestHeader)
 	if !ok {
-		return nil, errors.New("headers is not []BatchHeaderable")
+		return nil, errors.New("headers is not []RestRequestHeader")
 	}
 
 	return typedheaders, nil
 }
 
 // SetHeaders sets the headers for the request.
-func (rE *RestRequest) SetHeaders(headers []BatchHeaderable) error {
+func (rE *RestRequestModel) SetHeaders(headers []RestRequestHeader) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
@@ -365,7 +365,7 @@ func (rE *RestRequest) SetHeaders(headers []BatchHeaderable) error {
 }
 
 // GetID returns the id of the request.
-func (rE *RestRequest) GetID() (*string, error) {
+func (rE *RestRequestModel) GetID() (*string, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
 	}
@@ -389,7 +389,7 @@ func (rE *RestRequest) GetID() (*string, error) {
 }
 
 // SetID sets the id of the request.
-func (rE *RestRequest) SetID(id *string) error {
+func (rE *RestRequestModel) SetID(id *string) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
@@ -403,7 +403,7 @@ func (rE *RestRequest) SetID(id *string) error {
 }
 
 // GetMethod returns the method of the request
-func (rE *RestRequest) GetMethod() (*abstractions.HttpMethod, error) {
+func (rE *RestRequestModel) GetMethod() (*abstractions.HttpMethod, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
 	}
@@ -427,7 +427,7 @@ func (rE *RestRequest) GetMethod() (*abstractions.HttpMethod, error) {
 }
 
 // SetMethod sets the method of the request
-func (rE *RestRequest) SetMethod(method *abstractions.HttpMethod) error {
+func (rE *RestRequestModel) SetMethod(method *abstractions.HttpMethod) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
@@ -441,7 +441,7 @@ func (rE *RestRequest) SetMethod(method *abstractions.HttpMethod) error {
 }
 
 // GetURL returns the relative URL of the request.
-func (rE *RestRequest) GetURL() (*string, error) {
+func (rE *RestRequestModel) GetURL() (*string, error) {
 	if internal.IsNil(rE) {
 		return nil, nil
 	}
@@ -465,7 +465,7 @@ func (rE *RestRequest) GetURL() (*string, error) {
 }
 
 // SetURL sets the URL of the request (if not relative, will be converted).
-func (rE *RestRequest) SetURL(url *string) error {
+func (rE *RestRequestModel) SetURL(url *string) error {
 	if internal.IsNil(rE) {
 		return nil
 	}

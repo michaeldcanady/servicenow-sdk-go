@@ -43,7 +43,7 @@ func TestBatchResponse_Serialize(t *testing.T) {
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					mocking.NewMockModel(),
 				}
 				err := resp.Serialize(writer)
@@ -55,7 +55,7 @@ func TestBatchResponse_Serialize(t *testing.T) {
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
 
-				resp := (*BatchResponse)(nil)
+				resp := (*BatchResponseModel)(nil)
 				err := resp.Serialize(writer)
 				assert.Equal(t, nil, err)
 			},
@@ -94,7 +94,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -113,7 +113,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -132,7 +132,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -147,7 +147,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -159,7 +159,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				resp := (*BatchResponse)(nil)
+				resp := (*BatchResponseModel)(nil)
 
 				id, err := resp.GetBatchRequestID()
 				assert.Nil(t, err)
@@ -188,7 +188,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -210,7 +210,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -229,7 +229,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -244,7 +244,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 			test: func(t *testing.T) {
 				input := internal.ToPointer("id")
 
-				resp := (*BatchResponse)(nil)
+				resp := (*BatchResponseModel)(nil)
 
 				err := resp.setBatchRequestID(input)
 				assert.Nil(t, err)
@@ -265,14 +265,14 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				ret := []ServicedRequestable{}
+				ret := []ServicedRequest{}
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", servicedRequestsKey).Return(ret, nil)
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -291,7 +291,7 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -310,7 +310,7 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -325,7 +325,7 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -337,7 +337,7 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				resp := (*BatchResponse)(nil)
+				resp := (*BatchResponseModel)(nil)
 
 				id, err := resp.GetServicedRequests()
 				assert.Nil(t, err)
@@ -359,14 +359,14 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				input := []ServicedRequestable{}
+				input := []ServicedRequest{}
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", servicedRequestsKey, input).Return(nil)
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -380,7 +380,7 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 		{
 			name: "Error setting object",
 			test: func(t *testing.T) {
-				input := []ServicedRequestable{}
+				input := []ServicedRequest{}
 				ret := errors.New("failed to set value")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", servicedRequestsKey, input).Return(ret)
@@ -388,7 +388,7 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -402,12 +402,12 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				input := []ServicedRequestable{}
+				input := []ServicedRequest{}
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -420,9 +420,9 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				input := []ServicedRequestable{}
+				input := []ServicedRequest{}
 
-				resp := (*BatchResponse)(nil)
+				resp := (*BatchResponseModel)(nil)
 
 				err := resp.setServicedRequests(input)
 				assert.Nil(t, err)
@@ -450,7 +450,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -469,7 +469,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -488,7 +488,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -503,7 +503,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -515,7 +515,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				resp := (*BatchResponse)(nil)
+				resp := (*BatchResponseModel)(nil)
 
 				id, err := resp.GetUnservicedRequests()
 				assert.Nil(t, err)
@@ -544,7 +544,7 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -566,7 +566,7 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -585,7 +585,7 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				resp := &BatchResponse{
+				resp := &BatchResponseModel{
 					intModel,
 				}
 
@@ -600,7 +600,7 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 			test: func(t *testing.T) {
 				input := []string{}
 
-				resp := (*BatchResponse)(nil)
+				resp := (*BatchResponseModel)(nil)
 
 				err := resp.setUnservicedRequests(input)
 				assert.Nil(t, err)
