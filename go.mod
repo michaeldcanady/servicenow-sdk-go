@@ -20,7 +20,6 @@ require (
 )
 
 require (
-	github.com/cjlapao/common-go v0.0.41 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
