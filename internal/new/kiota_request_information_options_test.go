@@ -14,18 +14,6 @@ func TestWithMethod(t *testing.T) {
 	}
 }
 
-// TODO: add tests
-func TestWithURLTemplate(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
-}
-
 import (
 	"errors"
 	"testing"
