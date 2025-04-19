@@ -14,12 +14,16 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
+type webClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
 type ServiceNowClient struct {
 	// Deprecated: deprecated since v1.6.0.
 	Credential     core.Credential
-	authProvider   *internal.BaseAuthorizationProvider
+	authProvider   internal.AuthorizationProvider
 	BaseUrl        string //nolint:stylecheck
-	Session        http.Client
+	Session        webClient
 	requestAdapter abstractions.RequestAdapter
 }
 
@@ -49,7 +53,7 @@ func NewServiceNowClient(credential core.Credential, instance string) *ServiceNo
 		Credential:   credential,
 		authProvider: authProvider,
 		BaseUrl:      instance,
-		Session:      http.Client{},
+		Session:      &http.Client{},
 	}
 }
 
@@ -85,7 +89,7 @@ func NewServiceNowClient2(credential core.Credential, instance string) (*Service
 		Credential:     credential,
 		authProvider:   authProvider,
 		BaseUrl:        instance,
-		Session:        http.Client{},
+		Session:        &http.Client{},
 		requestAdapter: client.GetRequestAdapter(),
 	}, nil
 }

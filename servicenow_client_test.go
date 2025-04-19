@@ -122,7 +122,7 @@ func TestNewServiceNowClient2(t *testing.T) {
 				Credential:   sharedUsernameAndPasswordCred,
 				authProvider: authProvider,
 				BaseUrl:      "https://instance.service-now.com/api",
-				Session:      http.Client{},
+				Session:      &http.Client{},
 			},
 			expectedErr: nil,
 		},
