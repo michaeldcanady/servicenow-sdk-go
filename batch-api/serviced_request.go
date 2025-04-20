@@ -15,4 +15,5 @@ type ServicedRequest interface {
 	GetRedirectURL() (*string, error)
 	GetStatusCode() (*int64, error)
 	GetStatusText() (*string, error)
+	serialization.Parsable
 }

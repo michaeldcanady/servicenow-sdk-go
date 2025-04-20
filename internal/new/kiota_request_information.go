@@ -45,4 +45,6 @@ func (request *KiotaRequestInformation) AddQueryParameters(source any) {
 		}
 		request.QueryParametersAny[key] = tmp
 	}
+
+	return
 }

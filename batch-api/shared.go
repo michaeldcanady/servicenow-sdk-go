@@ -31,7 +31,7 @@ func throwErrors(req ServicedRequest, typeName string) error {
 
 	contentType := getHTTPHeader(headers, newInternal.HTTPHeaderContentType, "")
 
-	return newInternal.ThrowErrors(typeName, *code, contentType, []byte(*body))
+	return newInternal.NewServiceNowErrorThrower(newInternal.GetErrorRegistryInstance(), newInternal.NewKiotaDeserializer()).Throw(typeName, *code, contentType, []byte(*body))
 }
 
 // serializeContent serializes the provided content using the provided ParsableFactory

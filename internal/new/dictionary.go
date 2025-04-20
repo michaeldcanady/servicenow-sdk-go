@@ -1,7 +1,7 @@
 package internal
 
 // Dictionary interface definition
-type Dictionary[K, V any] interface {
+type Dictionary[K comparable, V any] interface {
 	Get(K) (V, error)
 	Add(K, V) error
 	Update(K, V) error
