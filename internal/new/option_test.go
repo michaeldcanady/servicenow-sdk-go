@@ -17,7 +17,6 @@ func TestApplyOptions(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-
 				type configType struct {
 				}
 
@@ -34,7 +33,6 @@ func TestApplyOptions(t *testing.T) {
 		{
 			name: "Option error",
 			test: func(t *testing.T) {
-
 				type configType struct {
 				}
 
@@ -51,7 +49,6 @@ func TestApplyOptions(t *testing.T) {
 		{
 			name: "No options",
 			test: func(t *testing.T) {
-
 				type configType struct {
 				}
 
@@ -66,7 +63,6 @@ func TestApplyOptions(t *testing.T) {
 		{
 			name: "No options",
 			test: func(t *testing.T) {
-
 				type configType struct {
 				}
 

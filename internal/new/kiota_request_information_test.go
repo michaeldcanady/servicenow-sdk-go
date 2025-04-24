@@ -64,7 +64,6 @@ func TestKiotaRequestInformation_AddQueryParameters(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-
 				params := struct {
 					ExampleValue string `url:"example_value,omitempty"`
 				}{

@@ -308,7 +308,6 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 				err := header.SetName(expName)
 
 				assert.Nil(t, err)
-
 			},
 		},
 	}
@@ -476,7 +475,6 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 				err := header.SetValue(expName)
 
 				assert.Nil(t, err)
-
 			},
 		},
 	}

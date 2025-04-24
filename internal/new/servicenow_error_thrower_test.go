@@ -150,9 +150,6 @@ func TestServiceNowErrorThrower_resolveErrorFactory(t *testing.T) {
 				typeName := "type"
 				statusCode := int64(403)
 
-				strct := mocking.NewMockParsableFactory()
-				factory := strct.Factory
-
 				errorMapping := abstractions.ErrorMappings{}
 
 				errorRegistry := mocking.NewMockDictionary[string, abstractions.ErrorMappings]()
@@ -167,7 +164,6 @@ func TestServiceNowErrorThrower_resolveErrorFactory(t *testing.T) {
 				assert.Equal(t, errors.New("no error factory registered"), err)
 				assert.Nil(t, factory)
 				errorRegistry.AssertExpectations(t)
-				strct.AssertExpectations(t)
 			},
 		},
 		{

@@ -1,7 +1,6 @@
 package batchapi
 
 import (
-	"crypto/rand"
 	"errors"
 	"testing"
 
@@ -9,15 +8,6 @@ import (
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/stretchr/testify/assert"
 )
-
-func generateRandomBytes(n int) ([]byte, error) {
-	b := make([]byte, n)
-	_, err := rand.Read(b)
-	if err != nil {
-		return nil, err
-	}
-	return b, nil
-}
 
 func TestNewServicedRequest(t *testing.T) {
 	tests := []struct {

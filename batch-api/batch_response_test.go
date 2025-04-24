@@ -134,7 +134,7 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 					{
 						name: "servicedRequestsKey",
 						test: func(t *testing.T) {
-							var ret []serialization.Parsable = make([]serialization.Parsable, 0)
+							ret := make([]serialization.Parsable, 0)
 							mockParseNode.On("GetCollectionOfObjectValues", mock.AnythingOfType("serialization.ParsableFactory")).Return(ret, nil)
 							backingStore.On("Set", servicedRequestsKey, []ServicedRequest{}).Return(nil)
 
