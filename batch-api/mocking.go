@@ -17,14 +17,14 @@ func newMockRestRequest() *mockRestRequest {
 }
 
 // Serialize writes the objects properties to the current writer.
-func (mP *mockRestRequest) Serialize(writer serialization.SerializationWriter) error {
-	args := mP.Called(writer)
+func (mRR *mockRestRequest) Serialize(writer serialization.SerializationWriter) error {
+	args := mRR.Called(writer)
 	return args.Error(0)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (mP *mockRestRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	args := mP.Called()
+func (mRR *mockRestRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	args := mRR.Called()
 	return args.Get(0).(map[string]func(serialization.ParseNode) error)
 }
 func (mRR *mockRestRequest) GetBody() ([]byte, error) {
