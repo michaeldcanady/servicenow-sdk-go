@@ -8,24 +8,56 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TODO: add tests
 func TestNewMainError(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				header := NewMainError()
+
+				assert.NotNil(t, header)
+				assert.IsType(t, &MainError{}, header)
+
+				assert.NotNil(t, header.Model)
+				assert.IsType(t, &BaseModel{}, header.Model)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
 }
 
-// TODO: add tests
 func TestCreateMainErrorFromDiscriminatorValue(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "with parse node",
+			test: func(t *testing.T) {
+				parseNode := mocking.NewMockParseNode()
+
+				parsable, err := CreateMainErrorFromDiscriminatorValue(parseNode)
+				assert.Nil(t, err)
+				assert.NotNil(t, parsable)
+				assert.IsType(t, &MainError{}, parsable)
+			},
+		},
+		{
+			name: "with nil parse node",
+			test: func(t *testing.T) {
+				parsable, err := CreateMainErrorFromDiscriminatorValue(nil)
+				assert.Nil(t, err)
+				assert.NotNil(t, parsable)
+				assert.IsType(t, &MainError{}, parsable)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
