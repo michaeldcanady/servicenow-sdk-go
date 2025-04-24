@@ -19,24 +19,48 @@ func generateRandomBytes(n int) ([]byte, error) {
 	return b, nil
 }
 
-// TODO: add tests
 func TestNewServicedRequest(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				parsable := NewServicedRequest()
+
+				assert.NotNil(t, parsable)
+				assert.IsType(t, &ServicedRequestModel{}, parsable)
+
+				assert.NotNil(t, parsable.Model)
+				assert.IsType(t, &internal.BaseModel{}, parsable.Model)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
 }
 
-// TODO: add tests
 func TestCreateServicedRequestFromDiscriminatorValue(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				parseNode := mocking.NewMockParseNode()
+
+				parsable, err := CreateServicedRequestFromDiscriminatorValue(parseNode)
+
+				assert.Nil(t, err)
+				assert.NotNil(t, parsable)
+				assert.IsType(t, &ServicedRequestModel{}, parsable)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)

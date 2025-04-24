@@ -30,8 +30,8 @@ func NewBatchRequestBuilderInternal(
 	return m
 }
 
-// NewBatchRequestBuilder2 instantiates a new BatchRequestBuilder with custom parsable for table entries.
-func NewBatchRequestBuilder2(
+// NewBatchRequestBuilder instantiates a new BatchRequestBuilder with custom parsable for table entries.
+func NewBatchRequestBuilder(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 ) *BatchRequestBuilder {

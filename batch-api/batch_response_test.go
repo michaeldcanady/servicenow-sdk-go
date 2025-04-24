@@ -9,24 +9,50 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TODO: add tests
+// TODO: replicate this test for all New*
 func TestNewBatchResponse(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				parsable := NewBatchResponse()
+
+				assert.NotNil(t, parsable)
+				assert.IsType(t, &BatchResponseModel{}, parsable)
+
+				assert.NotNil(t, parsable.Model)
+				assert.IsType(t, &internal.BaseModel{}, parsable.Model)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
 }
 
-// TODO: add tests
+// TODO: replicate this test for all *FromDiscriminatorValue
 func TestCreateBatchResponseFromDiscriminatorValue(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				parseNode := mocking.NewMockParseNode()
+
+				parsable, err := CreateBatchResponseFromDiscriminatorValue(parseNode)
+
+				assert.Nil(t, err)
+				assert.NotNil(t, parsable)
+				assert.IsType(t, &BatchResponseModel{}, parsable)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)

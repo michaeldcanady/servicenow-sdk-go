@@ -16,19 +16,44 @@ func TestNewRestRequest(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				parsable := NewRestRequest()
+
+				assert.NotNil(t, parsable)
+				assert.IsType(t, &RestRequestModel{}, parsable)
+
+				assert.NotNil(t, parsable.Model)
+				assert.IsType(t, &internal.BaseModel{}, parsable.Model)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
 }
 
-// TODO: add tests
 func TestCreateRestRequestFromDiscriminatorValue(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				parseNode := mocking.NewMockParseNode()
+
+				parsable, err := CreateRestRequestFromDiscriminatorValue(parseNode)
+
+				assert.Nil(t, err)
+				assert.NotNil(t, parsable)
+				assert.IsType(t, &RestRequestModel{}, parsable)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)

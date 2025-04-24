@@ -5,27 +5,52 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/stretchr/testify/assert"
 )
 
-// TODO: add tests
-func TestNewBatchRequest2(t *testing.T) {
+func TestNewBatchRequestModel(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				parsable := NewBatchRequestModel()
+
+				assert.NotNil(t, parsable)
+				assert.IsType(t, &BatchRequestModel{}, parsable)
+
+				assert.NotNil(t, parsable.Model)
+				assert.IsType(t, &internal.BaseModel{}, parsable.Model)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
 }
 
-// TODO: add tests
-func TestCreateBatchRequest2FromDiscriminatorValue(t *testing.T) {
+func TestCreateBatchRequestFromDiscriminatorValue(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				parseNode := mocking.NewMockParseNode()
+
+				parsable, err := CreateBatchRequestFromDiscriminatorValue(parseNode)
+
+				assert.Nil(t, err)
+				assert.NotNil(t, parsable)
+				assert.IsType(t, &BatchRequestModel{}, parsable)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)

@@ -21,6 +21,9 @@ func TestNewBatchHeader(t *testing.T) {
 
 				assert.NotNil(t, header)
 				assert.IsType(t, &RestRequestHeaderModel{}, header)
+
+				assert.NotNil(t, header.Model)
+				assert.IsType(t, &internal.BaseModel{}, header.Model)
 			},
 		},
 	}

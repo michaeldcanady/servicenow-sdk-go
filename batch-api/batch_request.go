@@ -43,8 +43,8 @@ func NewBatchRequestModel() *BatchRequestModel {
 	return request
 }
 
-// CreateBatchRequest2FromDiscriminatorValue is a parsable factory for creating a BatchRequest
-func CreateBatchRequest2FromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+// CreateBatchRequestFromDiscriminatorValue is a parsable factory for creating a BatchRequest
+func CreateBatchRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewBatchRequestModel(), nil
 }
 

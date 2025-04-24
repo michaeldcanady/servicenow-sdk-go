@@ -62,12 +62,15 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 
 	return map[string]func(serialization.ParseNode) error{
 		batchRequestIDKey: func(pn serialization.ParseNode) error {
+			//TODO: implement
 			return errors.New("deserializer (batchRequestIDKey) not implemented")
 		},
 		servicedRequestsKey: func(pn serialization.ParseNode) error {
+			//TODO: implement
 			return errors.New("deserializer (servicedRequestsKey) not implemented")
 		},
 		unservicedRequestsKey: func(pn serialization.ParseNode) error {
+			//TODO: implement
 			return errors.New("deserializer (unservicedRequestsKey) not implemented")
 		},
 	}
