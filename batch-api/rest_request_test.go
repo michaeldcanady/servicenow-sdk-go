@@ -11,7 +11,6 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// TODO: add tests
 func TestNewRestRequest(t *testing.T) {
 	tests := []struct {
 		name string
@@ -84,12 +83,32 @@ func TestRestRequest_Serialize(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestRestRequest_GetFieldDeserializers(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successfully",
+			test: func(t *testing.T) {
+				model := &RestRequestModel{}
+
+				deserializers := model.GetFieldDeserializers()
+
+				assert.Nil(t, deserializers)
+			},
+		},
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				model := (*RestRequestModel)(nil)
+
+				deserializers := model.GetFieldDeserializers()
+
+				assert.Nil(t, deserializers)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)

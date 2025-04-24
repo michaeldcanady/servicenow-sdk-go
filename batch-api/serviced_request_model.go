@@ -84,7 +84,7 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 			return sR.setExecutionTime(duration)
 		},
 		headersKey: func(pn serialization.ParseNode) error {
-			headers, err := pn.GetCollectionOfObjectValues(CreateBatchHeader2FromDiscriminatorValue)
+			headers, err := pn.GetCollectionOfObjectValues(CreateRestRequestHeaderFromDiscriminatorValue)
 			if err != nil {
 				return err
 			}

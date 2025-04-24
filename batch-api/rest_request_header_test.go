@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewBatchHeader(t *testing.T) {
+func TestNewRestRequestHeader(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -17,7 +17,7 @@ func TestNewBatchHeader(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				header := NewBatchHeader()
+				header := NewRestRequestHeader()
 
 				assert.NotNil(t, header)
 				assert.IsType(t, &RestRequestHeaderModel{}, header)
@@ -33,7 +33,7 @@ func TestNewBatchHeader(t *testing.T) {
 	}
 }
 
-func TestCreateBatchHeader2FromDiscriminatorValue(t *testing.T) {
+func TestCreateRestRequestHeaderFromDiscriminatorValue(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -43,7 +43,7 @@ func TestCreateBatchHeader2FromDiscriminatorValue(t *testing.T) {
 			test: func(t *testing.T) {
 				parseNode := mocking.NewMockParseNode()
 
-				parsable, err := CreateBatchHeader2FromDiscriminatorValue(parseNode)
+				parsable, err := CreateRestRequestHeaderFromDiscriminatorValue(parseNode)
 				assert.Nil(t, err)
 				assert.NotNil(t, parsable)
 				assert.IsType(t, &RestRequestHeaderModel{}, parsable)
@@ -52,7 +52,7 @@ func TestCreateBatchHeader2FromDiscriminatorValue(t *testing.T) {
 		{
 			name: "with nil parse node",
 			test: func(t *testing.T) {
-				parsable, err := CreateBatchHeader2FromDiscriminatorValue(nil)
+				parsable, err := CreateRestRequestHeaderFromDiscriminatorValue(nil)
 				assert.Nil(t, err)
 				assert.NotNil(t, parsable)
 				assert.IsType(t, &RestRequestHeaderModel{}, parsable)
@@ -66,7 +66,7 @@ func TestCreateBatchHeader2FromDiscriminatorValue(t *testing.T) {
 }
 
 // TODO: add tests
-func TestBatchHeader_Serialize(t *testing.T) {
+func TestRestRequestHeader_Serialize(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -78,7 +78,7 @@ func TestBatchHeader_Serialize(t *testing.T) {
 
 		//		model := mocking.NewMockModel()
 
-		//		header := &BatchHeader{model}
+		//		header := &RestRequestHeader{model}
 
 		//		err := header.Serialize(writer)
 
@@ -118,19 +118,39 @@ func TestBatchHeader_Serialize(t *testing.T) {
 	}
 }
 
-// TODO: add tests
-func TestBatchHeader_GetFieldDeserializers(t *testing.T) {
+func TestRestRequestHeader_GetFieldDeserializers(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successfully",
+			test: func(t *testing.T) {
+				model := &RestRequestHeaderModel{}
+
+				deserializers := model.GetFieldDeserializers()
+
+				assert.Nil(t, deserializers)
+			},
+		},
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				model := (*RestRequestHeaderModel)(nil)
+
+				deserializers := model.GetFieldDeserializers()
+
+				assert.Nil(t, deserializers)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
 }
 
-func TestBatchHeader_GetName(t *testing.T) {
+func TestRestRequestHeader_GetName(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -235,7 +255,7 @@ func TestBatchHeader_GetName(t *testing.T) {
 	}
 }
 
-func TestBatchHeader_SetName(t *testing.T) {
+func TestRestRequestHeader_SetName(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -298,7 +318,7 @@ func TestBatchHeader_SetName(t *testing.T) {
 	}
 }
 
-func TestBatchHeader_GetValue(t *testing.T) {
+func TestRestRequestHeader_GetValue(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -403,7 +423,7 @@ func TestBatchHeader_GetValue(t *testing.T) {
 	}
 }
 
-func TestBatchHeader_SetValue(t *testing.T) {
+func TestRestRequestHeader_SetValue(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)

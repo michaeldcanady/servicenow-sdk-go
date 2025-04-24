@@ -62,16 +62,58 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 
 	return map[string]func(serialization.ParseNode) error{
 		batchRequestIDKey: func(pn serialization.ParseNode) error {
-			//TODO: implement
-			return errors.New("deserializer (batchRequestIDKey) not implemented")
+			if internal.IsNil(pn) {
+				return nil
+			}
+
+			value, err := pn.GetStringValue()
+			if err != nil {
+				return err
+			}
+
+			return bR.setBatchRequestID(value)
 		},
 		servicedRequestsKey: func(pn serialization.ParseNode) error {
-			//TODO: implement
-			return errors.New("deserializer (servicedRequestsKey) not implemented")
+			if internal.IsNil(pn) {
+				return nil
+			}
+
+			values, err := pn.GetCollectionOfObjectValues(CreateServicedRequestFromDiscriminatorValue)
+			if err != nil {
+				return err
+			}
+
+			requests := make([]ServicedRequest, 0, len(values))
+			for index, value := range values {
+				typedValue, ok := value.(ServicedRequest)
+				if !ok {
+					return errors.New("value is not ServicedRequest")
+				}
+				requests[index] = typedValue
+			}
+
+			return bR.setServicedRequests(requests)
 		},
 		unservicedRequestsKey: func(pn serialization.ParseNode) error {
-			//TODO: implement
-			return errors.New("deserializer (unservicedRequestsKey) not implemented")
+			if internal.IsNil(pn) {
+				return nil
+			}
+
+			values, err := pn.GetCollectionOfPrimitiveValues("string")
+			if err != nil {
+				return err
+			}
+
+			requests := make([]string, 0, len(values))
+			for index, value := range values {
+				typedValue, ok := value.(string)
+				if !ok {
+					return errors.New("value is not string")
+				}
+				requests[index] = typedValue
+			}
+
+			return bR.setUnservicedRequests(requests)
 		},
 	}
 }

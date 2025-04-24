@@ -2,7 +2,6 @@ package batchapi
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -35,16 +34,16 @@ type RestRequestHeaderModel struct {
 	newInternal.Model
 }
 
-// NewBatchHeader creates new instance of BatchHeader
-func NewBatchHeader() *RestRequestHeaderModel {
+// NewRestRequestHeader creates new instance of BatchHeader
+func NewRestRequestHeader() *RestRequestHeaderModel {
 	return &RestRequestHeaderModel{
 		newInternal.NewBaseModel(),
 	}
 }
 
-// CreateBatchHeader2FromDiscriminatorValue is a parsable factory for creating a BatchRequest
-func CreateBatchHeader2FromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewBatchHeader(), nil
+// CreateRestRequestHeaderFromDiscriminatorValue is a parsable factory for creating a BatchRequest
+func CreateRestRequestHeaderFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewRestRequestHeader(), nil
 }
 
 // Serialize writes the objects properties to the current writer.
@@ -88,14 +87,7 @@ func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serial
 		return nil
 	}
 
-	return map[string]func(serialization.ParseNode) error{
-		nameKey: func(pn serialization.ParseNode) error {
-			return fmt.Errorf("deserializer (%s) not implemented", nameKey)
-		},
-		valueKey: func(pn serialization.ParseNode) error {
-			return fmt.Errorf("deserializer (%s) not implemented", valueKey)
-		},
-	}
+	return nil
 }
 
 // GetName returns the name of the header
@@ -185,7 +177,7 @@ func createRestRequestHeaderFromHeaders[h headers](headers h) ([]RestRequestHead
 
 	if requestHeaders, ok := interface{}(headers).(*abstractions.RequestHeaders); ok {
 		for _, key := range requestHeaders.ListKeys() {
-			batchHeader := NewBatchHeader()
+			batchHeader := NewRestRequestHeader()
 			values := requestHeaders.Get(key)
 			if err := batchHeader.SetName(&key); err != nil {
 				return nil, err

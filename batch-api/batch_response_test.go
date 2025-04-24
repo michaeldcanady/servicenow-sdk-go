@@ -6,10 +6,11 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
-// TODO: replicate this test for all New*
 func TestNewBatchResponse(t *testing.T) {
 	tests := []struct {
 		name string
@@ -34,7 +35,6 @@ func TestNewBatchResponse(t *testing.T) {
 	}
 }
 
-// TODO: replicate this test for all *FromDiscriminatorValue
 func TestCreateBatchResponseFromDiscriminatorValue(t *testing.T) {
 	tests := []struct {
 		name string
@@ -98,7 +98,189 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successfully",
+			test: func(t *testing.T) {
+				backingStore := mocking.NewMockBackingStore()
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				mockParseNode := mocking.NewMockParseNode()
+
+				resp := &BatchResponseModel{
+					intModel,
+				}
+
+				deserializers := resp.GetFieldDeserializers()
+
+				tests := []struct {
+					name string
+					test func(*testing.T)
+				}{
+					{
+						name: "batchRequestIDKey",
+						test: func(t *testing.T) {
+							ret := internal.ToPointer("id")
+							mockParseNode.On("GetStringValue").Return(ret, nil)
+							backingStore.On("Set", batchRequestIDKey, ret).Return(nil)
+
+							err := deserializers[batchRequestIDKey](mockParseNode)
+
+							assert.Nil(t, err)
+						},
+					},
+					{
+						name: "servicedRequestsKey",
+						test: func(t *testing.T) {
+							var ret []serialization.Parsable = make([]serialization.Parsable, 0)
+							mockParseNode.On("GetCollectionOfObjectValues", mock.AnythingOfType("serialization.ParsableFactory")).Return(ret, nil)
+							backingStore.On("Set", servicedRequestsKey, []ServicedRequest{}).Return(nil)
+
+							err := deserializers[servicedRequestsKey](mockParseNode)
+
+							assert.Nil(t, err)
+						},
+					},
+					{
+						name: "unservicedRequestsKey",
+						test: func(t *testing.T) {
+							ret := make([]interface{}, 0)
+							mockParseNode.On("GetCollectionOfPrimitiveValues", "string").Return(ret, nil)
+							backingStore.On("Set", unservicedRequestsKey, []string{}).Return(nil)
+
+							err := deserializers[unservicedRequestsKey](mockParseNode)
+
+							assert.Nil(t, err)
+						},
+					},
+				}
+
+				for _, test := range tests {
+					t.Run(test.name, test.test)
+				}
+			},
+		},
+		{
+			name: "Nil ParseNode",
+			test: func(t *testing.T) {
+				backingStore := mocking.NewMockBackingStore()
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				mockParseNode := (*mocking.MockParseNode)(nil)
+
+				resp := &BatchResponseModel{
+					intModel,
+				}
+
+				deserializers := resp.GetFieldDeserializers()
+
+				tests := []struct {
+					name string
+					test func(*testing.T)
+				}{
+					{
+						name: "batchRequestIDKey",
+						test: func(t *testing.T) {
+							err := deserializers[batchRequestIDKey](mockParseNode)
+
+							assert.Nil(t, err)
+						},
+					},
+					{
+						name: "servicedRequestsKey",
+						test: func(t *testing.T) {
+							err := deserializers[servicedRequestsKey](mockParseNode)
+
+							assert.Nil(t, err)
+						},
+					},
+					{
+						name: "unservicedRequestsKey",
+						test: func(t *testing.T) {
+							err := deserializers[unservicedRequestsKey](mockParseNode)
+
+							assert.Nil(t, err)
+						},
+					},
+				}
+
+				for _, test := range tests {
+					t.Run(test.name, test.test)
+				}
+			},
+		},
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				resp := (*BatchResponseModel)(nil)
+
+				deserializers := resp.GetFieldDeserializers()
+
+				assert.Nil(t, deserializers)
+			},
+		},
+		{
+			name: "Error retrieving value",
+			test: func(t *testing.T) {
+				backingStore := mocking.NewMockBackingStore()
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				mockParseNode := mocking.NewMockParseNode()
+
+				resp := &BatchResponseModel{
+					intModel,
+				}
+
+				deserializers := resp.GetFieldDeserializers()
+
+				tests := []struct {
+					name string
+					test func(*testing.T)
+				}{
+					{
+						name: "batchRequestIDKey",
+						test: func(t *testing.T) {
+							mockParseNode.On("GetStringValue").Return((*string)(nil), errors.New("failed to get value"))
+
+							err := deserializers[batchRequestIDKey](mockParseNode)
+
+							assert.Equal(t, errors.New("failed to get value"), err)
+						},
+					},
+					{
+						name: "servicedRequestsKey",
+						test: func(t *testing.T) {
+							mockParseNode.On("GetCollectionOfObjectValues", mock.AnythingOfType("serialization.ParsableFactory")).Return(([]serialization.Parsable)(nil), errors.New("failed to get value"))
+
+							err := deserializers[servicedRequestsKey](mockParseNode)
+
+							assert.Equal(t, errors.New("failed to get value"), err)
+						},
+					},
+					{
+						name: "unservicedRequestsKey",
+						test: func(t *testing.T) {
+							mockParseNode.On("GetCollectionOfPrimitiveValues", "string").Return(([]interface{})(nil), errors.New("failed to get value"))
+
+							err := deserializers[unservicedRequestsKey](mockParseNode)
+
+							assert.Equal(t, errors.New("failed to get value"), err)
+						},
+					},
+				}
+
+				for _, test := range tests {
+					t.Run(test.name, test.test)
+				}
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)

@@ -182,23 +182,7 @@ func (rE *RestRequestModel) GetFieldDeserializers() map[string]func(serializatio
 		return nil
 	}
 
-	return map[string]func(serialization.ParseNode) error{
-		bodyKey: func(pn serialization.ParseNode) error {
-			return errors.New("deserializer (bodyKey) not implemented")
-		},
-		excludeResponseHeadersKey: func(pn serialization.ParseNode) error {
-			return errors.New("deserializer (excludeResponseHeadersKey) not implemented")
-		},
-		headersKey: func(pn serialization.ParseNode) error {
-			return errors.New("deserializer (headersKey) not implemented")
-		},
-		methodKey: func(pn serialization.ParseNode) error {
-			return errors.New("deserializer (methodKey) not implemented")
-		},
-		urlKey: func(pn serialization.ParseNode) error {
-			return errors.New("deserializer (urlKey) not implemented")
-		},
-	}
+	return nil
 }
 
 // GetBody returns the requests body in bytes.
@@ -256,7 +240,7 @@ func (rE *RestRequestModel) SetBodyFromParsable(contentType string, parsable ser
 		return err
 	}
 
-	batchHeader := NewBatchHeader()
+	batchHeader := NewRestRequestHeader()
 	// TODO: add to RequestHeader
 	name := "Content-Type"
 	if err := batchHeader.SetName(&name); err != nil {
