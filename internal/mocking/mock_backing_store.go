@@ -49,13 +49,13 @@ func (bS *MockBackingStore) Subscribe(callback store.BackingStoreSubscriber) str
 }
 
 // SubscribeWithId registers a listener to any data change happening and assigns the given id
-func (bS *MockBackingStore) SubscribeWithId(callback store.BackingStoreSubscriber, subscriptionId string) error { // nolint: stylecheck: needs to match interface
+func (bS *MockBackingStore) SubscribeWithId(callback store.BackingStoreSubscriber, subscriptionId string) error { // nolint: stylecheck // needs to match interface
 	args := bS.Called(callback, subscriptionId)
 	return args.Error(0)
 }
 
 // Unsubscribe Removes a subscription from the store based on its subscription id.
-func (bS *MockBackingStore) Unsubscribe(subscriptionId string) error { // nolint: stylecheck: needs to match interface
+func (bS *MockBackingStore) Unsubscribe(subscriptionId string) error { // nolint: stylecheck // needs to match interface
 	args := bS.Called(subscriptionId)
 	return args.Error(0)
 }
