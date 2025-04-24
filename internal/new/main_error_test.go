@@ -65,7 +65,7 @@ func TestMainError_GetFieldDeserializers(t *testing.T) {
 	}
 }
 
-func TestMainError_GetDetail(t *testing.T) {
+func TestMainError_GetDetail(t *testing.T) { // nolint: dupl
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -160,7 +160,7 @@ func TestMainError_GetDetail(t *testing.T) {
 	}
 }
 
-func TestMainError_setDetail(t *testing.T) {
+func TestMainError_setDetail(t *testing.T) { // nolint: dupl
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -221,7 +221,7 @@ func TestMainError_setDetail(t *testing.T) {
 	}
 }
 
-func TestMainError_GetMessage(t *testing.T) {
+func TestMainError_GetMessage(t *testing.T) { // nolint: dupl
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -316,7 +316,7 @@ func TestMainError_GetMessage(t *testing.T) {
 	}
 }
 
-func TestMainError_setMessage(t *testing.T) {
+func TestMainError_setMessage(t *testing.T) { // nolint: dupl
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -377,7 +377,7 @@ func TestMainError_setMessage(t *testing.T) {
 	}
 }
 
-func TestMainError_GetStatus(t *testing.T) {
+func TestMainError_GetStatus(t *testing.T) { // nolint: dupl
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -472,7 +472,7 @@ func TestMainError_GetStatus(t *testing.T) {
 	}
 }
 
-func TestMainError_setStatus(t *testing.T) {
+func TestMainError_setStatus(t *testing.T) { // nolint: dupl
 	tests := []struct {
 		name string
 		test func(*testing.T)
