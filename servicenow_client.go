@@ -14,12 +14,16 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
+type webClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
 type ServiceNowClient struct {
 	// Deprecated: deprecated since v1.6.0.
 	Credential     core.Credential
-	authProvider   *internal.BaseAuthorizationProvider
+	authProvider   internal.AuthorizationProvider
 	BaseUrl        string //nolint:stylecheck
-	Session        http.Client
+	Session        webClient
 	requestAdapter abstractions.RequestAdapter
 }
 
@@ -49,7 +53,7 @@ func NewServiceNowClient(credential core.Credential, instance string) *ServiceNo
 		Credential:   credential,
 		authProvider: authProvider,
 		BaseUrl:      instance,
-		Session:      http.Client{},
+		Session:      &http.Client{},
 	}
 }
 
@@ -72,13 +76,12 @@ func NewServiceNowClient2(credential core.Credential, instance string) (*Service
 	}
 
 	authenticationProvider, err := newCredentialAuthenticationProviderAdapter(credential)
-	if err != nil {
-		// can't test since if credential is nil, it will be picked up earlier
+	if err != nil { // nocov // can't test since if credential is nil, it will be picked up earlier
 		return nil, err
 	}
 
 	client, err := newServiceNowServiceClientWithOptions(authenticationProvider, withURL(strings.Replace(instance, "/api", "", -1)))
-	if err != nil {
+	if err != nil { // nocov // can't test since options are fix, it shouldn't be able to error
 		return nil, err
 	}
 
@@ -86,7 +89,7 @@ func NewServiceNowClient2(credential core.Credential, instance string) (*Service
 		Credential:     credential,
 		authProvider:   authProvider,
 		BaseUrl:        instance,
-		Session:        http.Client{},
+		Session:        &http.Client{},
 		requestAdapter: client.GetRequestAdapter(),
 	}, nil
 }
@@ -121,6 +124,8 @@ func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 		}
 	}
 
+	stringError := c.unmarshallError(response)
+
 	if errorCtor == nil {
 		err := &core.ApiError{
 			Message:            "The server returned an unexpected status code and no error factory is registered for this code: " + statusAsString,
@@ -128,8 +133,6 @@ func (c *ServiceNowClient) throwIfFailedResponse(response *http.Response, errorM
 		}
 		return err
 	}
-
-	stringError := c.unmarshallError(response)
 
 	return stringError
 }

@@ -32,6 +32,7 @@ var (
 	sharedUsernameAndPasswordCred = credentials.NewUsernamePasswordCredential("username", "password")
 )
 
+// TODO: should be mocked
 type MockRequestInformation struct {
 	Headers http.Header
 }
@@ -102,7 +103,7 @@ func (rI *MockRequestInformation) AddHeaders(rawHeaders interface{}) error {
 	return nil
 }
 
-func TestNewClient(t *testing.T) {
+func TestNewServiceNowClient(t *testing.T) {
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
@@ -110,7 +111,7 @@ func TestNewClient(t *testing.T) {
 	assert.NotNil(t, client)
 }
 
-func TestNewClient2(t *testing.T) {
+func TestNewServiceNowClient2(t *testing.T) {
 	authProvider, _ := internal.NewBaseAuthorizationProvider(sharedUsernameAndPasswordCred)
 
 	tests := []test[*ServiceNowClient]{
@@ -121,7 +122,7 @@ func TestNewClient2(t *testing.T) {
 				Credential:   sharedUsernameAndPasswordCred,
 				authProvider: authProvider,
 				BaseUrl:      "https://instance.service-now.com/api",
-				Session:      http.Client{},
+				Session:      &http.Client{},
 			},
 			expectedErr: nil,
 		},
@@ -154,7 +155,7 @@ func TestNewClient2(t *testing.T) {
 	}
 }
 
-func TestClientURL(t *testing.T) {
+func TestServiceNowClient_URL(t *testing.T) {
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
@@ -162,7 +163,7 @@ func TestClientURL(t *testing.T) {
 	assert.Equal(t, client.BaseUrl, "https://instance.service-now.com/api")
 }
 
-func TestClientNow(t *testing.T) {
+func TestServiceNowClient_Now(t *testing.T) {
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
@@ -174,7 +175,7 @@ func TestClientNow(t *testing.T) {
 	assert.Equal(t, client, nowBuilder.Client)
 }
 
-func TestClientToRequest(t *testing.T) {
+func TestServiceNowClient_ToRequest(t *testing.T) {
 	requestInfo := &MockRequestInformation{
 		Headers: http.Header{},
 	}
@@ -202,7 +203,7 @@ func TestClientToRequest(t *testing.T) {
 	assert.Error(t, ErrNilRequestInfo, err)
 }
 
-func TestClientUnmarshallError(t *testing.T) {
+func TestServiceNowClient_UnmarshallError(t *testing.T) {
 	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
@@ -237,7 +238,7 @@ func TestClientUnmarshallError(t *testing.T) {
 	assert.IsType(t, &json.SyntaxError{}, err)
 }
 
-func TestClientToRequestWithContext(t *testing.T) {
+func TestServiceNowClient_ToRequestWithContext(t *testing.T) {
 	requestInfo := &MockRequestInformation{
 		Headers: http.Header{},
 	}
@@ -268,4 +269,40 @@ func TestClientToRequestWithContext(t *testing.T) {
 
 	_, err = client.toRequestWithContext(nil, requestInfo) //nolint:all
 	assert.Error(t, ErrNilContext, err)
+}
+
+// TODO: add tests
+func TestServiceNowClient_ThrowIfFailedResponse(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+// TODO: add tests
+func TestServiceNowClient_SendWithContext(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+// TODO: add tests
+func TestServiceNowClient_Send(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
 }

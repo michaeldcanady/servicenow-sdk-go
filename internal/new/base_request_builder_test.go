@@ -29,6 +29,20 @@ func TestNewBaseRequestBuilder(t *testing.T) {
 				}}, requestBuilder)
 			},
 		},
+		{
+			name: "nil pathParameter",
+			test: func(t *testing.T) {
+				requestAdapter := mocking.NewMockRequestAdapter()
+				urlTemplate := "template"
+				requestBuilder := NewBaseRequestBuilder(requestAdapter, urlTemplate, nil)
+
+				assert.Equal(t, &BaseRequestBuilder{abstractions.BaseRequestBuilder{
+					PathParameters: map[string]string{},
+					UrlTemplate:    urlTemplate,
+					RequestAdapter: requestAdapter,
+				}}, requestBuilder)
+			},
+		},
 	}
 
 	for _, test := range tests {
