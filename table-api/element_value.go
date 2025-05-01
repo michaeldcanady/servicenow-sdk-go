@@ -1,8 +1,6 @@
 package tableapi
 
 import (
-	"time"
-
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -27,11 +25,11 @@ type ElementValue interface {
 	// GetInt64Value returns a Int64 value from the element.
 	GetInt64Value() (*int64, error)
 	// GetTimeValue returns a Time value from the element.
-	GetTimeValue() (*time.Time, error)
+	//GetTimeValue() (*time.Time, error)
 	// GetTimeOnlyValue returns a Time-only value from the element.
-	GetTimeOnlyValue() (*serialization.TimeOnly, error)
+	//GetTimeOnlyValue() (*serialization.TimeOnly, error)
 	// GetDateOnlyValue returns a Date-only value from the element.
-	GetDateOnlyValue() (*serialization.DateOnly, error)
+	//GetDateOnlyValue() (*serialization.DateOnly, error)
 	// GetEnumValue returns an enum value from the element.
 	GetEnumValue(parser serialization.EnumFactory) (interface{}, error)
 	// GetCollectionOfPrimitiveValues returns a Collection of specified primitive values from the element.

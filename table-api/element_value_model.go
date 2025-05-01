@@ -3,10 +3,9 @@ package tableapi
 import (
 	"errors"
 	"fmt"
-	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -16,12 +15,13 @@ type ElementValueModel struct {
 }
 
 // NewElementValue returns a new Element Value
-func NewElementValue(val interface{}) ElementValue {
+func NewElementValue(val interface{}) *ElementValueModel {
 	return &ElementValueModel{
 		val: val,
 	}
 }
 
+// CreateElementValueFromDiscriminatorValue is a parsable factory for creating a ElementValueModel
 func CreateElementValueFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewElementValue(nil), nil
 }
@@ -32,7 +32,7 @@ func (eV *ElementValueModel) Serialize(writer serialization.SerializationWriter)
 		return nil
 	}
 
-	return errors.New("Serialize not implemented")
+	return errors.New("Serialize is not supported")
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
@@ -45,11 +45,18 @@ func (eV *ElementValueModel) IsNil() bool {
 	return internal.IsNil(eV) || internal.IsNil(eV.val)
 }
 
-func (eV *ElementValueModel) setValue(val interface{}) { //nolint: unused
-	if eV.IsNil() {
-		return
+func (eV *ElementValueModel) setValue(val interface{}) error { //nolint: unused
+	if internal.IsNil(eV) {
+		return nil
 	}
+
+	if !internal.IsPointer(val) {
+		return errors.New("val is not a pointer")
+	}
+
 	eV.val = val
+
+	return nil
 }
 
 // GetStringValue returns a String value from the element.
@@ -169,39 +176,39 @@ func (eV *ElementValueModel) GetInt64Value() (*int64, error) {
 }
 
 // GetTimeValue returns a Time value from the element.
-func (eV *ElementValueModel) GetTimeValue() (*time.Time, error) {
-	if eV.IsNil() {
-		return nil, nil
-	}
-	v, err := eV.GetStringValue()
-	if err != nil {
-		return nil, err
-	}
-	if v == nil {
-		return nil, nil
-	}
-
-	parsed, err := time.Parse(time.RFC3339, *v)
-	return &parsed, err
-}
+//func (eV *ElementValueModel) GetTimeValue() (*time.Time, error) {
+//	if eV.IsNil() {
+//		return nil, nil
+//	}
+//	v, err := eV.GetStringValue()
+//	if err != nil {
+//		return nil, err
+//	}
+//	if v == nil {
+//		return nil, nil
+//	}
+//
+//	parsed, err := time.Parse(time.RFC3339, *v)
+//	return &parsed, err
+//}
 
 // GetTimeOnlyValue returns a Time-only value from the element.
-func (eV *ElementValueModel) GetTimeOnlyValue() (*serialization.TimeOnly, error) {
-	if eV.IsNil() {
-		return nil, nil
-	}
-
-	return nil, errors.New("not implemented")
-}
+//func (eV *ElementValueModel) GetTimeOnlyValue() (*serialization.TimeOnly, error) {
+//	if eV.IsNil() {
+//		return nil, nil
+//	}
+//
+//	return nil, errors.New("not implemented")
+//}
 
 // GetDateOnlyValue returns a Date-only value from the element.
-func (eV *ElementValueModel) GetDateOnlyValue() (*serialization.DateOnly, error) {
-	if eV.IsNil() {
-		return nil, nil
-	}
-
-	return nil, errors.New("not implemented")
-}
+//func (eV *ElementValueModel) GetDateOnlyValue() (*serialization.DateOnly, error) {
+//	if eV.IsNil() {
+//		return nil, nil
+//	}
+//
+//	return nil, errors.New("not implemented")
+//}
 
 // GetEnumValue returns an enum value from the element.
 func (eV *ElementValueModel) GetEnumValue(parser serialization.EnumFactory) (interface{}, error) {
@@ -243,6 +250,7 @@ func (eV *ElementValueModel) GetCollectionOfPrimitiveValues(targetType Primitive
 			err error
 		)
 		if v != nil {
+			// FIXME: when primitiveValue is called it's taking in the whole collection not just an element
 			val, err = eV.getPrimitiveValue(targetType)
 			if err != nil {
 				return nil, err
@@ -265,8 +273,8 @@ func (eV *ElementValueModel) getPrimitiveValue(targetType Primitive) (interface{
 		return eV.GetBoolValue()
 	case PrimitiveByte:
 		return eV.GetByteValue()
-	case PrimitiveDateOnly:
-		return eV.GetDateOnlyValue()
+	//case PrimitiveDateOnly:
+	//	return eV.GetDateOnlyValue()
 	case PrimitiveFloat32:
 		return eV.GetFloat32Value()
 	case PrimitiveFloat64:
@@ -277,10 +285,10 @@ func (eV *ElementValueModel) getPrimitiveValue(targetType Primitive) (interface{
 		return eV.GetInt64Value()
 	case PrimitiveInt8:
 		return eV.GetInt8Value()
-	case PrimitiveTime:
-		return eV.GetTimeValue()
-	case PrimitiveTimeOnly:
-		return eV.GetTimeOnlyValue()
+	//case PrimitiveTime:
+	//	return eV.GetTimeValue()
+	//case PrimitiveTimeOnly:
+	//	return eV.GetTimeOnlyValue()
 	case PrimitiveString:
 		return eV.GetStringValue()
 	default:
