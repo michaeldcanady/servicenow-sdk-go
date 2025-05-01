@@ -14,3 +14,8 @@ func IsNil(a interface{}) bool {
 func ToPointer[T any](value T) *T {
 	return &value
 }
+
+// IsPointer
+func IsPointer(value any) bool {
+	return reflect.ValueOf(value).Kind() == reflect.Pointer
+}
