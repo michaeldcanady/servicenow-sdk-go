@@ -8,8 +8,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- Batch API support ([Issue #49](https://github.com/michaeldcanady/servicenow-sdk-go/issues/49))
-
 ### Changed
 
 ### Deprecated
@@ -17,6 +15,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Removed
 
 ### Fixed
+
+- unable to access `display_value` and `link` with new implementation `tableapi.RecordElementModel` ([Issue #204](https://github.com/michaeldcanady/servicenow-sdk-go/issues/204))
 
 ## [1.7.0] - (01/05/2025)
 
@@ -27,7 +27,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - `core.RequestInformation.ToRequestWithContext` not including headers when converting to request ([Issue #107](https://github.com/michaeldcanady/servicenow-sdk-go/issues/107))
-- unable to access `display_value` and `link` with new implementation `tableapi.RecordElementModel` ([Issue #204](https://github.com/michaeldcanady/servicenow-sdk-go/issues/204))
 
 ## [1.6.0] - (08/03/2024)
 
