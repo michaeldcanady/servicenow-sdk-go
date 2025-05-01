@@ -16,6 +16,7 @@
     "coverpkg",
     "coverprofile",
     "covignore",
+    "dateonly",
     "devcontainers",
     "donjayamanne",
     "dupl",
