@@ -8,13 +8,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- Batch API support ([Issue #49](https://github.com/michaeldcanady/servicenow-sdk-go/issues/49))
-
 ### Changed
 
 ### Deprecated
 
 ### Removed
+
+### Fixed
+
+## [1.7.0] - (01/05/2025)
+
+### Added
+
+- Batch API support ([Issue #49](https://github.com/michaeldcanady/servicenow-sdk-go/issues/49))
 
 ### Fixed
 
