@@ -16,8 +16,6 @@ func NewTableEntry() TableEntry {
 	return TableEntry{}
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use SetElement or SetValue instead.
-//
 // Set assigns the specified key to the given value in the table entry.
 func (tE TableEntry) Set(key string, value interface{}) {
 	tE[key] = value

@@ -6,12 +6,12 @@ import (
 
 // OrderBy represents an order-by clause.
 //
-// Deprecated: deprecated since 1.4.0. Please use core.OrderBy instead.
+// Deprecated: deprecated since v1.4.0. Please use core.OrderBy instead.
 type OrderBy = core.OrderBy
 
 // NewOrderBy Creates new order by.
 //
-// Deprecated: deprecated since 1.4.0. Please use core.NewOrderBy instead.
+// Deprecated: deprecated since v1.4.0. Please use core.NewOrderBy instead.
 func NewOrderBy() *OrderBy {
 	return core.NewOrderBy()
 }
