@@ -2,12 +2,6 @@ package tableapi
 
 import "errors"
 
-const (
-	displayValueKey = "display_value"
-	valueKey        = "value"
-	linkKey         = "link"
-)
-
 // TableEntry represents a single Service-Now table entry.
 type TableEntry map[string]interface{}
 
@@ -16,8 +10,6 @@ func NewTableEntry() TableEntry {
 	return TableEntry{}
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use SetElement or SetValue instead.
-//
 // Set assigns the specified key to the given value in the table entry.
 func (tE TableEntry) Set(key string, value interface{}) {
 	tE[key] = value
@@ -54,24 +46,6 @@ func (tE TableEntry) DisplayValue(key string) *TableValue {
 	case map[string]interface{}:
 		trueVal = v[displayValueKey]
 		trueVal = v[valueKey]
-	case interface{}:
-		trueVal = v
-	}
-	return &TableValue{value: trueVal}
-}
-
-// DisplayValue retrieves a TableValue instance for the given key.
-func (tE TableEntry) DisplayValue(key string) *TableValue {
-	value, exists := tE[key]
-	if !exists {
-		return nil
-	}
-
-	var trueVal interface{}
-
-	switch v := value.(type) {
-	case map[string]interface{}:
-		trueVal = v[displayValueKey]
 	case interface{}:
 		trueVal = v
 	}
