@@ -39,10 +39,10 @@ func NewBaseServiceNowItemResponse[T serialization.Parsable](factory serializati
 // Serialize Writes the objects properties to the current writer.
 func (bR *BaseServiceNowItemResponse[T]) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(bR) {
-		return errors.New("Serialization is not supported")
+		return errors.New("serialization is not supported")
 	}
 
-	return errors.New("Serialization is not supported")
+	return errors.New("serialization is not supported")
 }
 
 // GetFieldDeserializers Returns the deserialization information for this object.
