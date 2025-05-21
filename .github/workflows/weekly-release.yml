@@ -9,6 +9,23 @@ env:
   PREVIEW_VERSION:
 
 jobs:
+  check_conditions:
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test if should release
+        id: check
+        run: |
+          if scripts/test_changed_file.sh && scripts/test_commit.sh && scripts/test_version.sh; then
+            echo "should_release=true" >> $GITHUB_ENV
+          else
+            echo "should_release=false" >> $GITHUB_ENV
+          fi
+
   create_preview_release:
     runs-on: ubuntu-latest
     steps:
@@ -38,3 +55,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             changelog.md
+    needs: check_conditions
+    if: env.should_release == 'true'
