@@ -21,12 +21,14 @@ jobs:
         id: check
         run: |
           if scripts/test_changed_file.sh && scripts/test_commit.sh && scripts/test_version.sh; then
-            echo "should_release=true" >> $GITHUB_ENV
+            echo "should_release=true" >> $GITHUB_OUTPUT
           else
-            echo "should_release=false" >> $GITHUB_ENV
+            echo "should_release=false" >> $GITHUB_OUTPUT
           fi
 
   create_preview_release:
+    needs: check_conditions
+    if: ${{needs.check_conditions.should_release}} == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -55,5 +57,3 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             changelog.md
-    needs: check_conditions
-    if: ${{env.should_release}} == 'true'
