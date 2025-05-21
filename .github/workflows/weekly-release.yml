@@ -56,4 +56,4 @@ jobs:
           files: |
             changelog.md
     needs: check_conditions
-    if: env.should_release == 'true'
+    if: ${{env.should_release}} == 'true'
