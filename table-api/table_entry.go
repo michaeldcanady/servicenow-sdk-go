@@ -2,6 +2,12 @@ package tableapi
 
 import "errors"
 
+const (
+	linkKey         = "link"
+	valueKey        = "value"
+	displayValueKey = "displayValue"
+)
+
 // TableEntry represents a single Service-Now table entry.
 type TableEntry map[string]interface{}
 
@@ -45,7 +51,6 @@ func (tE TableEntry) DisplayValue(key string) *TableValue {
 	switch v := value.(type) {
 	case map[string]interface{}:
 		trueVal = v[displayValueKey]
-		trueVal = v[valueKey]
 	case interface{}:
 		trueVal = v
 	}
