@@ -43,7 +43,7 @@ func TestBaseServiceNowItemResponse_Serialize(t *testing.T) {
 				parsable := &BaseServiceNowItemResponse[*mocking.MockParsable]{}
 				err := parsable.Serialize(nil)
 
-				assert.Equal(t, errors.New("Serialization is not supported"), err)
+				assert.Equal(t, errors.New("serialization is not supported"), err)
 			},
 		},
 		{
@@ -54,7 +54,7 @@ func TestBaseServiceNowItemResponse_Serialize(t *testing.T) {
 				parsable := &BaseServiceNowItemResponse[*mocking.MockParsable]{}
 				err := parsable.Serialize(writer)
 
-				assert.Equal(t, errors.New("Serialization is not supported"), err)
+				assert.Equal(t, errors.New("serialization is not supported"), err)
 			},
 		},
 		{
@@ -63,7 +63,7 @@ func TestBaseServiceNowItemResponse_Serialize(t *testing.T) {
 				parsable := (*BaseServiceNowItemResponse[*mocking.MockParsable])(nil)
 				err := parsable.Serialize(nil)
 
-				assert.Equal(t, errors.New("Serialization is not supported"), err)
+				assert.Equal(t, errors.New("serialization is not supported"), err)
 			},
 		},
 	}
