@@ -1,19 +1,27 @@
 package tableapi
 
-// NewTableEntry creates a new table entry instance.
+import "errors"
+
+const (
+	linkKey         = "link"
+	valueKey        = "value"
+	displayValueKey = "displayValue"
+)
+
+// TableEntry represents a single Service-Now table entry.
+type TableEntry map[string]interface{}
+
+// NewTableEntry creates a new instance of TableEntry.
 func NewTableEntry() TableEntry {
 	return TableEntry{}
 }
 
-// TableEntry represents a single Service-Now Table Entry.
-type TableEntry map[string]interface{}
-
-// Set sets the specified key to the provided value.
+// Set assigns the specified key to the given value in the table entry.
 func (tE TableEntry) Set(key string, value interface{}) {
 	tE[key] = value
 }
 
-// Value returns a tE if a valid key is provided.
+// Value retrieves a TableValue instance for the given key.
 func (tE TableEntry) Value(key string) *TableValue {
 	value, exists := tE[key]
 	if !exists {
@@ -24,14 +32,57 @@ func (tE TableEntry) Value(key string) *TableValue {
 
 	switch v := value.(type) {
 	case map[string]interface{}:
-		trueVal = v["value"]
+		trueVal = v[valueKey]
 	case interface{}:
 		trueVal = v
 	}
 	return &TableValue{value: trueVal}
 }
 
-// Keys returns a slice of the tE's keys.
+// DisplayValue retrieves a TableValue instance for the given key.
+func (tE TableEntry) DisplayValue(key string) *TableValue {
+	value, exists := tE[key]
+	if !exists {
+		return nil
+	}
+
+	var trueVal interface{}
+
+	switch v := value.(type) {
+	case map[string]interface{}:
+		trueVal = v[displayValueKey]
+	case interface{}:
+		trueVal = v
+	}
+	return &TableValue{value: trueVal}
+}
+
+// Link retrieves a String instance for the given key.
+func (tE TableEntry) Link(key string) (*string, error) {
+	value, exists := tE[key]
+	if !exists {
+		return nil, nil
+	}
+
+	var trueVal string
+
+	switch v := value.(type) {
+	case map[string]interface{}:
+		val, ok := v[linkKey]
+		if !ok {
+			return nil, nil
+		}
+		trueVal, ok = val.(string)
+		if !ok {
+			return nil, errors.New("link is not string")
+		}
+	default:
+		return nil, nil
+	}
+	return &trueVal, nil
+}
+
+// Keys returns a slice of all field names stored in the table entry.
 func (tE TableEntry) Keys() []string {
 	keys := make([]string, 0, tE.Len())
 	for k := range tE {
@@ -40,7 +91,8 @@ func (tE TableEntry) Keys() []string {
 	return keys
 }
 
-// Len returns the length of the tE.
+// Len returns the number of fields in the table entry.
+// Len returns the number of fields in the table entry.
 func (tE TableEntry) Len() int {
 	return len(tE)
 }
