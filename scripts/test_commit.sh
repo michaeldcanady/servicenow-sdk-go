@@ -1,6 +1,7 @@
 #!/bin/bash
 
-git rev-list --tags
+echo "current tags:"
+echo $(git rev-list --tags)
 
 LATEST_RELEASE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
 LATEST_RELEASE_COMMIT_ID=$(git rev-parse "${LATEST_RELEASE_TAG}")
