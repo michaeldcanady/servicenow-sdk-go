@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LATEST_RELEASE_TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
+LATEST_RELEASE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
 
 # Get the current state of the repo
 current_state=$(git rev-parse HEAD)
