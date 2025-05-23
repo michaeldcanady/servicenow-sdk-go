@@ -1,5 +1,7 @@
 #!/bin/bash
 
+git ls-remote --tags origin
+
 LATEST_RELEASE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
 
 # Get the current state of the repo

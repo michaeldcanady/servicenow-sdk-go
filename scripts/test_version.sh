@@ -1,8 +1,12 @@
 #!/bin/bash
 
+git ls-remote --tags origin
+
 version_to_number() {
     echo "$1" | awk -F. '{ printf("%d%d%d\n", $1,$2,$3) }'
 }
+
+echo "$(git tag | grep -v -- '-preview' | sort -V | tail -n 1)"
 
 CURRENT_VERSION_STRING=$(cat VERSION | sed 's/^v//')
 LAST_STABLE_VERSION_STRING=$(gh release list --limit 1 --json tagName --jq '.[0].tagName' | sed 's/^v//')
