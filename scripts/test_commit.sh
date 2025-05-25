@@ -1,7 +1,5 @@
 #!/bin/bash
 
-git ls-remote --tags origin
-
 echo "current tags:"
 echo $(git rev-list --tags)
 
