@@ -24,7 +24,7 @@ jobs:
           echo "scripts/test_changed_file.sh $(scripts/test_changed_file.sh)"
           echo "scripts/test_commit.sh $(scripts/test_commit.sh)"
           echo "scripts/test_version.sh $(scripts/test_version.sh)"
-          if scripts/test_changed_file.sh && scripts/test_commit.sh && scripts/test_version.sh; then
+          if [[ scripts/test_changed_file.sh && scripts/test_commit.sh && scripts/test_version.sh ]]; then
             echo "should_release=true" >> $GITHUB_OUTPUT
           else
             echo "should_release=false" >> $GITHUB_OUTPUT
