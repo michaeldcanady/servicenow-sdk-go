@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git ls-remote --tags origin
+git fetch --tags origin
 
 LATEST_RELEASE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
 
