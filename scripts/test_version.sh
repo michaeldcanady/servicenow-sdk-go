@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CURRENT_VERSION_STRING=$(cat VERSION | sed 's/^v//')
-LAST_STABLE_VERSION_STRING="$(git tag | grep -v -- '-' | sort -V | tail -n 1)"
+LAST_STABLE_VERSION_STRING="$(git tag | grep -v -- '-' | sort -V | tail -n 1 | sed 's/^v//')"
 
 echo "\n$CURRENT_VERSION_STRING\n"
 echo "\n$LAST_STABLE_VERSION_STRING\n"
@@ -10,8 +10,8 @@ if [[ $CURRENT_VERSION_STRING == $LAST_STABLE_VERSION_STRING ]]
 then
     echo false
 fi
-local IFS=.
-local i ver1=($CURRENT_VERSION_STRING) ver2=($LAST_STABLE_VERSION_STRING)
+IFS=.
+i ver1=($CURRENT_VERSION_STRING) ver2=($LAST_STABLE_VERSION_STRING)
 # fill empty fields in ver1 with zeros
 for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
 do
