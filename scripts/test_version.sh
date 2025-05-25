@@ -1,26 +1,19 @@
 #!/bin/bash
 
-version_to_number() {
-    echo "$1" | awk -F. '{ printf("%d%d%d\n", $1,$2,$3) }'
-}
-
 echo "$(git tag | grep -v -- '-' | sort -V | tail -n 1)"
 
 CURRENT_VERSION_STRING=$(cat VERSION | sed 's/^v//')
 LAST_STABLE_VERSION_STRING=$(gh release list --limit 1 --json tagName --jq '.[0].tagName' | sed 's/^v//')
 
-CURRENT_VERSION=$(version_to_number $CURRENT_VERSION_STRING)
-LAST_STABLE_VERSION=$(version_to_number $LAST_STABLE_VERSION_STRING)
-
 echo "\n$CURRENT_VERSION\n"
 echo "\n$LAST_STABLE_VERSION\n"
 
-if [[ $CURRENT_VERSION == $LAST_STABLE_VERSION" ]]
+if [[ $CURRENT_VERSION_STRING == $LAST_STABLE_VERSION_STRING ]]
 then
     echo false
 fi
 local IFS=.
-local i ver1=($CURRENT_VERSION) ver2=($LAST_STABLE_VERSION")
+local i ver1=($CURRENT_VERSION_STRING) ver2=($LAST_STABLE_VERSION_STRING)
 # fill empty fields in ver1 with zeros
 for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
 do
