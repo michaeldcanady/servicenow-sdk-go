@@ -1,9 +1,7 @@
 #!/bin/bash
 
-echo "$(git tag | grep -v -- '-' | sort -V | tail -n 1)"
-
 CURRENT_VERSION_STRING=$(cat VERSION | sed 's/^v//')
-LAST_STABLE_VERSION_STRING=$(gh release list --limit 1 --json tagName --jq '.[0].tagName' | sed 's/^v//')
+LAST_STABLE_VERSION_STRING="$(git tag | grep -v -- '-' | sort -V | tail -n 1)"
 
 echo "\n$CURRENT_VERSION_STRING\n"
 echo "\n$LAST_STABLE_VERSION_STRING\n"
