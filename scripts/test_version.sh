@@ -3,9 +3,6 @@
 CURRENT_VERSION_STRING=$(cat VERSION | sed 's/^v//')
 LAST_STABLE_VERSION_STRING="$(git tag | grep -v -- '-' | sort -V | tail -n 1 | sed 's/^v//')"
 
-echo "\n$CURRENT_VERSION_STRING\n"
-echo "\n$LAST_STABLE_VERSION_STRING\n"
-
 if [[ $CURRENT_VERSION_STRING == $LAST_STABLE_VERSION_STRING ]]
 then
     echo false
