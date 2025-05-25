@@ -12,11 +12,30 @@ LAST_STABLE_VERSION_STRING=$(gh release list --limit 1 --json tagName --jq '.[0]
 CURRENT_VERSION=$(version_to_number $CURRENT_VERSION_STRING)
 LAST_STABLE_VERSION=$(version_to_number $LAST_STABLE_VERSION_STRING)
 
-echo "$CURRENT_VERSION"
-echo "$LAST_STABLE_VERSION"
+echo "\n$CURRENT_VERSION\n"
+echo "\n$LAST_STABLE_VERSION\n"
 
-if [ $CURRENT_VERSION -gt $LAST_STABLE_VERSION ]; then
-    echo true
-else
+if [[ $CURRENT_VERSION == $LAST_STABLE_VERSION" ]]
+then
     echo false
 fi
+local IFS=.
+local i ver1=($CURRENT_VERSION) ver2=($LAST_STABLE_VERSION")
+# fill empty fields in ver1 with zeros
+for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+do
+    ver1[i]=0
+done
+for ((i=0; i<${#ver1[@]}; i++))
+do
+    if ((10#${ver1[i]:=0} > 10#${ver2[i]:=0}))
+    then
+        echo true
+    fi
+    if ((10#${ver1[i]} < 10#${ver2[i]}))
+    then
+        echo false
+    fi
+done
+echo false
+
