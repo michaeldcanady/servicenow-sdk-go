@@ -11,7 +11,8 @@ then
     echo false
 fi
 IFS=.
-i ver1=($CURRENT_VERSION_STRING) ver2=($LAST_STABLE_VERSION_STRING)
+ver1=($CURRENT_VERSION_STRING)
+ver2=($LAST_STABLE_VERSION_STRING)
 # fill empty fields in ver1 with zeros
 for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
 do
