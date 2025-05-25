@@ -9,7 +9,7 @@ echo "\n$LAST_STABLE_VERSION_STRING\n"
 if [[ $CURRENT_VERSION_STRING == $LAST_STABLE_VERSION_STRING ]]
 then
     echo false
-    return 0
+    exit 0
 fi
 IFS=.
 ver1=($CURRENT_VERSION_STRING)
@@ -24,13 +24,13 @@ do
     if ((10#${ver1[i]:=0} > 10#${ver2[i]:=0}))
     then
         echo true
-        return 0
+        exit 0
     fi
     if ((10#${ver1[i]} < 10#${ver2[i]}))
     then
         echo false
-        return 0
+        exit 0
     fi
 done
 echo false
-return 0
+exit 0
