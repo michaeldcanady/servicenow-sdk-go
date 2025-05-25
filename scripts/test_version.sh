@@ -5,8 +5,7 @@ LAST_STABLE_VERSION_STRING="$(git tag | grep -v -- '-' | sort -V | tail -n 1 | s
 
 if [[ $CURRENT_VERSION_STRING == $LAST_STABLE_VERSION_STRING ]]
 then
-    echo false
-    exit 0
+    exit 1
 fi
 IFS=.
 ver1=($CURRENT_VERSION_STRING)
@@ -20,14 +19,11 @@ for ((i=0; i<${#ver1[@]}; i++))
 do
     if ((10#${ver1[i]:=0} > 10#${ver2[i]:=0}))
     then
-        echo true
         exit 0
     fi
     if ((10#${ver1[i]} < 10#${ver2[i]}))
     then
-        echo false
-        exit 0
+        exit 1
     fi
 done
-echo false
-exit 0
+exit 1
