@@ -1,7 +1,5 @@
 #!/bin/bash
 
-git ls-remote --tags origin
-
 version_to_number() {
     echo "$1" | awk -F. '{ printf("%d%d%d\n", $1,$2,$3) }'
 }
