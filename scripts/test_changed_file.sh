@@ -8,7 +8,7 @@ current_state=$(git rev-parse HEAD)
 echo "files: $(git diff --name-only "$LATEST_RELEASE_TAG" "$current_state" | grep -q '\.go$')"
 
 if git diff --name-only "$LATEST_RELEASE_TAG" "$current_state" | grep -q '\.go$'; then
-  echo true
+  exit 0
 else
-  echo false
+  exit 1
 fi
