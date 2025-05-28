@@ -74,6 +74,17 @@ func (rB *AttachmentRequestBuilder2) File() *AttachmentFileRequestBuilder {
 	return NewAttachmentFileRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
+// Upload provides the way to access Service-Now's attachment upload API
+func (rB *AttachmentRequestBuilder2) Upload() *AttachmentUploadRequestBuilder {
+	if internal.IsNil(rB) {
+		return nil
+	}
+
+	pathParameters := maps.Clone(rB.GetPathParameters())
+
+	return NewAttachmentUploadRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
+
 // Get returns AttachmentCollectionResponse using provided arguments
 func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfiguration *AttachmentRequestBuilder2GetRequestConfiguration) (*AttachmentCollectionResponse2Model, error) {
 	if internal.IsNil(rB) {
