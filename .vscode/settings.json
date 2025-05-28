@@ -11,6 +11,7 @@
   "go.lintTool": "golangci-lint",
   "go.lintFlags": [],
   "cSpell.words": [
+    "attachmentapi",
     "Batchable",
     "covermode",
     "coverpkg",
@@ -27,6 +28,7 @@
     "formserialization",
     "gitblame",
     "githistory",
+    "gocognit",
     "golangci",
     "gopath",
     "Gruntfuggly",
