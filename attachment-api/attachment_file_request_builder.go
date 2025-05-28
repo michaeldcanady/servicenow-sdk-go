@@ -98,7 +98,7 @@ func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Conte
 		return nil, nil
 	}
 
-	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !internal.IsNil(requestConfiguration) {
 		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {

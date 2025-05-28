@@ -84,6 +84,7 @@ func (rB *BatchRequestBuilder) toPostRequestInformation(ctx context.Context, bod
 		return nil, nil
 	}
 
+	// BUG: method should be POST not PUT
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !internal.IsNil(requestConfiguration) {
