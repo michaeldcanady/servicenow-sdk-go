@@ -22,9 +22,7 @@ type AttachmentRequestBuilder2 struct {
 }
 
 // newAttachmentRequestBuilder2Internal instantiates a new AttachmentRequestBuilder2 with the provided requestBuilder
-func newAttachmentRequestBuilder2Internal(
-	requestBuilder newInternal.RequestBuilder,
-) *AttachmentRequestBuilder2 {
+func newAttachmentRequestBuilder2Internal(requestBuilder newInternal.RequestBuilder) *AttachmentRequestBuilder2 {
 	m := &AttachmentRequestBuilder2{
 		requestBuilder,
 	}
@@ -137,7 +135,12 @@ func (rB *AttachmentRequestBuilder2) ToGetRequestInformation(_ context.Context, 
 		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+		if parameter := requestConfiguration.QueryParameters; !internal.IsNil(parameter) {
+			kiotaRequestInfo.AddQueryParameters(parameter)
+		}
+		if options := requestConfiguration.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
 	}
 	requestInfo.Headers.TryAdd("Accept", "application/json")
 	return kiotaRequestInfo.RequestInformation, nil

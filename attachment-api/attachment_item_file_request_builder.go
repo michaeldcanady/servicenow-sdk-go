@@ -23,9 +23,7 @@ type AttachmentItemFileRequestBuilder struct {
 }
 
 // newAttachmentItemFileRequestBuilderInternal instantiates a new AttachmentItemFileRequestBuilder with the provided requestBuilder
-func newAttachmentItemFileRequestBuilderInternal(
-	requestBuilder newInternal.RequestBuilder,
-) *AttachmentItemFileRequestBuilder {
+func newAttachmentItemFileRequestBuilderInternal(requestBuilder newInternal.RequestBuilder) *AttachmentItemFileRequestBuilder {
 	m := &AttachmentItemFileRequestBuilder{
 		requestBuilder,
 	}
@@ -74,6 +72,11 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 
 	// TODO: add error factory
 	errorMapping := abstractions.ErrorMappings{}
+
+	requestAdapter := rB.GetRequestAdapter()
+	if internal.IsNil(requestAdapter) {
+		return nil, errors.New("requestAdapter is nil")
+	}
 
 	resp, err := rB.GetRequestAdapter().SendPrimitive(ctx, requestInfo, "[]byte", errorMapping)
 	if err != nil {
@@ -125,7 +128,9 @@ func (rB *AttachmentItemFileRequestBuilder) ToGetRequestInformation(_ context.Co
 		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+		if options := requestConfiguration.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
 	}
 	requestInfo.Headers.TryAdd("Accept", "*/*")
 	return kiotaRequestInfo.RequestInformation, nil

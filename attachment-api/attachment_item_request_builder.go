@@ -21,9 +21,7 @@ type AttachmentItemRequestBuilder struct {
 }
 
 // newAttachmentItemRequestBuilderInternal instantiates a new AttachmentItemRequestBuilder with the provided requestBuilder
-func newAttachmentItemRequestBuilderInternal(
-	requestBuilder newInternal.RequestBuilder,
-) *AttachmentItemRequestBuilder {
+func newAttachmentItemRequestBuilderInternal(requestBuilder newInternal.RequestBuilder) *AttachmentItemRequestBuilder {
 	m := &AttachmentItemRequestBuilder{
 		requestBuilder,
 	}
@@ -121,14 +119,16 @@ func (rB *AttachmentItemRequestBuilder) ToGetRequestInformation(_ context.Contex
 		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+		if options := requestConfiguration.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
 	}
-	requestInfo.Headers.TryAdd("Accept", "application/json")
+	requestInfo.Headers.TryAdd(newInternal.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 	return kiotaRequestInfo.RequestInformation, nil
 }
 
 // ToDeleteRequestInformation converts request configurations to Delete request information.
-func (rB *AttachmentItemRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *AttachmentItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *AttachmentItemRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *AttachmentItemRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -139,8 +139,10 @@ func (rB *AttachmentItemRequestBuilder) ToDeleteRequestInformation(_ context.Con
 		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+		if options := requestConfiguration.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
 	}
-	requestInfo.Headers.TryAdd("Accept", "application/json")
+	requestInfo.Headers.TryAdd(newInternal.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 	return kiotaRequestInfo.RequestInformation, nil
 }

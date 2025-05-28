@@ -66,7 +66,6 @@ func TestNewAttachmentFileRequestBuilder(t *testing.T) {
 	}
 }
 
-// TODO: (AttachmentFileRequestBuilder_Post) Add tests
 func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 	tests := []struct {
 		name string
