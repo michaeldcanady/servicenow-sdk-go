@@ -51,6 +51,18 @@ func TestNowRequestBuilder_Attachment(t *testing.T) {
 	assert.Equal(t, expected, attachmentBuilder.RequestBuilder.PathParameters)
 }
 
+// TODO: (TestNowRequestBuilder_Attachment2) Add tests
+func TestNowRequestBuilder_Attachment2(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
 func TestNowRequestBuilder_Batch(t *testing.T) {
 	tests := []struct {
 		name string
