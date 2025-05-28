@@ -20,9 +20,7 @@ type AttachmentUploadRequestBuilder struct {
 }
 
 // newAttachmentUploadRequestBuilderInternal instantiates a new AttachmentUploadRequestBuilder with the provided requestBuilder
-func newAttachmentUploadRequestBuilderInternal(
-	requestBuilder newInternal.RequestBuilder,
-) *AttachmentUploadRequestBuilder {
+func newAttachmentUploadRequestBuilderInternal(requestBuilder newInternal.RequestBuilder) *AttachmentUploadRequestBuilder {
 	m := &AttachmentUploadRequestBuilder{
 		requestBuilder,
 	}
@@ -89,8 +87,9 @@ func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstrac
 		return nil, err
 	}
 
-	// TODO: add error factory
-	errorMapping := abstractions.ErrorMappings{}
+	errorMapping := abstractions.ErrorMappings{
+		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+	}
 
 	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateFileFromDiscriminatorValue, errorMapping)
 	if err != nil {

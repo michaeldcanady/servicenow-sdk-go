@@ -103,8 +103,9 @@ func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfigurati
 		return nil, err
 	}
 
-	// TODO: add error factory
-	errorMapping := abstractions.ErrorMappings{}
+	errorMapping := abstractions.ErrorMappings{
+		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+	}
 
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachmentCollectionResponse2FromDiscriminatorValue, errorMapping)
 	if err != nil {

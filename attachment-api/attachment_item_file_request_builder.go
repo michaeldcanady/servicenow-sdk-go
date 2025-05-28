@@ -70,8 +70,9 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 		return nil, err
 	}
 
-	// TODO: add error factory
-	errorMapping := abstractions.ErrorMappings{}
+	errorMapping := abstractions.ErrorMappings{
+		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+	}
 
 	requestAdapter := rB.GetRequestAdapter()
 	if internal.IsNil(requestAdapter) {

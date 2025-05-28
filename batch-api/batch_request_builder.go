@@ -55,10 +55,8 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 		return nil, err
 	}
 
-	// TODO: implement error mapping
 	errorMapping := abstractions.ErrorMappings{
-		//"401":
-		//"500":
+		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateBatchResponseFromDiscriminatorValue, errorMapping)
