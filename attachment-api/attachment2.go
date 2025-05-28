@@ -114,7 +114,7 @@ func (rE *Attachment2Model) Serialize(_ serialization.SerializationWriter) error
 		return nil
 	}
 
-	return errors.New("Serialization not supported")
+	return errors.New("serialization not supported")
 }
 
 // Attachment2Model returns the deserialization information for this object.
