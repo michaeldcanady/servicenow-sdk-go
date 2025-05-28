@@ -34,7 +34,7 @@ func NewAttachmentItemRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentItemRequestBuilder {
 	return newAttachmentItemRequestBuilderInternal(
-		newInternal.NewBaseRequestBuilder(requestAdapter, attachmentFileURLTemplate, pathParameters),
+		newInternal.NewBaseRequestBuilder(requestAdapter, attachmentItemURLTemplate, pathParameters),
 	)
 }
 
