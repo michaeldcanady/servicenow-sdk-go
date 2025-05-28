@@ -89,7 +89,9 @@ func (rB *BatchRequestBuilder) toPostRequestInformation(ctx context.Context, bod
 		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+		if options := requestConfiguration.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(newInternal.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 

@@ -33,7 +33,7 @@ func NewAttachmentUploadRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentUploadRequestBuilder {
 	return newAttachmentUploadRequestBuilderInternal(
-		newInternal.NewBaseRequestBuilder(requestAdapter, attachmentFileURLTemplate, pathParameters),
+		newInternal.NewBaseRequestBuilder(requestAdapter, attachmentUploadURLTemplate, pathParameters),
 	)
 }
 
@@ -120,11 +120,15 @@ func (rB *AttachmentUploadRequestBuilder) ToPostRequestInformation(ctx context.C
 		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+		if options := requestConfiguration.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(newInternal.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
-	kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), "application/json", body)
-	requestInfo.Headers.TryAdd("Accept", "application/json")
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	if err != nil {
+		return nil, err
+	}
 	return kiotaRequestInfo.RequestInformation, nil
 }
