@@ -1,5 +1,0 @@
-package attachmentapi
-
-import abstractions "github.com/microsoft/kiota-abstractions-go"
-
-type TableAttachmentFileRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[AttachmentFileRequestBuilderPostQueryParameters]

@@ -50,7 +50,7 @@ func NewAttachmentFileRequestBuilder(
 }
 
 // Post uploads provided content to Service-Now using provided parameters
-func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType string, data []byte, requestConfiguration *TableAttachmentFileRequestBuilderPostRequestConfiguration) (*FileModel, error) {
+func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType string, data []byte, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*FileModel, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -93,7 +93,7 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType st
 }
 
 // ToPostRequestInformation converts request configurations to Post request information.
-func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Context, contentType string, body []byte, requestConfiguration *TableAttachmentFileRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
+func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Context, contentType string, body []byte, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
