@@ -48,7 +48,7 @@ func (f *FileWithContentModel) GetFieldDeserializers() map[string]func(serializa
 		f = NewFileWithContent().(*FileWithContentModel)
 	}
 
-	return f.GetFieldDeserializers()
+	return f.File.GetFieldDeserializers()
 }
 
 // GetContent returns contents of file
