@@ -20,9 +20,7 @@ type AttachmentFileRequestBuilder struct {
 }
 
 // newAttachmentFileRequestBuilderInternal instantiates a new AttachmentFileRequestBuilder with the provided requestBuilder
-func newAttachmentFileRequestBuilderInternal(
-	requestBuilder newInternal.RequestBuilder,
-) *AttachmentFileRequestBuilder {
+func newAttachmentFileRequestBuilderInternal(requestBuilder newInternal.RequestBuilder) *AttachmentFileRequestBuilder {
 	m := &AttachmentFileRequestBuilder{
 		requestBuilder,
 	}
@@ -60,7 +58,7 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType st
 	}
 
 	if requestConfiguration.QueryParameters.TableSysID == nil || *requestConfiguration.QueryParameters.TableSysID == "" {
-		return nil, errors.New("requestConfiguration.QueryParameters.TableSysId can't be empty")
+		return nil, errors.New("requestConfiguration.QueryParameters.TableSysID can't be empty")
 	}
 
 	if requestConfiguration.QueryParameters.TableName == nil || *requestConfiguration.QueryParameters.TableName == "" {
@@ -71,7 +69,16 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType st
 		return nil, errors.New("requestConfiguration.QueryParameters.FileName can't be empty")
 	}
 
+	if contentType == "" {
+		return nil, errors.New("contentType can't be empty")
+	}
+
+	if data == nil || len(data) == 0 {
+		return nil, errors.New("data is empty")
+	}
+
 	requestInfo, err := rB.ToPostRequestInformation(ctx, contentType, data, requestConfiguration)
+	// unable to test since nothing returns an error
 	if err != nil {
 		return nil, err
 	}
@@ -79,21 +86,26 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType st
 	// TODO: add error factory
 	errorMapping := abstractions.ErrorMappings{}
 
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateFileFromDiscriminatorValue, errorMapping)
+	requestAdapter := rB.GetRequestAdapter()
+	if internal.IsNil(requestAdapter) {
+		return nil, errors.New("requestAdapter is nil")
+	}
+
+	resp, err := requestAdapter.Send(ctx, requestInfo, CreateFileFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
 	}
 
 	typedResp, ok := resp.(*FileModel)
 	if !ok {
-		return nil, errors.New("resp is not Fileable")
+		return nil, errors.New("resp is not *FileModel")
 	}
 
 	return typedResp, nil
 }
 
 // ToPostRequestInformation converts request configurations to Post request information.
-func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Context, contentType string, body []byte, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) { //nolint:unparam
+func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Context, contentType string, body []byte, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -104,11 +116,15 @@ func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Conte
 		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+		if options := requestConfiguration.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
+		if parameters := requestConfiguration.QueryParameters; !internal.IsNil(parameters) {
+			kiotaRequestInfo.AddQueryParameters(parameters)
+		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(newInternal.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
 	kiotaRequestInfo.SetStreamContentAndContentType(body, contentType)
-	requestInfo.Headers.TryAdd("Accept", "application/json")
 	return kiotaRequestInfo.RequestInformation, nil
 }
