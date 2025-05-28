@@ -73,7 +73,7 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType st
 		return nil, errors.New("contentType can't be empty")
 	}
 
-	if data == nil || len(data) == 0 {
+	if len(data) == 0 {
 		return nil, errors.New("data is empty")
 	}
 
