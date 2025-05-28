@@ -113,7 +113,7 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 	return typedFile, nil
 }
 
-// ToPostRequestInformation converts request configurations to Post request information.
+// ToGetRequestInformation converts request configurations to Get request information.
 func (rB *AttachmentItemFileRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if internal.IsNil(rB) {
 		return nil, nil

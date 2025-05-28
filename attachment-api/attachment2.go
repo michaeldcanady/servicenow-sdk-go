@@ -104,7 +104,7 @@ func newAttachment2(model newInternal.Model) *Attachment2Model {
 }
 
 // CreateAttachment2FromDiscriminatorValue is a parsable factory for creating an Attachment2Model
-func CreateAttachment2FromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+func CreateAttachment2FromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewAttachment2(), nil
 }
 

@@ -1,0 +1,5 @@
+package attachmentapi
+
+import abstractions "github.com/microsoft/kiota-abstractions-go"
+
+type AttachmentRequestBuilder2GetRequestConfiguration = abstractions.RequestConfiguration[AttachmentRequestBuilder2GetQueryParameters]
