@@ -180,7 +180,7 @@ func TestAttachmentRequestBuilder2_Upload(t *testing.T) {
 						BaseRequestBuilder: abstractions.BaseRequestBuilder{
 							PathParameters: pathParameters,
 							RequestAdapter: requestAdapter,
-							UrlTemplate:    attachmentURLTemplate,
+							UrlTemplate:    attachmentUploadURLTemplate,
 						},
 					},
 				}, itemBuilder)
