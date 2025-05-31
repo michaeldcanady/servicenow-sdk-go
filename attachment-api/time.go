@@ -11,6 +11,9 @@ const (
 	DateTimeFormat = DateFormat + " " + TimeFormat
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// Time ...
 type Time time.Time
 
 func (t *Time) UnmarshalJSON(data []byte) error {

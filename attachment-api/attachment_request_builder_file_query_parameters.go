@@ -1,5 +1,8 @@
 package attachmentapi
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// AttachmentRequestBuilderFileQueryParameters ...
 type AttachmentRequestBuilderFileQueryParameters struct {
 	//EncryptionContext Sys_id of an encryption context record.
 	//Specify this parameter to allow only users with the specified encryption context to access the attachment.
