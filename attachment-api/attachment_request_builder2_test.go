@@ -88,7 +88,7 @@ func TestAttachmentRequestBuilder2_ByID(t *testing.T) {
 						BaseRequestBuilder: abstractions.BaseRequestBuilder{
 							PathParameters: pathParameters,
 							RequestAdapter: requestAdapter,
-							UrlTemplate:    attachmentFileURLTemplate,
+							UrlTemplate:    attachmentURLTemplate,
 						},
 					},
 				}, itemBuilder)
