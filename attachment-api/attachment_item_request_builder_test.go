@@ -83,12 +83,12 @@ func TestAttachmentItemRequestBuilder_File(t *testing.T) {
 
 				fileBuilder := builder.File()
 
-				assert.Equal(t, &AttachmentItemRequestBuilder{
+				assert.Equal(t, &AttachmentItemFileRequestBuilder{
 					&newInternal.BaseRequestBuilder{
 						BaseRequestBuilder: abstractions.BaseRequestBuilder{
 							PathParameters: pathParameters,
 							RequestAdapter: requestAdapter,
-							UrlTemplate:    attachmentFileURLTemplate,
+							UrlTemplate:    attachmentItemFileURLTemplate,
 						},
 					},
 				}, fileBuilder)

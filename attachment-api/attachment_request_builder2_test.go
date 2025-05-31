@@ -83,7 +83,7 @@ func TestAttachmentRequestBuilder2_ByID(t *testing.T) {
 
 				itemBuilder := builder.ByID("id")
 
-				assert.Equal(t, &AttachmentRequestBuilder2{
+				assert.Equal(t, &AttachmentItemRequestBuilder{
 					&newInternal.BaseRequestBuilder{
 						BaseRequestBuilder: abstractions.BaseRequestBuilder{
 							PathParameters: pathParameters,
