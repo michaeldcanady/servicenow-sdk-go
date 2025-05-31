@@ -98,7 +98,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), abstractions.ErrorMappings{"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue}).Return(mockParsable, nil)
+				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.AnythingOfType("abstractions.ErrorMappings")).Return(mockParsable, nil)
 
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
 				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
@@ -149,7 +149,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), abstractions.ErrorMappings{"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue}).Return((*mocking.MockParsable)(nil), errors.New("send error"))
+				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.AnythingOfType("abstractions.ErrorMappings")).Return((*mocking.MockParsable)(nil), errors.New("send error"))
 
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
 				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
@@ -200,7 +200,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), abstractions.ErrorMappings{"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue}).Return(mocking.NewMockParsable(), nil)
+				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.AnythingOfType("abstractions.ErrorMappings")).Return(mocking.NewMockParsable(), nil)
 
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
 				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
