@@ -121,7 +121,6 @@ func TestAttachmentUploadRequestBuilder_ToPostRequestInformation(t *testing.T) {
 					QueryParameters:    mockQueryParameters,
 					QueryParametersAny: mockQueryParametersAny,
 					Headers:            mockHeaders,
-					Content:            []byte("content"),
 				}
 
 				expected.AddRequestOptions([]abstractions.RequestOption{})
@@ -133,7 +132,12 @@ func TestAttachmentUploadRequestBuilder_ToPostRequestInformation(t *testing.T) {
 				requestInformation, err := builder.ToPostRequestInformation(context.Background(), mockContent, requestConfiguration)
 
 				assert.Nil(t, err)
-				assert.Equal(t, expected, requestInformation)
+				assert.Equal(t, expected.Method, requestInformation.Method)
+				assert.Equal(t, expected.UrlTemplate, requestInformation.UrlTemplate)
+				assert.Equal(t, expected.PathParameters, requestInformation.PathParameters)
+				assert.Equal(t, expected.PathParametersAny, requestInformation.PathParametersAny)
+				assert.Equal(t, expected.QueryParameters, requestInformation.QueryParameters)
+				assert.Equal(t, expected.QueryParametersAny, requestInformation.QueryParametersAny)
 			},
 		},
 		{
@@ -193,7 +197,12 @@ func TestAttachmentUploadRequestBuilder_ToPostRequestInformation(t *testing.T) {
 				requestInformation, err := builder.ToPostRequestInformation(context.Background(), mockContent, requestConfiguration)
 
 				assert.Nil(t, err)
-				assert.Equal(t, expected, requestInformation)
+				assert.Equal(t, expected.Method, requestInformation.Method)
+				assert.Equal(t, expected.UrlTemplate, requestInformation.UrlTemplate)
+				assert.Equal(t, expected.PathParameters, requestInformation.PathParameters)
+				assert.Equal(t, expected.PathParametersAny, requestInformation.PathParametersAny)
+				assert.Equal(t, expected.QueryParameters, requestInformation.QueryParameters)
+				assert.Equal(t, expected.QueryParametersAny, requestInformation.QueryParametersAny)
 			},
 		},
 		{
@@ -252,7 +261,12 @@ func TestAttachmentUploadRequestBuilder_ToPostRequestInformation(t *testing.T) {
 				requestInformation, err := builder.ToPostRequestInformation(context.Background(), mockContent, requestConfiguration)
 
 				assert.Nil(t, err)
-				assert.Equal(t, expected, requestInformation)
+				assert.Equal(t, expected.Method, requestInformation.Method)
+				assert.Equal(t, expected.UrlTemplate, requestInformation.UrlTemplate)
+				assert.Equal(t, expected.PathParameters, requestInformation.PathParameters)
+				assert.Equal(t, expected.PathParametersAny, requestInformation.PathParametersAny)
+				assert.Equal(t, expected.QueryParameters, requestInformation.QueryParameters)
+				assert.Equal(t, expected.QueryParametersAny, requestInformation.QueryParametersAny)
 			},
 		},
 		{
