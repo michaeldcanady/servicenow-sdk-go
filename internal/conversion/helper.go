@@ -80,6 +80,12 @@ func As2[T any](in interface{}, out T, strict bool) error {
 		return nil
 	}
 
+ // no point in dojng extra work if type is already correct
+ if typedIn, ok := in.(T); ok {
+  out = typedIn
+  return nil
+ }
+
 	valValue := reflect.ValueOf(in)
 	for valValue.Kind() == reflect.Ptr {
 		valValue = valValue.Elem()
