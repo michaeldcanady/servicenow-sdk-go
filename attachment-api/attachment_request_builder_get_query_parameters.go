@@ -1,5 +1,8 @@
 package attachmentapi
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// AttachmentRequestBuilderGetQueryParameters ...
 type AttachmentRequestBuilderGetQueryParameters struct {
 	// Limit Limit to be applied on pagination.
 	Limit int `url:"sysparm_limit"`

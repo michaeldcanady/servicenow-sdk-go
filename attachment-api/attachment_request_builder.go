@@ -7,10 +7,16 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// AttachmentRequestBuilder ...
 type AttachmentRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// NewAttachmentRequestBuilder ...
 func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]string) *AttachmentRequestBuilder {
 	requestBuilder := core.NewRequestBuilder(
 		client,
@@ -22,6 +28,8 @@ func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]s
 	}
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // Get sends an HTTP GET request using the specified query parameters and returns a AttachmentCollectionResponse.
 //
 // Parameters:
@@ -46,6 +54,8 @@ func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQuery
 	return configuration.response, nil
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // File ...
 func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequestBuilderFileQueryParameters) (*AttachmentItemResponse, error) {
 	if params == nil {

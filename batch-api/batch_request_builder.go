@@ -55,10 +55,8 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 		return nil, err
 	}
 
-	// TODO: implement error mapping
 	errorMapping := abstractions.ErrorMappings{
-		//"401":
-		//"500":
+		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateBatchResponseFromDiscriminatorValue, errorMapping)
@@ -84,13 +82,16 @@ func (rB *BatchRequestBuilder) toPostRequestInformation(ctx context.Context, bod
 		return nil, nil
 	}
 
+	// BUG: method should be POST not PUT
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !internal.IsNil(requestConfiguration) {
 		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+		if options := requestConfiguration.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(newInternal.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
