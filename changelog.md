@@ -18,6 +18,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
+## [1.7.1] - (03/06/2025)
+
+### Fixed
+
 - unable to access `display_value` and `link` with new implementation `tableapi.RecordElementModel` ([Issue #204](https://github.com/michaeldcanady/servicenow-sdk-go/issues/204))
 
 ## [1.7.0] - (01/05/2025)
