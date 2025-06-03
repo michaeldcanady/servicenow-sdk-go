@@ -40,7 +40,7 @@ func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilde
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
 // It allows you to work with attachments and manage attachments in ServiceNow.
 func (rB *NowRequestBuilder) Attachment2() *attachmentapi.AttachmentRequestBuilder2 {
-	return attachmentapi.NewAttachmentRequestBuilder2Internal(rB.RequestBuilder.PathParameters, rB.RequestBuilder.Client.(*ServiceNowClient).requestAdapter)
+	return attachmentapi.NewAttachmentRequestBuilder2(rB.RequestBuilder.Client.(*ServiceNowClient).requestAdapter, attachmentapi.WithPathParameters(rB.RequestBuilder.PathParameters))
 }
 
 // Batch returns a BatchRequestBuilder, entrypoint into the batch api.

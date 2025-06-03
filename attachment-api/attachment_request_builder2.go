@@ -29,24 +29,19 @@ func newAttachmentRequestBuilder2Internal(requestBuilder newInternal.RequestBuil
 	return m
 }
 
-// NewAttachmentRequestBuilder2Internal instantiates a new AttachmentRequestBuilder2 with custom parsable for table entries.
-func NewAttachmentRequestBuilder2Internal(
-	pathParameters map[string]string,
-	requestAdapter abstractions.RequestAdapter,
-) *AttachmentRequestBuilder2 {
-	return newAttachmentRequestBuilder2Internal(
-		newInternal.NewBaseRequestBuilder(requestAdapter, attachmentURLTemplate, pathParameters),
-	)
-}
-
 // NewAttachmentRequestBuilder2 instantiates a new AttachmentRequestBuilder2 with custom parsable for table entries.
 func NewAttachmentRequestBuilder2(
-	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
+	opts ...AttachmentRequestBuilder2Option,
 ) *AttachmentRequestBuilder2 {
-	urlParams := make(map[string]string)
-	urlParams[newInternal.RawURLKey] = rawURL
-	return NewAttachmentRequestBuilder2Internal(urlParams, requestAdapter)
+
+	config := attachmentRequestBuilder2Config{}
+
+	_ = newInternal.ApplyOptions(&config, opts...)
+
+	return newAttachmentRequestBuilder2Internal(
+		newInternal.NewBaseRequestBuilder(requestAdapter, attachmentURLTemplate, config.pathParameters),
+	)
 }
 
 // ByID provides the way to manage attachment item with provided sys id

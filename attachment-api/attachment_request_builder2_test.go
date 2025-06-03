@@ -10,32 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewAttachmentRequestBuilder2Internal(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				pathParameters := map[string]string{}
-				requestAdapter := mocking.NewMockRequestAdapter()
-
-				builder := NewAttachmentRequestBuilder2Internal(pathParameters, requestAdapter)
-
-				assert.IsType(t, &AttachmentRequestBuilder2{}, builder)
-				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
-				assert.Equal(t, pathParameters, builder.GetPathParameters())
-				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
-}
-
 func TestNewAttachmentRequestBuilder2(t *testing.T) {
 	tests := []struct {
 		name string
@@ -49,7 +23,7 @@ func TestNewAttachmentRequestBuilder2(t *testing.T) {
 
 				urlParams := map[string]string{newInternal.RawURLKey: rawURL}
 
-				builder := NewAttachmentRequestBuilder2(rawURL, requestAdapter)
+				builder := NewAttachmentRequestBuilder2(requestAdapter, WithRawURL(rawURL))
 
 				assert.IsType(t, &AttachmentRequestBuilder2{}, builder)
 				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
