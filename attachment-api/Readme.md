@@ -131,4 +131,104 @@ func main() {
 
 ## \[GET\] /now/attachment/\<sys_id\>
 
-<!-- TODO: Write [GET] /now/attachment/\<sys_id\> -->
+### V1 client compatible
+
+```golang
+package main
+
+import (
+    "context"
+
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+)
+
+func main() {
+    
+    //Implement credential and client.
+    pathParameters := {
+        "baseurl":"https://www.{instance}.service-now.com/api/now",
+        "sys_id": "sys id here",
+    }
+
+    // Instantiate new attachment request builder.
+    requestBuilder := attachmentapi.NewV1CompatibleAttachmentItemRequestBuilder(pathParameters, client)
+
+    // Call the get method with/without request configurations.
+    // Response is the attachment item.
+    response, err := requestBuilder.Get(context.Background(), nil)
+
+    // Test err, should be nil
+    if err != nil {
+        panic(err)
+    }
+}
+```
+
+## \[DELETE\] /now/attachment/\<sys_id\>
+
+### V1 client compatible
+
+```golang
+package main
+
+import (
+    "context"
+
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+)
+
+func main() {
+    
+    //Implement credential and client.
+    pathParameters := {
+        "baseurl":"https://www.{instance}.service-now.com/api/now",
+        "sys_id": "sys id here",
+    }
+
+    // Instantiate new attachment request builder.
+    requestBuilder := attachmentapi.NewV1CompatibleAttachmentItemRequestBuilder(pathParameters, client)
+
+    // Call the delete method with/without request configurations.
+    err := requestBuilder.Delete(context.Background(), nil)
+
+    // Test err, should be nil
+    if err != nil {
+        panic(err)
+    }
+}
+```
+
+## \[GET\] /now/attachment/\<sys_id\>/file
+
+### V1 client compatible
+
+```golang
+package main
+
+import (
+    "context"
+
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+)
+
+func main() {
+    
+    //Implement credential and client.
+    pathParameters := {
+        "baseurl":"https://www.{instance}.service-now.com/api/now",
+        "sys_id": "sys id here",
+    }
+
+    // Instantiate new attachment request builder.
+    requestBuilder := attachmentapi.NewV1CompatibleAttachmentItemRequestBuilder(pathParameters, client)
+
+    // Call the delete method with/without request configurations.
+    // response is the file with its metadata
+    response, err := requestBuilder.Get(context.Background(), nil)
+
+    // Test err, should be nil
+    if err != nil {
+        panic(err)
+    }
+}
+```
