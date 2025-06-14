@@ -117,7 +117,12 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				result, err := builder.Post(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				result, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Equal(t, mockParsable, result)
 				assert.Nil(t, err)
@@ -168,7 +173,12 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				result, err := builder.Post(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				result, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, result)
 				assert.Equal(t, errors.New("send error"), err)
@@ -219,7 +229,12 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				result, err := builder.Post(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				result, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, result)
 				assert.Equal(t, errors.New("resp is not *FileModel"), err)
@@ -251,7 +266,12 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				result, err := builder.Post(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				result, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, result)
 				assert.Equal(t, errors.New("requestAdapter is nil"), err)
@@ -274,7 +294,12 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.Post(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
 				assert.Equal(t, errors.New("data is empty"), err)
@@ -297,7 +322,12 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.Post(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
 				assert.Equal(t, errors.New("contentType can't be empty"), err)
@@ -319,7 +349,12 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.Post(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
 				assert.Equal(t, errors.New("requestConfiguration.QueryParameters.FileName can't be empty"), err)
@@ -340,7 +375,12 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.Post(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
 				assert.Equal(t, errors.New("requestConfiguration.QueryParameters.TableName can't be empty"), err)
@@ -361,7 +401,12 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.Post(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
 				assert.Equal(t, errors.New("requestConfiguration.QueryParameters.TableSysID can't be empty"), err)
@@ -378,7 +423,12 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.Post(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
 				assert.Equal(t, errors.New("requestConfiguration or requestConfiguration.QueryParameters can't be empty"), err)
@@ -394,7 +444,12 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.Post(context.Background(), contentType, mockData, nil)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				requestInformation, err := builder.Post(context.Background(), media, nil)
 
 				assert.Nil(t, requestInformation)
 				assert.Equal(t, errors.New("requestConfiguration or requestConfiguration.QueryParameters can't be empty"), err)
@@ -409,7 +464,12 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				builder := (*AttachmentFileRequestBuilder)(nil)
 
-				requestInformation, err := builder.Post(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
 				assert.Nil(t, err)
@@ -462,9 +522,14 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 				mockData := []byte{}
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{}
 
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), contentType, mockData, requestConfiguration)
+				requestInformation, err := builder.ToPostRequestInformation(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, err)
 				assert.Equal(t, expected, requestInformation)
@@ -511,9 +576,14 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 					Headers: headers,
 				}
 
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), contentType, mockData, requestConfiguration)
+				requestInformation, err := builder.ToPostRequestInformation(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, err)
 				assert.Equal(t, expected, requestInformation)
@@ -559,9 +629,14 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 					Options: []abstractions.RequestOption{mockRequestOption},
 				}
 
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), contentType, mockData, requestConfiguration)
+				requestInformation, err := builder.ToPostRequestInformation(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, err)
 				assert.Equal(t, expected, requestInformation)
@@ -610,7 +685,12 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				requestInformation, err := builder.ToPostRequestInformation(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, err)
 				assert.Equal(t, expected, requestInformation)
@@ -625,7 +705,12 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 
 				builder := (*AttachmentFileRequestBuilder)(nil)
 
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), contentType, mockData, requestConfiguration)
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				requestInformation, err := builder.ToPostRequestInformation(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
 				assert.Nil(t, err)

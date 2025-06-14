@@ -4,9 +4,11 @@ import (
 	"context"
 	"errors"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
 const (
@@ -17,6 +19,19 @@ const (
 // AttachmentFileRequestBuilder provides operations to manage Service-Now attachments.
 type AttachmentFileRequestBuilder struct {
 	newInternal.RequestBuilder
+}
+
+// NewV1CompatibleAttachmentFileRequestBuilder2 instantiates a new AttachmentRequestBuilder2.
+func NewV1CompatibleAttachmentFileRequestBuilder2(
+	pathParameters map[string]string,
+	client core.Client,
+) *AttachmentFileRequestBuilder {
+	authProvider := core.NewAPIV1ClientAdapter(client)
+	adapter, _ := nethttplibrary.NewNetHttpRequestAdapter(authProvider)
+
+	return newAttachmentFileRequestBuilderInternal(
+		newInternal.NewBaseRequestBuilder(adapter, attachmentURLTemplate, pathParameters),
+	)
 }
 
 // newAttachmentFileRequestBuilderInternal instantiates a new AttachmentFileRequestBuilder with the provided requestBuilder
@@ -48,7 +63,7 @@ func NewAttachmentFileRequestBuilder(
 }
 
 // Post uploads provided content to Service-Now using provided parameters
-func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType string, data []byte, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*FileModel, error) {
+func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*FileModel, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -69,15 +84,19 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType st
 		return nil, errors.New("requestConfiguration.QueryParameters.FileName can't be empty")
 	}
 
-	if contentType == "" {
+	if newInternal.IsNil(media) {
+		return nil, errors.New("media is nil")
+	}
+
+	if media.contentType == "" {
 		return nil, errors.New("contentType can't be empty")
 	}
 
-	if len(data) == 0 {
+	if len(media.data) == 0 {
 		return nil, errors.New("data is empty")
 	}
 
-	requestInfo, err := rB.ToPostRequestInformation(ctx, contentType, data, requestConfiguration)
+	requestInfo, err := rB.ToPostRequestInformation(ctx, media, requestConfiguration)
 	// unable to test since nothing returns an error
 	if err != nil {
 		return nil, err
@@ -106,7 +125,7 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, contentType st
 }
 
 // ToPostRequestInformation converts request configurations to Post request information.
-func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Context, contentType string, body []byte, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -126,6 +145,6 @@ func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Conte
 	}
 	kiotaRequestInfo.Headers.TryAdd(newInternal.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
-	kiotaRequestInfo.SetStreamContentAndContentType(body, contentType)
+	kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), media.GetContentType(), media)
 	return kiotaRequestInfo.RequestInformation, nil
 }
