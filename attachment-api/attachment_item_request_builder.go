@@ -53,6 +53,10 @@ func NewAttachmentItemRequestBuilderInternal(
 	)
 }
 
+func (rB *AttachmentItemRequestBuilder) isNil() bool {
+	return internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder)
+}
+
 // NewAttachmentItemRequestBuilder instantiates a new AttachmentItemRequestBuilder with custom parsable for table entries.
 func NewAttachmentItemRequestBuilder(
 	rawURL string,
@@ -65,7 +69,7 @@ func NewAttachmentItemRequestBuilder(
 
 // File provides way to manage Service-Now's Attachment Item File endpoint
 func (rB *AttachmentItemRequestBuilder) File() *AttachmentItemFileRequestBuilder {
-	if internal.IsNil(rB) {
+	if rB.isNil() {
 		return nil
 	}
 
@@ -76,7 +80,7 @@ func (rB *AttachmentItemRequestBuilder) File() *AttachmentItemFileRequestBuilder
 
 // Get returns an Attachment using the provided arguments
 func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentItemRequestBuilderGetRequestConfiguration) (*Attachment2Model, error) {
-	if internal.IsNil(rB) {
+	if rB.isNil() {
 		return nil, nil
 	}
 
@@ -95,7 +99,7 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 	}
 
 	if internal.IsNil(res) {
-		return nil, nil
+		return nil, errors.New("response is nil")
 	}
 
 	typedRes, ok := res.(*Attachment2Model)
@@ -108,7 +112,7 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 
 // Delete removes the attachment item using the provided arguments
 func (rB *AttachmentItemRequestBuilder) Delete(ctx context.Context, requestConfiguration *AttachmentItemRequestBuilderDeleteRequestConfiguration) error {
-	if internal.IsNil(rB) {
+	if rB.isNil() {
 		return nil
 	}
 
@@ -126,7 +130,7 @@ func (rB *AttachmentItemRequestBuilder) Delete(ctx context.Context, requestConfi
 
 // ToGetRequestInformation converts request configurations to Post request information.
 func (rB *AttachmentItemRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) {
+	if rB.isNil() {
 		return nil, nil
 	}
 
@@ -146,7 +150,7 @@ func (rB *AttachmentItemRequestBuilder) ToGetRequestInformation(_ context.Contex
 
 // ToDeleteRequestInformation converts request configurations to Delete request information.
 func (rB *AttachmentItemRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *AttachmentItemRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) {
+	if rB.isNil() {
 		return nil, nil
 	}
 

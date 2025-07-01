@@ -66,7 +66,7 @@ func NewAttachmentItemFileRequestBuilder(
 
 // Get returns file with content using provided parameters
 func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration) (*FileWithContentModel, error) {
-	if internal.IsNil(rB) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
@@ -105,7 +105,7 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 		return nil, errors.New("resp is not []byte")
 	}
 
-	metadata := opts.ResponseHeaders.Get("X-Attachment-Metadata")[0]
+	metadata := opts.ResponseHeaders.Get("x-attachment-metadata")[0]
 
 	var node serialization.ParseNode
 
@@ -133,7 +133,7 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 
 // ToGetRequestInformation converts request configurations to Get request information.
 func (rB *AttachmentItemFileRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 

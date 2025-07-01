@@ -83,12 +83,12 @@ func TestAttachmentRequestBuilder2_ByID(t *testing.T) {
 
 				itemBuilder := builder.ByID("id")
 
-				assert.Equal(t, &AttachmentRequestBuilder2{
+				assert.Equal(t, &AttachmentItemRequestBuilder{
 					&newInternal.BaseRequestBuilder{
 						BaseRequestBuilder: abstractions.BaseRequestBuilder{
 							PathParameters: pathParameters,
 							RequestAdapter: requestAdapter,
-							UrlTemplate:    attachmentFileURLTemplate,
+							UrlTemplate:    attachmentItemURLTemplate,
 						},
 					},
 				}, itemBuilder)
@@ -180,7 +180,7 @@ func TestAttachmentRequestBuilder2_Upload(t *testing.T) {
 						BaseRequestBuilder: abstractions.BaseRequestBuilder{
 							PathParameters: pathParameters,
 							RequestAdapter: requestAdapter,
-							UrlTemplate:    attachmentFileURLTemplate,
+							UrlTemplate:    attachmentUploadURLTemplate,
 						},
 					},
 				}, itemBuilder)

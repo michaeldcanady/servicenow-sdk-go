@@ -145,6 +145,14 @@ func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(ctx context.Con
 	}
 	kiotaRequestInfo.Headers.TryAdd(newInternal.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
-	kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), media.GetContentType(), media)
+	requestAdapter := rB.GetRequestAdapter()
+	if newInternal.IsNil(requestAdapter) {
+		return nil, errors.New("requestAdapter is nil")
+	}
+
+	if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), media.GetContentType(), media); err != nil {
+		return nil, err
+	}
+
 	return kiotaRequestInfo.RequestInformation, nil
 }

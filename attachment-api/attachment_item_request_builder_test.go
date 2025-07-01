@@ -2,12 +2,14 @@ package attachmentapi
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestNewAttachmentItemRequestBuilderInternal(t *testing.T) {
@@ -110,12 +112,189 @@ func TestAttachmentItemRequestBuilder_File(t *testing.T) {
 	}
 }
 
-// TODO: (TestAttachmentItemRequestBuilder_Get) Add tests
 func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				mockPathParameters := map[string]string{}
+				mockPathParametersAny := map[string]any{}
+				mockHeaders := &abstractions.RequestHeaders{}
+				mockHeaders.Add("Accept", "application/json")
+				mockQueryParameters := map[string]string{}
+				mockQueryParametersAny := map[string]any{}
+				mockURLTemplate := ""
+
+				expectedRequestInformation := &abstractions.RequestInformation{
+					Method:             abstractions.GET,
+					UrlTemplate:        mockURLTemplate,
+					PathParameters:     mockPathParameters,
+					PathParametersAny:  mockPathParametersAny,
+					QueryParameters:    mockQueryParameters,
+					QueryParametersAny: mockQueryParametersAny,
+					Headers:            mockHeaders,
+				}
+				expectedRequestInformation.AddRequestOptions(make([]abstractions.RequestOption, 0))
+
+				mockModel := mocking.NewMockModel()
+				expectedResult := &Attachment2Model{mockModel}
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(&Attachment2Model{mockModel}, nil)
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &AttachmentItemRequestBuilder{mockInternalRequestBuilder}
+
+				result, err := builder.Get(context.Background(), nil)
+
+				assert.Equal(t, expectedResult, result)
+				assert.Nil(t, err)
+			},
+		},
+		{
+			name: "Send Error",
+			test: func(t *testing.T) {
+				mockPathParameters := map[string]string{}
+				mockPathParametersAny := map[string]any{}
+				mockHeaders := &abstractions.RequestHeaders{}
+				mockHeaders.Add("Accept", "application/json")
+				mockQueryParameters := map[string]string{}
+				mockQueryParametersAny := map[string]any{}
+				mockURLTemplate := ""
+
+				expectedRequestInformation := &abstractions.RequestInformation{
+					Method:             abstractions.GET,
+					UrlTemplate:        mockURLTemplate,
+					PathParameters:     mockPathParameters,
+					PathParametersAny:  mockPathParametersAny,
+					QueryParameters:    mockQueryParameters,
+					QueryParametersAny: mockQueryParametersAny,
+					Headers:            mockHeaders,
+				}
+				expectedRequestInformation.AddRequestOptions(make([]abstractions.RequestOption, 0))
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return((*mocking.MockParsable)(nil), errors.New("send error"))
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &AttachmentItemRequestBuilder{mockInternalRequestBuilder}
+
+				result, err := builder.Get(context.Background(), nil)
+
+				assert.Nil(t, result)
+				assert.Equal(t, errors.New("send error"), err)
+			},
+		},
+		{
+			name: "Wrong type",
+			test: func(t *testing.T) {
+				mockPathParameters := map[string]string{}
+				mockPathParametersAny := map[string]any{}
+				mockHeaders := &abstractions.RequestHeaders{}
+				mockHeaders.Add("Accept", "application/json")
+				mockQueryParameters := map[string]string{}
+				mockQueryParametersAny := map[string]any{}
+				mockURLTemplate := ""
+
+				expectedRequestInformation := &abstractions.RequestInformation{
+					Method:             abstractions.GET,
+					UrlTemplate:        mockURLTemplate,
+					PathParameters:     mockPathParameters,
+					PathParametersAny:  mockPathParametersAny,
+					QueryParameters:    mockQueryParameters,
+					QueryParametersAny: mockQueryParametersAny,
+					Headers:            mockHeaders,
+				}
+				expectedRequestInformation.AddRequestOptions(make([]abstractions.RequestOption, 0))
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(mocking.NewMockParsable(), nil)
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &AttachmentItemRequestBuilder{mockInternalRequestBuilder}
+
+				result, err := builder.Get(context.Background(), nil)
+
+				assert.Nil(t, result)
+				assert.Equal(t, errors.New("res is not *Attachment2Model"), err)
+			},
+		},
+		{
+			name: "Nil response",
+			test: func(t *testing.T) {
+				mockPathParameters := map[string]string{}
+				mockPathParametersAny := map[string]any{}
+				mockHeaders := &abstractions.RequestHeaders{}
+				mockHeaders.Add("Accept", "application/json")
+				mockQueryParameters := map[string]string{}
+				mockQueryParametersAny := map[string]any{}
+				mockURLTemplate := ""
+
+				expectedRequestInformation := &abstractions.RequestInformation{
+					Method:             abstractions.GET,
+					UrlTemplate:        mockURLTemplate,
+					PathParameters:     mockPathParameters,
+					PathParametersAny:  mockPathParametersAny,
+					QueryParameters:    mockQueryParameters,
+					QueryParametersAny: mockQueryParametersAny,
+					Headers:            mockHeaders,
+				}
+				expectedRequestInformation.AddRequestOptions(make([]abstractions.RequestOption, 0))
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return((*mocking.MockParsable)(nil), nil)
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &AttachmentItemRequestBuilder{mockInternalRequestBuilder}
+
+				result, err := builder.Get(context.Background(), nil)
+
+				assert.Nil(t, result)
+				assert.Equal(t, errors.New("response is nil"), err)
+			},
+		},
+		{
+			name: "Nil inner model",
+			test: func(t *testing.T) {
+				builder := &AttachmentItemRequestBuilder{nil}
+
+				result, err := builder.Get(context.Background(), nil)
+
+				assert.Nil(t, result)
+				assert.Nil(t, err)
+			},
+		},
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				builder := (*AttachmentItemRequestBuilder)(nil)
+
+				result, err := builder.Get(context.Background(), nil)
+
+				assert.Nil(t, result)
+				assert.Nil(t, err)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
@@ -127,7 +306,85 @@ func TestAttachmentItemRequestBuilder_Delete(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				mockPathParameters := map[string]string{}
+				mockPathParametersAny := map[string]any{}
+				mockHeaders := &abstractions.RequestHeaders{}
+				mockHeaders.Add("Accept", "application/json")
+				mockQueryParameters := map[string]string{}
+				mockQueryParametersAny := map[string]any{}
+				mockURLTemplate := ""
+
+				expectedRequestInformation := &abstractions.RequestInformation{
+					Method:             abstractions.DELETE,
+					UrlTemplate:        mockURLTemplate,
+					PathParameters:     mockPathParameters,
+					PathParametersAny:  mockPathParametersAny,
+					QueryParameters:    mockQueryParameters,
+					QueryParametersAny: mockQueryParametersAny,
+					Headers:            mockHeaders,
+				}
+				expectedRequestInformation.AddRequestOptions(make([]abstractions.RequestOption, 0))
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("SendNoContent", context.Background(), expectedRequestInformation, mock.IsType(abstractions.ErrorMappings{})).Return(nil)
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &AttachmentItemRequestBuilder{mockInternalRequestBuilder}
+
+				err := builder.Delete(context.Background(), nil)
+
+				assert.Nil(t, err)
+			},
+		},
+		{
+			name: "SendNoContext Error",
+			test: func(t *testing.T) {
+				mockPathParameters := map[string]string{}
+				mockPathParametersAny := map[string]any{}
+				mockHeaders := &abstractions.RequestHeaders{}
+				mockHeaders.Add("Accept", "application/json")
+				mockQueryParameters := map[string]string{}
+				mockQueryParametersAny := map[string]any{}
+				mockURLTemplate := ""
+
+				expectedRequestInformation := &abstractions.RequestInformation{
+					Method:             abstractions.DELETE,
+					UrlTemplate:        mockURLTemplate,
+					PathParameters:     mockPathParameters,
+					PathParametersAny:  mockPathParametersAny,
+					QueryParameters:    mockQueryParameters,
+					QueryParametersAny: mockQueryParametersAny,
+					Headers:            mockHeaders,
+				}
+				expectedRequestInformation.AddRequestOptions(make([]abstractions.RequestOption, 0))
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("SendNoContent", context.Background(), expectedRequestInformation, mock.IsType(abstractions.ErrorMappings{})).Return(errors.New("send error"))
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &AttachmentItemRequestBuilder{mockInternalRequestBuilder}
+
+				err := builder.Delete(context.Background(), nil)
+
+				assert.Equal(t, errors.New("send error"), err)
+			},
+		},
+		// TODO: Write 'Wrong Type' test
+		// TODO: Write 'Nil embedded RequestBuilder' test
+		// TODO: Write 'Nil RequestBuilder' test
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)

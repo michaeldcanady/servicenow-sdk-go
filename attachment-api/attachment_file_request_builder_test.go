@@ -80,7 +80,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockQueryParametersAny := map[string]any{"file_name": []interface{}{"fileName"}, "table_name": []interface{}{"tableName"}, "table_sys_id": []interface{}{"sysId"}}
 				mockHeaders := &abstractions.RequestHeaders{}
 				mockHeaders.Add("accept", "application/json")
-				mockHeaders.Add("Content-Type", "text/plain")
+				mockHeaders.Add("Content-Type", "application/json")
 				mockContent := []byte("testing")
 				mockURLTemplate := ""
 				mockParsable := &FileModel{}
@@ -97,7 +97,23 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				}
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
+				contentType := "application/json"
+				mockData := mockContent
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
+				writer.On("Close").Return(nil)
+				writer.On("GetSerializedContent").Return(mockData, nil)
+
+				factory := mocking.NewMockSerializationWriterFactory()
+				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
+
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
 				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.AnythingOfType("abstractions.ErrorMappings")).Return(mockParsable, nil)
 
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
@@ -105,8 +121,6 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
 				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
 
-				contentType := "text/plain"
-				mockData := []byte("testing")
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
 						TableSysID: newInternal.ToPointer("sysId"),
@@ -116,11 +130,6 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				}
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
 
 				result, err := builder.Post(context.Background(), media, requestConfiguration)
 
@@ -137,7 +146,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockQueryParametersAny := map[string]any{"file_name": []interface{}{"fileName"}, "table_name": []interface{}{"tableName"}, "table_sys_id": []interface{}{"sysId"}}
 				mockHeaders := &abstractions.RequestHeaders{}
 				mockHeaders.Add("accept", "application/json")
-				mockHeaders.Add("Content-Type", "text/plain")
+				mockHeaders.Add("Content-Type", "application/json")
 				mockContent := []byte("testing")
 				mockURLTemplate := ""
 
@@ -153,7 +162,23 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				}
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
+				contentType := "application/json"
+				mockData := mockContent
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
+				writer.On("Close").Return(nil)
+				writer.On("GetSerializedContent").Return(mockData, nil)
+
+				factory := mocking.NewMockSerializationWriterFactory()
+				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
+
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
 				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.AnythingOfType("abstractions.ErrorMappings")).Return((*mocking.MockParsable)(nil), errors.New("send error"))
 
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
@@ -161,8 +186,6 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
 				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
 
-				contentType := "text/plain"
-				mockData := []byte("testing")
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
 						TableSysID: newInternal.ToPointer("sysId"),
@@ -172,11 +195,6 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				}
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
 
 				result, err := builder.Post(context.Background(), media, requestConfiguration)
 
@@ -193,7 +211,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockQueryParametersAny := map[string]any{"file_name": []interface{}{"fileName"}, "table_name": []interface{}{"tableName"}, "table_sys_id": []interface{}{"sysId"}}
 				mockHeaders := &abstractions.RequestHeaders{}
 				mockHeaders.Add("accept", "application/json")
-				mockHeaders.Add("Content-Type", "text/plain")
+				mockHeaders.Add("Content-Type", "application/json")
 				mockContent := []byte("testing")
 				mockURLTemplate := ""
 
@@ -209,7 +227,23 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				}
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
+				contentType := "application/json"
+				mockData := mockContent
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
+				writer.On("Close").Return(nil)
+				writer.On("GetSerializedContent").Return(mockData, nil)
+
+				factory := mocking.NewMockSerializationWriterFactory()
+				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
+
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
 				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.AnythingOfType("abstractions.ErrorMappings")).Return(mocking.NewMockParsable(), nil)
 
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
@@ -217,8 +251,6 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
 				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
 
-				contentType := "text/plain"
-				mockData := []byte("testing")
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
 						TableSysID: newInternal.ToPointer("sysId"),
@@ -228,11 +260,6 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				}
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
 
 				result, err := builder.Post(context.Background(), media, requestConfiguration)
 
@@ -490,14 +517,32 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 		{
 			name: "Successful - minimal",
 			test: func(t *testing.T) {
+				contentType := "application/json"
+				mockData := []byte("I am content")
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
+				writer.On("Close").Return(nil)
+				writer.On("GetSerializedContent").Return(mockData, nil)
+
+				factory := mocking.NewMockSerializationWriterFactory()
+				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
+
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
+
 				mockPathParameters := map[string]string{}
 				mockPathParametersAny := map[string]any{}
 				mockQueryParameters := map[string]string{}
 				mockQueryParametersAny := map[string]any{}
 				mockHeaders := &abstractions.RequestHeaders{}
 				mockHeaders.Add("accept", "application/json")
-				mockContent := []byte{}
+				mockHeaders.Add("content-type", "application/json")
+				mockContent := mockData
 				mockURLTemplate := ""
 
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
@@ -518,14 +563,7 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
-				contentType := ""
-				mockData := []byte{}
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
 
@@ -538,15 +576,33 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 		{
 			name: "Successful - with headers",
 			test: func(t *testing.T) {
+				contentType := "application/json"
+				mockData := []byte("I am content")
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
+				writer.On("Close").Return(nil)
+				writer.On("GetSerializedContent").Return(mockData, nil)
+
+				factory := mocking.NewMockSerializationWriterFactory()
+				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
+
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
+
 				mockPathParameters := map[string]string{}
 				mockPathParametersAny := map[string]any{}
 				mockQueryParameters := map[string]string{}
 				mockQueryParametersAny := map[string]any{}
 				mockHeaders := &abstractions.RequestHeaders{}
 				mockHeaders.Add("accept", "application/json")
+				mockHeaders.Add("content-type", "application/json")
 				mockHeaders.Add("test", "test1")
-				mockContent := []byte{}
+				mockContent := mockData
 				mockURLTemplate := ""
 
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
@@ -567,18 +623,11 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
-				contentType := ""
-				mockData := []byte{}
 				headers := &abstractions.RequestHeaders{}
 				headers.Add("test", "test1")
 
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					Headers: headers,
-				}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
 				}
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
@@ -592,14 +641,32 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 		{
 			name: "Successful - with options",
 			test: func(t *testing.T) {
+				contentType := "application/json"
+				mockData := []byte("I am content")
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
+				writer.On("Close").Return(nil)
+				writer.On("GetSerializedContent").Return(mockData, nil)
+
+				factory := mocking.NewMockSerializationWriterFactory()
+				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
+
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
+
 				mockPathParameters := map[string]string{}
 				mockPathParametersAny := map[string]any{}
 				mockQueryParameters := map[string]string{}
 				mockQueryParametersAny := map[string]any{}
 				mockHeaders := &abstractions.RequestHeaders{}
 				mockHeaders.Add("accept", "application/json")
-				mockContent := []byte{}
+				mockHeaders.Add("content-type", "application/json")
+				mockContent := mockData
 				mockURLTemplate := ""
 
 				mockRequestOption := mocking.NewMockRequestOption()
@@ -623,15 +690,8 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 
 				expected.AddRequestOptions([]abstractions.RequestOption{mockRequestOption})
 
-				contentType := ""
-				mockData := []byte{}
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					Options: []abstractions.RequestOption{mockRequestOption},
-				}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
 				}
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
@@ -645,14 +705,31 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 		{
 			name: "Successful - with query parameters",
 			test: func(t *testing.T) {
+				contentType := "application/json"
+				mockData := []byte("I am content")
+				media := &Media{
+					data:        mockData,
+					contentType: contentType,
+				}
+
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
+				writer.On("Close").Return(nil)
+				writer.On("GetSerializedContent").Return(mockData, nil)
+
+				factory := mocking.NewMockSerializationWriterFactory()
+				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
+
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
 				mockPathParameters := map[string]string{}
 				mockPathParametersAny := map[string]any{}
 				mockQueryParameters := map[string]string{"file_name": "file name"}
 				mockQueryParametersAny := map[string]any{"file_name": []interface{}{"file name"}}
 				mockHeaders := &abstractions.RequestHeaders{}
 				mockHeaders.Add("accept", "application/json")
-				mockContent := []byte{}
+				mockHeaders.Add("content-type", "application/json")
+				mockContent := mockData
 				mockURLTemplate := ""
 
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
@@ -673,8 +750,6 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
-				contentType := ""
-				mockData := []byte{}
 				queryParameters := &AttachmentFileRequestBuilderPostQueryParameters{
 					FileName: newInternal.ToPointer("file name"),
 				}
@@ -684,11 +759,6 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 				}
 
 				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
 
 				requestInformation, err := builder.ToPostRequestInformation(context.Background(), media, requestConfiguration)
 

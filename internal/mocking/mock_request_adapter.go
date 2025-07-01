@@ -58,7 +58,7 @@ func (rA *MockRequestAdapter) SendPrimitiveCollection(context context.Context, r
 // SendNoContent executes the HTTP request specified by the given RequestInformation with no return content.
 func (rA *MockRequestAdapter) SendNoContent(context context.Context, requestInfo *abstractions.RequestInformation, errorMappings abstractions.ErrorMappings) error {
 	args := rA.Called(context, requestInfo, errorMappings)
-	return args.Error(1)
+	return args.Error(0)
 }
 
 // GetSerializationWriterFactory returns the serialization writer factory currently in use for the request adapter service.
