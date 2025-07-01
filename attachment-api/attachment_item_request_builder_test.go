@@ -5,6 +5,9 @@ import (
 	"errors"
 	"testing"
 
+	"net/http"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -57,6 +60,48 @@ func TestNewAttachmentItemRequestBuilder(t *testing.T) {
 				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, urlParams, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+type mockV1Client struct {
+	mock.Mock
+}
+
+func newMockV1Client() *mockV1Client {
+	return &mockV1Client{
+		mock.Mock{},
+	}
+}
+
+func (mock *mockV1Client) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+	args := mock.Called(requestInfo, errorMapping)
+	return args.Get(0).(*http.Response), args.Error(1)
+}
+
+func TestNewV1CompatibleAttachmentItemRequestBuilder(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+
+				pathParameters := map[string]string{}
+				mockClient := newMockV1Client()
+
+				builder := NewV1CompatibleAttachmentItemRequestBuilder(pathParameters, mockClient)
+
+				assert.IsType(t, &AttachmentItemRequestBuilder{}, builder)
+				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.Equal(t, pathParameters, builder.GetPathParameters())
+				//assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},
 		},
 	}
