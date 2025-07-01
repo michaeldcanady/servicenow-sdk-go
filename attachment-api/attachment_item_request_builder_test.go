@@ -92,7 +92,6 @@ func TestNewV1CompatibleAttachmentItemRequestBuilder(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-
 				pathParameters := map[string]string{}
 				mockClient := newMockV1Client()
 
