@@ -382,8 +382,26 @@ func TestAttachmentItemRequestBuilder_Delete(t *testing.T) {
 			},
 		},
 		// TODO: Write 'Wrong Type' test
-		// TODO: Write 'Nil embedded RequestBuilder' test
-		// TODO: Write 'Nil RequestBuilder' test
+		{
+			name: "Nil inner model",
+			test: func(t *testing.T) {
+				builder := &AttachmentItemRequestBuilder{nil}
+
+				err := builder.Delete(context.Background(), nil)
+
+				assert.Nil(t, err)
+			},
+		},
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				builder := (*AttachmentItemRequestBuilder)(nil)
+
+				err := builder.Delete(context.Background(), nil)
+
+				assert.Nil(t, err)
+			},
+		},
 	}
 
 	for _, test := range tests {
@@ -429,9 +447,8 @@ func TestAttachmentItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 
 				builder := &AttachmentItemRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
+				requestInformation := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
 
-				assert.Nil(t, err)
 				assert.Equal(t, expected, requestInformation)
 			},
 		},
@@ -474,9 +491,8 @@ func TestAttachmentItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 
 				builder := &AttachmentItemRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
+				requestInformation := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
 
-				assert.Nil(t, err)
 				assert.Equal(t, expected, requestInformation)
 			},
 		},
@@ -518,9 +534,8 @@ func TestAttachmentItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 
 				builder := &AttachmentItemRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
+				requestInformation := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
 
-				assert.Nil(t, err)
 				assert.Equal(t, expected, requestInformation)
 			},
 		},
@@ -531,10 +546,9 @@ func TestAttachmentItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 
 				builder := (*AttachmentItemRequestBuilder)(nil)
 
-				requestInformation, err := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
+				requestInformation := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
 
 				assert.Nil(t, requestInformation)
-				assert.Nil(t, err)
 			},
 		},
 	}
@@ -582,9 +596,8 @@ func TestAttachmentItemRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
 
 				builder := &AttachmentItemRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.ToDeleteRequestInformation(context.Background(), requestConfiguration)
+				requestInformation := builder.ToDeleteRequestInformation(context.Background(), requestConfiguration)
 
-				assert.Nil(t, err)
 				assert.Equal(t, expected, requestInformation)
 			},
 		},
@@ -627,9 +640,8 @@ func TestAttachmentItemRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
 
 				builder := &AttachmentItemRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.ToDeleteRequestInformation(context.Background(), requestConfiguration)
+				requestInformation := builder.ToDeleteRequestInformation(context.Background(), requestConfiguration)
 
-				assert.Nil(t, err)
 				assert.Equal(t, expected, requestInformation)
 			},
 		},
@@ -671,9 +683,8 @@ func TestAttachmentItemRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
 
 				builder := &AttachmentItemRequestBuilder{mockInternalRequestBuilder}
 
-				requestInformation, err := builder.ToDeleteRequestInformation(context.Background(), requestConfiguration)
+				requestInformation := builder.ToDeleteRequestInformation(context.Background(), requestConfiguration)
 
-				assert.Nil(t, err)
 				assert.Equal(t, expected, requestInformation)
 			},
 		},
@@ -684,10 +695,9 @@ func TestAttachmentItemRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
 
 				builder := (*AttachmentItemRequestBuilder)(nil)
 
-				requestInformation, err := builder.ToDeleteRequestInformation(context.Background(), requestConfiguration)
+				requestInformation := builder.ToDeleteRequestInformation(context.Background(), requestConfiguration)
 
 				assert.Nil(t, requestInformation)
-				assert.Nil(t, err)
 			},
 		},
 	}
