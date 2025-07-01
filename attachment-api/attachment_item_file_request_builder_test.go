@@ -86,7 +86,9 @@ func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 				mockParsable := &FileWithContentModel{
 					NewFile(),
 				}
-				mockParsable.setContent(mockContent)
+
+				err := mockParsable.setContent(mockContent)
+				assert.Nil(t, err)
 
 				opts := nethttplibrary.NewHeadersInspectionOptions()
 				opts.InspectResponseHeaders = true
@@ -150,7 +152,8 @@ func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 				mockParsable := &FileWithContentModel{
 					NewFile(),
 				}
-				mockParsable.setContent(mockContent)
+				err := mockParsable.setContent(mockContent)
+				assert.Nil(t, err)
 
 				opts := nethttplibrary.NewHeadersInspectionOptions()
 				opts.InspectResponseHeaders = true
@@ -211,7 +214,8 @@ func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 				mockParsable := &FileWithContentModel{
 					NewFile(),
 				}
-				mockParsable.setContent(mockContent)
+				err := mockParsable.setContent(mockContent)
+				assert.Nil(t, err)
 
 				opts := nethttplibrary.NewHeadersInspectionOptions()
 				opts.InspectResponseHeaders = true
