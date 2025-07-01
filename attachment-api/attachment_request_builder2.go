@@ -35,7 +35,6 @@ func NewV1CompatibleAttachmentRequestBuilder2(
 	pathParameters map[string]string,
 	client core.Client,
 ) *AttachmentRequestBuilder2 {
-
 	authProvider := core.NewAPIV1ClientAdapter(client)
 	adapter, _ := nethttplibrary.NewNetHttpRequestAdapter(authProvider)
 
