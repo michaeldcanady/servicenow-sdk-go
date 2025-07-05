@@ -5,9 +5,6 @@ import (
 	"errors"
 	"testing"
 
-	"net/http"
-
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -67,21 +64,6 @@ func TestNewAttachmentItemRequestBuilder(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
-}
-
-type mockV1Client struct {
-	mock.Mock
-}
-
-func newMockV1Client() *mockV1Client {
-	return &mockV1Client{
-		mock.Mock{},
-	}
-}
-
-func (mock *mockV1Client) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-	args := mock.Called(requestInfo, errorMapping)
-	return args.Get(0).(*http.Response), args.Error(1)
 }
 
 func TestAttachmentItemRequestBuilder_File(t *testing.T) {
