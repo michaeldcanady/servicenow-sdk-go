@@ -15,8 +15,8 @@ func NewMockModel() *MockModel {
 	}
 }
 
-func (mM *MockModel) GetBackingStore() store.BackingStore {
-	args := mM.Called()
+func (mock *MockModel) GetBackingStore() store.BackingStore {
+	args := mock.Called()
 	return NilAllowed[store.BackingStore](args, 0)
 }
 
