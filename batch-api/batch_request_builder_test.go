@@ -64,19 +64,345 @@ func TestNewBatchRequestBuilder2(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestBatchRequestBuilder_Post(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				request := newMockBatchRequest()
+				mockPathParameters := map[string]string{}
+				mockPathParametersAny := map[string]any{}
+				mockHeaders := &abstractions.RequestHeaders{}
+				mockHeaders.Add("accept", "application/json")
+				mockHeaders.Add("content-type", "application/json")
+				mockQueryParameters := map[string]string{}
+				mockQueryParametersAny := map[string]any{}
+				mockURLTemplate := ""
+				mockContent := &BatchResponseModel{}
+				mockData := []byte{}
+
+				expected := &abstractions.RequestInformation{
+					Method:             abstractions.POST,
+					UrlTemplate:        mockURLTemplate,
+					PathParameters:     mockPathParameters,
+					PathParametersAny:  mockPathParametersAny,
+					QueryParameters:    mockQueryParameters,
+					QueryParametersAny: mockQueryParametersAny,
+					Headers:            mockHeaders,
+					Content:            mockData,
+				}
+				expected.AddRequestOptions([]abstractions.RequestOption{})
+				mockWriter := mocking.NewMockSerializationWriter()
+				mockWriter.On("WriteObjectValue", "", request, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
+				mockWriter.On("Close").Return(nil)
+				mockWriter.On("GetSerializedContent").Return(mockData, nil)
+
+				factory := mocking.NewMockSerializationWriterFactory()
+				factory.On("GetSerializationWriter", "application/json").Return(mockWriter, nil)
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
+				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(mockContent, nil)
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &BatchRequestBuilder{mockInternalRequestBuilder}
+
+				result, err := builder.Post(context.Background(), request, nil)
+
+				assert.Equal(t, mockContent, result)
+				assert.Nil(t, err)
+				mockRequestAdapter.AssertExpectations(t)
+				mockInternalRequestBuilder.AssertExpectations(t)
+				mockWriter.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Send error",
+			test: func(t *testing.T) {
+				request := newMockBatchRequest()
+				mockPathParameters := map[string]string{}
+				mockPathParametersAny := map[string]any{}
+				mockHeaders := &abstractions.RequestHeaders{}
+				mockHeaders.Add("accept", "application/json")
+				mockHeaders.Add("content-type", "application/json")
+				mockQueryParameters := map[string]string{}
+				mockQueryParametersAny := map[string]any{}
+				mockURLTemplate := ""
+				mockData := []byte{}
+
+				expected := &abstractions.RequestInformation{
+					Method:             abstractions.POST,
+					UrlTemplate:        mockURLTemplate,
+					PathParameters:     mockPathParameters,
+					PathParametersAny:  mockPathParametersAny,
+					QueryParameters:    mockQueryParameters,
+					QueryParametersAny: mockQueryParametersAny,
+					Headers:            mockHeaders,
+					Content:            mockData,
+				}
+				expected.AddRequestOptions([]abstractions.RequestOption{})
+				mockWriter := mocking.NewMockSerializationWriter()
+				mockWriter.On("WriteObjectValue", "", request, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
+				mockWriter.On("Close").Return(nil)
+				mockWriter.On("GetSerializedContent").Return(mockData, nil)
+
+				factory := mocking.NewMockSerializationWriterFactory()
+				factory.On("GetSerializationWriter", "application/json").Return(mockWriter, nil)
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
+				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(nil, errors.New("send error"))
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &BatchRequestBuilder{mockInternalRequestBuilder}
+
+				result, err := builder.Post(context.Background(), request, nil)
+
+				assert.Nil(t, result)
+				assert.Equal(t, errors.New("send error"), err)
+				mockRequestAdapter.AssertExpectations(t)
+				mockInternalRequestBuilder.AssertExpectations(t)
+				mockWriter.AssertExpectations(t)
+			},
+		},
+		{
+			name: "wrong response type",
+			test: func(t *testing.T) {
+				request := newMockBatchRequest()
+				mockPathParameters := map[string]string{}
+				mockPathParametersAny := map[string]any{}
+				mockHeaders := &abstractions.RequestHeaders{}
+				mockHeaders.Add("accept", "application/json")
+				mockHeaders.Add("content-type", "application/json")
+				mockQueryParameters := map[string]string{}
+				mockQueryParametersAny := map[string]any{}
+				mockURLTemplate := ""
+				mockContent := mocking.NewMockParsable()
+				mockData := []byte{}
+
+				expected := &abstractions.RequestInformation{
+					Method:             abstractions.POST,
+					UrlTemplate:        mockURLTemplate,
+					PathParameters:     mockPathParameters,
+					PathParametersAny:  mockPathParametersAny,
+					QueryParameters:    mockQueryParameters,
+					QueryParametersAny: mockQueryParametersAny,
+					Headers:            mockHeaders,
+					Content:            mockData,
+				}
+				expected.AddRequestOptions([]abstractions.RequestOption{})
+				mockWriter := mocking.NewMockSerializationWriter()
+				mockWriter.On("WriteObjectValue", "", request, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
+				mockWriter.On("Close").Return(nil)
+				mockWriter.On("GetSerializedContent").Return(mockData, nil)
+
+				factory := mocking.NewMockSerializationWriterFactory()
+				factory.On("GetSerializationWriter", "application/json").Return(mockWriter, nil)
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
+				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(mockContent, nil)
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &BatchRequestBuilder{mockInternalRequestBuilder}
+
+				result, err := builder.Post(context.Background(), request, nil)
+
+				assert.Nil(t, result)
+				assert.Equal(t, errors.New("resp is not *BatchResponse"), err)
+				mockRequestAdapter.AssertExpectations(t)
+				mockInternalRequestBuilder.AssertExpectations(t)
+				mockWriter.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Nil response",
+			test: func(t *testing.T) {
+				request := newMockBatchRequest()
+				mockPathParameters := map[string]string{}
+				mockPathParametersAny := map[string]any{}
+				mockHeaders := &abstractions.RequestHeaders{}
+				mockHeaders.Add("accept", "application/json")
+				mockHeaders.Add("content-type", "application/json")
+				mockQueryParameters := map[string]string{}
+				mockQueryParametersAny := map[string]any{}
+				mockURLTemplate := ""
+				mockData := []byte{}
+
+				expected := &abstractions.RequestInformation{
+					Method:             abstractions.POST,
+					UrlTemplate:        mockURLTemplate,
+					PathParameters:     mockPathParameters,
+					PathParametersAny:  mockPathParametersAny,
+					QueryParameters:    mockQueryParameters,
+					QueryParametersAny: mockQueryParametersAny,
+					Headers:            mockHeaders,
+					Content:            mockData,
+				}
+				expected.AddRequestOptions([]abstractions.RequestOption{})
+				mockWriter := mocking.NewMockSerializationWriter()
+				mockWriter.On("WriteObjectValue", "", request, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
+				mockWriter.On("Close").Return(nil)
+				mockWriter.On("GetSerializedContent").Return(mockData, nil)
+
+				factory := mocking.NewMockSerializationWriterFactory()
+				factory.On("GetSerializationWriter", "application/json").Return(mockWriter, nil)
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
+				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(nil, nil)
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &BatchRequestBuilder{mockInternalRequestBuilder}
+
+				result, err := builder.Post(context.Background(), request, nil)
+
+				assert.Nil(t, result)
+				assert.Nil(t, err)
+				mockRequestAdapter.AssertExpectations(t)
+				mockInternalRequestBuilder.AssertExpectations(t)
+				mockWriter.AssertExpectations(t)
+			},
+		},
+		{
+			name: "requestInformation conversion error",
+			test: func(t *testing.T) {
+				request := newMockBatchRequest()
+				mockPathParameters := map[string]string{}
+				mockPathParametersAny := map[string]any{}
+				mockHeaders := &abstractions.RequestHeaders{}
+				mockHeaders.Add("accept", "application/json")
+				mockHeaders.Add("content-type", "application/json")
+				mockQueryParameters := map[string]string{}
+				mockQueryParametersAny := map[string]any{}
+				mockURLTemplate := ""
+				mockData := []byte{}
+
+				expected := &abstractions.RequestInformation{
+					Method:             abstractions.POST,
+					UrlTemplate:        mockURLTemplate,
+					PathParameters:     mockPathParameters,
+					PathParametersAny:  mockPathParametersAny,
+					QueryParameters:    mockQueryParameters,
+					QueryParametersAny: mockQueryParametersAny,
+					Headers:            mockHeaders,
+					Content:            mockData,
+				}
+				expected.AddRequestOptions([]abstractions.RequestOption{})
+				mockWriter := mocking.NewMockSerializationWriter()
+				mockWriter.On("WriteObjectValue", "", request, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
+				mockWriter.On("Close").Return(nil)
+				mockWriter.On("GetSerializedContent").Return([]byte{}, errors.New("get content error"))
+
+				factory := mocking.NewMockSerializationWriterFactory()
+				factory.On("GetSerializationWriter", "application/json").Return(mockWriter, nil)
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &BatchRequestBuilder{mockInternalRequestBuilder}
+
+				result, err := builder.Post(context.Background(), request, nil)
+
+				assert.Nil(t, result)
+				assert.Equal(t, errors.New("get content error"), err)
+				mockRequestAdapter.AssertExpectations(t)
+				mockInternalRequestBuilder.AssertExpectations(t)
+				mockWriter.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Nil body",
+			test: func(t *testing.T) {
+				mockPathParameters := map[string]string{}
+				mockPathParametersAny := map[string]any{}
+				mockHeaders := &abstractions.RequestHeaders{}
+				mockHeaders.Add("accept", "application/json")
+				mockHeaders.Add("content-type", "application/json")
+				mockQueryParameters := map[string]string{}
+				mockQueryParametersAny := map[string]any{}
+				mockURLTemplate := ""
+				mockData := []byte{}
+
+				expected := &abstractions.RequestInformation{
+					Method:             abstractions.POST,
+					UrlTemplate:        mockURLTemplate,
+					PathParameters:     mockPathParameters,
+					PathParametersAny:  mockPathParametersAny,
+					QueryParameters:    mockQueryParameters,
+					QueryParametersAny: mockQueryParametersAny,
+					Headers:            mockHeaders,
+					Content:            mockData,
+				}
+				expected.AddRequestOptions([]abstractions.RequestOption{})
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+
+				builder := &BatchRequestBuilder{mockInternalRequestBuilder}
+
+				result, err := builder.Post(context.Background(), nil, nil)
+
+				assert.Nil(t, result)
+				assert.Equal(t, errors.New("body can't be nil"), err)
+			},
+		},
+		{
+			name: "Nil inner requestBuilder",
+			test: func(t *testing.T) {
+				request := newMockBatchRequest()
+
+				builder := &BatchRequestBuilder{nil}
+
+				requestInformation, err := builder.Post(context.Background(), request, nil)
+
+				assert.Nil(t, err)
+				assert.Nil(t, requestInformation)
+			},
+		},
+		{
+			name: "Nil requestBuilder",
+			test: func(t *testing.T) {
+				request := newMockBatchRequest()
+
+				builder := (*BatchRequestBuilder)(nil)
+
+				requestInformation, err := builder.Post(context.Background(), request, nil)
+
+				assert.Nil(t, err)
+				assert.Nil(t, requestInformation)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
 }
 
-// TODO: add tests
 func TestBatchRequestBuilder_toPostRequestInformation(t *testing.T) {
 	tests := []struct {
 		name string

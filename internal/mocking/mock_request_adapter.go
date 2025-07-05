@@ -2,6 +2,7 @@ package mocking
 
 import (
 	"context"
+	"fmt"
 
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -19,10 +20,27 @@ func NewMockRequestAdapter() *MockRequestAdapter {
 	}
 }
 
+func NilAllowed[T any](arguments mock.Arguments, index int) T {
+	var emptyT T
+	var typedObj T
+	var ok bool
+
+	obj := arguments.Get(index)
+
+	if obj == nil {
+		return emptyT
+	}
+	if typedObj, ok = obj.(T); !ok {
+		panic(fmt.Sprintf("assert: arguments: NilAllowed(%d) failed because object wasn't correct type: %v", index, obj))
+	}
+	return typedObj
+}
+
 // Send executes the HTTP request specified by the given RequestInformation and returns the deserialized response model.
 func (rA *MockRequestAdapter) Send(context context.Context, requestInfo *abstractions.RequestInformation, constructor serialization.ParsableFactory, errorMappings abstractions.ErrorMappings) (serialization.Parsable, error) {
 	args := rA.Called(context, requestInfo, constructor, errorMappings)
-	return args.Get(0).(serialization.Parsable), args.Error(1)
+
+	return NilAllowed[serialization.Parsable](args, 0), args.Error(1)
 }
 
 // SendEnum executes the HTTP request specified by the given RequestInformation and returns the deserialized response model.

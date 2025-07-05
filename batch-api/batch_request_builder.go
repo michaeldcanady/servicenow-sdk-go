@@ -42,7 +42,7 @@ func NewBatchRequestBuilder(
 
 // Post produces a batch response using the specified parameters
 func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requestConfiguration *BatchRequestBuilderPostRequestConfiguration) (*BatchResponseModel, error) {
-	if internal.IsNil(rB) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
