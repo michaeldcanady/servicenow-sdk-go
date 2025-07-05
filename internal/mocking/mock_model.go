@@ -15,12 +15,12 @@ func NewMockModel() *MockModel {
 	}
 }
 
-func (mM *MockModel) GetBackingStore() store.BackingStore {
-	args := mM.Called()
-	return args.Get(0).(store.BackingStore)
+func (mock *MockModel) GetBackingStore() store.BackingStore {
+	args := mock.Called()
+	return NilAllowed[store.BackingStore](args, 0)
 }
 
-func (mM *MockModel) SetBackingStoreFactory(factory store.BackingStoreFactory) error {
-	args := mM.Called(factory)
+func (mock *MockModel) SetBackingStoreFactory(factory store.BackingStoreFactory) error {
+	args := mock.Called(factory)
 	return args.Error(0)
 }

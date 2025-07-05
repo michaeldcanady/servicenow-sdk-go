@@ -12,7 +12,7 @@ type NowRequestBuilder struct {
 }
 
 // NewNowRequestBuilder creates a new instance of the NowRequestBuilder associated with the given URL and Client.
-// It accepts the URL and Client as parameters and returns a pointer to the created NowRequestBuiabstraction
+// It accepts the URL and Client as parameters and returns a pointer to the created NowRequestBuilder
 func NewNowRequestBuilder(url string, client core.Client) *NowRequestBuilder {
 	pathParameters := map[string]string{"baseurl": url}
 	requestBuilder := core.NewRequestBuilder(client, "{+baseurl}/Now", pathParameters)
@@ -29,10 +29,18 @@ func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuild
 	return tableapi.NewTableRequestBuilder(rB.RequestBuilder.Client, rB.RequestBuilder.PathParameters)
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
 // It allows you to work with attachments and manage attachments in ServiceNow.
 func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilder {
 	return attachmentapi.NewAttachmentRequestBuilder(rB.RequestBuilder.Client, rB.RequestBuilder.PathParameters)
+}
+
+// Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
+// It allows you to work with attachments and manage attachments in ServiceNow.
+func (rB *NowRequestBuilder) Attachment2() *attachmentapi.AttachmentRequestBuilder2 {
+	return attachmentapi.NewAttachmentRequestBuilder2Internal(rB.RequestBuilder.PathParameters, rB.RequestBuilder.Client.(*ServiceNowClient).requestAdapter)
 }
 
 // Batch returns a BatchRequestBuilder, entrypoint into the batch api.

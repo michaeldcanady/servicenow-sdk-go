@@ -76,33 +76,46 @@ func As[T any](in interface{}, out T) error {
 // As2 converts the input value to the specified type T and assigns it to out if compatible.
 // It supports strict and non-strict mode.
 func As2[T any](in interface{}, out T, strict bool) error {
+	// Early return if input is nil
 	if internal.IsNil(in) {
 		return nil
 	}
 
-	valValue := reflect.ValueOf(in)
-	for valValue.Kind() == reflect.Ptr {
-		valValue = valValue.Elem()
-		in = valValue.Interface()
-	}
-
+	// Validate output is a non-nil pointer
 	outVal := reflect.ValueOf(out)
 	if outVal.Kind() != reflect.Pointer || internal.IsNil(out) {
-		return fmt.Errorf("out is not pointer or is nil")
+		return fmt.Errorf("out must be a non-nil pointer")
 	}
 
+	// If types match, set directly
+	if typedIn, ok := in.(T); ok {
+		reflect.ValueOf(out).Elem().Set(reflect.ValueOf(typedIn))
+		return nil
+	}
+
+	// Unwrap pointer layers of input
+	valValue := reflect.ValueOf(in)
+	for valValue.Kind() == reflect.Ptr && !valValue.IsNil() {
+		valValue = valValue.Elem()
+	}
+
+	// Get the concrete type behind the output pointer
 	nestedOutVal := outVal.Elem()
 	if nestedOutVal.Kind() == reflect.Interface && !nestedOutVal.IsNil() {
 		nestedOutVal = nestedOutVal.Elem()
 	}
 
 	outType := nestedOutVal.Type()
+	inVal := valValue.Interface()
 
-	if !isCompatible(in, outType, strict) {
-		return fmt.Errorf("value '%v' is not compatible with type %T", in, nestedOutVal.Interface())
+	// Compatibility check
+	if !isCompatible(inVal, outType, strict) {
+		return fmt.Errorf("cannot convert '%v' to type %s", inVal, outType)
 	}
 
-	outVal.Elem().Set(valValue.Convert(outType))
+	converted := reflect.ValueOf(inVal).Convert(outType)
+	outVal.Elem().Set(converted)
+
 	return nil
 }
 

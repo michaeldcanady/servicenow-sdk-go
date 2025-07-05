@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- attachment api to utilize the Kiota framework
+
 ### Deprecated
 
 ### Removed

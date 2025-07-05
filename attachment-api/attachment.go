@@ -1,5 +1,8 @@
 package attachmentapi
 
+// Deprecated: deprecated since v{unreleased}.
+//
+// Attachment ...
 type Attachment struct {
 	TableSysId        string `json:"table_sys_id"` //nolint:stylecheck
 	Size              Int    `json:"size_bytes"`
