@@ -5,7 +5,6 @@ import (
 	"errors"
 	"maps"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -28,20 +27,6 @@ func newAttachmentRequestBuilder2Internal(requestBuilder newInternal.RequestBuil
 		requestBuilder,
 	}
 	return m
-}
-
-// NewV1CompatibleAttachmentRequestBuilder2 instantiates a new AttachmentRequestBuilder2 with custom parsable for table entries.
-func NewV1CompatibleAttachmentRequestBuilder2(
-	pathParameters map[string]string,
-	client core.Client,
-) *AttachmentRequestBuilder2 {
-	authProvider := core.NewAPIV1ClientAdapter(client)
-	adapter, _ := nethttplibrary.NewNetHttpRequestAdapter(authProvider)
-
-	return newAttachmentRequestBuilder2Internal(
-
-		newInternal.NewBaseRequestBuilder(adapter, attachmentURLTemplate, pathParameters),
-	)
 }
 
 // NewAttachmentRequestBuilder2Internal instantiates a new AttachmentRequestBuilder2 with custom parsable for table entries.

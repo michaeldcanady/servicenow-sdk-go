@@ -1,4 +1,5 @@
 package credentials
 
-type Credential struct {
+type Credential interface {
+	GetAuthentication() (string, error)
 }

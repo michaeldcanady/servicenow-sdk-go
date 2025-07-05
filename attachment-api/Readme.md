@@ -7,15 +7,13 @@ You can upload or retrieve a single file with each request.
 
 Returns the metadata for multiple attachments.
 
-### V1 client compatible
-
 ```golang
 package main
 
 import (
     "context"
 
-    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+    serviceNow "github.com/michaeldcanady/servicenow-sdk-go"
 )
 
 func main() {
@@ -25,12 +23,11 @@ func main() {
         "baseurl":"https://www.{instance}.service-now.com/api/now",
     }
 
-    // Instantiate new attachment request builder.
-    requestBuilder := attachmentapi.NewV1CompatibleAttachmentRequestBuilder2(pathParameters, client)
+    client := serviceNow.NewServiceNowClient2()
 
     // Call the get method, with or without AttachmentRequestBuilderGetQueryParameters.
     // Response is a AttachmentCollectionResponse.
-    response, err := requestBuilder.Get(context.Background(), nil)
+    response, err := client.Now().Attachment2().Get(context.Background(), nil)
 
     // Test err, should be nil
     if err != nil {
@@ -43,8 +40,6 @@ func main() {
 
 Upload file of any supported content type.
 
-### V1 client compatible
-
 ```golang
 package main
 
@@ -61,9 +56,6 @@ func main() {
         "baseurl":"https://www.{instance}.service-now.com/api/now",
     }
 
-    // Instantiate new attachment request builder.
-    requestBuilder := attachmentapi.NewV1CompatibleAttachmentFileRequestBuilder2(pathParameters, client)
-
     // The content type of the file you want to upload
     dataContentType := "text/plain"
     // the byte content of the file
@@ -72,8 +64,8 @@ func main() {
     media := attachmentapi.NewMedia(dataContentType, data)
 
     // Define the required query parameters
-    requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-        QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
+    requestConfiguration := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
+        QueryParameters: &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
             TableSysID: "INC00000001",
             TableName:  "incident",
             FileName:   "example.txt",
@@ -82,7 +74,7 @@ func main() {
 
     // Call the post method with your content type, data, and request configurations.
     // Response is the uploaded file.
-    response, err := requestBuilder.Post(context.Background(), media, requestConfiguration)
+    response, err := client.Now().Attachment2().Post(context.Background(), media, requestConfiguration)
 
     // Test err, should be nil
     if err != nil {
@@ -95,8 +87,6 @@ func main() {
 
 Upload file of any supported content type.
 
-### V1 client compatible
-
 ```golang
 package main
 
@@ -107,20 +97,11 @@ import (
 )
 
 func main() {
-    
-    //Implement credential and client.
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-    }
-
-    // Instantiate new attachment request builder.
-    requestBuilder := attachmentapi.NewV1CompatibleAttachmentUploadRequestBuilder(pathParameters, client)
-
     body := // TODO: how to make multipart body?
 
     // Call the post method with your content type, data, and request configurations.
     // Response is the uploaded file.
-    response, err := requestBuilder.Post(context.Background(), body, nil)
+    response, err := client.Now().Attachment2().Post(context.Background(), body, nil)
 
     // Test err, should be nil
     if err != nil {
@@ -131,8 +112,6 @@ func main() {
 
 ## \[GET\] /now/attachment/\<sys_id\>
 
-### V1 client compatible
-
 ```golang
 package main
 
@@ -143,19 +122,9 @@ import (
 )
 
 func main() {
-    
-    //Implement credential and client.
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-        "sys_id": "sys id here",
-    }
-
-    // Instantiate new attachment request builder.
-    requestBuilder := attachmentapi.NewV1CompatibleAttachmentItemRequestBuilder(pathParameters, client)
-
     // Call the get method with/without request configurations.
     // Response is the attachment item.
-    response, err := requestBuilder.Get(context.Background(), nil)
+    response, err := client.Now().Attachment2().ByID("sys id here").Get(context.Background(), nil)
 
     // Test err, should be nil
     if err != nil {
@@ -178,18 +147,8 @@ import (
 )
 
 func main() {
-    
-    //Implement credential and client.
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-        "sys_id": "sys id here",
-    }
-
-    // Instantiate new attachment request builder.
-    requestBuilder := attachmentapi.NewV1CompatibleAttachmentItemRequestBuilder(pathParameters, client)
-
     // Call the delete method with/without request configurations.
-    err := requestBuilder.Delete(context.Background(), nil)
+    err := client.Now().Attachment2().ByID("sys id here").Delete(context.Background(), nil)
 
     // Test err, should be nil
     if err != nil {
@@ -199,8 +158,6 @@ func main() {
 ```
 
 ## \[GET\] /now/attachment/\<sys_id\>/file
-
-### V1 client compatible
 
 ```golang
 package main
@@ -212,19 +169,9 @@ import (
 )
 
 func main() {
-    
-    //Implement credential and client.
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-        "sys_id": "sys id here",
-    }
-
-    // Instantiate new attachment request builder.
-    requestBuilder := attachmentapi.NewV1CompatibleAttachmentItemRequestBuilder(pathParameters, client)
-
     // Call the delete method with/without request configurations.
     // response is the file with its metadata
-    response, err := requestBuilder.Get(context.Background(), nil)
+    response, err := client.Now().Attachment2().ByID("sys id here").Get(context.Background(), nil)
 
     // Test err, should be nil
     if err != nil {

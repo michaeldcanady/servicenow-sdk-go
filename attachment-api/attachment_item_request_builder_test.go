@@ -84,32 +84,6 @@ func (mock *mockV1Client) Send(requestInfo core.IRequestInformation, errorMappin
 	return args.Get(0).(*http.Response), args.Error(1)
 }
 
-func TestNewV1CompatibleAttachmentItemRequestBuilder(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				pathParameters := map[string]string{}
-				mockClient := newMockV1Client()
-
-				builder := NewV1CompatibleAttachmentItemRequestBuilder(pathParameters, mockClient)
-
-				assert.IsType(t, &AttachmentItemRequestBuilder{}, builder)
-				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
-				assert.Equal(t, pathParameters, builder.GetPathParameters())
-				//assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
-}
-
 func TestAttachmentItemRequestBuilder_File(t *testing.T) {
 	tests := []struct {
 		name string

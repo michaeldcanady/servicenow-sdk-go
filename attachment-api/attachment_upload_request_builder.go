@@ -4,11 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
-	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
 const (
@@ -19,19 +17,6 @@ const (
 // AttachmentUploadRequestBuilder provides operations to manage Service-Now attachments.
 type AttachmentUploadRequestBuilder struct {
 	newInternal.RequestBuilder
-}
-
-// NewV1CompatibleAttachmentUploadRequestBuilder instantiates a new AttachmentUploadRequestBuilder.
-func NewV1CompatibleAttachmentUploadRequestBuilder(
-	pathParameters map[string]string,
-	client core.Client,
-) *AttachmentUploadRequestBuilder {
-	authProvider := core.NewAPIV1ClientAdapter(client)
-	adapter, _ := nethttplibrary.NewNetHttpRequestAdapter(authProvider)
-
-	return newAttachmentUploadRequestBuilderInternal(
-		newInternal.NewBaseRequestBuilder(adapter, attachmentURLTemplate, pathParameters),
-	)
 }
 
 // newAttachmentUploadRequestBuilderInternal instantiates a new AttachmentUploadRequestBuilder with the provided requestBuilder
