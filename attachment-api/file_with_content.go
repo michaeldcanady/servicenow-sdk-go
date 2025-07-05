@@ -15,7 +15,7 @@ const (
 type FileWithContent interface {
 	File
 	GetContent() ([]byte, error)
-	setContent([]byte) error
+	SetContent([]byte) error
 }
 
 // FileWithContentModel implementation of FileWithContent
@@ -45,7 +45,7 @@ func CreateFileWithContentFromDiscriminatorValue(parseNode serialization.ParseNo
 // GetFieldDeserializers returns the deserialization information for this object.
 func (f *FileWithContentModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	if internal.IsNil(f) {
-		f = NewFileWithContent().(*FileWithContentModel)
+		return nil
 	}
 
 	return f.File.GetFieldDeserializers()
@@ -70,8 +70,8 @@ func (f *FileWithContentModel) GetContent() ([]byte, error) {
 	return content, nil
 }
 
-// setContent sets the content to the provided value
-func (f *FileWithContentModel) setContent(content []byte) error {
+// SetContent sets the content to the provided value
+func (f *FileWithContentModel) SetContent(content []byte) error {
 	if internal.IsNil(f) {
 		return nil
 	}

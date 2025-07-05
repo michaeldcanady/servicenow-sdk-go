@@ -124,7 +124,7 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 		return nil, errors.New("file is not *FileWithContentModel")
 	}
 
-	if err := typedFile.setContent(typedResp); err != nil {
+	if err := typedFile.SetContent(typedResp); err != nil {
 		return nil, err
 	}
 

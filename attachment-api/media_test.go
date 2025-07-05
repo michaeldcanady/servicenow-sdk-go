@@ -32,17 +32,6 @@ func TestNewMedia(t *testing.T) {
 	}
 }
 
-//func TestNewMedia(t *testing.T) {
-//	tests := []struct {
-//		name string
-//		test func(*testing.T)
-//	}{}
-//
-//	for _, test := range tests {
-//		t.Run(test.name, test.test)
-//	}
-//}
-
 func TestMedia_Serialize(t *testing.T) {
 	tests := []struct {
 		name string

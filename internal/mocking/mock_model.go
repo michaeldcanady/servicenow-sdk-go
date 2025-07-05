@@ -20,7 +20,7 @@ func (mM *MockModel) GetBackingStore() store.BackingStore {
 	return args.Get(0).(store.BackingStore)
 }
 
-func (mM *MockModel) SetBackingStoreFactory(factory store.BackingStoreFactory) error {
-	args := mM.Called(factory)
+func (mock *MockModel) SetBackingStoreFactory(factory store.BackingStoreFactory) error {
+	args := mock.Called(factory)
 	return args.Error(0)
 }
