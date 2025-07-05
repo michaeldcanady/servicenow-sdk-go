@@ -27,6 +27,10 @@ func (m *MockRequestBuilder) SetPathParameters(pathParameters map[string]string)
 
 func (m *MockRequestBuilder) GetRequestAdapter() abstractions.RequestAdapter {
 	args := m.Called()
+	val0 := args.Get(0)
+	if val0 == nil {
+		return (abstractions.RequestAdapter)(nil)
+	}
 	return args.Get(0).(abstractions.RequestAdapter)
 }
 

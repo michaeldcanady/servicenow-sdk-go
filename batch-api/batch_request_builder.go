@@ -78,11 +78,10 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 
 // toPostRequestInformation converts provided parameters into request information
 func (rB *BatchRequestBuilder) toPostRequestInformation(ctx context.Context, body BatchRequest, requestConfiguration *BatchRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
-	// BUG: method should be POST not PUT
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !internal.IsNil(requestConfiguration) {
