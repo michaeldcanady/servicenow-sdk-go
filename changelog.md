@@ -8,9 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- Added support for Service-Now's attachment api using the Kiota framework
-
 ### Changed
+
+- attachment api to utilize the Kiota framework
 
 ### Deprecated
 
