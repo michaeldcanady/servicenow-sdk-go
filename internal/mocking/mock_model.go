@@ -17,7 +17,7 @@ func NewMockModel() *MockModel {
 
 func (mM *MockModel) GetBackingStore() store.BackingStore {
 	args := mM.Called()
-	return args.Get(0).(store.BackingStore)
+	return NilAllowed[store.BackingStore](args, 0)
 }
 
 func (mock *MockModel) SetBackingStoreFactory(factory store.BackingStoreFactory) error {

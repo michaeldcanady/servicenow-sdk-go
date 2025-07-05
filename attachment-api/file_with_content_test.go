@@ -1,6 +1,7 @@
 package attachmentapi
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
@@ -100,24 +101,154 @@ func TestFileWithContent_GetFieldDeserializers(t *testing.T) {
 	}
 }
 
-// TODO: Write tests for TestFileWithContent_GetContent
 func TestFileWithContent_GetContent(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				mockContent := []byte{}
+
+				mockBackingStore := mocking.NewMockBackingStore()
+				mockBackingStore.On("Get", "content").Return(mockContent, nil)
+
+				mockModel := mocking.NewMockModel()
+				mockModel.On("GetBackingStore").Return(mockBackingStore)
+
+				file := &FileWithContentModel{File: &FileModel{Model: mockModel}}
+
+				content, err := file.GetContent()
+
+				assert.Equal(t, mockContent, content)
+				assert.Nil(t, err)
+			},
+		},
+		{
+			name: "Wrong type",
+			test: func(t *testing.T) {
+				mockContent := "bad type"
+
+				mockBackingStore := mocking.NewMockBackingStore()
+				mockBackingStore.On("Get", "content").Return(mockContent, nil)
+
+				mockModel := mocking.NewMockModel()
+				mockModel.On("GetBackingStore").Return(mockBackingStore)
+
+				file := &FileWithContentModel{File: &FileModel{Model: mockModel}}
+
+				content, err := file.GetContent()
+
+				assert.Nil(t, content)
+				assert.Equal(t, errors.New("content is not []byte"), err)
+			},
+		},
+		{
+			name: "Retrieval error",
+			test: func(t *testing.T) {
+				mockBackingStore := mocking.NewMockBackingStore()
+				mockBackingStore.On("Get", "content").Return(nil, errors.New("retrieval error"))
+
+				mockModel := mocking.NewMockModel()
+				mockModel.On("GetBackingStore").Return(mockBackingStore)
+
+				file := &FileWithContentModel{File: &FileModel{Model: mockModel}}
+
+				content, err := file.GetContent()
+
+				assert.Nil(t, content)
+				assert.Equal(t, errors.New("retrieval error"), err)
+			},
+		},
+		{
+			name: "Nil store",
+			test: func(t *testing.T) {
+				mockContent := []byte{}
+
+				mockBackingStore := mocking.NewMockBackingStore()
+				mockBackingStore.On("Get", "content").Return(mockContent, nil)
+
+				mockModel := mocking.NewMockModel()
+				mockModel.On("GetBackingStore").Return(nil)
+
+				file := &FileWithContentModel{File: &FileModel{Model: mockModel}}
+
+				content, err := file.GetContent()
+
+				assert.Nil(t, content)
+				assert.Equal(t, errors.New("store is nil"), err)
+			},
+		},
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				file := (*FileWithContentModel)(nil)
+
+				content, err := file.GetContent()
+
+				assert.Nil(t, content)
+				assert.Nil(t, err)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
 }
 
-// TODO: Write tests for TestFileWithContent_SetContent
 func TestFileWithContent_SetContent(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				mockContent := []byte{}
+
+				mockBackingStore := mocking.NewMockBackingStore()
+				mockBackingStore.On("Set", "content", mockContent).Return(nil)
+
+				mockModel := mocking.NewMockModel()
+				mockModel.On("GetBackingStore").Return(mockBackingStore)
+
+				file := &FileWithContentModel{File: &FileModel{Model: mockModel}}
+
+				err := file.SetContent(mockContent)
+
+				assert.Nil(t, err)
+			},
+		},
+		{
+			name: "Nil store",
+			test: func(t *testing.T) {
+				mockContent := []byte{}
+
+				mockModel := mocking.NewMockModel()
+				mockModel.On("GetBackingStore").Return(nil)
+
+				file := &FileWithContentModel{File: &FileModel{Model: mockModel}}
+
+				err := file.SetContent(mockContent)
+
+				assert.Equal(t, errors.New("store is nil"), err)
+			},
+		},
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				mockContent := []byte{}
+
+				file := (*FileWithContentModel)(nil)
+
+				err := file.SetContent(mockContent)
+
+				assert.Nil(t, err)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)

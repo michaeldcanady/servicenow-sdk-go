@@ -57,7 +57,12 @@ func (f *FileWithContentModel) GetContent() ([]byte, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(contentKey)
+	store := f.GetBackingStore()
+	if internal.IsNil(store) {
+		return nil, errors.New("store is nil")
+	}
+
+	val, err := store.Get(contentKey)
 	if err != nil {
 		return nil, err
 	}
@@ -76,5 +81,10 @@ func (f *FileWithContentModel) SetContent(content []byte) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(contentKey, content)
+	store := f.GetBackingStore()
+	if internal.IsNil(store) {
+		return errors.New("store is nil")
+	}
+
+	return store.Set(contentKey, content)
 }
