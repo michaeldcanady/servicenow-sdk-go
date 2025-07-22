@@ -9,38 +9,7 @@ You can upload or retrieve a single file with each request.
 
 Returns the metadata for multiple attachments.
 
-```golang
-package main
-
-import (
-    "context"
-
-    serviceNow "github.com/michaeldcanady/servicenow-sdk-go"
-)
-
-func main() {
-    
-    //Implement credential and client.
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-    }
-
-    client := serviceNow.NewServiceNowClient2()
-
-    // Call the get method, with or without AttachmentRequestBuilderGetQueryParameters.
-    // Response is a AttachmentCollectionResponse.
-    response, err := client.Now().Attachment2().Get(context.Background(), nil)
-
-    // Test err, should be nil
-    if err != nil {
-        panic(err)
-    }
-}
-```
-
-## \[POST\] /now/attachment/file
-
-Upload file of any supported content type.
+### Fluent implementation
 
 ```golang
 package main
@@ -52,8 +21,48 @@ import (
 )
 
 func main() {
-    
-    //Implement credential and client.
+    ... //Implement credential and client.
+
+    pathParameters := {
+        "baseurl":"https://www.{instance}.service-now.com/api/now",
+    }
+
+    client := serviceNow.NewServiceNowClient2()
+ 
+    // define the configurations you wish to (optional)
+    config := &attachmentapi.AttachmentRequestBuilder2GetRequestConfiguration{
+       // ...
+    }
+
+    // Call the get method, with or without AttachmentRequestBuilderGetQueryParameters.
+    // Response is a AttachmentCollectionResponse.
+    response, err := client.Now().Attachment2().Get(context.Background(), config)
+
+    // Test err, should be nil
+    if err != nil {
+        log.Fatal(err)
+    }
+}
+```
+
+## \[POST\] /now/attachment/file
+
+Upload file of any supported content type.
+
+### Fluent implementation
+
+```golang
+package main
+
+import (
+    "context"
+
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+)
+
+func main() {
+    ... //Implement credential and client.
+
     pathParameters := {
         "baseurl":"https://www.{instance}.service-now.com/api/now",
     }
@@ -65,22 +74,24 @@ func main() {
 
     media := attachmentapi.NewMedia(dataContentType, data)
 
-    // Define the required query parameters
-    requestConfiguration := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
+    // Define the required and optional configurations
+    config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
+        ...
         QueryParameters: &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
-            TableSysID: "INC00000001",
-            TableName:  "incident",
-            FileName:   "example.txt",
+            TableSysID: "INC00000001", // required
+            TableName:  "incident", // required
+            FileName:   "example.txt", // required
         }
+        ...
     }
 
     // Call the post method with your content type, data, and request configurations.
     // Response is the uploaded file.
-    response, err := client.Now().Attachment2().Post(context.Background(), media, requestConfiguration)
+    response, err := client.Now().Attachment2().File().Post(context.Background(), media, config)
 
     // Test err, should be nil
     if err != nil {
-        panic(err)
+        log.Fatal(err)
     }
 }
 ```
@@ -89,6 +100,8 @@ func main() {
 
 Upload file of any supported content type.
 
+### Fluent implementation
+
 ```golang
 package main
 
@@ -99,20 +112,31 @@ import (
 )
 
 func main() {
+    ... //Implement credential and client.
+
     body := // TODO: how to make multipart body?
+
+    // define the configurations you wish to (optional)
+    config := &attachmentapi.AttachmentUploadRequestBuilderPostRequestConfiguration{
+        //...
+    }
 
     // Call the post method with your content type, data, and request configurations.
     // Response is the uploaded file.
-    response, err := client.Now().Attachment2().Post(context.Background(), body, nil)
+    response, err := client.Now().Attachment2().Upload().Post(context.Background(), body, config)
 
     // Test err, should be nil
     if err != nil {
-        panic(err)
+        log.Fatal(err)
     }
 }
 ```
 
-## \[GET\] /now/attachment/\<sys_id\>
+## \[GET\] /now/attachment/{sys_id}
+
+Retrieve specific attachment metadata using the sys id.
+
+### Fluent implementation
 
 ```golang
 package main
@@ -124,14 +148,23 @@ import (
 )
 
 func main() {
+    ... //Implement credential and client.
+
+    // define the configurations you wish to (optional)
+    config := &attachmentapi.AttachmentItemRequestBuilderGetRequestConfiguration{
+        //...
+    }
+
     // Call the get method with/without request configurations.
     // Response is the attachment item.
-    response, err := client.Now().Attachment2().ByID("sys id here").Get(context.Background(), nil)
+    response, err := client.Now().Attachment2().ByID("{sys id}").Get(context.Background(), config)
 
     // Test err, should be nil
     if err != nil {
-        panic(err)
+        log.Fatal(err)
     }
+    // Handle response
+    ...
 }
 ```
 
