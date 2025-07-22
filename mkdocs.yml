@@ -3,7 +3,7 @@ nav:
   - Home: index.md
   - Getting started: getting-started.md
   - How to use: how-to-use.md
-  - apis: apis/index.md
+  - apis:
     - Attachment API: apis/attachment-api.md
     - Batch API: apis/batch-api.md
     - Table API: apis/table-api.md
