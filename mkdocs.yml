@@ -1,0 +1,9 @@
+site_name: Service-Now SDK for Go Docs
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - How to use: how-to-use.md
+  - apis: apis/index.md
+    - Attachment API: apis/attachment-api.md
+    - Batch API: apis/batch-api.md
+    - Table API: apis/table-api.md
