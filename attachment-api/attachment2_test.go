@@ -27,3 +27,27 @@ func TestNewAttachment2(t *testing.T) {
 		t.Run(test.name, test.test)
 	}
 }
+
+func TestAttachment2_GetFieldDeserializers(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				model := (*Attachment2Model)(nil)
+
+				assert.Nil(t, model)
+
+				_ = model.GetFieldDeserializers()
+
+				assert.NotNil(t, model)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
