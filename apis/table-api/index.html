@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Table API - Service-Now SDK for Go Docs</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">Service-Now SDK for Go Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../getting-started/" class="nav-link">Getting started</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../how-to-use/" class="nav-link">How to use</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">apis</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../attachment-api/" class="dropdown-item">Attachment API</a>
+</li>
+                                    
+<li>
+    <a href="../batch-api/" class="dropdown-item">Batch API</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Table API</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../batch-api/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" class="nav-link disabled">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#table-api" class="nav-link">Table API</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#overview" class="nav-link">Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#get-nowtabletablename" class="nav-link">[GET] /now/table/{tableName}</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#post-nowtabletablename" class="nav-link">[POST] /now/table/{tableName}</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#delete-nowtabletablenamesys_id" class="nav-link">[DELETE] /now/table/{tableName}/{sys_id}</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#get-nowtabletablenamesys_id" class="nav-link">[GET] /now/table/{tableName}/{sys_id}</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#put-nowtabletablenamesys_id" class="nav-link">[PUT] /now/table/{tableName}/{sys_id}</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="table-api">Table API</h1>
+<h4 id="table-of-contents">Table of Contents</h4>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#--get----now-table--tablename-">[GET] /now/table/{tableName}</a></li>
+<li><a href="#fluent-implementation">Fluent implementation</a></li>
+<li><a href="#standard-implementation">Standard implementation</a></li>
+<li><a href="#--post----now-table--tablename-">[POST] /now/table/{tableName}</a></li>
+<li><a href="#fluent-implementation-1">Fluent implementation</a></li>
+<li><a href="#standard-implementation-1">Standard implementation</a></li>
+<li><a href="#--delete----now-table--tablename---sys-id-">[DELETE] /now/table/{tableName}/{sys_id}</a></li>
+<li><a href="#fluent-implementation-2">Fluent implementation</a></li>
+<li><a href="#standard-implementation">Standard Implementation</a></li>
+<li><a href="#--get----now-table--tablename---sys-id-">[GET] /now/table/{tableName}/{sys_id}</a></li>
+<li><a href="#fluent-implementation-3">Fluent implementation</a></li>
+<li><a href="#standard-implementation-2">Standard implementation</a></li>
+<li><a href="#--put----now-table--tablename---sys-id-">[PUT] /now/table/{tableName}/{sys_id}</a></li>
+<li><a href="#fluent-implementation-4">Fluent implementation</a></li>
+<li><a href="#standard-implementation-3">Standard implementation</a></li>
+</ul>
+<h2 id="overview">Overview</h2>
+<p>The <code>Table API</code> provides endpoints that allow you to perform create, read, update, and delete (CRUD) operations on existing tables.</p>
+<h2 id="get-nowtabletablename">[GET] /now/table/{tableName}</h2>
+<p>Retrieves multiple records for the specified table.</p>
+<h3 id="fluent-implementation">Fluent implementation</h3>
+<pre><code class="language-golang">package main
+
+import (
+    tableapi &quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;
+)
+
+func main() {
+    ... //Implement credential and client.
+
+    // define parameters you wish to (optional)
+    params := *tableapi.TableRequestBuilderGetQueryParameters{
+    ...
+    }
+
+    response, err := client.Now.Table(&quot;{TableName}&quot;).Get(params)
+    if err != nil {
+        log.Fatal(err)
+    }
+    // Handle response
+    ...
+}
+</code></pre>
+<h3 id="standard-implementation">Standard implementation</h3>
+<pre><code class="language-golang">package main
+
+import (
+    tableapi &quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;
+)
+
+func main() {
+    ... //Implement credential and client.
+    pathParameters := {
+        &quot;baseurl&quot;:&quot;https://www.{instance}.service-now.com/api/now&quot;,
+        &quot;table&quot;: &quot;incident&quot;,
+    }
+
+    // Instantiate new TableItemRequestBuilder.
+    requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
+
+    // Call the get method, with or without TableRequestBuilderGetQueryParameters.
+    // Response is a TableCollectionResponse.
+    response, err := requestBuilder.Get(nil)
+
+    // Test err, should be nil
+    if err != nil {
+        log.Fatal(err)
+    }
+}
+</code></pre>
+<h2 id="post-nowtabletablename">[POST] /now/table/{tableName}</h2>
+<p>Inserts one record in the specified table. </p>
+<blockquote>
+<p>Note: Multiple record insertion is <strong>not</strong> supported by this method.</p>
+</blockquote>
+<h3 id="fluent-implementation_1">Fluent implementation</h3>
+<pre><code class="language-golang">package main
+
+import (
+    tableapi &quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;
+)
+
+func main() {
+    ... //Implement credential and client.
+
+    // define parameters you wish to (optional)
+    params := *tableapi.TableRequestBuilderPostQueryParameters{
+    ...
+    }
+
+    // data map of information you want to use for the new record
+    data := map[string]string{
+        &quot;short_description&quot;: &quot;example incident&quot;,
+        &quot;description&quot;: &quot;incident created by servicenow-sdk-go&quot;,
+    }
+
+    response, err := client.Now.Table(&quot;{TableName}&quot;).Post(data, params)
+    if err != nil {
+        log.Fatal(err)
+    }
+    // Handle response
+    ...
+}
+</code></pre>
+<h3 id="standard-implementation_1">Standard implementation</h3>
+<pre><code class="language-golang">package main
+
+import (
+    tableapi &quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;
+)
+
+func main() {
+    ... //Implement credential and client.
+
+    pathParameters := {
+        &quot;baseurl&quot;:&quot;https://www.{instance}.service-now.com/api/now&quot;,
+        &quot;table&quot;: &quot;incident&quot;,
+    }
+
+     // define parameters you wish to (optional)
+    params := *tableapi.TableRequestBuilderPostQueryParameters{
+    ...
+    }
+
+    // data map of information you want to use for the new record
+    data := map[string]string{
+        &quot;short_description&quot;: &quot;example incident&quot;,
+        &quot;description&quot;: &quot;incident created by servicenow-sdk-go&quot;,
+    }
+
+    // Instantiate new TableItemRequestBuilder.
+    requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
+
+    // Call the get method, with or without TableRequestBuilderPostQueryParamters.
+    // Make sure you include the data paramter
+    // Response is a TableItemResponse.
+    response, err := requestBuilder.Post3(data, nil)
+
+    // Test err, should be nil
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Handle item response
+    ...
+}
+</code></pre>
+<h2 id="delete-nowtabletablenamesys_id">[DELETE] /now/table/{tableName}/{sys_id}</h2>
+<p>Deletes the specified record from the specified table.</p>
+<h3 id="fluent-implementation_2">Fluent implementation</h3>
+<pre><code class="language-golang">package main
+
+import (
+    tableapi &quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;
+)
+
+func main() {
+    ... //Implement credential and client.
+
+    // define parameters you wish to (optional)
+    params := *tableapi.TableItemRequestBuilderDeleteQueryParameters{
+    ...
+    }
+
+    response, err := client.Now.Table(&quot;{TableName}&quot;).Delete(params)
+    if err != nil {
+        log.Fatal(err)
+    }
+    // Handle response
+    ...
+}
+</code></pre>
+<h3 id="standard-implementation_2">Standard Implementation</h3>
+<pre><code class="language-golang">package main
+
+import (
+    tableapi &quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;
+)
+
+func main() {
+    ... //Implement credential and client.
+
+    pathParameters := {
+        &quot;baseurl&quot;:&quot;https://www.{instance}.service-now.com/api/now&quot;,
+        &quot;table&quot;: &quot;incident&quot;,
+        &quot;sysId&quot;: &quot;INC00000000&quot;,
+    }
+
+    // define parameters you wish to (optional)
+    params := *tableapi.TableItemRequestBuilderDeleteQueryParameters{
+        ...
+    }
+
+    // Instantiate new TableItemRequestBuilder.
+    requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
+
+    // Call the delete method, with or without TableItemRequestBuilderDeleteQueryParameters.
+    err := requestBuilder.Delete(params)
+
+    // Since there is no record, the delete method only returns an error.
+    if err != nil {
+        log.Fatalf(err)
+    }
+    ...
+}
+</code></pre>
+<h2 id="get-nowtabletablenamesys_id">[GET] /now/table/{tableName}/{sys_id}</h2>
+<p>Retrieves the record identified by the specified sys_id from the specified table.</p>
+<h3 id="fluent-implementation_3">Fluent implementation</h3>
+<pre><code class="language-golang">package main
+
+import (
+    tableapi &quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;
+)
+
+func main() {
+    ... //Implement credential and client.
+
+    // define parameters you wish to (optional)
+    params := *tableapi.TableItemRequestBuilderGetQueryParameters{
+    ...
+    }
+
+    response, err := client.Now.Table(&quot;{TableName}&quot;).Get(params)
+    if err != nil {
+        log.Fatal(err)
+    }
+    // Handle response
+    ...
+}
+</code></pre>
+<h3 id="standard-implementation_3">Standard implementation</h3>
+<pre><code class="language-golang">package main
+
+import (
+    tableapi &quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;
+)
+
+func main() {
+    ... //Implement credential and client.
+
+    pathParameters := {
+        &quot;baseurl&quot;:&quot;https://www.{instance}.service-now.com/api/now&quot;,
+        &quot;table&quot;: &quot;incident&quot;,
+        &quot;sysId&quot;: &quot;INC00000000&quot;,
+    }
+
+    // Instantiate new TableItemRequestBuilder.
+    requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
+
+   // define parameters you wish to (optional)
+   params := *tableapi.TableItemRequestBuilderGetQueryParameters{
+   ...
+   }
+
+    // Call the get method, with or without TableItemRequestBuilderGetQueryParameters.
+    // record is of type TableItemResponse
+    record, err := requestBuilder.Get(params)
+
+    // evaluate err, should be nil
+    if err != nil {
+        log.Fatal(err)
+    }
+    // Handle response
+    ...
+}
+</code></pre>
+<h2 id="put-nowtabletablenamesys_id">[PUT] /now/table/{tableName}/{sys_id}</h2>
+<h3 id="fluent-implementation_4">Fluent implementation</h3>
+<pre><code class="language-golang">package main
+
+import (
+    tableapi &quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;
+)
+
+func main() {
+    ... //Implement credential and client.
+
+    // define parameters you wish to (optional)
+    params := *tableapi.TableItemRequestBuilderGetQueryParameters{
+    ...
+    }
+
+    // data map of information you want to use for the new record
+    data := map[string]string{
+        &quot;short_description&quot;: &quot;example incident&quot;,
+        &quot;description&quot;: &quot;incident created by servicenow-sdk-go&quot;,
+    }
+
+    response, err := client.Now.Table(&quot;{TableName}&quot;).Put2(data, params)
+    if err != nil {
+        log.Fatal(err)
+    }
+    // Handle response
+    ...
+}
+</code></pre>
+<h3 id="standard-implementation_4">Standard implementation</h3>
+<pre><code class="language-golang">package main
+
+import (
+    tableapi &quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;
+)
+
+func main() {
+    ... //Implement credential and client.
+
+    pathParameters := {
+        &quot;baseurl&quot;:&quot;https://www.{instance}.service-now.com/api/now&quot;,
+        &quot;table&quot;: &quot;incident&quot;,
+        &quot;sysId&quot;: &quot;INC00000000&quot;,
+    }
+
+    // Instantiate new TableItemRequestBuilder.
+    requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
+
+   // define parameters you wish to (optional)
+   params := *tableapi.TableItemRequestBuilderPutQueryParameters{
+   ...
+   }
+
+   // data map of information you want to use for the new record
+   data := map[string]string{
+       &quot;short_description&quot;: &quot;example incident&quot;,
+       &quot;description&quot;: &quot;incident created by servicenow-sdk-go&quot;,
+   }
+
+   // Call the get method, with or without TableItemRequestBuilderGetQueryParameters.
+   // record is of type TableItemResponse
+   record, err := requestBuilder.Put2(data, params)
+
+   // evaluate err, should be nil
+   if err != nil {
+       log.Fatal(err)
+   }
+   // Handle response
+   ...
+}
+</code></pre></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
