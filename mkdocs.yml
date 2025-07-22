@@ -1,9 +1,31 @@
 site_name: Service-Now SDK for Go Docs
 nav:
-  - Home: index.md
-  - Getting started: getting-started.md
-  - How to use: how-to-use.md
+  - Overview: index.md
+  - getting-started.md
+  - how-to-use.md
   - apis:
-    - Attachment API: apis/attachment-api.md
-    - Batch API: apis/batch-api.md
-    - Table API: apis/table-api.md
+      - Overview: apis/index.md
+      - Attachment API: apis/attachment-api.md
+      - Batch API: apis/batch-api.md
+      - Table API: apis/table-api.md
+  repo_url: https://github.com/michaeldcanady/servicenow-sdk-go
+  site_name: Service-Now SDK for Go
+  theme:
+  custom_dir: overrides
+  font:
+    text: Work Sans
+  logo: assets/logo.png
+  name: material
+  palette:
+  - media: '(prefers-color-scheme: light)'
+    primary: teal
+    scheme: default
+    toggle:
+      icon: material/brightness-7
+      name: Switch to dark mode
+  - media: '(prefers-color-scheme: dark)'
+    primary: teal
+    scheme: slate
+    toggle:
+      icon: material/brightness-4
+      name: Switch to light mode
