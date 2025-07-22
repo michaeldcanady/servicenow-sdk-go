@@ -1,8 +1,10 @@
 name: release pages
 on:
-  - workflow_dispatch:
-  - release:
-    - released
+  workflow_dispatch:
+  release:
+    types:
+      - released
+
 permissions:
   contents: write
 
