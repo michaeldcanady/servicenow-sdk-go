@@ -21,13 +21,8 @@ import (
 )
 
 func main() {
-    ... //Implement credential and client.
-
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-    }
-
-    client := serviceNow.NewServiceNowClient2()
+    //Implement credential and client.
+    ...
  
     // define the configurations you wish to (optional)
     config := &attachmentapi.AttachmentRequestBuilder2GetRequestConfiguration{
@@ -42,12 +37,15 @@ func main() {
     if err != nil {
         log.Fatal(err)
     }
+
+    // Handle response
+    ...
 }
 ```
 
 ## \[POST\] /now/attachment/file
 
-Upload file of any supported content type.
+Upload file of any supported content type. Requires you to provide the table sys id, table name, and file name via **the request headers**.
 
 ### Fluent implementation
 
@@ -61,11 +59,8 @@ import (
 )
 
 func main() {
-    ... //Implement credential and client.
-
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-    }
+    //Implement credential and client.
+    ...
 
     // The content type of the file you want to upload
     dataContentType := "text/plain"
@@ -93,12 +88,15 @@ func main() {
     if err != nil {
         log.Fatal(err)
     }
+    
+    // Handle response
+    ...
 }
 ```
 
 ## \[POST\] /now/attachment/upload
 
-Upload file of any supported content type.
+Upload file of any supported content type. Requires you to provide the table sys id, table name, and file name via **the multipart form**.
 
 ### Fluent implementation
 
@@ -112,7 +110,8 @@ import (
 )
 
 func main() {
-    ... //Implement credential and client.
+    //Implement credential and client.
+    ...
 
     body := // TODO: how to make multipart body?
 
@@ -129,6 +128,9 @@ func main() {
     if err != nil {
         log.Fatal(err)
     }
+
+    // Handle response
+    ...
 }
 ```
 
@@ -148,7 +150,8 @@ import (
 )
 
 func main() {
-    ... //Implement credential and client.
+    //Implement credential and client.
+    ...
 
     // define the configurations you wish to (optional)
     config := &attachmentapi.AttachmentItemRequestBuilderGetRequestConfiguration{
@@ -157,20 +160,21 @@ func main() {
 
     // Call the get method with/without request configurations.
     // Response is the attachment item.
-    response, err := client.Now().Attachment2().ByID("{sys id}").Get(context.Background(), config)
+    response, err := client.Now().Attachment2().ByID("{sys_id}").Get(context.Background(), config)
 
     // Test err, should be nil
     if err != nil {
         log.Fatal(err)
     }
+
     // Handle response
     ...
 }
 ```
 
-## \[DELETE\] /now/attachment/\<sys_id\>
+## \[DELETE\] /now/attachment/{sys_id}
 
-### V1 client compatible
+### Fluent implementation
 
 ```golang
 package main
@@ -182,17 +186,31 @@ import (
 )
 
 func main() {
+    //Implement credential and client.
+    ...
+
+    // define the configurations you wish to (optional)
+    config := &attachmentapi.AttachmentItemRequestBuilderDeleteRequestConfiguration{
+        //...
+    }
+
     // Call the delete method with/without request configurations.
-    err := client.Now().Attachment2().ByID("sys id here").Delete(context.Background(), nil)
+    err := client.Now().Attachment2().ByID("{sys_id}").Delete(context.Background(), config)
 
     // Test err, should be nil
     if err != nil {
-        panic(err)
+        log.Fatal(err)
     }
+
+    ...
 }
 ```
 
-## \[GET\] /now/attachment/\<sys_id\>/file
+## \[GET\] /now/attachment/{sys_id}/file
+
+Retrieves a file with content using provided parameters.
+
+### Fluent implementation
 
 ```golang
 package main
@@ -204,13 +222,24 @@ import (
 )
 
 func main() {
+    //Implement credential and client.
+    ...
+
+    // define the configurations you wish to (optional)
+    config := &attachmentapi.AttachmentItemRequestBuilderGetRequestConfiguration{
+        //...
+    }
+
     // Call the delete method with/without request configurations.
     // response is the file with its metadata
-    response, err := client.Now().Attachment2().ByID("sys id here").Get(context.Background(), nil)
+    response, err := client.Now().Attachment2().ByID("{sys_id}").Get(context.Background(), config)
 
     // Test err, should be nil
     if err != nil {
         panic(err)
     }
+
+    // Handle response
+    ...
 }
 ```

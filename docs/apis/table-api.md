@@ -1,24 +1,7 @@
 # Table API
 
-#### Table of Contents
-- [Overview](#overview)
-- [\[GET\] /now/table/{tableName}](#--get----now-table--tablename-)
-  * [Fluent implementation](#fluent-implementation)
-  * [Standard implementation](#standard-implementation)
-- [\[POST\] /now/table/{tableName}](#--post----now-table--tablename-)
-  * [Fluent implementation](#fluent-implementation-1)
-  * [Standard implementation](#standard-implementation-1)
-- [\[DELETE\] /now/table/{tableName}/{sys_id}](#--delete----now-table--tablename---sys-id-)
-  * [Fluent implementation](#fluent-implementation-2)
-  * [Standard Implementation](#standard-implementation)
-- [\[GET\] /now/table/{tableName}/{sys_id}](#--get----now-table--tablename---sys-id-)
-  * [Fluent implementation](#fluent-implementation-3)
-  * [Standard implementation](#standard-implementation-2)
-- [\[PUT\] /now/table/{tableName}/{sys_id}](#--put----now-table--tablename---sys-id-)
-  * [Fluent implementation](#fluent-implementation-4)
-  * [Standard implementation](#standard-implementation-3)
-
 ## Overview
+
 The `Table API` provides endpoints that allow you to perform create, read, update, and delete (CRUD) operations on existing tables.
 
 ## \[GET\] /now/table/{tableName}

@@ -1,20 +1,26 @@
 # Getting started
-## 1. Installation
 
-Install latest
-```Shell
-go get github.com/michaeldcanady/servicenow-sdk-go
-```
-or
+## Requirements
 
-Install specific version
-```Shell
-go get github.com/michaeldcanady/servicenow-sdk-go@version
-```
+- Installed [golang 1.23+](https://go.dev/doc/install).
+- Active Service-Now instance or [developer instance](https://developer.servicenow.com/dev.do).
 
-## 2. Getting started
+## 1. Install Service-Now SDK for Go
 
-### 2.1 Create a credential
+<details>
+    <summary>Install the latest</summary>
+    <code lang="bash">
+    go get github.com/michaeldcanady/servicenow-sdk-go
+    </code>
+</details>
+<details>
+    <summary>Install a specific version</summary>
+    <code lang="bash">
+    go get github.com/michaeldcanady/servicenow-sdk-go@{version}
+    </code>
+</details>
+
+## 2 Create a credential
 
 ```golang
 package main
@@ -26,18 +32,18 @@ import (
 
 func main() {
     // instantiates a basic authentication username/password credential but you can use any from the `credentials` submodule or implement your own!
-    cred := credentials.NewUsernamePasswordCredential("username", "password")
+    cred := credentials.NewUsernamePasswordCredential("{username}", "{password}")
     ...
 ```
 
-### 2.2 Create a Service-Now client
+## 2 Create a Service-Now client
 
 ```golang
     ...
-    client := servicenowsdkgo.NewServiceNowClient(cred, "instance")
+    client := servicenowsdkgo.NewServiceNowClient(cred, "{instance}")
     ...
 ```
 
-## 3. Review API documentation
+## 3. Review specific API documentation
 
 Once you have your `client` object, you're good to get started implementing all that the Service-Now SDK for Go has to offer! See [apis](/apis) for information on implementing a specific API!

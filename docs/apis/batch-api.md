@@ -1,14 +1,11 @@
 # Batch API
 
-##### Table of Contents
-- [Overview](#overview)
-- [\[POST\] /now/batch](#--post----now-batch)
-  * [Fluent Implementation](#fluent-implementation)
-
 ## Overview
+
 The `Batch API` provides an endpoint to send multiple `REST` requests simultaneously.
 
 ## \[POST\] /now/batch
+
 Submits a `BatchRequest` containing all desired requests.
 
 ### Fluent Implementation
