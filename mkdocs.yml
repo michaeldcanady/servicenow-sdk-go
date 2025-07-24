@@ -1,19 +1,35 @@
 repo_url: https://github.com/michaeldcanady/servicenow-sdk-go
 site_name: Service-Now SDK for Go Docs
+markdown_extensions:
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.highlight
+  - admonition
+  - toc:
+      permalink: true
+
 nav:
   - Overview: index.md
   - getting-started.md
   - how-to-use.md
-  - apis:
+  - APIs:
       - Overview: apis/index.md
-      - Attachment API: apis/attachment-api.md
-      - Batch API: apis/batch-api.md
-      - Table API: apis/table-api.md
+      - apis/attachment-api.md
+      - apis/batch-api.md
+      - apis/table-api.md
+  - Contributing:
+      - Overview: contributing/index.md
+      - Architecture:
+          - Overview: contributing/architecture/index.md
+          - contributing/architecture/core-concepts.md
+      - contributing/quick-start.md
+  - Releases ⧉: https://github.com/michaeldcanady/servicenow-sdk-go/releases
+  - Roadmap ⧉: https://github.com/users/michaeldcanady/projects/7/views/9
 theme:
-  custom_dir: overrides
   font:
     text: Work Sans
   logo: assets/logo.png
+  favicon: assets/favicon.png
   name: material
   palette:
     - media: "(prefers-color-scheme: light)"

@@ -1,1 +1,4 @@
 .test/
+.local/
+.cache/
+site/

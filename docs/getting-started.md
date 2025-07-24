@@ -34,6 +34,7 @@ func main() {
     // instantiates a basic authentication username/password credential but you can use any from the `credentials` submodule or implement your own!
     cred := credentials.NewUsernamePasswordCredential("{username}", "{password}")
     ...
+}
 ```
 
 ## 2 Create a Service-Now client

@@ -1,4 +1,5 @@
 # How to use
+
 This SDK has two modalities of usage: `fluent` and `standard`.
 
 The following block is the base you'll need for **all** implementation methods:
