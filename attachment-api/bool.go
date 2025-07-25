@@ -11,7 +11,7 @@ import (
 type Bool bool
 
 func (i *Bool) UnmarshalJSON(data []byte) error {
-	cleanData := strings.Replace(string(data), "\"", "", -1)
+	cleanData := strings.ReplaceAll(string(data), "\"", "")
 
 	cleanInt, err := strconv.ParseBool(cleanData)
 

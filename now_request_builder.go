@@ -26,7 +26,7 @@ func NewNowRequestBuilder(url string, client core.Client) *NowRequestBuilder {
 // The returned TableRequestBuilder can be used to build and execute table-related requests.
 func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder {
 	rB.RequestBuilder.PathParameters["table"] = tableName
-	return tableapi.NewTableRequestBuilder(rB.RequestBuilder.Client, rB.RequestBuilder.PathParameters)
+	return tableapi.NewTableRequestBuilder(rB.Client, rB.RequestBuilder.PathParameters)
 }
 
 // Deprecated: deprecated since v{unreleased}.
@@ -34,16 +34,16 @@ func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuild
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
 // It allows you to work with attachments and manage attachments in ServiceNow.
 func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilder {
-	return attachmentapi.NewAttachmentRequestBuilder(rB.RequestBuilder.Client, rB.RequestBuilder.PathParameters)
+	return attachmentapi.NewAttachmentRequestBuilder(rB.Client, rB.RequestBuilder.PathParameters)
 }
 
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
 // It allows you to work with attachments and manage attachments in ServiceNow.
 func (rB *NowRequestBuilder) Attachment2() *attachmentapi.AttachmentRequestBuilder2 {
-	return attachmentapi.NewAttachmentRequestBuilder2Internal(rB.RequestBuilder.PathParameters, rB.RequestBuilder.Client.(*ServiceNowClient).requestAdapter)
+	return attachmentapi.NewAttachmentRequestBuilder2Internal(rB.PathParameters, rB.Client.(*ServiceNowClient).requestAdapter)
 }
 
 // Batch returns a BatchRequestBuilder, entrypoint into the batch api.
 func (rB *NowRequestBuilder) Batch() *batchapi.BatchRequestBuilder {
-	return batchapi.NewBatchRequestBuilderInternal(rB.RequestBuilder.PathParameters, rB.RequestBuilder.Client.(*ServiceNowClient).requestAdapter)
+	return batchapi.NewBatchRequestBuilderInternal(rB.PathParameters, rB.Client.(*ServiceNowClient).requestAdapter)
 }
