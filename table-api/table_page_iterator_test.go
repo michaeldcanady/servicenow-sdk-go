@@ -16,7 +16,7 @@ var (
 		// Populate with test data.
 	}
 	sharedClient      = &MockClient{}
-	sharedIterator, _ = NewTablePageIterator[TableEntry](&sharedTableCollectionResponse2, sharedClient)
+	sharedIterator, _ = NewTablePageIterator(&sharedTableCollectionResponse2, sharedClient)
 )
 
 func TestNewTablePageIterator(t *testing.T) {
