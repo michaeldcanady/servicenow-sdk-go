@@ -20,6 +20,6 @@ func NewMockMiddleware() *MockMiddleware {
 }
 
 func (m *MockMiddleware) Intercept(pipeline nethttplibrary.Pipeline, middlewareIndex int, request *nethttp.Request) (*nethttp.Response, error) {
-	args := m.Mock.Called(pipeline, middlewareIndex, request)
+	args := m.Called(pipeline, middlewareIndex, request)
 	return args.Get(0).(*nethttp.Response), args.Error(1)
 }

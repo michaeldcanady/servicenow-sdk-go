@@ -267,7 +267,7 @@ func TestServiceNowClient_ToRequestWithContext(t *testing.T) {
 	_, err = client.toRequestWithContext(context.TODO(), nil)
 	assert.Error(t, ErrNilRequestInfo, err)
 
-	_, err = client.toRequestWithContext(nil, requestInfo) //nolint:all
+	_, err = client.toRequestWithContext(context.TODO(), requestInfo) //nolint:all
 	assert.Error(t, ErrNilContext, err)
 }
 

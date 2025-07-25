@@ -11,7 +11,7 @@ import (
 type Int int
 
 func (i *Int) UnmarshalJSON(data []byte) error {
-	cleanData := strings.Replace(string(data), "\"", "", -1)
+	cleanData := strings.ReplaceAll(string(data), "\"", "")
 
 	if cleanData == "" {
 		cleanData = "0"

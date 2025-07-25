@@ -114,7 +114,7 @@ func TestTableItemRequestBuilderPut(t *testing.T) {
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		resp := testResult
 
-		resp = maps.Clone[map[string]interface{}](resp)
+		resp = maps.Clone(resp)
 
 		switch r.Method {
 		case http.MethodGet:
@@ -205,7 +205,7 @@ func TestTableItemRequestBuilderPut2(t *testing.T) {
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		resp := testResult
 
-		resp = maps.Clone[map[string]interface{}](resp)
+		resp = maps.Clone(resp)
 
 		switch r.Method {
 		case http.MethodGet:

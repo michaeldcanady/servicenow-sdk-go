@@ -252,11 +252,11 @@ func (c *mockClient) Send(requestInformation core.IRequestInformation, errorMapp
 
 	parsedURI, _ := url.Parse(uri)
 
-	if slices.Contains[[]string, string](collectionLinks, uri) {
+	if slices.Contains(collectionLinks, uri) {
 		return c.sendCollection(requestInformation)
 	}
 
-	if slices.Contains[[]string, string](itemLinks, parsedURI.Scheme+"://"+parsedURI.Host) {
+	if slices.Contains(itemLinks, parsedURI.Scheme+"://"+parsedURI.Host) {
 		return c.sendItem(requestInformation)
 	}
 
