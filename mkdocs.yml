@@ -1,9 +1,51 @@
+repo_url: https://github.com/michaeldcanady/servicenow-sdk-go
 site_name: Service-Now SDK for Go Docs
+markdown_extensions:
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.highlight
+  - admonition
+  - toc:
+      permalink: true
+
 nav:
-  - Home: index.md
-  - Getting started: getting-started.md
-  - How to use: how-to-use.md
-  - apis:
-    - Attachment API: apis/attachment-api.md
-    - Batch API: apis/batch-api.md
-    - Table API: apis/table-api.md
+  - index.md
+  - getting-started.md
+  - how-to-use.md
+  - APIs:
+      - apis/index.md
+      - apis/attachment-api.md
+      - apis/batch-api.md
+      - apis/table-api.md
+  - Contributing:
+      - contributing/index.md
+      - Architecture:
+          - contributing/architecture/index.md
+          - contributing/architecture/core-concepts.md
+      - contributing/quick-start.md
+  - Releases ⧉: https://github.com/michaeldcanady/servicenow-sdk-go/releases
+  - Roadmap ⧉: https://github.com/users/michaeldcanady/projects/7/views/9
+
+theme:
+  font:
+    text: Work Sans
+  logo: assets/logo.png
+  favicon: assets/favicon.png
+  name: material
+  features:
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      primary: teal
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      primary: teal
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
