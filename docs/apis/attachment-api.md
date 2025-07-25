@@ -9,10 +9,9 @@ You can upload or retrieve a single file with each request.
 
 Returns the metadata for multiple attachments.
 
-<details>
-    <summary> Fluent implementation </summary>
-    <pre>
-    <code lang="golang">
+??? "Fluent implementation"
+
+    ``` golang
     package main
 
     import (
@@ -42,9 +41,7 @@ Returns the metadata for multiple attachments.
         // Handle response
         ...
     }
-    </code>
-    </pre>
-</details>
+    ```
 
 ## \[POST\] /now/attachment/file
 
