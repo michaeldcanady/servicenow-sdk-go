@@ -27,9 +27,9 @@ func NewTableRequestBuilder(client core.Client, pathParameters map[string]string
 // It accepts the sysId of the record as a parameter and constructs the URL for the record.
 // The returned TableItemRequestBuilder can be used to build and execute requests for the specific record.
 func (rB *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder { //nolint:stylecheck
-	pathParameters := rB.RequestBuilder.PathParameters
+	pathParameters := rB.PathParameters
 	pathParameters["sysId"] = sysId
-	return NewTableItemRequestBuilder(rB.RequestBuilder.Client, pathParameters)
+	return NewTableItemRequestBuilder(rB.Client, pathParameters)
 }
 
 // Get sends an HTTP GET request using the specified query parameters and returns a TableCollectionResponse.
@@ -135,14 +135,14 @@ func (rB *TableRequestBuilder) Post3(data interface{}, params *TableRequestBuild
 //   - int: The count of items.
 //   - error: An error if there was an issue with the request or response.
 func (rB *TableRequestBuilder) Count() (int, error) {
-	requestInfo, err := rB.RequestBuilder.ToHeadRequestInformation()
+	requestInfo, err := rB.ToHeadRequestInformation()
 	if err != nil {
 		return -1, err
 	}
 
 	errorMapping := core.ErrorMapping{"4XX": "hi"}
 
-	response, err := rB.RequestBuilder.Client.Send(requestInfo, errorMapping)
+	response, err := rB.Client.Send(requestInfo, errorMapping)
 	if err != nil {
 		return -1, err
 	}
