@@ -1,380 +1,363 @@
 # Table API
 
-#### Table of Contents
-- [Overview](#overview)
-- [\[GET\] /now/table/{tableName}](#--get----now-table--tablename-)
-  * [Fluent implementation](#fluent-implementation)
-  * [Standard implementation](#standard-implementation)
-- [\[POST\] /now/table/{tableName}](#--post----now-table--tablename-)
-  * [Fluent implementation](#fluent-implementation-1)
-  * [Standard implementation](#standard-implementation-1)
-- [\[DELETE\] /now/table/{tableName}/{sys_id}](#--delete----now-table--tablename---sys-id-)
-  * [Fluent implementation](#fluent-implementation-2)
-  * [Standard Implementation](#standard-implementation)
-- [\[GET\] /now/table/{tableName}/{sys_id}](#--get----now-table--tablename---sys-id-)
-  * [Fluent implementation](#fluent-implementation-3)
-  * [Standard implementation](#standard-implementation-2)
-- [\[PUT\] /now/table/{tableName}/{sys_id}](#--put----now-table--tablename---sys-id-)
-  * [Fluent implementation](#fluent-implementation-4)
-  * [Standard implementation](#standard-implementation-3)
-
 ## Overview
+
 The `Table API` provides endpoints that allow you to perform create, read, update, and delete (CRUD) operations on existing tables.
 
-## \[GET\] /now/table/{tableName}
+## \[GET\] <code>/now/table/<var>{tableName}</var></code>
 
 Retrieves multiple records for the specified table.
 
-### Fluent implementation
+=== "Fluent"
 
-```golang
-package main
+    ``` golang
+    package main
 
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
+    import (
+        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    )
 
-func main() {
-    ... //Implement credential and client.
+    func main() {
+        ... //Implement credential and client.
 
-    // define parameters you wish to (optional)
-    params := *tableapi.TableRequestBuilderGetQueryParameters{
-    ...
+        // define parameters you wish to (optional)
+        params := *tableapi.TableRequestBuilderGetQueryParameters{
+        ...
+        }
+
+        response, err := client.Now.Table("{TableName}").Get(params)
+        if err != nil {
+            log.Fatal(err)
+        }
+        // Handle response
+        ...
     }
+    ```
 
-    response, err := client.Now.Table("{TableName}").Get(params)
-    if err != nil {
-        log.Fatal(err)
+=== "Standard"
+
+    ``` golang
+    package main
+
+    import (
+        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    )
+
+    func main() {
+        ... //Implement credential and client.
+        pathParameters := {
+            "baseurl":"https://www.{instance}.service-now.com/api/now",
+            "table": "incident",
+        }
+
+        // Instantiate new TableItemRequestBuilder.
+        requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
+
+        // Call the get method, with or without TableRequestBuilderGetQueryParameters.
+        // Response is a TableCollectionResponse.
+        response, err := requestBuilder.Get(nil)
+
+        // Test err, should be nil
+        if err != nil {
+            log.Fatal(err)
+        }
     }
-    // Handle response
-    ...
-}
-```
+    ```
 
-### Standard implementation
-
-```golang
-package main
-
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
-
-func main() {
-    ... //Implement credential and client.
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-        "table": "incident",
-    }
-
-    // Instantiate new TableItemRequestBuilder.
-    requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
-
-    // Call the get method, with or without TableRequestBuilderGetQueryParameters.
-    // Response is a TableCollectionResponse.
-    response, err := requestBuilder.Get(nil)
-
-    // Test err, should be nil
-    if err != nil {
-        log.Fatal(err)
-    }
-}
-```
-
-## \[POST\] /now/table/{tableName}
+## \[POST\] <code>/now/table/<var>{tableName}</var></code>
 
 Inserts one record in the specified table. 
 > Note: Multiple record insertion is **not** supported by this method.
 
-### Fluent implementation
+=== "Fluent"
 
-```golang
-package main
+    ``` golang
+    package main
 
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
+    import (
+        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    )
 
-func main() {
-    ... //Implement credential and client.
+    func main() {
+        ... //Implement credential and client.
 
-    // define parameters you wish to (optional)
-    params := *tableapi.TableRequestBuilderPostQueryParameters{
-    ...
+        // define parameters you wish to (optional)
+        params := *tableapi.TableRequestBuilderPostQueryParameters{
+        ...
+        }
+
+        // data map of information you want to use for the new record
+        data := map[string]string{
+            "short_description": "example incident",
+            "description": "incident created by servicenow-sdk-go",
+        }
+
+        response, err := client.Now.Table("{TableName}").Post(data, params)
+        if err != nil {
+            log.Fatal(err)
+        }
+        // Handle response
+        ...
     }
+    ```
 
-    // data map of information you want to use for the new record
-    data := map[string]string{
-        "short_description": "example incident",
-        "description": "incident created by servicenow-sdk-go",
+=== "Standard"
+
+    ``` golang
+    package main
+
+    import (
+        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    )
+
+    func main() {
+        ... //Implement credential and client.
+
+        pathParameters := {
+            "baseurl":"https://www.{instance}.service-now.com/api/now",
+            "table": "incident",
+        }
+
+        // define parameters you wish to (optional)
+        params := *tableapi.TableRequestBuilderPostQueryParameters{
+        ...
+        }
+
+        // data map of information you want to use for the new record
+        data := map[string]string{
+            "short_description": "example incident",
+            "description": "incident created by servicenow-sdk-go",
+        }
+
+        // Instantiate new TableItemRequestBuilder.
+        requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
+
+        // Call the get method, with or without TableRequestBuilderPostQueryParamters.
+        // Make sure you include the data paramter
+        // Response is a TableItemResponse.
+        response, err := requestBuilder.Post3(data, nil)
+
+        // Test err, should be nil
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        // Handle item response
+        ...
     }
+    ```
 
-    response, err := client.Now.Table("{TableName}").Post(data, params)
-    if err != nil {
-        log.Fatal(err)
-    }
-    // Handle response
-    ...
-}
-```
-
-### Standard implementation
-
-```golang
-package main
-
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
-
-func main() {
-    ... //Implement credential and client.
-
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-        "table": "incident",
-    }
-
-     // define parameters you wish to (optional)
-    params := *tableapi.TableRequestBuilderPostQueryParameters{
-    ...
-    }
-
-    // data map of information you want to use for the new record
-    data := map[string]string{
-        "short_description": "example incident",
-        "description": "incident created by servicenow-sdk-go",
-    }
-
-    // Instantiate new TableItemRequestBuilder.
-    requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
-
-    // Call the get method, with or without TableRequestBuilderPostQueryParamters.
-    // Make sure you include the data paramter
-    // Response is a TableItemResponse.
-    response, err := requestBuilder.Post3(data, nil)
-
-    // Test err, should be nil
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    // Handle item response
-    ...
-}
-```
-
-## \[DELETE\] /now/table/{tableName}/{sys_id}
+## \[DELETE\] <code>/now/table/<var>{tableName}</var>/<var>{sys_id}</var></code>
 
 Deletes the specified record from the specified table.
 
-### Fluent implementation
+=== "Fluent"
 
-```golang
-package main
+    ``` golang
+    package main
 
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
+    import (
+        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    )
 
-func main() {
-    ... //Implement credential and client.
+    func main() {
+        ... //Implement credential and client.
 
-    // define parameters you wish to (optional)
-    params := *tableapi.TableItemRequestBuilderDeleteQueryParameters{
-    ...
-    }
+        // define parameters you wish to (optional)
+        params := *tableapi.TableItemRequestBuilderDeleteQueryParameters{
+        ...
+        }
 
-    response, err := client.Now.Table("{TableName}").Delete(params)
-    if err != nil {
-        log.Fatal(err)
-    }
-    // Handle response
-    ...
-}
-```
-
-### Standard Implementation
-
-```golang
-package main
-
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
-
-func main() {
-    ... //Implement credential and client.
-
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-        "table": "incident",
-        "sysId": "INC00000000",
-    }
-
-    // define parameters you wish to (optional)
-    params := *tableapi.TableItemRequestBuilderDeleteQueryParameters{
+        response, err := client.Now.Table("{TableName}").Delete(params)
+        if err != nil {
+            log.Fatal(err)
+        }
+        // Handle response
         ...
     }
+    ```
 
-    // Instantiate new TableItemRequestBuilder.
-    requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
+=== "Standard"
+        
+    ``` golang
+    package main
 
-    // Call the delete method, with or without TableItemRequestBuilderDeleteQueryParameters.
-    err := requestBuilder.Delete(params)
+    import (
+        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    )
 
-    // Since there is no record, the delete method only returns an error.
-    if err != nil {
-        log.Fatalf(err)
+    func main() {
+        ... //Implement credential and client.
+
+        pathParameters := {
+            "baseurl":"https://www.{instance}.service-now.com/api/now",
+            "table": "incident",
+            "sysId": "INC00000000",
+        }
+
+        // define parameters you wish to (optional)
+        params := *tableapi.TableItemRequestBuilderDeleteQueryParameters{
+            ...
+        }
+
+        // Instantiate new TableItemRequestBuilder.
+        requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
+
+        // Call the delete method, with or without TableItemRequestBuilderDeleteQueryParameters.
+        err := requestBuilder.Delete(params)
+
+        // Since there is no record, the delete method only returns an error.
+        if err != nil {
+            log.Fatalf(err)
+        }
+        ...
     }
-    ...
-}
-```
+    ```
 
-## \[GET\] /now/table/{tableName}/{sys_id}
+## \[GET\] <code>/now/table/<var>{tableName}</var>/<var>{sys_id}</var></code>
 
 Retrieves the record identified by the specified sys_id from the specified table.
 
-### Fluent implementation
+=== "Fluent"
 
-```golang
-package main
+    ``` golang
+    package main
 
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
+    import (
+        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    )
 
-func main() {
-    ... //Implement credential and client.
+    func main() {
+        ... //Implement credential and client.
 
-    // define parameters you wish to (optional)
-    params := *tableapi.TableItemRequestBuilderGetQueryParameters{
-    ...
+        // define parameters you wish to (optional)
+        params := *tableapi.TableItemRequestBuilderGetQueryParameters{
+        ...
+        }
+
+        response, err := client.Now.Table("{TableName}").Get(params)
+        if err != nil {
+            log.Fatal(err)
+        }
+        // Handle response
+        ...
     }
+    ```
 
-    response, err := client.Now.Table("{TableName}").Get(params)
-    if err != nil {
-        log.Fatal(err)
+=== "Standard"
+
+    ``` golang
+    package main
+
+    import (
+        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    )
+
+    func main() {
+        //... Implement credential and client.
+
+        pathParameters := {
+            "baseurl":"https://www.{instance}.service-now.com/api/now",
+            "table": "incident",
+            "sysId": "INC00000000",
+        }
+
+        // Instantiate new TableItemRequestBuilder.
+        requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
+
+        // define parameters you wish to (optional)
+        params := *tableapi.TableItemRequestBuilderGetQueryParameters{
+        //...
+        }
+
+        // Call the get method, with or without TableItemRequestBuilderGetQueryParameters.
+        // record is of type TableItemResponse
+        record, err := requestBuilder.Get(params)
+
+        // evaluate err, should be nil
+        if err != nil {
+            log.Fatal(err)
+        }
+        // Handle response
+        //...
     }
-    // Handle response
-    ...
-}
-```
+    ```
 
-### Standard implementation
+## \[PUT\] <code>/now/table/<var>{tableName}</var>/<var>{sys_id}</var></code>
 
-```golang
-package main
+=== "Fluent"
 
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
+    ``` golang
+    package main
 
-func main() {
-    ... //Implement credential and client.
+        import (
+            tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+        )
 
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-        "table": "incident",
-        "sysId": "INC00000000",
-    }
+        func main() {
+            ... //Implement credential and client.
 
-    // Instantiate new TableItemRequestBuilder.
-    requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
+            // define parameters you wish to (optional)
+            params := *tableapi.TableItemRequestBuilderGetQueryParameters{
+            ...
+            }
 
-   // define parameters you wish to (optional)
-   params := *tableapi.TableItemRequestBuilderGetQueryParameters{
-   ...
-   }
+            // data map of information you want to use for the new record
+            data := map[string]string{
+                "short_description": "example incident",
+                "description": "incident created by servicenow-sdk-go",
+            }
 
-    // Call the get method, with or without TableItemRequestBuilderGetQueryParameters.
-    // record is of type TableItemResponse
-    record, err := requestBuilder.Get(params)
+            response, err := client.Now.Table("{TableName}").Put2(data, params)
+            if err != nil {
+                log.Fatal(err)
+            }
+            // Handle response
+            ...
+        }
+    ```
 
-    // evaluate err, should be nil
-    if err != nil {
-        log.Fatal(err)
-    }
-    // Handle response
-    ...
-}
-```
+=== "Standard"
 
-## \[PUT\] /now/table/{tableName}/{sys_id}
+    ``` golang
+        package main
 
-### Fluent implementation
+        import (
+            tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+        )
 
-```golang
-package main
+        func main() {
+            ... //Implement credential and client.
 
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
+            pathParameters := {
+                "baseurl":"https://www.{instance}.service-now.com/api/now",
+                "table": "incident",
+                "sysId": "INC00000000",
+            }
 
-func main() {
-    ... //Implement credential and client.
+            // Instantiate new TableItemRequestBuilder.
+            requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
 
-    // define parameters you wish to (optional)
-    params := *tableapi.TableItemRequestBuilderGetQueryParameters{
-    ...
-    }
+            // define parameters you wish to (optional)
+            params := *tableapi.TableItemRequestBuilderPutQueryParameters{
+            ...
+            }
 
-    // data map of information you want to use for the new record
-    data := map[string]string{
-        "short_description": "example incident",
-        "description": "incident created by servicenow-sdk-go",
-    }
+            // data map of information you want to use for the new record
+            data := map[string]string{
+                "short_description": "example incident",
+                "description": "incident created by servicenow-sdk-go",
+            }
 
-    response, err := client.Now.Table("{TableName}").Put2(data, params)
-    if err != nil {
-        log.Fatal(err)
-    }
-    // Handle response
-    ...
-}
-```
+            // Call the get method, with or without TableItemRequestBuilderGetQueryParameters.
+            // record is of type TableItemResponse
+            record, err := requestBuilder.Put2(data, params)
 
-### Standard implementation
-
-```golang
-package main
-
-import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-)
-
-func main() {
-    ... //Implement credential and client.
-
-    pathParameters := {
-        "baseurl":"https://www.{instance}.service-now.com/api/now",
-        "table": "incident",
-        "sysId": "INC00000000",
-    }
-
-    // Instantiate new TableItemRequestBuilder.
-    requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
-
-   // define parameters you wish to (optional)
-   params := *tableapi.TableItemRequestBuilderPutQueryParameters{
-   ...
-   }
-
-   // data map of information you want to use for the new record
-   data := map[string]string{
-       "short_description": "example incident",
-       "description": "incident created by servicenow-sdk-go",
-   }
-
-   // Call the get method, with or without TableItemRequestBuilderGetQueryParameters.
-   // record is of type TableItemResponse
-   record, err := requestBuilder.Put2(data, params)
-
-   // evaluate err, should be nil
-   if err != nil {
-       log.Fatal(err)
-   }
-   // Handle response
-   ...
-}
-```
+            // evaluate err, should be nil
+            if err != nil {
+                log.Fatal(err)
+            }
+            // Handle response
+            ...
+        }
+    ```
