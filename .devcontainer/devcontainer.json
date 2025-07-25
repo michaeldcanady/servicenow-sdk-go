@@ -35,6 +35,8 @@
       "version": "latest"
     }
   },
-  "runArgs": ["--userns=keep-id"],
+  "runArgs": [
+    "--userns=keep-id"
+  ],
   "containerUser": "vscode"
 }
