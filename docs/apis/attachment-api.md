@@ -5,11 +5,11 @@
 The Attachment API provides endpoints that allow you to upload and query file attachments.
 You can upload or retrieve a single file with each request.
 
-## \[GET\] /now/attachment
+## \[GET\] <code>/now/attachment</code>
 
 Returns the metadata for multiple attachments.
 
-??? "Fluent implementation"
+=== "Fluent"
 
     ``` golang
     package main
@@ -43,11 +43,11 @@ Returns the metadata for multiple attachments.
     }
     ```
 
-## \[POST\] /now/attachment/file
+## \[POST\] <code>/now/attachment/file</code>
 
 Upload file of any supported content type. Requires you to provide the table sys id, table name, and file name via **the request headers**.
 
-??? "Fluent implementation"
+=== "Fluent"
 
     ``` golang
     package main
@@ -98,7 +98,7 @@ Upload file of any supported content type. Requires you to provide the table sys
 
 Upload file of any supported content type. Requires you to provide the table sys id, table name, and file name via **the multipart form**.
 
-??? "Fluent implementation"
+=== "Fluent"
 
     ``` golang
     package main
@@ -138,7 +138,7 @@ Upload file of any supported content type. Requires you to provide the table sys
 
 Retrieve specific attachment metadata using the sys id.
 
-??? "Fluent implementation"
+=== "Fluent"
 
     ``` golang
     package main
@@ -174,7 +174,7 @@ Retrieve specific attachment metadata using the sys id.
 
 ## \[DELETE\] <code>/now/attachment/<var>{sys_id}</var></code>
 
-??? "Fluent implementation"
+=== "Fluent"
 
     ``` golang
     package main
@@ -210,7 +210,7 @@ Retrieve specific attachment metadata using the sys id.
 
 Retrieves a file with content using provided parameters.
 
-??? "Fluent implementation"
+=== "Fluent"
 
     ``` golang
     package main

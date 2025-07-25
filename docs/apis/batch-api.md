@@ -4,11 +4,11 @@
 
 The `Batch API` provides an endpoint to send multiple `REST` requests simultaneously.
 
-## \[POST\] /now/batch
+## \[POST\] <code>/now/batch</code>
 
 Submits a `BatchRequest` containing all desired requests.
 
-??? "Fluent implementation"
+=== "Fluent"
 
     ``` golang
     package main

@@ -2,6 +2,8 @@ repo_url: https://github.com/michaeldcanady/servicenow-sdk-go
 site_name: Service-Now SDK for Go Docs
 markdown_extensions:
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.details
   - pymdownx.highlight
   - admonition
@@ -32,6 +34,8 @@ theme:
   logo: assets/logo.png
   favicon: assets/favicon.png
   name: material
+  features:
+    - content.code.copy
   palette:
     - media: "(prefers-color-scheme: light)"
       primary: teal

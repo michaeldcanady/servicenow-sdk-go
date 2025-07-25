@@ -8,7 +8,7 @@ The `Table API` provides endpoints that allow you to perform create, read, updat
 
 Retrieves multiple records for the specified table.
 
-??? "Fluent implementation"
+=== "Fluent"
 
     ``` golang
     package main
@@ -34,7 +34,7 @@ Retrieves multiple records for the specified table.
     }
     ```
 
-??? "Standard implementation"
+=== "Standard"
 
     ``` golang
     package main
@@ -69,7 +69,7 @@ Retrieves multiple records for the specified table.
 Inserts one record in the specified table. 
 > Note: Multiple record insertion is **not** supported by this method.
 
-??? "Fluent implementation"
+=== "Fluent"
 
     ``` golang
     package main
@@ -101,7 +101,7 @@ Inserts one record in the specified table.
     }
     ```
 
-??? "Standard implementation"
+=== "Standard"
 
     ``` golang
     package main
@@ -151,7 +151,7 @@ Inserts one record in the specified table.
 
 Deletes the specified record from the specified table.
 
-??? "Fluent implementation"
+=== "Fluent"
 
     ``` golang
     package main
@@ -177,7 +177,7 @@ Deletes the specified record from the specified table.
     }
     ```
 
-??? "Standard implementation"
+=== "Standard"
         
     ``` golang
     package main
@@ -218,7 +218,7 @@ Deletes the specified record from the specified table.
 
 Retrieves the record identified by the specified sys_id from the specified table.
 
-??? "Fluent implementation"
+=== "Fluent"
 
     ``` golang
     package main
@@ -244,7 +244,7 @@ Retrieves the record identified by the specified sys_id from the specified table
     }
     ```
 
-??? "Standard implementation"
+=== "Standard"
 
     ``` golang
     package main
@@ -285,7 +285,7 @@ Retrieves the record identified by the specified sys_id from the specified table
 
 ## \[PUT\] <code>/now/table/<var>{tableName}</var>/<var>{sys_id}</var></code>
 
-??? "Fluent implementation"
+=== "Fluent"
 
     ``` golang
     package main
@@ -317,7 +317,7 @@ Retrieves the record identified by the specified sys_id from the specified table
         }
     ```
 
-??? "Standard implementation"
+=== "Standard"
 
     ``` golang
         package main

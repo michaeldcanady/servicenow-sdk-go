@@ -7,20 +7,18 @@
 
 ## 1. Install Service-Now SDK for Go
 
-<details>
-    <summary>Install the latest</summary>
-    <code lang="bash">
-    go get github.com/michaeldcanady/servicenow-sdk-go
-    </code>
-</details>
-<details>
-    <summary>Install a specific version</summary>
-    <code lang="bash">
-    go get github.com/michaeldcanady/servicenow-sdk-go@{version}
-    </code>
-</details>
+=== "Install the latest"
 
-## 2 Create a credential
+    ``` bash
+    go get github.com/michaeldcanady/servicenow-sdk-go
+    ```
+=== "Install a specific version"
+    
+    ``` bash
+    go get github.com/michaeldcanady/servicenow-sdk-go@{version}
+    ```
+
+## 2. Create a credential
 
 ```golang
 package main
@@ -37,7 +35,7 @@ func main() {
 }
 ```
 
-## 2 Create a Service-Now client
+## 3. Create a Service-Now client
 
 ```golang
     ...
@@ -45,6 +43,6 @@ func main() {
     ...
 ```
 
-## 3. Review specific API documentation
+## 4. Review specific API documentation
 
 Once you have your `client` object, you're good to get started implementing all that the Service-Now SDK for Go has to offer! See [apis](/apis) for information on implementing a specific API!
