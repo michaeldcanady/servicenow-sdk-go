@@ -16,7 +16,7 @@ func TestNewNowRequestBuilder(t *testing.T) {
 	}
 
 	assert.NotNil(t, builder)
-	assert.Equal(t, expected, builder.RequestBuilder.PathParameters)
+	assert.Equal(t, expected, builder.PathParameters)
 }
 
 func TestNowRequestBuilder_Table(t *testing.T) {
@@ -33,7 +33,7 @@ func TestNowRequestBuilder_Table(t *testing.T) {
 	tableBuilder := builder.Table(tableName)
 
 	assert.NotNil(t, tableBuilder)
-	assert.Equal(t, expected, tableBuilder.RequestBuilder.PathParameters)
+	assert.Equal(t, expected, tableBuilder.PathParameters)
 }
 
 func TestNowRequestBuilder_Attachment(t *testing.T) {
@@ -48,7 +48,7 @@ func TestNowRequestBuilder_Attachment(t *testing.T) {
 	attachmentBuilder := builder.Attachment()
 
 	assert.NotNil(t, attachmentBuilder)
-	assert.Equal(t, expected, attachmentBuilder.RequestBuilder.PathParameters)
+	assert.Equal(t, expected, attachmentBuilder.PathParameters)
 }
 
 func TestNowRequestBuilder_Attachment2(t *testing.T) {
@@ -70,7 +70,7 @@ func TestNowRequestBuilder_Attachment2(t *testing.T) {
 				attachmentBuilder := builder.Attachment2()
 
 				assert.NotNil(t, attachmentBuilder)
-				assert.Equal(t, expected, attachmentBuilder.RequestBuilder.GetPathParameters())
+				assert.Equal(t, expected, attachmentBuilder.GetPathParameters())
 			},
 		},
 	}
@@ -99,7 +99,7 @@ func TestNowRequestBuilder_Batch(t *testing.T) {
 				attachmentBuilder := builder.Batch()
 
 				assert.NotNil(t, attachmentBuilder)
-				assert.Equal(t, expected, attachmentBuilder.RequestBuilder.GetPathParameters())
+				assert.Equal(t, expected, attachmentBuilder.GetPathParameters())
 			},
 		},
 	}

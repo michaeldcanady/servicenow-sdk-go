@@ -27,8 +27,8 @@ func TestNewBatchRequestBuilderInternal(t *testing.T) {
 
 				assert.NotNil(t, builder)
 				assert.IsType(t, &BatchRequestBuilder{}, builder)
-				assert.Equal(t, mockAdapter, builder.RequestBuilder.GetRequestAdapter())
-				assert.Equal(t, params, builder.RequestBuilder.GetPathParameters())
+				assert.Equal(t, mockAdapter, builder.GetRequestAdapter())
+				assert.Equal(t, params, builder.GetPathParameters())
 			},
 		},
 	}
@@ -53,8 +53,8 @@ func TestNewBatchRequestBuilder2(t *testing.T) {
 
 				assert.NotNil(t, builder)
 				assert.IsType(t, &BatchRequestBuilder{}, builder)
-				assert.Equal(t, mockAdapter, builder.RequestBuilder.GetRequestAdapter())
-				assert.Equal(t, map[string]string{newInternal.RawURLKey: rawURL}, builder.RequestBuilder.GetPathParameters())
+				assert.Equal(t, mockAdapter, builder.GetRequestAdapter())
+				assert.Equal(t, map[string]string{newInternal.RawURLKey: rawURL}, builder.GetPathParameters())
 			},
 		},
 	}

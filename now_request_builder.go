@@ -25,7 +25,7 @@ func NewNowRequestBuilder(url string, client core.Client) *NowRequestBuilder {
 // It accepts a table name as a parameter and constructs the URL for table-related requests.
 // The returned TableRequestBuilder can be used to build and execute table-related requests.
 func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder {
-	rB.RequestBuilder.PathParameters["table"] = tableName
+	rB.PathParameters["table"] = tableName
 	return tableapi.NewTableRequestBuilder(rB.Client, rB.PathParameters)
 }
 
