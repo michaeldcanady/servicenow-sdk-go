@@ -1,13 +1,32 @@
+version: "2"
 linters:
   enable:
     - dogsled
-    - govet
+    - gocognit
     - gosec
-    - gofmt
     - misspell
     - nakedret
-    - stylecheck
+    - staticcheck
     - unconvert
     - unparam
     - whitespace
-    - gocognit
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
