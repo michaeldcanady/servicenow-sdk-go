@@ -59,7 +59,25 @@ func (bR *BaseServiceNowCollectionResponse[T]) Serialize(writer serialization.Se
 
 // GetFieldDeserializers returns the deserialization information for this object
 func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	return nil
+	return map[string]func(serialization.ParseNode) error{
+		resultKey: func(pn serialization.ParseNode) error {
+			rawResults, err := pn.GetCollectionOfObjectValues(bR.factory)
+			if err != nil {
+				return err
+			}
+
+			results := make([]T, len(rawResults))
+			for index, rawResult := range rawResults {
+				result, ok := rawResult.(T)
+				if !ok {
+					return fmt.Errorf("rawResult not of type %T", result)
+				}
+				results[index] = result
+			}
+
+			return bR.SetResult(results)
+		},
+	}
 }
 
 // GetBackingStore returns the backing store, if store is nil it instantiates a new store.
@@ -111,6 +129,22 @@ func (r *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
 	}
 
 	return results, nil
+}
+
+func (r *BaseServiceNowCollectionResponse[T]) SetResult(result []T) error {
+	if IsNil(r) {
+		return nil
+	}
+
+	store, err := r.GetBackingStore()
+	if err != nil {
+		return err
+	}
+
+	if err := store.Set(resultKey, result); err != nil {
+		return err
+	}
+	return nil
 }
 
 // GetNextLink Returns the url to the next page of results.

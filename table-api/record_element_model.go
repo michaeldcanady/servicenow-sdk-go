@@ -4,41 +4,85 @@ import (
 	"errors"
 
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
-)
-
-const (
-	displayValueKey = "display_value"
-	valueKey        = "value"
-	linkKey         = "link"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
 // RecordElementModel implements the RecordElement interface.
 //
 // This model encapsulates structured data storage for table entries and provides
 // methods for retrieving and updating values related to a specific record.
-//
-// Example usage:
-//
-//	element := NewRecordElement()
-//	err := element.SetValue("active")
-//	if err != nil {
-//	    log.Fatal(err)
-//	}
 type RecordElementModel struct {
 	internal.Model
+	//singleValue possible to have only display value, value, or link
+	singleValue bool
+}
+
+// GetFieldDeserializers implements serialization.Parsable.
+func (rE *RecordElementModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	if rE.singleValue {
+		return make(map[string]func(serialization.ParseNode) error)
+	}
+
+	return map[string]func(serialization.ParseNode) error{
+		displayValueKey: func(pn serialization.ParseNode) error {
+			rawValue, err := pn.GetRawValue()
+			if err != nil {
+				return err
+			}
+
+			return rE.SetDisplayValue(rawValue)
+		},
+		valueKey: func(pn serialization.ParseNode) error {
+			rawValue, err := pn.GetRawValue()
+			if err != nil {
+				return err
+			}
+
+			return rE.SetValue(rawValue)
+		},
+		linkKey: func(pn serialization.ParseNode) error {
+			rawValue, err := pn.GetStringValue()
+			if err != nil {
+				return err
+			}
+
+			return rE.setLink(rawValue)
+		},
+	}
+}
+
+// Serialize implements serialization.Parsable.
+func (rE *RecordElementModel) Serialize(writer serialization.SerializationWriter) error {
+	panic("unimplemented")
 }
 
 // NewRecordElement creates a new instance of RecordElementModel.
 //
 // This function initializes a RecordElementModel with a new backing store.
-//
-// Example:
-//
-//	element := NewRecordElement()
 func NewRecordElement() *RecordElementModel {
 	return &RecordElementModel{
 		internal.NewBaseModel(),
+		false,
 	}
+}
+
+func NewRecordElementFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+	element := NewRecordElement()
+
+	rawValue, err := parseNode.GetRawValue()
+	if err != nil {
+		return nil, err
+	}
+
+	switch rawValue.(type) {
+	case map[string]any:
+		element.singleValue = false
+	default:
+		element.singleValue = true
+		element.GetBackingStore().Set(valueKey, rawValue)
+	}
+
+	return element, nil
 }
 
 // GetDisplayValue retrieves the display value associated with the element.
