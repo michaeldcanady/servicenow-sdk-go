@@ -17,40 +17,54 @@ type Numeric interface {
 }
 
 type QueryBuilder struct {
-	forest  *QueryForest
-	current *QueryTree
+	query           Node
+	logicalOperator Operator
 }
 
 func NewQueryBuilder() *QueryBuilder {
-	tree := NewQueryTree()
-
-	forest := NewQueryForest()
-	forest.AddTree(tree)
-
 	return &QueryBuilder{
-		forest:  forest,
-		current: tree,
+		query:           nil,
+		logicalOperator: Operator("^"),
 	}
 }
 
-func (qB *QueryBuilder) AddFilter(field string, filter func(string) *Condition) *QueryBuilder {
-	qB.current.AddCondition(filter(field))
+func (qB *QueryBuilder) AddFilter(field string, filter func(string) Node) *QueryBuilder {
+	newExpr := filter(field)
+	if qB.query != nil {
+		newExpr = &BinaryExpression{
+			LeftExpression:  qB.query,
+			Operator:        qB.logicalOperator,
+			Position:        qB.query.Right(),
+			RightExpression: newExpr,
+		}
+	}
+	qB.query = newExpr
 	return qB
 }
 
-func (qB *QueryBuilder) group(logicalOperator string, group func(q *QueryBuilder)) *QueryBuilder {
+func (qB *QueryBuilder) group(op Operator, groupFunc func(q *QueryBuilder)) *QueryBuilder {
 	subBuilder := &QueryBuilder{
-		forest: nil,
-		current: &QueryTree{
-			root: &LogicalGroup{
-				Operator: logicalOperator,
-				Children: []QueryNode{},
-			},
-		},
+		query:           nil,
+		logicalOperator: op,
 	}
-	group(subBuilder)
+	groupFunc(subBuilder)
 
-	qB.current.AddCondition(subBuilder.current)
+	if subBuilder.query == nil {
+		return qB
+	}
+
+	newQuery := subBuilder.query
+
+	if qB.query != nil {
+		newQuery = &BinaryExpression{
+			LeftExpression:  qB.query,
+			Operator:        qB.logicalOperator,
+			Position:        qB.query.Right(),
+			RightExpression: subBuilder.query,
+		}
+	}
+
+	qB.query = newQuery
 
 	return qB
 }
@@ -60,9 +74,9 @@ func (qB *QueryBuilder) OrGroup(group func(q *QueryBuilder)) *QueryBuilder {
 }
 
 func (qB *QueryBuilder) AndGroup(group func(q *QueryBuilder)) *QueryBuilder {
-	return qB.group("^And", group)
+	return qB.group("^", group)
 }
 
 func (qB *QueryBuilder) Build() string {
-	return qB.forest.Serialize()
+	return qB.query.String()
 }

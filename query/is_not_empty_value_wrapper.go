@@ -1,5 +1,5 @@
 package query
 
-func IsNotEmpty() func(string) *Condition {
-	return valueWrapper1("ISNOTEMPTY", nil)
+func IsNotEmpty() func(string) Node {
+	return valueWrapper2(Operator("ISNOTEMPTY"), nil)
 }
