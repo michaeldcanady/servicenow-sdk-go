@@ -1,0 +1,19 @@
+package query
+
+type ReferenceOperator int64
+
+const (
+	ReferenceOperatorIs ReferenceOperator = iota
+	ReferenceOperatorIsNot
+	ReferenceOperatorIsEmpty
+	ReferenceOperatorIsNotEmpty
+	ReferenceOperatorStartsWith
+	ReferenceOperatorEndsWith
+	ReferenceOperatorContains
+	ReferenceOperatorDosNotContain
+	ReferenceOperatorIsAnything
+	ReferenceOperatorIsSame
+	ReferenceOperatorIsDifferent
+	ReferenceOperatorIsEmptyString
+	ReferenceOperatorIsDynamic
+)

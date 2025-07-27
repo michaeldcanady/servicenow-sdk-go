@@ -1,0 +1,27 @@
+package query
+
+type DateTimeOperator int64
+
+const (
+	DateTimeOperatorOn DateTimeOperator = iota
+	DateTimeOperatorNotOn
+	DateTimeOperatorBefore
+	DateTimeOperatorAtOrBefore
+	DateTimeOperatorAfter
+	DateTimeOperatorAtOrAfter
+	DateTimeOperatorBetween
+	DateTimeOperatorTrendOnOrAfter
+	DateTimeOperatorTrendOnOrBefore
+	DateTimeOperatorTrendAfter
+	DateTimeOperatorTrendBefore
+	DateTimeOperatorTrendOn
+	DateTimeOperatorRelativeAfter
+	DateTimeOperatorRelativeBefore
+	DateTimeOperatorIsEmpty
+	DateTimeOperatorIsNotEmpty
+	DateTimeOperatorIsAnything
+	DateTimeOperatorIsSame
+	DateTimeOperatorIsDifferent
+	DateTimeOperatorIsMoreThan
+	DateTimeOperatorIsLessThan
+)

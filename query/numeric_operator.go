@@ -1,0 +1,22 @@
+package query
+
+type NumericOperator int64
+
+const (
+	NumericOperatorIs NumericOperator = iota
+	NumericOperatorIsNot
+	NumericOperatorIsEmpty
+	NumericOperatorIsNotEmpty
+	NumericOperatorLessThan
+	NumericOperatorGreaterThan
+	NumericOperatorLessThanOrIs
+	NumericOperatorGreaterThanOrIs
+	NumericOperatorBetween
+	NumericOperatorIsAnything
+	NumericOperatorIsSame
+	NumericOperatorIsDifferent
+	NumericOperatorGreaterThanField
+	NumericOperatorLessThanField
+	NumericOperatorGreaterThanOrIsField
+	NumericOperatorLessThanOrIsField
+)

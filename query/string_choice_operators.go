@@ -1,0 +1,17 @@
+package query
+
+type StringChoiceOperator int64
+
+const (
+	StringChoiceOperatorIs StringChoiceOperator = iota
+	StringChoiceOperatorIsNot
+	StringChoiceOperatorIsOneOf
+	StringChoiceOperatorIsNotOneOf
+	StringChoiceOperatorContains
+	StringChoiceOperatorStartsWith
+	StringChoiceOperatorEndsWith
+	StringChoiceOperatorDoesNotContain
+	StringChoiceOperatorIsAnything
+	StringChoiceOperatorIsSame
+	StringChoiceOperatorIsDifferent
+)

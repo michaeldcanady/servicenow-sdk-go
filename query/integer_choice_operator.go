@@ -1,0 +1,20 @@
+package query
+
+type IntegerChoiceOperator int64
+
+const (
+	IntegerChoiceOperatorIs IntegerChoiceOperator = iota
+	IntegerChoiceOperatorIsNot
+	IntegerChoiceOperatorIsOneOf
+	IntegerChoiceOperatorIsNotOneOf
+	IntegerChoiceOperatorIsEmpty
+	IntegerChoiceOperatorIsNotEmpty
+	IntegerChoiceOperatorLessThan
+	IntegerChoiceOperatorGreaterThan
+	IntegerChoiceOperatorLessThanOrIs
+	IntegerChoiceOperatorGreaterThanOrIs
+	IntegerChoiceOperatorBetween
+	IntegerChoiceOperatorIsAnything
+	IntegerChoiceOperatorIsSame
+	IntegerChoiceOperatorIsDifferent
+)
