@@ -12,9 +12,9 @@ func TestQueryBuilder_AddFilter(t *testing.T) {
 	builder.
 		AddFilter("example", GreaterThan(7)).
 		OrGroup(func(q *QueryBuilder) {
-			q.AddFilter("example2", Equals("random"))
-			q.AddFilter("example3", Equals("random1"))
+			q.AddFilter("example2", GreaterThan(7))
+			q.AddFilter("example3", Is("random"))
 		})
 
-	assert.Equal(t, "example>7^example2=random^ORexample3=random1", builder.Build())
+	assert.Equal(t, "example>7^example2>7^ORexample3=random", builder.Build())
 }

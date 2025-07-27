@@ -33,8 +33,8 @@ func NewQueryBuilder() *QueryBuilder {
 	}
 }
 
-func (qB *QueryBuilder) AddFilter(field string, filter ValueWrapper) *QueryBuilder {
-	qB.current.AddCondition(filter.ToCondition(field))
+func (qB *QueryBuilder) AddFilter(field string, filter func(string) *Condition) *QueryBuilder {
+	qB.current.AddCondition(filter(field))
 	return qB
 }
 

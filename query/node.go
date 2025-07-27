@@ -1,7 +1,6 @@
 package query
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -15,17 +14,6 @@ const (
 	OpLt  Operator = "<"
 	// Add more as needed
 )
-
-// A single condition in a query
-type Condition struct {
-	Field    string
-	Operator Operator
-	Value    any
-}
-
-func (c Condition) Serialize() string {
-	return fmt.Sprintf("%s%s%s", c.Field, c.Operator, c.Value)
-}
 
 type LogicalGroup struct {
 	Operator string // "AND" or "OR"
