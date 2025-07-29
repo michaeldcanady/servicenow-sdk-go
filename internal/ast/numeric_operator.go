@@ -1,4 +1,4 @@
-package query
+package ast
 
 type NumericOperator int64
 

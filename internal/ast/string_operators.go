@@ -1,4 +1,4 @@
-package query
+package ast
 
 type StringOperator int64
 

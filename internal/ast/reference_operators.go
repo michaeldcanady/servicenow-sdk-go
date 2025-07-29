@@ -1,4 +1,4 @@
-package query
+package ast
 
 type ReferenceOperator int64
 

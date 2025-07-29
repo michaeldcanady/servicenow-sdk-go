@@ -1,5 +1,7 @@
 package query
 
+import ast "github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
+
 type Uint interface {
 	~uint | ~uint32 | ~uint64
 }
@@ -17,21 +19,21 @@ type Numeric interface {
 }
 
 type QueryBuilder struct {
-	query           Node
-	logicalOperator Operator
+	query           ast.Node
+	logicalOperator ast.Operator
 }
 
 func NewQueryBuilder() *QueryBuilder {
 	return &QueryBuilder{
 		query:           nil,
-		logicalOperator: Operator("^"),
+		logicalOperator: ast.Operator("^"),
 	}
 }
 
-func (qB *QueryBuilder) AddFilter(field string, filter func(string) Node) *QueryBuilder {
+func (qB *QueryBuilder) AddFilter(field string, filter func(string) ast.Node) *QueryBuilder {
 	newExpr := filter(field)
 	if qB.query != nil {
-		newExpr = &BinaryExpression{
+		newExpr = &ast.BinaryNode{
 			LeftExpression:  qB.query,
 			Operator:        qB.logicalOperator,
 			Position:        qB.query.Right(),
@@ -42,7 +44,7 @@ func (qB *QueryBuilder) AddFilter(field string, filter func(string) Node) *Query
 	return qB
 }
 
-func (qB *QueryBuilder) group(op Operator, groupFunc func(q *QueryBuilder)) *QueryBuilder {
+func (qB *QueryBuilder) group(op ast.Operator, groupFunc func(q *QueryBuilder)) *QueryBuilder {
 	subBuilder := &QueryBuilder{
 		query:           nil,
 		logicalOperator: op,
@@ -56,7 +58,7 @@ func (qB *QueryBuilder) group(op Operator, groupFunc func(q *QueryBuilder)) *Que
 	newQuery := subBuilder.query
 
 	if qB.query != nil {
-		newQuery = &BinaryExpression{
+		newQuery = &ast.BinaryNode{
 			LeftExpression:  qB.query,
 			Operator:        qB.logicalOperator,
 			Position:        qB.query.Right(),
@@ -78,5 +80,8 @@ func (qB *QueryBuilder) AndGroup(group func(q *QueryBuilder)) *QueryBuilder {
 }
 
 func (qB *QueryBuilder) Build() string {
-	return qB.query.String()
+	visitor := NewStringerVisitor()
+	visitor.Visit(qB.query)
+
+	return visitor.String()
 }

@@ -1,26 +1,24 @@
 package query
 
-import "fmt"
+import (
+	"fmt"
 
-func valueWrapper1(operator string, value any) func(string) *Condition {
-	return func(field string) *Condition {
-		return NewCondition(field, operator, value)
-	}
-}
+	ast "github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
+)
 
-func valueWrapper2(operator Operator, value any) func(string) Node {
-	return func(field string) Node {
-		return &BinaryExpression{
-			LeftExpression: &Literal{
+func valueWrapper2(operator ast.Operator, value any) func(string) ast.Node {
+	return func(field string) ast.Node {
+		return &ast.BinaryNode{
+			LeftExpression: &ast.LiteralNode{
 				Position: 0,
 				Value:    field,
-				Kind:     KindString,
+				Kind:     ast.KindString,
 			},
 			Operator: operator,
-			RightExpression: &Literal{
+			RightExpression: &ast.LiteralNode{
 				Position: 0,
 				Value:    fmt.Sprintf("%v", value),
-				Kind:     KindString,
+				Kind:     ast.KindString,
 			},
 		}
 	}

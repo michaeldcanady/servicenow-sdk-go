@@ -1,4 +1,4 @@
-package query
+package ast
 
 // Operators for conditions
 type Operator string
