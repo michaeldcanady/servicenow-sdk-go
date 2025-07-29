@@ -1,7 +1,11 @@
 package query
 
-import "fmt"
+import (
+	"fmt"
 
-func GreaterThan[T Numeric](val T) func(string) Node {
-	return valueWrapper2(Operator(">"), fmt.Sprintf("%v", val))
+	ast "github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
+)
+
+func GreaterThan[T Numeric](val T) func(string) ast.Node {
+	return valueWrapper2(ast.Operator(">"), fmt.Sprintf("%v", val))
 }

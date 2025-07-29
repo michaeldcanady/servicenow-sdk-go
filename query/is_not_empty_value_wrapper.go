@@ -1,5 +1,7 @@
 package query
 
-func IsNotEmpty() func(string) Node {
-	return valueWrapper2(Operator("ISNOTEMPTY"), nil)
+import ast "github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
+
+func IsNotEmpty() func(string) ast.Node {
+	return valueWrapper2(ast.Operator("ISNOTEMPTY"), nil)
 }
