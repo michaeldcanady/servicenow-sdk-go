@@ -1,15 +1,8 @@
 package ast
 
-type LiteralNodeVisitor interface {
-	VisitLiteralNode(*LiteralNode)
-}
-
-type BinaryNodeVisitor interface {
-	VisitBinaryNode(*BinaryNode)
-}
-
-type NodeVisitor[T any] interface {
-	Visitor[T]
+// NodeVisitor[T] Represents a visit for a node
+type NodeVisitor interface {
+	Visitor[Node]
 	BinaryNodeVisitor
-	LiteralNodeVisitor
+	LiteralNodeVisitor[LiteralNode]
 }

@@ -6,7 +6,7 @@ import (
 	ast "github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
 )
 
-func valueWrapper2(operator ast.Operator, value any) func(string) ast.Node {
+func Condition(operator ast.Operator, value any) func(string) ast.Node {
 	return func(field string) ast.Node {
 		return &ast.BinaryNode{
 			LeftExpression: &ast.LiteralNode{

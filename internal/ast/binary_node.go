@@ -1,5 +1,7 @@
 package ast
 
+var _ Node = (*BinaryNode)(nil)
+
 // BinaryNode Represents a binary expression node.
 type BinaryNode struct {
 	// LeftExpression The left-hand side expression of the binary operation.
@@ -27,6 +29,7 @@ func (expr *BinaryNode) Pos() int {
 	return expr.Position
 }
 
-func (expr *BinaryNode) Accept(visitor NodeVisitor[Node]) {
+// Accept Accepts the provided visitor.
+func (expr *BinaryNode) Accept(visitor NodeVisitor) {
 	visitor.VisitBinaryNode(expr)
 }

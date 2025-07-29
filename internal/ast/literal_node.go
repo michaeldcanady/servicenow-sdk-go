@@ -1,5 +1,7 @@
 package ast
 
+var _ Node = (*LiteralNode)(nil)
+
 // LiteralNode Represents a literal value node (e.g. numeric constant, string, or keyword) in the expression tree.
 type LiteralNode struct {
 	// Position The position of the literal in the source text.
@@ -10,22 +12,22 @@ type LiteralNode struct {
 	Value string
 }
 
+// Left The leftmost (starting) position of the node in source text.
 func (expr *LiteralNode) Left() int {
-	return expr.Position
+	return expr.Pos()
 }
 
+// Right The rightmost (ending) position of the node in source text.
 func (expr *LiteralNode) Right() int {
-	return expr.Position + len(expr.Value)
+	return expr.Pos() + len(expr.Value)
 }
 
+// Pos The actual position of the node.
 func (expr *LiteralNode) Pos() int {
 	return expr.Position
 }
 
-func (expr *LiteralNode) String() string {
-	return expr.Value
-}
-
-func (expr *LiteralNode) Accept(visitor NodeVisitor[Node]) {
+// Accept Accepts the provided visitor.
+func (expr *LiteralNode) Accept(visitor NodeVisitor) {
 	visitor.VisitLiteralNode(expr)
 }

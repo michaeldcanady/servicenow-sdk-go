@@ -6,12 +6,15 @@ import (
 	ast "github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
 )
 
-var _ ast.NodeVisitor[ast.Node] = (*StringerVisitor)(nil)
+var _ ast.NodeVisitor = (*StringerVisitor)(nil)
 
+// StringerVisitor Represents a visitor to convert the tree to a string.
 type StringerVisitor struct {
+	// builder Builds the returned string.
 	builder strings.Builder
 }
 
+// NewStringerVisitor Instantiates new StringerVisitor.
 func NewStringerVisitor() *StringerVisitor {
 	return &StringerVisitor{
 		builder: strings.Builder{},
@@ -26,7 +29,7 @@ func (v *StringerVisitor) Visit(node ast.Node) {
 // VisitBinaryNode implements NodeVisitor.
 func (v *StringerVisitor) VisitBinaryNode(node *ast.BinaryNode) {
 	v.Visit(node.LeftExpression)
-	v.builder.WriteString(string(node.Operator))
+	v.builder.WriteString(node.Operator.String())
 	v.Visit(node.RightExpression)
 }
 

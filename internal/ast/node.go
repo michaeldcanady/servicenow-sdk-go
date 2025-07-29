@@ -1,5 +1,6 @@
 package ast
 
+// Node Represents a tree node
 type Node interface {
 	// Left The leftmost (starting) position of the node in source text.
 	Left() int
@@ -7,6 +8,5 @@ type Node interface {
 	Right() int
 	// Pos The actual position of the node.
 	Pos() int
-
-	Accepter[Node, NodeVisitor[Node]]
+	Accepter[Node, NodeVisitor]
 }

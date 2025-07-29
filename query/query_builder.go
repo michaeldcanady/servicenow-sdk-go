@@ -2,31 +2,16 @@ package query
 
 import ast "github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
 
-type Uint interface {
-	~uint | ~uint32 | ~uint64
-}
-
-type Float interface {
-	~float32 | ~float64
-}
-
-type Int interface {
-	~int | ~int32 | ~int64
-}
-
-type Numeric interface {
-	Int | Float | Uint
-}
-
 type QueryBuilder struct {
 	query           ast.Node
 	logicalOperator ast.Operator
 }
 
+// NewQueryBuilder Instantiates new *QueryBuilder
 func NewQueryBuilder() *QueryBuilder {
 	return &QueryBuilder{
 		query:           nil,
-		logicalOperator: ast.Operator("^"),
+		logicalOperator: ast.OperatorAnd,
 	}
 }
 
@@ -72,14 +57,14 @@ func (qB *QueryBuilder) group(op ast.Operator, groupFunc func(q *QueryBuilder)) 
 }
 
 func (qB *QueryBuilder) OrGroup(group func(q *QueryBuilder)) *QueryBuilder {
-	return qB.group("^OR", group)
+	return qB.group(ast.OperatorOr, group)
 }
 
 func (qB *QueryBuilder) AndGroup(group func(q *QueryBuilder)) *QueryBuilder {
-	return qB.group("^", group)
+	return qB.group(ast.OperatorAnd, group)
 }
 
-func (qB *QueryBuilder) Build() string {
+func (qB *QueryBuilder) String() string {
 	visitor := NewStringerVisitor()
 	visitor.Visit(qB.query)
 

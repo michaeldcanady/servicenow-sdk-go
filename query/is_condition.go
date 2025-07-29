@@ -10,6 +10,6 @@ type Primitive interface {
 	Numeric | ~string
 }
 
-func Is[T Primitive](val T) func(string) ast.Node {
-	return valueWrapper2(ast.Operator("="), fmt.Sprintf("%v", val))
+func IsCondition[T Primitive](val T) func(string) ast.Node {
+	return Condition(ast.OperatorIs, fmt.Sprintf("%v", val))
 }
