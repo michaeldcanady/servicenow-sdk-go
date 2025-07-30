@@ -11,5 +11,5 @@ type Primitive interface {
 }
 
 func IsCondition[T Primitive](val T) func(string) ast.Node {
-	return Condition(ast.OperatorIs, fmt.Sprintf("%v", val))
+	return BinaryCondition(ast.OperatorIs, fmt.Sprintf("%v", val))
 }

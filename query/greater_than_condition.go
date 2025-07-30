@@ -7,5 +7,5 @@ import (
 )
 
 func GreaterThanCondition[T Numeric](val T) func(string) ast.Node {
-	return Condition(ast.OperatorGreaterThan, fmt.Sprintf("%v", val))
+	return BinaryCondition(ast.OperatorGreaterThan, fmt.Sprintf("%v", val))
 }
