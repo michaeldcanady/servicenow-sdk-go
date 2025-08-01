@@ -14,6 +14,16 @@ type StringerVisitor struct {
 	builder strings.Builder
 }
 
+// VisitArrayNode implements ast.NodeVisitor.
+func (v *StringerVisitor) VisitArrayNode(array *ast.ArrayNode) {
+	for index, element := range array.Elements {
+		v.Visit(element)
+		if index != len(array.Elements)-1 {
+			v.builder.WriteString(",")
+		}
+	}
+}
+
 // NewStringerVisitor Instantiates new StringerVisitor.
 func NewStringerVisitor() *StringerVisitor {
 	return &StringerVisitor{

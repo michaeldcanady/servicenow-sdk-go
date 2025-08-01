@@ -5,4 +5,5 @@ type NodeVisitor interface {
 	Visitor[Node]
 	BinaryNodeVisitor
 	LiteralNodeVisitor[LiteralNode]
+	ArrayNodeVisitor
 }
