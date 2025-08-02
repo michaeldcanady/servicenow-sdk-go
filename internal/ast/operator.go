@@ -6,18 +6,18 @@ package ast
 type Operator int64
 
 const (
-	OperatorUnknown Operator = iota - 1
-	OperatorIs
-	OperatorIsNot
-	OperatorIsEmpty
-	OperatorIsNotEmpty
-	OperatorLessThan
-	OperatorGreaterThan
-	OperatorLessThanOrIs
-	OperatorGreaterThanOrIs
-	OperatorBetween
-	OperatorIsAnything
-	OperatorIsSame
+	OperatorUnknown         Operator = iota - 1
+	OperatorIs                       // implemented
+	OperatorIsNot                    // implemented
+	OperatorIsEmpty                  // implemented
+	OperatorIsNotEmpty               // implemented
+	OperatorLessThan                 // implemented
+	OperatorGreaterThan              // implemented
+	OperatorLessThanOrIs             // implemented
+	OperatorGreaterThanOrIs          // implemented
+	OperatorBetween                  // implemented
+	OperatorIsAnything               // implemented
+	OperatorIsSame                   // implemented
 	OperatorIsDifferent
 	OperatorGreaterThanField
 	OperatorLessThanField

@@ -31,6 +31,21 @@ func ArrayCondition[T Primitive](operator ast.Operator, values []T) func(string)
 	return nodeCondition(operator, node)
 }
 
+func PairCondition[T Numeric](operator ast.Operator, value1, value2 T) func(string) ast.Node {
+	node := &ast.PairNode{
+		Element1: &ast.LiteralNode{
+			Position: 0,
+			Value:    fmt.Sprintf("%v", value1),
+		},
+		Element2: &ast.LiteralNode{
+			Position: 0,
+			Value:    fmt.Sprintf("%v", value2),
+		},
+	}
+
+	return nodeCondition(operator, node)
+}
+
 func nodeCondition(operator ast.Operator, node ast.Node) func(string) ast.Node {
 	return func(field string) ast.Node {
 		return &ast.BinaryNode{

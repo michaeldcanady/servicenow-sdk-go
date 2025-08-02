@@ -14,6 +14,13 @@ type StringerVisitor struct {
 	builder strings.Builder
 }
 
+// VisitPairNode implements ast.NodeVisitor.
+func (v *StringerVisitor) VisitPairNode(pair *ast.PairNode) {
+	v.Visit(pair.Element1)
+	v.builder.WriteString("@")
+	v.Visit(pair.Element2)
+}
+
 // VisitArrayNode implements ast.NodeVisitor.
 func (v *StringerVisitor) VisitArrayNode(array *ast.ArrayNode) {
 	for index, element := range array.Elements {

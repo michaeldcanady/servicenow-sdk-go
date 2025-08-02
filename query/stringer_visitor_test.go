@@ -41,3 +41,35 @@ func TestStringerVisitor_VisitArrayNode(t *testing.T) {
 		t.Run(test.name, test.test)
 	}
 }
+
+func TestStringerVisitor_VisitPairNode(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				node := &ast.PairNode{
+					Element1: &ast.LiteralNode{
+						Position: 0,
+						Value:    "test",
+					},
+					Element2: &ast.LiteralNode{
+						Position: 0,
+						Value:    "test",
+					},
+				}
+
+				visitor := NewStringerVisitor()
+				visitor.VisitPairNode(node)
+
+				assert.Equal(t, "test@test", visitor.String())
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
