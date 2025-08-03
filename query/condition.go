@@ -14,6 +14,18 @@ func BinaryCondition(operator ast.Operator, value any) func(string) ast.Node {
 	})
 }
 
+func unaryCondition(operator ast.Operator) func(string) ast.Node {
+	return func(field string) ast.Node {
+		return &ast.UnaryNode{
+			Operator: operator,
+			Node: &ast.LiteralNode{
+				Position: 0,
+				Value:    field,
+			},
+		}
+	}
+}
+
 func ArrayCondition[T Primitive](operator ast.Operator, values []T) func(string) ast.Node {
 	node := &ast.ArrayNode{
 		LeftBrace:  0,

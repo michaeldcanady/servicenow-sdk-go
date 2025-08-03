@@ -6,6 +6,11 @@ import (
 	ast "github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
 )
 
+const (
+	arraySeparator string = ","
+	pairSeparator  string = "@"
+)
+
 var _ ast.NodeVisitor = (*StringerVisitor)(nil)
 
 // StringerVisitor Represents a visitor to convert the tree to a string.
@@ -14,10 +19,16 @@ type StringerVisitor struct {
 	builder strings.Builder
 }
 
+// VisitUnaryNode implements ast.NodeVisitor.
+func (v *StringerVisitor) VisitUnaryNode(unary *ast.UnaryNode) {
+	v.Visit(unary.Node)
+	v.builder.WriteString(unary.Operator.String())
+}
+
 // VisitPairNode implements ast.NodeVisitor.
 func (v *StringerVisitor) VisitPairNode(pair *ast.PairNode) {
 	v.Visit(pair.Element1)
-	v.builder.WriteString("@")
+	v.builder.WriteString(pairSeparator)
 	v.Visit(pair.Element2)
 }
 
@@ -26,7 +37,7 @@ func (v *StringerVisitor) VisitArrayNode(array *ast.ArrayNode) {
 	for index, element := range array.Elements {
 		v.Visit(element)
 		if index != len(array.Elements)-1 {
-			v.builder.WriteString(",")
+			v.builder.WriteString(arraySeparator)
 		}
 	}
 }
