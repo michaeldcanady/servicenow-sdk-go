@@ -6,23 +6,24 @@ package ast
 type Operator int64
 
 const (
-	OperatorUnknown         Operator = iota - 1
-	OperatorIs                       // implemented
-	OperatorIsNot                    // implemented
-	OperatorIsEmpty                  // implemented
-	OperatorIsNotEmpty               // implemented
-	OperatorLessThan                 // implemented
-	OperatorGreaterThan              // implemented
-	OperatorLessThanOrIs             // implemented
-	OperatorGreaterThanOrIs          // implemented
-	OperatorBetween                  // implemented
-	OperatorIsAnything               // implemented
-	OperatorIsSame                   // implemented
-	OperatorIsDifferent
-	OperatorGreaterThanField
-	OperatorLessThanField
-	OperatorGreaterThanOrIsField
-	OperatorLessThanOrIsField
+	OperatorUnknown              Operator = iota - 1
+	OperatorIs                            // implemented
+	OperatorIsNot                         // implemented
+	OperatorIsEmpty                       // implemented
+	OperatorIsNotEmpty                    // implemented
+	OperatorLessThan                      // implemented
+	OperatorGreaterThan                   // implemented
+	OperatorLessThanOrIs                  // implemented
+	OperatorGreaterThanOrIs               // implemented
+	OperatorBetween                       // implemented
+	OperatorIsAnything                    // implemented
+	OperatorIsSame                        // implemented
+	OperatorIsDifferent                   // implemented
+	OperatorGreaterThanField              // implemented
+	OperatorLessThanField                 // implemented
+	OperatorGreaterThanOrIsField          // implemented
+	OperatorLessThanOrIsField             // implemented
+	// date/time
 	OperatorOn
 	OperatorNotOn
 	OperatorBefore
@@ -36,7 +37,8 @@ const (
 	OperatorTrendOn
 	OperatorRelativeAfter
 	OperatorRelativeBefore
-	OperatorIsMoreThan
+	// numeric
+	OperatorIsMoreThan // implemented
 	OperatorIsLessThan
 	OperatorIsOneOf
 	OperatorIsNotOneOf
