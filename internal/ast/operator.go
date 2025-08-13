@@ -13,7 +13,6 @@ const (
 	OperatorIsEmpty    // implemented
 	OperatorIsNotEmpty // implemented
 	OperatorIsAnything // implemented
-	OperatorIsDynamic
 	//string
 	OperatorStartsWith     // implemented
 	OperatorEndsWith       // implemented
@@ -21,21 +20,22 @@ const (
 	OperatorIsEmptyString  // implemented
 	OperatorDoesNotContain // implemented
 	// field
-	OperatorIsSame // implemented
+	OperatorIsDynamic // implemented
+	OperatorIsSame    // implemented
 	// date/time
-	OperatorOn
-	OperatorNotOn
-	OperatorBefore
-	OperatorAtOrBefore
-	OperatorAfter
-	OperatorAtOrAfter
-	OperatorTrendOnOrAfter
-	OperatorTrendOnOrBefore
-	OperatorTrendAfter
-	OperatorTrendBefore
-	OperatorTrendOn
-	OperatorRelativeAfter
-	OperatorRelativeBefore
+	OperatorOn              // implemented
+	OperatorNotOn           // implemented
+	OperatorBefore          // implemented
+	OperatorAtOrBefore      // implemented
+	OperatorAfter           // implemented
+	OperatorAtOrAfter       // implemented
+	OperatorTrendOnOrAfter  // implemented
+	OperatorTrendOnOrBefore // implemented
+	OperatorTrendAfter      // implemented
+	OperatorTrendBefore     // implemented
+	OperatorTrendOn         // implemented
+	OperatorRelativeAfter   // implemented
+	OperatorRelativeBefore  // implemented
 	// numeric
 	OperatorLessThan             // implemented
 	OperatorGreaterThan          // implemented
@@ -51,8 +51,9 @@ const (
 	OperatorIsLessThan           // implemented
 	OperatorIsOneOf              // implemented
 	OperatorIsNotOneOf           // implemented
-	OperatorAnd                  // implemented
-	OperatorOr                   // implemented
+	// logical
+	OperatorAnd // implemented
+	OperatorOr  // implemented
 )
 
 func (o Operator) String() string {
