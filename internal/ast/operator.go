@@ -6,23 +6,22 @@ package ast
 type Operator int64
 
 const (
-	OperatorUnknown              Operator = iota - 1
-	OperatorIs                            // implemented
-	OperatorIsNot                         // implemented
-	OperatorIsEmpty                       // implemented
-	OperatorIsNotEmpty                    // implemented
-	OperatorLessThan                      // implemented
-	OperatorGreaterThan                   // implemented
-	OperatorLessThanOrIs                  // implemented
-	OperatorGreaterThanOrIs               // implemented
-	OperatorBetween                       // implemented
-	OperatorIsAnything                    // implemented
-	OperatorIsSame                        // implemented
-	OperatorIsDifferent                   // implemented
-	OperatorGreaterThanField              // implemented
-	OperatorLessThanField                 // implemented
-	OperatorGreaterThanOrIsField          // implemented
-	OperatorLessThanOrIsField             // implemented
+	OperatorUnknown Operator = iota - 1
+	// all
+	OperatorIs         // implemented
+	OperatorIsNot      // implemented
+	OperatorIsEmpty    // implemented
+	OperatorIsNotEmpty // implemented
+	OperatorIsAnything // implemented
+	OperatorIsDynamic
+	//string
+	OperatorStartsWith     // implemented
+	OperatorEndsWith       // implemented
+	OperatorContains       // implemented
+	OperatorIsEmptyString  // implemented
+	OperatorDoesNotContain // implemented
+	// field
+	OperatorIsSame // implemented
 	// date/time
 	OperatorOn
 	OperatorNotOn
@@ -38,19 +37,22 @@ const (
 	OperatorRelativeAfter
 	OperatorRelativeBefore
 	// numeric
-	OperatorIsMoreThan // implemented
-	OperatorIsLessThan
-	OperatorIsOneOf
-	OperatorIsNotOneOf
-	OperatorStartsWith
-	OperatorEndsWith
-	OperatorContains
-	OperatorIsEmptyString
-	OperatorIsDynamic
-	OperatorDoesNotContain
-	OperatorStartWith
-	OperatorAnd
-	OperatorOr
+	OperatorLessThan             // implemented
+	OperatorGreaterThan          // implemented
+	OperatorLessThanOrIs         // implemented
+	OperatorGreaterThanOrIs      // implemented
+	OperatorBetween              // implemented
+	OperatorIsDifferent          // implemented
+	OperatorGreaterThanField     // implemented
+	OperatorLessThanField        // implemented
+	OperatorGreaterThanOrIsField // implemented
+	OperatorLessThanOrIsField    // implemented
+	OperatorIsMoreThan           // implemented
+	OperatorIsLessThan           // implemented
+	OperatorIsOneOf              // implemented
+	OperatorIsNotOneOf           // implemented
+	OperatorAnd                  // implemented
+	OperatorOr                   // implemented
 )
 
 func (o Operator) String() string {
@@ -95,7 +97,6 @@ func (o Operator) String() string {
 		OperatorIsEmptyString:        "EMPTYSTRING",
 		OperatorIsDynamic:            "DYNAMIC",
 		OperatorDoesNotContain:       "NOT LIKE",
-		OperatorStartWith:            "",
 		OperatorAnd:                  "^",
 		OperatorOr:                   "^OR",
 	}[o]
