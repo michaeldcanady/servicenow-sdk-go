@@ -25,6 +25,9 @@ nav:
           - contributing/architecture/index.md
           - contributing/architecture/core-concepts.md
       - contributing/quick-start.md
+  - Proposals:
+      - proposals/index.md
+      - proposals/query-builder.md
   - Releases ⧉: https://github.com/michaeldcanady/servicenow-sdk-go/releases
   - Roadmap ⧉: https://github.com/users/michaeldcanady/projects/7/views/9
 
