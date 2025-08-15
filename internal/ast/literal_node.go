@@ -16,15 +16,11 @@ type LiteralNode struct {
 	Value string
 }
 
-func kindOf(_ any) Kind {
-	return KindUnknown
-}
-
 // NewLiteralNode instantiates a new literal node of the specified value
 func NewLiteralNode(value any) *LiteralNode {
 	return &LiteralNode{
 		Position: -1,
-		Kind:     kindOf(value),
+		Kind:     KindUnknown,
 		Value:    fmt.Sprintf("%v", value),
 	}
 }

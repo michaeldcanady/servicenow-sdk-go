@@ -6,6 +6,28 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestNewLiteralNode(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				node := NewLiteralNode("value")
+
+				assert.Equal(t, "value", node.Value)
+				assert.Equal(t, KindUnknown, node.Kind)
+				assert.Equal(t, -1, node.Position)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
 func TestLiteralNode_Left(t *testing.T) {
 	tests := []struct {
 		name string

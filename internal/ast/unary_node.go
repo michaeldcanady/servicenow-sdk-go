@@ -35,7 +35,3 @@ func (u *UnaryNode) Left() int {
 
 	return u.Node.Left()
 }
-
-func (u *UnaryNode) Operator() Operator {
-	return u.Op
-}
