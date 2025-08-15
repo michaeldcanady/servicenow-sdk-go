@@ -1,3 +1,5 @@
+//go:build preview
+
 package ast
 
 var _ Node = (*BinaryNode)(nil)

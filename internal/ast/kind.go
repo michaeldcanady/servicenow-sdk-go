@@ -1,3 +1,5 @@
+//go:build preview
+
 package ast
 
 type Kind int64

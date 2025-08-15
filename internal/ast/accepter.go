@@ -1,3 +1,5 @@
+//go:build preview
+
 package ast
 
 // Accepter[T,V] Represents an accepter of a visitor.

@@ -1,3 +1,5 @@
+//go:build preview
+
 package ast
 
 // Node Represents a tree node

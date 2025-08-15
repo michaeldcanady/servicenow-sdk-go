@@ -1,3 +1,5 @@
+//go:build preview
+
 package ast
 
 // PairNodeVisitor represents a visitor to a pair node

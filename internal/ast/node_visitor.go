@@ -1,3 +1,5 @@
+//go:build preview
+
 package ast
 
 // NodeVisitor represents a visitor for a node tree.
