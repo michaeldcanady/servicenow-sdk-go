@@ -3,7 +3,6 @@ package ast
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,7 +22,7 @@ func TestUnaryNode_Left(t *testing.T) {
 		{
 			name: "Has Node",
 			test: func(t *testing.T) {
-				node := mocking.NewMockNode()
+				node := newMockNode()
 				node.On("Left").Return(1)
 
 				unaryNode := &UnaryNode{
@@ -93,7 +92,7 @@ func TestUnaryNode_Accept(t *testing.T) {
 			name: "Successful",
 			test: func(t *testing.T) {
 				node := &UnaryNode{}
-				visitor := newMockUnaryNodeVisitor()
+				visitor := newMockNodeVisitor()
 				visitor.On("VisitUnaryNode", node)
 
 				node.Accept(visitor)

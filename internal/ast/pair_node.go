@@ -9,7 +9,7 @@ type PairNode struct {
 }
 
 // Accept accepts the NodeVisitor and visits the visitor.
-func (p *PairNode) Accept(visitor PairNodeVisitor) {
+func (p *PairNode) Accept(visitor NodeVisitor) {
 	visitor.VisitPairNode(p)
 }
 

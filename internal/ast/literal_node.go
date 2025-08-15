@@ -1,5 +1,9 @@
 package ast
 
+import (
+	"fmt"
+)
+
 var _ Node = (*LiteralNode)(nil)
 
 // LiteralNode Represents a literal value node (e.g. numeric constant, string, or keyword) in the expression tree.
@@ -10,6 +14,18 @@ type LiteralNode struct {
 	Kind Kind
 	// The literal value itself.
 	Value string
+}
+
+func kindOf(_ any) Kind {
+	return KindUnknown
+}
+
+func NewLiteralNode(value any) *LiteralNode {
+	return &LiteralNode{
+		Position: -1,
+		Kind:     kindOf(value),
+		Value:    fmt.Sprintf("%v", value),
+	}
 }
 
 // Left The leftmost (starting) position of the node in source text.
@@ -28,6 +44,6 @@ func (expr *LiteralNode) Pos() int {
 }
 
 // Accept Accepts the provided visitor.
-func (expr *LiteralNode) Accept(visitor LiteralNodeVisitor) {
+func (expr *LiteralNode) Accept(visitor NodeVisitor) {
 	visitor.VisitLiteralNode(expr)
 }

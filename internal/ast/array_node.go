@@ -30,6 +30,6 @@ func (expr *ArrayNode) Pos() int {
 }
 
 // Accept Accepts the provided visitor.
-func (expr *ArrayNode) Accept(visitor ArrayNodeVisitor) {
+func (expr *ArrayNode) Accept(visitor NodeVisitor) {
 	visitor.VisitArrayNode(expr)
 }

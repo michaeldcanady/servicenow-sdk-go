@@ -3,5 +3,10 @@ package ast
 type Kind int64
 
 const (
-	KindString Kind = iota
+	KindUnknown Kind = iota - 1
+	KindString
+	KindReference
+	KindDateTime
+	KindNumeric
+	KindBoolean
 )

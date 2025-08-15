@@ -83,7 +83,7 @@ func TestLiteralNode_Accept(t *testing.T) {
 			name: "Successful",
 			test: func(t *testing.T) {
 				node := &LiteralNode{}
-				visitor := newMockLiteralNodeVisitor()
+				visitor := newMockNodeVisitor()
 				visitor.On("VisitLiteralNode", node)
 
 				node.Accept(visitor)

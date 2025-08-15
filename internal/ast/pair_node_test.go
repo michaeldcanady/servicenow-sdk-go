@@ -3,7 +3,6 @@ package ast
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,7 +22,7 @@ func TestPairNode_Left(t *testing.T) {
 		{
 			name: "Has Element1",
 			test: func(t *testing.T) {
-				element1 := mocking.NewMockNode()
+				element1 := newMockNode()
 				element1.On("Left").Return(1)
 
 				node := &PairNode{
@@ -57,7 +56,7 @@ func TestPairNode_Right(t *testing.T) {
 		{
 			name: "Has Element2",
 			test: func(t *testing.T) {
-				element1 := mocking.NewMockNode()
+				element1 := newMockNode()
 				element1.On("Right").Return(1)
 
 				node := &PairNode{
@@ -91,7 +90,7 @@ func TestPairNode_Pos(t *testing.T) {
 		{
 			name: "Has Element1",
 			test: func(t *testing.T) {
-				element1 := mocking.NewMockNode()
+				element1 := newMockNode()
 				element1.On("Left").Return(1)
 
 				node := &PairNode{
@@ -118,7 +117,7 @@ func TestPairNode_Accept(t *testing.T) {
 			name: "Successful",
 			test: func(t *testing.T) {
 				node := &PairNode{}
-				visitor := newMockPairNodeVisitor()
+				visitor := newMockNodeVisitor()
 				visitor.On("VisitPairNode", node)
 
 				node.Accept(visitor)

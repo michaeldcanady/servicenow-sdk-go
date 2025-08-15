@@ -4,8 +4,8 @@ var _ Node = (*UnaryNode)(nil)
 
 // UnaryNode represents a node with only an operator and a node
 type UnaryNode struct {
-	// Operator The unary operator.
-	Operator Operator
+	// Op The unary operator.
+	Op Operator
 	// Position The position of the unary operator.
 	Position int
 	// Node
@@ -13,7 +13,7 @@ type UnaryNode struct {
 }
 
 // Accept implements Node.
-func (u *UnaryNode) Accept(node UnaryNodeVisitor) {
+func (u *UnaryNode) Accept(node NodeVisitor) {
 	node.VisitUnaryNode(u)
 }
 
@@ -34,4 +34,8 @@ func (u *UnaryNode) Left() int {
 	}
 
 	return u.Node.Left()
+}
+
+func (u *UnaryNode) Operator() Operator {
+	return u.Op
 }

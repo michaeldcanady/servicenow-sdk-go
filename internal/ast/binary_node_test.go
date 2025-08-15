@@ -3,7 +3,6 @@ package ast
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,7 +14,7 @@ func TestBinaryNode_Left(t *testing.T) {
 		{
 			name: "Has left expression",
 			test: func(t *testing.T) {
-				leftNode := mocking.NewMockNode()
+				leftNode := newMockNode()
 				leftNode.On("Pos").Return(1)
 
 				node := &BinaryNode{
@@ -51,7 +50,7 @@ func TestBinaryNode_Right(t *testing.T) {
 		{
 			name: "Has left expression",
 			test: func(t *testing.T) {
-				rightNode := mocking.NewMockNode()
+				rightNode := newMockNode()
 				rightNode.On("Pos").Return(1)
 
 				node := &BinaryNode{
@@ -110,7 +109,7 @@ func TestBinaryNode_Accept(t *testing.T) {
 			name: "Successful",
 			test: func(t *testing.T) {
 				node := &BinaryNode{}
-				visitor := newMockBinaryNodeVisitor()
+				visitor := newMockNodeVisitor()
 				visitor.On("VisitBinaryNode", node)
 
 				node.Accept(visitor)

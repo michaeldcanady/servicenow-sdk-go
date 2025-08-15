@@ -8,4 +8,5 @@ type Node interface {
 	Right() int
 	// Pos The actual position of the node.
 	Pos() int
+	Accepter[Node, NodeVisitor]
 }

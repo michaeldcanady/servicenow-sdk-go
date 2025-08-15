@@ -3,7 +3,6 @@ package ast
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,7 +34,7 @@ func TestArrayNode_Left(t *testing.T) {
 		{
 			name: "One element array",
 			test: func(t *testing.T) {
-				mockNode := mocking.NewMockNode()
+				mockNode := newMockNode()
 				mockNode.On("Left").Return(1)
 
 				node := &ArrayNode{
@@ -81,7 +80,7 @@ func TestArrayNode_Right(t *testing.T) {
 		{
 			name: "One element array",
 			test: func(t *testing.T) {
-				mockNode := mocking.NewMockNode()
+				mockNode := newMockNode()
 				mockNode.On("Right").Return(1)
 
 				node := &ArrayNode{
@@ -120,7 +119,7 @@ func TestArrayNode_Accept(t *testing.T) {
 			test: func(t *testing.T) {
 				node := &ArrayNode{}
 
-				visitor := newMockArrayNodeVisitor()
+				visitor := newMockNodeVisitor()
 				visitor.On("VisitArrayNode", node)
 
 				visitor.VisitArrayNode(node)

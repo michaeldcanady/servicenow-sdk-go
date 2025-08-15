@@ -36,6 +36,6 @@ func (expr *BinaryNode) Pos() int {
 }
 
 // Accept Accepts the provided visitor.
-func (expr *BinaryNode) Accept(visitor BinaryNodeVisitor) {
+func (expr *BinaryNode) Accept(visitor NodeVisitor) {
 	visitor.VisitBinaryNode(expr)
 }
