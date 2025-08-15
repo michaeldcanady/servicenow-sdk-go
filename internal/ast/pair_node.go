@@ -4,7 +4,9 @@ var _ Node = (*PairNode)(nil)
 
 // PairNode represents a pair of nodes
 type PairNode struct {
+	// Element1 represents the first node in the pair.
 	Element1 Node
+	// Element2 represents the second node in the pair.
 	Element2 Node
 }
 

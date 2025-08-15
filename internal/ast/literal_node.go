@@ -20,6 +20,7 @@ func kindOf(_ any) Kind {
 	return KindUnknown
 }
 
+// NewLiteralNode instantiates a new literal node of the specified value
 func NewLiteralNode(value any) *LiteralNode {
 	return &LiteralNode{
 		Position: -1,
