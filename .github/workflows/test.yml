@@ -38,14 +38,14 @@ jobs:
       - name: Run unit tests on Unix systems
         if: runner.os != 'Windows'
         run: |
-          go test -count=1 -coverpkg=./... -covermode=atomic -coverprofile $COVERAGE_FILE  ./...
+          go test -count=1 -tags=preview.query -coverpkg=./... -covermode=atomic -coverprofile $COVERAGE_FILE  ./...
           grep -v -E -f .covignore $COVERAGE_FILE > coverage.filtered.out && mv coverage.filtered.out $COVERAGE_FILE
         working-directory: ${{ github.workspace }}
 
       - name: Run unit tests on Windows systems
         if: runner.os == 'Windows'
         run: |
-          go test -count=1 -coverpkg=./... -covermode=atomic -coverprofile $env:COVERAGE_FILE  ./...
+          go test -count=1 -tags=preview.query -coverpkg=./... -covermode=atomic -coverprofile $env:COVERAGE_FILE  ./...
           findstr /V /G:.covignore $env:COVERAGE_FILE > coverage.filtered.out
           Move-Item -Path coverage.filtered.out -Destination $env:COVERAGE_FILE -Force
         working-directory: ${{ github.workspace }}
