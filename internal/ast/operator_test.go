@@ -1,4 +1,4 @@
-//go:build preview
+//go:build preview.query
 
 package ast
 
