@@ -1,3 +1,5 @@
+//go:build preview.query
+
 package ast
 
 // LiteralNodeVisitor Represents a visitor of a literal node

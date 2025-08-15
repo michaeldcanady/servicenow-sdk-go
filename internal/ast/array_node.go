@@ -1,3 +1,5 @@
+//go:build preview.query
+
 package ast
 
 var _ Node = (*ArrayNode)(nil)
