@@ -1,3 +1,5 @@
+//go:build preview.query
+
 package ast
 
 // BinaryNodeVisitor Represents a visitor for a binary node.

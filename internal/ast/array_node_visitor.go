@@ -1,3 +1,5 @@
+//go:build preview.query
+
 package ast
 
 // ArrayNodeVisitor represents a visitor for an array node.

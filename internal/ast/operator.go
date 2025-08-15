@@ -1,3 +1,5 @@
+//go:build preview.query
+
 package ast
 
 //https://www.servicenow.com/docs/bundle/vancouver-platform-user-interface/page/use/common-ui-elements/reference/r_OpAvailableFiltersQueries.html

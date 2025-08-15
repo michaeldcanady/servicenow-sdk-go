@@ -1,3 +1,5 @@
+//go:build preview.query
+
 package ast
 
 // Node Represents a tree node
