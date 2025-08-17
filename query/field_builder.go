@@ -16,8 +16,8 @@ func NewFieldBuilder(query *QueryBuilder) *FieldBuilder {
 }
 
 // Field a generic field.
-func (builder *FieldBuilder) Field(name string) *ConditionBuilder {
-	return NewConditionBuilder(name, builder.query)
+func (builder *FieldBuilder) Field(name string) *UnitedConditionBuilder {
+	return NewUnitedConditionBuilder(name, builder.query)
 }
 
 // StringField a string field.

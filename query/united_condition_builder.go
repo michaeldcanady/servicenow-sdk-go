@@ -2,15 +2,15 @@
 
 package query
 
-type ConditionBuilder struct {
+type UnitedConditionBuilder struct {
 	*BaseConditionBuilder[any]
 	*StringConditionBuilder
 	*DateTimeConditionBuilder
 	*NumericConditionBuilder
 }
 
-func NewConditionBuilder(field string, query *QueryBuilder) *ConditionBuilder {
-	return &ConditionBuilder{
+func NewUnitedConditionBuilder(field string, query *QueryBuilder) *UnitedConditionBuilder {
+	return &UnitedConditionBuilder{
 		NewBaseConditionBuilder[any](field, query),
 		NewStringConditionBuilder(field, query),
 		NewDateTimeConditionBuilder(field, query),
