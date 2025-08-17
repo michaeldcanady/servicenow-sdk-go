@@ -54,12 +54,3 @@ func (builder *SharedConditionBuilder[T]) IsDynamic(sysID string) *QueryBuilder 
 func (builder *SharedConditionBuilder[T]) IsSame(sysID string) *QueryBuilder {
 	return builder.binaryCondition(ast.OperatorIsSame, ast.NewLiteralNode(sysID))
 }
-
-// unaryCondition builds a new unary condition.
-func (builder *SharedConditionBuilder[T]) unaryCondition(operator ast.Operator) *QueryBuilder {
-	if operator == ast.OperatorUnknown {
-		builder.addErrors(UnknownOperatorErr)
-	}
-
-	return builder.addCondition(ast.NewUnaryNode(operator, ast.NewLiteralNode(builder.field)))
-}
