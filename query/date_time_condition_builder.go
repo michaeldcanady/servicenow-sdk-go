@@ -10,13 +10,13 @@ import (
 
 // DateTimeConditionBuilder represents a condition builder for a date-time field.
 type DateTimeConditionBuilder struct {
-	*BaseConditionBuilder[time.Time]
+	*SharedConditionBuilder[time.Time]
 }
 
 // NewDateTimeConditionBuilder  a new date-time condition builder, of the provided query, for the provided field.
-func NewDateTimeConditionBuilder(name string, query *QueryBuilder) *DateTimeConditionBuilder {
+func NewDateTimeConditionBuilder(field string, query *QueryBuilder) *DateTimeConditionBuilder {
 	return &DateTimeConditionBuilder{
-		NewBaseConditionBuilder[time.Time](name, query),
+		NewSharedConditionBuilder[time.Time](field, query),
 	}
 }
 

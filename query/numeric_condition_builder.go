@@ -11,13 +11,13 @@ import (
 
 // NumericConditionBuilder represents a condition builder for a numeric field.
 type NumericConditionBuilder struct {
-	*BaseConditionBuilder[float64]
+	*SharedConditionBuilder[float64]
 }
 
 // NewNumericConditionBuilder instantiates a new numeric condition builder.
 func NewNumericConditionBuilder(field string, query *QueryBuilder) *NumericConditionBuilder {
 	return &NumericConditionBuilder{
-		NewBaseConditionBuilder[float64](field, query),
+		NewSharedConditionBuilder[float64](field, query),
 	}
 }
 

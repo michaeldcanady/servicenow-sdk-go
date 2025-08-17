@@ -8,13 +8,13 @@ import (
 
 // StringConditionBuilder represents a condition builder for a string field.
 type StringConditionBuilder struct {
-	*BaseConditionBuilder[string]
+	*SharedConditionBuilder[string]
 }
 
 // NewStringConditionBuilder instantiates a new string condition builder, of the provided query, for the provided field.
 func NewStringConditionBuilder(field string, query *QueryBuilder) *StringConditionBuilder {
 	return &StringConditionBuilder{
-		NewBaseConditionBuilder[string](field, query),
+		NewSharedConditionBuilder[string](field, query),
 	}
 }
 
