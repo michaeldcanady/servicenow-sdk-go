@@ -51,7 +51,6 @@ func (expr *BinaryNode) Accept(visitor NodeVisitor) {
 	visitor.VisitBinaryNode(expr)
 }
 
-// Operator returns the expression operator.
 func (expr *BinaryNode) Operator() Operator {
 	return expr.Op
 }

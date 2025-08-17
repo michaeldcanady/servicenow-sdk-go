@@ -47,7 +47,7 @@ func (u *UnaryNode) Left() int {
 	return u.Node.Left()
 }
 
-// Operator returns the expression operator.
+// Operator returns the operator value.
 func (u *UnaryNode) Operator() Operator {
 	return u.Op
 }
