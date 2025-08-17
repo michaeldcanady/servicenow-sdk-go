@@ -8,12 +8,21 @@ var _ Node = (*BinaryNode)(nil)
 type BinaryNode struct {
 	// LeftExpression The left-hand side expression of the binary operation.
 	LeftExpression Node
-	// Operator The binary operator.
-	Operator Operator
+	// Op The binary operator.
+	Op Operator
 	// Position The position of the operator within the source text.
 	Position int
 	// RightExpression The right-hand side expression of the binary operation.
 	RightExpression Node
+}
+
+func NewBinaryNode(left Node, operator Operator, right Node) *BinaryNode {
+	return &BinaryNode{
+		LeftExpression:  left,
+		Position:        -1,
+		Op:              operator,
+		RightExpression: right,
+	}
 }
 
 // Left The leftmost (starting) position of the node in source text.
@@ -40,4 +49,8 @@ func (expr *BinaryNode) Pos() int {
 // Accept Accepts the provided visitor.
 func (expr *BinaryNode) Accept(visitor NodeVisitor) {
 	visitor.VisitBinaryNode(expr)
+}
+
+func (expr *BinaryNode) Operator() Operator {
+	return expr.Op
 }

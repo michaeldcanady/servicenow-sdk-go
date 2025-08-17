@@ -8,6 +8,30 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestNewUnaryNode(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				operator := OperatorBefore
+				node := NewLiteralNode("value")
+				expr := NewUnaryNode(operator, node)
+
+				assert.Equal(t, operator, expr.Op)
+				assert.Equal(t, node, expr.Node)
+				assert.Equal(t, -1, expr.Position)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
 func TestUnaryNode_Left(t *testing.T) {
 	tests := []struct {
 		name string
@@ -99,6 +123,28 @@ func TestUnaryNode_Accept(t *testing.T) {
 
 				node.Accept(visitor)
 				visitor.AssertExpectations(t)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestUnaryNode_Operator(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				node := &UnaryNode{
+					Op: OperatorAnd,
+				}
+
+				assert.Equal(t, OperatorAnd, node.Operator())
 			},
 		},
 	}

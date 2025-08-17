@@ -185,7 +185,7 @@ func TestStringerVisitor_VisitBinaryNode(t *testing.T) {
 
 				node := &BinaryNode{
 					LeftExpression:  leftNode,
-					Operator:        OperatorUnknown,
+					Op:              OperatorUnknown,
 					RightExpression: rightNode,
 				}
 

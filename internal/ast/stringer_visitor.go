@@ -57,7 +57,7 @@ func (v *StringerVisitor) Visit(node Node) {
 // VisitBinaryNode implements NodeVisitor.
 func (v *StringerVisitor) VisitBinaryNode(node *BinaryNode) {
 	v.Visit(node.LeftExpression)
-	_, _ = v.builder.WriteString(node.Operator.String())
+	_, _ = v.builder.WriteString(node.Op.String())
 	v.Visit(node.RightExpression)
 }
 
