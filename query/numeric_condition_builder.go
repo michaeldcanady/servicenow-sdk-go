@@ -3,7 +3,6 @@
 package query
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
@@ -44,7 +43,7 @@ func (builder *NumericConditionBuilder) GreaterThanOrIs(value float64) *QueryBui
 // Between The numeric field is between provided lower and upper values.
 func (builder *NumericConditionBuilder) Between(lower, upper float64) *QueryBuilder {
 	if lower >= upper {
-		builder.Error = errors.Join(builder.Error, fmt.Errorf("%v is greater or equal to %v", lower, upper))
+		builder.addErrors(fmt.Errorf("%v is greater or equal to %v", lower, upper))
 	}
 
 	return builder.binaryCondition(ast.OperatorBetween, ast.NewPairNode(

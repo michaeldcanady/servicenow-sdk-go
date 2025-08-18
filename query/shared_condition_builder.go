@@ -10,7 +10,7 @@ import (
 
 // SharedConditionBuilder represents the base for all conditions, and all operators supported by all types.
 type SharedConditionBuilder[T Primitive | time.Time | any] struct {
-	*BaseConditionBuilder[T]
+	ExpressionConditionBuilder[QueryBuilder]
 }
 
 // NewSharedConditionBuilder instantiates a new base condition builder.
