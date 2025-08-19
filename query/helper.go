@@ -4,6 +4,7 @@ package query
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
 )
@@ -19,4 +20,8 @@ func convertSliceToArrayNode[T Primitive](values ...T) *ast.ArrayNode {
 	}
 
 	return ast.NewArrayNode(nodes...)
+}
+
+func empty(s string) bool {
+	return (s == "" || strings.TrimSpace(s) == "")
 }
