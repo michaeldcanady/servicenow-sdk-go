@@ -2,6 +2,6 @@
 
 package query
 
-type ErrorBuilder interface {
+type ErrorAdder interface {
 	addErrors(errs ...error)
 }

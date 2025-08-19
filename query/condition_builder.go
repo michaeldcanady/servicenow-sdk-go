@@ -2,8 +2,8 @@
 
 package query
 
-type ExpressionConditionBuilder[T QueryBuilder] interface {
+type ConditionBuilder[T QueryBuilder] interface {
 	UnaryConditionBuilder[T]
 	BinaryConditionBuilder[T]
-	ErrorBuilder
+	ErrorAdder
 }

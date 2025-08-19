@@ -2,10 +2,13 @@
 
 package query
 
+import "errors"
+
 // FieldBuilder represents the selection of a specific type of field.
 type FieldBuilder struct {
 	// query the current query.
 	query *QueryBuilder
+	Error error
 }
 
 // NewFieldBuilder instantiates a new field builder.
@@ -33,4 +36,10 @@ func (builder *FieldBuilder) DateTimeField(name string) *DateTimeConditionBuilde
 // NumericField a numeric field.
 func (builder *FieldBuilder) NumericField(name string) *NumericConditionBuilder {
 	return NewNumericConditionBuilder(name, builder.query)
+}
+
+// addErrors appends the provided errors to the existing builder errors.
+func (builder *FieldBuilder) addErrors(errs ...error) {
+	errs = append([]error{builder.Error}, errs...)
+	builder.Error = errors.Join(errs...)
 }
