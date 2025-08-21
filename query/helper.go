@@ -3,7 +3,6 @@
 package query
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
@@ -13,10 +12,7 @@ import (
 func convertSliceToArrayNode[T Primitive](values ...T) *ast.ArrayNode {
 	nodes := make([]ast.Node, len(values))
 	for index, value := range values {
-		node := ast.LiteralNode{
-			Value: fmt.Sprintf("%v", value),
-		}
-		nodes[index] = &node
+		nodes[index] = ast.NewLiteralNode(value)
 	}
 
 	return ast.NewArrayNode(nodes...)

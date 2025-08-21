@@ -7,22 +7,26 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type mockConditionBuilder struct {
+type mockConditionBuilder[T QueryBuilder] struct {
 	mock.Mock
 }
 
-func newMockConditionBuilder() *mockConditionBuilder {
-	return &mockConditionBuilder{
+func newMockConditionBuilder[T QueryBuilder]() *mockConditionBuilder[T] {
+	return &mockConditionBuilder[T]{
 		mock.Mock{},
 	}
 }
 
-func (mock *mockConditionBuilder) addErrors(errs ...error) {
+func (mock *mockConditionBuilder[T]) addErrors(errs ...error) {
 	_ = mock.Called(errs)
 }
-func (mock *mockConditionBuilder) binaryCondition(operator ast.Operator, value ast.Node) *T {
-	mock.Called(operator, value)
+
+func (mock *mockConditionBuilder[T]) binaryCondition(operator ast.Operator, value ast.Node) *T {
+	args := mock.Called(operator, value)
+	return args.Get(0).(*T)
 }
-func (mock *mockConditionBuilder) unaryCondition(operator ast.Operator) *T {
-	mock.Called(operator)
+
+func (mock *mockConditionBuilder[T]) unaryCondition(operator ast.Operator) *T {
+	args := mock.Called(operator)
+	return args.Get(0).(*T)
 }

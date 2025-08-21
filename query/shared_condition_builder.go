@@ -35,8 +35,8 @@ func (builder *SharedConditionBuilder[T]) IsEmpty() *QueryBuilder {
 	return builder.unaryCondition(ast.OperatorIsEmpty)
 }
 
-// IsNotsEmpty query that field is not empty.
-func (builder *SharedConditionBuilder[T]) IsNotsEmpty() *QueryBuilder {
+// IsNotEmpty query that field is not empty.
+func (builder *SharedConditionBuilder[T]) IsNotEmpty() *QueryBuilder {
 	return builder.unaryCondition(ast.OperatorIsNotEmpty)
 }
 
@@ -47,7 +47,7 @@ func (builder *SharedConditionBuilder[T]) IsAnything() *QueryBuilder {
 
 // IsDynamic query that field is dynamically the sysID provided.
 func (builder *SharedConditionBuilder[T]) IsDynamic(sysID string) *QueryBuilder {
-	return builder.binaryCondition(ast.OperatorIsNot, ast.NewLiteralNode(sysID))
+	return builder.binaryCondition(ast.OperatorIsDynamic, ast.NewLiteralNode(sysID))
 }
 
 // IsSame query that field is the same the provided value.

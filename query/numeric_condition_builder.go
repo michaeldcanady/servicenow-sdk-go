@@ -10,7 +10,7 @@ import (
 
 // NumericConditionBuilder represents a condition builder for a numeric field.
 type NumericConditionBuilder struct {
-	*SharedConditionBuilder[float64]
+	conBuilder[float64, QueryBuilder]
 }
 
 // NewNumericConditionBuilder instantiates a new numeric condition builder.

@@ -10,7 +10,7 @@ import (
 
 // DateTimeConditionBuilder represents a condition builder for a date-time field.
 type DateTimeConditionBuilder struct {
-	*SharedConditionBuilder[time.Time]
+	conBuilder[time.Time, QueryBuilder]
 }
 
 // NewDateTimeConditionBuilder  a new date-time condition builder, of the provided query, for the provided field.
