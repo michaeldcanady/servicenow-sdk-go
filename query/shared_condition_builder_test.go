@@ -21,7 +21,7 @@ func TestSharedConditionBuilder_Is(t *testing.T) {
 				mockBuilder := newMockConditionBuilder()
 				mockBuilder.On("binaryCondition", ast.OperatorIs, ast.NewLiteralNode("test")).Return(mockQueryBuilder)
 
-				builder := &SharedConditionBuilder[any]{mockBuilder}
+				builder := &SharedConditionBuilder[string]{mockBuilder}
 
 				queryBuilder := builder.Is("test")
 
@@ -48,7 +48,7 @@ func TestSharedConditionBuilder_IsNot(t *testing.T) {
 				mockBuilder := newMockConditionBuilder()
 				mockBuilder.On("binaryCondition", ast.OperatorIsNot, ast.NewLiteralNode("test")).Return(mockQueryBuilder)
 
-				builder := &SharedConditionBuilder[any]{mockBuilder}
+				builder := &SharedConditionBuilder[string]{mockBuilder}
 
 				queryBuilder := builder.IsNot("test")
 
@@ -75,7 +75,7 @@ func TestSharedConditionBuilder_IsEmpty(t *testing.T) {
 				mockBuilder := newMockConditionBuilder()
 				mockBuilder.On("unaryCondition", ast.OperatorIsEmpty).Return(mockQueryBuilder)
 
-				builder := &SharedConditionBuilder[any]{mockBuilder}
+				builder := &SharedConditionBuilder[string]{mockBuilder}
 
 				queryBuilder := builder.IsEmpty()
 
@@ -102,7 +102,7 @@ func TestSharedConditionBuilder_IsNotEmpty(t *testing.T) {
 				mockBuilder := newMockConditionBuilder()
 				mockBuilder.On("unaryCondition", ast.OperatorIsNotEmpty).Return(mockQueryBuilder)
 
-				builder := &SharedConditionBuilder[any]{mockBuilder}
+				builder := &SharedConditionBuilder[string]{mockBuilder}
 
 				queryBuilder := builder.IsNotEmpty()
 
@@ -129,7 +129,7 @@ func TestSharedConditionBuilder_IsAnything(t *testing.T) {
 				mockBuilder := newMockConditionBuilder()
 				mockBuilder.On("unaryCondition", ast.OperatorIsAnything).Return(mockQueryBuilder)
 
-				builder := &SharedConditionBuilder[any]{mockBuilder}
+				builder := &SharedConditionBuilder[string]{mockBuilder}
 
 				queryBuilder := builder.IsAnything()
 
@@ -156,7 +156,7 @@ func TestSharedConditionBuilder_IsDynamic(t *testing.T) {
 				mockBuilder := newMockConditionBuilder()
 				mockBuilder.On("binaryCondition", ast.OperatorIsDynamic, ast.NewLiteralNode("test")).Return(mockQueryBuilder)
 
-				builder := &SharedConditionBuilder[any]{mockBuilder}
+				builder := &SharedConditionBuilder[string]{mockBuilder}
 
 				queryBuilder := builder.IsDynamic("test")
 
@@ -183,7 +183,7 @@ func TestSharedConditionBuilder_IsSame(t *testing.T) {
 				mockBuilder := newMockConditionBuilder()
 				mockBuilder.On("binaryCondition", ast.OperatorIsSame, ast.NewLiteralNode("test")).Return(mockQueryBuilder)
 
-				builder := &SharedConditionBuilder[any]{mockBuilder}
+				builder := &SharedConditionBuilder[string]{mockBuilder}
 
 				queryBuilder := builder.IsSame("test")
 

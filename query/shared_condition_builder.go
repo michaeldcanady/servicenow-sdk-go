@@ -9,12 +9,12 @@ import (
 )
 
 // SharedConditionBuilder represents the base for all conditions, and all operators supported by all types.
-type SharedConditionBuilder[T Primitive | time.Time | any] struct {
+type SharedConditionBuilder[T Primitive | time.Time] struct {
 	ConditionBuilder[QueryBuilder]
 }
 
 // NewSharedConditionBuilder instantiates a new base condition builder.
-func NewSharedConditionBuilder[T Primitive | time.Time | any](field string, query *QueryBuilder) *SharedConditionBuilder[T] {
+func NewSharedConditionBuilder[T Primitive | time.Time](field string, query *QueryBuilder) *SharedConditionBuilder[T] {
 	return &SharedConditionBuilder[T]{
 		NewBaseConditionBuilder[T](field, query),
 	}
