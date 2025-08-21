@@ -4,6 +4,7 @@ package ast
 
 import (
 	"fmt"
+	"time"
 )
 
 var _ Node = (*LiteralNode)(nil)
@@ -19,10 +20,10 @@ type LiteralNode struct {
 }
 
 // NewLiteralNode instantiates a new literal node of the specified value
-func NewLiteralNode(value any) *LiteralNode {
+func NewLiteralNode[T Primitive | time.Time](value T) *LiteralNode {
 	return &LiteralNode{
 		Position: -1,
-		Kind:     KindUnknown,
+		Kind:     kindOf(value),
 		Value:    fmt.Sprintf("%v", value),
 	}
 }
