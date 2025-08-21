@@ -18,10 +18,8 @@
     "promptForTags": true
   },
   "go.coverOnSave": true,
-  "go.formatFlags": [
-    "-s",
-    "-w"
-  ],
+  "go.formatFlags": ["-s", "-w"],
+  "go.buildFlags": ["-tags=preview.query"],
   "go.lintOnSave": "package",
   "go.lintTool": "golangci-lint",
   "go.lintFlags": [],
@@ -87,5 +85,9 @@
     "vscodeintellicode",
     "waderyan",
     "yzhang"
-  ]
+  ],
+  "gopls": {
+    "build.buildFlags": ["-tags=preview.query"]
+  },
+  "go.useLanguageServer": true
 }
