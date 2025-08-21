@@ -23,6 +23,7 @@ func kindOf[T Primitive | time.Time](value T) Kind {
 		return KindDateTime
 	case bool:
 		return KindBoolean
+	// can't cover because it shouldn't be possible
 	default:
 		return KindUnknown
 	}
