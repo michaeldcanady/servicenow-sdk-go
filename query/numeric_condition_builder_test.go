@@ -10,6 +10,34 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestNumericConditionBuilder_GreaterThan(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				input := float64(5)
+				mockQueryBuilder := &QueryBuilder{}
+
+				mockBuilder := newMockConBuilder[float64]()
+				mockBuilder.On("binaryCondition", ast.OperatorGreaterThan, ast.NewLiteralNode(input)).Return(mockQueryBuilder)
+				builder := &NumericConditionBuilder{mockBuilder}
+
+				queryBuilder := builder.GreaterThan(input)
+
+				assert.Equal(t, mockQueryBuilder, queryBuilder)
+				mockBuilder.AssertExpectations(t)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
 func TestNumericConditionBuilder_LessThan(t *testing.T) {
 	tests := []struct {
 		name string

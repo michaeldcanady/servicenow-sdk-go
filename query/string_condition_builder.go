@@ -8,7 +8,7 @@ import (
 
 // StringConditionBuilder represents a condition builder for a string field.
 type StringConditionBuilder struct {
-	*SharedConditionBuilder[string]
+	conBuilder[string, QueryBuilder]
 }
 
 // NewStringConditionBuilder instantiates a new string condition builder, of the provided query, for the provided field.
