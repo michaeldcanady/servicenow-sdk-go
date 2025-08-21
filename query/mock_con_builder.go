@@ -4,13 +4,15 @@ package query
 
 import (
 	"time"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
 )
 
-type mockConBuilder[T Primitive | time.Time | any, Q QueryBuilder] struct {
+type mockConBuilder[T ast.Primitive | time.Time, Q QueryBuilder] struct {
 	*mockConditionBuilder[Q]
 }
 
-func newMockConBuilder[T Primitive | time.Time | any, Q QueryBuilder]() *mockConBuilder[T, Q] {
+func newMockConBuilder[T ast.Primitive | time.Time, Q QueryBuilder]() *mockConBuilder[T, Q] {
 	return &mockConBuilder[T, Q]{
 		newMockConditionBuilder[Q](),
 	}

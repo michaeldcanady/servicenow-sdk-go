@@ -1,8 +1,8 @@
 //go:build preview.query
 
-package query
+package ast
 
 // Primitive represents any base type.
 type Primitive interface {
-	Numeric | ~string
+	Numeric | ~string | ~bool
 }

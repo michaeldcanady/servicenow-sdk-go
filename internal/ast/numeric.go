@@ -1,6 +1,6 @@
 //go:build preview.query
 
-package query
+package ast
 
 // Numeric represents a number value
 type Numeric interface {

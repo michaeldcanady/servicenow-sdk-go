@@ -10,7 +10,7 @@ import (
 )
 
 // BaseConditionBuilder represents the base for all conditions, and all operators supported by all types.
-type BaseConditionBuilder[T Primitive | time.Time | any] struct {
+type BaseConditionBuilder[T ast.Primitive | time.Time] struct {
 	// field the field of the query.
 	field string
 	// query the existing query builder.
@@ -20,7 +20,7 @@ type BaseConditionBuilder[T Primitive | time.Time | any] struct {
 }
 
 // NewBaseConditionBuilder instantiates a new base condition builder.
-func NewBaseConditionBuilder[T Primitive | time.Time | any](field string, query *QueryBuilder) *BaseConditionBuilder[T] {
+func NewBaseConditionBuilder[T ast.Primitive | time.Time](field string, query *QueryBuilder) *BaseConditionBuilder[T] {
 	return &BaseConditionBuilder[T]{
 		field: field,
 		query: query,

@@ -2,9 +2,13 @@
 
 package query
 
-import "time"
+import (
+	"time"
 
-type conBuilder[T Primitive | time.Time | any, Q QueryBuilder] interface {
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
+)
+
+type conBuilder[T ast.Primitive | time.Time, Q QueryBuilder] interface {
 	Is(value T) *Q
 	IsAnything() *Q
 	IsDynamic(sysID string) *Q
