@@ -107,3 +107,25 @@ func TestUnaryNode_Accept(t *testing.T) {
 		t.Run(test.name, test.test)
 	}
 }
+
+func TestUnaryNode_Operator(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				node := &UnaryNode{
+					Op: OperatorAnd,
+				}
+
+				assert.Equal(t, OperatorAnd, node.Operator())
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
