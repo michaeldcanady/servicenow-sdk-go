@@ -37,3 +37,8 @@ func (u *UnaryNode) Left() int {
 
 	return u.Node.Left()
 }
+
+// Operator returns the expression operator.
+func (u *UnaryNode) Operator() Operator {
+	return u.Op
+}
