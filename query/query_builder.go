@@ -47,7 +47,7 @@ func (builder *QueryBuilder) Or() *FieldBuilder {
 // setLogicalOperator sets the current logical operator to join the new condition.
 func (builder *QueryBuilder) setLogicalOperator(operator ast.Operator) *FieldBuilder {
 	if builder.logicalOperator != ast.OperatorUnknown {
-		builder.Error = errors.Join(builder.Error, errors.New("logicalOperator already is set"))
+		builder.addErrors(errors.New("logicalOperator already is set"))
 	}
 	builder.logicalOperator = operator
 	return NewFieldBuilder(builder)
@@ -55,13 +55,17 @@ func (builder *QueryBuilder) setLogicalOperator(operator ast.Operator) *FieldBui
 
 // addCondition appends the condition to the end of the current query.
 func (builder *QueryBuilder) addCondition(condition ast.Node) *QueryBuilder {
+	if condition == nil {
+		builder.addErrors(builder.Error, errors.New("condition is nil"))
+	}
+
 	if builder.query == nil {
 		builder.query = condition
 		return builder
 	}
 
 	if builder.logicalOperator == ast.OperatorUnknown {
-		builder.Error = errors.Join(builder.Error, errors.New("logicalOperator is unset"))
+		builder.addErrors(builder.Error, errors.New("logicalOperator is unset"))
 		return builder
 	}
 
@@ -78,6 +82,7 @@ func (builder *QueryBuilder) String() string {
 	return visitor.String()
 }
 
+// addErrors adds the provided errors to the existing error.
 func (builder *QueryBuilder) addErrors(errs ...error) {
 	errs = append([]error{builder.Error}, errs...)
 	builder.Error = errors.Join(errs...)

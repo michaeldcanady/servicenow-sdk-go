@@ -2,6 +2,8 @@
 
 package query
 
+// ErrorAdder represents a type that stores an extendable error.
 type ErrorAdder interface {
-	addErrors(errs ...error)
+	// addErrors adds the provided errors to the existing error.
+	addErrors(...error)
 }

@@ -19,5 +19,5 @@ func convertSliceToArrayNode[T Primitive](values ...T) *ast.ArrayNode {
 }
 
 func empty(s string) bool {
-	return (s == "" || strings.TrimSpace(s) == "")
+	return (strings.TrimSpace(s) == "")
 }

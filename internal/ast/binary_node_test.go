@@ -42,7 +42,7 @@ func TestBinaryNode_Left(t *testing.T) {
 		{
 			name: "Has left expression",
 			test: func(t *testing.T) {
-				leftNode := newMockNode()
+				leftNode := NewMockNode()
 				leftNode.On("Pos").Return(1)
 
 				node := &BinaryNode{
@@ -78,7 +78,7 @@ func TestBinaryNode_Right(t *testing.T) {
 		{
 			name: "Has left expression",
 			test: func(t *testing.T) {
-				rightNode := newMockNode()
+				rightNode := NewMockNode()
 				rightNode.On("Pos").Return(1)
 
 				node := &BinaryNode{

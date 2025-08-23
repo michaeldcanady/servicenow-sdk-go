@@ -48,7 +48,7 @@ func TestUnaryNode_Left(t *testing.T) {
 		{
 			name: "Has Node",
 			test: func(t *testing.T) {
-				node := newMockNode()
+				node := NewMockNode()
 				node.On("Left").Return(1)
 
 				unaryNode := &UnaryNode{

@@ -20,7 +20,7 @@ type BaseConditionBuilder[T Primitive | time.Time | any] struct {
 }
 
 // NewBaseConditionBuilder instantiates a new base condition builder.
-func NewBaseConditionBuilder[T Primitive | time.Time | any](field string, query *QueryBuilder) *BaseConditionBuilder[T] {
+func NewBaseConditionBuilder[T Primitive | time.Time | any](field string, query conditionAdder[*QueryBuilder]) *BaseConditionBuilder[T] {
 	return &BaseConditionBuilder[T]{
 		field: field,
 		query: query,
@@ -54,7 +54,9 @@ func (builder *BaseConditionBuilder[T]) addErrors(errs ...error) {
 
 // addCondition appends the provided condition to query.
 func (builder *BaseConditionBuilder[T]) addCondition(condition ast.Node) *QueryBuilder {
-	builder.query.addErrors(builder.Error)
+	if err := builder.Error; err != nil {
+		builder.query.addErrors(err)
+	}
 
 	return builder.query.addCondition(condition)
 }
