@@ -65,11 +65,7 @@ func (builder *QueryBuilder) addCondition(condition ast.Node) *QueryBuilder {
 		return builder
 	}
 
-	builder.query = &ast.BinaryNode{
-		LeftExpression:  builder.query,
-		Op:              builder.logicalOperator,
-		RightExpression: condition,
-	}
+	builder.query = ast.NewBinaryNode(builder.query, builder.logicalOperator, condition)
 	return builder
 }
 

@@ -14,7 +14,7 @@ type BaseConditionBuilder[T Primitive | time.Time | any] struct {
 	// field the field of the query.
 	field string
 	// query the existing query builder.
-	query *QueryBuilder
+	query conditionAdder[*QueryBuilder]
 	// Error error(s) encountered during the building process.
 	Error error
 }
