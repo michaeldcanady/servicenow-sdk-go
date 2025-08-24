@@ -12,6 +12,14 @@ type PairNode struct {
 	Element2 Node
 }
 
+// NewPairNode instantiates a new node pair of the provided nodes.
+func NewPairNode(node1, node2 Node) *PairNode {
+	return &PairNode{
+		Element1: node1,
+		Element2: node2,
+	}
+}
+
 // Accept accepts the NodeVisitor and visits the visitor.
 func (p *PairNode) Accept(visitor NodeVisitor) {
 	visitor.VisitPairNode(p)

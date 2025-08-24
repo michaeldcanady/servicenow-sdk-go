@@ -8,6 +8,32 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestNewBinaryNode(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				operator := OperatorBefore
+				node1 := NewLiteralNode("value1")
+				node2 := NewLiteralNode("value")
+				expr := NewBinaryNode(node1, operator, node2)
+
+				assert.Equal(t, operator, expr.Op)
+				assert.Equal(t, node1, expr.LeftExpression)
+				assert.Equal(t, node2, expr.RightExpression)
+				assert.Equal(t, -1, expr.Position)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
 func TestBinaryNode_Left(t *testing.T) {
 	tests := []struct {
 		name string
@@ -16,7 +42,7 @@ func TestBinaryNode_Left(t *testing.T) {
 		{
 			name: "Has left expression",
 			test: func(t *testing.T) {
-				leftNode := newMockNode()
+				leftNode := NewMockNode()
 				leftNode.On("Pos").Return(1)
 
 				node := &BinaryNode{
@@ -52,7 +78,7 @@ func TestBinaryNode_Right(t *testing.T) {
 		{
 			name: "Has left expression",
 			test: func(t *testing.T) {
-				rightNode := newMockNode()
+				rightNode := NewMockNode()
 				rightNode.On("Pos").Return(1)
 
 				node := &BinaryNode{

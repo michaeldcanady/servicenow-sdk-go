@@ -16,6 +16,15 @@ type BinaryNode struct {
 	RightExpression Node
 }
 
+func NewBinaryNode(left Node, operator Operator, right Node) *BinaryNode {
+	return &BinaryNode{
+		LeftExpression:  left,
+		Position:        -1,
+		Op:              operator,
+		RightExpression: right,
+	}
+}
+
 // Left The leftmost (starting) position of the node in source text.
 func (expr *BinaryNode) Left() int {
 	if expr.LeftExpression == nil {
