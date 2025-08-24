@@ -24,7 +24,7 @@ func TestPairNode_Left(t *testing.T) {
 		{
 			name: "Has Element1",
 			test: func(t *testing.T) {
-				element1 := newMockNode()
+				element1 := NewMockNode()
 				element1.On("Left").Return(1)
 
 				node := &PairNode{
@@ -58,7 +58,7 @@ func TestPairNode_Right(t *testing.T) {
 		{
 			name: "Has Element2",
 			test: func(t *testing.T) {
-				element1 := newMockNode()
+				element1 := NewMockNode()
 				element1.On("Right").Return(1)
 
 				node := &PairNode{
@@ -92,7 +92,7 @@ func TestPairNode_Pos(t *testing.T) {
 		{
 			name: "Has Element1",
 			test: func(t *testing.T) {
-				element1 := newMockNode()
+				element1 := NewMockNode()
 				element1.On("Left").Return(1)
 
 				node := &PairNode{

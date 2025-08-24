@@ -44,7 +44,7 @@ func TestStringerVisitor_VisitUnaryNode(t *testing.T) {
 					builder: stringerWriter,
 				}
 
-				node1 := newMockNode()
+				node1 := NewMockNode()
 				node1.On("Accept", visitor)
 
 				node := &UnaryNode{
@@ -77,10 +77,10 @@ func TestStringerVisitor_VisitPairNode(t *testing.T) {
 					builder: stringerWriter,
 				}
 
-				node1 := newMockNode()
+				node1 := NewMockNode()
 				node1.On("Accept", visitor)
 
-				node2 := newMockNode()
+				node2 := NewMockNode()
 				node2.On("Accept", visitor)
 
 				node := &PairNode{
@@ -113,10 +113,10 @@ func TestStringerVisitor_VisitArrayNode(t *testing.T) {
 					builder: stringerWriter,
 				}
 
-				node1 := newMockNode()
+				node1 := NewMockNode()
 				node1.On("Accept", visitor)
 
-				node2 := newMockNode()
+				node2 := NewMockNode()
 				node2.On("Accept", visitor)
 
 				node := &ArrayNode{
@@ -147,7 +147,7 @@ func TestStringerVisitor_Visit(t *testing.T) {
 				visitor := &StringerVisitor{
 					builder: stringerWriter,
 				}
-				node := newMockNode()
+				node := NewMockNode()
 				node.On("Accept", visitor)
 
 				visitor.Visit(node)
@@ -177,10 +177,10 @@ func TestStringerVisitor_VisitBinaryNode(t *testing.T) {
 					builder: stringerWriter,
 				}
 
-				leftNode := newMockNode()
+				leftNode := NewMockNode()
 				leftNode.On("Accept", visitor)
 
-				rightNode := newMockNode()
+				rightNode := NewMockNode()
 				rightNode.On("Accept", visitor)
 
 				node := &BinaryNode{

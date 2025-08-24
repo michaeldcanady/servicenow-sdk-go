@@ -14,6 +14,15 @@ type UnaryNode struct {
 	Node Node
 }
 
+// NewUnaryNode instantiates a new unary node expression.
+func NewUnaryNode(operator Operator, node Node) *UnaryNode {
+	return &UnaryNode{
+		Op:       operator,
+		Position: -1,
+		Node:     node,
+	}
+}
+
 // Accept implements Node.
 func (u *UnaryNode) Accept(node NodeVisitor) {
 	node.VisitUnaryNode(u)
@@ -29,7 +38,7 @@ func (u *UnaryNode) Pos() int {
 	return u.Position
 }
 
-// Left return the left most value of the Node.
+// Left return the left most value.
 func (u *UnaryNode) Left() int {
 	if u.Node == nil {
 		return -1

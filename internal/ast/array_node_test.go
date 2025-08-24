@@ -36,7 +36,7 @@ func TestArrayNode_Left(t *testing.T) {
 		{
 			name: "One element array",
 			test: func(t *testing.T) {
-				mockNode := newMockNode()
+				mockNode := NewMockNode()
 				mockNode.On("Left").Return(1)
 
 				node := &ArrayNode{
@@ -82,7 +82,7 @@ func TestArrayNode_Right(t *testing.T) {
 		{
 			name: "One element array",
 			test: func(t *testing.T) {
-				mockNode := newMockNode()
+				mockNode := NewMockNode()
 				mockNode.On("Right").Return(1)
 
 				node := &ArrayNode{

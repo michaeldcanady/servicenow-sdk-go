@@ -10,6 +10,12 @@ type ArrayNode struct {
 	Elements []Node
 }
 
+func NewArrayNode(nodes ...Node) *ArrayNode {
+	return &ArrayNode{
+		Elements: nodes,
+	}
+}
+
 // Left The leftmost (starting) position of the node in source text.
 func (expr *ArrayNode) Left() int {
 	return expr.Pos()

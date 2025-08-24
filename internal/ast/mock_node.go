@@ -8,7 +8,7 @@ type mockNode struct {
 	mock.Mock
 }
 
-func newMockNode() *mockNode {
+func NewMockNode() *mockNode {
 	return &mockNode{
 		mock.Mock{},
 	}
