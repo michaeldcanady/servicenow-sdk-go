@@ -19,7 +19,6 @@
   },
   "go.coverOnSave": true,
   "go.formatFlags": ["-s", "-w"],
-  "go.buildFlags": ["-tags=preview.query"],
   "go.lintOnSave": "package",
   "go.lintTool": "golangci-lint",
   "go.lintFlags": [],
@@ -86,8 +85,8 @@
     "waderyan",
     "yzhang"
   ],
-  "gopls": {
-    "build.buildFlags": ["-tags=preview.query"]
+  "gopls": { 
   },
+  "go.buildTags": "preview.query preview.tableApiV2",
   "go.useLanguageServer": true
 }

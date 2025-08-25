@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${file}",
-            "buildFlags": "-tags=preview.query"
+            "buildFlags": "-tags=\"preview.query preview.tableApiV2\""
         } 
     ]
 }
