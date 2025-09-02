@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"math"
 	"reflect"
-
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
 // IsNil checks if a value is nil or a nil interface.
@@ -59,7 +57,7 @@ func isCompatible(value interface{}, tp reflect.Type, strict bool) bool {
 
 // As converts the value to the type T.
 func As[T any](in interface{}, out T) error {
-	if internal.IsNil(in) {
+	if IsNil(in) {
 		return nil
 	}
 
@@ -70,7 +68,7 @@ func As[T any](in interface{}, out T) error {
 	}
 
 	outVal := reflect.ValueOf(out)
-	if outVal.Kind() != reflect.Pointer || internal.IsNil(out) {
+	if outVal.Kind() != reflect.Pointer || IsNil(out) {
 		return fmt.Errorf("out is not pointer or is nil")
 	}
 
@@ -91,15 +89,15 @@ func As[T any](in interface{}, out T) error {
 
 // As2 converts the input value to the specified type T and assigns it to out if compatible.
 // It supports strict and non-strict mode.
-func As2[T any](in interface{}, out T, strict bool) error {
+func As2[T any](in any, out T, strict bool) error {
 	// Early return if input is nil
-	if internal.IsNil(in) {
+	if IsNil(in) {
 		return nil
 	}
 
 	// Validate output is a non-nil pointer
 	outVal := reflect.ValueOf(out)
-	if outVal.Kind() != reflect.Pointer || internal.IsNil(out) {
+	if outVal.Kind() != reflect.Pointer || IsNil(out) {
 		return fmt.Errorf("out must be a non-nil pointer")
 	}
 
