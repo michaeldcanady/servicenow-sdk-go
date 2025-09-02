@@ -2,24 +2,24 @@ package internal
 
 import (
 	"errors"
-	"fmt"
+	"strings"
 
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
+// StoreAccessorFunc[S,T] defines a generic function signature for retrieving a value from a backing store
+// using a specified key and converting it to a desired type.
 type StoreAccessorFunc[S store.BackingStore, T any] func(S, string) (T, error)
 
-type BackedModelAccessorFunc[M store.BackedModel, T any] func(M, string) (T, error)
-
-type BackedModelMutatorFunc[M store.BackedModel, T any] func(M, string, T) error
-
-func BaseStoreAccessorFunc[S store.BackingStore, T any](store S, key string) (T, error) {
+// DefaultStoreAccessorFunc[S, T] is a generic implementation of StoreAccessorFunc that retrieves a value
+// from a backing store and attempts to convert it to the specified type.
+func DefaultStoreAccessorFunc[S store.BackingStore, T any](store S, key string) (T, error) {
 	var result T
 
 	if IsNil(store) {
 		return result, errors.New("store is nil")
 	}
-	if key == "" {
+	if strings.TrimSpace(key) == "" {
 		return result, errors.New("key is empty")
 	}
 
@@ -28,30 +28,9 @@ func BaseStoreAccessorFunc[S store.BackingStore, T any](store S, key string) (T,
 		return result, err
 	}
 
-	var ok bool
-
-	// TODO: use convert.As
-	if result, ok = val.(T); !ok {
-		return result, fmt.Errorf("val is not %T", val)
+	if err := As2(val, &result, true); err != nil {
+		return result, err
 	}
 
 	return result, nil
-}
-
-func BaseBackedModelAccessorFunc[M store.BackedModel, T any](model M, key string) (T, error) {
-	var result T
-
-	if IsNil(model) {
-		return result, errors.New("model is nil")
-	}
-
-	return BaseStoreAccessorFunc[store.BackingStore, T](model.GetBackingStore(), key)
-}
-
-func BaseBackedModelMutatorFunc[M store.BackedModel, T any](model M, key string, value T) error {
-	if IsNil(model) {
-		return errors.New("model is nil")
-	}
-
-	return BaseStoreMutatorFunc[store.BackingStore, T](model.GetBackingStore(), key, value)
 }
