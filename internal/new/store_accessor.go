@@ -7,10 +7,12 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
-// StoreAccessorFunc Function for accessing specific key, and converting it to the desired type, from backing store.
+// StoreAccessorFunc[S,T] defines a generic function signature for retrieving a value from a backing store
+// using a specified key and converting it to a desired type.
 type StoreAccessorFunc[S store.BackingStore, T any] func(S, string) (T, error)
 
-// DefaultStoreAccessorFunc Gets key from store, converting it to the desired type.
+// DefaultStoreAccessorFunc[S, T] is a generic implementation of StoreAccessorFunc that retrieves a value
+// from a backing store and attempts to convert it to the specified type.
 func DefaultStoreAccessorFunc[S store.BackingStore, T any](store S, key string) (T, error) {
 	var result T
 
