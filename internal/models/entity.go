@@ -43,10 +43,9 @@ func (rE *Entity) GetFieldDeserializers() map[string]func(serialization.ParseNod
 }
 
 func (e *Entity) GetSysID() (*string, error) {
-	store := e.GetBackingStore()
-	raw, err := store.Get(sysIDKey)
-	if err != nil {
-		return nil, err
-	}
+	return newInternal.DefaultBackedModelAccessorFunc[*Entity, *string](e, sysIDKey)
+}
 
+func (e *Entity) SetSysID(sysID *string) error {
+	return newInternal.DefaultBackedModelMutatorFunc(e, sysIDKey, sysID)
 }

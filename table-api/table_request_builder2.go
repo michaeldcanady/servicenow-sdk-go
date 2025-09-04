@@ -15,7 +15,7 @@ import (
 
 const (
 	// batchURLTemplate the url template for Service-Now batch API
-	batchURLTemplate = "{+baseurl}/api/now/v1/batch"
+	batchURLTemplate = "{+baseurl}/api/now/v1/table"
 )
 
 type TableRequestBuilder2[T serialization.Parsable, V any] struct {

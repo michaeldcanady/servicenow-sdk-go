@@ -42,6 +42,12 @@ func DeserializeMutatedStringFunc[T any](setter ModelSetter[T], mutator func(*st
 	}
 }
 
+func DeserializeMutatedValueFunc[T any](setter ModelSetter[T], mutator func(any) (T, error)) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		return SetMutatedValueFromSource(node.GetRawValue, setter, mutator)
+	}
+}
+
 func DeserializeStringFunc(setter ModelSetter[*string]) serialization.NodeParser {
 	return func(node serialization.ParseNode) error {
 		return SetValueFromSource(node.GetStringValue, setter)
@@ -97,6 +103,12 @@ func DeserializeFormattedTime(setter ModelSetter[*time.Time], format string) ser
 func DeserializeIsoDurationFunc(setter ModelSetter[*serialization.ISODuration]) serialization.NodeParser {
 	return func(node serialization.ParseNode) error {
 		return SetValueFromSource(node.GetISODurationValue, setter)
+	}
+}
+
+func DeserializeRawFunc(setter ModelSetter[any]) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		return SetValueFromSource(node.GetRawValue, setter)
 	}
 }
 
@@ -161,6 +173,30 @@ func DeserializeObjectFunc[T serialization.Parsable](setter ModelSetter[T], fact
 			}
 
 			return typedValue, nil
+		}, setter)
+	}
+}
+
+func DeserializeObjectArrayFunc[T serialization.Parsable](setter ModelSetter[[]T], factory serialization.ParsableFactory) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		return SetValueFromSource(func() ([]T, error) {
+			unknownSlice, err := node.GetCollectionOfObjectValues(factory)
+			if err != nil {
+				return nil, err
+			}
+
+			results := make([]T, len(unknownSlice), 0)
+
+			for index, value := range unknownSlice {
+				result, ok := value.(T)
+				if !ok {
+					return nil, fmt.Errorf("value is not %T", new(T))
+				}
+
+				results[index] = result
+			}
+
+			return results, nil
 		}, setter)
 	}
 }

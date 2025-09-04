@@ -1,3 +1,5 @@
+//go:build preview.tableApiV2
+
 package tableapi
 
 import (
@@ -20,7 +22,7 @@ func TestNewRecordElement(t *testing.T) {
 				model := NewRecordElement()
 
 				assert.NotNil(t, model)
-				assert.IsType(t, &RecordElementModel{}, model)
+				assert.IsType(t, &RecordElement{}, model)
 			},
 		},
 	}
@@ -46,14 +48,14 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				model := &RecordElementModel{intModel}
+				model := &RecordElement{intModel}
 
 				elementValue, err := model.GetDisplayValue()
 
 				assert.Nil(t, err)
 				assert.NotNil(t, elementValue)
-				assert.IsType(t, &ElementValueModel{}, elementValue)
-				assert.Equal(t, interface{}(value), (elementValue.(*ElementValueModel)).val)
+				assert.IsType(t, &ElementValue{}, elementValue)
+				assert.Equal(t, interface{}(value), elementValue.val)
 			},
 		},
 		{
@@ -65,7 +67,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				model := &RecordElementModel{intModel}
+				model := &RecordElement{intModel}
 
 				elementValue, err := model.GetDisplayValue()
 
@@ -79,7 +81,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				model := &RecordElementModel{intModel}
+				model := &RecordElement{intModel}
 
 				elementValue, err := model.GetDisplayValue()
 
@@ -90,7 +92,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*RecordElementModel)(nil)
+				model := (*RecordElement)(nil)
 
 				elementValue, err := model.GetDisplayValue()
 
@@ -133,14 +135,14 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				model := &RecordElementModel{intModel}
+				model := &RecordElement{intModel}
 
 				elementValue, err := model.GetValue()
 
 				assert.Nil(t, err)
 				assert.NotNil(t, elementValue)
-				assert.IsType(t, &ElementValueModel{}, elementValue)
-				assert.Equal(t, interface{}(value), (elementValue.(*ElementValueModel)).val)
+				assert.IsType(t, &ElementValue{}, elementValue)
+				assert.Equal(t, interface{}(value), elementValue.val)
 			},
 		},
 		{
@@ -152,7 +154,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				model := &RecordElementModel{intModel}
+				model := &RecordElement{intModel}
 
 				elementValue, err := model.GetValue()
 
@@ -166,7 +168,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				model := &RecordElementModel{intModel}
+				model := &RecordElement{intModel}
 
 				elementValue, err := model.GetValue()
 
@@ -177,7 +179,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*RecordElementModel)(nil)
+				model := (*RecordElement)(nil)
 
 				elementValue, err := model.GetValue()
 
@@ -220,7 +222,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				model := &RecordElementModel{intModel}
+				model := &RecordElement{intModel}
 
 				elementValue, err := model.GetLink()
 
@@ -238,7 +240,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				model := &RecordElementModel{intModel}
+				model := &RecordElement{intModel}
 
 				elementValue, err := model.GetLink()
 
@@ -252,7 +254,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
 
-				model := &RecordElementModel{intModel}
+				model := &RecordElement{intModel}
 
 				elementValue, err := model.GetLink()
 
@@ -263,7 +265,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*RecordElementModel)(nil)
+				model := (*RecordElement)(nil)
 
 				elementValue, err := model.GetLink()
 

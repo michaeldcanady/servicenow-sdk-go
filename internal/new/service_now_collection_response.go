@@ -2,7 +2,6 @@ package internal
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -59,152 +58,61 @@ func (bR *BaseServiceNowCollectionResponse[T]) Serialize(writer serialization.Se
 
 // GetFieldDeserializers returns the deserialization information for this object
 func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	return nil
+	return map[string]func(serialization.ParseNode) error{
+		resultKey: DeserializeObjectArrayFunc(bR.SetResult, bR.factory),
+	}
 }
 
 // GetBackingStore returns the backing store, if store is nil it instantiates a new store.
-func (r *BaseServiceNowCollectionResponse[T]) GetBackingStore() (store.BackingStore, error) {
-	if IsNil(r) {
-		return nil, nil
-	}
+func (r *BaseServiceNowCollectionResponse[T]) GetBackingStore() store.BackingStore {
+	return r.backingStore
+}
 
-	if IsNil(r.backingStore) {
-		if IsNil(r.backingStoreFactory) {
-			return nil, errors.New("store is nil")
-		}
-		r.backingStore = r.backingStoreFactory()
-	}
-
-	return r.backingStore, nil
+func (r *BaseServiceNowCollectionResponse[T]) SetResult(result []T) error {
+	return DefaultBackedModelMutatorFunc(r, resultKey, result)
 }
 
 // GetResult Returns the result values of the response.
 func (r *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
-	if IsNil(r) {
-		return nil, nil
-	}
-
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return nil, err
-	}
-
-	val, err := store.Get(resultKey)
-	if err != nil {
-		return nil, err
-	}
-
-	unknownSlice, ok := val.([]any)
-	if !ok {
-		return nil, errors.New("val is not slice")
-	}
-
-	results := make([]T, len(unknownSlice), 0)
-
-	for index, value := range unknownSlice {
-		result, ok := value.(T)
-		if !ok {
-			return nil, fmt.Errorf("value is not %T", new(T))
-		}
-
-		results[index] = result
-	}
-
-	return results, nil
+	return DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], []T](r, resultKey)
 }
 
 // GetNextLink Returns the url to the next page of results.
 func (r *BaseServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
-	if IsNil(r) {
-		return nil, nil
-	}
+	return DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](r, nextKey)
+}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return nil, err
-	}
-
-	val, err := store.Get(nextKey)
-	if err != nil {
-		return nil, err
-	}
-
-	link, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return link, nil
+// SetNextLink Sets the url to the next page of results.
+func (r *BaseServiceNowCollectionResponse[T]) SetNextLink(link *string) error {
+	return DefaultBackedModelMutatorFunc(r, nextKey, link)
 }
 
 // GetPreviousLink Returns the url to the previous page of results.
 func (r *BaseServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error) {
-	if IsNil(r) {
-		return nil, nil
-	}
+	return DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](r, previousKey)
+}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return nil, err
-	}
-
-	val, err := store.Get(previousKey)
-	if err != nil {
-		return nil, err
-	}
-
-	link, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return link, nil
+// SetPreviousLink Sets the url to the previous page of results.
+func (r *BaseServiceNowCollectionResponse[T]) SetPreviousLink(link *string) error {
+	return DefaultBackedModelMutatorFunc(r, previousKey, link)
 }
 
 // GetFirstLink Returns the url to the first page of results.
 func (r *BaseServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
-	if IsNil(r) {
-		return nil, nil
-	}
+	return DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](r, firstKey)
+}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return nil, err
-	}
-
-	val, err := store.Get(firstKey)
-	if err != nil {
-		return nil, err
-	}
-
-	link, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return link, nil
+// SetFirstLink Sets the url to the first page of results.
+func (r *BaseServiceNowCollectionResponse[T]) SetFirstLink(link *string) error {
+	return DefaultBackedModelMutatorFunc(r, firstKey, link)
 }
 
 // GetLastLink Returns the url to the last page of results.
 func (r *BaseServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
-	if IsNil(r) {
-		return nil, nil
-	}
+	return DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](r, lastKey)
+}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return nil, err
-	}
-
-	val, err := store.Get(lastKey)
-	if err != nil {
-		return nil, err
-	}
-
-	link, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return link, nil
+// SetLastLink Sets the url to the last page of results.
+func (r *BaseServiceNowCollectionResponse[T]) SetLastLink(link *string) error {
+	return DefaultBackedModelMutatorFunc(r, lastKey, link)
 }

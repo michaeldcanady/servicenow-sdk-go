@@ -1,3 +1,5 @@
+//go:build preview.tableApiV2
+
 package tableapi
 
 import (
@@ -19,10 +21,11 @@ func TestNewElementValue(t *testing.T) {
 			test: func(t *testing.T) {
 				val := "test"
 
-				elementValue := NewElementValue(val)
+				elementValue, err := NewElementValue(val)
 
+				assert.Nil(t, err)
 				assert.NotNil(t, elementValue)
-				assert.IsType(t, &ElementValueModel{}, elementValue)
+				assert.IsType(t, &ElementValue{}, elementValue)
 				assert.Equal(t, val, elementValue.val)
 			},
 		},
@@ -47,8 +50,8 @@ func TestCreateElementValueFromDiscriminatorValue(t *testing.T) {
 
 				assert.Nil(t, err)
 				assert.NotNil(t, elementVal)
-				assert.IsType(t, &ElementValueModel{}, elementVal)
-				assert.Nil(t, (elementVal.(*ElementValueModel)).val)
+				assert.IsType(t, &ElementValue{}, elementVal)
+				assert.Nil(t, (elementVal.(*ElementValue)).val)
 			},
 		},
 	}
@@ -68,7 +71,7 @@ func TestElementValueModel_Serialize(t *testing.T) {
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
 
-				value := &ElementValueModel{}
+				value := &ElementValue{}
 
 				err := value.Serialize(writer)
 
@@ -80,7 +83,7 @@ func TestElementValueModel_Serialize(t *testing.T) {
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
 
-				value := (*ElementValueModel)(nil)
+				value := (*ElementValue)(nil)
 				err := value.Serialize(writer)
 
 				assert.Nil(t, err)
@@ -113,7 +116,7 @@ func TestElementValueModel_IsNil(t *testing.T) {
 		{
 			name: "Nil value",
 			test: func(t *testing.T) {
-				val := &ElementValueModel{val: nil}
+				val := &ElementValue{val: nil}
 
 				assert.True(t, val.IsNil())
 			},
@@ -121,7 +124,7 @@ func TestElementValueModel_IsNil(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				val := (*ElementValueModel)(nil)
+				val := (*ElementValue)(nil)
 
 				assert.True(t, val.IsNil())
 			},
@@ -143,7 +146,7 @@ func TestElementValueModel_setValue(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer("test")
 
-				model := &ElementValueModel{val: nil}
+				model := &ElementValue{val: nil}
 
 				err := model.setValue(value)
 
@@ -156,7 +159,7 @@ func TestElementValueModel_setValue(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer("test")
 
-				model := (*ElementValueModel)(nil)
+				model := (*ElementValue)(nil)
 
 				err := model.setValue(value)
 
@@ -168,7 +171,7 @@ func TestElementValueModel_setValue(t *testing.T) {
 			test: func(t *testing.T) {
 				value := "test"
 
-				model := &ElementValueModel{val: nil}
+				model := &ElementValue{val: nil}
 
 				err := model.setValue(value)
 
@@ -192,7 +195,7 @@ func TestElementValueModel_GetStringValue(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer("test")
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetStringValue()
 
@@ -205,7 +208,7 @@ func TestElementValueModel_GetStringValue(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer(true)
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetStringValue()
 
@@ -216,7 +219,7 @@ func TestElementValueModel_GetStringValue(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*ElementValueModel)(nil)
+				model := (*ElementValue)(nil)
 
 				ret, err := model.GetStringValue()
 
@@ -241,7 +244,7 @@ func TestElementValueModel_GetBoolValue(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer(true)
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetBoolValue()
 
@@ -254,7 +257,7 @@ func TestElementValueModel_GetBoolValue(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer("test")
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetBoolValue()
 
@@ -265,7 +268,7 @@ func TestElementValueModel_GetBoolValue(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*ElementValueModel)(nil)
+				model := (*ElementValue)(nil)
 
 				ret, err := model.GetBoolValue()
 
@@ -290,7 +293,7 @@ func TestElementValueModel_GetInt8Value(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer(int8(7))
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetInt8Value()
 
@@ -303,7 +306,7 @@ func TestElementValueModel_GetInt8Value(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer("test")
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetInt8Value()
 
@@ -314,7 +317,7 @@ func TestElementValueModel_GetInt8Value(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*ElementValueModel)(nil)
+				model := (*ElementValue)(nil)
 
 				ret, err := model.GetInt8Value()
 
@@ -339,7 +342,7 @@ func TestElementValueModel_GetByteValue(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer(byte(7))
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetByteValue()
 
@@ -352,7 +355,7 @@ func TestElementValueModel_GetByteValue(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer("test")
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetByteValue()
 
@@ -363,7 +366,7 @@ func TestElementValueModel_GetByteValue(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*ElementValueModel)(nil)
+				model := (*ElementValue)(nil)
 
 				ret, err := model.GetByteValue()
 
@@ -388,7 +391,7 @@ func TestElementValueModel_GetFloat32Value(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer(float32(7))
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetFloat32Value()
 
@@ -401,7 +404,7 @@ func TestElementValueModel_GetFloat32Value(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer("test")
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetFloat32Value()
 
@@ -412,7 +415,7 @@ func TestElementValueModel_GetFloat32Value(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*ElementValueModel)(nil)
+				model := (*ElementValue)(nil)
 
 				ret, err := model.GetFloat32Value()
 
@@ -437,7 +440,7 @@ func TestElementValueModel_GetFloat64Value(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer(float64(7))
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetFloat64Value()
 
@@ -450,7 +453,7 @@ func TestElementValueModel_GetFloat64Value(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer("test")
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetFloat64Value()
 
@@ -461,7 +464,7 @@ func TestElementValueModel_GetFloat64Value(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*ElementValueModel)(nil)
+				model := (*ElementValue)(nil)
 
 				ret, err := model.GetFloat64Value()
 
@@ -486,7 +489,7 @@ func TestElementValueModel_GetInt32Value(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer(int32(7))
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetInt32Value()
 
@@ -499,7 +502,7 @@ func TestElementValueModel_GetInt32Value(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer("test")
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetInt32Value()
 
@@ -510,7 +513,7 @@ func TestElementValueModel_GetInt32Value(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*ElementValueModel)(nil)
+				model := (*ElementValue)(nil)
 
 				ret, err := model.GetInt32Value()
 
@@ -535,7 +538,7 @@ func TestElementValueModel_GetInt64Value(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer(int64(7))
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetInt64Value()
 
@@ -548,7 +551,7 @@ func TestElementValueModel_GetInt64Value(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer("test")
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetInt64Value()
 
@@ -559,7 +562,7 @@ func TestElementValueModel_GetInt64Value(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*ElementValueModel)(nil)
+				model := (*ElementValue)(nil)
 
 				ret, err := model.GetInt64Value()
 
@@ -595,9 +598,10 @@ func TestElementValueModel_GetCollectionOfPrimitiveValues(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := []interface{}{true, false, true}
+				value := []interface{}{internal.ToPointer(true), internal.ToPointer(false), internal.ToPointer(true)}
 
-				model := &ElementValueModel{val: value}
+				model, err := NewElementValue(value)
+				assert.Nil(t, err)
 
 				ret, err := model.GetCollectionOfPrimitiveValues(PrimitiveBool)
 
@@ -612,7 +616,6 @@ func TestElementValueModel_GetCollectionOfPrimitiveValues(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 	tests := []struct {
 		name string
@@ -622,7 +625,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 			name: "Successful - PrimitiveBool",
 			test: func(t *testing.T) {
 				value := internal.ToPointer(true)
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveBool)
 
@@ -634,7 +637,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 			name: "Successful - PrimitiveByte",
 			test: func(t *testing.T) {
 				value := internal.ToPointer(byte(1))
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveByte)
 
@@ -646,7 +649,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 			name: "Successful - PrimitiveFloat32",
 			test: func(t *testing.T) {
 				value := internal.ToPointer(float32(1))
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveFloat32)
 
@@ -658,7 +661,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 			name: "Successful - PrimitiveFloat64",
 			test: func(t *testing.T) {
 				value := internal.ToPointer(float64(1))
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveFloat64)
 
@@ -670,7 +673,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 			name: "Successful - PrimitiveInt32",
 			test: func(t *testing.T) {
 				value := internal.ToPointer(int32(1))
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveInt32)
 
@@ -682,7 +685,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 			name: "Successful - PrimitiveInt64",
 			test: func(t *testing.T) {
 				value := internal.ToPointer(int64(1))
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveInt64)
 
@@ -694,7 +697,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 			name: "Successful - PrimitiveInt8",
 			test: func(t *testing.T) {
 				value := internal.ToPointer(int8(1))
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveInt8)
 
@@ -706,7 +709,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 			name: "Successful - PrimitiveString",
 			test: func(t *testing.T) {
 				value := internal.ToPointer("test")
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveString)
 
@@ -715,21 +718,9 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 			},
 		},
 		{
-			name: "Successful - PrimitiveDateOnly",
-			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
-				model := &ElementValueModel{val: value}
-
-				val, err := model.getPrimitiveValue(PrimitiveDateOnly)
-
-				assert.Equal(t, errors.New("unknown primitive dateonly"), err)
-				assert.Nil(t, val)
-			},
-		},
-		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*ElementValueModel)(nil)
+				model := (*ElementValue)(nil)
 
 				ret, err := model.getPrimitiveValue(PrimitiveDateOnly)
 
@@ -754,7 +745,7 @@ func TestElementValueModel_GetRawValue(t *testing.T) {
 			test: func(t *testing.T) {
 				value := internal.ToPointer(7)
 
-				model := &ElementValueModel{val: value}
+				model := &ElementValue{val: value}
 
 				ret, err := model.GetRawValue()
 
@@ -765,7 +756,7 @@ func TestElementValueModel_GetRawValue(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				model := (*ElementValueModel)(nil)
+				model := (*ElementValue)(nil)
 
 				ret, err := model.GetRawValue()
 

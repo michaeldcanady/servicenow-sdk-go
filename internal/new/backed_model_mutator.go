@@ -8,7 +8,7 @@ import (
 
 // BackedModelMutatorFunc[S, T] defines a generic function signature for setting the value of a backed model
 // using a specified key.
-type BackedModelMutatorFunc[M store.BackedModel, T any] func(M, string, T) error
+type BackedModelMutatorFunc[M BackedModel, T any] func(M, string, T) error
 
 // DefaultStoreMutatorFunc[S, T] is a generic implementation of StoreMutatorFunc[S, T] that sets the value
 // of a backed model.
