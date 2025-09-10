@@ -40,7 +40,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 		{
 			name: "Successfully",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("")
+				value := &ElementValue{val: internal.ToPointer("")}
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", displayValueKey).Return(value, nil)
@@ -55,7 +55,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 				assert.Nil(t, err)
 				assert.NotNil(t, elementValue)
 				assert.IsType(t, &ElementValue{}, elementValue)
-				assert.Equal(t, interface{}(value), elementValue.val)
+				assert.Equal(t, interface{}(internal.ToPointer("")), elementValue.val)
 			},
 		},
 		{
@@ -72,7 +72,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 				elementValue, err := model.GetDisplayValue()
 
 				assert.Equal(t, errors.New("retrieval error"), err)
-				assert.Nil(t, elementValue)
+				assert.Equal(t, &ElementValue{}, elementValue)
 			},
 		},
 		{
@@ -85,8 +85,8 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 
 				elementValue, err := model.GetDisplayValue()
 
-				assert.Nil(t, err)
-				assert.Nil(t, elementValue)
+				assert.Equal(t, errors.New("store is nil"), err)
+				assert.Equal(t, &ElementValue{}, elementValue)
 			},
 		},
 		{
@@ -96,8 +96,8 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 
 				elementValue, err := model.GetDisplayValue()
 
-				assert.Nil(t, err)
-				assert.Nil(t, elementValue)
+				assert.Equal(t, errors.New("model is nil"), err)
+				assert.Equal(t, &ElementValue{}, elementValue)
 			},
 		},
 	}
@@ -127,7 +127,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 		{
 			name: "Successfully",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("")
+				value := &ElementValue{val: internal.ToPointer("")}
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", valueKey).Return(value, nil)
@@ -142,7 +142,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 				assert.Nil(t, err)
 				assert.NotNil(t, elementValue)
 				assert.IsType(t, &ElementValue{}, elementValue)
-				assert.Equal(t, interface{}(value), elementValue.val)
+				assert.Equal(t, interface{}(internal.ToPointer("")), elementValue.val)
 			},
 		},
 		{
@@ -159,7 +159,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 				elementValue, err := model.GetValue()
 
 				assert.Equal(t, errors.New("retrieval error"), err)
-				assert.Nil(t, elementValue)
+				assert.Equal(t, &ElementValue{}, elementValue)
 			},
 		},
 		{
@@ -172,8 +172,8 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 
 				elementValue, err := model.GetValue()
 
-				assert.Nil(t, err)
-				assert.Nil(t, elementValue)
+				assert.Equal(t, errors.New("store is nil"), err)
+				assert.Equal(t, &ElementValue{}, elementValue)
 			},
 		},
 		{
@@ -183,8 +183,8 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 
 				elementValue, err := model.GetValue()
 
-				assert.Nil(t, err)
-				assert.Nil(t, elementValue)
+				assert.Equal(t, errors.New("model is nil"), err)
+				assert.Equal(t, &ElementValue{}, elementValue)
 			},
 		},
 	}
@@ -245,7 +245,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 				elementValue, err := model.GetLink()
 
 				assert.Equal(t, errors.New("retrieval error"), err)
-				assert.Nil(t, elementValue)
+				assert.Equal(t, internal.ToPointer(""), elementValue)
 			},
 		},
 		{
@@ -258,8 +258,8 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 
 				elementValue, err := model.GetLink()
 
-				assert.Nil(t, err)
-				assert.Nil(t, elementValue)
+				assert.Equal(t, errors.New("store is nil"), err)
+				assert.Equal(t, internal.ToPointer(""), elementValue)
 			},
 		},
 		{
@@ -269,8 +269,8 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 
 				elementValue, err := model.GetLink()
 
-				assert.Nil(t, err)
-				assert.Nil(t, elementValue)
+				assert.Equal(t, errors.New("model is nil"), err)
+				assert.Equal(t, internal.ToPointer(""), elementValue)
 			},
 		},
 	}

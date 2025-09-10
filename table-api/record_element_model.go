@@ -48,7 +48,8 @@ func NewRecordElement() *RecordElement {
 //	}
 //	fmt.Println(displayValue)
 func (rE *RecordElement) GetDisplayValue() (*ElementValue, error) {
-	return internal.DefaultBackedModelAccessorFunc[*RecordElement, *ElementValue](rE, displayValueKey)
+	val, err := internal.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, displayValueKey)
+	return &val, err
 }
 
 // SetDisplayValue updates the display value of the element.
@@ -82,7 +83,8 @@ func (rE *RecordElement) SetDisplayValue(value any) error {
 //	}
 //	fmt.Println(value)
 func (rE *RecordElement) GetValue() (*ElementValue, error) {
-	return internal.DefaultBackedModelAccessorFunc[*RecordElement, *ElementValue](rE, valueKey)
+	val, err := internal.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, valueKey)
+	return &val, err
 }
 
 // SetValue updates the stored value of the element.
@@ -101,7 +103,7 @@ func (rE *RecordElement) SetValue(value any) error {
 		}
 	}
 
-	return internal.DefaultBackedModelMutatorFunc(rE, string(displayValueKey), value)
+	return internal.DefaultBackedModelMutatorFunc(rE, valueKey, value)
 }
 
 // GetLink retrieves the optional link associated with the element.
@@ -116,7 +118,8 @@ func (rE *RecordElement) SetValue(value any) error {
 //	}
 //	fmt.Println(*link)
 func (rE *RecordElement) GetLink() (*string, error) {
-	return internal.DefaultBackedModelAccessorFunc[*RecordElement, *string](rE, linkKey)
+	val, err := internal.DefaultBackedModelAccessorFunc[*RecordElement, string](rE, linkKey)
+	return &val, err
 }
 
 // setLink assigns an optional reference link to the element.

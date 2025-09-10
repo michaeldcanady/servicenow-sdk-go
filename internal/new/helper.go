@@ -101,16 +101,17 @@ func As2[T any](in any, out T, strict bool) error {
 		return fmt.Errorf("out must be a non-nil pointer")
 	}
 
-	// If types match, set directly
-	if typedIn, ok := in.(T); ok {
-		reflect.ValueOf(out).Elem().Set(reflect.ValueOf(typedIn))
-		return nil
-	}
-
 	// Unwrap pointer layers of input
 	valValue := reflect.ValueOf(in)
 	for valValue.Kind() == reflect.Ptr && !valValue.IsNil() {
 		valValue = valValue.Elem()
+	}
+
+	// If types match, set directly
+	if typedIn, ok := valValue.Interface().(T); ok {
+		fmt.Println("here")
+		reflect.ValueOf(out).Elem().Set(reflect.ValueOf(typedIn))
+		return nil
 	}
 
 	// Get the concrete type behind the output pointer

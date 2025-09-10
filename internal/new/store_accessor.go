@@ -28,6 +28,7 @@ func DefaultStoreAccessorFunc[S store.BackingStore, T any](store S, key string) 
 		return result, err
 	}
 
+	//BUG: doesn't support pointer of a pointer
 	if err := As2(val, &result, true); err != nil {
 		return result, err
 	}

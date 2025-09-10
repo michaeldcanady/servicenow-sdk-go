@@ -212,7 +212,7 @@ func TestElementValueModel_GetStringValue(t *testing.T) {
 
 				ret, err := model.GetStringValue()
 
-				assert.Equal(t, errors.New("type '*bool' is not compatible with type string"), err)
+				assert.Equal(t, errors.New("value 'true' is not compatible with type string"), err)
 				assert.Nil(t, ret)
 			},
 		},
@@ -261,7 +261,7 @@ func TestElementValueModel_GetBoolValue(t *testing.T) {
 
 				ret, err := model.GetBoolValue()
 
-				assert.Equal(t, errors.New("type '*string' is not compatible with type bool"), err)
+				assert.Equal(t, errors.New("value 'test' is not compatible with type bool"), err)
 				assert.Nil(t, ret)
 			},
 		},
