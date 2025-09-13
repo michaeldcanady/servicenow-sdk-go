@@ -22,6 +22,7 @@ jobs:
       - uses: errata-ai/vale-action@v2.1.1
   deploy:
     runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
     steps:
       - uses: actions/checkout@v4
       - name: Configure Git Credentials
