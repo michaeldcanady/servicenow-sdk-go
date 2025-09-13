@@ -17,6 +17,7 @@ var (
 		reflect.Int64,
 		reflect.Uint64,
 		reflect.Int,
+		reflect.Uint,
 		reflect.Float32,
 		reflect.Float64,
 	}
