@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"errors"
+	"math"
 	"reflect"
 	"testing"
 
@@ -146,6 +148,62 @@ func TestIsNumericKind(t *testing.T) {
 				isNumeric := isNumericKind(reflect.ValueOf("string"))
 
 				assert.False(t, isNumeric)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestConvertNumeric(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Int8 to Int8",
+			test: func(t *testing.T) {
+				input := reflect.ValueOf(int8(0))
+				desiredType := reflect.TypeOf(int8(0))
+				result, err := convertNumeric(input, desiredType)
+
+				assert.Nil(t, err)
+				assert.Equal(t, int8(0), result)
+			},
+		},
+		{
+			name: "String to Int8",
+			test: func(t *testing.T) {
+				input := reflect.ValueOf("string")
+				desiredType := reflect.TypeOf(int8(0))
+				result, err := convertNumeric(input, desiredType)
+
+				assert.Equal(t, errors.New("string is non-numeric"), err)
+				assert.Nil(t, result)
+			},
+		},
+		{
+			name: "Int16 to Int8",
+			test: func(t *testing.T) {
+				input := reflect.ValueOf(math.MaxInt16)
+				desiredType := reflect.TypeOf(int8(0))
+				result, err := convertNumeric(input, desiredType)
+
+				assert.Equal(t, errors.New("overflow or incompatible decimal converting to int8"), err)
+				assert.Nil(t, result)
+			},
+		},
+		{
+			name: "Int16 to Int",
+			test: func(t *testing.T) {
+				input := reflect.ValueOf(math.MaxInt16)
+				desiredType := reflect.TypeOf(int(0))
+				result, err := convertNumeric(input, desiredType)
+
+				assert.Equal(t, errors.New("unsupported numeric target type: int"), err)
+				assert.Nil(t, result)
 			},
 		},
 	}
