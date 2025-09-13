@@ -202,8 +202,8 @@ func TestConvertNumeric(t *testing.T) {
 				desiredType := reflect.TypeOf(int(0))
 				result, err := convertNumeric(input, desiredType)
 
-				assert.Equal(t, errors.New("unsupported numeric target type: int"), err)
-				assert.Nil(t, result)
+				assert.Nil(t, err)
+				assert.Equal(t, int(32767), result)
 			},
 		},
 	}

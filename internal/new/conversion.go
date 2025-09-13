@@ -4,23 +4,19 @@ import (
 	"fmt"
 	"reflect"
 	"slices"
+	"sync"
 )
 
 var (
-	numericKinds = []reflect.Kind{
-		reflect.Int8,
-		reflect.Uint8,
-		reflect.Int16,
-		reflect.Uint16,
-		reflect.Int32,
-		reflect.Uint32,
-		reflect.Int64,
-		reflect.Uint64,
-		reflect.Int,
-		reflect.Uint,
-		reflect.Float32,
-		reflect.Float64,
-	}
+	numericKinds = sync.OnceValue(func() []reflect.Kind {
+		keys := make([]reflect.Kind, len(ranges))
+		i := 0
+		for key := range ranges {
+			keys[i] = key
+			i++
+		}
+		return keys
+	})()
 	floatType = reflect.TypeOf(float64(0))
 )
 
