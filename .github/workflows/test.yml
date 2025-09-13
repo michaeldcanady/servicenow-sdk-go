@@ -8,6 +8,8 @@ on:
   pull_request:
     paths:
       - "**.go"
+      - ".github/workflows/lint.yml"
+      - ".github/workflows/test.yml"
 
 env:
   COVERAGE_FILE: coverage.out

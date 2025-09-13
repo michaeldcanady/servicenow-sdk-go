@@ -6,6 +6,10 @@ on:
     branches:
       - "**"
   pull_request:
+    paths:
+      - "**.go"
+      - ".github/workflows/lint.yml"
+      - ".github/workflows/test.yml"
 
 jobs:
   golangci:
