@@ -1,9 +1,11 @@
 package internal
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"reflect"
+	"strconv"
 )
 
 // IsNil checks if a value is nil or a nil interface.
@@ -42,6 +44,17 @@ var (
 		reflect.Float64: {-math.MaxFloat64, math.MaxFloat64, true},
 	}
 )
+
+// Dereference recursively unwraps nested pointers
+func Dereference(v reflect.Value) reflect.Value {
+	for v.Kind() == reflect.Ptr {
+		if v.IsNil() {
+			return reflect.Zero(v.Type().Elem())
+		}
+		v = v.Elem()
+	}
+	return v
+}
 
 // isCompatible checks if the value is compatible with the type tp.
 func isCompatible(value interface{}, tp reflect.Type, strict bool) bool {
@@ -132,6 +145,105 @@ func As2[T any](in any, out T, strict bool) error {
 	return nil
 }
 
+func Convert(input any, output any) error {
+	if output == nil {
+		return errors.New("output cannot be nil")
+	}
+
+	outVal := reflect.ValueOf(output)
+	if outVal.Kind() != reflect.Ptr || outVal.IsNil() {
+		return errors.New("output must be a non-nil pointer")
+	}
+
+	targetVal := outVal.Elem()
+	targetType := targetVal.Type()
+
+	if input == nil {
+		targetVal.Set(reflect.Zero(targetType))
+		return nil
+	}
+
+	srcVal := reflect.ValueOf(input)
+
+	// If input is a pointer, deref for conversion but keep original for pointer assignment
+	derefSrc := Dereference(srcVal)
+
+	// Case 1: Direct assignable (including pointer-to-pointer)
+	if srcVal.Type().AssignableTo(targetType) {
+		targetVal.Set(srcVal)
+		return nil
+	}
+
+	// Case 2: Target is a pointer type
+	if targetType.Kind() == reflect.Ptr {
+		elemType := targetType.Elem()
+
+		// If input is already pointer to correct type
+		if srcVal.Type().AssignableTo(targetType) {
+			targetVal.Set(srcVal)
+			return nil
+		}
+
+		// Convert underlying value to element type
+		convertedVal, err := convertValue(derefSrc, elemType)
+		if err != nil {
+			return err
+		}
+
+		ptr := reflect.New(elemType)
+		ptr.Elem().Set(convertedVal)
+		targetVal.Set(ptr)
+		return nil
+	}
+
+	// Case 3: Non-pointer target
+	convertedVal, err := convertValue(derefSrc, targetType)
+	if err != nil {
+		return err
+	}
+	targetVal.Set(convertedVal)
+	return nil
+}
+
+func convertValue(srcVal reflect.Value, targetType reflect.Type) (reflect.Value, error) {
+	srcKind := srcVal.Kind()
+	dstKind := targetType.Kind()
+
+	// Direct assignable
+	if srcVal.Type().AssignableTo(targetType) {
+		return srcVal, nil
+	}
+
+	// Numeric conversions
+	if isNumericKind(srcKind) && isNumericKind(dstKind) {
+		converted, err := convertNumeric(srcVal, targetType)
+		if err != nil {
+			return reflect.Value{}, err
+		}
+		return reflect.ValueOf(converted).Convert(targetType), nil
+	}
+
+	// String to numeric
+	if srcKind == reflect.String && isNumericKind(dstKind) {
+		num, err := strconv.ParseFloat(srcVal.String(), 64)
+		if err != nil {
+			return reflect.Value{}, err
+		}
+		converted, err := convertNumeric(reflect.ValueOf(num), targetType)
+		if err != nil {
+			return reflect.Value{}, err
+		}
+		return reflect.ValueOf(converted).Convert(targetType), nil
+	}
+
+	// Numeric to string
+	if isNumericKind(srcKind) && dstKind == reflect.String {
+		return reflect.ValueOf(fmt.Sprintf("%v", srcVal.Interface())), nil
+	}
+
+	return reflect.Value{}, fmt.Errorf("unsupported conversion: %s → %s", srcKind, dstKind)
+}
+
 // isNumericType checks if the given type is a numeric type.
 func isNumericType(in interface{}) bool {
 	if in == nil {
@@ -151,6 +263,12 @@ func isNumericType(in interface{}) bool {
 	default:
 		return false
 	}
+}
+
+func isNumericKind(k reflect.Kind) bool {
+	return (k >= reflect.Int && k <= reflect.Int64) ||
+		(k >= reflect.Uint && k <= reflect.Uint64) ||
+		(k == reflect.Float32 || k == reflect.Float64)
 }
 
 // isCompatibleInt checks if the given value is compatible with the specified integer type.
@@ -173,4 +291,22 @@ func isCompatibleInt(in interface{}, tp reflect.Type) bool {
 // hasDecimalPlace checks if the given float64 value has a decimal place.
 func hasDecimalPlace(value float64) bool {
 	return value != float64(int64(value))
+}
+
+func convertNumeric(srcVal reflect.Value, targetType reflect.Type) (any, error) {
+	srcFloat := srcVal.Convert(reflect.TypeOf(float64(0))).Float()
+
+	targetKind := targetType.Kind()
+
+	rng, ok := ranges[targetKind]
+	if !ok {
+		return nil, fmt.Errorf("unsupported numeric target type: %s", targetType.Kind())
+	}
+
+	if !rng.Compatible(srcFloat) {
+		return nil, fmt.Errorf("overflow or incompatible decimal converting to %s", targetType.Kind())
+	}
+
+	// Safe to convert
+	return reflect.ValueOf(srcFloat).Convert(targetType).Interface(), nil
 }

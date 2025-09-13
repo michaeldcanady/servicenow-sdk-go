@@ -93,6 +93,6 @@
   ],
   "gopls": { 
   },
-  "go.buildTags": "preview.query preview.tableApiV2",
+  "go.buildTags": "preview.query",
   "go.useLanguageServer": true
 }
