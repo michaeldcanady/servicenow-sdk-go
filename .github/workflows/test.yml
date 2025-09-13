@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - "**"
+    paths:
+      - "**.go"
+      - ".github/workflows/lint.yml"
+      - ".github/workflows/test.yml"
   pull_request:
     paths:
       - "**.go"
