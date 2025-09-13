@@ -25,14 +25,14 @@ jobs:
   #  name: Lint Docs with Vale
   #  runs-on: ubuntu-latest
   #  steps:
-  #    - uses: actions/checkout@v4
+  #    - uses: actions/checkout@v5
   #    - uses: errata-ai/vale-action@v2.1.1
 
   build:
     name: Test Docs Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: 3.x
@@ -46,7 +46,7 @@ jobs:
       - test-docs
     if: github.event_name == 'release' && github.event.action == 'published'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Configure Git Credentials
         run: |
           git config user.name github-actions[bot]
