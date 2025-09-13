@@ -3,7 +3,11 @@ name: Docs Pipeline
 on:
   push:
     branches:
-      - main
+      - "**"
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - ".github/workflows/pages.yml"
   pull_request:
     paths:
       - "docs/**"
