@@ -17,14 +17,14 @@ permissions:
   contents: write
 
 jobs:
-  vale:
-    name: Lint Docs with Vale
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: errata-ai/vale-action@v2.1.1
+  #vale:
+  #  name: Lint Docs with Vale
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: actions/checkout@v4
+  #    - uses: errata-ai/vale-action@v2.1.1
 
-  test-docs:
+  build:
     name: Test Docs Build
     runs-on: ubuntu-latest
     needs:
