@@ -65,7 +65,7 @@ func TestIsNumericKind(t *testing.T) {
 		{
 			name: "Int8",
 			test: func(t *testing.T) {
-				isNumeric := isNumericKind(reflect.ValueOf(int8(1)))
+				isNumeric := isNumericKind(reflect.ValueOf(int8(1)).Kind())
 
 				assert.True(t, isNumeric)
 			},
@@ -73,7 +73,7 @@ func TestIsNumericKind(t *testing.T) {
 		{
 			name: "Uint8",
 			test: func(t *testing.T) {
-				isNumeric := isNumericKind(reflect.ValueOf(uint8(1)))
+				isNumeric := isNumericKind(reflect.ValueOf(uint8(1)).Kind())
 
 				assert.True(t, isNumeric)
 			},
@@ -81,7 +81,7 @@ func TestIsNumericKind(t *testing.T) {
 		{
 			name: "Int16",
 			test: func(t *testing.T) {
-				isNumeric := isNumericKind(reflect.ValueOf(int16(1)))
+				isNumeric := isNumericKind(reflect.ValueOf(int16(1)).Kind())
 
 				assert.True(t, isNumeric)
 			},
@@ -89,7 +89,7 @@ func TestIsNumericKind(t *testing.T) {
 		{
 			name: "Uint16",
 			test: func(t *testing.T) {
-				isNumeric := isNumericKind(reflect.ValueOf(uint16(1)))
+				isNumeric := isNumericKind(reflect.ValueOf(uint16(1)).Kind())
 
 				assert.True(t, isNumeric)
 			},
@@ -97,7 +97,7 @@ func TestIsNumericKind(t *testing.T) {
 		{
 			name: "Int32",
 			test: func(t *testing.T) {
-				isNumeric := isNumericKind(reflect.ValueOf(int32(1)))
+				isNumeric := isNumericKind(reflect.ValueOf(int32(1)).Kind())
 
 				assert.True(t, isNumeric)
 			},
@@ -105,7 +105,7 @@ func TestIsNumericKind(t *testing.T) {
 		{
 			name: "Uint32",
 			test: func(t *testing.T) {
-				isNumeric := isNumericKind(reflect.ValueOf(uint32(1)))
+				isNumeric := isNumericKind(reflect.ValueOf(uint32(1)).Kind())
 
 				assert.True(t, isNumeric)
 			},
@@ -113,7 +113,7 @@ func TestIsNumericKind(t *testing.T) {
 		{
 			name: "Int64",
 			test: func(t *testing.T) {
-				isNumeric := isNumericKind(reflect.ValueOf(int64(1)))
+				isNumeric := isNumericKind(reflect.ValueOf(int64(1)).Kind())
 
 				assert.True(t, isNumeric)
 			},
@@ -121,7 +121,7 @@ func TestIsNumericKind(t *testing.T) {
 		{
 			name: "Uint64",
 			test: func(t *testing.T) {
-				isNumeric := isNumericKind(reflect.ValueOf(uint64(1)))
+				isNumeric := isNumericKind(reflect.ValueOf(uint64(1)).Kind())
 
 				assert.True(t, isNumeric)
 			},
@@ -129,7 +129,7 @@ func TestIsNumericKind(t *testing.T) {
 		{
 			name: "Float32",
 			test: func(t *testing.T) {
-				isNumeric := isNumericKind(reflect.ValueOf(float32(1.00)))
+				isNumeric := isNumericKind(reflect.ValueOf(float32(1.00)).Kind())
 
 				assert.True(t, isNumeric)
 			},
@@ -137,7 +137,7 @@ func TestIsNumericKind(t *testing.T) {
 		{
 			name: "Float64",
 			test: func(t *testing.T) {
-				isNumeric := isNumericKind(reflect.ValueOf(float64(1.00)))
+				isNumeric := isNumericKind(reflect.ValueOf(float64(1.00)).Kind())
 
 				assert.True(t, isNumeric)
 			},
@@ -145,7 +145,7 @@ func TestIsNumericKind(t *testing.T) {
 		{
 			name: "String",
 			test: func(t *testing.T) {
-				isNumeric := isNumericKind(reflect.ValueOf("string"))
+				isNumeric := isNumericKind(reflect.ValueOf("string").Kind())
 
 				assert.False(t, isNumeric)
 			},
@@ -204,6 +204,78 @@ func TestConvertNumeric(t *testing.T) {
 
 				assert.Nil(t, err)
 				assert.Equal(t, int(32767), result)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestConvertValue(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Int8 to Int16",
+			test: func(t *testing.T) {
+				srcValue := reflect.ValueOf(int8(0))
+				result, err := convertValue(srcValue, reflect.TypeOf(int16(0)))
+
+				assert.Nil(t, err)
+				assert.Equal(t, int16(0), result.Interface())
+			},
+		},
+		{
+			name: "Int String to Int16",
+			test: func(t *testing.T) {
+				srcValue := reflect.ValueOf("0")
+				result, err := convertValue(srcValue, reflect.TypeOf(int16(0)))
+
+				assert.Nil(t, err)
+				assert.Equal(t, int16(0), result.Interface())
+			},
+		},
+		{
+			name: "Word String to Int16",
+			test: func(t *testing.T) {
+				srcValue := reflect.ValueOf("not number")
+				result, err := convertValue(srcValue, reflect.TypeOf(int16(0)))
+
+				assert.Equal(t, errors.New("unable to convert not number to float: strconv.ParseFloat: parsing \"not number\": invalid syntax"), err)
+				assert.Equal(t, reflect.Value{}, result)
+			},
+		},
+		{
+			name: "Int16 to Int String",
+			test: func(t *testing.T) {
+				srcValue := reflect.ValueOf(int16(0))
+				result, err := convertValue(srcValue, reflect.TypeOf(""))
+
+				assert.Nil(t, err)
+				assert.Equal(t, "0", result.Interface())
+			},
+		},
+		{
+			name: "String to String",
+			test: func(t *testing.T) {
+				srcValue := reflect.ValueOf("0")
+				result, err := convertValue(srcValue, reflect.TypeOf(""))
+
+				assert.Nil(t, err)
+				assert.Equal(t, "0", result.Interface())
+			},
+		},
+		{
+			name: "Bool to String",
+			test: func(t *testing.T) {
+				srcValue := reflect.ValueOf(true)
+				result, err := convertValue(srcValue, reflect.TypeOf(""))
+
+				assert.Equal(t, errors.New("unsupported conversion: bool to string"), err)
+				assert.Equal(t, reflect.Value{}, result)
 			},
 		},
 	}

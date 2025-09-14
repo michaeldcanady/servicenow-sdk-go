@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"slices"
+	"strconv"
 	"sync"
 )
 
@@ -34,13 +35,13 @@ func Dereference(v reflect.Value) reflect.Value {
 }
 
 // isNumericKind checks if value is a numeric value.
-func isNumericKind(v reflect.Value) bool {
-	return slices.Contains(numericKinds, v.Kind())
+func isNumericKind(v reflect.Kind) bool {
+	return slices.Contains(numericKinds, v)
 }
 
 // convertNumeric converts value to desired type
 func convertNumeric(srcVal reflect.Value, targetType reflect.Type) (any, error) {
-	if !isNumericKind(srcVal) {
+	if !isNumericKind(srcVal.Kind()) {
 		return nil, fmt.Errorf("%s is non-numeric", srcVal)
 	}
 
@@ -58,4 +59,44 @@ func convertNumeric(srcVal reflect.Value, targetType reflect.Type) (any, error) 
 	}
 
 	return reflect.ValueOf(srcFloat).Convert(targetType).Interface(), nil
+}
+
+// convertValue converts the provide value to the target type.
+func convertValue(srcVal reflect.Value, targetType reflect.Type) (reflect.Value, error) {
+	srcKind := srcVal.Kind()
+	dstKind := targetType.Kind()
+
+	// Direct assignable
+	if srcVal.Type().AssignableTo(targetType) {
+		return srcVal, nil
+	}
+
+	// Numeric conversions
+	if isNumericKind(srcKind) && isNumericKind(dstKind) {
+		converted, err := convertNumeric(srcVal, targetType)
+		if err != nil {
+			return reflect.Value{}, err
+		}
+		return reflect.ValueOf(converted).Convert(targetType), nil
+	}
+
+	// String to numeric
+	if srcKind == reflect.String && isNumericKind(dstKind) {
+		num, err := strconv.ParseFloat(srcVal.String(), 64)
+		if err != nil {
+			return reflect.Value{}, fmt.Errorf("unable to convert %s to float: %s", srcVal, err)
+		}
+		converted, err := convertNumeric(reflect.ValueOf(num), targetType)
+		if err != nil {
+			return reflect.Value{}, err
+		}
+		return reflect.ValueOf(converted).Convert(targetType), nil
+	}
+
+	// Numeric to string
+	if isNumericKind(srcKind) && dstKind == reflect.String {
+		return reflect.ValueOf(fmt.Sprintf("%v", srcVal.Interface())), nil
+	}
+
+	return reflect.Value{}, fmt.Errorf("unsupported conversion: %s to %s", srcKind, dstKind)
 }
