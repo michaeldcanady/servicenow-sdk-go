@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"slices"
@@ -99,4 +100,65 @@ func convertValue(srcVal reflect.Value, targetType reflect.Type) (reflect.Value,
 	}
 
 	return reflect.Value{}, fmt.Errorf("unsupported conversion: %s to %s", srcKind, dstKind)
+}
+
+// Convert converts provided input to and sets output
+func Convert(input any, output any) error {
+	if output == nil {
+		return errors.New("output cannot be nil")
+	}
+
+	outVal := reflect.ValueOf(output)
+	if outVal.Kind() != reflect.Ptr || outVal.IsNil() {
+		return errors.New("output must be a non-nil pointer")
+	}
+
+	targetVal := outVal.Elem()
+	targetType := targetVal.Type()
+
+	if input == nil {
+		targetVal.Set(reflect.Zero(targetType))
+		return nil
+	}
+
+	srcVal := reflect.ValueOf(input)
+
+	// If input is a pointer, deref for conversion but keep original for pointer assignment
+	derefSrc := Dereference(srcVal)
+
+	// Case 1: Direct assignable (including pointer-to-pointer)
+	if srcVal.Type().AssignableTo(targetType) {
+		targetVal.Set(srcVal)
+		return nil
+	}
+
+	// Case 2: Target is a pointer type
+	if targetType.Kind() == reflect.Ptr {
+		elemType := targetType.Elem()
+
+		// If input is already pointer to correct type
+		if srcVal.Type().AssignableTo(targetType) {
+			targetVal.Set(srcVal)
+			return nil
+		}
+
+		// Convert underlying value to element type
+		convertedVal, err := convertValue(derefSrc, elemType)
+		if err != nil {
+			return err
+		}
+
+		ptr := reflect.New(elemType)
+		ptr.Elem().Set(convertedVal)
+		targetVal.Set(ptr)
+		return nil
+	}
+
+	// Case 3: Non-pointer target
+	convertedVal, err := convertValue(derefSrc, targetType)
+	if err != nil {
+		return err
+	}
+	targetVal.Set(convertedVal)
+	return nil
 }

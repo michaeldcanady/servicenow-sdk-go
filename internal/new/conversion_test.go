@@ -284,3 +284,93 @@ func TestConvertValue(t *testing.T) {
 		t.Run(test.name, test.test)
 	}
 }
+
+func TestConvert(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Non-pointer output",
+			test: func(t *testing.T) {
+				input := ""
+				output := ""
+
+				err := Convert(input, output)
+
+				assert.Equal(t, errors.New("output must be a non-nil pointer"), err)
+			},
+		},
+		{
+			name: "Nil input",
+			test: func(t *testing.T) {
+				output := ToPointer("random words")
+
+				err := Convert(nil, output)
+
+				assert.Nil(t, err)
+				assert.Equal(t, "", *output)
+			},
+		},
+		{
+			name: "Nil output",
+			test: func(t *testing.T) {
+				err := Convert(nil, nil)
+
+				assert.Equal(t, errors.New("output cannot be nil"), err)
+			},
+		},
+		{
+			name: "Int8 to Int16",
+			test: func(t *testing.T) {
+				input := int8(10)
+				output := ToPointer(int16(0))
+
+				err := Convert(input, output)
+
+				assert.Nil(t, err)
+				assert.Equal(t, int16(10), *output)
+			},
+		},
+		{
+			name: "String pointer",
+			test: func(t *testing.T) {
+				var input interface{} = ToPointer("test")
+				var output *string
+
+				err := Convert(input, &output)
+
+				assert.Nil(t, err)
+				assert.Equal(t, ToPointer("test"), output)
+			},
+		},
+		{
+			name: "int8",
+			test: func(t *testing.T) {
+				var input interface{} = int8(8)
+				var output int8
+
+				err := Convert(input, &output)
+
+				assert.Nil(t, err)
+				assert.Equal(t, int8(8), output)
+			},
+		},
+		{
+			name: "String pointer pointer",
+			test: func(t *testing.T) {
+				var input interface{} = ToPointer(ToPointer("test"))
+				var output **string
+
+				err := Convert(input, &output)
+
+				assert.Nil(t, err)
+				assert.Equal(t, ToPointer(ToPointer("test")), output)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
