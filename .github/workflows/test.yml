@@ -24,6 +24,8 @@ permissions:
 jobs:
   lint:
     name: lint
+    permissions:
+      contents: read
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -46,6 +48,8 @@ jobs:
 
   test:
     name: Test
+    permissions:
+      contents: read
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
