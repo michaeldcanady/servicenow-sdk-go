@@ -18,6 +18,9 @@ on:
 env:
   COVERAGE_FILE: coverage.out
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: lint
