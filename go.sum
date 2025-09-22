@@ -28,8 +28,8 @@ github.com/microsoft/kiota-serialization-json-go v1.1.2 h1:eJrPWeQ665nbjO0gsHWJ0
 github.com/microsoft/kiota-serialization-json-go v1.1.2/go.mod h1:deaGt7fjZarywyp7TOTiRsjfYiyWxwJJPQZytXwYQn8=
 github.com/microsoft/kiota-serialization-multipart-go v1.1.2 h1:1pUyA1QgIeKslQwbk7/ox1TehjlCUUT3r1f8cNlkvn4=
 github.com/microsoft/kiota-serialization-multipart-go v1.1.2/go.mod h1:j2K7ZyYErloDu7Kuuk993DsvfoP7LPWvAo7rfDpdPio=
-github.com/microsoft/kiota-serialization-text-go v1.1.2 h1:7OfKFlzdjpPygca/+OtqafkEqCWR7+94efUFGC28cLw=
-github.com/microsoft/kiota-serialization-text-go v1.1.2/go.mod h1:QNTcswkBPFY3QVBFmzfk00UMNViKQtV0AQKCrRw5ibM=
+github.com/microsoft/kiota-serialization-text-go v1.1.3 h1:8z7Cebn0YAAr++xswVgfdxZjnAZ4GOB9O7XP4+r5r/M=
+github.com/microsoft/kiota-serialization-text-go v1.1.3/go.mod h1:NDSvz4A3QalGMjNboKKQI9wR+8k+ih8UuagNmzIRgTQ=
 github.com/mozillazg/go-httpheader v0.4.0 h1:aBn6aRXtFzyDLZ4VIRLsZbbJloagQfMnCiYgOq6hK4w=
 github.com/mozillazg/go-httpheader v0.4.0/go.mod h1:PuT8h0pw6efvp8ZeUec1Rs7dwjK08bt6gKSReGMqtdA=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
