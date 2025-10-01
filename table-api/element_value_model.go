@@ -5,7 +5,6 @@ package tableapi
 import (
 	"errors"
 	"fmt"
-	"reflect"
 
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -18,42 +17,7 @@ type ElementValue struct {
 
 // NewElementValue returns a new Element Value
 func NewElementValue(val any) (*ElementValue, error) {
-	return loadTree(val)
-}
-
-func loadTree(val any) (*ElementValue, error) {
-	var err error
-
-	rv := reflect.ValueOf(val)
-
-	for {
-		switch rv.Kind() {
-		case reflect.Array, reflect.Slice:
-			array := make([]*ElementValue, rv.Len())
-			for i := 0; i < rv.Len(); i++ {
-				if array[i], err = loadTree(rv.Index(i).Interface()); err != nil {
-					return nil, err
-				}
-			}
-			return &ElementValue{val: array}, nil
-		case reflect.Map:
-			mapping := make(map[string]*ElementValue, rv.Len())
-			for _, valKey := range rv.MapKeys() {
-				key := valKey.Interface().(string)
-				if mapping[key], err = loadTree(rv.MapIndex(valKey).Interface()); err != nil {
-					return nil, err
-				}
-			}
-			return &ElementValue{val: mapping}, nil
-		case reflect.Pointer:
-			if rv.IsNil() {
-				return nil, nil
-			}
-			return loadTree(rv.Elem().Interface())
-		default:
-			return &ElementValue{val: val}, nil
-		}
-	}
+	return newElementVis().Visit(val)
 }
 
 // CreateElementValueFromDiscriminatorValue is a parsable factory for creating a ElementValueModel
@@ -80,7 +44,7 @@ func (eV *ElementValue) IsNil() bool {
 	return internal.IsNil(eV) || internal.IsNil(eV.val)
 }
 
-func (eV *ElementValue) setValue(val interface{}) error { //nolint: unused
+func (eV *ElementValue) setValue(val any) error { //nolint: unused
 	if internal.IsNil(eV) {
 		return nil
 	}
@@ -289,8 +253,7 @@ func (eV *ElementValue) GetCollectionOfPrimitiveValues(targetType Primitive) ([]
 			err error
 		)
 		if v != nil {
-			val, err = v.getPrimitiveValue(targetType)
-			if err != nil {
+			if val, err = v.getPrimitiveValue(targetType); err != nil {
 				return nil, err
 			}
 		}
