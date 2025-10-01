@@ -77,7 +77,7 @@ func TestDefaultStoreAccessorFunc(t *testing.T) {
 
 				response, err := DefaultStoreAccessorFunc[*mocking.MockBackingStore, string](store, key)
 
-				assert.Equal(t, errors.New("cannot convert 'true' to type string"), err)
+				assert.Equal(t, errors.New("unsupported conversion: bool to string"), err)
 				assert.Equal(t, "", response)
 			},
 		},
