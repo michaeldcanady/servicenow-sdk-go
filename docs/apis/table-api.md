@@ -14,23 +14,30 @@ Retrieves multiple records for the specified table.
     package main
 
     import (
+        "context"
+
         tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
     )
 
     func main() {
-        ... //Implement credential and client.
+        //Implement credential and client.
+        //...
 
         // define parameters you wish to (optional)
-        params := *tableapi.TableRequestBuilderGetQueryParameters{
+        params := &tableapi.TableRequestBuilderGetQueryParameters{
         ...
         }
 
-        response, err := client.Now.Table("{TableName}").Get(params)
+        ctx := context.Background()
+        // Modify your context as desired.
+        //...
+
+        response, err := client.Now.Table("{TableName}").Get2(ctx, params)
         if err != nil {
             log.Fatal(err)
         }
         // Handle response
-        ...
+        //...
     }
     ```
 
@@ -40,11 +47,14 @@ Retrieves multiple records for the specified table.
     package main
 
     import (
+        "context"
+
         tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
     )
 
     func main() {
-        ... //Implement credential and client.
+        //Implement credential and client.
+        //...
         pathParameters := {
             "baseurl":"https://www.{instance}.service-now.com/api/now",
             "table": "incident",
@@ -53,14 +63,23 @@ Retrieves multiple records for the specified table.
         // Instantiate new TableItemRequestBuilder.
         requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
 
+        // define parameters you wish to (optional)
+        params := &tableapi.TableRequestBuilderGetQueryParameters{
+        //...
+        }
+
+        ctx := context.Background()
+        // Modify your context as desired.
+        //...
+
         // Call the get method, with or without TableRequestBuilderGetQueryParameters.
         // Response is a TableCollectionResponse.
-        response, err := requestBuilder.Get(nil)
-
-        // Test err, should be nil
+        response, err := requestBuilder.Get2(ctx, params)
         if err != nil {
             log.Fatal(err)
         }
+        // Handle response
+        //...
     }
     ```
 
