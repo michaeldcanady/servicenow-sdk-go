@@ -32,7 +32,7 @@ Retrieves multiple records for the specified table.
         // Modify your context as desired.
         //...
 
-        response, err := client.Now.Table("{TableName}").Get2(ctx, params)
+        response, err := client.Now2().Table2("{TableName}").Get2(ctx, params)
         if err != nil {
             log.Fatal(err)
         }
@@ -61,7 +61,7 @@ Retrieves multiple records for the specified table.
         }
 
         // Instantiate new TableItemRequestBuilder.
-        requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
+        requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
 
         // define parameters you wish to (optional)
         params := &tableapi.TableRequestBuilderGetQueryParameters{
@@ -116,7 +116,7 @@ Inserts one record in the specified table.
             "description": "incident created by servicenow-sdk-go",
         }
 
-        response, err := client.Now.Table("{TableName}").Post4(ctx, data, params)
+        response, err := client.Now2().Table2("{TableName}").Post4(ctx, data, params)
         if err != nil {
             log.Fatal(err)
         }
