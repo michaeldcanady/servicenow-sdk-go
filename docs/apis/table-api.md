@@ -155,7 +155,7 @@ Inserts one record in the specified table.
         }
 
         // Instantiate new TableItemRequestBuilder.
-        requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
+        requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
 
         // Call the get method, with or without TableRequestBuilderPostQueryParamters.
         // Make sure you include the data parameter
