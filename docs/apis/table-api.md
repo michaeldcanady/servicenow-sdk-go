@@ -98,12 +98,17 @@ Inserts one record in the specified table.
     )
 
     func main() {
-        ... //Implement credential and client.
+        //Implement credential and client.
+        //...
 
         // define parameters you wish to (optional)
-        params := *tableapi.TableRequestBuilderPostQueryParameters{
-        ...
+        params := &tableapi.TableRequestBuilderPostQueryParameters{
+        //...
         }
+
+        ctx := context.Background()
+        // Modify your context as desired.
+        //...
 
         // data map of information you want to use for the new record
         data := map[string]string{
@@ -111,12 +116,12 @@ Inserts one record in the specified table.
             "description": "incident created by servicenow-sdk-go",
         }
 
-        response, err := client.Now.Table("{TableName}").Post(data, params)
+        response, err := client.Now.Table("{TableName}").Post4(ctx, data, params)
         if err != nil {
             log.Fatal(err)
         }
         // Handle response
-        ...
+        //...
     }
     ```
 
@@ -130,7 +135,8 @@ Inserts one record in the specified table.
     )
 
     func main() {
-        ... //Implement credential and client.
+        //Implement credential and client.
+        //...
 
         pathParameters := {
             "baseurl":"https://www.{instance}.service-now.com/api/now",
@@ -139,7 +145,7 @@ Inserts one record in the specified table.
 
         // define parameters you wish to (optional)
         params := *tableapi.TableRequestBuilderPostQueryParameters{
-        ...
+        //...
         }
 
         // data map of information you want to use for the new record
@@ -152,17 +158,14 @@ Inserts one record in the specified table.
         requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
 
         // Call the get method, with or without TableRequestBuilderPostQueryParamters.
-        // Make sure you include the data paramter
+        // Make sure you include the data parameter
         // Response is a TableItemResponse.
-        response, err := requestBuilder.Post3(data, nil)
-
-        // Test err, should be nil
+        response, err := requestBuilder.Post4(ctx, data, params)
         if err != nil {
             log.Fatal(err)
         }
-
-        // Handle item response
-        ...
+        // Handle response
+        //...
     }
     ```
 
