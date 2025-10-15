@@ -30,7 +30,7 @@ type ServiceNowClient struct {
 // Now returns a NowRequestBuilder associated with the Client.
 // It prepares the NowRequestBuilder with the base URL for the ServiceNow instance.
 func (c *ServiceNowClient) Now() *NowRequestBuilder {
-	return NewNowRequestBuilder(c.BaseUrl+"/now", c)
+	return NewNowRequestBuilder2(c.BaseUrl+"/now", c)
 }
 
 // Deprecated: deprecated since v1.6.0. Please use `NewServiceNowClient2` instead.
