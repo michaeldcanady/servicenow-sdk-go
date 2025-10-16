@@ -11,6 +11,7 @@ type TableItemRequestBuilder struct {
 const tableItemURLTemplate = "{+baseurl}/table{/table}{/sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_input_display_value,sysparm_query_no_domain,sysparm_view,sysparm_query_no_domain}"
 
 // Deprecated: deprecated since v{unreleased}. Use NewTableItemRequestBuilder2 instead.
+//
 // NewTableItemRequestBuilder creates a new instance of the TableItemRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableItemRequestBuilder.
 func NewTableItemRequestBuilder(client core.Client, pathParameters map[string]string) *TableItemRequestBuilder {
@@ -25,6 +26,7 @@ func NewTableItemRequestBuilder(client core.Client, pathParameters map[string]st
 }
 
 // Deprecated: deprecated since v{unreleased}. Use Get2 instead.
+//
 // Get sends an HTTP GET request using the specified query parameters and returns a TableItemResponse.
 //
 // Parameters:
@@ -50,6 +52,7 @@ func (rB *TableItemRequestBuilder) Get(params *TableItemRequestBuilderGetQueryPa
 }
 
 // Deprecated: deprecated since v{unreleased}. Use Delete2 instead.
+//
 // Delete sends an HTTP DELETE request using the specified query parameters and returns an error if the request or response encounters any issues.
 //
 // Parameters:
@@ -86,6 +89,7 @@ func (rB *TableItemRequestBuilder) Put(tableEntry map[string]string, params *Tab
 }
 
 // Deprecated: deprecated since v{unreleased}. Use Put3 instead.
+//
 // Put2 updates a table item using an HTTP PUT request.
 // It takes a map of table entry data and optional query parameters to send in the request.
 // The method returns a TableItemResponse representing the updated item or an error if the request fails.
