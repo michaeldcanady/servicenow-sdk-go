@@ -1,0 +1,154 @@
+name: Go CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "**"
+    paths:
+      - "**.go"
+      - ".github/workflows/go.yml"
+  pull_request:
+    paths:
+      - "**.go"
+      - ".github/workflows/go.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+env:
+  COVERAGE_FILE: coverage.out
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.any_changed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Changed Files
+        uses: tj-actions/changed-files@v47.0.0
+        id: filter
+        with:
+          files: |
+            **.go
+            .github/workflows/go.yml
+  
+  check-go:
+    name: Check Go Modules
+    needs:
+       changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ["1.23", "1.24"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go-version }}
+      - run: go mod download
+      - run: go mod verify
+      - run: |
+          go mod tidy
+          git diff --exit-code -- .
+
+  build-go:
+    name: Build Go Code
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ["1.23", "1.24"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Cache Go build
+        uses: actions/cache@v4.3.0
+        with:
+          path: ~/.cache/go-build
+          key: ${{ runner.os }}-go-build-${{ matrix.os }}-${{ hashFiles('go.sum') }}
+          restore-keys: ${{ runner.os }}-go-build-
+      - run: go mod download
+      - run: go build ./...
+
+  lint-go:
+    name: Lint Go Code
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ["1.23", "1.24"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: latest
+          skip-cache: false
+
+  test-go:
+    name: Test Go Code
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ["1.23", "1.24"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Cache Go build
+        uses: actions/cache@v4.3.0
+        with:
+          path: ~/.cache/go-build
+          key: ${{ matrix.os }}-go-build-${{ matrix.go-version }}-${{ hashFiles('go.sum') }}
+          restore-keys: ${{ runner.os }}-go-build-${{ hashFiles('go.sum') }}
+      - name: Run tests (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          go test -count=1 -tags=preview.query -coverpkg=./... -covermode=atomic -coverprofile=$COVERAGE_FILE ./...
+          grep -v -E -f .covignore $COVERAGE_FILE > coverage.filtered.out && mv coverage.filtered.out $COVERAGE_FILE
+          go tool cover -func=$COVERAGE_FILE
+          go tool cover -html=$COVERAGE_FILE -o cover.html
+      - name: Run tests (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          go test -count=1 -tags="preview.query" -coverpkg=./... -covermode=atomic -coverprofile="$($env:COVERAGE_FILE)" ./...
+          dir
+          findstr /V /G:.covignore $env:COVERAGE_FILE > coverage.filtered.out
+          Move-Item -Path coverage.filtered.out -Destination $env:COVERAGE_FILE -Force
+          go tool cover -func="$($env:COVERAGE_FILE)"
+          go tool cover -html="$($env:COVERAGE_FILE)" -o cover.html
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-coverage-report-${{ matrix.go-version }}-${{ hashFiles('go.sum') }}) }}
+          path: cover.html
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
