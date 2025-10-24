@@ -14,6 +14,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Deprecated
 
+- `NewNowRequestBuilder`
+- `NowRequestBuilder.Table`
+- `NowRequestBuilder.Attachment`
+- `ServiceNowClient.Now`
+- `attachmentapi.AttachmentCollectionFileRequestConfiguration`
+- `attachmentapi.AttachmentCollectionGetRequestConfiguration`
+- `attachmentapi.AttachmentCollectionResponse`
+- `attachmentapi.AttachmentItemResponse`
+- `attachmentapi.AttachmentRequestBuilderFileQueryParameters`
+- `attachmentapi.AttachmentRequestBuilderGetQueryParameters`
+- `attachmentapi.AttachmentRequestBuilder`
+- `attachmentapi.NewAttachmentRequestBuilder`
+- `attachmentapi.AttachmentRequestBuilder.Get`
+- `attachmentapi.AttachmentRequestBuilder.File`
+- `attachmentapi.Attachment`
+- `attachmentapi.Bool`
+- `attachmentapi.Int`
+- `attachmentapi.Time`
+- `core.RequestBuilder.SendGet2`
+- `core.RequestBuilder.SendPost3`
+- `core.RequestBuilder.SendDelete2`
+- `core.RequestBuilder.SendPut2`
+- `tableapi.NewTableItemRequestBuilder`
+- `tableapi.TableItemRequestBuilder.Get`
+- `tableapi.TableItemRequestBuilder.Delete`
+- `tableapi.TableItemRequestBuilder.Put2`
+- `tableapi.TableRequestBuilder.ById`
+- `tableapi.TableRequestBuilder.Get`
+- `tableapi.TableRequestBuilder.Post3`
+
 ### Removed
 
 ### Fixed
