@@ -11,7 +11,7 @@ const (
 	DateTimeFormat = DateFormat + " " + TimeFormat
 )
 
-// Deprecated: deprecated since v{unreleased}.
+// Deprecated: deprecated since v1.8.0.
 //
 // Time ...
 type Time time.Time
