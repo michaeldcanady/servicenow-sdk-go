@@ -1,4 +1,4 @@
-name: Go Test
+name: Go CI
 
 on:
   workflow_dispatch:
@@ -7,13 +7,11 @@ on:
       - "**"
     paths:
       - "**.go"
-      - ".github/workflows/lint.yml"
-      - ".github/workflows/test.yml"
+      - ".github/workflows/go.yml"
   pull_request:
     paths:
       - "**.go"
-      - ".github/workflows/lint.yml"
-      - ".github/workflows/test.yml"
+      - ".github/workflows/go.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -40,8 +38,7 @@ jobs:
         with:
           files: |
             **.go
-            .github/workflows/lint.yml
-            .github/workflows/test.yml
+            .github/workflows/go.yml
   
   check-go:
     name: Check Go Modules
