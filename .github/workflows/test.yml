@@ -38,13 +38,16 @@ jobs:
         uses: tj-actions/changed-files@v47.0.0
         id: filter
         with:
-          files: "**.go"
+          files: |
+            **.go
+            .github/workflows/lint.yml
+            .github/workflows/test.yml
   
   check-go:
     name: Check Go Modules
-    # needs:
-#       - changes
-    # if: ${{ needs.changes.outputs.code == 'true' }}
+    needs:
+       changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -62,9 +65,9 @@ jobs:
 
   build-go:
     name: Build Go Code
-    # needs:
-#       - changes
-    # if: ${{ needs.changes.outputs.code == 'true' }}
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
     strategy:
       fail-fast: false
       matrix:
@@ -87,9 +90,9 @@ jobs:
 
   lint-go:
     name: Lint Go Code
-    # needs:
-#       - changes
-    # if: ${{ needs.changes.outputs.code == 'true' }}
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -107,9 +110,9 @@ jobs:
 
   test-go:
     name: Test Go Code
-    # needs:
-#       - changes
-    # if: ${{ needs.changes.outputs.code == 'true' }}
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
     strategy:
       fail-fast: false
       matrix:
