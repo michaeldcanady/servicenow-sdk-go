@@ -86,7 +86,7 @@ jobs:
             go-version: ${{ matrix.go-version }}
 
       - name: Restore go build cache
-        uses: actions/cache@4.3.0
+        uses: actions/cache@v4.3.0
         with:
           path: ~/.cache/go-build
           key: ${{ runner.os }}-build-go-${{ github.run_id }}
@@ -149,7 +149,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Restore go build cache
-        uses: actions/cache@4.3.0
+        uses: actions/cache@v4.3.0
         with:
           path: ~/.cache/go-build
           key: ${{ runner.os }}-build-go-${{ github.run_id }}
