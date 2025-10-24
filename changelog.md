@@ -8,9 +8,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- `core.RequestBuilder.SendGet3`
+- `core.RequestBuilder.SendPost4`
+- `core.RequestBuilder.SendDelete3`
+- `core.RequestBuilder.SendPut3`
+- `tableapi.NewTableItemRequestBuilder2`
+- `tableapi.TableItemRequestBuilder.Get2`
+- `tableapi.TableItemRequestBuilder.Delete2`
+- `tableapi.TableItemRequestBuilder.Put3`
+- `tableapi.TableRequestBuilder.ByID2`
+- `tableapi.TableRequestBuilder.Get2`
+- `tableapi.TableRequestBuilder.Post4`
+
 ### Changed
 
 - attachment api to utilize the Kiota framework
+- table api requests to support `context.Context`
 
 ### Deprecated
 
