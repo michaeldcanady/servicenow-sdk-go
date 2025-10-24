@@ -1,13 +1,19 @@
 package tableapi
 
 import (
+	"bytes"
+	"context"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"reflect"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func builder(uri string) (*TableRequestBuilder, error) {
@@ -72,6 +78,41 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 	assert.IsType(t, &TableCollectionResponse{}, resp)
 	assert.Len(t, resp.Result, 1)
 	assert.Equal(t, &fakeEntry, resp.Result[0])
+}
+
+func TestTableRequestBuilder_Get2(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				request := &http.Response{
+					Header: nil,
+					Body:   io.NopCloser(bytes.NewReader(getFakeCollectionJSON())),
+				}
+
+				client := mocking.NewMockCoreClient2()
+				client.
+					On("SendWithContext", context.Background(), mock.AnythingOfType("*core.RequestInformation"), core.ErrorMapping(nil)).
+					Return(request, nil)
+
+				pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1"}
+
+				requestBuilder := NewTableRequestBuilder2(client, pathParameters)
+
+				resp, err := requestBuilder.Get2(context.Background(), nil)
+
+				assert.Nil(t, err)
+				assert.NotNil(t, resp)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
 }
 
 //nolint:dupl
@@ -242,6 +283,41 @@ func TestTableRequestBuilder_Post3(t *testing.T) {
 
 			assert.IsType(t, &TableItemResponse{}, response)
 		})
+	}
+}
+
+func TestTableRequestBuilder_Post4(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				request := &http.Response{
+					Header: nil,
+					Body:   io.NopCloser(bytes.NewReader(getFakeItemJSON())),
+				}
+
+				client := mocking.NewMockCoreClient2()
+				client.
+					On("SendWithContext", context.Background(), mock.AnythingOfType("*core.RequestInformation"), core.ErrorMapping(nil)).
+					Return(request, nil)
+
+				pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1"}
+
+				requestBuilder := NewTableRequestBuilder2(client, pathParameters)
+
+				resp, err := requestBuilder.Post4(context.Background(), map[string]string{"key": "value"}, nil)
+
+				assert.Nil(t, err)
+				assert.NotNil(t, resp)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
 	}
 }
 
