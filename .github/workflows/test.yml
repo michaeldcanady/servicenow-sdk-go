@@ -125,8 +125,8 @@ jobs:
         uses: actions/cache@v4.3.0
         with:
           path: ~/.cache/go-build
-          key: ${{ runner.os }}-go-build-${{ matrix.os }}-${{ hashFiles('go.sum') }}
-          restore-keys: ${{ runner.os }}-go-build-
+          key: ${{ matrix.os }}-go-build-${{ matrix.go-version }}-${{ hashFiles('go.sum') }}
+          restore-keys: ${{ runner.os }}-go-build-${{ hashFiles('go.sum') }}
       - name: Run tests (Unix)
         if: runner.os != 'Windows'
         run: |
@@ -145,7 +145,7 @@ jobs:
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
+          name: ${{ matrix.os }}-coverage-report-${{ matrix.go-version }}-${{ hashFiles('go.sum') }}) }}
           path: cover.html
       - name: Upload to Codecov
         uses: codecov/codecov-action@v5
