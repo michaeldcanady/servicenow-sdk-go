@@ -71,7 +71,7 @@ jobs:
       - name: Replace {unreleased} in .go files
         if: ${{ steps.release_meta.outputs.prerelease == 'false' }}
         run: |
-          find . -name "*.go" -type f -exec sed -i "s/{unreleased}/${{ env.VERSION }}/g" {} \;
+          find . -name "*.go" -type f -exec sed -i "s/{unreleased}/${{ steps.release_meta.outputs.tag }}/g" {} \;
 
       - name: Update Changelog
         if: ${{ steps.release_meta.outputs.prerelease == 'false' }}
