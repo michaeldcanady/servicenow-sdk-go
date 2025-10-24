@@ -22,7 +22,7 @@ type ServiceNowClient struct {
 	requestAdapter abstractions.RequestAdapter
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use Now2.
+// Deprecated: deprecated since v1.8.0. Please use Now2.
 //
 // Now returns a NowRequestBuilder associated with the Client.
 // It prepares the NowRequestBuilder with the base URL for the ServiceNow instance.

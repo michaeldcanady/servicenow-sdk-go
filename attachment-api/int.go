@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// Deprecated: deprecated since v{unreleased}.
+// Deprecated: deprecated since v1.8.0.
 //
 // Int ...
 type Int int

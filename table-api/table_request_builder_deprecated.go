@@ -23,7 +23,7 @@ func NewTableRequestBuilder(client core.Client, pathParameters map[string]string
 	}
 }
 
-// Deprecated: deprecated since v{unreleased}. Use ById2 instead.
+// Deprecated: deprecated since v1.8.0. Use ById2 instead.
 // ById returns a TableItemRequestBuilder for a specific record in the table.
 // It accepts the sysId of the record as a parameter and constructs the URL for the record.
 // The returned TableItemRequestBuilder can be used to build and execute requests for the specific record.
@@ -33,7 +33,7 @@ func (rB *TableRequestBuilder) ById(sysId string) *TableItemRequestBuilder { //n
 	return NewTableItemRequestBuilder(rB.Client, pathParameters)
 }
 
-// Deprecated: deprecated since v{unreleased}. Use Get2 instead.
+// Deprecated: deprecated since v1.8.0. Use Get2 instead.
 // Get sends an HTTP GET request using the specified query parameters and returns a TableCollectionResponse.
 //
 // Parameters:
@@ -104,7 +104,7 @@ func (rB *TableRequestBuilder) Post2(data map[string]string, params *TableReques
 	return config.response, nil
 }
 
-// Deprecated: deprecated since v{unreleased}. Use Post4 instead.
+// Deprecated: deprecated since v1.8.0. Use Post4 instead.
 // Post3 sends an HTTP Post request with the provided data and query parameters and returns an `TableItemResponse`.
 //
 // Parameters:

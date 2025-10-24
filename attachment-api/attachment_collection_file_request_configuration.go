@@ -2,7 +2,7 @@ package attachmentapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
-// Deprecated: deprecated since v{unreleased}.
+// Deprecated: deprecated since v1.8.0.
 //
 // AttachmentCollectionFileRequestConfiguration ...
 type AttachmentCollectionFileRequestConfiguration struct {
