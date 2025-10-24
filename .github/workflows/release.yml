@@ -3,9 +3,9 @@ permissions:
   contents: read
 
 on:
-  workflow_dispatch:         # Manual trigger for stable releases
+  workflow_dispatch: # Manual trigger for stable releases
   schedule:
-    - cron: '0 3 * * 1'      # Weekly preview release (every Monday at 3 AM UTC)
+    - cron: "0 3 * * 1" # Weekly preview release (every Monday at 3 AM UTC)
 
 concurrency:
   group: release-${{ github.ref }}
@@ -56,36 +56,29 @@ jobs:
         id: release_meta
         run: |
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            UNRELEASED_VERSION="$(cat VERSION)  # Replace with logic to compute next version if needed
+            UNRELEASED_VERSION="$(cat VERSION)"  # Replace with logic to compute next version if needed
             TAG="${UNRELEASED_VERSION}-preview$(date +'%Y%m%d')"
             echo "tag=$TAG" >> $GITHUB_OUTPUT
             echo "name=Weekly Preview Release" >> $GITHUB_OUTPUT
             echo "prerelease=true" >> $GITHUB_OUTPUT
           else
-            TAG="${GITHUB_REF#refs/tags/}"
+            TAG="$(cat VERSION)"
             echo "tag=$TAG" >> $GITHUB_OUTPUT
             echo "name=Stable Release $TAG" >> $GITHUB_OUTPUT
             echo "prerelease=false" >> $GITHUB_OUTPUT
           fi
-      
+
       - name: Replace {unreleased} in .go files
         if: ${{ steps.release_meta.outputs.prerelease == 'false' }}
         run: |
-          find . -name "*.go" -type f -exec sed -i "s/{unreleased}/${{ env.VERSION }}/g" {} \;
+          find . -name "*.go" -type f -exec sed -i "s/{unreleased}/${{ steps.release_meta.outputs.tag }}/g" {} \;
 
       - name: Update Changelog
         if: ${{ steps.release_meta.outputs.prerelease == 'false' }}
         run: |
-          sed -i "s/Unreleased/${{ env.VERSION }}/g" changelog.md
+          sed -i "s/Unreleased/${{ steps.release_meta.outputs.tag }}/g" changelog.md
           sed -i "s#(\(dd/mm/yyyy\))#\($(date +'%d/%m/%Y')\)#g" changelog.md
           perl -0777 -i -pe 's/### (Added|Changed|Deprecated|Removed|Fixed)\s*(?=###|##)//gs' changelog.md
-
-      - name: Create Tag
-        uses: rickstaa/action-create-tag@v1
-        with:
-          tag: "v${{env.VERSION}}"
-          message: "v${{env.VERSION}}"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -95,7 +88,7 @@ jobs:
           prerelease: ${{ steps.release_meta.outputs.prerelease }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Remove header
         if: ${{ steps.release_meta.outputs.prerelease == 'false' }}
         run: |
