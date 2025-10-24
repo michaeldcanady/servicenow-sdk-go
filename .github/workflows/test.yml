@@ -16,7 +16,7 @@ on:
       - ".github/workflows/test.yml"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -132,6 +132,8 @@ jobs:
         run: |
           go test -count=1 -tags=preview.query -coverpkg=./... -covermode=atomic -coverprofile=$COVERAGE_FILE ./...
           grep -v -E -f .covignore $COVERAGE_FILE > coverage.filtered.out && mv coverage.filtered.out $COVERAGE_FILE
+          go tool cover -func=$COVERAGE_FILE
+          go tool cover -html=$COVERAGE_FILE -o cover.html
       - name: Run tests (Windows)
         if: runner.os == 'Windows'
         run: |
@@ -139,10 +141,8 @@ jobs:
           dir
           findstr /V /G:.covignore $env:COVERAGE_FILE > coverage.filtered.out
           Move-Item -Path coverage.filtered.out -Destination $env:COVERAGE_FILE -Force
-      - name: Coverage Summary
-        run: go tool cover -func=$COVERAGE_FILE
-      - name: Generate Coverage HTML
-        run: go tool cover -html=$COVERAGE_FILE -o cover.html
+          go tool cover -func="$($env:COVERAGE_FILE)"
+          go tool cover -html="$($env:COVERAGE_FILE)" -o cover.html
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
