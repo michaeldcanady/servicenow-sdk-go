@@ -2,7 +2,7 @@ package attachmentapi
 
 import "net/http"
 
-// Deprecated: deprecated since v{unreleased}.
+// Deprecated: deprecated since v1.8.0.
 //
 // AttachmentItemResponse ...
 type AttachmentItemResponse struct {

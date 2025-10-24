@@ -200,7 +200,7 @@ func (rB *RequestBuilder) SendGet(params interface{}, errorMapping ErrorMapping,
 	return nil
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use SendGet3
+// Deprecated: deprecated since v1.8.0. Please use SendGet3
 func (rB *RequestBuilder) SendGet2(config *RequestConfiguration) error {
 	err := SendGet2(rB, config)
 	if err != nil {
@@ -219,7 +219,7 @@ func (rB *RequestBuilder) SendPost2(data interface{}, params interface{}, errorM
 	return sendPost(rB, data, params, errorMapping, &value)
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use SendPost4
+// Deprecated: deprecated since v1.8.0. Please use SendPost4
 func (rB *RequestBuilder) SendPost3(config *RequestConfiguration) error {
 	return SendPost2(rB, config)
 }
@@ -229,7 +229,7 @@ func (rB *RequestBuilder) SendDelete(params interface{}, errorMapping ErrorMappi
 	return sendDelete(rB, params, errorMapping)
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use SendDelete3
+// Deprecated: deprecated since v1.8.0. Please use SendDelete3
 func (rB *RequestBuilder) SendDelete2(config *RequestConfiguration) error {
 	return sendDelete2(rB, config)
 }
@@ -239,7 +239,7 @@ func (rB *RequestBuilder) SendPut(data map[string]string, params interface{}, er
 	return sendPut(rB, data, params, errorMapping, &value)
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use SendPut3
+// Deprecated: deprecated since v1.8.0. Please use SendPut3
 func (rB *RequestBuilder) SendPut2(config *RequestConfiguration) error {
 	return sendPut2(rB, config)
 }

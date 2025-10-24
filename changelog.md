@@ -8,6 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+## [1.8.0] - (24/10/2025)
+
+### Added
+
 - `NewNowRequestBuilder2`
 - `NowRequestBuilder.Table2`
 - `NowRequestBuilder.Attachment2`
@@ -60,10 +72,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `tableapi.TableRequestBuilder.ById`
 - `tableapi.TableRequestBuilder.Get`
 - `tableapi.TableRequestBuilder.Post3`
-
-### Removed
-
-### Fixed
 
 ## [1.7.1] - (03/06/2025)
 
