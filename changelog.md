@@ -8,11 +8,58 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- `NewNowRequestBuilder2`
+- `NowRequestBuilder.Table2`
+- `NowRequestBuilder.Attachment2`
+- `ServiceNowClient.Now2`
+- `core.RequestBuilder.SendGet3`
+- `core.RequestBuilder.SendPost4`
+- `core.RequestBuilder.SendDelete3`
+- `core.RequestBuilder.SendPut3`
+- `tableapi.NewTableItemRequestBuilder2`
+- `tableapi.TableItemRequestBuilder.Get2`
+- `tableapi.TableItemRequestBuilder.Delete2`
+- `tableapi.TableItemRequestBuilder.Put3`
+- `tableapi.TableRequestBuilder.ByID2`
+- `tableapi.TableRequestBuilder.Get2`
+- `tableapi.TableRequestBuilder.Post4`
+
 ### Changed
 
 - attachment api to utilize the Kiota framework
+- table api requests to support `context.Context`
 
 ### Deprecated
+
+- `NewNowRequestBuilder`
+- `NowRequestBuilder.Table`
+- `NowRequestBuilder.Attachment`
+- `ServiceNowClient.Now`
+- `attachmentapi.AttachmentCollectionFileRequestConfiguration`
+- `attachmentapi.AttachmentCollectionGetRequestConfiguration`
+- `attachmentapi.AttachmentCollectionResponse`
+- `attachmentapi.AttachmentItemResponse`
+- `attachmentapi.AttachmentRequestBuilderFileQueryParameters`
+- `attachmentapi.AttachmentRequestBuilderGetQueryParameters`
+- `attachmentapi.AttachmentRequestBuilder`
+- `attachmentapi.NewAttachmentRequestBuilder`
+- `attachmentapi.AttachmentRequestBuilder.Get`
+- `attachmentapi.AttachmentRequestBuilder.File`
+- `attachmentapi.Attachment`
+- `attachmentapi.Bool`
+- `attachmentapi.Int`
+- `attachmentapi.Time`
+- `core.RequestBuilder.SendGet2`
+- `core.RequestBuilder.SendPost3`
+- `core.RequestBuilder.SendDelete2`
+- `core.RequestBuilder.SendPut2`
+- `tableapi.NewTableItemRequestBuilder`
+- `tableapi.TableItemRequestBuilder.Get`
+- `tableapi.TableItemRequestBuilder.Delete`
+- `tableapi.TableItemRequestBuilder.Put2`
+- `tableapi.TableRequestBuilder.ById`
+- `tableapi.TableRequestBuilder.Get`
+- `tableapi.TableRequestBuilder.Post3`
 
 ### Removed
 

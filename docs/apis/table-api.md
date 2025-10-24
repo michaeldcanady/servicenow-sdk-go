@@ -14,23 +14,30 @@ Retrieves multiple records for the specified table.
     package main
 
     import (
+        "context"
+
         tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
     )
 
     func main() {
-        ... //Implement credential and client.
+        //Implement credential and client.
+        //...
 
         // define parameters you wish to (optional)
-        params := *tableapi.TableRequestBuilderGetQueryParameters{
+        params := &tableapi.TableRequestBuilderGetQueryParameters{
         ...
         }
 
-        response, err := client.Now.Table("{TableName}").Get(params)
+        ctx := context.Background()
+        // Modify your context as desired.
+        //...
+
+        response, err := client.Now2().Table2("{TableName}").Get2(ctx, params)
         if err != nil {
             log.Fatal(err)
         }
         // Handle response
-        ...
+        //...
     }
     ```
 
@@ -40,27 +47,39 @@ Retrieves multiple records for the specified table.
     package main
 
     import (
+        "context"
+
         tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
     )
 
     func main() {
-        ... //Implement credential and client.
+        //Implement credential and client.
+        //...
         pathParameters := {
             "baseurl":"https://www.{instance}.service-now.com/api/now",
             "table": "incident",
         }
 
         // Instantiate new TableItemRequestBuilder.
-        requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
+        requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
+
+        // define parameters you wish to (optional)
+        params := &tableapi.TableRequestBuilderGetQueryParameters{
+        //...
+        }
+
+        ctx := context.Background()
+        // Modify your context as desired.
+        //...
 
         // Call the get method, with or without TableRequestBuilderGetQueryParameters.
         // Response is a TableCollectionResponse.
-        response, err := requestBuilder.Get(nil)
-
-        // Test err, should be nil
+        response, err := requestBuilder.Get2(ctx, params)
         if err != nil {
             log.Fatal(err)
         }
+        // Handle response
+        //...
     }
     ```
 
@@ -79,12 +98,17 @@ Inserts one record in the specified table.
     )
 
     func main() {
-        ... //Implement credential and client.
+        //Implement credential and client.
+        //...
 
         // define parameters you wish to (optional)
-        params := *tableapi.TableRequestBuilderPostQueryParameters{
-        ...
+        params := &tableapi.TableRequestBuilderPostQueryParameters{
+        //...
         }
+
+        ctx := context.Background()
+        // Modify your context as desired.
+        //...
 
         // data map of information you want to use for the new record
         data := map[string]string{
@@ -92,12 +116,12 @@ Inserts one record in the specified table.
             "description": "incident created by servicenow-sdk-go",
         }
 
-        response, err := client.Now.Table("{TableName}").Post(data, params)
+        response, err := client.Now2().Table2("{TableName}").Post4(ctx, data, params)
         if err != nil {
             log.Fatal(err)
         }
         // Handle response
-        ...
+        //...
     }
     ```
 
@@ -107,11 +131,14 @@ Inserts one record in the specified table.
     package main
 
     import (
+        "context"
+
         tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
     )
 
     func main() {
-        ... //Implement credential and client.
+        //Implement credential and client.
+        //...
 
         pathParameters := {
             "baseurl":"https://www.{instance}.service-now.com/api/now",
@@ -119,9 +146,13 @@ Inserts one record in the specified table.
         }
 
         // define parameters you wish to (optional)
-        params := *tableapi.TableRequestBuilderPostQueryParameters{
-        ...
+        params := &tableapi.TableRequestBuilderPostQueryParameters{
+        //...
         }
+
+        ctx := context.Background()
+        // Modify your context as desired.
+        //...
 
         // data map of information you want to use for the new record
         data := map[string]string{
@@ -130,20 +161,17 @@ Inserts one record in the specified table.
         }
 
         // Instantiate new TableItemRequestBuilder.
-        requestBuilder := tableapi.NewTableRequestBuilder(client, pathParameters)
+        requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
 
         // Call the get method, with or without TableRequestBuilderPostQueryParamters.
-        // Make sure you include the data paramter
+        // Make sure you include the data parameter
         // Response is a TableItemResponse.
-        response, err := requestBuilder.Post3(data, nil)
-
-        // Test err, should be nil
+        response, err := requestBuilder.Post4(ctx, data, params)
         if err != nil {
             log.Fatal(err)
         }
-
-        // Handle item response
-        ...
+        // Handle response
+        //...
     }
     ```
 
@@ -157,23 +185,30 @@ Deletes the specified record from the specified table.
     package main
 
     import (
+        "context"
+
         tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
     )
 
     func main() {
-        ... //Implement credential and client.
+        //Implement credential and client.
+        //...
 
         // define parameters you wish to (optional)
-        params := *tableapi.TableItemRequestBuilderDeleteQueryParameters{
-        ...
+        params := &tableapi.TableItemRequestBuilderDeleteQueryParameters{
+        //...
         }
 
-        response, err := client.Now.Table("{TableName}").Delete(params)
+        ctx := context.Background()
+        // Modify your context as desired.
+        //...
+
+        response, err := client.Now2().Table2("{TableName}").ByID("{sysID}").Delete2(ctx, params)
         if err != nil {
             log.Fatal(err)
         }
         // Handle response
-        ...
+        //...
     }
     ```
 
@@ -183,11 +218,14 @@ Deletes the specified record from the specified table.
     package main
 
     import (
+        "context"
+
         tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
     )
 
     func main() {
-        ... //Implement credential and client.
+        //Implement credential and client.
+        //...
 
         pathParameters := {
             "baseurl":"https://www.{instance}.service-now.com/api/now",
@@ -196,21 +234,24 @@ Deletes the specified record from the specified table.
         }
 
         // define parameters you wish to (optional)
-        params := *tableapi.TableItemRequestBuilderDeleteQueryParameters{
-            ...
+        params := &tableapi.TableItemRequestBuilderDeleteQueryParameters{
+        //...
         }
+
+        ctx := context.Background()
+        // Modify your context as desired.
+        //...
 
         // Instantiate new TableItemRequestBuilder.
-        requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
+        requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
 
         // Call the delete method, with or without TableItemRequestBuilderDeleteQueryParameters.
-        err := requestBuilder.Delete(params)
-
-        // Since there is no record, the delete method only returns an error.
+        err := requestBuilder.Delete2(ctx, params)
         if err != nil {
-            log.Fatalf(err)
+            log.Fatal(err)
         }
-        ...
+        // Handle response
+        //...
     }
     ```
 
@@ -224,23 +265,30 @@ Retrieves the record identified by the specified sys_id from the specified table
     package main
 
     import (
+        "context"
+
         tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
     )
 
     func main() {
-        ... //Implement credential and client.
+        //Implement credential and client.
+        //...
 
         // define parameters you wish to (optional)
-        params := *tableapi.TableItemRequestBuilderGetQueryParameters{
-        ...
+        params := &tableapi.TableItemRequestBuilderGetQueryParameters{
+        //...
         }
 
-        response, err := client.Now.Table("{TableName}").Get(params)
+        ctx := context.Background()
+        // Modify your context as desired.
+        //...
+
+        response, err := client.Now2().Table2("{TableName}").ByID("{sysID}").Get2(ctx, params)
         if err != nil {
             log.Fatal(err)
         }
         // Handle response
-        ...
+        //...
     }
     ```
 
@@ -250,11 +298,14 @@ Retrieves the record identified by the specified sys_id from the specified table
     package main
 
     import (
+        "context"
+
         tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
     )
 
     func main() {
-        //... Implement credential and client.
+        //Implement credential and client.
+        //...
 
         pathParameters := {
             "baseurl":"https://www.{instance}.service-now.com/api/now",
@@ -263,18 +314,20 @@ Retrieves the record identified by the specified sys_id from the specified table
         }
 
         // Instantiate new TableItemRequestBuilder.
-        requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
+        requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
 
         // define parameters you wish to (optional)
-        params := *tableapi.TableItemRequestBuilderGetQueryParameters{
+        params := &tableapi.TableItemRequestBuilderGetQueryParameters{
         //...
         }
 
+        ctx := context.Background()
+        // Modify your context as desired.
+        //...
+
         // Call the get method, with or without TableItemRequestBuilderGetQueryParameters.
         // record is of type TableItemResponse
-        record, err := requestBuilder.Get(params)
-
-        // evaluate err, should be nil
+        record, err := requestBuilder.Get2(ctx, params)
         if err != nil {
             log.Fatal(err)
         }
@@ -291,16 +344,23 @@ Retrieves the record identified by the specified sys_id from the specified table
     package main
 
         import (
+            "context"
+
             tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
         )
 
         func main() {
-            ... //Implement credential and client.
+            //Implement credential and client.
+            //...
 
             // define parameters you wish to (optional)
-            params := *tableapi.TableItemRequestBuilderGetQueryParameters{
-            ...
+            params := &tableapi.TableItemRequestBuilderGetQueryParameters{
+            //...
             }
+
+            ctx := context.Background()
+            // Modify your context as desired.
+            //...
 
             // data map of information you want to use for the new record
             data := map[string]string{
@@ -308,12 +368,12 @@ Retrieves the record identified by the specified sys_id from the specified table
                 "description": "incident created by servicenow-sdk-go",
             }
 
-            response, err := client.Now.Table("{TableName}").Put2(data, params)
+            response, err := client.Now2().Table2("{TableName}").Put3(ctx, data, params)
             if err != nil {
                 log.Fatal(err)
             }
             // Handle response
-            ...
+            //...
         }
     ```
 
@@ -323,11 +383,14 @@ Retrieves the record identified by the specified sys_id from the specified table
         package main
 
         import (
+            "context"
+
             tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
         )
 
         func main() {
-            ... //Implement credential and client.
+            //Implement credential and client.
+            //...
 
             pathParameters := {
                 "baseurl":"https://www.{instance}.service-now.com/api/now",
@@ -336,12 +399,16 @@ Retrieves the record identified by the specified sys_id from the specified table
             }
 
             // Instantiate new TableItemRequestBuilder.
-            requestBuilder := tableapi.NewTableItemRequestBuilder(client, pathParameters)
+            requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
 
             // define parameters you wish to (optional)
-            params := *tableapi.TableItemRequestBuilderPutQueryParameters{
-            ...
+            params := &tableapi.TableItemRequestBuilderGetQueryParameters{
+            //...
             }
+
+            ctx := context.Background()
+            // Modify your context as desired.
+            //...
 
             // data map of information you want to use for the new record
             data := map[string]string{
@@ -351,13 +418,11 @@ Retrieves the record identified by the specified sys_id from the specified table
 
             // Call the get method, with or without TableItemRequestBuilderGetQueryParameters.
             // record is of type TableItemResponse
-            record, err := requestBuilder.Put2(data, params)
-
-            // evaluate err, should be nil
+            record, err := requestBuilder.Put3(ctx, data, params)
             if err != nil {
                 log.Fatal(err)
             }
             // Handle response
-            ...
+            //...
         }
     ```

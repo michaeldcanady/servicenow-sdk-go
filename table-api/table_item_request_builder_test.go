@@ -1,6 +1,8 @@
 package tableapi
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"maps"
@@ -10,7 +12,9 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 type MockClient struct{}
@@ -79,6 +83,41 @@ func TestTableItemRequestBuilderGet(t *testing.T) {
 	assert.NotNil(t, response)
 }
 
+func TestTableItemRequestBuilder_Get2(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				request := &http.Response{
+					Header: nil,
+					Body:   io.NopCloser(bytes.NewReader(getFakeItemJSON())),
+				}
+
+				client := mocking.NewMockCoreClient2()
+				client.
+					On("SendWithContext", context.Background(), mock.AnythingOfType("*core.RequestInformation"), core.ErrorMapping(nil)).
+					Return(request, nil)
+
+				pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1", "sysId": "sysId"}
+
+				requestBuilder := NewTableItemRequestBuilder2(client, pathParameters)
+
+				resp, err := requestBuilder.Get2(context.Background(), nil)
+
+				assert.Nil(t, err)
+				assert.NotNil(t, resp)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
 func TestTableItemRequestBuilderDelete(t *testing.T) {
 	client := &MockClient{}
 
@@ -103,6 +142,40 @@ func TestTableItemRequestBuilderDelete(t *testing.T) {
 	err = req.Delete(params)
 
 	assert.Nil(t, err)
+}
+
+func TestTableItemRequestBuilder_Delete2(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				request := &http.Response{
+					Header: nil,
+					Body:   io.NopCloser(bytes.NewReader(getFakeItemJSON())),
+				}
+
+				client := mocking.NewMockCoreClient2()
+				client.
+					On("SendWithContext", context.Background(), mock.AnythingOfType("*core.RequestInformation"), core.ErrorMapping(nil)).
+					Return(request, nil)
+
+				pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1", "sysId": "sysId"}
+
+				requestBuilder := NewTableItemRequestBuilder2(client, pathParameters)
+
+				err := requestBuilder.Delete2(context.Background(), nil)
+
+				assert.Nil(t, err)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
 }
 
 //nolint:dupl
@@ -285,4 +358,45 @@ func TestTableItemRequestBuilderPut2(t *testing.T) {
 	// For example: assert.Equal(t, expectedValue, updatedRecord.Field)
 
 	assert.Equal(t, fakeTableItemResponse, updatedRecord)
+}
+
+func TestTableItemRequestBuilder_Put3(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				request := &http.Response{
+					Header: nil,
+					Body:   io.NopCloser(bytes.NewReader(getFakeItemJSON())),
+				}
+
+				client := mocking.NewMockCoreClient2()
+				client.
+					On("SendWithContext", context.Background(), mock.AnythingOfType("*core.RequestInformation"), core.ErrorMapping(nil)).
+					Return(request, nil)
+
+				pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1", "sysId": "sysId"}
+
+				requestBuilder := NewTableItemRequestBuilder2(client, pathParameters)
+
+				// Prepare values to update the record
+				values := map[string]string{
+					// Provide values to change in the record here
+					"location": "home",
+				}
+
+				resp, err := requestBuilder.Put3(context.Background(), values, nil)
+
+				assert.Nil(t, err)
+				assert.NotNil(t, resp)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
 }
