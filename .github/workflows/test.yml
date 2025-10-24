@@ -80,7 +80,7 @@ jobs:
         uses: actions/cache@v4.3.0
         with:
           path: ~/.cache/go-build
-          key: ${{ runner.os }}-go-build-${{ hashFiles('go.sum') }}
+          key: ${{ runner.os }}-go-build-${{ matrix.os }}-${{ hashFiles('go.sum') }}
           restore-keys: ${{ runner.os }}-go-build-
       - run: go mod download
       - run: go build ./...
@@ -125,7 +125,7 @@ jobs:
         uses: actions/cache@v4.3.0
         with:
           path: ~/.cache/go-build
-          key: ${{ runner.os }}-go-build-${{ hashFiles('go.sum') }}
+          key: ${{ runner.os }}-go-build-${{ matrix.os }}-${{ hashFiles('go.sum') }}
           restore-keys: ${{ runner.os }}-go-build-
       - name: Run tests (Unix)
         if: runner.os != 'Windows'
