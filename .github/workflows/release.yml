@@ -1,4 +1,6 @@
 name: Release
+permissions:
+  contents: read
 
 on:
   workflow_dispatch:         # Manual trigger for stable releases
@@ -35,6 +37,9 @@ jobs:
 
   release:
     name: Create Release
+    permissions:
+      contents: write
+      pull-requests: write
     needs: detect-changes
     if: |
       (
