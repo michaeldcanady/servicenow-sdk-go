@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- `NewNowRequestBuilder2`
+- `NowRequestBuilder.Table2`
+- `NowRequestBuilder.Attachment2`
+- `ServiceNowClient.Now2`
 - `core.RequestBuilder.SendGet3`
 - `core.RequestBuilder.SendPost4`
 - `core.RequestBuilder.SendDelete3`
