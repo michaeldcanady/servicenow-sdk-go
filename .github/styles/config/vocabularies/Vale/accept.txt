@@ -1,11 +1,11 @@
 (?i)api
 (?i)apis
-devcontainer
-vscode
-devcontainers
+(?i)devcontainer
+(?i)vscode
+(?i)devcontainers
 sys_id
 (?i)Kiota
 GitHub
 golang
 sys
-sdk
+(?i)sdk
