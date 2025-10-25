@@ -18,9 +18,6 @@ on:
     types:
       - published
 
-permissions:
-  contents: write
-
 env:
   CONCURRENCY: 1
   PYTHON_VERSION: 3.x
