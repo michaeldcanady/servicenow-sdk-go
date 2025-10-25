@@ -15,6 +15,7 @@ on:
       - "mkdocs.yml"
       - ".github/workflows/pages.yml"
 
+
 env:
   PYTHON_VERSION: "3.x"
 
