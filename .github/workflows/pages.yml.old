@@ -1,6 +1,7 @@
 name: Docs Pipeline
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - "**"
@@ -62,4 +63,5 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material==9.5.24
+      - run: pip install markdown_include
       - run: mkdocs gh-deploy --force
