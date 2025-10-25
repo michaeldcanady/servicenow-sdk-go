@@ -17,7 +17,7 @@ Every RequestBuilder exposes methods aligned with supported HTTP operations, acc
 These methods wrap internal logic for:
 
 1. Building the request: Dynamically constructs the HTTP request, including headers, query parameters, and payload.
-2. Sending the request: Routes the request via a pluggable HTTP client, enabling retries, logging, etc.
+2. Sending the request: Routes the request via a HTTP client, enabling retries, logging, etc.
 3. Handling the response: Maps raw HTTP responses into structured SDK types or error classes.
 
 ## Batch API Compatibility
