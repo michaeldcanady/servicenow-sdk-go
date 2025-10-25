@@ -2,15 +2,20 @@
 
 ## `RequestBuilder` Facade
 
-The `RequestBuilder` serves as a high-level interface for constructing and executing HTTP operations for a specific API path. A new `RequestBuilder` is introduced at each path diversion. For example, the path `https://{host}/api` is shared across **all** APIs and does not require inclusion.
+The `RequestBuilder` serves as a high-level interface for constructing and executing HTTP operations for a specific API path. At each path diversion (after the base URI) introduce a new `RequestBuilder`.
 
-Example:  
-The path `…/api/now/{version}/table` results in two distinct `RequestBuilder` instances:
+**Example:**  
+Absolute URI: `https://{instance}.service-now.com/api/now/{version}/table`
 
-- `NowRequestBuilder`
-- `TableRequestBuilder`
+To generate the appropriate `RequestBuilder` types:
 
-> Note: The version segment does not receive a `RequestBuilder` because the SDK represents a single version of the API.
+1. **Remove the shared base URI**: Strip the common prefix `https://{instance}.service-now.com/api` to isolate the relative path `now/{version}/table`.
+2. **Segment the relative path**: Split the path by `/`, omitting the version segment. This yields two distinct `RequestBuilder` types:
+   - `NowRequestBuilder`
+   - `TableRequestBuilder`
+
+> The base URI is `https://{instance}.service-now.com/api`  
+> Note: The version segment is excluded from `RequestBuilder` generation because the SDK targets a single API version.
 
 ## `RequestBuilder` Structure
 
