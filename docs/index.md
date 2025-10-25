@@ -2,7 +2,7 @@
 
 ## What is Service-Now SDK for Go?
 
-Service-Now SDK for Go is a thin golang sdk for the Service-Now REST APIs. It leverages the functionality and flexibility of Kiota modules (we do not utilize the Kiota CLI as Service-Now's OpenAPI spec is not public).
+Service-Now SDK for Go is a thin golang sdk for the Service-Now REST apis. It leverages the functionality and flexibility of Kiota modules (we do not utilize the Kiota CLI as Service-Now's Openap spec is not public).
 
 ## Why Service-Now SDK for Go?
 

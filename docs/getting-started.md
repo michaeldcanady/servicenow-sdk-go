@@ -43,6 +43,6 @@ func main() {
     ...
 ```
 
-## 4. Review specific API documentation
+## 4. Review specific api documentation
 
-Once you have your `client` object, you're good to get started implementing all that the Service-Now SDK for Go has to offer! See [apis](/apis) for information on implementing a specific API!
+Once you have your `client` object, you're good to get started implementing all that the Service-Now SDK for Go has to offer! See [apis](/apis) for information on implementing a specific api!

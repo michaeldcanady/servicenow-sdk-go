@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `Table API` provides endpoints that allow you to perform create, read, update, and delete (CRUD) operations on existing tables.
+The `Table api` provides endpoints that allow you to perform create, read, update, and delete (CRUD) operations on existing tables.
 
 ## \[GET\] <code>/now/table/<var>{tableName}</var></code>
 

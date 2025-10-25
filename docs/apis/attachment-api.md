@@ -1,8 +1,8 @@
-# Attachment API
+# Attachment api
 
 ## Overview
 
-The Attachment API provides endpoints that allow you to upload and query file attachments.
+The Attachment api provides endpoints that allow you to upload and query file attachments.
 You can upload or retrieve a single file with each request.
 
 ## \[GET\] <code>/now/attachment</code>

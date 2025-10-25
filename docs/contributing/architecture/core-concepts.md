@@ -2,14 +2,14 @@
 
 ## RequestBuilder Facade
 
-At the heart of the SDK is the `RequestBuilder`, which acts as a high-level interface for constructing and executing HTTP operations for a specific API path. A `RequestBuilder` is added at each path diversion. (I.E.: <code>https://<var>{host}</var>/api</code>, is shared between **all** APIs so it’s superfluous to include).
+At the heart of the SDK is the `RequestBuilder`, which acts as a high-level interface for constructing and executing HTTP operations for a specific api path. A `RequestBuilder` is added at each path diversion. (I.E.: <code>https://<var>{host}</var>/api</code>, is shared between **all** apis so it’s superfluous to include).
 Example:
 The path `…/api/now/{version}/table`  becomes two `requestBuilders`.
 
 - `NowRequestBuilder`
 - `TableRequestBuilder`
 
-> Note: Version doesn’t get a `RequestBuilder` as the **whole** SDK represents a single version of the API.
+> Note: Version doesn’t get a `RequestBuilder` as the **whole** SDK represents a single version of the api.
 
 ## RequestBuilder Structure
 
