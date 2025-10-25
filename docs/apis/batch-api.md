@@ -4,7 +4,7 @@
 
 The `Batch api` provides an endpoint to send multiple `REST` requests simultaneously.
 
-## \[POST\] <code>/now/batch</code>
+## \[Post\] <code>/now/batch</code>
 
 Submits a `BatchRequest` containing all desired requests.
 

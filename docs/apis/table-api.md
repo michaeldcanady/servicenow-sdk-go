@@ -4,7 +4,7 @@
 
 The `Table api` provides endpoints that allow you to perform create, read, update, and delete (CRUD) operations on existing tables.
 
-## \[GET\] <code>/now/table/<var>{tableName}</var></code>
+## \[Get\] <code>/now/table/<var>{tableName}</var></code>
 
 Retrieves multiple records for the specified table.
 
@@ -83,7 +83,7 @@ Retrieves multiple records for the specified table.
     }
     ```
 
-## \[POST\] <code>/now/table/<var>{tableName}</var></code>
+## \[Post\] <code>/now/table/<var>{tableName}</var></code>
 
 Inserts one record in the specified table. 
 > Note: Multiple record insertion is **not** supported by this method.
@@ -175,7 +175,7 @@ Inserts one record in the specified table.
     }
     ```
 
-## \[DELETE\] <code>/now/table/<var>{tableName}</var>/<var>{sys_id}</var></code>
+## \[Delete\] <code>/now/table/<var>{tableName}</var>/<var>{sys_id}</var></code>
 
 Deletes the specified record from the specified table.
 
@@ -255,7 +255,7 @@ Deletes the specified record from the specified table.
     }
     ```
 
-## \[GET\] <code>/now/table/<var>{tableName}</var>/<var>{sys_id}</var></code>
+## \[Get\] <code>/now/table/<var>{tableName}</var>/<var>{sys_id}</var></code>
 
 Retrieves the record identified by the specified sys_id from the specified table.
 
@@ -336,7 +336,7 @@ Retrieves the record identified by the specified sys_id from the specified table
     }
     ```
 
-## \[PUT\] <code>/now/table/<var>{tableName}</var>/<var>{sys_id}</var></code>
+## \[Put\] <code>/now/table/<var>{tableName}</var>/<var>{sys_id}</var></code>
 
 === "Fluent"
 

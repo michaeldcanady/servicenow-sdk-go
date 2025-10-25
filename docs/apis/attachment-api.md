@@ -5,7 +5,7 @@
 The Attachment api provides endpoints that allow you to upload and query file attachments.
 You can upload or retrieve a single file with each request.
 
-## \[GET\] <code>/now/attachment</code>
+## \[Get\] <code>/now/attachment</code>
 
 Returns the metadata for multiple attachments.
 
@@ -43,7 +43,7 @@ Returns the metadata for multiple attachments.
     }
     ```
 
-## \[POST\] <code>/now/attachment/file</code>
+## \[Post\] <code>/now/attachment/file</code>
 
 Upload file of any supported content type. Requires you to provide the table sys id, table name, and file name via **the request headers**.
 
@@ -94,7 +94,7 @@ Upload file of any supported content type. Requires you to provide the table sys
     }
     ```
 
-## \[POST\] <code>/now/attachment/upload</code>
+## \[Post\] <code>/now/attachment/upload</code>
 
 Upload file of any supported content type. Requires you to provide the table sys id, table name, and file name via **the multipart form**.
 
@@ -134,7 +134,7 @@ Upload file of any supported content type. Requires you to provide the table sys
     }
     ```
 
-## \[GET\] <code>/now/attachment/<var>{sys_id}</var></code>
+## \[Get\] <code>/now/attachment/<var>{sys_id}</var></code>
 
 Retrieve specific attachment metadata using the sys id.
 
@@ -172,7 +172,7 @@ Retrieve specific attachment metadata using the sys id.
     }
     ```
 
-## \[DELETE\] <code>/now/attachment/<var>{sys_id}</var></code>
+## \[Delete\] <code>/now/attachment/<var>{sys_id}</var></code>
 
 === "Fluent"
 
@@ -206,7 +206,7 @@ Retrieve specific attachment metadata using the sys id.
     }
     ```
 
-## \[GET\] <code>/now/attachment/<var>{sys_id}</var>/file</code>
+## \[Get\] <code>/now/attachment/<var>{sys_id}</var>/file</code>
 
 Retrieves a file with content using provided parameters.
 
