@@ -1,13 +1,10 @@
-api
-API
-apis
-APIs
+(?i)api
+(?i)apis
 devcontainer
 vscode
 devcontainers
 sys_id
-Kiota
-kiota
+(?i)Kiota
 GitHub
 golang
 sys
