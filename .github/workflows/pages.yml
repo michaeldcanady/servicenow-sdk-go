@@ -88,7 +88,7 @@ jobs:
           key: site-${{ github.sha }}
       
       - name: Upload site artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v5.0.0
         with:
           name: site
           path: site
@@ -128,7 +128,7 @@ jobs:
         run: pip install -r requirements.txt
       
       - name: Download site artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5.0.0
         with:
           name: site
           path: site
