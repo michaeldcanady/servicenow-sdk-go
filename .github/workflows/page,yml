@@ -19,11 +19,27 @@
 # IN THE SOFTWARE.
 
 name: documentation
+
 on:
+  workflow_dispatch:
   push:
     branches:
       - "**"
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - ".github/workflows/pages.yml"
   pull_request:
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - ".github/workflows/pages.yml"
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
 
 env:
   CONCURRENCY: 1
