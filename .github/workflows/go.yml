@@ -43,7 +43,7 @@ jobs:
   check-go:
     name: Check Go Modules
     needs:
-       changes
+      - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
     strategy:
