@@ -1,3 +1,3 @@
 # Overview
 
-This section outlines how to implement each api. The apis are grouped into submodules based on the Service-Now REST api they're wrapping. While the goals is to have consistency across **all** modules, internal consistency - consistency **within** the submodule - should be prioritized.
+This section explains how to implement each API. We organize the APIs into submodules according to the specific Service-Now REST API they wrap. Although we aim for consistency across all modules, we prioritize internal consistency—ensuring each submodule remains consistent within itself.
