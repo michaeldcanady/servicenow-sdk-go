@@ -1,8 +1,14 @@
 api
+API
 apis
+APIs
 devcontainer
 vscode
 devcontainers
 sys_id
+Kiota
 kiota
 GitHub
+golang
+sys
+sdk
