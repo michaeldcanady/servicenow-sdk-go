@@ -1,4 +1,4 @@
-# Core Concepts
+# Core concepts
 
 ## `RequestBuilder` Facade
 
@@ -17,7 +17,7 @@ To generate the appropriate `RequestBuilder` types:
 > The base URI is `https://{instance}.service-now.com/api`  
 > Note: The version segment is excluded from `RequestBuilder` generation because the SDK targets a single API version.
 
-## `RequestBuilder` Structure
+## `RequestBuilder` structure
 
 Each `RequestBuilder` provides methods aligned with supported HTTP operations. These methods accept standardized parameters or enable construction of the next path segment. Internally, they handle:
 
@@ -25,7 +25,7 @@ Each `RequestBuilder` provides methods aligned with supported HTTP operations. T
 2. **Request transmission**: Sends the request through an HTTP client, supporting features such as retries and logging.
 3. **Response handling**: Converts raw HTTP responses into structured SDK types or error classes.
 
-## Batch API Compatibility
+## Batch API compatibility
 
 All `RequestBuilder` types support batch operations using a shared convention:  
 `ToXXXRequestInformation(…) (RequestInformation, error)` methods.

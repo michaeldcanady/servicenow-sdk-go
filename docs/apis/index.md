@@ -1,3 +1,10 @@
 # Overview
 
-This section explains how to implement each API. APIs are organized into submodules based on the specific Service-Now REST API they wrap. While consistency across **all** modules is a goal, internal consistency—maintaining coherence within each submodule—takes priority.
+This section provides implementation guidance for each supported API in the SDK. Each SDK submodule corresponds to a Service-Now REST API of the same name. For example, the `table-api` submodule wraps the Table REST API.
+
+To ensure clarity and maintainability:
+
+- **Internal consistency** within each submodule takes precedence.
+- **Cross-module consistency** remains a broader goal but may vary for a number of reasons.
+
+Each subsection includes examples and usage patterns tailored to the specific API it supports.
