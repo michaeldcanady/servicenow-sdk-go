@@ -5,7 +5,9 @@
 - Installed [golang 1.23+](https://go.dev/doc/install).
 - Active Service-Now instance or [developer instance](https://developer.servicenow.com/dev.do).
 
+<!-- vale Microsoft.Headings = NO -->
 ## 1. Install Service-Now SDK for Go
+<!-- vale Microsoft.Headings = YES -->
 
 === "Install the latest"
 
