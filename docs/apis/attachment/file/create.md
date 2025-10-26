@@ -12,7 +12,7 @@ N/A - doesn't support standard format.
 
 | Name                | Type      | Possible values | Description                                                  |
 |---------------------|-----------|-----------------|--------------------------------------------------------------|
-| `EncryptionContext` | `*string` | N/A             | Sys_id of an encryption context record.                      |
+| `EncryptionContext` | `*string` | N/A             | `sys_id` of an encryption context record.                      |
 
 ## Required query parameters
 
@@ -20,7 +20,7 @@ N/A - doesn't support standard format.
 |---------------------|-----------|-----------------|-----------------------------------------------------------------------------------|
 | `FileName`          | `*string` | N/A             | Name to provided file.                                                            |
 | `TableName`         | `*string` | N/A             | Name of the designated table which contains the record to attach the file to.     |
-| `TableSysID`        | `*string` | N/A             | Specifies the sys_id of the record in the designated table to attach the file to. |
+| `TableSysID`        | `*string` | N/A             | Specifies the `sys_id` of the record in the designated table to attach the file to. |
 
 ## Examples
 
