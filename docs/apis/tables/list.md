@@ -4,6 +4,13 @@
 
 Retrieves multiple records from the specified table.
 
+## Path parameters
+
+| Name      | Description                                                                                                                       |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------|
+| `baseurl` | The absolute base URI for the request (this is the same for all requests) including: the schema, the domain, and a path fragment. |
+| `table`   | The table name of for the operation.                                                                                              |
+
 ## Optional query parameters
 
 ## Examples
