@@ -4,19 +4,7 @@
 
 Deletes the specified record from the table.
 
-## Path parameters
-
-| Name      | Description                                                                                                                                 |
-|-----------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| `baseurl` | The absolute base URI for the request (generally this is the same for all requests) including: the schema, the domain, and a path fragment. |
-| `table`   | The table name of for the operation.                                                                                                        |
-| `sysId`   | The `sys_id` of the record.                                                                                                                 |
-
 ## Optional query parameters
-
-| Name            | Type | Possible values | Description                                                                                                               |
-|-----------------|------|-----------------|---------------------------------------------------------------------------------------------------------------------------|
-| `QueryNoDomain` | bool |                 | Flag that indicates whether to restrict the record search to only the domains for which the logged in user is configured. |
 
 ## Examples
 
@@ -52,7 +40,7 @@ Deletes the specified record from the table.
     ```
 
 === "Standard"
-
+        
     ```go
     package main
 

@@ -4,24 +4,7 @@
 
 Updates the specified record by `sys_id` in the specified table.
 
-## Path parameters
-
-| Name      | Description                                                                                                                                 |
-|-----------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| `baseurl` | The absolute base URI for the request (generally this is the same for all requests) including: the schema, the domain, and a path fragment. |
-| `table`   | The table name of for the operation.                                                                                                        |
-| `sysId`   | The `sys_id` of the record.                                                                                                                 |
-
 ## Optional query parameters
-
-| Name                   | Type                  | Possible values                                           | Description                                                                                                               |
-|------------------------|-----------------------|-----------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| `DisplayValue`         | tableapi.DisplayValue | `tableapi.TRUE`, `tableapi.FALSE`, or `tableapi.ALL`      | Determines the type of data returned, either the actual values from the database or the display values of the fields.     |
-| `ExcludeReferenceLink` | bool                  |                                                           | Flag that indicates whether to exclude Table API links for reference fields.                                              |
-| `Fields`               | []string              |                                                           | List of fields to include in the response.                                                                                |
-| `QueryNoDomain`        | bool                  |                                                           | Flag that indicates whether to restrict the record search to only the domains for which the logged in user is configured. |
-| `InputDisplayValue`    | bool                  |                                                           | Determins whether to treat the input values as display or actual values.                                                  |
-| `View`                 | tableapi.View         | `tableapi.DESKTOP`, `tableapi.MOBILE`, or `tableapi.BOTH` | UI view for which to render the data.                                                                                     |
 
 ## Examples
 
