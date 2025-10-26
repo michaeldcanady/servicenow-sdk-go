@@ -44,20 +44,17 @@ N/A
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         params := &tableapi.TableRequestBuilderPostQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
-
-        ctx := context.Background()
 
         data := map[string]string{
             "short_description": "example incident",
             "description":       "incident created by servicenow-sdk-go",
         }
 
-        response, err := client.Now2().Table2("{TableName}").Post4(ctx, data, params)
+        response, err := client.Now2().Table2("{TableName}").Post4(context.Background(), data, params)
         if err != nil {
             log.Fatal(err)
         }
@@ -80,7 +77,6 @@ N/A
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         pathParameters := map[string]string{
             "baseurl": "https://www.{instance}.service-now.com/api/now",
@@ -90,17 +86,15 @@ N/A
         requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
 
         params := &tableapi.TableRequestBuilderPostQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
-
-        ctx := context.Background()
 
         data := map[string]string{
             "short_description": "example incident",
             "description":       "incident created by servicenow-sdk-go",
         }
 
-        response, err := requestBuilder.Post4(ctx, data, params)
+        response, err := requestBuilder.Post4(context.Background(), data, params)
         if err != nil {
             log.Fatal(err)
         }

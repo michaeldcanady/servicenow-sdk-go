@@ -38,15 +38,12 @@ N/A
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         params := &tableapi.TableItemRequestBuilderDeleteQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
 
-        ctx := context.Background()
-
-        err := client.Now2().Table2("{TableName}").ByID("{sysID}").Delete2(ctx, params)
+        err := client.Now2().Table2("{TableName}").ByID("{sysID}").Delete2(context.Background(), params)
         if err != nil {
             log.Fatal(err)
         }
@@ -56,7 +53,7 @@ N/A
     ```
 
 === "Standard"
-        
+
     ```go
     package main
 
@@ -69,7 +66,6 @@ N/A
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         pathParameters := map[string]string{
             "baseurl": "https://www.{instance}.service-now.com/api/now",
@@ -80,12 +76,10 @@ N/A
         requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
 
         params := &tableapi.TableItemRequestBuilderDeleteQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
 
-        ctx := context.Background()
-
-        err := requestBuilder.Delete2(ctx, params)
+        err := requestBuilder.Delete2(context.Background(), params)
         if err != nil {
             log.Fatal(err)
         }

@@ -42,15 +42,12 @@ N/A
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         params := &tableapi.TableItemRequestBuilderGetQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
 
-        ctx := context.Background()
-
-        response, err := client.Now2().Table2("{TableName}").ByID("{sysID}").Get2(ctx, params)
+        response, err := client.Now2().Table2("{TableName}").ByID("{sysID}").Get2(context.Background(), params)
         if err != nil {
             log.Fatal(err)
         }
@@ -73,7 +70,6 @@ N/A
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         pathParameters := map[string]string{
             "baseurl": "https://www.{instance}.service-now.com/api/now",
@@ -84,12 +80,10 @@ N/A
         requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
 
         params := &tableapi.TableItemRequestBuilderGetQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
 
-        ctx := context.Background()
-
-        record, err := requestBuilder.Get2(ctx, params)
+        record, err := requestBuilder.Get2(context.Background(), params)
         if err != nil {
             log.Fatal(err)
         }

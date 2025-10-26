@@ -41,17 +41,13 @@ N/A
         )
 
         func main() {
-            //Implement credential and client.
-            //...
+            // Initialize credentials and client
 
-            // define parameters you wish to (optional)
             params := &tableapi.TableItemRequestBuilderGetQueryParameters{
-            //...
+                // Optional configurations
             }
 
             ctx := context.Background()
-            // Modify your context as desired.
-            //...
 
             // data map of information you want to use for the new record
             data := map[string]string{
@@ -63,8 +59,7 @@ N/A
             if err != nil {
                 log.Fatal(err)
             }
-            // Handle response
-            //...
+            // Process response
         }
     ```
 
@@ -80,8 +75,7 @@ N/A
         )
 
         func main() {
-            //Implement credential and client.
-            //...
+            // Initialize credentials and client
 
             pathParameters := {
                 "baseurl":"https://www.{instance}.service-now.com/api/now",
@@ -89,31 +83,23 @@ N/A
                 "sysId": "INC00000000",
             }
 
-            // Instantiate new TableItemRequestBuilder.
             requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
 
             // define parameters you wish to (optional)
             params := &tableapi.TableItemRequestBuilderGetQueryParameters{
-            //...
+                // Optional configurations
             }
 
-            ctx := context.Background()
-            // Modify your context as desired.
-            //...
-
-            // data map of information you want to use for the new record
             data := map[string]string{
                 "short_description": "example incident",
                 "description": "incident created by servicenow-sdk-go",
             }
 
-            // Call the get method, with or without TableItemRequestBuilderGetQueryParameters.
-            // record is of type TableItemResponse
-            record, err := requestBuilder.Put3(ctx, data, params)
+            record, err := requestBuilder.Put3(context.Background(), data, params)
             if err != nil {
                 log.Fatal(err)
             }
-            // Handle response
-            //...
+
+            // Process response
         }
     ```

@@ -46,7 +46,6 @@ N/A
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         // Build requests, using ToXXXRequestInformation method
 

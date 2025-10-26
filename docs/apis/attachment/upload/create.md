@@ -31,26 +31,19 @@ N/A
     )
 
     func main() {
-        //Implement credential and client.
-        ...
+        // Initialize credentials and client
 
         body := // TODO: how to make multipart body?
 
-        // define the configurations you wish to (optional)
         config := &attachmentapi.AttachmentUploadRequestBuilderPostRequestConfiguration{
-            //...
+            // Optional configurations
         }
 
-        // Call the post method with your content type, data, and request configurations.
-        // Response is the uploaded file.
-        response, err := client.Now().Attachment2().Upload().Post(context.Background(), body, config)
-
-        // Test err, should be nil
+        response, err := client.Now2().Attachment2().Upload().Post(context.Background(), body, config)
         if err != nil {
             log.Fatal(err)
         }
 
-        // Handle response
-        ...
+        // Process response
     }
     ```

@@ -30,22 +30,17 @@ N/A
     )
 
     func main() {
-        //Implement credential and client.
-        ...
+        // Initialize credentials and client
 
-        // define the configurations you wish to (optional)
         config := &attachmentapi.AttachmentItemRequestBuilderDeleteRequestConfiguration{
-            //...
+            // Optional configurations
         }
 
-        // Call the delete method with/without request configurations.
-        err := client.Now().Attachment2().ByID("{sys_id}").Delete(context.Background(), config)
-
-        // Test err, should be nil
+        err := client.Now2().Attachment2().ByID("{sys_id}").Delete(context.Background(), config)
         if err != nil {
             log.Fatal(err)
         }
 
-        ...
+        // Process response
     }
     ```

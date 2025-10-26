@@ -36,37 +36,27 @@ N/A - doesn't support standard format.
     )
 
     func main() {
-        //Implement credential and client.
-        ...
+        // Initialize credentials and client
 
-        // The content type of the file you want to upload
+        //build media type
         dataContentType := "text/plain"
-        // the byte content of the file
         data := []byte("this is example data")
-
         media := attachmentapi.NewMedia(dataContentType, data)
 
-        // Define the required and optional configurations
         config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
-            ...
             QueryParameters: &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
                 TableSysID: "INC00000001", // required
                 TableName:  "incident", // required
                 FileName:   "example.txt", // required
             }
-            ...
+            // Optional configurations
         }
 
-        // Call the post method with your content type, data, and request configurations.
-        // Response is the uploaded file.
-        response, err := client.Now().Attachment2().File().Post(context.Background(), media, config)
-
-        // Test err, should be nil
+        response, err := client.Now2().Attachment2().File().Post(context.Background(), media, config)
         if err != nil {
             log.Fatal(err)
         }
         
-        // Handle response
-        ...
+        // Process response
     }
     ```

@@ -30,24 +30,17 @@ N/A
     )
 
     func main() {
-        //Implement credential and client.
-        ...
+        // Initialize credentials and client
 
-        // define the configurations you wish to (optional)
         config := &attachmentapi.AttachmentItemRequestBuilderGetRequestConfiguration{
-            //...
+            // Optional configurations
         }
 
-        // Call the get method with/without request configurations.
-        // Response is the attachment item.
-        response, err := client.Now().Attachment2().ByID("{sys_id}").Get(context.Background(), config)
-
-        // Test err, should be nil
+        response, err := client.Now2().Attachment2().ByID("{sys_id}").Get(context.Background(), config)
         if err != nil {
             log.Fatal(err)
         }
 
-        // Handle response
-        ...
+        // Process response
     }
     ```

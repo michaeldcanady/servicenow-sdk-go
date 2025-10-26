@@ -17,9 +17,14 @@ nav:
   - APIs:
       - apis/index.md
       - Attachment:
-        - File: # TODO: add info
-        - Upload: # TODO: add info
         - Overview: apis/attachment/index.md
+        - File:
+          - Overview: apis/attachment/file/index.md
+          - Get: apis/attachment/file/get.md
+          - Create: apis/attachment/file/create.md
+        - Upload:
+          - Overview: apis/attachment/upload/index.md
+          - Create: apis/attachment/upload/create.md
         - List: apis/attachment/list.md
         - Get: apis/attachment/get.md
         - Delete: apis/attachment/delete.md
