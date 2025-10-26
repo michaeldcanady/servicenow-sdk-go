@@ -4,7 +4,7 @@
 
 Submits a `BatchRequest` containing all desired requests.
 
-# Path parameters
+## Path parameters
 
 N/A
 
@@ -41,7 +41,10 @@ N/A
     }
 
     func main() {
-        ... // instantiate client
+        // Initialize credentials and client
+        // ...
+
+        // Build requests, using ToXXXRequestInformation method
 
         body := batchRequests(true, ...requests)
         
@@ -51,7 +54,6 @@ N/A
             log.Fatal(err)
         }
 
-        // handle response
-        ...
+        // Process response
     }
     ```
