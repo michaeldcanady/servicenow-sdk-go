@@ -1,6 +1,6 @@
 # Core concepts
 
-## `RequestBuilder` Facade
+## `RequestBuilder` facade
 
 The `RequestBuilder` serves as a high-level interface for constructing and executing HTTP operations for a specific API path. At each path diversion (after the base URI) introduce a new `RequestBuilder`.
 
@@ -33,7 +33,7 @@ All `RequestBuilder` types support batch operations using a shared convention:
 These methods generate lightweight `RequestInformation` objects that encapsulate:
 
 - The HTTP method  
-- Target URL  
+- Target address  
 - Headers and query parameters  
 - Request body (if applicable)
 
