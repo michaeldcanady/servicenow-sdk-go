@@ -6,16 +6,17 @@
 - Active Service-Now instance or [developer instance](https://developer.servicenow.com/dev.do).
 
 <!-- vale Microsoft.Headings = NO -->
+<!-- vale Microsoft.Headings = NO -->
 ## 1. Install Service-Now SDK for Go
 <!-- vale Microsoft.Headings = YES -->
 
 === "Install the latest"
 
     ``` bash
-    go get github.com/michaeldcanady/servicenow-sdk-go
+    go get github.com/michaeldcanady/servicenow-sdk-go@latest
     ```
 === "Install a specific version"
-    
+
     ``` bash
     go get github.com/michaeldcanady/servicenow-sdk-go@{version}
     ```
