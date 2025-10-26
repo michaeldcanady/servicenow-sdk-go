@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `Batch api` provides an endpoint to send multiple `REST` requests simultaneously.
+The `Batch api` provides an endpoint for submitting a batch of `REST` requests.
 
 ## \[Post\] <code>/now/batch</code>
 

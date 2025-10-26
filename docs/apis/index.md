@@ -5,6 +5,6 @@ This section provides implementation guidance for each supported API in the SDK.
 To ensure clarity and maintainability:
 
 - **Internal consistency** within each submodule takes precedence.
-- **Cross-module consistency** remains a broader goal but may vary for a number of reasons.
+- **Cross-module consistency** remains a broader goal (but may vary for specific reasons).
 
 Each subsection includes examples and usage patterns tailored to the specific API it supports.
