@@ -24,6 +24,10 @@ Creates a single record in the specified table.
 | `View`                 | `tableapi.View`         | `DESKTOP`, `MOBILE`, or `BOTH` | UI view for which to render the data.                                                                                 |
 <!-- vale Vale.Spelling = YES -->
 
+# Required query parameters
+
+N/A
+
 ## Examples
 
 === "Fluent"

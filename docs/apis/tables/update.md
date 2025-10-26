@@ -23,6 +23,10 @@ Updates the specified record by `sys_id` in the specified table.
 | `QueryNoDomain`            | `bool`                  | N/A                            | Flag that indicates whether to restrict the record search to only the domains configured for the logged in user.      |
 | `View`                     | `tableapi.View`         | `DESKTOP`, `MOBILE`, or `BOTH` | UI view for which to render the data.                                                                                 |
 
+# Required query parameters
+
+N/A
+
 ## Examples
 
 === "Fluent"

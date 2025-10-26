@@ -27,6 +27,10 @@ Retrieves multiple records from the specified table.
 | `QueryCategory`            | `string`                | N/A                            | Name of the category to use for queries.                                                                              |
 | `SuppressPaginationHeader` | `bool`                  | N/A                            | Flag that indicates whether to remove the Link header from the response.                                              |
 
+# Required query parameters
+
+N/A
+
 ## Examples
 
 === "Fluent"

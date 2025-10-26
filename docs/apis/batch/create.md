@@ -12,6 +12,10 @@ N/A
 
 N/A
 
+# Required query parameters
+
+N/A
+
 ## Examples
 
 === "Fluent"

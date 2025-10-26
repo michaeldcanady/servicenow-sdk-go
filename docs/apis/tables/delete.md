@@ -18,6 +18,10 @@ Deletes the specified record from the table.
 |------------------------|--------|-----------------|---------------------------------------------------------------------------------------------------------------------------|
 | `QueryNoDomain`        | `bool` | N/A             | Flag that indicates whether to restrict the record search to only the domains configured for the logged in user.          |
 
+# Required query parameters
+
+N/A
+
 ## Examples
 
 === "Fluent"
