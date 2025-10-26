@@ -1,4 +1,4 @@
-# Retrieve multiple records
+# List table records
 
 ## Overview
 

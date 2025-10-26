@@ -1,4 +1,4 @@
-# Retrieve a record
+# Get table record
 
 ## Overview
 

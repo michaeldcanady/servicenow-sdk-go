@@ -1,4 +1,4 @@
-# Delete a record
+# Delete table record
 
 ## Overview
 

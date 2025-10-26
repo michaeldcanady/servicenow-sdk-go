@@ -1,4 +1,4 @@
-# Update a record
+# Update table record
 
 ## Overview
 

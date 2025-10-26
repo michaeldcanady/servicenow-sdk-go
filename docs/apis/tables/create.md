@@ -1,4 +1,4 @@
-# Create a record
+# Create table record
 
 ## Overview
 

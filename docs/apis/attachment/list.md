@@ -1,4 +1,4 @@
-# Retrieve multiple attachments
+# List attachments
 
 ## Overview
 
