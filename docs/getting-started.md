@@ -12,10 +12,10 @@
 === "Install the latest"
 
     ``` bash
-    go get github.com/michaeldcanady/servicenow-sdk-go
+    go get github.com/michaeldcanady/servicenow-sdk-go@latest
     ```
 === "Install a specific version"
-    
+
     ``` bash
     go get github.com/michaeldcanady/servicenow-sdk-go@{version}
     ```
@@ -47,4 +47,4 @@ func main() {
 
 ## 4. Review specific api documentation
 
-With the `client` object initialized, implementation of the full capabilities offered by the Service-Now SDK for Go can begin. Refer to [apis](/apis/index.md) for details on implementing specific APIs.
+With the `client` object initialized, implementation of the full capabilities offered by the Service-Now SDK for Go can begin. Refer to [apis](apis/index.md) for details on implementing specific APIs.
