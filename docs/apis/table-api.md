@@ -86,7 +86,9 @@ Retrieves multiple records for the specified table.
 ## \[Post\] <code>/now/table/<var>{tableName}</var></code>
 
 Inserts one record in the specified table. 
+<!-- vale Microsoft.Contractions = NO -->
 > Note: Multiple record insertion is **not** supported by this method.
+<!-- vale Microsoft.Contractions = YES -->
 
 === "Fluent"
 
