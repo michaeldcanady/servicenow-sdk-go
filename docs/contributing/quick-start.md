@@ -18,7 +18,7 @@ Examples:
 
 ### Fork and clone repository
 
-1. Fork the Service-Now SDK for Go repository to your personal Github Account.
+1. Fork the Service-Now SDK for Go repository to your personal GitHub Account.
 2. Clone the forked repository:
 
     ```bash

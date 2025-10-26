@@ -15,6 +15,7 @@ on:
       - "mkdocs.yml"
       - ".github/workflows/pages.yml"
 
+
 env:
   PYTHON_VERSION: "3.x"
 
@@ -22,6 +23,10 @@ permissions:
   contents: write
   pages: write
   id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   changes-docs:
@@ -87,7 +92,7 @@ jobs:
           key: site-${{ github.sha }}
       
       - name: Upload site artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v5.0.0
         with:
           name: site
           path: site
@@ -127,7 +132,7 @@ jobs:
         run: pip install -r requirements.txt
       
       - name: Download site artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5.0.0
         with:
           name: site
           path: site

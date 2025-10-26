@@ -5,15 +5,17 @@
 - Installed [golang 1.23+](https://go.dev/doc/install).
 - Active Service-Now instance or [developer instance](https://developer.servicenow.com/dev.do).
 
+<!-- vale Microsoft.Headings = NO -->
 ## 1. Install Service-Now SDK for Go
+<!-- vale Microsoft.Headings = YES -->
 
 === "Install the latest"
 
     ``` bash
-    go get github.com/michaeldcanady/servicenow-sdk-go
+    go get github.com/michaeldcanady/servicenow-sdk-go@latest
     ```
 === "Install a specific version"
-    
+
     ``` bash
     go get github.com/michaeldcanady/servicenow-sdk-go@{version}
     ```
@@ -43,6 +45,6 @@ func main() {
     ...
 ```
 
-## 4. Review specific API documentation
+## 4. Review specific api documentation
 
-Once you have your `client` object, you're good to get started implementing all that the Service-Now SDK for Go has to offer! See [apis](/apis) for information on implementing a specific API!
+With the `client` object initialized, implementation of the full capabilities offered by the Service-Now SDK for Go can begin. Refer to [apis](/apis/index.md) for details on implementing specific APIs.
