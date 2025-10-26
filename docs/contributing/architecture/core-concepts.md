@@ -15,7 +15,7 @@ To generate the appropriate `RequestBuilder` types:
    - `TableRequestBuilder`
 
 > The base URI is `https://{instance}.service-now.com/api`  
-> Note: The SDK targets a single API version; exclude the version segment of the address.
+> Note: The SDK targets a single API version, so the version segment can be excluded from `RequestBuilder` generation.
 
 ## `RequestBuilder` structure
 
