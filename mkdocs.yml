@@ -16,7 +16,13 @@ nav:
   - how-to-use.md
   - APIs:
       - apis/index.md
-      - apis/attachment-api.md
+      - Attachment:
+        - File: # TODO: add info
+        - Upload: # TODO: add info
+        - Overview: apis/attachment/index.md
+        - List: apis/attachment/list.md
+        - Get: apis/attachment/get.md
+        - Delete: apis/attachment/delete.md
       - Table:
         - Overview: apis/tables/index.md
         - List: apis/tables/list.md
