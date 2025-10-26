@@ -6,7 +6,7 @@ Retrieves an attachment's file by sys id.
 
 ## Path parameters
 
-N/A - doesn't support standard format.
+N/A - doesn't support standard implementation.
 
 ## Optional query parameters
 

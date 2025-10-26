@@ -6,7 +6,7 @@ Retrieve specific attachment metadata using the sys id.
 
 ## Path parameters
 
-N/A - doesn't support standard format.
+N/A - doesn't support standard implementation.
 
 ## Optional query parameters
 

@@ -6,7 +6,7 @@ Upload file of any supported content type. Requires you to provide the table sys
 
 ## Path parameters
 
-N/A - doesn't support standard format.
+N/A - doesn't support standard implementation.
 
 ## Optional query parameters
 
