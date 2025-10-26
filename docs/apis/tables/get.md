@@ -1,4 +1,4 @@
-# Retrieve a Single Record
+# Retrieve a record
 
 ## Overview
 

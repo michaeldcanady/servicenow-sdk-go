@@ -1,4 +1,4 @@
-# Update a Record
+# Update a record
 
 ## Overview
 
