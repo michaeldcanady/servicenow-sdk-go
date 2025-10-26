@@ -14,13 +14,13 @@ Creates a single record in the specified table.
 
 ## Optional query parameters
 
-| Name                   | Type                  | Possible values                | Description                                                                                                           |
-|------------------------|-----------------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------------|
-| `DisplayValue`         | tableapi.DisplayValue | `TRUE`, `FALSE`, or `ALL`      | Determines the type of data returned, either the actual values from the database or the display values of the fields. |
-| `ExcludeReferenceLink` | bool                  |                                | Flag that indicates whether to exclude Table API links for reference fields.                                          |
-| `Fields`               | []string              |                                | List of fields to include in the response.                                                                            |
-| `InputDisplayValue`    | bool                  |                                |                                                                                                                       |
-| `View`                 | tableapi.View         | `DESKTOP`, `MOBILE`, or `BOTH` | UI view for which to render the data.                                                                                 | 
+| Name                   | Type                  | Possible values                                           | Description                                                                                                           |
+|------------------------|-----------------------|-----------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| `DisplayValue`         | tableapi.DisplayValue | `tableapi.TRUE`, `tableapi.FALSE`, or `tableapi.ALL`      | Determines the type of data returned, either the actual values from the database or the display values of the fields. |
+| `ExcludeReferenceLink` | bool                  |                                                           | Flag that indicates whether to exclude Table API links for reference fields.                                          |
+| `Fields`               | []string              |                                                           | List of fields to include in the response.                                                                            |
+| `InputDisplayValue`    | bool                  |                                                           |                                                                                                                       |
+| `View`                 | tableapi.View         | `tableapi.DESKTOP`, `tableapi.MOBILE`, or `tableapi.BOTH` | UI view for which to render the data.                                                                                 | 
 
 ## Examples
 
