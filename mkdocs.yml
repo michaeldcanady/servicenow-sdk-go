@@ -17,7 +17,6 @@ nav:
   - APIs:
       - apis/index.md
       - apis/attachment-api.md
-      - apis/batch-api.md
       - Table:
         - Overview: apis/tables/index.md
         - List: apis/tables/list.md
@@ -25,6 +24,9 @@ nav:
         - Get: apis/tables/get.md
         - Update: apis/tables/update.md
         - Delete: apis/tables/delete.md
+      - Batch:
+        - Overview: apis/batch/index.md
+        - Create: apis/batch/create.md
   - Contributing:
       - contributing/index.md
       - Architecture:
