@@ -1,4 +1,4 @@
-# Retrieve a record
+# Get table record
 
 ## Overview
 
@@ -22,6 +22,10 @@ Retrieves a specific record by `sys_id` from the specified table.
 | `QueryNoDomain`        | `bool`                  | N/A                            | Flag that indicates whether to restrict the record search to only the domains configured for the logged in user.      |
 | `View`                 | `tableapi.View`         | `DESKTOP`, `MOBILE`, or `BOTH` | UI view for which to render the data.                                                                                 |
 
+# Required query parameters
+
+N/A
+
 ## Examples
 
 === "Fluent"
@@ -38,15 +42,12 @@ Retrieves a specific record by `sys_id` from the specified table.
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         params := &tableapi.TableItemRequestBuilderGetQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
 
-        ctx := context.Background()
-
-        response, err := client.Now2().Table2("{TableName}").ByID("{sysID}").Get2(ctx, params)
+        response, err := client.Now2().Table2("{TableName}").ByID("{sysID}").Get2(context.Background(), params)
         if err != nil {
             log.Fatal(err)
         }
@@ -69,7 +70,6 @@ Retrieves a specific record by `sys_id` from the specified table.
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         pathParameters := map[string]string{
             "baseurl": "https://www.{instance}.service-now.com/api/now",
@@ -80,12 +80,10 @@ Retrieves a specific record by `sys_id` from the specified table.
         requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
 
         params := &tableapi.TableItemRequestBuilderGetQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
 
-        ctx := context.Background()
-
-        record, err := requestBuilder.Get2(ctx, params)
+        record, err := requestBuilder.Get2(context.Background(), params)
         if err != nil {
             log.Fatal(err)
         }

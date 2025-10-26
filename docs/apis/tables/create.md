@@ -1,4 +1,4 @@
-# Create a record
+# Create table record
 
 ## Overview
 
@@ -24,6 +24,10 @@ Creates a single record in the specified table.
 | `View`                 | `tableapi.View`         | `DESKTOP`, `MOBILE`, or `BOTH` | UI view for which to render the data.                                                                                 |
 <!-- vale Vale.Spelling = YES -->
 
+# Required query parameters
+
+N/A
+
 ## Examples
 
 === "Fluent"
@@ -40,20 +44,17 @@ Creates a single record in the specified table.
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         params := &tableapi.TableRequestBuilderPostQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
-
-        ctx := context.Background()
 
         data := map[string]string{
             "short_description": "example incident",
             "description":       "incident created by servicenow-sdk-go",
         }
 
-        response, err := client.Now2().Table2("{TableName}").Post4(ctx, data, params)
+        response, err := client.Now2().Table2("{TableName}").Post4(context.Background(), data, params)
         if err != nil {
             log.Fatal(err)
         }
@@ -76,7 +77,6 @@ Creates a single record in the specified table.
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         pathParameters := map[string]string{
             "baseurl": "https://www.{instance}.service-now.com/api/now",
@@ -86,17 +86,15 @@ Creates a single record in the specified table.
         requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
 
         params := &tableapi.TableRequestBuilderPostQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
-
-        ctx := context.Background()
 
         data := map[string]string{
             "short_description": "example incident",
             "description":       "incident created by servicenow-sdk-go",
         }
 
-        response, err := requestBuilder.Post4(ctx, data, params)
+        response, err := requestBuilder.Post4(context.Background(), data, params)
         if err != nil {
             log.Fatal(err)
         }

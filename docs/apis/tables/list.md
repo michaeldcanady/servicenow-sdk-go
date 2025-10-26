@@ -1,4 +1,4 @@
-# Retrieve multiple records
+# List table records
 
 ## Overview
 
@@ -27,6 +27,10 @@ Retrieves multiple records from the specified table.
 | `QueryCategory`            | `string`                | N/A                            | Name of the category to use for queries.                                                                              |
 | `SuppressPaginationHeader` | `bool`                  | N/A                            | Flag that indicates whether to remove the Link header from the response.                                              |
 
+# Required query parameters
+
+N/A
+
 ## Examples
 
 === "Fluent"
@@ -43,15 +47,12 @@ Retrieves multiple records from the specified table.
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         params := &tableapi.TableRequestBuilderGetQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
 
-        ctx := context.Background()
-
-        response, err := client.Now2().Table2("{TableName}").Get2(ctx, params)
+        response, err := client.Now2().Table2("{TableName}").Get2(context.Background(), params)
         if err != nil {
             log.Fatal(err)
         }
@@ -74,7 +75,6 @@ Retrieves multiple records from the specified table.
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         pathParameters := map[string]string{
             "baseurl": "https://www.{instance}.service-now.com/api/now",
@@ -84,12 +84,10 @@ Retrieves multiple records from the specified table.
         requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
 
         params := &tableapi.TableRequestBuilderGetQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
 
-        ctx := context.Background()
-
-        response, err := requestBuilder.Get2(ctx, params)
+        response, err := requestBuilder.Get2(context.Background(), params)
         if err != nil {
             log.Fatal(err)
         }

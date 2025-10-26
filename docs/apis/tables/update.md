@@ -1,4 +1,4 @@
-# Update a record
+# Update table record
 
 ## Overview
 
@@ -23,6 +23,10 @@ Updates the specified record by `sys_id` in the specified table.
 | `QueryNoDomain`            | `bool`                  | N/A                            | Flag that indicates whether to restrict the record search to only the domains configured for the logged in user.      |
 | `View`                     | `tableapi.View`         | `DESKTOP`, `MOBILE`, or `BOTH` | UI view for which to render the data.                                                                                 |
 
+# Required query parameters
+
+N/A
+
 ## Examples
 
 === "Fluent"
@@ -37,17 +41,13 @@ Updates the specified record by `sys_id` in the specified table.
         )
 
         func main() {
-            //Implement credential and client.
-            //...
+            // Initialize credentials and client
 
-            // define parameters you wish to (optional)
             params := &tableapi.TableItemRequestBuilderGetQueryParameters{
-            //...
+                // Optional configurations
             }
 
             ctx := context.Background()
-            // Modify your context as desired.
-            //...
 
             // data map of information you want to use for the new record
             data := map[string]string{
@@ -59,8 +59,7 @@ Updates the specified record by `sys_id` in the specified table.
             if err != nil {
                 log.Fatal(err)
             }
-            // Handle response
-            //...
+            // Process response
         }
     ```
 
@@ -76,8 +75,7 @@ Updates the specified record by `sys_id` in the specified table.
         )
 
         func main() {
-            //Implement credential and client.
-            //...
+            // Initialize credentials and client
 
             pathParameters := {
                 "baseurl":"https://www.{instance}.service-now.com/api/now",
@@ -85,31 +83,23 @@ Updates the specified record by `sys_id` in the specified table.
                 "sysId": "INC00000000",
             }
 
-            // Instantiate new TableItemRequestBuilder.
             requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
 
             // define parameters you wish to (optional)
             params := &tableapi.TableItemRequestBuilderGetQueryParameters{
-            //...
+                // Optional configurations
             }
 
-            ctx := context.Background()
-            // Modify your context as desired.
-            //...
-
-            // data map of information you want to use for the new record
             data := map[string]string{
                 "short_description": "example incident",
                 "description": "incident created by servicenow-sdk-go",
             }
 
-            // Call the get method, with or without TableItemRequestBuilderGetQueryParameters.
-            // record is of type TableItemResponse
-            record, err := requestBuilder.Put3(ctx, data, params)
+            record, err := requestBuilder.Put3(context.Background(), data, params)
             if err != nil {
                 log.Fatal(err)
             }
-            // Handle response
-            //...
+
+            // Process response
         }
     ```

@@ -1,4 +1,4 @@
-# Delete a record
+# Delete table record
 
 ## Overview
 
@@ -18,6 +18,10 @@ Deletes the specified record from the table.
 |------------------------|--------|-----------------|---------------------------------------------------------------------------------------------------------------------------|
 | `QueryNoDomain`        | `bool` | N/A             | Flag that indicates whether to restrict the record search to only the domains configured for the logged in user.          |
 
+# Required query parameters
+
+N/A
+
 ## Examples
 
 === "Fluent"
@@ -34,15 +38,12 @@ Deletes the specified record from the table.
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         params := &tableapi.TableItemRequestBuilderDeleteQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
 
-        ctx := context.Background()
-
-        err := client.Now2().Table2("{TableName}").ByID("{sysID}").Delete2(ctx, params)
+        err := client.Now2().Table2("{TableName}").ByID("{sysID}").Delete2(context.Background(), params)
         if err != nil {
             log.Fatal(err)
         }
@@ -52,7 +53,7 @@ Deletes the specified record from the table.
     ```
 
 === "Standard"
-        
+
     ```go
     package main
 
@@ -65,7 +66,6 @@ Deletes the specified record from the table.
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         pathParameters := map[string]string{
             "baseurl": "https://www.{instance}.service-now.com/api/now",
@@ -76,12 +76,10 @@ Deletes the specified record from the table.
         requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
 
         params := &tableapi.TableItemRequestBuilderDeleteQueryParameters{
-            // Optional query parameters
+            // Optional configurations
         }
 
-        ctx := context.Background()
-
-        err := requestBuilder.Delete2(ctx, params)
+        err := requestBuilder.Delete2(context.Background(), params)
         if err != nil {
             log.Fatal(err)
         }

@@ -12,6 +12,10 @@ N/A
 
 N/A
 
+# Required query parameters
+
+N/A
+
 ## Examples
 
 === "Fluent"
@@ -42,7 +46,6 @@ N/A
 
     func main() {
         // Initialize credentials and client
-        // ...
 
         // Build requests, using ToXXXRequestInformation method
 
