@@ -54,7 +54,7 @@ jobs:
       - changes-docs
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Restore site cache
         id: site-cache
@@ -105,7 +105,7 @@ jobs:
       - changes-docs
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Vale Linter
         uses: errata-ai/vale-action@v2.1.1
@@ -121,7 +121,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Set up Python
         uses: actions/setup-python@v4
