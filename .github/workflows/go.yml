@@ -77,7 +77,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Cache Go build
-        uses: actions/cache@v4.3.0
+        uses: actions/cache@v4
         with:
           path: ~/.cache/go-build
           key: ${{ runner.os }}-go-build-${{ matrix.os }}-${{ hashFiles('go.sum') }}
@@ -122,7 +122,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Cache Go build
-        uses: actions/cache@v4.3.0
+        uses: actions/cache@v4
         with:
           path: ~/.cache/go-build
           key: ${{ matrix.os }}-go-build-${{ matrix.go-version }}-${{ hashFiles('go.sum') }}

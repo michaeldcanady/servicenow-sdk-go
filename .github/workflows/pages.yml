@@ -58,7 +58,7 @@ jobs:
 
       - name: Restore site cache
         id: site-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           continue-on-error: true
           path: site
@@ -86,7 +86,7 @@ jobs:
       
       - name: Cache built site
         if: steps.site-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: site
           key: site-${{ github.sha }}
