@@ -92,7 +92,7 @@ jobs:
           key: site-${{ github.sha }}
       
       - name: Upload site artifact
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v5
         with:
           name: site
           path: site
