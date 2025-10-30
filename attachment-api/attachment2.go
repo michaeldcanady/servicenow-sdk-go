@@ -121,10 +121,6 @@ func (rE *Attachment2Model) Serialize(_ serialization.SerializationWriter) error
 
 // Attachment2Model returns the deserialization information for this object.
 func (rE *Attachment2Model) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
-	if internal.IsNil(rE) {
-		rE = NewAttachment2()
-	}
-
 	return map[string]func(serialization.ParseNode) error{
 		tableSysIDKey:        internalSerialization.DeserializeStringFunc(rE.setTableSysID),
 		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(rE.setSizeBytes, conversion.StringPtrToInt64Ptr),

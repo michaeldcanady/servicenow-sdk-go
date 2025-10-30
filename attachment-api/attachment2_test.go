@@ -42,7 +42,7 @@ func TestAttachment2_GetFieldDeserializers(t *testing.T) {
 
 				_ = model.GetFieldDeserializers()
 
-				assert.NotNil(t, model)
+				assert.Nil(t, model)
 			},
 		},
 	}
