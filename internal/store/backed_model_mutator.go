@@ -22,5 +22,9 @@ func DefaultBackedModelMutatorFunc[M store.BackedModel, T any](model M, key stri
 }
 
 func DefaultStoreMutatorFunc[T any](store store.BackingStore, key string, value T) error {
+	if internal.IsNil(store) {
+		return errors.New("store is nil")
+	}
+
 	return store.Set(key, value)
 }
