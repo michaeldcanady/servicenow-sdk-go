@@ -6,6 +6,7 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -123,7 +124,7 @@ func (rB *AttachmentItemRequestBuilder) ToGetRequestInformation(_ context.Contex
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	requestInfo.Headers.TryAdd(newInternal.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	requestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 	return kiotaRequestInfo.RequestInformation
 }
 
@@ -143,6 +144,6 @@ func (rB *AttachmentItemRequestBuilder) ToDeleteRequestInformation(_ context.Con
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	requestInfo.Headers.TryAdd(newInternal.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	requestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 	return kiotaRequestInfo.RequestInformation
 }

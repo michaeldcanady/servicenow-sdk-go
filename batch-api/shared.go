@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
@@ -29,7 +30,7 @@ func throwErrors(req ServicedRequest, typeName string) error {
 		return err
 	}
 
-	contentType := getHTTPHeader(headers, newInternal.HTTPHeaderContentType, "")
+	contentType := getHTTPHeader(headers, internalHttp.HTTPHeaderContentType, "")
 
 	return newInternal.NewServiceNowErrorThrower(newInternal.GetErrorRegistryInstance(), newInternal.NewKiotaDeserializer()).Throw(typeName, *code, contentType, []byte(*body))
 }
@@ -57,7 +58,7 @@ func serializeContent[T serialization.Parsable](contentType string, content []by
 }
 
 // getHTTPHeader gets the requested header's value from a slice of RestRequestHeader
-func getHTTPHeader(headers []RestRequestHeader, httpHeader newInternal.HTTPHeader, defaultValue string) string { // nolint: unparam // httpHeader currently on receives one value; however, can be used for any header in the future.
+func getHTTPHeader(headers []RestRequestHeader, httpHeader internalHttp.HTTPHeader, defaultValue string) string { // nolint: unparam // httpHeader currently on receives one value; however, can be used for any header in the future.
 	for _, header := range headers {
 		name, err := header.GetName()
 		if err != nil {
