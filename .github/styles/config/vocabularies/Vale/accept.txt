@@ -1,0 +1,15 @@
+(?i)api
+(?i)apis
+(?i)devcontainer
+(?i)vscode
+(?i)devcontainers
+sys_id
+(?i)Kiota
+GitHub
+golang
+sys
+(?i)sdk
+OpenAPI
+rebasing
+REST
+CRUD

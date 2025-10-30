@@ -39,11 +39,11 @@ jobs:
           files: |
             **.go
             .github/workflows/go.yml
-  
+
   check-go:
     name: Check Go Modules
     needs:
-       changes
+      - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
     strategy:
@@ -77,7 +77,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Cache Go build
-        uses: actions/cache@v4.3.0
+        uses: actions/cache@v4
         with:
           path: ~/.cache/go-build
           key: ${{ runner.os }}-go-build-${{ matrix.os }}-${{ hashFiles('go.sum') }}
@@ -122,7 +122,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Cache Go build
-        uses: actions/cache@v4.3.0
+        uses: actions/cache@v4
         with:
           path: ~/.cache/go-build
           key: ${{ matrix.os }}-go-build-${{ matrix.go-version }}-${{ hashFiles('go.sum') }}
@@ -144,7 +144,7 @@ jobs:
           go tool cover -func="$($env:COVERAGE_FILE)"
           go tool cover -html="$($env:COVERAGE_FILE)" -o cover.html
       - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.os }}-coverage-report-${{ matrix.go-version }}-${{ hashFiles('go.sum') }}) }}
           path: cover.html

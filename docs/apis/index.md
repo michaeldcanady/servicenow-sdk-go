@@ -1,3 +1,12 @@
 # Overview
 
-This section outlines how to implement each api. The APIs are grouped into submodules based on the Service-Now REST API they are wrapping. While the goals is to have consistency across **all** modules, internal consistency - consistency **within** the submodule - should be prioritized.
+This section provides implementation guidance for each supported API in the SDK. Each SDK submodule corresponds to a Service-Now REST API of the same name. For example, the `table-api` submodule wraps the Table REST API.
+
+<!-- vale Microsoft.Vocab = NO  -->
+To ensure clarity and maintainability:
+<!-- vale Microsoft.Vocab = YES  -->
+
+- **Internal consistency** within each submodule takes precedence.
+- **Cross-module consistency** remains a broader goal (but may vary for specific reasons).
+
+Each subsection includes examples and usage patterns tailored to the specific API it supports.
