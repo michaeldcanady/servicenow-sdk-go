@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
@@ -59,7 +60,7 @@ func newServiceNowServiceClientWithOptions(
 	authenticationProvider authentication.AuthenticationProvider,
 	opts ...serviceNowServiceClientOption,
 ) (*serviceNowServiceClient, error) {
-	requestAdapter, err := newInternal.NewServiceNowRequestAdapter(authenticationProvider)
+	requestAdapter, err := internalHttp.NewServiceNowRequestAdapter(authenticationProvider)
 	if err != nil {
 		return nil, err
 	}

@@ -173,5 +173,4 @@ func StringToTime(format string) TypeConverter[string, time.Time] {
 
 		return dateTime, nil
 	}
-
 }

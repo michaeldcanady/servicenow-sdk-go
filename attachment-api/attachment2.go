@@ -139,7 +139,7 @@ func (rE *Attachment2Model) GetFieldDeserializers() map[string]func(serializatio
 		averageImageColorKey: internalSerialization.DeserializeStringFunc(rE.setAverageImageColor),
 		sysUpdatedByKey:      internalSerialization.DeserializeStringFunc(rE.setSysUpdatedBy),
 		// TODO: figure out separator
-		sysTagsKey:        internalSerialization.DeserializeMutatedStringFunc(rE.setSysTags, conversion.StringPtrToPrimitiveSlice[string](" ", func(s string) (string, error) { return s, nil })),
+		sysTagsKey:        internalSerialization.DeserializeMutatedStringFunc(rE.setSysTags, conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil })),
 		tableNameKey:      internalSerialization.DeserializeStringFunc(rE.setTableName),
 		imageWidthKey:     internalSerialization.DeserializeMutatedStringFunc(rE.setImageWidth, conversion.StringPtrToFloat64Ptr),
 		sysModCountKey:    internalSerialization.DeserializeMutatedStringFunc(rE.setSysModCount, conversion.StringPtrToInt64Ptr),
