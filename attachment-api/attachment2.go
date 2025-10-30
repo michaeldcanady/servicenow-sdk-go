@@ -5,7 +5,10 @@ import (
 	"time"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
+	internalStore "github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
@@ -123,25 +126,25 @@ func (rE *Attachment2Model) GetFieldDeserializers() map[string]func(serializatio
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		tableSysIDKey:        newInternal.DeserializeStringFunc(rE.setTableSysID),
-		sizeBytesKey:         newInternal.DeserializeMutatedStringFunc(rE.setSizeBytes, newInternal.StringPtrToInt64Ptr),
-		downloadLinkKey:      newInternal.DeserializeStringFunc(rE.setDownloadLink),
-		sysUpdatedOnKey:      newInternal.DeserializeMutatedStringFunc(rE.setSysUpdatedOn, newInternal.StringPtrToTimePtr(dateTimeFormat)),
-		sysIDKey:             newInternal.DeserializeStringFunc(rE.setSysID),
-		imageHeightKey:       newInternal.DeserializeMutatedStringFunc(rE.setImageHeight, newInternal.StringPtrToFloat64Ptr),
-		sysCreatedOnKey:      newInternal.DeserializeMutatedStringFunc(rE.setSysCreatedOn, newInternal.StringPtrToTimePtr(dateTimeFormat)),
-		fileNameKey:          newInternal.DeserializeStringFunc(rE.setFileName),
-		sysCreatedByKey:      newInternal.DeserializeStringFunc(rE.setSysCreatedBy),
-		compressedKey:        newInternal.DeserializeMutatedStringFunc(rE.setCompressed, newInternal.StringPtrToBoolPtr),
-		averageImageColorKey: newInternal.DeserializeStringFunc(rE.setAverageImageColor),
-		sysUpdatedByKey:      newInternal.DeserializeStringFunc(rE.setSysUpdatedBy),
+		tableSysIDKey:        internalSerialization.DeserializeStringFunc(rE.setTableSysID),
+		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(rE.setSizeBytes, conversion.StringPtrToInt64Ptr),
+		downloadLinkKey:      internalSerialization.DeserializeStringFunc(rE.setDownloadLink),
+		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(rE.setSysUpdatedOn, conversion.StringPtrToTimePtr(dateTimeFormat)),
+		sysIDKey:             internalSerialization.DeserializeStringFunc(rE.setSysID),
+		imageHeightKey:       internalSerialization.DeserializeMutatedStringFunc(rE.setImageHeight, conversion.StringPtrToFloat64Ptr),
+		sysCreatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(rE.setSysCreatedOn, conversion.StringPtrToTimePtr(dateTimeFormat)),
+		fileNameKey:          internalSerialization.DeserializeStringFunc(rE.setFileName),
+		sysCreatedByKey:      internalSerialization.DeserializeStringFunc(rE.setSysCreatedBy),
+		compressedKey:        internalSerialization.DeserializeMutatedStringFunc(rE.setCompressed, conversion.StringPtrToBoolPtr),
+		averageImageColorKey: internalSerialization.DeserializeStringFunc(rE.setAverageImageColor),
+		sysUpdatedByKey:      internalSerialization.DeserializeStringFunc(rE.setSysUpdatedBy),
 		// TODO: figure out separator
-		sysTagsKey:        newInternal.DeserializeMutatedStringFunc(rE.setSysTags, newInternal.StringPtrToPrimitiveSlice[string](" ", func(s string) (string, error) { return s, nil })),
-		tableNameKey:      newInternal.DeserializeStringFunc(rE.setTableName),
-		imageWidthKey:     newInternal.DeserializeMutatedStringFunc(rE.setImageWidth, newInternal.StringPtrToFloat64Ptr),
-		sysModCountKey:    newInternal.DeserializeMutatedStringFunc(rE.setSysModCount, newInternal.StringPtrToInt64Ptr),
-		contentTypeKey:    newInternal.DeserializeStringFunc(rE.setContentType),
-		sizeCompressedKey: newInternal.DeserializeMutatedStringFunc(rE.setSizeCompressed, newInternal.StringPtrToInt64Ptr),
+		sysTagsKey:        internalSerialization.DeserializeMutatedStringFunc(rE.setSysTags, conversion.StringPtrToPrimitiveSlice[string](" ", func(s string) (string, error) { return s, nil })),
+		tableNameKey:      internalSerialization.DeserializeStringFunc(rE.setTableName),
+		imageWidthKey:     internalSerialization.DeserializeMutatedStringFunc(rE.setImageWidth, conversion.StringPtrToFloat64Ptr),
+		sysModCountKey:    internalSerialization.DeserializeMutatedStringFunc(rE.setSysModCount, conversion.StringPtrToInt64Ptr),
+		contentTypeKey:    internalSerialization.DeserializeStringFunc(rE.setContentType),
+		sizeCompressedKey: internalSerialization.DeserializeMutatedStringFunc(rE.setSizeCompressed, conversion.StringPtrToInt64Ptr),
 		chunkSizeBytesKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
 			if err != nil {
@@ -149,218 +152,218 @@ func (rE *Attachment2Model) GetFieldDeserializers() map[string]func(serializatio
 			}
 			return rE.setChunkSizeBytes(val)
 		},
-		hashKey:  newInternal.DeserializeStringFunc(rE.setHash),
-		stateKey: newInternal.DeserializeStringFunc(rE.setState),
+		hashKey:  internalSerialization.DeserializeStringFunc(rE.setHash),
+		stateKey: internalSerialization.DeserializeStringFunc(rE.setState),
 	}
 }
 
 // GetTableSysID returns the table sys id
 func (rE *Attachment2Model) GetTableSysID() (*string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *string](rE, tableSysIDKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, tableSysIDKey)
 }
 
 // setTableSysID sets the table sys id to the provide value
 func (rE *Attachment2Model) setTableSysID(tableSysID *string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, tableSysIDKey, tableSysID)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, tableSysIDKey, tableSysID)
 }
 
 // GetSizeBytes returns the attachment's size in bytes
 func (rE *Attachment2Model) GetSizeBytes() (*int64, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *int64](rE, sizeBytesKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *int64](rE, sizeBytesKey)
 }
 
 // setSizeBytes sets the size (in bytes) to the provided value
 func (rE *Attachment2Model) setSizeBytes(size *int64) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, sizeBytesKey, size)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, sizeBytesKey, size)
 }
 
 // GetDownloadLink returns the download link
 func (rE *Attachment2Model) GetDownloadLink() (*string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *string](rE, downloadLinkKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, downloadLinkKey)
 }
 
 // setDownloadLink sets the download link to the provided value
 func (rE *Attachment2Model) setDownloadLink(link *string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, downloadLinkKey, link)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, downloadLinkKey, link)
 }
 
 // GetSysUpdatedOn return the last updated timestamp
 func (rE *Attachment2Model) GetSysUpdatedOn() (*time.Time, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *time.Time](rE, sysUpdatedOnKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *time.Time](rE, sysUpdatedOnKey)
 }
 
 // setSysUpdatedOn sets the last updated timestamp to the provided value
 func (rE *Attachment2Model) setSysUpdatedOn(val *time.Time) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, sysUpdatedOnKey, val)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, sysUpdatedOnKey, val)
 }
 
 // GetSysID returns the sys id
 func (rE *Attachment2Model) GetSysID() (*string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *string](rE, sysIDKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, sysIDKey)
 }
 
 // setSysID sets the sys id to the provide value
 func (rE *Attachment2Model) setSysID(val *string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, sysIDKey, val)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, sysIDKey, val)
 }
 
 // GetImageHeight returns the image's height, if the attachment is an image
 func (rE *Attachment2Model) GetImageHeight() (*float64, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *float64](rE, imageHeightKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *float64](rE, imageHeightKey)
 }
 
 // setImageHeight sets the image height to the provided value
 func (rE *Attachment2Model) setImageHeight(val *float64) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, imageHeightKey, val)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, imageHeightKey, val)
 }
 
 // GetSysCreatedOn returns the created on timestamp
 func (rE *Attachment2Model) GetSysCreatedOn() (*time.Time, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *time.Time](rE, sysCreatedOnKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *time.Time](rE, sysCreatedOnKey)
 }
 
 // setSysCreatedOn sets the created on timestamp to the provided value
 func (rE *Attachment2Model) setSysCreatedOn(timestamp *time.Time) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, sysCreatedOnKey, timestamp)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, sysCreatedOnKey, timestamp)
 }
 
 // GetFileName returns the file name
 func (rE *Attachment2Model) GetFileName() (*string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *string](rE, fileNameKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, fileNameKey)
 }
 
 // setFileName sets the file name to the provide value
 func (rE *Attachment2Model) setFileName(name *string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, fileNameKey, name)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, fileNameKey, name)
 }
 
 // GetSysCreatedBy returns the username of who created it
 func (rE *Attachment2Model) GetSysCreatedBy() (*string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *string](rE, sysCreatedByKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, sysCreatedByKey)
 }
 
 // setSysCreatedBy sets the username of who created it to the provided value
 func (rE *Attachment2Model) setSysCreatedBy(val *string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, sysCreatedByKey, val)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, sysCreatedByKey, val)
 }
 
 // GetCompressed returns if the attachment is compressed
 func (rE *Attachment2Model) GetCompressed() (*bool, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *bool](rE, compressedKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *bool](rE, compressedKey)
 }
 
 // setCompressed sets if the attachment is compressed
 func (rE *Attachment2Model) setCompressed(compressed *bool) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, compressedKey, compressed)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, compressedKey, compressed)
 }
 
 // GetAverageImageColor returns the average image color, if an image
 func (rE *Attachment2Model) GetAverageImageColor() (*string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *string](rE, averageImageColorKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, averageImageColorKey)
 }
 
 // setAverageImageColor sets the average image color to the provided value
 func (rE *Attachment2Model) setAverageImageColor(color *string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, averageImageColorKey, color)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, averageImageColorKey, color)
 }
 
 // GetSysUpdatedBy returns the username of the account that last updated the attachment
 func (rE *Attachment2Model) GetSysUpdatedBy() (*string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *string](rE, sysUpdatedByKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, sysUpdatedByKey)
 }
 
 // setSysUpdatedBy sets the username of the account that last updated the attachment to the provide value
 func (rE *Attachment2Model) setSysUpdatedBy(username *string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, sysUpdatedByKey, username)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, sysUpdatedByKey, username)
 }
 
 // GetSysTags returns slice of tags
 func (rE *Attachment2Model) GetSysTags() ([]string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, []string](rE, sysTagsKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, []string](rE, sysTagsKey)
 }
 
 // setSysTags sets the sys tags to the provided values
 func (rE *Attachment2Model) setSysTags(tags []string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, sysTagsKey, tags)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, sysTagsKey, tags)
 }
 
 // GetTableName returns associated table name
 func (rE *Attachment2Model) GetTableName() (*string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *string](rE, tableNameKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, tableNameKey)
 }
 
 // setTableName sets table name to provided value
 func (rE *Attachment2Model) setTableName(name *string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, tableNameKey, name)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, tableNameKey, name)
 }
 
 // GetImageWidth returns the width, if attachment is an image
 func (rE *Attachment2Model) GetImageWidth() (*float64, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *float64](rE, imageWidthKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *float64](rE, imageWidthKey)
 }
 
 // setImageWidth sets the width to the provide value
 func (rE *Attachment2Model) setImageWidth(width *float64) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, imageWidthKey, width)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, imageWidthKey, width)
 }
 
 // GetSysModCount returns the mod count
 func (rE *Attachment2Model) GetSysModCount() (*int64, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *int64](rE, sysModCountKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *int64](rE, sysModCountKey)
 }
 
 // setSysModCount sets the count to the provided value
 func (rE *Attachment2Model) setSysModCount(count *int64) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, sysModCountKey, count)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, sysModCountKey, count)
 }
 
 // GetContentType returns the content type of the attachment
 func (rE *Attachment2Model) GetContentType() (*string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *string](rE, contentTypeKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, contentTypeKey)
 }
 
 // setContentType sets the content type to the provided value
 func (rE *Attachment2Model) setContentType(contentType *string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, contentTypeKey, contentType)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, contentTypeKey, contentType)
 }
 
 // GetSizeCompressed returns compressed size of attachment
 func (rE *Attachment2Model) GetSizeCompressed() (*int64, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *int64](rE, sizeCompressedKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *int64](rE, sizeCompressedKey)
 }
 
 // setSizeCompressed sets compressed size to provided value
 func (rE *Attachment2Model) setSizeCompressed(size *int64) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, sizeCompressedKey, size)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, sizeCompressedKey, size)
 }
 
 // TODO: should be int64
 // GetChunkSizeBytes returns chunk size (in bytes) of attachment
 func (rE *Attachment2Model) GetChunkSizeBytes() (*string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *string](rE, chunkSizeBytesKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, chunkSizeBytesKey)
 }
 
 // setChunkSizeBytes sets chunk size to provided value
 func (rE *Attachment2Model) setChunkSizeBytes(size *string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, chunkSizeBytesKey, size)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, chunkSizeBytesKey, size)
 }
 
 // GetHash returns hash of attachment
 func (rE *Attachment2Model) GetHash() (*string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *string](rE, hashKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, hashKey)
 }
 
 // setHash sets hash to provided value
 func (rE *Attachment2Model) setHash(hash *string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, hashKey, hash)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, hashKey, hash)
 }
 
 // GetState returns the state
 func (rE *Attachment2Model) GetState() (*string, error) {
-	return newInternal.BaseBackedModelAccessorFunc[*Attachment2Model, *string](rE, stateKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, stateKey)
 }
 
 // setState sets the state
 func (rE *Attachment2Model) setState(val *string) error {
-	return newInternal.BaseBackedModelMutatorFunc(rE, stateKey, val)
+	return internalStore.DefaultBackedModelMutatorFunc(rE, stateKey, val)
 }

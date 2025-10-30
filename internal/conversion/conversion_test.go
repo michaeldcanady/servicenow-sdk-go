@@ -1,4 +1,4 @@
-package internal
+package conversion
 
 import (
 	"errors"
@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"testing"
 
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,7 +18,7 @@ func TestDereference(t *testing.T) {
 		{
 			name: "String pointer",
 			test: func(t *testing.T) {
-				input := ToPointer("testing")
+				input := internal.ToPointer("testing")
 				output := Dereference(reflect.ValueOf(input))
 
 				assert.Equal(t, interface{}("testing"), output.Interface())
@@ -26,7 +27,7 @@ func TestDereference(t *testing.T) {
 		{
 			name: "String pointer pointer",
 			test: func(t *testing.T) {
-				input := ToPointer(ToPointer("testing"))
+				input := internal.ToPointer(internal.ToPointer("testing"))
 				output := Dereference(reflect.ValueOf(input))
 
 				assert.Equal(t, interface{}("testing"), output.Interface())
@@ -304,7 +305,7 @@ func TestConvert(t *testing.T) {
 		{
 			name: "Nil input",
 			test: func(t *testing.T) {
-				output := ToPointer("random words")
+				output := internal.ToPointer("random words")
 
 				err := Convert(nil, output)
 
@@ -324,7 +325,7 @@ func TestConvert(t *testing.T) {
 			name: "Int8 to Int16",
 			test: func(t *testing.T) {
 				input := int8(10)
-				output := ToPointer(int16(0))
+				output := internal.ToPointer(int16(0))
 
 				err := Convert(input, output)
 
@@ -335,13 +336,13 @@ func TestConvert(t *testing.T) {
 		{
 			name: "String pointer",
 			test: func(t *testing.T) {
-				var input interface{} = ToPointer("test")
+				var input interface{} = internal.ToPointer("test")
 				var output *string
 
 				err := Convert(input, &output)
 
 				assert.Nil(t, err)
-				assert.Equal(t, ToPointer("test"), output)
+				assert.Equal(t, internal.ToPointer("test"), output)
 			},
 		},
 		{
@@ -359,13 +360,13 @@ func TestConvert(t *testing.T) {
 		{
 			name: "String pointer pointer",
 			test: func(t *testing.T) {
-				var input interface{} = ToPointer(ToPointer("test"))
+				var input interface{} = internal.ToPointer(internal.ToPointer("test"))
 				var output **string
 
 				err := Convert(input, &output)
 
 				assert.Nil(t, err)
-				assert.Equal(t, ToPointer(ToPointer("test")), output)
+				assert.Equal(t, internal.ToPointer(internal.ToPointer("test")), output)
 			},
 		},
 	}

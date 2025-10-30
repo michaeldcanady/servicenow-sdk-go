@@ -1,4 +1,4 @@
-package internal
+package conversion
 
 import (
 	"errors"
@@ -7,6 +7,7 @@ import (
 	"slices"
 	"strconv"
 	"sync"
+	"time"
 )
 
 var (
@@ -161,4 +162,16 @@ func Convert(input any, output any) error {
 	}
 	targetVal.Set(convertedVal)
 	return nil
+}
+
+func StringToTime(format string) TypeConverter[string, time.Time] {
+	return func(input string) (time.Time, error) {
+		dateTime, err := time.Parse(format, input)
+		if err != nil {
+			return time.Time{}, err
+		}
+
+		return dateTime, nil
+	}
+
 }
