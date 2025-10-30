@@ -1,7 +1,6 @@
 # Core concepts
 
 ## `RequestBuilder` façade
-## `RequestBuilder` façade
 
 The `RequestBuilder` serves as a high-level interface for constructing and executing HTTP operations for a specific API path. At each path diversion (after the base URI) introduce a new `RequestBuilder`.
 

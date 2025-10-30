@@ -39,7 +39,7 @@ jobs:
           files: |
             **.go
             .github/workflows/go.yml
-  
+
   check-go:
     name: Check Go Modules
     needs:

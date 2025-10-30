@@ -1,9 +1,11 @@
-package internal
+package store
 
 import (
 	"errors"
 	"strings"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
@@ -16,7 +18,7 @@ type StoreAccessorFunc[S store.BackingStore, T any] func(S, string) (T, error)
 func DefaultStoreAccessorFunc[S store.BackingStore, T any](store S, key string) (T, error) {
 	var result T
 
-	if IsNil(store) {
+	if internal.IsNil(store) {
 		return result, errors.New("store is nil")
 	}
 	if strings.TrimSpace(key) == "" {
@@ -28,7 +30,7 @@ func DefaultStoreAccessorFunc[S store.BackingStore, T any](store S, key string) 
 		return result, err
 	}
 
-	if err := As2(val, &result, true); err != nil {
+	if err := conversion.As2(val, &result, true); err != nil {
 		return result, err
 	}
 

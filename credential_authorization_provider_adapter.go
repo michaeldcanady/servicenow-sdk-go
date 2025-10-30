@@ -6,6 +6,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	newInt "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
@@ -41,13 +42,13 @@ func (provider *credentialAuthenticationProviderAdapter) AuthenticateRequest(_ c
 	if request.Headers == nil {
 		request.Headers = abstractions.NewRequestHeaders()
 	}
-	if !request.Headers.ContainsKey(newInt.RequestHeaderAuthorization.String()) {
+	if !request.Headers.ContainsKey(internalHttp.RequestHeaderAuthorization.String()) {
 		authString, err := provider.cred.GetAuthentication()
 		if err != nil {
 			return err
 		}
 		if authString != "" {
-			request.Headers.Add(newInt.RequestHeaderAuthorization.String(), authString)
+			request.Headers.Add(internalHttp.RequestHeaderAuthorization.String(), authString)
 		}
 	}
 

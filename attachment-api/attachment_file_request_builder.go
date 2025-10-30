@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -128,7 +129,7 @@ func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(ctx context.Con
 			kiotaRequestInfo.AddQueryParameters(parameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(newInternal.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
 	requestAdapter := rB.GetRequestAdapter()
 	if newInternal.IsNil(requestAdapter) {

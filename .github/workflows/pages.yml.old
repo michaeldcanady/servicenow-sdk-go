@@ -1,0 +1,67 @@
+name: Docs Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "**"
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - ".github/workflows/pages.yml"
+  pull_request:
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - ".github/workflows/pages.yml"
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+
+jobs:
+  #vale:
+  #  name: Lint Docs with Vale
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: actions/checkout@v5
+  #    - uses: errata-ai/vale-action@v2.1.1
+
+  build:
+    name: Test Docs Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+      - run: pip install mkdocs-material==9.5.24
+      - name: Build Docs (Dry Run)
+        run: mkdocs build --strict
+
+  deploy:
+    name: Deploy Docs
+    runs-on: ubuntu-latest
+      - test-docs
+    if: github.event_name == 'release' && github.event.action == 'published'
+    steps:
+      - uses: actions/checkout@v5
+      - name: Configure Git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      - run: pip install mkdocs-material==9.5.24
+      - run: pip install markdown_include
+      - run: mkdocs gh-deploy --force

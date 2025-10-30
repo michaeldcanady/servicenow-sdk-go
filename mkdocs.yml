@@ -16,27 +16,27 @@ nav:
   - APIs:
       - apis/index.md
       - Attachment:
-        - Overview: apis/attachment/index.md
-        - File:
-          - Overview: apis/attachment/file/index.md
-          - Get: apis/attachment/file/get.md
-          - Create: apis/attachment/file/create.md
-        - Upload:
-          - Overview: apis/attachment/upload/index.md
-          - Create: apis/attachment/upload/create.md
-        - List: apis/attachment/list.md
-        - Get: apis/attachment/get.md
-        - Delete: apis/attachment/delete.md
+          - Overview: apis/attachment/index.md
+          - File:
+              - Overview: apis/attachment/file/index.md
+              - Get: apis/attachment/file/get.md
+              - Create: apis/attachment/file/create.md
+          - Upload:
+              - Overview: apis/attachment/upload/index.md
+              - Create: apis/attachment/upload/create.md
+          - List: apis/attachment/list.md
+          - Get: apis/attachment/get.md
+          - Delete: apis/attachment/delete.md
       - Table:
-        - Overview: apis/tables/index.md
-        - List: apis/tables/list.md
-        - Create: apis/tables/create.md
-        - Get: apis/tables/get.md
-        - Update: apis/tables/update.md
-        - Delete: apis/tables/delete.md
+          - Overview: apis/tables/index.md
+          - List: apis/tables/list.md
+          - Create: apis/tables/create.md
+          - Get: apis/tables/get.md
+          - Update: apis/tables/update.md
+          - Delete: apis/tables/delete.md
       - Batch:
-        - Overview: apis/batch/index.md
-        - Create: apis/batch/create.md
+          - Overview: apis/batch/index.md
+          - Create: apis/batch/create.md
   - Contributing:
       - contributing/index.md
       - Architecture:
