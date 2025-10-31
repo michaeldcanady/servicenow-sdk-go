@@ -9,25 +9,23 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
-// ElementValueModel is an implementation of ElementValue.
-type ElementValueModel struct {
-	val interface{}
+// ElementValue is an implementation of ElementValue.
+type ElementValue struct {
+	val any
 }
 
 // NewElementValue returns a new Element Value
-func NewElementValue(val interface{}) *ElementValueModel {
-	return &ElementValueModel{
-		val: val,
-	}
+func NewElementValue(val any) (*ElementValue, error) {
+	return newElementVis().Visit(val)
 }
 
 // CreateElementValueFromDiscriminatorValue is a parsable factory for creating a ElementValueModel
 func CreateElementValueFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewElementValue(nil), nil
+	return NewElementValue(nil)
 }
 
 // Serialize writes the objects properties to the current writer.
-func (eV *ElementValueModel) Serialize(writer serialization.SerializationWriter) error {
+func (eV *ElementValue) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(eV) {
 		return nil
 	}
@@ -36,16 +34,16 @@ func (eV *ElementValueModel) Serialize(writer serialization.SerializationWriter)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (eV *ElementValueModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (eV *ElementValue) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{}
 }
 
 // IsNil returns whether the element is nil or not.
-func (eV *ElementValueModel) IsNil() bool {
+func (eV *ElementValue) IsNil() bool {
 	return internal.IsNil(eV) || internal.IsNil(eV.val)
 }
 
-func (eV *ElementValueModel) setValue(val interface{}) error { //nolint: unused
+func (eV *ElementValue) setValue(val any) error { //nolint: unused
 	if internal.IsNil(eV) {
 		return nil
 	}
@@ -60,40 +58,44 @@ func (eV *ElementValueModel) setValue(val interface{}) error { //nolint: unused
 }
 
 // GetStringValue returns a String value from the element.
-func (eV *ElementValueModel) GetStringValue() (*string, error) {
+func (eV *ElementValue) GetStringValue() (*string, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
 
-	val, ok := eV.val.(*string)
-	if !ok {
-		return nil, fmt.Errorf("type '%T' is not compatible with type string", eV.val)
+	var val string
+
+	if err := conversion.As2(eV.val, &val, false); err != nil {
+		return nil, err
 	}
-	return val, nil
+
+	return &val, nil
 }
 
 // GetBoolValue returns a Bool value from the element.
-func (eV *ElementValueModel) GetBoolValue() (*bool, error) {
+func (eV *ElementValue) GetBoolValue() (*bool, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
 
-	val, ok := eV.val.(*bool)
-	if !ok {
-		return nil, fmt.Errorf("type '%T' is not compatible with type bool", eV.val)
+	var val bool
+
+	if err := conversion.As2(eV.val, &val, false); err != nil {
+		return nil, err
 	}
-	return val, nil
+
+	return &val, nil
 }
 
 // GetInt8Value returns a Int8 value from the element.
-func (eV *ElementValueModel) GetInt8Value() (*int8, error) {
+func (eV *ElementValue) GetInt8Value() (*int8, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
 
 	var val int8
 
-	if err := conversion.As(eV.val, &val); err != nil {
+	if err := conversion.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 
@@ -101,14 +103,14 @@ func (eV *ElementValueModel) GetInt8Value() (*int8, error) {
 }
 
 // GetByteValue returns a Byte value from the element.
-func (eV *ElementValueModel) GetByteValue() (*byte, error) {
+func (eV *ElementValue) GetByteValue() (*byte, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
 
 	var val byte
 
-	if err := conversion.As(eV.val, &val); err != nil {
+	if err := conversion.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 
@@ -116,14 +118,14 @@ func (eV *ElementValueModel) GetByteValue() (*byte, error) {
 }
 
 // GetFloat32Value returns a Float32 value from the element.
-func (eV *ElementValueModel) GetFloat32Value() (*float32, error) {
+func (eV *ElementValue) GetFloat32Value() (*float32, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
 
 	var val float32
 
-	if err := conversion.As(eV.val, &val); err != nil {
+	if err := conversion.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 
@@ -131,14 +133,14 @@ func (eV *ElementValueModel) GetFloat32Value() (*float32, error) {
 }
 
 // GetFloat64Value returns a Float64 value from the element.
-func (eV *ElementValueModel) GetFloat64Value() (*float64, error) {
+func (eV *ElementValue) GetFloat64Value() (*float64, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
 
 	var val float64
 
-	if err := conversion.As(eV.val, &val); err != nil {
+	if err := conversion.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 
@@ -146,14 +148,14 @@ func (eV *ElementValueModel) GetFloat64Value() (*float64, error) {
 }
 
 // GetInt32Value returns a Int32 value from the element.
-func (eV *ElementValueModel) GetInt32Value() (*int32, error) {
+func (eV *ElementValue) GetInt32Value() (*int32, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
 
 	var val int32
 
-	if err := conversion.As(eV.val, &val); err != nil {
+	if err := conversion.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 
@@ -161,14 +163,14 @@ func (eV *ElementValueModel) GetInt32Value() (*int32, error) {
 }
 
 // GetInt64Value returns a Int64 value from the element.
-func (eV *ElementValueModel) GetInt64Value() (*int64, error) {
+func (eV *ElementValue) GetInt64Value() (*int64, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
 
 	var val int64
 
-	if err := conversion.As(eV.val, &val); err != nil {
+	if err := conversion.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 
@@ -211,7 +213,7 @@ func (eV *ElementValueModel) GetInt64Value() (*int64, error) {
 //}
 
 // GetEnumValue returns an enum value from the element.
-func (eV *ElementValueModel) GetEnumValue(parser serialization.EnumFactory) (interface{}, error) {
+func (eV *ElementValue) GetEnumValue(parser serialization.EnumFactory) (interface{}, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -229,7 +231,7 @@ func (eV *ElementValueModel) GetEnumValue(parser serialization.EnumFactory) (int
 }
 
 // GetCollectionOfPrimitiveValues returns a Collection of specified primitive values from the element.
-func (eV *ElementValueModel) GetCollectionOfPrimitiveValues(targetType Primitive) ([]interface{}, error) {
+func (eV *ElementValue) GetCollectionOfPrimitiveValues(targetType Primitive) ([]interface{}, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -238,21 +240,19 @@ func (eV *ElementValueModel) GetCollectionOfPrimitiveValues(targetType Primitive
 		return nil, fmt.Errorf("target type can't be %s", PrimitiveUnknown)
 	}
 
-	rawCollection, ok := eV.val.([]interface{})
+	rawCollection, ok := eV.val.([]*ElementValue)
 	if !ok {
 		return nil, errors.New("val is not a collection")
 	}
 
-	collection := make([]interface{}, 0, len(rawCollection))
+	collection := make([]interface{}, len(rawCollection))
 	for i, v := range rawCollection {
 		var (
 			val interface{}
 			err error
 		)
 		if v != nil {
-			// FIXME: when primitiveValue is called it's taking in the whole collection not just an element
-			val, err = eV.getPrimitiveValue(targetType)
-			if err != nil {
+			if val, err = v.getPrimitiveValue(targetType); err != nil {
 				return nil, err
 			}
 		}
@@ -263,7 +263,7 @@ func (eV *ElementValueModel) GetCollectionOfPrimitiveValues(targetType Primitive
 }
 
 // getPrimitiveValue returns the element value as the specified primitive type or error if not of that type
-func (eV *ElementValueModel) getPrimitiveValue(targetType Primitive) (interface{}, error) {
+func (eV *ElementValue) getPrimitiveValue(targetType Primitive) (interface{}, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
@@ -297,7 +297,7 @@ func (eV *ElementValueModel) getPrimitiveValue(targetType Primitive) (interface{
 }
 
 // GetRawValue returns the value of the element as an interface.
-func (eV *ElementValueModel) GetRawValue() (interface{}, error) {
+func (eV *ElementValue) GetRawValue() (interface{}, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
