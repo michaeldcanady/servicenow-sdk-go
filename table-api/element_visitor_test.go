@@ -237,6 +237,17 @@ func TestElementVis_Visit(t *testing.T) {
 				assert.Equal(t, &ElementValue{val: true}, elem)
 			},
 		},
+		{
+			name: "Nil",
+			test: func(t *testing.T) {
+				visitor := &elementVis{}
+
+				elem, err := visitor.Visit(nil)
+
+				assert.Nil(t, err)
+				assert.Equal(t, &ElementValue{val: nil}, elem)
+			},
+		},
 	}
 
 	for _, test := range tests {

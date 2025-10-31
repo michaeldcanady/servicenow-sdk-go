@@ -3,6 +3,8 @@ package tableapi
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
 // elementVisitor represents a way to convert a value to element(s)
@@ -31,6 +33,10 @@ func (eV *elementVis) Visit(val any) (*ElementValue, error) {
 		ok bool
 		rv reflect.Value
 	)
+
+	if internal.IsNil(val) {
+		return &ElementValue{val: nil}, nil
+	}
 
 	if rv, ok = val.(reflect.Value); !ok {
 		rv = reflect.ValueOf(val)
@@ -86,4 +92,11 @@ func (eV *elementVis) VisitPointer(val reflect.Value) (*ElementValue, error) {
 // VisitPrimitive converts the provided val to ElementValue
 func (eV *elementVis) VisitPrimitive(val reflect.Value) (*ElementValue, error) {
 	return &ElementValue{val: val.Interface()}, nil
+}
+
+func (eV *elementVis) VisitInterface(val reflect.Value) (*ElementValue, error) {
+	if val.IsNil() {
+		return eV.VisitPrimitive(val)
+	}
+	return eV.Visit(val.Elem())
 }
