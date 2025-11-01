@@ -93,7 +93,7 @@
     "yzhang"
   ],
   "gopls": {
-    "build.buildFlags": ["-tags=preview.query"]
+    "build.buildFlags": ["-tags=preview.query,preview.tableApiV2"]
   },
   "go.useLanguageServer": true
 }
