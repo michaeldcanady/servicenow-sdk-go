@@ -90,9 +90,6 @@ func As2[T any](in any, out T, strict bool) error {
 	// If types match, set directly
 	if typedIn, ok := in.(T); ok {
 		if internal.IsPointer(typedIn) {
-			if strict {
-				return fmt.Errorf("cannot convert type '%s' to type %s", reflect.ValueOf(typedIn).Type(), reflect.ValueOf(out).Elem().Type())
-			}
 			reflect.ValueOf(out).Elem().Set(reflect.ValueOf(typedIn).Elem())
 			return nil
 		}
