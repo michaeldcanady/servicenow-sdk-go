@@ -7,28 +7,14 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
-// elementVisitor represents a way to convert a value to element(s)
-type elementVisitor interface {
-	// Visit converts the provided value to an ElementValue
-	Visit(any) (*ElementValue, error)
-	// VisitSlice converts the provided slice into a slice of ElementValues
-	VisitSlice(reflect.Value) (*ElementValue, error)
-	// VisitMap converts the provided map into a map of ElementValues
-	VisitMap(reflect.Value) (*ElementValue, error)
-	// VisitPointer converts the pointer into a dereferenced ElementValue
-	VisitPointer(reflect.Value) (*ElementValue, error)
-	// VisitPrimitive converts the provided val to ElementValue
-	VisitPrimitive(reflect.Value) (*ElementValue, error)
+func NewElementVisitor() *ElementVisitor {
+	return &ElementVisitor{}
 }
 
-func newElementVis() *elementVis {
-	return &elementVis{}
-}
-
-type elementVis struct{}
+type ElementVisitor struct{}
 
 // Visit converts the provided value to an ElementValue
-func (eV *elementVis) Visit(val any) (*ElementValue, error) {
+func (eV *ElementVisitor) Visit(val any) (*ElementValue, error) {
 	var (
 		ok bool
 		rv reflect.Value
@@ -57,7 +43,7 @@ func (eV *elementVis) Visit(val any) (*ElementValue, error) {
 }
 
 // VisitSlice converts the provided slice into a slice of ElementValues
-func (eV *elementVis) VisitSlice(val reflect.Value) (*ElementValue, error) {
+func (eV *ElementVisitor) VisitSlice(val reflect.Value) (*ElementValue, error) {
 	var err error
 	array := make([]*ElementValue, val.Len())
 	for i := 0; i < val.Len(); i++ {
@@ -69,7 +55,7 @@ func (eV *elementVis) VisitSlice(val reflect.Value) (*ElementValue, error) {
 }
 
 // VisitMap converts the provided map into a map of ElementValues
-func (eV *elementVis) VisitMap(val reflect.Value) (*ElementValue, error) {
+func (eV *ElementVisitor) VisitMap(val reflect.Value) (*ElementValue, error) {
 	var err error
 	mapping := make(map[string]*ElementValue, val.Len())
 	for _, valKey := range val.MapKeys() {
@@ -82,7 +68,7 @@ func (eV *elementVis) VisitMap(val reflect.Value) (*ElementValue, error) {
 }
 
 // VisitPointer converts the pointer into a dereferenced ElementValue
-func (eV *elementVis) VisitPointer(val reflect.Value) (*ElementValue, error) {
+func (eV *ElementVisitor) VisitPointer(val reflect.Value) (*ElementValue, error) {
 	if val.IsNil() {
 		return nil, nil
 	}
@@ -90,13 +76,6 @@ func (eV *elementVis) VisitPointer(val reflect.Value) (*ElementValue, error) {
 }
 
 // VisitPrimitive converts the provided val to ElementValue
-func (eV *elementVis) VisitPrimitive(val reflect.Value) (*ElementValue, error) {
+func (eV *ElementVisitor) VisitPrimitive(val reflect.Value) (*ElementValue, error) {
 	return &ElementValue{val: val.Interface()}, nil
-}
-
-func (eV *elementVis) VisitInterface(val reflect.Value) (*ElementValue, error) {
-	if val.IsNil() {
-		return eV.VisitPrimitive(val)
-	}
-	return eV.Visit(val.Elem())
 }

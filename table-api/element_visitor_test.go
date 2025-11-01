@@ -1,6 +1,7 @@
 package tableapi
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -16,7 +17,7 @@ func TestElementVis_VisitSlice(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.VisitSlice(reflect.ValueOf([]string{"test", "testing"}))
 
@@ -27,7 +28,7 @@ func TestElementVis_VisitSlice(t *testing.T) {
 		{
 			name: "Nil",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.VisitSlice(reflect.ValueOf(([]string)(nil)))
 
@@ -50,7 +51,7 @@ func TestElementVis_VisitMap(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.VisitMap(reflect.ValueOf(map[string]string{"test": "testing"}))
 
@@ -61,7 +62,7 @@ func TestElementVis_VisitMap(t *testing.T) {
 		{
 			name: "Nil",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.VisitMap(reflect.ValueOf((map[string]string)(nil)))
 
@@ -84,7 +85,7 @@ func TestElementVis_VisitPointer(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.VisitPointer(reflect.ValueOf(internal.ToPointer("test")))
 
@@ -95,7 +96,7 @@ func TestElementVis_VisitPointer(t *testing.T) {
 		{
 			name: "Nil",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.VisitPointer(reflect.ValueOf((*string)(nil)))
 
@@ -118,7 +119,7 @@ func TestElementVis_VisitPrimitive(t *testing.T) {
 		{
 			name: "String",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.VisitPrimitive(reflect.ValueOf("test"))
 
@@ -141,7 +142,7 @@ func TestElementVis_Visit(t *testing.T) {
 		{
 			name: "String",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.Visit("test")
 
@@ -152,7 +153,7 @@ func TestElementVis_Visit(t *testing.T) {
 		{
 			name: "Int64",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.Visit(int64(1))
 
@@ -163,7 +164,7 @@ func TestElementVis_Visit(t *testing.T) {
 		{
 			name: "Int32",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.Visit(int32(1))
 
@@ -174,7 +175,7 @@ func TestElementVis_Visit(t *testing.T) {
 		{
 			name: "Float64",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.Visit(float64(1.00))
 
@@ -185,7 +186,7 @@ func TestElementVis_Visit(t *testing.T) {
 		{
 			name: "Float32",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.Visit(float32(1.00))
 
@@ -196,7 +197,7 @@ func TestElementVis_Visit(t *testing.T) {
 		{
 			name: "Byte",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.Visit(byte(1))
 
@@ -207,7 +208,7 @@ func TestElementVis_Visit(t *testing.T) {
 		{
 			name: "Int8",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.Visit(int8(1))
 
@@ -218,7 +219,7 @@ func TestElementVis_Visit(t *testing.T) {
 		{
 			name: "Bool",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.Visit(true)
 
@@ -229,7 +230,7 @@ func TestElementVis_Visit(t *testing.T) {
 		{
 			name: "reflect.Value",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.Visit(reflect.ValueOf(true))
 
@@ -240,12 +241,36 @@ func TestElementVis_Visit(t *testing.T) {
 		{
 			name: "Nil",
 			test: func(t *testing.T) {
-				visitor := &elementVis{}
+				visitor := &ElementVisitor{}
 
 				elem, err := visitor.Visit(nil)
 
 				assert.Nil(t, err)
 				assert.Equal(t, &ElementValue{val: nil}, elem)
+			},
+		},
+		{
+			name: "Map",
+			test: func(t *testing.T) {
+				visitor := &ElementVisitor{}
+
+				in := map[string]string{"test": "test"}
+
+				elem, err := visitor.Visit(in)
+				assert.Nil(t, err)
+				assert.Equal(t, &ElementValue{val: map[string]*ElementValue{"test": {val: "test"}}}, elem)
+			},
+		},
+		{
+			name: "Unsupported kind",
+			test: func(t *testing.T) {
+				visitor := &ElementVisitor{}
+
+				in := make(chan string)
+
+				elem, err := visitor.Visit(in)
+				assert.Equal(t, fmt.Errorf("unsupported kind %s", reflect.Chan), err)
+				assert.Equal(t, (*ElementValue)(nil), elem)
 			},
 		},
 	}

@@ -16,7 +16,7 @@ type ElementValue struct {
 
 // NewElementValue returns a new Element Value
 func NewElementValue(val any) (*ElementValue, error) {
-	return newElementVis().Visit(val)
+	return NewElementVisitor().Visit(val)
 }
 
 // CreateElementValueFromDiscriminatorValue is a parsable factory for creating a ElementValueModel
