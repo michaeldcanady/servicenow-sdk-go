@@ -65,7 +65,7 @@ func (eV *ElementValue) GetStringValue() (*string, error) {
 
 	var val string
 
-	if err := conversion.As2(eV.val, &val, false); err != nil {
+	if err := conversion.As2(eV.val, &val, true); err != nil {
 		return nil, err
 	}
 
@@ -224,7 +224,7 @@ func (eV *ElementValue) GetEnumValue(parser serialization.EnumFactory) (interfac
 	if err != nil {
 		return nil, err
 	}
-	if s == nil {
+	if s == nil || *s == "" {
 		return nil, nil
 	}
 	return parser(*s)

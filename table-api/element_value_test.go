@@ -94,12 +94,21 @@ func TestElementValueModel_Serialize(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestElementValueModel_GetFieldDeserializers(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				model := &ElementValue{}
+				serializers := model.GetFieldDeserializers()
+
+				assert.Len(t, serializers, 0)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
@@ -191,14 +200,14 @@ func TestElementValueModel_GetStringValue(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
+				value := "test"
 
 				model := &ElementValue{val: value}
 
 				ret, err := model.GetStringValue()
 
 				assert.Nil(t, err)
-				assert.Equal(t, value, ret)
+				assert.Equal(t, &value, ret)
 			},
 		},
 		{
@@ -580,7 +589,67 @@ func TestElementValueModel_GetEnumValue(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Valid Parser",
+			test: func(t *testing.T) {
+				strct := mocking.NewMockEnumFactory()
+				strct.On("Factory", "value").Return(0, nil)
+
+				model := &ElementValue{val: "value"}
+				enum, err := model.GetEnumValue(strct.Factory)
+
+				assert.Nil(t, err)
+				assert.Equal(t, 0, enum)
+			},
+		},
+		{
+			name: "Nil Parser",
+			test: func(t *testing.T) {
+				model := &ElementValue{val: "value"}
+				enum, err := model.GetEnumValue(nil)
+
+				assert.Equal(t, errors.New("parser is nil"), err)
+				assert.Nil(t, enum)
+			},
+		},
+		{
+			name: "Parsing Error",
+			test: func(t *testing.T) {
+				strct := mocking.NewMockEnumFactory()
+
+				model := &ElementValue{val: 1}
+				enum, err := model.GetEnumValue(strct.Factory)
+
+				assert.Equal(t, errors.New("cannot convert '1' to type string"), err)
+				assert.Nil(t, enum)
+			},
+		},
+		{
+			name: "Empty String",
+			test: func(t *testing.T) {
+				strct := mocking.NewMockEnumFactory()
+
+				model := &ElementValue{val: ""}
+				enum, err := model.GetEnumValue(strct.Factory)
+
+				assert.Nil(t, err)
+				assert.Nil(t, enum)
+			},
+		},
+		{
+			name: "Nil Model",
+			test: func(t *testing.T) {
+				strct := mocking.NewMockEnumFactory()
+
+				model := (*ElementValue)(nil)
+				enum, err := model.GetEnumValue(strct.Factory)
+
+				assert.Nil(t, err)
+				assert.Nil(t, enum)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
