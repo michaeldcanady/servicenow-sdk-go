@@ -1,7 +1,6 @@
 package conversion
 
 import (
-	"errors"
 	"testing"
 
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
@@ -21,8 +20,8 @@ func TestAs2(t *testing.T) {
 
 				err := As2(in, &out, true)
 
-				assert.Equal(t, errors.New("cannot convert type '*string' to type string"), err)
-				assert.Equal(t, "", out)
+				assert.Nil(t, err)
+				assert.Equal(t, "test", out)
 			},
 		},
 	}
