@@ -1,18 +1,11 @@
 package tableapi
 
 import (
-	"errors"
-
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 )
 
-const (
-	displayValueKey = "display_value"
-	valueKey        = "value"
-	linkKey         = "link"
-)
-
-// RecordElementModel implements the RecordElement interface.
+// RecordElement implements the RecordElement interface.
 //
 // This model encapsulates structured data storage for table entries and provides
 // methods for retrieving and updating values related to a specific record.
@@ -24,7 +17,7 @@ const (
 //	if err != nil {
 //	    log.Fatal(err)
 //	}
-type RecordElementModel struct {
+type RecordElement struct {
 	internal.Model
 }
 
@@ -35,8 +28,8 @@ type RecordElementModel struct {
 // Example:
 //
 //	element := NewRecordElement()
-func NewRecordElement() *RecordElementModel {
-	return &RecordElementModel{
+func NewRecordElement() *RecordElement {
+	return &RecordElement{
 		internal.NewBaseModel(),
 	}
 }
@@ -53,22 +46,9 @@ func NewRecordElement() *RecordElementModel {
 //	    log.Fatal(err)
 //	}
 //	fmt.Println(displayValue)
-func (rE *RecordElementModel) GetDisplayValue() (ElementValue, error) {
-	if internal.IsNil(rE) {
-		return nil, nil
-	}
-
-	store := rE.GetBackingStore()
-	if internal.IsNil(store) {
-		return nil, nil
-	}
-
-	value, err := store.Get(displayValueKey)
-	if err != nil {
-		return nil, err
-	}
-
-	return NewElementValue(value), nil
+func (rE *RecordElement) GetDisplayValue() (*ElementValue, error) {
+	val, err := store.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, displayValueKey)
+	return &val, err
 }
 
 // SetDisplayValue updates the display value of the element.
@@ -79,17 +59,15 @@ func (rE *RecordElementModel) GetDisplayValue() (ElementValue, error) {
 //	if err != nil {
 //	    log.Fatal(err)
 //	}
-func (rE *RecordElementModel) SetDisplayValue(value any) error {
-	if internal.IsNil(rE) {
-		return nil
+func (rE *RecordElement) SetDisplayValue(value any) error {
+	if _, ok := value.(*ElementValue); !ok {
+		var err error
+		if value, err = NewElementValue(value); err != nil {
+			return err
+		}
 	}
 
-	store := rE.GetBackingStore()
-	if internal.IsNil(store) {
-		return nil
-	}
-
-	return store.Set(displayValueKey, value)
+	return store.DefaultBackedModelMutatorFunc(rE, displayValueKey, value)
 }
 
 // GetValue retrieves the raw stored value of the element.
@@ -103,22 +81,9 @@ func (rE *RecordElementModel) SetDisplayValue(value any) error {
 //	    log.Fatal(err)
 //	}
 //	fmt.Println(value)
-func (rE *RecordElementModel) GetValue() (ElementValue, error) {
-	if internal.IsNil(rE) {
-		return nil, nil
-	}
-
-	store := rE.GetBackingStore()
-	if internal.IsNil(store) {
-		return nil, nil
-	}
-
-	value, err := store.Get(valueKey)
-	if err != nil {
-		return nil, err
-	}
-
-	return NewElementValue(value), nil
+func (rE *RecordElement) GetValue() (*ElementValue, error) {
+	val, err := store.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, valueKey)
+	return &val, err
 }
 
 // SetValue updates the stored value of the element.
@@ -129,13 +94,15 @@ func (rE *RecordElementModel) GetValue() (ElementValue, error) {
 //	if err != nil {
 //	    log.Fatal(err)
 //	}
-func (rE *RecordElementModel) SetValue(value any) error {
-	store := rE.GetBackingStore()
-	if internal.IsNil(store) {
-		return nil
+func (rE *RecordElement) SetValue(value any) error {
+	if _, ok := value.(*ElementValue); !ok {
+		var err error
+		if value, err = NewElementValue(value); err != nil {
+			return err
+		}
 	}
 
-	return store.Set(valueKey, value)
+	return store.DefaultBackedModelMutatorFunc(rE, valueKey, value)
 }
 
 // GetLink retrieves the optional link associated with the element.
@@ -149,27 +116,9 @@ func (rE *RecordElementModel) SetValue(value any) error {
 //	    log.Fatal(err)
 //	}
 //	fmt.Println(*link)
-func (rE *RecordElementModel) GetLink() (*string, error) {
-	if internal.IsNil(rE) {
-		return nil, nil
-	}
-
-	store := rE.GetBackingStore()
-	if internal.IsNil(store) {
-		return nil, nil
-	}
-
-	value, err := store.Get(linkKey)
-	if err != nil {
-		return nil, err
-	}
-
-	link, ok := value.(*string)
-	if !ok {
-		return nil, errors.New("value is not *string")
-	}
-
-	return link, nil
+func (rE *RecordElement) GetLink() (*string, error) {
+	val, err := store.DefaultBackedModelAccessorFunc[*RecordElement, string](rE, linkKey)
+	return &val, err
 }
 
 // setLink assigns an optional reference link to the element.
@@ -180,11 +129,6 @@ func (rE *RecordElementModel) GetLink() (*string, error) {
 //	if err := element.setLink(&link); err != nil {
 //	    log.Fatal(err)
 //	}
-func (rE *RecordElementModel) setLink(link *string) error {
-	store := rE.GetBackingStore()
-	if internal.IsNil(store) {
-		return nil
-	}
-
-	return store.Set(linkKey, link)
+func (rE *RecordElement) setLink(link *string) error {
+	return store.DefaultBackedModelMutatorFunc(rE, linkKey, link)
 }

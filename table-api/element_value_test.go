@@ -200,14 +200,14 @@ func TestElementValueModel_GetStringValue(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := "test"
+				value := internal.ToPointer("test")
 
 				model := &ElementValue{val: value}
 
 				ret, err := model.GetStringValue()
 
 				assert.Nil(t, err)
-				assert.Equal(t, &value, ret)
+				assert.Equal(t, value, ret)
 			},
 		},
 		{
@@ -584,7 +584,6 @@ func TestElementValueModel_GetInt64Value(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestElementValueModel_GetEnumValue(t *testing.T) {
 	tests := []struct {
 		name string
@@ -775,13 +774,13 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 		{
 			name: "Successful - PrimitiveString",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
+				value := "test"
 				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveString)
 
 				assert.Nil(t, err)
-				assert.Equal(t, value, val)
+				assert.Equal(t, &value, val)
 			},
 		},
 		{
