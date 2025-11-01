@@ -1,6 +1,7 @@
 package tableapi
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"testing"
@@ -36,6 +37,17 @@ func TestElementVis_VisitSlice(t *testing.T) {
 				assert.Equal(t, &ElementValue{val: []*ElementValue{}}, elem)
 			},
 		},
+		{
+			name: "Invalid type",
+			test: func(t *testing.T) {
+				visitor := &ElementVisitor{}
+
+				elem, err := visitor.VisitSlice(reflect.ValueOf([]func(){func() {}, func() {}}))
+
+				assert.Equal(t, errors.New("unsupported kind func"), err)
+				assert.Nil(t, elem)
+			},
+		},
 	}
 
 	for _, test := range tests {
@@ -68,6 +80,17 @@ func TestElementVis_VisitMap(t *testing.T) {
 
 				assert.Nil(t, err)
 				assert.Equal(t, &ElementValue{val: map[string]*ElementValue{}}, elem)
+			},
+		},
+		{
+			name: "Invalid type",
+			test: func(t *testing.T) {
+				visitor := &ElementVisitor{}
+
+				elem, err := visitor.VisitMap(reflect.ValueOf(map[string]func(){"test": func() {}, "test1": func() {}}))
+
+				assert.Equal(t, errors.New("unsupported kind func"), err)
+				assert.Nil(t, elem)
 			},
 		},
 	}
