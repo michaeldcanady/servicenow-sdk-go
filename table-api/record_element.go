@@ -121,14 +121,14 @@ func (rE *RecordElement) GetLink() (*string, error) {
 	return &val, err
 }
 
-// setLink assigns an optional reference link to the element.
+// SetLink assigns an optional reference link to the element.
 //
 // Example:
 //
 //	link := "https://example.com"
-//	if err := element.setLink(&link); err != nil {
+//	if err := element.SetLink(&link); err != nil {
 //	    log.Fatal(err)
 //	}
-func (rE *RecordElement) setLink(link *string) error {
+func (rE *RecordElement) SetLink(link *string) error {
 	return store.DefaultBackedModelMutatorFunc(rE, linkKey, link)
 }
