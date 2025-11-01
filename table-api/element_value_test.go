@@ -200,14 +200,14 @@ func TestElementValueModel_GetStringValue(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
+				value := "test"
 
 				model := &ElementValue{val: value}
 
 				ret, err := model.GetStringValue()
 
 				assert.Nil(t, err)
-				assert.Equal(t, value, ret)
+				assert.Equal(t, &value, ret)
 			},
 		},
 		{
