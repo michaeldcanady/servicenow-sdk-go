@@ -410,7 +410,7 @@ func TestRecordElementModel_SetLink(t *testing.T) {
 
 				record := &RecordElement{innerModel}
 
-				err := record.SetValue(link)
+				err := record.SetLink(link)
 
 				assert.Equal(t, errors.New("store error"), err)
 				backingStore.AssertExpectations(t)
