@@ -81,7 +81,7 @@ jobs:
           perl -0777 -i -pe 's/### (Added|Changed|Deprecated|Removed|Fixed)\s*(?=###|##)//gs' changelog.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.release_meta.outputs.tag }}
           name: ${{ steps.release_meta.outputs.name }}
