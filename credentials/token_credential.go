@@ -140,7 +140,7 @@ func (tc *TokenCredential) refreshOAuthToken() (*AccessToken, error) {
 	data.Set("grant_type", "refresh_token")
 	data.Set("client_id", tc.ClientID)
 	data.Set("client_secret", tc.ClientSecret)
-	data.Set("refresh_token ", tc.Token.RefreshToken)
+	data.Set("refresh_token", tc.Token.RefreshToken)
 
 	return tc.requestToken(data)
 }
