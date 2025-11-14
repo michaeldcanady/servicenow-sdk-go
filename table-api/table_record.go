@@ -26,27 +26,23 @@ var _ serialization.Parsable = (*TableRecord)(nil)
 //	fmt.Println(element)
 type TableRecord struct {
 	keys []string
-	*internal.BaseModel
+	internal.Model
 }
 
 func CreateTableRecordFromDiscriminatorValue(node serialization.ParseNode) (serialization.Parsable, error) {
-	record := NewTableRecord()
-
 	value, err := node.GetRawValue()
 	if err != nil {
 		return nil, err
 	}
 
-	typedValue, ok := value.(map[string]any)
-	if !ok {
-		return nil, fmt.Errorf("unsupported type %T", value)
+	if typedValue, ok := value.(map[string]any); ok {
+		record := NewTableRecord()
+		for key := range typedValue {
+			record.keys = append(record.keys, key)
+		}
+		return record, nil
 	}
-
-	for key := range typedValue {
-		record.keys = append(record.keys, key)
-	}
-
-	return record, nil
+	return nil, fmt.Errorf("unsupported type %T", value)
 }
 
 func recordElementParser(node serialization.ParseNode) error {
@@ -118,8 +114,8 @@ func (tR *TableRecord) Serialize(writer serialization.SerializationWriter) error
 
 func NewTableRecord() *TableRecord {
 	return &TableRecord{
-		keys:      make([]string, 0),
-		BaseModel: internal.NewBaseModel(),
+		keys:  make([]string, 0),
+		Model: internal.NewBaseModel(),
 	}
 }
 
@@ -132,7 +128,9 @@ func NewTableRecord() *TableRecord {
 //	element := record.Get("status")
 //	fmt.Println(element)
 func (tR *TableRecord) Get(key string) (*RecordElement, error) {
-	return store.DefaultBackedModelAccessorFunc[*TableRecord, *RecordElement](tR, key)
+	elem, err := store.DefaultBackedModelAccessorFunc[*TableRecord, RecordElement](tR, key)
+
+	return &elem, err
 }
 
 // SetElement assigns a RecordElement to the specified key.
