@@ -19,7 +19,7 @@ jobs:
       go_changed: ${{ steps.go_diff.outputs.any_changed }}
       latest_tag: ${{ steps.latest_tag.outputs.tag }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Fetch all tags
         run: git fetch --tags --force
@@ -50,7 +50,7 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Set release type and tag
         id: release_meta
