@@ -30,7 +30,7 @@ jobs:
       code: ${{ steps.filter.outputs.any_changed }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Changed Files
         uses: tj-actions/changed-files@v47.0.0
@@ -50,7 +50,7 @@ jobs:
       matrix:
         go-version: ["1.23", "1.24"]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
@@ -72,7 +72,7 @@ jobs:
         go-version: ["1.23", "1.24"]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
@@ -95,7 +95,7 @@ jobs:
       matrix:
         go-version: ["1.23", "1.24"]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
@@ -117,7 +117,7 @@ jobs:
         go-version: ["1.23", "1.24"]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
