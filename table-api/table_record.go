@@ -45,10 +45,10 @@ func CreateTableRecordFromDiscriminatorValue(node serialization.ParseNode) (seri
 	return nil, fmt.Errorf("unsupported type %T", value)
 }
 
-func recordElementParser(node serialization.ParseNode) error {
+func recordElementParser(node serialization.ParseNode) (*RecordElement, error) {
 	rawValue, err := node.GetRawValue()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	var (
 		displayValue any
@@ -69,31 +69,31 @@ func recordElementParser(node serialization.ParseNode) error {
 		if rawLink, ok := typedVal[linkKey]; ok {
 			strLink, ok := rawLink.(*string)
 			if !ok {
-				return errors.New("link is not *string")
+				return nil, errors.New("link is not *string")
 			}
 			link = strLink
 		}
 	case any:
 		value = typedVal
 	default:
-		return errors.New("value is one of expected types")
+		return nil, errors.New("value is one of expected types")
 	}
 
 	elem := NewRecordElement()
 
 	if err := elem.SetDisplayValue(displayValue); err != nil {
-		return err
+		return nil, err
 	}
 
 	if err := elem.SetValue(value); err != nil {
-		return err
+		return nil, err
 	}
 
 	if err := elem.SetLink(link); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return elem, nil
 }
 
 // GetFieldDeserializers implements serialization.Parsable.
@@ -101,7 +101,13 @@ func (tR *TableRecord) GetFieldDeserializers() map[string]func(serialization.Par
 	fieldDeserializers := map[string]func(serialization.ParseNode) error{}
 
 	for _, key := range tR.keys {
-		fieldDeserializers[key] = recordElementParser
+		fieldDeserializers[key] = func(node serialization.ParseNode) error {
+			element, err := recordElementParser(node)
+			if err != nil {
+				return err
+			}
+			return tR.SetElement(key, element)
+		}
 	}
 
 	return fieldDeserializers

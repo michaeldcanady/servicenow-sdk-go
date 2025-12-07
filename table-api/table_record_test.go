@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -64,7 +65,84 @@ func TestRecordElementParser(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful map, w/o link",
+			test: func(t *testing.T) {
+				parseNode := mocking.NewMockParseNode()
+				parseNode.On("GetRawValue").Return(map[string]any{
+					displayValueKey: internal.ToPointer("displayValue"),
+					valueKey:        internal.ToPointer("value"),
+				}, nil)
+
+				element, err := recordElementParser(parseNode)
+
+				assert.NotNil(t, element)
+				assert.Nil(t, err)
+				parseNode.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Successful map, w/ link, right type",
+			test: func(t *testing.T) {
+				parseNode := mocking.NewMockParseNode()
+				parseNode.On("GetRawValue").Return(map[string]any{
+					displayValueKey: internal.ToPointer("displayValue"),
+					valueKey:        internal.ToPointer("value"),
+					linkKey:         internal.ToPointer("link"),
+				}, nil)
+
+				element, err := recordElementParser(parseNode)
+
+				assert.NotNil(t, element)
+				assert.Nil(t, err)
+				parseNode.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Successful map, w/ link, wrong type",
+			test: func(t *testing.T) {
+				parseNode := mocking.NewMockParseNode()
+				parseNode.On("GetRawValue").Return(map[string]any{
+					displayValueKey: internal.ToPointer("displayValue"),
+					valueKey:        internal.ToPointer("value"),
+					linkKey:         internal.ToPointer(true),
+				}, nil)
+
+				element, err := recordElementParser(parseNode)
+
+				assert.Nil(t, element)
+				assert.Equal(t, errors.New("link is not *string"), err)
+				parseNode.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Successful any",
+			test: func(t *testing.T) {
+				parseNode := mocking.NewMockParseNode()
+				parseNode.On("GetRawValue").Return(internal.ToPointer("value"), nil)
+
+				element, err := recordElementParser(parseNode)
+
+				assert.Nil(t, element)
+				assert.Equal(t, errors.New("link is not *string"), err)
+				parseNode.AssertExpectations(t)
+			},
+		},
+		{
+			name: "value retrieval error",
+			test: func(t *testing.T) {
+				parseNode := mocking.NewMockParseNode()
+				parseNode.On("GetRawValue").Return(nil, errors.New("error retrieving value"))
+
+				element, err := recordElementParser(parseNode)
+
+				assert.Nil(t, element)
+				assert.Equal(t, errors.New("error retrieving value"), err)
+				parseNode.AssertExpectations(t)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
