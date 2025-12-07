@@ -43,7 +43,7 @@ N/A
             // Optional configurations
         }
 
-        err := client.Now2().Table2("{TableName}").ByID("{sysID}").Delete2(context.Background(), params)
+        err := client.Now2().Table2("xSDK_SN_TABLEx").ByID("xSDK_SN_TABLE_SYS_IDx").Delete2(context.Background(), params)
         if err != nil {
             log.Fatal(err)
         }
@@ -68,9 +68,9 @@ N/A
         // Initialize credentials and client
 
         pathParameters := map[string]string{
-            "baseurl": "https://www.{instance}.service-now.com/api/now",
-            "table":   "incident",
-            "sysId":   "INC00000000",
+            "baseurl": "https://www.xSDK_SN_INSTANCEx.service-now.com/api/now",
+            "table":   "xSDK_SN_TABLEx",
+            "sysId":   "xSDK_SN_TABLE_SYS_IDx",
         }
 
         requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)

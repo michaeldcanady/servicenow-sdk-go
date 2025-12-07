@@ -25,9 +25,12 @@ cairosvg
 pillow
 
 # Requirements for integrations
+pymdown-extensions
+markdown_include
 mkdocs-git-committers-plugin-2
 mkdocs-git-revision-date-localized-plugin
 mkdocs-glightbox
 mkdocs-minify-plugin
 mkdocs-redirects
 mkdocs-rss-plugin
+mkdocs-placeholder-plugin

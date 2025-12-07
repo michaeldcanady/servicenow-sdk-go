@@ -10,6 +10,14 @@ markdown_extensions:
   - toc:
       permalink: true
 
+plugins:
+  - placeholder:
+      enabled: True
+      js_output_dir: "assets/javascript/"
+      placeholder_css: "assets/css/placeholder-plugin.css"
+      placeholder_extra_js: ""
+      placeholder_file: "placeholder-plugin.yaml"
+
 nav:
   - index.md
   - getting-started.md

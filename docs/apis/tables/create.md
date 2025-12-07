@@ -54,7 +54,7 @@ N/A
             "description":       "incident created by servicenow-sdk-go",
         }
 
-        response, err := client.Now2().Table2("{TableName}").Post4(context.Background(), data, params)
+        response, err := client.Now2().Table2("xSDK_SN_TABLEx").Post4(context.Background(), data, params)
         if err != nil {
             log.Fatal(err)
         }
@@ -79,8 +79,8 @@ N/A
         // Initialize credentials and client
 
         pathParameters := map[string]string{
-            "baseurl": "https://www.{instance}.service-now.com/api/now",
-            "table":   "incident",
+            "baseurl": "https://www.xSDK_SN_INSTANCEx.service-now.com/api/now",
+            "table":   "xSDK_SN_TABLEx",
         }
 
         requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
