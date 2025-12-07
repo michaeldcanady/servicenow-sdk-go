@@ -8,9 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- `credentials.ResourceOwnerPasswordCredential`
+- `credentials.NewResourceOwnerPasswordCredential`
+
 ### Changed
 
 ### Deprecated
+
+- `credentials.TokenCredential`
+- `credentials.NewTokenCredential`
 
 ### Removed
 

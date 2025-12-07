@@ -51,7 +51,7 @@ func TestClient_ExchangeClientCredentials(t *testing.T) {
 					AuthMethod: AuthMethodClientSecretPost,
 					HTTPClient: mockClient,
 				}
-				tok, err := client.ExchangeClientCredentials(context.Background(), []string{"scope1"})
+				tok, err := client.ExchangeClientCredentials(context.Background())
 				require.NoError(t, err)
 				require.Equal(t, "abc", tok.AccessToken)
 				require.Equal(t, int64(3600), tok.ExpiresIn)
@@ -75,7 +75,7 @@ func TestClient_ExchangeClientCredentials(t *testing.T) {
 					AuthMethod: AuthMethodClientSecretPost,
 					HTTPClient: mockClient,
 				}
-				_, err := client.ExchangeClientCredentials(context.Background(), nil)
+				_, err := client.ExchangeClientCredentials(context.Background())
 				require.Error(t, err)
 				_, ok := err.(*TokenError)
 				require.True(t, ok)
@@ -146,7 +146,7 @@ func TestClient_ExchangePassword(t *testing.T) {
 					AuthMethod: AuthMethodClientSecretPost,
 					HTTPClient: mockClient,
 				}
-				tok, err := client.ExchangePassword(context.Background(), "user", "pass", []string{"scope"})
+				tok, err := client.ExchangePassword(context.Background(), "user", "pass")
 				require.NoError(t, err)
 				require.Equal(t, "ghi", tok.AccessToken)
 

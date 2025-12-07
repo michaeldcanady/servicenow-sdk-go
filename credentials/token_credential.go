@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// Deprecated: deprecated in v{unreleased}. Please use ResourceOwnerPasswordCredential.
 // TokenCredential represents the OAuth2 token credentials.
 type TokenCredential struct {
 	ClientID     string
@@ -30,6 +31,7 @@ func DefaultPrompt() (string, string, error) {
 	return username, password, nil
 }
 
+// Deprecated: deprecated in v{unreleased}. Please use NewResourceOwnerPasswordCredential.
 // NewTokenCredential creates a new token credential
 func NewTokenCredential(clientID, clientSecret, baseURL string, prompt func() (string, string, error)) (*TokenCredential, error) {
 	address := "localhost:5000"

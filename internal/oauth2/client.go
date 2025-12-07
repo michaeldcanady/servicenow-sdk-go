@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 type Client struct {
@@ -18,6 +19,7 @@ type Client struct {
 	Endpoints    *Endpoints
 	AuthMethod   AuthMethod
 	HTTPClient   HTTPClient
+	Scopes       []string
 }
 
 func (c *Client) Exchange(ctx context.Context, params url.Values) (*Token, error) {
@@ -94,6 +96,7 @@ func (c *Client) doRequest(req *http.Request) (*Token, error) {
 	} else {
 		tok.Raw = map[string]any{"_raw": string(body)}
 	}
+	tok.ExpiresAt = time.Now().Round(0).Add(time.Second * time.Duration(tok.ExpiresIn)).UTC()
 	tok.Headers = res.Header
 	return &tok, nil
 }
@@ -105,11 +108,11 @@ func (c *Client) httpClient() HTTPClient {
 	return http.DefaultClient
 }
 
-func (c *Client) ExchangeClientCredentials(ctx context.Context, scopes []string) (*Token, error) {
+func (c *Client) ExchangeClientCredentials(ctx context.Context) (*Token, error) {
 	params := url.Values{}
 	params.Set(GrantTypeKey, GrantTypeClientCreds)
-	if len(scopes) > 0 {
-		params.Set(ScopeKey, strings.Join(scopes, " "))
+	if len(c.Scopes) > 0 {
+		params.Set(ScopeKey, strings.Join(c.Scopes, " "))
 	}
 	return c.Exchange(ctx, params)
 }
@@ -121,14 +124,11 @@ func (c *Client) ExchangeRefreshToken(ctx context.Context, refresh string) (*Tok
 	return c.Exchange(ctx, params)
 }
 
-func (c *Client) ExchangePassword(ctx context.Context, user, pass string, scopes []string) (*Token, error) {
+func (c *Client) ExchangePassword(ctx context.Context, user, pass string) (*Token, error) {
 	params := url.Values{}
 	params.Set(GrantTypeKey, GrantTypePassword)
 	params.Set(UsernameKey, user)
 	params.Set(PasswordKey, pass)
-	if len(scopes) > 0 {
-		params.Set(ScopeKey, strings.Join(scopes, " "))
-	}
 	return c.Exchange(ctx, params)
 }
 
