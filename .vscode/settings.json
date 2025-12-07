@@ -69,6 +69,8 @@
     "nolint",
     "outliner",
     "Paramters",
+    "PKCE",
+    "PKCES",
     "Requestable",
     "Responseable",
     "servicenowsdkgo",
