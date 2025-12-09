@@ -17,6 +17,7 @@ plugins:
       placeholder_css: "assets/css/placeholder-plugin.css"
       placeholder_extra_js: ""
       placeholder_file: "placeholder-plugin.yaml"
+  - include-markdown
 
 nav:
   - index.md

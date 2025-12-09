@@ -24,7 +24,7 @@ Creates a single record in the specified table.
 | `View`                 | `tableapi.View`         | `DESKTOP`, `MOBILE`, or `BOTH` | UI view for which to render the data.                                                                                 |
 <!-- vale Vale.Spelling = YES -->
 
-# Required query parameters
+## Required query parameters
 
 N/A
 
@@ -33,72 +33,15 @@ N/A
 === "Fluent"
 
     ```go
-    package main
-
-    import (
-        "context"
-        "log"
-
-        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-    )
-
-    func main() {
-        // Initialize credentials and client
-
-        params := &tableapi.TableRequestBuilderPostQueryParameters{
-            // Optional configurations
-        }
-
-        data := map[string]string{
-            "short_description": "example incident",
-            "description":       "incident created by servicenow-sdk-go",
-        }
-
-        response, err := client.Now2().Table2("xSDK_SN_TABLEx").Post4(context.Background(), data, params)
-        if err != nil {
-            log.Fatal(err)
-        }
-
-        // Process response
-    }
+    {%
+		include-markdown 'assets/snippets/table-create-fluent.go'
+	%}
     ```
 
 === "Standard"
 
     ```go
-    package main
-
-    import (
-        "context"
-        "log"
-
-        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-    )
-
-    func main() {
-        // Initialize credentials and client
-
-        pathParameters := map[string]string{
-            "baseurl": "https://www.xSDK_SN_INSTANCEx.service-now.com/api/now",
-            "table":   "xSDK_SN_TABLEx",
-        }
-
-        requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
-
-        params := &tableapi.TableRequestBuilderPostQueryParameters{
-            // Optional configurations
-        }
-
-        data := map[string]string{
-            "short_description": "example incident",
-            "description":       "incident created by servicenow-sdk-go",
-        }
-
-        response, err := requestBuilder.Post4(context.Background(), data, params)
-        if err != nil {
-            log.Fatal(err)
-        }
-
-        // Process response
-    }
+    {%
+		include-markdown 'assets/snippets/table-create-standard.go'
+	%}
     ```

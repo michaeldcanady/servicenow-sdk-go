@@ -27,7 +27,7 @@ Retrieves multiple records from the specified table.
 | `QueryCategory`            | `string`                | N/A                            | Name of the category to use for queries.                                                                              |
 | `SuppressPaginationHeader` | `bool`                  | N/A                            | Flag that indicates whether to remove the Link header from the response.                                              |
 
-# Required query parameters
+## Required query parameters
 
 N/A
 
@@ -36,62 +36,15 @@ N/A
 === "Fluent"
 
     ```go
-    package main
-
-    import (
-        "context"
-        "log"
-
-        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-    )
-
-    func main() {
-        // Initialize credentials and client
-
-        params := &tableapi.TableRequestBuilderGetQueryParameters{
-            // Optional configurations
-        }
-
-        response, err := client.Now2().Table2("xSDK_SN_TABLEx").Get2(context.Background(), params)
-        if err != nil {
-            log.Fatal(err)
-        }
-
-        // Process response
-    }
+    {%
+    include-markdown 'assets/snippets/table-list-fluent.go'
+    %}
     ```
 
 === "Standard"
 
     ```go
-    package main
-
-    import (
-        "context"
-        "log"
-
-        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-    )
-
-    func main() {
-        // Initialize credentials and client
-
-        pathParameters := map[string]string{
-            "baseurl": "https://www.xSDK_SN_INSTANCEx.service-now.com/api/now",
-            "table":   "xSDK_SN_TABLEx",
-        }
-
-        requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
-
-        params := &tableapi.TableRequestBuilderGetQueryParameters{
-            // Optional configurations
-        }
-
-        response, err := requestBuilder.Get2(context.Background(), params)
-        if err != nil {
-            log.Fatal(err)
-        }
-
-        // Process response
-    }
+    {%
+    include-markdown 'assets/snippets/table-list-standard.go'
+    %}
     ```
