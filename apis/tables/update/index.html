@@ -1017,6 +1017,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#required-query-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required query parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1514,6 +1536,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#required-query-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required query parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1609,7 +1653,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="required-query-parameters">Required query parameters<a class="headerlink" href="#required-query-parameters" title="Permanent link">&para;</a></h1>
+<h2 id="required-query-parameters">Required query parameters<a class="headerlink" href="#required-query-parameters" title="Permanent link">&para;</a></h2>
 <p>N/A</p>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Fluent</label><label for="__tabbed_1_2">Standard</label></div>
@@ -1617,72 +1661,97 @@
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
 
-<span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">        </span><span class="s">&quot;context&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;context&quot;</span>
+<span class="w">    </span><span class="s">&quot;fmt&quot;</span>
+<span class="w">    </span><span class="s">&quot;log&quot;</span>
+<span class="w">    </span><span class="s">&quot;time&quot;</span>
 
-<span class="w">        </span><span class="nx">tableapi</span><span class="w"> </span><span class="s">&quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;</span>
-<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="nx">servicenowsdkgo</span><span class="w"> </span><span class="s">&quot;github.com/michaeldcanady/servicenow-sdk-go&quot;</span>
+<span class="w">    </span><span class="s">&quot;github.com/michaeldcanady/servicenow-sdk-go/credentials&quot;</span>
+<span class="w">    </span><span class="nx">tableapi</span><span class="w"> </span><span class="s">&quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;</span>
+<span class="p">)</span>
 
-<span class="w">    </span><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Initialize credentials and client</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Step 1: Create credentials</span>
+<span class="w"> </span><span class="nx">cred</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">credentials</span><span class="p">.</span><span class="nx">NewUsernamePasswordCredential</span><span class="p">(</span><span class="s">&quot;<span class="placeholder-value inline-editor-requested" data-placeholder="SDK_USERNAME">{username}</span>&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;<span class="placeholder-value inline-editor-requested" data-placeholder="SDK_PASSWORD">{password}</span>&quot;</span><span class="p">)</span>
 
-<span class="w">        </span><span class="nx">params</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">tableapi</span><span class="p">.</span><span class="nx">TableItemRequestBuilderGetQueryParameters</span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// Optional configurations</span>
-<span class="w">        </span><span class="p">}</span>
+<span class="w"> </span><span class="c1">// Step 2: Initialize client</span>
+<span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">servicenowsdkgo</span><span class="p">.</span><span class="nx">NewServiceNowClient</span><span class="p">(</span><span class="nx">cred</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;<span class="placeholder-value inline-editor-requested" data-placeholder="SDK_SN_INSTANCE">{instance}</span>.service-now.com&quot;</span><span class="p">)</span>
 
-<span class="w">        </span><span class="nx">ctx</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">()</span>
-
-<span class="w">        </span><span class="c1">// data map of information you want to use for the new record</span>
-<span class="w">        </span><span class="nx">data</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
-<span class="w">            </span><span class="s">&quot;short_description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;example incident&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;incident created by servicenow-sdk-go&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">Now2</span><span class="p">().</span><span class="nx">Table2</span><span class="p">(</span><span class="s">&quot;{TableName}&quot;</span><span class="p">).</span><span class="nx">Put3</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">params</span><span class="p">)</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// Process response</span>
+<span class="w">    </span><span class="c1">// Step 3: Configure query parameters</span>
+<span class="w">    </span><span class="nx">params</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">tableapi</span><span class="p">.</span><span class="nx">TableItemRequestBuilderGetQueryParameters</span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Optional configurations</span>
 <span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">ctx</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">()</span>
+
+<span class="w">    </span><span class="c1">// Step 4: Prepare your data</span>
+<span class="w">    </span><span class="nx">data</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+<span class="w">        </span><span class="s">&quot;short_description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;example incident&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;incident created by servicenow-sdk-go&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Step 5: Execute request</span>
+<span class="w">    </span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">Now2</span><span class="p">().</span><span class="nx">Table2</span><span class="p">(</span><span class="s">&quot;<span class="placeholder-value inline-editor-requested" data-placeholder="SDK_SN_TABLE">{TableName}</span>&quot;</span><span class="p">).</span><span class="nx">Put3</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span><span class="w"> </span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">params</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Process response</span>
+<span class="p">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
 
-<span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">        </span><span class="s">&quot;context&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;context&quot;</span>
+<span class="w">    </span><span class="s">&quot;fmt&quot;</span>
+<span class="w">    </span><span class="s">&quot;log&quot;</span>
+<span class="w">    </span><span class="s">&quot;time&quot;</span>
 
-<span class="w">        </span><span class="nx">tableapi</span><span class="w"> </span><span class="s">&quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;</span>
-<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="nx">servicenowsdkgo</span><span class="w"> </span><span class="s">&quot;github.com/michaeldcanady/servicenow-sdk-go&quot;</span>
+<span class="w">    </span><span class="s">&quot;github.com/michaeldcanady/servicenow-sdk-go/credentials&quot;</span>
+<span class="w">    </span><span class="nx">tableapi</span><span class="w"> </span><span class="s">&quot;github.com/michaeldcanady/servicenow-sdk-go/table-api&quot;</span>
+<span class="p">)</span>
 
-<span class="w">    </span><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Initialize credentials and client</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Step 1: Create credentials</span>
+<span class="w"> </span><span class="nx">cred</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">credentials</span><span class="p">.</span><span class="nx">NewUsernamePasswordCredential</span><span class="p">(</span><span class="s">&quot;<span class="placeholder-value inline-editor-requested" data-placeholder="SDK_USERNAME">{username}</span>&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;<span class="placeholder-value inline-editor-requested" data-placeholder="SDK_PASSWORD">{password}</span>&quot;</span><span class="p">)</span>
 
-<span class="w">        </span><span class="nx">pathParameters</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="s">&quot;baseurl&quot;</span><span class="p">:</span><span class="s">&quot;https://www.{instance}.service-now.com/api/now&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;incident&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s">&quot;sysId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;INC00000000&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="p">}</span>
+<span class="w"> </span><span class="c1">// Step 2: Initialize client</span>
+<span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">servicenowsdkgo</span><span class="p">.</span><span class="nx">NewServiceNowClient</span><span class="p">(</span><span class="nx">cred</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;<span class="placeholder-value inline-editor-requested" data-placeholder="SDK_SN_INSTANCE">{instance}</span>.service-now.com&quot;</span><span class="p">)</span>
 
-<span class="w">        </span><span class="nx">requestBuilder</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tableapi</span><span class="p">.</span><span class="nx">NewTableItemRequestBuilder2</span><span class="p">(</span><span class="nx">client</span><span class="p">,</span><span class="w"> </span><span class="nx">pathParameters</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">// Step 3: Define path parameters</span>
+<span class="w"> </span><span class="nx">pathParameters</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+<span class="w">    </span><span class="s">&quot;baseurl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://www.<span class="placeholder-value inline-editor-requested" data-placeholder="SDK_SN_INSTANCE">{instance}</span>.service-now.com/api/now&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;table&quot;</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;<span class="placeholder-value inline-editor-requested" data-placeholder="SDK_SN_TABLE">{TableName}</span>&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;sysId&quot;</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;<span class="placeholder-value inline-editor-requested" data-placeholder="SDK_SN_TABLE_SYS_ID">{SysID}</span>&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="p">}</span>
 
-<span class="w">        </span><span class="c1">// define parameters you wish to (optional)</span>
-<span class="w">        </span><span class="nx">params</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">tableapi</span><span class="p">.</span><span class="nx">TableItemRequestBuilderGetQueryParameters</span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// Optional configurations</span>
-<span class="w">        </span><span class="p">}</span>
+<span class="w"> </span><span class="c1">// Step 4: Build request</span>
+<span class="w"> </span><span class="nx">requestBuilder</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tableapi</span><span class="p">.</span><span class="nx">NewTableItemRequestBuilder2</span><span class="p">(</span><span class="nx">client</span><span class="p">,</span><span class="w"> </span><span class="nx">pathParameters</span><span class="p">)</span>
 
-<span class="w">        </span><span class="nx">data</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
-<span class="w">            </span><span class="s">&quot;short_description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;example incident&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;incident created by servicenow-sdk-go&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="nx">record</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">requestBuilder</span><span class="p">.</span><span class="nx">Put3</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span><span class="w"> </span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">params</span><span class="p">)</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// Process response</span>
+<span class="w">    </span><span class="c1">// Step 5: Configure query parameters</span>
+<span class="w">    </span><span class="nx">params</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">tableapi</span><span class="p">.</span><span class="nx">TableItemRequestBuilderGetQueryParameters</span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Optional configurations</span>
 <span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Step 6: Prepare your data</span>
+<span class="w">    </span><span class="nx">data</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+<span class="w">        </span><span class="s">&quot;short_description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;example incident&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;incident created by servicenow-sdk-go&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Step 7: Execute request</span>
+<span class="w">    </span><span class="nx">record</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">requestBuilder</span><span class="p">.</span><span class="nx">Put3</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span><span class="w"> </span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">params</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Process response</span>
+<span class="p">}</span>
 </code></pre></div>
 </div>
 </div>
