@@ -1,0 +1,28 @@
+settings:
+  auto_placeholder_tables: false
+  inline_editor_style: icons
+placeholders:
+  SDK_VERSION:
+    description: "The version of the SDK you want to install."
+    values:
+      # TODO: have a function or something that populates all current (stable?) versions
+      "1.8.0": "1.8.0"
+      "1.7.0": "1.7.0"
+  SDK_USERNAME:
+    description: "Your username."
+    default: "{username}"
+  SDK_PASSWORD:
+    description: "Your password."
+    default: "{password}"
+  SDK_SN_INSTANCE:
+    description: "Your Service-Now instance."
+    default: "{instance}"
+  SDK_SN_URL:
+    description: "Your Service-Now base url."
+    default: "{custom-url.com}"
+  SDK_SN_TABLE:
+    description: "The name of the Service-Now table."
+    default: "{TableName}"
+  SDK_SN_TABLE_SYS_ID:
+    description: "The sys id of the Service-Now table record."
+    default: "{SysID}"
