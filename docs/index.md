@@ -25,8 +25,8 @@ cred := credentials.NewUsernamePasswordCredential("username", "password")
 client := servicenowsdkgo.NewServiceNowClient2(cred, "instance")
 ```
 
-Make API requests, this is done one of two ways via the fluent or standard implementation.
-> It's recommended to use the fluent implementation, whose design takes ease of use and simplicity in mind.
+You can make API requests in two ways: through the fluent or standard implementation.
+> We recommend the fluent implementation because it emphasizes ease of use and simplicity.
 
 === "Fluent"
 
