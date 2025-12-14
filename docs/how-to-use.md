@@ -15,7 +15,7 @@ client := servicenowsdkgo.NewServiceNowClient2(cred, "instance")
 
 ## Fluent
 
-The fluent implementation is designed for ease of use and more simplistic implementations. 
+By design, the fluent implementation helps you write cleaner, simpler code with minimal effort.
 
 ``` golang {title="Table API"}
 client.Now().Table("table_name")

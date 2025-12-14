@@ -1,6 +1,7 @@
 FROM docker.io/squidfunk/mkdocs-material
 
-RUN pip install pymdown-extensions
-RUN pip install markdown_include
+COPY requirements.txt requirements.txt
+
+RUN pip install --no-cache-dir -r requirements.txt
 
 CMD ["serve", "--dirtyreload", "--dev-addr=0.0.0.0:8000"]

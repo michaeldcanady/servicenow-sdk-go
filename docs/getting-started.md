@@ -17,7 +17,7 @@
 === "Install a specific version"
 
     ``` bash
-    go get github.com/michaeldcanady/servicenow-sdk-go@{version}
+    go get github.com/michaeldcanady/servicenow-sdk-go@xSDK_VERSIONx
     ```
 
 ## 2. Create a credential
@@ -32,18 +32,23 @@ import (
 
 func main() {
     // instantiates a basic authentication username/password credential but you can use any from the `credentials` submodule or implement your own!
-    cred := credentials.NewUsernamePasswordCredential("{username}", "{password}")
+    cred := credentials.NewUsernamePasswordCredential("xSDK_USERNAMEx", "xSDK_PASSWORDx")
     ...
 }
 ```
 
 ## 3. Create a Service-Now client
 
-```golang
-    ...
-    client := servicenowsdkgo.NewServiceNowClient(cred, "{instance}")
-    ...
-```
+=== "Specify instance"
+    ```golang
+        client := servicenowsdkgo.NewServiceNowClient(cred, "xSDK_SN_INSTANCEx.service-now.com")
+    ```
+<!-- vale Vale.Spelling = NO -->
+=== "Specify url"
+<!-- vale Vale.Spelling = YES -->
+    ```golang
+        client := servicenowsdkgo.NewServiceNowClient(cred, "xSDK_SN_URLx")
+    ```
 
 ## 4. Review specific api documentation
 

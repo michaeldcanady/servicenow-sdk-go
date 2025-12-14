@@ -23,7 +23,7 @@ Updates the specified record by `sys_id` in the specified table.
 | `QueryNoDomain`            | `bool`                  | N/A                            | Flag that indicates whether to restrict the record search to only the domains configured for the logged in user.      |
 | `View`                     | `tableapi.View`         | `DESKTOP`, `MOBILE`, or `BOTH` | UI view for which to render the data.                                                                                 |
 
-# Required query parameters
+## Required query parameters
 
 N/A
 
@@ -32,74 +32,15 @@ N/A
 === "Fluent"
 
     ``` golang
-    package main
-
-        import (
-            "context"
-
-            tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-        )
-
-        func main() {
-            // Initialize credentials and client
-
-            params := &tableapi.TableItemRequestBuilderGetQueryParameters{
-                // Optional configurations
-            }
-
-            ctx := context.Background()
-
-            // data map of information you want to use for the new record
-            data := map[string]string{
-                "short_description": "example incident",
-                "description": "incident created by servicenow-sdk-go",
-            }
-
-            response, err := client.Now2().Table2("{TableName}").Put3(ctx, data, params)
-            if err != nil {
-                log.Fatal(err)
-            }
-            // Process response
-        }
+    {%
+		include-markdown 'assets/snippets/table-update-fluent.go'
+	%}
     ```
 
 === "Standard"
 
     ``` golang
-        package main
-
-        import (
-            "context"
-
-            tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-        )
-
-        func main() {
-            // Initialize credentials and client
-
-            pathParameters := {
-                "baseurl":"https://www.{instance}.service-now.com/api/now",
-                "table": "incident",
-                "sysId": "INC00000000",
-            }
-
-            requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
-
-            // define parameters you wish to (optional)
-            params := &tableapi.TableItemRequestBuilderGetQueryParameters{
-                // Optional configurations
-            }
-
-            data := map[string]string{
-                "short_description": "example incident",
-                "description": "incident created by servicenow-sdk-go",
-            }
-
-            record, err := requestBuilder.Put3(context.Background(), data, params)
-            if err != nil {
-                log.Fatal(err)
-            }
-
-            // Process response
-        }
+    {%
+		include-markdown 'assets/snippets/table-update-standard.go'
+	%}
     ```

@@ -22,7 +22,7 @@ Retrieves a specific record by `sys_id` from the specified table.
 | `QueryNoDomain`        | `bool`                  | N/A                            | Flag that indicates whether to restrict the record search to only the domains configured for the logged in user.      |
 | `View`                 | `tableapi.View`         | `DESKTOP`, `MOBILE`, or `BOTH` | UI view for which to render the data.                                                                                 |
 
-# Required query parameters
+## Required query parameters
 
 N/A
 
@@ -31,63 +31,15 @@ N/A
 === "Fluent"
 
     ```go
-    package main
-
-    import (
-        "context"
-        "log"
-
-        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-    )
-
-    func main() {
-        // Initialize credentials and client
-
-        params := &tableapi.TableItemRequestBuilderGetQueryParameters{
-            // Optional configurations
-        }
-
-        response, err := client.Now2().Table2("{TableName}").ByID("{sysID}").Get2(context.Background(), params)
-        if err != nil {
-            log.Fatal(err)
-        }
-
-        // Process response
-    }
+    {%
+		include-markdown 'assets/snippets/table-get-fluent.go'
+	%}
     ```
 
 === "Standard"
 
     ```go
-    package main
-
-    import (
-        "context"
-        "log"
-
-        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-    )
-
-    func main() {
-        // Initialize credentials and client
-
-        pathParameters := map[string]string{
-            "baseurl": "https://www.{instance}.service-now.com/api/now",
-            "table":   "incident",
-            "sysId":   "INC00000000",
-        }
-
-        requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
-
-        params := &tableapi.TableItemRequestBuilderGetQueryParameters{
-            // Optional configurations
-        }
-
-        record, err := requestBuilder.Get2(context.Background(), params)
-        if err != nil {
-            log.Fatal(err)
-        }
-
-        // Process record
-    }
+    {%
+		include-markdown 'assets/snippets/table-get-standard.go'
+	%}
     ```

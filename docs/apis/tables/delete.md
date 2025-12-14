@@ -18,7 +18,7 @@ Deletes the specified record from the table.
 |------------------------|--------|-----------------|---------------------------------------------------------------------------------------------------------------------------|
 | `QueryNoDomain`        | `bool` | N/A             | Flag that indicates whether to restrict the record search to only the domains configured for the logged in user.          |
 
-# Required query parameters
+## Required query parameters
 
 N/A
 
@@ -27,63 +27,15 @@ N/A
 === "Fluent"
 
     ```go
-    package main
-
-    import (
-        "context"
-        "log"
-
-        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-    )
-
-    func main() {
-        // Initialize credentials and client
-
-        params := &tableapi.TableItemRequestBuilderDeleteQueryParameters{
-            // Optional configurations
-        }
-
-        err := client.Now2().Table2("{TableName}").ByID("{sysID}").Delete2(context.Background(), params)
-        if err != nil {
-            log.Fatal(err)
-        }
-
-        // Process result
-    }
+    {%
+		include-markdown 'assets/snippets/table-delete-fluent.go'
+	%}
     ```
 
 === "Standard"
 
     ```go
-    package main
-
-    import (
-        "context"
-        "log"
-
-        tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
-    )
-
-    func main() {
-        // Initialize credentials and client
-
-        pathParameters := map[string]string{
-            "baseurl": "https://www.{instance}.service-now.com/api/now",
-            "table":   "incident",
-            "sysId":   "INC00000000",
-        }
-
-        requestBuilder := tableapi.NewTableItemRequestBuilder2(client, pathParameters)
-
-        params := &tableapi.TableItemRequestBuilderDeleteQueryParameters{
-            // Optional configurations
-        }
-
-        err := requestBuilder.Delete2(context.Background(), params)
-        if err != nil {
-            log.Fatal(err)
-        }
-
-        // Process result
-    }
+    {%
+		include-markdown 'assets/snippets/table-delete-standard.go'
+	%}
     ```
