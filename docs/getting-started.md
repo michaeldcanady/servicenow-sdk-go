@@ -43,7 +43,9 @@ func main() {
     ```golang
         client := servicenowsdkgo.NewServiceNowClient(cred, "xSDK_SN_INSTANCEx.service-now.com")
     ```
+<!-- vale Microsoft.Headings = NO -->
 === "Specify url"
+<!-- vale Microsoft.Headings = YES -->
     ```golang
         client := servicenowsdkgo.NewServiceNowClient(cred, "xSDK_SN_URLx")
     ```
