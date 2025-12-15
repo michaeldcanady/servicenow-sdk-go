@@ -100,7 +100,7 @@ func TestTableRequestBuilder_Get2(t *testing.T) {
 
 				pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1"}
 
-				requestBuilder := NewTableRequestBuilder2(client, pathParameters)
+				requestBuilder := New2TableRequestBuilder(client, pathParameters)
 
 				resp, err := requestBuilder.Get2(context.Background(), nil)
 
@@ -306,7 +306,7 @@ func TestTableRequestBuilder_Post4(t *testing.T) {
 
 				pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1"}
 
-				requestBuilder := NewTableRequestBuilder2(client, pathParameters)
+				requestBuilder := New2TableRequestBuilder(client, pathParameters)
 
 				resp, err := requestBuilder.Post4(context.Background(), map[string]string{"key": "value"}, nil)
 

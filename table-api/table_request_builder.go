@@ -7,7 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
-func NewTableRequestBuilder2(client core.Client2, pathParameters map[string]string) *TableRequestBuilder {
+func New2TableRequestBuilder(client core.Client2, pathParameters map[string]string) *TableRequestBuilder {
 	requestBuilder := core.NewRequestBuilder2(
 		client,
 		tableURLTemplate,
@@ -25,11 +25,13 @@ func (rB *TableRequestBuilder) ByID2(sysId string) *TableItemRequestBuilder {
 }
 
 func (rB *TableRequestBuilder) Get2(ctx context.Context, params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
+	errMapping := core.NewErrorMapping()
+	errMapping.Set("XXX", "placeholder")
 	config := &tableGetRequestConfiguration2[TableEntry]{
 		header:   nil,
 		query:    params,
 		data:     nil,
-		mapping:  nil,
+		mapping:  errMapping,
 		response: &TableCollectionResponse2[TableEntry]{},
 	}
 
