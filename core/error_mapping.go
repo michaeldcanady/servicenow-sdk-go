@@ -40,9 +40,11 @@ func (eM ErrorMapping) Get(code int) (string, bool) {
 	}
 
 	// Try to find a relative match (e.g., 4XX for client errors or 5XX for server errors).
-	if code >= 500 && code < 600 && eM["5XX"] != "" {
-		return eM["5XX"], true
-	} else if code >= 400 && code < 500 && eM["4XX"] != "" {
+	if err := eM["XXX"]; err != "" {
+		return err, true
+	} else if err := eM["5XX"]; code >= 500 && code < 600 && err != "" {
+		return err, true
+	} else if err := eM["4XX"]; code >= 400 && code < 500 && err != "" {
 		return eM["4XX"], true
 	}
 
