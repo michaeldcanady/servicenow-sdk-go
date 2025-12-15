@@ -54,6 +54,8 @@
     "Gruntfuggly",
     "Headerable",
     "httpheader",
+    "httpmock",
+    "jarcoal",
     "jsonserialization",
     "kiota",
     "maint",

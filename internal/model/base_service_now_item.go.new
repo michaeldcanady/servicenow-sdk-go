@@ -1,0 +1,77 @@
+package model
+
+import (
+	"errors"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	intStore "github.com/michaeldcanady/servicenow-sdk-go/internal/store"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
+	"github.com/microsoft/kiota-abstractions-go/store"
+)
+
+const (
+	sysIDKey = "sys_id"
+)
+
+type BaseServiceNowItem struct {
+	// backingStoreFactory The BackingStoreFactory for creating the BackingStore to use.
+	backingStoreFactory store.BackingStoreFactory
+	// backingStore The BackingStore
+	backingStore store.BackingStore
+}
+
+func NewBaseServiceNowItem() *BaseServiceNowItem {
+	return &BaseServiceNowItem{
+		store.NewInMemoryBackingStore,
+		store.NewInMemoryBackingStore(),
+	}
+}
+
+// GetFieldDeserializers Returns the deserialization information for this object.
+func (bR *BaseServiceNowItem) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		sysIDKey: func(pn serialization.ParseNode) error {
+			sysID, err := pn.GetStringValue()
+			if err != nil {
+				return err
+			}
+
+			return bR.SetSysID(sysID)
+		},
+	}
+}
+
+// Serialize writes the objects properties to the current writer
+func (bR *BaseServiceNowItem) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(bR) {
+		return nil
+	}
+
+	return errors.New("Serialize not implemented")
+}
+
+// GetBackingStore Returns the backing store, if store is nil it instantiates a new store.
+func (r *BaseServiceNowItem) GetBackingStore() store.BackingStore {
+	if internal.IsNil(r) {
+		return nil
+	}
+
+	if internal.IsNil(r.backingStore) {
+		if internal.IsNil(r.backingStoreFactory) {
+			return nil
+		}
+		r.backingStore = r.backingStoreFactory()
+	}
+
+	return r.backingStore
+}
+
+func (r *BaseServiceNowItem) GetSysID() (*string, error) {
+	elem, err := intStore.DefaultBackedModelAccessorFunc[*BaseServiceNowItem, string](r, sysIDKey)
+
+	return &elem, err
+}
+
+func (r *BaseServiceNowItem) SetSysID(sysID *string) error {
+	return intStore.DefaultBackedModelMutatorFunc(r, sysIDKey, sysIDKey)
+}
