@@ -9,12 +9,15 @@ on:
       - "docs/**"
       - "mkdocs.yml"
       - ".github/workflows/pages.yml"
+    paths-ignore:
+      - ".github/dependabot.yml"
   pull_request:
     paths:
       - "docs/**"
       - "mkdocs.yml"
       - ".github/workflows/pages.yml"
-
+    paths-ignore:
+      - ".github/dependabot.yml"
 
 env:
   PYTHON_VERSION: "3.x"
@@ -83,14 +86,14 @@ jobs:
       - name: Build docs
         if: steps.site-cache.outputs.cache-hit != 'true'
         run: mkdocs build --strict
-      
+
       - name: Cache built site
         if: steps.site-cache.outputs.cache-hit != 'true'
         uses: actions/cache@v4
         with:
           path: site
           key: site-${{ github.sha }}
-      
+
       - name: Upload site artifact
         uses: actions/upload-artifact@v5
         with:
@@ -130,7 +133,7 @@ jobs:
 
       - name: Install Python dependencies
         run: pip install -r requirements.txt
-      
+
       - name: Download site artifact
         uses: actions/download-artifact@v6.0.0
         with:
