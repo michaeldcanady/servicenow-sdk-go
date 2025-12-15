@@ -304,8 +304,8 @@ func TestTableRecord_SetValue(t *testing.T) {
 				innerModel.On("GetBackingStore").Return(store)
 
 				record := &TableRecord{
-					keys:  make([]string, 0),
-					Model: innerModel,
+					make([]string, 0),
+					innerModel,
 				}
 
 				err := record.SetValue("Test", "value")
@@ -319,8 +319,8 @@ func TestTableRecord_SetValue(t *testing.T) {
 			name: "Unsupported",
 			test: func(t *testing.T) {
 				record := &TableRecord{
-					keys:  make([]string, 0),
-					Model: nil,
+					make([]string, 0),
+					nil,
 				}
 
 				err := record.SetValue("Test", make(chan int))

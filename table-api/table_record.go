@@ -96,6 +96,20 @@ func recordElementParser(node serialization.ParseNode) (*RecordElement, error) {
 	return elem, nil
 }
 
+func (tR *TableRecord) GetSysID() (*string, error) {
+	element, err := tR.Get("sys_id")
+	if err != nil {
+		return nil, err
+	}
+
+	value, err := element.GetValue()
+	if err != nil {
+		return nil, err
+	}
+
+	return value.GetStringValue()
+}
+
 // GetFieldDeserializers implements serialization.Parsable.
 func (tR *TableRecord) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	fieldDeserializers := map[string]func(serialization.ParseNode) error{}
