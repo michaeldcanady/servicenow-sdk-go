@@ -60,12 +60,12 @@ func newServiceNowServiceClientWithOptions(
 	authenticationProvider authentication.AuthenticationProvider,
 	opts ...serviceNowServiceClientOption,
 ) (*serviceNowServiceClient, error) {
-	requestAdapter, err := internalHttp.NewServiceNowRequestAdapter(authenticationProvider)
+	config, err := buildServiceClientConfig(opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	config, err := buildServiceClientConfig(opts...)
+	requestAdapter, err := internalHttp.NewServiceNowRequestAdapter(authenticationProvider, config.requestAdapterOptions...)
 	if err != nil {
 		return nil, err
 	}

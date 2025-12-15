@@ -5,7 +5,7 @@ import (
 	"math"
 	"reflect"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 )
 
 type numericRange struct {
@@ -89,6 +89,10 @@ func As2[T any](in any, out T, strict bool) error {
 
 	// If types match, set directly
 	if typedIn, ok := in.(T); ok {
+		if internal.IsPointer(typedIn) {
+			reflect.ValueOf(out).Elem().Set(reflect.ValueOf(typedIn).Elem())
+			return nil
+		}
 		reflect.ValueOf(out).Elem().Set(reflect.ValueOf(typedIn))
 		return nil
 	}

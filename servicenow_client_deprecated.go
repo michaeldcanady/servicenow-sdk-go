@@ -19,7 +19,7 @@ type ServiceNowClient struct {
 	authProvider   internal.AuthorizationProvider
 	BaseUrl        string //nolint:stylecheck
 	Session        webClient
-	requestAdapter abstractions.RequestAdapter
+	RequestAdapter abstractions.RequestAdapter
 }
 
 // Deprecated: deprecated since v1.8.0. Please use Now2.

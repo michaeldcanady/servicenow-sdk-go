@@ -8,7 +8,9 @@ import (
 
 type DeserializerFunc[T any] func(setter ModelSetter[T]) serialization.NodeParser
 
-func SetMutatedValueFromSource[T, S any](source func() (T, error), setter ModelSetter[S], mutator func(T) (S, error)) error {
+type Mutator[T, S any] func(input T) (S, error)
+
+func SetMutatedValueFromSource[T, S any](source func() (T, error), setter ModelSetter[S], mutator Mutator[T, S]) error {
 	if source == nil {
 		return errors.New("source is nil")
 	}
@@ -29,7 +31,7 @@ func SetMutatedValueFromSource[T, S any](source func() (T, error), setter ModelS
 	return setter(mutatedT)
 }
 
-func DeserializeMutatedStringFunc[T any](setter ModelSetter[T], mutator func(*string) (T, error)) serialization.NodeParser {
+func DeserializeMutatedStringFunc[T any](setter ModelSetter[T], mutator Mutator[*string, T]) serialization.NodeParser {
 	return func(node serialization.ParseNode) error {
 		return SetMutatedValueFromSource(node.GetStringValue, setter, mutator)
 	}

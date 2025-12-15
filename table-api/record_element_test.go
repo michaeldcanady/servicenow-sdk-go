@@ -1,0 +1,425 @@
+package tableapi
+
+import (
+	"errors"
+	"testing"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+)
+
+func TestNewRecordElement(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successfully",
+			test: func(t *testing.T) {
+				model := NewRecordElement()
+
+				assert.NotNil(t, model)
+				assert.IsType(t, &RecordElement{}, model)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestRecordElementModel_GetDisplayValue(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successfully",
+			test: func(t *testing.T) {
+				value := &ElementValue{val: internal.ToPointer("")}
+
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Get", displayValueKey).Return(value, nil)
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				model := &RecordElement{intModel}
+
+				elementValue, err := model.GetDisplayValue()
+
+				assert.Nil(t, err)
+				assert.NotNil(t, elementValue)
+				assert.IsType(t, &ElementValue{}, elementValue)
+				assert.Equal(t, interface{}(internal.ToPointer("")), elementValue.val)
+			},
+		},
+		{
+			name: "Retrieval error",
+			test: func(t *testing.T) {
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Get", displayValueKey).Return(nil, errors.New("retrieval error"))
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				model := &RecordElement{intModel}
+
+				elementValue, err := model.GetDisplayValue()
+
+				assert.Equal(t, errors.New("retrieval error"), err)
+				assert.Equal(t, &ElementValue{}, elementValue)
+			},
+		},
+		{
+			name: "Nil store",
+			test: func(t *testing.T) {
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
+
+				model := &RecordElement{intModel}
+
+				elementValue, err := model.GetDisplayValue()
+
+				assert.Equal(t, errors.New("store is nil"), err)
+				assert.Equal(t, &ElementValue{}, elementValue)
+			},
+		},
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				model := (*RecordElement)(nil)
+
+				elementValue, err := model.GetDisplayValue()
+
+				assert.Equal(t, errors.New("model is nil"), err)
+				assert.Equal(t, &ElementValue{}, elementValue)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestRecordElementModel_SetDisplayValue(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Set", "displayValue", mock.AnythingOfType("*tableapi.ElementValue")).Return(nil)
+
+				innerModel := mocking.NewMockModel()
+				innerModel.On("GetBackingStore").Return(backingStore)
+
+				record := &RecordElement{innerModel}
+
+				err := record.SetDisplayValue("displayValue")
+
+				assert.Nil(t, err)
+				backingStore.AssertExpectations(t)
+				innerModel.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Store error",
+			test: func(t *testing.T) {
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Set", "displayValue", mock.AnythingOfType("*tableapi.ElementValue")).Return(errors.New("store error"))
+
+				innerModel := mocking.NewMockModel()
+				innerModel.On("GetBackingStore").Return(backingStore)
+
+				record := &RecordElement{innerModel}
+
+				err := record.SetDisplayValue("displayValue")
+
+				assert.Equal(t, errors.New("store error"), err)
+				backingStore.AssertExpectations(t)
+				innerModel.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Invalid value",
+			test: func(t *testing.T) {
+				record := &RecordElement{}
+
+				err := record.SetDisplayValue(make(chan int))
+
+				assert.Equal(t, errors.New("unsupported kind chan"), err)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestRecordElementModel_GetValue(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successfully",
+			test: func(t *testing.T) {
+				value := &ElementValue{val: internal.ToPointer("")}
+
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Get", valueKey).Return(value, nil)
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				model := &RecordElement{intModel}
+
+				elementValue, err := model.GetValue()
+
+				assert.Nil(t, err)
+				assert.NotNil(t, elementValue)
+				assert.IsType(t, &ElementValue{}, elementValue)
+				assert.Equal(t, interface{}(internal.ToPointer("")), elementValue.val)
+			},
+		},
+		{
+			name: "Retrieval error",
+			test: func(t *testing.T) {
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Get", valueKey).Return(nil, errors.New("retrieval error"))
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				model := &RecordElement{intModel}
+
+				elementValue, err := model.GetValue()
+
+				assert.Equal(t, errors.New("retrieval error"), err)
+				assert.Equal(t, &ElementValue{}, elementValue)
+			},
+		},
+		{
+			name: "Nil store",
+			test: func(t *testing.T) {
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
+
+				model := &RecordElement{intModel}
+
+				elementValue, err := model.GetValue()
+
+				assert.Equal(t, errors.New("store is nil"), err)
+				assert.Equal(t, &ElementValue{}, elementValue)
+			},
+		},
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				model := (*RecordElement)(nil)
+
+				elementValue, err := model.GetValue()
+
+				assert.Equal(t, errors.New("model is nil"), err)
+				assert.Equal(t, &ElementValue{}, elementValue)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+// TODO: add tests
+func TestRecordElementModel_SetValue(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Set", "value", mock.AnythingOfType("*tableapi.ElementValue")).Return(nil)
+
+				innerModel := mocking.NewMockModel()
+				innerModel.On("GetBackingStore").Return(backingStore)
+
+				record := &RecordElement{innerModel}
+
+				err := record.SetValue("value")
+
+				assert.Nil(t, err)
+				backingStore.AssertExpectations(t)
+				innerModel.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Store error",
+			test: func(t *testing.T) {
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Set", "value", mock.AnythingOfType("*tableapi.ElementValue")).Return(errors.New("store error"))
+
+				innerModel := mocking.NewMockModel()
+				innerModel.On("GetBackingStore").Return(backingStore)
+
+				record := &RecordElement{innerModel}
+
+				err := record.SetValue("value")
+
+				assert.Equal(t, errors.New("store error"), err)
+				backingStore.AssertExpectations(t)
+				innerModel.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Invalid value",
+			test: func(t *testing.T) {
+				record := &RecordElement{}
+
+				err := record.SetValue(make(chan int))
+
+				assert.Equal(t, errors.New("unsupported kind chan"), err)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestRecordElementModel_GetLink(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successfully",
+			test: func(t *testing.T) {
+				value := internal.ToPointer("")
+
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Get", linkKey).Return(value, nil)
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				model := &RecordElement{intModel}
+
+				elementValue, err := model.GetLink()
+
+				assert.Nil(t, err)
+				assert.NotNil(t, elementValue)
+				assert.Equal(t, value, elementValue)
+			},
+		},
+		{
+			name: "Retrieval error",
+			test: func(t *testing.T) {
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Get", linkKey).Return(nil, errors.New("retrieval error"))
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				model := &RecordElement{intModel}
+
+				elementValue, err := model.GetLink()
+
+				assert.Equal(t, errors.New("retrieval error"), err)
+				assert.Equal(t, internal.ToPointer(""), elementValue)
+			},
+		},
+		{
+			name: "Nil store",
+			test: func(t *testing.T) {
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
+
+				model := &RecordElement{intModel}
+
+				elementValue, err := model.GetLink()
+
+				assert.Equal(t, errors.New("store is nil"), err)
+				assert.Equal(t, internal.ToPointer(""), elementValue)
+			},
+		},
+		{
+			name: "Nil model",
+			test: func(t *testing.T) {
+				model := (*RecordElement)(nil)
+
+				elementValue, err := model.GetLink()
+
+				assert.Equal(t, errors.New("model is nil"), err)
+				assert.Equal(t, internal.ToPointer(""), elementValue)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestRecordElementModel_SetLink(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				link := internal.ToPointer("value")
+
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Set", "link", link).Return(nil)
+
+				innerModel := mocking.NewMockModel()
+				innerModel.On("GetBackingStore").Return(backingStore)
+
+				record := &RecordElement{innerModel}
+
+				err := record.SetLink(link)
+
+				assert.Nil(t, err)
+				backingStore.AssertExpectations(t)
+				innerModel.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Store error",
+			test: func(t *testing.T) {
+				link := internal.ToPointer("value")
+
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Set", "link", link).Return(errors.New("store error"))
+
+				innerModel := mocking.NewMockModel()
+				innerModel.On("GetBackingStore").Return(backingStore)
+
+				record := &RecordElement{innerModel}
+
+				err := record.SetLink(link)
+
+				assert.Equal(t, errors.New("store error"), err)
+				backingStore.AssertExpectations(t)
+				innerModel.AssertExpectations(t)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
