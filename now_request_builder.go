@@ -17,16 +17,16 @@ func NewNowRequestBuilder2(url string, client core.Client2) *NowRequestBuilder {
 
 func (rB *NowRequestBuilder) Table2(tableName string) *tableapi.TableRequestBuilder {
 	rB.PathParameters["table"] = tableName
-	return tableapi.NewTableRequestBuilder2(rB.Client2, rB.PathParameters)
+	return tableapi.New2TableRequestBuilder(rB.Client2, rB.PathParameters)
 }
 
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
 // It allows you to work with attachments and manage attachments in ServiceNow.
 func (rB *NowRequestBuilder) Attachment2() *attachmentapi.AttachmentRequestBuilder2 {
-	return attachmentapi.NewAttachmentRequestBuilder2Internal(rB.PathParameters, rB.Client.(*ServiceNowClient).requestAdapter)
+	return attachmentapi.NewAttachmentRequestBuilder2Internal(rB.PathParameters, rB.Client.(*ServiceNowClient).RequestAdapter)
 }
 
 // Batch returns a BatchRequestBuilder, entrypoint into the batch api.
 func (rB *NowRequestBuilder) Batch() *batchapi.BatchRequestBuilder {
-	return batchapi.NewBatchRequestBuilderInternal(rB.PathParameters, rB.Client.(*ServiceNowClient).requestAdapter)
+	return batchapi.NewBatchRequestBuilderInternal(rB.PathParameters, rB.Client.(*ServiceNowClient).RequestAdapter)
 }
