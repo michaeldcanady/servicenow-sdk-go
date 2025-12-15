@@ -5,10 +5,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
-)
 
-// TypeConverter[T, S] converts input, type T, to output, type S, and returns an error if there is one.
-type TypeConverter[T, S any] func(input T) (S, error)
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
+)
 
 // StringPtrToInt64Ptr Converts string pointer to int64 pointer.
 func StringPtrToInt64Ptr(input *string) (*int64, error) {
@@ -48,7 +47,7 @@ func StringPtrToBoolPtr(input *string) (*bool, error) {
 }
 
 // StringPtrToTimePtr Converts string pointer to formatted time pointer.
-func StringPtrToTimePtr(format string) TypeConverter[*string, *time.Time] {
+func StringPtrToTimePtr(format string) serialization.Mutator[*string, *time.Time] {
 	return func(input *string) (*time.Time, error) {
 		if input == nil {
 			return nil, errors.New("input is nil")
@@ -63,7 +62,7 @@ func StringPtrToTimePtr(format string) TypeConverter[*string, *time.Time] {
 }
 
 // StringPtrToPrimitiveSlice Converts string pointer to slice of primitive type T
-func StringPtrToPrimitiveSlice[T any](delimiter string, mutator func(string) (T, error)) TypeConverter[*string, []T] {
+func StringPtrToPrimitiveSlice[T any](delimiter string, mutator func(string) (T, error)) serialization.Mutator[*string, []T] {
 	return func(input *string) ([]T, error) {
 		sliceString := *input
 

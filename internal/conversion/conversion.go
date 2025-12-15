@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 )
 
 var (
@@ -164,7 +166,7 @@ func Convert(input any, output any) error {
 	return nil
 }
 
-func StringToTime(format string) TypeConverter[string, time.Time] {
+func StringToTime(format string) serialization.Mutator[string, time.Time] {
 	return func(input string) (time.Time, error) {
 		dateTime, err := time.Parse(format, input)
 		if err != nil {
