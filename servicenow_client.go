@@ -24,6 +24,10 @@ func (c *ServiceNowClient) Now2() *NowRequestBuilder {
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
 // It returns a pointer to the Client.
 func NewServiceNowClient2(credential core.Credential, instance string) (*ServiceNowClient, error) {
+	return NewServiceNowClient2WithHTTPClient(credential, instance, nil)
+}
+
+func NewServiceNowClient2WithHTTPClient(credential core.Credential, instance string, httpClient *http.Client) (*ServiceNowClient, error) {
 	if !strings.HasSuffix(instance, ".service-now.com/api") {
 		instance += ".service-now.com/api"
 	}
@@ -42,7 +46,12 @@ func NewServiceNowClient2(credential core.Credential, instance string) (*Service
 		return nil, err
 	}
 
-	client, err := newServiceNowServiceClientWithOptions(authenticationProvider, withURL(strings.ReplaceAll(instance, "/api", "")))
+	opts := []serviceNowServiceClientOption{withURL(strings.ReplaceAll(instance, "/api", ""))}
+	if httpClient != nil {
+		opts = append(opts, withHTTPClient(httpClient))
+	}
+
+	client, err := newServiceNowServiceClientWithOptions(authenticationProvider, opts...)
 	if err != nil { // nocov // can't test since options are fix, it shouldn't be able to error
 		return nil, err
 	}
@@ -52,7 +61,7 @@ func NewServiceNowClient2(credential core.Credential, instance string) (*Service
 		authProvider:   authProvider,
 		BaseUrl:        instance,
 		Session:        &http.Client{},
-		requestAdapter: client.GetRequestAdapter(),
+		RequestAdapter: client.GetRequestAdapter(),
 	}, nil
 }
 

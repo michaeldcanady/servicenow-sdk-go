@@ -3,10 +3,12 @@ package servicenowsdkgo
 import (
 	"errors"
 	"fmt"
+	"net/http"
 	"net/url"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
@@ -81,6 +83,15 @@ func withBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) serv
 		}
 
 		config.backingStoreFactory = backingStoreFactory
+
+		return nil
+	}
+}
+
+func withHTTPClient(client *http.Client) serviceNowServiceClientOption {
+	return func(config *serviceNowServiceClientConfig) error {
+
+		config.requestAdapterOptions = append(config.requestAdapterOptions, internalHttp.WithClient(client))
 
 		return nil
 	}

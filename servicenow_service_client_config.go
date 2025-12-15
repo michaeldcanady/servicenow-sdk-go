@@ -3,16 +3,18 @@ package servicenowsdkgo
 import (
 	"errors"
 
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
 // serviceNowServiceClientConfig represents possible configurations for the Service-Now service client.
 type serviceNowServiceClientConfig struct {
-	middleware          []nethttplibrary.Middleware
-	rawURI              string
-	instance            string
-	backingStoreFactory store.BackingStoreFactory
+	middleware            []nethttplibrary.Middleware
+	rawURI                string
+	instance              string
+	backingStoreFactory   store.BackingStoreFactory
+	requestAdapterOptions []internalHttp.ServiceNowRequestAdapterOption
 }
 
 // newServiceNowClientConfig instantiates a new empty config.
