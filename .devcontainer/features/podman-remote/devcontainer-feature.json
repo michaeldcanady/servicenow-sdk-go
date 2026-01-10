@@ -1,0 +1,20 @@
+{
+    "id": "podman-remote",
+    "version": "1.0.0",
+    "name": "Podman Remote Client",
+    "documentationURL": "https://github.com/containers/podman",
+    "description": "Installs the Podman CLI and configures it to talk to the host Podman socket.",
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ],
+    "containerEnv": {
+        "CONTAINER_HOST": "unix:///tmp/podman.sock"
+    },
+    "mounts": [
+        {
+            "source": "/var/run/user/1000/podman/podman.sock",
+            "target": "/tmp/podman.sock",
+            "type": "bind"
+        }
+    ]
+}

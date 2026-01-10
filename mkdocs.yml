@@ -18,6 +18,7 @@ plugins:
       placeholder_extra_js: ""
       placeholder_file: "placeholder-plugin.yaml"
   - include-markdown
+  - mike
 
 nav:
   - index.md

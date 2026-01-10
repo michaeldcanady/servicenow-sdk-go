@@ -9,11 +9,11 @@ build-docs:
 
 # Serve docs locally with live reload
 serve-docs: build-docs
-    podman run --rm -p {{DOC_PORT}}:8000 -v {{DOC_PATH}}:/docs {{DOC_IMAGE}}
+    podman run --rm -p {{DOC_PORT}}:8000 {{DOC_IMAGE}}
 
 # Build static site output (without serving)
 generate-docs: build-docs
-    podman run --rm -v {{DOC_PATH}}:/docs {{DOC_IMAGE}} mkdocs build --clean
+    podman run --rm {{DOC_IMAGE}} mkdocs build --clean
 
 # Clean up local build artifacts
 clean-docs:
