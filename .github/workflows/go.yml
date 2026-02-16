@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Changed Files
-        uses: tj-actions/changed-files@v47.0.1
+        uses: tj-actions/changed-files@v47.0.2
         id: filter
         with:
           files: |
