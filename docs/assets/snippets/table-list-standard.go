@@ -16,13 +16,15 @@ func main() {
 		include-markdown 'assets/snippets/table-request-standard.go'
 	%}
 
-    // Step 5: Configure query parameters
-    params := &tableapi.TableRequestBuilderGetQueryParameters{
-        // Optional configurations
+    // Step 5: Configure request
+    config := &tableapi.TableRequestBuilder2GetRequestConfiguration{
+        QueryParameters: &tableapi.TableRequestBuilder2GetQueryParameters{
+            // Optional configurations
+        },
     }
 
     // Step 6: Execute request
-    response, err := requestBuilder.Get2(context.Background(), params)
+    response, err := requestBuilder.Get(context.Background(), config)
     if err != nil {
         log.Fatal(err)
     }

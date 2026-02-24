@@ -8,10 +8,10 @@ const (
 	displayValueKey = "displayValue"
 )
 
-// TableEntry represents a single Service-Now table entry.
+// Deprecated: deprecated since v{unreleased}. Please use [TableRecord]
 type TableEntry map[string]interface{}
 
-// NewTableEntry creates a new instance of TableEntry.
+// Deprecated: deprecated since v{unreleased}. Please use [NewTableRecord]
 func NewTableEntry() TableEntry {
 	return TableEntry{}
 }

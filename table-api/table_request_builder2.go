@@ -18,6 +18,7 @@ const (
 	tableURLTemplate2 = "{+baseurl}/api/now/v1/table/{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
 )
 
+// TableRequestBuilder2 provides operations to manage Service-Now table collections.
 type TableRequestBuilder2[T model.ServiceNowItem] struct {
 	newInternal.RequestBuilder
 	factory serialization.ParsableFactory
@@ -30,20 +31,21 @@ func NewTableRequestBuilder2Internal[T model.ServiceNowItem](
 	factory serialization.ParsableFactory,
 ) *TableRequestBuilder2[T] {
 	m := &TableRequestBuilder2[T]{
-		newInternal.NewBaseRequestBuilder(requestAdapter, tableURLTemplate2, pathParameters),
-		factory,
+		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, tableURLTemplate2, pathParameters),
+		factory:        factory,
 	}
 	return m
 }
 
-func NewDefaultTableRequestBuilder2Internal[T model.ServiceNowItem](
+// NewDefaultTableRequestBuilder2Internal instantiates a new TableRequestBuilder2 with default table record parsable.
+func NewDefaultTableRequestBuilder2Internal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 ) *TableRequestBuilder2[*TableRecord] {
 	return NewTableRequestBuilder2Internal[*TableRecord](pathParameters, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
-// NewTableRequestBuilder2 instantiates a new BatchRequestBuilder with custom parsable for table entries.
+// NewDefaultTableRequestBuilder2 instantiates a new TableRequestBuilder2 with a raw URL and default table record parsable.
 func NewDefaultTableRequestBuilder2(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
@@ -51,7 +53,7 @@ func NewDefaultTableRequestBuilder2(
 	return NewTableRequestBuilder2[*TableRecord](rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
-// NewTableRequestBuilder2 instantiates a new BatchRequestBuilder with custom parsable for table entries.
+// NewTableRequestBuilder2 instantiates a new TableRequestBuilder2 with a raw URL and custom parsable.
 func NewTableRequestBuilder2[T model.ServiceNowItem](
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
@@ -62,6 +64,7 @@ func NewTableRequestBuilder2[T model.ServiceNowItem](
 	return NewTableRequestBuilder2Internal[T](urlParams, requestAdapter, factory)
 }
 
+// Get sends an HTTP GET request and returns a collection of table records.
 func (rB *TableRequestBuilder2[T]) Get(ctx context.Context, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (newInternal.ServiceNowCollectionResponse[T], error) {
 	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
 		return nil, nil
@@ -93,7 +96,8 @@ func (rB *TableRequestBuilder2[T]) Get(ctx context.Context, requestConfiguration
 	return typedResp, nil
 }
 
-func (rB *TableRequestBuilder2[T]) Post(ctx context.Context, body T, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (newInternal.ServiceNowItemResponse[T], error) {
+// Post sends an HTTP POST request to create a new table record and returns the created record.
+func (rB *TableRequestBuilder2[T]) Post(ctx context.Context, body T, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (newInternal.ServiceNowItemResponse[T], error) {
 	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -128,6 +132,16 @@ func (rB *TableRequestBuilder2[T]) Post(ctx context.Context, body T, requestConf
 	return typedResp, nil
 }
 
+// ById returns a TableItemRequestBuilder2 for the specified sysId.
+func (rB *TableRequestBuilder2[T]) ById(sysId string) *TableItemRequestBuilder2[T] {
+	pathParameters := make(map[string]string)
+	for k, v := range rB.GetPathParameters() {
+		pathParameters[k] = v
+	}
+	pathParameters["sysId"] = sysId
+	return NewTableItemRequestBuilder2Internal[T](pathParameters, rB.GetRequestAdapter(), rB.factory)
+}
+
 // TODO: Add Head method which returns headers
 
 // ToGetRequestInformation converts provided parameters into request information
@@ -145,6 +159,9 @@ func (rB *TableRequestBuilder2[T]) ToGetRequestInformation(_ context.Context, re
 		if options := requestConfiguration.Options; !internal.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
+		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
+			kiotaRequestInfo.AddQueryParameters(queryParams)
+		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
@@ -152,7 +169,7 @@ func (rB *TableRequestBuilder2[T]) ToGetRequestInformation(_ context.Context, re
 }
 
 // ToPostRequestInformation converts provided parameters into request information
-func (rB *TableRequestBuilder2[T]) ToPostRequestInformation(ctx context.Context, body T, requestConfiguration *TableRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *TableRequestBuilder2[T]) ToPostRequestInformation(ctx context.Context, body T, requestConfiguration *TableRequestBuilder2PostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -165,6 +182,9 @@ func (rB *TableRequestBuilder2[T]) ToPostRequestInformation(ctx context.Context,
 		}
 		if options := requestConfiguration.Options; !internal.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
+		}
+		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
+			kiotaRequestInfo.AddQueryParameters(queryParams)
 		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)

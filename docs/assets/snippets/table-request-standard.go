@@ -8,11 +8,8 @@
 	include-markdown 'assets/snippets/client.go'
 %}
 
-// Step 3: Define path parameters
-pathParameters := map[string]string{
-	"baseurl": "https://www.xSDK_SN_INSTANCEx.service-now.com/api/now",
-	"table":   "xSDK_SN_TABLEx",
-}
+// Step 3: Define raw URL
+rawURL := "https://www.xSDK_SN_INSTANCEx.service-now.com/api/now/v1/table/xSDK_SN_TABLEx"
 
 // Step 4: Build request
-requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
+requestBuilder := tableapi.NewDefaultTableRequestBuilder2(rawURL, client.RequestAdapter)

@@ -21,6 +21,7 @@ linters:
       - third_party$
       - builtin$
       - examples$
+      - docs/assets/snippets/.*\.go$
 formatters:
   enable:
     - gofmt
@@ -30,3 +31,5 @@ formatters:
       - third_party$
       - builtin$
       - examples$
+      - docs$
+      - docs/assets/snippets/.*\.go$

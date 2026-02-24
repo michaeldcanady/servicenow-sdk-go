@@ -93,9 +93,12 @@ func TestTableRequestBuilder_Get2(t *testing.T) {
 					Body:   io.NopCloser(bytes.NewReader(getFakeCollectionJSON())),
 				}
 
+				errMapping := core.NewErrorMapping()
+				errMapping.Set("XXX", "placeholder")
+
 				client := mocking.NewMockCoreClient2()
 				client.
-					On("SendWithContext", context.Background(), mock.AnythingOfType("*core.RequestInformation"), core.ErrorMapping(nil)).
+					On("SendWithContext", context.Background(), mock.AnythingOfType("*core.RequestInformation"), errMapping).
 					Return(request, nil)
 
 				pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1"}

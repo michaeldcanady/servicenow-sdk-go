@@ -22,19 +22,20 @@ func main() {
 		include-markdown 'assets/snippets/client.go'
 	%}
 
-	// Step 3: Configure query parameters
-	params := &tableapi.TableRequestBuilderPostQueryParameters{
-		// Optional configurations
+	// Step 3: Configure request
+	config := &tableapi.TableRequestBuilder2PostRequestConfiguration{
+		QueryParameters: &tableapi.TableRequestBuilder2PostQueryParameters{
+			// Optional configurations
+		},
 	}
 
 	// Step 4: Build request body
-	data := map[string]string{
-		"short_description": "example incident",
-		"description":       "incident created by servicenow-sdk-go",
-	}
+	data := tableapi.NewTableRecord()
+	data.SetValue("short_description", "example incident")
+	data.SetValue("description", "incident created by servicenow-sdk-go")
 
 	// Step 5: Execute request
-	response, err := client.Now2().Table2("xSDK_SN_TABLEx").Post4(context.Background(), data, params)
+	response, err := client.Now2().TableV2("xSDK_SN_TABLEx").Post(context.Background(), data, config)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-// TableValue is the reflection interface to a table value.
+// Deprecated: deprecated since v{unreleased}. Please use [RecordElement] and [ElementValue]
 type TableValue struct {
 	value interface{}
 }

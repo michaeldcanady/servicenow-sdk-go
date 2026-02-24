@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
+// Deprecated: deprecated since v{unreleased}. Please use [NewDefaultTableRequestBuilder2Internal] or [NewTableRequestBuilder2Internal]
 func New2TableRequestBuilder(client core.Client2, pathParameters map[string]string) *TableRequestBuilder {
 	requestBuilder := core.NewRequestBuilder2(
 		client,
@@ -18,12 +19,14 @@ func New2TableRequestBuilder(client core.Client2, pathParameters map[string]stri
 	}
 }
 
+// Deprecated: deprecated since v{unreleased}. Please use [TableRequestBuilder2.ById]
 func (rB *TableRequestBuilder) ByID2(sysId string) *TableItemRequestBuilder {
 	pathParameters := rB.PathParameters
 	pathParameters["sysId"] = sysId
 	return NewTableItemRequestBuilder2(rB.Client2, pathParameters)
 }
 
+// Deprecated: deprecated since v{unreleased}. Please use [TableRequestBuilder2.Get]
 func (rB *TableRequestBuilder) Get2(ctx context.Context, params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
 	errMapping := core.NewErrorMapping()
 	errMapping.Set("XXX", "placeholder")
@@ -43,6 +46,7 @@ func (rB *TableRequestBuilder) Get2(ctx context.Context, params *TableRequestBui
 	return config.response, nil
 }
 
+// Deprecated: deprecated since v{unreleased}. Please use [TableRequestBuilder2.Post]
 func (rB *TableRequestBuilder) Post4(ctx context.Context, data interface{}, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error) {
 	data, err := convertFromTableEntry(data)
 	if err != nil {
@@ -65,6 +69,8 @@ func (rB *TableRequestBuilder) Post4(ctx context.Context, data interface{}, para
 	return config.response, nil
 }
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // Count sends an HTTP HEAD request and retrieves the value of "X-Total-Count" from the response header, which represents the count of items.
 //
 // Returns:

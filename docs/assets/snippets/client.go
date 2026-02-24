@@ -1,1 +1,4 @@
-client := servicenowsdkgo.NewServiceNowClient(cred, "xSDK_SN_INSTANCEx.service-now.com")
+client, err := servicenowsdkgo.NewServiceNowClient2(cred, "xSDK_SN_INSTANCEx.service-now.com")
+if err != nil {
+	log.Fatal(err)
+}

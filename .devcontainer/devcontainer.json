@@ -28,12 +28,15 @@
   },
   "remoteUser": "vscode",
   "features": {
+    "./features/podman-remote": {},
     "ghcr.io/devcontainers/features/github-cli:1": {
       "version": "latest"
     },
     "ghcr.io/devcontainers/features/powershell:2": {
       "version": "latest"
-    }
+    },
+    "ghcr.io/stu-bell/devcontainer-features/gemini-cli:0": {},
+    "ghcr.io/guiyomh/features/just:0": {}
   },
   "runArgs": [
     "--userns=keep-id"

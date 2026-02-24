@@ -41,13 +41,13 @@ func main() {
 
 === "Specify instance"
     ```golang
-        client := servicenowsdkgo.NewServiceNowClient(cred, "xSDK_SN_INSTANCEx.service-now.com")
+        client, err := servicenowsdkgo.NewServiceNowClient2(cred, "xSDK_SN_INSTANCEx.service-now.com")
     ```
 <!-- vale Vale.Spelling = NO -->
 === "Specify url"
 <!-- vale Vale.Spelling = YES -->
     ```golang
-        client := servicenowsdkgo.NewServiceNowClient(cred, "xSDK_SN_URLx")
+        client, err := servicenowsdkgo.NewServiceNowClient2(cred, "xSDK_SN_URLx")
     ```
 
 ## 4. Review specific api documentation

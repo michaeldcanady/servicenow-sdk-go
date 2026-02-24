@@ -31,7 +31,7 @@ You can make API requests in two ways: through the fluent or standard implementa
 === "Fluent"
 
     ``` golang {title="Table api"}
-    client.Now2().Table2("table_name")
+    client.Now2().TableV2("table_name")
     ```
 
     ``` golang {title="Attachment api"}
@@ -45,12 +45,9 @@ You can make API requests in two ways: through the fluent or standard implementa
 === "Standard"
 
     ``` golang {title="Table api"}
-    pathParameters := map[string]string{
-        "baseurl": "https://www.{instance}.service-now.com/api/now",
-        "table":   "incident",
-    }
+    rawURL := "https://www.{instance}.service-now.com/api/now/v1/table/incident"
 
-    requestBuilder := tableapi.NewTableRequestBuilder2(client, pathParameters)
+    requestBuilder := tableapi.NewDefaultTableRequestBuilder2(rawURL, client.RequestAdapter)
     ```
 
 ## Development status

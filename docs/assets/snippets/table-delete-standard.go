@@ -16,13 +16,15 @@ func main() {
 		include-markdown 'assets/snippets/table-item-request-standard.go'
 	%}
 
-	// Step 5: Configure query parameters
-	params := &tableapi.TableItemRequestBuilderDeleteQueryParameters{
-		// Optional configurations
+	// Step 5: Configure request
+	config := &tableapi.TableItemRequestBuilder2DeleteRequestConfiguration{
+		QueryParameters: &tableapi.TableItemRequestBuilder2DeleteQueryParameters{
+			// Optional configurations
+		},
 	}
 
 	// Step 6: Execute request
-	err := requestBuilder.Delete2(context.Background(), params)
+	err := requestBuilder.Delete(context.Background(), config)
 	if err != nil {
 		log.Fatal(err)
 	}
