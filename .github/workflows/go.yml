@@ -113,6 +113,7 @@ jobs:
         with:
           version: latest
           skip-cache: false
+          args: --timeout=5m --skip-dirs=docs
 
   test-go:
     name: Test Go Code

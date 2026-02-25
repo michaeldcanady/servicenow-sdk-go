@@ -1,4 +1,10 @@
 version: "2"
+run:
+  skip-dirs:
+    - docs
+issues:
+  exclude-dirs:
+    - docs
 linters:
   enable:
     - dogsled
