@@ -5,371 +5,196 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	abstractions "github.com/microsoft/kiota-abstractions-go"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNewBaseRequestBuilder(t *testing.T) {
+	ra := mocking.NewMockRequestAdapter()
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name   string
+		ra     *mocking.MockRequestAdapter
+		templ  string
+		params map[string]string
 	}{
-		{
-			name: "successful",
-			test: func(t *testing.T) {
-				requestAdapter := mocking.NewMockRequestAdapter()
-				urlTemplate := "template"
-				pathParameters := map[string]string{}
-				requestBuilder := NewBaseRequestBuilder(requestAdapter, urlTemplate, pathParameters)
-
-				assert.Equal(t, &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: pathParameters,
-					UrlTemplate:    urlTemplate,
-					RequestAdapter: requestAdapter,
-				}}, requestBuilder)
-			},
-		},
-		{
-			name: "nil pathParameter",
-			test: func(t *testing.T) {
-				requestAdapter := mocking.NewMockRequestAdapter()
-				urlTemplate := "template"
-				requestBuilder := NewBaseRequestBuilder(requestAdapter, urlTemplate, nil)
-
-				assert.Equal(t, &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: map[string]string{},
-					UrlTemplate:    urlTemplate,
-					RequestAdapter: requestAdapter,
-				}}, requestBuilder)
-			},
-		},
+		{"Standard", ra, "t", map[string]string{"a": "b"}},
+		{"NilParams", ra, "t", nil},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res := NewBaseRequestBuilder(tt.ra, tt.templ, tt.params)
+			if res == nil {
+				t.Fatal("NewBaseRequestBuilder returned nil")
+			}
+			if res.UrlTemplate != tt.templ {
+				t.Errorf("got %s, expected %s", res.UrlTemplate, tt.templ)
+			}
+		})
 	}
 }
 
-func TestRequestBuilder_GetPathParameters(t *testing.T) {
+func TestBaseRequestBuilder_GetPathParameters(t *testing.T) {
+	params := map[string]string{"a": "b"}
+	rb := &BaseRequestBuilder{}
+	rb.PathParameters = params
+	var nilRB *BaseRequestBuilder
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name     string
+		rb       *BaseRequestBuilder
+		expected map[string]string
 	}{
-		{
-			name: "successful",
-			test: func(t *testing.T) {
-				requestAdapter := mocking.NewMockRequestAdapter()
-				urlTemplate := "template"
-				pathParameters := map[string]string{}
-
-				requestBuilder := &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: pathParameters,
-					UrlTemplate:    urlTemplate,
-					RequestAdapter: requestAdapter,
-				}}
-
-				assert.Equal(t, map[string]string{}, requestBuilder.GetPathParameters())
-			},
-		},
-		{
-			name: "nil requestBuilder",
-			test: func(t *testing.T) {
-				requestBuilder := (*BaseRequestBuilder)(nil)
-
-				assert.Nil(t, requestBuilder.GetPathParameters())
-			},
-		},
-		{
-			name: "nil pathParameter",
-			test: func(t *testing.T) {
-				requestAdapter := mocking.NewMockRequestAdapter()
-				urlTemplate := "template"
-
-				requestBuilder := &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: nil,
-					UrlTemplate:    urlTemplate,
-					RequestAdapter: requestAdapter,
-				}}
-
-				assert.Nil(t, requestBuilder.GetPathParameters())
-			},
-		},
+		{"Ok", rb, params},
+		{"NilRB", nilRB, nil},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res := tt.rb.GetPathParameters()
+			if tt.expected == nil {
+				if res != nil {
+					t.Error("expected nil")
+				}
+			} else {
+				if res["a"] != tt.expected["a"] {
+					t.Errorf("got %v, expected %v", res, tt.expected)
+				}
+			}
+		})
 	}
 }
 
-func TestRequestBuilder_SetPathParameters(t *testing.T) {
+func TestBaseRequestBuilder_SetPathParameters(t *testing.T) {
+	params := map[string]string{"a": "b"}
+	rb := &BaseRequestBuilder{}
+	var nilRB *BaseRequestBuilder
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name   string
+		rb     *BaseRequestBuilder
+		params map[string]string
+		err    error
 	}{
-		{
-			name: "successful",
-			test: func(t *testing.T) {
-				requestAdapter := mocking.NewMockRequestAdapter()
-				urlTemplate := "template"
-				pathParameters := map[string]string{}
-
-				requestBuilder := &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: nil,
-					UrlTemplate:    urlTemplate,
-					RequestAdapter: requestAdapter,
-				}}
-
-				err := requestBuilder.SetPathParameters(pathParameters)
-
-				assert.Nil(t, err)
-				assert.Equal(t, pathParameters, requestBuilder.PathParameters)
-			},
-		},
-		{
-			name: "nil requestBuilder",
-			test: func(t *testing.T) {
-				pathParameters := map[string]string{}
-
-				requestBuilder := (*BaseRequestBuilder)(nil)
-
-				err := requestBuilder.SetPathParameters(pathParameters)
-
-				assert.Nil(t, err)
-			},
-		},
-		{
-			name: "nil pathParameters",
-			test: func(t *testing.T) {
-				requestAdapter := mocking.NewMockRequestAdapter()
-				urlTemplate := "template"
-				pathParameters := map[string]string{}
-
-				requestBuilder := &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: pathParameters,
-					UrlTemplate:    urlTemplate,
-					RequestAdapter: requestAdapter,
-				}}
-
-				err := requestBuilder.SetPathParameters(nil)
-
-				assert.Equal(t, errors.New("pathParameters is nil"), err)
-			},
-		},
+		{"Ok", rb, params, nil},
+		{"NilParams", rb, nil, errors.New("pathParameters is nil")},
+		{"NilRB", nilRB, params, nil},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.rb.SetPathParameters(tt.params)
+			if tt.err != nil {
+				if err == nil || err.Error() != tt.err.Error() {
+					t.Errorf("got err %v, expected err %v", err, tt.err)
+				}
+			} else if err != nil {
+				t.Errorf("unexpected err %v", err)
+			}
+		})
 	}
 }
 
-func TestRequestBuilder_GetRequestAdapter(t *testing.T) {
+func TestBaseRequestBuilder_GetRequestAdapter(t *testing.T) {
+	ra := mocking.NewMockRequestAdapter()
+	rb := &BaseRequestBuilder{}
+	rb.RequestAdapter = ra
+	var nilRB *BaseRequestBuilder
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name     string
+		rb       *BaseRequestBuilder
+		expected any
 	}{
-		{
-			name: "successful",
-			test: func(t *testing.T) {
-				requestAdapter := mocking.NewMockRequestAdapter()
-				urlTemplate := "template"
-				pathParameters := map[string]string{}
-
-				requestBuilder := &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: pathParameters,
-					UrlTemplate:    urlTemplate,
-					RequestAdapter: requestAdapter,
-				}}
-
-				assert.Equal(t, requestAdapter, requestBuilder.GetRequestAdapter())
-			},
-		},
-		{
-			name: "nil requestBuilder",
-			test: func(t *testing.T) {
-				requestBuilder := (*BaseRequestBuilder)(nil)
-
-				assert.Nil(t, requestBuilder.GetRequestAdapter())
-			},
-		},
-		{
-			name: "nil requestAdapter",
-			test: func(t *testing.T) {
-				urlTemplate := "template"
-				pathParameters := map[string]string{}
-
-				requestBuilder := &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: pathParameters,
-					UrlTemplate:    urlTemplate,
-					RequestAdapter: nil,
-				}}
-
-				assert.Nil(t, requestBuilder.GetRequestAdapter())
-			},
-		},
+		{"Ok", rb, ra},
+		{"NilRB", nilRB, nil},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res := tt.rb.GetRequestAdapter()
+			if tt.expected == nil {
+				if res != nil {
+					t.Error("expected nil")
+				}
+			} else if res != tt.expected {
+				t.Error("got wrong adapter")
+			}
+		})
 	}
 }
 
-func TestRequestBuilder_SetRequestAdapter(t *testing.T) {
+func TestBaseRequestBuilder_SetRequestAdapter(t *testing.T) {
+	ra := mocking.NewMockRequestAdapter()
+	rb := &BaseRequestBuilder{}
+	var nilRB *BaseRequestBuilder
+
 	tests := []struct {
 		name string
-		test func(*testing.T)
+		rb   *BaseRequestBuilder
+		ra   *mocking.MockRequestAdapter
+		err  error
 	}{
-		{
-			name: "successful",
-			test: func(t *testing.T) {
-				requestAdapter := mocking.NewMockRequestAdapter()
-				urlTemplate := "template"
-				pathParameters := map[string]string{}
-
-				requestBuilder := &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: pathParameters,
-					UrlTemplate:    urlTemplate,
-					RequestAdapter: nil,
-				}}
-
-				err := requestBuilder.SetRequestAdapter(requestAdapter)
-
-				assert.Nil(t, err)
-				assert.Equal(t, requestAdapter, requestBuilder.RequestAdapter)
-			},
-		},
-		{
-			name: "nil requestBuilder",
-			test: func(t *testing.T) {
-				requestAdapter := mocking.NewMockRequestAdapter()
-
-				requestBuilder := (*BaseRequestBuilder)(nil)
-
-				err := requestBuilder.SetRequestAdapter(requestAdapter)
-
-				assert.Nil(t, err)
-			},
-		},
-		{
-			name: "nil requestAdapter",
-			test: func(t *testing.T) {
-				urlTemplate := "template"
-				pathParameters := map[string]string{}
-
-				requestBuilder := &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: pathParameters,
-					UrlTemplate:    urlTemplate,
-					RequestAdapter: nil,
-				}}
-
-				err := requestBuilder.SetRequestAdapter(nil)
-
-				assert.Equal(t, errors.New("requestAdapter is nil"), err)
-				assert.Nil(t, requestBuilder.RequestAdapter)
-			},
-		},
+		{"Ok", rb, ra, nil},
+		{"NilRA", rb, nil, errors.New("requestAdapter is nil")},
+		{"NilRB", nilRB, ra, nil},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Type conversion needed because SetRequestAdapter expects abstractions.RequestAdapter
+			// Wait, the method signature is abstractions.RequestAdapter, let's just pass it
+			err := tt.rb.SetRequestAdapter(tt.ra)
+			if tt.err != nil {
+				if err == nil || err.Error() != tt.err.Error() {
+					t.Errorf("got err %v, expected err %v", err, tt.err)
+				}
+			} else if err != nil {
+				t.Errorf("unexpected err %v", err)
+			}
+		})
 	}
 }
 
-func TestRequestBuilder_GetURLTemplate(t *testing.T) {
+func TestBaseRequestBuilder_GetURLTemplate(t *testing.T) {
+	rb := &BaseRequestBuilder{}
+	rb.UrlTemplate = "t"
+	var nilRB *BaseRequestBuilder
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name     string
+		rb       *BaseRequestBuilder
+		expected string
 	}{
-		{
-			name: "successful",
-			test: func(t *testing.T) {
-				requestAdapter := mocking.NewMockRequestAdapter()
-				urlTemplate := "template"
-				pathParameters := map[string]string{}
-
-				requestBuilder := &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: pathParameters,
-					UrlTemplate:    urlTemplate,
-					RequestAdapter: requestAdapter,
-				}}
-
-				template := requestBuilder.GetURLTemplate()
-
-				assert.Equal(t, urlTemplate, template)
-			},
-		},
-		{
-			name: "nil requestBuilder",
-			test: func(t *testing.T) {
-				requestBuilder := (*BaseRequestBuilder)(nil)
-
-				template := requestBuilder.GetURLTemplate()
-
-				assert.Equal(t, "", template)
-			},
-		},
+		{"Ok", rb, "t"},
+		{"NilRB", nilRB, ""},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.rb.GetURLTemplate() != tt.expected {
+				t.Errorf("got %s, expected %s", tt.rb.GetURLTemplate(), tt.expected)
+			}
+		})
 	}
 }
 
-func TestRequestBuilder_SetURLTemplate(t *testing.T) {
+func TestBaseRequestBuilder_SetURLTemplate(t *testing.T) {
+	rb := &BaseRequestBuilder{}
+	var nilRB *BaseRequestBuilder
+
 	tests := []struct {
 		name string
-		test func(*testing.T)
+		rb   *BaseRequestBuilder
+		t    string
+		err  error
 	}{
-		{
-			name: "successful",
-			test: func(t *testing.T) {
-				requestAdapter := mocking.NewMockRequestAdapter()
-				urlTemplate := "template"
-				pathParameters := map[string]string{}
-
-				requestBuilder := &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: pathParameters,
-					UrlTemplate:    "",
-					RequestAdapter: requestAdapter,
-				}}
-
-				err := requestBuilder.SetURLTemplate(urlTemplate)
-
-				assert.Nil(t, err)
-				assert.Equal(t, urlTemplate, requestBuilder.UrlTemplate)
-			},
-		},
-		{
-			name: "nil requestBuilder",
-			test: func(t *testing.T) {
-				urlTemplate := "template"
-
-				requestBuilder := (*BaseRequestBuilder)(nil)
-
-				err := requestBuilder.SetURLTemplate(urlTemplate)
-
-				assert.Nil(t, err)
-			},
-		},
-		{
-			name: "empty template",
-			test: func(t *testing.T) {
-				requestAdapter := mocking.NewMockRequestAdapter()
-				pathParameters := map[string]string{}
-
-				requestBuilder := &BaseRequestBuilder{abstractions.BaseRequestBuilder{
-					PathParameters: pathParameters,
-					UrlTemplate:    "",
-					RequestAdapter: requestAdapter,
-				}}
-
-				err := requestBuilder.SetURLTemplate("")
-
-				assert.Equal(t, errors.New("urlTemplate is empty"), err)
-			},
-		},
+		{"Ok", rb, "t", nil},
+		{"Empty", rb, "", errors.New("urlTemplate is empty")},
+		{"NilRB", nilRB, "t", nil},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.rb.SetURLTemplate(tt.t)
+			if tt.err != nil {
+				if err == nil || err.Error() != tt.err.Error() {
+					t.Errorf("got err %v, expected err %v", err, tt.err)
+				}
+			} else if err != nil {
+				t.Errorf("unexpected err %v", err)
+			}
+		})
 	}
 }

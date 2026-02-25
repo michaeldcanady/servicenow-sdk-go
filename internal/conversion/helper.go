@@ -31,14 +31,22 @@ var (
 
 // isCompatible checks if the value is compatible with the type tp.
 func isCompatible(value interface{}, tp reflect.Type, strict bool) bool {
+	if value == nil {
+		return true
+	}
+	valType := reflect.TypeOf(value)
+
 	if isNumericType(value) && isNumericType(tp) {
+		if strict {
+			return valType == tp
+		}
 		return isCompatibleInt(value, tp)
 	}
 
 	if strict {
-		return reflect.TypeOf(value) == tp
+		return valType == tp
 	}
-	return reflect.TypeOf(value).ConvertibleTo(tp)
+	return valType.ConvertibleTo(tp)
 }
 
 // As converts the value to the type T.
@@ -87,38 +95,39 @@ func As2[T any](in any, out T, strict bool) error {
 		return fmt.Errorf("out must be a non-nil pointer")
 	}
 
-	// If types match, set directly
-	if typedIn, ok := in.(T); ok {
-		if internal.IsPointer(typedIn) {
-			reflect.ValueOf(out).Elem().Set(reflect.ValueOf(typedIn).Elem())
-			return nil
-		}
-		reflect.ValueOf(out).Elem().Set(reflect.ValueOf(typedIn))
+	outValElem := outVal.Elem()
+	outType := outValElem.Type()
+
+	// Handle direct type matches (including interfaces)
+	inVal := reflect.ValueOf(in)
+	if inVal.Type().AssignableTo(outType) {
+		outValElem.Set(inVal)
 		return nil
 	}
 
-	// Unwrap pointer layers of input
-	valValue := reflect.ValueOf(in)
-	for valValue.Kind() == reflect.Ptr && !valValue.IsNil() {
-		valValue = valValue.Elem()
+	// Try dereferencing input if it's a pointer
+	if inVal.Kind() == reflect.Ptr && !inVal.IsNil() {
+		derefIn := inVal.Elem()
+		if derefIn.Type().AssignableTo(outType) {
+			outValElem.Set(derefIn)
+			return nil
+		}
 	}
 
-	// Get the concrete type behind the output pointer
-	nestedOutVal := outVal.Elem()
-	if nestedOutVal.Kind() == reflect.Interface && !nestedOutVal.IsNil() {
-		nestedOutVal = nestedOutVal.Elem()
+	// General conversion logic for numeric and other convertible types
+	currIn := inVal
+	for currIn.Kind() == reflect.Ptr && !currIn.IsNil() {
+		currIn = currIn.Elem()
 	}
-
-	outType := nestedOutVal.Type()
-	inVal := valValue.Interface()
+	rawIn := currIn.Interface()
 
 	// Compatibility check
-	if !isCompatible(inVal, outType, strict) {
-		return fmt.Errorf("cannot convert '%v' to type %s", inVal, outType)
+	if !isCompatible(rawIn, outType, strict) {
+		return fmt.Errorf("cannot convert '%v' to type %s", rawIn, outType)
 	}
 
-	converted := reflect.ValueOf(inVal).Convert(outType)
-	outVal.Elem().Set(converted)
+	converted := reflect.ValueOf(rawIn).Convert(outType)
+	outValElem.Set(converted)
 
 	return nil
 }

@@ -21,7 +21,10 @@ func New2TableRequestBuilder(client core.Client2, pathParameters map[string]stri
 
 // Deprecated: deprecated since v{unreleased}. Please use [TableRequestBuilder2.ById]
 func (rB *TableRequestBuilder) ByID2(sysId string) *TableItemRequestBuilder {
-	pathParameters := rB.PathParameters
+	pathParameters := make(map[string]string)
+	for k, v := range rB.PathParameters {
+		pathParameters[k] = v
+	}
 	pathParameters["sysId"] = sysId
 	return NewTableItemRequestBuilder2(rB.Client2, pathParameters)
 }

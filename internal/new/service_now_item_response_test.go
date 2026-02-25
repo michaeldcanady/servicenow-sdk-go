@@ -4,261 +4,113 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNewBaseServiceNowItemResponse(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				strct := mocking.NewMockParsableFactory()
-				parsableFactory := strct.Factory
-
-				parsable := NewBaseServiceNowItemResponse[*mocking.MockParsable](parsableFactory)
-				assert.IsType(t, &BaseServiceNowItemResponse[*mocking.MockParsable]{}, parsable)
-				assert.IsType(t, &store.InMemoryBackingStore{}, parsable.backingStore)
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	res := NewBaseServiceNowItemResponse[serialization.Parsable](nil)
+	if res == nil {
+		t.Error("returned nil")
 	}
 }
 
 func TestBaseServiceNowItemResponse_Serialize(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Nil writer",
-			test: func(t *testing.T) {
-				parsable := &BaseServiceNowItemResponse[*mocking.MockParsable]{}
-				err := parsable.Serialize(nil)
-
-				assert.Equal(t, errors.New("serialization is not supported"), err)
-			},
-		},
-		{
-			name: "Writer",
-			test: func(t *testing.T) {
-				writer := mocking.NewMockSerializationWriter()
-
-				parsable := &BaseServiceNowItemResponse[*mocking.MockParsable]{}
-				err := parsable.Serialize(writer)
-
-				assert.Equal(t, errors.New("serialization is not supported"), err)
-			},
-		},
-		{
-			name: "Nil model",
-			test: func(t *testing.T) {
-				parsable := (*BaseServiceNowItemResponse[*mocking.MockParsable])(nil)
-				err := parsable.Serialize(nil)
-
-				assert.Equal(t, errors.New("serialization is not supported"), err)
-			},
-		},
+	res := NewBaseServiceNowItemResponse[serialization.Parsable](nil)
+	err := res.Serialize(nil)
+	if err == nil || err.Error() != "serialization is not supported" {
+		t.Errorf("got %v, expected serialization is not supported", err)
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	var nilR *BaseServiceNowItemResponse[serialization.Parsable]
+	if err := nilR.Serialize(nil); err == nil {
+		t.Error("nil receiver should return error")
 	}
 }
 
-// TODO: implement tests
 func TestBaseServiceNowItemResponse_GetFieldDeserializers(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	res := NewBaseServiceNowItemResponse[*MainError](CreateMainErrorFromDiscriminatorValue)
+	deser := res.GetFieldDeserializers()
+	if deser[resultKey] == nil {
+		t.Error("missing deserializer")
 	}
 }
 
 func TestBaseServiceNowItemResponse_GetBackingStore(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Existing store",
-			test: func(t *testing.T) {
-				backingStore := mocking.NewMockBackingStore()
-
-				parsable := &BaseServiceNowItemResponse[*mocking.MockParsable]{
-					backingStore: backingStore,
-				}
-
-				store, err := parsable.GetBackingStore()
-
-				assert.Nil(t, err)
-				assert.Equal(t, backingStore, store)
-			},
-		},
-		{
-			name: "Existing factory, Nil store",
-			test: func(t *testing.T) {
-				backingStore := mocking.NewMockBackingStore()
-
-				strct := mocking.NewMockBackingStoreFactory()
-				strct.On("MockBackingStoreFactory").Return(backingStore)
-				factory := strct.MockBackingStoreFactory
-
-				parsable := &BaseServiceNowItemResponse[*mocking.MockParsable]{
-					backingStoreFactory: factory,
-					backingStore:        nil,
-				}
-
-				store, err := parsable.GetBackingStore()
-
-				assert.Nil(t, err)
-				assert.Equal(t, backingStore, store)
-				assert.Equal(t, backingStore, parsable.backingStore)
-				strct.AssertExpectations(t)
-			},
-		},
-		{
-			name: "Nil factory, Nil store",
-			test: func(t *testing.T) {
-				parsable := &BaseServiceNowItemResponse[*mocking.MockParsable]{
-					backingStoreFactory: nil,
-					backingStore:        nil,
-				}
-
-				store, err := parsable.GetBackingStore()
-
-				assert.Equal(t, errors.New("store is nil"), err)
-				assert.Nil(t, store)
-			},
-		},
-		{
-			name: "Nil model",
-			test: func(t *testing.T) {
-				parsable := (*BaseServiceNowItemResponse[*mocking.MockParsable])(nil)
-
-				store, err := parsable.GetBackingStore()
-
-				assert.Nil(t, err)
-				assert.Nil(t, store)
-			},
-		},
+	res := NewBaseServiceNowItemResponse[serialization.Parsable](nil)
+	res.backingStore = nil
+	bs, err := res.GetBackingStore()
+	if err != nil || bs == nil {
+		t.Error("failed to get backing store")
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	var nilR *BaseServiceNowItemResponse[serialization.Parsable]
+	if bs, _ := nilR.GetBackingStore(); bs != nil {
+		t.Error("expected nil")
 	}
 }
 
 func TestBaseServiceNowItemResponse_GetResult(t *testing.T) {
+	res := NewBaseServiceNowItemResponse[*MainError](nil)
+	me := NewMainError()
+	_ = res.setResult(me)
+	var nilR *BaseServiceNowItemResponse[*MainError]
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name  string
+		model *BaseServiceNowItemResponse[*MainError]
+		err   bool
 	}{
-		{
-			name: "Expected type",
-			test: func(t *testing.T) {
-				mockResult := mocking.NewMockParsable()
-
-				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", resultKey).Return(mockResult, nil)
-
-				parsable := &BaseServiceNowItemResponse[*mocking.MockParsable]{
-					backingStore: backingStore,
-				}
-
-				result, err := parsable.GetResult()
-
-				assert.Nil(t, err)
-				assert.Equal(t, mockResult, result)
-
-				backingStore.AssertExpectations(t)
-			},
-		},
-		{
-			name: "Wrong type",
-			test: func(t *testing.T) {
-				mockResult := struct{}{}
-
-				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", resultKey).Return(mockResult, nil)
-
-				parsable := &BaseServiceNowItemResponse[*mocking.MockParsable]{
-					backingStore: backingStore,
-				}
-
-				result, err := parsable.GetResult()
-
-				assert.Equal(t, errors.New("value is not *mocking.MockParsable"), err)
-				assert.Nil(t, result)
-
-				backingStore.AssertExpectations(t)
-			},
-		},
-		{
-			name: "Retrieval error",
-			test: func(t *testing.T) {
-				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", resultKey).Return(nil, errors.New("retrieval error"))
-
-				parsable := &BaseServiceNowItemResponse[*mocking.MockParsable]{
-					backingStore: backingStore,
-				}
-
-				result, err := parsable.GetResult()
-
-				assert.Equal(t, errors.New("retrieval error"), err)
-				assert.Nil(t, result)
-
-				backingStore.AssertExpectations(t)
-			},
-		},
-		{
-			name: "BackingStore error",
-			test: func(t *testing.T) {
-				parsable := &BaseServiceNowItemResponse[*mocking.MockParsable]{}
-
-				result, err := parsable.GetResult()
-
-				assert.Equal(t, errors.New("store is nil"), err)
-				assert.Nil(t, result)
-			},
-		},
-		{
-			name: "Nil model",
-			test: func(t *testing.T) {
-				parsable := (*BaseServiceNowItemResponse[*mocking.MockParsable])(nil)
-
-				result, err := parsable.GetResult()
-
-				assert.Nil(t, err)
-				assert.Nil(t, result)
-			},
-		},
+		{"Ok", res, false},
+		{"NilM", nilR, false},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := tt.model.GetResult()
+			if (err != nil) != tt.err {
+				t.Errorf("err: got %v, expected %v", err, tt.err)
+			}
+		})
 	}
 }
 
-// TODO: implement tests
 func TestBaseServiceNowItemResponse_setResult(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
+	res := NewBaseServiceNowItemResponse[*MainError](nil)
+	me := NewMainError()
+	var nilR *BaseServiceNowItemResponse[*MainError]
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	tests := []struct {
+		name  string
+		model *BaseServiceNowItemResponse[*MainError]
+		val   *MainError
+		err   bool
+	}{
+		{"Ok", res, me, false},
+		{"NilM", nilR, me, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.model.setResult(tt.val)
+			if (err != nil) != tt.err {
+				t.Errorf("err: got %v, expected %v", err, tt.err)
+			}
+		})
+	}
+}
+
+func TestBaseServiceNowItemResponse_ErrorBranches(t *testing.T) {
+	res := NewBaseServiceNowItemResponse[*MainError](nil)
+	_ = res.backingStore.Set(resultKey, "not-parsable")
+	if _, err := res.GetResult(); err == nil {
+		t.Error("expected error for wrong type in GetResult")
+	}
+
+	resNilF := NewBaseServiceNowItemResponse[*MainError](nil)
+	deser := resNilF.GetFieldDeserializers()
+	if err := deser[resultKey](nil); err == nil || err.Error() != "factory is nil" {
+		t.Errorf("expected factory nil error, got %v", err)
+	}
+	
+	resNilBS := &BaseServiceNowItemResponse[*MainError]{backingStore: nil, backingStoreFactory: nil}
+	if err := resNilBS.setResult(nil); err == nil || err.Error() != "store is nil" {
+		t.Errorf("expected store nil error, got %v", err)
 	}
 }

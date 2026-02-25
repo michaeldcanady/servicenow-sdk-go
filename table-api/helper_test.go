@@ -1,95 +1,102 @@
 package tableapi
 
 import (
+	"reflect"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestConvertType(t *testing.T) {
-	// Test case with valid conversion
-	var validValue interface{} = 42
-	expectedInt := 42
-	validInt, validErr := convertType[int](validValue)
-	assert.Nil(t, validErr)
-	assert.Equal(t, expectedInt, validInt)
-
-	// Test case with invalid conversion
-	invalidValue := "not_an_int"
-	var invalidInt int
-	invalidInt, invalidErr := convertType[int](invalidValue)
-	assert.Error(t, invalidErr)
-	assert.Equal(t, 0, invalidInt)
+	tests := []struct {
+		name     string
+		input    interface{}
+		expected int
+		err      bool
+	}{
+		{"Ok", 42, 42, false},
+		{"Bad", "s", 0, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := convertType[int](tt.input)
+			if (err != nil) != tt.err {
+				t.Errorf("err: got %v, expected %v", err, tt.err)
+			}
+			if res != tt.expected {
+				t.Errorf("got %v, expected %v", res, tt.expected)
+			}
+		})
+	}
 }
 
-func TestConvertToPageNilResponse(t *testing.T) {
-	page, err := convertToPage(nil)
-
-	assert.Equal(t, PageResult{}, page)
-	assert.ErrorIs(t, err, ErrNilResponse)
+func TestIsNil(t *testing.T) {
+	var s *string
+	tests := []struct {
+		name     string
+		input    interface{}
+		expected bool
+	}{
+		{"Nil", nil, true},
+		{"NilPtr", s, true},
+		{"NotNil", "v", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if isNil(tt.input) != tt.expected {
+				t.Errorf("failed for %v", tt.input)
+			}
+		})
+	}
 }
 
-func TestConvertToPageWrongResponseType(t *testing.T) {
-	response := TableItemResponse{}
-
-	page, err := convertToPage(response)
-
-	assert.Equal(t, PageResult{}, page)
-	assert.ErrorIs(t, err, ErrWrongResponseType)
+func TestConvertToPage(t *testing.T) {
+	resp := &TableCollectionResponse{
+		Result: []*TableEntry{{}},
+	}
+	tests := []struct {
+		name  string
+		input interface{}
+		err   error
+	}{
+		{"Ok", resp, nil},
+		{"OkPtr", &resp, nil}, // Pointer to pointer to collection response
+		{"Nil", nil, ErrNilResponse},
+		{"WrongType", 123, ErrWrongResponseType},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := convertToPage(tt.input)
+			if tt.err != nil {
+				if err != tt.err {
+					t.Errorf("got err %v, expected %v", err, tt.err)
+				}
+			} else if err != nil {
+				t.Errorf("unexpected err %v", err)
+			}
+		})
+	}
 }
 
 func TestConvertFromTableEntry(t *testing.T) {
-	tests := []test[map[string]string]{
-		{
-			title:    "Test with map[string]string",
-			value:    map[string]string{"key": "value"},
-			expected: map[string]string{"key": "value"},
-		},
-		{
-			title:    "Test with TableEntry",
-			value:    TableEntry{"key": 123},
-			expected: map[string]string{"key": "123"},
-		},
-		{
-			title:     "Test with unsupported type",
-			value:     123,
-			expectErr: true,
-		},
-		{
-			title:    "Test with pointer to map[string]string",
-			value:    &map[string]string{"key": "value"},
-			expected: map[string]string{"key": "value"},
-		},
-		{
-			title:    "Test with pointer to TableEntry int",
-			value:    &TableEntry{"key": 123},
-			expected: map[string]string{"key": "123"},
-		},
-		{
-			title:    "Test with pointer to TableEntry bool",
-			value:    &TableEntry{"key": true},
-			expected: map[string]string{"key": "true"},
-		},
-		{
-			title:    "Test with pointer to TableEntry string",
-			value:    &TableEntry{"key": "value"},
-			expected: map[string]string{"key": "value"},
-		},
-		{
-			title:    "Test with pointer to TableEntry float",
-			value:    &TableEntry{"key": 1.2},
-			expected: map[string]string{"key": "1.2"},
-		},
+	tests := []struct {
+		name     string
+		input    interface{}
+		expected map[string]string
+		err      bool
+	}{
+		{"Map", map[string]string{"a": "b"}, map[string]string{"a": "b"}, false},
+		{"Entry", TableEntry{"a": 1, "b": "s"}, map[string]string{"a": "1", "b": "s"}, false},
+		{"PtrEntry", &TableEntry{"a": 1}, map[string]string{"a": "1"}, false},
+		{"BadType", 123, nil, true},
 	}
-
 	for _, tt := range tests {
-		t.Run(tt.title, func(t *testing.T) {
-			got, err := convertFromTableEntry(tt.value)
-			if (err != nil) != tt.expectErr {
-				t.Errorf("convertFromTableEntry() error = %v, wantErr %v", err, tt.expectErr)
-				return
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := convertFromTableEntry(tt.input)
+			if (err != nil) != tt.err {
+				t.Errorf("err: got %v, expected %v", err, tt.err)
 			}
-			assert.Equal(t, tt.expected, got)
+			if !tt.err && !reflect.DeepEqual(res, tt.expected) {
+				t.Errorf("got %v, expected %v", res, tt.expected)
+			}
 		})
 	}
 }

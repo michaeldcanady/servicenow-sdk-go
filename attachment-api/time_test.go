@@ -3,37 +3,28 @@ package attachmentapi
 import (
 	"testing"
 	"time"
-
-	"github.com/stretchr/testify/assert"
 )
 
-func TestTimeUnmarshalJSON_Success(t *testing.T) {
-	rawJSON := []byte(`2006-01-02 15:04:05`)
-
-	actual := &Time{}
-
-	err := actual.UnmarshalJSON(rawJSON)
-	if err != nil {
-		t.Error(err)
+func TestTime_UnmarshalJSON(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected time.Time
+		err      bool
+	}{
+		{"Ok", `"2006-01-02 15:04:05"`, time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC), false},
+		{"BadFormat", `"bad"`, time.Time{}, true},
 	}
-
-	expectedRaw, err := time.Parse("2006-01-02 15:04:05", "2006-01-02 15:04:05")
-	if err != nil {
-		t.Error(err)
-	}
-
-	expected := Time(expectedRaw)
-
-	assert.Equal(t, &expected, actual)
-}
-
-func TestTime_UnmarshallJSON_Failed(t *testing.T) {
-	rawJSON := []byte(`2006-01-02 15:04:053`)
-
-	actual := &Time{}
-
-	err := actual.UnmarshalJSON(rawJSON)
-	if err != nil {
-		assert.Error(t, err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var ti Time
+			err := ti.UnmarshalJSON([]byte(tt.input))
+			if (err != nil) != tt.err {
+				t.Errorf("err: got %v, expected %v", err, tt.err)
+			}
+			if !tt.err && !time.Time(ti).Equal(tt.expected) {
+				t.Errorf("got %v, expected %v", ti, tt.expected)
+			}
+		})
 	}
 }

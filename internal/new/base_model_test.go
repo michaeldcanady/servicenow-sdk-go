@@ -4,127 +4,77 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/store"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNewBaseModel(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				model := NewBaseModel()
-				assert.IsType(t, (store.BackingStoreFactory)(nil), model.backingStoreFactory)
-				assert.NotNil(t, model.backingStoreFactory)
-			},
-		},
+	model := NewBaseModel()
+	if model == nil {
+		t.Fatal("NewBaseModel returned nil")
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	if model.backingStoreFactory == nil {
+		t.Error("backingStoreFactory not initialized")
 	}
 }
 
 func TestBaseModel_SetBackingStoreFactory(t *testing.T) {
+	var nilM *BaseModel
+	m := &BaseModel{}
+	f := store.NewInMemoryBackingStore
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name    string
+		model   *BaseModel
+		factory store.BackingStoreFactory
+		err     error
 	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				strct := mocking.NewMockBackingStoreFactory()
-				factory := strct.MockBackingStoreFactory
-
-				model := &BaseModel{}
-				err := model.SetBackingStoreFactory(factory)
-				assert.Nil(t, err)
-				assert.NotNil(t, model.backingStoreFactory)
-			},
-		},
-		{
-			name: "Nil input",
-			test: func(t *testing.T) {
-				model := &BaseModel{}
-				err := model.SetBackingStoreFactory(nil)
-				assert.Equal(t, errors.New("factory is nil"), err)
-			},
-		},
-		{
-			name: "Nil model",
-			test: func(t *testing.T) {
-				model := (*BaseModel)(nil)
-				err := model.SetBackingStoreFactory(nil)
-				assert.Nil(t, err)
-			},
-		},
+		{"Ok", m, f, nil},
+		{"NilFactory", m, nil, errors.New("factory is nil")},
+		{"NilModel", nilM, f, nil},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.model.SetBackingStoreFactory(tt.factory)
+			if tt.err != nil {
+				if err == nil || err.Error() != tt.err.Error() {
+					t.Errorf("got err %v, expected err %v", err, tt.err)
+				}
+			} else {
+				if err != nil {
+					t.Errorf("unexpected err %v", err)
+				}
+			}
+		})
 	}
 }
 
 func TestBaseModel_GetBackingStore(t *testing.T) {
+	var nilM *BaseModel
+	m := NewBaseModel()
+	bs := store.NewInMemoryBackingStore()
+	mWithBS := &BaseModel{backingStore: bs}
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name  string
+		model *BaseModel
+		isNil bool
 	}{
-		{
-			name: "Successful no store provided",
-			test: func(t *testing.T) {
-				backingStore := mocking.NewMockBackingStore()
-
-				strct := mocking.NewMockBackingStoreFactory()
-				strct.On("MockBackingStoreFactory").Return(backingStore)
-				factory := strct.MockBackingStoreFactory
-
-				model := &BaseModel{
-					backingStoreFactory: factory,
-				}
-
-				valBackingStore := model.GetBackingStore()
-
-				assert.Equal(t, backingStore, valBackingStore)
-				strct.AssertExpectations(t)
-			},
-		},
-		{
-			name: "Nil model",
-			test: func(t *testing.T) {
-				model := (*BaseModel)(nil)
-
-				valBackingStore := model.GetBackingStore()
-
-				assert.Nil(t, valBackingStore)
-			},
-		},
-		{
-			name: "Successful existing store",
-			test: func(t *testing.T) {
-				backingStore := mocking.NewMockBackingStore()
-
-				strct := mocking.NewMockBackingStoreFactory()
-				factory := strct.MockBackingStoreFactory
-
-				model := &BaseModel{
-					backingStoreFactory: factory,
-					backingStore:        backingStore,
-				}
-
-				valBackingStore := model.GetBackingStore()
-
-				assert.Equal(t, backingStore, valBackingStore)
-				strct.AssertExpectations(t)
-			},
-		},
+		{"FromFactory", m, false},
+		{"Existing", mWithBS, false},
+		{"NilModel", nilM, true},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res := tt.model.GetBackingStore()
+			if tt.isNil {
+				if res != nil {
+					t.Error("expected nil")
+				}
+			} else {
+				if res == nil {
+					t.Error("expected non-nil")
+				}
+			}
+		})
 	}
 }

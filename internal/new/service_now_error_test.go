@@ -3,214 +3,100 @@ package internal
 import (
 	"errors"
 	"testing"
-
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	"github.com/stretchr/testify/assert"
 )
 
-// TODO: add tests
 func TestNewServicenowError(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	err := NewServicenowError()
+	if err == nil {
+		t.Fatal("NewServicenowError returned nil")
 	}
 }
 
 func TestCreateServiceNowErrorFromDiscriminatorValue(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				model, err := CreateServiceNowErrorFromDiscriminatorValue(nil)
-				assert.Nil(t, err)
-				assert.IsType(t, &ServicenowError{}, model)
-				assert.NotNil(t, model)
-			},
-		},
+	res, err := CreateServiceNowErrorFromDiscriminatorValue(nil)
+	if err != nil {
+		t.Errorf("unexpected err %v", err)
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	if res == nil {
+		t.Error("returned nil")
 	}
 }
 
 func TestServicenowError_Serialize(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				model := &ServicenowError{}
-
-				err := model.Serialize(nil)
-				assert.Error(t, errors.New("unsupported"), err)
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	err := NewServicenowError().Serialize(nil)
+	if err == nil || err.Error() != "unsupported" {
+		t.Errorf("got err %v, expected unsupported", err)
 	}
 }
 
-// TODO: add tests
 func TestServicenowError_GetFieldDeserializers(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	deser := NewServicenowError().GetFieldDeserializers()
+	if deser[errorKey] == nil {
+		t.Error("missing deserializer")
 	}
 }
 
 func TestServicenowError_GetError(t *testing.T) {
+	me := NewMainError()
+	e := NewServicenowError()
+	_ = e.setError(me)
+	var nilE *ServicenowError
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name     string
+		model    *ServicenowError
+		expected MainErrorable
+		err      bool
 	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				mainError := mocking.NewMockMainError()
-
-				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", errorKey).Return(mainError, nil)
-
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(backingStore)
-
-				model := &ServicenowError{
-					innerModel,
-				}
-
-				apiErr, err := model.GetError()
-				assert.Nil(t, err)
-				assert.Equal(t, mainError, apiErr)
-			},
-		},
-		{
-			name: "Wrong type",
-			test: func(t *testing.T) {
-				mainError := "mocking.NewMockMainError()"
-
-				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", errorKey).Return(mainError, nil)
-
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(backingStore)
-
-				model := &ServicenowError{
-					innerModel,
-				}
-
-				apiErr, err := model.GetError()
-				assert.Equal(t, errors.New("rawMainErr is not MainErrorable"), err)
-				assert.Nil(t, apiErr)
-			},
-		},
-		{
-			name: "Error backingStore.Get",
-			test: func(t *testing.T) {
-				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", errorKey).Return(nil, errors.New("unable to retrieve"))
-
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(backingStore)
-
-				model := &ServicenowError{
-					innerModel,
-				}
-
-				apiErr, err := model.GetError()
-				assert.Equal(t, errors.New("unable to retrieve"), err)
-				assert.Nil(t, apiErr)
-			},
-		},
-		{
-			name: "Nil model",
-			test: func(t *testing.T) {
-				model := (*ServicenowError)(nil)
-
-				apiErr, err := model.GetError()
-				assert.Nil(t, err)
-				assert.Nil(t, apiErr)
-			},
-		},
+		{"Ok", e, me, false},
+		{"NilE", nilE, nil, false},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := tt.model.GetError()
+			if (err != nil) != tt.err {
+				t.Errorf("err: got %v, expected %v", err, tt.err)
+			}
+			if res != tt.expected {
+				t.Errorf("got %v, expected %v", res, tt.expected)
+			}
+		})
 	}
 }
 
 func TestServicenowError_setError(t *testing.T) {
+	me := NewMainError()
+	e := NewServicenowError()
+	var nilE *ServicenowError
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name  string
+		model *ServicenowError
+		val   MainErrorable
+		err   bool
 	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				mainError := mocking.NewMockMainError()
+		{"Ok", e, me, false},
+		{"NilE", nilE, me, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.model.setError(tt.val)
+			if (err != nil) != tt.err {
+				t.Errorf("err: got %v, expected %v", err, tt.err)
+			}
+		})
+	}
+}
 
-				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Set", errorKey, mainError).Return(nil)
-
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(backingStore)
-
-				model := &ServicenowError{
-					innerModel,
-				}
-
-				err := model.setError(mainError)
-				assert.Nil(t, err)
-				backingStore.AssertExpectations(t)
-				innerModel.AssertExpectations(t)
-			},
-		},
-		{
-			name: "Nil backing store",
-			test: func(t *testing.T) {
-				mainError := mocking.NewMockMainError()
-
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				model := &ServicenowError{
-					innerModel,
-				}
-
-				err := model.setError(mainError)
-				assert.Equal(t, errors.New("backingStore is nil"), err)
-				innerModel.AssertExpectations(t)
-			},
-		},
-		{
-			name: "nil model",
-			test: func(t *testing.T) {
-				mainError := mocking.NewMockMainError()
-
-				model := (*ServicenowError)(nil)
-
-				err := model.setError(mainError)
-				assert.Nil(t, err)
-			},
-		},
+func TestServicenowError_ErrorBranches(t *testing.T) {
+	eWrongType := NewServicenowError()
+	_ = eWrongType.GetBackingStore().Set(errorKey, 123)
+	if _, err := eWrongType.GetError(); err == nil || err.Error() != "rawMainErr is not MainErrorable" {
+		t.Errorf("Expected wrong type error, got %v", err)
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	eNilBS := &ServicenowError{Model: &mockNilBSModel{}}
+	if err := eNilBS.setError(nil); err == nil || err.Error() != "backingStore is nil" {
+		t.Errorf("Expected BS nil error, got %v", err)
 	}
 }

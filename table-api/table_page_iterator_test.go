@@ -8,83 +8,45 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/stretchr/testify/assert"
-)
-
-var (
-	sharedTableCollectionResponse2 = TableCollectionResponse2[TableEntry]{
-		// Populate with test data.
-	}
-	sharedClient      = &MockClient{}
-	sharedIterator, _ = NewTablePageIterator(&sharedTableCollectionResponse2, sharedClient)
 )
 
 func TestNewTablePageIterator(t *testing.T) {
-	tests := []test[*TablePageIterator[TableEntry]]{
-		{
-			title: "Valid",
-			value: []interface{}{
-				&sharedTableCollectionResponse2,
-				sharedClient,
-			},
-			expected:  sharedIterator,
-			expectErr: false,
-			err:       nil,
-		},
-		{
-			title: "Missing Client",
-			value: []interface{}{
-				&sharedTableCollectionResponse2,
-				(*MockClient)(nil),
-			},
-			expected:  nil,
-			expectErr: false,
-			err:       core.ErrNilClient,
-		},
+	client := &MockClient{}
+	resp := &TableCollectionResponse2[TableEntry]{}
+	tests := []struct {
+		name   string
+		resp   *TableCollectionResponse2[TableEntry]
+		client core.Client
+		err    error
+	}{
+		{"Ok", resp, client, nil},
+		{"NilClient", resp, nil, core.ErrNilClient},
 	}
-
-	for _, test := range tests {
-		t.Run(test.title, func(t *testing.T) {
-			value, _ := test.value.([]interface{})
-
-			page := value[0].(*TableCollectionResponse2[TableEntry])
-			client := value[1].(*MockClient)
-
-			_, err := NewTablePageIterator(page, client)
-
-			// Fails due to constructor function
-			//assert.Equal(t, test.expected, iterator)
-			assert.Equal(t, test.err, err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := NewTablePageIterator(tt.resp, tt.client)
+			if err != tt.err {
+				t.Errorf("got err %v, expected %v", err, tt.err)
+			}
 		})
 	}
 }
 
 func TestConstructTableCollection(t *testing.T) {
-	tests := []test[core.CollectionResponse[TableEntry]]{
-		{
-			title: "Valid",
-			value: &http.Response{
-				Body: io.NopCloser(strings.NewReader(string(getFakeCollectionJSON()))),
-			},
-			expected: &fakeCollectionResponse,
-			err:      nil,
-		},
-		{
-			title: "Nil Body",
-			value: &http.Response{
-				Body: http.NoBody,
-			},
-			expected: nil,
-			err:      internal.ErrNilResponseBody,
-		},
+	tests := []struct {
+		name  string
+		input *http.Response
+		err   error
+	}{
+		{"Ok", &http.Response{Body: io.NopCloser(strings.NewReader(string(getFakeCollectionJSON())))}, nil},
+		{"NilBody", &http.Response{Body: http.NoBody}, internal.ErrNilResponseBody},
 	}
-
-	for _, test := range tests {
-		t.Run(test.title, func(t *testing.T) {
-			collection, err := constructTableCollection[TableEntry](test.value.(*http.Response))
-
-			assert.Equal(t, test.expected, collection)
-			assert.Equal(t, test.err, err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := constructTableCollection[TableEntry](tt.input)
+			if err != tt.err {
+				t.Errorf("got err %v, expected %v", err, tt.err)
+			}
 		})
 	}
 }

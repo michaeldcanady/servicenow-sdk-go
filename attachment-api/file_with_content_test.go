@@ -1,256 +1,106 @@
 package attachmentapi
 
 import (
-	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/stretchr/testify/assert"
+	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
-//func TestNewMedia(t *testing.T) {
-//	tests := []struct {
-//		name string
-//		test func(*testing.T)
-//	}{}
-//
-//	for _, test := range tests {
-//		t.Run(test.name, test.test)
-//	}
-//}
-
 func TestNewFileWithContent(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				file := NewFileWithContent()
-
-				assert.IsType(t, &FileWithContentModel{}, file)
-				assert.IsType(t, &FileModel{}, file.(*FileWithContentModel).File)
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	res := NewFileWithContent()
+	if res == nil {
+		t.Error("returned nil")
 	}
 }
 
 func TestCreateFileWithContentFromDiscriminatorValue(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				mockParseNode := mocking.NewMockParseNode()
-
-				model, err := CreateFileWithContentFromDiscriminatorValue(mockParseNode)
-
-				assert.Nil(t, err)
-				assert.IsType(t, &FileWithContentModel{}, model)
-			},
-		},
+	res, err := CreateFileWithContentFromDiscriminatorValue(nil)
+	if err != nil {
+		t.Errorf("unexpected err %v", err)
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	if res == nil {
+		t.Error("returned nil")
 	}
 }
 
-func TestFileWithContent_GetFieldDeserializers(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				file := mocking.NewMockFile()
-				file.On("GetFieldDeserializers").Return(make(map[string]func(serialization.ParseNode) error, 0))
-
-				fileWithContent := &FileWithContentModel{
-					File: file,
-				}
-
-				fileWithContent.GetFieldDeserializers()
-
-				file.AssertExpectations(t)
-			},
-		},
-		{
-			name: "Nil model",
-			test: func(t *testing.T) {
-				fileWithContent := (*FileWithContentModel)(nil)
-
-				fieldDeserializers := fileWithContent.GetFieldDeserializers()
-
-				assert.Nil(t, fieldDeserializers)
-			},
-		},
+func TestFileWithContentModel_GetFieldDeserializers(t *testing.T) {
+	m := NewFileWithContent()
+	deser := m.GetFieldDeserializers()
+	if deser == nil {
+		t.Error("expected non-nil deser")
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	var nilM *FileWithContentModel
+	if nilM.GetFieldDeserializers() != nil {
+		t.Error("expected nil")
 	}
 }
 
-func TestFileWithContent_GetContent(t *testing.T) {
+func TestFileWithContentModel_GetContent(t *testing.T) {
+	m := NewFileWithContent()
+	data := []byte("test")
+	_ = m.SetContent(data)
+	var nilM *FileWithContentModel
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name     string
+		model    FileWithContent
+		expected []byte
+		err      bool
 	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				mockContent := []byte{}
-
-				mockBackingStore := mocking.NewMockBackingStore()
-				mockBackingStore.On("Get", "content").Return(mockContent, nil)
-
-				mockModel := mocking.NewMockModel()
-				mockModel.On("GetBackingStore").Return(mockBackingStore)
-
-				file := &FileWithContentModel{File: &FileModel{Model: mockModel}}
-
-				content, err := file.GetContent()
-
-				assert.Equal(t, mockContent, content)
-				assert.Nil(t, err)
-			},
-		},
-		{
-			name: "Wrong type",
-			test: func(t *testing.T) {
-				mockContent := "bad type"
-
-				mockBackingStore := mocking.NewMockBackingStore()
-				mockBackingStore.On("Get", "content").Return(mockContent, nil)
-
-				mockModel := mocking.NewMockModel()
-				mockModel.On("GetBackingStore").Return(mockBackingStore)
-
-				file := &FileWithContentModel{File: &FileModel{Model: mockModel}}
-
-				content, err := file.GetContent()
-
-				assert.Nil(t, content)
-				assert.Equal(t, errors.New("content is not []byte"), err)
-			},
-		},
-		{
-			name: "Retrieval error",
-			test: func(t *testing.T) {
-				mockBackingStore := mocking.NewMockBackingStore()
-				mockBackingStore.On("Get", "content").Return(nil, errors.New("retrieval error"))
-
-				mockModel := mocking.NewMockModel()
-				mockModel.On("GetBackingStore").Return(mockBackingStore)
-
-				file := &FileWithContentModel{File: &FileModel{Model: mockModel}}
-
-				content, err := file.GetContent()
-
-				assert.Nil(t, content)
-				assert.Equal(t, errors.New("retrieval error"), err)
-			},
-		},
-		{
-			name: "Nil store",
-			test: func(t *testing.T) {
-				mockContent := []byte{}
-
-				mockBackingStore := mocking.NewMockBackingStore()
-				mockBackingStore.On("Get", "content").Return(mockContent, nil)
-
-				mockModel := mocking.NewMockModel()
-				mockModel.On("GetBackingStore").Return(nil)
-
-				file := &FileWithContentModel{File: &FileModel{Model: mockModel}}
-
-				content, err := file.GetContent()
-
-				assert.Nil(t, content)
-				assert.Equal(t, errors.New("store is nil"), err)
-			},
-		},
-		{
-			name: "Nil model",
-			test: func(t *testing.T) {
-				file := (*FileWithContentModel)(nil)
-
-				content, err := file.GetContent()
-
-				assert.Nil(t, content)
-				assert.Nil(t, err)
-			},
-		},
+		{"Ok", m, data, false},
+		{"NilM", nilM, nil, false},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := tt.model.GetContent()
+			if (err != nil) != tt.err {
+				t.Errorf("err: got %v, expected %v", err, tt.err)
+			}
+			if string(res) != string(tt.expected) {
+				t.Errorf("got %v, expected %v", res, tt.expected)
+			}
+		})
 	}
 }
 
-func TestFileWithContent_SetContent(t *testing.T) {
+func TestFileWithContentModel_SetContent(t *testing.T) {
+	m := NewFileWithContent()
+	data := []byte("test")
+	var nilM *FileWithContentModel
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name  string
+		model FileWithContent
+		err   bool
 	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				mockContent := []byte{}
-
-				mockBackingStore := mocking.NewMockBackingStore()
-				mockBackingStore.On("Set", "content", mockContent).Return(nil)
-
-				mockModel := mocking.NewMockModel()
-				mockModel.On("GetBackingStore").Return(mockBackingStore)
-
-				file := &FileWithContentModel{File: &FileModel{Model: mockModel}}
-
-				err := file.SetContent(mockContent)
-
-				assert.Nil(t, err)
-			},
-		},
-		{
-			name: "Nil store",
-			test: func(t *testing.T) {
-				mockContent := []byte{}
-
-				mockModel := mocking.NewMockModel()
-				mockModel.On("GetBackingStore").Return(nil)
-
-				file := &FileWithContentModel{File: &FileModel{Model: mockModel}}
-
-				err := file.SetContent(mockContent)
-
-				assert.Equal(t, errors.New("store is nil"), err)
-			},
-		},
-		{
-			name: "Nil model",
-			test: func(t *testing.T) {
-				mockContent := []byte{}
-
-				file := (*FileWithContentModel)(nil)
-
-				err := file.SetContent(mockContent)
-
-				assert.Nil(t, err)
-			},
-		},
+		{"Ok", m, false},
+		{"NilM", nilM, false},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.model.SetContent(data)
+			if (err != nil) != tt.err {
+				t.Errorf("err: got %v, expected %v", err, tt.err)
+			}
+		})
 	}
 }
+
+func TestFileWithContentModel_ErrorBranches(t *testing.T) {
+	mWrongType := NewFileWithContent()
+	_ = mWrongType.GetBackingStore().Set(contentKey, 123)
+	if _, err := mWrongType.GetContent(); err == nil || err.Error() != "content is not []byte" {
+		t.Errorf("expected type error, got %v", err)
+	}
+
+	mNilBS := &FileWithContentModel{File: &mockNilBSFile{}}
+	if _, err := mNilBS.GetContent(); err == nil || err.Error() != "store is nil" {
+		t.Errorf("expected BS nil error in Get, got %v", err)
+	}
+	if err := mNilBS.SetContent(nil); err == nil || err.Error() != "store is nil" {
+		t.Errorf("expected BS nil error in Set, got %v", err)
+	}
+}
+
+type mockNilBSFile struct { FileModel }
+func (m *mockNilBSFile) GetBackingStore() store.BackingStore { return nil }

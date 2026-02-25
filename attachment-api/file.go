@@ -536,7 +536,7 @@ func (f *FileModel) GetCompressed() (*bool, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(compressedKey)
 	if err != nil {
 		return nil, err
 	}
@@ -732,7 +732,7 @@ func (f *FileModel) GetSizeBytes() (*int64, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(sizeBytesKey)
 	if err != nil {
 		return nil, err
 	}
@@ -760,7 +760,7 @@ func (f *FileModel) GetSizeCompressed() (*int64, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(sizeCompressedKey)
 	if err != nil {
 		return nil, err
 	}
@@ -788,7 +788,7 @@ func (f *FileModel) GetSysCreatedBy() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(sysCreatedByKey)
 	if err != nil {
 		return nil, err
 	}
@@ -816,7 +816,7 @@ func (f *FileModel) GetSysCreatedOn() (*time.Time, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(sysCreatedOnKey)
 	if err != nil {
 		return nil, err
 	}
@@ -844,7 +844,7 @@ func (f *FileModel) GetSysID() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(sysIDKey)
 	if err != nil {
 		return nil, err
 	}
@@ -872,7 +872,7 @@ func (f *FileModel) GetSysModCount() (*int64, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(sysModCountKey)
 	if err != nil {
 		return nil, err
 	}
@@ -900,7 +900,7 @@ func (f *FileModel) GetSysTags() ([]string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(sysTagsKey)
 	if err != nil {
 		return nil, err
 	}
@@ -928,7 +928,7 @@ func (f *FileModel) GetSysUpdatedBy() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(sysUpdatedByKey)
 	if err != nil {
 		return nil, err
 	}
@@ -956,7 +956,7 @@ func (f *FileModel) GetSysUpdatedOn() (*time.Time, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(sysUpdatedOnKey)
 	if err != nil {
 		return nil, err
 	}
@@ -984,7 +984,7 @@ func (f *FileModel) GetTableName() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(tableNameKey)
 	if err != nil {
 		return nil, err
 	}
@@ -1012,7 +1012,7 @@ func (f *FileModel) GetTableSysID() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(tableSysIDKey)
 	if err != nil {
 		return nil, err
 	}
@@ -1040,7 +1040,7 @@ func (f *FileModel) GetUpdatedByName() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
+	val, err := f.GetBackingStore().Get(updatedByNameKey)
 	if err != nil {
 		return nil, err
 	}

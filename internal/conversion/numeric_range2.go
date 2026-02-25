@@ -11,7 +11,7 @@ var (
 	int16Range = sync.OnceValue(func() *numericRange2 { return newNumericRange2(math.MaxInt16, math.MinInt16, false) })()
 	int32Range = sync.OnceValue(func() *numericRange2 { return newNumericRange2(math.MaxInt32, math.MinInt32, false) })()
 	int64Range = sync.OnceValue(func() *numericRange2 { return newNumericRange2(math.MaxInt64, math.MinInt64, false) })()
-	intRange   = sync.OnceValue(func() *numericRange2 { return newNumericRange2(math.MaxInt64, math.MinInt64, true) })()
+	intRange   = sync.OnceValue(func() *numericRange2 { return newNumericRange2(math.MaxInt64, math.MinInt64, false) })()
 
 	float32Range = sync.OnceValue(func() *numericRange2 { return newNumericRange2(math.MaxFloat32, -math.MaxFloat32, true) })()
 	float64Range = sync.OnceValue(func() *numericRange2 { return newNumericRange2(math.MaxFloat64, -math.MaxFloat64, true) })()
