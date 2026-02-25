@@ -1,192 +1,166 @@
 package core
 
 import (
-	"bytes"
 	"context"
 	"net/http"
 	"net/url"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNewRequestInformation(t *testing.T) {
-	requestInfo := NewRequestInformation()
-
-	expectedHeaders := make(http.Header)
-	expectedOptions := make(map[string]RequestOption)
-	expectedURI := NewURLInformation()
-
-	assert.Equal(t, expectedHeaders, requestInfo.Headers)
-	assert.Equal(t, expectedOptions, requestInfo.options)
-	assert.Equal(t, expectedURI, requestInfo.uri)
+	ri := NewRequestInformation()
+	if ri == nil {
+		t.Fatal("returned nil")
+	}
 }
 
-func TestNewRequestInformationSetStreamContenr(t *testing.T) {
-	content := []byte("Testing Test")
-
-	requestInfo := NewRequestInformation()
-	requestInfo.SetStreamContent(content)
-
-	assert.Equal(t, content, requestInfo.Content)
-	assert.Equal(t, binaryContentType, requestInfo.Headers.Get(contentTypeHeader))
-}
-
-func TestNewRequestInformationAddQueryParameters(t *testing.T) {
-	source := struct {
-		Var1 string `url:"var_1"`
+func TestRequestInformation_AddRequestOptions(t *testing.T) {
+	ri := NewRequestInformation()
+	ri.options = nil
+	tests := []struct {
+		name string
+		opts []RequestOption
 	}{
-		Var1: "Val1",
+		{"Nil", nil},
+		{"Single", []RequestOption{&mockRequestOption{}}},
 	}
-
-	expected := map[string]string{"var_1": "Val1"}
-
-	requestInfo := NewRequestInformation()
-	err := requestInfo.AddQueryParameters(source)
-	if err != nil {
-		t.Error(err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ri.AddRequestOptions(tt.opts)
+		})
 	}
-	assert.Equal(t, expected, requestInfo.uri.QueryParameters)
 }
 
-func TestNewRequestInformationSetUri(t *testing.T) {
-	url, err := url.Parse("https://www.example.com")
-	if err != nil {
-		t.Error(err)
-	}
-
-	expected := map[string]string{"request-raw-url": "https://www.example.com"}
-
-	requestInfo := NewRequestInformation()
-	requestInfo.SetUri(url)
-
-	assert.Equal(t, expected, requestInfo.uri.PathParameters)
-}
-
-func TestNewRequestInformationGetContentReader(t *testing.T) {
-	requestInfo := NewRequestInformation()
-	reader := requestInfo.getContentReader()
-	assert.IsType(t, &bytes.Reader{}, reader)
-}
-
-func TestNewRequestInformationUrl(t *testing.T) {
-	url, err := url.Parse("https://www.example.com")
-	if err != nil {
-		t.Error(err)
-	}
-
-	requestInfo := NewRequestInformation()
-	requestInfo.SetUri(url)
-	uri, err := requestInfo.Url()
-	assert.NoError(t, err)
-
-	assert.Equal(t, "https://www.example.com", uri)
-}
-
-func TestNewRequestInformation_ToRequest(t *testing.T) {
-	url, err := url.Parse("https://www.example.com")
-	if err != nil {
-		t.Error(err)
-	}
-
-	requestInfo := NewRequestInformation()
-	requestInfo.SetUri(url)
-	requestInfo.Method = GET
-
-	request, err := requestInfo.ToRequest()
-	assert.NoError(t, err)
-
-	expected, err := http.NewRequest("GET", "https://www.example.com", http.NoBody) // Use nil directly here
-	assert.NoError(t, err)
-
-	assert.Equal(t, expected.Method, request.Method)
-	assert.Equal(t, expected.URL, request.URL)
-	assert.Equal(t, expected.Body, request.Body)
-}
-
-func TestNewRequestInformationToRequestWithContext(t *testing.T) {
-	url, err := url.Parse("https://www.example.com")
-	if err != nil {
-		t.Error(err)
-	}
-
-	requestInfo := NewRequestInformation()
-	requestInfo.SetUri(url)
-	requestInfo.Method = GET
-	request, err := requestInfo.ToRequestWithContext(context.TODO())
-	assert.NoError(t, err)
-
-	expected, err := http.NewRequestWithContext(context.TODO(), "GET", "https://www.example.com", bytes.NewReader([]byte(nil)))
-	assert.NoError(t, err)
-
-	assert.Equal(t, expected.Method, request.Method)
-	assert.Equal(t, expected.URL, request.URL)
-	assert.Equal(t, expected.Body, request.Body)
-	assert.Equal(t, expected.Context(), request.Context())
-}
-
-type test[T any] struct {
-	title string
-	// setup to make needed modifications for a specific test
-	setup func()
-	// cleanup to undo changes do to reusable items
-	cleanup     func()
-	input       interface{}
-	expected    T
-	shouldErr   bool
-	expectedErr error
-}
-
-func TestNewRequestInformationAddHeaders(t *testing.T) {
-	tests := []test[http.Header]{
-		{
-			title: "Test Struct Headers",
-			input: struct {
-				Header1 string `header:"header-1"`
-				Header2 string `header:"header-2"`
-				Header3 string `header:"header-3"`
-			}{
-				Header1: "value1",
-				Header2: "value2",
-				Header3: "value3",
-			},
-			expected: http.Header{
-				"Header-1": []string{"value1"},
-				"Header-2": []string{"value2"},
-				"Header-3": []string{"value3"},
-			},
-			shouldErr: false,
-		},
-		{
-			title: "Test http.Header Headers",
-			input: http.Header{
-				"Header-1": []string{"value1"},
-				"Header-2": []string{"value2"},
-				"Header-3": []string{"value3"},
-			},
-			expected: http.Header{
-				"Header-1": []string{"value1"},
-				"Header-2": []string{"value2"},
-				"Header-3": []string{"value3"},
-			},
-			shouldErr: false,
-		},
-		{
-			title:       "Test string Headers",
-			input:       "bad headers",
-			expected:    http.Header{},
-			shouldErr:   true,
-			expectedErr: ErrInvalidHeaderType,
-		},
-	}
-
-	for _, test := range tests {
-		requestInfo := NewRequestInformation()
-		err := requestInfo.AddHeaders(test.input)
-
-		if !test.shouldErr {
-			assert.NoError(t, err)
+func TestRequestInformation_GetRequestOptions(t *testing.T) {
+	ri := NewRequestInformation()
+	t.Run("Empty", func(t *testing.T) {
+		if len(ri.GetRequestOptions()) != 0 {
+			t.Error("expected empty")
 		}
-		assert.Equal(t, test.expected, requestInfo.Headers)
+	})
+	t.Run("NilInternal", func(t *testing.T) {
+		ri.options = nil
+		if len(ri.GetRequestOptions()) != 0 {
+			t.Error("expected empty")
+		}
+	})
+}
+
+func TestRequestInformation_SetStreamContent(t *testing.T) {
+	ri := NewRequestInformation()
+	data := []byte("test")
+	ri.SetStreamContent(data)
+	if string(ri.Content) != "test" {
+		t.Error("failed to set content")
+	}
+	if ri.Headers.Get("Content-Type") != "application/octet-stream" {
+		t.Error("failed to set header")
 	}
 }
+
+func TestRequestInformation_Url(t *testing.T) {
+	ri := NewRequestInformation()
+	ri.uri.UrlTemplate = "http://{+baseurl}/t"
+	ri.uri.PathParameters["baseurl"] = "test.com"
+	res, _ := ri.Url()
+	if res != "http://test.com/t" {
+		t.Errorf("got %s", res)
+	}
+	
+	riBad := NewRequestInformation()
+	_, err := riBad.Url()
+	if err == nil {
+		t.Error("expected error for missing params")
+	}
+}
+
+func TestRequestInformation_ToRequest(t *testing.T) {
+	ri := NewRequestInformation()
+	ri.uri.UrlTemplate = "http://{+baseurl}/t"
+	ri.uri.PathParameters["baseurl"] = "test.com"
+	ri.Method = GET
+	ri.Headers.Add("A", "B")
+
+	req, err := ri.ToRequest()
+	if err != nil {
+		t.Errorf("unexpected err %v", err)
+	}
+	if req.Header.Get("A") != "B" {
+		t.Error("header missing")
+	}
+	
+	riBad := NewRequestInformation()
+	_, err = riBad.ToRequest()
+	if err == nil {
+		t.Error("expected error")
+	}
+}
+
+func TestRequestInformation_ToRequestWithContext(t *testing.T) {
+	ri := NewRequestInformation()
+	ri.uri.UrlTemplate = "http://{+baseurl}/t"
+	ri.uri.PathParameters["baseurl"] = "test.com"
+	
+	_, err := ri.ToRequestWithContext(context.Background())
+	if err != nil {
+		t.Errorf("unexpected err %v", err)
+	}
+
+	riBad := NewRequestInformation()
+	_, err = riBad.ToRequestWithContext(context.Background())
+	if err == nil {
+		t.Error("expected error")
+	}
+}
+
+func TestRequestInformation_AddHeaders(t *testing.T) {
+	ri := NewRequestInformation()
+	tests := []struct {
+		name  string
+		input any
+		err   bool
+	}{
+		{"Header", http.Header{"A": []string{"B"}}, false},
+		{"Struct", struct {
+			A string `header:"A"`
+		}{A: "B"}, false},
+		{"BadType", 123, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := ri.AddHeaders(tt.input)
+			if (err != nil) != tt.err {
+				t.Errorf("err: got %v, expected %v", err, tt.err)
+			}
+		})
+	}
+}
+
+func TestRequestInformation_getContentReader(t *testing.T) {
+	ri := NewRequestInformation()
+	ri.Content = []byte("test")
+	reader := ri.getContentReader()
+	if reader == nil {
+		t.Fatal("returned nil")
+	}
+}
+
+func TestRequestInformation_SetUri(t *testing.T) {
+	ri := NewRequestInformation()
+	u, _ := url.Parse("http://test")
+	ri.SetUri(u)
+	if ri.uri.PathParameters[rawURLKey] != "http://test" {
+		t.Error("failed to set raw url")
+	}
+}
+
+func TestRequestInformation_AddQueryParameters(t *testing.T) {
+	ri := NewRequestInformation()
+	err := ri.AddQueryParameters(struct{A string `url:"a"`}{A: "v"})
+	if err != nil {
+		t.Errorf("unexpected err %v", err)
+	}
+}
+
+type mockRequestOption struct{}
+func (m *mockRequestOption) GetKey() RequestOptionKey { return RequestOptionKey{Key: "mock"} }

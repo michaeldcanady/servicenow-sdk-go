@@ -2,12 +2,14 @@ package attachmentapi
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestNewAttachmentRequestBuilder2Internal(t *testing.T) {
@@ -202,15 +204,62 @@ func TestAttachmentRequestBuilder2_Upload(t *testing.T) {
 	}
 }
 
-// TODO: (TestAttachmentRequestBuilder2_Get) Add tests
 func TestAttachmentRequestBuilder2_Get(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
+		name        string
+		setup       func(ra *mocking.MockRequestAdapter)
+		expectedErr bool
+	}{
+		{
+			name: "Successful",
+			setup: func(ra *mocking.MockRequestAdapter) {
+				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&AttachmentCollectionResponse2Model{}, nil)
+			},
+			expectedErr: false,
+		},
+		{
+			name: "Send Error",
+			setup: func(ra *mocking.MockRequestAdapter) {
+				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, errors.New("send error"))
+			},
+			expectedErr: true,
+		},
+		{
+			name: "Nil Result",
+			setup: func(ra *mocking.MockRequestAdapter) {
+				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
+			},
+			expectedErr: false,
+		},
+		{
+			name: "Wrong Type Error",
+			setup: func(ra *mocking.MockRequestAdapter) {
+				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&Attachment2Model{}, nil)
+			},
+			expectedErr: true,
+		},
+	}
 
 	for _, test := range tests {
-		t.Run(test.name, test.test)
+		t.Run(test.name, func(t *testing.T) {
+			ra := mocking.NewMockRequestAdapter()
+			test.setup(ra)
+
+			rb := NewAttachmentRequestBuilder2("url", ra)
+			res, err := rb.Get(context.Background(), nil)
+
+			if test.expectedErr {
+				assert.Error(t, err)
+				assert.Nil(t, res)
+			} else {
+				assert.NoError(t, err)
+				if test.name == "Nil Result" {
+					assert.Nil(t, res)
+				} else {
+					assert.NotNil(t, res)
+				}
+			}
+		})
 	}
 }
 

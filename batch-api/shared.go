@@ -16,7 +16,7 @@ func throwErrors(req ServicedRequest, typeName string) error {
 		return err
 	}
 
-	if code != nil && *code < 400 {
+	if code == nil || *code < 400 {
 		return nil
 	}
 
@@ -32,7 +32,12 @@ func throwErrors(req ServicedRequest, typeName string) error {
 
 	contentType := getHTTPHeader(headers, internalHttp.HTTPHeaderContentType, "")
 
-	return newInternal.NewServiceNowErrorThrower(newInternal.GetErrorRegistryInstance(), newInternal.NewKiotaDeserializer()).Throw(typeName, *code, contentType, []byte(*body))
+	var bodyBytes []byte
+	if body != nil {
+		bodyBytes = []byte(*body)
+	}
+
+	return newInternal.NewServiceNowErrorThrower(newInternal.GetErrorRegistryInstance(), newInternal.NewKiotaDeserializer()).Throw(typeName, *code, contentType, bodyBytes)
 }
 
 // serializeContent serializes the provided content using the provided ParsableFactory

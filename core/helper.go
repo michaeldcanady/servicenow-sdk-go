@@ -148,12 +148,19 @@ func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) erro
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	var errorMapping ErrorMapping
+	var response Response
+	if config != nil {
+		errorMapping = config.ErrorMapping
+		response = config.Response
+	}
+
+	resp, err := requestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
 		return err
 	}
 
-	return ParseResponse(response, &config.Response)
+	return ParseResponse(resp, &response)
 }
 
 // Deprecated: deprecated in v1.4.0. Use `SendPost2` instead.
@@ -177,12 +184,19 @@ func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) err
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	var errorMapping ErrorMapping
+	var response Response
+	if config != nil {
+		errorMapping = config.ErrorMapping
+		response = config.Response
+	}
+
+	resp, err := requestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
 		return err
 	}
 
-	return ParseResponse(response, &config.Response)
+	return ParseResponse(resp, &response)
 }
 
 // Deprecated: deprecated in v1.4.0. Use `sendDelete2` instead.

@@ -820,3 +820,59 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 		t.Run(test.name, test.test)
 	}
 }
+
+func TestBatchResponse_GetServicedRequestByID(t *testing.T) {
+	tests := []struct {
+		name        string
+		id          string
+		setup       func(m *BatchResponseModel)
+		expectedNil bool
+	}{
+		{
+			name: "Found",
+			id:   "1",
+			setup: func(m *BatchResponseModel) {
+				req := NewMockServicedRequest()
+				req.On("GetID").Return(internal.ToPointer("1"), nil)
+				_ = m.setServicedRequests([]ServicedRequest{req})
+			},
+			expectedNil: false,
+		},
+		{
+			name: "Not Found",
+			id:   "2",
+			setup: func(m *BatchResponseModel) {
+				req := NewMockServicedRequest()
+				req.On("GetID").Return(internal.ToPointer("1"), nil)
+				_ = m.setServicedRequests([]ServicedRequest{req})
+			},
+			expectedNil: true,
+		},
+		{
+			name: "Nil Model",
+			id:   "1",
+			setup: func(m *BatchResponseModel) {
+				// handled by test loop
+			},
+			expectedNil: true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			var m *BatchResponseModel
+			if test.name != "Nil Model" {
+				m = NewBatchResponse()
+				test.setup(m)
+			}
+
+			res, err := m.GetServicedRequestByID(test.id)
+			assert.NoError(t, err)
+			if test.expectedNil {
+				assert.Nil(t, res)
+			} else {
+				assert.NotNil(t, res)
+			}
+		})
+	}
+}

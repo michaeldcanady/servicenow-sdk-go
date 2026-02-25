@@ -6,7 +6,9 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestNewRestRequestHeader(t *testing.T) {
@@ -65,26 +67,27 @@ func TestCreateRestRequestHeaderFromDiscriminatorValue(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestRestRequestHeader_Serialize(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
 	}{
-		//{
-		//	name: "Successful",
-		//	test: func(t *testing.T) {
-		//		writer := mocking.NewMockSerializationWriter()
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
 
-		//		model := mocking.NewMockModel()
+				m := NewRestRequestHeader()
+				n := "name"
+				v := "value"
+				_ = m.SetName(&n)
+				_ = m.SetValue(&v)
 
-		//		header := &RestRequestHeader{model}
-
-		//		err := header.Serialize(writer)
-
-		//		assert.Nil(t, err)
-		//	},
-		//},
+				err := m.Serialize(writer)
+				assert.Nil(t, err)
+			},
+		},
 		{
 			name: "nil writer",
 			test: func(t *testing.T) {
@@ -100,7 +103,7 @@ func TestRestRequestHeader_Serialize(t *testing.T) {
 			},
 		},
 		{
-			name: "nil writer",
+			name: "nil model",
 			test: func(t *testing.T) {
 				writer := (*mocking.MockSerializationWriter)(nil)
 
@@ -115,6 +118,46 @@ func TestRestRequestHeader_Serialize(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
+	}
+}
+
+func TestCreateRestRequestHeaderFromHeaders(t *testing.T) {
+	tests := []struct {
+		name        string
+		headers     *abstractions.RequestHeaders
+		expectedErr bool
+	}{
+		{
+			name: "Successful",
+			headers: func() *abstractions.RequestHeaders {
+				h := abstractions.NewRequestHeaders()
+				h.Add("test", "value")
+				return h
+			}(),
+			expectedErr: false,
+		},
+		{
+			name:        "Nil Headers",
+			headers:     nil,
+			expectedErr: false,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			res, err := createRestRequestHeaderFromHeaders(test.headers)
+			if test.expectedErr {
+				assert.Error(t, err)
+				assert.Nil(t, res)
+			} else {
+				assert.NoError(t, err)
+				if test.headers != nil {
+					assert.NotEmpty(t, res)
+				} else {
+					assert.Empty(t, res)
+				}
+			}
+		})
 	}
 }
 

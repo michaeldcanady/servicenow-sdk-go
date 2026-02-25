@@ -176,6 +176,9 @@ func createRestRequestHeaderFromHeaders[h headers](headers h) ([]RestRequestHead
 	batchHeaders := make([]RestRequestHeader, 0)
 
 	if requestHeaders, ok := interface{}(headers).(*abstractions.RequestHeaders); ok {
+		if internal.IsNil(requestHeaders) {
+			return batchHeaders, nil
+		}
 		for _, key := range requestHeaders.ListKeys() {
 			batchHeader := NewRestRequestHeader()
 			values := requestHeaders.Get(key)

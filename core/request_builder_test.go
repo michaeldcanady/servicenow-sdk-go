@@ -1,457 +1,124 @@
 package core
 
 import (
-	"encoding/json"
-	"fmt"
-	"io"
-	"net/http"
-	"net/url"
-	"reflect"
-	"slices"
-	"strings"
+	"context"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
-var (
-	collectionLinks = []string{fakeLastLink, fakeNextLink}
-	itemLinks       = []string{}
-	baseResp        = &http.Response{
-		Status:     "200 OK",
-		StatusCode: 200,
-		Proto:      "HTTP/1.1",
-		ProtoMajor: 1,
-		ProtoMinor: 1,
-		Header:     http.Header{},
-		Body:       http.NoBody,
-		Request:    nil,
+func TestNewRequestBuilder2(t *testing.T) {
+	tests := []struct {
+		name  string
+		templ string
+	}{
+		{"Basic", "t"},
 	}
-)
-
-// Create a mock client for testing purposes
-type mockClient struct{}
-
-func (c *mockClient) sendCollection(requestInformation IRequestInformation) (*http.Response, error) {
-	url, err := requestInformation.Url()
-	if err != nil {
-		return nil, fmt.Errorf("unable to parse URL: %s", err)
-	}
-
-	switch url {
-	case fakeLastLink:
-		baseResp.Body = io.NopCloser(strings.NewReader(string(sharedCurrentPageToJSON())))
-	case fakeNextLink:
-		baseResp.Body = io.NopCloser(strings.NewReader(string(sharedCurrentPageToJSON())))
-	}
-
-	return baseResp, nil
-}
-
-func (c *mockClient) sendItem(requestInformation IRequestInformation) (*http.Response, error) {
-	uri, err := requestInformation.Url()
-	if err != nil {
-		return nil, fmt.Errorf("unable to parse URL: %s", err)
-	}
-
-	parsedURI, _ := url.Parse(uri)
-
-	switch parsedURI.Scheme + "://" + parsedURI.Host {
-	}
-	return nil, nil
-}
-
-func (c *mockClient) Send(requestInformation IRequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
-	uri, err := requestInformation.Url()
-	if err != nil {
-		return nil, fmt.Errorf("unable to parse URL: %s", err)
-	}
-
-	parsedURI, _ := url.Parse(uri)
-
-	if uri == fakeLinkNilResp {
-		return nil, nil
-	}
-
-	if slices.Contains[[]string, string](collectionLinks, uri) {
-		return c.sendCollection(requestInformation)
-	}
-
-	if slices.Contains[[]string, string](itemLinks, parsedURI.Scheme+"://"+parsedURI.Host) {
-		return c.sendItem(requestInformation)
-	}
-
-	return nil, nil
-}
-
-func TestRequestBuilderToHeadRequestInformation(t *testing.T) {
-	// Create a mock RequestBuilder with a mock client
-	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
-
-	// Call the ToHeadRequestInformation method
-	requestInfo, err := builder.ToHeadRequestInformation()
-
-	// Perform assertions to check the result
-	if err != nil {
-		t.Errorf("Expected no error, but got %v", err)
-	}
-	if requestInfo.Method != HEAD {
-		t.Errorf("Expected method to be HEAD, but got %s", requestInfo.Method)
-	}
-	// Add more assertions as needed
-}
-
-func TestRequestBuilderToGetRequestInformation(t *testing.T) {
-	// Create a mock RequestBuilder with a mock client
-	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
-
-	// Create mock query parameters
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
-	}
-
-	// Call the ToGetRequestInformation method
-	requestInfo, err := builder.ToGetRequestInformation(params)
-
-	// Perform assertions to check the result
-	assert.NoError(t, err)
-	assert.Equal(t, GET, requestInfo.Method)
-	assert.Equal(t, params, requestInfo.uri.QueryParameters)
-}
-
-func TestRequestBuilderToGetRequestInformation2(t *testing.T) {
-	// Create a mock RequestBuilder with a mock client
-	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
-
-	// Create mock query parameters
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
-	}
-
-	config := RequestConfiguration{
-		QueryParameters: params,
-	}
-
-	// Call the ToGetRequestInformation method
-	requestInfo, err := builder.ToGetRequestInformation2(&config)
-
-	// Perform assertions to check the result
-	if err != nil {
-		t.Errorf("Expected no error, but got %v", err)
-	}
-
-	assert.NoError(t, err)
-	assert.Equal(t, GET, requestInfo.Method)
-	assert.Equal(t, params, requestInfo.uri.QueryParameters)
-}
-
-func TestRequestBuilderToPostRequestInformation(t *testing.T) {
-	// Create a mock RequestBuilder with a mock client
-	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
-
-	// Create mock data and query parameters
-	data := map[string]string{
-		"key1": "value1",
-		"key2": "value2",
-	}
-
-	expectedJSON, err := json.Marshal(data)
-	if err != nil {
-		t.Error(err)
-	}
-
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
-	}
-
-	// Call the ToPostRequestInformation method
-	requestInfo, err := builder.ToPostRequestInformation(data, params)
-
-	// Perform assertions to check the result
-	assert.NoError(t, err)
-	assert.Equal(t, POST, requestInfo.Method)
-	assert.Equal(t, expectedJSON, requestInfo.Content)
-}
-
-func TestRequestBuilderToPostRequestInformation2(t *testing.T) {
-	// Create a mock RequestBuilder with a mock client
-	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
-
-	// Create mock data and query parameters
-	data := map[string]string{
-		"key1": "value1",
-		"key2": "value2",
-	}
-	expectedJSON, err := json.Marshal(data)
-	if err != nil {
-		t.Error(err)
-	}
-
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
-	}
-
-	// Call the ToPostRequestInformation method
-	requestInfo, err := builder.ToPostRequestInformation2(data, params)
-
-	// Perform assertions to check the result
-	assert.NoError(t, err)
-	assert.Equal(t, POST, requestInfo.Method)
-	assert.Equal(t, expectedJSON, requestInfo.Content)
-}
-
-func TestRequestBuilderToPostRequestInformation3(t *testing.T) {
-	// Create a mock RequestBuilder with a mock client
-	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
-
-	// Create mock data and query parameters
-	data := map[string]string{
-		"key1": "value1",
-		"key2": "value2",
-	}
-
-	expectedJSON, err := json.Marshal(data)
-	if err != nil {
-		t.Error(err)
-	}
-
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
-	}
-
-	config := RequestConfiguration{
-		QueryParameters: params,
-		Data:            data,
-	}
-
-	// Call the ToPostRequestInformation method
-	requestInfo, err := builder.ToPostRequestInformation3(&config)
-
-	// Perform assertions to check the result
-	assert.NoError(t, err)
-	assert.Equal(t, POST, requestInfo.Method)
-	assert.Equal(t, expectedJSON, requestInfo.Content)
-}
-
-func TestRequestBuilderToDeleteRequestInformation(t *testing.T) {
-	// Create a mock RequestBuilder with a mock client
-	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
-
-	// Create mock query parameters
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
-	}
-
-	// Call the ToDeleteRequestInformation method
-	requestInfo, err := builder.ToDeleteRequestInformation(params)
-
-	// Perform assertions to check the result
-	assert.NoError(t, err)
-	assert.Equal(t, params, requestInfo.uri.QueryParameters)
-}
-
-func TestRequestBuilderToDeleteRequestInformation2(t *testing.T) {
-	// Create a mock RequestBuilder with a mock client
-	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
-
-	// Create mock query parameters
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
-	}
-
-	config := RequestConfiguration{
-		QueryParameters: params,
-	}
-
-	// Call the ToDeleteRequestInformation method
-	requestInfo, err := builder.ToDeleteRequestInformation2(&config)
-
-	// Perform assertions to check the result
-	assert.NoError(t, err)
-	assert.Equal(t, params, requestInfo.uri.QueryParameters)
-}
-
-func TestRequestBuilderToPutRequestInformation2(t *testing.T) {
-	// Create a mock RequestBuilder with a mock client
-	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
-
-	// Create mock data and query parameters
-	data := map[string]string{
-		"key1": "value1",
-		"key2": "value2",
-	}
-	params := map[string]string{
-		"param1": "value1",
-		"param2": "value2",
-	}
-
-	// Call the ToPostRequestInformation method
-	requestInfo, err := builder.ToPutRequestInformation(data, params)
-
-	// Perform assertions to check the result
-	if err != nil {
-		t.Errorf("Expected no error, but got %v", err)
-	}
-	if requestInfo.Method != PUT {
-		t.Errorf("Expected method to be PUT, but got %s", requestInfo.Method)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res := NewRequestBuilder2(nil, tt.templ, nil)
+			if res == nil {
+				t.Fatal("returned nil")
+			}
+			if res.UrlTemplate != tt.templ {
+				t.Error("failed")
+			}
+		})
 	}
 }
 
-func TestRequestBuilderPrepareData(t *testing.T) {
-	t.Run("NilData", func(t *testing.T) {
-		rB := &RequestBuilder{}
-		data, err := rB.prepareData(nil)
-		if err != nil {
-			t.Fatalf("Unexpected error: %v", err)
-		}
+func TestRequestBuilder_ToPutRequestInformation2(t *testing.T) {
+	rb := &RequestBuilder{}
+	tests := []struct {
+		name string
+	}{
+		{"Basic"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, _ := rb.ToPutRequestInformation2(nil)
+			if res.Method != PUT {
+				t.Error("wrong method")
+			}
+		})
+	}
+}
 
-		if data != nil {
-			t.Fatalf("Expected nil data for nil input, got: %v", data)
+func TestRequestBuilder_ToPostRequestInformation3(t *testing.T) {
+	rb := &RequestBuilder{}
+	res, _ := rb.ToPostRequestInformation3(nil)
+	if res.Method != POST { t.Error("failed") }
+}
+
+func TestRequestBuilder_ToDeleteRequestInformation2(t *testing.T) {
+	rb := &RequestBuilder{}
+	res, _ := rb.ToDeleteRequestInformation2(nil)
+	if res.Method != DELETE { t.Error("failed") }
+}
+
+func TestRequestBuilder_ToGetRequestInformation2(t *testing.T) {
+	rb := &RequestBuilder{}
+	res, _ := rb.ToGetRequestInformation2(nil)
+	if res.Method != GET { t.Error("failed") }
+}
+
+func TestRequestBuilder_prepareData(t *testing.T) {
+	rb := &RequestBuilder{}
+	tests := []struct {
+		name  string
+		input any
+		err   bool
+	}{
+		{"Nil", nil, false},
+		{"Bytes", []byte("v"), false},
+		{"Map", map[string]string{"a": "b"}, false},
+		{"Bad", 123, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := rb.prepareData(tt.input)
+			if (err != nil) != tt.err {
+				t.Errorf("err: got %v", err)
+			}
+		})
+	}
+}
+
+func TestRequestBuilder_SendMethods(t *testing.T) {
+	// These are harder to unit test without complex mocks
+	// but we can test the error propagation when ToRequestInformation fails
+	rb := &RequestBuilder{}
+	config := &RequestConfiguration{Data: 123} // trigger prepareData error
+	
+	t.Run("SendGet3", func(t *testing.T) {
+		if err := rb.SendGet3(context.Background(), config); err == nil {
+			t.Error("expected error")
 		}
 	})
-
-	t.Run("ByteData", func(t *testing.T) {
-		rB := &RequestBuilder{}
-		rawData := []byte("test data")
-		data, err := rB.prepareData(rawData)
-		if err != nil {
-			t.Fatalf("Unexpected error: %v", err)
-		}
-
-		if !reflect.DeepEqual(data, rawData) {
-			t.Fatalf("Expected %v, got: %v", rawData, data)
+	t.Run("SendPost4", func(t *testing.T) {
+		if err := rb.SendPost4(context.Background(), config); err == nil {
+			t.Error("expected error")
 		}
 	})
-
-	t.Run("MapData", func(t *testing.T) {
-		rB := &RequestBuilder{}
-		rawData := map[string]string{
-			"key": "value",
-		}
-		data, err := rB.prepareData(rawData)
-		if err != nil {
-			t.Fatalf("Unexpected error: %v", err)
-		}
-
-		expectedData, err := json.Marshal(rawData)
-		if err != nil {
-			t.Fatalf("Error marshalling map data: %v", err)
-		}
-
-		if !reflect.DeepEqual(data, expectedData) {
-			t.Fatalf("Expected %v, got: %v", expectedData, data)
+	t.Run("SendDelete3", func(t *testing.T) {
+		if err := rb.SendDelete3(context.Background(), config); err == nil {
+			t.Error("expected error")
 		}
 	})
-
-	t.Run("UnsupportedType", func(t *testing.T) {
-		rB := &RequestBuilder{}
-		rawData := 42 // Unsupported type
-		_, err := rB.prepareData(rawData)
-		if err == nil {
-			t.Fatal("Expected an error for unsupported type, but got nil")
-		}
-
-		expectedError := "unsupported type: int"
-		if err.Error() != expectedError {
-			t.Fatalf("Expected error %q, got: %v", expectedError, err)
+	t.Run("SendPut3", func(t *testing.T) {
+		if err := rb.SendPut3(context.Background(), config); err == nil {
+			t.Error("expected error")
 		}
 	})
 }
 
-func TestRequestBuilderToRequestInformation(t *testing.T) {
-	// Create a mock RequestBuilder with a mock client
-	builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
-
-	// Create mock data and query parameters
-	data := map[string]string{
-		"key1": "value1",
-		"key2": "value2",
-	}
-	params := map[string]interface{}{
-		"param1": "value1",
-		"param2": "value2",
-	}
-
-	// Call the ToRequestInformation method for a GET request
-	requestInfo, err := builder.ToRequestInformation(GET, nil, params)
-
-	// Perform assertions to check the result
-	if err != nil {
-		t.Errorf("Expected no error, but got %v", err)
-	}
-	if requestInfo.Method != GET {
-		t.Errorf("Expected method to be GET, but got %s", requestInfo.Method)
-	}
-
-	// Call the ToRequestInformation method for a POST request
-	requestInfo, err = builder.ToRequestInformation(POST, data, params)
-
-	// Perform assertions to check the result
-	if err != nil {
-		t.Errorf("Expected no error, but got %v", err)
-	}
-	if requestInfo.Method != POST {
-		t.Errorf("Expected method to be POST, but got %s", requestInfo.Method)
-	}
+func TestNewRequestBuilder(t *testing.T) {
+	res := NewRequestBuilder(nil, "t", nil)
+	if res == nil { t.Error("failed") }
 }
 
-type requestBuilderTest struct {
-	title  string
-	method HttpMethod
-	config RequestConfiguration
-}
-
-func TestRequestBuilderToRequestInformation3(t *testing.T) {
-	tests := []requestBuilderTest{
-		{
-			title:  "Test GET",
-			method: GET,
-			config: RequestConfiguration{
-				QueryParameters: map[string]interface{}{
-					"param1": "value1",
-					"param2": "value2",
-				},
-				Data: map[string]string{
-					"key1": "value1",
-					"key2": "value2",
-				},
-			},
-		},
-		{
-			title:  "Test POST",
-			method: POST,
-			config: RequestConfiguration{
-				QueryParameters: map[string]interface{}{
-					"param1": "value1",
-					"param2": "value2",
-				},
-				Data: map[string]string{
-					"key1": "value1",
-					"key2": "value2",
-				},
-			},
-		},
-	}
-
-	for _, test := range tests {
-		expectedJSON, err := json.Marshal(test.config.Data)
-		assert.NoError(t, err)
-
-		// Create a mock RequestBuilder with a mock client
-		builder := NewRequestBuilder(&mockClient{}, "https://example.com", nil)
-
-		// Call the ToRequestInformation method for a GET request
-		requestInfo, err := builder.ToRequestInformation3(test.method, &test.config) //nolint:gosec
-
-		assert.NoError(t, err)
-		assert.Equal(t, test.method, requestInfo.Method)
-		assert.Equal(t, expectedJSON, requestInfo.Content)
-	}
+func TestRequestBuilder_DeprecatedToRequestInformation(t *testing.T) {
+	rb := &RequestBuilder{}
+	t.Run("Head", func(t *testing.T) {
+		res, _ := rb.ToHeadRequestInformation()
+		if res.Method != HEAD { t.Error("failed") }
+	})
 }

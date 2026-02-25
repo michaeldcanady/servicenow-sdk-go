@@ -191,6 +191,10 @@ func (bR *BatchRequestModel) GetRestRequests() ([]RestRequest, error) {
 		return nil, err
 	}
 
+	if internal.IsNil(requests) {
+		return nil, nil
+	}
+
 	typedRequests, ok := requests.([]RestRequest)
 	if !ok {
 		return nil, errors.New("requests is not []RestRequestable")

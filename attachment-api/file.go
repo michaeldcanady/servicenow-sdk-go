@@ -171,7 +171,7 @@ func (f *FileModel) Serialize(writer serialization.SerializationWriter) error { 
 
 			return writer.WriteStringValue(sizeBytesKey, &sizeBytesString)
 		},
-		sizeCompressedKey: func(serialization.SerializationWriter) error {
+		sizeCompressedKey: func(writer serialization.SerializationWriter) error {
 			sizeCompressed, err := f.GetSizeCompressed()
 			if err != nil {
 				return err
@@ -179,10 +179,10 @@ func (f *FileModel) Serialize(writer serialization.SerializationWriter) error { 
 
 			sizeCompressedString := fmt.Sprintf("%v", sizeCompressed)
 
-			return writer.WriteStringValue(sizeBytesKey, &sizeCompressedString)
+			return writer.WriteStringValue(sizeCompressedKey, &sizeCompressedString)
 		},
 		sysCreatedByKey: func(writer serialization.SerializationWriter) error {
-			sysCreatedBy, err := f.GetFileName()
+			sysCreatedBy, err := f.GetSysCreatedBy()
 			if err != nil {
 				return err
 			}
@@ -200,7 +200,7 @@ func (f *FileModel) Serialize(writer serialization.SerializationWriter) error { 
 			return writer.WriteStringValue(sysCreatedOnKey, &sysCreatedOnString)
 		},
 		sysIDKey: func(writer serialization.SerializationWriter) error {
-			sysID, err := f.GetFileName()
+			sysID, err := f.GetSysID()
 			if err != nil {
 				return err
 			}
@@ -215,7 +215,7 @@ func (f *FileModel) Serialize(writer serialization.SerializationWriter) error { 
 
 			sysModCountString := fmt.Sprintf("%v", sysModCount)
 
-			return writer.WriteStringValue(sizeBytesKey, &sysModCountString)
+			return writer.WriteStringValue(sysModCountKey, &sysModCountString)
 		},
 		sysTagsKey: func(writer serialization.SerializationWriter) error {
 			sysTags, err := f.GetSysTags()
@@ -229,7 +229,7 @@ func (f *FileModel) Serialize(writer serialization.SerializationWriter) error { 
 			return writer.WriteStringValue(sysTagsKey, &sysTagsString)
 		},
 		sysUpdatedByKey: func(writer serialization.SerializationWriter) error {
-			sysUpdatedBy, err := f.GetFileName()
+			sysUpdatedBy, err := f.GetSysUpdatedBy()
 			if err != nil {
 				return err
 			}
@@ -237,7 +237,7 @@ func (f *FileModel) Serialize(writer serialization.SerializationWriter) error { 
 			return writer.WriteStringValue(sysUpdatedByKey, sysUpdatedBy)
 		},
 		sysUpdatedOnKey: func(writer serialization.SerializationWriter) error {
-			sysUpdatedOn, err := f.GetSysCreatedOn()
+			sysUpdatedOn, err := f.GetSysUpdatedOn()
 			if err != nil {
 				return err
 			}
@@ -247,7 +247,7 @@ func (f *FileModel) Serialize(writer serialization.SerializationWriter) error { 
 			return writer.WriteStringValue(sysUpdatedOnKey, &sysUpdatedOnString)
 		},
 		tableNameKey: func(writer serialization.SerializationWriter) error {
-			tableName, err := f.GetFileName()
+			tableName, err := f.GetTableName()
 			if err != nil {
 				return err
 			}
@@ -255,7 +255,7 @@ func (f *FileModel) Serialize(writer serialization.SerializationWriter) error { 
 			return writer.WriteStringValue(tableNameKey, tableName)
 		},
 		tableSysIDKey: func(writer serialization.SerializationWriter) error {
-			tableSysID, err := f.GetFileName()
+			tableSysID, err := f.GetTableSysID()
 			if err != nil {
 				return err
 			}
@@ -263,7 +263,7 @@ func (f *FileModel) Serialize(writer serialization.SerializationWriter) error { 
 			return writer.WriteStringValue(tableSysIDKey, tableSysID)
 		},
 		updatedByNameKey: func(writer serialization.SerializationWriter) error {
-			updatedByName, err := f.GetFileName()
+			updatedByName, err := f.GetUpdatedByName()
 			if err != nil {
 				return err
 			}
@@ -863,7 +863,7 @@ func (f *FileModel) SetSysID(sysID *string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(sysCreatedOnKey, sysID)
+	return f.GetBackingStore().Set(sysIDKey, sysID)
 }
 
 // GetSysModCount returns the number of times the attachment file has been modified (uploaded to the instance).

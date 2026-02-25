@@ -2,6 +2,7 @@ package servicenowsdkgo
 
 import (
 	"errors"
+	"net/http"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
@@ -139,7 +140,7 @@ func TestWithInstance(t *testing.T) {
 				instance := "https://exampleurl.com"
 				config := (*serviceNowServiceClientConfig)(nil)
 
-				option := withURL(instance)
+				option := withInstance(instance)
 
 				err := option(config)
 				assert.Equal(t, errors.New("config is nil"), err)
@@ -194,6 +195,31 @@ func TestWithBackingStore(t *testing.T) {
 
 				assert.Equal(t, errors.New("backingStoreFactory is nil"), err)
 				assert.Nil(t, config.backingStoreFactory)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestWithHTTPClient(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(t *testing.T)
+	}{
+		{
+			name: "successful",
+			test: func(t *testing.T) {
+				client := &http.Client{}
+				config := &serviceNowServiceClientConfig{}
+
+				option := withHTTPClient(client)
+				err := option(config)
+
+				assert.Nil(t, err)
+				assert.NotEmpty(t, config.requestAdapterOptions)
 			},
 		},
 	}
