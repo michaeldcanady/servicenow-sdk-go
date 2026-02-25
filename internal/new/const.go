@@ -5,5 +5,4 @@ const (
 	ContentTypeApplicationJSON        = "application/json"
 	RawURLKey                         = "request-raw-url"
 	BaseURLkey                        = "baseurl"
-	baseURLTemplatePlaceholder        = "{+baseurl}"
 )

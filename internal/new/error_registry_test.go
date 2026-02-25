@@ -18,13 +18,14 @@ func TestGetErrorRegistryInstance(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.name == "Singleton" {
+			switch tt.name {
+			case "Singleton":
 				inst1 := GetErrorRegistryInstance()
 				inst2 := GetErrorRegistryInstance()
 				if inst1 != inst2 {
 					t.Error("different instances returned")
 				}
-			} else if tt.name == "ThreadSafe" {
+			case "ThreadSafe":
 				var wg sync.WaitGroup
 				const count = 100
 				instances := make([]Dictionary[string, abstractions.ErrorMappings], count)

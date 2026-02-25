@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"errors"
 	"testing"
 )
 

@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/microsoft/kiota-abstractions-go/store"
@@ -198,7 +197,7 @@ func TestMainError_setStatus(t *testing.T) {
 
 func TestMainError_ErrorBranches(t *testing.T) {
 	mNilBS := &MainError{Model: &mockNilBSModel{}}
-	
+
 	if _, err := mNilBS.GetDetail(); err == nil || err.Error() != "backingStore is nil" {
 		t.Errorf("Expected backingStore is nil error, got %v", err)
 	}
@@ -223,7 +222,7 @@ func TestMainError_ErrorBranches(t *testing.T) {
 	if _, err := mWrongType.GetDetail(); err == nil || err.Error() != "detail is not *string" {
 		t.Errorf("Expected wrong type error, got %v", err)
 	}
-	
+
 	_ = mWrongType.GetBackingStore().Set(messageKey, 123)
 	if _, err := mWrongType.GetMessage(); err == nil || err.Error() != "message is not *string" {
 		t.Errorf("Expected wrong type error in Message, got %v", err)
@@ -235,5 +234,6 @@ func TestMainError_ErrorBranches(t *testing.T) {
 	}
 }
 
-type mockNilBSModel struct { BaseModel }
+type mockNilBSModel struct{ BaseModel }
+
 func (m *mockNilBSModel) GetBackingStore() store.BackingStore { return nil }

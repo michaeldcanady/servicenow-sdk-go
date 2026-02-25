@@ -1,11 +1,9 @@
 package internal
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
 func TestNewBaseServiceNowCollectionResponse(t *testing.T) {
@@ -47,7 +45,7 @@ func TestBaseServiceNowCollectionResponse_GetResult(t *testing.T) {
 	res := NewBaseServiceNowCollectionResponse[*MainError](nil)
 	me := NewMainError()
 	_ = res.backingStore.Set(resultKey, []any{me})
-	
+
 	tests := []struct {
 		name  string
 		model *BaseServiceNowCollectionResponse[*MainError]
@@ -76,24 +74,34 @@ func TestBaseServiceNowCollectionResponse_GetLinks(t *testing.T) {
 
 	t.Run("Next", func(t *testing.T) {
 		l, _ := res.GetNextLink()
-		if *l != link { t.Error("failed") }
+		if *l != link {
+			t.Error("failed")
+		}
 	})
 	t.Run("Previous", func(t *testing.T) {
 		l, _ := res.GetPreviousLink()
-		if *l != link { t.Error("failed") }
+		if *l != link {
+			t.Error("failed")
+		}
 	})
 	t.Run("First", func(t *testing.T) {
 		l, _ := res.GetFirstLink()
-		if *l != link { t.Error("failed") }
+		if *l != link {
+			t.Error("failed")
+		}
 	})
 	t.Run("Last", func(t *testing.T) {
 		l, _ := res.GetLastLink()
-		if *l != link { t.Error("failed") }
+		if *l != link {
+			t.Error("failed")
+		}
 	})
-	
+
 	var nilR *BaseServiceNowCollectionResponse[serialization.Parsable]
 	t.Run("Nil", func(t *testing.T) {
-		if l, _ := nilR.GetNextLink(); l != nil { t.Error("expected nil") }
+		if l, _ := nilR.GetNextLink(); l != nil {
+			t.Error("expected nil")
+		}
 	})
 }
 
@@ -108,7 +116,7 @@ func TestBaseServiceNowCollectionResponse_ErrorBranches(t *testing.T) {
 	if _, err := res.GetNextLink(); err == nil || err.Error() != "val is not *string" {
 		t.Error("expected string error in next link")
 	}
-	
+
 	_ = res.backingStore.Set(previousKey, 123)
 	if _, err := res.GetPreviousLink(); err == nil || err.Error() != "val is not *string" {
 		t.Error("expected string error in prev link")

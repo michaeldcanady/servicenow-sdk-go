@@ -1,11 +1,9 @@
 package internal
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
 func TestNewBaseServiceNowItemResponse(t *testing.T) {
@@ -108,7 +106,7 @@ func TestBaseServiceNowItemResponse_ErrorBranches(t *testing.T) {
 	if err := deser[resultKey](nil); err == nil || err.Error() != "factory is nil" {
 		t.Errorf("expected factory nil error, got %v", err)
 	}
-	
+
 	resNilBS := &BaseServiceNowItemResponse[*MainError]{backingStore: nil, backingStoreFactory: nil}
 	if err := resNilBS.setResult(nil); err == nil || err.Error() != "store is nil" {
 		t.Errorf("expected store nil error, got %v", err)
