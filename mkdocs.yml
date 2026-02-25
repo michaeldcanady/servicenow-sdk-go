@@ -20,11 +20,25 @@ plugins:
   - include-markdown
 
 nav:
-  - index.md
-  - getting-started.md
-  - APIs:
-      - apis/index.md
-      - Attachment:
+  - Welcome: index.md
+  - User Guide:
+      - Getting Started: getting-started.md
+      - Authentication: user-guide/authentication.md
+      - Table Operations: user-guide/tables.md
+      - Attachments: user-guide/attachments.md
+      - Batch Operations: user-guide/batch.md
+      - Preview Features: user-guide/preview-features.md
+      - Query Builder (Preview): user-guide/query-builder.md
+  - API Reference:
+      - Overview: apis/index.md
+      - Table API:
+          - Overview: apis/tables/index.md
+          - List Records: apis/tables/list.md
+          - Create Record: apis/tables/create.md
+          - Get Record: apis/tables/get.md
+          - Update Record: apis/tables/update.md
+          - Delete Record: apis/tables/delete.md
+      - Attachment API:
           - Overview: apis/attachment/index.md
           - File:
               - Overview: apis/attachment/file/index.md
@@ -36,22 +50,14 @@ nav:
           - List: apis/attachment/list.md
           - Get: apis/attachment/get.md
           - Delete: apis/attachment/delete.md
-      - Table:
-          - Overview: apis/tables/index.md
-          - List: apis/tables/list.md
-          - Create: apis/tables/create.md
-          - Get: apis/tables/get.md
-          - Update: apis/tables/update.md
-          - Delete: apis/tables/delete.md
-      - Batch:
+      - Batch API:
           - Overview: apis/batch/index.md
           - Create: apis/batch/create.md
-  - Contributing:
-      - contributing/index.md
-      - Architecture:
-          - contributing/architecture/index.md
-          - contributing/architecture/core-concepts.md
-      - contributing/quick-start.md
+  - Contributor Guide:
+      - Overview: contributing/index.md
+      - Development Setup: contributing/setup.md
+      - Architecture: contributing/architecture.md
+      - Testing: contributing/testing.md
   - Releases ⧉: https://github.com/michaeldcanady/servicenow-sdk-go/releases
   - Roadmap ⧉: https://github.com/users/michaeldcanady/projects/7/views/9
 
@@ -63,15 +69,22 @@ theme:
   name: material
   features:
     - content.code.copy
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
   palette:
     - media: "(prefers-color-scheme: light)"
       primary: teal
+      accent: indigo
       scheme: default
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       primary: teal
+      accent: indigo
       scheme: slate
       toggle:
         icon: material/brightness-4

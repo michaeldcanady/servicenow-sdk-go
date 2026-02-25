@@ -1,25 +1,24 @@
 {
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "yaml.schemas": {
-    "https://squidfunk.github.io/mkdocs-material/schema.json": "mkdocs.yml"
-  },
-  "yaml.customTags": [
-    "!ENV scalar",
-    "!ENV sequence",
-    "!relative scalar",
-    "tag:yaml.org,2002:python/name:material.extensions.emoji.to_svg",
-    "tag:yaml.org,2002:python/name:material.extensions.emoji.twemoji",
-    "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format",
-    "tag:yaml.org,2002:python/object/apply:pymdownx.slugs.slugify mapping"
+  "json.schemas": [
+    {
+      "https://squidfunk.github.io/mkdocs-material/schema.json": "mkdocs.yml"
+    }
   ],
   "go.addTags": {
     "tags": "json,url,header",
     "promptForTags": true
   },
+  "go.testOnSave": true,
   "go.coverOnSave": true,
-  "go.formatFlags": ["-s", "-w"],
-  "go.buildFlags": ["-tags=preview.query"],
+  "go.formatFlags": [
+    "-s",
+    "-w"
+  ],
+  "go.buildFlags": [
+    "-tags=preview.query"
+  ],
   "go.lintOnSave": "package",
   "go.lintTool": "golangci-lint",
   "go.lintFlags": [],
@@ -29,15 +28,19 @@
     "Batchable",
     "batchapi",
     "cmdb",
+    "conds",
     "covermode",
     "coverpkg",
     "coverprofile",
     "covignore",
     "dateonly",
+    "DATEPART",
     "devcontainers",
     "donjayamanne",
     "dupl",
     "dvcm",
+    "EMPTYSTRING",
+    "ENDSWITH",
     "Errorable",
     "errorlens",
     "esbenp",
@@ -55,12 +58,15 @@
     "Headerable",
     "httpheader",
     "httpmock",
+    "ISNOTEMPTY",
     "jarcoal",
     "jsonserialization",
     "kiota",
+    "LESSTHAN",
     "maint",
     "michaeldcanady",
     "mkdocs",
+    "MORETHAN",
     "mozillazg",
     "msyrus",
     "multipartserialization",
@@ -69,13 +75,17 @@
     "nethttplibrary",
     "nocov",
     "nolint",
+    "NOTON",
+    "NSAMEAS",
     "outliner",
     "Paramters",
     "PKCE",
     "PKCES",
     "Requestable",
     "Responseable",
+    "SAMEAS",
     "servicenowsdkgo",
+    "STARTSWITH",
     "staticcheck",
     "strct",
     "stretchr",
@@ -97,7 +107,9 @@
     "yzhang"
   ],
   "gopls": {
-    "build.buildFlags": ["-tags=preview.query,preview.tableApiV2"]
+    "build.buildFlags": [
+      "-tags=preview.query,preview.tableApiV2"
+    ],
   },
   "go.useLanguageServer": true
 }

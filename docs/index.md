@@ -1,55 +1,47 @@
-# Overview
+# Welcome to ServiceNow SDK for Go
 
-<!-- vale Microsoft = NO -->
+[![Go Reference](https://pkg.go.dev/badge/github.com/michaeldcanady/servicenow-sdk-go.svg)](https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go)
 
-## What's Service-Now SDK for Go?
+The **ServiceNow SDK for Go** is a powerful, type-safe, and intuitive client library for interacting with ServiceNow REST APIs. Built on the modern Microsoft Kiota framework, it provides a fluent development experience tailored for Go developers.
 
-Service-Now SDK for Go is a thin golang sdk for the Service-Now REST apis. It leverages the functionality and flexibility of [Kiota modules](https://github.com/orgs/microsoft/repositories?q=kiota-*-go) (we don't use the Kiota CLI as Service-Now's OpenAPI spec, if it exists at all, isn't public).
+## Key Features
 
-## Why Service-Now SDK for Go?
+- **Fluent API**: Discoverable and readable code structure.
+- **Type Safety**: Leverages Go generics (V2) for compile-time checks.
+- **Modular**: Only use the parts of the SDK you need (Table, Attachment, Batch).
+- **Extensible**: Easy to add custom authentication or custom table models.
+- **Middleware Support**: Built-in support for retries, logging, and more via Kiota.
 
-Have to write your own SDK - or worse having to manage REST calls by hand - can be tedious and cumbersome. The goal of this project is to make that process easy and intuitive so you can get back to what you enjoy **working on your projects**!
+## Quick Start
 
-## How to use
-
-This SDK has two modalities of usage: `fluent` and `standard`.
-
-The following block is the base you'll need for **all** implementation methods:
-```golang
+```go
 import (
+    "context"
+    "fmt"
+    "github.com/michaeldcanady/servicenow-sdk-go"
     "github.com/michaeldcanady/servicenow-sdk-go/credentials"
 )
 
-cred := credentials.NewUsernamePasswordCredential("username", "password")
+func main() {
+    cred := credentials.NewUsernamePasswordCredential("admin", "password")
+    client, _ := servicenowsdkgo.NewServiceNowClient2(cred, "my-instance")
 
-client := servicenowsdkgo.NewServiceNowClient2(cred, "instance")
+    ctx := context.Background()
+    response, _ := client.Now2().TableV2("incident").Get(ctx, nil)
+
+    for _, record := range response.GetValue() {
+        fmt.Println(record.Get("number"))
+    }
+}
 ```
 
-You can make API requests in two ways: through the fluent or standard implementation.
-> We recommend the fluent implementation because it emphasizes ease of use and simplicity.
+## How the Docs are Organized
 
-=== "Fluent"
+- [**User Guide**](user-guide/getting-started.md): Practical tutorials for common tasks like authentication and CRUD operations.
+- [**Preview Features**](user-guide/preview-features.md): Documentation for experimental features requiring build tags (e.g., Fluent Query Builder).
+- [**API Reference**](apis/index.md): Detailed documentation of every supported ServiceNow API module.
+- [**Contributor Guide**](contributing/index.md): Information for those looking to help improve the SDK.
 
-    ``` golang {title="Table api"}
-    client.Now2().TableV2("table_name")
-    ```
+---
 
-    ``` golang {title="Attachment api"}
-    client.Now2().Attachment2()
-    ```
-
-    ``` golang {title="Batch api"}
-    client.Now2().Batch()
-    ```
-
-=== "Standard"
-
-    ``` golang {title="Table api"}
-    rawURL := "https://www.{instance}.service-now.com/api/now/v1/table/incident"
-
-    requestBuilder := tableapi.NewDefaultTableRequestBuilder2(rawURL, client.RequestAdapter)
-    ```
-
-## Development status
-
-Service-Now SDK for Go is being actively developed by the community.
+*This project is community-driven and not an official ServiceNow product.*

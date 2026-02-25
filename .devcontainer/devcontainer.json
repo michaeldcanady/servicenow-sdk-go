@@ -28,7 +28,6 @@
   },
   "remoteUser": "vscode",
   "features": {
-    "./features/podman-remote": {},
     "ghcr.io/devcontainers/features/github-cli:1": {
       "version": "latest"
     },

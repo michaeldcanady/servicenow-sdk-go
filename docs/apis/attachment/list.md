@@ -11,7 +11,7 @@ N/A - doesn't support standard implementation.
 ## Optional query parameters
 
 | Name            | Type     | Possible values | Description                                                  |
-|-----------------|----------|-----------------|--------------------------------------------------------------|
+| --------------- | -------- | --------------- | ------------------------------------------------------------ |
 | `SysParmLimit`  | `int`    | N/A             | Maximum number of records to return.                         |
 | `SysParmOffset` | `int`    | N/A             | Starting record index for which to begin retrieving records. |
 | `SysParmQuery`  | `string` | N/A             | Encoded query used to filter the result set.                 |
