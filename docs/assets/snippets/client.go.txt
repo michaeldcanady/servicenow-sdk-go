@@ -1,3 +1,5 @@
+package snippet
+
 client, err := servicenowsdkgo.NewServiceNowClient2(cred, "xSDK_SN_INSTANCEx.service-now.com")
 if err != nil {
 	log.Fatal(err)

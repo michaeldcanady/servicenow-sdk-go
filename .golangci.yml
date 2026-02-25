@@ -1,10 +1,4 @@
 version: "2"
-run:
-  skip-dirs:
-    - docs
-issues:
-  exclude-dirs:
-    - docs
 linters:
   enable:
     - dogsled
@@ -37,5 +31,4 @@ formatters:
       - third_party$
       - builtin$
       - examples$
-      - docs$
       - docs/assets/snippets/.*\.go$
