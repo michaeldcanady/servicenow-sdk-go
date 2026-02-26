@@ -17,6 +17,7 @@ var (
 	ErrNilCredential           = errors.New("credential is nil")
 
 	//Page Iterator
+
 	ErrNilClient         = errors.New("client can't be nil")
 	ErrNilResult         = errors.New("result property missing in response object")
 	ErrWrongResponseType = errors.New("incorrect Response Type")
@@ -25,5 +26,6 @@ var (
 	ErrNoMoreItems       = errors.New("no more items")
 
 	//Authorization Provider
+
 	ErrNilRequest = errors.New("request can't be nil")
 )

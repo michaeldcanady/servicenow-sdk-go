@@ -1,90 +1,148 @@
 package attachmentapi
 
 import (
-	"os"
-	"path/filepath"
+	"context"
+	"errors"
+	"maps"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
-// Deprecated: deprecated since v1.8.0.
-//
-// AttachmentRequestBuilder ...
-type AttachmentRequestBuilder struct {
-	core.RequestBuilder
+const (
+	// attachmentURLTemplate url template for the Service-Now Attachment endpoint
+	attachmentURLTemplate = "{+baseurl}/api/now/v1/attachment{?sysparm_limit,sysparm_offset,sysparm_query}"
+)
+
+// AttachmentRequestBuilder2 provides operations to manage Service-Now attachments.
+type AttachmentRequestBuilder2 struct {
+	newInternal.RequestBuilder
 }
 
-// Deprecated: deprecated since v1.8.0.
-//
-// NewAttachmentRequestBuilder ...
-func NewAttachmentRequestBuilder(client core.Client, pathParameters map[string]string) *AttachmentRequestBuilder {
-	requestBuilder := core.NewRequestBuilder(
-		client,
-		"{+baseurl}/attachment{/attachment}{?encryption_context,file_name,table_name,table_sys_id}",
-		pathParameters,
+// newAttachmentRequestBuilder2Internal instantiates a new AttachmentRequestBuilder2 with the provided requestBuilder
+func newAttachmentRequestBuilder2Internal(requestBuilder newInternal.RequestBuilder) *AttachmentRequestBuilder2 {
+	m := &AttachmentRequestBuilder2{
+		requestBuilder,
+	}
+	return m
+}
+
+// NewAttachmentRequestBuilder2Internal instantiates a new AttachmentRequestBuilder2 with custom parsable for table entries.
+func NewAttachmentRequestBuilder2Internal(
+	pathParameters map[string]string,
+	requestAdapter abstractions.RequestAdapter,
+) *AttachmentRequestBuilder2 {
+	return newAttachmentRequestBuilder2Internal(
+		newInternal.NewBaseRequestBuilder(requestAdapter, attachmentURLTemplate, pathParameters),
 	)
-	return &AttachmentRequestBuilder{
-		*requestBuilder,
-	}
 }
 
-// Deprecated: deprecated since v1.8.0.
-//
-// Get sends an HTTP GET request using the specified query parameters and returns a AttachmentCollectionResponse.
-//
-// Parameters:
-//   - params: An instance of AttachmentRequestBuilderGetQueryParameters to include in the GET request.
-//
-// Returns:
-//   - *AttachmentCollectionResponse: The response data as a AttachmentCollectionResponse.
-//   - error: An error if there was an issue with the request or response.
-func (rB *AttachmentRequestBuilder) Get(params *AttachmentRequestBuilderGetQueryParameters) (*AttachmentCollectionResponse, error) {
-	configuration := &AttachmentCollectionGetRequestConfiguration{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            nil,
-		response:        &AttachmentCollectionResponse{},
-	}
-
-	err := rB.SendGet2(configuration.toConfiguration())
-	if err != nil {
-		return nil, err
-	}
-
-	return configuration.response, nil
+// NewAttachmentRequestBuilder2 instantiates a new AttachmentRequestBuilder2 with custom parsable for table entries.
+func NewAttachmentRequestBuilder2(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *AttachmentRequestBuilder2 {
+	urlParams := make(map[string]string)
+	urlParams[newInternal.RawURLKey] = rawURL
+	return NewAttachmentRequestBuilder2Internal(urlParams, requestAdapter)
 }
 
-// Deprecated: deprecated since v1.8.0.
-//
-// File ...
-func (rB *AttachmentRequestBuilder) File(filePath string, params *AttachmentRequestBuilderFileQueryParameters) (*AttachmentItemResponse, error) {
-	if params == nil {
-		return nil, ErrNilParams
+// ByID provides the way to manage attachment item with provided sys id
+func (rB *AttachmentRequestBuilder2) ByID(sysID string) *AttachmentItemRequestBuilder {
+	if internal.IsNil(rB) {
+		return nil
 	}
 
-	cleanPath := filepath.Clean(filePath)
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters[sysIDKey] = sysID
 
-	_, err := os.Stat(cleanPath)
+	return NewAttachmentItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
+
+// File provides the way to access Service-Now's attachment file API
+func (rB *AttachmentRequestBuilder2) File() *AttachmentFileRequestBuilder {
+	if internal.IsNil(rB) {
+		return nil
+	}
+
+	pathParameters := maps.Clone(rB.GetPathParameters())
+
+	return NewAttachmentFileRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
+
+// Upload provides the way to access Service-Now's attachment upload API
+func (rB *AttachmentRequestBuilder2) Upload() *AttachmentUploadRequestBuilder {
+	if internal.IsNil(rB) {
+		return nil
+	}
+
+	pathParameters := maps.Clone(rB.GetPathParameters())
+
+	return NewAttachmentUploadRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
+
+// Get returns AttachmentCollectionResponse using provided arguments
+func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfiguration *AttachmentRequestBuilder2GetRequestConfiguration) (*AttachmentCollectionResponse2Model, error) {
+	if internal.IsNil(rB) {
+		return nil, nil
+	}
+
+	if internal.IsNil(requestConfiguration) {
+		requestConfiguration = &AttachmentRequestBuilder2GetRequestConfiguration{}
+	}
+
+	opts := nethttplibrary.NewHeadersInspectionOptions()
+	opts.InspectResponseHeaders = true
+
+	requestConfiguration.Options = append(requestConfiguration.Options, opts)
+
+	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return nil, err
 	}
 
-	data, err := os.ReadFile(cleanPath)
+	errorMapping := abstractions.ErrorMappings{
+		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+	}
+
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachmentCollectionResponse2FromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
 	}
 
-	config := &AttachmentCollectionFileRequestConfiguration{
-		Header:          nil,
-		QueryParameters: params,
-		Data:            data,
-		response:        &AttachmentItemResponse{},
+	if internal.IsNil(res) {
+		return nil, nil
 	}
 
-	err = rB.SendPost3(config.toConfiguration())
-	if err != nil {
-		return nil, err
+	snRes, ok := res.(*AttachmentCollectionResponse2Model)
+	if !ok {
+		return nil, errors.New("res is not *AttachmentCollectionResponse2Model")
 	}
 
-	return config.response, nil
+	return snRes, nil
+}
+
+// ToGetRequestInformation converts request configurations to Get request information.
+func (rB *AttachmentRequestBuilder2) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if internal.IsNil(rB) {
+		return nil, nil
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !internal.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
+		if parameter := requestConfiguration.QueryParameters; !internal.IsNil(parameter) {
+			kiotaRequestInfo.AddQueryParameters(parameter)
+		}
+		if options := requestConfiguration.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
+	}
+	requestInfo.Headers.TryAdd("Accept", "application/json")
+	return kiotaRequestInfo.RequestInformation, nil
 }

@@ -1,402 +1,294 @@
 package tableapi
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
-	"io"
-	"maps"
-	"net/http"
-	"net/http/httptest"
-	"net/url"
+	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
-type MockClient struct{}
-
-var (
-	testResult = map[string]interface{}{
-		"result": fakeResultItem,
-	}
-)
-
-func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
-	req, err := requestInfo.ToRequest()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
-func TestNewTableItemRequestBuilder(t *testing.T) {
-	client := &MockClient{}
-
-	pathParameters := map[string]string{"baseurl": "instance.service-now.com", "table": "table1", "sysId": "sysid"}
-
-	req := NewTableItemRequestBuilder(client, pathParameters)
-
-	assert.NotNil(t, req)
-}
-
-func TestTableItemRequestBuilderGet(t *testing.T) {
-	client := &MockClient{}
-
-	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Simulate successful response with the provided JSON
-
-		responseJSON, err := json.Marshal(testResult)
-		assert.Nil(t, err)
-
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(responseJSON) //nolint:errcheck
-	}))
-
-	parsedURL, err := url.Parse(mockServer.URL)
-	assert.Nil(t, err)
-
-	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path, "sysId": "sysid"}
-
-	req := NewTableItemRequestBuilder(client, pathParameters)
-
-	params := &TableItemRequestBuilderGetQueryParameters{
-		DisplayValue:         "true",
-		ExcludeReferenceLink: true,
-		Fields:               []string{"field1", "field2"},
-		QueryNoDomain:        true,
-		View:                 "desktop",
-	}
-
-	response, err := req.Get(params)
-
-	assert.Nil(t, err)
-	assert.NotNil(t, response)
-}
-
-func TestTableItemRequestBuilder_Get2(t *testing.T) {
+func TestTableItemRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name      string
+		setupMock func(m *mocking.MockRequestAdapter)
+		err       error
 	}{
 		{
 			name: "Successful",
-			test: func(t *testing.T) {
-				request := &http.Response{
-					Header: nil,
-					Body:   io.NopCloser(bytes.NewReader(getFakeItemJSON())),
-				}
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(newInternal.NewBaseServiceNowItemResponse[*TableRecord](CreateTableRecordFromDiscriminatorValue), nil)
+			},
+			err: nil,
+		},
+		{
+			name: "adapter returns error",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, errors.New("network error"))
+			},
+			err: errors.New("network error"),
+		},
+		{
+			name: "adapter returns nil response",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			err: errors.New("response is nil"),
+		},
+	}
 
-				client := mocking.NewMockCoreClient2()
-				client.
-					On("SendWithContext", context.Background(), mock.AnythingOfType("*core.RequestInformation"), core.ErrorMapping(nil)).
-					Return(request, nil)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockAdapter := new(mocking.MockRequestAdapter)
+			tt.setupMock(mockAdapter)
 
-				pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1", "sysId": "sysId"}
+			builder := NewTableItemRequestBuilder3[*TableRecord](
+				"https://example.com/api/now/v1/table/test/sysid",
+				mockAdapter,
+				CreateTableRecordFromDiscriminatorValue,
+			)
 
-				requestBuilder := NewTableItemRequestBuilder2(client, pathParameters)
-
-				resp, err := requestBuilder.Get2(context.Background(), nil)
-
-				assert.Nil(t, err)
+			resp, err := builder.Get(context.Background(), nil)
+			if tt.err != nil {
+				require.Equal(t, tt.err, err)
+				assert.Nil(t, resp)
+			} else {
+				require.NoError(t, err)
 				assert.NotNil(t, resp)
-			},
-		},
-	}
+			}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+			mockAdapter.AssertExpectations(t)
+		})
 	}
 }
 
-func TestTableItemRequestBuilderDelete(t *testing.T) {
-	client := &MockClient{}
-
-	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Simulate successful response with the provided JSON
-		responseJSON := ``
-
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(responseJSON)) //nolint:errcheck
-	}))
-
-	parsedURL, err := url.Parse(mockServer.URL)
-	assert.Nil(t, err)
-
-	pathParameters := map[string]string{"baseurl": "http://" + parsedURL.Host, "table": parsedURL.Path, "sysId": "sysid"}
-	req := NewTableItemRequestBuilder(client, pathParameters)
-
-	params := &TableItemRequestBuilderDeleteQueryParameters{
-		QueryNoDomain: true,
-	}
-
-	err = req.Delete(params)
-
-	assert.Nil(t, err)
-}
-
-func TestTableItemRequestBuilder_Delete2(t *testing.T) {
+func TestTableItemRequestBuilder_Delete(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name      string
+		setupMock func(m *mocking.MockRequestAdapter)
+		err       error
 	}{
 		{
 			name: "Successful",
-			test: func(t *testing.T) {
-				request := &http.Response{
-					Header: nil,
-					Body:   io.NopCloser(bytes.NewReader(getFakeItemJSON())),
-				}
-
-				client := mocking.NewMockCoreClient2()
-				client.
-					On("SendWithContext", context.Background(), mock.AnythingOfType("*core.RequestInformation"), core.ErrorMapping(nil)).
-					Return(request, nil)
-
-				pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1", "sysId": "sysId"}
-
-				requestBuilder := NewTableItemRequestBuilder2(client, pathParameters)
-
-				err := requestBuilder.Delete2(context.Background(), nil)
-
-				assert.Nil(t, err)
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("SendNoContent", mock.Anything, mock.Anything, mock.Anything).
+					Return(nil)
 			},
+			err: nil,
+		},
+		{
+			name: "adapter returns error",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("SendNoContent", mock.Anything, mock.Anything, mock.Anything).
+					Return(errors.New("network error"))
+			},
+			err: errors.New("network error"),
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockAdapter := new(mocking.MockRequestAdapter)
+			tt.setupMock(mockAdapter)
+
+			builder := NewTableItemRequestBuilder3[*TableRecord](
+				"https://example.com/api/now/v1/table/test/sysid",
+				mockAdapter,
+				CreateTableRecordFromDiscriminatorValue,
+			)
+
+			err := builder.Delete(context.Background(), nil)
+			if tt.err != nil {
+				require.Equal(t, tt.err, err)
+			} else {
+				require.NoError(t, err)
+			}
+
+			mockAdapter.AssertExpectations(t)
+		})
 	}
 }
 
-//nolint:dupl
-func TestTableItemRequestBuilderPut(t *testing.T) {
-	// Create a mock client for testing
-	client := &MockClient{}
-
-	// Create a mock server for testing
-	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		resp := testResult
-
-		resp = maps.Clone(resp)
-
-		switch r.Method {
-		case http.MethodGet:
-			break
-		case http.MethodPut:
-			body := make(map[string]interface{})
-
-			// Read the request body into a []byte
-			requestBody, err := io.ReadAll(r.Body)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-
-			err = json.Unmarshal(requestBody, &body) // Use &body to correctly update the 'body' map
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-
-			result := resp["result"].(map[string]interface{})
-
-			for key, value := range body {
-				result[key] = value
-			}
-
-			resp["result"] = result // Update the 'result' in 'resp'
-
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			return
-		}
-
-		jsonData, err := json.Marshal(resp)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(jsonData)
-	}))
-
-	// Parse the URL of the mock server
-	parsedURL, err := url.Parse(mockServer.URL)
-	if err != nil {
-		t.Errorf("Expected no error, but got: %v", err)
-		return
-	}
-
-	// Prepare path parameters
-	pathParameters := map[string]string{
-		"baseurl": "http://" + parsedURL.Host,
-		"table":   parsedURL.Path,
-		"sysId":   "sysid",
-	}
-
-	// Create a request builder
-	req := NewTableItemRequestBuilder(client, pathParameters)
-
-	// Prepare values to update the record
-	values := map[string]string{
-		// Provide values to change in the record here
-		"location": "home",
-	}
-
-	// Send the PUT request to update the record
-	updatedRecord, err := req.Put(values, nil)
-
-	// Perform assertions and test the response
-	if err != nil {
-		t.Errorf("Expected no error, but got: %v", err)
-	}
-
-	// You should assert that the updatedRecord matches your expected response here.
-	// You may need to unmarshal the JSON response and compare specific fields.
-	// For example: assert.Equal(t, expectedValue, updatedRecord.Field)
-
-	assert.Equal(t, fakeTableItemResponse, updatedRecord)
-}
-
-//nolint:dupl
-func TestTableItemRequestBuilderPut2(t *testing.T) {
-	// Create a mock client for testing
-	client := &MockClient{}
-
-	// Create a mock server for testing
-	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		resp := testResult
-
-		resp = maps.Clone(resp)
-
-		switch r.Method {
-		case http.MethodGet:
-			break
-		case http.MethodPut:
-			body := make(map[string]interface{})
-
-			// Read the request body into a []byte
-			requestBody, err := io.ReadAll(r.Body)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-
-			err = json.Unmarshal(requestBody, &body) // Use &body to correctly update the 'body' map
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-
-			result := resp["result"].(map[string]interface{})
-
-			for key, value := range body {
-				result[key] = value
-			}
-
-			resp["result"] = result // Update the 'result' in 'resp'
-
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			return
-		}
-
-		jsonData, err := json.Marshal(resp)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(jsonData)
-	}))
-
-	// Parse the URL of the mock server
-	parsedURL, err := url.Parse(mockServer.URL)
-	if err != nil {
-		t.Errorf("Expected no error, but got: %v", err)
-		return
-	}
-
-	// Prepare path parameters
-	pathParameters := map[string]string{
-		"baseurl": "http://" + parsedURL.Host,
-		"table":   parsedURL.Path,
-		"sysId":   "sysid",
-	}
-
-	// Create a request builder
-	req := NewTableItemRequestBuilder(client, pathParameters)
-
-	// Prepare values to update the record
-	values := map[string]string{
-		// Provide values to change in the record here
-		"location": "home",
-	}
-
-	// Send the PUT request to update the record
-	updatedRecord, err := req.Put2(values, nil)
-
-	// Perform assertions and test the response
-	if err != nil {
-		t.Errorf("Expected no error, but got: %v", err)
-	}
-
-	// You should assert that the updatedRecord matches your expected response here.
-	// You may need to unmarshal the JSON response and compare specific fields.
-	// For example: assert.Equal(t, expectedValue, updatedRecord.Field)
-
-	assert.Equal(t, fakeTableItemResponse, updatedRecord)
-}
-
-func TestTableItemRequestBuilder_Put3(t *testing.T) {
+func TestTableItemRequestBuilder_Put(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name      string
+		body      *TableRecord
+		setupMock func(m *mocking.MockRequestAdapter)
+		err       error
 	}{
 		{
 			name: "Successful",
-			test: func(t *testing.T) {
-				request := &http.Response{
-					Header: nil,
-					Body:   io.NopCloser(bytes.NewReader(getFakeItemJSON())),
-				}
+			body: NewTableRecord(),
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				serializationWriter := mocking.NewMockSerializationWriter()
+				serializationWriter.On("WriteObjectValue", "", mock.AnythingOfType("*tableapi.TableRecord"), mock.Anything).Return(nil)
+				serializationWriter.On("Close").Return(nil)
+				serializationWriter.On("GetSerializedContent").Return([]byte("{}"), nil)
 
-				client := mocking.NewMockCoreClient2()
-				client.
-					On("SendWithContext", context.Background(), mock.AnythingOfType("*core.RequestInformation"), core.ErrorMapping(nil)).
-					Return(request, nil)
+				serializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+				serializationWriterFactory.On("GetSerializationWriter", "application/json").Return(serializationWriter, nil)
 
-				pathParameters := map[string]string{"baseurl": "https://instance.service-now.com/api/now", "table": "table1", "sysId": "sysId"}
+				m.On("GetSerializationWriterFactory").Return(serializationWriterFactory)
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(newInternal.NewBaseServiceNowItemResponse[*TableRecord](CreateTableRecordFromDiscriminatorValue), nil)
+			},
+			err: nil,
+		},
+		{
+			name: "nil body",
+			body: nil,
+			setupMock: func(m *mocking.MockRequestAdapter) {
+			},
+			err: errors.New("body is nil"),
+		},
+	}
 
-				requestBuilder := NewTableItemRequestBuilder2(client, pathParameters)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockAdapter := new(mocking.MockRequestAdapter)
+			tt.setupMock(mockAdapter)
 
-				// Prepare values to update the record
-				values := map[string]string{
-					// Provide values to change in the record here
-					"location": "home",
-				}
+			builder := NewTableItemRequestBuilder3[*TableRecord](
+				"https://example.com/api/now/v1/table/test/sysid",
+				mockAdapter,
+				CreateTableRecordFromDiscriminatorValue,
+			)
 
-				resp, err := requestBuilder.Put3(context.Background(), values, nil)
-
-				assert.Nil(t, err)
+			resp, err := builder.Put(context.Background(), tt.body, nil)
+			if tt.err != nil {
+				require.Equal(t, tt.err, err)
+				assert.Nil(t, resp)
+			} else {
+				require.NoError(t, err)
 				assert.NotNil(t, resp)
+			}
+
+			mockAdapter.AssertExpectations(t)
+		})
+	}
+}
+
+func TestTableItemRequestBuilder_Patch(t *testing.T) {
+	tests := []struct {
+		name      string
+		body      *TableRecord
+		setupMock func(m *mocking.MockRequestAdapter)
+		err       error
+	}{
+		{
+			name: "Successful",
+			body: NewTableRecord(),
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				serializationWriter := mocking.NewMockSerializationWriter()
+				serializationWriter.On("WriteObjectValue", "", mock.AnythingOfType("*tableapi.TableRecord"), mock.Anything).Return(nil)
+				serializationWriter.On("Close").Return(nil)
+				serializationWriter.On("GetSerializedContent").Return([]byte("{}"), nil)
+
+				serializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+				serializationWriterFactory.On("GetSerializationWriter", "application/json").Return(serializationWriter, nil)
+
+				m.On("GetSerializationWriterFactory").Return(serializationWriterFactory)
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(newInternal.NewBaseServiceNowItemResponse[*TableRecord](CreateTableRecordFromDiscriminatorValue), nil)
 			},
+			err: nil,
+		},
+		{
+			name: "nil body",
+			body: nil,
+			setupMock: func(m *mocking.MockRequestAdapter) {
+			},
+			err: errors.New("body is nil"),
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockAdapter := new(mocking.MockRequestAdapter)
+			tt.setupMock(mockAdapter)
+
+			builder := NewTableItemRequestBuilder3[*TableRecord](
+				"https://example.com/api/now/v1/table/test/sysid",
+				mockAdapter,
+				CreateTableRecordFromDiscriminatorValue,
+			)
+
+			resp, err := builder.Patch(context.Background(), tt.body, nil)
+			if tt.err != nil {
+				require.Equal(t, tt.err, err)
+				assert.Nil(t, resp)
+			} else {
+				require.NoError(t, err)
+				assert.NotNil(t, resp)
+			}
+
+			mockAdapter.AssertExpectations(t)
+		})
 	}
+}
+
+func TestTableItemRequestBuilder_ToRequestInformation(t *testing.T) {
+	mockAdapter := new(mocking.MockRequestAdapter)
+	builder := NewTableItemRequestBuilder3[*TableRecord](
+		"https://example.com/api/now/v1/table/test/sysid",
+		mockAdapter,
+		CreateTableRecordFromDiscriminatorValue,
+	)
+
+	t.Run("ToGetRequestInformation", func(t *testing.T) {
+		config := &TableItemRequestBuilderGetRequestConfiguration{
+			QueryParameters: &TableItemRequestBuilderGetQueryParameters{
+				DisplayValue: DisplayValue2All,
+			},
+		}
+		requestInfo, err := builder.ToGetRequestInformation(context.Background(), config)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.GET, requestInfo.Method)
+	})
+
+	t.Run("ToDeleteRequestInformation", func(t *testing.T) {
+		requestInfo, err := builder.ToDeleteRequestInformation(context.Background(), nil)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.DELETE, requestInfo.Method)
+	})
+
+	t.Run("ToPutRequestInformation", func(t *testing.T) {
+		serializationWriter := mocking.NewMockSerializationWriter()
+		serializationWriter.On("WriteObjectValue", "", mock.AnythingOfType("*tableapi.TableRecord"), mock.Anything).Return(nil)
+		serializationWriter.On("Close").Return(nil)
+		serializationWriter.On("GetSerializedContent").Return([]byte("{}"), nil)
+
+		serializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+		serializationWriterFactory.On("GetSerializationWriter", "application/json").Return(serializationWriter, nil)
+
+		mockAdapter.On("GetSerializationWriterFactory").Return(serializationWriterFactory)
+
+		requestInfo, err := builder.ToPutRequestInformation(context.Background(), NewTableRecord(), nil)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.PUT, requestInfo.Method)
+	})
+
+	t.Run("ToPatchRequestInformation", func(t *testing.T) {
+		serializationWriter := mocking.NewMockSerializationWriter()
+		serializationWriter.On("WriteObjectValue", "", mock.AnythingOfType("*tableapi.TableRecord"), mock.Anything).Return(nil)
+		serializationWriter.On("Close").Return(nil)
+		serializationWriter.On("GetSerializedContent").Return([]byte("{}"), nil)
+
+		serializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+		serializationWriterFactory.On("GetSerializationWriter", "application/json").Return(serializationWriter, nil)
+
+		mockAdapter.On("GetSerializationWriterFactory").Return(serializationWriterFactory)
+
+		requestInfo, err := builder.ToPatchRequestInformation(context.Background(), NewTableRecord(), nil)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.PATCH, requestInfo.Method)
+	})
 }

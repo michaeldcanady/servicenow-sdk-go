@@ -1,6 +1,13 @@
 package tableapi
 
-// Deprecated: deprecated since v1.4.0. Use `TableItemResponse2[T]` instead.
-//
-// TableItemResponse represents a single table record response.
-type TableItemResponse = TableItemResponse2[TableEntry]
+import "net/http"
+
+// Deprecated: deprecated since v{unreleased}. Please use [newInternal.ServiceNowItemResponse]
+type TableItemResponse2[T Entry] struct {
+	Result *T
+}
+
+// ParseHeaders parses information from headers.
+func (r *TableItemResponse2[T]) ParseHeaders(headers http.Header) {
+	// no headers need parsing.
+}

@@ -1,23 +1,48 @@
 package tableapi
 
-import "testing"
+import (
+	"testing"
 
-func TestDisplayValue(t *testing.T) {
-	testCases := []struct {
-		displayValue DisplayValue
-		expected     string
+	"github.com/stretchr/testify/assert"
+)
+
+func TestDisplayValue2_String(t *testing.T) {
+	tests := []struct {
+		name     string
+		value    DisplayValue2
+		expected string
 	}{
-		{TRUE, "true"},
-		{FALSE, "false"},
-		{ALL, "all"},
+		{
+			name:     "Unknown value",
+			value:    DisplayValue2Unknown,
+			expected: "unknown",
+		},
+		{
+			name:     "True value",
+			value:    DisplayValue2True,
+			expected: "true",
+		},
+		{
+			name:     "False value",
+			value:    DisplayValue2False,
+			expected: "false",
+		},
+		{
+			name:     "All value",
+			value:    DisplayValue2All,
+			expected: "all",
+		},
+		{
+			name:     "Invalid value falls back to Unknown",
+			value:    DisplayValue2(99),
+			expected: DisplayValue2Unknown.String(), // fallback
+		},
 	}
 
-	for _, tc := range testCases {
-		t.Run("String() for DisplayValue", func(t *testing.T) {
-			result := tc.displayValue
-			if string(result) != tc.expected {
-				t.Errorf("Expected %s, got %s", tc.expected, result)
-			}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.value.String()
+			assert.Equal(t, tt.expected, got)
 		})
 	}
 }

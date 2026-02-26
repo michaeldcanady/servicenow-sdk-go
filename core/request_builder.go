@@ -9,29 +9,42 @@ import (
 	"github.com/gabriel-vasile/mimetype"
 )
 
-func NewRequestBuilder2(client Client2, urlTemplate string, pathParameters map[string]string) *RequestBuilder {
+// RequestBuilder represents a builder for constructing HTTP request information.
+type RequestBuilder struct {
+	// PathParameters is a map of path parameters used in the URL template.
+	PathParameters map[string]string
+
+	// Client is an instance of the HTTP client used to send requests.
+	Client Client
+
+	// UrlTemplate is the URL template for constructing the request URL.
+	UrlTemplate string //nolint:stylecheck
+}
+
+// NewRequestBuilder creates a new instance of the RequestBuilder associated with the given URL and Client.
+// It accepts the URL and Client as parameters and returns a pointer to the created RequestBuilder.
+func NewRequestBuilder(client Client, urlTemplate string, pathParameters map[string]string) *RequestBuilder {
 	return &RequestBuilder{
 		Client:         client,
-		Client2:        client,
 		UrlTemplate:    urlTemplate,
 		PathParameters: pathParameters,
 	}
 }
 
-func (rB *RequestBuilder) ToPutRequestInformation2(config *RequestConfiguration) (*RequestInformation, error) {
-	return rB.ToRequestInformation3(PUT, config)
+func (rB *RequestBuilder) ToPutRequestInformation(config *RequestConfiguration) (*RequestInformation, error) {
+	return rB.ToRequestInformation(PUT, config)
 }
 
-func (rB *RequestBuilder) ToPostRequestInformation3(config *RequestConfiguration) (*RequestInformation, error) {
-	return rB.ToRequestInformation3(POST, config)
+func (rB *RequestBuilder) ToPostRequestInformation(config *RequestConfiguration) (*RequestInformation, error) {
+	return rB.ToRequestInformation(POST, config)
 }
 
-func (rB *RequestBuilder) ToDeleteRequestInformation2(config *RequestConfiguration) (*RequestInformation, error) {
-	return rB.ToRequestInformation3(DELETE, config)
+func (rB *RequestBuilder) ToDeleteRequestInformation(config *RequestConfiguration) (*RequestInformation, error) {
+	return rB.ToRequestInformation(DELETE, config)
 }
 
-func (rB *RequestBuilder) ToGetRequestInformation2(config *RequestConfiguration) (*RequestInformation, error) {
-	return rB.ToRequestInformation3(GET, config)
+func (rB *RequestBuilder) ToGetRequestInformation(config *RequestConfiguration) (*RequestInformation, error) {
+	return rB.ToRequestInformation(GET, config)
 }
 
 func (rB *RequestBuilder) prepareData(rawData interface{}) ([]byte, error) {
@@ -60,7 +73,7 @@ func (rB *RequestBuilder) prepareData(rawData interface{}) ([]byte, error) {
 	return data, nil
 }
 
-func (rB *RequestBuilder) ToRequestInformation3(method HttpMethod, config *RequestConfiguration) (*RequestInformation, error) {
+func (rB *RequestBuilder) ToRequestInformation(method HttpMethod, config *RequestConfiguration) (*RequestInformation, error) {
 	requestInfo := NewRequestInformation()
 
 	if config != nil {
@@ -91,27 +104,13 @@ func (rB *RequestBuilder) ToRequestInformation3(method HttpMethod, config *Reque
 	return requestInfo, nil
 }
 
-func (rB *RequestBuilder) SendGet3(ctx context.Context, config *RequestConfiguration) error {
-	requestInfo, err := rB.ToGetRequestInformation2(config)
+func (rB *RequestBuilder) SendGet(ctx context.Context, config *RequestConfiguration) error {
+	requestInfo, err := rB.ToGetRequestInformation(config)
 	if err != nil {
 		return err
 	}
 
-	response, err := rB.Client2.SendWithContext(ctx, requestInfo, config.ErrorMapping)
-	if err != nil {
-		return err
-	}
-
-	return ParseResponse(response, &config.Response)
-}
-
-func (rB *RequestBuilder) SendPost4(ctx context.Context, config *RequestConfiguration) error {
-	requestInfo, err := rB.ToPostRequestInformation3(config)
-	if err != nil {
-		return err
-	}
-
-	response, err := rB.Client2.SendWithContext(ctx, requestInfo, config.ErrorMapping)
+	response, err := rB.Client.SendWithContext(ctx, requestInfo, config.ErrorMapping)
 	if err != nil {
 		return err
 	}
@@ -119,23 +118,37 @@ func (rB *RequestBuilder) SendPost4(ctx context.Context, config *RequestConfigur
 	return ParseResponse(response, &config.Response)
 }
 
-func (rB *RequestBuilder) SendDelete3(ctx context.Context, config *RequestConfiguration) error {
-	requestInfo, err := rB.ToDeleteRequestInformation2(config)
+func (rB *RequestBuilder) SendPost(ctx context.Context, config *RequestConfiguration) error {
+	requestInfo, err := rB.ToPostRequestInformation(config)
 	if err != nil {
 		return err
 	}
 
-	_, err = rB.Client2.SendWithContext(ctx, requestInfo, config.ErrorMapping)
+	response, err := rB.Client.SendWithContext(ctx, requestInfo, config.ErrorMapping)
+	if err != nil {
+		return err
+	}
+
+	return ParseResponse(response, &config.Response)
+}
+
+func (rB *RequestBuilder) SendDelete(ctx context.Context, config *RequestConfiguration) error {
+	requestInfo, err := rB.ToDeleteRequestInformation(config)
+	if err != nil {
+		return err
+	}
+
+	_, err = rB.Client.SendWithContext(ctx, requestInfo, config.ErrorMapping)
 	return err
 }
 
-func (rB *RequestBuilder) SendPut3(ctx context.Context, config *RequestConfiguration) error {
-	requestInfo, err := rB.ToPutRequestInformation2(config)
+func (rB *RequestBuilder) SendPut(ctx context.Context, config *RequestConfiguration) error {
+	requestInfo, err := rB.ToPutRequestInformation(config)
 	if err != nil {
 		return err
 	}
 
-	response, err := rB.Client2.SendWithContext(ctx, requestInfo, config.ErrorMapping)
+	response, err := rB.Client.SendWithContext(ctx, requestInfo, config.ErrorMapping)
 	if err != nil {
 		return err
 	}

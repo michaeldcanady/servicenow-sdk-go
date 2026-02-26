@@ -2,100 +2,219 @@ package tableapi
 
 import (
 	"context"
-	"strconv"
+	"errors"
+	"fmt"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
-// Deprecated: deprecated since v{unreleased}. Please use [NewDefaultTableRequestBuilder2Internal] or [NewTableRequestBuilder2Internal]
-func New2TableRequestBuilder(client core.Client2, pathParameters map[string]string) *TableRequestBuilder {
-	requestBuilder := core.NewRequestBuilder2(
-		client,
-		tableURLTemplate,
-		pathParameters,
-	)
-	return &TableRequestBuilder{
-		*requestBuilder,
-	}
+const (
+	// tableURLTemplate2 the url template for Service-Now batch API
+	tableURLTemplate2 = "{+baseurl}/api/now/v1/table/{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
+)
+
+// TableRequestBuilder provides operations to manage Service-Now table collections.
+type TableRequestBuilder[T model.ServiceNowItem] struct {
+	newInternal.RequestBuilder
+	factory serialization.ParsableFactory
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use [TableRequestBuilder2.ById]
-func (rB *TableRequestBuilder) ByID2(sysId string) *TableItemRequestBuilder {
+// NewTableRequestBuilderInternal instantiates a new TableRequestBuilder with custom parsable for table entries.
+func NewTableRequestBuilderInternal[T model.ServiceNowItem](
+	pathParameters map[string]string,
+	requestAdapter abstractions.RequestAdapter,
+	factory serialization.ParsableFactory,
+) *TableRequestBuilder[T] {
+	m := &TableRequestBuilder[T]{
+		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, tableURLTemplate2, pathParameters),
+		factory:        factory,
+	}
+	return m
+}
+
+// NewDefaultTableRequestBuilderInternal instantiates a new TableRequestBuilder with default table record parsable.
+func NewDefaultTableRequestBuilderInternal(
+	pathParameters map[string]string,
+	requestAdapter abstractions.RequestAdapter,
+) *TableRequestBuilder[*TableRecord] {
+	return NewTableRequestBuilderInternal[*TableRecord](pathParameters, requestAdapter, CreateTableRecordFromDiscriminatorValue)
+}
+
+// NewDefaultTableRequestBuilder instantiates a new TableRequestBuilder with a raw URL and default table record parsable.
+func NewDefaultTableRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *TableRequestBuilder[*TableRecord] {
+	return NewTableRequestBuilder[*TableRecord](rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
+}
+
+// NewTableRequestBuilder instantiates a new TableRequestBuilder with a raw URL and custom parsable.
+func NewTableRequestBuilder[T model.ServiceNowItem](
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+	factory serialization.ParsableFactory,
+) *TableRequestBuilder[T] {
+	urlParams := make(map[string]string)
+	urlParams[newInternal.RawURLKey] = rawURL
+	return NewTableRequestBuilderInternal[T](urlParams, requestAdapter, factory)
+}
+
+// Get sends an HTTP GET request and returns a collection of table records.
+func (rB *TableRequestBuilder[T]) Get(ctx context.Context, requestConfiguration *TableRequestBuilderGetRequestConfiguration) (newInternal.ServiceNowCollectionResponse[T], error) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
+	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
+	if err != nil {
+		return nil, err
+	}
+
+	errorMapping := abstractions.ErrorMappings{
+		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+	}
+
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, rB.factory, errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp == nil {
+		return nil, errors.New("response is nil")
+	}
+
+	typedResp, ok := resp.(newInternal.ServiceNowCollectionResponse[T])
+	if !ok {
+		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowCollectionResponse[T])(nil))
+	}
+
+	return typedResp, nil
+}
+
+// Post sends an HTTP POST request to create a new table record and returns the created record.
+func (rB *TableRequestBuilder[T]) Post(ctx context.Context, body T, requestConfiguration *TableRequestBuilderPostRequestConfiguration) (newInternal.ServiceNowItemResponse[T], error) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
+	if internal.IsNil(body) {
+		return nil, errors.New("body is nil")
+	}
+
+	requestInfo, err := rB.ToPostRequestInformation(ctx, body, requestConfiguration)
+	if err != nil {
+		return nil, err
+	}
+
+	errorMapping := abstractions.ErrorMappings{
+		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+	}
+
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, rB.factory, errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp == nil {
+		return nil, errors.New("response is nil")
+	}
+
+	typedResp, ok := resp.(newInternal.ServiceNowItemResponse[T])
+	if !ok {
+		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowItemResponse[T])(nil))
+	}
+
+	return typedResp, nil
+}
+
+// ById returns a TableItemRequestBuilder for the specified sysId.
+func (rB *TableRequestBuilder[T]) ById(sysId string) *TableItemRequestBuilder[T] {
 	pathParameters := make(map[string]string)
-	for k, v := range rB.PathParameters {
+	for k, v := range rB.GetPathParameters() {
 		pathParameters[k] = v
 	}
 	pathParameters["sysId"] = sysId
-	return NewTableItemRequestBuilder2(rB.Client2, pathParameters)
+	return NewTableItemRequestBuilderInternal[T](pathParameters, rB.GetRequestAdapter(), rB.factory)
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use [TableRequestBuilder2.Get]
-func (rB *TableRequestBuilder) Get2(ctx context.Context, params *TableRequestBuilderGetQueryParameters) (*TableCollectionResponse, error) {
-	errMapping := core.NewErrorMapping()
-	errMapping.Set("XXX", "placeholder")
-	config := &tableGetRequestConfiguration2[TableEntry]{
-		header:   nil,
-		query:    params,
-		data:     nil,
-		mapping:  errMapping,
-		response: &TableCollectionResponse2[TableEntry]{},
+// TODO: Add Head method which returns headers
+
+// ToGetRequestInformation converts provided parameters into request information
+func (rB *TableRequestBuilder[T]) ToGetRequestInformation(_ context.Context, requestConfiguration *TableRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+		return nil, nil
 	}
 
-	err := rB.SendGet3(ctx, config.toConfiguration())
-	if err != nil {
-		return nil, err
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !internal.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
+		if options := requestConfiguration.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
+		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
+			kiotaRequestInfo.AddQueryParameters(queryParams)
+		}
 	}
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
-	return config.response, nil
+	return kiotaRequestInfo.RequestInformation, nil
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use [TableRequestBuilder2.Post]
-func (rB *TableRequestBuilder) Post4(ctx context.Context, data interface{}, params *TableRequestBuilderPostQueryParameters) (*TableItemResponse, error) {
-	data, err := convertFromTableEntry(data)
-	if err != nil {
-		return nil, err
+// ToPostRequestInformation converts provided parameters into request information
+func (rB *TableRequestBuilder[T]) ToPostRequestInformation(ctx context.Context, body T, requestConfiguration *TableRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+		return nil, nil
 	}
 
-	config := &tablePostRequestConfiguration2[TableEntry]{
-		header:   nil,
-		query:    params,
-		data:     data.(map[string]string),
-		mapping:  nil,
-		response: &TableItemResponse2[TableEntry]{},
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !internal.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
+		if options := requestConfiguration.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
+		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
+			kiotaRequestInfo.AddQueryParameters(queryParams)
+		}
+	}
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+
+	if !internal.IsNil(body) {
+		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body); err != nil {
+			return nil, err
+		}
 	}
 
-	err = rB.SendPost4(ctx, config.toConfiguration())
-	if err != nil {
-		return nil, err
-	}
-
-	return config.response, nil
+	return kiotaRequestInfo.RequestInformation, nil
 }
 
-// Deprecated: deprecated since v{unreleased}.
-//
-// Count sends an HTTP HEAD request and retrieves the value of "X-Total-Count" from the response header, which represents the count of items.
-//
-// Returns:
-//   - int: The count of items.
-//   - error: An error if there was an issue with the request or response.
-func (rB *TableRequestBuilder) Count() (int, error) {
-	requestInfo, err := rB.ToHeadRequestInformation()
-	if err != nil {
-		return -1, err
+// ToHeadRequestInformation converts provided parameters into request information
+func (rB *TableRequestBuilder[T]) ToHeadRequestInformation(_ context.Context, requestConfiguration *TableRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+		return nil, nil
 	}
 
-	errorMapping := core.ErrorMapping{"4XX": "hi"}
-
-	response, err := rB.Client.Send(requestInfo, errorMapping)
-	if err != nil {
-		return -1, err
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.HEAD, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !internal.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
+		if options := requestConfiguration.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
 	}
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
-	count, err := strconv.Atoi(response.Header.Get("X-Total-Count"))
-	if err != nil {
-		count = 0
-	}
-
-	return count, nil
+	return kiotaRequestInfo.RequestInformation, nil
 }

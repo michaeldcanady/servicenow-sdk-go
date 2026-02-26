@@ -1,6 +1,6 @@
 package tableapi
 
-// Deprecated: deprecated since v{unreleased}. Please use [TableItemRequestBuilder2PutQueryParameters]
+// TableItemRequestBuilderPutQueryParameters represents the query parameters for a Table item PUT request.
 type TableItemRequestBuilderPutQueryParameters struct {
 	//DisplayValue determines the type of data returned, either the actual values from the database or the display values of the fields.
 	//Display values are manipulated based on the actual value in the database and user or system settings and preferences.
@@ -12,7 +12,7 @@ type TableItemRequestBuilderPutQueryParameters struct {
 	//- Encrypted text: The database value is encrypted, while the displayed value is unencrypted based on the user's encryption context.
 	//
 	//- Reference fields: The database value is sys_id, but the display value is a display field of the referenced record.
-	DisplayValue DisplayValue `url:"sysparm_display_value"`
+	DisplayValue DisplayValue2 `url:"sysparm_display_value"`
 	//ExcludeReferenceLink flag that indicates whether to exclude Table API links for reference fields.
 	//
 	//Valid values:
@@ -40,5 +40,5 @@ type TableItemRequestBuilderPutQueryParameters struct {
 	//- mobile
 	//- both
 	//If you also specify the sysparm_fields parameter, it takes precedent.
-	View View `url:"sysparm_view"`
+	View View2 `url:"sysparm_view"`
 }

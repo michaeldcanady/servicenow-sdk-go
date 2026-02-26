@@ -1,13 +1,29 @@
 package tableapi
 
-// Deprecated: deprecated since v{unreleased}. Please use [View2]
-type View string
+// View2 specifies the UI view for which to render the data.
+type View2 int
 
 const (
-	// Deprecated: deprecated since v{unreleased}. Please use [View2Desktop]
-	DESKTOP View = "desktop"
-	// Deprecated: deprecated since v{unreleased}. Please use [View2Mobile]
-	MOBILE View = "mobile"
-	// Deprecated: deprecated since v{unreleased}. Please use [View2Both]
-	BOTH View = "both"
+	// View2Unknown represents an unknown UI view.
+	View2Unknown View2 = iota - 1
+	// View2Desktop renders the data for the desktop UI view.
+	View2Desktop
+	// View2Mobile renders the data for the mobile UI view.
+	View2Mobile
+	// View2Both renders the data for both desktop and mobile UI views.
+	View2Both
 )
+
+// String returns the string representation of the View2.
+func (e View2) String() string {
+	str, ok := map[View2]string{
+		View2Unknown: "unknown",
+		View2Desktop: "desktop",
+		View2Mobile:  "mobile",
+		View2Both:    "both",
+	}[e]
+	if !ok {
+		return View2Unknown.String()
+	}
+	return str
+}

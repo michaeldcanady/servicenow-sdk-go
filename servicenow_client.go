@@ -13,21 +13,21 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
-// Now2 returns a NowRequestBuilder associated with the Client.
+// Now returns a NowRequestBuilder associated with the Client.
 // It prepares the NowRequestBuilder with the base URL for the ServiceNow instance.
-func (c *ServiceNowClient) Now2() *NowRequestBuilder {
-	return NewNowRequestBuilder2(c.BaseUrl+"/now", c)
+func (c *ServiceNowClient) Now() *NowRequestBuilder {
+	return NewNowRequestBuilder(c.BaseUrl+"/now", c)
 }
 
-// NewServiceNowClient2 creates a new instance of the ServiceNow client.
+// NewServiceNowClient creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
 // It returns a pointer to the Client.
-func NewServiceNowClient2(credential core.Credential, instance string) (*ServiceNowClient, error) {
-	return NewServiceNowClient2WithHTTPClient(credential, instance, nil)
+func NewServiceNowClient(credential core.Credential, instance string) (*ServiceNowClient, error) {
+	return NewServiceNowClientWithHTTPClient(credential, instance, nil)
 }
 
-func NewServiceNowClient2WithHTTPClient(credential core.Credential, instance string, httpClient *http.Client) (*ServiceNowClient, error) {
+func NewServiceNowClientWithHTTPClient(credential core.Credential, instance string, httpClient *http.Client) (*ServiceNowClient, error) {
 	if !strings.HasSuffix(instance, ".service-now.com/api") {
 		instance += ".service-now.com/api"
 	}

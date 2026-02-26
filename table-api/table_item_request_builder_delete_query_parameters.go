@@ -1,6 +1,6 @@
 package tableapi
 
-// Deprecated: deprecated since v{unreleased}. Please use [TableItemRequestBuilder2DeleteQueryParameters]
+// TableItemRequestBuilderDeleteQueryParameters represents the query parameters for a Table item DELETE request.
 type TableItemRequestBuilderDeleteQueryParameters struct {
 	// QueryNoDomain flag that indicates whether to restrict the record search to only the domains for which the logged in user is configured.
 	//

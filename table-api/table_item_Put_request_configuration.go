@@ -2,24 +2,22 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
-// Deprecated: deprecated since v1.4.0. Removed from public API.
-//
-// TableItemPutRequestConfiguration represents request configurations GET request.
-type TableItemPutRequestConfiguration struct {
-	Header          interface{}
-	QueryParameters *TableItemRequestBuilderPutQueryParameters
-	Data            interface{}
-	ErrorMapping    core.ErrorMapping
-	response        *TableItemResponse
+// tableItemPutRequestConfiguration2[T] represents request configurations GET request.
+type tableItemPutRequestConfiguration2[T Entry] struct {
+	header   interface{}
+	query    *TableItemRequestBuilderPutQueryParameters
+	data     interface{}
+	mapping  core.ErrorMapping
+	response *TableItemResponse2[T]
 }
 
 // toConfiguration converts rC to `core.RequestConfiguration`.
-func (rC *TableItemPutRequestConfiguration) toConfiguration() *core.RequestConfiguration {
+func (rC *tableItemPutRequestConfiguration2[T]) toConfiguration() *core.RequestConfiguration {
 	return &core.RequestConfiguration{
-		Header:          rC.Header,
-		QueryParameters: rC.QueryParameters,
-		Data:            rC.Data,
-		ErrorMapping:    rC.ErrorMapping,
+		Header:          rC.header,
+		QueryParameters: rC.query,
+		Data:            rC.data,
+		ErrorMapping:    rC.mapping,
 		Response:        rC.response,
 	}
 }

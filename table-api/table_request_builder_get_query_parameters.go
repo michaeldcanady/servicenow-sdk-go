@@ -1,8 +1,7 @@
 package tableapi
 
-// Deprecated: deprecated since v{unreleased}. Please use [TableRequestBuilder2GetQueryParameters]
+// TableRequestBuilderGetQueryParameters represents the query parameters for a Table collection GET request.
 type TableRequestBuilderGetQueryParameters struct {
-	//Determines the type of data returned, either the actual values from the database or the display values of the fields.
 	//Display values are manipulated based on the actual value in the database and user or system settings and preferences.
 	//If returning display values, the value that is returned is dependent on the field type.
 	//- Choice fields: The database value may be a number, but the display value will be more descriptive.
@@ -12,7 +11,7 @@ type TableRequestBuilderGetQueryParameters struct {
 	//- Encrypted text: The database value is encrypted, while the displayed value is unencrypted based on the user's encryption context.
 	//
 	//- Reference fields: The database value is sys_id, but the display value is a display field of the referenced record.
-	DisplayValue DisplayValue `url:"sysparm_display_value,omitempty"`
+	DisplayValue DisplayValue2 `url:"sysparm_display_value,omitempty"`
 	//Flag that indicates whether to exclude Table API links for reference fields.
 	//
 	//Valid values:
@@ -39,7 +38,7 @@ type TableRequestBuilderGetQueryParameters struct {
 	//- mobile
 	//- both
 	//If you also specify the sysparm_fields parameter, it takes precedent.
-	View                     View   `url:"sysparm_view,omitempty"`
+	View                     View2  `url:"sysparm_view,omitempty"`
 	Limit                    int    `url:"sysparm_limit,omitempty"`
 	NoCount                  bool   `url:"sysparm_no_count,omitempty"`
 	Offset                   int    `url:"sysparm_offset,omitempty"`

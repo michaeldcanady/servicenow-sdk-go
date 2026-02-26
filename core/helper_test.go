@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestToQueryMap(t *testing.T) {
@@ -79,76 +77,6 @@ func TestParseResponse(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected err %v", err)
 	}
-}
-
-func TestSendMethods(t *testing.T) {
-	client := &mockCoreClient{
-		SendFunc: func(requestInfo IRequestInformation, errorMapping ErrorMapping) (*http.Response, error) {
-			return &http.Response{
-				StatusCode: 200,
-				Body:       io.NopCloser(strings.NewReader(`{"Body":"test"}`)),
-				Header:     http.Header{},
-			}, nil
-		},
-	}
-	rb := NewRequestBuilder(client, "{+baseurl}/test", map[string]string{"baseurl": "http://localhost"})
-
-	t.Run("sendGet", func(t *testing.T) {
-		var res *mockResponse
-		err := sendGet(rb, nil, nil, &res)
-		assert.NoError(t, err)
-	})
-
-	t.Run("SendGet2", func(t *testing.T) {
-		var res Response = &mockResponse{}
-		config := &RequestConfiguration{
-			Response: res,
-		}
-		err := SendGet2(rb, config)
-		assert.NoError(t, err)
-	})
-
-	t.Run("sendPost", func(t *testing.T) {
-		var res *mockResponse
-		err := sendPost(rb, map[string]string{"a": "b"}, nil, nil, &res)
-		assert.NoError(t, err)
-	})
-
-	t.Run("SendPost2", func(t *testing.T) {
-		var res Response = &mockResponse{}
-		config := &RequestConfiguration{
-			Response: res,
-			Data:     map[string]string{"a": "b"},
-		}
-		err := SendPost2(rb, config)
-		assert.NoError(t, err)
-	})
-
-	t.Run("sendDelete", func(t *testing.T) {
-		err := sendDelete(rb, nil, nil)
-		assert.NoError(t, err)
-	})
-
-	t.Run("sendDelete2", func(t *testing.T) {
-		err := sendDelete2(rb, nil)
-		assert.NoError(t, err)
-	})
-
-	t.Run("sendPut", func(t *testing.T) {
-		var res *mockResponse
-		err := sendPut(rb, map[string]string{"a": "b"}, nil, nil, &res)
-		assert.NoError(t, err)
-	})
-
-	t.Run("sendPut2", func(t *testing.T) {
-		var res Response = &mockResponse{}
-		config := &RequestConfiguration{
-			Response: res,
-			Data:     map[string]string{"a": "b"},
-		}
-		err := sendPut2(rb, config)
-		assert.NoError(t, err)
-	})
 }
 
 func TestIsPointer(t *testing.T) {

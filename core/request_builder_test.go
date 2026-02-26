@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestNewRequestBuilder2(t *testing.T) {
+func TestNewRequestBuilder(t *testing.T) {
 	tests := []struct {
 		name  string
 		templ string
@@ -14,7 +14,7 @@ func TestNewRequestBuilder2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res := NewRequestBuilder2(nil, tt.templ, nil)
+			res := NewRequestBuilder(nil, tt.templ, nil)
 			if res == nil {
 				t.Fatal("returned nil")
 			}
@@ -25,7 +25,7 @@ func TestNewRequestBuilder2(t *testing.T) {
 	}
 }
 
-func TestRequestBuilder_ToPutRequestInformation2(t *testing.T) {
+func TestRequestBuilder_ToPutRequestInformation(t *testing.T) {
 	rb := &RequestBuilder{}
 	tests := []struct {
 		name string
@@ -34,7 +34,7 @@ func TestRequestBuilder_ToPutRequestInformation2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res, _ := rb.ToPutRequestInformation2(nil)
+			res, _ := rb.ToPutRequestInformation(nil)
 			if res.Method != PUT {
 				t.Error("wrong method")
 			}
@@ -42,21 +42,21 @@ func TestRequestBuilder_ToPutRequestInformation2(t *testing.T) {
 	}
 }
 
-func TestRequestBuilder_ToPostRequestInformation3(t *testing.T) {
+func TestRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	rb := &RequestBuilder{}
-	res, _ := rb.ToPostRequestInformation3(nil)
+	res, _ := rb.ToPostRequestInformation(nil)
 	if res.Method != POST { t.Error("failed") }
 }
 
-func TestRequestBuilder_ToDeleteRequestInformation2(t *testing.T) {
+func TestRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
 	rb := &RequestBuilder{}
-	res, _ := rb.ToDeleteRequestInformation2(nil)
+	res, _ := rb.ToDeleteRequestInformation(nil)
 	if res.Method != DELETE { t.Error("failed") }
 }
 
-func TestRequestBuilder_ToGetRequestInformation2(t *testing.T) {
+func TestRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	rb := &RequestBuilder{}
-	res, _ := rb.ToGetRequestInformation2(nil)
+	res, _ := rb.ToGetRequestInformation(nil)
 	if res.Method != GET { t.Error("failed") }
 }
 
@@ -83,42 +83,27 @@ func TestRequestBuilder_prepareData(t *testing.T) {
 }
 
 func TestRequestBuilder_SendMethods(t *testing.T) {
-	// These are harder to unit test without complex mocks
-	// but we can test the error propagation when ToRequestInformation fails
 	rb := &RequestBuilder{}
 	config := &RequestConfiguration{Data: 123} // trigger prepareData error
 	
-	t.Run("SendGet3", func(t *testing.T) {
-		if err := rb.SendGet3(context.Background(), config); err == nil {
+	t.Run("SendGet", func(t *testing.T) {
+		if err := rb.SendGet(context.Background(), config); err == nil {
 			t.Error("expected error")
 		}
 	})
-	t.Run("SendPost4", func(t *testing.T) {
-		if err := rb.SendPost4(context.Background(), config); err == nil {
+	t.Run("SendPost", func(t *testing.T) {
+		if err := rb.SendPost(context.Background(), config); err == nil {
 			t.Error("expected error")
 		}
 	})
-	t.Run("SendDelete3", func(t *testing.T) {
-		if err := rb.SendDelete3(context.Background(), config); err == nil {
+	t.Run("SendDelete", func(t *testing.T) {
+		if err := rb.SendDelete(context.Background(), config); err == nil {
 			t.Error("expected error")
 		}
 	})
-	t.Run("SendPut3", func(t *testing.T) {
-		if err := rb.SendPut3(context.Background(), config); err == nil {
+	t.Run("SendPut", func(t *testing.T) {
+		if err := rb.SendPut(context.Background(), config); err == nil {
 			t.Error("expected error")
 		}
-	})
-}
-
-func TestNewRequestBuilder(t *testing.T) {
-	res := NewRequestBuilder(nil, "t", nil)
-	if res == nil { t.Error("failed") }
-}
-
-func TestRequestBuilder_DeprecatedToRequestInformation(t *testing.T) {
-	rb := &RequestBuilder{}
-	t.Run("Head", func(t *testing.T) {
-		res, _ := rb.ToHeadRequestInformation()
-		if res.Method != HEAD { t.Error("failed") }
 	})
 }

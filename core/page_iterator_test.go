@@ -1,12 +1,14 @@
 package core
 
 import (
+	"net/http"
 	"testing"
 )
 
 func TestNewPageIterator(t *testing.T) {
 	client := &mockCoreClient{}
 	page := &mockPage{}
+	cf := func(r *http.Response) (CollectionResponse[any], error) { return page, nil }
 	tests := []struct {
 		name   string
 		page   *mockPage
@@ -19,7 +21,7 @@ func TestNewPageIterator(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := NewPageIterator[any, *mockPage](tt.page, tt.client)
+			_, err := NewPageIterator[any](tt.page, tt.client, cf)
 			if err != tt.err {
 				t.Errorf("got %v, expected %v", err, tt.err)
 			}
@@ -30,15 +32,15 @@ func TestNewPageIterator(t *testing.T) {
 func TestPageIterator_Iterate(t *testing.T) {
 	tests := []struct {
 		name     string
-		iterator *PageIterator[any, *mockPage]
+		iterator *PageIterator[any]
 		callback func(*any) bool
 		err      error
 	}{
-		{"NilCallback", &PageIterator[any, *mockPage]{}, nil, ErrNilCallback},
+		{"NilCallback", &PageIterator[any]{}, nil, ErrNilCallback},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.iterator.Iterate(tt.callback)
+			err := tt.iterator.Iterate(tt.callback, false)
 			if err != tt.err {
 				t.Errorf("got %v, expected %v", err, tt.err)
 			}
@@ -46,18 +48,17 @@ func TestPageIterator_Iterate(t *testing.T) {
 	}
 }
 
-func TestPageIterator_fetchAndConvertPage(t *testing.T) {
-	it := &PageIterator[any, *mockPage]{client: &mockCoreClient{}}
+func TestPageIterator_nextPage(t *testing.T) {
+	it := &PageIterator[any]{}
 	tests := []struct {
 		name string
-		link string
 		err  bool
 	}{
-		{"EmptyLink", "", true},
+		{"EmptyLink", false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := it.fetchAndConvertPage(tt.link)
+			_, err := it.nextPage(false)
 			if (err != nil) != tt.err {
 				t.Errorf("err: got %v", err)
 			}

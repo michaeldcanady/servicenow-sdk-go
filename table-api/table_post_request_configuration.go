@@ -2,24 +2,22 @@ package tableapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/core"
 
-// Deprecated: deprecated since v1.4.0. removed from public API.
-//
-// TablePostRequestConfiguration represents request configurations POST request.
-type TablePostRequestConfiguration struct {
-	Header          interface{}
-	QueryParameters *TableRequestBuilderPostQueryParameters
-	Data            map[string]string
-	ErrorMapping    core.ErrorMapping
-	response        *TableItemResponse
+// tablePostRequestConfiguration2[T] represents request configurations POST request.
+type tablePostRequestConfiguration2[T Entry] struct {
+	header   interface{}
+	query    *TableRequestBuilderPostQueryParameters
+	data     map[string]string
+	mapping  core.ErrorMapping
+	response *TableItemResponse
 }
 
 // toConfiguration converts rC to `core.RequestConfiguration`.
-func (rC *TablePostRequestConfiguration) toConfiguration() *core.RequestConfiguration {
+func (rC *tablePostRequestConfiguration2[T]) toConfiguration() *core.RequestConfiguration {
 	return &core.RequestConfiguration{
-		Header:          rC.Header,
-		QueryParameters: rC.QueryParameters,
-		Data:            rC.Data,
-		ErrorMapping:    rC.ErrorMapping,
+		Header:          rC.header,
+		QueryParameters: rC.query,
+		Data:            rC.data,
+		ErrorMapping:    rC.mapping,
 		Response:        rC.response,
 	}
 }
