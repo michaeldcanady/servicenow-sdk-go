@@ -24,27 +24,18 @@ N/A
 
 === "Fluent"
 
-    ``` golang
+    ```go
     package main
 
-    import (
-        "context"
-
-        attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
-    )
+    {% include-markdown '../../snippets/attachments.go' start='// [START attachment_imports]' end='// [END attachment_imports]' comments=false trailing-newlines=false dedent=true %}
 
     func main() {
-        // Initialize credentials and client
+        // Step 1: Create credentials
+        {% include-markdown '../../snippets/auth.go' start='// [START auth_basic]' end='// [END auth_basic]' comments=false trailing-newlines=false dedent=true %}
 
-        config := &attachmentapi.AttachmentRequestBuilder2GetRequestConfiguration{
-           // Optional configurations
-        }
+        // Step 2: Initialize client
+        {% include-markdown '../../snippets/auth.go' start='// [START client_init]' end='// [END client_init]' comments=false trailing-newlines=false dedent=true %}
 
-        response, err := client.Now2().Attachment2().Get(context.Background(), config)
-        if err != nil {
-            log.Fatal(err)
-        }
-
-        // Process response
+        {% include-markdown '../../snippets/attachments.go' start='// [START attachment_list]' end='// [END attachment_list]' comments=false trailing-newlines=false dedent=true %}
     }
     ```

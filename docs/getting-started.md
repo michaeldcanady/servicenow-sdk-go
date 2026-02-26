@@ -18,20 +18,14 @@ go get github.com/michaeldcanady/servicenow-sdk-go
 First, create a credential and then initialize the ServiceNow client.
 
 ```go
-import (
-    "github.com/michaeldcanady/servicenow-sdk-go"
-    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
-)
+{% include-markdown 'snippets/auth.go' start='// [START auth_imports]' end='// [END auth_imports]' comments=false trailing-newlines=false dedent=true %}
 
 func main() {
     // 1. Setup credentials (Basic Auth example)
-    cred := credentials.NewUsernamePasswordCredential("admin", "password")
+    {% include-markdown 'snippets/auth.go' start='// [START auth_basic_admin]' end='// [END auth_basic_admin]' comments=false trailing-newlines=false dedent=true %}
 
     // 2. Initialize the client for your instance
-    client, err := servicenowsdkgo.NewServiceNowClient2(cred, "your-instance")
-    if err != nil {
-        panic(err)
-    }
+    {% include-markdown 'snippets/auth.go' start='// [START client_init_panic]' end='// [END client_init_panic]' comments=false trailing-newlines=false dedent=true %}
 }
 ```
 

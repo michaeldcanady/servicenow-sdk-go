@@ -16,15 +16,7 @@ go test ./...
 We use `github.com/jarcoal/httpmock` to mock ServiceNow API responses. This allows us to test request construction and response parsing without requiring a real ServiceNow instance.
 
 ```go
-func TestMyFeature(t *testing.T) {
-    httpmock.Activate()
-    defer httpmock.DeactivateAndReset()
-
-    httpmock.RegisterResponder("GET", "https://your-instance.service-now.com/api/now/v1/table/incident",
-        httpmock.NewStringResponder(200, `{"result": []}`))
-
-    // ... test logic ...
-}
+{% include-markdown '../snippets/testing.go' start='// [START testing_mocking]' end='// [END testing_mocking]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Integration Tests

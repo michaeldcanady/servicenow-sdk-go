@@ -44,6 +44,13 @@ func NewDefaultTableItemRequestBuilder2Internal(
 	return NewTableItemRequestBuilder2Internal[*TableRecord](pathParameters, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
+func NewDefaultTableItemRequestBuilder2(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *TableItemRequestBuilder2[*TableRecord] {
+	return NewTableItemRequestBuilder3[*TableRecord](rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
+}
+
 // NewTableItemRequestBuilder3 instantiates a new TableItemRequestBuilder2 with a raw URL and custom parsable.
 func NewTableItemRequestBuilder3[T model.ServiceNowItem](
 	rawURL string,

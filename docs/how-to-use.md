@@ -3,30 +3,29 @@
 This SDK has two modalities of usage: `fluent` and `standard`.
 
 The following block is the base you'll need for **all** implementation methods:
-```golang
+```go
 import (
-    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
+    {% include-markdown 'snippets/auth.go' start='// [START credentials_import]' end='// [END credentials_import]' comments=false trailing-newlines=false dedent=true %}
 )
 
-cred := credentials.NewUsernamePasswordCredential("username", "password")
-
-client := servicenowsdkgo.NewServiceNowClient2(cred, "instance")
+{% include-markdown 'snippets/auth.go' start='// [START auth_basic]' end='// [END auth_basic]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/auth.go' start='// [START client_init]' end='// [END client_init]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Fluent
 
 By design, the fluent implementation helps you write cleaner, simpler code with minimal effort.
 
-``` golang {title="Table API"}
-client.Now2().TableV2("table_name")
+``` go {title="Table API"}
+{% include-markdown 'snippets/howtouse.go' start='// [START fluent_table]' end='// [START fluent_table]' comments=false trailing-newlines=false dedent=true %}
 ```
 
-``` golang {title="Attachment API"}
-client.Now().Attachment2()
+``` go {title="Attachment API"}
+{% include-markdown 'snippets/howtouse.go' start='// [START fluent_attachment]' end='// [START fluent_attachment]' comments=false trailing-newlines=false dedent=true %}
 ```
 
-``` golang {title="Batch API"}
-client.Now().Batch()
+``` go {title="Batch API"}
+{% include-markdown 'snippets/howtouse.go' start='// [START fluent_batch]' end='// [START fluent_batch]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 # Standard

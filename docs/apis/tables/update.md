@@ -31,16 +31,33 @@ N/A
 
 === "Fluent"
 
-    ``` golang
-    {%
-    	include-markdown 'assets/snippets/table-update-fluent.go'
-    %}
+    ```go
+    package main
+
+    {% include-markdown '../../snippets/tables.go' start='// [START table_imports]' end='// [END table_imports]' comments=false trailing-newlines=false dedent=true %}
+
+    func main() {
+        // Step 1: Create credentials
+        {% include-markdown '../../snippets/auth.go' start='// [START auth_basic]' end='// [END auth_basic]' comments=false trailing-newlines=false dedent=true %}
+        // Step 2: Initialize client
+        {% include-markdown '../../snippets/auth.go' start='// [START client_init]' end='// [END client_init]' comments=false trailing-newlines=false dedent=true %}
+        {% include-markdown '../../snippets/tables.go' start='// [START table_update_fluent]' end='// [END table_update_fluent]' comments=false trailing-newlines=false dedent=true %}
+    }
     ```
 
 === "Standard"
 
-    ``` golang
-    {%
-    	include-markdown 'assets/snippets/table-update-standard.go'
-    %}
+    ```go
+    package main
+
+    {% include-markdown '../../snippets/tables.go' start='// [START table_imports]' end='// [END table_imports]' comments=false trailing-newlines=false dedent=true %}
+
+    func main() {
+        // Step 1: Create credentials
+        {% include-markdown '../../snippets/auth.go' start='// [START auth_basic]' end='// [END auth_basic]' comments=false trailing-newlines=false dedent=true %}
+        // Step 2: Initialize client
+        {% include-markdown '../../snippets/auth.go' start='// [START client_init]' end='// [END client_init]' comments=false trailing-newlines=false dedent=true %}
+        {% include-markdown '../../snippets/tables.go' start='// [START table_standard_setup]' end='// [END table_standard_setup]' comments=false trailing-newlines=false dedent=true %}
+        {% include-markdown '../../snippets/tables.go' start='// [START table_update_standard]' end='// [END table_update_standard]' comments=false trailing-newlines=false dedent=true %}
+    }
     ```

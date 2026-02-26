@@ -1,6 +1,8 @@
 # Welcome to ServiceNow SDK for Go
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/michaeldcanady/servicenow-sdk-go.svg)](https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go)
+[![GoDoc](https://img.shields.io/static/v1?style=plastic&label=godoc&message=reference&color=blue)](https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go)
+![GitHub Go version](https://img.shields.io/github/go-mod/go-version/michaeldcanady/servicenow-sdk-go?style=plastic)
+![GitHub release](https://img.shields.io/github/v/release/michaeldcanady/servicenow-sdk-go?style=plastic)
 
 The **ServiceNow SDK for Go** is a powerful, type-safe, and intuitive client library for interacting with ServiceNow REST APIs. Built on the modern Microsoft Kiota framework, it provides a fluent development experience tailored for Go developers.
 
@@ -15,24 +17,15 @@ The **ServiceNow SDK for Go** is a powerful, type-safe, and intuitive client lib
 ## Quick Start
 
 ```go
-import (
-    "context"
-    "fmt"
-    "github.com/michaeldcanady/servicenow-sdk-go"
-    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
-)
+{% include-markdown 'snippets/tables.go' start='// [START table_imports]' end='// [END table_imports]' comments=false trailing-newlines=false dedent=true %}
 
 func main() {
-    cred := credentials.NewUsernamePasswordCredential("admin", "password")
-    client, _ := servicenowsdkgo.NewServiceNowClient2(cred, "my-instance")
-
+    {% include-markdown 'snippets/auth.go' start='// [START auth_basic]' end='// [END auth_basic]' comments=false trailing-newlines=false dedent=true %}
+    {% include-markdown 'snippets/auth.go' start='// [START client_init]' end='// [END client_init]' comments=false trailing-newlines=false dedent=true %}
     ctx := context.Background()
-    response, _ := client.Now2().TableV2("incident").Get(ctx, nil)
-
-    for _, record := range response.GetValue() {
-        fmt.Println(record.Get("number"))
-    }
+    {% include-markdown 'snippets/tables.go' start='// [START table_list_guide]' end='// [END table_list_guide]' comments=false trailing-newlines=false dedent=true %}
 }
+
 ```
 
 ## How the Docs are Organized

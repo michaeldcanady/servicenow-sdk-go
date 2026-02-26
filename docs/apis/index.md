@@ -9,10 +9,6 @@ This section provides detailed reference for each supported ServiceNow API modul
 - [**Batch API**](batch/index.md): Group multiple requests into a single call.
 - [**Fluent Query Builder (Preview)**](../user-guide/query-builder.md): A type-safe way to build ServiceNow queries.
 
-## Looking for Practical Examples?
-
-If you're just getting started or looking for how-to guides, check out our [**User Guide**](../user-guide/getting-started.md).
-
 ## Implementation Consistency
 
 - **Internal consistency** within each submodule takes precedence.
