@@ -17,22 +17,22 @@ func (m *MockServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
 
 func (m *MockServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
 	args := m.Called()
-	return args.Get(0).(*string), args.Error(1)
+	return NilAllowed[*string](args, 0), args.Error(1)
 }
 
 func (m *MockServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error) {
 	args := m.Called()
-	return args.Get(0).(*string), args.Error(1)
+	return NilAllowed[*string](args, 0), args.Error(1)
 }
 
 func (m *MockServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
 	args := m.Called()
-	return args.Get(0).(*string), args.Error(1)
+	return NilAllowed[*string](args, 0), args.Error(1)
 }
 
 func (m *MockServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
 	args := m.Called()
-	return args.Get(0).(*string), args.Error(1)
+	return NilAllowed[*string](args, 0), args.Error(1)
 }
 
 // Serialize writes the objects properties to the current writer.
@@ -48,7 +48,7 @@ func (mP *MockServiceNowCollectionResponse[T]) GetFieldDeserializers() map[strin
 }
 
 // GetBackingStore returns the BackingStore of the model.
-func (mM *MockServiceNowCollectionResponse[T]) GetBackingStore() store.BackingStore {
+func (mM *MockServiceNowCollectionResponse[T]) GetBackingStore() (store.BackingStore, error) {
 	args := mM.Called()
-	return args.Get(0).(store.BackingStore)
+	return args.Get(0).(store.BackingStore), args.Error(1)
 }
