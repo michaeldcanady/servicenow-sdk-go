@@ -39,8 +39,8 @@ const (
 	dateTimeFormat       = "2006-01-02 15:04:05"
 )
 
-// Attachment2 represents Service-Now attachment
-type Attachment2 interface {
+// Attachment represents Service-Now attachment
+type Attachment interface {
 	GetTableSysID() (*string, error)
 	setTableSysID(*string) error
 	GetSizeBytes() (*int64, error)
@@ -94,20 +94,20 @@ type Attachment2Model struct {
 }
 
 // NewAttachment creates a new instance of Attachment2Model
-func NewAttachment2() *Attachment2Model {
-	return newAttachment2(newInternal.NewBaseModel())
+func NewAttachment() *Attachment2Model {
+	return newAttachment(newInternal.NewBaseModel())
 }
 
-// newAttachment2 creates a new instance of Attachment2Model with the provided model underlying it
-func newAttachment2(model newInternal.Model) *Attachment2Model {
+// newAttachment creates a new instance of Attachment2Model with the provided model underlying it
+func newAttachment(model newInternal.Model) *Attachment2Model {
 	return &Attachment2Model{
 		model,
 	}
 }
 
-// CreateAttachment2FromDiscriminatorValue is a parsable factory for creating an Attachment2Model
-func CreateAttachment2FromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewAttachment2(), nil
+// CreateAttachmentFromDiscriminatorValue is a parsable factory for creating an Attachment2Model
+func CreateAttachmentFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewAttachment(), nil
 }
 
 // Serialize writes the objects properties to the current writer.

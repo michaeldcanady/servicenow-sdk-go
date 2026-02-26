@@ -39,5 +39,5 @@ type TableItemRequestBuilderGetQueryParameters struct {
 	//- mobile
 	//- both
 	//If you also specify the sysparm_fields parameter, it takes precedent.
-	View View2 `url:"sysparm_view"`
+	View View `url:"sysparm_view"`
 }

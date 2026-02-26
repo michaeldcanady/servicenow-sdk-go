@@ -84,7 +84,7 @@ func (rB *AttachmentRequestBuilder2) Upload() *AttachmentUploadRequestBuilder {
 }
 
 // Get returns AttachmentCollectionResponse using provided arguments
-func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfiguration *AttachmentRequestBuilder2GetRequestConfiguration) (*AttachmentCollectionResponse2Model, error) {
+func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfiguration *AttachmentRequestBuilder2GetRequestConfiguration) (*AttachmentCollectionResponseModel, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -107,7 +107,7 @@ func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfigurati
 		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachmentCollectionResponse2FromDiscriminatorValue, errorMapping)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachmentCollectionResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -116,7 +116,7 @@ func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfigurati
 		return nil, nil
 	}
 
-	snRes, ok := res.(*AttachmentCollectionResponse2Model)
+	snRes, ok := res.(*AttachmentCollectionResponseModel)
 	if !ok {
 		return nil, errors.New("res is not *AttachmentCollectionResponse2Model")
 	}

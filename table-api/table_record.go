@@ -10,6 +10,12 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
+const (
+	displayValueKey = "display_value"
+	linkKey         = "link"
+	valueKey        = "value"
+)
+
 var _ serialization.Parsable = (*TableRecord)(nil)
 
 // TableRecord represents a structured record in a Service-Now table.

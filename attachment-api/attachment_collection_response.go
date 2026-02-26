@@ -5,11 +5,11 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
-type AttachmentCollectionResponse2 = newInternal.ServiceNowCollectionResponse[Attachment2]
+type AttachmentCollectionResponse = newInternal.ServiceNowCollectionResponse[Attachment]
 
-// CreateAttachment2FromDiscriminatorValue is a parsable factory for creating an Collection Request for Attachment2Model
-func CreateAttachmentCollectionResponse2FromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowCollectionResponse[Attachment2](CreateAttachment2FromDiscriminatorValue), nil
+type AttachmentCollectionResponseModel = newInternal.BaseServiceNowCollectionResponse[Attachment]
+
+// CreateAttachmentCollectionResponseFromDiscriminatorValue is a parsable factory for creating an Collection Request for Attachment
+func CreateAttachmentCollectionResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return newInternal.NewBaseServiceNowCollectionResponse[Attachment](CreateAttachmentFromDiscriminatorValue), nil
 }
-
-type AttachmentCollectionResponse2Model = newInternal.BaseServiceNowCollectionResponse[Attachment2]

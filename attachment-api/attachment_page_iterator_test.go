@@ -11,15 +11,15 @@ import (
 
 func TestNewAttachmentPageIterator(t *testing.T) {
 	reqAdapter := mocking.NewMockRequestAdapter()
-	res := &mocking.MockServiceNowCollectionResponse[Attachment2]{}
+	res := &mocking.MockServiceNowCollectionResponse[Attachment]{}
 
-	res.On("GetResult").Return([]Attachment2{}, nil)
+	res.On("GetResult").Return([]Attachment{}, nil)
 	res.On("GetNextLink").Return(nil, nil)
 	res.On("GetPreviousLink").Return(nil, nil)
 	res.On("GetFirstLink").Return(nil, nil)
 	res.On("GetLastLink").Return(nil, nil)
 
-	iterator, err := NewAttachmentPageIterator(res, reqAdapter, CreateAttachment2FromDiscriminatorValue)
+	iterator, err := NewAttachmentPageIterator(res, reqAdapter, CreateAttachmentFromDiscriminatorValue)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, iterator)
@@ -27,21 +27,21 @@ func TestNewAttachmentPageIterator(t *testing.T) {
 
 func TestAttachmentPageIterator_Iterate(t *testing.T) {
 	reqAdapter := mocking.NewMockRequestAdapter()
-	res := &mocking.MockServiceNowCollectionResponse[Attachment2]{}
+	res := &mocking.MockServiceNowCollectionResponse[Attachment]{}
 
 	attachment1 := &Attachment2Model{}
 	attachment2 := &Attachment2Model{}
 
-	res.On("GetResult").Return([]Attachment2{attachment1, attachment2}, nil) // Mock single page with 2 items for simplicity in specialized test
+	res.On("GetResult").Return([]Attachment{attachment1, attachment2}, nil) // Mock single page with 2 items for simplicity in specialized test
 	res.On("GetNextLink").Return(nil, nil)
 	res.On("GetPreviousLink").Return(nil, nil)
 	res.On("GetFirstLink").Return(nil, nil)
 	res.On("GetLastLink").Return(nil, nil)
 
-	iterator, _ := NewAttachmentPageIterator(res, reqAdapter, CreateAttachment2FromDiscriminatorValue)
+	iterator, _ := NewAttachmentPageIterator(res, reqAdapter, CreateAttachmentFromDiscriminatorValue)
 
-	var items []Attachment2
-	err := iterator.Iterate(context.Background(), false, func(item Attachment2) bool {
+	var items []Attachment
+	err := iterator.Iterate(context.Background(), false, func(item Attachment) bool {
 		items = append(items, item)
 		return true
 	})
@@ -54,17 +54,17 @@ func TestAttachmentPageIterator_Iterate(t *testing.T) {
 
 func TestAttachmentPageIterator_NextItem(t *testing.T) {
 	reqAdapter := mocking.NewMockRequestAdapter()
-	res := &mocking.MockServiceNowCollectionResponse[Attachment2]{}
+	res := &mocking.MockServiceNowCollectionResponse[Attachment]{}
 
 	attachment1 := &Attachment2Model{}
 
-	res.On("GetResult").Return([]Attachment2{attachment1}, nil)
+	res.On("GetResult").Return([]Attachment{attachment1}, nil)
 	res.On("GetNextLink").Return(nil, nil)
 	res.On("GetPreviousLink").Return(nil, nil)
 	res.On("GetFirstLink").Return(nil, nil)
 	res.On("GetLastLink").Return(nil, nil)
 
-	iterator, _ := NewAttachmentPageIterator(res, reqAdapter, CreateAttachment2FromDiscriminatorValue)
+	iterator, _ := NewAttachmentPageIterator(res, reqAdapter, CreateAttachmentFromDiscriminatorValue)
 
 	item, err := iterator.NextItem(context.Background())
 	assert.NoError(t, err)

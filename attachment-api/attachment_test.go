@@ -10,14 +10,14 @@ import (
 )
 
 func TestNewAttachment2(t *testing.T) {
-	res := NewAttachment2()
+	res := NewAttachment()
 	if res == nil {
 		t.Error("returned nil")
 	}
 }
 
 func TestAttachment2Model_GetFieldDeserializers(t *testing.T) {
-	m := NewAttachment2()
+	m := NewAttachment()
 	deser := m.GetFieldDeserializers()
 	assert.NotNil(t, deser[tableSysIDKey])
 
@@ -48,7 +48,7 @@ func TestAttachment2Model_GetFieldDeserializers(t *testing.T) {
 }
 
 func TestAttachment2Model_Serialize(t *testing.T) {
-	m := NewAttachment2()
+	m := NewAttachment()
 	err := m.Serialize(nil)
 	assert.Error(t, err)
 
@@ -59,9 +59,9 @@ func TestAttachment2Model_Serialize(t *testing.T) {
 
 func TestAttachment2Model_GetTableSysID(t *testing.T) {
 	s := "sid"
-	m := NewAttachment2()
+	m := NewAttachment()
 	_ = m.setTableSysID(&s)
-	
+
 	tests := []struct {
 		name     string
 		model    *Attachment2Model
@@ -82,8 +82,8 @@ func TestAttachment2Model_GetTableSysID(t *testing.T) {
 
 func TestAttachment2Model_setTableSysID(t *testing.T) {
 	s := "sid"
-	m := NewAttachment2()
-	
+	m := NewAttachment()
+
 	tests := []struct {
 		name  string
 		model *Attachment2Model
@@ -100,152 +100,192 @@ func TestAttachment2Model_setTableSysID(t *testing.T) {
 }
 
 func TestCreateAttachment2FromDiscriminatorValue(t *testing.T) {
-	res, err := CreateAttachment2FromDiscriminatorValue(nil)
+	res, err := CreateAttachmentFromDiscriminatorValue(nil)
 	assert.NoError(t, err)
 	assert.NotNil(t, res)
 }
 
 func TestAttachment2Model_Accessors(t *testing.T) {
 	// Group similar ones to reach coverage quickly
-	m := NewAttachment2()
-	
+	m := NewAttachment()
+
 	t.Run("SizeBytes", func(t *testing.T) {
 		v := int64(1)
 		_ = m.setSizeBytes(&v)
 		res, _ := m.GetSizeBytes()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
-	
+
 	t.Run("DownloadLink", func(t *testing.T) {
 		v := "l"
 		_ = m.setDownloadLink(&v)
 		res, _ := m.GetDownloadLink()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("SysID", func(t *testing.T) {
 		v := "id"
 		_ = m.setSysID(&v)
 		res, _ := m.GetSysID()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("FileName", func(t *testing.T) {
 		v := "name"
 		_ = m.setFileName(&v)
 		res, _ := m.GetFileName()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("SysTags", func(t *testing.T) {
 		v := []string{"a"}
 		_ = m.setSysTags(v)
 		res, _ := m.GetSysTags()
-		if res[0] != "a" { t.Error("failed") }
+		if res[0] != "a" {
+			t.Error("failed")
+		}
 	})
-	
+
 	t.Run("Compressed", func(t *testing.T) {
 		v := true
 		_ = m.setCompressed(&v)
 		res, _ := m.GetCompressed()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("SysUpdatedOn", func(t *testing.T) {
 		v := time.Now()
 		_ = m.setSysUpdatedOn(&v)
 		res, _ := m.GetSysUpdatedOn()
-		if !res.Equal(v) { t.Error("failed") }
+		if !res.Equal(v) {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("ImageHeight", func(t *testing.T) {
 		v := float64(100)
 		_ = m.setImageHeight(&v)
 		res, _ := m.GetImageHeight()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("SysCreatedOn", func(t *testing.T) {
 		v := time.Now()
 		_ = m.setSysCreatedOn(&v)
 		res, _ := m.GetSysCreatedOn()
-		if !res.Equal(v) { t.Error("failed") }
+		if !res.Equal(v) {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("SysCreatedBy", func(t *testing.T) {
 		v := "user"
 		_ = m.setSysCreatedBy(&v)
 		res, _ := m.GetSysCreatedBy()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("AverageImageColor", func(t *testing.T) {
 		v := "red"
 		_ = m.setAverageImageColor(&v)
 		res, _ := m.GetAverageImageColor()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("SysUpdatedBy", func(t *testing.T) {
 		v := "user2"
 		_ = m.setSysUpdatedBy(&v)
 		res, _ := m.GetSysUpdatedBy()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("TableName", func(t *testing.T) {
 		v := "table"
 		_ = m.setTableName(&v)
 		res, _ := m.GetTableName()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("ImageWidth", func(t *testing.T) {
 		v := float64(200)
 		_ = m.setImageWidth(&v)
 		res, _ := m.GetImageWidth()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("SysModCount", func(t *testing.T) {
 		v := int64(5)
 		_ = m.setSysModCount(&v)
 		res, _ := m.GetSysModCount()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("ContentType", func(t *testing.T) {
 		v := "image/png"
 		_ = m.setContentType(&v)
 		res, _ := m.GetContentType()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("SizeCompressed", func(t *testing.T) {
 		v := int64(50)
 		_ = m.setSizeCompressed(&v)
 		res, _ := m.GetSizeCompressed()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("ChunkSizeBytes", func(t *testing.T) {
 		v := "1024"
 		_ = m.setChunkSizeBytes(&v)
 		res, _ := m.GetChunkSizeBytes()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("Hash", func(t *testing.T) {
 		v := "hash"
 		_ = m.setHash(&v)
 		res, _ := m.GetHash()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 
 	t.Run("State", func(t *testing.T) {
 		v := "available"
 		_ = m.setState(&v)
 		res, _ := m.GetState()
-		if *res != v { t.Error("failed") }
+		if *res != v {
+			t.Error("failed")
+		}
 	})
 }

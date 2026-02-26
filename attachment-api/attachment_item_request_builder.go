@@ -85,7 +85,7 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachment2FromDiscriminatorValue, errorMapping)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachmentFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
 	}

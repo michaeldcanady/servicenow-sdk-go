@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	newInt "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
@@ -16,11 +16,11 @@ var _ authentication.AuthenticationProvider = (*credentialAuthenticationProvider
 
 // credentialAuthenticationProviderAdapter adapter for core.Credential to kiota AuthenticationProvider
 type credentialAuthenticationProviderAdapter struct {
-	cred core.Credential //nolint: staticcheck
+	cred credentials.Credential //nolint: staticcheck
 }
 
 // newCredentialAuthenticationProviderAdapter adapts provided credential to an AuthenticationProvider
-func newCredentialAuthenticationProviderAdapter(credential core.Credential) (*credentialAuthenticationProviderAdapter, error) {
+func newCredentialAuthenticationProviderAdapter(credential credentials.Credential) (*credentialAuthenticationProviderAdapter, error) {
 	if internal.IsNil(credential) {
 		return nil, errors.New("credential is nil")
 	}

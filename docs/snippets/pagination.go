@@ -63,13 +63,13 @@ func _() {
 	}
 
 	// 2. Create the iterator
-	attachmentIterator, err := attachmentapi.NewAttachmentPageIterator(attachmentResponse, client.RequestAdapter, attachmentapi.CreateAttachment2FromDiscriminatorValue)
+	attachmentIterator, err := attachmentapi.NewAttachmentPageIterator(attachmentResponse, client.RequestAdapter, attachmentapi.CreateAttachmentFromDiscriminatorValue)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// 3. Iterate over attachments
-	err = attachmentIterator.Iterate(ctx, false, func(attachment attachmentapi.Attachment2) bool {
+	err = attachmentIterator.Iterate(ctx, false, func(attachment attachmentapi.Attachment) bool {
 		fileName, _ := attachment.GetFileName()
 		fmt.Printf("Attachment: %s
 ", *fileName)

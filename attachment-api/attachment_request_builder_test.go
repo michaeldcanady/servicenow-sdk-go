@@ -213,7 +213,7 @@ func TestAttachmentRequestBuilder2_Get(t *testing.T) {
 		{
 			name: "Successful",
 			setup: func(ra *mocking.MockRequestAdapter) {
-				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&AttachmentCollectionResponse2Model{}, nil)
+				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&AttachmentCollectionResponseModel{}, nil)
 			},
 			expectedErr: false,
 		},
@@ -426,7 +426,7 @@ func TestAttachmentRequestBuilder2_ToGetRequestInformation(t *testing.T) {
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
 				queryParameters := &AttachmentRequestBuilder2GetQueryParameters{
-					SysparmLimit: newInternal.ToPointer(1),
+					SysparmLimit: 1,
 				}
 
 				requestConfiguration := &AttachmentRequestBuilder2GetRequestConfiguration{

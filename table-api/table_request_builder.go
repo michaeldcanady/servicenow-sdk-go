@@ -59,9 +59,7 @@ func NewTableRequestBuilder[T model.ServiceNowItem](
 	requestAdapter abstractions.RequestAdapter,
 	factory serialization.ParsableFactory,
 ) *TableRequestBuilder[T] {
-	urlParams := make(map[string]string)
-	urlParams[newInternal.RawURLKey] = rawURL
-	return NewTableRequestBuilderInternal[T](urlParams, requestAdapter, factory)
+	return NewTableRequestBuilderInternal[T](map[string]string{newInternal.RawURLKey: rawURL}, requestAdapter, factory)
 }
 
 // Get sends an HTTP GET request and returns a collection of table records.
