@@ -1,27 +1,36 @@
-# Getting Started
+# Getting started
 
-## Requirements
+Welcome to the ServiceNow SDK for Go! This guide helps you set up the SDK and
+make your first successful API call in just a few minutes.
 
-- Installed [Go 1.23+](https://go.dev/doc/install).
-- Active ServiceNow instance or [Developer Instance](https://developer.servicenow.com/dev.do).
+## Prerequisites
 
-## 1. Install the SDK
+Before you begin, ensure your development environment meets these requirements:
 
-To add the SDK to your project:
+- **Go:** Version 1.23 or higher installed.
+- **ServiceNow Instance:** Access to a ServiceNow instance (a
+  [Personal Developer Instance](https://developer.servicenow.com/) works
+  perfectly).
+
+## Install the SDK
+
+Add the SDK to your existing Go module using the `go get` command:
 
 ```bash
 go get github.com/michaeldcanady/servicenow-sdk-go
 ```
 
-## 2. Initialize the Client
+## Initialize the client
 
-First, create a credential and then initialize the ServiceNow client.
+To interact with ServiceNow, you must first configure your credentials and
+initialize a client. The following example demonstrates a basic setup using
+username and password authentication.
 
 ```go
 {% include-markdown 'snippets/auth.go' start='// [START auth_imports]' end='// [END auth_imports]' comments=false trailing-newlines=false dedent=true %}
 
 func main() {
-    // 1. Setup credentials (Basic Auth example)
+    // 1. Configure your credentials
     {% include-markdown 'snippets/auth.go' start='// [START auth_basic_admin]' end='// [END auth_basic_admin]' comments=false trailing-newlines=false dedent=true %}
 
     // 2. Initialize the client for your instance
@@ -29,12 +38,21 @@ func main() {
 }
 ```
 
-## 3. What's Next?
+## Make your first request
 
-Now that you have a client, you can start interacting with ServiceNow:
+Once your client is initialized, you can perform operations like retrieving
+records from a table. See the [Table Operations](user-guide/tables.md) guide
+for more details.
 
-- [**Authentication Guide**](user-guide/authentication.md): Learn about OAuth2 and custom credentials.
-- [**Table Operations**](user-guide/tables.md): Learn how to CRUD records in tables.
-- [**Working with Attachments**](user-guide/attachments.md): Learn how to upload and download files.
-- [**Batch Operations**](user-guide/batch.md): Learn how to group multiple requests.
-- [**API Reference**](apis/index.md): Explore detailed documentation for each module.
+## Next steps
+
+Now that you have the basic setup, explore these topics to dive deeper:
+
+- **[Authentication Guide](user-guide/authentication.md):** Learn about OAuth2
+  and alternative credential types.
+- **[Table Operations](user-guide/tables.md):** Master CRUD operations for
+  ServiceNow records.
+- **[Attachments](user-guide/attachments.md):** Manage files associated with
+  your records.
+- **[API Reference](apis/index.md):** Consult the detailed documentation for
+  specific API modules.

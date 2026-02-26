@@ -32,6 +32,24 @@ func _() {
 	}
 	// [END attachment_get_item]
 
+	// [START attachment_std_get_item]
+	// Step 3: Define raw URL
+	get_item_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/xSDK_SN_TABLE_SYS_IDx"
+
+	// Step 4: Configure request
+	get_item_std_config := &attachmentapi.AttachmentItemRequestBuilderGetRequestConfiguration{
+		// Optional configurations
+	}
+
+	// Step 5: Build request
+	get_item_builder := attachmentapi.NewAttachmentItemRequestBuilder(get_item_rawURL, client.RequestAdapter)
+
+	get_item_std_response, err := get_item_builder.Get(context.Background(), get_item_std_config)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END attachment_std_get_item]
+
 	// [START attachment_list]
 	list_config := &attachmentapi.AttachmentRequestBuilder2GetRequestConfiguration{
 		// Optional configurations
@@ -42,6 +60,24 @@ func _() {
 		log.Fatal(err)
 	}
 	// [END attachment_list]
+
+	// [START attachment_std_list]
+	// Step 3: Define raw URL
+	list_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment"
+
+	// Step 4: Configure request
+	list_std_config := &attachmentapi.AttachmentRequestBuilder2GetRequestConfiguration{
+		// Optional configurations
+	}
+
+	// Step 5: Build request
+	list_builder := attachmentapi.NewAttachmentRequestBuilder2(list_rawURL, client.RequestAdapter)
+
+	list_std_response, err := list_builder.Get(context.Background(), list_std_config)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END attachment_std_list]
 
 	// [START attachment_delete]
 	// Step 3: Configure request
@@ -93,6 +129,34 @@ func _() {
 	}
 	// [END attachment_file_create]
 
+	// [START attachment_std_file_create]
+	// Step 3: Define raw URL
+	file_create_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/file"
+
+	// Step 4: Build media type
+	file_create_dataContentType := "text/plain"
+	file_create_data := []byte("this is example data")
+	file_create_media := attachmentapi.NewMedia(file_create_dataContentType, file_create_data)
+
+	// Step 5: Configure request
+	file_create_std_config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
+		QueryParameters: &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
+			TableSysID: "xSDK_SN_TABLE_SYS_IDx", // required
+			TableName:  "xSDK_SN_TABLEx",        // required
+			FileName:   "example.txt",           // required
+		},
+		// Optional configurations
+	}
+
+	// Step 6: Build request
+	file_create_builder := attachmentapi.NewAttachmentFileRequestBuilder(file_create_rawURL, client.RequestAdapter)
+
+	file_create_std_response, err := file_create_builder.Post(context.Background(), file_create_media, file_create_std_config)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END attachment_std_file_create]
+
 	// [START attachment_upload_create]
 	// body := // TODO: how to make multipart body?
 	var body abstractions.MultipartBody
@@ -106,6 +170,56 @@ func _() {
 		log.Fatal(err)
 	}
 	// [END attachment_upload_create]
+
+	// [START attachment_std_upload_create]
+	// Step 3: Define raw URL
+	upload_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/upload"
+
+	// Step 4: Build multipart body
+	var upload_std_body abstractions.MultipartBody
+
+	// Step 5: Configure request
+	upload_std_config := &attachmentapi.AttachmentUploadRequestBuilderPostRequestConfiguration{
+		// Optional configurations
+	}
+
+	// Step 6: Build request
+	upload_builder := attachmentapi.NewAttachmentUploadRequestBuilder(upload_rawURL, client.RequestAdapter)
+
+	upload_std_response, err := upload_builder.Post(context.Background(), upload_std_body, upload_std_config)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END attachment_std_upload_create]
+
+	// [START attachment_file_get]
+	file_get_config := &attachmentapi.AttachmentItemFileRequestBuilderGetRequestConfiguration{
+		// Optional configurations
+	}
+
+	file_get_response, err := client.Now2().Attachment2().ByID("xSDK_SN_TABLE_SYS_IDx").File().Get(context.Background(), file_get_config)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END attachment_file_get]
+
+	// [START attachment_std_file_get]
+	// Step 3: Define raw URL
+	file_get_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/xSDK_SN_TABLE_SYS_IDx/file"
+
+	// Step 4: Configure request
+	file_get_std_config := &attachmentapi.AttachmentItemFileRequestBuilderGetRequestConfiguration{
+		// Optional configurations
+	}
+
+	// Step 5: Build request
+	file_get_builder := attachmentapi.NewAttachmentItemFileRequestBuilder(file_get_rawURL, client.RequestAdapter)
+
+	file_get_std_response, err := file_get_builder.Get(context.Background(), file_get_std_config)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END attachment_std_file_get]
 
 	// [START attachment_list_guide]
 	// List all attachments

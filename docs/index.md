@@ -4,17 +4,28 @@
 ![GitHub Go version](https://img.shields.io/github/go-mod/go-version/michaeldcanady/servicenow-sdk-go?style=plastic)
 ![GitHub release](https://img.shields.io/github/v/release/michaeldcanady/servicenow-sdk-go?style=plastic)
 
-The **ServiceNow SDK for Go** is a powerful, type-safe, and intuitive client library for interacting with ServiceNow REST APIs. Built on the modern Microsoft Kiota framework, it provides a fluent development experience tailored for Go developers.
+The **ServiceNow SDK for Go** is a powerful, type-safe, and intuitive client
+library for interacting with ServiceNow REST APIs. Built on the modern
+Microsoft Kiota framework, it provides a fluent development experience tailored
+specifically for Go developers.
 
-## Key Features
+## Why use this SDK?
 
-- **Fluent API**: Discoverable and readable code structure.
-- **Type Safety**: Leverages Go generics (V2) for compile-time checks.
-- **Modular**: Only use the parts of the SDK you need (Table, Attachment, Batch).
-- **Extensible**: Easy to add custom authentication or custom table models.
-- **Middleware Support**: Built-in support for retries, logging, and more via Kiota.
+Building integrations with ServiceNow can be complex. This SDK simplifies that
+process by providing:
 
-## Quick Start
+- **Fluent API:** Write readable and discoverable code that matches the API
+  hierarchy.
+- **Strong typing:** Leverage Go generics (in V2 modules) for compile-time
+  checks and improved IDE support.
+- **Built-in resilience:** Benefit from automatic retries and modular
+  middleware for logging and error handling.
+- **Extensibility:** Easily integrate custom authentication methods or
+  specialized table models.
+
+## Quick start
+
+Get up and running with just a few lines of code:
 
 ```go
 {% include-markdown 'snippets/tables.go' start='// [START table_imports]' end='// [END table_imports]' comments=false trailing-newlines=false dedent=true %}
@@ -25,16 +36,19 @@ func main() {
     ctx := context.Background()
     {% include-markdown 'snippets/tables.go' start='// [START table_list_guide]' end='// [END table_list_guide]' comments=false trailing-newlines=false dedent=true %}
 }
-
 ```
 
-## How the Docs are Organized
+## Explore the documentation
 
-- [**User Guide**](user-guide/getting-started.md): Practical tutorials for common tasks like authentication and CRUD operations.
-- [**Preview Features**](user-guide/preview-features.md): Documentation for experimental features requiring build tags (e.g., Fluent Query Builder).
-- [**API Reference**](apis/index.md): Detailed documentation of every supported ServiceNow API module.
-- [**Contributor Guide**](contributing/index.md): Information for those looking to help improve the SDK.
+- **[Getting Started](getting-started.md):** Follow our quick start guide to
+  install the SDK and make your first call.
+- **[User Guide](user-guide/authentication.md):** Deep dive into core features
+  like authentication, table operations, and file attachments.
+- **[API Reference](apis/index.md):** Browse detailed technical documentation
+  for every supported ServiceNow API module.
+- **[Contributor Guide](contributing/index.md):** Learn how you can help
+  improve the SDK and become part of our community.
 
 ---
 
-*This project is community-driven and not an official ServiceNow product.*
+*This project is community-driven and is not an official ServiceNow product.*

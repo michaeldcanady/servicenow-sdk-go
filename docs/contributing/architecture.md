@@ -1,33 +1,84 @@
 # Architecture
 
-The ServiceNow SDK for Go is designed to be a thin, high-performance wrapper around the ServiceNow REST APIs. It leverages the **Microsoft Kiota** ecosystem for its core networking and serialization logic.
+The ServiceNow SDK for Go is designed as a thin, high-performance wrapper around
+the ServiceNow REST APIs. It utilizes the **Microsoft Kiota** framework to
+provide a consistent, type-safe development experience.
 
-## High-Level Components
+## System overview
 
-### 1. Request Builders
-Request builders provide a fluent API for constructing requests. They are organized to match the ServiceNow API hierarchy (e.g., `client.Now2().TableV2("incident")`).
+The SDK follows a layered architecture where each component has a specific
+responsibility in the request-response lifecycle.
 
-### 2. Request Adapters
-The `RequestAdapter` (from Kiota) is responsible for executing the actual HTTP requests. It handles:
-- Authentication
-- Serialization of request bodies
-- Deserialization of response bodies
-- URL template expansion
+```mermaid
+graph TD
+    User([User Code]) --> RB[Request Builder]
+    RB --> RA[Request Adapter]
+    RA --> Auth[Authentication Provider]
+    RA --> Serial[Serialization]
+    RA --> HTT[HTTP Client]
+    HTT --> SN{ServiceNow API}
+    SN --> HTT
+    HTT --> RA
+    RA --> Deserial[Deserialization]
+    Deserial --> RA
+    RA --> RB
+    RB --> User
+```
 
-### 3. Authentication Providers
-Located in `credentials/`, these providers manage the `Authorization` header. They can handle simple Basic Auth or complex OAuth2 token refreshes.
+## Core components
 
-### 4. Serialization
-The SDK uses Kiota's serialization abstractions. This allows for pluggable support for different content types (JSON, Text, Form-data), though ServiceNow primarily uses JSON.
+### Request builders
 
-## Design Patterns
+Request builders provide the primary "fluent" interface for the SDK. They map
+directly to the ServiceNow API hierarchy. For example, the path
+`client.Now2().TableV2("incident")` corresponds to the `/api/now/table/incident`
+endpoint.
 
-- **Fluent Interface**: The SDK prioritizes a "fluent" style that makes code readable and easy to discover via IDE autocomplete.
-- **Generics (V2)**: The V2 implementations (like `TableRequestBuilder2`) use Go generics to provide type-safe responses.
-- **Independence**: Each API module (Table, Attachment, Batch) is relatively independent, allowing for modular growth.
+Builders are responsible for:
+- Constructing the URL based on path parameters.
+- Providing methods for HTTP operations (GET, POST, etc.).
+- Offering type-safe request and response models.
 
-## Internal vs. Core
+### Request adapter
 
-- **`core/`**: Contains the foundational interfaces and common types used throughout the SDK.
-- **`internal/`**: Contains helper logic and Kiota-specific wrappers that are not intended for public use.
-- **`internal/new/`**: Specifically houses the base request builder and model logic that aligns with Kiota's generator output.
+The `RequestAdapter` is the engine of the SDK. It coordinates between the
+builders and the underlying networking and serialization layers.
+
+It handles:
+- **URL Template Expansion:** Injecting parameters into Kiota URL templates.
+- **Authentication:** Calling the registered provider to add authorization
+  headers.
+- **Serialization:** Converting Go structs into JSON for request bodies.
+- **Request Execution:** Passing the final request to the HTTP client.
+
+### Authentication providers
+
+Located in the `credentials/` package, these providers manage the `Authorization`
+header. They support various methods, including Basic Auth and OAuth2. The
+adapter calls the provider for every request, allowing for dynamic token
+refreshes.
+
+## Request lifecycle
+
+When you execute a method like `Get()`, the following sequence occurs:
+
+1.  **Build:** The Request Builder creates a `RequestInformation` object
+    containing the URL, method, and headers.
+2.  **Authorize:** The Request Adapter asks the Authentication Provider to
+    apply credentials to the request.
+3.  **Serialize:** If there is a request body, the Serialization layer converts
+     the Go model into JSON.
+4.  **Send:** The HTTP client transmits the request to ServiceNow.
+5.  **Deserialize:** The response JSON is converted back into the appropriate
+    Go model (or an error object if the status code indicates failure).
+
+## Design patterns
+
+- **Fluent interface:** Prioritizes readability and discoverability through IDE
+  autocompletion.
+- **Generics (V2):** Uses Go generics in the V2 modules to provide compile-time
+  type safety for API responses.
+- **Modular design:** Each API module (Table, Attachment, Batch) is independent,
+  minimizing the library's footprint.
+- **Dependency injection:** The HTTP client and authentication providers can
+  be customized or mocked for testing.

@@ -25,8 +25,9 @@ nav:
       - Getting Started: getting-started.md
       - Authentication: user-guide/authentication.md
       - Table Operations: user-guide/tables.md
-      - Attachments: user-guide/attachments.md
+      - Attachment Operations: user-guide/attachments.md
       - Batch Operations: user-guide/batch.md
+      - Pagination: user-guide/pagination.md
       - Preview Features: user-guide/preview-features.md
       - Query Builder (Preview): user-guide/query-builder.md
   - API Reference:

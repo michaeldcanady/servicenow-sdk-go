@@ -45,5 +45,14 @@ A Service-Now API client enabling Go programs to interact with Service-Now in a 
 | ♻️     | In progress   |
 | ✖️     | Not supported |
 
-## How to use
-Review the [wiki](https://github.com/michaeldcanady/servicenow-sdk-go/wiki) for information on how to get started and use this SDK!
+## Documentation
+
+For detailed information on how to get started and use this SDK, please visit
+the [official documentation](https://michaeldcanady.github.io/servicenow-sdk-go/).
+
+## Contributing
+
+We welcome contributions from the community! Whether you're fixing a bug, adding
+a new feature, or improving documentation, please review our
+[Contributor Guide](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/)
+to get started.

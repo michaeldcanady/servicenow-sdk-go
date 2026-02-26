@@ -1,41 +1,81 @@
 # Development Setup
 
-Thank you for your interest in contributing to the ServiceNow SDK for Go! This guide will help you set up your development environment.
+This guide walks you through setting up your environment to contribute to the
+ServiceNow SDK for Go. You can choose between a fully automated setup using
+VS Code Dev Containers or a manual local setup.
 
 ## Prerequisites
 
-- **Go**: Version 1.23 or higher is required.
-- **Git**: For version control.
-- **ServiceNow Instance**: A Personal Developer Instance (PDI) is recommended for testing. You can get one for free at [developer.servicenow.com](https://developer.servicenow.com/).
+Regardless of your setup choice, you need the following:
 
-## Getting Started
+- **Git:** For version control and cloning the repository.
+- **ServiceNow Instance:** A Personal Developer Instance (PDI) is essential for
+  running integration tests. You can obtain one for free at
+  [developer.servicenow.com](https://developer.servicenow.com/).
 
-1.  **Fork the repository** on GitHub.
-2.  **Clone your fork** locally:
+## Option 1: VS Code Dev Containers (Recommended)
+
+The easiest way to get started is using VS Code Dev Containers. This method
+automatically configures a consistent environment with all necessary tools
+(Go, linters, and extensions).
+
+1.  **Install [Docker](https://www.docker.com/get-started/)** or
+    **[Podman](https://podman.io/)**.
+2.  **Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)**
+    in VS Code.
+3.  **Fork and clone** the repository:
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/servicenow-sdk-go.git
+    ```
+4.  **Open the folder** in VS Code.
+5.  **Click "Reopen in Container"** when the notification appears in the bottom
+    right corner.
+
+## Option 2: Local development
+
+If you prefer to manage your own environment, ensure you meet these additional
+requirements:
+
+- **Go:** Version 1.23 or higher.
+- **golangci-lint:** For running code quality checks.
+- **just:** (Optional) A command runner used for some development tasks.
+
+### Configure your environment
+
+1.  **Fork and clone** the repository:
     ```bash
     git clone https://github.com/YOUR_USERNAME/servicenow-sdk-go.git
     cd servicenow-sdk-go
     ```
-3.  **Install dependencies**:
+2.  **Download dependencies:**
     ```bash
     go mod download
     ```
+3.  **Install the linter:**
+    Follow the installation instructions at
+    [golangci-lint.run](https://golangci-lint.run/usage/install/).
 
-## Development Workflow
+## Configure environment variables
 
-- **Branching**: Create a new branch for each feature or bug fix.
-  ```bash
-  git checkout -b feat/my-new-feature
-  ```
-- **Linting**: We use `golangci-lint`. You can run it locally:
-  ```bash
-  golangci-lint run
-  ```
-- **Testing**: Ensure all tests pass before submitting a PR.
-  ```bash
-  go test ./...
-  ```
+To run integration tests, you must configure your ServiceNow instance
+credentials. Create a `.env` file in the project root (this file is ignored by
+git):
 
-## Using VS Code
+```env
+SN_INSTANCE=your_instance_name
+SN_USERNAME=your_username
+SN_PASSWORD=your_password
+```
 
-If you use VS Code, we provide a `.devcontainer` configuration to get a consistent environment quickly. We also include recommended extensions and settings in `.vscode/`.
+## Verify your setup
+
+Run the unit tests to ensure your environment is working correctly:
+
+```bash
+go test ./...
+```
+
+## Next steps
+
+Now that your environment is ready, learn about the
+[project architecture](architecture.md) to understand how the SDK is structured.

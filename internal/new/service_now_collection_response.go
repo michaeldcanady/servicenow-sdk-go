@@ -99,7 +99,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
 		return nil, errors.New("val is not slice")
 	}
 
-	results := make([]T, len(unknownSlice), 0)
+	results := make([]T, len(unknownSlice))
 
 	for index, value := range unknownSlice {
 		result, ok := value.(T)

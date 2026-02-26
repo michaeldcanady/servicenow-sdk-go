@@ -6,7 +6,10 @@ Delete specific attachment using the sys id.
 
 ## Path parameters
 
-N/A - doesn't support standard implementation.
+| Name      | Description                                                                                                                       |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `baseurl` | The absolute base URI for the request (this is the same for all requests) including: the schema, the domain, and a path fragment. |
+| `sysId`   | The sys id of the attachment.                                                                                                     |
 
 ## Optional query parameters
 
@@ -35,6 +38,7 @@ N/A
         {% include-markdown '../../snippets/attachments.go' start='// [START attachment_delete]' end='// [END attachment_delete]' comments=false trailing-newlines=false dedent=true %}
     }
     ```
+
 === "Standard"
 
     ```go

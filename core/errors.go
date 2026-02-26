@@ -26,4 +26,5 @@ var (
 	ErrParsing            = internal.ErrParsing
 	ErrNilCallback        = internal.ErrNilCallback
 	ErrNilConstructorFunc = errors.New("constructorFunc can't be nil")
+	ErrNoMoreItems        = internal.ErrNoMoreItems
 )

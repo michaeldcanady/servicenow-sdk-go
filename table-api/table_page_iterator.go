@@ -1,98 +1,66 @@
 package tableapi
 
 import (
-	"net/http"
+	"context"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
-// TablePageIterator is a generic struct in Golang which is used to iterate over pages of entries.
-// It embeds the core.PageIterator2 struct and can be used with any type that satisfies the Entry interface.
-//
-// Fields:
-//   - core.PageIterator2[T]: This is an embedded field of type PageIterator2 from the core package.
-//     The type T represents the type of Entry that the iterator will return.
-//
-// Usage:
-// You can use this struct to iterate over pages of entries in a table.
-// The specific type of Entry depends on what you specify for T when you create an instance of TablePageIterator.
-type TablePageIterator[T Entry] struct {
-	*core.PageIterator2[T]
+// TablePageIterator represents an iterator for paginated table collections.
+type TablePageIterator[T model.ServiceNowItem] struct {
+	*newInternal.PageIterator[T]
 }
 
-// constructTableCollection is a generic function in Golang used to construct a collection of table entries.
-// It takes an http.Response pointer as input and returns a CollectionResponse of the specified Entry type and an error.
-//
-// Parameters:
-// * response: This is a pointer to an http.Response that contains the server's response to an HTTP request.
-//
-// Returns:
-// * core.CollectionResponse[T]: This is a CollectionResponse of the specified Entry type. It represents the collection of table entries.
-// * error: This is an error that will be returned if there is any error while parsing the response.
-//
-// Usage:
-// You can use this function to construct a collection of table entries from an *http.Response.
-//
-//	func ExampleConstructTableCollectionF() {
-//		response, err := http.Get("http://example.com")
-//
-//		if err != nil {
-//	    	log.Fatal(err)
-//		}
-//
-//		collection, err := constructTableCollection[MyEntryType](response)
-//
-//		if err != nil {
-//	    	log.Fatal(err)
-//		}
-//
-//		// Process collection
-//	}
-func constructTableCollection[T Entry](response *http.Response) (core.CollectionResponse[T], error) {
-	resp := &TableCollectionResponse2[T]{}
+// DefaultTablePageIterator represents a TablePageIterator for the default TableRecord type.
+type DefaultTablePageIterator = TablePageIterator[*TableRecord]
 
-	err := internal.ParseResponse(response, resp)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
-}
-
-// NewTablePageIterator is a function that creates a new instance of TablePageIterator.
-// It takes a TableCollectionResponse and a Client as input and returns a pointer to a TablePageIterator and an error.
-//
-// Parameters:
-//
-//   - collection: This is a pointer to a TableCollectionResponse that contains the collection of table entries.
-//   - client: This is a Client that will be used to make requests to the server.
-//
-// Returns:
-//
-//   - *TablePageIterator[T]: This is a pointer to a TablePageIterator that can be used to iterate over the pages of entries in the collection.
-//   - error: This is an error that will be returned if there is any error while creating the PageIterator.
-//
-// Usage:
-// You can use this function to create a new instance of TablePageIterator.
-//
-//		func ExampleNewTablePageIteratorF() {
-//			// use an existing collection
-//			var collection TableCollectionResponse2[T]
-//			// use a new or existing client
-//			var client core.Client
-//			iter, err := NewTablePageIterator[T](collection, client)
-//			if err != nil {
-//	    		log.Fatal(err)
-//			}
-//			// Use iter to iterate over the pages of entries
-//		}
-func NewTablePageIterator[T Entry](collection *TableCollectionResponse2[T], client core.Client) (*TablePageIterator[T], error) {
-	pageIterator, err := core.NewPageIterator2(collection, client, constructTableCollection[T])
+// NewTablePageIterator creates a new TablePageIterator instance.
+func NewTablePageIterator[T model.ServiceNowItem](
+	res newInternal.ServiceNowCollectionResponse[T],
+	reqAdapter abstractions.RequestAdapter,
+	constructorFunc serialization.ParsableFactory,
+	options ...newInternal.Option[*newInternal.PageIterator[T]],
+) (*TablePageIterator[T], error) {
+	iterator, err := newInternal.NewPageIterator[T](res, reqAdapter, constructorFunc, options...)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TablePageIterator[T]{
-		pageIterator,
+		PageIterator: iterator,
 	}, nil
+}
+
+// NewDefaultTablePageIterator creates a new TablePageIterator instance for TableRecord.
+func NewDefaultTablePageIterator(
+	res newInternal.ServiceNowCollectionResponse[*TableRecord],
+	reqAdapter abstractions.RequestAdapter,
+	options ...newInternal.Option[*newInternal.PageIterator[*TableRecord]],
+) (*DefaultTablePageIterator, error) {
+	return NewTablePageIterator(res, reqAdapter, CreateTableRecordFromDiscriminatorValue, options...)
+}
+
+// Iterate traverses the pages and invokes the callback for each item.
+//
+// reverse determines the direction of page traversal.
+// callback should return true to continue iteration, or false to stop.
+func (i *TablePageIterator[T]) Iterate(ctx context.Context, reverse bool, callback func(T) bool) error {
+	return i.PageIterator.Iterate(ctx, reverse, callback)
+}
+
+// NextItem returns the next item in the collection, fetching the next page if necessary.
+//
+// Returns [newInternal.ErrNoMoreItems] if the end of the collection is reached.
+func (i *TablePageIterator[T]) NextItem(ctx context.Context) (T, error) {
+	return i.PageIterator.NextItem(ctx)
+}
+
+// PreviousItem returns the previous item in the collection, fetching the previous page if necessary.
+//
+// Returns [newInternal.ErrNoMoreItems] if the beginning of the collection is reached.
+func (i *TablePageIterator[T]) PreviousItem(ctx context.Context) (T, error) {
+	return i.PageIterator.PreviousItem(ctx)
 }
