@@ -3,7 +3,7 @@
 package query2
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast2"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
 )
 
 // BooleanField represents a boolean field in ServiceNow.
@@ -13,5 +13,5 @@ type BooleanField struct {
 
 // Is query that field is the provided value.
 func (f BooleanField) Is(val bool) Condition {
-	return f.binary(ast2.OperatorIs, val)
+	return f.binary(ast.OperatorIs, val)
 }

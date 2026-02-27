@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	model "github.com/michaeldcanady/servicenow-sdk-go/internal/errors"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"

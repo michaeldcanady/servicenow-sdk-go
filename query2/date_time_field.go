@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast2"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
 )
 
 // DateTimeField represents a date-time field in ServiceNow.
@@ -14,7 +14,7 @@ type DateTimeField struct {
 	BaseField
 }
 
-func (f DateTimeField) dateTimeBinary(op ast2.Operator, val any) Condition {
+func (f DateTimeField) dateTimeBinary(op ast.Operator, val any) Condition {
 	var literal string
 	switch v := val.(type) {
 	case DateTimeValue:
@@ -31,32 +31,32 @@ func (f DateTimeField) dateTimeBinary(op ast2.Operator, val any) Condition {
 
 // On query the date-time field is on a specific date-time.
 func (f DateTimeField) On(val DateTimeValue) Condition {
-	return f.dateTimeBinary(ast2.OperatorOn, val)
+	return f.dateTimeBinary(ast.OperatorOn, val)
 }
 
 // NotOn query the date-time field is not on a specific date-time.
 func (f DateTimeField) NotOn(val DateTimeValue) Condition {
-	return f.dateTimeBinary(ast2.OperatorNotOn, val)
+	return f.dateTimeBinary(ast.OperatorNotOn, val)
 }
 
 // Before query the date-time field is before a specific date-time.
 func (f DateTimeField) Before(val DateTimeValue) Condition {
-	return f.dateTimeBinary(ast2.OperatorBefore, val)
+	return f.dateTimeBinary(ast.OperatorBefore, val)
 }
 
 // AtOrBefore query the date-time field is at or before a specific date-time.
 func (f DateTimeField) AtOrBefore(val DateTimeValue) Condition {
-	return f.dateTimeBinary(ast2.OperatorAtOrBefore, val)
+	return f.dateTimeBinary(ast.OperatorAtOrBefore, val)
 }
 
 // After query the date-time field is after a specific date-time.
 func (f DateTimeField) After(val DateTimeValue) Condition {
-	return f.dateTimeBinary(ast2.OperatorAfter, val)
+	return f.dateTimeBinary(ast.OperatorAfter, val)
 }
 
 // AtOrAfter query the date-time field is at or after a specific date-time.
 func (f DateTimeField) AtOrAfter(val DateTimeValue) Condition {
-	return f.dateTimeBinary(ast2.OperatorAtOrAfter, val)
+	return f.dateTimeBinary(ast.OperatorAtOrAfter, val)
 }
 
 // Between query the date-time field is between the provided start and end values.
@@ -64,7 +64,7 @@ func (f DateTimeField) Between(start, end time.Time) Condition {
 	if start.After(end) {
 		return NewErrorCondition(fmt.Errorf("start time %v is after end time %v", start, end))
 	}
-	return f.pair(ast2.OperatorBetween, NewDateTimeValue(start), NewDateTimeValue(end))
+	return f.pair(ast.OperatorBetween, NewDateTimeValue(start), NewDateTimeValue(end))
 }
 
 // Javascript allows using a custom JavaScript expression (e.g., gs.daysAgoStart(0)).
@@ -125,45 +125,45 @@ func (f DateTimeField) OnSpecialty(label, startExpr, endExpr string) Condition {
 
 // IsMoreThan query that field is more than the provided value.
 func (f DateTimeField) IsMoreThan(val string) Condition {
-	return f.binary(ast2.OperatorIsMoreThan, val)
+	return f.binary(ast.OperatorIsMoreThan, val)
 }
 
 // IsLessThan query that field is less than the provided value.
 func (f DateTimeField) IsLessThan(val string) Condition {
-	return f.binary(ast2.OperatorIsLessThan, val)
+	return f.binary(ast.OperatorIsLessThan, val)
 }
 
 // TrendOnOrAfter query the date-time field that trends on or after a specific value.
 func (f DateTimeField) TrendOnOrAfter(val string) Condition {
-	return f.binary(ast2.OperatorTrendOnOrAfter, val)
+	return f.binary(ast.OperatorTrendOnOrAfter, val)
 }
 
 // TrendOnOrBefore query the date-time field that trends on or before a specific value.
 func (f DateTimeField) TrendOnOrBefore(val string) Condition {
-	return f.binary(ast2.OperatorTrendOnOrBefore, val)
+	return f.binary(ast.OperatorTrendOnOrBefore, val)
 }
 
 // TrendAfter query the date-time field that trends after a specific value.
 func (f DateTimeField) TrendAfter(val string) Condition {
-	return f.binary(ast2.OperatorTrendAfter, val)
+	return f.binary(ast.OperatorTrendAfter, val)
 }
 
 // TrendBefore query the date-time field that trends before a specific value.
 func (f DateTimeField) TrendBefore(val string) Condition {
-	return f.binary(ast2.OperatorTrendBefore, val)
+	return f.binary(ast.OperatorTrendBefore, val)
 }
 
 // TrendOn query the date-time field that trends on a specific value.
 func (f DateTimeField) TrendOn(val string) Condition {
-	return f.binary(ast2.OperatorTrendOn, val)
+	return f.binary(ast.OperatorTrendOn, val)
 }
 
 // RelativeAfter query the date-time field that is relatively after a specific value.
 func (f DateTimeField) RelativeAfter(val string) Condition {
-	return f.binary(ast2.OperatorRelativeAfter, val)
+	return f.binary(ast.OperatorRelativeAfter, val)
 }
 
 // RelativeBefore query the date-time field that is relatively before a specific value.
 func (f DateTimeField) RelativeBefore(val string) Condition {
-	return f.binary(ast2.OperatorRelativeBefore, val)
+	return f.binary(ast.OperatorRelativeBefore, val)
 }

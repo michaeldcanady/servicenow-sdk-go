@@ -3,15 +3,15 @@
 package query2
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast2"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
 )
 
 // convertSliceToArrayNode converts the provided slice of values to an array of literal nodes.
-func convertSliceToArrayNode[T ast2.Primitive](values ...T) *ast2.ArrayNode {
-	nodes := make([]ast2.Node, len(values))
+func convertSliceToArrayNode[T ast.Primitive](values ...T) *ast.ArrayNode {
+	nodes := make([]ast.Node, len(values))
 	for index, value := range values {
-		nodes[index] = ast2.NewLiteralNode(value)
+		nodes[index] = ast.NewLiteralNode(value)
 	}
 
-	return ast2.NewArrayNode(nodes...)
+	return ast.NewArrayNode(nodes...)
 }
