@@ -9,33 +9,33 @@ import (
 func TestDisplayValue2_String(t *testing.T) {
 	tests := []struct {
 		name     string
-		value    DisplayValue2
+		value    DisplayValue
 		expected string
 	}{
 		{
 			name:     "Unknown value",
-			value:    DisplayValue2Unknown,
+			value:    DisplayValueUnknown,
 			expected: "unknown",
 		},
 		{
 			name:     "True value",
-			value:    DisplayValue2True,
+			value:    DisplayValueTrue,
 			expected: "true",
 		},
 		{
 			name:     "False value",
-			value:    DisplayValue2False,
+			value:    DisplayValueFalse,
 			expected: "false",
 		},
 		{
 			name:     "All value",
-			value:    DisplayValue2All,
+			value:    DisplayValueAll,
 			expected: "all",
 		},
 		{
 			name:     "Invalid value falls back to Unknown",
-			value:    DisplayValue2(99),
-			expected: DisplayValue2Unknown.String(), // fallback
+			value:    DisplayValue(99),
+			expected: DisplayValueUnknown.String(), // fallback
 		},
 	}
 

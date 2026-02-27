@@ -11,11 +11,6 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
-// ErrNoMoreItems is returned when the iterator has reached the end of the collection.
-var (
-	ErrNoMoreItems = errors.New("no more items")
-)
-
 // PageIterator represents an iterator for paginated collections.
 // T is the type of the items in the collection, which must implement [serialization.Parsable].
 type PageIterator[T serialization.Parsable] struct {
@@ -51,7 +46,7 @@ func NewPageIterator[T serialization.Parsable](
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": internalErrors.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	iterator := &PageIterator[T]{

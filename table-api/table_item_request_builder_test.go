@@ -246,7 +246,7 @@ func TestTableItemRequestBuilder_ToRequestInformation(t *testing.T) {
 	t.Run("ToGetRequestInformation", func(t *testing.T) {
 		config := &TableItemRequestBuilderGetRequestConfiguration{
 			QueryParameters: &TableItemRequestBuilderGetQueryParameters{
-				DisplayValue: DisplayValue2All,
+				DisplayValue: DisplayValueAll,
 			},
 		}
 		requestInfo, err := builder.ToGetRequestInformation(context.Background(), config)

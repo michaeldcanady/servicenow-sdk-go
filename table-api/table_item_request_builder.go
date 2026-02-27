@@ -192,7 +192,7 @@ func (rB *TableItemRequestBuilder[T]) ToGetRequestInformation(_ context.Context,
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &kiota.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !utils.IsNil(requestConfiguration) {
 		if headers := requestConfiguration.Headers; !utils.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
@@ -204,7 +204,7 @@ func (rB *TableItemRequestBuilder[T]) ToGetRequestInformation(_ context.Context,
 			kiotaRequestInfo.AddQueryParameters(queryParams)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), utils.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
@@ -228,7 +228,7 @@ func (rB *TableItemRequestBuilder[T]) ToDeleteRequestInformation(_ context.Conte
 			kiotaRequestInfo.AddQueryParameters(queryParams)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), utils.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
@@ -240,7 +240,7 @@ func (rB *TableItemRequestBuilder[T]) ToPutRequestInformation(ctx context.Contex
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &kiota.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !utils.IsNil(requestConfiguration) {
 		if headers := requestConfiguration.Headers; !utils.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
@@ -252,10 +252,10 @@ func (rB *TableItemRequestBuilder[T]) ToPutRequestInformation(ctx context.Contex
 			kiotaRequestInfo.AddQueryParameters(queryParams)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), utils.ContentTypeApplicationJSON)
 
 	if !utils.IsNil(body) {
-		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body); err != nil {
+		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), utils.ContentTypeApplicationJSON, body); err != nil {
 			return nil, err
 		}
 	}
@@ -270,7 +270,7 @@ func (rB *TableItemRequestBuilder[T]) ToPatchRequestInformation(ctx context.Cont
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PATCH, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &kiota.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !utils.IsNil(requestConfiguration) {
 		if headers := requestConfiguration.Headers; !utils.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
@@ -282,10 +282,10 @@ func (rB *TableItemRequestBuilder[T]) ToPatchRequestInformation(ctx context.Cont
 			kiotaRequestInfo.AddQueryParameters(queryParams)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), utils.ContentTypeApplicationJSON)
 
 	if !utils.IsNil(body) {
-		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body); err != nil {
+		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), utils.ContentTypeApplicationJSON, body); err != nil {
 			return nil, err
 		}
 	}

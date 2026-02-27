@@ -3,7 +3,6 @@ package model
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
@@ -14,13 +13,13 @@ const (
 
 // ServicenowError represents a Service-Now API error
 type ServicenowError struct {
-	model.Model
+	Model
 }
 
 // NewServicenowError instantiates a new Service-Now error
 func NewServicenowError() *ServicenowError {
 	return &ServicenowError{
-		model.NewBaseModel(),
+		NewBaseModel(),
 	}
 }
 

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -71,8 +71,8 @@ func TestRecordElementParser(t *testing.T) {
 			test: func(t *testing.T) {
 				parseNode := mocking.NewMockParseNode()
 				parseNode.On("GetRawValue").Return(map[string]any{
-					displayValueKey: internal.ToPointer("displayValue"),
-					valueKey:        internal.ToPointer("value"),
+					displayValueKey: utils.ToPointer("displayValue"),
+					valueKey:        utils.ToPointer("value"),
 				}, nil)
 
 				element, err := recordElementParser(parseNode)
@@ -87,9 +87,9 @@ func TestRecordElementParser(t *testing.T) {
 			test: func(t *testing.T) {
 				parseNode := mocking.NewMockParseNode()
 				parseNode.On("GetRawValue").Return(map[string]any{
-					displayValueKey: internal.ToPointer("displayValue"),
-					valueKey:        internal.ToPointer("value"),
-					linkKey:         internal.ToPointer("link"),
+					displayValueKey: utils.ToPointer("displayValue"),
+					valueKey:        utils.ToPointer("value"),
+					linkKey:         utils.ToPointer("link"),
 				}, nil)
 
 				element, err := recordElementParser(parseNode)
@@ -104,9 +104,9 @@ func TestRecordElementParser(t *testing.T) {
 			test: func(t *testing.T) {
 				parseNode := mocking.NewMockParseNode()
 				parseNode.On("GetRawValue").Return(map[string]any{
-					displayValueKey: internal.ToPointer("displayValue"),
-					valueKey:        internal.ToPointer("value"),
-					linkKey:         internal.ToPointer(true),
+					displayValueKey: utils.ToPointer("displayValue"),
+					valueKey:        utils.ToPointer("value"),
+					linkKey:         utils.ToPointer(true),
 				}, nil)
 
 				element, err := recordElementParser(parseNode)
@@ -120,7 +120,7 @@ func TestRecordElementParser(t *testing.T) {
 			name: "Successful any",
 			test: func(t *testing.T) {
 				parseNode := mocking.NewMockParseNode()
-				parseNode.On("GetRawValue").Return(internal.ToPointer("value"), nil)
+				parseNode.On("GetRawValue").Return(utils.ToPointer("value"), nil)
 
 				element, err := recordElementParser(parseNode)
 

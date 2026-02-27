@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	internalErrors "github.com/michaeldcanady/servicenow-sdk-go/internal/errors"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -58,7 +58,7 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": internalErrors.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": model.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateBatchResponseFromDiscriminatorValue, errorMapping)

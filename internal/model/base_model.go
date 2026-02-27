@@ -32,7 +32,9 @@ func (bM *BaseModel) GetFieldDeserializers() map[string]func(serialization.Parse
 	return map[string]func(serialization.ParseNode) error{}
 }
 
-func (bM *BaseModel) Serialize(_ serialization.SerializationWriter) {}
+func (bM *BaseModel) Serialize(_ serialization.SerializationWriter) error {
+	return nil
+}
 
 // SetBackingStoreFactory sets the store.BackingStoreFactory for the model.
 func (bM *BaseModel) SetBackingStoreFactory(factory store.BackingStoreFactory) error {

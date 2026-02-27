@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	internalErrors "github.com/michaeldcanady/servicenow-sdk-go/internal/errors"
+	model "github.com/michaeldcanady/servicenow-sdk-go/internal/errors"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
@@ -142,7 +142,7 @@ func TestSerializeContent(t *testing.T) {
 
 				abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return parseNodeFactory })
 
-				parsable, err := serializeContent[*internalErrors.MainError](contentType, []byte{}, factory)
+				parsable, err := serializeContent[*model.MainError](contentType, []byte{}, factory)
 				assert.Equal(t, errors.New("result is not *internal.MainError"), err)
 				assert.Nil(t, parsable)
 			},

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"maps"
 
-	internalErrors "github.com/michaeldcanady/servicenow-sdk-go/internal/errors"
+	model "github.com/michaeldcanady/servicenow-sdk-go/internal/errors"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
@@ -83,7 +83,7 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 	requestInfo := rB.ToGetRequestInformation(ctx, requestConfiguration)
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": internalErrors.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": model.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachment2FromDiscriminatorValue, errorMapping)
@@ -112,7 +112,7 @@ func (rB *AttachmentItemRequestBuilder) Delete(ctx context.Context, requestConfi
 	requestInfo := rB.ToDeleteRequestInformation(ctx, requestConfiguration)
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": internalErrors.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": model.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)

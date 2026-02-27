@@ -12,7 +12,7 @@ type TableItemRequestBuilderGetQueryParameters struct {
 	//- Encrypted text: The database value is encrypted, while the displayed value is unencrypted based on the user's encryption context.
 	//
 	//- Reference fields: The database value is sys_id, but the display value is a display field of the referenced record.
-	DisplayValue DisplayValue2 `url:"sysparm_display_value"`
+	DisplayValue DisplayValue `url:"sysparm_display_value"`
 	//ExcludeReferenceLink flag that indicates whether to exclude Table API links for reference fields.
 	//
 	//Valid values:

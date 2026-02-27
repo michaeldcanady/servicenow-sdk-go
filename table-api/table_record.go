@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -130,7 +131,7 @@ func (tR *TableRecord) Serialize(writer serialization.SerializationWriter) error
 func NewTableRecord() *TableRecord {
 	return &TableRecord{
 		keys:  make([]string, 0),
-		Model: internal.NewBaseModel(),
+		Model: model.NewBaseModel(),
 	}
 }
 

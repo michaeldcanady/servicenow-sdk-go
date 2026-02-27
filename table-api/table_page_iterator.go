@@ -3,6 +3,7 @@ package tableapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -22,7 +23,7 @@ func NewTablePageIterator[T model.ServiceNowItem](
 	res newInternal.ServiceNowCollectionResponse[T],
 	reqAdapter abstractions.RequestAdapter,
 	constructorFunc serialization.ParsableFactory,
-	options ...newInternal.Option[*newInternal.PageIterator[T]],
+	options ...kiota.Option[*newInternal.PageIterator[T]],
 ) (*TablePageIterator[T], error) {
 	iterator, err := newInternal.NewPageIterator[T](res, reqAdapter, constructorFunc, options...)
 	if err != nil {
@@ -38,7 +39,7 @@ func NewTablePageIterator[T model.ServiceNowItem](
 func NewDefaultTablePageIterator(
 	res newInternal.ServiceNowCollectionResponse[*TableRecord],
 	reqAdapter abstractions.RequestAdapter,
-	options ...newInternal.Option[*newInternal.PageIterator[*TableRecord]],
+	options ...kiota.Option[*newInternal.PageIterator[*TableRecord]],
 ) (*DefaultTablePageIterator, error) {
 	return NewTablePageIterator(res, reqAdapter, CreateTableRecordFromDiscriminatorValue, options...)
 }

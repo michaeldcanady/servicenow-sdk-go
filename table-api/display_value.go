@@ -1,26 +1,26 @@
 package tableapi
 
-// DisplayValue2 determines the type of data returned, either the actual values from the database or the display values of the fields.
-type DisplayValue2 int
+// DisplayValue determines the type of data returned, either the actual values from the database or the display values of the fields.
+type DisplayValue int
 
 const (
-	// DisplayValue2Unknown represents an unknown display value setting.
-	DisplayValue2Unknown DisplayValue2 = iota - 1
-	// DisplayValue2True returns the display values for all fields.
-	DisplayValue2True
-	// DisplayValue2False returns the actual values from the database.
-	DisplayValue2False
-	// DisplayValue2All returns both display and actual values for all fields.
-	DisplayValue2All
+	// DisplayValueUnknown represents an unknown display value setting.
+	DisplayValueUnknown DisplayValue = iota - 1
+	// DisplayValueTrue returns the display values for all fields.
+	DisplayValueTrue
+	// DisplayValueFalse returns the actual values from the database.
+	DisplayValueFalse
+	// DisplayValueAll returns both display and actual values for all fields.
+	DisplayValueAll
 )
 
 // String returns the string representation of the DisplayValue2.
-func (e DisplayValue2) String() string {
-	str, ok := map[DisplayValue2]string{
-		DisplayValue2Unknown: "unknown",
-		DisplayValue2True:    "true",
-		DisplayValue2False:   "false",
-		DisplayValue2All:     "all",
+func (e DisplayValue) String() string {
+	str, ok := map[DisplayValue]string{
+		DisplayValueUnknown: "unknown",
+		DisplayValueTrue:    "true",
+		DisplayValueFalse:   "false",
+		DisplayValueAll:     "all",
 	}[e]
 	if !ok {
 		return View2Unknown.String()

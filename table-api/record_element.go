@@ -1,6 +1,7 @@
 package tableapi
 
 import (
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 )
@@ -21,7 +22,7 @@ type RecordElement struct {
 // NewRecordElement creates a new instance of RecordElement.
 func NewRecordElement() *RecordElement {
 	return &RecordElement{
-		internal.NewBaseModel(),
+		model.NewBaseModel(),
 	}
 }
 

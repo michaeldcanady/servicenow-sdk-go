@@ -64,12 +64,12 @@ func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[strin
 
 // GetBackingStore returns the backing store, if store is nil it instantiates a new store.
 func (r *BaseServiceNowCollectionResponse[T]) GetBackingStore() (store.BackingStore, error) {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil, nil
 	}
 
-	if IsNil(r.backingStore) {
-		if IsNil(r.backingStoreFactory) {
+	if utils.IsNil(r.backingStore) {
+		if utils.IsNil(r.backingStoreFactory) {
 			return nil, errors.New("store is nil")
 		}
 		r.backingStore = r.backingStoreFactory()
@@ -80,7 +80,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetBackingStore() (store.BackingSt
 
 // GetResult Returns the result values of the response.
 func (r *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil, nil
 	}
 
@@ -115,7 +115,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
 
 // GetNextLink Returns the url to the next page of results.
 func (r *BaseServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil, nil
 	}
 
@@ -139,7 +139,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
 
 // GetPreviousLink Returns the url to the previous page of results.
 func (r *BaseServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error) {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil, nil
 	}
 
@@ -163,7 +163,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error)
 
 // GetFirstLink Returns the url to the first page of results.
 func (r *BaseServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil, nil
 	}
 
@@ -187,7 +187,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
 
 // GetLastLink Returns the url to the last page of results.
 func (r *BaseServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil, nil
 	}
 
