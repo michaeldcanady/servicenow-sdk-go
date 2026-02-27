@@ -4,10 +4,9 @@ import (
 	"errors"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
-	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
-	internalStore "github.com/michaeldcanady/servicenow-sdk-go/internal/store"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
+	internalStore "github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -123,24 +122,24 @@ func (rE *Attachment2Model) Serialize(_ serialization.SerializationWriter) error
 func (rE *Attachment2Model) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
 	return map[string]func(serialization.ParseNode) error{
 		tableSysIDKey:        internalSerialization.DeserializeStringFunc(rE.setTableSysID),
-		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(rE.setSizeBytes, conversion.StringPtrToInt64Ptr),
+		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(rE.setSizeBytes, utils.StringPtrToInt64Ptr),
 		downloadLinkKey:      internalSerialization.DeserializeStringFunc(rE.setDownloadLink),
-		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(rE.setSysUpdatedOn, conversion.StringPtrToTimePtr(dateTimeFormat)),
+		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(rE.setSysUpdatedOn, utils.StringPtrToTimePtr(dateTimeFormat)),
 		sysIDKey:             internalSerialization.DeserializeStringFunc(rE.setSysID),
-		imageHeightKey:       internalSerialization.DeserializeMutatedStringFunc(rE.setImageHeight, conversion.StringPtrToFloat64Ptr),
-		sysCreatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(rE.setSysCreatedOn, conversion.StringPtrToTimePtr(dateTimeFormat)),
+		imageHeightKey:       internalSerialization.DeserializeMutatedStringFunc(rE.setImageHeight, utils.StringPtrToFloat64Ptr),
+		sysCreatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(rE.setSysCreatedOn, utils.StringPtrToTimePtr(dateTimeFormat)),
 		fileNameKey:          internalSerialization.DeserializeStringFunc(rE.setFileName),
 		sysCreatedByKey:      internalSerialization.DeserializeStringFunc(rE.setSysCreatedBy),
-		compressedKey:        internalSerialization.DeserializeMutatedStringFunc(rE.setCompressed, conversion.StringPtrToBoolPtr),
+		compressedKey:        internalSerialization.DeserializeMutatedStringFunc(rE.setCompressed, utils.StringPtrToBoolPtr),
 		averageImageColorKey: internalSerialization.DeserializeStringFunc(rE.setAverageImageColor),
 		sysUpdatedByKey:      internalSerialization.DeserializeStringFunc(rE.setSysUpdatedBy),
 		// TODO: figure out separator
-		sysTagsKey:        internalSerialization.DeserializeMutatedStringFunc(rE.setSysTags, conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil })),
+		sysTagsKey:        internalSerialization.DeserializeMutatedStringFunc(rE.setSysTags, utils.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil })),
 		tableNameKey:      internalSerialization.DeserializeStringFunc(rE.setTableName),
-		imageWidthKey:     internalSerialization.DeserializeMutatedStringFunc(rE.setImageWidth, conversion.StringPtrToFloat64Ptr),
-		sysModCountKey:    internalSerialization.DeserializeMutatedStringFunc(rE.setSysModCount, conversion.StringPtrToInt64Ptr),
+		imageWidthKey:     internalSerialization.DeserializeMutatedStringFunc(rE.setImageWidth, utils.StringPtrToFloat64Ptr),
+		sysModCountKey:    internalSerialization.DeserializeMutatedStringFunc(rE.setSysModCount, utils.StringPtrToInt64Ptr),
 		contentTypeKey:    internalSerialization.DeserializeStringFunc(rE.setContentType),
-		sizeCompressedKey: internalSerialization.DeserializeMutatedStringFunc(rE.setSizeCompressed, conversion.StringPtrToInt64Ptr),
+		sizeCompressedKey: internalSerialization.DeserializeMutatedStringFunc(rE.setSizeCompressed, utils.StringPtrToInt64Ptr),
 		chunkSizeBytesKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
 			if err != nil {

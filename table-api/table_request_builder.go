@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	// tableURLTemplate2 the url template for Service-Now batch API
-	tableURLTemplate2 = "{+baseurl}/api/now/v1/table/{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
+	// tableURLTemplate the url template for Service-Now batch API
+	tableURLTemplate = "{+baseurl}/api/now/v1/table/{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
 )
 
 // TableRequestBuilder provides operations to manage Service-Now table collections.
@@ -32,7 +32,7 @@ func NewTableRequestBuilderInternal[T model.ServiceNowItem](
 	factory serialization.ParsableFactory,
 ) *TableRequestBuilder[T] {
 	m := &TableRequestBuilder[T]{
-		RequestBuilder: kiota.NewBaseRequestBuilder(requestAdapter, tableURLTemplate2, pathParameters),
+		RequestBuilder: kiota.NewBaseRequestBuilder(requestAdapter, tableURLTemplate, pathParameters),
 		factory:        factory,
 	}
 	return m

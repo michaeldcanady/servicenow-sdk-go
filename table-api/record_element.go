@@ -3,7 +3,7 @@ package tableapi
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 )
 
 const (
@@ -28,7 +28,7 @@ func NewRecordElement() *RecordElement {
 
 // GetDisplayValue retrieves the display value associated with the element.
 func (rE *RecordElement) GetDisplayValue() (*ElementValue, error) {
-	val, err := store.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, displayValueKey)
+	val, err := kiota.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, displayValueKey)
 	return &val, err
 }
 
@@ -41,12 +41,12 @@ func (rE *RecordElement) SetDisplayValue(value any) error {
 		}
 	}
 
-	return store.DefaultBackedModelMutatorFunc(rE, displayValueKey, value)
+	return kiota.DefaultBackedModelMutatorFunc(rE, displayValueKey, value)
 }
 
 // GetValue retrieves the raw stored value of the element.
 func (rE *RecordElement) GetValue() (*ElementValue, error) {
-	val, err := store.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, valueKey)
+	val, err := kiota.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, valueKey)
 	return &val, err
 }
 
@@ -59,16 +59,16 @@ func (rE *RecordElement) SetValue(value any) error {
 		}
 	}
 
-	return store.DefaultBackedModelMutatorFunc(rE, valueKey, value)
+	return kiota.DefaultBackedModelMutatorFunc(rE, valueKey, value)
 }
 
 // GetLink retrieves the optional link associated with the element.
 func (rE *RecordElement) GetLink() (*string, error) {
-	val, err := store.DefaultBackedModelAccessorFunc[*RecordElement, string](rE, linkKey)
+	val, err := kiota.DefaultBackedModelAccessorFunc[*RecordElement, string](rE, linkKey)
 	return &val, err
 }
 
 // SetLink assigns an optional reference link to the element.
 func (rE *RecordElement) SetLink(link *string) error {
-	return store.DefaultBackedModelMutatorFunc(rE, linkKey, link)
+	return kiota.DefaultBackedModelMutatorFunc(rE, linkKey, link)
 }

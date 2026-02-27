@@ -143,7 +143,7 @@ func TestSerializeContent(t *testing.T) {
 				abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return parseNodeFactory })
 
 				parsable, err := serializeContent[*model.MainError](contentType, []byte{}, factory)
-				assert.Equal(t, errors.New("result is not *internal.MainError"), err)
+				assert.Equal(t, errors.New("result is not *model.MainError"), err)
 				assert.Nil(t, parsable)
 			},
 		},

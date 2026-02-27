@@ -5,7 +5,7 @@ import (
 	"errors"
 	"maps"
 
-	model "github.com/michaeldcanady/servicenow-sdk-go/internal/errors"
+	model "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"

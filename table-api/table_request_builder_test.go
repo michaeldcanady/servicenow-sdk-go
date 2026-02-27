@@ -40,7 +40,7 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(mocking.NewMockParsable(), nil)
 			},
-			err: errors.New("resp is not *internal.ServiceNowCollectionResponse[*github.com/michaeldcanady/servicenow-sdk-go/table-api.TableRecord]"),
+			err: errors.New("resp is not *model.ServiceNowCollectionResponse[*github.com/michaeldcanady/servicenow-sdk-go/table-api.TableRecord]"),
 		},
 	}
 
@@ -120,7 +120,7 @@ func TestTableRequestBuilder_Post(t *testing.T) {
 					Return(mocking.NewMockParsable(), nil)
 			},
 			expectErr: true,
-			err:       errors.New("resp is not *internal.ServiceNowItemResponse[*github.com/michaeldcanady/servicenow-sdk-go/table-api.TableRecord]"),
+			err:       errors.New("resp is not *model.ServiceNowItemResponse[*github.com/michaeldcanady/servicenow-sdk-go/table-api.TableRecord]"),
 		},
 	}
 

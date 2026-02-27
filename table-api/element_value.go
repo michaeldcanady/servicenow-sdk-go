@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
@@ -67,7 +66,7 @@ func (eV *ElementValue) GetStringValue() (*string, error) {
 
 	var val string
 
-	if err := conversion.As2(eV.val, &val, true); err != nil {
+	if err := utils.As2(eV.val, &val, true); err != nil {
 		return nil, err
 	}
 
@@ -82,7 +81,7 @@ func (eV *ElementValue) GetBoolValue() (*bool, error) {
 
 	var val bool
 
-	if err := conversion.As2(eV.val, &val, false); err != nil {
+	if err := utils.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 
@@ -97,7 +96,7 @@ func (eV *ElementValue) GetInt8Value() (*int8, error) {
 
 	var val int8
 
-	if err := conversion.As2(eV.val, &val, false); err != nil {
+	if err := utils.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 
@@ -112,7 +111,7 @@ func (eV *ElementValue) GetByteValue() (*byte, error) {
 
 	var val byte
 
-	if err := conversion.As2(eV.val, &val, false); err != nil {
+	if err := utils.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 
@@ -127,7 +126,7 @@ func (eV *ElementValue) GetFloat32Value() (*float32, error) {
 
 	var val float32
 
-	if err := conversion.As2(eV.val, &val, false); err != nil {
+	if err := utils.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 
@@ -142,7 +141,7 @@ func (eV *ElementValue) GetFloat64Value() (*float64, error) {
 
 	var val float64
 
-	if err := conversion.As2(eV.val, &val, false); err != nil {
+	if err := utils.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 
@@ -157,7 +156,7 @@ func (eV *ElementValue) GetInt32Value() (*int32, error) {
 
 	var val int32
 
-	if err := conversion.As2(eV.val, &val, false); err != nil {
+	if err := utils.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 
@@ -172,7 +171,7 @@ func (eV *ElementValue) GetInt64Value() (*int64, error) {
 
 	var val int64
 
-	if err := conversion.As2(eV.val, &val, false); err != nil {
+	if err := utils.As2(eV.val, &val, false); err != nil {
 		return nil, err
 	}
 

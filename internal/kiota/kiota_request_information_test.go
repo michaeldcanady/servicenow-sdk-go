@@ -28,7 +28,7 @@ func TestNewRequestInformation(t *testing.T) {
 			name: "construction error",
 			test: func(t *testing.T) {
 				strct := mocking.NewMockOption[*KiotaRequestInformation]()
-				strct.On("Option", mock.AnythingOfType("*internal.KiotaRequestInformation")).Return(errors.New("error"))
+				strct.On("Option", mock.AnythingOfType("*kiota.KiotaRequestInformation")).Return(errors.New("error"))
 				opt := strct.Option
 
 				requestInformation, err := NewRequestInformation(opt)

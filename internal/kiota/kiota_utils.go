@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
+
 	"github.com/google/uuid"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
@@ -25,7 +27,7 @@ func SetStringCollectionValueFromSource(setter func([]string) error) serializati
 			return err
 		}
 
-		collection, err := CastCollection[interface{}, string](value)
+		collection, err := utils.CastCollection[interface{}, string](value)
 		if err != nil {
 			return err
 		}
@@ -51,7 +53,7 @@ func SetBoolCollectionValueFromSource(setter func([]bool) error) serialization.N
 			return err
 		}
 
-		collection, err := CastCollection[interface{}, bool](value)
+		collection, err := utils.CastCollection[interface{}, bool](value)
 		if err != nil {
 			return err
 		}
@@ -77,7 +79,7 @@ func SetInt8CollectionValueFromSource(setter func([]int8) error) serialization.N
 			return err
 		}
 
-		collection, err := CastCollection[interface{}, int8](value)
+		collection, err := utils.CastCollection[interface{}, int8](value)
 		if err != nil {
 			return err
 		}
@@ -123,7 +125,7 @@ func SetFloat32CollectionValueFromSource(setter func([]float32) error) serializa
 			return err
 		}
 
-		collection, err := CastCollection[interface{}, float32](value)
+		collection, err := utils.CastCollection[interface{}, float32](value)
 		if err != nil {
 			return err
 		}
@@ -149,7 +151,7 @@ func SetFloat64CollectionValueFromSource(setter func([]float64) error) serializa
 			return err
 		}
 
-		collection, err := CastCollection[interface{}, float64](value)
+		collection, err := utils.CastCollection[interface{}, float64](value)
 		if err != nil {
 			return err
 		}
@@ -175,7 +177,7 @@ func SetInt32CollectionValueFromSource(setter func([]int32) error) serialization
 			return err
 		}
 
-		collection, err := CastCollection[interface{}, int32](value)
+		collection, err := utils.CastCollection[interface{}, int32](value)
 		if err != nil {
 			return err
 		}
@@ -201,7 +203,7 @@ func SetInt64CollectionValueFromSource(setter func([]int64) error) serialization
 			return err
 		}
 
-		collection, err := CastCollection[interface{}, int64](value)
+		collection, err := utils.CastCollection[interface{}, int64](value)
 		if err != nil {
 			return err
 		}
@@ -227,7 +229,7 @@ func SetTimeCollectionValueFromSource(setter func([]time.Time) error) serializat
 			return err
 		}
 
-		collection, err := CastCollection[interface{}, time.Time](value)
+		collection, err := utils.CastCollection[interface{}, time.Time](value)
 		if err != nil {
 			return err
 		}
@@ -253,7 +255,7 @@ func SetISODurationCollectionValueFromSource(setter func([]serialization.ISODura
 			return err
 		}
 
-		collection, err := CastCollection[interface{}, serialization.ISODuration](value)
+		collection, err := utils.CastCollection[interface{}, serialization.ISODuration](value)
 		if err != nil {
 			return err
 		}
@@ -279,7 +281,7 @@ func SetTimeOnlyCollectionValueFromSource(setter func([]serialization.TimeOnly) 
 			return err
 		}
 
-		collection, err := CastCollection[interface{}, serialization.TimeOnly](value)
+		collection, err := utils.CastCollection[interface{}, serialization.TimeOnly](value)
 		if err != nil {
 			return err
 		}
@@ -305,7 +307,7 @@ func SetDateOnlyCollectionValueFromSource(setter func([]serialization.DateOnly) 
 			return err
 		}
 
-		collection, err := CastCollection[interface{}, serialization.DateOnly](value)
+		collection, err := utils.CastCollection[interface{}, serialization.DateOnly](value)
 		if err != nil {
 			return err
 		}
@@ -331,7 +333,7 @@ func SetUUIDCollectionValueFromSource(setter func([]uuid.UUID) error) serializat
 			return err
 		}
 
-		collection, err := CastCollection[interface{}, uuid.UUID](value)
+		collection, err := utils.CastCollection[interface{}, uuid.UUID](value)
 		if err != nil {
 			return err
 		}
@@ -374,7 +376,6 @@ func SetObjectValueFromSource[T serialization.Parsable](setter func(T) error, fa
 	}
 }
 
-// TODO: add SetObjectCollectionValueFromSource
 func SetObjectCollectionValueFromSource[T serialization.Parsable](setter func([]T) error, factory serialization.ParsableFactory) serialization.NodeParser {
 	return func(node serialization.ParseNode) error {
 		value, err := node.GetCollectionOfObjectValues(factory)
@@ -382,44 +383,11 @@ func SetObjectCollectionValueFromSource[T serialization.Parsable](setter func([]
 			return err
 		}
 
-		collection, err := CastCollection[serialization.Parsable, T](value)
+		collection, err := utils.CastCollection[serialization.Parsable, T](value)
 		if err != nil {
 			return err
 		}
 
 		return setter(collection)
 	}
-}
-
-// TODO: move to conversion
-func CastCollection[T, R any](collection []T) ([]R, error) {
-	var err error
-	newCollection := CollectionApply(collection, func(in T) (R, bool) {
-		out, ok := any(in).(R)
-		if !ok {
-			var emptyR R
-			err = fmt.Errorf("item not %T", emptyR)
-			return emptyR, false
-		}
-		return out, true
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return newCollection, nil
-}
-
-// TODO: move to conversion
-func CollectionApply[T, R any](collection []T, mutator func(in T) (R, bool)) []R {
-	outputs := make([]R, len(collection))
-	for i, item := range collection {
-		output, ok := mutator(item)
-		if !ok {
-			break
-		}
-
-		outputs[i] = output
-	}
-	return outputs
 }

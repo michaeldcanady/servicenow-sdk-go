@@ -115,7 +115,7 @@ func TestRecordElementModel_SetDisplayValue(t *testing.T) {
 			name: "Successful",
 			test: func(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Set", "displayValue", mock.AnythingOfType("*tableapi.ElementValue")).Return(nil)
+				backingStore.On("Set", displayValueKey, mock.AnythingOfType("*tableapi.ElementValue")).Return(nil)
 
 				innerModel := mocking.NewMockModel()
 				innerModel.On("GetBackingStore").Return(backingStore)
@@ -133,7 +133,7 @@ func TestRecordElementModel_SetDisplayValue(t *testing.T) {
 			name: "Store error",
 			test: func(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Set", "displayValue", mock.AnythingOfType("*tableapi.ElementValue")).Return(errors.New("store error"))
+				backingStore.On("Set", displayValueKey, mock.AnythingOfType("*tableapi.ElementValue")).Return(errors.New("store error"))
 
 				innerModel := mocking.NewMockModel()
 				innerModel.On("GetBackingStore").Return(backingStore)

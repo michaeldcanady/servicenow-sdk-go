@@ -31,8 +31,7 @@ func _() {
 	err = iterator.Iterate(ctx, false, func(record *tableapi.TableRecord) bool {
 		// Process the record
 		sysId, _ := record.GetSysID()
-		fmt.Printf("Incident ID: %s
-", *sysId)
+		fmt.Printf("Incident ID: %s\n", *sysId)
 		return true // Continue to the next record
 	})
 
@@ -71,8 +70,7 @@ func _() {
 	// 3. Iterate over attachments
 	err = attachmentIterator.Iterate(ctx, false, func(attachment attachmentapi.Attachment) bool {
 		fileName, _ := attachment.GetFileName()
-		fmt.Printf("Attachment: %s
-", *fileName)
+		fmt.Printf("Attachment: %s\n", *fileName)
 		return true
 	})
 	// [END pagination_attachment]

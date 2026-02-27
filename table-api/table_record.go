@@ -7,7 +7,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -137,14 +137,14 @@ func NewTableRecord() *TableRecord {
 
 // Get retrieves a RecordElement associated with the specified key.
 func (tR *TableRecord) Get(key string) (*RecordElement, error) {
-	elem, err := store.DefaultBackedModelAccessorFunc[*TableRecord, RecordElement](tR, key)
+	elem, err := kiota.DefaultBackedModelAccessorFunc[*TableRecord, RecordElement](tR, key)
 
 	return &elem, err
 }
 
 // SetElement assigns a RecordElement to the specified key.
 func (tR *TableRecord) SetElement(key string, element *RecordElement) error {
-	return store.DefaultBackedModelMutatorFunc(tR, key, element)
+	return kiota.DefaultBackedModelMutatorFunc(tR, key, element)
 }
 
 // SetValue assigns a value to the specified key using a RecordElement wrapper.
