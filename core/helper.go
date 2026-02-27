@@ -2,6 +2,7 @@ package core
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -215,6 +216,10 @@ func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping
 }
 
 func sendDelete2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
+	if config == nil {
+		return errors.New("config is nil")
+	}
+
 	requestInfo, err := requestBuilder.ToDeleteRequestInformation2(config)
 	if err != nil {
 		return err

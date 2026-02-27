@@ -1,6 +1,7 @@
 package core
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"strings"
@@ -131,7 +132,7 @@ func TestSendMethods(t *testing.T) {
 
 	t.Run("sendDelete2", func(t *testing.T) {
 		err := sendDelete2(rb, nil)
-		assert.NoError(t, err)
+		assert.Equal(t, errors.New("config is nil"), err)
 	})
 
 	t.Run("sendPut", func(t *testing.T) {
@@ -153,6 +154,10 @@ func TestSendMethods(t *testing.T) {
 
 func TestIsPointer(t *testing.T) {
 	s := "test"
-	if IsPointer(s) { t.Error("failed") }
-	if !IsPointer(&s) { t.Error("failed") }
+	if IsPointer(s) {
+		t.Error("failed")
+	}
+	if !IsPointer(&s) {
+		t.Error("failed")
+	}
 }
