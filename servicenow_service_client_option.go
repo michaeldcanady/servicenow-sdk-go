@@ -13,13 +13,13 @@ import (
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
-// serviceNowServiceClientOption is a function type that modifies the serviceNowServiceClientConfig.
+// ServiceNowServiceClientOption is a function type that modifies the serviceNowServiceClientConfig.
 // It returns an error if the modification is not successful.
-type serviceNowServiceClientOption func(*serviceNowServiceClientConfig) error
+type ServiceNowServiceClientOption func(*serviceNowServiceClientConfig) error
 
 // withURL creates an option to set the base URL for the requests.
 // It returns an error if the provided configuration is nil or the URL is empty.
-func withURL(uri string) serviceNowServiceClientOption {
+func withURL(uri string) ServiceNowServiceClientOption {
 	return func(config *serviceNowServiceClientConfig) error {
 		if utils.IsNil(config) {
 			return errors.New("config is nil")
@@ -41,7 +41,7 @@ func withURL(uri string) serviceNowServiceClientOption {
 
 // withMiddleware creates an option to set the middleware used by the requests.
 // It returns an error if the provided configuration is nil or the middleware slice is empty.
-func withMiddleware(middleware ...nethttplibrary.Middleware) serviceNowServiceClientOption {
+func withMiddleware(middleware ...nethttplibrary.Middleware) ServiceNowServiceClientOption {
 	return func(config *serviceNowServiceClientConfig) error {
 		if utils.IsNil(config) {
 			return errors.New("config is nil")
@@ -58,7 +58,7 @@ func withMiddleware(middleware ...nethttplibrary.Middleware) serviceNowServiceCl
 
 // withInstance creates an option to set the instance of the default ServiceNow URL for the requests.
 // It returns an error if the provided configuration is nil or the instance string is empty.
-func withInstance(instance string) serviceNowServiceClientOption {
+func withInstance(instance string) ServiceNowServiceClientOption {
 	return func(config *serviceNowServiceClientConfig) error {
 		if utils.IsNil(config) {
 			return errors.New("config is nil")
@@ -76,7 +76,7 @@ func withInstance(instance string) serviceNowServiceClientOption {
 
 // withBackingStoreFactory creates an option to set the backingStoreFactory for the serviceNowServiceClient.
 // It returns an error if the provided factory is nil.
-func withBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) serviceNowServiceClientOption {
+func withBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) ServiceNowServiceClientOption {
 	return func(config *serviceNowServiceClientConfig) error {
 		if utils.IsNil(backingStoreFactory) {
 			return errors.New("backingStoreFactory is nil")
@@ -88,7 +88,7 @@ func withBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) serv
 	}
 }
 
-func withHTTPClient(client *http.Client) serviceNowServiceClientOption {
+func withHTTPClient(client *http.Client) ServiceNowServiceClientOption {
 	return func(config *serviceNowServiceClientConfig) error {
 
 		config.requestAdapterOptions = append(config.requestAdapterOptions, internalHttp.WithClient(client))

@@ -3,6 +3,7 @@ package servicenowsdkgo
 import (
 	"errors"
 	"fmt"
+	"maps"
 	"strings"
 
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -27,8 +28,8 @@ const (
 	baseURLVariable = "{+baseurl}"
 )
 
-// serviceNowServiceClient is the core service used by ServiceNowServiceClient to make requests to Service-Now's APIs
-type serviceNowServiceClient struct {
+// ServiceNowServiceClient is the core service used by ServiceNowServiceClient to make requests to Service-Now's APIs
+type ServiceNowServiceClient struct {
 	kiota.RequestBuilder
 }
 
@@ -55,11 +56,11 @@ func registerDefaultDeserializers() {
 	abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return formserialization.NewFormParseNodeFactory() })
 }
 
-// newServiceNowServiceClientWithOptions creates new serviceNowServiceClient using provided options.
-func newServiceNowServiceClientWithOptions(
+// NewServiceNowServiceClientWithOptions creates new serviceNowServiceClient using provided options.
+func NewServiceNowServiceClientWithOptions(
 	authenticationProvider authentication.AuthenticationProvider,
-	opts ...serviceNowServiceClientOption,
-) (*serviceNowServiceClient, error) {
+	opts ...ServiceNowServiceClientOption,
+) (*ServiceNowServiceClient, error) {
 	config, err := buildServiceClientConfig(opts...)
 	if err != nil {
 		return nil, err
@@ -84,15 +85,15 @@ func newServiceNowServiceClientWithOptions(
 		backingStoreFactory = store.BackingStoreFactoryInstance
 	}
 
-	return newServiceNowServiceClient(requestAdapter, backingStoreFactory, baseURL)
+	return NewServiceNowServiceClient(requestAdapter, backingStoreFactory, baseURL)
 }
 
-// newServiceNowServiceClient creates a new ServiceNowBaseServiceClient with the given parameters
-func newServiceNowServiceClient(
+// NewServiceNowServiceClient creates a new ServiceNowBaseServiceClient with the given parameters
+func NewServiceNowServiceClient(
 	requestAdapter abstractions.RequestAdapter,
 	backingStoreFactory store.BackingStoreFactory,
 	baseURL string,
-) (*serviceNowServiceClient, error) {
+) (*ServiceNowServiceClient, error) {
 	baseURL = strings.TrimSpace(baseURL)
 	if baseURL == "" {
 		return nil, errors.New("baseURL is empty")
@@ -106,7 +107,12 @@ func newServiceNowServiceClient(
 
 	registerDefaultSerializers()
 	registerDefaultDeserializers()
-	return &serviceNowServiceClient{
+	return &ServiceNowServiceClient{
 		RequestBuilder: kiota.NewBaseRequestBuilder(requestAdapter, baseURLVariable, pathParameters),
 	}, nil
+}
+
+// Now returns a NowRequestBuilder associated with the client.
+func (c *ServiceNowServiceClient) Now() *NowRequestBuilder {
+	return NewNowRequestBuilderInternal(maps.Clone(c.GetPathParameters()), c.GetRequestAdapter())
 }

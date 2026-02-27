@@ -12,26 +12,26 @@ import (
 func TestNewServiceNowServiceClientWithOptions(t *testing.T) {
 	tests := []struct {
 		name        string
-		opts        []serviceNowServiceClientOption
+		opts        []ServiceNowServiceClientOption
 		expectedErr bool
 	}{
 		{
 			name: "With URL",
-			opts: []serviceNowServiceClientOption{
+			opts: []ServiceNowServiceClientOption{
 				withURL("https://example.com"),
 			},
 			expectedErr: false,
 		},
 		{
 			name: "With Instance",
-			opts: []serviceNowServiceClientOption{
+			opts: []ServiceNowServiceClientOption{
 				withInstance("test"),
 			},
 			expectedErr: false,
 		},
 		{
 			name:        "Neither URL nor Instance",
-			opts:        []serviceNowServiceClientOption{},
+			opts:        []ServiceNowServiceClientOption{},
 			expectedErr: true,
 		},
 	}
@@ -39,7 +39,7 @@ func TestNewServiceNowServiceClientWithOptions(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			authProvider := mocking.NewMockAuthenticationProvider()
-			client, err := newServiceNowServiceClientWithOptions(authProvider, test.opts...)
+			client, err := NewServiceNowServiceClientWithOptions(authProvider, test.opts...)
 			if test.expectedErr {
 				assert.Error(t, err)
 				assert.Nil(t, client)
@@ -79,7 +79,7 @@ func TestNewServiceNowServiceClient(t *testing.T) {
 
 			backingStore := store.BackingStoreFactoryInstance
 
-			client, err := newServiceNowServiceClient(requestAdapter, backingStore, test.baseURL)
+			client, err := NewServiceNowServiceClient(requestAdapter, backingStore, test.baseURL)
 			if test.expectedErr {
 				assert.Error(t, err)
 				assert.Nil(t, client)

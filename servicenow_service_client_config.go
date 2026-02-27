@@ -27,7 +27,7 @@ func newServiceNowClientConfig() *serviceNowServiceClientConfig {
 }
 
 // buildServiceClientConfig assembles new client config using the provided options.
-func buildServiceClientConfig(opts ...serviceNowServiceClientOption) (*serviceNowServiceClientConfig, error) {
+func buildServiceClientConfig(opts ...ServiceNowServiceClientOption) (*serviceNowServiceClientConfig, error) {
 	config := newServiceNowClientConfig()
 	for _, opt := range opts {
 		if err := opt(config); err != nil {
