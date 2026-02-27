@@ -81,5 +81,5 @@ The iterator maintains state, allowing you to reset or restart iteration.
 
 - **[Table Operations](tables.md):** Learn more about the initial requests
   that produce paginated results.
-- **[Querying](querying.md):** Learn how to use queries to limit the number
+- **[Querying](query-builder.md):** Learn how to use queries to limit the number
   of records returned.
