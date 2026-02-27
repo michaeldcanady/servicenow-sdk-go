@@ -102,8 +102,5 @@ func TestFileWithContentModel_ErrorBranches(t *testing.T) {
 	}
 }
 
-type mockNilBSFile struct {
-	FileModel
-}
-
+type mockNilBSFile struct { FileModel }
 func (m *mockNilBSFile) GetBackingStore() store.BackingStore { return nil }

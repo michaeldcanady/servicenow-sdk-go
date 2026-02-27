@@ -1,11 +1,11 @@
 package model
 
 import (
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
 type Model interface {
 	serialization.Parsable
-	internal.BackedModel
+	store.BackedModel
 }

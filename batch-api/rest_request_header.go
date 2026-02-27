@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
@@ -48,11 +48,11 @@ func CreateRestRequestHeaderFromDiscriminatorValue(_ serialization.ParseNode) (s
 
 // Serialize writes the objects properties to the current writer.
 func (bH *RestRequestHeaderModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(bH) {
+	if utils.IsNil(bH) {
 		return nil
 	}
 
-	if internal.IsNil(writer) {
+	if utils.IsNil(writer) {
 		return errors.New("write is nil")
 	}
 
@@ -83,7 +83,7 @@ func (bH *RestRequestHeaderModel) Serialize(writer serialization.SerializationWr
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	if internal.IsNil(bH) {
+	if utils.IsNil(bH) {
 		return nil
 	}
 
@@ -92,12 +92,12 @@ func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serial
 
 // GetName returns the name of the header
 func (bH *RestRequestHeaderModel) GetName() (*string, error) {
-	if internal.IsNil(bH) {
+	if utils.IsNil(bH) {
 		return nil, nil
 	}
 
 	backingStore := bH.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if utils.IsNil(backingStore) {
 		return nil, errors.New("backingStore is nil")
 	}
 
@@ -116,12 +116,12 @@ func (bH *RestRequestHeaderModel) GetName() (*string, error) {
 
 // SetName sets name to provided value
 func (bH *RestRequestHeaderModel) SetName(name *string) error {
-	if internal.IsNil(bH) {
+	if utils.IsNil(bH) {
 		return nil
 	}
 
 	backingStore := bH.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if utils.IsNil(backingStore) {
 		return errors.New("backingStore is nil")
 	}
 
@@ -130,12 +130,12 @@ func (bH *RestRequestHeaderModel) SetName(name *string) error {
 
 // GetValue returns the value of the header
 func (bH *RestRequestHeaderModel) GetValue() (*string, error) {
-	if internal.IsNil(bH) {
+	if utils.IsNil(bH) {
 		return nil, nil
 	}
 
 	backingStore := bH.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if utils.IsNil(backingStore) {
 		return nil, errors.New("backingStore is nil")
 	}
 
@@ -154,12 +154,12 @@ func (bH *RestRequestHeaderModel) GetValue() (*string, error) {
 
 // SetValue sets the value to the provided value
 func (bH *RestRequestHeaderModel) SetValue(value *string) error {
-	if internal.IsNil(bH) {
+	if utils.IsNil(bH) {
 		return nil
 	}
 
 	backingStore := bH.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if utils.IsNil(backingStore) {
 		return errors.New("backingStore is nil")
 	}
 
@@ -176,7 +176,7 @@ func createRestRequestHeaderFromHeaders[h headers](headers h) ([]RestRequestHead
 	batchHeaders := make([]RestRequestHeader, 0)
 
 	if requestHeaders, ok := interface{}(headers).(*abstractions.RequestHeaders); ok {
-		if internal.IsNil(requestHeaders) {
+		if utils.IsNil(requestHeaders) {
 			return batchHeaders, nil
 		}
 		for _, key := range requestHeaders.ListKeys() {

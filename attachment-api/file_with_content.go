@@ -3,7 +3,7 @@ package attachmentapi
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -44,7 +44,7 @@ func CreateFileWithContentFromDiscriminatorValue(parseNode serialization.ParseNo
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (f *FileWithContentModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	if internal.IsNil(f) {
+	if utils.IsNil(f) {
 		return nil
 	}
 
@@ -53,12 +53,12 @@ func (f *FileWithContentModel) GetFieldDeserializers() map[string]func(serializa
 
 // GetContent returns contents of file
 func (f *FileWithContentModel) GetContent() ([]byte, error) {
-	if internal.IsNil(f) {
+	if utils.IsNil(f) {
 		return nil, nil
 	}
 
 	store := f.GetBackingStore()
-	if internal.IsNil(store) {
+	if utils.IsNil(store) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -77,12 +77,12 @@ func (f *FileWithContentModel) GetContent() ([]byte, error) {
 
 // SetContent sets the content to the provided value
 func (f *FileWithContentModel) SetContent(content []byte) error {
-	if internal.IsNil(f) {
+	if utils.IsNil(f) {
 		return nil
 	}
 
 	store := f.GetBackingStore()
-	if internal.IsNil(store) {
+	if utils.IsNil(store) {
 		return errors.New("store is nil")
 	}
 

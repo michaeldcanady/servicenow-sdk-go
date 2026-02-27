@@ -5,15 +5,9 @@ import (
 	"fmt"
 	"slices"
 
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-)
-
-const (
-	displayValueKey = "display_value"
-	linkKey         = "link"
-	valueKey        = "value"
 )
 
 var _ serialization.Parsable = (*TableRecord)(nil)

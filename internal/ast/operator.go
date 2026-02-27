@@ -21,6 +21,8 @@ const (
 	OperatorContains       // implemented
 	OperatorIsEmptyString  // implemented
 	OperatorDoesNotContain // implemented
+	OperatorMatchesPattern // added
+	OperatorIsInHierarchy  // added
 	// field
 	OperatorIsDynamic // implemented
 	OperatorIsSame    // implemented
@@ -100,6 +102,8 @@ func (o Operator) String() string {
 		OperatorIsEmptyString:        "EMPTYSTRING",
 		OperatorIsDynamic:            "DYNAMIC",
 		OperatorDoesNotContain:       "NOT LIKE",
+		OperatorMatchesPattern:       "MATCHES PATTERN",
+		OperatorIsInHierarchy:        "IN HIERARCHY",
 		OperatorAnd:                  "^",
 		OperatorOr:                   "^OR",
 	}[o]

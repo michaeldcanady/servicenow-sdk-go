@@ -5,8 +5,9 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 	"github.com/stretchr/testify/assert"
@@ -27,7 +28,7 @@ func TestNewAttachmentItemFileRequestBuilderInternal(t *testing.T) {
 				builder := NewAttachmentItemFileRequestBuilderInternal(pathParameters, requestAdapter)
 
 				assert.IsType(t, &AttachmentItemFileRequestBuilder{}, builder)
-				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.IsType(t, &kiota.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, pathParameters, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},
@@ -50,12 +51,12 @@ func TestNewAttachmentItemFileRequestBuilder(t *testing.T) {
 				rawURL := ""
 				requestAdapter := mocking.NewMockRequestAdapter()
 
-				urlParams := map[string]string{newInternal.RawURLKey: rawURL}
+				urlParams := map[string]string{utils.RawURLKey: rawURL}
 
 				builder := NewAttachmentItemFileRequestBuilder(rawURL, requestAdapter)
 
 				assert.IsType(t, &AttachmentItemFileRequestBuilder{}, builder)
-				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.IsType(t, &kiota.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, urlParams, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},

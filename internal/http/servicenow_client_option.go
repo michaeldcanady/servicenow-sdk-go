@@ -3,7 +3,7 @@ package internal
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
@@ -16,10 +16,10 @@ func WithMiddleware(middleware ...nethttplibrary.Middleware) serviceNowClientOpt
 		if len(middleware) == 0 {
 			return errors.New("middleware is empty")
 		}
-		if internal.IsNil(config) {
+		if utils.IsNil(config) {
 			return errors.New("config is nil")
 		}
-		if internal.IsNil(config.middleware) {
+		if utils.IsNil(config.middleware) {
 			config.middleware = []nethttplibrary.Middleware{}
 		}
 		config.middleware = append(config.middleware, middleware...)

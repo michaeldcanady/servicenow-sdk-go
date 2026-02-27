@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -28,7 +28,7 @@ func CreateElementValueFromDiscriminatorValue(_ serialization.ParseNode) (serial
 
 // Serialize writes the objects properties to the current writer.
 func (eV *ElementValue) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(eV) {
+	if utils.IsNil(eV) {
 		return nil
 	}
 
@@ -42,15 +42,15 @@ func (eV *ElementValue) GetFieldDeserializers() map[string]func(serialization.Pa
 
 // IsNil returns whether the element is nil or not.
 func (eV *ElementValue) IsNil() bool {
-	return internal.IsNil(eV) || internal.IsNil(eV.val)
+	return utils.IsNil(eV) || utils.IsNil(eV.val)
 }
 
 func (eV *ElementValue) setValue(val any) error { //nolint: unused
-	if internal.IsNil(eV) {
+	if utils.IsNil(eV) {
 		return nil
 	}
 
-	if !internal.IsPointer(val) {
+	if !utils.IsPointer(val) {
 		return errors.New("val is not a pointer")
 	}
 

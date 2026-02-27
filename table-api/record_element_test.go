@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -39,7 +39,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 		{
 			name: "Successfully",
 			test: func(t *testing.T) {
-				value := &ElementValue{val: internal.ToPointer("")}
+				value := &ElementValue{val: utils.ToPointer("")}
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", displayValueKey).Return(value, nil)
@@ -54,7 +54,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 				assert.Nil(t, err)
 				assert.NotNil(t, elementValue)
 				assert.IsType(t, &ElementValue{}, elementValue)
-				assert.Equal(t, interface{}(internal.ToPointer("")), elementValue.val)
+				assert.Equal(t, interface{}(utils.ToPointer("")), elementValue.val)
 			},
 		},
 		{
@@ -172,7 +172,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 		{
 			name: "Successfully",
 			test: func(t *testing.T) {
-				value := &ElementValue{val: internal.ToPointer("")}
+				value := &ElementValue{val: utils.ToPointer("")}
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", valueKey).Return(value, nil)
@@ -187,7 +187,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 				assert.Nil(t, err)
 				assert.NotNil(t, elementValue)
 				assert.IsType(t, &ElementValue{}, elementValue)
-				assert.Equal(t, interface{}(internal.ToPointer("")), elementValue.val)
+				assert.Equal(t, interface{}(utils.ToPointer("")), elementValue.val)
 			},
 		},
 		{
@@ -306,7 +306,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 		{
 			name: "Successfully",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("")
+				value := utils.ToPointer("")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", linkKey).Return(value, nil)
@@ -337,7 +337,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 				elementValue, err := model.GetLink()
 
 				assert.Equal(t, errors.New("retrieval error"), err)
-				assert.Equal(t, internal.ToPointer(""), elementValue)
+				assert.Equal(t, utils.ToPointer(""), elementValue)
 			},
 		},
 		{
@@ -351,7 +351,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 				elementValue, err := model.GetLink()
 
 				assert.Equal(t, errors.New("store is nil"), err)
-				assert.Equal(t, internal.ToPointer(""), elementValue)
+				assert.Equal(t, utils.ToPointer(""), elementValue)
 			},
 		},
 		{
@@ -362,7 +362,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 				elementValue, err := model.GetLink()
 
 				assert.Equal(t, errors.New("model is nil"), err)
-				assert.Equal(t, internal.ToPointer(""), elementValue)
+				assert.Equal(t, utils.ToPointer(""), elementValue)
 			},
 		},
 	}
@@ -380,7 +380,7 @@ func TestRecordElementModel_SetLink(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				link := internal.ToPointer("value")
+				link := utils.ToPointer("value")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", "link", link).Return(nil)
@@ -400,7 +400,7 @@ func TestRecordElementModel_SetLink(t *testing.T) {
 		{
 			name: "Store error",
 			test: func(t *testing.T) {
-				link := internal.ToPointer("value")
+				link := utils.ToPointer("value")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", "link", link).Return(errors.New("store error"))

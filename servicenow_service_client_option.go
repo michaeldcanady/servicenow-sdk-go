@@ -7,8 +7,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
@@ -21,7 +21,7 @@ type serviceNowServiceClientOption func(*serviceNowServiceClientConfig) error
 // It returns an error if the provided configuration is nil or the URL is empty.
 func withURL(uri string) serviceNowServiceClientOption {
 	return func(config *serviceNowServiceClientConfig) error {
-		if internal.IsNil(config) {
+		if utils.IsNil(config) {
 			return errors.New("config is nil")
 		}
 		uri = strings.TrimSpace(uri)
@@ -43,7 +43,7 @@ func withURL(uri string) serviceNowServiceClientOption {
 // It returns an error if the provided configuration is nil or the middleware slice is empty.
 func withMiddleware(middleware ...nethttplibrary.Middleware) serviceNowServiceClientOption {
 	return func(config *serviceNowServiceClientConfig) error {
-		if internal.IsNil(config) {
+		if utils.IsNil(config) {
 			return errors.New("config is nil")
 		}
 		if len(middleware) == 0 {
@@ -60,7 +60,7 @@ func withMiddleware(middleware ...nethttplibrary.Middleware) serviceNowServiceCl
 // It returns an error if the provided configuration is nil or the instance string is empty.
 func withInstance(instance string) serviceNowServiceClientOption {
 	return func(config *serviceNowServiceClientConfig) error {
-		if internal.IsNil(config) {
+		if utils.IsNil(config) {
 			return errors.New("config is nil")
 		}
 		instance = strings.TrimSpace(instance)
@@ -78,7 +78,7 @@ func withInstance(instance string) serviceNowServiceClientOption {
 // It returns an error if the provided factory is nil.
 func withBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) serviceNowServiceClientOption {
 	return func(config *serviceNowServiceClientConfig) error {
-		if internal.IsNil(backingStoreFactory) {
+		if utils.IsNil(backingStoreFactory) {
 			return errors.New("backingStoreFactory is nil")
 		}
 

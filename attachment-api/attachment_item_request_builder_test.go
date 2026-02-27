@@ -5,8 +5,9 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -26,7 +27,7 @@ func TestNewAttachmentItemRequestBuilderInternal(t *testing.T) {
 				builder := NewAttachmentItemRequestBuilderInternal(pathParameters, requestAdapter)
 
 				assert.IsType(t, &AttachmentItemRequestBuilder{}, builder)
-				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.IsType(t, &kiota.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, pathParameters, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},
@@ -49,12 +50,12 @@ func TestNewAttachmentItemRequestBuilder(t *testing.T) {
 				rawURL := ""
 				requestAdapter := mocking.NewMockRequestAdapter()
 
-				urlParams := map[string]string{newInternal.RawURLKey: rawURL}
+				urlParams := map[string]string{utils.RawURLKey: rawURL}
 
 				builder := NewAttachmentItemRequestBuilder(rawURL, requestAdapter)
 
 				assert.IsType(t, &AttachmentItemRequestBuilder{}, builder)
-				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.IsType(t, &kiota.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, urlParams, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},
@@ -86,7 +87,7 @@ func TestAttachmentItemRequestBuilder_File(t *testing.T) {
 				fileBuilder := builder.File()
 
 				assert.Equal(t, &AttachmentItemFileRequestBuilder{
-					&newInternal.BaseRequestBuilder{
+					&kiota.BaseRequestBuilder{
 						BaseRequestBuilder: abstractions.BaseRequestBuilder{
 							PathParameters: pathParameters,
 							RequestAdapter: requestAdapter,

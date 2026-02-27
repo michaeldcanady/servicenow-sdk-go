@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalErrors "github.com/michaeldcanady/servicenow-sdk-go/internal/errors"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -17,7 +18,7 @@ const (
 
 // BatchRequestBuilder constructs batch requests for the specified base URL.
 type BatchRequestBuilder struct {
-	newInternal.RequestBuilder
+	kiota.RequestBuilder
 }
 
 // NewBatchRequestBuilderInternal instantiates a new BatchRequestBuilder with custom parsable for table entries.
@@ -26,7 +27,7 @@ func NewBatchRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *BatchRequestBuilder {
 	m := &BatchRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, batchURLTemplate, pathParameters),
+		kiota.NewBaseRequestBuilder(requestAdapter, batchURLTemplate, pathParameters),
 	}
 	return m
 }
@@ -37,17 +38,17 @@ func NewBatchRequestBuilder(
 	requestAdapter abstractions.RequestAdapter,
 ) *BatchRequestBuilder {
 	urlParams := make(map[string]string)
-	urlParams[newInternal.RawURLKey] = rawURL
+	urlParams[utils.RawURLKey] = rawURL
 	return NewBatchRequestBuilderInternal(urlParams, requestAdapter)
 }
 
 // Post produces a batch response using the specified parameters
 func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requestConfiguration *BatchRequestBuilderPostRequestConfiguration) (*BatchResponseModel, error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+	if utils.IsNil(rB) || utils.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
-	if internal.IsNil(body) {
+	if utils.IsNil(body) {
 		return nil, errors.New("body can't be nil")
 	}
 
@@ -57,7 +58,7 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internalErrors.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateBatchResponseFromDiscriminatorValue, errorMapping)
@@ -79,23 +80,23 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 
 // toPostRequestInformation converts provided parameters into request information
 func (rB *BatchRequestBuilder) toPostRequestInformation(ctx context.Context, body BatchRequest, requestConfiguration *BatchRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+	if utils.IsNil(rB) || utils.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &kiota.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !utils.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !utils.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := requestConfiguration.Options; !utils.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), utils.ContentTypeApplicationJSON)
 
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), utils.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}

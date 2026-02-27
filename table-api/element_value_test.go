@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -151,7 +151,7 @@ func TestElementValueModel_setValue(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
+				value := utils.ToPointer("test")
 
 				model := &ElementValue{val: nil}
 
@@ -164,7 +164,7 @@ func TestElementValueModel_setValue(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
+				value := utils.ToPointer("test")
 
 				model := (*ElementValue)(nil)
 
@@ -213,7 +213,7 @@ func TestElementValueModel_GetStringValue(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(true)
+				value := utils.ToPointer(true)
 
 				model := &ElementValue{val: value}
 
@@ -249,7 +249,7 @@ func TestElementValueModel_GetBoolValue(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(true)
+				value := utils.ToPointer(true)
 
 				model := &ElementValue{val: value}
 
@@ -262,7 +262,7 @@ func TestElementValueModel_GetBoolValue(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
+				value := utils.ToPointer("test")
 
 				model := &ElementValue{val: value}
 
@@ -298,7 +298,7 @@ func TestElementValueModel_GetInt8Value(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(int8(7))
+				value := utils.ToPointer(int8(7))
 
 				model := &ElementValue{val: value}
 
@@ -311,7 +311,7 @@ func TestElementValueModel_GetInt8Value(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
+				value := utils.ToPointer("test")
 
 				model := &ElementValue{val: value}
 
@@ -347,7 +347,7 @@ func TestElementValueModel_GetByteValue(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(byte(7))
+				value := utils.ToPointer(byte(7))
 
 				model := &ElementValue{val: value}
 
@@ -360,7 +360,7 @@ func TestElementValueModel_GetByteValue(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
+				value := utils.ToPointer("test")
 
 				model := &ElementValue{val: value}
 
@@ -396,7 +396,7 @@ func TestElementValueModel_GetFloat32Value(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(float32(7))
+				value := utils.ToPointer(float32(7))
 
 				model := &ElementValue{val: value}
 
@@ -409,7 +409,7 @@ func TestElementValueModel_GetFloat32Value(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
+				value := utils.ToPointer("test")
 
 				model := &ElementValue{val: value}
 
@@ -445,7 +445,7 @@ func TestElementValueModel_GetFloat64Value(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(float64(7))
+				value := utils.ToPointer(float64(7))
 
 				model := &ElementValue{val: value}
 
@@ -458,7 +458,7 @@ func TestElementValueModel_GetFloat64Value(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
+				value := utils.ToPointer("test")
 
 				model := &ElementValue{val: value}
 
@@ -494,7 +494,7 @@ func TestElementValueModel_GetInt32Value(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(int32(7))
+				value := utils.ToPointer(int32(7))
 
 				model := &ElementValue{val: value}
 
@@ -507,7 +507,7 @@ func TestElementValueModel_GetInt32Value(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
+				value := utils.ToPointer("test")
 
 				model := &ElementValue{val: value}
 
@@ -543,7 +543,7 @@ func TestElementValueModel_GetInt64Value(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(int64(7))
+				value := utils.ToPointer(int64(7))
 
 				model := &ElementValue{val: value}
 
@@ -556,7 +556,7 @@ func TestElementValueModel_GetInt64Value(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				value := internal.ToPointer("test")
+				value := utils.ToPointer("test")
 
 				model := &ElementValue{val: value}
 
@@ -664,7 +664,7 @@ func TestElementValueModel_GetCollectionOfPrimitiveValues(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := []interface{}{internal.ToPointer(true), internal.ToPointer(false), internal.ToPointer(true)}
+				value := []interface{}{utils.ToPointer(true), utils.ToPointer(false), utils.ToPointer(true)}
 
 				model, err := NewElementValue(value)
 				assert.Nil(t, err)
@@ -690,7 +690,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 		{
 			name: "Successful - PrimitiveBool",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(true)
+				value := utils.ToPointer(true)
 				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveBool)
@@ -702,7 +702,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 		{
 			name: "Successful - PrimitiveByte",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(byte(1))
+				value := utils.ToPointer(byte(1))
 				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveByte)
@@ -714,7 +714,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 		{
 			name: "Successful - PrimitiveFloat32",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(float32(1))
+				value := utils.ToPointer(float32(1))
 				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveFloat32)
@@ -726,7 +726,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 		{
 			name: "Successful - PrimitiveFloat64",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(float64(1))
+				value := utils.ToPointer(float64(1))
 				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveFloat64)
@@ -738,7 +738,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 		{
 			name: "Successful - PrimitiveInt32",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(int32(1))
+				value := utils.ToPointer(int32(1))
 				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveInt32)
@@ -750,7 +750,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 		{
 			name: "Successful - PrimitiveInt64",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(int64(1))
+				value := utils.ToPointer(int64(1))
 				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveInt64)
@@ -762,7 +762,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 		{
 			name: "Successful - PrimitiveInt8",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(int8(1))
+				value := utils.ToPointer(int8(1))
 				model := &ElementValue{val: value}
 
 				val, err := model.getPrimitiveValue(PrimitiveInt8)
@@ -809,7 +809,7 @@ func TestElementValueModel_GetRawValue(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				value := internal.ToPointer(7)
+				value := utils.ToPointer(7)
 
 				model := &ElementValue{val: value}
 

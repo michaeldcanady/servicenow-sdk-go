@@ -5,9 +5,10 @@ import (
 	"errors"
 	"maps"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalErrors "github.com/michaeldcanady/servicenow-sdk-go/internal/errors"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -18,11 +19,11 @@ const (
 
 // AttachmentItemRequestBuilder provides operations to manage Service-Now attachments.
 type AttachmentItemRequestBuilder struct {
-	newInternal.RequestBuilder
+	kiota.RequestBuilder
 }
 
 // newAttachmentItemRequestBuilderInternal instantiates a new AttachmentItemRequestBuilder with the provided requestBuilder
-func newAttachmentItemRequestBuilderInternal(requestBuilder newInternal.RequestBuilder) *AttachmentItemRequestBuilder {
+func newAttachmentItemRequestBuilderInternal(requestBuilder kiota.RequestBuilder) *AttachmentItemRequestBuilder {
 	m := &AttachmentItemRequestBuilder{
 		requestBuilder,
 	}
@@ -35,7 +36,7 @@ func NewAttachmentItemRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentItemRequestBuilder {
 	return newAttachmentItemRequestBuilderInternal(
-		newInternal.NewBaseRequestBuilder(requestAdapter, attachmentItemURLTemplate, pathParameters),
+		kiota.NewBaseRequestBuilder(requestAdapter, attachmentItemURLTemplate, pathParameters),
 	)
 }
 
@@ -44,12 +45,12 @@ func NewAttachmentItemRequestBuilder2(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentItemRequestBuilder {
 	urlParams := make(map[string]string)
-	urlParams[newInternal.RawURLKey] = rawURL
+	urlParams[utils.RawURLKey] = rawURL
 	return NewAttachmentItemRequestBuilderInternal(urlParams, requestAdapter)
 }
 
 func (rB *AttachmentItemRequestBuilder) isNil() bool {
-	return internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder)
+	return utils.IsNil(rB) || utils.IsNil(rB.RequestBuilder)
 }
 
 // NewAttachmentItemRequestBuilder instantiates a new AttachmentItemRequestBuilder with custom parsable for table entries.
@@ -58,7 +59,7 @@ func NewAttachmentItemRequestBuilder(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentItemRequestBuilder {
 	urlParams := make(map[string]string)
-	urlParams[newInternal.RawURLKey] = rawURL
+	urlParams[utils.RawURLKey] = rawURL
 	return NewAttachmentItemRequestBuilderInternal(urlParams, requestAdapter)
 }
 
@@ -82,15 +83,15 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 	requestInfo := rB.ToGetRequestInformation(ctx, requestConfiguration)
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internalErrors.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachmentFromDiscriminatorValue, errorMapping)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachment2FromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
 	}
 
-	if internal.IsNil(res) {
+	if utils.IsNil(res) {
 		return nil, errors.New("response is nil")
 	}
 
@@ -111,7 +112,7 @@ func (rB *AttachmentItemRequestBuilder) Delete(ctx context.Context, requestConfi
 	requestInfo := rB.ToDeleteRequestInformation(ctx, requestConfiguration)
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internalErrors.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
@@ -124,16 +125,16 @@ func (rB *AttachmentItemRequestBuilder) ToGetRequestInformation(_ context.Contex
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &kiota.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !utils.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !utils.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := requestConfiguration.Options; !utils.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	requestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	requestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), utils.ContentTypeApplicationJSON)
 	return kiotaRequestInfo.RequestInformation
 }
 
@@ -144,15 +145,15 @@ func (rB *AttachmentItemRequestBuilder) ToDeleteRequestInformation(_ context.Con
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &kiota.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !utils.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !utils.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := requestConfiguration.Options; !utils.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	requestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	requestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), utils.ContentTypeApplicationJSON)
 	return kiotaRequestInfo.RequestInformation
 }

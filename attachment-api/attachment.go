@@ -4,11 +4,11 @@ import (
 	"errors"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	internalStore "github.com/michaeldcanady/servicenow-sdk-go/internal/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
@@ -39,8 +39,8 @@ const (
 	dateTimeFormat       = "2006-01-02 15:04:05"
 )
 
-// Attachment represents Service-Now attachment
-type Attachment interface {
+// Attachment2 represents Service-Now attachment
+type Attachment2 interface {
 	GetTableSysID() (*string, error)
 	setTableSysID(*string) error
 	GetSizeBytes() (*int64, error)
@@ -94,25 +94,25 @@ type Attachment2Model struct {
 }
 
 // NewAttachment creates a new instance of Attachment2Model
-func NewAttachment() *Attachment2Model {
-	return newAttachment(newInternal.NewBaseModel())
+func NewAttachment2() *Attachment2Model {
+	return newAttachment2(newInternal.NewBaseModel())
 }
 
-// newAttachment creates a new instance of Attachment2Model with the provided model underlying it
-func newAttachment(model newInternal.Model) *Attachment2Model {
+// newAttachment2 creates a new instance of Attachment2Model with the provided model underlying it
+func newAttachment2(model newInternal.Model) *Attachment2Model {
 	return &Attachment2Model{
 		model,
 	}
 }
 
-// CreateAttachmentFromDiscriminatorValue is a parsable factory for creating an Attachment2Model
-func CreateAttachmentFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewAttachment(), nil
+// CreateAttachment2FromDiscriminatorValue is a parsable factory for creating an Attachment2Model
+func CreateAttachment2FromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewAttachment2(), nil
 }
 
 // Serialize writes the objects properties to the current writer.
 func (rE *Attachment2Model) Serialize(_ serialization.SerializationWriter) error {
-	if internal.IsNil(rE) {
+	if utils.IsNil(rE) {
 		return nil
 	}
 

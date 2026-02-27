@@ -2,8 +2,11 @@
 
 package ast
 
-// Visitor Represents
-type Visitor[T any] interface {
-	// Visit Visits the provided value.
-	Visit(T)
+// Visitor represents a visitor for the AST.
+type Visitor interface {
+	VisitLiteral(node *LiteralNode)
+	VisitUnary(node *UnaryNode)
+	VisitBinary(node *BinaryNode)
+	VisitPair(node *PairNode)
+	VisitArray(node *ArrayNode)
 }

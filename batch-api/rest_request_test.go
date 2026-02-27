@@ -6,7 +6,8 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
@@ -102,11 +103,11 @@ func TestRestRequest_Serialize(t *testing.T) {
 			name: "Successful",
 			setup: func(m *RestRequestModel) {
 				_ = m.SetBody([]byte("test"))
-				_ = m.SetExcludeResponseHeaders(internal.ToPointer(true))
+				_ = m.SetExcludeResponseHeaders(utils.ToPointer(true))
 				_ = m.SetHeaders([]RestRequestHeader{NewRestRequestHeader()})
-				_ = m.SetID(internal.ToPointer("id"))
-				_ = m.SetMethod(internal.ToPointer(abstractions.GET))
-				_ = m.SetURL(internal.ToPointer("/api/test"))
+				_ = m.SetID(utils.ToPointer("id"))
+				_ = m.SetMethod(utils.ToPointer(abstractions.GET))
+				_ = m.SetURL(utils.ToPointer("/api/test"))
 			},
 			expectedErr: false,
 		},
@@ -201,7 +202,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", bodyKey).Return(ret, nil)
 
@@ -406,7 +407,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", excludeResponseHeadersKey).Return(ret, nil)
 
@@ -425,7 +426,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer("test")
+				ret := utils.ToPointer("test")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", excludeResponseHeadersKey).Return(ret, nil)
 
@@ -500,7 +501,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				input := internal.ToPointer(true)
+				input := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", excludeResponseHeadersKey, input).Return(nil)
 
@@ -521,7 +522,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 		{
 			name: "Error setting object",
 			test: func(t *testing.T) {
-				input := internal.ToPointer(true)
+				input := utils.ToPointer(true)
 				ret := errors.New("failed to set value")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", excludeResponseHeadersKey, input).Return(ret)
@@ -543,7 +544,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				input := internal.ToPointer(true)
+				input := utils.ToPointer(true)
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
@@ -561,7 +562,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				input := internal.ToPointer(true)
+				input := utils.ToPointer(true)
 
 				resp := (*RestRequestModel)(nil)
 
@@ -603,7 +604,7 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer("test")
+				ret := utils.ToPointer("test")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", headersKey).Return(ret, nil)
 
@@ -762,7 +763,7 @@ func TestRestRequest_GetID(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer("id")
+				ret := utils.ToPointer("id")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", idKey).Return(ret, nil)
 
@@ -781,7 +782,7 @@ func TestRestRequest_GetID(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", idKey).Return(ret, nil)
 
@@ -856,7 +857,7 @@ func TestRestRequest_SetID(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", idKey, input).Return(nil)
 
@@ -877,7 +878,7 @@ func TestRestRequest_SetID(t *testing.T) {
 		{
 			name: "Error setting object",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 				ret := errors.New("failed to set value")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", idKey, input).Return(ret)
@@ -899,7 +900,7 @@ func TestRestRequest_SetID(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
@@ -917,7 +918,7 @@ func TestRestRequest_SetID(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 
 				resp := (*RestRequestModel)(nil)
 
@@ -940,7 +941,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(abstractions.GET)
+				ret := utils.ToPointer(abstractions.GET)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", methodKey).Return(ret, nil)
 
@@ -959,7 +960,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", methodKey).Return(ret, nil)
 
@@ -1034,7 +1035,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				input := internal.ToPointer(abstractions.GET)
+				input := utils.ToPointer(abstractions.GET)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", methodKey, input).Return(nil)
 
@@ -1055,7 +1056,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 		{
 			name: "Error setting object",
 			test: func(t *testing.T) {
-				input := internal.ToPointer(abstractions.GET)
+				input := utils.ToPointer(abstractions.GET)
 				ret := errors.New("failed to set value")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", methodKey, input).Return(ret)
@@ -1077,7 +1078,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				input := internal.ToPointer(abstractions.GET)
+				input := utils.ToPointer(abstractions.GET)
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
@@ -1095,7 +1096,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				input := internal.ToPointer(abstractions.GET)
+				input := utils.ToPointer(abstractions.GET)
 
 				resp := (*RestRequestModel)(nil)
 
@@ -1118,7 +1119,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer("url")
+				ret := utils.ToPointer("url")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", urlKey).Return(ret, nil)
 
@@ -1137,7 +1138,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", urlKey).Return(ret, nil)
 
@@ -1212,7 +1213,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("https://service-now.com/api/now/table")
+				input := utils.ToPointer("https://service-now.com/api/now/table")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", urlKey, mock.AnythingOfType("*string")).Return(nil)
 
@@ -1233,7 +1234,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 		{
 			name: "Path doesn't start with /api",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("https://service-now.com/now/table")
+				input := utils.ToPointer("https://service-now.com/now/table")
 
 				intModel := mocking.NewMockModel()
 
@@ -1250,7 +1251,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 		{
 			name: "Error setting object",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("https://service-now.com/api/now/table")
+				input := utils.ToPointer("https://service-now.com/api/now/table")
 				ret := errors.New("failed to set value")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", urlKey, mock.AnythingOfType("*string")).Return(ret)
@@ -1272,7 +1273,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("https://service-now.com/api/now/table")
+				input := utils.ToPointer("https://service-now.com/api/now/table")
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
@@ -1290,7 +1291,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("https://service-now.com/api/now/table")
+				input := utils.ToPointer("https://service-now.com/api/now/table")
 
 				resp := (*RestRequestModel)(nil)
 

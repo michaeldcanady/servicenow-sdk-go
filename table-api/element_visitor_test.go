@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -110,7 +110,7 @@ func TestElementVis_VisitPointer(t *testing.T) {
 			test: func(t *testing.T) {
 				visitor := &ElementVisitor{}
 
-				elem, err := visitor.VisitPointer(reflect.ValueOf(internal.ToPointer("test")))
+				elem, err := visitor.VisitPointer(reflect.ValueOf(utils.ToPointer("test")))
 
 				assert.Nil(t, err)
 				assert.Equal(t, &ElementValue{val: "test"}, elem)

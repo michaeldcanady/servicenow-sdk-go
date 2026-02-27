@@ -5,7 +5,7 @@ import (
 	"math"
 	"reflect"
 
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 )
 
 type numericRange struct {
@@ -51,7 +51,7 @@ func isCompatible(value interface{}, tp reflect.Type, strict bool) bool {
 
 // As converts the value to the type T.
 func As[T any](in interface{}, out T) error {
-	if internal.IsNil(in) {
+	if utils.IsNil(in) {
 		return nil
 	}
 
@@ -62,7 +62,7 @@ func As[T any](in interface{}, out T) error {
 	}
 
 	outVal := reflect.ValueOf(out)
-	if outVal.Kind() != reflect.Pointer || internal.IsNil(out) {
+	if outVal.Kind() != reflect.Pointer || utils.IsNil(out) {
 		return fmt.Errorf("out is not pointer or is nil")
 	}
 
@@ -85,13 +85,13 @@ func As[T any](in interface{}, out T) error {
 // It supports strict and non-strict mode.
 func As2[T any](in any, out T, strict bool) error {
 	// Early return if input is nil
-	if internal.IsNil(in) {
+	if utils.IsNil(in) {
 		return nil
 	}
 
 	// Validate output is a non-nil pointer
 	outVal := reflect.ValueOf(out)
-	if outVal.Kind() != reflect.Pointer || internal.IsNil(out) {
+	if outVal.Kind() != reflect.Pointer || utils.IsNil(out) {
 		return fmt.Errorf("out must be a non-nil pointer")
 	}
 

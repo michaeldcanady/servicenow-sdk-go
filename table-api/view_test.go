@@ -9,33 +9,33 @@ import (
 func TestView2_String(t *testing.T) {
 	tests := []struct {
 		name     string
-		value    View
+		value    View2
 		expected string
 	}{
 		{
 			name:     "Unknown value",
-			value:    ViewUnknown,
+			value:    View2Unknown,
 			expected: "unknown",
 		},
 		{
 			name:     "Desktop value",
-			value:    ViewDesktop,
+			value:    View2Desktop,
 			expected: "desktop",
 		},
 		{
 			name:     "Mobile value",
-			value:    ViewMobile,
+			value:    View2Mobile,
 			expected: "mobile",
 		},
 		{
 			name:     "Both value",
-			value:    ViewBoth,
+			value:    View2Both,
 			expected: "both",
 		},
 		{
 			name:     "Invalid value falls back to Unknown",
-			value:    View(42),
-			expected: ViewUnknown.String(), // fallback
+			value:    View2(42),
+			expected: View2Unknown.String(), // fallback
 		},
 	}
 

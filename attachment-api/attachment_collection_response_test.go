@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,10 +18,10 @@ func TestCreateAttachmentCollectionResponse2FromDiscriminatorValue(t *testing.T)
 			test: func(t *testing.T) {
 				mockParseNode := mocking.NewMockParseNode()
 
-				model, err := CreateAttachmentCollectionResponseFromDiscriminatorValue(mockParseNode)
+				model, err := CreateAttachmentCollectionResponse2FromDiscriminatorValue(mockParseNode)
 
 				assert.Nil(t, err)
-				assert.IsType(t, &newInternal.BaseServiceNowCollectionResponse[Attachment]{}, model)
+				assert.IsType(t, &newInternal.BaseServiceNowCollectionResponse[Attachment2]{}, model)
 			},
 		},
 	}

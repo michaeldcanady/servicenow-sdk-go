@@ -3,9 +3,15 @@ package model
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
+
+// BackingStoreFactorySetter represents a struct with a settable backing store factory.
+type BackingStoreFactorySetter interface {
+	SetBackingStoreFactory(store.BackingStoreFactory) error
+}
 
 type BaseModel struct {
 	// backingStoreFactory factory to create backingStore
@@ -22,32 +28,34 @@ func NewBaseModel() *BaseModel {
 	}
 }
 
+func (bM *BaseModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{}
+}
+
+func (bM *BaseModel) Serialize(_ serialization.SerializationWriter) {}
+
 // SetBackingStoreFactory sets the store.BackingStoreFactory for the model.
 func (bM *BaseModel) SetBackingStoreFactory(factory store.BackingStoreFactory) error {
-	if internal.IsNil(bM) {
+	if utils.IsNil(bM) {
 		return nil
 	}
 
-	if internal.IsNil(factory) {
+	if utils.IsNil(factory) {
 		return errors.New("factory is nil")
 	}
 
 	bM.backingStoreFactory = factory
-
-	// TODO: invalidate existing store
-	// TODO: transfer data from one store to the new
-	// TODO: replace existing store with new
 
 	return nil
 }
 
 // GetBackingStore retrieves the backing store for the model.
 func (bM *BaseModel) GetBackingStore() store.BackingStore {
-	if internal.IsNil(bM) {
+	if utils.IsNil(bM) {
 		return nil
 	}
 
-	if internal.IsNil(bM.backingStore) {
+	if utils.IsNil(bM.backingStore) {
 		bM.backingStore = bM.backingStoreFactory()
 	}
 

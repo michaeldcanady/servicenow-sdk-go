@@ -3,7 +3,7 @@ package store
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
@@ -16,7 +16,7 @@ type BackedModelAccessorFunc[M store.BackedModel, T any] func(M, string) (T, err
 func DefaultBackedModelAccessorFunc[M store.BackedModel, T any](model M, key string) (T, error) {
 	var result T
 
-	if internal.IsNil(model) {
+	if utils.IsNil(model) {
 		return result, errors.New("model is nil")
 	}
 

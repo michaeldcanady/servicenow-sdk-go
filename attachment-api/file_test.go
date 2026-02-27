@@ -57,7 +57,7 @@ func TestFileModel_GetFieldDeserializers(t *testing.T) {
 
 func TestFileModel_Serialize(t *testing.T) {
 	m := NewFile()
-
+	
 	// Set all fields to cover all branches in Serialize
 	s := "test"
 	b := true
@@ -65,7 +65,7 @@ func TestFileModel_Serialize(t *testing.T) {
 	i := int64(10)
 	tm := time.Now()
 	tags := []string{"tag"}
-
+	
 	_ = m.SetAverageImageColor(&s)
 	_ = m.SetCompressed(&b)
 	_ = m.SetContentType(&s)
@@ -100,7 +100,7 @@ func TestFileModel_Serialize(t *testing.T) {
 
 func TestFileModel_Accessors(t *testing.T) {
 	m := NewFile()
-
+	
 	t.Run("AverageImageColor", func(t *testing.T) {
 		s := "red"
 		_ = m.SetAverageImageColor(&s)
@@ -244,7 +244,7 @@ func TestFileModel_Accessors(t *testing.T) {
 
 func TestFileModel_ErrorBranches(t *testing.T) {
 	m := NewFile()
-
+	
 	t.Run("AverageImageColor_WrongType", func(t *testing.T) {
 		_ = m.GetBackingStore().Set(averageImageColorKey, 123)
 		_, err := m.GetAverageImageColor()
@@ -364,7 +364,7 @@ func TestFileModel_ErrorBranches(t *testing.T) {
 		_, err := m.GetUpdatedByName()
 		assert.Error(t, err)
 	})
-
+	
 	t.Run("NilReceiver_Accessors", func(t *testing.T) {
 		var nilM *FileModel
 		v1, _ := nilM.GetAverageImageColor()
@@ -407,7 +407,7 @@ func TestFileModel_ErrorBranches(t *testing.T) {
 		assert.Nil(t, v19)
 		v20, _ := nilM.GetUpdatedByName()
 		assert.Nil(t, v20)
-
+		
 		assert.Nil(t, nilM.SetAverageImageColor(nil))
 		assert.Nil(t, nilM.SetCompressed(nil))
 		assert.Nil(t, nilM.SetContentType(nil))

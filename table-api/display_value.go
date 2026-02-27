@@ -23,7 +23,7 @@ func (e DisplayValue2) String() string {
 		DisplayValue2All:     "all",
 	}[e]
 	if !ok {
-		return ViewUnknown.String()
+		return View2Unknown.String()
 	}
 	return str
 }

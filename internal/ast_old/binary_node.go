@@ -1,0 +1,57 @@
+//go:build preview.query
+
+package ast
+
+var _ Node = (*BinaryNode)(nil)
+
+// BinaryNode Represents a binary expression node.
+type BinaryNode struct {
+	// LeftExpression The left-hand side expression of the binary operation.
+	LeftExpression Node
+	// Op The binary operator.
+	Op Operator
+	// Position The position of the operator within the source text.
+	Position int
+	// RightExpression The right-hand side expression of the binary operation.
+	RightExpression Node
+}
+
+func NewBinaryNode(left Node, operator Operator, right Node) *BinaryNode {
+	return &BinaryNode{
+		LeftExpression:  left,
+		Position:        -1,
+		Op:              operator,
+		RightExpression: right,
+	}
+}
+
+// Left The leftmost (starting) position of the node in source text.
+func (expr *BinaryNode) Left() int {
+	if expr.LeftExpression == nil {
+		return -1
+	}
+	return expr.LeftExpression.Pos()
+}
+
+// Right The rightmost (ending) position of the node in source text.
+func (expr *BinaryNode) Right() int {
+	if expr.RightExpression == nil {
+		return -1
+	}
+	return expr.RightExpression.Pos()
+}
+
+// Pos The actual position of the node.
+func (expr *BinaryNode) Pos() int {
+	return expr.Position
+}
+
+// Accept Accepts the provided visitor.
+func (expr *BinaryNode) Accept(visitor NodeVisitor) {
+	visitor.VisitBinaryNode(expr)
+}
+
+// Operator returns the expression operator.
+func (expr *BinaryNode) Operator() Operator {
+	return expr.Op
+}

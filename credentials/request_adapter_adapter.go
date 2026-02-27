@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -22,7 +22,7 @@ func NewRequestAdapterAdapter(credential Credential) *RequestAdapterAdapter {
 
 // AuthenticateRequest authenticates the provided RequestInformation.
 func (c *RequestAdapterAdapter) AuthenticateRequest(context context.Context, request *abstractions.RequestInformation, additionalAuthenticationContext map[string]interface{}) error {
-	if internal.IsNil(c) || internal.IsNil(c.credential) {
+	if utils.IsNil(c) || utils.IsNil(c.credential) {
 		return errors.New("credential is nil")
 	}
 

@@ -43,7 +43,7 @@ func (bR *BaseServiceNowItem) GetFieldDeserializers() map[string]func(serializat
 
 // Serialize writes the objects properties to the current writer
 func (bR *BaseServiceNowItem) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil
 	}
 
@@ -52,12 +52,12 @@ func (bR *BaseServiceNowItem) Serialize(writer serialization.SerializationWriter
 
 // GetBackingStore Returns the backing store, if store is nil it instantiates a new store.
 func (r *BaseServiceNowItem) GetBackingStore() store.BackingStore {
-	if internal.IsNil(r) {
+	if utils.IsNil(r) {
 		return nil
 	}
 
-	if internal.IsNil(r.backingStore) {
-		if internal.IsNil(r.backingStoreFactory) {
+	if utils.IsNil(r.backingStore) {
+		if utils.IsNil(r.backingStoreFactory) {
 			return nil
 		}
 		r.backingStore = r.backingStoreFactory()

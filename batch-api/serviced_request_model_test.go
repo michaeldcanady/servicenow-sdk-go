@@ -6,7 +6,8 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -164,7 +165,7 @@ func TestServicedRequestModel_GetBodyAsParsable(t *testing.T) {
 				_ = h.SetName(&n)
 				_ = h.SetValue(&v)
 				_ = m.setHeaders([]RestRequestHeader{h})
-				_ = m.setStatusCode(internal.ToPointer(int64(200)))
+				_ = m.setStatusCode(utils.ToPointer(int64(200)))
 
 				serialization.DefaultSerializationWriterFactoryInstance.ContentTypeAssociatedFactories["application/json"] = mocking.NewMockSerializationWriterFactory()
 				serialization.DefaultParseNodeFactoryInstance.ContentTypeAssociatedFactories["application/json"] = mocking.NewMockParseNodeFactory()
@@ -174,7 +175,7 @@ func TestServicedRequestModel_GetBodyAsParsable(t *testing.T) {
 		{
 			name: "Error mapping",
 			setup: func(m *ServicedRequestModel) {
-				_ = m.setStatusCode(internal.ToPointer(int64(400)))
+				_ = m.setStatusCode(utils.ToPointer(int64(400)))
 				_ = m.setBody([]byte(`{"error":"bad"}`))
 			},
 			expectedErr: true,
@@ -235,7 +236,7 @@ func TestServicedRequestModel_GetBody(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", bodyKey).Return(ret, nil)
 
@@ -401,7 +402,7 @@ func TestServicedRequestModel_GetErrorMessage(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer("message")
+				ret := utils.ToPointer("message")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", errorMessageKey).Return(ret, nil)
 
@@ -423,7 +424,7 @@ func TestServicedRequestModel_GetErrorMessage(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", errorMessageKey).Return(ret, nil)
 
@@ -505,7 +506,7 @@ func TestServicedRequestModel_setErrorMessage(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("message")
+				input := utils.ToPointer("message")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", errorMessageKey, input).Return(nil)
 
@@ -526,7 +527,7 @@ func TestServicedRequestModel_setErrorMessage(t *testing.T) {
 		{
 			name: "Error setting object",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("message")
+				input := utils.ToPointer("message")
 				ret := errors.New("failed to set value")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", errorMessageKey, input).Return(ret)
@@ -548,7 +549,7 @@ func TestServicedRequestModel_setErrorMessage(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("message")
+				input := utils.ToPointer("message")
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
@@ -566,7 +567,7 @@ func TestServicedRequestModel_setErrorMessage(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("message")
+				input := utils.ToPointer("message")
 
 				resp := (*ServicedRequestModel)(nil)
 
@@ -672,7 +673,7 @@ func TestServicedRequestModel_GetHeaders(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", headersKey).Return(ret, nil)
 
@@ -838,7 +839,7 @@ func TestServicedRequestModel_GetID(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer("id")
+				ret := utils.ToPointer("id")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", idKey).Return(ret, nil)
 
@@ -860,7 +861,7 @@ func TestServicedRequestModel_GetID(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", idKey).Return(ret, nil)
 
@@ -942,7 +943,7 @@ func TestServicedRequestModel_setID(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", idKey, input).Return(nil)
 
@@ -963,7 +964,7 @@ func TestServicedRequestModel_setID(t *testing.T) {
 		{
 			name: "Error setting object",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 				ret := errors.New("failed to set value")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", idKey, input).Return(ret)
@@ -985,7 +986,7 @@ func TestServicedRequestModel_setID(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
@@ -1003,7 +1004,7 @@ func TestServicedRequestModel_setID(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 
 				resp := (*ServicedRequestModel)(nil)
 
@@ -1026,7 +1027,7 @@ func TestServicedRequestModel_GetRedirectURL(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer("url")
+				ret := utils.ToPointer("url")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", redirectURLKey).Return(ret, nil)
 
@@ -1048,7 +1049,7 @@ func TestServicedRequestModel_GetRedirectURL(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", redirectURLKey).Return(ret, nil)
 
@@ -1130,7 +1131,7 @@ func TestServicedRequestModel_setRedirectURL(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", redirectURLKey, input).Return(nil)
 
@@ -1151,7 +1152,7 @@ func TestServicedRequestModel_setRedirectURL(t *testing.T) {
 		{
 			name: "Error setting object",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 				ret := errors.New("failed to set value")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", redirectURLKey, input).Return(ret)
@@ -1173,7 +1174,7 @@ func TestServicedRequestModel_setRedirectURL(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
@@ -1191,7 +1192,7 @@ func TestServicedRequestModel_setRedirectURL(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 
 				resp := (*ServicedRequestModel)(nil)
 
@@ -1214,7 +1215,7 @@ func TestServicedRequestModel_GetStatusCode(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer("url")
+				ret := utils.ToPointer("url")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", redirectURLKey).Return(ret, nil)
 
@@ -1236,7 +1237,7 @@ func TestServicedRequestModel_GetStatusCode(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", statusCodeKey).Return(ret, nil)
 
@@ -1318,7 +1319,7 @@ func TestServicedRequestModel_setStatusCode(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				input := internal.ToPointer(int64(0))
+				input := utils.ToPointer(int64(0))
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", statusCodeKey, input).Return(nil)
 
@@ -1339,7 +1340,7 @@ func TestServicedRequestModel_setStatusCode(t *testing.T) {
 		{
 			name: "Error setting object",
 			test: func(t *testing.T) {
-				input := internal.ToPointer(int64(0))
+				input := utils.ToPointer(int64(0))
 				ret := errors.New("failed to set value")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", statusCodeKey, input).Return(ret)
@@ -1361,7 +1362,7 @@ func TestServicedRequestModel_setStatusCode(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				input := internal.ToPointer(int64(0))
+				input := utils.ToPointer(int64(0))
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
@@ -1379,7 +1380,7 @@ func TestServicedRequestModel_setStatusCode(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				input := internal.ToPointer(int64(0))
+				input := utils.ToPointer(int64(0))
 
 				resp := (*ServicedRequestModel)(nil)
 
@@ -1402,7 +1403,7 @@ func TestServicedRequestModel_GetStatusText(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer("url")
+				ret := utils.ToPointer("url")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", statusTextKey).Return(ret, nil)
 
@@ -1424,7 +1425,7 @@ func TestServicedRequestModel_GetStatusText(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", statusTextKey).Return(ret, nil)
 
@@ -1506,7 +1507,7 @@ func TestServicedRequestModel_setStatusText(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", statusTextKey, input).Return(nil)
 
@@ -1527,7 +1528,7 @@ func TestServicedRequestModel_setStatusText(t *testing.T) {
 		{
 			name: "Error setting object",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 				ret := errors.New("failed to set value")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", statusTextKey, input).Return(ret)
@@ -1549,7 +1550,7 @@ func TestServicedRequestModel_setStatusText(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
@@ -1567,7 +1568,7 @@ func TestServicedRequestModel_setStatusText(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 
 				resp := (*ServicedRequestModel)(nil)
 

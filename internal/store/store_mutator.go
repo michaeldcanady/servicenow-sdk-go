@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
@@ -12,7 +12,7 @@ type StoreMutatorFunc[S store.BackingStore, T any] func(S, string, value T) erro
 
 // DefaultStoreMutatorFunc[T] sets the store at the provided key to the provided value.
 func DefaultStoreMutatorFunc[T any](store store.BackingStore, key string, value T) error {
-	if internal.IsNil(store) {
+	if utils.IsNil(store) {
 		return errors.New("store is nil")
 	}
 

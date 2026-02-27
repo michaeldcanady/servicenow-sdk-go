@@ -1,8 +1,14 @@
 package tableapi
 
 import (
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
+)
+
+const (
+	displayValueKey = "display_value"
+	valueKey        = "value"
+	linkKey         = "link"
 )
 
 // RecordElement represents a single field in a TableRecord.

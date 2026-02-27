@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 )
 
 func NewElementVisitor() *ElementVisitor {
@@ -20,7 +20,7 @@ func (eV *ElementVisitor) Visit(val any) (*ElementValue, error) {
 		rv reflect.Value
 	)
 
-	if internal.IsNil(val) {
+	if utils.IsNil(val) {
 		return &ElementValue{val: nil}, nil
 	}
 

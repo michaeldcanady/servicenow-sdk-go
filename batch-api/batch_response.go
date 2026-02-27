@@ -3,8 +3,8 @@ package batchapi
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -47,7 +47,7 @@ func CreateBatchResponseFromDiscriminatorValue(_ serialization.ParseNode) (seria
 
 // Serialize writes the objects properties to the current writer
 func (bR *BatchResponseModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil
 	}
 
@@ -56,13 +56,13 @@ func (bR *BatchResponseModel) Serialize(writer serialization.SerializationWriter
 
 // GetFieldDeserializers returns the deserialization information for this object
 func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil
 	}
 
 	return map[string]func(serialization.ParseNode) error{
 		batchRequestIDKey: func(pn serialization.ParseNode) error {
-			if internal.IsNil(pn) {
+			if utils.IsNil(pn) {
 				return nil
 			}
 
@@ -74,7 +74,7 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 			return bR.setBatchRequestID(value)
 		},
 		servicedRequestsKey: func(pn serialization.ParseNode) error {
-			if internal.IsNil(pn) {
+			if utils.IsNil(pn) {
 				return nil
 			}
 
@@ -95,7 +95,7 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 			return bR.setServicedRequests(requests)
 		},
 		unservicedRequestsKey: func(pn serialization.ParseNode) error {
-			if internal.IsNil(pn) {
+			if utils.IsNil(pn) {
 				return nil
 			}
 
@@ -120,12 +120,12 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 
 // GetBatchRequestID returns the id of the associated batch request
 func (bR *BatchResponseModel) GetBatchRequestID() (*string, error) {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil, nil
 	}
 
 	backingStore := bR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if utils.IsNil(backingStore) {
 		return nil, nil
 	}
 
@@ -134,7 +134,7 @@ func (bR *BatchResponseModel) GetBatchRequestID() (*string, error) {
 		return nil, err
 	}
 
-	if internal.IsNil(id) {
+	if utils.IsNil(id) {
 		return nil, nil
 	}
 
@@ -148,7 +148,7 @@ func (bR *BatchResponseModel) GetBatchRequestID() (*string, error) {
 
 // GetServicedRequestByID returns the serviced request with the provided id
 func (bR *BatchResponseModel) GetServicedRequestByID(id string) (ServicedRequest, error) {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil, nil
 	}
 
@@ -173,12 +173,12 @@ func (bR *BatchResponseModel) GetServicedRequestByID(id string) (ServicedRequest
 
 // setBatchRequestID sets the id of the associated batch request
 func (bR *BatchResponseModel) setBatchRequestID(id *string) error {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil
 	}
 
 	backingStore := bR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if utils.IsNil(backingStore) {
 		return nil
 	}
 
@@ -187,12 +187,12 @@ func (bR *BatchResponseModel) setBatchRequestID(id *string) error {
 
 // GetServicedRequests returns serviced requests
 func (bR *BatchResponseModel) GetServicedRequests() ([]ServicedRequest, error) {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil, nil
 	}
 
 	backingStore := bR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if utils.IsNil(backingStore) {
 		return nil, nil
 	}
 
@@ -201,7 +201,7 @@ func (bR *BatchResponseModel) GetServicedRequests() ([]ServicedRequest, error) {
 		return nil, err
 	}
 
-	if internal.IsNil(servicedRequests) {
+	if utils.IsNil(servicedRequests) {
 		return nil, nil
 	}
 
@@ -215,12 +215,12 @@ func (bR *BatchResponseModel) GetServicedRequests() ([]ServicedRequest, error) {
 
 // setServicedRequests sets the serviced requests to the provided values
 func (bR *BatchResponseModel) setServicedRequests(requests []ServicedRequest) error {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil
 	}
 
 	backingStore := bR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if utils.IsNil(backingStore) {
 		return nil
 	}
 
@@ -229,12 +229,12 @@ func (bR *BatchResponseModel) setServicedRequests(requests []ServicedRequest) er
 
 // GetUnservicedRequests returns the unserviced requests' id
 func (bR *BatchResponseModel) GetUnservicedRequests() ([]string, error) {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil, nil
 	}
 
 	backingStore := bR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if utils.IsNil(backingStore) {
 		return nil, nil
 	}
 
@@ -243,7 +243,7 @@ func (bR *BatchResponseModel) GetUnservicedRequests() ([]string, error) {
 		return nil, err
 	}
 
-	if internal.IsNil(unservicedRequests) {
+	if utils.IsNil(unservicedRequests) {
 		return nil, nil
 	}
 
@@ -257,12 +257,12 @@ func (bR *BatchResponseModel) GetUnservicedRequests() ([]string, error) {
 
 // setUnservicedRequests sets the ids of the unserviced requests to the provided value
 func (bR *BatchResponseModel) setUnservicedRequests(unservicedRequests []string) error {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil
 	}
 
 	backingStore := bR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if utils.IsNil(backingStore) {
 		return nil
 	}
 

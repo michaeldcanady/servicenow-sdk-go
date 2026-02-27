@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -50,7 +50,7 @@ func CreateBatchRequestFromDiscriminatorValue(_ serialization.ParseNode) (serial
 
 // Serialize writes the objects properties to the current writer.
 func (bR *BatchRequestModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil
 	}
 
@@ -62,7 +62,7 @@ func (bR *BatchRequestModel) Serialize(writer serialization.SerializationWriter)
 			}
 
 			// ensure request has an id BEFORE serializing
-			if internal.IsNil(id) || *id == "" {
+			if utils.IsNil(id) || *id == "" {
 				idString := uuid.NewString()
 				id = &idString
 			}
@@ -95,7 +95,7 @@ func (bR *BatchRequestModel) Serialize(writer serialization.SerializationWriter)
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (bR *BatchRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil
 	}
 
@@ -131,11 +131,11 @@ func (bR *BatchRequestModel) GetFieldDeserializers() map[string]func(serializati
 
 // AddRequest add request to the slice of requests.
 func (bR *BatchRequestModel) AddRequest(request RestRequest) error {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil
 	}
 
-	if internal.IsNil(request) {
+	if utils.IsNil(request) {
 		return errors.New("request is nil")
 	}
 
@@ -143,7 +143,7 @@ func (bR *BatchRequestModel) AddRequest(request RestRequest) error {
 	if err != nil {
 		return err
 	}
-	if internal.IsNil(requests) {
+	if utils.IsNil(requests) {
 		requests = []RestRequest{}
 	}
 
@@ -154,7 +154,7 @@ func (bR *BatchRequestModel) AddRequest(request RestRequest) error {
 
 // GetBatchRequestID returns the id of the request.
 func (bR *BatchRequestModel) GetBatchRequestID() (*string, error) {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil, nil
 	}
 
@@ -173,7 +173,7 @@ func (bR *BatchRequestModel) GetBatchRequestID() (*string, error) {
 
 // SetBatchRequestID sets the id of the request.
 func (bR *BatchRequestModel) SetBatchRequestID(id *string) error {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil
 	}
 
@@ -182,7 +182,7 @@ func (bR *BatchRequestModel) SetBatchRequestID(id *string) error {
 
 // GetRestRequests returns batched requests.
 func (bR *BatchRequestModel) GetRestRequests() ([]RestRequest, error) {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil, nil
 	}
 
@@ -191,7 +191,7 @@ func (bR *BatchRequestModel) GetRestRequests() ([]RestRequest, error) {
 		return nil, err
 	}
 
-	if internal.IsNil(requests) {
+	if utils.IsNil(requests) {
 		return nil, nil
 	}
 
@@ -205,7 +205,7 @@ func (bR *BatchRequestModel) GetRestRequests() ([]RestRequest, error) {
 
 // SetRestRequests sets the batched requests.
 func (bR *BatchRequestModel) SetRestRequests(requests []RestRequest) error {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil
 	}
 

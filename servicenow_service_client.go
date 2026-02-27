@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -29,7 +29,7 @@ const (
 
 // serviceNowServiceClient is the core service used by ServiceNowServiceClient to make requests to Service-Now's APIs
 type serviceNowServiceClient struct {
-	newInternal.RequestBuilder
+	kiota.RequestBuilder
 }
 
 // registerDefaultSerializers registers default serializers
@@ -80,7 +80,7 @@ func newServiceNowServiceClientWithOptions(
 	}
 
 	var backingStoreFactory = config.backingStoreFactory
-	if internal.IsNil(backingStoreFactory) {
+	if utils.IsNil(backingStoreFactory) {
 		backingStoreFactory = store.BackingStoreFactoryInstance
 	}
 
@@ -97,7 +97,7 @@ func newServiceNowServiceClient(
 	if baseURL == "" {
 		return nil, errors.New("baseURL is empty")
 	}
-	if !newInternal.IsNil(backingStoreFactory) {
+	if !utils.IsNil(backingStoreFactory) {
 		requestAdapter.EnableBackingStore(backingStoreFactory)
 	}
 
@@ -107,6 +107,6 @@ func newServiceNowServiceClient(
 	registerDefaultSerializers()
 	registerDefaultDeserializers()
 	return &serviceNowServiceClient{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, baseURLVariable, pathParameters),
+		RequestBuilder: kiota.NewBaseRequestBuilder(requestAdapter, baseURLVariable, pathParameters),
 	}, nil
 }

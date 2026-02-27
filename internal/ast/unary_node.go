@@ -2,52 +2,15 @@
 
 package ast
 
-var _ Node = (*UnaryNode)(nil)
-
-// UnaryNode represents a node with only an operator and a node
+// UnaryNode represents a unary operation (e.g., fieldISEMPTY).
 type UnaryNode struct {
-	// Op The unary operator.
-	Op Operator
-	// Position The position of the unary operator.
-	Position int
-	// Node
-	Node Node
+	Op   Operator
+	Left Node
 }
 
-// NewUnaryNode instantiates a new unary node expression.
-func NewUnaryNode(operator Operator, node Node) *UnaryNode {
-	return &UnaryNode{
-		Op:       operator,
-		Position: -1,
-		Node:     node,
-	}
-}
+func (n *UnaryNode) Accept(v Visitor) { v.VisitUnary(n) }
 
-// Accept implements Node.
-func (u *UnaryNode) Accept(node NodeVisitor) {
-	node.VisitUnaryNode(u)
-}
-
-// Right returns the right most position of the operator.
-func (u *UnaryNode) Right() int {
-	return u.Pos()
-}
-
-// Pos returns the position of the operator.
-func (u *UnaryNode) Pos() int {
-	return u.Position
-}
-
-// Left return the left most value.
-func (u *UnaryNode) Left() int {
-	if u.Node == nil {
-		return -1
-	}
-
-	return u.Node.Left()
-}
-
-// Operator returns the expression operator.
-func (u *UnaryNode) Operator() Operator {
-	return u.Op
+// NewUnaryNode creates a new UnaryNode with the given operator and left node.
+func NewUnaryNode(op Operator, left Node) *UnaryNode {
+	return &UnaryNode{Op: op, Left: left}
 }

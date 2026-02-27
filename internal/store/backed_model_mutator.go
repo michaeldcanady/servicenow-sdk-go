@@ -3,7 +3,7 @@ package store
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
@@ -14,7 +14,7 @@ type BackedModelMutatorFunc[M store.BackedModel, T any] func(M, string, T) error
 // DefaultStoreMutatorFunc[S, T] is a generic implementation of StoreMutatorFunc[S, T] that sets the value
 // of a backed model.
 func DefaultBackedModelMutatorFunc[M store.BackedModel, T any](model M, key string, value T) error {
-	if internal.IsNil(model) {
+	if utils.IsNil(model) {
 		return errors.New("model is nil")
 	}
 

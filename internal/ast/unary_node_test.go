@@ -4,152 +4,32 @@ package ast
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
+
+func TestUnaryNode_Accept(t *testing.T) {
+	node := NewUnaryNode(OperatorIsEmpty, NewLiteralNode("f"))
+	visitor := NewStringerVisitor()
+	node.Accept(visitor)
+	if visitor.String() != "fISEMPTY" {
+		t.Errorf("got %s, expected fISEMPTY", visitor.String())
+	}
+}
 
 func TestNewUnaryNode(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name     string
+		op       Operator
+		left     Node
+		expected string
 	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				operator := OperatorBefore
-				node := NewLiteralNode("value")
-				expr := NewUnaryNode(operator, node)
-
-				assert.Equal(t, operator, expr.Op)
-				assert.Equal(t, node, expr.Node)
-				assert.Equal(t, -1, expr.Position)
-			},
-		},
+		{"IsEmpty", OperatorIsEmpty, NewLiteralNode("f"), "fISEMPTY"},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
-}
-
-func TestUnaryNode_Left(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "No Node",
-			test: func(t *testing.T) {
-				node := &UnaryNode{}
-
-				assert.Equal(t, -1, node.Left())
-			},
-		},
-		{
-			name: "Has Node",
-			test: func(t *testing.T) {
-				node := NewMockNode()
-				node.On("Left").Return(1)
-
-				unaryNode := &UnaryNode{
-					Node: node,
-				}
-
-				assert.Equal(t, 1, unaryNode.Left())
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
-}
-
-func TestUnaryNode_Right(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				node := &UnaryNode{
-					Position: 1,
-				}
-
-				assert.Equal(t, 1, node.Right())
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
-}
-
-func TestUnaryNode_Pos(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				node := &UnaryNode{
-					Position: 1,
-				}
-
-				assert.Equal(t, 1, node.Pos())
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
-}
-
-func TestUnaryNode_Accept(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				node := &UnaryNode{}
-				visitor := newMockNodeVisitor()
-				visitor.On("VisitUnaryNode", node)
-
-				node.Accept(visitor)
-				visitor.AssertExpectations(t)
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
-}
-
-func TestUnaryNode_Operator(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				node := &UnaryNode{
-					Op: OperatorAnd,
-				}
-
-				assert.Equal(t, OperatorAnd, node.Operator())
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			node := NewUnaryNode(tt.op, tt.left)
+			if node.Op != tt.op || node.Left != tt.left {
+				t.Errorf("NewUnaryNode failed")
+			}
+		})
 	}
 }

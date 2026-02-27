@@ -4,26 +4,23 @@ package ast
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
-func TestOperator(t *testing.T) {
+func TestOperator_String(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name     string
+		op       Operator
+		expected string
 	}{
-		{
-			name: "Unknown value",
-			test: func(t *testing.T) {
-				op := Operator(500)
-
-				assert.Equal(t, "unknown", op.String())
-			},
-		},
+		{"Is", OperatorIs, "="},
+		{"IsNot", OperatorIsNot, "!="},
+		{"Unknown", Operator(-99), "unknown"},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.op.String() != tt.expected {
+				t.Errorf("got %s, expected %s", tt.op.String(), tt.expected)
+			}
+		})
 	}
 }

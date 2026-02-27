@@ -5,7 +5,8 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -201,7 +202,7 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				expName := internal.ToPointer("name")
+				expName := utils.ToPointer("name")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", nameKey).Return(expName, nil)
@@ -223,7 +224,7 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				expName := internal.ToPointer(true)
+				expName := utils.ToPointer(true)
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", nameKey).Return(expName, nil)
@@ -306,7 +307,7 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				expName := internal.ToPointer("name")
+				expName := utils.ToPointer("name")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", nameKey, expName).Return(nil)
@@ -327,7 +328,7 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 		{
 			name: "Nil backing store",
 			test: func(t *testing.T) {
-				expName := internal.ToPointer("name")
+				expName := utils.ToPointer("name")
 
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
@@ -344,7 +345,7 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				expName := internal.ToPointer("name")
+				expName := utils.ToPointer("name")
 
 				header := (*RestRequestHeaderModel)(nil)
 
@@ -368,7 +369,7 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				expName := internal.ToPointer("value")
+				expName := utils.ToPointer("value")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", valueKey).Return(expName, nil)
@@ -390,7 +391,7 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				expName := internal.ToPointer(true)
+				expName := utils.ToPointer(true)
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", valueKey).Return(expName, nil)
@@ -473,7 +474,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				expName := internal.ToPointer("value")
+				expName := utils.ToPointer("value")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", valueKey, expName).Return(nil)
@@ -494,7 +495,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 		{
 			name: "Nil backing store",
 			test: func(t *testing.T) {
-				expName := internal.ToPointer("value")
+				expName := utils.ToPointer("value")
 
 				model := mocking.NewMockModel()
 				model.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
@@ -511,7 +512,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				expName := internal.ToPointer("value")
+				expName := utils.ToPointer("value")
 
 				header := (*RestRequestHeaderModel)(nil)
 

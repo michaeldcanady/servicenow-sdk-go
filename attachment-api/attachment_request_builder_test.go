@@ -5,8 +5,9 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -26,7 +27,7 @@ func TestNewAttachmentRequestBuilder2Internal(t *testing.T) {
 				builder := NewAttachmentRequestBuilder2Internal(pathParameters, requestAdapter)
 
 				assert.IsType(t, &AttachmentRequestBuilder2{}, builder)
-				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.IsType(t, &kiota.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, pathParameters, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},
@@ -49,12 +50,12 @@ func TestNewAttachmentRequestBuilder2(t *testing.T) {
 				rawURL := ""
 				requestAdapter := mocking.NewMockRequestAdapter()
 
-				urlParams := map[string]string{newInternal.RawURLKey: rawURL}
+				urlParams := map[string]string{utils.RawURLKey: rawURL}
 
 				builder := NewAttachmentRequestBuilder2(rawURL, requestAdapter)
 
 				assert.IsType(t, &AttachmentRequestBuilder2{}, builder)
-				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.IsType(t, &kiota.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, urlParams, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},
@@ -86,7 +87,7 @@ func TestAttachmentRequestBuilder2_ByID(t *testing.T) {
 				itemBuilder := builder.ByID("id")
 
 				assert.Equal(t, &AttachmentItemRequestBuilder{
-					&newInternal.BaseRequestBuilder{
+					&kiota.BaseRequestBuilder{
 						BaseRequestBuilder: abstractions.BaseRequestBuilder{
 							PathParameters: pathParameters,
 							RequestAdapter: requestAdapter,
@@ -132,7 +133,7 @@ func TestAttachmentRequestBuilder2_File(t *testing.T) {
 				itemBuilder := builder.File()
 
 				assert.Equal(t, &AttachmentFileRequestBuilder{
-					&newInternal.BaseRequestBuilder{
+					&kiota.BaseRequestBuilder{
 						BaseRequestBuilder: abstractions.BaseRequestBuilder{
 							PathParameters: pathParameters,
 							RequestAdapter: requestAdapter,
@@ -178,7 +179,7 @@ func TestAttachmentRequestBuilder2_Upload(t *testing.T) {
 				itemBuilder := builder.Upload()
 
 				assert.Equal(t, &AttachmentUploadRequestBuilder{
-					&newInternal.BaseRequestBuilder{
+					&kiota.BaseRequestBuilder{
 						BaseRequestBuilder: abstractions.BaseRequestBuilder{
 							PathParameters: pathParameters,
 							RequestAdapter: requestAdapter,
@@ -213,7 +214,7 @@ func TestAttachmentRequestBuilder2_Get(t *testing.T) {
 		{
 			name: "Successful",
 			setup: func(ra *mocking.MockRequestAdapter) {
-				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&AttachmentCollectionResponseModel{}, nil)
+				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&AttachmentCollectionResponse2Model{}, nil)
 			},
 			expectedErr: false,
 		},
@@ -425,8 +426,8 @@ func TestAttachmentRequestBuilder2_ToGetRequestInformation(t *testing.T) {
 
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
-				queryParameters := &AttachmentRequestBuilder2GetQueryParameters{
-					SysparmLimit: 1,
+				queryParameters := &AttachmentRequestBuilderGetQueryParameters{
+					SysparmLimit: utils.ToPointer(1),
 				}
 
 				requestConfiguration := &AttachmentRequestBuilder2GetRequestConfiguration{

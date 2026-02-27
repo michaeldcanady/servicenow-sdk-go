@@ -5,7 +5,8 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -122,7 +123,7 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 					{
 						name: "batchRequestIDKey",
 						test: func(t *testing.T) {
-							ret := internal.ToPointer("id")
+							ret := utils.ToPointer("id")
 							mockParseNode.On("GetStringValue").Return(ret, nil)
 							backingStore.On("Set", batchRequestIDKey, ret).Return(nil)
 
@@ -295,7 +296,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer("id")
+				ret := utils.ToPointer("id")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", batchRequestIDKey).Return(ret, nil)
 
@@ -314,7 +315,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", batchRequestIDKey).Return(ret, nil)
 
@@ -389,7 +390,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", batchRequestIDKey, input).Return(nil)
 
@@ -410,7 +411,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 		{
 			name: "Error setting object",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 				ret := errors.New("failed to set value")
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", batchRequestIDKey, input).Return(ret)
@@ -432,7 +433,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
@@ -450,7 +451,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("id")
+				input := utils.ToPointer("id")
 
 				resp := (*BatchResponseModel)(nil)
 
@@ -492,7 +493,7 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", servicedRequestsKey).Return(ret, nil)
 
@@ -670,7 +671,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				ret := internal.ToPointer(true)
+				ret := utils.ToPointer(true)
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", unservicedRequestsKey).Return(ret, nil)
 
@@ -833,7 +834,7 @@ func TestBatchResponse_GetServicedRequestByID(t *testing.T) {
 			id:   "1",
 			setup: func(m *BatchResponseModel) {
 				req := NewMockServicedRequest()
-				req.On("GetID").Return(internal.ToPointer("1"), nil)
+				req.On("GetID").Return(utils.ToPointer("1"), nil)
 				_ = m.setServicedRequests([]ServicedRequest{req})
 			},
 			expectedNil: false,
@@ -843,7 +844,7 @@ func TestBatchResponse_GetServicedRequestByID(t *testing.T) {
 			id:   "2",
 			setup: func(m *BatchResponseModel) {
 				req := NewMockServicedRequest()
-				req.On("GetID").Return(internal.ToPointer("1"), nil)
+				req.On("GetID").Return(utils.ToPointer("1"), nil)
 				_ = m.setServicedRequests([]ServicedRequest{req})
 			},
 			expectedNil: true,
