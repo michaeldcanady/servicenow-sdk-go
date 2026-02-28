@@ -7,7 +7,7 @@ import (
 )
 
 func decodeAccessToken(response *http.Response) (*AccessToken, error) {
-	defer response.Body.Close()
+	defer response.Body.Close() //nolint:errcheck
 	var accessToken AccessToken
 	if err := json.NewDecoder(response.Body).Decode(&accessToken); err != nil {
 		return nil, err

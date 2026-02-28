@@ -28,7 +28,11 @@ func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping cor
 		return nil, err
 	}
 
-	response, err := http.DefaultClient.Do(req)
+	client := &http.Client{
+		Timeout: 30 * time.Second,
+	}
+
+	response, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}

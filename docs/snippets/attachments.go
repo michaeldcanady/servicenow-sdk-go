@@ -251,7 +251,7 @@ func _() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
+	defer file.Close() //nolint:errcheck
 
 	// Upload attachment for an incident
 	guide_table_name := "xSDK_SN_TABLEx"
