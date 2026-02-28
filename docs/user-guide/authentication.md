@@ -6,7 +6,7 @@ security requirements and environment configurations.
 
 ## Choose an authentication method
 
-ServiceNow provides several ways to authenticate. The SDK currently supports
+ServiceNow provides many ways to authenticate. The SDK currently supports
 Basic Authentication (Username/Password) and Token-based authentication (OAuth
 2.0).
 
@@ -27,7 +27,7 @@ ServiceNow credentials.
 
 Token-based authentication uses OAuth 2.0 to provide a more secure way to
 authenticate without sharing user credentials directly with the application.
-This method is recommended for production environments.
+The project recommends this method for production environments.
 
 To use token-based authentication, you must provide your Client ID, Client
 Secret, and the Base URL of your ServiceNow instance.

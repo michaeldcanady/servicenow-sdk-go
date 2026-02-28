@@ -16,8 +16,8 @@ values.
 
 - **Operators:** Used to compare field values, for example, `=`, `!=`, `LIKE`,
   `STARTSWITH`.
-- **Logical Operators:** Used to combine multiple conditions (`^` for AND, `^OR`
-  for OR).
+- **Logical Operators:** Used to combine multiple conditions (`^` for and
+  [conjunction], `^OR` for or [disjunction]).
 - **Encoded String:** The final output of the query builder that's passed to
   the Table API.
 
@@ -32,7 +32,7 @@ field types and logical operations.
 
 ## Use a query with the Table API
 
-Once you've built a query string, it can be used in the request
+Once you've built a query string, you can use it in the request
 configuration for table operations.
 
 ```go

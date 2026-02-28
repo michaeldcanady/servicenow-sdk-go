@@ -1,6 +1,6 @@
 # Attachment file overview
 
-The Attachment File API allows you to interact with the raw binary content of file attachments. Unlike the base Attachment API which handles metadata (like filenames and sizes), the File sub-module is used for the actual upload and download of file data.
+The Attachment File API lets you interact with the raw binary content of file attachments. Unlike the base Attachment API which handles metadata (like filenames and sizes), the File sub-module handles the actual upload and download of file data.
 
 Commonly used for:
 - Uploading a new file and attaching it to a specific record.

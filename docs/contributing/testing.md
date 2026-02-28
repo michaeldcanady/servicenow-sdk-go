@@ -1,4 +1,4 @@
-# Testing Guide
+# Testing guide
 
 The SDK maintains high standards for code quality by requiring comprehensive tests for
 every new feature and bug fix. This guide explains how to write and run tests
@@ -22,7 +22,7 @@ go test ./...
 
 ### Integration tests
 
-Integration tests verify the SDK's behavior against a real ServiceNow instance.
+Integration tests verify the SDK's behavior with a real ServiceNow instance.
 They're located in the `integration/` directory. These tests are essential for
 validating that the SDK correctly handles actual API responses.
 
@@ -37,9 +37,9 @@ To run integration tests:
 
 ## Mocking HTTP requests
 
-The project uses the `httpmock` library to simulate ServiceNow API responses in unit tests.
-This allows for the verification of request construction and response parsing without a
-live instance.
+The project uses the `httpmock` library to simulate ServiceNow API responses in
+unit tests. This lets you verify request construction and response parsing
+without a live instance.
 
 ```go
 func TestExample(t *testing.T) {
@@ -58,14 +58,14 @@ func TestExample(t *testing.T) {
 
 When contributing tests, follow these best practices:
 
-- **Test for success and failure:** Ensure you test both happy paths and
-  various error conditions, for example, 401 Unauthorized, 404 Not Found.
+- **Test for success and failure:** Make sure you test both happy paths and
+  many error conditions, for example, 401 Unauthorized, 404 Not Found.
 - **Use meaningful data:** Avoid using "foo" or "bar." Use data that resembles
   real ServiceNow records, for example, "INC0010001."
 - **Verify request details:** In unit tests, check that the correct headers,
-  query parameters, and body are sent.
+  query parameters, and body reach the server.
 - **Check for regressions:** If you're fixing a bug, add a test case that
-  reproduces the bug to ensure it doesn't return.
+  reproduces the bug to make sure it doesn't return.
 
 ## Coverage reporting
 

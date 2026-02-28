@@ -17,4 +17,4 @@ Whether you're automating incident management, synchronizing user records, or ha
 - **Fluent & Standard Builders**: Offers both a fluent API for ease of use and standard builders for more manual control.
 - **Internal consistency** within each submodule takes precedence, though cross-module consistency remains a broader goal.
 
-Explore the subsections above for implementation details, code snippets, and specific endpoint documentation.
+Explore the following subsections for implementation details, code snippets, and specific endpoint documentation.

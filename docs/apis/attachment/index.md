@@ -1,6 +1,6 @@
-# Attachment API Overview
+# Attachment API overview
 
-The Attachment API allows you to manage files attached to records in ServiceNow. You can use it to list metadata for multiple attachments, retrieve metadata for a specific attachment, or delete an attachment.
+The Attachment API lets you manage files attached to records in ServiceNow. You can use it to list metadata for multiple attachments, retrieve metadata for a specific attachment, or delete an attachment.
 
 Additionally, it provides specialized endpoints for handling the raw file content (binary data) through the [File operations](file/index.md) sub-module.
 
@@ -10,7 +10,7 @@ Commonly used for:
 - Uploading documents, images, or logs to existing ServiceNow records.
 - Cleaning up old or redundant attachments.
 
-## Basic Usage
+## Basic usage
 
 To interact with attachments, you use the `Attachment2` method from the `now` namespace.
 
@@ -24,7 +24,7 @@ attachmentAPI := client.Now2().Attachment2()
 result, err := attachmentAPI.Get(context.Background(), nil)
 ```
 
-## Available Operations
+## Available operations
 
 - [**List Attachments**](list.md): Retrieve metadata for multiple attachments.
 - [**Get Attachment Metadata**](get.md): Retrieve metadata for a specific attachment using its `sys_id`.

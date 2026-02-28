@@ -28,6 +28,9 @@
   },
   "remoteUser": "vscode",
   "features": {
+    "ghcr.io/shinepukur/devcontainer-features/vale:1": {
+      "version": "latest"
+    },
     "ghcr.io/devcontainers/features/github-cli:1": {
       "version": "latest"
     },

@@ -1,6 +1,6 @@
 # Architecture
 
-The ServiceNow SDK for Go is designed as a thin, high-performance wrapper around
+The ServiceNow SDK for Go is a thin, high-performance wrapper around
 the ServiceNow REST APIs. It utilizes the **Microsoft Kiota** framework to
 provide a consistent, type-safe development experience.
 
@@ -54,7 +54,7 @@ It handles:
 ### Authentication providers
 
 Located in the `credentials/` package, these providers manage the `Authorization`
-header. They support various methods, including Basic Auth and OAuth2. The
+header. They support many methods, including Basic Auth and OAuth2. The
 adapter calls the provider for every request, allowing for dynamic token
 refreshes.
 
@@ -69,7 +69,7 @@ When you execute a method like `Get()`, the following sequence occurs:
 3.  **Serialize:** If there is a request body, the Serialization layer converts
      the Go model into JSON.
 4.  **Send:** The HTTP client transmits the request to ServiceNow.
-5.  **Deserialize:** The response JSON is converted back into the appropriate
+5.  **Deserialize:** The SDK converts the response JSON back into the appropriate
     Go model (or an error object if the status code indicates failure).
 
 ## Design patterns
@@ -80,5 +80,4 @@ When you execute a method like `Get()`, the following sequence occurs:
   type safety for API responses.
 - **Modular design:** Each API module (Table, Attachment, Batch) is independent,
   minimizing the library's footprint.
-- **Dependency injection:** The HTTP client and authentication providers can
-  be customized or mocked for testing.
+- **Dependency injection:** You can customize or mock the HTTP client and authentication providers for testing.

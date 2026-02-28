@@ -6,9 +6,8 @@ minimizing network overhead and latency.
 
 ## Understand batch requests
 
-A batch request consists of multiple individual sub-requests. Each sub-request
-is executed by ServiceNow, and the results are returned in a single combined
-response.
+A batch request consists of multiple individual sub-requests. ServiceNow
+executes each sub-request and returns the results in a single combined response.
 
 ### Key benefits
 

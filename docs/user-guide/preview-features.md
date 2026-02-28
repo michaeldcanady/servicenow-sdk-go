@@ -16,8 +16,8 @@ They're provided as-is for evaluation and feedback purposes.
 
 - **Experimental:** The API and behavior of these features may change.
 - **Feedback:** Your feedback is crucial for improving these features.
-- **Build Tags:** Some preview features may require specific Go build tags
-  to be enabled.
+- **Build Tags:** You might need to enable specific Go build tags for some
+  preview features.
 
 ## List of preview features
 
