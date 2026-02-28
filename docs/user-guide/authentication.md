@@ -12,8 +12,8 @@ Basic Authentication (Username/Password) and Token-based authentication (OAuth
 
 ### Basic authentication
 
-Basic authentication is the simplest method, requiring only a username and
-password. It is suitable for automated scripts and internal tools where complex
+Basic authentication's the simplest method, requiring only a username and
+password. It's suitable for automated scripts and internal tools where complex
 OAuth flows might be unnecessary.
 
 To use basic authentication, create a `UsernamePasswordCredential` with your
@@ -42,12 +42,12 @@ After configuring your credentials, you must initialize the `ServiceNowClient`
 to start making requests to your instance.
 
 ```go
-{% include-markdown 'snippets/auth.go' start='// [START client_init]' end='// [END client_init]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/auth.go' start='// [START client_init]' end='// [START client_init]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Next steps
 
-Now that you have authenticated your client, you can begin performing
+Now that you've authenticated your client, you can begin performing
 operations:
 
 - **[Table Operations](tables.md):** Learn how to interact with ServiceNow

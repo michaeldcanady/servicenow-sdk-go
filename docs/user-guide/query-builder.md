@@ -1,7 +1,7 @@
 # Querying
 
 The SDK provides a powerful query builder to construct complex ServiceNow
-Encoded Queries in a type-safe and readable way. This helps you filter table
+Encoded Queries in a type-safe and readable way. This helps filter table
 records precisely and minimize unnecessary data transfer.
 
 > **Note:** This is a preview feature currently under active development.
@@ -14,11 +14,11 @@ values.
 
 ### Key concepts
 
-- **Operators:** Used to compare field values (e.g., `=`, `!=`, `LIKE`,
-  `STARTSWITH`).
+- **Operators:** Used to compare field values, for example, `=`, `!=`, `LIKE`,
+  `STARTSWITH`.
 - **Logical Operators:** Used to combine multiple conditions (`^` for AND, `^OR`
   for OR).
-- **Encoded String:** The final output of the query builder that you pass to
+- **Encoded String:** The final output of the query builder that's passed to
   the Table API.
 
 ## Build a query
@@ -32,7 +32,7 @@ field types and logical operations.
 
 ## Use a query with the Table API
 
-Once you've built your query string, you can use it in the request
+Once you've built a query string, it can be used in the request
 configuration for table operations.
 
 ```go

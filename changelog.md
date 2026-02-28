@@ -187,7 +187,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - abstract `core.PageIterator` and `core.PageResult`
-- `PageIterator.fetchPage` does not parse provided uri ([Issue #83](https://github.com/michaeldcanady/servicenow-sdk-go/issues/83))
+- `PageIterator.fetchPage` doesn't parse provided URI ([Issue #83](https://github.com/michaeldcanady/servicenow-sdk-go/issues/83))
 
 ### Deprecated
 
@@ -220,4 +220,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- Page Interation stops after first page ([Issue #62](https://github.com/michaeldcanady/servicenow-sdk-go/pull/62))
+- Page Iteration stops after first page ([Issue #62](https://github.com/michaeldcanady/servicenow-sdk-go/pull/62))

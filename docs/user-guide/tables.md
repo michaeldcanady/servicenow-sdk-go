@@ -9,11 +9,11 @@ more direct control.
 
 The SDK offers two distinct ways to build and execute requests.
 
-- **Fluent:** A method-chaining approach that is expressive and easy to read. It
-  is generally preferred for most common tasks.
+- **Fluent:** A method-chaining approach that's expressive and easy to read. That's
+  preferred for most common tasks.
 - **Standard:** A more explicit approach that requires you to manage request
   builders and raw URLs. This is useful when you need to handle dynamic URLs or
-  specific configurations not easily expressed fluently.
+  specific configurations not expressed fluently.
 
 ## Retrieve records
 

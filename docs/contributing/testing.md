@@ -1,6 +1,6 @@
 # Testing Guide
 
-We maintain high standards for code quality by requiring comprehensive tests for
+The SDK maintains high standards for code quality by requiring comprehensive tests for
 every new feature and bug fix. This guide explains how to write and run tests
 within the SDK.
 
@@ -10,7 +10,7 @@ The SDK uses two main categories of tests: unit tests and integration tests.
 
 ### Unit tests
 
-Unit tests verify individual components in isolation. They are located in the
+Unit tests verify individual components in isolation. They're located in the
 same directory as the code they test and use the `_test.go` suffix. These tests
 must be fast and not require external network access.
 
@@ -23,7 +23,7 @@ go test ./...
 ### Integration tests
 
 Integration tests verify the SDK's behavior against a real ServiceNow instance.
-They are located in the `integration/` directory. These tests are essential for
+They're located in the `integration/` directory. These tests are essential for
 validating that the SDK correctly handles actual API responses.
 
 To run integration tests:
@@ -37,8 +37,8 @@ To run integration tests:
 
 ## Mocking HTTP requests
 
-We use the `httpmock` library to simulate ServiceNow API responses in unit tests.
-This allows us to verify request construction and response parsing without a
+The project uses the `httpmock` library to simulate ServiceNow API responses in unit tests.
+This allows for the verification of request construction and response parsing without a
 live instance.
 
 ```go
@@ -59,17 +59,17 @@ func TestExample(t *testing.T) {
 When contributing tests, follow these best practices:
 
 - **Test for success and failure:** Ensure you test both happy paths and
-  various error conditions (e.g., 401 Unauthorized, 404 Not Found).
-- **Use meaningful data:** Avoid using "foo" or "bar". Use data that resembles
-  real ServiceNow records (e.g., "INC0010001").
+  various error conditions, for example, 401 Unauthorized, 404 Not Found.
+- **Use meaningful data:** Avoid using "foo" or "bar." Use data that resembles
+  real ServiceNow records, for example, "INC0010001."
 - **Verify request details:** In unit tests, check that the correct headers,
-  query parameters, and body are being sent.
+  query parameters, and body are sent.
 - **Check for regressions:** If you're fixing a bug, add a test case that
   reproduces the bug to ensure it doesn't return.
 
 ## Coverage reporting
 
-We use Codecov to track test coverage. You can generate a local coverage report
+The project uses Codecov to track test coverage. You can generate a local coverage report
 using the standard Go tools:
 
 ```bash

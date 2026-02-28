@@ -10,7 +10,7 @@ Regardless of your setup choice, you need the following:
 
 - **Git:** For version control and cloning the repository.
 - **ServiceNow Instance:** A Personal Developer Instance (PDI) is essential for
-  running integration tests. You can obtain one for free at
+  running integration tests. You can obtain one at no cost at
   [developer.servicenow.com](https://developer.servicenow.com/).
 
 ## Option 1: VS Code Dev Containers (Recommended)

@@ -1,7 +1,7 @@
 # Preview features
 
 To provide users with early access to upcoming functionality and gather
-valuable feedback, the SDK includes several features that are currently in
+valuable feedback, the SDK includes features currently in
 preview. These features are under active development and may undergo
 significant changes.
 
@@ -10,7 +10,7 @@ significant changes.
 ## Understand preview features
 
 Preview features are experimental and may not yet be fully documented or tested.
-They are provided as-is for evaluation and feedback purposes.
+They're provided as-is for evaluation and feedback purposes.
 
 ### Key points
 

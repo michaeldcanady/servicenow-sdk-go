@@ -18,9 +18,9 @@ process by providing:
   hierarchy.
 - **Strong typing:** Leverage Go generics (in V2 modules) for compile-time
   checks and improved IDE support.
-- **Built-in resilience:** Benefit from automatic retries and modular
+- **Resilience:** Benefit from automatic retries and modular
   middleware for logging and error handling.
-- **Extensibility:** Easily integrate custom authentication methods or
+- **Extensibility:** Integrate custom authentication methods or
   specialized table models.
 
 ## Quick start
@@ -40,15 +40,15 @@ func main() {
 
 ## Explore the documentation
 
-- **[Getting Started](getting-started.md):** Follow our quick start guide to
+- **[Getting Started](getting-started.md):** Follow the quick start guide to
   install the SDK and make your first call.
 - **[User Guide](user-guide/authentication.md):** Deep dive into core features
   like authentication, table operations, and file attachments.
 - **[API Reference](apis/index.md):** Browse detailed technical documentation
   for every supported ServiceNow API module.
-- **[Contributor Guide](contributing/index.md):** Learn how you can help
-  improve the SDK and become part of our community.
+- **[Contributor Guide](contributing/index.md):** Learn how to help
+  improve the SDK and become part of the community.
 
 ---
 
-*This project is community-driven and is not an official ServiceNow product.*
+*This project is community-driven and isn't an official ServiceNow product.*

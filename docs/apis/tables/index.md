@@ -7,7 +7,7 @@ Commonly used for:
 - Retrieving records from tables like `incident`, `change_request`, or `sys_user`.
 - Creating new records with specific field values.
 - Updating existing records by their unique system ID (`sys_id`).
-- Deleting records when they are no longer needed.
+- Deleting records when they're no longer needed.
 
 ## Basic Usage
 
