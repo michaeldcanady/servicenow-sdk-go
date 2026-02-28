@@ -320,8 +320,8 @@ func TestPageIterator_Reset(t *testing.T) {
 	iterator.Reset()
 
 	assert.Equal(t, 0, iterator.pauseIndex)
-	assert.Equal(t, 1, len(iterator.currentPage.value))
-	assert.Equal(t, item1, iterator.currentPage.value[0])
+	assert.Equal(t, 1, len(iterator.currentPage.Result))
+	assert.Equal(t, item1, iterator.currentPage.Result[0])
 }
 
 func TestPageIterator_ResetPage(t *testing.T) {

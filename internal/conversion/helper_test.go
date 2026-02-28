@@ -88,10 +88,10 @@ func TestIsCompatible(t *testing.T) {
 func TestAs(t *testing.T) {
 	var i int16
 	tests := []struct {
-		name  string
-		in    any
-		out   any
-		err   bool
+		name string
+		in   any
+		out  any
+		err  bool
 	}{
 		{"Successful", int16(10), &i, false},
 		{"NilInput", nil, &i, false},

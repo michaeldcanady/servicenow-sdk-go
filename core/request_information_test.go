@@ -66,7 +66,7 @@ func TestRequestInformation_Url(t *testing.T) {
 	if res != "http://test.com/t" {
 		t.Errorf("got %s", res)
 	}
-	
+
 	riBad := NewRequestInformation()
 	_, err := riBad.Url()
 	if err == nil {
@@ -88,7 +88,7 @@ func TestRequestInformation_ToRequest(t *testing.T) {
 	if req.Header.Get("A") != "B" {
 		t.Error("header missing")
 	}
-	
+
 	riBad := NewRequestInformation()
 	_, err = riBad.ToRequest()
 	if err == nil {
@@ -100,7 +100,7 @@ func TestRequestInformation_ToRequestWithContext(t *testing.T) {
 	ri := NewRequestInformation()
 	ri.uri.UrlTemplate = "http://{+baseurl}/t"
 	ri.uri.PathParameters["baseurl"] = "test.com"
-	
+
 	_, err := ri.ToRequestWithContext(context.Background())
 	if err != nil {
 		t.Errorf("unexpected err %v", err)
@@ -156,11 +156,14 @@ func TestRequestInformation_SetUri(t *testing.T) {
 
 func TestRequestInformation_AddQueryParameters(t *testing.T) {
 	ri := NewRequestInformation()
-	err := ri.AddQueryParameters(struct{A string `url:"a"`}{A: "v"})
+	err := ri.AddQueryParameters(struct {
+		A string `url:"a"`
+	}{A: "v"})
 	if err != nil {
 		t.Errorf("unexpected err %v", err)
 	}
 }
 
 type mockRequestOption struct{}
+
 func (m *mockRequestOption) GetKey() RequestOptionKey { return RequestOptionKey{Key: "mock"} }

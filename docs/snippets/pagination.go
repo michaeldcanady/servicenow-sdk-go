@@ -6,8 +6,8 @@ import (
 	"log"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 )
 
 func _() {
@@ -31,8 +31,7 @@ func _() {
 	err = iterator.Iterate(ctx, false, func(record *tableapi.TableRecord) bool {
 		// Process the record
 		sysId, _ := record.GetSysID()
-		fmt.Printf("Incident ID: %s
-", *sysId)
+		fmt.Printf("Incident ID: %s\n", *sysId)
 		return true // Continue to the next record
 	})
 
@@ -49,7 +48,7 @@ func _() {
 	}
 
 	// Process the items on the next page
-	results, _ := nextPage.GetResult()
+	results := nextPage.Result
 	for _, item := range results {
 		fmt.Println(item)
 	}
@@ -57,7 +56,7 @@ func _() {
 
 	// [START pagination_attachment]
 	// 1. Execute an attachment list request
-	attachmentResponse, err := client.Now2().AttachmentV2().Get(ctx, nil)
+	attachmentResponse, err := client.Now2().Attachment2().Get(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -69,12 +68,13 @@ func _() {
 	}
 
 	// 3. Iterate over attachments
-	err = attachmentIterator.Iterate(ctx, false, func(attachment attachmentapi.Attachment2) bool {
+	if err := attachmentIterator.Iterate(ctx, false, func(attachment attachmentapi.Attachment2) bool {
 		fileName, _ := attachment.GetFileName()
-		fmt.Printf("Attachment: %s
-", *fileName)
+		fmt.Printf("Attachment: %s\n", *fileName)
 		return true
-	})
+	}); err != nil {
+		log.Fatal(err)
+	}
 	// [END pagination_attachment]
 
 	// [START pagination_item_by_item]

@@ -5,7 +5,7 @@ import (
 )
 
 func _() {
-    var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowClient
 
 	// [START fluent_table]
 	client.Now2().TableV2("xSDK_SN_TABLEx")

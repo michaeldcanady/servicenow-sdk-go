@@ -103,7 +103,7 @@ func WithRequestOptions[T serialization.Parsable](options ...abstractions.Reques
 // callback should return true to continue iteration, or false to stop.
 func (i *PageIterator[T]) Iterate(ctx context.Context, reverse bool, callback func(T) bool) error {
 	if reverse && i.pauseIndex == 0 {
-		i.pauseIndex = len(i.currentPage.value)
+		i.pauseIndex = len(i.currentPage.Result)
 	}
 
 	for {
@@ -131,14 +131,14 @@ func (i *PageIterator[T]) Iterate(ctx context.Context, reverse bool, callback fu
 
 // HasNext returns true if there are more items to iterate over in the forward direction.
 func (i *PageIterator[T]) HasNext() bool {
-	return (i.pauseIndex < len(i.currentPage.value)) ||
-		(i.currentPage.nextLink != nil && strings.TrimSpace(*i.currentPage.nextLink) != "")
+	return (i.pauseIndex < len(i.currentPage.Result)) ||
+		(i.currentPage.NextLink != nil && strings.TrimSpace(*i.currentPage.NextLink) != "")
 }
 
 // HasPrevious returns true if there are more items to iterate over in the reverse direction.
 func (i *PageIterator[T]) HasPrevious() bool {
 	return (i.pauseIndex > 0) ||
-		(i.currentPage.prevLink != nil && strings.TrimSpace(*i.currentPage.prevLink) != "")
+		(i.currentPage.PrevLink != nil && strings.TrimSpace(*i.currentPage.PrevLink) != "")
 }
 
 // NextItem returns the next item in the collection, fetching the next page if necessary.
@@ -150,8 +150,8 @@ func (i *PageIterator[T]) NextItem(ctx context.Context) (T, error) {
 			i.pauseIndex = 0
 		}
 
-		if i.pauseIndex < len(i.currentPage.value) {
-			item := i.currentPage.value[i.pauseIndex]
+		if i.pauseIndex < len(i.currentPage.Result) {
+			item := i.currentPage.Result[i.pauseIndex]
 			i.pauseIndex++
 			return item, nil
 		}
@@ -174,13 +174,13 @@ func (i *PageIterator[T]) NextItem(ctx context.Context) (T, error) {
 // Returns [ErrNoMoreItems] if the beginning of the collection is reached.
 func (i *PageIterator[T]) PreviousItem(ctx context.Context) (T, error) {
 	for {
-		if i.pauseIndex > len(i.currentPage.value) {
-			i.pauseIndex = len(i.currentPage.value)
+		if i.pauseIndex > len(i.currentPage.Result) {
+			i.pauseIndex = len(i.currentPage.Result)
 		}
 
 		if i.pauseIndex > 0 {
 			i.pauseIndex--
-			item := i.currentPage.value[i.pauseIndex]
+			item := i.currentPage.Result[i.pauseIndex]
 			return item, nil
 		}
 
@@ -199,11 +199,11 @@ func (i *PageIterator[T]) PreviousItem(ctx context.Context) (T, error) {
 
 // Previous fetches and returns the previous page of results.
 func (i *PageIterator[T]) Previous(ctx context.Context) (PageResult[T], error) {
-	if i.currentPage.prevLink == nil || strings.TrimSpace(*i.currentPage.prevLink) == "" {
+	if i.currentPage.PrevLink == nil || strings.TrimSpace(*i.currentPage.PrevLink) == "" {
 		return PageResult[T]{}, nil
 	}
 
-	collection, err := i.fetchPage(ctx, i.currentPage.prevLink)
+	collection, err := i.fetchPage(ctx, i.currentPage.PrevLink)
 	if err != nil {
 		return PageResult[T]{}, err
 	}
@@ -213,18 +213,18 @@ func (i *PageIterator[T]) Previous(ctx context.Context) (PageResult[T], error) {
 		return PageResult[T]{}, err
 	}
 
-	i.updatePage(page, len(page.value))
+	i.updatePage(page, len(page.Result))
 
 	return i.currentPage, nil
 }
 
 // Next fetches and returns the next page of results.
 func (i *PageIterator[T]) Next(ctx context.Context) (PageResult[T], error) {
-	if i.currentPage.nextLink == nil || strings.TrimSpace(*i.currentPage.nextLink) == "" {
+	if i.currentPage.NextLink == nil || strings.TrimSpace(*i.currentPage.NextLink) == "" {
 		return PageResult[T]{}, nil
 	}
 
-	collection, err := i.fetchPage(ctx, i.currentPage.nextLink)
+	collection, err := i.fetchPage(ctx, i.currentPage.NextLink)
 	if err != nil {
 		return PageResult[T]{}, err
 	}
@@ -241,11 +241,11 @@ func (i *PageIterator[T]) Next(ctx context.Context) (PageResult[T], error) {
 
 // First fetches and returns the first page of results.
 func (i *PageIterator[T]) First(ctx context.Context) (PageResult[T], error) {
-	if i.currentPage.firstLink == nil || strings.TrimSpace(*i.currentPage.firstLink) == "" {
+	if i.currentPage.FirstLink == nil || strings.TrimSpace(*i.currentPage.FirstLink) == "" {
 		return PageResult[T]{}, nil
 	}
 
-	collection, err := i.fetchPage(ctx, i.currentPage.firstLink)
+	collection, err := i.fetchPage(ctx, i.currentPage.FirstLink)
 	if err != nil {
 		return PageResult[T]{}, err
 	}
@@ -262,11 +262,11 @@ func (i *PageIterator[T]) First(ctx context.Context) (PageResult[T], error) {
 
 // Last fetches and returns the last page of results.
 func (i *PageIterator[T]) Last(ctx context.Context) (PageResult[T], error) {
-	if i.currentPage.lastLink == nil || strings.TrimSpace(*i.currentPage.lastLink) == "" {
+	if i.currentPage.LastLink == nil || strings.TrimSpace(*i.currentPage.LastLink) == "" {
 		return PageResult[T]{}, nil
 	}
 
-	collection, err := i.fetchPage(ctx, i.currentPage.lastLink)
+	collection, err := i.fetchPage(ctx, i.currentPage.LastLink)
 	if err != nil {
 		return PageResult[T]{}, err
 	}
@@ -276,7 +276,7 @@ func (i *PageIterator[T]) Last(ctx context.Context) (PageResult[T], error) {
 		return PageResult[T]{}, err
 	}
 
-	i.updatePage(page, len(page.value))
+	i.updatePage(page, len(page.Result))
 
 	return i.currentPage, nil
 }

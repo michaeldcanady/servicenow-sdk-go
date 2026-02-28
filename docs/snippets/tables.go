@@ -7,19 +7,25 @@ import (
 	"log"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 )
 
 // [END table_imports]
 
 func _() {
-	var _ credentials.AccessToken
+	tableBasicSetup()
+	tableGetSnippets()
+	tableListSnippets()
+	tableCreateSnippets()
+	tableUpdateSnippets()
+	tableDeleteSnippets()
+	tableGuideSnippets()
+}
 
+func tableBasicSetup() {
 	var client *servicenowsdkgo.ServiceNowClient
 	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
 	var collectionRequestBuilder *tableapi.TableRequestBuilder2[*tableapi.TableRecord]
-	ctx := context.Background()
 
 	// [START table_standard_setup]
 	// Step 3: Define raw URL
@@ -36,6 +42,13 @@ func _() {
 	// Step 4: Build request
 	collectionRequestBuilder = tableapi.NewDefaultTableRequestBuilder2(rawURL, client.RequestAdapter)
 	// [END table_collection_standard_setup]
+	_ = requestBuilder
+	_ = collectionRequestBuilder
+}
+
+func tableGetSnippets() {
+	var client *servicenowsdkgo.ServiceNowClient
+	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_get_fluent]
 	// Step 3: Configure request
@@ -66,6 +79,13 @@ func _() {
 		log.Fatal(err)
 	}
 	// [END table_get_standard]
+	_ = getResponse
+	_ = getStdRecord
+}
+
+func tableListSnippets() {
+	var client *servicenowsdkgo.ServiceNowClient
+	var collectionRequestBuilder *tableapi.TableRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_list_fluent]
 	// Step 3: Configure request
@@ -96,6 +116,13 @@ func _() {
 		log.Fatal(err)
 	}
 	// [END table_list_standard]
+	_ = list_response
+	_ = list_std_response
+}
+
+func tableCreateSnippets() {
+	var client *servicenowsdkgo.ServiceNowClient
+	var collectionRequestBuilder *tableapi.TableRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_create_fluent]
 	// Step 3: Configure request
@@ -107,8 +134,12 @@ func _() {
 
 	// Step 4: Build request body
 	createData := tableapi.NewTableRecord()
-	createData.SetValue("short_description", "example incident")
-	createData.SetValue("description", "incident created by servicenow-sdk-go")
+	if err := createData.SetValue("short_description", "example incident"); err != nil {
+		log.Fatal(err)
+	}
+	if err := createData.SetValue("description", "incident created by servicenow-sdk-go"); err != nil {
+		log.Fatal(err)
+	}
 
 	// Step 5: Execute request
 	create_response, err := client.Now2().TableV2("xSDK_SN_TABLEx").Post(context.Background(), createData, createConfig)
@@ -127,8 +158,12 @@ func _() {
 
 	// Step 6: Build request body
 	createStdData := tableapi.NewTableRecord()
-	createStdData.SetValue("short_description", "example incident")
-	createStdData.SetValue("description", "incident created by servicenow-sdk-go")
+	if err := createStdData.SetValue("short_description", "example incident"); err != nil {
+		log.Fatal(err)
+	}
+	if err := createStdData.SetValue("description", "incident created by servicenow-sdk-go"); err != nil {
+		log.Fatal(err)
+	}
 
 	// Step 7: Execute request
 	create_std_response, err := collectionRequestBuilder.Post(context.Background(), createStdData, createStdConfig)
@@ -136,6 +171,13 @@ func _() {
 		log.Fatal(err)
 	}
 	// [END table_create_standard]
+	_ = create_response
+	_ = create_std_response
+}
+
+func tableUpdateSnippets() {
+	var client *servicenowsdkgo.ServiceNowClient
+	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_update_fluent]
 	// Step 3: Configure request
@@ -147,7 +189,9 @@ func _() {
 
 	// Step 4: Build request body
 	updateData := tableapi.NewTableRecord()
-	updateData.SetValue("short_description", "updated incident")
+	if err := updateData.SetValue("short_description", "updated incident"); err != nil {
+		log.Fatal(err)
+	}
 
 	// Step 5: Execute request
 	updateResponse, err := client.Now2().TableV2("xSDK_SN_TABLEx").ById("xSDK_SN_TABLE_SYS_IDx").Put(context.Background(), updateData, update_config)
@@ -166,7 +210,9 @@ func _() {
 
 	// Step 6: Build request body
 	updateStdData := tableapi.NewTableRecord()
-	updateStdData.SetValue("short_description", "updated incident")
+	if err := updateStdData.SetValue("short_description", "updated incident"); err != nil {
+		log.Fatal(err)
+	}
 
 	// Step 7: Execute request
 	updateStdResponse, err := requestBuilder.Put(context.Background(), updateStdData, updateStdConfig)
@@ -174,6 +220,13 @@ func _() {
 		log.Fatal(err)
 	}
 	// [END table_update_standard]
+	_ = updateResponse
+	_ = updateStdResponse
+}
+
+func tableDeleteSnippets() {
+	var client *servicenowsdkgo.ServiceNowClient
+	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_delete_fluent]
 	// Step 3: Configure request
@@ -184,7 +237,7 @@ func _() {
 	}
 
 	// Step 4: Execute request
-	err = client.Now2().TableV2("xSDK_SN_TABLEx").ById("xSDK_SN_TABLE_SYS_IDx").Delete(context.Background(), delete_config)
+	err := client.Now2().TableV2("xSDK_SN_TABLEx").ById("xSDK_SN_TABLE_SYS_IDx").Delete(context.Background(), delete_config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -204,6 +257,11 @@ func _() {
 		log.Fatal(err)
 	}
 	// [END table_delete_standard]
+}
+
+func tableGuideSnippets() {
+	var client *servicenowsdkgo.ServiceNowClient
+	ctx := context.Background()
 
 	// [START table_list_guide]
 	// Get records from the 'incident' table
@@ -238,8 +296,12 @@ func _() {
 
 	// [START table_create_guide]
 	newIncident := tableapi.NewTableRecord()
-	newIncident.SetValue("short_description", "System is down")
-	newIncident.SetValue("priority", "1")
+	if err := newIncident.SetValue("short_description", "System is down"); err != nil {
+		log.Fatal(err)
+	}
+	if err := newIncident.SetValue("priority", "1"); err != nil {
+		log.Fatal(err)
+	}
 
 	create_guide_response, err := client.Now2().TableV2("xSDK_SN_TABLEx").Post(ctx, newIncident, nil)
 	if err != nil {
@@ -256,14 +318,22 @@ func _() {
 	sysIdStr := "xSDK_SN_TABLE_SYS_IDx" // your record sys_id
 
 	updateGuideData := tableapi.NewTableRecord()
-	updateGuideData.SetValue("short_description", "Updated description")
+	if err := updateGuideData.SetValue("short_description", "Updated description"); err != nil {
+		log.Fatal(err)
+	}
 
 	update_guide_response, err := client.Now2().TableV2("xSDK_SN_TABLEx").ById(sysIdStr).Put(ctx, updateGuideData, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// [END table_update_guide]
 
 	// [START table_delete_guide]
 	sysIdToDelete := "xSDK_SN_TABLE_SYS_IDx"
 	err = client.Now2().TableV2("xSDK_SN_TABLEx").ById(sysIdToDelete).Delete(ctx, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// [END table_delete_guide]
 
 	// [START table_query_guide]
@@ -277,17 +347,10 @@ func _() {
 	}
 
 	query_guide_response, err := client.Now2().TableV2("xSDK_SN_TABLEx").Get(ctx, config)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// [END table_query_guide]
-
-	_ = getResponse
-	_ = getStdRecord
-	_ = collectionRequestBuilder
-	_ = list_response
-	_ = list_std_response
-	_ = create_response
-	_ = create_std_response
-	_ = updateResponse
-	_ = updateStdResponse
 	_ = update_guide_response
 	_ = query_guide_response
 }

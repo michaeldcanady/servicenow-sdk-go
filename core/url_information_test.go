@@ -121,7 +121,7 @@ func TestUrlInformation_ToUrl(t *testing.T) {
 	ui := NewURLInformation()
 	ui.UrlTemplate = "http://{+baseurl}/t"
 	ui.PathParameters["baseurl"] = "test.com"
-	
+
 	uiRaw := NewURLInformation()
 	uiRaw.PathParameters[rawURLKey] = "http://raw"
 
@@ -182,7 +182,7 @@ func TestUrlInformation_getURIFromRaw(t *testing.T) {
 	if res.String() != "http://test" {
 		t.Error("failed")
 	}
-	
+
 	uiEmpty := NewURLInformation()
 	res2, _ := uiEmpty.getURIFromRaw()
 	if res2 != nil {
@@ -198,7 +198,7 @@ func TestUrlInformation_buildURIFromTemplate(t *testing.T) {
 	if res != "http://test.com/t" {
 		t.Errorf("got %s", res)
 	}
-	
+
 	uiBad := NewURLInformation()
 	uiBad.UrlTemplate = "{" // Invalid template
 	_, err := uiBad.buildURIFromTemplate()

@@ -16,6 +16,7 @@ import (
 type Credential interface {
 	GetAuthentication() (string, error)
 }
+
 // [END auth_interface]
 
 func _() {

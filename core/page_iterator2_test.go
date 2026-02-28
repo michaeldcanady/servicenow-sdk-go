@@ -8,7 +8,7 @@ import (
 func TestNewPageIterator2(t *testing.T) {
 	client := &mockCoreClient2{}
 	page := &mockPage{}
-	cf := func(r *http.Response) (CollectionResponse[any], error) { return page, nil }
+	cf := func(_ *http.Response) (CollectionResponse[any], error) { return page, nil } //nolint:unparam
 	tests := []struct {
 		name   string
 		page   *mockPage

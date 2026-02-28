@@ -120,14 +120,15 @@ func TestServicedRequestModel_GetFieldDeserializers(t *testing.T) {
 					if key == bodyKey {
 						s = base64.StdEncoding.EncodeToString([]byte("test"))
 					}
-					if key == statusCodeKey {
+					switch key {
+					case statusCodeKey:
 						i := int64(200)
 						node.On("GetInt64Value").Return(&i, nil)
-					} else if key == executionTimeKey {
+					case executionTimeKey:
 						node.On("GetISODurationValue").Return(&serialization.ISODuration{}, nil)
-					} else if key == headersKey {
+					case headersKey:
 						node.On("GetCollectionOfObjectValues", mock.Anything).Return([]serialization.Parsable{NewRestRequestHeader()}, nil)
-					} else {
+					default:
 						node.On("GetStringValue").Return(&s, nil)
 					}
 					_ = fn(node)

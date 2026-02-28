@@ -114,11 +114,15 @@ func _() {
 	data := []byte("this is example data")
 	media := attachmentapi.NewMedia(dataContentType, data)
 
+	create_file_table_sys_id := "xSDK_SN_TABLE_SYS_IDx"
+	create_file_table_name := "xSDK_SN_TABLEx"
+	create_file_file_name := "example.txt"
+
 	create_file_config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
 		QueryParameters: &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
-			TableSysID: "xSDK_SN_TABLE_SYS_IDx", // required
-			TableName:  "xSDK_SN_TABLEx",        // required
-			FileName:   "example.txt",           // required
+			TableSysID: &create_file_table_sys_id, // required
+			TableName:  &create_file_table_name,   // required
+			FileName:   &create_file_file_name,    // required
 		},
 		// Optional configurations
 	}
@@ -138,12 +142,16 @@ func _() {
 	file_create_data := []byte("this is example data")
 	file_create_media := attachmentapi.NewMedia(file_create_dataContentType, file_create_data)
 
+	file_create_table_sys_id := "xSDK_SN_TABLE_SYS_IDx"
+	file_create_table_name := "xSDK_SN_TABLEx"
+	file_create_file_name := "example.txt"
+
 	// Step 5: Configure request
 	file_create_std_config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
 		QueryParameters: &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
-			TableSysID: "xSDK_SN_TABLE_SYS_IDx", // required
-			TableName:  "xSDK_SN_TABLEx",        // required
-			FileName:   "example.txt",           // required
+			TableSysID: &file_create_table_sys_id, // required
+			TableName:  &file_create_table_name,   // required
+			FileName:   &file_create_file_name,    // required
 		},
 		// Optional configurations
 	}
@@ -246,10 +254,14 @@ func _() {
 	defer file.Close()
 
 	// Upload attachment for an incident
+	guide_table_name := "xSDK_SN_TABLEx"
+	guide_table_sys_id := "xSDK_SN_TABLE_SYS_IDx"
+	guide_file_name := "file.txt"
+
 	params := &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
-		TableName:  "xSDK_SN_TABLEx",
-		TableSysID: "xSDK_SN_TABLE_SYS_IDx",
-		FileName:   "file.txt",
+		TableName:  &guide_table_name,
+		TableSysID: &guide_table_sys_id,
+		FileName:   &guide_file_name,
 	}
 
 	config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
@@ -284,9 +296,17 @@ func _() {
 	// [END attachment_download_guide]
 
 	_ = get_item_response
+	_ = get_item_std_response
 	_ = list_response
+	_ = list_std_response
 	_ = create_file_response
+	_ = file_create_std_response
 	_ = upload_response
+	_ = upload_std_response
+	_ = file_get_response
+	_ = file_get_std_response
 	_ = list_guide_results
+	_ = create_guide_response
+	_ = id
 	_ = content
 }

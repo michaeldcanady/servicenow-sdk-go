@@ -119,7 +119,7 @@ func TestIntegrationTableCollection_Get2(t *testing.T) {
 			require.NoError(t, err)
 
 			ctx := context.Background()
-			resp, err := client.Now2().Table2(tableName).Get2(ctx, nil)
+			resp, err := client.Now2().Table2(tableName).Get2(ctx, nil) //nolint:staticcheck
 
 			if tt.expectErr {
 				require.Equal(t, tt.expectedErr, err)

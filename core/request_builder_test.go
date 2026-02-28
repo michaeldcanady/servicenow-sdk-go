@@ -45,19 +45,25 @@ func TestRequestBuilder_ToPutRequestInformation2(t *testing.T) {
 func TestRequestBuilder_ToPostRequestInformation3(t *testing.T) {
 	rb := &RequestBuilder{}
 	res, _ := rb.ToPostRequestInformation3(nil)
-	if res.Method != POST { t.Error("failed") }
+	if res.Method != POST {
+		t.Error("failed")
+	}
 }
 
 func TestRequestBuilder_ToDeleteRequestInformation2(t *testing.T) {
 	rb := &RequestBuilder{}
 	res, _ := rb.ToDeleteRequestInformation2(nil)
-	if res.Method != DELETE { t.Error("failed") }
+	if res.Method != DELETE {
+		t.Error("failed")
+	}
 }
 
 func TestRequestBuilder_ToGetRequestInformation2(t *testing.T) {
 	rb := &RequestBuilder{}
 	res, _ := rb.ToGetRequestInformation2(nil)
-	if res.Method != GET { t.Error("failed") }
+	if res.Method != GET {
+		t.Error("failed")
+	}
 }
 
 func TestRequestBuilder_prepareData(t *testing.T) {
@@ -87,7 +93,7 @@ func TestRequestBuilder_SendMethods(t *testing.T) {
 	// but we can test the error propagation when ToRequestInformation fails
 	rb := &RequestBuilder{}
 	config := &RequestConfiguration{Data: 123} // trigger prepareData error
-	
+
 	t.Run("SendGet3", func(t *testing.T) {
 		if err := rb.SendGet3(context.Background(), config); err == nil {
 			t.Error("expected error")
@@ -112,13 +118,17 @@ func TestRequestBuilder_SendMethods(t *testing.T) {
 
 func TestNewRequestBuilder(t *testing.T) {
 	res := NewRequestBuilder(nil, "t", nil)
-	if res == nil { t.Error("failed") }
+	if res == nil {
+		t.Error("failed")
+	}
 }
 
 func TestRequestBuilder_DeprecatedToRequestInformation(t *testing.T) {
 	rb := &RequestBuilder{}
 	t.Run("Head", func(t *testing.T) {
 		res, _ := rb.ToHeadRequestInformation()
-		if res.Method != HEAD { t.Error("failed") }
+		if res.Method != HEAD {
+			t.Error("failed")
+		}
 	})
 }

@@ -298,9 +298,9 @@ func TestServiceNowClient_ToRequestWithContext_Error(t *testing.T) {
 	requestInfo := &MockRequestInformation{
 		Headers: http.Header{},
 	}
-	
+
 	ctx := context.TODO()
-	
+
 	_, err := client.toRequestWithContext(ctx, requestInfo)
 	assert.Error(t, err)
 	assert.Equal(t, "auth error", err.Error())
