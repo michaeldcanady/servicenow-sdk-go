@@ -15,7 +15,7 @@ import (
 
 type Client struct {
 	ClientID     string
-	ClientSecret string
+	ClientSecret string //nolint:gosec // G117: Needed for flow, no secret
 	Endpoints    *Endpoints
 	AuthMethod   AuthMethod
 	HTTPClient   HTTPClient

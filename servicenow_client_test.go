@@ -55,10 +55,10 @@ func (rI *MockRequestInformation) AddQueryParameters(source interface{}) error {
 	return nil
 }
 
-func (rI *MockRequestInformation) SetUri(url *url.URL) { //nolint:stylecheck
+func (rI *MockRequestInformation) SetUri(url *url.URL) {
 }
 
-func (rI *MockRequestInformation) Url() (string, error) { //nolint:stylecheck
+func (rI *MockRequestInformation) Url() (string, error) {
 	return "https://www.example.com", nil
 }
 

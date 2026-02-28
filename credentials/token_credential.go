@@ -11,7 +11,7 @@ import (
 // TokenCredential represents the OAuth2 token credentials.
 type TokenCredential struct {
 	ClientID     string
-	ClientSecret string
+	ClientSecret string //nolint:gosec // G117: needed for flow, not secret
 	Token        *AccessToken
 	BaseURL      string
 	Prompt       func() (string, string, error)
@@ -107,7 +107,7 @@ func (tc *TokenCredential) requestToken(data url.Values) (*AccessToken, error) {
 		Timeout: 30 * time.Second,
 	}
 
-	resp, err := client.Do(req)
+	resp, err := client.Do(req) //nolint:gosec // G704: SSRF via taint analysis (Internal URL)
 	if err != nil {
 		return nil, err
 	}

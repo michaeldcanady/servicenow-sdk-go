@@ -32,7 +32,7 @@ func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping cor
 		Timeout: 30 * time.Second,
 	}
 
-	response, err := client.Do(req)
+	response, err := client.Do(req) //nolint:gosec // G704: Test mock
 	if err != nil {
 		return nil, err
 	}

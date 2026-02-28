@@ -91,12 +91,12 @@ func (rA *MockRequestAdapter) EnableBackingStore(factory store.BackingStoreFacto
 }
 
 // SetBaseUrl sets the base url for every request.
-func (rA *MockRequestAdapter) SetBaseUrl(baseUrl string) { //nolint:stylecheck
+func (rA *MockRequestAdapter) SetBaseUrl(baseUrl string) {
 	_ = rA.Called(baseUrl)
 }
 
 // GetBaseUrl gets the base url for every request.
-func (rA *MockRequestAdapter) GetBaseUrl() string { //nolint:stylecheck
+func (rA *MockRequestAdapter) GetBaseUrl() string {
 	args := rA.Called()
 	return args.String(0)
 }

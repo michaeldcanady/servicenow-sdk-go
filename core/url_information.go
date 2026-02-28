@@ -11,19 +11,19 @@ import (
 )
 
 // UrlInformation represents an abstract Url.
-type UrlInformation struct { //nolint:stylecheck
+type UrlInformation struct {
 	// The Query Parameters of the request.
 	QueryParameters map[string]string
 	// The path parameters to use for the URL template when generating the URI.
 	PathParameters map[string]string
 	// The Url template for the current request.
-	UrlTemplate string //nolint:stylecheck
+	UrlTemplate string
 }
 
 // Deprecated: deprecated as of v1.4.0, use `NewURLInformation` instead.
 //
 // NewUrlInformation creates a new RequestUri object.
-func NewUrlInformation() *UrlInformation { //nolint:stylecheck
+func NewUrlInformation() *UrlInformation {
 	return NewURLInformation()
 }
 
@@ -131,7 +131,7 @@ func (uI *UrlInformation) checkBaseURLRequirement() error {
 }
 
 // getUriFromTemplate retrieves the URI from the URL template.
-func (uI *UrlInformation) getUriFromTemplate() (*url.URL, error) { //nolint:stylecheck
+func (uI *UrlInformation) getUriFromTemplate() (*url.URL, error) {
 	if err := uI.checkBaseURLRequirement(); err != nil {
 		return nil, err
 	}
@@ -163,7 +163,7 @@ func (uI *UrlInformation) parseRawURL(rawURL string) (*url.URL, error) {
 }
 
 // ToUrl retrieves the URI, either from the raw URL or the URL template.
-func (uI *UrlInformation) ToUrl() (*url.URL, error) { //nolint:stylecheck
+func (uI *UrlInformation) ToUrl() (*url.URL, error) {
 	uri, err := uI.getURIFromRaw()
 	if uri != nil || err != nil {
 		return uri, err

@@ -13,7 +13,7 @@ var (
 	ErrMissingBasePathParam    = internal.ErrMissingBasePathParam
 	ErrMissingBasePathTemplate = internal.ErrMissingBasePathTemplate
 	ErrInvalidHeaderType       = internal.ErrInvalidHeaderType
-	ErrEmptyRawUrl             = internal.ErrEmptyRawURL //nolint:stylecheck
+	ErrEmptyRawUrl             = internal.ErrEmptyRawURL
 	ErrMissingSchema           = internal.ErrMissingSchema
 	ErrNilResponse             = internal.ErrNilResponse
 	ErrNilResponseBody         = internal.ErrNilResponseBody

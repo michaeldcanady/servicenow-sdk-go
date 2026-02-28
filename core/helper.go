@@ -94,7 +94,7 @@ func IsPointer(value interface{}) bool {
 	return valueKind == reflect.Ptr
 }
 
-func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
+func FromJson[T any](response *http.Response, v *T) error {
 	if response == nil {
 		return ErrNilResponse
 	}
