@@ -11,7 +11,7 @@ Whether you're automating incident management, synchronizing user records, or ha
 - [**Batch API**](batch/index.md): Group multiple requests into a single efficient call.
 - [**Fluent Query Builder (Preview)**](../user-guide/query-builder.md): A type-safe and expressive way to build ServiceNow queries.
 
-## Design Philosophy
+## Design philosophy
 
 - **Idiomatic Go**: Uses standard Go patterns for error handling, context support, and naming.
 - **Fluent & Standard Builders**: Offers both a fluent API for ease of use and standard builders for more manual control.
