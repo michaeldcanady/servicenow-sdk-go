@@ -2,3 +2,5 @@
 .local/
 .cache/
 site/
+.github/styles
+!.github/styles/config
