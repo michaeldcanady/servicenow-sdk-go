@@ -33,7 +33,7 @@ jobs:
         run: |
           # Get the version proposed in the PR (strip comments if present)
           VERSION=$(sed '/^#/d' VERSION | xargs)
-          TAG="v${VERSION}"
+          TAG="${VERSION}"
           
           # Replace {unreleased} with the proposed tag
           find . -name "*.go" -type f -exec sed -i "s/{unreleased}/${TAG}/g" {} \;
