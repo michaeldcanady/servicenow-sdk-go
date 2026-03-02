@@ -172,4 +172,4 @@ CRUD
 (?i)bolded
 (?i)chatbot
 (?i)agent
-(?!)ropc
+ropc
