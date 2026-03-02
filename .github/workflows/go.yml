@@ -160,7 +160,7 @@ jobs:
           go tool cover -func="$($env:COVERAGE_FILE)"
           go tool cover -html="$($env:COVERAGE_FILE)" -o cover.html
       - name: Upload Coverage Report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.os }}-coverage-report-${{ matrix.go-version }}-${{ hashFiles('go.sum') }}) }}
           path: cover.html
