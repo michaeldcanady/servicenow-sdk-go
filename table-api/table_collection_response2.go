@@ -7,7 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
-// Deprecated: deprecated since v{unreleased}. Please use [newInternal.ServiceNowCollectionResponse]
+// Deprecated: deprecated since v1.9.0. Please use [newInternal.ServiceNowCollectionResponse]
 type TableCollectionResponse2[T Entry] struct {
 	// Result is a slice of pointers to table entries.
 	Result []*T

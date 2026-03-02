@@ -6,7 +6,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
-// Deprecated: deprecated since v{unreleased}. Please use [NewTableItemRequestBuilder3] or [NewTableItemRequestBuilder2Internal]
+// Deprecated: deprecated since v1.9.0. Please use [NewTableItemRequestBuilder3] or [NewTableItemRequestBuilder2Internal]
 func NewTableItemRequestBuilder2(client core.Client2, pathParameters map[string]string) *TableItemRequestBuilder {
 	requestBuilder := core.NewRequestBuilder2(
 		client,
@@ -18,7 +18,7 @@ func NewTableItemRequestBuilder2(client core.Client2, pathParameters map[string]
 	}
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use [TableItemRequestBuilder2.Get]
+// Deprecated: deprecated since v1.9.0. Please use [TableItemRequestBuilder2.Get]
 func (rB *TableItemRequestBuilder) Get2(ctx context.Context, params *TableItemRequestBuilderGetQueryParameters) (*TableItemResponse, error) {
 	config := &tableItemGetRequestConfiguration2[TableEntry]{
 		header:   nil,
@@ -35,7 +35,7 @@ func (rB *TableItemRequestBuilder) Get2(ctx context.Context, params *TableItemRe
 	return config.response, nil
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use [TableItemRequestBuilder2.Delete]
+// Deprecated: deprecated since v1.9.0. Please use [TableItemRequestBuilder2.Delete]
 func (rB *TableItemRequestBuilder) Delete2(ctx context.Context, params *TableItemRequestBuilderDeleteQueryParameters) error {
 	config := &tableItemDeleteRequestConfiguration2[TableEntry]{
 		header:   nil,
@@ -47,7 +47,7 @@ func (rB *TableItemRequestBuilder) Delete2(ctx context.Context, params *TableIte
 	return rB.SendDelete3(ctx, config.toConfiguration())
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use [TableItemRequestBuilder2.Put]
+// Deprecated: deprecated since v1.9.0. Please use [TableItemRequestBuilder2.Put]
 func (rB *TableItemRequestBuilder) Put3(ctx context.Context, tableEntry interface{}, params *TableItemRequestBuilderPutQueryParameters) (*TableItemResponse, error) {
 	tableEntry, err := convertFromTableEntry(tableEntry)
 	if err != nil {

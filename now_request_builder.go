@@ -15,7 +15,7 @@ func NewNowRequestBuilder2(url string, client core.Client2) *NowRequestBuilder {
 	}
 }
 
-// Deprecated: deprecated since v{unreleased}. Please use [NowRequestBuilder.TableV2]
+// Deprecated: deprecated since v1.9.0. Please use [NowRequestBuilder.TableV2]
 func (rB *NowRequestBuilder) Table2(tableName string) *tableapi.TableRequestBuilder {
 	rB.PathParameters["table"] = tableName
 	return tableapi.New2TableRequestBuilder(rB.Client2, rB.PathParameters)

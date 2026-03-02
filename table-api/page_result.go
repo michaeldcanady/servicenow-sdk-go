@@ -1,6 +1,6 @@
 package tableapi
 
-// Deprecated: deprecated since v{unreleased}.
+// Deprecated: deprecated since v1.9.0.
 //
 // PageResult represents a single page of results from a table.
 type PageResult struct {
