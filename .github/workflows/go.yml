@@ -24,11 +24,6 @@ env:
 
 permissions: {}
 
-# YAML Anchors for DRY matrices
-x-matrices:
-  go-versions: &go-versions ["stable", "oldstable"]
-  os-platforms: &os-platforms [ubuntu-latest, macos-latest, windows-latest]
-
 jobs:
   changes:
     runs-on: ubuntu-latest
@@ -60,7 +55,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        go-version: *go-versions
+        go-versions: &go-versions ["stable", "oldstable"]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
@@ -80,7 +75,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: *os-platforms
+        os: &os-platforms [ubuntu-latest, macos-latest, windows-latest]
         go-version: *go-versions
     runs-on: ${{ matrix.os }}
     permissions:
