@@ -140,30 +140,3 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: mkdocs gh-deploy --force --config-file mkdocs.yml --site-dir site
-
-  deploy-staging:
-    name: deploy-staging-preview
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    if: github.event_name == 'pull_request'
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: preview/${{ github.event.pull_request.number }}
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Download site artifact
-        uses: actions/download-artifact@v7
-        with:
-          name: site
-          path: site
-
-      - name: Upload PR preview to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          path: site
-          artifact_name: site
