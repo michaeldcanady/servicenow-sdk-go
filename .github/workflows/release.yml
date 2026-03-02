@@ -1,6 +1,4 @@
 name: Release
-permissions:
-  contents: read
 
 on:
   workflow_dispatch: # Manual trigger for stable releases
@@ -11,10 +9,14 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: true
 
+permissions: {}
+
 jobs:
   detect-changes:
     name: Detect Go Changes Since Last Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       go_changed: ${{ steps.go_diff.outputs.any_changed }}
       latest_tag: ${{ steps.latest_tag.outputs.tag }}

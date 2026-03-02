@@ -4,13 +4,14 @@ on:
   pull_request:
     branches: [main]
 
-permissions:
-  pull-requests: write
-  contents: write
+permissions: {}
 
 jobs:
   dependabot-merge:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
 
     if: ${{ github.actor == 'dependabot[bot]' }}
 
