@@ -5,7 +5,6 @@ import (
 
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
-	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
 // AttachmentPageIterator represents an iterator for paginated attachment collections.
@@ -17,10 +16,9 @@ type AttachmentPageIterator struct {
 func NewAttachmentPageIterator(
 	res newInternal.ServiceNowCollectionResponse[Attachment2],
 	reqAdapter abstractions.RequestAdapter,
-	constructorFunc serialization.ParsableFactory,
 	options ...newInternal.Option[*newInternal.PageIterator[Attachment2]],
 ) (*AttachmentPageIterator, error) {
-	iterator, err := newInternal.NewPageIterator[Attachment2](res, reqAdapter, constructorFunc, options...)
+	iterator, err := newInternal.NewPageIterator[Attachment2](res, reqAdapter, CreateAttachment2FromDiscriminatorValue, options...)
 	if err != nil {
 		return nil, err
 	}
