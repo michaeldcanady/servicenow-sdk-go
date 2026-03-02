@@ -35,6 +35,7 @@ directly to the ServiceNow API hierarchy. For example, the path
 endpoint.
 
 Builders are responsible for:
+
 - Constructing the URL based on path parameters.
 - Providing methods for HTTP operations (GET, POST, etc.).
 - Offering type-safe request and response models.
@@ -45,9 +46,9 @@ The `RequestAdapter` is the engine of the SDK. It coordinates between the
 builders and the underlying networking and serialization layers.
 
 It handles:
+
 - **URL Template Expansion:** Injecting parameters into Kiota URL templates.
-- **Authentication:** Calling the registered provider to add authorization
-  headers.
+- **Authentication:** Calling the registered provider to add authorization headers.
 - **Serialization:** Converting Go structs into JSON for request bodies.
 - **Request Execution:** Passing the final request to the HTTP client.
 

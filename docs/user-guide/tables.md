@@ -1,9 +1,7 @@
 # Table operations
 
 The Table API lets you perform Create, Read, Update, and Delete (CRUD)
-operations on ServiceNow table records. The SDK provides two ways to interact
-with this API: a fluent interface for readability and a standard interface for
-more direct control.
+operations on ServiceNow table records.
 
 ## Understand the modalities
 
@@ -15,25 +13,20 @@ The SDK offers two distinct ways to build and execute requests.
   builders and raw URLs. This is useful when you need to handle dynamic URLs or
   specific configurations not expressed fluently.
 
-## Retrieve records
-
-You can retrieve a single record by its unique `sys_id` or list multiple
-records from a table.
-
-### Get a single record
+## Get a single record
 
 To retrieve a specific record, use the `ById` method in the fluent interface.
 
 ```go
-{% include-markdown 'snippets/tables.go' start='// [START table_get_fluent]' end='// [START table_get_fluent]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/tables.go' start='// [START table_get_fluent]' end='// [END table_get_fluent]' comments=false trailing-newlines=false dedent=true %}
 ```
 
-### List records
+## List records
 
 To list records from a table, call `Get` on the table resource.
 
 ```go
-{% include-markdown 'snippets/tables.go' start='// [START table_list_guide]' end='// [START table_list_guide]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/tables.go' start='// [START table_list_guide]' end='// [END table_list_guide]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Create records
@@ -42,7 +35,7 @@ To create a new record, use the `Post` method and provide a `TableRecord`
 containing the field values.
 
 ```go
-{% include-markdown 'snippets/tables.go' start='// [START table_create_guide]' end='// [START table_create_guide]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/tables.go' start='// [START table_create_guide]' end='// [END table_create_guide]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Update records
@@ -51,7 +44,7 @@ To update an existing record, use the `Put` method with the record's `sys_id`
 and a `TableRecord` containing the updated fields.
 
 ```go
-{% include-markdown 'snippets/tables.go' start='// [START table_update_guide]' end='// [START table_update_guide]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/tables.go' start='// [START table_update_guide]' end='// [END table_update_guide]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Delete records
@@ -59,7 +52,7 @@ and a `TableRecord` containing the updated fields.
 To delete a record, use the `Delete` method with the record's `sys_id`.
 
 ```go
-{% include-markdown 'snippets/tables.go' start='// [START table_delete_guide]' end='// [START table_delete_guide]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/tables.go' start='// [START table_delete_guide]' end='// [END table_delete_guide]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Query records
@@ -68,7 +61,7 @@ You can filter results by providing a query string in the request
 configuration. ServiceNow uses a specific query syntax (Encoded Queries).
 
 ```go
-{% include-markdown 'snippets/tables.go' start='// [START table_query_guide]' end='// [START table_query_guide]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/tables.go' start='// [START table_query_guide]' end='// [END table_query_guide]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Next steps

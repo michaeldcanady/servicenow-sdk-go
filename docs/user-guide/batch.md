@@ -23,7 +23,7 @@ using the SDK's request builders and then combine them into a
 `BatchRequestModel`.
 
 ```go
-{% include-markdown 'snippets/batch.go' start='// [START batch_create]' end='// [START batch_create]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/batch.go' start='// [START batch_create]' end='// [END batch_create]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ### Batch helper
@@ -32,7 +32,7 @@ Combining multiple requests can involve repetitive code. You can use a helper
 function to streamline the process of adding requests to your batch model.
 
 ```go
-{% include-markdown 'snippets/batch.go' start='// [START batch_helper]' end='// [START batch_helper]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/batch.go' start='// [START batch_helper]' end='// [END batch_helper]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Next steps

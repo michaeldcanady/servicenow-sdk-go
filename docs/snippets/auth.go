@@ -5,9 +5,7 @@ import (
 	"log"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	// [START credentials_import]
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
-	// [END credentials_import]
 )
 
 // [END auth_imports]
@@ -25,7 +23,7 @@ func _() {
 	// [END auth_basic_admin]
 
 	// [START client_init_panic]
-	clientPanic, err := servicenowsdkgo.NewServiceNowClient2(credAdmin, "your-instance")
+	clientPanic, err := servicenowsdkgo.NewServiceNowClient2(credAdmin, "xSDK_SN_URLx")
 	if err != nil {
 		panic(err)
 	}
@@ -49,7 +47,7 @@ func _() {
 	// [END auth_token]
 
 	// [START client_init]
-	client, err := servicenowsdkgo.NewServiceNowClient2(cred, "xSDK_SN_INSTANCEx")
+	client, err := servicenowsdkgo.NewServiceNowClient2(cred, "xSDK_SN_URLx")
 	if err != nil {
 		log.Fatal(err)
 	}

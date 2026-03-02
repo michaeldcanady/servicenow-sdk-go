@@ -27,7 +27,7 @@ To build a query, use the `query2` package. It provides methods for different
 field types and logical operations.
 
 ```go
-{% include-markdown 'snippets/query.go' start='// [START query_basic]' end='// [START query_basic]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/query.go' start='// [START query_basic]' end='// [END query_basic]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Use a query with the Table API
@@ -36,7 +36,7 @@ Once you've built a query string, you can use it in the request
 configuration for table operations.
 
 ```go
-{% include-markdown 'snippets/query.go' start='// [START query_table_api]' end='// [START query_table_api]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/query.go' start='// [START query_table_api]' end='// [END query_table_api]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Next steps

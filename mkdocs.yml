@@ -18,6 +18,8 @@ plugins:
       placeholder_extra_js: ""
       placeholder_file: "placeholder-plugin.yaml"
   - include-markdown
+  - mermaid2
+  - search
 
 nav:
   - Welcome: index.md

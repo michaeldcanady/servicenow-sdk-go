@@ -9,7 +9,6 @@ Whether you're automating incident management, synchronizing user records, or ha
 - [**Table API**](tables/index.md): Create, read, update, and delete (CRUD) operations for ServiceNow tables.
 - [**Attachment API**](attachment/index.md): Manage files and raw file content attached to records.
 - [**Batch API**](batch/index.md): Group multiple requests into a single efficient call.
-- [**Fluent Query Builder (Preview)**](../user-guide/query-builder.md): A type-safe and expressive way to build ServiceNow queries.
 
 ## Design philosophy
 

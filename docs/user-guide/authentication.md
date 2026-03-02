@@ -23,9 +23,9 @@ ServiceNow credentials.
 {% include-markdown 'snippets/auth.go' start='// [START auth_basic]' end='// [END auth_basic]' comments=false trailing-newlines=false dedent=true %}
 ```
 
-### Token-based authentication
+### Resource owner password credential
 
-Token-based authentication uses OAuth 2.0 to provide a more secure way to
+Resource owner password credential (ropc) OAuth 2.0 to provide a more secure way to
 authenticate without sharing user credentials directly with the application.
 The project recommends this method for production environments.
 
@@ -42,7 +42,7 @@ After configuring your credentials, you must initialize the `ServiceNowClient`
 to start making requests to your instance.
 
 ```go
-{% include-markdown 'snippets/auth.go' start='// [START client_init]' end='// [START client_init]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/auth.go' start='// [START client_init]' end='// [END client_init]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Next steps
