@@ -4,13 +4,15 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "**"
+      - main
     paths:
       - "**.go"
+      - "!docs/snippets/**"
       - ".github/workflows/go.yml"
   pull_request:
     paths:
       - "**.go"
+      - "!docs/snippets/**"
       - ".github/workflows/go.yml"
 
 concurrency:
@@ -20,12 +22,14 @@ concurrency:
 env:
   COVERAGE_FILE: coverage.out
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   changes:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'release-please--'))
     outputs:
       code: ${{ steps.filter.outputs.any_changed }}
     steps:
@@ -38,6 +42,7 @@ jobs:
         with:
           files: |
             **.go
+            !docs/snippets/**
             .github/workflows/go.yml
 
   check-go:
@@ -46,9 +51,11 @@ jobs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
-        go-version: ["stable", "oldstable"]
+        go-versions: &go-versions ["stable", "oldstable"]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
@@ -68,9 +75,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        go-version: ["stable", "oldstable"]
+        os: &os-platforms [ubuntu-latest, macos-latest, windows-latest]
+        go-version: *go-versions
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
@@ -83,16 +95,10 @@ jobs:
           key: ${{ runner.os }}-go-build-${{ matrix.os }}-${{ hashFiles('go.sum') }}
           restore-keys: ${{ runner.os }}-go-build-
       - run: go mod download
-      - name: Build Go Code (Unix)
-        if: runner.os != 'Windows'
+      - name: Build Go Code
         run: |
-          DIRS=$(ls -d */ | grep -v docs | sed 's/\(.*\)\//.\/\1\/.../')
-          go build . $DIRS
-      - name: Build Go Code (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          $dirs = Get-ChildItem -Directory | Where-Object { $_.Name -notmatch "docs|.git|.github" } | ForEach-Object { "./$($_.Name)/..." }
-          go build . $dirs
+          PACKAGES=$(go list ./... | grep -v "/docs")
+          go build $PACKAGES
 
   lint-go:
     name: Lint Go Code
@@ -100,9 +106,11 @@ jobs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
-        go-version: ["stable", "oldstable"]
+        go-version: *go-versions
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
@@ -123,9 +131,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        go-version: ["stable", "oldstable"]
+        os: *os-platforms
+        go-version: *go-versions
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
@@ -137,28 +150,14 @@ jobs:
           path: ~/.cache/go-build
           key: ${{ matrix.os }}-go-build-${{ matrix.go-version }}-${{ hashFiles('go.sum') }}
           restore-keys: ${{ runner.os }}-go-build-${{ hashFiles('go.sum') }}
-      - name: Run tests (Unix)
-        if: runner.os != 'Windows'
+      - name: Run tests
         run: |
-          DIRS=$(ls -d */ | grep -v docs | sed 's/\(.*\)\//.\/\1\/.../')
-          PACKAGES=$(go list . $DIRS)
+          PACKAGES=$(go list ./... | grep -v "/docs")
           COVERPKG=$(echo "$PACKAGES" | paste -sd "," -)
           go test -count=1 -tags=preview.query -coverpkg="$COVERPKG" -covermode=atomic -coverprofile=$COVERAGE_FILE $PACKAGES
           grep -v -E -f .covignore $COVERAGE_FILE > coverage.filtered.out && mv coverage.filtered.out $COVERAGE_FILE
           go tool cover -func=$COVERAGE_FILE
           go tool cover -html=$COVERAGE_FILE -o cover.html
-      - name: Run tests (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          $dirs = Get-ChildItem -Directory | Where-Object { $_.Name -notmatch "docs|.git|.github" } | ForEach-Object { "./$($_.Name)/..." }
-          $packages = go list . $dirs
-          $coverpkg = $packages -join ","
-          go test -count=1 -tags="preview.query" -coverpkg="$coverpkg" -covermode=atomic -coverprofile="$($env:COVERAGE_FILE)" $packages
-          dir
-          findstr /V /G:.covignore $env:COVERAGE_FILE > coverage.filtered.out
-          Move-Item -Path coverage.filtered.out -Destination $env:COVERAGE_FILE -Force
-          go tool cover -func="$($env:COVERAGE_FILE)"
-          go tool cover -html="$($env:COVERAGE_FILE)" -o cover.html
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v7
         with:

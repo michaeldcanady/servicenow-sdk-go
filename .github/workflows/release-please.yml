@@ -4,16 +4,14 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
-
-permissions:
-  contents: write
-  issues: write
-  pull-requests: write
 
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
       - name: Create release
         uses: googleapis/release-please-action@v4
@@ -36,7 +34,7 @@ jobs:
           TAG="${VERSION}"
           
           # Replace {unreleased} with the proposed tag
-          find . -name "*.go" -type f -exec sed -i "s/{unreleased}/${TAG}/g" {} \;
+          ./scripts/replace_unreleased.sh "${TAG}"
           
           # Commit and push back to the PR branch
           git config --global user.email "actions@github.com"

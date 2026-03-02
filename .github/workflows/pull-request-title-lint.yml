@@ -8,6 +8,8 @@ on:
       - edited
       - synchronize
 
+permissions: {}
+
 jobs:
   main:
     name: Validate PR Title
