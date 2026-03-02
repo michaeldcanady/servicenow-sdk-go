@@ -62,7 +62,7 @@ func _() {
 	}
 
 	// 2. Create the iterator
-	attachmentIterator, err := attachmentapi.NewAttachmentPageIterator(attachmentResponse, client.RequestAdapter, attachmentapi.CreateAttachment2FromDiscriminatorValue)
+	attachmentIterator, err := attachmentapi.NewAttachmentPageIterator(attachmentResponse, client.RequestAdapter)
 	if err != nil {
 		log.Fatal(err)
 	}
