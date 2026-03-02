@@ -4,14 +4,14 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
 
-// Deprecated: deprecated since v{unreleased}. Please use [TableItemRequestBuilder2]
+// Deprecated: deprecated since v1.9.0. Please use [TableItemRequestBuilder2]
 type TableItemRequestBuilder struct {
 	core.RequestBuilder
 }
 
 const tableItemURLTemplate = "{+baseurl}/table{/table}{/sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_input_display_value,sysparm_query_no_domain,sysparm_view,sysparm_query_no_domain}"
 
-// Deprecated: deprecated since v{unreleased}. Please use [NewTableItemRequestBuilder3] or [NewTableItemRequestBuilder2Internal]
+// Deprecated: deprecated since v1.9.0. Please use [NewTableItemRequestBuilder3] or [NewTableItemRequestBuilder2Internal]
 //
 // NewTableItemRequestBuilder creates a new instance of the TableItemRequestBuilder associated with the given URL and Client.
 // It accepts the URL and Client as parameters and returns a pointer to the created TableItemRequestBuilder.

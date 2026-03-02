@@ -1,6 +1,6 @@
 package tableapi
 
-// Deprecated: deprecated since v{unreleased}. Please use [TableRequestBuilder2GetQueryParameters]
+// Deprecated: deprecated since v1.9.0. Please use [TableRequestBuilder2GetQueryParameters]
 type TableRequestBuilderGetQueryParameters struct {
 	//Determines the type of data returned, either the actual values from the database or the display values of the fields.
 	//Display values are manipulated based on the actual value in the database and user or system settings and preferences.

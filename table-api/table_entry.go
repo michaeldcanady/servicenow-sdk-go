@@ -8,10 +8,10 @@ const (
 	displayValueKey = "displayValue"
 )
 
-// Deprecated: deprecated since v{unreleased}. Please use [TableRecord]
+// Deprecated: deprecated since v1.9.0. Please use [TableRecord]
 type TableEntry map[string]interface{}
 
-// Deprecated: deprecated since v{unreleased}. Please use [NewTableRecord]
+// Deprecated: deprecated since v1.9.0. Please use [NewTableRecord]
 func NewTableEntry() TableEntry {
 	return TableEntry{}
 }

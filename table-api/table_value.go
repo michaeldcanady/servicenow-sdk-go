@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-// Deprecated: deprecated since v{unreleased}. Please use [RecordElement] and [ElementValue]
+// Deprecated: deprecated since v1.9.0. Please use [RecordElement] and [ElementValue]
 type TableValue struct {
 	value interface{}
 }
