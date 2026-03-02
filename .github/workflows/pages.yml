@@ -158,7 +158,7 @@ jobs:
       - name: Download site artifact
         uses: actions/download-artifact@v7
         with:
-          name: ssite-cachee
+          name: site-cache
           path: site
 
       - name: Upload PR preview to GitHub Pages
