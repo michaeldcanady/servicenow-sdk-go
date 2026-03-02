@@ -166,3 +166,4 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           path: site
+          artifact_name: site
