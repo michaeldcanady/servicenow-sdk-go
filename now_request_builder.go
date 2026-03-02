@@ -15,9 +15,20 @@ func NewNowRequestBuilder2(url string, client core.Client2) *NowRequestBuilder {
 	}
 }
 
+// Deprecated: deprecated since v{unreleased}. Please use [NowRequestBuilder.TableV2]
 func (rB *NowRequestBuilder) Table2(tableName string) *tableapi.TableRequestBuilder {
 	rB.PathParameters["table"] = tableName
 	return tableapi.New2TableRequestBuilder(rB.Client2, rB.PathParameters)
+}
+
+// TableV2 returns a TableRequestBuilder2 associated with the NowRequestBuilder.
+func (rB *NowRequestBuilder) TableV2(tableName string) *tableapi.TableRequestBuilder2[*tableapi.TableRecord] {
+	pathParameters := make(map[string]string)
+	for k, v := range rB.PathParameters {
+		pathParameters[k] = v
+	}
+	pathParameters["table"] = tableName
+	return tableapi.NewDefaultTableRequestBuilder2Internal(pathParameters, rB.Client.(*ServiceNowClient).RequestAdapter)
 }
 
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.

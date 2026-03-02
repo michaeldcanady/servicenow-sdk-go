@@ -83,7 +83,7 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 				return err
 			}
 
-			requests := make([]ServicedRequest, 0, len(values))
+			requests := make([]ServicedRequest, len(values))
 			for index, value := range values {
 				typedValue, ok := value.(ServicedRequest)
 				if !ok {
@@ -104,7 +104,7 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 				return err
 			}
 
-			requests := make([]string, 0, len(values))
+			requests := make([]string, len(values))
 			for index, value := range values {
 				typedValue, ok := value.(string)
 				if !ok {
@@ -134,12 +134,41 @@ func (bR *BatchResponseModel) GetBatchRequestID() (*string, error) {
 		return nil, err
 	}
 
+	if internal.IsNil(id) {
+		return nil, nil
+	}
+
 	strID, ok := id.(*string)
 	if !ok {
 		return nil, errors.New("id is not *string")
 	}
 
 	return strID, nil
+}
+
+// GetServicedRequestByID returns the serviced request with the provided id
+func (bR *BatchResponseModel) GetServicedRequestByID(id string) (ServicedRequest, error) {
+	if internal.IsNil(bR) {
+		return nil, nil
+	}
+
+	requests, err := bR.GetServicedRequests()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, request := range requests {
+		reqID, err := request.GetID()
+		if err != nil {
+			continue
+		}
+
+		if reqID != nil && *reqID == id {
+			return request, nil
+		}
+	}
+
+	return nil, nil
 }
 
 // setBatchRequestID sets the id of the associated batch request
@@ -170,6 +199,10 @@ func (bR *BatchResponseModel) GetServicedRequests() ([]ServicedRequest, error) {
 	servicedRequests, err := backingStore.Get(servicedRequestsKey)
 	if err != nil {
 		return nil, err
+	}
+
+	if internal.IsNil(servicedRequests) {
+		return nil, nil
 	}
 
 	typedServicedRequests, ok := servicedRequests.([]ServicedRequest)
@@ -208,6 +241,10 @@ func (bR *BatchResponseModel) GetUnservicedRequests() ([]string, error) {
 	unservicedRequests, err := backingStore.Get(unservicedRequestsKey)
 	if err != nil {
 		return nil, err
+	}
+
+	if internal.IsNil(unservicedRequests) {
+		return nil, nil
 	}
 
 	typedUnservicedRequests, ok := unservicedRequests.([]string)

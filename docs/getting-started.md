@@ -1,55 +1,58 @@
 # Getting started
 
-## Requirements
+Welcome to the ServiceNow SDK for Go! This guide helps you set up the SDK and
+make your first successful API call in just a few minutes.
 
-- Installed [golang 1.23+](https://go.dev/doc/install).
-- Active Service-Now instance or [developer instance](https://developer.servicenow.com/dev.do).
+## Prerequisites
 
-<!-- vale Microsoft.Headings = NO -->
-## 1. Install Service-Now SDK for Go
-<!-- vale Microsoft.Headings = YES -->
+Before you begin, make sure your development environment meets these
+requirements:
 
-=== "Install the latest"
+- **Go:** Version 1.23 or higher installed.
+- **ServiceNow Instance:** Access to a ServiceNow instance (a
+  [Personal Developer Instance](https://developer.servicenow.com/) works).
 
-    ``` bash
-    go get github.com/michaeldcanady/servicenow-sdk-go@latest
-    ```
-=== "Install a specific version"
+## Install the SDK
 
-    ``` bash
-    go get github.com/michaeldcanady/servicenow-sdk-go@xSDK_VERSIONx
-    ```
+Add the SDK to your existing Go module using the `go get` command:
 
-## 2. Create a credential
+```bash
+go get github.com/michaeldcanady/servicenow-sdk-go
+```
 
-```golang
-package main
+## Initialize the client
 
-import (
-    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
-    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-)
+To interact with ServiceNow, you must first configure your credentials and
+initialize a client. The following example demonstrates a basic setup using
+username and password authentication.
+
+```go
+{% include-markdown 'snippets/auth.go' start='// [START auth_imports]' end='// [END auth_imports]' comments=false trailing-newlines=false dedent=true %}
 
 func main() {
-    // instantiates a basic authentication username/password credential but you can use any from the `credentials` submodule or implement your own!
-    cred := credentials.NewUsernamePasswordCredential("xSDK_USERNAMEx", "xSDK_PASSWORDx")
-    ...
+    // 1. Configure your credentials
+    {% include-markdown 'snippets/auth.go' start='// [START auth_basic_admin]' end='// [END auth_basic_admin]' comments=false trailing-newlines=false dedent=true %}
+
+    // 2. Initialize the client for your instance
+    {% include-markdown 'snippets/auth.go' start='// [START client_init_panic]' end='// [END client_init_panic]' comments=false trailing-newlines=false dedent=true %}
 }
 ```
 
-## 3. Create a Service-Now client
+## Make your first request
 
-=== "Specify instance"
-    ```golang
-        client := servicenowsdkgo.NewServiceNowClient(cred, "xSDK_SN_INSTANCEx.service-now.com")
-    ```
-<!-- vale Vale.Spelling = NO -->
-=== "Specify url"
-<!-- vale Vale.Spelling = YES -->
-    ```golang
-        client := servicenowsdkgo.NewServiceNowClient(cred, "xSDK_SN_URLx")
-    ```
+Once you initialize your client, you can perform operations like retrieving
+records from a table. See the [Table Operations](user-guide/tables.md) guide
+for more details.
 
-## 4. Review specific api documentation
+## Next steps
 
-With the `client` object initialized, implementation of the full capabilities offered by the Service-Now SDK for Go can begin. Refer to [apis](/apis/index.md) for details on implementing specific APIs.
+Now that you have the basic setup, explore these topics to dive deeper:
+
+- **[Authentication Guide](user-guide/authentication.md):** Learn about OAuth2
+  and alternative credential types.
+- **[Table Operations](user-guide/tables.md):** Master CRUD operations for
+  ServiceNow records.
+- **[Attachments](user-guide/attachments.md):** Manage files associated with
+  your records.
+- **[API Reference](apis/index.md):** Consult the detailed documentation for
+  specific API modules.

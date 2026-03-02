@@ -148,12 +148,6 @@ var (
 	fakeTableItemResponse = &TableItemResponse{
 		Result: &fakeEntry,
 	}
-
-	fakeCollectionResponse = TableCollectionResponse2[TableEntry]{
-		Result: []*TableEntry{
-			&fakeEntry,
-		},
-	}
 )
 
 func getFakeCollectionJSON() []byte {

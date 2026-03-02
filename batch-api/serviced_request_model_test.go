@@ -1,12 +1,15 @@
 package batchapi
 
 import (
+	"encoding/base64"
 	"errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestNewServicedRequest(t *testing.T) {
@@ -99,27 +102,107 @@ func TestServicedRequestModel_Serialize(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestServicedRequestModel_GetFieldDeserializers(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				m := NewServicedRequest()
+				deser := m.GetFieldDeserializers()
+				assert.NotNil(t, deser)
+
+				for key, fn := range deser {
+					node := mocking.NewMockParseNode()
+					s := "test"
+					if key == bodyKey {
+						s = base64.StdEncoding.EncodeToString([]byte("test"))
+					}
+					switch key {
+					case statusCodeKey:
+						i := int64(200)
+						node.On("GetInt64Value").Return(&i, nil)
+					case executionTimeKey:
+						node.On("GetISODurationValue").Return(&serialization.ISODuration{}, nil)
+					case headersKey:
+						node.On("GetCollectionOfObjectValues", mock.Anything).Return([]serialization.Parsable{NewRestRequestHeader()}, nil)
+					default:
+						node.On("GetStringValue").Return(&s, nil)
+					}
+					_ = fn(node)
+				}
+			},
+		},
+		{
+			name: "Nil Model",
+			test: func(t *testing.T) {
+				var m *ServicedRequestModel
+				assert.Nil(t, m.GetFieldDeserializers())
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
 }
 
-// TODO: add tests
 func TestServicedRequestModel_GetBodyAsParsable(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
+		name        string
+		setup       func(m *ServicedRequestModel)
+		expectedErr bool
+	}{
+		{
+			name: "Successful",
+			setup: func(m *ServicedRequestModel) {
+				_ = m.setBody([]byte(`{"test":"test"}`))
+				h := NewRestRequestHeader()
+				n := "Content-Type"
+				v := "application/json"
+				_ = h.SetName(&n)
+				_ = h.SetValue(&v)
+				_ = m.setHeaders([]RestRequestHeader{h})
+				_ = m.setStatusCode(internal.ToPointer(int64(200)))
+
+				serialization.DefaultSerializationWriterFactoryInstance.ContentTypeAssociatedFactories["application/json"] = mocking.NewMockSerializationWriterFactory()
+				serialization.DefaultParseNodeFactoryInstance.ContentTypeAssociatedFactories["application/json"] = mocking.NewMockParseNodeFactory()
+			},
+			expectedErr: false,
+		},
+		{
+			name: "Error mapping",
+			setup: func(m *ServicedRequestModel) {
+				_ = m.setStatusCode(internal.ToPointer(int64(400)))
+				_ = m.setBody([]byte(`{"error":"bad"}`))
+			},
+			expectedErr: true,
+		},
+	}
 
 	for _, test := range tests {
-		t.Run(test.name, test.test)
+		t.Run(test.name, func(t *testing.T) {
+			m := NewServicedRequest()
+			test.setup(m)
+
+			if test.name == "Successful" {
+				factory := serialization.DefaultParseNodeFactoryInstance.ContentTypeAssociatedFactories["application/json"].(*mocking.MockParseNodeFactory)
+				node := mocking.NewMockParseNode()
+				node.On("GetObjectValue", mock.Anything).Return(mocking.NewMockParsable(), nil)
+				factory.On("GetRootParseNode", "application/json", mock.Anything).Return(node, nil)
+			}
+
+			_, err := m.GetBodyAsParsable(func(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+				return mocking.NewMockParsable(), nil
+			})
+			if test.expectedErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
 	}
 }
 
@@ -499,24 +582,61 @@ func TestServicedRequestModel_setErrorMessage(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestServicedRequestModel_GetExecutionTime(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				m := NewServicedRequest()
+				v := &serialization.ISODuration{}
+				_ = m.setExecutionTime(v)
+				res, err := m.GetExecutionTime()
+				assert.NoError(t, err)
+				assert.Equal(t, v, res)
+			},
+		},
+		{
+			name: "Nil Model",
+			test: func(t *testing.T) {
+				var m *ServicedRequestModel
+				res, err := m.GetExecutionTime()
+				assert.NoError(t, err)
+				assert.Nil(t, res)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
 }
 
-// TODO: add tests
 func TestServicedRequestModel_setExecutionTime(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
-	}{}
+	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				m := NewServicedRequest()
+				v := &serialization.ISODuration{}
+				err := m.setExecutionTime(v)
+				assert.NoError(t, err)
+			},
+		},
+		{
+			name: "Nil Model",
+			test: func(t *testing.T) {
+				var m *ServicedRequestModel
+				err := m.setExecutionTime(nil)
+				assert.NoError(t, err)
+			},
+		},
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
@@ -1318,7 +1438,7 @@ func TestServicedRequestModel_GetStatusText(t *testing.T) {
 
 				id, err := resp.GetStatusText()
 
-				assert.Equal(t, errors.New("statusCode is not *string"), err)
+				assert.Equal(t, errors.New("statusText is not *string"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)

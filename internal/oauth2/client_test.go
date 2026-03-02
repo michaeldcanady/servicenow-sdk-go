@@ -42,11 +42,11 @@ func TestClient_ExchangeClientCredentials(t *testing.T) {
 				resp := newResponse(200, `{"access_token":"abc","token_type":"bearer","expires_in":3600}`)
 				mockClient.On("Do", mock.Anything).Return(resp, nil)
 
-				client := &Client{
+				client := &Client{ //nolint:gosec // G101: Mock credentials for testing
 					ClientID:     "id",
-					ClientSecret: "secret",
-					Endpoints: &Endpoints{
-						TokenURL: "http://token",
+					ClientSecret: "secret", //nolint:gosec // G101: Mock credentials for testing
+					Endpoints: &Endpoints{ //nolint:gosec // G101: Mock credentials for testing
+						TokenURL: "http://token", //nolint:gosec // G101: Mock credentials for testing
 					},
 					AuthMethod: AuthMethodClientSecretPost,
 					HTTPClient: mockClient,
@@ -66,11 +66,11 @@ func TestClient_ExchangeClientCredentials(t *testing.T) {
 				resp := newResponse(400, `{"error":"invalid_request","error_description":"bad"}`)
 				mockClient.On("Do", mock.Anything).Return(resp, nil)
 
-				client := &Client{
+				client := &Client{ //nolint:gosec // G101: Mock credentials for testing
 					ClientID:     "id",
-					ClientSecret: "secret",
-					Endpoints: &Endpoints{
-						TokenURL: "http://token",
+					ClientSecret: "secret", //nolint:gosec // G101: Mock credentials for testing
+					Endpoints: &Endpoints{ //nolint:gosec // G101: Mock credentials for testing
+						TokenURL: "http://token", //nolint:gosec // G101: Mock credentials for testing
 					},
 					AuthMethod: AuthMethodClientSecretPost,
 					HTTPClient: mockClient,
@@ -102,11 +102,11 @@ func TestClient_ExchangeRefreshToken(t *testing.T) {
 				resp := newResponse(200, `{"access_token":"def","token_type":"bearer"}`)
 				mockClient.On("Do", mock.Anything).Return(resp, nil)
 
-				client := &Client{
+				client := &Client{ //nolint:gosec // G101: Mock credentials for testing
 					ClientID:     "id",
-					ClientSecret: "secret",
-					Endpoints: &Endpoints{
-						TokenURL: "http://token",
+					ClientSecret: "secret", //nolint:gosec // G101: Mock credentials for testing
+					Endpoints: &Endpoints{ //nolint:gosec // G101: Mock credentials for testing
+						TokenURL: "http://token", //nolint:gosec // G101: Mock credentials for testing
 					},
 					AuthMethod: AuthMethodClientSecretPost,
 					HTTPClient: mockClient,
@@ -137,11 +137,11 @@ func TestClient_ExchangePassword(t *testing.T) {
 				resp := newResponse(200, `{"access_token":"ghi","token_type":"bearer"}`)
 				mockClient.On("Do", mock.Anything).Return(resp, nil)
 
-				client := &Client{
+				client := &Client{ //nolint:gosec // G101: Mock credentials for testing
 					ClientID:     "id",
-					ClientSecret: "secret",
-					Endpoints: &Endpoints{
-						TokenURL: "http://token",
+					ClientSecret: "secret", //nolint:gosec // G101: Mock credentials for testing
+					Endpoints: &Endpoints{ //nolint:gosec // G101: Mock credentials for testing
+						TokenURL: "http://token", //nolint:gosec // G101: Mock credentials for testing
 					},
 					AuthMethod: AuthMethodClientSecretPost,
 					HTTPClient: mockClient,
@@ -172,11 +172,11 @@ func TestClient_ExchangeCode(t *testing.T) {
 				resp := newResponse(200, `{"access_token":"jkl","token_type":"bearer"}`)
 				mockClient.On("Do", mock.Anything).Return(resp, nil)
 
-				client := &Client{
+				client := &Client{ //nolint:gosec // G101: Mock credentials for testing
 					ClientID:     "id",
-					ClientSecret: "secret",
-					Endpoints: &Endpoints{
-						TokenURL: "http://token",
+					ClientSecret: "secret", //nolint:gosec // G101: Mock credentials for testing
+					Endpoints: &Endpoints{ //nolint:gosec // G101: Mock credentials for testing
+						TokenURL: "http://token", //nolint:gosec // G101: Mock credentials for testing
 					},
 					AuthMethod: AuthMethodClientSecretPost,
 					HTTPClient: mockClient,
@@ -207,11 +207,11 @@ func TestClient_ExchangeJWT(t *testing.T) {
 				resp := newResponse(200, `{"access_token":"mno","token_type":"bearer"}`)
 				mockClient.On("Do", mock.Anything).Return(resp, nil)
 
-				client := &Client{
+				client := &Client{ //nolint:gosec // G101: Mock credentials for testing
 					ClientID:     "id",
-					ClientSecret: "secret",
-					Endpoints: &Endpoints{
-						TokenURL: "http://token",
+					ClientSecret: "secret", //nolint:gosec // G101: Mock credentials for testing
+					Endpoints: &Endpoints{ //nolint:gosec // G101: Mock credentials for testing
+						TokenURL: "http://token", //nolint:gosec // G101: Mock credentials for testing
 					},
 					AuthMethod: AuthMethodClientSecretPost,
 					HTTPClient: mockClient,

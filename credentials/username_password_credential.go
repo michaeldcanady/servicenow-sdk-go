@@ -4,7 +4,7 @@ import "encoding/base64"
 
 type UsernamePasswordCredential struct {
 	Username string
-	Password string
+	Password string //nolint:gosec // G117: Needed for flow, not secret
 }
 
 // NewUsernamePasswordCredential creates a new instance of UsernamePasswordCredential.

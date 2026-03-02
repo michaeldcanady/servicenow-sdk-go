@@ -9,17 +9,19 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
-// ElementValue is an implementation of ElementValue.
+// ElementValue represents a value of a field in a Service-Now table.
+//
+// It provides type-safe methods to retrieve the value as various Go types.
 type ElementValue struct {
 	val any
 }
 
-// NewElementValue returns a new Element Value
+// NewElementValue returns a new ElementValue.
 func NewElementValue(val any) (*ElementValue, error) {
 	return NewElementVisitor().Visit(val)
 }
 
-// CreateElementValueFromDiscriminatorValue is a parsable factory for creating a ElementValueModel
+// CreateElementValueFromDiscriminatorValue is a parsable factory for creating an ElementValue.
 func CreateElementValueFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewElementValue(nil)
 }

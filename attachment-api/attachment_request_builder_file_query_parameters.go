@@ -14,5 +14,5 @@ type AttachmentRequestBuilderFileQueryParameters struct {
 	//TableName Name of the table to attach the file to.
 	TableName string `url:"table_name"`
 	//TableSysId Sys_id of the record in the table specified in table_name that you want to attach the file to.
-	TableSysId string `url:"table_sys_id"` //nolint:stylecheck
+	TableSysId string `url:"table_sys_id"`
 }

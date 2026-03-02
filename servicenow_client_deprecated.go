@@ -17,7 +17,7 @@ type ServiceNowClient struct {
 	// Deprecated: deprecated since v1.6.0.
 	Credential     core.Credential
 	authProvider   internal.AuthorizationProvider
-	BaseUrl        string //nolint:stylecheck
+	BaseUrl        string
 	Session        webClient
 	RequestAdapter abstractions.RequestAdapter
 }

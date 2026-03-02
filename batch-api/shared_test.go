@@ -13,15 +13,49 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// TODO: add tests
 func TestThrowErrors(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
+		name        string
+		setup       func(m *MockServicedRequest)
+		expectedErr bool
+	}{
+		{
+			name: "No Error",
+			setup: func(m *MockServicedRequest) {
+				m.On("GetStatusCode").Return(newInternal.ToPointer(int64(200)), nil)
+			},
+			expectedErr: false,
+		},
+		{
+			name: "Status Error",
+			setup: func(m *MockServicedRequest) {
+				m.On("GetStatusCode").Return((*int64)(nil), errors.New("status error"))
+			},
+			expectedErr: true,
+		},
+		{
+			name: "Mapped Error",
+			setup: func(m *MockServicedRequest) {
+				m.On("GetStatusCode").Return(newInternal.ToPointer(int64(400)), nil)
+				m.On("GetErrorMessage").Return(newInternal.ToPointer(`{"error":"bad"}`), nil)
+				m.On("GetHeaders").Return([]RestRequestHeader{}, nil)
+			},
+			expectedErr: true,
+		},
+	}
 
 	for _, test := range tests {
-		t.Run(test.name, test.test)
+		t.Run(test.name, func(t *testing.T) {
+			m := NewMockServicedRequest()
+			test.setup(m)
+
+			err := throwErrors(m, "test")
+			if test.expectedErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
 	}
 }
 
@@ -33,7 +67,7 @@ func TestSerializeContent(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				const contentType = "application/json"
+				const contentType = "application/json-shared-test-successful"
 
 				strct := mocking.NewMockParsableFactory()
 				factory := strct.Factory
@@ -63,15 +97,6 @@ func TestSerializeContent(t *testing.T) {
 				strct := mocking.NewMockParsableFactory()
 				factory := strct.Factory
 
-				parseNode := mocking.NewMockParseNode()
-				parseNode.On("GetObjectValue", mock.AnythingOfType("serialization.ParsableFactory")).Return(mocking.NewMockParsable(), nil)
-
-				parseNodeFactory := mocking.NewMockParseNodeFactory()
-				parseNodeFactory.On("GetValidContentType").Return(contentType, nil)
-				parseNodeFactory.On("GetRootParseNode", contentType, []byte{}).Return(parseNode, nil)
-
-				abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return parseNodeFactory })
-
 				parsable, err := serializeContent[*mocking.MockParsable](contentType, []byte{}, factory)
 				assert.Equal(t, errors.New("contentType is required"), err)
 				assert.Nil(t, parsable)
@@ -80,7 +105,7 @@ func TestSerializeContent(t *testing.T) {
 		{
 			name: "Bad content",
 			test: func(t *testing.T) {
-				const contentType = "application/random"
+				const contentType = "application/json-shared-test-bad-content"
 
 				strct := mocking.NewMockParsableFactory()
 				factory := strct.Factory
@@ -102,7 +127,7 @@ func TestSerializeContent(t *testing.T) {
 		{
 			name: "differing type",
 			test: func(t *testing.T) {
-				const contentType = "application/random1"
+				const contentType = "application/json-shared-test-differing-type"
 
 				strct := mocking.NewMockParsableFactory()
 				factory := strct.Factory
@@ -121,7 +146,6 @@ func TestSerializeContent(t *testing.T) {
 				assert.Nil(t, parsable)
 			},
 		},
-		//TODO: add test for unregistered content type
 	}
 
 	for _, test := range tests {

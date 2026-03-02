@@ -1,6 +1,4 @@
 package tableapi
 
-// Deprecacted: deprecated since v1.4.0. Use "TableCollectionResponse2[T]" instead.
-//
-// TableCollectionResponse represents a collection of table entries.
+// Deprecated: deprecated since v1.4.0. Use "TableCollectionResponse2[T]" instead.
 type TableCollectionResponse = TableCollectionResponse2[TableEntry]

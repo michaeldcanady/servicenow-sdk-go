@@ -76,13 +76,13 @@ func (rI *RequestInformation) getContentReader() *bytes.Reader {
 	return bytes.NewReader(rI.Content)
 }
 
-func (rI *RequestInformation) SetUri(url *url.URL) { //nolint:stylecheck
+func (rI *RequestInformation) SetUri(url *url.URL) {
 	//TODO: Add validation that url is valid
 
 	rI.uri.PathParameters = map[string]string{rawURLKey: url.String()}
 }
 
-func (rI *RequestInformation) Url() (string, error) { //nolint:stylecheck
+func (rI *RequestInformation) Url() (string, error) {
 	uri, err := rI.uri.ToUrl()
 	if err != nil {
 		return "", err

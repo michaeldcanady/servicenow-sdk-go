@@ -124,8 +124,8 @@ func TestRecordElementParser(t *testing.T) {
 
 				element, err := recordElementParser(parseNode)
 
-				assert.Nil(t, element)
-				assert.Equal(t, errors.New("link is not *string"), err)
+				assert.NotNil(t, element)
+				assert.Nil(t, err)
 				parseNode.AssertExpectations(t)
 			},
 		},
@@ -184,7 +184,7 @@ func TestTableRecord_GetFieldDeserializers(t *testing.T) {
 				}
 
 				deserializers := record.GetFieldDeserializers()
-				assert.Equal(t, expectedKeys, keys(deserializers))
+				assert.ElementsMatch(t, expectedKeys, keys(deserializers))
 			},
 		},
 	}

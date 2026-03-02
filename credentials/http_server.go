@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 // HTTPServer represents an HTTP server for OAuth2 redirection.
@@ -19,7 +20,7 @@ func NewHTTPServer(address string) *HTTPServer {
 	httpServer := &http.Server{
 		Addr:              address,
 		Handler:           mux,
-		ReadHeaderTimeout: 1000,
+		ReadHeaderTimeout: 1 * time.Second,
 	}
 
 	return &HTTPServer{server: httpServer}

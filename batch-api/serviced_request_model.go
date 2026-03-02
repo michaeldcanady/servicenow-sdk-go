@@ -142,7 +142,7 @@ func (sR *ServicedRequestModel) GetBodyAsParsable(constructor serialization.Pars
 		return nil, nil
 	}
 
-	if err := throwErrors(sR, reflect.TypeOf(constructor).Elem().Name()); err != nil {
+	if err := throwErrors(sR, reflect.TypeOf(constructor).String()); err != nil {
 		return nil, err
 	}
 
@@ -178,6 +178,10 @@ func (sR *ServicedRequestModel) GetBody() ([]byte, error) {
 	body, err := backingStore.Get(bodyKey)
 	if err != nil {
 		return nil, err
+	}
+
+	if internal.IsNil(body) {
+		return nil, nil
 	}
 
 	typedBody, ok := body.([]byte)
@@ -218,6 +222,10 @@ func (sR *ServicedRequestModel) GetErrorMessage() (*string, error) {
 		return nil, err
 	}
 
+	if internal.IsNil(message) {
+		return nil, nil
+	}
+
 	stringMessage, ok := message.(*string)
 	if !ok {
 		return nil, errors.New("message is not *string")
@@ -251,6 +259,10 @@ func (sR *ServicedRequestModel) GetExecutionTime() (*serialization.ISODuration, 
 		return nil, err
 	}
 
+	if internal.IsNil(executionTime) {
+		return nil, nil
+	}
+
 	typedExecutionTime, ok := executionTime.(*serialization.ISODuration)
 	if !ok {
 		return nil, errors.New("executionTime is not *serialization.ISODuration")
@@ -282,6 +294,10 @@ func (sR *ServicedRequestModel) GetHeaders() ([]RestRequestHeader, error) {
 	headers, err := backingStore.Get(headersKey)
 	if err != nil {
 		return nil, err
+	}
+
+	if internal.IsNil(headers) {
+		return nil, nil
 	}
 
 	typedHeaders, ok := headers.([]RestRequestHeader)
@@ -322,6 +338,10 @@ func (sR *ServicedRequestModel) GetID() (*string, error) {
 		return nil, err
 	}
 
+	if internal.IsNil(id) {
+		return nil, nil
+	}
+
 	typedID, ok := id.(*string)
 	if !ok {
 		return nil, errors.New("id is not *string")
@@ -358,6 +378,10 @@ func (sR *ServicedRequestModel) GetRedirectURL() (*string, error) {
 	redirectURL, err := backingStore.Get(redirectURLKey)
 	if err != nil {
 		return nil, err
+	}
+
+	if internal.IsNil(redirectURL) {
+		return nil, nil
 	}
 
 	typedRedirectURL, ok := redirectURL.(*string)
@@ -398,6 +422,10 @@ func (sR *ServicedRequestModel) GetStatusCode() (*int64, error) {
 		return nil, err
 	}
 
+	if internal.IsNil(statusCode) {
+		return nil, nil
+	}
+
 	typedStatusCode, ok := statusCode.(*int64)
 	if !ok {
 		return nil, errors.New("statusCode is not *int64")
@@ -436,9 +464,13 @@ func (sR *ServicedRequestModel) GetStatusText() (*string, error) {
 		return nil, err
 	}
 
+	if internal.IsNil(statusText) {
+		return nil, nil
+	}
+
 	typedStatusText, ok := statusText.(*string)
 	if !ok {
-		return nil, errors.New("statusCode is not *string")
+		return nil, errors.New("statusText is not *string")
 	}
 
 	return typedStatusText, nil

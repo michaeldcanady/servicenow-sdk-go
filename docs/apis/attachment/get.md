@@ -6,7 +6,10 @@ Retrieve specific attachment metadata using the sys id.
 
 ## Path parameters
 
-N/A - doesn't support standard implementation.
+| Name      | Description                                                                                                                       |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `baseurl` | The absolute base URI for the request (this is the same for all requests) including: the schema, the domain, and a path fragment. |
+| `sysId`   | The sys id of the attachment.                                                                                                     |
 
 ## Optional query parameters
 
@@ -20,27 +23,36 @@ N/A
 
 === "Fluent"
 
-    ``` golang
+    ```go
     package main
 
-    import (
-        "context"
-
-        attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
-    )
+    {% include-markdown '../../snippets/attachments.go' start='// [START attachment_imports]' end='// [END attachment_imports]' comments=false trailing-newlines=false dedent=true %}
 
     func main() {
-        // Initialize credentials and client
+        // Step 1: Create credentials
+        {% include-markdown '../../snippets/auth.go' start='// [START auth_basic]' end='// [END auth_basic]' comments=false trailing-newlines=false dedent=true %}
 
-        config := &attachmentapi.AttachmentItemRequestBuilderGetRequestConfiguration{
-            // Optional configurations
-        }
+        // Step 2: Initialize client
+        {% include-markdown '../../snippets/auth.go' start='// [START client_init]' end='// [END client_init]' comments=false trailing-newlines=false dedent=true %}
 
-        response, err := client.Now2().Attachment2().ByID("{sys_id}").Get(context.Background(), config)
-        if err != nil {
-            log.Fatal(err)
-        }
+        {% include-markdown '../../snippets/attachments.go' start='// [START attachment_get_item]' end='// [END attachment_get_item]' comments=false trailing-newlines=false dedent=true %}
+    }
+    ```
 
-        // Process response
+=== "Standard"
+
+    ```go
+    package main
+
+    {% include-markdown '../../snippets/attachments.go' start='// [START attachment_imports]' end='// [END attachment_imports]' comments=false trailing-newlines=false dedent=true %}
+
+    func main() {
+        // Step 1: Create credentials
+        {% include-markdown '../../snippets/auth.go' start='// [START auth_basic]' end='// [END auth_basic]' comments=false trailing-newlines=false dedent=true %}
+
+        // Step 2: Initialize client
+        {% include-markdown '../../snippets/auth.go' start='// [START client_init]' end='// [END client_init]' comments=false trailing-newlines=false dedent=true %}
+
+        {% include-markdown '../../snippets/attachments.go' start='// [START attachment_std_get_item]' end='// [END attachment_std_get_item]' comments=false trailing-newlines=false dedent=true %}
     }
     ```

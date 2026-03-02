@@ -24,8 +24,8 @@ type MockRequestInformation struct {
 
 func (m *MockRequestInformation) SetStreamContent(content []byte)             {}
 func (m *MockRequestInformation) AddQueryParameters(source interface{}) error { return nil }
-func (m *MockRequestInformation) SetUri(url *url.URL)                         {}                 //nolint:stylecheck
-func (m *MockRequestInformation) Url() (string, error)                        { return "", nil } //nolint:stylecheck
+func (m *MockRequestInformation) SetUri(url *url.URL)                         {}
+func (m *MockRequestInformation) Url() (string, error)                        { return "", nil }
 func (m *MockRequestInformation) ToRequest() (*http.Request, error)           { return nil, nil }
 func (m *MockRequestInformation) ToRequestWithContext(ctx context.Context) (*http.Request, error) {
 	return nil, nil

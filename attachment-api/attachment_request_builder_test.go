@@ -2,6 +2,7 @@ package attachmentapi
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -14,15 +15,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type MockClient struct{}
+type MockClient struct {
+	SendFunc func(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error)
+}
 
 func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+	if c.SendFunc != nil {
+		return c.SendFunc(requestInfo, errorMapping)
+	}
 	req, err := requestInfo.ToRequest()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := http.DefaultClient.Do(req)
+	client := &http.Client{
+		Timeout: 30 * time.Second,
+	}
+
+	response, err := client.Do(req) //nolint:gosec // G704: Test mock
 	if err != nil {
 		return nil, err
 	}
@@ -152,6 +162,17 @@ func TestAttachmentRequestBuilderGet(t *testing.T) {
 		t.Errorf("Expected response with 1 result, but got %v", len(resp.Result))
 	}
 	assert.Equal(t, expected, resp)
+
+	t.Run("Send Error", func(t *testing.T) {
+		clientError := &MockClient{
+			SendFunc: func(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+				return nil, errors.New("send error")
+			},
+		}
+		builderError := NewAttachmentRequestBuilder(clientError, pathParameters)
+		_, err := builderError.Get(nil)
+		assert.Error(t, err)
+	})
 }
 
 func TestAttachmentRequestBuilderFile(t *testing.T) {
@@ -291,6 +312,22 @@ func TestAttachmentRequestBuilderFile(t *testing.T) {
 		}
 
 		_, err := builder.File("bad-file.txt", params)
+		assert.Error(t, err)
+	})
+
+	t.Run("Send Error", func(t *testing.T) {
+		params := &AttachmentRequestBuilderFileQueryParameters{
+			FileName:   fileName,
+			TableName:  tableName,
+			TableSysId: tableSysID,
+		}
+		clientError := &MockClient{
+			SendFunc: func(requestInfo core.IRequestInformation, errorMapping core.ErrorMapping) (*http.Response, error) {
+				return nil, errors.New("send error")
+			},
+		}
+		builderError := NewAttachmentRequestBuilder(clientError, pathParameters)
+		_, err := builderError.File(tempFile.Name(), params)
 		assert.Error(t, err)
 	})
 }

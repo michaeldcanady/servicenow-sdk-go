@@ -2,7 +2,7 @@ package tableapi
 
 import "net/http"
 
-// TableItemResponse2[T] represents a T Entry single table record response.
+// Deprecated: deprecated since v{unreleased}. Please use [newInternal.ServiceNowItemResponse]
 type TableItemResponse2[T Entry] struct {
 	Result *T
 }

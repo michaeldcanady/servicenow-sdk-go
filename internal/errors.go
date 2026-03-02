@@ -22,6 +22,7 @@ var (
 	ErrWrongResponseType = errors.New("incorrect Response Type")
 	ErrParsing           = errors.New("parsing nextLink url failed")
 	ErrNilCallback       = errors.New("callback can't be nil")
+	ErrNoMoreItems       = errors.New("no more items")
 
 	//Authorization Provider
 	ErrNilRequest = errors.New("request can't be nil")

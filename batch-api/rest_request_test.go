@@ -2,11 +2,13 @@ package batchapi
 
 import (
 	"errors"
+	"net/url"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -59,27 +61,84 @@ func TestCreateRestRequestFromDiscriminatorValue(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestCreateRestRequestFromRequestInformation(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
+		name                   string
+		excludeResponseHeaders bool
+		expectedErr            bool
+	}{
+		{
+			name:                   "Successful",
+			excludeResponseHeaders: true,
+			expectedErr:            false,
+		},
+	}
 
 	for _, test := range tests {
-		t.Run(test.name, test.test)
+		t.Run(test.name, func(t *testing.T) {
+			requestInfo := abstractions.NewRequestInformation()
+			requestInfo.Method = abstractions.GET
+			requestInfo.SetUri(url.URL{Path: "/api/now/table"})
+
+			res, err := CreateRestRequestFromRequestInformation(requestInfo, test.excludeResponseHeaders)
+			if test.expectedErr {
+				assert.Error(t, err)
+				assert.Nil(t, res)
+			} else {
+				assert.NoError(t, err)
+				assert.NotNil(t, res)
+			}
+		})
 	}
 }
 
-// TODO: add tests
 func TestRestRequest_Serialize(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
+		name        string
+		setup       func(m *RestRequestModel)
+		expectedErr bool
+	}{
+		{
+			name: "Successful",
+			setup: func(m *RestRequestModel) {
+				_ = m.SetBody([]byte("test"))
+				_ = m.SetExcludeResponseHeaders(internal.ToPointer(true))
+				_ = m.SetHeaders([]RestRequestHeader{NewRestRequestHeader()})
+				_ = m.SetID(internal.ToPointer("id"))
+				_ = m.SetMethod(internal.ToPointer(abstractions.GET))
+				_ = m.SetURL(internal.ToPointer("/api/test"))
+			},
+			expectedErr: false,
+		},
+		{
+			name: "Nil Model",
+			setup: func(m *RestRequestModel) {
+				// handled by test loop
+			},
+			expectedErr: false,
+		},
+	}
 
 	for _, test := range tests {
-		t.Run(test.name, test.test)
+		t.Run(test.name, func(t *testing.T) {
+			var m *RestRequestModel
+			if test.name != "Nil Model" {
+				m = NewRestRequest()
+				test.setup(m)
+			}
+
+			writer := mocking.NewMockSerializationWriter()
+			writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteBoolValue", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteCollectionOfObjectValues", mock.Anything, mock.Anything).Return(nil)
+
+			err := m.Serialize(writer)
+			if test.expectedErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
 	}
 }
 
@@ -209,15 +268,49 @@ func TestRestRequest_GetBody(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestRestRequest_SetBodyFromParsable(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
+		name        string
+		setup       func(m *RestRequestModel)
+		expectedErr bool
+	}{
+		{
+			name: "Successful",
+			setup: func(m *RestRequestModel) {
+				// We need a registered serialization writer
+				serialization.DefaultSerializationWriterFactoryInstance.ContentTypeAssociatedFactories["application/json"] = mocking.NewMockSerializationWriterFactory()
+			},
+			expectedErr: false,
+		},
+		{
+			name: "Registry Error",
+			setup: func(m *RestRequestModel) {
+				delete(serialization.DefaultSerializationWriterFactoryInstance.ContentTypeAssociatedFactories, "application/json")
+			},
+			expectedErr: true,
+		},
+	}
 
 	for _, test := range tests {
-		t.Run(test.name, test.test)
+		t.Run(test.name, func(t *testing.T) {
+			m := NewRestRequest()
+			test.setup(m)
+
+			if test.name == "Successful" {
+				factory := serialization.DefaultSerializationWriterFactoryInstance.ContentTypeAssociatedFactories["application/json"].(*mocking.MockSerializationWriterFactory)
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteObjectValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+				writer.On("GetSerializedContent").Return([]byte("test"), nil)
+				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
+			}
+
+			err := m.SetBodyFromParsable("application/json", mocking.NewMockParsable())
+			if test.expectedErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
 	}
 }
 

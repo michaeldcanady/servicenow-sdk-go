@@ -3,6 +3,7 @@ package servicenowsdkgo
 import (
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -107,4 +108,51 @@ func TestNowRequestBuilder_Batch(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, test.test)
 	}
+}
+
+func TestNewNowRequestBuilder2(t *testing.T) {
+	client := &ServiceNowClient{}
+	url := "https://example.service-now.com/api"
+	builder := NewNowRequestBuilder2(url, client)
+
+	expected := map[string]string{
+		"baseurl": url,
+	}
+
+	assert.NotNil(t, builder)
+	assert.Equal(t, expected, builder.PathParameters)
+}
+
+func TestNowRequestBuilder_Table2(t *testing.T) {
+	client := &ServiceNowClient{}
+	url := "https://example.service-now.com/api"
+	builder := NewNowRequestBuilder2(url, client)
+	tableName := "incident"
+
+	expected := map[string]string{
+		"baseurl": url,
+		"table":   tableName,
+	}
+
+	tableBuilder := builder.Table2(tableName)
+
+	assert.NotNil(t, tableBuilder)
+	assert.Equal(t, expected, tableBuilder.PathParameters)
+}
+
+func TestNowRequestBuilder_TableV2(t *testing.T) {
+	client := NewServiceNowClient(mocking.NewMockCredential(), "instance")
+	url := "https://example.service-now.com/api"
+	builder := NewNowRequestBuilder2(url, client)
+	tableName := "incident"
+
+	expected := map[string]string{
+		"baseurl": url,
+		"table":   tableName,
+	}
+
+	tableBuilder := builder.TableV2(tableName)
+
+	assert.NotNil(t, tableBuilder)
+	assert.Equal(t, expected, tableBuilder.GetPathParameters())
 }

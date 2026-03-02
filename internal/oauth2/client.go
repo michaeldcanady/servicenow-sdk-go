@@ -10,11 +10,12 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 type Client struct {
 	ClientID     string
-	ClientSecret string
+	ClientSecret string //nolint:gosec // G117: Needed for flow, no secret
 	Endpoints    *Endpoints
 	AuthMethod   AuthMethod
 	HTTPClient   HTTPClient
@@ -75,7 +76,7 @@ func (c *Client) doRequest(req *http.Request) (*Token, error) {
 	if err != nil {
 		return nil, fmt.Errorf("token request failed: %w", err)
 	}
-	defer res.Body.Close()
+	defer res.Body.Close() //nolint:errcheck
 
 	body, _ := io.ReadAll(res.Body)
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
@@ -98,11 +99,15 @@ func (c *Client) doRequest(req *http.Request) (*Token, error) {
 	return &tok, nil
 }
 
+var defaultHTTPClient = &http.Client{
+	Timeout: 30 * time.Second,
+}
+
 func (c *Client) httpClient() HTTPClient {
 	if c.HTTPClient != nil {
 		return c.HTTPClient
 	}
-	return http.DefaultClient
+	return defaultHTTPClient
 }
 
 func (c *Client) ExchangeClientCredentials(ctx context.Context, scopes []string) (*Token, error) {

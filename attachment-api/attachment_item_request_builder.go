@@ -39,6 +39,15 @@ func NewAttachmentItemRequestBuilderInternal(
 	)
 }
 
+func NewAttachmentItemRequestBuilder2(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *AttachmentItemRequestBuilder {
+	urlParams := make(map[string]string)
+	urlParams[newInternal.RawURLKey] = rawURL
+	return NewAttachmentItemRequestBuilderInternal(urlParams, requestAdapter)
+}
+
 func (rB *AttachmentItemRequestBuilder) isNil() bool {
 	return internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder)
 }

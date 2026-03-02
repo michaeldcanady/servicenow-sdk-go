@@ -2,67 +2,62 @@ package internal
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestIsNil(t *testing.T) {
+	var s *string
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name     string
+		input    any
+		expected bool
 	}{
-		{
-			name: "untyped nil",
-			test: func(t *testing.T) {
-				assert.True(t, IsNil(nil))
-			},
-		},
-		{
-			name: "nil string pointer",
-			test: func(t *testing.T) {
-				assert.True(t, IsNil((*string)(nil)))
-			},
-		},
-		{
-			name: "nil interface",
-			test: func(t *testing.T) {
-				assert.True(t, IsNil((interface{})(nil)))
-			},
-		},
+		{"UntypedNil", nil, true},
+		{"NilPtr", s, true},
+		{"NotNil", "v", false},
+		{"IntNotNil", 1, false},
 	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
-}
-
-// TODO: add tests
-func TestThrowErrors(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if IsNil(tt.input) != tt.expected {
+				t.Errorf("got %v, expected %v", IsNil(tt.input), tt.expected)
+			}
+		})
 	}
 }
 
 func TestToPointer(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name  string
+		input string
 	}{
-		{
-			name: "String",
-			test: func(t *testing.T) {
-				val := "string"
-				assert.Equal(t, &val, ToPointer("string"))
-			},
-		},
+		{"String", "test"},
 	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res := ToPointer(tt.input)
+			if *res != tt.input {
+				t.Errorf("got %v, expected %v", *res, tt.input)
+			}
+		})
+	}
+}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+func TestIsPointer(t *testing.T) {
+	s := "v"
+	tests := []struct {
+		name     string
+		input    any
+		expected bool
+	}{
+		{"Pointer", &s, true},
+		{"NotPointer", s, false},
+		{"Nil", nil, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if IsPointer(tt.input) != tt.expected {
+				t.Errorf("got %v, expected %v", IsPointer(tt.input), tt.expected)
+			}
+		})
 	}
 }

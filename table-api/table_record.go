@@ -12,23 +12,16 @@ import (
 
 var _ serialization.Parsable = (*TableRecord)(nil)
 
-// TableRecord defines an interface for managing structured records in a table.
+// TableRecord represents a structured record in a Service-Now table.
 //
-// This interface provides methods for retrieving, updating, and checking the existence
-// of attributes stored within a table entry.
-//
-// Implementing types should ensure proper storage and retrieval of RecordElement instances.
-//
-// Example usage:
-//
-//	var record TableRecord
-//	element := record.Get("status")
-//	fmt.Println(element)
+// This model provides a flexible way to store and retrieve attributes from a table entry
+// using a backing store. It supports both raw values and structured RecordElement instances.
 type TableRecord struct {
 	keys []string
 	internal.Model
 }
 
+// CreateTableRecordFromDiscriminatorValue creates a new TableRecord from a ParseNode.
 func CreateTableRecordFromDiscriminatorValue(node serialization.ParseNode) (serialization.Parsable, error) {
 	value, err := node.GetRawValue()
 	if err != nil {
@@ -96,6 +89,7 @@ func recordElementParser(node serialization.ParseNode) (*RecordElement, error) {
 	return elem, nil
 }
 
+// GetSysID returns the sys_id of the record if it exists.
 func (tR *TableRecord) GetSysID() (*string, error) {
 	element, err := tR.Get("sys_id")
 	if err != nil {
@@ -132,6 +126,7 @@ func (tR *TableRecord) Serialize(writer serialization.SerializationWriter) error
 	return errors.New("unimplemented")
 }
 
+// NewTableRecord creates a new instance of TableRecord.
 func NewTableRecord() *TableRecord {
 	return &TableRecord{
 		keys:  make([]string, 0),
@@ -140,13 +135,6 @@ func NewTableRecord() *TableRecord {
 }
 
 // Get retrieves a RecordElement associated with the specified key.
-//
-// This method returns the stored element for the given field name.
-//
-// Example:
-//
-//	element := record.Get("status")
-//	fmt.Println(element)
 func (tR *TableRecord) Get(key string) (*RecordElement, error) {
 	elem, err := store.DefaultBackedModelAccessorFunc[*TableRecord, RecordElement](tR, key)
 
@@ -154,22 +142,11 @@ func (tR *TableRecord) Get(key string) (*RecordElement, error) {
 }
 
 // SetElement assigns a RecordElement to the specified key.
-//
-// Example:
-//
-//	element := NewRecordElement()
-//	err := record.SetElement("status", element)
 func (tR *TableRecord) SetElement(key string, element *RecordElement) error {
 	return store.DefaultBackedModelMutatorFunc(tR, key, element)
 }
 
 // SetValue assigns a value to the specified key using a RecordElement wrapper.
-//
-// This method ensures that the stored data conforms to the RecordElement interface.
-//
-// Example:
-//
-//	err := record.SetValue("status", "active")
 func (tR *TableRecord) SetValue(key string, value any) error {
 	elem := NewRecordElement()
 	if err := elem.SetValue(value); err != nil {
@@ -179,11 +156,6 @@ func (tR *TableRecord) SetValue(key string, value any) error {
 }
 
 // HasAttribute checks whether the specified key exists in the record.
-//
-// Example:
-//
-//	exists := record.HasAttribute("status")
-//	fmt.Println(exists) // Output: true or false
 func (tR *TableRecord) HasAttribute(key string) bool {
 	return slices.Contains(tR.keys, key)
 }

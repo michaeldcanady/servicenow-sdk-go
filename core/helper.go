@@ -2,6 +2,7 @@ package core
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -93,7 +94,7 @@ func IsPointer(value interface{}) bool {
 	return valueKind == reflect.Ptr
 }
 
-func FromJson[T any](response *http.Response, v *T) error { //nolint:stylecheck
+func FromJson[T any](response *http.Response, v *T) error {
 	if response == nil {
 		return ErrNilResponse
 	}
@@ -148,12 +149,19 @@ func SendGet2(requestBuilder *RequestBuilder, config *RequestConfiguration) erro
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	var errorMapping ErrorMapping
+	var response Response
+	if config != nil {
+		errorMapping = config.ErrorMapping
+		response = config.Response
+	}
+
+	resp, err := requestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
 		return err
 	}
 
-	return ParseResponse(response, &config.Response)
+	return ParseResponse(resp, &response)
 }
 
 // Deprecated: deprecated in v1.4.0. Use `SendPost2` instead.
@@ -177,12 +185,19 @@ func SendPost2(requestBuilder *RequestBuilder, config *RequestConfiguration) err
 		return err
 	}
 
-	response, err := requestBuilder.Client.Send(requestInfo, config.ErrorMapping)
+	var errorMapping ErrorMapping
+	var response Response
+	if config != nil {
+		errorMapping = config.ErrorMapping
+		response = config.Response
+	}
+
+	resp, err := requestBuilder.Client.Send(requestInfo, errorMapping)
 	if err != nil {
 		return err
 	}
 
-	return ParseResponse(response, &config.Response)
+	return ParseResponse(resp, &response)
 }
 
 // Deprecated: deprecated in v1.4.0. Use `sendDelete2` instead.
@@ -201,6 +216,10 @@ func sendDelete(requestBuilder *RequestBuilder, params interface{}, errorMapping
 }
 
 func sendDelete2(requestBuilder *RequestBuilder, config *RequestConfiguration) error {
+	if config == nil {
+		return errors.New("config is nil")
+	}
+
 	requestInfo, err := requestBuilder.ToDeleteRequestInformation2(config)
 	if err != nil {
 		return err

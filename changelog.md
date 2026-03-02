@@ -8,9 +8,52 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- `NowRequestBuilder.TableV2`
+- `tableapi.TableRequestBuilder2`
+- `tableapi.TableItemRequestBuilder2`
+- `tableapi.NewTableItemRequestBuilder3`
+- `tableapi.TableRequestBuilder2GetQueryParameters`
+- `tableapi.TableRequestBuilder2PostQueryParameters`
+- `tableapi.TableItemRequestBuilder2GetQueryParameters`
+- `tableapi.TableItemRequestBuilder2PutQueryParameters`
+- `tableapi.TableItemRequestBuilder2DeleteQueryParameters`
+- `tableapi.TableItemRequestBuilder2PatchQueryParameters`
+- `tableapi.TableRecord`
+- `tableapi.RecordElement`
+- `tableapi.ElementValue`
+
 ### Changed
 
+- Complete migration of table sub-module to Kiota-based framework
+
 ### Deprecated
+
+- `tableapi.New2TableRequestBuilder`
+- `tableapi.TableRequestBuilder.ByID2`
+- `tableapi.TableRequestBuilder.Get2`
+- `tableapi.TableRequestBuilder.Post4`
+- `tableapi.TableRequestBuilder.Count`
+- `tableapi.NewTableItemRequestBuilder2`
+- `tableapi.TableItemRequestBuilder.Get2`
+- `tableapi.TableItemRequestBuilder.Delete2`
+- `tableapi.TableItemRequestBuilder.Put3`
+- `tableapi.TableRequestBuilderGetQueryParameters`
+- `tableapi.TableRequestBuilderPostQueryParameters`
+- `tableapi.TableItemRequestBuilderGetQueryParameters`
+- `tableapi.TableItemRequestBuilderPutQueryParameters`
+- `tableapi.TableItemRequestBuilderDeleteQueryParameters`
+- `tableapi.TableEntry`
+- `tableapi.TableCollectionResponse2`
+- `tableapi.TableItemResponse2`
+- `tableapi.TableValue`
+- `tableapi.Entry`
+- `tableapi.DisplayValue`
+- `tableapi.View`
+- `NowRequestBuilder.Table2`
+- `tableapi.TableRequestBuilder`
+- `tableapi.TableItemRequestBuilder`
+- `tableapi.NewTableRequestBuilder`
+- `tableapi.NewTableItemRequestBuilder`
 
 ### Removed
 
@@ -144,7 +187,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - abstract `core.PageIterator` and `core.PageResult`
-- `PageIterator.fetchPage` does not parse provided uri ([Issue #83](https://github.com/michaeldcanady/servicenow-sdk-go/issues/83))
+- `PageIterator.fetchPage` doesn't parse provided URI ([Issue #83](https://github.com/michaeldcanady/servicenow-sdk-go/issues/83))
 
 ### Deprecated
 
@@ -177,4 +220,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- Page Interation stops after first page ([Issue #62](https://github.com/michaeldcanady/servicenow-sdk-go/pull/62))
+- Page Iteration stops after first page ([Issue #62](https://github.com/michaeldcanady/servicenow-sdk-go/pull/62))

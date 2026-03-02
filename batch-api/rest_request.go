@@ -201,6 +201,10 @@ func (rE *RestRequestModel) GetBody() ([]byte, error) {
 		return nil, err
 	}
 
+	if internal.IsNil(body) {
+		return nil, nil
+	}
+
 	typedBody, ok := body.([]byte)
 	if !ok {
 		return nil, errors.New("body is not []byte")
@@ -288,6 +292,10 @@ func (rE *RestRequestModel) GetExcludeResponseHeaders() (*bool, error) {
 		return nil, err
 	}
 
+	if internal.IsNil(excludeResponseHeaders) {
+		return nil, nil
+	}
+
 	typedExcludeResponseHeaders, ok := excludeResponseHeaders.(*bool)
 	if !ok {
 		return nil, errors.New("excludeResponseHeaders is not *bool")
@@ -324,6 +332,10 @@ func (rE *RestRequestModel) GetHeaders() ([]RestRequestHeader, error) {
 	headers, err := backingStore.Get(headersKey)
 	if err != nil {
 		return nil, err
+	}
+
+	if internal.IsNil(headers) {
+		return nil, nil
 	}
 
 	typedheaders, ok := headers.([]RestRequestHeader)
@@ -364,6 +376,10 @@ func (rE *RestRequestModel) GetID() (*string, error) {
 		return nil, err
 	}
 
+	if internal.IsNil(id) {
+		return nil, nil
+	}
+
 	typedID, ok := id.(*string)
 	if !ok {
 		return nil, errors.New("id is not *string")
@@ -402,6 +418,10 @@ func (rE *RestRequestModel) GetMethod() (*abstractions.HttpMethod, error) {
 		return nil, err
 	}
 
+	if internal.IsNil(method) {
+		return nil, nil
+	}
+
 	typedMethod, ok := method.(*abstractions.HttpMethod)
 	if !ok {
 		return nil, errors.New("method is not *abstractions.HttpMethod")
@@ -438,6 +458,10 @@ func (rE *RestRequestModel) GetURL() (*string, error) {
 	url, err := backingStore.Get(urlKey)
 	if err != nil {
 		return nil, err
+	}
+
+	if internal.IsNil(url) {
+		return nil, nil
 	}
 
 	typedURL, ok := url.(*string)

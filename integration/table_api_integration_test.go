@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/jarcoal/httpmock"
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
@@ -115,11 +116,11 @@ func TestIntegrationTableCollection_Get2(t *testing.T) {
 			)
 
 			cred := credentials.NewUsernamePasswordCredential(username, password)
-			client, err := servicenowsdkgo.NewServiceNowClient2WithHTTPClient(cred, instance, http.DefaultClient)
+			client, err := servicenowsdkgo.NewServiceNowClient2WithHTTPClient(cred, instance, &http.Client{Timeout: 30 * time.Second})
 			require.NoError(t, err)
 
 			ctx := context.Background()
-			resp, err := client.Now2().Table2(tableName).Get2(ctx, nil)
+			resp, err := client.Now2().Table2(tableName).Get2(ctx, nil) //nolint:staticcheck
 
 			if tt.expectErr {
 				require.Equal(t, tt.expectedErr, err)

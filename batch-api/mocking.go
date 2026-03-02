@@ -133,3 +133,68 @@ func (mock *mockBatchRequest) GetBackingStore() store.BackingStore {
 	args := mock.Called()
 	return args.Get(0).(store.BackingStore)
 }
+
+type MockServicedRequest struct {
+	mock.Mock
+}
+
+func NewMockServicedRequest() *MockServicedRequest {
+	return &MockServicedRequest{
+		Mock: mock.Mock{},
+	}
+}
+
+func (m *MockServicedRequest) GetBodyAsParsable(constructor serialization.ParsableFactory) (serialization.Parsable, error) {
+	args := m.Called(constructor)
+	return args.Get(0).(serialization.Parsable), args.Error(1)
+}
+
+func (m *MockServicedRequest) GetBody() ([]byte, error) {
+	args := m.Called()
+	return args.Get(0).([]byte), args.Error(1)
+}
+
+func (m *MockServicedRequest) GetErrorMessage() (*string, error) {
+	args := m.Called()
+	return args.Get(0).(*string), args.Error(1)
+}
+
+func (m *MockServicedRequest) GetExecutionTime() (*serialization.ISODuration, error) {
+	args := m.Called()
+	return args.Get(0).(*serialization.ISODuration), args.Error(1)
+}
+
+func (m *MockServicedRequest) GetHeaders() ([]RestRequestHeader, error) {
+	args := m.Called()
+	return args.Get(0).([]RestRequestHeader), args.Error(1)
+}
+
+func (m *MockServicedRequest) GetID() (*string, error) {
+	args := m.Called()
+	return args.Get(0).(*string), args.Error(1)
+}
+
+func (m *MockServicedRequest) GetRedirectURL() (*string, error) {
+	args := m.Called()
+	return args.Get(0).(*string), args.Error(1)
+}
+
+func (m *MockServicedRequest) GetStatusCode() (*int64, error) {
+	args := m.Called()
+	return args.Get(0).(*int64), args.Error(1)
+}
+
+func (m *MockServicedRequest) GetStatusText() (*string, error) {
+	args := m.Called()
+	return args.Get(0).(*string), args.Error(1)
+}
+
+func (m *MockServicedRequest) Serialize(writer serialization.SerializationWriter) error {
+	args := m.Called(writer)
+	return args.Error(0)
+}
+
+func (m *MockServicedRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	args := m.Called()
+	return args.Get(0).(map[string]func(serialization.ParseNode) error)
+}

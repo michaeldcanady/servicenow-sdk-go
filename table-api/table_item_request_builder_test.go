@@ -10,6 +10,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"testing"
+	"time"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
@@ -31,7 +32,11 @@ func (c *MockClient) Send(requestInfo core.IRequestInformation, errorMapping cor
 		return nil, err
 	}
 
-	response, err := http.DefaultClient.Do(req)
+	client := &http.Client{
+		Timeout: 30 * time.Second,
+	}
+
+	response, err := client.Do(req) //nolint:gosec // G704: Test mock
 	if err != nil {
 		return nil, err
 	}

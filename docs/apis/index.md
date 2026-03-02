@@ -1,12 +1,19 @@
-# Overview
+# API reference overview
 
-This section provides implementation guidance for each supported API in the SDK. Each SDK submodule corresponds to a Service-Now REST API of the same name. For example, the `table-api` submodule wraps the Table REST API.
+This section provides detailed reference for each supported ServiceNow API module in the SDK. Each submodule corresponds to a ServiceNow REST API of the same name, providing a Go-idiomatic way to interact with the platform.
 
-<!-- vale Microsoft.Vocab = NO  -->
-To ensure clarity and maintainability:
-<!-- vale Microsoft.Vocab = YES  -->
+Whether you're automating incident management, synchronizing user records, or handling file attachments, these modules provide the necessary tools for building robust ServiceNow integrations.
 
-- **Internal consistency** within each submodule takes precedence.
-- **Cross-module consistency** remains a broader goal (but may vary for specific reasons).
+## Supported APIs
 
-Each subsection includes examples and usage patterns tailored to the specific API it supports.
+- [**Table API**](tables/index.md): Create, read, update, and delete (CRUD) operations for ServiceNow tables.
+- [**Attachment API**](attachment/index.md): Manage files and raw file content attached to records.
+- [**Batch API**](batch/index.md): Group multiple requests into a single efficient call.
+
+## Design philosophy
+
+- **Idiomatic Go**: Uses standard Go patterns for error handling, context support, and naming.
+- **Fluent & Standard Builders**: Offers both a fluent API for ease of use and standard builders for more manual control.
+- **Internal consistency** within each submodule takes precedence, though cross-module consistency remains a broader goal.
+
+Explore the following subsections for implementation details, code snippets, and specific endpoint documentation.

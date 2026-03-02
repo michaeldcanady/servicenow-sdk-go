@@ -9,15 +9,11 @@ on:
       - "docs/**"
       - "mkdocs.yml"
       - ".github/workflows/pages.yml"
-    paths-ignore:
-      - ".github/dependabot.yml"
   pull_request:
     paths:
       - "docs/**"
       - "mkdocs.yml"
       - ".github/workflows/pages.yml"
-    paths-ignore:
-      - ".github/dependabot.yml"
 
 env:
   PYTHON_VERSION: "3.x"

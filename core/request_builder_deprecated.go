@@ -18,7 +18,7 @@ type RequestBuilder struct {
 	Client2 Client2
 
 	// UrlTemplate is the URL template for constructing the request URL.
-	UrlTemplate string //nolint:stylecheck
+	UrlTemplate string
 }
 
 // NewRequestBuilder creates a new instance of the RequestBuilder associated with the given URL and Client.

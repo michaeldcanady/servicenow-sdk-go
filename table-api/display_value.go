@@ -1,9 +1,13 @@
 package tableapi
 
+// Deprecated: deprecated since v{unreleased}. Please use [DisplayValue2]
 type DisplayValue string
 
 const (
-	TRUE  DisplayValue = "true"
+	// Deprecated: deprecated since v{unreleased}. Please use [DisplayValue2True]
+	TRUE DisplayValue = "true"
+	// Deprecated: deprecated since v{unreleased}. Please use [DisplayValue2False]
 	FALSE DisplayValue = "false"
-	ALL   DisplayValue = "all"
+	// Deprecated: deprecated since v{unreleased}. Please use [DisplayValue2All]
+	ALL DisplayValue = "all"
 )

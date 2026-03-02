@@ -2,6 +2,7 @@ package attachmentapi
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
@@ -9,6 +10,7 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestNewAttachmentUploadRequestBuilderInternal(t *testing.T) {
@@ -65,15 +67,157 @@ func TestNewAttachmentUploadRequestBuilder(t *testing.T) {
 	}
 }
 
-// TODO: (TestAttachmentUploadRequestBuilder_Post) Add tests
 func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
+		name        string
+		setup       func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody)
+		expectedErr bool
+	}{
+		{
+			name: "Successful",
+			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+				s := "test"
+				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
+				_ = body.AddOrReplacePart("table_name", "text/plain", &s)
+				_ = body.AddOrReplacePart("table_sys_id", "text/plain", &s)
+				_ = body.AddOrReplacePart("uploadFile", "text/plain", &s)
+
+				mockSerializationWriter := mocking.NewMockSerializationWriter()
+				mockSerializationWriter.On("WriteObjectValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+				mockSerializationWriter.On("GetSerializedContent").Return([]byte("content"), nil)
+				mockSerializationWriter.On("Close").Return(nil)
+
+				mockSerializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+				mockSerializationWriterFactory.On("GetSerializationWriter", mock.Anything).Return(mockSerializationWriter, nil)
+
+				ra.On("GetSerializationWriterFactory").Return(mockSerializationWriterFactory)
+				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&FileModel{}, nil)
+			},
+			expectedErr: false,
+		},
+		{
+			name: "Missing Content-Type",
+			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+				// empty body
+			},
+			expectedErr: true,
+		},
+		{
+			name: "Missing table_name",
+			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+				s := "test"
+				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
+			},
+			expectedErr: true,
+		},
+		{
+			name: "Missing table_sys_id",
+			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+				s := "test"
+				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
+				_ = body.AddOrReplacePart("table_name", "text/plain", &s)
+			},
+			expectedErr: true,
+		},
+		{
+			name: "Missing uploadFile",
+			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+				s := "test"
+				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
+				_ = body.AddOrReplacePart("table_name", "text/plain", &s)
+				_ = body.AddOrReplacePart("table_sys_id", "text/plain", &s)
+			},
+			expectedErr: true,
+		},
+		{
+			name: "Send Error",
+			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+				s := "test"
+				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
+				_ = body.AddOrReplacePart("table_name", "text/plain", &s)
+				_ = body.AddOrReplacePart("table_sys_id", "text/plain", &s)
+				_ = body.AddOrReplacePart("uploadFile", "text/plain", &s)
+
+				mockSerializationWriter := mocking.NewMockSerializationWriter()
+				mockSerializationWriter.On("WriteObjectValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+				mockSerializationWriter.On("GetSerializedContent").Return([]byte("content"), nil)
+				mockSerializationWriter.On("Close").Return(nil)
+
+				mockSerializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+				mockSerializationWriterFactory.On("GetSerializationWriter", mock.Anything).Return(mockSerializationWriter, nil)
+
+				ra.On("GetSerializationWriterFactory").Return(mockSerializationWriterFactory)
+				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, errors.New("send error"))
+			},
+			expectedErr: true,
+		},
+		{
+			name: "Wrong Type Error",
+			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+				s := "test"
+				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
+				_ = body.AddOrReplacePart("table_name", "text/plain", &s)
+				_ = body.AddOrReplacePart("table_sys_id", "text/plain", &s)
+				_ = body.AddOrReplacePart("uploadFile", "text/plain", &s)
+
+				mockSerializationWriter := mocking.NewMockSerializationWriter()
+				mockSerializationWriter.On("WriteObjectValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+				mockSerializationWriter.On("GetSerializedContent").Return([]byte("content"), nil)
+				mockSerializationWriter.On("Close").Return(nil)
+
+				mockSerializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+				mockSerializationWriterFactory.On("GetSerializationWriter", mock.Anything).Return(mockSerializationWriter, nil)
+
+				ra.On("GetSerializationWriterFactory").Return(mockSerializationWriterFactory)
+				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&Attachment2Model{}, nil)
+			},
+			expectedErr: true,
+		},
+		{
+			name: "Nil Result",
+			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+				s := "test"
+				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
+				_ = body.AddOrReplacePart("table_name", "text/plain", &s)
+				_ = body.AddOrReplacePart("table_sys_id", "text/plain", &s)
+				_ = body.AddOrReplacePart("uploadFile", "text/plain", &s)
+
+				mockSerializationWriter := mocking.NewMockSerializationWriter()
+				mockSerializationWriter.On("WriteObjectValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+				mockSerializationWriter.On("GetSerializedContent").Return([]byte("content"), nil)
+				mockSerializationWriter.On("Close").Return(nil)
+
+				mockSerializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+				mockSerializationWriterFactory.On("GetSerializationWriter", mock.Anything).Return(mockSerializationWriter, nil)
+
+				ra.On("GetSerializationWriterFactory").Return(mockSerializationWriterFactory)
+				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
+			},
+			expectedErr: false,
+		},
+	}
 
 	for _, test := range tests {
-		t.Run(test.name, test.test)
+		t.Run(test.name, func(t *testing.T) {
+			ra := mocking.NewMockRequestAdapter()
+			body := abstractions.NewMultipartBody()
+			test.setup(ra, body)
+
+			rb := NewAttachmentUploadRequestBuilder("url", ra)
+			res, err := rb.Post(context.Background(), body, nil)
+
+			if test.expectedErr {
+				assert.Error(t, err)
+				assert.Nil(t, res)
+			} else {
+				assert.NoError(t, err)
+				if test.name == "Nil Result" {
+					assert.Nil(t, res)
+				} else {
+					assert.NotNil(t, res)
+				}
+			}
+		})
 	}
 }
 

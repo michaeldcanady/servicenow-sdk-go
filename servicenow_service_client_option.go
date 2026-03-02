@@ -90,7 +90,6 @@ func withBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) serv
 
 func withHTTPClient(client *http.Client) serviceNowServiceClientOption {
 	return func(config *serviceNowServiceClientConfig) error {
-
 		config.requestAdapterOptions = append(config.requestAdapterOptions, internalHttp.WithClient(client))
 
 		return nil

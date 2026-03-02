@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -45,7 +46,6 @@ func TestTableRequestBuilder2_Get(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
 			mockAdapter := new(mocking.MockRequestAdapter)
 			tt.setupMock(mockAdapter)
 
@@ -147,4 +147,61 @@ func TestTableRequestBuilder2_Post(t *testing.T) {
 			mockAdapter.AssertExpectations(t)
 		})
 	}
+}
+
+func TestTableRequestBuilder2_ById(t *testing.T) {
+	mockAdapter := new(mocking.MockRequestAdapter)
+	builder := NewTableRequestBuilder2[*TableRecord](
+		"https://example.com/api/now/v1/table/test",
+		mockAdapter,
+		CreateTableRecordFromDiscriminatorValue,
+	)
+
+	itemBuilder := builder.ById("sysid123")
+	assert.NotNil(t, itemBuilder)
+	assert.Equal(t, "sysid123", itemBuilder.GetPathParameters()["sysId"])
+}
+
+func TestTableRequestBuilder2_ToRequestInformation(t *testing.T) {
+	mockAdapter := new(mocking.MockRequestAdapter)
+	builder := NewTableRequestBuilder2[*TableRecord](
+		"https://example.com/api/now/v1/table/test",
+		mockAdapter,
+		CreateTableRecordFromDiscriminatorValue,
+	)
+
+	t.Run("ToGetRequestInformation", func(t *testing.T) {
+		config := &TableRequestBuilder2GetRequestConfiguration{
+			QueryParameters: &TableRequestBuilder2GetQueryParameters{
+				Limit: 10,
+			},
+		}
+		requestInfo, err := builder.ToGetRequestInformation(context.Background(), config)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.GET, requestInfo.Method)
+		// We can't easily check URI as it depends on internal Kiota logic,
+		// but we can check if it was added to QueryParameters if it was a KiotaRequestInformation
+	})
+
+	t.Run("ToPostRequestInformation", func(t *testing.T) {
+		serializationWriter := mocking.NewMockSerializationWriter()
+		serializationWriter.On("WriteObjectValue", "", mock.AnythingOfType("*tableapi.TableRecord"), mock.Anything).Return(nil)
+		serializationWriter.On("Close").Return(nil)
+		serializationWriter.On("GetSerializedContent").Return([]byte("{}"), nil)
+
+		serializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+		serializationWriterFactory.On("GetSerializationWriter", "application/json").Return(serializationWriter, nil)
+
+		mockAdapter.On("GetSerializationWriterFactory").Return(serializationWriterFactory)
+
+		requestInfo, err := builder.ToPostRequestInformation(context.Background(), NewTableRecord(), nil)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.POST, requestInfo.Method)
+	})
+
+	t.Run("ToHeadRequestInformation", func(t *testing.T) {
+		requestInfo, err := builder.ToHeadRequestInformation(context.Background(), nil)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.HEAD, requestInfo.Method)
+	})
 }

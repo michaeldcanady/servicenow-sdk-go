@@ -20,43 +20,35 @@ N/A
 
 === "Fluent"
 
-    ``` golang
+    ```go
     package main
 
-    import (
-        context
+    {% include-markdown '../../snippets/batch.go' start='// [START batch_imports]' end='// [END batch_imports]' comments=false trailing-newlines=false dedent=true %}
 
-        batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
-    )
-
-    // batchRequests A helper function to combine provided request information into a single `BatchRequest`.
-    func batchRequests(excludeResponseHeaders bool, requests ...*abstractions.RequestInformation) (*batchapi.BatchRequestModel, error) {
-        body := batchapi.NewBatchRequestModel()
-        for _, request := range requests {
-            restRequest, err := batchapi.CreateRestRequestFromRequestInformation(request, excludeResponseHeaders)
-            if err != nil {
-                return nil, err
-            }
-            if err := body.AddRequest(restRequest); err != nil {
-                return nil, err
-            }
-        }
-        return body, nil
-    }
+    {% include-markdown '../../snippets/batch.go' start='// [START batch_helper]' end='// [END batch_helper]' comments=false trailing-newlines=false dedent=true %}
 
     func main() {
-        // Initialize credentials and client
+        // Step 1: Create credentials
+        {% include-markdown '../../snippets/auth.go' start='// [START auth_basic]' end='// [END auth_basic]' comments=false trailing-newlines=false dedent=true %}
+        // Step 2: Initialize client
+        {% include-markdown '../../snippets/auth.go' start='// [START client_init]' end='// [END client_init]' comments=false trailing-newlines=false dedent=true %}
+        {% include-markdown '../../snippets/batch.go' start='// [START batch_create]' end='// [END batch_create]' comments=false trailing-newlines=false dedent=true %}
+    }
+    ```
 
-        // Build requests, using ToXXXRequestInformation method
+=== "Standard"
+    ```go
+    package main
 
-        body := batchRequests(true, ...requests)
-        
-        // build your request
-        response, err := client.Now().Batch().Post(context.Backgroud(), body)
-        if err != nil {
-            log.Fatal(err)
-        }
+    {% include-markdown '../../snippets/batch.go' start='// [START batch_imports]' end='// [END batch_imports]' comments=false trailing-newlines=false dedent=true %}
 
-        // Process response
+    {% include-markdown '../../snippets/batch.go' start='// [START batch_helper]' end='// [END batch_helper]' comments=false trailing-newlines=false dedent=true %}
+
+    func main() {
+        // Step 1: Create credentials
+        {% include-markdown '../../snippets/auth.go' start='// [START auth_basic]' end='// [END auth_basic]' comments=false trailing-newlines=false dedent=true %}
+        // Step 2: Initialize client
+        {% include-markdown '../../snippets/auth.go' start='// [START client_init]' end='// [END client_init]' comments=false trailing-newlines=false dedent=true %}
+        {% include-markdown '../../snippets/batch.go' start='// [START batch_std_create]' end='// [END batch_std_create]' comments=false trailing-newlines=false dedent=true %}
     }
     ```

@@ -70,3 +70,8 @@ func TestAttachmentCollectionRequestMarshal(t *testing.T) {
 	}
 	assert.Equal(t, expected, attachmentCollectionResponse)
 }
+
+func TestAttachmentCollectionResponse_ParseHeaders(t *testing.T) {
+	var attachmentCollectionResponse AttachmentCollectionResponse
+	attachmentCollectionResponse.ParseHeaders(nil)
+}
