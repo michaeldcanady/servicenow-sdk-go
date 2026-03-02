@@ -1,0 +1,48 @@
+name: release-please
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+
+      # If a PR was created or updated, update the {unreleased} placeholders in that branch
+      - name: Update {unreleased} in PR branch
+        if: ${{ steps.release.outputs.pr }}
+        run: |
+          # Parse the PR JSON output to get the branch name
+          PR_BRANCH=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.headBranchName')
+          
+          # Checkout the PR branch
+          git checkout $PR_BRANCH
+          
+          # Get the version proposed in the PR (it's already been bumped in the VERSION file on this branch)
+          VERSION=$(cat VERSION)
+          TAG="v${VERSION}"
+          
+          # Replace {unreleased} with the proposed tag
+          find . -name "*.go" -type f -exec sed -i "s/{unreleased}/${TAG}/g" {} \;
+          
+          # Commit and push back to the PR branch
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Action"
+          git add .
+          if git commit -m "chore: replace {unreleased} with ${TAG} for release"; then
+            git push origin $PR_BRANCH
+          else
+            echo "No changes to commit"
+          fi
