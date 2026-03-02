@@ -9,8 +9,6 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: true
 
-permissions: {}
-
 jobs:
   detect-changes:
     name: Detect Go Changes Since Last Release
