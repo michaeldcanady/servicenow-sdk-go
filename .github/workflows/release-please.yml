@@ -31,8 +31,8 @@ jobs:
       - name: Update {unreleased} in PR branch
         if: ${{ steps.release.outputs.pr }}
         run: |
-          # Get the version proposed in the PR (it's already been bumped in the VERSION file on this branch)
-          VERSION=$(cat VERSION)
+          # Get the version proposed in the PR (strip comments if present)
+          VERSION=$(sed '/^#/d' VERSION | xargs)
           TAG="v${VERSION}"
           
           # Replace {unreleased} with the proposed tag
