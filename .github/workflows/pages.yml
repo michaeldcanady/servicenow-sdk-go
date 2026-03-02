@@ -133,7 +133,7 @@ jobs:
       - name: Download site artifact
         uses: actions/download-artifact@v7.0.0
         with:
-          name: site-cache
+          name: site
           path: site
 
       - name: Deploy to GitHub Pages
@@ -158,7 +158,7 @@ jobs:
       - name: Download site artifact
         uses: actions/download-artifact@v7
         with:
-          name: site-cache
+          name: site
           path: site
 
       - name: Upload PR preview to GitHub Pages
