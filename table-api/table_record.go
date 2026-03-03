@@ -123,7 +123,24 @@ func (tR *TableRecord) GetFieldDeserializers() map[string]func(serialization.Par
 
 // Serialize implements serialization.Parsable.
 func (tR *TableRecord) Serialize(writer serialization.SerializationWriter) error {
-	return errors.New("unimplemented")
+	for _, key := range tR.keys {
+		element, err := tR.Get(key)
+		if err != nil {
+			return err
+		}
+		val, err := element.GetValue()
+		if err != nil {
+			return err
+		}
+		rawVal, err := val.GetRawValue()
+		if err != nil {
+			return err
+		}
+		if err := writer.WriteAnyValue(key, rawVal); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // NewTableRecord creates a new instance of TableRecord.
@@ -143,6 +160,9 @@ func (tR *TableRecord) Get(key string) (*RecordElement, error) {
 
 // SetElement assigns a RecordElement to the specified key.
 func (tR *TableRecord) SetElement(key string, element *RecordElement) error {
+	if !tR.HasAttribute(key) {
+		tR.keys = append(tR.keys, key)
+	}
 	return store.DefaultBackedModelMutatorFunc(tR, key, element)
 }
 
