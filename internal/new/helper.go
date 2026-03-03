@@ -6,8 +6,15 @@ import (
 
 // IsNil checks if a value is nil or a nil interface.
 func IsNil(a interface{}) bool {
-	defer func() { _ = recover() }()
-	return a == nil || reflect.ValueOf(a).IsNil()
+	if a == nil {
+		return true
+	}
+	v := reflect.ValueOf(a)
+	k := v.Kind()
+	if k == reflect.Chan || k == reflect.Func || k == reflect.Map || k == reflect.Pointer || k == reflect.UnsafePointer || k == reflect.Interface || k == reflect.Slice {
+		return v.IsNil()
+	}
+	return false
 }
 
 // ToPointer Converts provided value to pointer.
