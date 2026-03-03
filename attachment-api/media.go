@@ -23,6 +23,11 @@ func (P *Media) GetContentType() string {
 	return P.contentType
 }
 
+// GetData returns the data of the media
+func (P *Media) GetData() []byte {
+	return P.data
+}
+
 // Serialize writes the objects properties to the current writer.
 func (P *Media) Serialize(writer serialization.SerializationWriter) error {
 	return writer.WriteByteArrayValue("", P.data)
