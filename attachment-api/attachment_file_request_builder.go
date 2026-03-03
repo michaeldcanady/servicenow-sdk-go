@@ -49,7 +49,7 @@ func NewAttachmentFileRequestBuilder(
 }
 
 // Post uploads provided content to Service-Now using provided parameters
-func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*FileModel, error) {
+func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (newInternal.ServiceNowItemResponse[File], error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -97,21 +97,25 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 		return nil, errors.New("requestAdapter is nil")
 	}
 
-	resp, err := requestAdapter.Send(ctx, requestInfo, CreateFileFromDiscriminatorValue, errorMapping)
+	resp, err := requestAdapter.Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[File](CreateFileFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
 
-	typedResp, ok := resp.(*FileModel)
+	if internal.IsNil(resp) {
+		return nil, errors.New("response is nil")
+	}
+
+	typedResp, ok := resp.(newInternal.ServiceNowItemResponse[File])
 	if !ok {
-		return nil, errors.New("resp is not *FileModel")
+		return nil, errors.New("resp is not ServiceNowItemResponse[File]")
 	}
 
 	return typedResp, nil
 }
 
 // ToPostRequestInformation converts request configurations to Post request information.
-func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if internal.IsNil(rB) {
 		return nil, nil
 	}
@@ -136,9 +140,8 @@ func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(ctx context.Con
 		return nil, errors.New("requestAdapter is nil")
 	}
 
-	if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), media.GetContentType(), media); err != nil {
-		return nil, err
-	}
+	kiotaRequestInfo.SetStreamContent(media.GetData())
+	kiotaRequestInfo.Headers.TryAdd("Content-Type", media.GetContentType())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
