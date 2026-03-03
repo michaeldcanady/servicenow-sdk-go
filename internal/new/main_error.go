@@ -7,9 +7,9 @@ import (
 )
 
 const (
-	detailKey  = "Detail"
-	messageKey = "Message"
-	statusKey  = "Status"
+	detailKey  = "detail"
+	messageKey = "message"
+	statusKey  = "status"
 )
 
 type MainErrorable interface {
