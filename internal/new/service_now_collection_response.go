@@ -59,7 +59,119 @@ func (bR *BaseServiceNowCollectionResponse[T]) Serialize(writer serialization.Se
 
 // GetFieldDeserializers returns the deserialization information for this object
 func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	return nil
+	return map[string]func(serialization.ParseNode) error{
+		resultKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetCollectionOfObjectValues(bR.factory)
+			if err != nil {
+				return err
+			}
+
+			results := make([]any, len(val))
+			for i, v := range val {
+				results[i] = v
+			}
+
+			return bR.setResult(results)
+		},
+		nextKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetStringValue()
+			if err != nil {
+				return err
+			}
+			return bR.setNextLink(val)
+		},
+		previousKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetStringValue()
+			if err != nil {
+				return err
+			}
+			return bR.setPreviousLink(val)
+		},
+		firstKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetStringValue()
+			if err != nil {
+				return err
+			}
+			return bR.setFirstLink(val)
+		},
+		lastKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetStringValue()
+			if err != nil {
+				return err
+			}
+			return bR.setLastLink(val)
+		},
+	}
+}
+
+// setResult Sets the result values of the response.
+func (r *BaseServiceNowCollectionResponse[T]) setResult(val []any) error {
+	if IsNil(r) {
+		return nil
+	}
+
+	store, err := r.GetBackingStore()
+	if err != nil {
+		return err
+	}
+
+	return store.Set(resultKey, val)
+}
+
+// setNextLink Sets the url to the next page of results.
+func (r *BaseServiceNowCollectionResponse[T]) setNextLink(val *string) error {
+	if IsNil(r) {
+		return nil
+	}
+
+	store, err := r.GetBackingStore()
+	if err != nil {
+		return err
+	}
+
+	return store.Set(nextKey, val)
+}
+
+// setPreviousLink Sets the url to the previous page of results.
+func (r *BaseServiceNowCollectionResponse[T]) setPreviousLink(val *string) error {
+	if IsNil(r) {
+		return nil
+	}
+
+	store, err := r.GetBackingStore()
+	if err != nil {
+		return err
+	}
+
+	return store.Set(previousKey, val)
+}
+
+// setFirstLink Sets the url to the first page of results.
+func (r *BaseServiceNowCollectionResponse[T]) setFirstLink(val *string) error {
+	if IsNil(r) {
+		return nil
+	}
+
+	store, err := r.GetBackingStore()
+	if err != nil {
+		return err
+	}
+
+	return store.Set(firstKey, val)
+}
+
+// setLastLink Sets the url to the last page of results.
+func (r *BaseServiceNowCollectionResponse[T]) setLastLink(val *string) error {
+	if IsNil(r) {
+		return nil
+	}
+
+	store, err := r.GetBackingStore()
+	if err != nil {
+		return err
+	}
+
+	return store.Set(lastKey, val)
 }
 
 // GetBackingStore returns the backing store, if store is nil it instantiates a new store.

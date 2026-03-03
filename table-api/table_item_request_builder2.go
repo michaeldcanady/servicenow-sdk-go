@@ -77,7 +77,7 @@ func (rB *TableItemRequestBuilder2[T]) Get(ctx context.Context, requestConfigura
 		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, rB.factory, errorMapping)
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +131,7 @@ func (rB *TableItemRequestBuilder2[T]) Put(ctx context.Context, body T, requestC
 		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, rB.factory, errorMapping)
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func (rB *TableItemRequestBuilder2[T]) Patch(ctx context.Context, body T, reques
 		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, rB.factory, errorMapping)
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}

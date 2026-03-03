@@ -79,3 +79,13 @@ func (exc *ServicenowError) setError(mainError MainErrorable) error {
 	}
 	return backingStore.Set(errorKey, mainError)
 }
+
+func (exc *ServicenowError) Error() string {
+	mainErr, _ := exc.GetError()
+	msg, _ := mainErr.GetMessage()
+	if msg != nil {
+		return *msg
+	}
+	details, _ := mainErr.GetDetail()
+	return *details
+}

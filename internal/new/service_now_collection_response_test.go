@@ -27,8 +27,15 @@ func TestBaseServiceNowCollectionResponse_Serialize(t *testing.T) {
 
 func TestBaseServiceNowCollectionResponse_GetFieldDeserializers(t *testing.T) {
 	res := NewBaseServiceNowCollectionResponse[serialization.Parsable](nil)
-	if res.GetFieldDeserializers() != nil {
-		t.Error("expected nil")
+	deserializers := res.GetFieldDeserializers()
+	if deserializers == nil {
+		t.Error("expected non-nil deserializers")
+	}
+	expectedKeys := []string{resultKey, nextKey, previousKey, firstKey, lastKey}
+	for _, key := range expectedKeys {
+		if _, ok := deserializers[key]; !ok {
+			t.Errorf("expected key %s in deserializers", key)
+		}
 	}
 }
 
