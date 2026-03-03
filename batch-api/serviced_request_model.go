@@ -3,6 +3,7 @@ package batchapi
 import (
 	"encoding/base64"
 	"errors"
+	"math"
 	"reflect"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -77,6 +78,16 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 			return sR.setErrorMessage(errorMessage)
 		},
 		executionTimeKey: func(pn serialization.ParseNode) error {
+			// ServiceNow returns execution_time as a number (milliseconds)
+			// GetISODurationValue fails if it's a number in the JSON tree.
+			floatTime, err := pn.GetFloat64Value()
+			if err == nil && floatTime != nil {
+				seconds := int(*floatTime / 1000)
+				milliseconds := int(math.Mod(*floatTime, 1000))
+				isoDuration := serialization.NewDuration(0, 0, 0, 0, 0, seconds, milliseconds)
+				return sR.setExecutionTime(isoDuration)
+			}
+
 			duration, err := pn.GetISODurationValue()
 			if err != nil {
 				return err
@@ -118,12 +129,19 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 			return sR.setRedirectURL(redirectURL)
 		},
 		statusCodeKey: func(pn serialization.ParseNode) error {
-			statusCode, err := pn.GetInt64Value()
+			// ServiceNow sometimes returns status_code as a number that gets parsed as float64
+			// GetInt64Value fails if it's a float64 in the JSON tree.
+			floatCode, err := pn.GetFloat64Value()
 			if err != nil {
 				return err
 			}
 
-			return sR.setStatusCode(statusCode)
+			if floatCode != nil {
+				statusCode := int64(*floatCode)
+				return sR.setStatusCode(&statusCode)
+			}
+
+			return nil
 		},
 		statusTextKey: func(pn serialization.ParseNode) error {
 			statusText, err := pn.GetStringValue()
