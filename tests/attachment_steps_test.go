@@ -11,6 +11,7 @@ import (
 	sdk "github.com/michaeldcanady/servicenow-sdk-go"
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 )
 
 type attachmentTestContext struct {
@@ -116,9 +117,14 @@ func (c *attachmentTestContext) iRequestTheAttachmentByItsSysID() error {
 }
 
 func (c *attachmentTestContext) theResultShouldHaveTheCorrectSysID() error {
-	item, ok := c.response.(*attachmentapi.Attachment2Model)
+	response, ok := c.response.(newInternal.ServiceNowItemResponse[attachmentapi.Attachment2])
 	if !ok {
-		return fmt.Errorf("expected an item response, but got %T", c.response)
+		return fmt.Errorf("expected a ServiceNowItemResponse[Attachment2], but got %T", c.response)
+	}
+
+	item, err := response.GetResult()
+	if err != nil {
+		return fmt.Errorf("failed to retrieve result: %w", err)
 	}
 
 	sysID, err := item.GetSysID()
@@ -171,17 +177,31 @@ func (c *attachmentTestContext) iUploadTheFileFromTheResourcesDirectoryToTheInci
 	resp, err := c.client.Now2().Attachment2().File().Post(context.Background(), media, config)
 	c.response = resp
 	c.err = err
-	if err == nil {
-		sysID, _ := resp.GetSysID()
+	if err == nil && !newInternal.IsNil(resp) {
+		item, err := resp.GetResult()
+		if err != nil {
+			return fmt.Errorf("failed to get result from response: %w", err)
+		}
+		sysID, err := item.GetSysID()
+		if err != nil {
+			return fmt.Errorf("failed to get sys_id: %w", err)
+		}
+		if sysID == nil {
+			return fmt.Errorf("sys_id is nil in response")
+		}
 		c.lastSysID = *sysID
 	}
 	return nil
 }
 
 func (c *attachmentTestContext) theCreatedAttachmentShouldHaveAValidSysID() error {
-	item, ok := c.response.(*attachmentapi.FileModel)
+	response, ok := c.response.(newInternal.ServiceNowItemResponse[attachmentapi.File])
 	if !ok {
-		return fmt.Errorf("expected a file model response, but got %T", c.response)
+		return fmt.Errorf("expected a ServiceNowItemResponse[File], but got %T", c.response)
+	}
+	item, err := response.GetResult()
+	if err != nil {
+		return fmt.Errorf("failed to get result: %w", err)
 	}
 	sysID, err := item.GetSysID()
 	if err != nil || sysID == nil || *sysID == "" {
@@ -191,9 +211,13 @@ func (c *attachmentTestContext) theCreatedAttachmentShouldHaveAValidSysID() erro
 }
 
 func (c *attachmentTestContext) theAttachmentFilenameShouldBe(fileName string) error {
-	item, ok := c.response.(*attachmentapi.FileModel)
+	response, ok := c.response.(newInternal.ServiceNowItemResponse[attachmentapi.File])
 	if !ok {
-		return fmt.Errorf("expected a file model response, but got %T", c.response)
+		return fmt.Errorf("expected a ServiceNowItemResponse[File], but got %T", c.response)
+	}
+	item, err := response.GetResult()
+	if err != nil {
+		return fmt.Errorf("failed to get result: %w", err)
 	}
 	name, _ := item.GetFileName()
 	if *name != fileName {
