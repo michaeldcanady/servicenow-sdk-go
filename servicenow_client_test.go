@@ -31,7 +31,7 @@ type test[T any] struct {
 }
 
 var (
-	sharedUsernameAndPasswordCred = credentials.NewBasicCredential("username", "password")
+	sharedUsernameAndPasswordCred = credentials.NewUsernamePasswordCredential("username", "password")
 )
 
 // TODO: should be mocked
@@ -113,7 +113,7 @@ func (rI *MockRequestInformation) AddHeaders(rawHeaders interface{}) error {
 }
 
 func TestNewServiceNowClient(t *testing.T) {
-	cred := credentials.NewBasicCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -165,7 +165,7 @@ func TestNewServiceNowClient2(t *testing.T) {
 }
 
 func TestServiceNowClient_URL(t *testing.T) {
-	cred := credentials.NewBasicCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -182,7 +182,7 @@ func (m *MockWebClient) Do(req *http.Request) (*http.Response, error) {
 }
 
 func TestServiceNowClient_Now(t *testing.T) {
-	cred := credentials.NewBasicCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -194,7 +194,7 @@ func TestServiceNowClient_Now(t *testing.T) {
 }
 
 func TestServiceNowClient_Now2(t *testing.T) {
-	cred := credentials.NewBasicCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -210,7 +210,7 @@ func TestServiceNowClient_ToRequest(t *testing.T) {
 		Headers: http.Header{},
 	}
 
-	cred := credentials.NewBasicCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -244,7 +244,7 @@ func (e *ErrorReader) Close() error {
 }
 
 func TestServiceNowClient_UnmarshallError(t *testing.T) {
-	cred := credentials.NewBasicCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -311,7 +311,7 @@ func TestServiceNowClient_ToRequestWithContext(t *testing.T) {
 		Headers: http.Header{},
 	}
 
-	cred := credentials.NewBasicCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password")
 
 	ctx := context.TODO()
 
@@ -410,7 +410,7 @@ func TestServiceNowClient_SendWithContext(t *testing.T) {
 		{
 			name: "Successful Send",
 			client: func() *ServiceNowClient {
-				c := NewServiceNowClient(credentials.NewBasicCredential("user", "pass"), "instance")
+				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance")
 				c.Session = &MockWebClient{
 					Response: &http.Response{
 						StatusCode: 200,
@@ -426,7 +426,7 @@ func TestServiceNowClient_SendWithContext(t *testing.T) {
 		{
 			name: "Send Error",
 			client: func() *ServiceNowClient {
-				c := NewServiceNowClient(credentials.NewBasicCredential("user", "pass"), "instance")
+				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance")
 				c.Session = &MockWebClient{
 					Err: errors.New("network error"),
 				}
@@ -439,7 +439,7 @@ func TestServiceNowClient_SendWithContext(t *testing.T) {
 		{
 			name: "Failed Status Error",
 			client: func() *ServiceNowClient {
-				c := NewServiceNowClient(credentials.NewBasicCredential("user", "pass"), "instance")
+				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance")
 				c.Session = &MockWebClient{
 					Response: &http.Response{
 						StatusCode: 404,
@@ -455,7 +455,7 @@ func TestServiceNowClient_SendWithContext(t *testing.T) {
 		{
 			name: "ToRequest Error",
 			client: func() *ServiceNowClient {
-				c := NewServiceNowClient(credentials.NewBasicCredential("user", "pass"), "instance")
+				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance")
 				return c
 			}(),
 			requestInfo: &MockRequestInformation{Headers: http.Header{}, ReturnError: errors.New("to request error")},
@@ -477,7 +477,7 @@ func TestServiceNowClient_SendWithContext(t *testing.T) {
 }
 
 func TestServiceNowClient_Send(t *testing.T) {
-	client := NewServiceNowClient(credentials.NewBasicCredential("user", "pass"), "instance")
+	client := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance")
 	client.Session = &MockWebClient{
 		Response: &http.Response{
 			StatusCode: 200,
