@@ -80,8 +80,3 @@ func TestUsernamePasswordCredential_Public(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "public-token", token)
 }
-
-func rURL(s string) *url.URL {
-	u, _ := url.Parse(s)
-	return u
-}

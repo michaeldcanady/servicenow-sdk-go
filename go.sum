@@ -32,6 +32,7 @@ github.com/hashicorp/go-immutable-radix v1.3.1/go.mod h1:0y9vanUI8NX6FsYoO3zeMjh
 github.com/hashicorp/go-memdb v1.3.4 h1:XSL3NR682X/cVk2IeV0d70N4DZ9ljI885xAEU8IoK3c=
 github.com/hashicorp/go-memdb v1.3.4/go.mod h1:uBTr1oQbtuMgd1SSGoR8YV27eT3sBHbYiNm53bMpgSg=
 github.com/hashicorp/go-uuid v1.0.0/go.mod h1:6SBZvOh/SIDV7/2o3Jml5SYk/TvGqwFJ/bN7x4byOro=
+github.com/hashicorp/go-uuid v1.0.2 h1:cfejS+Tpcp13yd5nYHWDI6qVCny6wyX2Mt5SGur2IGE=
 github.com/hashicorp/go-uuid v1.0.2/go.mod h1:6SBZvOh/SIDV7/2o3Jml5SYk/TvGqwFJ/bN7x4byOro=
 github.com/hashicorp/golang-lru v0.5.0/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/hashicorp/golang-lru v0.5.4 h1:YDjusn29QI/Das2iO9M0BHnIbxPeyuCHsjMW+lJfyTc=
@@ -52,8 +53,8 @@ github.com/maxatome/go-testdeep v1.14.0 h1:rRlLv1+kI8eOI3OaBXZwb3O7xY3exRzdW5QyX
 github.com/maxatome/go-testdeep v1.14.0/go.mod h1:lPZc/HAcJMP92l7yI6TRz1aZN5URwUBUAfUNvrclaNM=
 github.com/microsoft/kiota-abstractions-go v1.9.3 h1:cqhbqro+VynJ7kObmo7850h3WN2SbvoyhypPn8uJ1SE=
 github.com/microsoft/kiota-abstractions-go v1.9.3/go.mod h1:f06pl3qSyvUHEfVNkiRpXPkafx7khZqQEb71hN/pmuU=
-github.com/microsoft/kiota-http-go v1.5.4 h1:wSUmL1J+bTQlAWHjbRkSwr+SPAkMVYeYxxB85Zw0KFs=
-github.com/microsoft/kiota-http-go v1.5.4/go.mod h1:L+5Ri+SzwELnUcNA0cpbFKp/pBbvypLh3Cd1PR6sjx0=
+github.com/microsoft/kiota-http-go v1.5.5 h1:K+jC3lq0kejeUETmh/C7TSIV+vdLuw1LT7NPPoNCxAE=
+github.com/microsoft/kiota-http-go v1.5.5/go.mod h1:L+5Ri+SzwELnUcNA0cpbFKp/pBbvypLh3Cd1PR6sjx0=
 github.com/microsoft/kiota-serialization-form-go v1.1.2 h1:SD6MATqNw+Dc5beILlsb/D87C36HKC/Zw7l+N9+HY2A=
 github.com/microsoft/kiota-serialization-form-go v1.1.2/go.mod h1:m4tY2JT42jAZmgbqFwPy3zGDF+NPJACuyzmjNXeuHio=
 github.com/microsoft/kiota-serialization-json-go v1.1.2 h1:eJrPWeQ665nbjO0gsHWJ0Bw6V/ZHHU1OfFPaYfRG39k=

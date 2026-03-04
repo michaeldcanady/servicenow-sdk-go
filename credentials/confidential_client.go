@@ -82,6 +82,7 @@ func (c *defaultTokenRequester) requestToken(ctx context.Context, params url.Val
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("Accept", "application/json")
 
+	// nolint: gosec //G704 external requests can't be processed here
 	resp, err := c.options.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("token request failed: %w", err)
