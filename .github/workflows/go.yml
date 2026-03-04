@@ -88,7 +88,7 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
-          cache: true
+          cache: false
       - run: go mod download
       - name: Build Go Code
         run: |
@@ -139,7 +139,7 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
-          cache: true
+          cache: false
       - name: Run tests
         run: |
           PACKAGES=$(go list ./... | grep -v "/docs")
