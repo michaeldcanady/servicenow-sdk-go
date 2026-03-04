@@ -72,7 +72,7 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 			}
 
 			return bR.setBatchRequestID(value)
-		},		servicedRequestsKey: func(pn serialization.ParseNode) error {
+		}, servicedRequestsKey: func(pn serialization.ParseNode) error {
 			if internal.IsNil(pn) {
 				return nil
 			}
