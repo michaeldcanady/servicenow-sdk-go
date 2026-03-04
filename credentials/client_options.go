@@ -13,13 +13,6 @@ type clientOptions struct {
 // clientOption is a functional option for configuring clients.
 type clientOption func(*clientOptions)
 
-// withHTTPClient sets a custom HTTP client.
-func withHTTPClient(client *http.Client) clientOption {
-	return func(o *clientOptions) {
-		o.httpClient = client
-	}
-}
-
 func defaultOptions() clientOptions {
 	return clientOptions{
 		httpClient: &http.Client{
