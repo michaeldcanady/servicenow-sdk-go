@@ -1,10 +1,11 @@
+@integration @mock @table @query
 Feature: ServiceNow Table API Filtering and Sorting
   As a developer using the ServiceNow SDK
   I want to be able to filter and sort records
   So that I can retrieve specific datasets efficiently
 
   Background:
-    Given I have a valid ServiceNow instance and credentials
+    And I have a valid ServiceNow instance and credentials
     And I have initialized the ServiceNow client
 
   @integration @table @query
