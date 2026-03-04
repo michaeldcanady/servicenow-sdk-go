@@ -92,6 +92,7 @@ func (bR *BatchRequestModel) Serialize(writer serialization.SerializationWriter)
 	}
 	return nil
 }
+
 // GetFieldDeserializers returns the deserialization information for this object.
 func (bR *BatchRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	if internal.IsNil(bR) {
