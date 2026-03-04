@@ -8,6 +8,7 @@ import (
 
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
 // ErrNoMoreItems is returned when the iterator has reached the end of the collection.
@@ -53,6 +54,9 @@ func NewPageIterator[T serialization.Parsable](
 		"XXX": CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
+	headerOpt := nethttplibrary.NewHeadersInspectionOptions()
+	headerOpt.InspectResponseHeaders = true
+
 	iterator := &PageIterator[T]{
 		currentPage:     page,
 		originalPage:    page,
@@ -61,6 +65,7 @@ func NewPageIterator[T serialization.Parsable](
 		constructorFunc: constructorFunc,
 		headers:         abstractions.NewRequestHeaders(),
 		errorMappings:   errorMapping,
+		reqOptions:      []abstractions.RequestOption{headerOpt},
 	}
 
 	if err := ApplyOptions(iterator, options...); err != nil {
@@ -310,13 +315,21 @@ func (i *PageIterator[T]) fetchPage(ctx context.Context, pageLink *string) (Serv
 		return response, errors.New("parsing nextLink url failed")
 	}
 
+	var headerOption *nethttplibrary.HeadersInspectionOptions
+
+	for _, opt := range i.reqOptions {
+		if opt.GetKey() == ((&nethttplibrary.HeadersInspectionOptions{}).GetKey()) {
+			headerOption = opt.(*nethttplibrary.HeadersInspectionOptions)
+		}
+	}
+
 	requestInfo := abstractions.NewRequestInformation()
 	requestInfo.Method = abstractions.GET
 	requestInfo.SetUri(*link)
 	requestInfo.Headers.AddAll(i.headers)
 	requestInfo.AddRequestOptions(i.reqOptions)
 
-	rawResponse, err = i.reqAdapter.Send(ctx, requestInfo, i.constructorFunc, i.errorMappings)
+	rawResponse, err = i.reqAdapter.Send(ctx, requestInfo, ServiceNowCollectionResponseFromDiscriminatorValue[T](i.constructorFunc), i.errorMappings)
 	if err != nil {
 		return response, err
 	}
@@ -325,6 +338,8 @@ func (i *PageIterator[T]) fetchPage(ctx context.Context, pageLink *string) (Serv
 	if !ok {
 		return response, errors.New("response is of wrong type")
 	}
+
+	response.ParseHeaders(headerOption.GetResponseHeaders())
 
 	return response, nil
 }

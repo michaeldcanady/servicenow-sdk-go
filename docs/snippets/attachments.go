@@ -269,12 +269,17 @@ func _() {
 	}
 
 	// Assuming 'file' can be used as media content
-	create_guide_response, err := client.Now2().Attachment2().File().Post(ctx, nil, config) // Placeholder
+	createGuideResponse, err := client.Now2().Attachment2().File().Post(ctx, nil, config) // Placeholder
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	id, err := create_guide_response.GetSysID()
+	result, err := createGuideResponse.GetResult()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	id, err := result.GetSysID()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -306,7 +311,7 @@ func _() {
 	_ = file_get_response
 	_ = file_get_std_response
 	_ = list_guide_results
-	_ = create_guide_response
+	_ = createGuideResponse
 	_ = id
 	_ = content
 }

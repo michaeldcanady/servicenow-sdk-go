@@ -3,8 +3,10 @@ package internal
 import (
 	"errors"
 	"fmt"
+	"regexp"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -25,6 +27,7 @@ type ServiceNowCollectionResponse[T serialization.Parsable] interface {
 	GetPreviousLink() (*string, error)
 	GetFirstLink() (*string, error)
 	GetLastLink() (*string, error)
+	ParseHeaders(*abstractions.ResponseHeaders)
 	serialization.Parsable
 	BackedModel
 }
@@ -45,6 +48,34 @@ func NewBaseServiceNowCollectionResponse[T serialization.Parsable](factory seria
 		factory:             factory,
 		backingStoreFactory: store.NewInMemoryBackingStore,
 		backingStore:        store.NewInMemoryBackingStore(),
+	}
+}
+
+// ParseHeaders parses the needed headers from the response.
+func (bR *BaseServiceNowCollectionResponse[T]) ParseHeaders(headers *abstractions.ResponseHeaders) {
+	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
+
+	hearderLinks := headers.Get("Link")
+
+	for _, header := range hearderLinks {
+		linkMatches := linkHeaderRegex.FindAllStringSubmatch(header, -1)
+
+		for _, match := range linkMatches {
+			link := match[1]
+			rel := match[2]
+
+			// Determine the type of link based on the 'rel' attribute
+			switch rel {
+			case "first":
+				_ = bR.setFirstLink(&link)
+			case "prev":
+				_ = bR.setPreviousLink(&link)
+			case "next":
+				_ = bR.setNextLink(&link)
+			case "last":
+				_ = bR.setLastLink(&link)
+			}
+		}
 	}
 }
 
@@ -241,6 +272,10 @@ func (r *BaseServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
 		return nil, err
 	}
 
+	if IsNil(val) {
+		return nil, nil
+	}
+
 	link, ok := val.(*string)
 	if !ok {
 		return nil, errors.New("val is not *string")
@@ -263,6 +298,10 @@ func (r *BaseServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error)
 	val, err := store.Get(previousKey)
 	if err != nil {
 		return nil, err
+	}
+
+	if IsNil(val) {
+		return nil, nil
 	}
 
 	link, ok := val.(*string)
@@ -289,6 +328,10 @@ func (r *BaseServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
 		return nil, err
 	}
 
+	if IsNil(val) {
+		return nil, nil
+	}
+
 	link, ok := val.(*string)
 	if !ok {
 		return nil, errors.New("val is not *string")
@@ -311,6 +354,10 @@ func (r *BaseServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
 	val, err := store.Get(lastKey)
 	if err != nil {
 		return nil, err
+	}
+
+	if IsNil(val) {
+		return nil, nil
 	}
 
 	link, ok := val.(*string)

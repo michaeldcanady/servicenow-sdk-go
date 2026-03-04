@@ -15,10 +15,13 @@ import (
 )
 
 type tableTestContext struct {
-	client    *sdk.ServiceNowClient
-	response  interface{} // Generic response to support either collection or item
-	err       error
-	lastSysID string
+	client       *sdk.ServiceNowClient
+	response     interface{} // Generic response to support either collection or item
+	err          error
+	lastSysID    string
+	pageSize     int
+	pagesReached int
+	totalItems   int
 }
 
 func (c *tableTestContext) iHaveAValidServiceNowInstanceAndCredentials() error {
@@ -35,14 +38,27 @@ func (c *tableTestContext) iHaveAValidServiceNowInstanceAndCredentials() error {
 func (c *tableTestContext) iHaveInitializedTheServiceNowClient() error {
 	instance := os.Getenv("SN_INSTANCE")
 	authority := credentials.NewInstanceAuthority(instance)
-	cred, err := credentials.NewROPCCredential(
-		os.Getenv("SN_CLIENT_ID"),
-		os.Getenv("SN_CLIENT_SECRET"),
-		os.Getenv("SN_USERNAME"),
-		os.Getenv("SN_PASSWORD"),
-		authority,
-		nil,
-	)
+	authType := os.Getenv("SN_AUTH_TYPE")
+
+	var cred credentials.Credential
+	var err error
+
+	if authType == "BASIC" {
+		cred = credentials.NewUsernamePasswordCredential(
+			os.Getenv("SN_USERNAME"),
+			os.Getenv("SN_PASSWORD"),
+		)
+	} else {
+		cred, err = credentials.NewROPCCredential(
+			os.Getenv("SN_CLIENT_ID"),
+			os.Getenv("SN_CLIENT_SECRET"),
+			os.Getenv("SN_USERNAME"),
+			os.Getenv("SN_PASSWORD"),
+			authority,
+			nil,
+		)
+	}
+
 	if err != nil {
 		return err
 	}
@@ -220,6 +236,141 @@ func (c *tableTestContext) theResponseShouldBeA404Error() error {
 	return nil
 }
 
+func (c *tableTestContext) iRequestIncidentsWithQueryAndLimit(query string, limit int) error {
+	config := &tableapi.TableRequestBuilder2GetRequestConfiguration{
+		QueryParameters: &tableapi.TableRequestBuilder2GetQueryParameters{
+			Query: query,
+			Limit: limit,
+		},
+	}
+	resp, err := c.client.Now2().TableV2("incident").Get(context.Background(), config)
+	c.response = resp
+	c.err = err
+	return nil
+}
+
+func (c *tableTestContext) theResultsShouldContainAtMostRecords(maxCount int) error {
+	collection, ok := c.response.(newInternal.ServiceNowCollectionResponse[*tableapi.TableRecord])
+	if !ok {
+		return fmt.Errorf("expected a collection response, but got %T", c.response)
+	}
+	results, _ := collection.GetResult()
+	if len(results) > maxCount {
+		return fmt.Errorf("expected at most %d records, got %d", maxCount, len(results))
+	}
+	return nil
+}
+
+func (c *tableTestContext) eachRecordShouldHaveSetTo(field, value string) error {
+	collection, ok := c.response.(newInternal.ServiceNowCollectionResponse[*tableapi.TableRecord])
+	if !ok {
+		return fmt.Errorf("expected a collection response, but got %T", c.response)
+	}
+	results, _ := collection.GetResult()
+	for _, record := range results {
+		elem, err := record.Get(field)
+		if err != nil {
+			return err
+		}
+		val, _ := elem.GetValue()
+		strVal, _ := val.GetStringValue()
+		if *strVal != value {
+			return fmt.Errorf("expected %s to be %s, got %s", field, value, *strVal)
+		}
+	}
+	return nil
+}
+
+func (c *tableTestContext) iRequestIncidentsSortedByDescending(field string) error {
+	config := &tableapi.TableRequestBuilder2GetRequestConfiguration{
+		QueryParameters: &tableapi.TableRequestBuilder2GetQueryParameters{
+			Query: "ORDERBYDESC" + field,
+		},
+	}
+	resp, err := c.client.Now2().TableV2("incident").Get(context.Background(), config)
+	c.response = resp
+	c.err = err
+	return nil
+}
+
+func (c *tableTestContext) theRecordsShouldBeInDescendingOrderOf(field string) error {
+	collection, ok := c.response.(newInternal.ServiceNowCollectionResponse[*tableapi.TableRecord])
+	if !ok {
+		return fmt.Errorf("expected a collection response, but got %T", c.response)
+	}
+	results, _ := collection.GetResult()
+	if len(results) < 2 {
+		return nil // Can't check order with less than 2
+	}
+	for i := 0; i < len(results)-1; i++ {
+		elem1, _ := results[i].Get(field)
+		val1, _ := elem1.GetValue()
+		str1, _ := val1.GetStringValue()
+
+		elem2, _ := results[i+1].Get(field)
+		val2, _ := elem2.GetValue()
+		str2, _ := val2.GetStringValue()
+
+		if *str1 < *str2 {
+			return fmt.Errorf("records not in descending order: %s < %s", *str1, *str2)
+		}
+	}
+	return nil
+}
+
+func (c *tableTestContext) iSetThePageSizeTo(pageSize int) error {
+	c.pageSize = pageSize
+	return nil
+}
+
+func (c *tableTestContext) iUseTheTablePageIteratorToFetchRecords() error {
+	config := &tableapi.TableRequestBuilder2GetRequestConfiguration{
+		QueryParameters: &tableapi.TableRequestBuilder2GetQueryParameters{
+			Limit: c.pageSize,
+		},
+	}
+	resp, err := c.client.Now2().TableV2("incident").Get(context.Background(), config)
+	if err != nil {
+		return err
+	}
+
+	iterator, err := tableapi.NewDefaultTablePageIterator(resp, c.client.RequestAdapter)
+	if err != nil {
+		return err
+	}
+
+	c.pagesReached = 0
+	c.totalItems = 0
+
+	err = iterator.Iterate(context.Background(), false, func(record *tableapi.TableRecord) bool {
+		c.totalItems++
+		// If we've processed all items in current page, increment pagesReached
+		if c.totalItems%c.pageSize == 0 {
+			c.pagesReached++
+			if c.pagesReached >= 2 {
+				return false // Stop after 2 pages
+			}
+		}
+		return true
+	})
+
+	return err
+}
+
+func (c *tableTestContext) iShouldBeAbleToReachTheSecondPage() error {
+	if c.pagesReached < 2 {
+		return fmt.Errorf("only reached %d pages, expected at least 2", c.pagesReached)
+	}
+	return nil
+}
+
+func (c *tableTestContext) theTotalCountOfRecordsRetrievedShouldBeGreaterThan(count int) error {
+	if c.totalItems <= count {
+		return fmt.Errorf("expected more than %d items, got %d", count, c.totalItems)
+	}
+	return nil
+}
+
 func InitializeTableScenario(ctx *godog.ScenarioContext) {
 	tc := &tableTestContext{}
 
@@ -240,6 +391,17 @@ func InitializeTableScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^I delete the created incident$`, tc.iDeleteTheCreatedIncident)
 	ctx.Step(`^I request the deleted incident by its "sys_id"$`, tc.iRequestTheDeletedIncidentByItsSysID)
 	ctx.Step(`^the response should be a 404 error$`, tc.theResponseShouldBeA404Error)
+
+	ctx.Step(`^I request incidents with query "([^"]*)" and limit (\d+)$`, tc.iRequestIncidentsWithQueryAndLimit)
+	ctx.Step(`^the results should contain at most (\d+) records$`, tc.theResultsShouldContainAtMostRecords)
+	ctx.Step(`^each record should have "([^"]*)" set to "([^"]*)"$`, tc.eachRecordShouldHaveSetTo)
+	ctx.Step(`^I request incidents sorted by "([^"]*)" descending$`, tc.iRequestIncidentsSortedByDescending)
+	ctx.Step(`^the records should be in descending order of "([^"]*)"$`, tc.theRecordsShouldBeInDescendingOrderOf)
+
+	ctx.Step(`^I set the page size to (\d+)$`, tc.iSetThePageSizeTo)
+	ctx.Step(`^I use the Table PageIterator to fetch records$`, tc.iUseTheTablePageIteratorToFetchRecords)
+	ctx.Step(`^I should be able to reach the second page$`, tc.iShouldBeAbleToReachTheSecondPage)
+	ctx.Step(`^the total count of records retrieved should be greater than (\d+)$`, tc.theTotalCountOfRecordsRetrievedShouldBeGreaterThan)
 }
 
 func TestTableFeatures(t *testing.T) {
@@ -247,7 +409,7 @@ func TestTableFeatures(t *testing.T) {
 		ScenarioInitializer: InitializeTableScenario,
 		Options: &godog.Options{
 			Format:   "pretty",
-			Paths:    []string{"features/incident_retrieval.feature", "features/table_crud.feature"},
+			Paths:    []string{"features/incident_retrieval.feature", "features/table_crud.feature", "features/table_query.feature", "features/table_pagination.feature"},
 			Tags:     "integration",
 			TestingT: t,
 		},

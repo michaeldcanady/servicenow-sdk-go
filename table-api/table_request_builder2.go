@@ -11,6 +11,7 @@ import (
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
 const (
@@ -70,6 +71,19 @@ func (rB *TableRequestBuilder2[T]) Get(ctx context.Context, requestConfiguration
 		return nil, nil
 	}
 
+	if internal.IsNil(requestConfiguration) {
+		requestConfiguration = &TableRequestBuilder2GetRequestConfiguration{}
+	}
+
+	headerOpt := nethttplibrary.NewHeadersInspectionOptions()
+	headerOpt.InspectResponseHeaders = true
+
+	//if existingOpts := requestConfiguration.Options; len(requestConfiguration.Options) > 0 {
+
+	//}
+
+	requestConfiguration.Options = append(requestConfiguration.Options, headerOpt)
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return nil, err
@@ -92,6 +106,8 @@ func (rB *TableRequestBuilder2[T]) Get(ctx context.Context, requestConfiguration
 	if !ok {
 		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowCollectionResponse[T])(nil))
 	}
+
+	typedResp.ParseHeaders(headerOpt.GetResponseHeaders())
 
 	return typedResp, nil
 }

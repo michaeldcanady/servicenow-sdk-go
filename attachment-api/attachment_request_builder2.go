@@ -121,6 +121,8 @@ func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfigurati
 		return nil, errors.New("res is not *AttachmentCollectionResponse2Model")
 	}
 
+	snRes.ParseHeaders(opts.GetResponseHeaders())
+
 	return snRes, nil
 }
 
