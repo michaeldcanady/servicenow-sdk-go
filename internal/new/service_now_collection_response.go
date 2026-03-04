@@ -53,11 +53,14 @@ func NewBaseServiceNowCollectionResponse[T serialization.Parsable](factory seria
 
 // ParseHeaders parses the needed headers from the response.
 func (bR *BaseServiceNowCollectionResponse[T]) ParseHeaders(headers *abstractions.ResponseHeaders) {
-	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
+	if headers == nil {
+		return
+	}
+	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;\s*rel="([^"]+)"`)
 
-	hearderLinks := headers.Get("Link")
+	headerLinks := headers.Get("Link")
 
-	for _, header := range hearderLinks {
+	for _, header := range headerLinks {
 		linkMatches := linkHeaderRegex.FindAllStringSubmatch(header, -1)
 
 		for _, match := range linkMatches {

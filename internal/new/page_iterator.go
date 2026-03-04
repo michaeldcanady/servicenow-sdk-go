@@ -320,7 +320,14 @@ func (i *PageIterator[T]) fetchPage(ctx context.Context, pageLink *string) (Serv
 	for _, opt := range i.reqOptions {
 		if opt.GetKey() == ((&nethttplibrary.HeadersInspectionOptions{}).GetKey()) {
 			headerOption = opt.(*nethttplibrary.HeadersInspectionOptions)
+			break
 		}
+	}
+
+	if headerOption == nil {
+		headerOption = nethttplibrary.NewHeadersInspectionOptions()
+		headerOption.InspectResponseHeaders = true
+		i.reqOptions = append(i.reqOptions, headerOption)
 	}
 
 	requestInfo := abstractions.NewRequestInformation()
