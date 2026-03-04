@@ -22,6 +22,7 @@ type baseAccessTokenProvider struct {
 
 func newBaseAccessTokenProvider(allowedHosts []string) *baseAccessTokenProvider {
 	return &baseAccessTokenProvider{
+		//nolint: staticcheck // while being deprecated there doesn't seem to be a replacement
 		allowedHostsValidator: authentication.NewAllowedHostsValidator(allowedHosts),
 	}
 }
