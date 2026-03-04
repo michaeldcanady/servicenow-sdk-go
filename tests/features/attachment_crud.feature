@@ -1,10 +1,11 @@
+@integration @mock @attachment @crud
 Feature: ServiceNow Attachment API CRUD Operations
   As a developer using the ServiceNow SDK
   I want to be able to upload, retrieve, and delete attachments
   So that I can manage files in my instance
 
   Background:
-    Given I have a valid ServiceNow instance and credentials
+    And I have a valid ServiceNow instance and credentials
     And I have initialized the ServiceNow client
 
   @integration @attachment @crud

@@ -275,6 +275,10 @@ func (r *BaseServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
 		return nil, err
 	}
 
+	if IsNil(val) {
+		return nil, nil
+	}
+
 	link, ok := val.(*string)
 	if !ok {
 		return nil, errors.New("val is not *string")
@@ -297,6 +301,10 @@ func (r *BaseServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error)
 	val, err := store.Get(previousKey)
 	if err != nil {
 		return nil, err
+	}
+
+	if IsNil(val) {
+		return nil, nil
 	}
 
 	link, ok := val.(*string)
@@ -323,6 +331,10 @@ func (r *BaseServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
 		return nil, err
 	}
 
+	if IsNil(val) {
+		return nil, nil
+	}
+
 	link, ok := val.(*string)
 	if !ok {
 		return nil, errors.New("val is not *string")
@@ -345,6 +357,10 @@ func (r *BaseServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
 	val, err := store.Get(lastKey)
 	if err != nil {
 		return nil, err
+	}
+
+	if IsNil(val) {
+		return nil, nil
 	}
 
 	link, ok := val.(*string)

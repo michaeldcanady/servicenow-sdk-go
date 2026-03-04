@@ -1,14 +1,19 @@
+//go:build integration
+
 package tests
 
 import (
 	"context"
 	"fmt"
 	"os"
+	"regexp"
 	"testing"
 
 	"github.com/cucumber/godog"
+	"github.com/jarcoal/httpmock"
 	"github.com/joho/godotenv"
 	sdk "github.com/michaeldcanady/servicenow-sdk-go"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
@@ -20,29 +25,28 @@ type tableTestContext struct {
 	err          error
 	lastSysID    string
 	pageSize     int
+	fields       []string
 	pagesReached int
 	totalItems   int
 }
 
 func (c *tableTestContext) iHaveAValidServiceNowInstanceAndCredentials() error {
 	_ = godotenv.Load("../.env")
-	required := []string{"SN_CLIENT_ID", "SN_USERNAME", "SN_PASSWORD", "SN_INSTANCE"}
-	for _, env := range required {
-		if os.Getenv(env) == "" {
-			return fmt.Errorf("missing environment variable: %s", env)
-		}
-	}
 	return nil
 }
 
 func (c *tableTestContext) iHaveInitializedTheServiceNowClient() error {
 	instance := os.Getenv("SN_INSTANCE")
+	if instance == "" {
+		instance = "mock_instance"
+	}
+
 	cred := credentials.NewUsernamePasswordCredential(
 		os.Getenv("SN_USERNAME"),
 		os.Getenv("SN_PASSWORD"),
 	)
 
-	client, err := sdk.NewServiceNowClient2(cred, instance)
+	client, err := sdk.NewServiceNowClient2WithHTTPClient(cred, instance, getHttpClient())
 	if err != nil {
 		return err
 	}
@@ -59,6 +63,10 @@ func (c *tableTestContext) iRequestAllIncidentsFromTheTable(tableName string) er
 
 func (c *tableTestContext) theResponseShouldNotBeAnError() error {
 	if c.err != nil {
+		if snErr, ok := c.err.(*core.ServiceNowError); ok {
+			return fmt.Errorf("expected no error, but got: %v (Message: %s, Detail: %s, Status: %s)",
+				c.err, snErr.Exception.Message, snErr.Exception.Detail, snErr.Status)
+		}
 		return fmt.Errorf("expected no error, but got: %v", c.err)
 	}
 	return nil
@@ -177,6 +185,16 @@ func (c *tableTestContext) iUpdateTheIncidentDescriptionTo(description string) e
 	return nil
 }
 
+func (c *tableTestContext) iPatchTheIncidentDescriptionTo(description string) error {
+	record := tableapi.NewTableRecord()
+	_ = record.SetValue("short_description", description)
+
+	resp, err := c.client.Now2().TableV2("incident").ById(c.lastSysID).Patch(context.Background(), record, nil)
+	c.response = resp
+	c.err = err
+	return nil
+}
+
 func (c *tableTestContext) theRecordShouldHaveDescription(description string) error {
 	item, ok := c.response.(newInternal.ServiceNowItemResponse[*tableapi.TableRecord])
 	if !ok {
@@ -202,6 +220,12 @@ func (c *tableTestContext) iDeleteTheCreatedIncident() error {
 }
 
 func (c *tableTestContext) iRequestTheDeletedIncidentByItsSysID() error {
+	if isOffline() {
+		baseURL := fmt.Sprintf("https://%s.service-now.com/api/now/v1/table/incident/", os.Getenv("SN_INSTANCE"))
+		httpmock.RegisterRegexpResponder("GET", regexp.MustCompile(baseURL+`[a-zA-Z0-9_]+$`),
+			httpmock.NewStringResponder(404, `{"error":{"message":"No Record found","detail":""},"status":"failure"}`))
+	}
+
 	resp, err := c.client.Now2().TableV2("incident").ById(c.lastSysID).Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
@@ -302,10 +326,16 @@ func (c *tableTestContext) iSetThePageSizeTo(pageSize int) error {
 	return nil
 }
 
+func (c *tableTestContext) iSetTheFieldsTo(fields []string) error {
+	c.fields = fields
+	return nil
+}
+
 func (c *tableTestContext) iUseTheTablePageIteratorToFetchRecords() error {
 	config := &tableapi.TableRequestBuilder2GetRequestConfiguration{
 		QueryParameters: &tableapi.TableRequestBuilder2GetQueryParameters{
-			Limit: c.pageSize,
+			Limit:  c.pageSize,
+			Fields: c.fields,
 		},
 	}
 	resp, err := c.client.Now2().TableV2("incident").Get(context.Background(), config)
@@ -321,11 +351,16 @@ func (c *tableTestContext) iUseTheTablePageIteratorToFetchRecords() error {
 	c.pagesReached = 0
 	c.totalItems = 0
 
+	itemsInCurrentPage := 0
 	err = iterator.Iterate(context.Background(), false, func(record *tableapi.TableRecord) bool {
-		c.totalItems++
-		// If we've processed all items in current page, increment pagesReached
-		if c.totalItems%c.pageSize == 0 {
+		if itemsInCurrentPage == 0 {
 			c.pagesReached++
+		}
+		c.totalItems++
+		itemsInCurrentPage++
+		// If we've processed all items in current page, reset itemsInCurrentPage
+		if itemsInCurrentPage >= c.pageSize {
+			itemsInCurrentPage = 0
 			if c.pagesReached >= 2 {
 				return false // Stop after 2 pages
 			}
@@ -353,6 +388,16 @@ func (c *tableTestContext) theTotalCountOfRecordsRetrievedShouldBeGreaterThan(co
 func InitializeTableScenario(ctx *godog.ScenarioContext) {
 	tc := &tableTestContext{}
 
+	ctx.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
+		setupGlobalMocks()
+		return ctx, nil
+	})
+
+	ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
+		httpmock.DeactivateAndReset()
+		return ctx, nil
+	})
+
 	ctx.Step(`^I have a valid ServiceNow instance and credentials$`, tc.iHaveAValidServiceNowInstanceAndCredentials)
 	ctx.Step(`^I have initialized the ServiceNow client$`, tc.iHaveInitializedTheServiceNowClient)
 	ctx.Step(`^I request all incidents from the "([^"]*)" table$`, tc.iRequestAllIncidentsFromTheTable)
@@ -366,6 +411,7 @@ func InitializeTableScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^I create a new incident with description "([^"]*)"$`, tc.iCreateANewIncidentWithDescription)
 	ctx.Step(`^the created record should have a valid "sys_id"$`, tc.theCreatedRecordShouldHaveAValidSysID)
 	ctx.Step(`^I update the incident description to "([^"]*)"$`, tc.iUpdateTheIncidentDescriptionTo)
+	ctx.Step(`^I patch the incident description to "([^"]*)"$`, tc.iPatchTheIncidentDescriptionTo)
 	ctx.Step(`^the record should have description "([^"]*)"$`, tc.theRecordShouldHaveDescription)
 	ctx.Step(`^I delete the created incident$`, tc.iDeleteTheCreatedIncident)
 	ctx.Step(`^I request the deleted incident by its "sys_id"$`, tc.iRequestTheDeletedIncidentByItsSysID)
@@ -388,7 +434,7 @@ func TestTableFeatures(t *testing.T) {
 		ScenarioInitializer: InitializeTableScenario,
 		Options: &godog.Options{
 			Format:   "pretty",
-			Paths:    []string{"features/incident_retrieval.feature", "features/table_crud.feature", "features/table_query.feature", "features/table_pagination.feature"},
+			Paths:    []string{"features/incident_retrieval.feature", "features/table_crud.feature", "features/table_query.feature", "features/table_pagination.feature", "features/table_patch.feature"},
 			Tags:     "integration",
 			TestingT: t,
 		},

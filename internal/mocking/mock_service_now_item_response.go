@@ -28,7 +28,7 @@ func (mP *MockServiceNowItemResponse[T]) GetFieldDeserializers() map[string]func
 }
 
 // GetBackingStore returns the BackingStore of the model.
-func (mM *MockServiceNowItemResponse[T]) GetBackingStore() store.BackingStore {
+func (mM *MockServiceNowItemResponse[T]) GetBackingStore() (store.BackingStore, error) {
 	args := mM.Called()
-	return args.Get(0).(store.BackingStore)
+	return args.Get(0).(store.BackingStore), args.Error(1)
 }
