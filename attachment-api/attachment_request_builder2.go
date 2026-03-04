@@ -6,6 +6,7 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
@@ -93,10 +94,10 @@ func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfigurati
 		requestConfiguration = &AttachmentRequestBuilder2GetRequestConfiguration{}
 	}
 
-	opts := nethttplibrary.NewHeadersInspectionOptions()
-	opts.InspectResponseHeaders = true
+	headerOpt := nethttplibrary.NewHeadersInspectionOptions()
+	headerOpt.InspectResponseHeaders = true
 
-	requestConfiguration.Options = append(requestConfiguration.Options, opts)
+	requestConfiguration.Options = append(requestConfiguration.Options, headerOpt)
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
 	if err != nil {
@@ -121,12 +122,14 @@ func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfigurati
 		return nil, errors.New("res is not *AttachmentCollectionResponse2Model")
 	}
 
+	snRes.ParseHeaders(headerOpt.GetResponseHeaders())
+
 	return snRes, nil
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.
 func (rB *AttachmentRequestBuilder2) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
@@ -136,13 +139,14 @@ func (rB *AttachmentRequestBuilder2) ToGetRequestInformation(_ context.Context, 
 		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if parameter := requestConfiguration.QueryParameters; !internal.IsNil(parameter) {
-			kiotaRequestInfo.AddQueryParameters(parameter)
-		}
 		if options := requestConfiguration.Options; !internal.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
+		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
+			kiotaRequestInfo.AddQueryParameters(queryParams)
+		}
 	}
-	requestInfo.Headers.TryAdd("Accept", "application/json")
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+
 	return kiotaRequestInfo.RequestInformation, nil
 }

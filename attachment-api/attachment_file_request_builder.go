@@ -140,8 +140,7 @@ func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Conte
 		return nil, errors.New("requestAdapter is nil")
 	}
 
-	kiotaRequestInfo.SetStreamContent(media.GetData())
-	kiotaRequestInfo.Headers.TryAdd("Content-Type", media.GetContentType())
+	kiotaRequestInfo.SetStreamContentAndContentType(media.GetData(), media.GetContentType())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
