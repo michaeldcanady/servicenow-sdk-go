@@ -137,7 +137,7 @@ func TestNewServiceNowClient2(t *testing.T) {
 		},
 		{
 			Title:       "Nil Credential",
-			Input:       []interface{}{"instance", (*credentials.BasicCredential)(nil)},
+			Input:       []interface{}{"instance", (*credentials.NewUsernamePasswordCredential)(nil)},
 			Expected:    nil,
 			expectedErr: internal.ErrNilCredential,
 		},
