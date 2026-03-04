@@ -11,6 +11,7 @@ import (
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
 const (
@@ -70,9 +71,27 @@ func (rB *TableRequestBuilder2[T]) Get(ctx context.Context, requestConfiguration
 		return nil, nil
 	}
 
+	if internal.IsNil(requestConfiguration) {
+		requestConfiguration = &TableRequestBuilder2GetRequestConfiguration{}
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return nil, err
+	}
+
+	var headerOpt *nethttplibrary.HeadersInspectionOptions
+	for _, opt := range requestInfo.GetRequestOptions() {
+		if opt.GetKey() == (*nethttplibrary.NewHeadersInspectionOptions()).GetKey() {
+			headerOpt = opt.(*nethttplibrary.HeadersInspectionOptions)
+			break
+		}
+	}
+
+	if headerOpt == nil {
+		headerOpt = nethttplibrary.NewHeadersInspectionOptions()
+		headerOpt.InspectResponseHeaders = true
+		requestInfo.AddRequestOptions([]abstractions.RequestOption{headerOpt})
 	}
 
 	errorMapping := abstractions.ErrorMappings{
@@ -92,6 +111,8 @@ func (rB *TableRequestBuilder2[T]) Get(ctx context.Context, requestConfiguration
 	if !ok {
 		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowCollectionResponse[T])(nil))
 	}
+
+	typedResp.ParseHeaders(headerOpt.GetResponseHeaders())
 
 	return typedResp, nil
 }
@@ -153,15 +174,7 @@ func (rB *TableRequestBuilder2[T]) ToGetRequestInformation(_ context.Context, re
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
-			kiotaRequestInfo.AddQueryParameters(queryParams)
-		}
+		newInternal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
@@ -177,15 +190,7 @@ func (rB *TableRequestBuilder2[T]) ToPostRequestInformation(ctx context.Context,
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
-			kiotaRequestInfo.AddQueryParameters(queryParams)
-		}
+		newInternal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
@@ -207,12 +212,7 @@ func (rB *TableRequestBuilder2[T]) ToHeadRequestInformation(_ context.Context, r
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.HEAD, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
+		newInternal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 

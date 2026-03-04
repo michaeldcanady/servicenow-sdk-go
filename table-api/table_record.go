@@ -123,6 +123,10 @@ func (tR *TableRecord) GetFieldDeserializers() map[string]func(serialization.Par
 
 // Serialize implements serialization.Parsable.
 func (tR *TableRecord) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(tR) {
+		return errors.New("unimplemented")
+	}
+
 	for _, key := range tR.keys {
 		element, err := tR.Get(key)
 		if err != nil {
