@@ -47,6 +47,7 @@ func TestPageIterator_Iterate(t *testing.T) {
 	res2.On("GetPreviousLink").Return(nil, nil)
 	res2.On("GetFirstLink").Return(nil, nil)
 	res2.On("GetLastLink").Return(nil, nil)
+	res2.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	reqAdapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(res2, nil)
 
@@ -74,14 +75,15 @@ func TestPageIterator_HasNext(t *testing.T) {
 	res.On("GetPreviousLink").Return(nil, nil)
 	res.On("GetFirstLink").Return(nil, nil)
 	res.On("GetLastLink").Return(nil, nil)
+	res.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
-	iterator, _ := NewPageIterator[*mocking.MockParsable](res, reqAdapter, nil)
+	iterator, _ := NewPageIterator(res, reqAdapter, nil)
 
 	assert.True(t, iterator.HasNext())
 
 	res.On("GetNextLink").Unset()
 	res.On("GetNextLink").Return(nil, nil)
-	iterator, _ = NewPageIterator[*mocking.MockParsable](res, reqAdapter, nil)
+	iterator, _ = NewPageIterator(res, reqAdapter, nil)
 	assert.False(t, iterator.HasNext())
 }
 
@@ -105,6 +107,7 @@ func TestPageIterator_NextItem(t *testing.T) {
 	res2.On("GetPreviousLink").Return(nil, nil)
 	res2.On("GetFirstLink").Return(nil, nil)
 	res2.On("GetLastLink").Return(nil, nil)
+	res2.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	reqAdapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(res2, nil)
 
@@ -136,6 +139,7 @@ func TestPageIterator_Iterate_Reverse(t *testing.T) {
 	res.On("GetPreviousLink").Return(&prevLink, nil)
 	res.On("GetFirstLink").Return(nil, nil)
 	res.On("GetLastLink").Return(nil, nil)
+	res.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	// Page 1 (previous)
 	res1 := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
@@ -144,6 +148,7 @@ func TestPageIterator_Iterate_Reverse(t *testing.T) {
 	res1.On("GetPreviousLink").Return(nil, nil)
 	res1.On("GetFirstLink").Return(nil, nil)
 	res1.On("GetLastLink").Return(nil, nil)
+	res1.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	reqAdapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(res1, nil)
 
@@ -177,6 +182,7 @@ func TestPageIterator_Iterate_EmptyPage(t *testing.T) {
 	res.On("GetPreviousLink").Return(nil, nil)
 	res.On("GetFirstLink").Return(nil, nil)
 	res.On("GetLastLink").Return(nil, nil)
+	res.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	// Page 2 (Empty)
 	res2 := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
@@ -186,6 +192,7 @@ func TestPageIterator_Iterate_EmptyPage(t *testing.T) {
 	res2.On("GetPreviousLink").Return(nil, nil)
 	res2.On("GetFirstLink").Return(nil, nil)
 	res2.On("GetLastLink").Return(nil, nil)
+	res2.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	// Page 3
 	res3 := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
@@ -194,6 +201,7 @@ func TestPageIterator_Iterate_EmptyPage(t *testing.T) {
 	res3.On("GetPreviousLink").Return(nil, nil)
 	res3.On("GetFirstLink").Return(nil, nil)
 	res3.On("GetLastLink").Return(nil, nil)
+	res3.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	reqAdapter.On("Send", mock.Anything, mock.MatchedBy(func(ri *abstractions.RequestInformation) bool {
 		uri, _ := ri.GetUri()
@@ -228,6 +236,7 @@ func TestPageIterator_Options(t *testing.T) {
 	res.On("GetPreviousLink").Return(nil, nil)
 	res.On("GetFirstLink").Return(nil, nil)
 	res.On("GetLastLink").Return(nil, nil)
+	res.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	headers := abstractions.NewRequestHeaders()
 	headers.Add("Test", "Value")
@@ -259,6 +268,7 @@ func TestPageIterator_PreviousItem(t *testing.T) {
 	res.On("GetPreviousLink").Return(&prevLink, nil)
 	res.On("GetFirstLink").Return(nil, nil)
 	res.On("GetLastLink").Return(nil, nil)
+	res.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	// Page 1 (previous)
 	res1 := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
@@ -267,6 +277,7 @@ func TestPageIterator_PreviousItem(t *testing.T) {
 	res1.On("GetPreviousLink").Return(nil, nil)
 	res1.On("GetFirstLink").Return(nil, nil)
 	res1.On("GetLastLink").Return(nil, nil)
+	res1.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	reqAdapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(res1, nil)
 
@@ -299,6 +310,7 @@ func TestPageIterator_Reset(t *testing.T) {
 	res.On("GetPreviousLink").Return(nil, nil)
 	res.On("GetFirstLink").Return(nil, nil)
 	res.On("GetLastLink").Return(nil, nil)
+	res.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	res2 := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
 	res2.On("GetResult").Return([]*mocking.MockParsable{item2}, nil)
@@ -306,6 +318,7 @@ func TestPageIterator_Reset(t *testing.T) {
 	res2.On("GetPreviousLink").Return(nil, nil)
 	res2.On("GetFirstLink").Return(nil, nil)
 	res2.On("GetLastLink").Return(nil, nil)
+	res2.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	reqAdapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(res2, nil)
 
@@ -335,6 +348,7 @@ func TestPageIterator_ResetPage(t *testing.T) {
 	res.On("GetPreviousLink").Return(nil, nil)
 	res.On("GetFirstLink").Return(nil, nil)
 	res.On("GetLastLink").Return(nil, nil)
+	res.On("ParseHeaders", mock.AnythingOfType("*abstractions.ResponseHeaders")).Return()
 
 	iterator, _ := NewPageIterator[*mocking.MockParsable](res, reqAdapter, nil)
 
