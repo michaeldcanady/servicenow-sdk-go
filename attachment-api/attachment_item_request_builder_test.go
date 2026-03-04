@@ -139,11 +139,10 @@ func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 				}
 				expectedRequestInformation.AddRequestOptions(make([]abstractions.RequestOption, 0))
 
-				mockModel := mocking.NewMockModel()
-				expectedResult := &Attachment2Model{mockModel}
+				mockParsable := newInternal.NewBaseServiceNowItemResponse[Attachment2](CreateAttachment2FromDiscriminatorValue)
 
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(&Attachment2Model{mockModel}, nil)
+				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(mockParsable, nil)
 
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
 				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
@@ -154,7 +153,7 @@ func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 
 				result, err := builder.Get(context.Background(), nil)
 
-				assert.Equal(t, expectedResult, result)
+				assert.Equal(t, mockParsable, result)
 				assert.Nil(t, err)
 			},
 		},
@@ -231,7 +230,7 @@ func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 				result, err := builder.Get(context.Background(), nil)
 
 				assert.Nil(t, result)
-				assert.Equal(t, errors.New("res is not *Attachment2Model"), err)
+				assert.Equal(t, errors.New("res is not ServiceNowItemResponse[Attachment2]"), err)
 			},
 		},
 		{
