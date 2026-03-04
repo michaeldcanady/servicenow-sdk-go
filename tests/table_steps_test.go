@@ -37,31 +37,10 @@ func (c *tableTestContext) iHaveAValidServiceNowInstanceAndCredentials() error {
 
 func (c *tableTestContext) iHaveInitializedTheServiceNowClient() error {
 	instance := os.Getenv("SN_INSTANCE")
-	authority := credentials.NewInstanceAuthority(instance)
-	authType := os.Getenv("SN_AUTH_TYPE")
-
-	var cred credentials.Credential
-	var err error
-
-	if authType == "BASIC" {
-		cred = credentials.NewUsernamePasswordCredential(
-			os.Getenv("SN_USERNAME"),
-			os.Getenv("SN_PASSWORD"),
-		)
-	} else {
-		cred, err = credentials.NewROPCCredential(
-			os.Getenv("SN_CLIENT_ID"),
-			os.Getenv("SN_CLIENT_SECRET"),
-			os.Getenv("SN_USERNAME"),
-			os.Getenv("SN_PASSWORD"),
-			authority,
-			nil,
-		)
-	}
-
-	if err != nil {
-		return err
-	}
+	cred := credentials.NewUsernamePasswordCredential(
+		os.Getenv("SN_USERNAME"),
+		os.Getenv("SN_PASSWORD"),
+	)
 
 	client, err := sdk.NewServiceNowClient2(cred, instance)
 	if err != nil {
