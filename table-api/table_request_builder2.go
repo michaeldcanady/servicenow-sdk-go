@@ -75,18 +75,23 @@ func (rB *TableRequestBuilder2[T]) Get(ctx context.Context, requestConfiguration
 		requestConfiguration = &TableRequestBuilder2GetRequestConfiguration{}
 	}
 
-	headerOpt := nethttplibrary.NewHeadersInspectionOptions()
-	headerOpt.InspectResponseHeaders = true
-
-	//if existingOpts := requestConfiguration.Options; len(requestConfiguration.Options) > 0 {
-
-	//}
-
-	requestConfiguration.Options = append(requestConfiguration.Options, headerOpt)
-
 	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return nil, err
+	}
+
+	var headerOpt *nethttplibrary.HeadersInspectionOptions
+	for _, opt := range requestInfo.GetRequestOptions() {
+		if opt.GetKey() == (*nethttplibrary.NewHeadersInspectionOptions()).GetKey() {
+			headerOpt = opt.(*nethttplibrary.HeadersInspectionOptions)
+			break
+		}
+	}
+
+	if headerOpt == nil {
+		headerOpt = nethttplibrary.NewHeadersInspectionOptions()
+		headerOpt.InspectResponseHeaders = true
+		requestInfo.AddRequestOptions([]abstractions.RequestOption{headerOpt})
 	}
 
 	errorMapping := abstractions.ErrorMappings{
@@ -169,15 +174,7 @@ func (rB *TableRequestBuilder2[T]) ToGetRequestInformation(_ context.Context, re
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
-			kiotaRequestInfo.AddQueryParameters(queryParams)
-		}
+		newInternal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
@@ -193,15 +190,7 @@ func (rB *TableRequestBuilder2[T]) ToPostRequestInformation(ctx context.Context,
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
-			kiotaRequestInfo.AddQueryParameters(queryParams)
-		}
+		newInternal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
@@ -223,12 +212,7 @@ func (rB *TableRequestBuilder2[T]) ToHeadRequestInformation(_ context.Context, r
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.HEAD, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
+		newInternal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
