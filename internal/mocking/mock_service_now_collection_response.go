@@ -1,6 +1,7 @@
 package mocking
 
 import (
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/mock"
@@ -51,4 +52,8 @@ func (mP *MockServiceNowCollectionResponse[T]) GetFieldDeserializers() map[strin
 func (mM *MockServiceNowCollectionResponse[T]) GetBackingStore() (store.BackingStore, error) {
 	args := mM.Called()
 	return args.Get(0).(store.BackingStore), args.Error(1)
+}
+
+func (mM *MockServiceNowCollectionResponse[T]) ParseHeaders(header *abstractions.ResponseHeaders) {
+	_ = mM.Called(header)
 }
