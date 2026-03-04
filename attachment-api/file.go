@@ -320,6 +320,9 @@ func (f *FileModel) GetFieldDeserializers() map[string]func(serialization.ParseN
 			if err != nil {
 				return err
 			}
+			if val == nil || *val == "" {
+				return nil
+			}
 			boolVal, err := strconv.ParseBool(*val)
 			if err != nil {
 				return err
@@ -364,6 +367,9 @@ func (f *FileModel) GetFieldDeserializers() map[string]func(serialization.ParseN
 			if err != nil {
 				return err
 			}
+			if val == nil || *val == "" {
+				return nil
+			}
 
 			floatVal, err := strconv.ParseFloat(*val, 64)
 			if err != nil {
@@ -376,6 +382,9 @@ func (f *FileModel) GetFieldDeserializers() map[string]func(serialization.ParseN
 			val, err := node.GetStringValue()
 			if err != nil {
 				return err
+			}
+			if val == nil || *val == "" {
+				return nil
 			}
 
 			floatVal, err := strconv.ParseFloat(*val, 64)
@@ -390,6 +399,9 @@ func (f *FileModel) GetFieldDeserializers() map[string]func(serialization.ParseN
 			if err != nil {
 				return err
 			}
+			if val == nil || *val == "" {
+				return nil
+			}
 
 			intVal, err := strconv.Atoi(*val)
 			if err != nil {
@@ -403,6 +415,9 @@ func (f *FileModel) GetFieldDeserializers() map[string]func(serialization.ParseN
 			val, err := node.GetStringValue()
 			if err != nil {
 				return err
+			}
+			if val == nil || *val == "" {
+				return nil
 			}
 
 			intVal, err := strconv.Atoi(*val)
@@ -426,8 +441,8 @@ func (f *FileModel) GetFieldDeserializers() map[string]func(serialization.ParseN
 			if err != nil {
 				return err
 			}
-			if internal.IsNil(val) || *val == "" {
-				return f.SetSysUpdatedOn(nil)
+			if val == nil || *val == "" {
+				return f.SetSysCreatedOn(nil)
 			}
 
 			dateTime, err := time.Parse("2006-01-02 15:04:05", *val)
@@ -449,6 +464,9 @@ func (f *FileModel) GetFieldDeserializers() map[string]func(serialization.ParseN
 			val, err := node.GetStringValue()
 			if err != nil {
 				return err
+			}
+			if val == nil || *val == "" {
+				return nil
 			}
 
 			intVal, err := strconv.Atoi(*val)
@@ -849,12 +867,15 @@ func (f *FileModel) GetSysID() (*string, error) {
 		return nil, err
 	}
 
-	typedVal, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
+	if typedVal, ok := val.(*string); ok {
+		return typedVal, nil
 	}
 
-	return typedVal, nil
+	if typedVal, ok := val.(string); ok {
+		return &typedVal, nil
+	}
+
+	return nil, errors.New("val is not *string or string")
 }
 
 // SetSysID Sets the sys_id of the attachment file.
