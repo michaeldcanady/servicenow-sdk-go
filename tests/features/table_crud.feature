@@ -1,10 +1,11 @@
+@integration @mock @table @crud
 Feature: ServiceNow Table API CRUD Operations
   As a developer using the ServiceNow SDK
   I want to be able to create, read, update, and delete records
   So that I can manage data in my instance
 
   Background:
-    Given I have a valid ServiceNow instance and credentials
+    And I have a valid ServiceNow instance and credentials
     And I have initialized the ServiceNow client
 
   @integration @table @crud

@@ -1,10 +1,11 @@
+@integration @mock @table @collection
 Feature: ServiceNow Table API
   As a developer using the ServiceNow SDK
   I want to be able to interact with tables
   So that I can manage records in my instance
 
   Background:
-    Given I have a valid ServiceNow instance and credentials
+    And I have a valid ServiceNow instance and credentials
     And I have initialized the ServiceNow client
 
   @integration @table @collection

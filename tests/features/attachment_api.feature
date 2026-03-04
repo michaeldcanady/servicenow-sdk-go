@@ -1,10 +1,11 @@
+@integration @mock @attachment @api
 Feature: ServiceNow Attachment API
   As a developer using the ServiceNow SDK
   I want to be able to manage attachments
   So that I can handle files in my instance
 
   Background:
-    Given I have a valid ServiceNow instance and credentials
+    And I have a valid ServiceNow instance and credentials
     And I have initialized the ServiceNow client
 
   @integration @attachment @collection

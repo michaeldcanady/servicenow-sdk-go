@@ -122,9 +122,11 @@ func TestServicedRequestModel_GetFieldDeserializers(t *testing.T) {
 					}
 					switch key {
 					case statusCodeKey:
+						node.On("GetFloat64Value").Return((*float64)(nil), nil)
 						i := int64(200)
 						node.On("GetInt64Value").Return(&i, nil)
 					case executionTimeKey:
+						node.On("GetFloat64Value").Return((*float64)(nil), nil)
 						node.On("GetISODurationValue").Return(&serialization.ISODuration{}, nil)
 					case headersKey:
 						node.On("GetCollectionOfObjectValues", mock.Anything).Return([]serialization.Parsable{NewRestRequestHeader()}, nil)

@@ -34,7 +34,7 @@ func _() {
 
 	// [START attachment_std_get_item]
 	// Step 3: Define raw URL
-	get_item_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/xSDK_SN_TABLE_SYS_IDx"
+	get_item_rawURL := "https://xSDK_SN_URLx/api/now/attachment/xSDK_SN_TABLE_SYS_IDx"
 
 	// Step 4: Configure request
 	get_item_std_config := &attachmentapi.AttachmentItemRequestBuilderGetRequestConfiguration{
@@ -63,7 +63,7 @@ func _() {
 
 	// [START attachment_std_list]
 	// Step 3: Define raw URL
-	list_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment"
+	list_rawURL := "https://xSDK_SN_URLx/api/now/attachment"
 
 	// Step 4: Configure request
 	list_std_config := &attachmentapi.AttachmentRequestBuilder2GetRequestConfiguration{
@@ -93,7 +93,7 @@ func _() {
 
 	// [START attachment_std_delete]
 	// Step 3: Define raw URL
-	rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/xSDK_SN_TABLE_SYS_IDx"
+	rawURL := "https://xSDK_SN_URLx/api/now/attachment/xSDK_SN_TABLE_SYS_IDx"
 
 	// Step 4: Configure request
 	deleteConfig = &attachmentapi.AttachmentItemRequestBuilderDeleteRequestConfiguration{
@@ -135,7 +135,7 @@ func _() {
 
 	// [START attachment_std_file_create]
 	// Step 3: Define raw URL
-	file_create_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/file"
+	file_create_rawURL := "https://xSDK_SN_URLx/api/now/attachment/file"
 
 	// Step 4: Build media type
 	file_create_dataContentType := "text/plain"
@@ -181,7 +181,7 @@ func _() {
 
 	// [START attachment_std_upload_create]
 	// Step 3: Define raw URL
-	upload_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/upload"
+	upload_rawURL := "https://xSDK_SN_URLx/api/now/attachment/upload"
 
 	// Step 4: Build multipart body
 	var upload_std_body abstractions.MultipartBody
@@ -213,7 +213,7 @@ func _() {
 
 	// [START attachment_std_file_get]
 	// Step 3: Define raw URL
-	file_get_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/xSDK_SN_TABLE_SYS_IDx/file"
+	file_get_rawURL := "https://xSDK_SN_URLx/api/now/attachment/xSDK_SN_TABLE_SYS_IDx/file"
 
 	// Step 4: Configure request
 	file_get_std_config := &attachmentapi.AttachmentItemFileRequestBuilderGetRequestConfiguration{
