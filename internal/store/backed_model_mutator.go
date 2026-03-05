@@ -11,6 +11,9 @@ import (
 // using a specified key.
 type BackedModelMutatorFunc[M store.BackedModel, T any] func(M, string, T) error
 
+// ModelMutator represents a function for mutating (setting) the property for a store backed model.
+type ModelMutator[M store.BackedModel, T any] BackedModelMutatorFunc[M, T]
+
 // DefaultStoreMutatorFunc[S, T] is a generic implementation of StoreMutatorFunc[S, T] that sets the value
 // of a backed model.
 func DefaultBackedModelMutatorFunc[M store.BackedModel, T any](model M, key string, value T) error {

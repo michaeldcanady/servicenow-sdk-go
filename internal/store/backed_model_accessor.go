@@ -11,6 +11,9 @@ import (
 // using a specified key and converting it to a desired type.
 type BackedModelAccessorFunc[M store.BackedModel, T any] func(M, string) (T, error)
 
+// ModelAccessor represents a function for getting and typing a property for a store backed model.
+type ModelAccessor[M store.BackedModel, T any] BackedModelAccessorFunc[M, T]
+
 // DefaultBackedModelAccessorFunc[S, T] is a generic implementation of BackedModelAccessorFunc that retrieves a value
 // from a backed model and attempts to convert it to the specified type.
 func DefaultBackedModelAccessorFunc[M store.BackedModel, T any](model M, key string) (T, error) {
