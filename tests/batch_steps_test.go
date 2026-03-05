@@ -1,3 +1,5 @@
+//go:build integration
+
 package tests
 
 import (
@@ -34,7 +36,7 @@ func (c *batchTestContext) iHaveInitializedTheServiceNowClient() error {
 	if instance == "" {
 		instance = "mock_instance"
 	}
-	
+
 	var cred credentials.Credential
 	if os.Getenv("SN_USERNAME") != "" {
 		cred = credentials.NewUsernamePasswordCredential(
