@@ -16,12 +16,12 @@ func TestDefaultBackedModelAccessorFunc(t *testing.T) {
 		{
 			name: "nil model",
 			test: func(t *testing.T) {
-				model := (*mocking.MockModel)(nil)
+				model := (*mocking.MockBackingStore)(nil)
 
-				value, err := DefaultBackedModelAccessorFunc[*mocking.MockModel, string](model, "test")
+				value, err := DefaultBackedModelAccessorFunc[*mocking.MockBackingStore, string](model, "test")
 
 				assert.Empty(t, value)
-				assert.Equal(t, errors.New("model is nil"), err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 			},
 		},
 	}
