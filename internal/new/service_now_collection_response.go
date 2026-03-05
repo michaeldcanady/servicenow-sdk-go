@@ -28,7 +28,6 @@ type ServiceNowCollectionResponse[T serialization.Parsable] interface {
 	GetFirstLink() (*string, error)
 	GetLastLink() (*string, error)
 	ParseHeaders(headers *abstractions.ResponseHeaders)
-	ParseHeaders(headers *abstractions.ResponseHeaders)
 	serialization.Parsable
 	BackedModel
 }
