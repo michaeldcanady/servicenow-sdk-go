@@ -12,10 +12,10 @@ func TestTableCollectionResponse2ParsePaginationHeaders(t *testing.T) {
 		name     string
 		headers  http.Header
 		expected struct {
-			first    string
-			prev     string
-			next     string
-			last     string
+			first string
+			prev  string
+			next  string
+			last  string
 		}
 	}{
 		{
@@ -26,10 +26,10 @@ func TestTableCollectionResponse2ParsePaginationHeaders(t *testing.T) {
 				return h
 			}(),
 			expected: struct {
-				first    string
-				prev     string
-				next     string
-				last     string
+				first string
+				prev  string
+				next  string
+				last  string
 			}{
 				first: "http://example.com/first",
 				prev:  "http://example.com/prev",

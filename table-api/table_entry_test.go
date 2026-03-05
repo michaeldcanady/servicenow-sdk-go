@@ -136,8 +136,8 @@ func TestTableEntry_Link(t *testing.T) {
 
 func TestTableEntry_Keys(t *testing.T) {
 	tests := []struct {
-		name         string
-		entry        TableEntry
+		name          string
+		entry         TableEntry
 		expectedCount int
 	}{
 		{
@@ -157,8 +157,8 @@ func TestTableEntry_Keys(t *testing.T) {
 
 func TestTableEntry_Len(t *testing.T) {
 	tests := []struct {
-		name         string
-		entry        TableEntry
+		name        string
+		entry       TableEntry
 		expectedLen int
 	}{
 		{
