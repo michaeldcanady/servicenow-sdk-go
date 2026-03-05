@@ -432,8 +432,6 @@ func TestFileModel_ErrorBranches(t *testing.T) {
 }
 
 func TestFileModel_Serialize_Errors(t *testing.T) {
-	writer := mocking.NewMockSerializationWriter()
-
 	keys := []string{
 		averageImageColorKey, compressedKey, contentTypeKey, createdByNameKey,
 		downloadLinkKey, fileNameKey, imageHeightKey, imageWidthKey,
@@ -444,6 +442,13 @@ func TestFileModel_Serialize_Errors(t *testing.T) {
 
 	for _, key := range keys {
 		t.Run(key, func(t *testing.T) {
+			writer := mocking.NewMockSerializationWriter()
+			writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteBoolValue", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteCollectionOfPrimitiveValues", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteObjectValue", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteCollectionOfObjectValues", mock.Anything, mock.Anything).Return(nil)
+
 			m := NewFile()
 			_ = m.GetBackingStore().Set(key, 123) // Poison with wrong type
 			err := m.Serialize(writer)
