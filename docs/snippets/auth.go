@@ -35,7 +35,7 @@ func _() {
 
 	// [START auth_token]
 	// You'll need your Client ID, Client Secret, and the Base URL of your instance.
-	credToken, err := credentials.NewTokenCredential(
+	credToken, err := credentials.NewTokenCredential( // nolint: staticcheck // allow until ROPCCredential is more mature
 		"your-client-id",
 		"your-client-secret",
 		"https://your-instance.service-now.com",

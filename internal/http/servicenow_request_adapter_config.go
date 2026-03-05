@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
 // serviceNowRequestAdapterConfig represents configurations for ServiceNowRequestAdapter
@@ -14,6 +15,8 @@ type serviceNowRequestAdapterConfig struct {
 	serializationWriterFactory serialization.SerializationWriterFactory
 	// parseNodeFactory the ParseNodeFactory for the adapter
 	parseNodeFactory serialization.ParseNodeFactory
+
+	middleware []nethttplibrary.Middleware
 }
 
 // buildServiceNowRequestAdapterConfig constructs new serviceNowRequestAdapterConfig from provided options
