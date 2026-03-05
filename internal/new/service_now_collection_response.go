@@ -82,6 +82,37 @@ func (bR *BaseServiceNowCollectionResponse[T]) ParseHeaders(headers *abstraction
 	}
 }
 
+// ParseHeaders parses the needed headers from the response.
+func (bR *BaseServiceNowCollectionResponse[T]) ParseHeaders(headers *abstractions.ResponseHeaders) {
+	if headers == nil {
+		return
+	}
+	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;\s*rel="([^"]+)"`)
+
+	headerLinks := headers.Get("Link")
+
+	for _, header := range headerLinks {
+		linkMatches := linkHeaderRegex.FindAllStringSubmatch(header, -1)
+
+		for _, match := range linkMatches {
+			link := match[1]
+			rel := match[2]
+
+			// Determine the type of link based on the 'rel' attribute
+			switch rel {
+			case "first":
+				_ = bR.setFirstLink(&link)
+			case "prev":
+				_ = bR.setPreviousLink(&link)
+			case "next":
+				_ = bR.setNextLink(&link)
+			case "last":
+				_ = bR.setLastLink(&link)
+			}
+		}
+	}
+}
+
 // Serialize writes the objects properties to the current writer
 func (bR *BaseServiceNowCollectionResponse[T]) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(bR) {
@@ -93,6 +124,119 @@ func (bR *BaseServiceNowCollectionResponse[T]) Serialize(writer serialization.Se
 
 // GetFieldDeserializers returns the deserialization information for this object
 func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		resultKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetCollectionOfObjectValues(bR.factory)
+			if err != nil {
+				return err
+			}
+
+			results := make([]any, len(val))
+			for i, v := range val {
+				results[i] = v
+			}
+
+			return bR.setResult(results)
+		},
+		nextKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetStringValue()
+			if err != nil {
+				return err
+			}
+			return bR.setNextLink(val)
+		},
+		previousKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetStringValue()
+			if err != nil {
+				return err
+			}
+			return bR.setPreviousLink(val)
+		},
+		firstKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetStringValue()
+			if err != nil {
+				return err
+			}
+			return bR.setFirstLink(val)
+		},
+		lastKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetStringValue()
+			if err != nil {
+				return err
+			}
+			return bR.setLastLink(val)
+		},
+	}
+}
+
+// setResult Sets the result values of the response.
+func (r *BaseServiceNowCollectionResponse[T]) setResult(val []any) error {
+	if IsNil(r) {
+		return nil
+	}
+
+	store, err := r.GetBackingStore()
+	if err != nil {
+		return err
+	}
+
+	return store.Set(resultKey, val)
+}
+
+// setNextLink Sets the url to the next page of results.
+func (r *BaseServiceNowCollectionResponse[T]) setNextLink(val *string) error {
+	if IsNil(r) {
+		return nil
+	}
+
+	store, err := r.GetBackingStore()
+	if err != nil {
+		return err
+	}
+
+	return store.Set(nextKey, val)
+}
+
+// setPreviousLink Sets the url to the previous page of results.
+func (r *BaseServiceNowCollectionResponse[T]) setPreviousLink(val *string) error {
+	if IsNil(r) {
+		return nil
+	}
+
+	store, err := r.GetBackingStore()
+	if err != nil {
+		return err
+	}
+
+	return store.Set(previousKey, val)
+}
+
+// setFirstLink Sets the url to the first page of results.
+func (r *BaseServiceNowCollectionResponse[T]) setFirstLink(val *string) error {
+	if IsNil(r) {
+		return nil
+	}
+
+	store, err := r.GetBackingStore()
+	if err != nil {
+		return err
+	}
+
+	return store.Set(firstKey, val)
+}
+
+// setLastLink Sets the url to the last page of results.
+func (r *BaseServiceNowCollectionResponse[T]) setLastLink(val *string) error {
+	if IsNil(r) {
+		return nil
+	}
+
+	store, err := r.GetBackingStore()
+	if err != nil {
+		return err
+	}
+
+	return store.Set(lastKey, val)
 	return map[string]func(serialization.ParseNode) error{
 		resultKey: func(pn serialization.ParseNode) error {
 			val, err := pn.GetCollectionOfObjectValues(bR.factory)
