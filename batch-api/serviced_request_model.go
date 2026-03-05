@@ -9,6 +9,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -184,326 +185,80 @@ func (sR *ServicedRequestModel) GetBodyAsParsable(constructor serialization.Pars
 
 // GetBody returns the raw body for the batch item.
 func (sR *ServicedRequestModel) GetBody() ([]byte, error) {
-	if internal.IsNil(sR) {
-		return nil, nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	body, err := backingStore.Get(bodyKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(body) {
-		return nil, nil
-	}
-
-	typedBody, ok := body.([]byte)
-	if !ok {
-		return nil, errors.New("body is not []byte")
-	}
-
-	return typedBody, nil
+	return store.DefaultBackedModelAccessorFunc[*ServicedRequestModel, []byte](sR, bodyKey)
 }
 
 // setBody sets the raw body for the batch item.
 func (sR *ServicedRequestModel) setBody(body []byte) error {
-	if internal.IsNil(sR) {
-		return nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(bodyKey, body)
+	return store.DefaultBackedModelMutatorFunc(sR, bodyKey, body)
 }
 
 // GetErrorMessage returns, if present, the error messages.
 func (sR *ServicedRequestModel) GetErrorMessage() (*string, error) {
-	if internal.IsNil(sR) {
-		return nil, nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	message, err := backingStore.Get(errorMessageKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(message) {
-		return nil, nil
-	}
-
-	stringMessage, ok := message.(*string)
-	if !ok {
-		return nil, errors.New("message is not *string")
-	}
-
-	return stringMessage, nil
+	return store.DefaultBackedModelAccessorFunc[*ServicedRequestModel, *string](sR, errorMessageKey)
 }
 
 // setErrorMessage sets the error messages.
 func (sR *ServicedRequestModel) setErrorMessage(errorMessage *string) error {
-	if internal.IsNil(sR) {
-		return nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(errorMessageKey, errorMessage)
+	return store.DefaultBackedModelMutatorFunc(sR, errorMessageKey, errorMessage)
 }
 
 // GetExecutionTime returns time it took to execute the batch item request.
 func (sR *ServicedRequestModel) GetExecutionTime() (*serialization.ISODuration, error) {
-	if internal.IsNil(sR) {
-		return nil, nil
-	}
-
-	executionTime, err := sR.GetBackingStore().Get(executionTimeKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(executionTime) {
-		return nil, nil
-	}
-
-	typedExecutionTime, ok := executionTime.(*serialization.ISODuration)
-	if !ok {
-		return nil, errors.New("executionTime is not *serialization.ISODuration")
-	}
-
-	return typedExecutionTime, nil
+	return store.DefaultBackedModelAccessorFunc[*ServicedRequestModel, *serialization.ISODuration](sR, executionTimeKey)
 }
 
 // setExecutionTime sets the time it took to execute the batch item request.
 func (sR *ServicedRequestModel) setExecutionTime(executionTime *serialization.ISODuration) error {
-	if internal.IsNil(sR) {
-		return nil
-	}
-
-	return sR.GetBackingStore().Set(executionTimeKey, executionTime)
+	return store.DefaultBackedModelMutatorFunc(sR, executionTimeKey, executionTime)
 }
 
 // GetHeaders returns headers for the batch item.
 func (sR *ServicedRequestModel) GetHeaders() ([]RestRequestHeader, error) {
-	if internal.IsNil(sR) {
-		return nil, nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	headers, err := backingStore.Get(headersKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(headers) {
-		return nil, nil
-	}
-
-	typedHeaders, ok := headers.([]RestRequestHeader)
-	if !ok {
-		return nil, errors.New("headers is not []RestRequestHeader")
-	}
-
-	return typedHeaders, nil
+	return store.DefaultBackedModelAccessorFunc[*ServicedRequestModel, []RestRequestHeader](sR, headersKey)
 }
 
 // setHeaders sets headers for the batch item.
 func (sR *ServicedRequestModel) setHeaders(headers []RestRequestHeader) error {
-	if internal.IsNil(sR) {
-		return nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(headersKey, headers)
+	return store.DefaultBackedModelMutatorFunc(sR, headersKey, headers)
 }
 
 // GetID returns ID of the batch item that matches the `rest_requests.id` parameter in the request.
 func (sR *ServicedRequestModel) GetID() (*string, error) {
-	if internal.IsNil(sR) {
-		return nil, nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	id, err := backingStore.Get(idKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(id) {
-		return nil, nil
-	}
-
-	typedID, ok := id.(*string)
-	if !ok {
-		return nil, errors.New("id is not *string")
-	}
-
-	return typedID, nil
+	return store.DefaultBackedModelAccessorFunc[*ServicedRequestModel, *string](sR, idKey)
 }
 
 // setID sets the id of the batch item.
 func (sR *ServicedRequestModel) setID(id *string) error {
-	if internal.IsNil(sR) {
-		return nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(idKey, id)
+	return store.DefaultBackedModelMutatorFunc(sR, idKey, id)
 }
 
 // GetRedirectURL, if present, returns redirect url for batch item.
 func (sR *ServicedRequestModel) GetRedirectURL() (*string, error) {
-	if internal.IsNil(sR) {
-		return nil, nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	redirectURL, err := backingStore.Get(redirectURLKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(redirectURL) {
-		return nil, nil
-	}
-
-	typedRedirectURL, ok := redirectURL.(*string)
-	if !ok {
-		return nil, errors.New("redirectURL is not *string")
-	}
-
-	return typedRedirectURL, nil
+	return store.DefaultBackedModelAccessorFunc[*ServicedRequestModel, *string](sR, redirectURLKey)
 }
 
 // setRedirectURL sets redirect url for batch item.
 func (sR *ServicedRequestModel) setRedirectURL(redirectURL *string) error {
-	if internal.IsNil(sR) {
-		return nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(redirectURLKey, redirectURL)
+	return store.DefaultBackedModelMutatorFunc(sR, redirectURLKey, redirectURL)
 }
 
 // GetStatusCode returns status code for batch item.
 func (sR *ServicedRequestModel) GetStatusCode() (*int64, error) {
-	if internal.IsNil(sR) {
-		return nil, nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	statusCode, err := backingStore.Get(statusCodeKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(statusCode) {
-		return nil, nil
-	}
-
-	typedStatusCode, ok := statusCode.(*int64)
-	if !ok {
-		return nil, errors.New("statusCode is not *int64")
-	}
-
-	return typedStatusCode, nil
+	return store.DefaultBackedModelAccessorFunc[*ServicedRequestModel, *int64](sR, statusCodeKey)
 }
 
 // setStatusCode sets status code for batch item.
 func (sR *ServicedRequestModel) setStatusCode(statusCode *int64) error {
-	if internal.IsNil(sR) {
-		return nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(statusCodeKey, statusCode)
+	return store.DefaultBackedModelMutatorFunc(sR, statusCodeKey, statusCode)
 }
 
 // GetStatusText returns status text for batch item.
 func (sR *ServicedRequestModel) GetStatusText() (*string, error) {
-	if internal.IsNil(sR) {
-		return nil, nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	statusText, err := backingStore.Get(statusTextKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(statusText) {
-		return nil, nil
-	}
-
-	typedStatusText, ok := statusText.(*string)
-	if !ok {
-		return nil, errors.New("statusText is not *string")
-	}
-
-	return typedStatusText, nil
+	return store.DefaultBackedModelAccessorFunc[*ServicedRequestModel, *string](sR, statusTextKey)
 }
 
 // setStatusText sets status text for batch item.
 func (sR *ServicedRequestModel) setStatusText(statusText *string) error {
-	if internal.IsNil(sR) {
-		return nil
-	}
-
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(statusTextKey, statusText)
+	return store.DefaultBackedModelMutatorFunc(sR, statusTextKey, statusText)
 }

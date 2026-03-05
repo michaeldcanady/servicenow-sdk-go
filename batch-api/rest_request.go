@@ -10,9 +10,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/microsoft/kiota-abstractions-go/store"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -37,7 +38,7 @@ type RestRequest interface {
 	GetURL() (*string, error)
 	SetURL(*string) error
 	serialization.Parsable
-	store.BackedModel
+	kiotaStore.BackedModel
 }
 
 // RestRequestModel implementation of RestRequestable
@@ -187,30 +188,7 @@ func (rE *RestRequestModel) GetFieldDeserializers() map[string]func(serializatio
 
 // GetBody returns the requests body in bytes.
 func (rE *RestRequestModel) GetBody() ([]byte, error) {
-	if internal.IsNil(rE) {
-		return nil, nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	body, err := backingStore.Get(bodyKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(body) {
-		return nil, nil
-	}
-
-	typedBody, ok := body.([]byte)
-	if !ok {
-		return nil, errors.New("body is not []byte")
-	}
-
-	return typedBody, nil
+	return store.DefaultBackedModelAccessorFunc[*RestRequestModel, []byte](rE, bodyKey)
 }
 
 // SetBodyFromParsable serializes the provided parsable and sets the output to the request's body.
@@ -264,212 +242,52 @@ func (rE *RestRequestModel) SetBodyFromParsable(contentType string, parsable ser
 
 // SetBody sets the requests body to the provided content.
 func (rE *RestRequestModel) SetBody(body []byte) error {
-	if internal.IsNil(rE) {
-		return nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(bodyKey, body)
+	return store.DefaultBackedModelMutatorFunc(rE, bodyKey, body)
 }
 
 // GetExcludeResponseHeaders returns if the request will exclude response headers.
 func (rE *RestRequestModel) GetExcludeResponseHeaders() (*bool, error) {
-	if internal.IsNil(rE) {
-		return nil, nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	excludeResponseHeaders, err := backingStore.Get(excludeResponseHeadersKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(excludeResponseHeaders) {
-		return nil, nil
-	}
-
-	typedExcludeResponseHeaders, ok := excludeResponseHeaders.(*bool)
-	if !ok {
-		return nil, errors.New("excludeResponseHeaders is not *bool")
-	}
-
-	return typedExcludeResponseHeaders, nil
+	return store.DefaultBackedModelAccessorFunc[*RestRequestModel, *bool](rE, excludeResponseHeadersKey)
 }
 
 // SetExcludeResponseHeaders set if to include or exclude response headers.
 func (rE *RestRequestModel) SetExcludeResponseHeaders(excludeResponseHeaders *bool) error {
-	if internal.IsNil(rE) {
-		return nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(excludeResponseHeadersKey, excludeResponseHeaders)
+	return store.DefaultBackedModelMutatorFunc(rE, excludeResponseHeadersKey, excludeResponseHeaders)
 }
 
 // GetHeaders returns the headers of the request.
 func (rE *RestRequestModel) GetHeaders() ([]RestRequestHeader, error) {
-	if internal.IsNil(rE) {
-		return nil, nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	headers, err := backingStore.Get(headersKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(headers) {
-		return nil, nil
-	}
-
-	typedheaders, ok := headers.([]RestRequestHeader)
-	if !ok {
-		return nil, errors.New("headers is not []RestRequestHeader")
-	}
-
-	return typedheaders, nil
+	return store.DefaultBackedModelAccessorFunc[*RestRequestModel, []RestRequestHeader](rE, headersKey)
 }
 
 // SetHeaders sets the headers for the request.
 func (rE *RestRequestModel) SetHeaders(headers []RestRequestHeader) error {
-	if internal.IsNil(rE) {
-		return nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(headersKey, headers)
+	return store.DefaultBackedModelMutatorFunc(rE, headersKey, headers)
 }
 
 // GetID returns the id of the request.
 func (rE *RestRequestModel) GetID() (*string, error) {
-	if internal.IsNil(rE) {
-		return nil, nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	id, err := backingStore.Get(idKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(id) {
-		return nil, nil
-	}
-
-	typedID, ok := id.(*string)
-	if !ok {
-		return nil, errors.New("id is not *string")
-	}
-
-	return typedID, nil
+	return store.DefaultBackedModelAccessorFunc[*RestRequestModel, *string](rE, idKey)
 }
 
 // SetID sets the id of the request.
 func (rE *RestRequestModel) SetID(id *string) error {
-	if internal.IsNil(rE) {
-		return nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(idKey, id)
+	return store.DefaultBackedModelMutatorFunc(rE, idKey, id)
 }
 
 // GetMethod returns the method of the request
 func (rE *RestRequestModel) GetMethod() (*abstractions.HttpMethod, error) {
-	if internal.IsNil(rE) {
-		return nil, nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	method, err := backingStore.Get(methodKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(method) {
-		return nil, nil
-	}
-
-	typedMethod, ok := method.(*abstractions.HttpMethod)
-	if !ok {
-		return nil, errors.New("method is not *abstractions.HttpMethod")
-	}
-
-	return typedMethod, nil
+	return store.DefaultBackedModelAccessorFunc[*RestRequestModel, *abstractions.HttpMethod](rE, methodKey)
 }
 
 // SetMethod sets the method of the request
 func (rE *RestRequestModel) SetMethod(method *abstractions.HttpMethod) error {
-	if internal.IsNil(rE) {
-		return nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(methodKey, method)
+	return store.DefaultBackedModelMutatorFunc(rE, methodKey, method)
 }
 
 // GetURL returns the relative URL of the request.
 func (rE *RestRequestModel) GetURL() (*string, error) {
-	if internal.IsNil(rE) {
-		return nil, nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	url, err := backingStore.Get(urlKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(url) {
-		return nil, nil
-	}
-
-	typedURL, ok := url.(*string)
-	if !ok {
-		return nil, errors.New("url is not *string")
-	}
-
-	return typedURL, nil
+	return store.DefaultBackedModelAccessorFunc[*RestRequestModel, *string](rE, urlKey)
 }
 
 // SetURL sets the URL of the request (if not relative, will be converted).
@@ -496,10 +314,5 @@ func (rE *RestRequestModel) SetURL(url *string) error {
 		return errors.New("invalid URL: path doesn't begin with \"/api\"")
 	}
 
-	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(urlKey, &relativeURL)
+	return store.DefaultBackedModelMutatorFunc(rE, urlKey, &relativeURL)
 }

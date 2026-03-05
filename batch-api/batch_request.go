@@ -6,8 +6,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/microsoft/kiota-abstractions-go/store"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -22,7 +23,7 @@ type BatchRequest interface {
 	SetRestRequests([]RestRequest) error
 	AddRequest(RestRequest) error
 	serialization.Parsable
-	store.BackedModel
+	kiotaStore.BackedModel
 }
 
 // BatchRequestModel implementation of BatchRequest
@@ -154,60 +155,20 @@ func (bR *BatchRequestModel) AddRequest(request RestRequest) error {
 
 // GetBatchRequestID returns the id of the request.
 func (bR *BatchRequestModel) GetBatchRequestID() (*string, error) {
-	if internal.IsNil(bR) {
-		return nil, nil
-	}
-
-	id, err := bR.GetBackingStore().Get(batchRequestIDKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedID, ok := id.(*string)
-	if !ok {
-		return nil, errors.New("id is not *string")
-	}
-
-	return typedID, nil
+	return store.DefaultBackedModelAccessorFunc[*BatchRequestModel, *string](bR, batchRequestIDKey)
 }
 
 // SetBatchRequestID sets the id of the request.
 func (bR *BatchRequestModel) SetBatchRequestID(id *string) error {
-	if internal.IsNil(bR) {
-		return nil
-	}
-
-	return bR.GetBackingStore().Set(batchRequestIDKey, id)
+	return store.DefaultBackedModelMutatorFunc(bR, batchRequestIDKey, id)
 }
 
 // GetRestRequests returns batched requests.
 func (bR *BatchRequestModel) GetRestRequests() ([]RestRequest, error) {
-	if internal.IsNil(bR) {
-		return nil, nil
-	}
-
-	requests, err := bR.GetBackingStore().Get(restRequestsKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if internal.IsNil(requests) {
-		return nil, nil
-	}
-
-	typedRequests, ok := requests.([]RestRequest)
-	if !ok {
-		return nil, errors.New("requests is not []RestRequestable")
-	}
-
-	return typedRequests, nil
+	return store.DefaultBackedModelAccessorFunc[*BatchRequestModel, []RestRequest](bR, restRequestsKey)
 }
 
 // SetRestRequests sets the batched requests.
 func (bR *BatchRequestModel) SetRestRequests(requests []RestRequest) error {
-	if internal.IsNil(bR) {
-		return nil
-	}
-
-	return bR.GetBackingStore().Set(restRequestsKey, requests)
+	return store.DefaultBackedModelMutatorFunc(bR, restRequestsKey, requests)
 }

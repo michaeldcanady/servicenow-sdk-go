@@ -6,6 +6,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
@@ -92,78 +93,22 @@ func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serial
 
 // GetName returns the name of the header
 func (bH *RestRequestHeaderModel) GetName() (*string, error) {
-	if internal.IsNil(bH) {
-		return nil, nil
-	}
-
-	backingStore := bH.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, errors.New("backingStore is nil")
-	}
-
-	name, err := backingStore.Get(nameKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedName, ok := name.(*string)
-	if !ok {
-		return nil, errors.New("name is not *string")
-	}
-
-	return typedName, nil
+	return store.DefaultBackedModelAccessorFunc[*RestRequestHeaderModel, *string](bH, nameKey)
 }
 
 // SetName sets name to provided value
 func (bH *RestRequestHeaderModel) SetName(name *string) error {
-	if internal.IsNil(bH) {
-		return nil
-	}
-
-	backingStore := bH.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return errors.New("backingStore is nil")
-	}
-
-	return backingStore.Set(nameKey, name)
+	return store.DefaultBackedModelMutatorFunc(bH, nameKey, name)
 }
 
 // GetValue returns the value of the header
 func (bH *RestRequestHeaderModel) GetValue() (*string, error) {
-	if internal.IsNil(bH) {
-		return nil, nil
-	}
-
-	backingStore := bH.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, errors.New("backingStore is nil")
-	}
-
-	value, err := backingStore.Get(valueKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedValue, ok := value.(*string)
-	if !ok {
-		return nil, errors.New("value is not *string")
-	}
-
-	return typedValue, nil
+	return store.DefaultBackedModelAccessorFunc[*RestRequestHeaderModel, *string](bH, valueKey)
 }
 
 // SetValue sets the value to the provided value
 func (bH *RestRequestHeaderModel) SetValue(value *string) error {
-	if internal.IsNil(bH) {
-		return nil
-	}
-
-	backingStore := bH.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return errors.New("backingStore is nil")
-	}
-
-	return backingStore.Set(valueKey, value)
+	return store.DefaultBackedModelMutatorFunc(bH, valueKey, value)
 }
 
 // headers support headers types
