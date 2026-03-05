@@ -48,3 +48,8 @@ site/
 # Vale styles
 .github/styles/*
 !.github/styles/config/
+
+# Gemini
+
+.gemini/tmp/*
+!.gemini/tmp/.gitkeep
