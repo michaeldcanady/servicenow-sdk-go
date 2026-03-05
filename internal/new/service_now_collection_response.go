@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -56,7 +57,7 @@ func (bR *BaseServiceNowCollectionResponse[T]) ParseHeaders(headers *abstraction
 	if headers == nil {
 		return
 	}
-	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;\s*rel="([^"]+)"`)
+	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>\s*;\s*(?:[^,;]+\s*;\s*)*rel="?([^";, ]+)"?`)
 
 	headerLinks := headers.Get("Link")
 
@@ -65,7 +66,7 @@ func (bR *BaseServiceNowCollectionResponse[T]) ParseHeaders(headers *abstraction
 
 		for _, match := range linkMatches {
 			link := match[1]
-			rel := match[2]
+			rel := strings.ToLower(match[2])
 
 			// Determine the type of link based on the 'rel' attribute
 			switch rel {

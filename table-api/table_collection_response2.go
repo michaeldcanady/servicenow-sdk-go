@@ -3,6 +3,7 @@ package tableapi
 import (
 	"net/http"
 	"regexp"
+	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 )
@@ -23,7 +24,7 @@ type TableCollectionResponse2[T Entry] struct {
 
 // parsePaginationHeaders parses the pagination headers from the response
 func (cR *TableCollectionResponse2[T]) parsePaginationHeaders(headers http.Header) {
-	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)
+	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>\s*;\s*(?:[^,;]+\s*;\s*)*rel="?([^";, ]+)"?`)
 
 	links := make(map[string]string)
 
@@ -34,7 +35,7 @@ func (cR *TableCollectionResponse2[T]) parsePaginationHeaders(headers http.Heade
 
 		for _, match := range linkMatches {
 			link := match[1]
-			rel := match[2]
+			rel := strings.ToLower(match[2])
 
 			// Determine the type of link based on the 'rel' attribute
 			switch rel {
