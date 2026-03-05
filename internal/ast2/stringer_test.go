@@ -4,56 +4,80 @@ package ast2
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewStringerVisitor(t *testing.T) {
-	v := NewStringerVisitor()
-	if v == nil {
-		t.Error("NewStringerVisitor returned nil")
+	tests := []struct {
+		name string
+	}{
+		{
+			name: "Create visitor",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			v := NewStringerVisitor()
+			assert.NotNil(t, v)
+		})
 	}
 }
 
-func TestStringerVisitor_VisitLiteral(t *testing.T) {
-	v := NewStringerVisitor()
-	n := NewLiteralNode("v")
-	v.VisitLiteral(n)
-	if v.String() != "v" {
-		t.Errorf("got %s, expected v", v.String())
+func TestStringerVisitor_Visit(t *testing.T) {
+	tests := []struct {
+		name     string
+		visit    func(v Visitor)
+		expected string
+	}{
+		{
+			name: "VisitLiteral",
+			visit: func(v Visitor) {
+				n := NewLiteralNode("v")
+				v.VisitLiteral(n)
+			},
+			expected: "v",
+		},
+		{
+			name: "VisitUnary",
+			visit: func(v Visitor) {
+				n := NewUnaryNode(OperatorIsEmpty, NewLiteralNode("f"))
+				v.VisitUnary(n)
+			},
+			expected: "fISEMPTY",
+		},
+		{
+			name: "VisitBinary",
+			visit: func(v Visitor) {
+				n := NewBinaryNode(NewLiteralNode("f"), OperatorIs, NewLiteralNode("v"))
+				v.VisitBinary(n)
+			},
+			expected: "f=v",
+		},
+		{
+			name: "VisitPair",
+			visit: func(v Visitor) {
+				n := NewPairNode(NewLiteralNode("a"), NewLiteralNode("b"))
+				v.VisitPair(n)
+			},
+			expected: "a@b",
+		},
+		{
+			name: "VisitArray",
+			visit: func(v Visitor) {
+				n := NewArrayNode(NewLiteralNode("a"), NewLiteralNode("b"))
+				v.VisitArray(n)
+			},
+			expected: "a,b",
+		},
 	}
-}
 
-func TestStringerVisitor_VisitUnary(t *testing.T) {
-	v := NewStringerVisitor()
-	n := NewUnaryNode(OperatorIsEmpty, NewLiteralNode("f"))
-	v.VisitUnary(n)
-	if v.String() != "fISEMPTY" {
-		t.Errorf("got %s, expected fISEMPTY", v.String())
-	}
-}
-
-func TestStringerVisitor_VisitBinary(t *testing.T) {
-	v := NewStringerVisitor()
-	n := NewBinaryNode(NewLiteralNode("f"), OperatorIs, NewLiteralNode("v"))
-	v.VisitBinary(n)
-	if v.String() != "f=v" {
-		t.Errorf("got %s, expected f=v", v.String())
-	}
-}
-
-func TestStringerVisitor_VisitPair(t *testing.T) {
-	v := NewStringerVisitor()
-	n := NewPairNode(NewLiteralNode("a"), NewLiteralNode("b"))
-	v.VisitPair(n)
-	if v.String() != "a@b" {
-		t.Errorf("got %s, expected a@b", v.String())
-	}
-}
-
-func TestStringerVisitor_VisitArray(t *testing.T) {
-	v := NewStringerVisitor()
-	n := NewArrayNode(NewLiteralNode("a"), NewLiteralNode("b"))
-	v.VisitArray(n)
-	if v.String() != "a,b" {
-		t.Errorf("got %s, expected a,b", v.String())
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			v := NewStringerVisitor()
+			test.visit(v)
+			assert.Equal(t, test.expected, v.String())
+		})
 	}
 }

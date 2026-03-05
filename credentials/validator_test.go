@@ -9,15 +9,38 @@ import (
 )
 
 func TestValidator(t *testing.T) {
-	//nolint: staticcheck // while being deprecated there doesn't seem to be a replacement
-	v := authentication.NewAllowedHostsValidator([]string{"example.com"})
-	u, _ := url.Parse("https://example.com/api")
-	assert.True(t, v.IsUrlHostValid(u))
+	tests := []struct {
+		name         string
+		allowedHosts []string
+		url          string
+		expected     bool
+	}{
+		{
+			name:         "Exact match",
+			allowedHosts: []string{"example.com"},
+			url:          "https://example.com/api",
+			expected:     true,
+		},
+		{
+			name:         "Match with port",
+			allowedHosts: []string{"example.com"},
+			url:          "https://example.com:443/api",
+			expected:     true,
+		},
+		{
+			name:         "Empty allowed hosts",
+			allowedHosts: []string{},
+			url:          "https://example.com/api",
+			expected:     true,
+		},
+	}
 
-	u2, _ := url.Parse("https://example.com:443/api")
-	assert.True(t, v.IsUrlHostValid(u2), "Should be valid with port if base matches")
-
-	//nolint: staticcheck // while being deprecated there doesn't seem to be a replacement
-	v2 := authentication.NewAllowedHostsValidator([]string{})
-	assert.True(t, v2.IsUrlHostValid(u))
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			//nolint: staticcheck // while being deprecated there doesn't seem to be a replacement
+			v := authentication.NewAllowedHostsValidator(test.allowedHosts)
+			u, _ := url.Parse(test.url)
+			assert.Equal(t, test.expected, v.IsUrlHostValid(u))
+		})
+	}
 }

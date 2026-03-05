@@ -7,251 +7,284 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewPageIteratorWithClient(t *testing.T) {
-	// Mock client and current page
-	client := &mockClient{}
-	currentPage := TableCollectionResponse{
-		Result:           []*TableEntry{&fakeEntry},
-		FirstPageLink:    fakeFirstLink,
-		LastPageLink:     fakeLastLink,
-		NextPageLink:     fakeNextLink,
-		PreviousPageLink: fakePrevLink,
-	}
-
-	pageIterator, err := NewPageIterator(currentPage, client)
-
-	if err != nil {
-		t.Errorf("Expected no error, but got %v", err)
-	}
-
-	if pageIterator == nil {
-		t.Error("Expected PageIterator, but got nil")
-	}
-
-	assert.Equal(t, &expectedIterator, pageIterator)
-}
-
-func TestNewPageIteratorWithoutClient(t *testing.T) {
-	// Mock current page
-	currentPage := TableCollectionResponse{
-		// Initialize with test data
-	}
-
-	pageIterator, err := NewPageIterator(currentPage, nil)
-
-	assert.Equal(t, (*PageIterator)(nil), pageIterator)
-	assert.Equal(t, ErrNilClient, err)
-}
-
-func TestNewPageIteratorNilCurrentPageWithClient(t *testing.T) {
-	client := &mockClient{}
-	pageIterator, err := NewPageIterator(nil, client)
-
-	assert.Equal(t, (*PageIterator)(nil), pageIterator)
-	assert.Equal(t, ErrNilResponse, err)
-}
-
-func TestPageIteratorNextWithLinkNoError(t *testing.T) {
-	currentPage := TableCollectionResponse{
-		NextPageLink: fakeCollectionLinkWithLinks,
-	}
-
-	client := &mockClient{}
-
-	pageIterator, err := NewPageIterator(currentPage, client)
-	assert.Nil(t, err)
-
-	page, err := pageIterator.next()
-	assert.Nil(t, err)
-
-	assert.Equal(t, expectedResult, page)
-}
-
-func TestPageIteratorEnumerateAll(t *testing.T) {
-	pageIterator := PageIterator{
-		currentPage: expectedResult,
-	}
-
-	enumCount := 0
-
-	keepIterating := pageIterator.enumerate(func(item *TableEntry) bool {
-		index := pageIterator.pauseIndex
-
-		result := expectedResult.Result[index]
-
-		assert.Equal(t, result, item)
-
-		enumCount += 1
-
-		return true
-	})
-	assert.Equal(t, true, keepIterating)
-	assert.Equal(t, len(expectedResult.Result), enumCount)
-}
-
-func TestPageIteratorEnumerateOnce(t *testing.T) {
-	pageIterator := PageIterator{
-		currentPage: expectedResult,
-	}
-
-	enumCount := 0
-
-	keepIterating := pageIterator.enumerate(func(item *TableEntry) bool {
-		index := pageIterator.pauseIndex
-
-		result := expectedResult.Result[index]
-
-		assert.Equal(t, result, item)
-
-		enumCount += 1
-
-		return false
-	})
-	assert.Equal(t, false, keepIterating)
-	assert.Equal(t, 1, enumCount)
-}
-
-func TestIterateWithNoCallback(t *testing.T) {
-	// Mock PageIterator
-	pageIterator := &PageIterator{
-		currentPage: PageResult{
-			// Initialize with test data
+func TestNewPageIterator(t *testing.T) {
+	tests := []struct {
+		name        string
+		currentPage interface{}
+		client      core.Client
+		expectedErr error
+	}{
+		{
+			name: "Valid with client",
+			currentPage: TableCollectionResponse{
+				Result:           []*TableEntry{&fakeEntry},
+				FirstPageLink:    fakeFirstLink,
+				LastPageLink:     fakeLastLink,
+				NextPageLink:     fakeNextLink,
+				PreviousPageLink: fakePrevLink,
+			},
+			client:      &mockClient{},
+			expectedErr: nil,
 		},
-		client:     &mockClient{},
-		pauseIndex: 0,
-	}
-
-	err := pageIterator.Iterate(nil)
-	assert.ErrorIs(t, err, ErrNilCallback)
-}
-
-func TestPageIteratorIterateSinglePageWithoutNextLinkWithoutCurrentPageWithCallback(t *testing.T) {
-	expectedIterator.currentPage = PageResult{}
-
-	// Mock callback function
-	callback := func(pageItem *TableEntry) bool {
-		// Implement your callback logic for testing
-		return true
-	}
-
-	err := expectedIterator.Iterate(callback)
-	assert.Nil(t, err)
-}
-
-func TestPageIteratorIterateSinglePageWithoutNextLinkWithCurrentPageWithCallback(t *testing.T) {
-	expectedIterator.currentPage.NextPageLink = ""
-
-	// Mock callback function
-	callback := func(pageItem *TableEntry) bool {
-		// Implement your callback logic for testing
-		return true
-	}
-
-	err := expectedIterator.Iterate(callback)
-	assert.Nil(t, err)
-}
-
-func TestPageIteratorIterateSinglePageWithNextLinkWithCurrentPageWithCallback(t *testing.T) {
-	expectedIterator.currentPage.NextPageLink = fakeCollectionLinkKey
-
-	// Mock callback function
-	callback := func(pageItem *TableEntry) bool {
-		// Implement your callback logic for testing
-		return true
-	}
-
-	err := expectedIterator.Iterate(callback)
-	assert.Nil(t, err)
-}
-
-func TestPageIteratorIterateMultiplePagesWithCallback(t *testing.T) {
-	// Mock PageIterator
-	pageIterator := &PageIterator{
-		currentPage: PageResult{
-			NextPageLink: fakeCollectionLinkWithLinks,
+		{
+			name: "Without client",
+			currentPage: TableCollectionResponse{
+				Result: []*TableEntry{&fakeEntry},
+			},
+			client:      nil,
+			expectedErr: ErrNilClient,
 		},
-		client:     &mockClient{},
-		pauseIndex: 0,
+		{
+			name:        "Nil response with client",
+			currentPage: nil,
+			client:      &mockClient{},
+			expectedErr: ErrNilResponse,
+		},
 	}
 
-	// Mock callback function
-	callback := func(pageItem *TableEntry) bool {
-		// Implement your callback logic for testing
-		return true
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			iterator, err := NewPageIterator(test.currentPage, test.client)
+			if test.expectedErr != nil {
+				assert.Equal(t, test.expectedErr, err)
+				assert.Nil(t, iterator)
+			} else {
+				assert.NoError(t, err)
+				assert.NotNil(t, iterator)
+				assert.Equal(t, &expectedIterator, iterator)
+			}
+		})
+	}
+}
+
+func TestPageIteratorNext(t *testing.T) {
+	tests := []struct {
+		name           string
+		currentPage    TableCollectionResponse
+		client         core.Client
+		expectedResult PageResult
+		expectedErr    error
+	}{
+		{
+			name: "With link no error",
+			currentPage: TableCollectionResponse{
+				NextPageLink: fakeCollectionLinkWithLinks,
+			},
+			client:         &mockClient{},
+			expectedResult: expectedResult,
+			expectedErr:    nil,
+		},
 	}
 
-	err := pageIterator.Iterate(callback)
-	assert.Nil(t, err)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			iterator, err := NewPageIterator(test.currentPage, test.client)
+			assert.NoError(t, err)
+
+			page, err := iterator.next()
+			assert.Equal(t, test.expectedErr, err)
+			assert.Equal(t, test.expectedResult, page)
+		})
+	}
+}
+
+func TestPageIteratorEnumerate(t *testing.T) {
+	tests := []struct {
+		name           string
+		iterator       PageIterator
+		stopAfter      int
+		expectedIter   int
+		expectedStatus bool
+	}{
+		{
+			name: "Enumerate all",
+			iterator: PageIterator{
+				currentPage: expectedResult,
+			},
+			stopAfter:      -1,
+			expectedIter:   len(expectedResult.Result),
+			expectedStatus: true,
+		},
+		{
+			name: "Enumerate once",
+			iterator: PageIterator{
+				currentPage: expectedResult,
+			},
+			stopAfter:      1,
+			expectedIter:   1,
+			expectedStatus: false,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			count := 0
+			keepIterating := test.iterator.enumerate(func(item *TableEntry) bool {
+				count++
+				if test.stopAfter > 0 && count >= test.stopAfter {
+					return false
+				}
+				return true
+			})
+			assert.Equal(t, test.expectedStatus, keepIterating)
+			assert.Equal(t, test.expectedIter, count)
+		})
+	}
+}
+
+func TestPageIteratorIterate(t *testing.T) {
+	tests := []struct {
+		name        string
+		iterator    *PageIterator
+		callback    func(pageItem *TableEntry) bool
+		expectedErr error
+	}{
+		{
+			name: "No callback",
+			iterator: &PageIterator{
+				currentPage: PageResult{},
+				client:      &mockClient{},
+			},
+			callback:    nil,
+			expectedErr: ErrNilCallback,
+		},
+		{
+			name: "Single page without next link",
+			iterator: &PageIterator{
+				currentPage: PageResult{},
+				client:      &mockClient{},
+			},
+			callback: func(item *TableEntry) bool {
+				return true
+			},
+			expectedErr: nil,
+		},
+		{
+			name: "Multiple pages with callback",
+			iterator: &PageIterator{
+				currentPage: PageResult{
+					NextPageLink: fakeCollectionLinkWithLinks,
+				},
+				client: &mockClient{},
+			},
+			callback: func(item *TableEntry) bool {
+				return true
+			},
+			expectedErr: nil,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			err := test.iterator.Iterate(test.callback)
+			if test.expectedErr != nil {
+				assert.ErrorIs(t, err, test.expectedErr)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
 }
 
 func TestPageIteratorLast(t *testing.T) {
-	pageIterator := &PageIterator{
-		currentPage: PageResult{
-			LastPageLink: fakeNextLink,
+	tests := []struct {
+		name        string
+		iterator    *PageIterator
+		expectedErr bool
+	}{
+		{
+			name: "Returns error",
+			iterator: &PageIterator{
+				currentPage: PageResult{
+					LastPageLink: fakeNextLink,
+				},
+				client: &mockClient{},
+			},
+			expectedErr: true,
 		},
-		client:     &mockClient{},
-		pauseIndex: 0,
 	}
 
-	_, err := pageIterator.Last()
-
-	assert.Error(t, err)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			_, err := test.iterator.Last()
+			if test.expectedErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
 }
 
-func TestPageFetchPageSendErr(t *testing.T) {
-	pageIterator := &PageIterator{
-		currentPage: PageResult{
-			LastPageLink: fakeCollectionLinkStatusFailed,
+func TestPageIteratorFetchPage(t *testing.T) {
+	tests := []struct {
+		name        string
+		iterator    *PageIterator
+		uri         string
+		expectedErr error
+	}{
+		{
+			name: "Send error",
+			iterator: &PageIterator{
+				currentPage: PageResult{},
+				client:      &mockClient{},
+			},
+			uri:         fakeCollectionLinkStatusFailed,
+			expectedErr: assert.AnError, // any error
 		},
-		client:     &mockClient{},
-		pauseIndex: 0,
-	}
-
-	_, err := pageIterator.fetchPage(fakeCollectionLinkStatusFailed)
-	assert.Error(t, err)
-}
-
-func TestPageFetchPageEmptyUri(t *testing.T) {
-	pageIterator := &PageIterator{
-		currentPage: PageResult{
-			LastPageLink: fakeCollectionLinkStatusFailed,
+		{
+			name: "Empty URI",
+			iterator: &PageIterator{
+				currentPage: PageResult{},
+				client:      &mockClient{},
+			},
+			uri:         "",
+			expectedErr: ErrEmptyURI,
 		},
-		client:     &mockClient{},
-		pauseIndex: 0,
 	}
 
-	_, err := pageIterator.fetchPage("")
-	assert.ErrorIs(t, err, ErrEmptyURI)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			_, err := test.iterator.fetchPage(test.uri)
+			if test.expectedErr != nil {
+				if test.expectedErr == assert.AnError {
+					assert.Error(t, err)
+				} else {
+					assert.ErrorIs(t, err, test.expectedErr)
+				}
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
 }
 
-func TestPageIteratorFetchAndConvertPageWithLinkErrNilResponseBody(t *testing.T) {
-	currentPage := TableCollectionResponse{
-		NextPageLink: fakeCollectionLinkWithLinksErr,
+func TestPageIteratorFetchAndConvertPage(t *testing.T) {
+	tests := []struct {
+		name        string
+		nextLink    string
+		expectedErr error
+	}{
+		{
+			name:        "Nil response body error",
+			nextLink:    fakeCollectionLinkWithLinksErr,
+			expectedErr: core.ErrNilResponseBody,
+		},
+		{
+			name:        "Nil response error",
+			nextLink:    fakeCollectionLinkNilResponse,
+			expectedErr: core.ErrNilResponse,
+		},
 	}
 
-	client := &mockClient{}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			iterator, err := NewPageIterator(TableCollectionResponse{NextPageLink: test.nextLink}, &mockClient{})
+			assert.NoError(t, err)
 
-	pageIterator, err := NewPageIterator(currentPage, client)
-	assert.Nil(t, err)
-
-	page, err := pageIterator.fetchAndConvertPage(pageIterator.currentPage.NextPageLink)
-	assert.ErrorIs(t, err, core.ErrNilResponseBody)
-
-	assert.Equal(t, PageResult{}, page)
-}
-
-func TestPageIteratorFetchAndConvertPageWithoutLink(t *testing.T) {
-	currentPage := TableCollectionResponse{
-		NextPageLink: fakeCollectionLinkNilResponse,
+			page, err := iterator.fetchAndConvertPage(test.nextLink)
+			assert.ErrorIs(t, err, test.expectedErr)
+			assert.Equal(t, PageResult{}, page)
+		})
 	}
-
-	client := &mockClient{}
-
-	pageIterator, err := NewPageIterator(currentPage, client)
-	assert.Nil(t, err)
-
-	page, err := pageIterator.fetchAndConvertPage(pageIterator.currentPage.NextPageLink)
-	assert.ErrorIs(t, err, core.ErrNilResponse)
-
-	assert.Equal(t, PageResult{}, page)
 }

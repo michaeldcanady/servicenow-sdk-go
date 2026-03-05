@@ -8,25 +8,49 @@ import (
 )
 
 func TestServiceNowCollectionResponseFromDiscriminatorValue(t *testing.T) {
-	strct := mocking.NewMockParsableFactory()
-	parsableFactory := strct.Factory
+	tests := []struct {
+		name string
+	}{
+		{
+			name: "Valid collection response",
+		},
+	}
 
-	parseNode := mocking.NewMockParseNode()
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			strct := mocking.NewMockParsableFactory()
+			parsableFactory := strct.Factory
+			parseNode := mocking.NewMockParseNode()
 
-	factory := ServiceNowCollectionResponseFromDiscriminatorValue[*mocking.MockParsable](parsableFactory)
-	parsable, err := factory(parseNode)
-	assert.Nil(t, err)
-	assert.IsType(t, &BaseServiceNowCollectionResponse[*mocking.MockParsable]{}, parsable)
+			factory := ServiceNowCollectionResponseFromDiscriminatorValue[*mocking.MockParsable](parsableFactory)
+			parsable, err := factory(parseNode)
+
+			assert.Nil(t, err)
+			assert.IsType(t, &BaseServiceNowCollectionResponse[*mocking.MockParsable]{}, parsable)
+		})
+	}
 }
 
 func TestServiceNowItemResponseFromDiscriminatorValue(t *testing.T) {
-	strct := mocking.NewMockParsableFactory()
-	parsableFactory := strct.Factory
+	tests := []struct {
+		name string
+	}{
+		{
+			name: "Valid item response",
+		},
+	}
 
-	parseNode := mocking.NewMockParseNode()
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			strct := mocking.NewMockParsableFactory()
+			parsableFactory := strct.Factory
+			parseNode := mocking.NewMockParseNode()
 
-	factory := ServiceNowItemResponseFromDiscriminatorValue[*mocking.MockParsable](parsableFactory)
-	parsable, err := factory(parseNode)
-	assert.Nil(t, err)
-	assert.IsType(t, &BaseServiceNowItemResponse[*mocking.MockParsable]{}, parsable)
+			factory := ServiceNowItemResponseFromDiscriminatorValue[*mocking.MockParsable](parsableFactory)
+			parsable, err := factory(parseNode)
+
+			assert.Nil(t, err)
+			assert.IsType(t, &BaseServiceNowItemResponse[*mocking.MockParsable]{}, parsable)
+		})
+	}
 }

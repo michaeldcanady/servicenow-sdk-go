@@ -1,7 +1,6 @@
 package tableapi
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -9,56 +8,59 @@ import (
 )
 
 func TestTablePostRequestConfigurationToConfiguration(t *testing.T) {
-	t.Run("ValidConfiguration", func(t *testing.T) {
-		rC := &TablePostRequestConfiguration{
-			Header: map[string]string{"Authorization": "Bearer token"},
-			QueryParameters: &TableRequestBuilderPostQueryParameters{
-				DisplayValue:      "true",
-				Fields:            []string{"field1", "field2"},
-				InputDisplayValue: true,
-				View:              "desktop",
+	tests := []struct {
+		name     string
+		config   *TablePostRequestConfiguration
+		expected *core.RequestConfiguration
+	}{
+		{
+			name: "ValidConfiguration",
+			config: &TablePostRequestConfiguration{
+				Header: map[string]string{"Authorization": "Bearer token"},
+				QueryParameters: &TableRequestBuilderPostQueryParameters{
+					DisplayValue:      "true",
+					Fields:            []string{"field1", "field2"},
+					InputDisplayValue: true,
+					View:              "desktop",
+				},
+				Data:         map[string]string{"key": "value"},
+				ErrorMapping: core.ErrorMapping{"4XX": "error"},
+				response:     &TableItemResponse{},
 			},
-			Data:         map[string]string{"key": "value"},
-			ErrorMapping: core.ErrorMapping{"4XX": "error"},
-			response:     &TableItemResponse{},
-		}
+			expected: &core.RequestConfiguration{
+				Header: map[string]string{"Authorization": "Bearer token"},
+				QueryParameters: &TableRequestBuilderPostQueryParameters{
+					DisplayValue:      "true",
+					Fields:            []string{"field1", "field2"},
+					InputDisplayValue: true,
+					View:              "desktop",
+				},
+				Data:         map[string]string{"key": "value"},
+				ErrorMapping: core.ErrorMapping{"4XX": "error"},
+				Response:     &TableItemResponse{},
+			},
+		},
+		{
+			name: "NilQueryParameters",
+			config: &TablePostRequestConfiguration{
+				Header:       map[string]string{"Authorization": "Bearer token"},
+				Data:         map[string]string{"key": "value"},
+				ErrorMapping: core.ErrorMapping{"4XX": "error"},
+				response:     &TableItemResponse{},
+			},
+			expected: &core.RequestConfiguration{
+				Header:          map[string]string{"Authorization": "Bearer token"},
+				QueryParameters: (*TableRequestBuilderPostQueryParameters)(nil),
+				Data:            map[string]string{"key": "value"},
+				ErrorMapping:    core.ErrorMapping{"4XX": "error"},
+				Response:        &TableItemResponse{},
+			},
+		},
+	}
 
-		config := rC.toConfiguration()
-
-		// Validate each field of the configuration
-		if !reflect.DeepEqual(config.Header, rC.Header) {
-			t.Fatalf("Expected header %v, got: %v", rC.Header, config.Header)
-		}
-
-		if !reflect.DeepEqual(config.QueryParameters, rC.QueryParameters) {
-			t.Fatalf("Expected query parameters %v, got: %v", rC.QueryParameters, config.QueryParameters)
-		}
-
-		if !reflect.DeepEqual(config.Data, rC.Data) {
-			t.Fatalf("Expected data %v, got: %v", rC.Data, config.Data)
-		}
-
-		if !reflect.DeepEqual(config.ErrorMapping, rC.ErrorMapping) {
-			t.Fatalf("Expected error mapping %v, got: %v", rC.ErrorMapping, config.ErrorMapping)
-		}
-
-		if !reflect.DeepEqual(config.Response, rC.response) {
-			t.Fatalf("Expected response %v, got: %v", rC.response, config.Response)
-		}
-	})
-
-	t.Run("NilQueryParameters", func(t *testing.T) {
-		rC := &TablePostRequestConfiguration{
-			Header: map[string]string{"Authorization": "Bearer token"},
-			// Nil QueryParameters
-			Data:         map[string]string{"key": "value"},
-			ErrorMapping: core.ErrorMapping{"4XX": "error"},
-			response:     &TableItemResponse{},
-		}
-
-		config := rC.toConfiguration()
-
-		// Validate that nil QueryParameters are handled
-		assert.Equal(t, (*TableRequestBuilderPostQueryParameters)(nil), config.QueryParameters)
-	})
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			assert.Equal(t, test.expected, test.config.toConfiguration())
+		})
+	}
 }

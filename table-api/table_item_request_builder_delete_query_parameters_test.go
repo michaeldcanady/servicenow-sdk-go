@@ -8,16 +8,25 @@ import (
 )
 
 func TestTableItemRequestBuilderDeleteQueryParameters(t *testing.T) {
-	params := &TableItemRequestBuilderDeleteQueryParameters{
-		QueryNoDomain: true,
+	tests := []struct {
+		name     string
+		params   *TableItemRequestBuilderDeleteQueryParameters
+		expected map[string]string
+	}{
+		{
+			name: "QueryNoDomain true",
+			params: &TableItemRequestBuilderDeleteQueryParameters{
+				QueryNoDomain: true,
+			},
+			expected: map[string]string{"sysparm_query_no_domain": "true"},
+		},
 	}
 
-	queryMap, err := core.ToQueryMap(params)
-	if err != nil {
-		t.Error(err)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			queryMap, err := core.ToQueryMap(test.params)
+			assert.NoError(t, err)
+			assert.Equal(t, test.expected, queryMap)
+		})
 	}
-
-	expectedValue := map[string]string{"sysparm_query_no_domain": "true"}
-
-	assert.Equal(t, expectedValue, queryMap)
 }

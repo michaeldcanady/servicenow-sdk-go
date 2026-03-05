@@ -6,45 +6,51 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	sharedBaseHandler = &BaseHandler{}
-)
-
 func TestBaseHandler_SetNext(t *testing.T) {
-	tests := []Test[*BaseHandler]{
+	tests := []struct {
+		name     string
+		input    RequestHandler
+		expected RequestHandler
+	}{
 		{
-			Title:       "Valid",
-			Input:       &BaseHandler{},
-			Expected:    &BaseHandler{},
-			ExpectedErr: nil,
+			name:     "Valid",
+			input:    &BaseHandler{},
+			expected: &BaseHandler{},
 		},
 	}
 
 	for _, test := range tests {
-		t.Run(test.Title, func(t *testing.T) {
-			sharedBaseHandler.SetNext(test.Input.(RequestHandler))
-			assert.Equal(t, test.Expected, sharedBaseHandler.next)
+		t.Run(test.name, func(t *testing.T) {
+			handler := &BaseHandler{}
+			handler.SetNext(test.input)
+			assert.Equal(t, test.expected, handler.next)
 		})
 	}
 }
 
 func TestBaseHandler_Handle(t *testing.T) {
-	tests := []Test[*BaseHandler]{
+	tests := []struct {
+		name        string
+		input       RequestInformation
+		next        RequestHandler
+		expectedErr error
+	}{
 		{
-			Title: "Valid",
-			Input: &MockRequestInformation{},
-			Setup: func() {
-				sharedBaseHandler.SetNext(&BaseHandler{})
-			},
-			Expected:    nil,
-			ExpectedErr: nil,
+			name:        "Valid",
+			input:       &MockRequestInformation{},
+			next:        &BaseHandler{},
+			expectedErr: nil,
 		},
 	}
 
 	for _, test := range tests {
-		t.Run(test.Title, func(t *testing.T) {
-			err := sharedBaseHandler.Handle(test.Input.(RequestInformation))
-			assert.Equal(t, test.ExpectedErr, err)
+		t.Run(test.name, func(t *testing.T) {
+			handler := &BaseHandler{}
+			if test.next != nil {
+				handler.SetNext(test.next)
+			}
+			err := handler.Handle(test.input)
+			assert.Equal(t, test.expectedErr, err)
 		})
 	}
 }

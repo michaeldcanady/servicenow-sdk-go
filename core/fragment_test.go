@@ -1,95 +1,128 @@
 package core
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestNewFragment(t *testing.T) {
-	field := "exampleField"
-	operator := Is
-	value := "exampleValue"
-
-	fragment := NewFragment(field, operator, value)
-
-	if fragment.Field != field {
-		t.Errorf("Expected Field to be %s, got %s", field, fragment.Field)
+	tests := []struct {
+		name     string
+		field    string
+		operator RelationalOperator
+		value    interface{}
+	}{
+		{
+			name:     "Standard fragment",
+			field:    "exampleField",
+			operator: Is,
+			value:    "exampleValue",
+		},
 	}
 
-	if fragment.RelationalOperator != operator {
-		t.Errorf("Expected RelationalOperator to be %v, got %v", operator, fragment.RelationalOperator)
-	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			fragment := NewFragment(test.field, test.operator, test.value)
 
-	if fragment.Value != value {
-		t.Errorf("Expected Value to be %v, got %v", value, fragment.Value)
+			assert.Equal(t, test.field, fragment.Field)
+			assert.Equal(t, test.operator, fragment.RelationalOperator)
+			assert.Equal(t, test.value, fragment.Value)
+		})
 	}
 }
 
 func TestFragmentSetNext(t *testing.T) {
-	fragment1 := NewFragment("field1", Is, "value1")
-	fragment2 := NewFragment("field2", IsNot, "value2")
-
-	fragment1.SetNext(fragment2, And)
-
-	if fragment1.next != fragment2 {
-		t.Error("Expected fragment1's next to be fragment2")
+	tests := []struct {
+		name            string
+		fragment1       *Fragment
+		fragment2       *Fragment
+		logicalOperator LogicalOperator
+	}{
+		{
+			name:            "Set next with And",
+			fragment1:       NewFragment("field1", Is, "value1"),
+			fragment2:       NewFragment("field2", IsNot, "value2"),
+			logicalOperator: And,
+		},
 	}
 
-	if fragment1.LogicalOperator != And {
-		t.Errorf("Expected fragment1's LogicalOperator to be And, got %v", fragment1.LogicalOperator)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.fragment1.SetNext(test.fragment2, test.logicalOperator)
+
+			assert.Equal(t, test.fragment2, test.fragment1.next)
+			assert.Equal(t, test.logicalOperator, test.fragment1.LogicalOperator)
+		})
 	}
 }
 
 func TestFragmentIterate(t *testing.T) {
-	fragment1 := NewFragment("field1", Is, "value1")
-	fragment2 := NewFragment("field2", IsNot, "value2")
-	fragment3 := NewFragment("field3", GreaterThan, "value3")
+	f1 := NewFragment("field1", Is, "value1")
+	f2 := NewFragment("field2", IsNot, "value2")
+	f3 := NewFragment("field3", GreaterThan, "value3")
 
-	fragment1.SetNext(fragment2, And)
-	fragment2.SetNext(fragment3, Or)
+	f1.SetNext(f2, And)
+	f2.SetNext(f3, Or)
 
-	fragments := []*Fragment{}
-	fragment1.Iterate(func(f *Fragment) bool {
-		fragments = append(fragments, f)
-		return true
-	})
-
-	if len(fragments) != 3 {
-		t.Errorf("Expected 3 fragments, got %d", len(fragments))
+	tests := []struct {
+		name           string
+		startFragment  *Fragment
+		iterator       func(f *Fragment) bool
+		expectedLength int
+	}{
+		{
+			name:          "Iterate all",
+			startFragment: f1,
+			iterator: func(f *Fragment) bool {
+				return true
+			},
+			expectedLength: 3,
+		},
+		{
+			name:          "Stop early",
+			startFragment: f1,
+			iterator: func(f *Fragment) bool {
+				return false
+			},
+			expectedLength: 1,
+		},
 	}
 
-	if fragments[0] != fragment1 || fragments[1] != fragment2 || fragments[2] != fragment3 {
-		t.Error("Fragments are not in the expected order")
-	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			var fragments []*Fragment
+			test.startFragment.Iterate(func(f *Fragment) bool {
+				fragments = append(fragments, f)
+				return test.iterator(f)
+			})
 
-	fragments = []*Fragment{}
-	fragment1.Iterate(func(f *Fragment) bool {
-		fragments = append(fragments, f)
-		return false
-	})
-
-	if len(fragments) != 1 {
-		t.Errorf("Expected 1 fragments, got %d", len(fragments))
-	}
-
-	if fragments[0] != fragment1 {
-		t.Error("Fragments are not in the expected order")
+			assert.Equal(t, test.expectedLength, len(fragments))
+		})
 	}
 }
 
 func TestFragmentString(t *testing.T) {
-	fragment := NewFragment("exampleField", IsNot, "exampleValue")
-
-	expected := "exampleField!=exampleValue"
-	result := fragment.String()
-
-	if result != expected {
-		t.Errorf("Expected %s, got %s", expected, result)
+	tests := []struct {
+		name     string
+		fragment *Fragment
+		expected string
+	}{
+		{
+			name:     "IsNot string",
+			fragment: NewFragment("exampleField", IsNot, "exampleValue"),
+			expected: "exampleField!=exampleValue",
+		},
+		{
+			name:     "IsEmpty fragment",
+			fragment: NewFragment("exampleField", IsEmpty, nil),
+			expected: "exampleFieldISEMPTY",
+		},
 	}
 
-	fragment = NewFragment("exampleField", IsEmpty, nil)
-
-	expected = "exampleFieldISEMPTY"
-	result = fragment.String()
-
-	if result != expected {
-		t.Errorf("Expected %s, got %s", expected, result)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			assert.Equal(t, test.expected, test.fragment.String())
+		})
 	}
 }
