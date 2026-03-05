@@ -33,7 +33,7 @@ func DefaultPrompt() (string, string, error) {
 	return username, password, nil
 }
 
-// Deprecated: deprecated since v{unreleased}. Use [NewUsernamePasswordCredential] instead.
+// Deprecated: deprecated since v{unreleased}. Use [NewROPCCredential] instead.
 //
 // NewTokenCredential creates a new token credential
 func NewTokenCredential(clientID, clientSecret, baseURL string, prompt func() (string, string, error)) (*TokenCredential, error) {

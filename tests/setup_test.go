@@ -1,3 +1,5 @@
+//go:build integration
+
 package tests
 
 import (
@@ -19,7 +21,7 @@ func setupGlobalMocks() {
 	}
 
 	httpmock.Activate()
-	
+
 	httpmock.RegisterNoResponder(func(req *http.Request) (*http.Response, error) {
 		return nil, fmt.Errorf("no responder found for %s %s", req.Method, req.URL)
 	})
@@ -40,7 +42,7 @@ func setupGlobalMocks() {
 		})
 	httpmock.RegisterResponder("POST", tableBaseURL+"/incident",
 		httpmock.NewStringResponder(201, mockCreatedIncident))
-	
+
 	tableIdRegex := regexp.MustCompile(tableBaseURL + `/+incident(?:/+(?:[a-zA-Z0-9_]+)?)?$`)
 	httpmock.RegisterRegexpResponder("GET", tableIdRegex, httpmock.NewStringResponder(200, mockIncidentItem))
 	httpmock.RegisterRegexpResponder("PUT", tableIdRegex, httpmock.NewStringResponder(200, mockUpdatedIncident))
@@ -50,11 +52,11 @@ func setupGlobalMocks() {
 	// Attachment API Mocks
 	attachBaseURL := fmt.Sprintf("https://%s.service-now.com/api/now/attachment", instance)
 	httpmock.RegisterResponder("GET", attachBaseURL, httpmock.NewStringResponder(200, mockAttachmentList))
-	
+
 	attachIdRegex := regexp.MustCompile(attachBaseURL + `/?([a-zA-Z0-9_]+)?$`)
 	httpmock.RegisterRegexpResponder("GET", attachIdRegex, httpmock.NewStringResponder(200, mockAttachmentItem))
 	httpmock.RegisterRegexpResponder("POST", regexp.MustCompile(attachBaseURL+`/+file`), httpmock.NewStringResponder(201, mockAttachmentItem))
-	
+
 	fileRegex := regexp.MustCompile(attachBaseURL + `/?([a-zA-Z0-9_]+)?/file`)
 	httpmock.RegisterRegexpResponder("GET", fileRegex, func(req *http.Request) (*http.Response, error) {
 		resp := httpmock.NewStringResponse(200, "test content")
