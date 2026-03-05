@@ -36,6 +36,26 @@ func (m *MockServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
 	return NilAllowed[*string](args, 0), args.Error(1)
 }
 
+func (m *MockServiceNowCollectionResponse[T]) SetNextLink(val *string) error {
+	args := m.Called(val)
+	return args.Error(0)
+}
+
+func (m *MockServiceNowCollectionResponse[T]) SetPreviousLink(val *string) error {
+	args := m.Called(val)
+	return args.Error(0)
+}
+
+func (m *MockServiceNowCollectionResponse[T]) SetFirstLink(val *string) error {
+	args := m.Called(val)
+	return args.Error(0)
+}
+
+func (m *MockServiceNowCollectionResponse[T]) SetLastLink(val *string) error {
+	args := m.Called(val)
+	return args.Error(0)
+}
+
 // Serialize writes the objects properties to the current writer.
 func (mP *MockServiceNowCollectionResponse[T]) Serialize(writer serialization.SerializationWriter) error {
 	args := mP.Called(writer)

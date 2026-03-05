@@ -2,10 +2,9 @@ package tableapi
 
 import (
 	"net/http"
-	"regexp"
-	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 )
 
 // Deprecated: deprecated since v1.9.0. Please use [newInternal.ServiceNowCollectionResponse]
@@ -22,44 +21,29 @@ type TableCollectionResponse2[T Entry] struct {
 	LastPageLink string
 }
 
-// parsePaginationHeaders parses the pagination headers from the response
-func (cR *TableCollectionResponse2[T]) parsePaginationHeaders(headers http.Header) {
-	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>\s*;\s*(?:[^,;]+\s*;\s*)*rel="?([^";, ]+)"?`)
+// SetFirstPageLink sets the first page link
+func (cR *TableCollectionResponse2[T]) SetFirstPageLink(link string) {
+	cR.FirstPageLink = link
+}
 
-	links := make(map[string]string)
+// SetPreviousPageLink sets the previous page link
+func (cR *TableCollectionResponse2[T]) SetPreviousPageLink(link string) {
+	cR.PreviousPageLink = link
+}
 
-	hearderLinks := headers["Link"]
+// SetNextPageLink sets the next page link
+func (cR *TableCollectionResponse2[T]) SetNextPageLink(link string) {
+	cR.NextPageLink = link
+}
 
-	for _, header := range hearderLinks {
-		linkMatches := linkHeaderRegex.FindAllStringSubmatch(header, -1)
-
-		for _, match := range linkMatches {
-			link := match[1]
-			rel := strings.ToLower(match[2])
-
-			// Determine the type of link based on the 'rel' attribute
-			switch rel {
-			case "first":
-				links["firstPageLink"] = link
-			case "prev":
-				links["previousPageLink"] = link
-			case "next":
-				links["nextPageLink"] = link
-			case "last":
-				links["lastPageLink"] = link
-			}
-		}
-	}
-
-	cR.FirstPageLink = links["firstPageLink"]
-	cR.PreviousPageLink = links["previousPageLink"]
-	cR.NextPageLink = links["nextPageLink"]
-	cR.LastPageLink = links["lastPageLink"]
+// SetLastPageLink sets the last page link
+func (cR *TableCollectionResponse2[T]) SetLastPageLink(link string) {
+	cR.LastPageLink = link
 }
 
 // ParseHeaders parses the needed headers from the response.
 func (cR *TableCollectionResponse2[T]) ParseHeaders(headers http.Header) {
-	cR.parsePaginationHeaders(headers)
+	newInternal.ParseHTTPHeaders(cR, headers)
 }
 
 // ToPage converts a TableCollectionResponse2 to a PageResult

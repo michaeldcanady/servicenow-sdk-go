@@ -347,7 +347,7 @@ func (i *PageIterator[T]) fetchPage(ctx context.Context, pageLink *string) (Serv
 		return response, errors.New("response is of wrong type")
 	}
 
-	response.ParseHeaders(headerOption.GetResponseHeaders())
+	ParseHeaders(response, headerOption.GetResponseHeaders())
 
 	return response, nil
 }

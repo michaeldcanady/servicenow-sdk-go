@@ -3,11 +3,8 @@ package internal
 import (
 	"errors"
 	"fmt"
-	"regexp"
-	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -25,10 +22,13 @@ type ServiceNowCollectionResponse[T serialization.Parsable] interface {
 	// GetResult Returns the result values of the response.
 	GetResult() ([]T, error)
 	GetNextLink() (*string, error)
+	SetNextLink(val *string) error
 	GetPreviousLink() (*string, error)
+	SetPreviousLink(val *string) error
 	GetFirstLink() (*string, error)
+	SetFirstLink(val *string) error
 	GetLastLink() (*string, error)
-	ParseHeaders(headers *abstractions.ResponseHeaders)
+	SetLastLink(val *string) error
 	serialization.Parsable
 	BackedModel
 }
@@ -49,37 +49,6 @@ func NewBaseServiceNowCollectionResponse[T serialization.Parsable](factory seria
 		factory:             factory,
 		backingStoreFactory: store.NewInMemoryBackingStore,
 		backingStore:        store.NewInMemoryBackingStore(),
-	}
-}
-
-// ParseHeaders parses the needed headers from the response.
-func (bR *BaseServiceNowCollectionResponse[T]) ParseHeaders(headers *abstractions.ResponseHeaders) {
-	if headers == nil {
-		return
-	}
-	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>\s*;\s*(?:[^,;]+\s*;\s*)*rel="?([^";, ]+)"?`)
-
-	headerLinks := headers.Get("Link")
-
-	for _, header := range headerLinks {
-		linkMatches := linkHeaderRegex.FindAllStringSubmatch(header, -1)
-
-		for _, match := range linkMatches {
-			link := match[1]
-			rel := strings.ToLower(match[2])
-
-			// Determine the type of link based on the 'rel' attribute
-			switch rel {
-			case "first":
-				_ = bR.setFirstLink(&link)
-			case "prev":
-				_ = bR.setPreviousLink(&link)
-			case "next":
-				_ = bR.setNextLink(&link)
-			case "last":
-				_ = bR.setLastLink(&link)
-			}
-		}
 	}
 }
 
@@ -113,28 +82,28 @@ func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[strin
 			if err != nil {
 				return err
 			}
-			return bR.setNextLink(val)
+			return bR.SetNextLink(val)
 		},
 		previousKey: func(pn serialization.ParseNode) error {
 			val, err := pn.GetStringValue()
 			if err != nil {
 				return err
 			}
-			return bR.setPreviousLink(val)
+			return bR.SetPreviousLink(val)
 		},
 		firstKey: func(pn serialization.ParseNode) error {
 			val, err := pn.GetStringValue()
 			if err != nil {
 				return err
 			}
-			return bR.setFirstLink(val)
+			return bR.SetFirstLink(val)
 		},
 		lastKey: func(pn serialization.ParseNode) error {
 			val, err := pn.GetStringValue()
 			if err != nil {
 				return err
 			}
-			return bR.setLastLink(val)
+			return bR.SetLastLink(val)
 		},
 	}
 }
@@ -153,8 +122,8 @@ func (r *BaseServiceNowCollectionResponse[T]) setResult(val []any) error {
 	return store.Set(resultKey, val)
 }
 
-// setNextLink Sets the url to the next page of results.
-func (r *BaseServiceNowCollectionResponse[T]) setNextLink(val *string) error {
+// SetNextLink Sets the url to the next page of results.
+func (r *BaseServiceNowCollectionResponse[T]) SetNextLink(val *string) error {
 	if IsNil(r) {
 		return nil
 	}
@@ -167,8 +136,8 @@ func (r *BaseServiceNowCollectionResponse[T]) setNextLink(val *string) error {
 	return store.Set(nextKey, val)
 }
 
-// setPreviousLink Sets the url to the previous page of results.
-func (r *BaseServiceNowCollectionResponse[T]) setPreviousLink(val *string) error {
+// SetPreviousLink Sets the url to the previous page of results.
+func (r *BaseServiceNowCollectionResponse[T]) SetPreviousLink(val *string) error {
 	if IsNil(r) {
 		return nil
 	}
@@ -181,8 +150,8 @@ func (r *BaseServiceNowCollectionResponse[T]) setPreviousLink(val *string) error
 	return store.Set(previousKey, val)
 }
 
-// setFirstLink Sets the url to the first page of results.
-func (r *BaseServiceNowCollectionResponse[T]) setFirstLink(val *string) error {
+// SetFirstLink Sets the url to the first page of results.
+func (r *BaseServiceNowCollectionResponse[T]) SetFirstLink(val *string) error {
 	if IsNil(r) {
 		return nil
 	}
@@ -195,8 +164,8 @@ func (r *BaseServiceNowCollectionResponse[T]) setFirstLink(val *string) error {
 	return store.Set(firstKey, val)
 }
 
-// setLastLink Sets the url to the last page of results.
-func (r *BaseServiceNowCollectionResponse[T]) setLastLink(val *string) error {
+// SetLastLink Sets the url to the last page of results.
+func (r *BaseServiceNowCollectionResponse[T]) SetLastLink(val *string) error {
 	if IsNil(r) {
 		return nil
 	}
