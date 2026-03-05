@@ -326,7 +326,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				}
 
 				id, err := resp.GetBatchRequestID()
-				assert.Equal(t, errors.New("id is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -360,7 +360,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				}
 
 				id, err := resp.GetBatchRequestID()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -442,7 +442,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 				}
 
 				err := resp.setBatchRequestID(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -504,7 +504,7 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				}
 
 				id, err := resp.GetServicedRequests()
-				assert.Equal(t, errors.New("servicedRequests is not []ServicedRequestable"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type []batchapi.ServicedRequest"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -538,7 +538,7 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				}
 
 				id, err := resp.GetServicedRequests()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -620,7 +620,7 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 				}
 
 				err := resp.setServicedRequests(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -682,7 +682,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				}
 
 				id, err := resp.GetUnservicedRequests()
-				assert.Equal(t, errors.New("unservicedRequests is not []string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type []string"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -716,7 +716,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				}
 
 				id, err := resp.GetUnservicedRequests()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -798,7 +798,7 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 				}
 
 				err := resp.setUnservicedRequests(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},

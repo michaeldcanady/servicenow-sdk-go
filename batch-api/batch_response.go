@@ -120,7 +120,12 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 
 // GetBatchRequestID returns the id of the associated batch request
 func (bR *BatchResponseModel) GetBatchRequestID() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*BatchResponseModel, *string](bR, batchRequestIDKey)
+	if internal.IsNil(bR) {
+		return nil, nil
+	}
+
+	backingStore := bR.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, batchRequestIDKey)
 }
 
 // GetServicedRequestByID returns the serviced request with the provided id
@@ -150,25 +155,50 @@ func (bR *BatchResponseModel) GetServicedRequestByID(id string) (ServicedRequest
 
 // setBatchRequestID sets the id of the associated batch request
 func (bR *BatchResponseModel) setBatchRequestID(id *string) error {
-	return store.DefaultBackedModelMutatorFunc(bR, batchRequestIDKey, id)
+	if internal.IsNil(bR) {
+		return nil
+	}
+
+	backingStore := bR.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, batchRequestIDKey, id)
 }
 
 // GetServicedRequests returns serviced requests
 func (bR *BatchResponseModel) GetServicedRequests() ([]ServicedRequest, error) {
-	return store.DefaultBackedModelAccessorFunc[*BatchResponseModel, []ServicedRequest](bR, servicedRequestsKey)
+	if internal.IsNil(bR) {
+		return nil, nil
+	}
+
+	backingStore := bR.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []ServicedRequest](backingStore, servicedRequestsKey)
 }
 
 // setServicedRequests sets the serviced requests to the provided values
 func (bR *BatchResponseModel) setServicedRequests(requests []ServicedRequest) error {
-	return store.DefaultBackedModelMutatorFunc(bR, servicedRequestsKey, requests)
+	if internal.IsNil(bR) {
+		return nil
+	}
+
+	backingStore := bR.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, servicedRequestsKey, requests)
 }
 
 // GetUnservicedRequests returns the unserviced requests' id
 func (bR *BatchResponseModel) GetUnservicedRequests() ([]string, error) {
-	return store.DefaultBackedModelAccessorFunc[*BatchResponseModel, []string](bR, unservicedRequestsKey)
+	if internal.IsNil(bR) {
+		return nil, nil
+	}
+
+	backingStore := bR.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []string](backingStore, unservicedRequestsKey)
 }
 
 // setUnservicedRequests sets the ids of the unserviced requests to the provided value
 func (bR *BatchResponseModel) setUnservicedRequests(unservicedRequests []string) error {
-	return store.DefaultBackedModelMutatorFunc(bR, unservicedRequestsKey, unservicedRequests)
+	if internal.IsNil(bR) {
+		return nil
+	}
+
+	backingStore := bR.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, unservicedRequestsKey, unservicedRequests)
 }
