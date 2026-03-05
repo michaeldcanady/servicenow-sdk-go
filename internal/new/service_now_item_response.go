@@ -68,19 +68,19 @@ func (bR *BaseServiceNowItemResponse[T]) GetFieldDeserializers() map[string]func
 }
 
 // GetBackingStore Returns the backing store, if store is nil it instantiates a new store.
-func (r *BaseServiceNowItemResponse[T]) GetBackingStore() (store.BackingStore, error) {
+func (r *BaseServiceNowItemResponse[T]) GetBackingStore() store.BackingStore {
 	if IsNil(r) {
-		return nil, nil
+		return nil
 	}
 
 	if IsNil(r.backingStore) {
 		if IsNil(r.backingStoreFactory) {
-			return nil, errors.New("store is nil")
+			return nil
 		}
 		r.backingStore = r.backingStoreFactory()
 	}
 
-	return r.backingStore, nil
+	return r.backingStore
 }
 
 // GetResult Returns the result value of the response.
@@ -91,9 +91,9 @@ func (bR *BaseServiceNowItemResponse[T]) GetResult() (T, error) {
 		return typedVal, nil
 	}
 
-	store, err := bR.GetBackingStore()
-	if err != nil {
-		return typedVal, err
+	store := bR.GetBackingStore()
+	if store == nil {
+		return typedVal, errors.New("nil store")
 	}
 
 	val, err := store.Get(resultKey)
@@ -115,9 +115,9 @@ func (bR *BaseServiceNowItemResponse[T]) setResult(result T) error {
 		return nil
 	}
 
-	store, err := bR.GetBackingStore()
-	if err != nil {
-		return err
+	store := bR.GetBackingStore()
+	if store == nil {
+		return errors.New("nil store")
 	}
 
 	return store.Set(resultKey, result)
