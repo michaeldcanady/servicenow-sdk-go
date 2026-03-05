@@ -12,35 +12,27 @@ Ensure high-quality, reliable, and well-tested SDK components through unit testi
 - **Test-Driven Excellence**: Prioritize automated tests for every new feature and bug fix.
 - **Isolate & Verify**: Use robust mocking strategies to isolate components.
 - **BDD Alignment**: Ensure integration tests reflect user stories and acceptance criteria.
-- **Offline Reliability**: Enable development without live instance dependencies.
 
 ## Workflow
 
 ### 1. Unit Testing & Mocking
-- Implement unit tests using standard Go patterns.
-- Utilize `testify/mock` and `httpmock` for isolation.
-- **Bug Reporting**: If a test failure reveals an underlying bug, use the `bug-reporter` skill to document and report it automatically.
+- Implement unit tests using standard Go patterns and `testify/mock`.
+- **Bug Reporting**: If a test failure reveals a bug, hand off to `backlog-architect` to document it.
 
 ### 2. BDD Integration Testing (Gherkin/Godog)
-- Maintain Gherkin feature files in `tests/features/`.
-- Implement reusable step definitions in `tests/*_steps_test.go`.
-- Manage mock data payloads in `tests/mock_data_test.go`.
+- Maintain Gherkin feature files and implement step definitions.
 
 ### 3. Acceptance Criteria Validation
 - Consult the `backlog-architect` skill to ensure criteria are covered by tests.
-- Verify each "Done" issue has passing tests.
 
-### 4. Quality Standards Alignment
-- Consult the `product-manager` skill when defining quality benchmarks.
-- Align testing strategy with the overall product roadmap.
+## 🤝 Collaboration Map
 
-## Techniques
+- **Collaborate with `backlog-architect`**: Help define testable acceptance criteria; provide bug reports from failing tests.
+- **Consult `software-engineer`**: Ensure code changes have adequate test coverage and help design for testability.
+- **Consult `kiota-architect`**: Validate complex serialization and request execution logic.
+- **Consult `product-manager`**: Align quality benchmarks with product priorities.
 
-### Offline Mode Support
-- Leverage `SN_OFFLINE` and `httpmock` for network-independent testing.
+## ⚖️ Usage Distinctions
 
-### Table-Driven Tests
-- Efficiently cover multiple input combinations.
-
-### Regression Prevention
-- Automate test suites in CI/CD.
+- **Use `qa-engineer` when**: You are writing tests, designing test strategies, creating mocks, or validating that requirements are met.
+- **Do NOT use for**: Implementing the core feature logic (`software-engineer`), designing the public API structure (`sdk-ux-engineer`), or managing the product roadmap (`product-manager`).

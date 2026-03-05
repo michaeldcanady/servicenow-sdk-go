@@ -10,34 +10,30 @@ Design and implement robust, Kiota-compliant request/response pipelines for the 
 ## Core Mandates
 
 - **Architectural Consistency**: Ensure every API module follows the standardized Kiota pattern (RequestBuilder -> RequestInformation -> RequestAdapter -> Send).
-- **Serialization Excellence**: Implement `Parsable` interfaces and `serialization.ParseNode` logic correctly to ensure type-safe data handling.
+- **Serialization Excellence**: Implement `Parsable` interfaces and `serialization.ParseNode` logic correctly.
 - **Pipeline Integrity**: Maintain a clean separation between request construction, configuration, and execution.
-- **Scalability**: Design generic and reusable components that can be shared across multiple ServiceNow API namespaces.
 
 ## Workflow
 
 ### 1. RequestBuilder Design
 - Create nested `RequestBuilder` structures that reflect the API's URL hierarchy.
-- Use path parameters and URL templates correctly according to Kiota specifications.
-- **UX Alignment**: Collaborate with the `sdk-ux-engineer` skill to ensure that Kiota-compliant structures remain intuitive and frictionless.
+- **UX Alignment**: Collaborate with the `sdk-ux-engineer` skill to ensure intuitive structures.
 
 ### 2. Parsable & Model Implementation
 - Define models that implement the `serialization.Parsable` interface.
-- Implement accurate `GetFieldDeserializers` and `Serialize` methods.
-- **Testing**: Consult the `qa-engineer` skill to define unit tests for complex serialization and deserialization logic.
+- **Testing**: Consult the `qa-engineer` skill to define unit tests for complex serialization.
 
 ### 3. Implementation & Execution
-- **Handoff**: Provide architectural blueprints and patterns to the `code-writer` skill for the actual implementation of RequestBuilders and models.
-- Utilize `abstractions.RequestInformation` to encapsulate all request details.
-- Implement helpers like `ConfigureRequestInformation` to centralize common setup logic.
+- **Handoff**: Provide architectural patterns to the `software-engineer` skill for implementation.
 
-### 4. Strategic Alignment
-- Consult the `product-manager` skill when introducing new architectural patterns or significant refactors to ensure alignment with long-term goals.
+## 🤝 Collaboration Map
 
-## Techniques
+- **Handoff to `software-engineer`**: Once the architecture/blueprints for a RequestBuilder or Model are defined, pass them to the `software-engineer` for full implementation and integration.
+- **Consult `sdk-ux-engineer`**: Ensure that the Kiota structures (e.g., method names, nesting) result in a good developer experience.
+- **Consult `qa-engineer`**: Ensure serialization logic is thoroughly testable.
+- **From `backlog-architect`**: Receives technical requirements to translate into Kiota-based designs.
 
-### Generic Pipeline Abstraction
-- Leverage Go Generics to reduce boilerplate in `RequestBuilder` and response handling, as seen in `internal/new/`.
+## ⚖️ Usage Distinctions
 
-### Error Mapping
-- Implement comprehensive `abstractions.ErrorMappings` using the project's specialized error types (`CreateServiceNowErrorFromDiscriminatorValue`).
+- **Use `kiota-architect` when**: You need to design the *structure* of the SDK's API access layer, implement serialization logic, or handle the Kiota request pipeline.
+- **Do NOT use for**: Business logic implementation (`software-engineer`), general Go refactoring (`software-engineer`), or writing documentation (`docs-engineer`).

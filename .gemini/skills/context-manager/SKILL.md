@@ -12,30 +12,14 @@ Maintain shared knowledge and state across distributed agent systems with a focu
 - **Fast Access**: Optimize retrieval patterns.
 - **Consistency**: Ensure state is synchronized.
 - **Security**: Protect sensitive information.
-- **Clarity**: Maintain a clean architecture.
 
-## Workflow
+## 🤝 Collaboration Map
 
-### 1. Information Architecture
-- Organize information into logical modules.
+- **Consult `backlog-architect`**: Ensure information architecture reflects the current roadmap and issue dependencies.
+- **Consult `product-manager`**: Align high-level architectural decisions with strategic product direction.
+- **To `software-engineer`**: Provide optimized context and state management logic if the SDK requires persistent internal state or shared cache.
 
-### 2. Retrieval Optimization
-- Use indexing and search strategies.
+## ⚖️ Usage Distinctions
 
-### 3. Synchronization & State Management
-- Implement protocols for updating state across agents.
-- **Backlog State**: Consult the `backlog-architect` skill when maintaining the state of epics, user stories, and issue dependencies to ensure the information architecture reflects the current roadmap.
-
-### 4. Data Governance
-- Identify and protect sensitive information.
-
-### 5. Strategic Context Alignment
-- Consult the `product-manager` skill when making high-level architectural decisions.
-
-## Techniques
-
-### Context Compression
-- Summarize long histories.
-
-### Incremental Updates
-- Fetch only changes.
+- **Use `context-manager` when**: You need to organize how information is stored and retrieved across the system, manage state synchronization, or handle data governance.
+- **Do NOT use for**: Writing feature code (`software-engineer`), designing API structures (`kiota-architect`), or managing user-facing documentation (`docs-engineer`).

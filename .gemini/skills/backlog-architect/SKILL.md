@@ -19,53 +19,27 @@ Craft clear, actionable, and contributor-friendly GitHub issues with a focus on 
 ### 1. User Story & Epic Definition
 - Define clear user stories that follow the "As a [persona], I want [action], so that [value]" format.
 - Decompose complex epics into smaller, manageable, and logically sequenced issues.
-- Ensure each issue has a clear and concise title that reflects its core objective.
 
 ### 2. Acceptance Criteria Design
 - Provide a detailed list of conditions that must be met for an issue to be considered "Done."
 - **QA Collaboration**: Consult the `qa-engineer` skill to ensure criteria are testable and cover edge cases.
-- Use objective, testable criteria to avoid ambiguity during the validation phase.
-- Include non-functional requirements (e.g., performance, security) where relevant.
 
 ### 3. Bug Triage & Reporting
 Assists in creating high-quality bug reports for the `servicenow-sdk-go` SDK.
-
-#### Manual Reporting
-1.  **Gather Context**: Identify the core issue, expected vs. actual behavior, and reproduction steps.
-2.  **Collect System Info**: Run `scripts/gather_info.sh`.
-3.  **Backlog Integration**: Ensure the report follows backlog formatting standards and epic/user story relationships.
-4.  **Format & Submit**: Use templates (e.g., `references/bug_report_template.md`) and `scripts/submit_report.sh`.
-
-#### Automated Reporting
-1.  **Identify Bug**: Triggered by user or other skills (e.g., `qa-engineer` on test failure).
-2.  **Generate Report**: Use `scripts/generate_report.sh`.
-3.  **QA Verification**: Consult the `qa-engineer` skill to provide automated verification steps or a failing test case for the report.
+- **Manual Reporting**: Gather context, run `scripts/gather_info.sh`, and use `scripts/submit_report.sh`.
+- **Automated Reporting**: Triggered by test failure or user, uses `scripts/generate_report.sh`.
 
 ### 4. Strategic Product Alignment
-- Consult the `product-manager` skill when defining new features or prioritizing the backlog to ensure alignment with the product vision, strategy, and roadmap.
-- Ensure that technical tasks and user stories directly contribute to the outcomes defined by the Product Manager.
+- Consult the `product-manager` skill when defining new features or prioritizing the backlog.
 
-## Techniques
+## 🤝 Collaboration Map
 
-### Definition of Ready (DoR)
-- Ensure an issue meets a minimum quality standard (e.g., clear description, estimated effort, assigned labels) before it is moved to the "Ready" state.
+- **From `product-manager`**: Receives high-level strategic initiatives to break down into epics and user stories.
+- **To `software-engineer` / `kiota-architect`**: Provides the "What" and "Why" (user stories/bugs) for them to implement.
+- **Consult `qa-engineer`**: Collaborate on writing testable acceptance criteria.
+- **From `qa-engineer`**: Receives bug reports from failing tests to triage.
 
-### Epic Decomposition Patterns
-- Break down large features by user workflow, data entity, or technical layer (e.g., API vs. UI).
+## ⚖️ Usage Distinctions
 
-### Template Utilization
-- Leverage GitHub issue templates to enforce structure and ensure all necessary information is captured consistently.
-- For the `servicenow-sdk-go` project, use templates found in `.github/ISSUE_TEMPLATE/` or `references/bug_report_template.md`.
-
-### Cross-Linkage
-- Use GitHub's reference system (e.g., `#123`, `Fixes #456`) to create a clear web of dependencies and related work.
-
-## Bundled Resources
-
-### Scripts
-- `scripts/gather_info.sh`
-- `scripts/generate_report.sh`
-- `scripts/submit_report.sh`
-
-### References
-- `references/bug_report_template.md`
+- **Use `backlog-architect` when**: You are defining *what* the requirements are, documenting a bug, or structuring the work. Use it for issue creation and management.
+- **Do NOT use for**: Determining high-level roadmap (`product-manager`), writing the code (`software-engineer`), or designing the API architecture (`kiota-architect`).

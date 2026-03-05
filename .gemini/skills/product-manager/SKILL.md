@@ -20,33 +20,27 @@ Define vision, shape strategy, and drive end-to-end product execution with a foc
 - Define the product's value proposition and long-term goals.
 - Analyze the market and competitor landscape to identify opportunities and threats.
 - Communicate the product vision clearly to stakeholders and technical teams.
-- **Cross-Skill Validation**: Consult the `sdk-ux-engineer` skill to validate that the vision aligns with developer experience goals and `docs-engineer` to ensure documentation strategy is considered early.
 
 ### 2. Roadmap Development
 - Create and maintain a prioritized product roadmap.
-- **Epic Handoff**: Consult the `backlog-architect` skill to decompose large strategic initiatives into manageable epics and user stories.
-- Ensure the roadmap is flexible enough to adapt to new information or changing market conditions.
+- **Epic Handoff**: Delegate to `backlog-architect` to decompose strategic initiatives into manageable epics and user stories.
 
 ### 3. Cross-Functional Alignment
-- Facilitate communication and collaboration between engineering, design, and documentation teams.
-- Ensure all teams are aligned on priorities and understand the rationale behind product decisions.
+- Facilitate communication between engineering, design, and documentation teams.
 - Manage stakeholder expectations and gather feedback to inform future changes.
 
 ### 4. Outcome-Driven Prioritization
 - Use frameworks (e.g., RICE, MoSCoW) to objectively prioritize the backlog.
 - Evaluate potential changes based on their impact, confidence, and required effort.
-- Focus on delivering high-impact, high-value features first.
 
-## Techniques
+## 🤝 Collaboration Map
 
-### Opportunity Assessment
-- Evaluate new feature requests by asking: "What problem does this solve?", "Who is it for?", and "How does it align with our vision?"
+- **Handoff to `backlog-architect`**: Once a high-level feature or strategic goal is defined, pass it to the `backlog-architect` to create granular issues and user stories.
+- **Consult `sdk-ux-engineer`**: Validate that the product vision aligns with developer experience goals and usability standards.
+- **Consult `software-engineer` / `kiota-architect`**: Verify technical feasibility, scalability, and effort estimates for proposed roadmap items.
+- **Consult `docs-engineer`**: Ensure documentation strategy is considered early for new features.
 
-### Minimum Viable Product (MVP) / Prototype
-- Define the smallest set of features required to validate a product idea or satisfy early adopters.
+## ⚖️ Usage Distinctions
 
-### Stakeholder Interviews & User Feedback
-- Regularly engage with users and stakeholders to gather qualitative and quantitative data.
-
-### Technical Feasibility & Scalability Review
-- Collaborate with engineering teams (e.g., `kiota-architect`, `code-writer`) to ensure proposed features are technically sound and can scale.
+- **Use `product-manager` when**: You need to decide *what* to build next, *why* it matters, or how to prioritize competing requests. Use it for high-level strategy and roadmap planning.
+- **Do NOT use for**: Writing code (`software-engineer`), designing specific API structures (`kiota-architect`), or writing detailed user stories (`backlog-architect`).

@@ -10,38 +10,30 @@ Design intuitive, developer-centric experiences for software development kits, f
 ## Core Mandates
 
 - **Clarity Above All**: Ensure APIs and documentation are unambiguous and easy to understand.
-- **Frictionless Integration**: Minimize the steps and cognitive load required for a developer to integrate the SDK.
-- **Consistency**: Maintain consistent patterns, naming conventions, and behaviors across different API modules and languages.
-- **Efficiency**: Optimize workflows to help developers achieve their goals with minimal code and effort.
+- **Frictionless Integration**: Minimize the cognitive load required for integration.
+- **Consistency**: Maintain consistent patterns across all modules.
 
 ## Workflow
 
 ### 1. API Usability & Design
-- Analyze method signatures, parameter names, and return types for intuitiveness.
-- **Technical Feasibility**: Consult the `kiota-architect` skill to ensure that proposed designs are compatible with the Kiota request/response pipeline.
-- Ensure error messages are actionable and provide clear guidance on how to resolve issues.
+- Analyze method signatures and types for intuitiveness.
+- **Technical Feasibility**: Consult the `kiota-architect` skill for compatibility.
 
 ### 2. Documentation UX
-- Structure documentation to follow the "Progressive Disclosure" principle.
-- **Doc Review**: Consult the `docs-engineer` skill to ensure documentation architecture supports discoverability and searchability.
-- Ensure code snippets are accurate, idiomatic, and follow best practices.
+- Structure documentation for discoverability.
+- **Doc Review**: Consult the `docs-engineer` skill for architecture consistency.
 
 ### 3. Integration Workflow Optimization
-- Identify and remove "boilerplate" code required for common tasks.
-- Streamline authentication and configuration processes.
-- Design high-level abstractions for complex request/response patterns.
+- Remove boilerplate; streamline auth and configuration.
 
-### 4. Cross-Language Consistency
-- Ensure the SDK feels familiar to developers coming from other languages (e.g., Go vs. Java vs. TypeScript).
-- Align with platform-specific idioms while maintaining core SDK design patterns.
+## 🤝 Collaboration Map
 
-### 5. Product Strategy Alignment
-- Consult the `product-manager` skill when proposing major API changes or shifts in developer experience to ensure alignment with the product vision and roadmap.
+- **Consult `kiota-architect`**: Ensure the structural designs (RequestBuilders, etc.) remain Kiota-compliant while being easy to use.
+- **Consult `docs-engineer`**: Collaborate on the structure and discoverability of the documentation site.
+- **Consult `product-manager`**: Align developer experience improvements with the overall product roadmap.
+- **Review `software-engineer`'s output**: Ensure the implementation follows the UX patterns designed.
 
-## Techniques
+## ⚖️ Usage Distinctions
 
-### The "Time-to-First-Hello-World" Metric
-- Evaluate how quickly a new developer can go from installation to a successful API call.
-
-### Actionable Errors
-- Transform generic error codes into helpful messages using the `bug-reporter` context where applicable.
+- **Use `sdk-ux-engineer` when**: You are designing *how* a developer interacts with the SDK—naming methods, structuring documentation for better flow, or simplifying authentication.
+- **Do NOT use for**: Writing the actual implementation code (`software-engineer`), creating the low-level Kiota structure (`kiota-architect`), or technical writing tasks (`docs-engineer`).
