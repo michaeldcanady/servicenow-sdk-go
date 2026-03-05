@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -55,17 +56,8 @@ func (exc *ServicenowError) GetError() (MainErrorable, error) {
 		return nil, nil
 	}
 
-	rawMainErr, err := exc.GetBackingStore().Get(errorKey)
-	if err != nil {
-		return nil, err
-	}
-
-	mainErr, ok := rawMainErr.(MainErrorable)
-	if !ok {
-		return nil, errors.New("rawMainErr is not MainErrorable")
-	}
-
-	return mainErr, nil
+	backingStore := exc.GetBackingStore()
+	return DefaultBackedModelAccessorFunc[store.BackingStore, MainErrorable](backingStore, errorKey)
 }
 
 // setError sets the main error
@@ -73,11 +65,9 @@ func (exc *ServicenowError) setError(mainError MainErrorable) error {
 	if IsNil(exc) {
 		return nil
 	}
+
 	backingStore := exc.GetBackingStore()
-	if IsNil(backingStore) {
-		return errors.New("backingStore is nil")
-	}
-	return backingStore.Set(errorKey, mainError)
+	return DefaultBackedModelMutatorFunc(backingStore, errorKey, mainError)
 }
 
 func (exc *ServicenowError) Error() string {
