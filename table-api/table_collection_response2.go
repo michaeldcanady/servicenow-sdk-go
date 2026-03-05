@@ -21,6 +21,26 @@ type TableCollectionResponse2[T Entry] struct {
 	LastPageLink string
 }
 
+// SetFirstPageLink sets the first page link
+func (cR *TableCollectionResponse2[T]) SetFirstPageLink(link string) {
+	cR.FirstPageLink = link
+}
+
+// SetPreviousPageLink sets the previous page link
+func (cR *TableCollectionResponse2[T]) SetPreviousPageLink(link string) {
+	cR.PreviousPageLink = link
+}
+
+// SetNextPageLink sets the next page link
+func (cR *TableCollectionResponse2[T]) SetNextPageLink(link string) {
+	cR.NextPageLink = link
+}
+
+// SetLastPageLink sets the last page link
+func (cR *TableCollectionResponse2[T]) SetLastPageLink(link string) {
+	cR.LastPageLink = link
+}
+
 // parsePaginationHeaders parses the pagination headers from the response
 func (cR *TableCollectionResponse2[T]) parsePaginationHeaders(headers http.Header) {
 	linkHeaderRegex := regexp.MustCompile(`<([^>]+)>;rel="([^"]+)"`)

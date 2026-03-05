@@ -334,6 +334,7 @@ func (i *PageIterator[T]) fetchPage(ctx context.Context, pageLink *string) (Serv
 	requestInfo.Method = abstractions.GET
 	requestInfo.SetUri(*link)
 	requestInfo.Headers.AddAll(i.headers)
+	requestInfo.Headers.TryAdd("Accept", "application/json")
 	requestInfo.AddRequestOptions(i.reqOptions)
 
 	rawResponse, err = i.reqAdapter.Send(ctx, requestInfo, ServiceNowCollectionResponseFromDiscriminatorValue[T](i.constructorFunc), i.errorMappings)
@@ -346,7 +347,7 @@ func (i *PageIterator[T]) fetchPage(ctx context.Context, pageLink *string) (Serv
 		return response, errors.New("response is of wrong type")
 	}
 
-	response.ParseHeaders(headerOption.GetResponseHeaders())
+	ParseHeaders(response, headerOption.GetResponseHeaders())
 
 	return response, nil
 }

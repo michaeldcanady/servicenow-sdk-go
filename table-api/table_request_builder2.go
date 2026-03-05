@@ -75,23 +75,14 @@ func (rB *TableRequestBuilder2[T]) Get(ctx context.Context, requestConfiguration
 		requestConfiguration = &TableRequestBuilder2GetRequestConfiguration{}
 	}
 
+	headerOpt := nethttplibrary.NewHeadersInspectionOptions()
+	headerOpt.InspectResponseHeaders = true
+
+	requestConfiguration.Options = append(requestConfiguration.Options, headerOpt)
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return nil, err
-	}
-
-	var headerOpt *nethttplibrary.HeadersInspectionOptions
-	for _, opt := range requestInfo.GetRequestOptions() {
-		if opt.GetKey() == (*nethttplibrary.NewHeadersInspectionOptions()).GetKey() {
-			headerOpt = opt.(*nethttplibrary.HeadersInspectionOptions)
-			break
-		}
-	}
-
-	if headerOpt == nil {
-		headerOpt = nethttplibrary.NewHeadersInspectionOptions()
-		headerOpt.InspectResponseHeaders = true
-		requestInfo.AddRequestOptions([]abstractions.RequestOption{headerOpt})
 	}
 
 	errorMapping := abstractions.ErrorMappings{
@@ -112,7 +103,7 @@ func (rB *TableRequestBuilder2[T]) Get(ctx context.Context, requestConfiguration
 		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowCollectionResponse[T])(nil))
 	}
 
-	typedResp.ParseHeaders(headerOpt.GetResponseHeaders())
+	newInternal.ParseHeaders(typedResp, headerOpt.GetResponseHeaders())
 
 	return typedResp, nil
 }
