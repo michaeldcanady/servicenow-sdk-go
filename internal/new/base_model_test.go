@@ -5,15 +5,24 @@ import (
 	"testing"
 
 	"github.com/microsoft/kiota-abstractions-go/store"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewBaseModel(t *testing.T) {
-	model := NewBaseModel()
-	if model == nil {
-		t.Fatal("NewBaseModel returned nil")
+	tests := []struct {
+		name string
+	}{
+		{
+			name: "Initialization",
+		},
 	}
-	if model.backingStoreFactory == nil {
-		t.Error("backingStoreFactory not initialized")
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			model := NewBaseModel()
+			assert.NotNil(t, model)
+			assert.NotNil(t, model.backingStoreFactory)
+		})
 	}
 }
 

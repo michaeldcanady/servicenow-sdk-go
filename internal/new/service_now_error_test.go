@@ -90,7 +90,7 @@ func TestServicenowError_setError(t *testing.T) {
 func TestServicenowError_ErrorBranches(t *testing.T) {
 	eWrongType := NewServicenowError()
 	_ = eWrongType.GetBackingStore().Set(errorKey, 123)
-	if _, err := eWrongType.GetError(); err == nil || err.Error() != "rawMainErr is not MainErrorable" {
+	if _, err := eWrongType.GetError(); err == nil || err.Error() != "cannot convert '123' to type internal.MainErrorable" {
 		t.Errorf("Expected wrong type error, got %v", err)
 	}
 

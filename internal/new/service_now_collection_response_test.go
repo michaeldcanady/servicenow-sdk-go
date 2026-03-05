@@ -42,8 +42,8 @@ func TestBaseServiceNowCollectionResponse_GetFieldDeserializers(t *testing.T) {
 func TestBaseServiceNowCollectionResponse_GetBackingStore(t *testing.T) {
 	res := NewBaseServiceNowCollectionResponse[serialization.Parsable](nil)
 	res.backingStore = nil
-	bs, err := res.GetBackingStore()
-	if err != nil || bs == nil {
+	bs := res.GetBackingStore()
+	if bs == nil {
 		t.Error("failed to get backing store")
 	}
 }

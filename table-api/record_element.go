@@ -1,8 +1,11 @@
 package tableapi
 
 import (
+	"errors"
+
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 // RecordElement represents a single field in a TableRecord.
@@ -19,49 +22,110 @@ func NewRecordElement() *RecordElement {
 	}
 }
 
-// GetDisplayValue retrieves the display value associated with the element.
-func (rE *RecordElement) GetDisplayValue() (*ElementValue, error) {
-	val, err := store.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, displayValueKey)
-	return &val, err
+const (
+	recordDisplayValueKey = "display_value"
+	recordValueKey        = "value"
+	recordLinkKey         = "link"
+)
+
+// GetDisplayValue returns the display value of the element.
+func (rE *RecordElement) GetDisplayValue() (ElementValue, error) {
+	if internal.IsNil(rE) {
+		return ElementValue{}, errors.New("model is nil")
+	}
+
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return ElementValue{}, errors.New("store is nil")
+	}
+
+	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, ElementValue](backingStore, recordDisplayValueKey)
+	if err != nil {
+		return ElementValue{}, err
+	}
+
+	return val, nil
 }
 
-// SetDisplayValue updates the display value of the element.
+// SetDisplayValue sets the display value of the element.
 func (rE *RecordElement) SetDisplayValue(value any) error {
-	if _, ok := value.(*ElementValue); !ok {
-		var err error
-		if value, err = NewElementValue(value); err != nil {
-			return err
-		}
+	if internal.IsNil(rE) {
+		return errors.New("model is nil")
 	}
 
-	return store.DefaultBackedModelMutatorFunc(rE, displayValueKey, value)
+	val, err := NewElementValue(value)
+	if err != nil {
+		return err
+	}
+
+	backingStore := rE.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, recordDisplayValueKey, *val)
 }
 
-// GetValue retrieves the raw stored value of the element.
-func (rE *RecordElement) GetValue() (*ElementValue, error) {
-	val, err := store.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, valueKey)
-	return &val, err
+// GetValue returns the raw value of the element.
+func (rE *RecordElement) GetValue() (ElementValue, error) {
+	if internal.IsNil(rE) {
+		return ElementValue{}, errors.New("model is nil")
+	}
+
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return ElementValue{}, errors.New("store is nil")
+	}
+
+	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, ElementValue](backingStore, recordValueKey)
+	if err != nil {
+		return ElementValue{}, err
+	}
+
+	return val, nil
 }
 
-// SetValue updates the stored value of the element.
+// SetValue sets the raw value of the element.
 func (rE *RecordElement) SetValue(value any) error {
-	if _, ok := value.(*ElementValue); !ok {
-		var err error
-		if value, err = NewElementValue(value); err != nil {
-			return err
-		}
+	if internal.IsNil(rE) {
+		return errors.New("model is nil")
 	}
 
-	return store.DefaultBackedModelMutatorFunc(rE, valueKey, value)
+	val, err := NewElementValue(value)
+	if err != nil {
+		return err
+	}
+
+	backingStore := rE.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, recordValueKey, *val)
 }
 
-// GetLink retrieves the optional link associated with the element.
-func (rE *RecordElement) GetLink() (*string, error) {
-	val, err := store.DefaultBackedModelAccessorFunc[*RecordElement, string](rE, linkKey)
-	return &val, err
+// GetLink returns the reference link of the element, if it is a reference field.
+func (rE *RecordElement) GetLink() (string, error) {
+	if internal.IsNil(rE) {
+		return "", errors.New("model is nil")
+	}
+
+	backingStore := rE.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return "", errors.New("store is nil")
+	}
+
+	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, string](backingStore, recordLinkKey)
+	if err != nil {
+		return "", err
+	}
+
+	return val, nil
 }
 
-// SetLink assigns an optional reference link to the element.
+// SetLink sets the reference link of the element.
 func (rE *RecordElement) SetLink(link *string) error {
-	return store.DefaultBackedModelMutatorFunc(rE, linkKey, link)
+	if internal.IsNil(rE) {
+		return errors.New("model is nil")
+	}
+
+	var val string
+	if link != nil {
+		val = *link
+	}
+
+	backingStore := rE.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, recordLinkKey, val)
 }

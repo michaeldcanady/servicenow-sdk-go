@@ -7,11 +7,23 @@ import (
 )
 
 func TestTableItemRequestBuilderGetQueryParametersDefaults(t *testing.T) {
-	params := &TableItemRequestBuilderGetQueryParameters{}
+	tests := []struct {
+		name string
+	}{
+		{
+			name: "Default values",
+		},
+	}
 
-	assert.Equal(t, DisplayValue(""), params.DisplayValue)
-	assert.Equal(t, false, params.ExcludeReferenceLink)
-	assert.Equal(t, 0, len(params.Fields))
-	assert.Equal(t, false, params.QueryNoDomain)
-	assert.Equal(t, View(""), params.View)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			params := &TableItemRequestBuilderGetQueryParameters{}
+
+			assert.Equal(t, DisplayValue(""), params.DisplayValue)
+			assert.Equal(t, false, params.ExcludeReferenceLink)
+			assert.Equal(t, 0, len(params.Fields))
+			assert.Equal(t, false, params.QueryNoDomain)
+			assert.Equal(t, View(""), params.View)
+		})
+	}
 }

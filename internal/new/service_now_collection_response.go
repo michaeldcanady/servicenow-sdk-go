@@ -144,9 +144,9 @@ func (r *BaseServiceNowCollectionResponse[T]) setResult(val []any) error {
 		return nil
 	}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return err
+	store := r.GetBackingStore()
+	if IsNil(store) {
+		return errors.New("store is nil")
 	}
 
 	return store.Set(resultKey, val)
@@ -158,9 +158,9 @@ func (r *BaseServiceNowCollectionResponse[T]) setNextLink(val *string) error {
 		return nil
 	}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return err
+	store := r.GetBackingStore()
+	if IsNil(store) {
+		return errors.New("store is nil")
 	}
 
 	return store.Set(nextKey, val)
@@ -172,9 +172,9 @@ func (r *BaseServiceNowCollectionResponse[T]) setPreviousLink(val *string) error
 		return nil
 	}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return err
+	store := r.GetBackingStore()
+	if IsNil(store) {
+		return errors.New("store is nil")
 	}
 
 	return store.Set(previousKey, val)
@@ -186,9 +186,9 @@ func (r *BaseServiceNowCollectionResponse[T]) setFirstLink(val *string) error {
 		return nil
 	}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return err
+	store := r.GetBackingStore()
+	if IsNil(store) {
+		return errors.New("store is nil")
 	}
 
 	return store.Set(firstKey, val)
@@ -200,28 +200,28 @@ func (r *BaseServiceNowCollectionResponse[T]) setLastLink(val *string) error {
 		return nil
 	}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return err
+	store := r.GetBackingStore()
+	if IsNil(store) {
+		return errors.New("store is nil")
 	}
 
 	return store.Set(lastKey, val)
 }
 
 // GetBackingStore returns the backing store, if store is nil it instantiates a new store.
-func (r *BaseServiceNowCollectionResponse[T]) GetBackingStore() (store.BackingStore, error) {
+func (r *BaseServiceNowCollectionResponse[T]) GetBackingStore() store.BackingStore {
 	if IsNil(r) {
-		return nil, nil
+		return nil
 	}
 
 	if IsNil(r.backingStore) {
 		if IsNil(r.backingStoreFactory) {
-			return nil, errors.New("store is nil")
+			return nil
 		}
 		r.backingStore = r.backingStoreFactory()
 	}
 
-	return r.backingStore, nil
+	return r.backingStore
 }
 
 // GetResult Returns the result values of the response.
@@ -230,9 +230,9 @@ func (r *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
 		return nil, nil
 	}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return nil, err
+	store := r.GetBackingStore()
+	if IsNil(store) {
+		return nil, errors.New("store is nil")
 	}
 
 	val, err := store.Get(resultKey)
@@ -265,9 +265,9 @@ func (r *BaseServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
 		return nil, nil
 	}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return nil, err
+	store := r.GetBackingStore()
+	if IsNil(store) {
+		return nil, errors.New("store is nil")
 	}
 
 	val, err := store.Get(nextKey)
@@ -293,9 +293,9 @@ func (r *BaseServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error)
 		return nil, nil
 	}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return nil, err
+	store := r.GetBackingStore()
+	if IsNil(store) {
+		return nil, errors.New("store is nil")
 	}
 
 	val, err := store.Get(previousKey)
@@ -321,9 +321,9 @@ func (r *BaseServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
 		return nil, nil
 	}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return nil, err
+	store := r.GetBackingStore()
+	if IsNil(store) {
+		return nil, errors.New("store is nil")
 	}
 
 	val, err := store.Get(firstKey)
@@ -349,9 +349,9 @@ func (r *BaseServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
 		return nil, nil
 	}
 
-	store, err := r.GetBackingStore()
-	if err != nil {
-		return nil, err
+	store := r.GetBackingStore()
+	if IsNil(store) {
+		return nil, errors.New("store is nil")
 	}
 
 	val, err := store.Get(lastKey)

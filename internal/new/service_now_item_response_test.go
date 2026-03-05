@@ -36,12 +36,12 @@ func TestBaseServiceNowItemResponse_GetFieldDeserializers(t *testing.T) {
 func TestBaseServiceNowItemResponse_GetBackingStore(t *testing.T) {
 	res := NewBaseServiceNowItemResponse[serialization.Parsable](nil)
 	res.backingStore = nil
-	bs, err := res.GetBackingStore()
-	if err != nil || bs == nil {
+	bs := res.GetBackingStore()
+	if bs == nil {
 		t.Error("failed to get backing store")
 	}
 	var nilR *BaseServiceNowItemResponse[serialization.Parsable]
-	if bs, _ := nilR.GetBackingStore(); bs != nil {
+	if bs := nilR.GetBackingStore(); bs != nil {
 		t.Error("expected nil")
 	}
 }
@@ -108,7 +108,7 @@ func TestBaseServiceNowItemResponse_ErrorBranches(t *testing.T) {
 	}
 
 	resNilBS := &BaseServiceNowItemResponse[*MainError]{backingStore: nil, backingStoreFactory: nil}
-	if err := resNilBS.setResult(nil); err == nil || err.Error() != "store is nil" {
+	if err := resNilBS.setResult(nil); err == nil || err.Error() != "nil store" {
 		t.Errorf("expected store nil error, got %v", err)
 	}
 }

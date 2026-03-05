@@ -8,16 +8,25 @@ import (
 )
 
 func TestTableRequestBuilderGetQueryParameters(t *testing.T) {
-	params := &TableRequestBuilderGetQueryParameters{
-		Limit: 1,
+	tests := []struct {
+		name     string
+		params   *TableRequestBuilderGetQueryParameters
+		expected map[string]string
+	}{
+		{
+			name: "Limit 1",
+			params: &TableRequestBuilderGetQueryParameters{
+				Limit: 1,
+			},
+			expected: map[string]string{"sysparm_limit": "1"},
+		},
 	}
 
-	queryMap, err := core.ToQueryMap(params)
-	if err != nil {
-		t.Error(err)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			queryMap, err := core.ToQueryMap(test.params)
+			assert.NoError(t, err)
+			assert.Equal(t, test.expected, queryMap)
+		})
 	}
-
-	expectedValue := map[string]string{"sysparm_limit": "1"}
-
-	assert.Equal(t, expectedValue, queryMap)
 }

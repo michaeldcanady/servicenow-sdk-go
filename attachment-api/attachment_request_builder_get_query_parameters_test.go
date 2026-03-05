@@ -8,22 +8,31 @@ import (
 )
 
 func TestAttachmentRequestBuilderGetQueryParameters(t *testing.T) {
-	expected := map[string]string{
-		"sysparm_limit":  "1000",
-		"sysparm_offset": "500",
-		"sysparm_query":  "field1=value1",
+	tests := []struct {
+		name     string
+		params   AttachmentRequestBuilderGetQueryParameters
+		expected map[string]string
+	}{
+		{
+			name: "Standard parameters",
+			params: AttachmentRequestBuilderGetQueryParameters{
+				Limit:  1000,
+				Offset: 500,
+				Query:  "field1=value1",
+			},
+			expected: map[string]string{
+				"sysparm_limit":  "1000",
+				"sysparm_offset": "500",
+				"sysparm_query":  "field1=value1",
+			},
+		},
 	}
 
-	params := AttachmentRequestBuilderGetQueryParameters{
-		Limit:  1000,
-		Offset: 500,
-		Query:  "field1=value1",
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			actual, err := core.ToQueryMap(test.params)
+			assert.NoError(t, err)
+			assert.Equal(t, test.expected, actual)
+		})
 	}
-
-	actual, err := core.ToQueryMap(params)
-	if err != nil {
-		t.Error(err)
-	}
-
-	assert.Equal(t, expected, actual)
 }

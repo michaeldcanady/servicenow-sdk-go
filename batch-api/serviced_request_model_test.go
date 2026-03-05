@@ -251,7 +251,7 @@ func TestServicedRequestModel_GetBody(t *testing.T) {
 
 				id, err := resp.GetBody()
 
-				assert.Equal(t, errors.New("body is not []byte"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type []uint8"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -439,7 +439,7 @@ func TestServicedRequestModel_GetErrorMessage(t *testing.T) {
 
 				id, err := resp.GetErrorMessage()
 
-				assert.Equal(t, errors.New("message is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -688,7 +688,7 @@ func TestServicedRequestModel_GetHeaders(t *testing.T) {
 
 				id, err := resp.GetHeaders()
 
-				assert.Equal(t, errors.New("headers is not []RestRequestHeader"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type []batchapi.RestRequestHeader"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -876,7 +876,7 @@ func TestServicedRequestModel_GetID(t *testing.T) {
 
 				id, err := resp.GetID()
 
-				assert.Equal(t, errors.New("id is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -1064,7 +1064,7 @@ func TestServicedRequestModel_GetRedirectURL(t *testing.T) {
 
 				id, err := resp.GetRedirectURL()
 
-				assert.Equal(t, errors.New("redirectURL is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -1252,7 +1252,7 @@ func TestServicedRequestModel_GetStatusCode(t *testing.T) {
 
 				id, err := resp.GetStatusCode()
 
-				assert.Equal(t, errors.New("statusCode is not *int64"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *int64"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -1440,7 +1440,7 @@ func TestServicedRequestModel_GetStatusText(t *testing.T) {
 
 				id, err := resp.GetStatusText()
 
-				assert.Equal(t, errors.New("statusText is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)

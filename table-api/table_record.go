@@ -8,6 +8,7 @@ import (
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 var _ serialization.Parsable = (*TableRecord)(nil)
@@ -51,15 +52,15 @@ func recordElementParser(node serialization.ParseNode) (*RecordElement, error) {
 
 	switch typedVal := rawValue.(type) {
 	case map[string]any:
-		if dv, ok := typedVal[displayValueKey]; ok {
+		if dv, ok := typedVal[recordDisplayValueKey]; ok {
 			displayValue = dv
 		}
 
-		if v, ok := typedVal[valueKey]; ok {
+		if v, ok := typedVal[recordValueKey]; ok {
 			value = v
 		}
 
-		if rawLink, ok := typedVal[linkKey]; ok {
+		if rawLink, ok := typedVal[recordLinkKey]; ok {
 			strLink, ok := rawLink.(*string)
 			if !ok {
 				return nil, errors.New("link is not *string")
@@ -157,7 +158,8 @@ func NewTableRecord() *TableRecord {
 
 // Get retrieves a RecordElement associated with the specified key.
 func (tR *TableRecord) Get(key string) (*RecordElement, error) {
-	elem, err := store.DefaultBackedModelAccessorFunc[*TableRecord, RecordElement](tR, key)
+	backingStore := tR.GetBackingStore()
+	elem, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, RecordElement](backingStore, key)
 
 	return &elem, err
 }
@@ -167,7 +169,8 @@ func (tR *TableRecord) SetElement(key string, element *RecordElement) error {
 	if !tR.HasAttribute(key) {
 		tR.keys = append(tR.keys, key)
 	}
-	return store.DefaultBackedModelMutatorFunc(tR, key, element)
+	backingStore := tR.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, key, element)
 }
 
 // SetValue assigns a value to the specified key using a RecordElement wrapper.

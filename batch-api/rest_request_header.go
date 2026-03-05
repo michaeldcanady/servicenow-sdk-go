@@ -6,8 +6,10 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -53,7 +55,7 @@ func (bH *RestRequestHeaderModel) Serialize(writer serialization.SerializationWr
 	}
 
 	if internal.IsNil(writer) {
-		return errors.New("write is nil")
+		return errors.New("writer is nil")
 	}
 
 	serializers := []func(serialization.SerializationWriter) error{
@@ -87,7 +89,22 @@ func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serial
 		return nil
 	}
 
-	return nil
+	return map[string]func(serialization.ParseNode) error{
+		nameKey: func(node serialization.ParseNode) error {
+			val, err := node.GetStringValue()
+			if err != nil {
+				return err
+			}
+			return bH.SetName(val)
+		},
+		valueKey: func(node serialization.ParseNode) error {
+			val, err := node.GetStringValue()
+			if err != nil {
+				return err
+			}
+			return bH.SetValue(val)
+		},
+	}
 }
 
 // GetName returns the name of the header
@@ -97,21 +114,7 @@ func (bH *RestRequestHeaderModel) GetName() (*string, error) {
 	}
 
 	backingStore := bH.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, errors.New("backingStore is nil")
-	}
-
-	name, err := backingStore.Get(nameKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedName, ok := name.(*string)
-	if !ok {
-		return nil, errors.New("name is not *string")
-	}
-
-	return typedName, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, nameKey)
 }
 
 // SetName sets name to provided value
@@ -121,11 +124,7 @@ func (bH *RestRequestHeaderModel) SetName(name *string) error {
 	}
 
 	backingStore := bH.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return errors.New("backingStore is nil")
-	}
-
-	return backingStore.Set(nameKey, name)
+	return store.DefaultBackedModelMutatorFunc(backingStore, nameKey, name)
 }
 
 // GetValue returns the value of the header
@@ -135,21 +134,7 @@ func (bH *RestRequestHeaderModel) GetValue() (*string, error) {
 	}
 
 	backingStore := bH.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, errors.New("backingStore is nil")
-	}
-
-	value, err := backingStore.Get(valueKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedValue, ok := value.(*string)
-	if !ok {
-		return nil, errors.New("value is not *string")
-	}
-
-	return typedValue, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, valueKey)
 }
 
 // SetValue sets the value to the provided value
@@ -159,11 +144,7 @@ func (bH *RestRequestHeaderModel) SetValue(value *string) error {
 	}
 
 	backingStore := bH.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return errors.New("backingStore is nil")
-	}
-
-	return backingStore.Set(valueKey, value)
+	return store.DefaultBackedModelMutatorFunc(backingStore, valueKey, value)
 }
 
 // headers support headers types

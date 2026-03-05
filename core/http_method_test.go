@@ -2,62 +2,66 @@ package core
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHttpMethod_String(t *testing.T) {
-	tests := []Test{
+	tests := []struct {
+		name     string
+		method   HttpMethod
+		expected string
+	}{
 		{
-			Title:    "Test GET",
-			Expected: "GET",
-			Actual:   GET.String(),
+			name:     "Test GET",
+			method:   GET,
+			expected: "GET",
 		},
 		{
-			Title:    "Test POST",
-			Expected: "POST",
-			Actual:   POST.String(),
+			name:     "Test POST",
+			method:   POST,
+			expected: "POST",
 		},
 		{
-			Title:    "Test PATCH",
-			Expected: "PATCH",
-			Actual:   PATCH.String(),
+			name:     "Test PATCH",
+			method:   PATCH,
+			expected: "PATCH",
 		},
 		{
-			Title:    "Test DELETE",
-			Expected: "DELETE",
-			Actual:   DELETE.String(),
+			name:     "Test DELETE",
+			method:   DELETE,
+			expected: "DELETE",
 		},
 		{
-			Title:    "Test OPTIONS",
-			Expected: "OPTIONS",
-			Actual:   OPTIONS.String(),
+			name:     "Test OPTIONS",
+			method:   OPTIONS,
+			expected: "OPTIONS",
 		},
 		{
-			Title:    "Test CONNECT",
-			Expected: "CONNECT",
-			Actual:   CONNECT.String(),
+			name:     "Test CONNECT",
+			method:   CONNECT,
+			expected: "CONNECT",
 		},
 		{
-			Title:    "Test PUT",
-			Expected: "PUT",
-			Actual:   PUT.String(),
+			name:     "Test PUT",
+			method:   PUT,
+			expected: "PUT",
 		},
 		{
-			Title:    "Test TRACE",
-			Expected: "TRACE",
-			Actual:   TRACE.String(),
+			name:     "Test TRACE",
+			method:   TRACE,
+			expected: "TRACE",
 		},
 		{
-			Title:    "Test HEAD",
-			Expected: "HEAD",
-			Actual:   HEAD.String(),
+			name:     "Test HEAD",
+			method:   HEAD,
+			expected: "HEAD",
 		},
 	}
 
 	for _, test := range tests {
-		t.Run(test.Title, func(t *testing.T) {
-			if result := test.Actual; result != test.Expected {
-				t.Errorf("Expected: %s, Got: %s", test.Expected, test.Actual)
-			}
+		t.Run(test.name, func(t *testing.T) {
+			assert.Equal(t, test.expected, test.method.String())
 		})
 	}
 }

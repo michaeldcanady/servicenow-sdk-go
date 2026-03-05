@@ -7,11 +7,28 @@ import (
 )
 
 func TestException(t *testing.T) {
-	ex := Exception{
-		Message: "Sample message",
-		Detail:  "Sample detail",
+	tests := []struct {
+		name     string
+		ex       Exception
+		expected Exception
+	}{
+		{
+			name: "Standard exception",
+			ex: Exception{
+				Message: "Sample message",
+				Detail:  "Sample detail",
+			},
+			expected: Exception{
+				Message: "Sample message",
+				Detail:  "Sample detail",
+			},
+		},
 	}
 
-	assert.Equal(t, "Sample message", ex.Message)
-	assert.Equal(t, "Sample detail", ex.Detail)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			assert.Equal(t, test.expected.Message, test.ex.Message)
+			assert.Equal(t, test.expected.Detail, test.ex.Detail)
+		})
+	}
 }

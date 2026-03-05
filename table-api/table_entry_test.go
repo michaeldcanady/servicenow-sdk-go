@@ -2,20 +2,46 @@ package tableapi
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewTableEntry(t *testing.T) {
-	entry := NewTableEntry()
-	if entry == nil {
-		t.Error("NewTableEntry returned nil")
+	tests := []struct {
+		name string
+	}{
+		{
+			name: "Create entry",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			entry := NewTableEntry()
+			assert.NotNil(t, entry)
+		})
 	}
 }
 
 func TestTableEntry_Set(t *testing.T) {
-	entry := NewTableEntry()
-	entry.Set("k", "v")
-	if entry["k"] != "v" {
-		t.Errorf("expected v, got %v", entry["k"])
+	tests := []struct {
+		name  string
+		key   string
+		value interface{}
+	}{
+		{
+			name:  "Set string",
+			key:   "k",
+			value: "v",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			entry := NewTableEntry()
+			entry.Set(test.key, test.value)
+			assert.Equal(t, test.value, entry[test.key])
+		})
 	}
 }
 
@@ -37,13 +63,10 @@ func TestTableEntry_Value(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			res := entry.Value(tt.key)
 			if tt.expected == nil {
-				if res != nil {
-					t.Error("expected nil")
-				}
+				assert.Nil(t, res)
 			} else {
-				if res.value != tt.expected {
-					t.Errorf("got %v, expected %v", res.value, tt.expected)
-				}
+				assert.NotNil(t, res)
+				assert.Equal(t, tt.expected, res.value)
 			}
 		})
 	}
@@ -67,13 +90,10 @@ func TestTableEntry_DisplayValue(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			res := entry.DisplayValue(tt.key)
 			if tt.expected == nil {
-				if res != nil {
-					t.Error("expected nil")
-				}
+				assert.Nil(t, res)
 			} else {
-				if res.value != tt.expected {
-					t.Errorf("got %v, expected %v", res.value, tt.expected)
-				}
+				assert.NotNil(t, res)
+				assert.Equal(t, tt.expected, res.value)
 			}
 		})
 	}
@@ -99,32 +119,59 @@ func TestTableEntry_Link(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			res, err := entry.Link(tt.key)
-			if (err != nil) != tt.err {
-				t.Errorf("err: got %v, expected %v", err, tt.err)
+			if tt.err {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
 			}
 			if tt.expected == nil {
-				if res != nil {
-					t.Error("expected nil res")
-				}
-			} else if *res != *tt.expected {
-				t.Errorf("got %s, expected %s", *res, *tt.expected)
+				assert.Nil(t, res)
+			} else {
+				assert.NotNil(t, res)
+				assert.Equal(t, *tt.expected, *res)
 			}
 		})
 	}
 }
 
 func TestTableEntry_Keys(t *testing.T) {
-	entry := TableEntry{"a": 1, "b": 2}
-	keys := entry.Keys()
-	if len(keys) != 2 {
-		t.Error("wrong number of keys")
+	tests := []struct {
+		name          string
+		entry         TableEntry
+		expectedCount int
+	}{
+		{
+			name:          "Two keys",
+			entry:         TableEntry{"a": 1, "b": 2},
+			expectedCount: 2,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			keys := test.entry.Keys()
+			assert.Len(t, keys, test.expectedCount)
+		})
 	}
 }
 
 func TestTableEntry_Len(t *testing.T) {
-	entry := TableEntry{"a": 1}
-	if entry.Len() != 1 {
-		t.Error("wrong len")
+	tests := []struct {
+		name        string
+		entry       TableEntry
+		expectedLen int
+	}{
+		{
+			name:        "One entry",
+			entry:       TableEntry{"a": 1},
+			expectedLen: 1,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			assert.Equal(t, test.expectedLen, test.entry.Len())
+		})
 	}
 }
 

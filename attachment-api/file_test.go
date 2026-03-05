@@ -11,402 +11,234 @@ import (
 )
 
 func TestNewFile(t *testing.T) {
-	res := NewFile()
-	assert.NotNil(t, res)
+	tests := []struct {
+		name string
+	}{
+		{
+			name: "Create file",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			res := NewFile()
+			assert.NotNil(t, res)
+		})
+	}
 }
 
 func TestFileModel_GetFieldDeserializers(t *testing.T) {
-	m := NewFile()
-	deser := m.GetFieldDeserializers()
-	assert.NotNil(t, deser[averageImageColorKey])
-
-	for key, fn := range deser {
-		node := mocking.NewMockParseNode()
-		s := "test"
-		switch key {
-		case sizeBytesKey, sizeCompressedKey, sysModCountKey:
-			s = "1"
-		case compressedKey:
-			s = "true"
-		case sysCreatedOnKey, sysUpdatedOnKey:
-			s = "2006-01-02 15:04:05"
-		case imageHeightKey, imageWidthKey:
-			s = "1.2"
-		}
-		node.On("GetStringValue").Return(&s, nil)
-		_ = fn(node)
+	tests := []struct {
+		name string
+	}{
+		{
+			name: "Standard flow",
+		},
 	}
 
-	// Test error branches
-	for _, fn := range deser {
-		// Test Read Error
-		nodeReadError := mocking.NewMockParseNode()
-		nodeReadError.On("GetStringValue").Return((*string)(nil), errors.New("read error"))
-		_ = fn(nodeReadError)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			m := NewFile()
+			deser := m.GetFieldDeserializers()
+			assert.NotNil(t, deser[averageImageColorKey])
 
-		// Test Parse Error
-		nodeParseError := mocking.NewMockParseNode()
-		s := "not-a-value"
-		nodeParseError.On("GetStringValue").Return(&s, nil)
-		_ = fn(nodeParseError)
+			for key, fn := range deser {
+				node := mocking.NewMockParseNode()
+				s := "test"
+				switch key {
+				case sizeBytesKey, sizeCompressedKey, sysModCountKey:
+					s = "1"
+				case compressedKey:
+					s = "true"
+				case sysCreatedOnKey, sysUpdatedOnKey:
+					s = "2006-01-02 15:04:05"
+				case imageHeightKey, imageWidthKey:
+					s = "1.2"
+				}
+				node.On("GetStringValue").Return(&s, nil)
+				_ = fn(node)
+			}
+
+			// Test error branches
+			for _, fn := range deser {
+				// Test Read Error
+				nodeReadError := mocking.NewMockParseNode()
+				nodeReadError.On("GetStringValue").Return((*string)(nil), errors.New("read error"))
+				_ = fn(nodeReadError)
+
+				// Test Parse Error
+				nodeParseError := mocking.NewMockParseNode()
+				s := "not-a-value"
+				nodeParseError.On("GetStringValue").Return(&s, nil)
+				_ = fn(nodeParseError)
+			}
+
+			var nilM *FileModel
+			assert.NotNil(t, nilM.GetFieldDeserializers())
+		})
 	}
-
-	var nilM *FileModel
-	assert.NotNil(t, nilM.GetFieldDeserializers())
 }
 
 func TestFileModel_Serialize(t *testing.T) {
-	m := NewFile()
+	tests := []struct {
+		name string
+		m    *FileModel
+	}{
+		{
+			name: "Standard serialize",
+			m: func() *FileModel {
+				m := NewFile()
+				s := "test"
+				b := true
+				f := 1.2
+				i := int64(10)
+				tm := time.Now()
+				tags := []string{"tag"}
 
-	// Set all fields to cover all branches in Serialize
-	s := "test"
-	b := true
-	f := 1.2
-	i := int64(10)
-	tm := time.Now()
-	tags := []string{"tag"}
+				_ = m.SetAverageImageColor(&s)
+				_ = m.SetCompressed(&b)
+				_ = m.SetContentType(&s)
+				_ = m.SetCreatedByName(&s)
+				_ = m.SetDownloadLink(&s)
+				_ = m.SetFileName(&s)
+				_ = m.SetImageHeight(&f)
+				_ = m.SetImageWidth(&f)
+				_ = m.SetSizeBytes(&i)
+				_ = m.SetSizeCompressed(&i)
+				_ = m.SetSysCreatedBy(&s)
+				_ = m.SetSysCreatedOn(&tm)
+				_ = m.SetSysID(&s)
+				_ = m.SetSysModCount(&i)
+				_ = m.SetSysTags(tags)
+				_ = m.SetSysUpdatedBy(&s)
+				_ = m.SetSysUpdatedOn(&tm)
+				_ = m.SetTableName(&s)
+				_ = m.SetTableSysID(&s)
+				_ = m.SetUpdatedByName(&s)
+				return m
+			}(),
+		},
+		{
+			name: "Nil model",
+			m:    nil,
+		},
+	}
 
-	_ = m.SetAverageImageColor(&s)
-	_ = m.SetCompressed(&b)
-	_ = m.SetContentType(&s)
-	_ = m.SetCreatedByName(&s)
-	_ = m.SetDownloadLink(&s)
-	_ = m.SetFileName(&s)
-	_ = m.SetImageHeight(&f)
-	_ = m.SetImageWidth(&f)
-	_ = m.SetSizeBytes(&i)
-	_ = m.SetSizeCompressed(&i)
-	_ = m.SetSysCreatedBy(&s)
-	_ = m.SetSysCreatedOn(&tm)
-	_ = m.SetSysID(&s)
-	_ = m.SetSysModCount(&i)
-	_ = m.SetSysTags(tags)
-	_ = m.SetSysUpdatedBy(&s)
-	_ = m.SetSysUpdatedOn(&tm)
-	_ = m.SetTableName(&s)
-	_ = m.SetTableSysID(&s)
-	_ = m.SetUpdatedByName(&s)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			writer := mocking.NewMockSerializationWriter()
+			writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteBoolValue", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteCollectionOfPrimitiveValues", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteObjectValue", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteCollectionOfObjectValues", mock.Anything, mock.Anything).Return(nil)
 
-	writer := mocking.NewMockSerializationWriter()
-	writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
-
-	err := m.Serialize(writer)
-	assert.NoError(t, err)
-
-	var nilM *FileModel
-	err = nilM.Serialize(writer)
-	assert.NoError(t, err)
+			err := test.m.Serialize(writer)
+			assert.NoError(t, err)
+		})
+	}
 }
 
 func TestFileModel_Accessors(t *testing.T) {
-	m := NewFile()
+	now := time.Now()
+	tests := []struct {
+		name   string
+		set    func(m *FileModel)
+		get    func(m *FileModel) (interface{}, error)
+		expect interface{}
+	}{
+		{"AverageImageColor", func(m *FileModel) { s := "red"; _ = m.SetAverageImageColor(&s) }, func(m *FileModel) (interface{}, error) { return m.GetAverageImageColor() }, "red"},
+		{"Compressed", func(m *FileModel) { v := true; _ = m.SetCompressed(&v) }, func(m *FileModel) (interface{}, error) { return m.GetCompressed() }, true},
+		{"ContentType", func(m *FileModel) { s := "text/plain"; _ = m.SetContentType(&s) }, func(m *FileModel) (interface{}, error) { return m.GetContentType() }, "text/plain"},
+		{"CreatedByName", func(m *FileModel) { s := "admin"; _ = m.SetCreatedByName(&s) }, func(m *FileModel) (interface{}, error) { return m.GetCreatedByName() }, "admin"},
+		{"DownloadLink", func(m *FileModel) { s := "http://link"; _ = m.SetDownloadLink(&s) }, func(m *FileModel) (interface{}, error) { return m.GetDownloadLink() }, "http://link"},
+		{"FileName", func(m *FileModel) { s := "file.txt"; _ = m.SetFileName(&s) }, func(m *FileModel) (interface{}, error) { return m.GetFileName() }, "file.txt"},
+		{"ImageHeight", func(m *FileModel) { v := 100.0; _ = m.SetImageHeight(&v) }, func(m *FileModel) (interface{}, error) { return m.GetImageHeight() }, 100.0},
+		{"ImageWidth", func(m *FileModel) { v := 200.0; _ = m.SetImageWidth(&v) }, func(m *FileModel) (interface{}, error) { return m.GetImageWidth() }, 200.0},
+		{"SizeBytes", func(m *FileModel) { v := int64(1024); _ = m.SetSizeBytes(&v) }, func(m *FileModel) (interface{}, error) { return m.GetSizeBytes() }, int64(1024)},
+		{"SizeCompressed", func(m *FileModel) { v := int64(512); _ = m.SetSizeCompressed(&v) }, func(m *FileModel) (interface{}, error) { return m.GetSizeCompressed() }, int64(512)},
+		{"SysCreatedBy", func(m *FileModel) { s := "user"; _ = m.SetSysCreatedBy(&s) }, func(m *FileModel) (interface{}, error) { return m.GetSysCreatedBy() }, "user"},
+		{"SysCreatedOn", func(m *FileModel) { _ = m.SetSysCreatedOn(&now) }, func(m *FileModel) (interface{}, error) { return m.GetSysCreatedOn() }, &now},
+		{"SysID", func(m *FileModel) { s := "sys_id"; _ = m.SetSysID(&s) }, func(m *FileModel) (interface{}, error) { return m.GetSysID() }, "sys_id"},
+		{"SysModCount", func(m *FileModel) { v := int64(5); _ = m.SetSysModCount(&v) }, func(m *FileModel) (interface{}, error) { return m.GetSysModCount() }, int64(5)},
+		{"SysTags", func(m *FileModel) { v := []string{"tag1"}; _ = m.SetSysTags(v) }, func(m *FileModel) (interface{}, error) { return m.GetSysTags() }, []string{"tag1"}},
+		{"SysUpdatedBy", func(m *FileModel) { s := "updater"; _ = m.SetSysUpdatedBy(&s) }, func(m *FileModel) (interface{}, error) { return m.GetSysUpdatedBy() }, "updater"},
+		{"SysUpdatedOn", func(m *FileModel) { _ = m.SetSysUpdatedOn(&now) }, func(m *FileModel) (interface{}, error) { return m.GetSysUpdatedOn() }, &now},
+		{"TableName", func(m *FileModel) { s := "incident"; _ = m.SetTableName(&s) }, func(m *FileModel) (interface{}, error) { return m.GetTableName() }, "incident"},
+		{"TableSysID", func(m *FileModel) { s := "table_sid"; _ = m.SetTableSysID(&s) }, func(m *FileModel) (interface{}, error) { return m.GetTableSysID() }, "table_sid"},
+		{"UpdatedByName", func(m *FileModel) { s := "updated_by"; _ = m.SetUpdatedByName(&s) }, func(m *FileModel) (interface{}, error) { return m.GetUpdatedByName() }, "updated_by"},
+	}
 
-	t.Run("AverageImageColor", func(t *testing.T) {
-		s := "red"
-		_ = m.SetAverageImageColor(&s)
-		res, _ := m.GetAverageImageColor()
-		assert.Equal(t, s, *res)
-	})
-
-	t.Run("Compressed", func(t *testing.T) {
-		v := true
-		_ = m.SetCompressed(&v)
-		res, _ := m.GetCompressed()
-		assert.Equal(t, v, *res)
-	})
-
-	t.Run("ContentType", func(t *testing.T) {
-		s := "text/plain"
-		_ = m.SetContentType(&s)
-		res, _ := m.GetContentType()
-		assert.Equal(t, s, *res)
-	})
-
-	t.Run("CreatedByName", func(t *testing.T) {
-		s := "admin"
-		_ = m.SetCreatedByName(&s)
-		res, _ := m.GetCreatedByName()
-		assert.Equal(t, s, *res)
-	})
-
-	t.Run("DownloadLink", func(t *testing.T) {
-		s := "http://link"
-		_ = m.SetDownloadLink(&s)
-		res, _ := m.GetDownloadLink()
-		assert.Equal(t, s, *res)
-	})
-
-	t.Run("FileName", func(t *testing.T) {
-		s := "file.txt"
-		_ = m.SetFileName(&s)
-		res, _ := m.GetFileName()
-		assert.Equal(t, s, *res)
-	})
-
-	t.Run("ImageHeight", func(t *testing.T) {
-		v := 100.0
-		_ = m.SetImageHeight(&v)
-		res, _ := m.GetImageHeight()
-		assert.Equal(t, v, *res)
-	})
-
-	t.Run("ImageWidth", func(t *testing.T) {
-		v := 200.0
-		_ = m.SetImageWidth(&v)
-		res, _ := m.GetImageWidth()
-		assert.Equal(t, v, *res)
-	})
-
-	t.Run("SizeBytes", func(t *testing.T) {
-		v := int64(1024)
-		_ = m.SetSizeBytes(&v)
-		res, _ := m.GetSizeBytes()
-		assert.Equal(t, v, *res)
-	})
-
-	t.Run("SizeCompressed", func(t *testing.T) {
-		v := int64(512)
-		_ = m.SetSizeCompressed(&v)
-		res, _ := m.GetSizeCompressed()
-		assert.Equal(t, v, *res)
-	})
-
-	t.Run("SysCreatedBy", func(t *testing.T) {
-		s := "user"
-		_ = m.SetSysCreatedBy(&s)
-		res, _ := m.GetSysCreatedBy()
-		assert.Equal(t, s, *res)
-	})
-
-	t.Run("SysCreatedOn", func(t *testing.T) {
-		v := time.Now()
-		_ = m.SetSysCreatedOn(&v)
-		res, _ := m.GetSysCreatedOn()
-		assert.True(t, res.Equal(v))
-	})
-
-	t.Run("SysID", func(t *testing.T) {
-		s := "sys_id"
-		_ = m.SetSysID(&s)
-		res, _ := m.GetSysID()
-		assert.Equal(t, s, *res)
-	})
-
-	t.Run("SysModCount", func(t *testing.T) {
-		v := int64(5)
-		_ = m.SetSysModCount(&v)
-		res, _ := m.GetSysModCount()
-		assert.Equal(t, v, *res)
-	})
-
-	t.Run("SysTags", func(t *testing.T) {
-		v := []string{"tag1"}
-		_ = m.SetSysTags(v)
-		res, _ := m.GetSysTags()
-		assert.Equal(t, v[0], res[0])
-	})
-
-	t.Run("SysUpdatedBy", func(t *testing.T) {
-		s := "updater"
-		_ = m.SetSysUpdatedBy(&s)
-		res, _ := m.GetSysUpdatedBy()
-		assert.Equal(t, s, *res)
-	})
-
-	t.Run("SysUpdatedOn", func(t *testing.T) {
-		v := time.Now()
-		_ = m.SetSysUpdatedOn(&v)
-		res, _ := m.GetSysUpdatedOn()
-		assert.True(t, res.Equal(v))
-	})
-
-	t.Run("TableName", func(t *testing.T) {
-		s := "incident"
-		_ = m.SetTableName(&s)
-		res, _ := m.GetTableName()
-		assert.Equal(t, s, *res)
-	})
-
-	t.Run("TableSysID", func(t *testing.T) {
-		s := "table_sid"
-		_ = m.SetTableSysID(&s)
-		res, _ := m.GetTableSysID()
-		assert.Equal(t, s, *res)
-	})
-
-	t.Run("UpdatedByName", func(t *testing.T) {
-		s := "updated_by"
-		_ = m.SetUpdatedByName(&s)
-		res, _ := m.GetUpdatedByName()
-		assert.Equal(t, s, *res)
-	})
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			m := NewFile()
+			test.set(m)
+			res, err := test.get(m)
+			assert.NoError(t, err)
+			switch v := res.(type) {
+			case *string:
+				assert.Equal(t, test.expect, *v)
+			case *bool:
+				assert.Equal(t, test.expect, *v)
+			case *float64:
+				assert.Equal(t, test.expect, *v)
+			case *int64:
+				assert.Equal(t, test.expect, *v)
+			case *time.Time:
+				assert.True(t, v.Equal(*(test.expect.(*time.Time))))
+			case []string:
+				assert.Equal(t, test.expect, v)
+			default:
+				t.Fatalf("unexpected type %T", v)
+			}
+		})
+	}
 }
 
 func TestFileModel_ErrorBranches(t *testing.T) {
-	m := NewFile()
+	tests := []struct {
+		name string
+		key  string
+		get  func(m *FileModel) (interface{}, error)
+	}{
+		{"AverageImageColor", averageImageColorKey, func(m *FileModel) (interface{}, error) { return m.GetAverageImageColor() }},
+		{"Compressed", compressedKey, func(m *FileModel) (interface{}, error) { return m.GetCompressed() }},
+		{"ContentType", contentTypeKey, func(m *FileModel) (interface{}, error) { return m.GetContentType() }},
+		{"CreatedByName", createdByNameKey, func(m *FileModel) (interface{}, error) { return m.GetCreatedByName() }},
+		{"DownloadLink", downloadLinkKey, func(m *FileModel) (interface{}, error) { return m.GetDownloadLink() }},
+		{"FileName", fileNameKey, func(m *FileModel) (interface{}, error) { return m.GetFileName() }},
+		{"ImageHeight", imageHeightKey, func(m *FileModel) (interface{}, error) { return m.GetImageHeight() }},
+		{"ImageWidth", imageWidthKey, func(m *FileModel) (interface{}, error) { return m.GetImageWidth() }},
+		{"SizeBytes", sizeBytesKey, func(m *FileModel) (interface{}, error) { return m.GetSizeBytes() }},
+		{"SizeCompressed", sizeCompressedKey, func(m *FileModel) (interface{}, error) { return m.GetSizeCompressed() }},
+		{"SysCreatedBy", sysCreatedByKey, func(m *FileModel) (interface{}, error) { return m.GetSysCreatedBy() }},
+		{"SysCreatedOn", sysCreatedOnKey, func(m *FileModel) (interface{}, error) { return m.GetSysCreatedOn() }},
+		{"SysID", sysIDKey, func(m *FileModel) (interface{}, error) { return m.GetSysID() }},
+		{"SysModCount", sysModCountKey, func(m *FileModel) (interface{}, error) { return m.GetSysModCount() }},
+		{"SysTags", sysTagsKey, func(m *FileModel) (interface{}, error) { return m.GetSysTags() }},
+		{"SysUpdatedBy", sysUpdatedByKey, func(m *FileModel) (interface{}, error) { return m.GetSysUpdatedBy() }},
+		{"SysUpdatedOn", sysUpdatedOnKey, func(m *FileModel) (interface{}, error) { return m.GetSysUpdatedOn() }},
+		{"TableName", tableNameKey, func(m *FileModel) (interface{}, error) { return m.GetTableName() }},
+		{"TableSysID", tableSysIDKey, func(m *FileModel) (interface{}, error) { return m.GetTableSysID() }},
+		{"UpdatedByName", updatedByNameKey, func(m *FileModel) (interface{}, error) { return m.GetUpdatedByName() }},
+	}
 
-	t.Run("AverageImageColor_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(averageImageColorKey, 123)
-		_, err := m.GetAverageImageColor()
-		assert.Error(t, err)
-	})
-
-	t.Run("Compressed_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(compressedKey, 123)
-		_, err := m.GetCompressed()
-		assert.Error(t, err)
-	})
-
-	t.Run("ContentType_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(contentTypeKey, 123)
-		_, err := m.GetContentType()
-		assert.Error(t, err)
-	})
-
-	t.Run("CreatedByName_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(createdByNameKey, 123)
-		_, err := m.GetCreatedByName()
-		assert.Error(t, err)
-	})
-
-	t.Run("DownloadLink_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(downloadLinkKey, 123)
-		_, err := m.GetDownloadLink()
-		assert.Error(t, err)
-	})
-
-	t.Run("FileName_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(fileNameKey, 123)
-		_, err := m.GetFileName()
-		assert.Error(t, err)
-	})
-
-	t.Run("ImageHeight_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(imageHeightKey, 123)
-		_, err := m.GetImageHeight()
-		assert.Error(t, err)
-	})
-
-	t.Run("ImageWidth_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(imageWidthKey, 123)
-		_, err := m.GetImageWidth()
-		assert.Error(t, err)
-	})
-
-	t.Run("SizeBytes_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(sizeBytesKey, 123)
-		_, err := m.GetSizeBytes()
-		assert.Error(t, err)
-	})
-
-	t.Run("SizeCompressed_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(sizeCompressedKey, 123)
-		_, err := m.GetSizeCompressed()
-		assert.Error(t, err)
-	})
-
-	t.Run("SysCreatedBy_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(sysCreatedByKey, 123)
-		_, err := m.GetSysCreatedBy()
-		assert.Error(t, err)
-	})
-
-	t.Run("SysCreatedOn_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(sysCreatedOnKey, 123)
-		_, err := m.GetSysCreatedOn()
-		assert.Error(t, err)
-	})
-
-	t.Run("SysID_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(sysIDKey, 123)
-		_, err := m.GetSysID()
-		assert.Error(t, err)
-	})
-
-	t.Run("SysModCount_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(sysModCountKey, 123)
-		_, err := m.GetSysModCount()
-		assert.Error(t, err)
-	})
-
-	t.Run("SysTags_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(sysTagsKey, 123)
-		_, err := m.GetSysTags()
-		assert.Error(t, err)
-	})
-
-	t.Run("SysUpdatedBy_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(sysUpdatedByKey, 123)
-		_, err := m.GetSysUpdatedBy()
-		assert.Error(t, err)
-	})
-
-	t.Run("SysUpdatedOn_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(sysUpdatedOnKey, 123)
-		_, err := m.GetSysUpdatedOn()
-		assert.Error(t, err)
-	})
-
-	t.Run("TableName_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(tableNameKey, 123)
-		_, err := m.GetTableName()
-		assert.Error(t, err)
-	})
-
-	t.Run("TableSysID_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(tableSysIDKey, 123)
-		_, err := m.GetTableSysID()
-		assert.Error(t, err)
-	})
-
-	t.Run("UpdatedByName_WrongType", func(t *testing.T) {
-		_ = m.GetBackingStore().Set(updatedByNameKey, 123)
-		_, err := m.GetUpdatedByName()
-		assert.Error(t, err)
-	})
+	for _, test := range tests {
+		t.Run(test.name+"_WrongType", func(t *testing.T) {
+			m := NewFile()
+			_ = m.GetBackingStore().Set(test.key, 123)
+			_, err := test.get(m)
+			assert.Error(t, err)
+		})
+	}
 
 	t.Run("NilReceiver_Accessors", func(t *testing.T) {
 		var nilM *FileModel
-		v1, _ := nilM.GetAverageImageColor()
-		assert.Nil(t, v1)
-		v2, _ := nilM.GetCompressed()
-		assert.Nil(t, v2)
-		v3, _ := nilM.GetContentType()
-		assert.Nil(t, v3)
-		v4, _ := nilM.GetCreatedByName()
-		assert.Nil(t, v4)
-		v5, _ := nilM.GetDownloadLink()
-		assert.Nil(t, v5)
-		v6, _ := nilM.GetFileName()
-		assert.Nil(t, v6)
-		v7, _ := nilM.GetImageHeight()
-		assert.Nil(t, v7)
-		v8, _ := nilM.GetImageWidth()
-		assert.Nil(t, v8)
-		v9, _ := nilM.GetSizeBytes()
-		assert.Nil(t, v9)
-		v10, _ := nilM.GetSizeCompressed()
-		assert.Nil(t, v10)
-		v11, _ := nilM.GetSysCreatedBy()
-		assert.Nil(t, v11)
-		v12, _ := nilM.GetSysCreatedOn()
-		assert.Nil(t, v12)
-		v13, _ := nilM.GetSysID()
-		assert.Nil(t, v13)
-		v14, _ := nilM.GetSysModCount()
-		assert.Nil(t, v14)
-		v15, _ := nilM.GetSysTags()
-		assert.Nil(t, v15)
-		v16, _ := nilM.GetSysUpdatedBy()
-		assert.Nil(t, v16)
-		v17, _ := nilM.GetSysUpdatedOn()
-		assert.Nil(t, v17)
-		v18, _ := nilM.GetTableName()
-		assert.Nil(t, v18)
-		v19, _ := nilM.GetTableSysID()
-		assert.Nil(t, v19)
-		v20, _ := nilM.GetUpdatedByName()
-		assert.Nil(t, v20)
+		for _, test := range tests {
+			res, err := test.get(nilM)
+			assert.NoError(t, err)
+			assert.Nil(t, res)
+		}
 
 		assert.Nil(t, nilM.SetAverageImageColor(nil))
 		assert.Nil(t, nilM.SetCompressed(nil))
@@ -432,8 +264,6 @@ func TestFileModel_ErrorBranches(t *testing.T) {
 }
 
 func TestFileModel_Serialize_Errors(t *testing.T) {
-	writer := mocking.NewMockSerializationWriter()
-
 	keys := []string{
 		averageImageColorKey, compressedKey, contentTypeKey, createdByNameKey,
 		downloadLinkKey, fileNameKey, imageHeightKey, imageWidthKey,
@@ -444,6 +274,13 @@ func TestFileModel_Serialize_Errors(t *testing.T) {
 
 	for _, key := range keys {
 		t.Run(key, func(t *testing.T) {
+			writer := mocking.NewMockSerializationWriter()
+			writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteBoolValue", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteCollectionOfPrimitiveValues", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteObjectValue", mock.Anything, mock.Anything).Return(nil)
+			writer.On("WriteCollectionOfObjectValues", mock.Anything, mock.Anything).Return(nil)
+
 			m := NewFile()
 			_ = m.GetBackingStore().Set(key, 123) // Poison with wrong type
 			err := m.Serialize(writer)

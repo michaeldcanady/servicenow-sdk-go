@@ -1,24 +1,19 @@
 package store
 
 import (
-	"errors"
-
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/microsoft/kiota-abstractions-go/store"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
-// BackedModelAccessorFunc[S,T] defines a generic function signature for retrieving a value from a backed model
+// BackedModelAccessorFunc[S,T] defines a generic function signature for retrieving a value from a backing store
 // using a specified key and converting it to a desired type.
-type BackedModelAccessorFunc[M store.BackedModel, T any] func(M, string) (T, error)
+type BackedModelAccessorFunc[S kiotaStore.BackingStore, T any] func(S, string) (T, error)
+
+// ModelAccessor represents a function for getting and typing a property for a store backed model.
+type ModelAccessor[S kiotaStore.BackingStore, T any] BackedModelAccessorFunc[S, T]
 
 // DefaultBackedModelAccessorFunc[S, T] is a generic implementation of BackedModelAccessorFunc that retrieves a value
-// from a backed model and attempts to convert it to the specified type.
-func DefaultBackedModelAccessorFunc[M store.BackedModel, T any](model M, key string) (T, error) {
-	var result T
-
-	if internal.IsNil(model) {
-		return result, errors.New("model is nil")
-	}
-
-	return DefaultStoreAccessorFunc[store.BackingStore, T](model.GetBackingStore(), key)
+// from a backing store and attempts to convert it to the specified type.
+func DefaultBackedModelAccessorFunc[S kiotaStore.BackingStore, T any](backingStore S, key string) (T, error) {
+	return internal.DefaultBackedModelAccessorFunc[S, T](backingStore, key)
 }
