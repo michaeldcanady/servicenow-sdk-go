@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -101,32 +102,8 @@ func (bR *BatchRequestModel) GetFieldDeserializers() map[string]func(serializati
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		batchRequestIDKey: func(pn serialization.ParseNode) error {
-			id, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return bR.SetBatchRequestID(id)
-		},
-		restRequestsKey: func(pn serialization.ParseNode) error {
-			requests, err := pn.GetCollectionOfObjectValues(CreateRestRequestFromDiscriminatorValue)
-			if err != nil {
-				return err
-			}
-
-			typedRequest := make([]RestRequest, 0, len(requests))
-
-			for _, request := range requests {
-				request, ok := request.(RestRequest)
-				if !ok {
-					return errors.New("request is not RestRequestable")
-				}
-				typedRequest = append(typedRequest, request)
-			}
-
-			return bR.SetRestRequests(typedRequest)
-		},
+		batchRequestIDKey: internalSerialization.DeserializeStringFunc(bR.SetBatchRequestID),
+		restRequestsKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc(bR.SetRestRequests, CreateRestRequestFromDiscriminatorValue),
 	}
 }
 

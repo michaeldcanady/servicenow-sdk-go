@@ -9,6 +9,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -58,27 +59,13 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		bodyKey: func(pn serialization.ParseNode) error {
-			encodedBody, err := pn.GetStringValue()
-			if err != nil {
-				return err
+		bodyKey: internalSerialization.DeserializeMutatedStringFunc(sR.setBody, func(s *string) ([]byte, error) {
+			if s == nil {
+				return nil, nil
 			}
-
-			body, err := base64.StdEncoding.DecodeString(*encodedBody)
-			if err != nil {
-				return err
-			}
-
-			return sR.setBody(body)
-		},
-		errorMessageKey: func(pn serialization.ParseNode) error {
-			errorMessage, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return sR.setErrorMessage(errorMessage)
-		},
+			return base64.StdEncoding.DecodeString(*s)
+		}),
+		errorMessageKey: internalSerialization.DeserializeStringFunc(sR.setErrorMessage),
 		executionTimeKey: func(pn serialization.ParseNode) error {
 			// ServiceNow returns execution_time as a number (milliseconds)
 			// GetISODurationValue fails if it's a number in the JSON tree.
@@ -97,39 +84,9 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 
 			return sR.setExecutionTime(duration)
 		},
-		headersKey: func(pn serialization.ParseNode) error {
-			headers, err := pn.GetCollectionOfObjectValues(CreateRestRequestHeaderFromDiscriminatorValue)
-			if err != nil {
-				return err
-			}
-
-			batchHeaders := make([]RestRequestHeader, len(headers))
-			for index, header := range headers {
-				batchHeader, ok := header.(RestRequestHeader)
-				if !ok {
-					return errors.New("header is not RestRequestHeader")
-				}
-				batchHeaders[index] = batchHeader
-			}
-
-			return sR.setHeaders(batchHeaders)
-		},
-		idKey: func(pn serialization.ParseNode) error {
-			id, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return sR.setID(id)
-		},
-		redirectURLKey: func(pn serialization.ParseNode) error {
-			redirectURL, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return sR.setRedirectURL(redirectURL)
-		},
+		headersKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc(sR.setHeaders, CreateRestRequestHeaderFromDiscriminatorValue),
+		idKey:          internalSerialization.DeserializeStringFunc(sR.setID),
+		redirectURLKey: internalSerialization.DeserializeStringFunc(sR.setRedirectURL),
 		statusCodeKey: func(pn serialization.ParseNode) error {
 			// ServiceNow sometimes returns status_code as a number that gets parsed as float64
 			// GetInt64Value fails if it's a float64 in the JSON tree.
@@ -145,14 +102,7 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 
 			return nil
 		},
-		statusTextKey: func(pn serialization.ParseNode) error {
-			statusText, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return sR.setStatusText(statusText)
-		},
+		statusTextKey: internalSerialization.DeserializeStringFunc(sR.setStatusText),
 	}
 }
 

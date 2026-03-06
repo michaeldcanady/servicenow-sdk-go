@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -184,66 +185,23 @@ func (rE *RestRequestModel) GetFieldDeserializers() map[string]func(serializatio
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		bodyKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
+		bodyKey: internalSerialization.DeserializeMutatedStringFunc(rE.SetBody, func(s *string) ([]byte, error) {
+			if s == nil {
+				return nil, nil
 			}
-			if val == nil {
-				return nil
+			return base64.StdEncoding.DecodeString(*s)
+		}),
+		excludeResponseHeadersKey: internalSerialization.DeserializeBoolFunc(rE.SetExcludeResponseHeaders),
+		headersKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc(rE.SetHeaders, CreateRestRequestHeaderFromDiscriminatorValue),
+		idKey: internalSerialization.DeserializeStringFunc(rE.SetID),
+		methodKey: internalSerialization.DeserializeMutatedStringFunc(rE.SetMethod, func(s *string) (*abstractions.HttpMethod, error) {
+			if s == nil {
+				return nil, nil
 			}
-			body, err := base64.StdEncoding.DecodeString(*val)
-			if err != nil {
-				return err
-			}
-			return rE.SetBody(body)
-		},
-		excludeResponseHeadersKey: func(node serialization.ParseNode) error {
-			val, err := node.GetBoolValue()
-			if err != nil {
-				return err
-			}
-			return rE.SetExcludeResponseHeaders(val)
-		},
-		headersKey: func(node serialization.ParseNode) error {
-			val, err := node.GetCollectionOfObjectValues(CreateRestRequestHeaderFromDiscriminatorValue)
-			if err != nil {
-				return err
-			}
-			headers := make([]RestRequestHeader, len(val))
-			for i, header := range val {
-				headers[i] = header.(RestRequestHeader)
-			}
-			return rE.SetHeaders(headers)
-		},
-		idKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			return rE.SetID(val)
-		},
-		methodKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val == nil {
-				return nil
-			}
-			method, err := parseHttpMethod(*val)
-			if err != nil {
-				return err
-			}
-			return rE.SetMethod(&method)
-		},
-		urlKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			return rE.SetURL(val)
-		},
+			m, err := parseHttpMethod(*s)
+			return &m, err
+		}),
+		urlKey: internalSerialization.DeserializeStringFunc(rE.SetURL),
 	}
 }
 

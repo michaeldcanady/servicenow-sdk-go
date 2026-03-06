@@ -48,3 +48,51 @@ func DeserializeInt64Func(setter ModelSetter[*int64]) serialization.NodeParser {
 		return SetValueFromSource(node.GetInt64Value, setter)
 	}
 }
+
+func DeserializeBoolFunc(setter ModelSetter[*bool]) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		return SetValueFromSource(node.GetBoolValue, setter)
+	}
+}
+
+func DeserializeFloat64Func(setter ModelSetter[*float64]) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		return SetValueFromSource(node.GetFloat64Value, setter)
+	}
+}
+
+func DeserializeByteArrayFunc(setter ModelSetter[[]byte]) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		return SetValueFromSource(node.GetByteArrayValue, setter)
+	}
+}
+
+func DeserializeMutatedByteArrayFunc[T any](setter ModelSetter[T], mutator Mutator[[]byte, T]) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		return SetMutatedValueFromSource(node.GetByteArrayValue, setter, mutator)
+	}
+}
+
+func DeserializeCollectionOfObjectValuesFunc[T serialization.Parsable](setter ModelSetter[[]T], factory serialization.ParsableFactory) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		val, err := node.GetCollectionOfObjectValues(factory)
+		if err != nil {
+			return err
+		}
+		res := make([]T, len(val))
+		for i, v := range val {
+			res[i] = v.(T)
+		}
+		return setter(res)
+	}
+}
+
+func DeserializeObjectValueFunc[T serialization.Parsable](setter ModelSetter[T], factory serialization.ParsableFactory) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		val, err := node.GetObjectValue(factory)
+		if err != nil {
+			return err
+		}
+		return setter(val.(T))
+	}
+}
