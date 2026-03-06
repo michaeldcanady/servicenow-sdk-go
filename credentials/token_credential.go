@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// Deprecated: deprecated since v{unreleased}. Use [UsernamePasswordCredential] instead.
+// Deprecated: deprecated since v1.10.0. Use [UsernamePasswordCredential] instead.
 //
 // TokenCredential represents the OAuth2 token credentials.
 type TokenCredential struct {
@@ -33,7 +33,7 @@ func DefaultPrompt() (string, string, error) {
 	return username, password, nil
 }
 
-// Deprecated: deprecated since v{unreleased}. Use [NewROPCCredential] instead.
+// Deprecated: deprecated since v1.10.0. Use [NewROPCCredential] instead.
 //
 // NewTokenCredential creates a new token credential
 func NewTokenCredential(clientID, clientSecret, baseURL string, prompt func() (string, string, error)) (*TokenCredential, error) {
