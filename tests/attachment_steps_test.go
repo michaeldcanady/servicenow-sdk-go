@@ -7,7 +7,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"regexp"
 	"testing"
 
 	"github.com/cucumber/godog"
@@ -143,7 +142,7 @@ func (c *attachmentTestContext) theResultShouldHaveTheCorrectSysID() error {
 }
 
 func (c *attachmentTestContext) iHaveAnIncidentRecordInTheTable(tableName string) error {
-	if httpmock.Disabled() {
+	if !isOffline() {
 		resp, err := c.client.Now2().TableV2(tableName).Get(context.Background(), nil)
 		if err != nil {
 			return err
@@ -282,8 +281,9 @@ func (c *attachmentTestContext) iDeleteTheCreatedAttachment() error {
 
 func (c *attachmentTestContext) iRequestTheDeletedAttachmentByItsSysID() error {
 	if isOffline() {
-		baseURL := fmt.Sprintf("https://%s.service-now.com/api/now/attachment", os.Getenv("SN_INSTANCE"))
-		httpmock.RegisterRegexpResponder("GET", regexp.MustCompile(baseURL+`/[a-zA-Z0-9_]+$`),
+		baseURL := fmt.Sprintf("https://%s.service-now.com/api/now/v1/attachment", os.Getenv("SN_INSTANCE"))
+		url := fmt.Sprintf("%s/%s", baseURL, c.lastSysID)
+		httpmock.RegisterResponder("GET", url,
 			httpmock.NewStringResponder(404, `{"error":{"message":"No Record found","detail":""},"status":"failure"}`))
 	}
 	resp, err := c.client.Now2().Attachment2().ByID(c.lastSysID).Get(context.Background(), nil)

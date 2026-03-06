@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"regexp"
 	"testing"
 
 	"github.com/cucumber/godog"
@@ -244,8 +243,9 @@ func (c *batchTestContext) iSendABatchRequestWithADELETEOperationForTheCreatedIn
 
 func (c *batchTestContext) iRequestTheDeletedIncidentByItsSysID() error {
 	if isOffline() {
-		baseURL := fmt.Sprintf("https://%s.service-now.com/api/now/v1/table/incident/", os.Getenv("SN_INSTANCE"))
-		httpmock.RegisterRegexpResponder("GET", regexp.MustCompile(baseURL+`[a-zA-Z0-9_]+$`),
+		instance := os.Getenv("SN_INSTANCE")
+		url := fmt.Sprintf("https://%s.service-now.com/api/now/v1/table/incident/%s", instance, c.lastSysID)
+		httpmock.RegisterResponder("GET", url,
 			httpmock.NewStringResponder(404, `{"error":{"message":"No Record found","detail":""},"status":"failure"}`))
 	}
 	_, err := c.client.Now2().TableV2("incident").ById(c.lastSysID).Get(context.Background(), nil)

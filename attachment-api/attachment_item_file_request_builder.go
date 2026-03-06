@@ -91,18 +91,23 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 		return nil, errors.New("resp is not []byte")
 	}
 
-	metadata := opts.ResponseHeaders.Get("x-attachment-metadata")[0]
+	var file serialization.Parsable = NewFileWithContent()
 
-	var node serialization.ParseNode
+	metadataHeaders := opts.ResponseHeaders.Get("x-attachment-metadata")
+	if len(metadataHeaders) > 0 {
+		metadata := metadataHeaders[0]
 
-	node, err = jsonserialization.NewJsonParseNode([]byte(metadata))
-	if err != nil {
-		return nil, err
-	}
+		var node serialization.ParseNode
 
-	file, err := node.GetObjectValue(CreateFileWithContentFromDiscriminatorValue)
-	if err != nil {
-		return nil, err
+		node, err = jsonserialization.NewJsonParseNode([]byte(metadata))
+		if err != nil {
+			return nil, err
+		}
+
+		file, err = node.GetObjectValue(CreateFileWithContentFromDiscriminatorValue)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	typedFile, ok := file.(*FileWithContentModel)
