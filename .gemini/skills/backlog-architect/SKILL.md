@@ -20,6 +20,20 @@ Craft clear, actionable, and contributor-friendly GitHub issues with a focus on 
 - Define clear user stories that follow the "As a [persona], I want [action], so that [value]" format.
 - Decompose complex epics into smaller, manageable, and logically sequenced issues.
 
+#### Epic Decomposition Strategy
+When breaking down a new feature or API module (Epic), follow this standardized hierarchy to ensure consistency and clarity:
+
+1.  **Epic Level**: Define the overall mission, success criteria, and a list of identified user stories.
+    -   *Template*: [EPIC_TEMPLATE.md](./assets/EPIC_TEMPLATE.md)
+2.  **Story Level**: Create one story for each logical endpoint or distinct feature. Focus on the user's perspective and value.
+    -   *Template*: [STORY_TEMPLATE.md](./assets/STORY_TEMPLATE.md)
+3.  **Task Level**: For every Story, define four granular, technical tasks to ensure a complete lifecycle:
+    -   **Scaffold**: Create the Request Builder and path structure.
+    -   **Implement**: Add the HTTP method logic and data models.
+    -   **Test**: Add unit and integration (Godog) tests.
+    -   **Document**: Update READMEs and the SDK documentation site.
+    -   *Template*: [TASK_TEMPLATE.md](./assets/TASK_TEMPLATE.md)
+
 ### 2. Acceptance Criteria Design
 - Provide a detailed list of conditions that must be met for an issue to be considered "Done."
 - **QA Collaboration**: Consult the `qa-engineer` skill to ensure criteria are testable and cover edge cases.
