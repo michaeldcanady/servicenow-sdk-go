@@ -3,8 +3,9 @@ package internal
 import (
 	"errors"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/microsoft/kiota-abstractions-go/store"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -57,7 +58,7 @@ func (exc *ServicenowError) GetError() (MainErrorable, error) {
 	}
 
 	backingStore := exc.GetBackingStore()
-	return DefaultBackedModelAccessorFunc[store.BackingStore, MainErrorable](backingStore, errorKey)
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, MainErrorable](backingStore, errorKey)
 }
 
 // setError sets the main error
@@ -67,7 +68,7 @@ func (exc *ServicenowError) setError(mainError MainErrorable) error {
 	}
 
 	backingStore := exc.GetBackingStore()
-	return DefaultBackedModelMutatorFunc(backingStore, errorKey, mainError)
+	return store.DefaultBackedModelMutatorFunc(backingStore, errorKey, mainError)
 }
 
 func (exc *ServicenowError) Error() string {

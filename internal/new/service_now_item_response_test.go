@@ -108,7 +108,7 @@ func TestBaseServiceNowItemResponse_ErrorBranches(t *testing.T) {
 	}
 
 	resNilBS := &BaseServiceNowItemResponse[*MainError]{backingStore: nil, backingStoreFactory: nil}
-	if err := resNilBS.setResult(nil); err == nil || err.Error() != "nil store" {
+	if err := resNilBS.setResult(nil); err == nil || err.Error() != "backingStore is nil" {
 		t.Errorf("expected store nil error, got %v", err)
 	}
 }

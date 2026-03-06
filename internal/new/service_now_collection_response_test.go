@@ -115,27 +115,27 @@ func TestBaseServiceNowCollectionResponse_GetLinks(t *testing.T) {
 func TestBaseServiceNowCollectionResponse_ErrorBranches(t *testing.T) {
 	res := NewBaseServiceNowCollectionResponse[serialization.Parsable](nil)
 	_ = res.backingStore.Set(resultKey, "not-a-slice")
-	if _, err := res.GetResult(); err == nil || err.Error() != "val is not slice" {
+	if _, err := res.GetResult(); err == nil || err.Error() != "cannot convert 'not-a-slice' to type []interface {}" {
 		t.Errorf("expected slice error, got %v", err)
 	}
 
 	_ = res.backingStore.Set(nextKey, 123)
-	if _, err := res.GetNextLink(); err == nil || err.Error() != "val is not *string" {
+	if _, err := res.GetNextLink(); err == nil || err.Error() != "cannot convert '123' to type *string" {
 		t.Error("expected string error in next link")
 	}
 
 	_ = res.backingStore.Set(previousKey, 123)
-	if _, err := res.GetPreviousLink(); err == nil || err.Error() != "val is not *string" {
+	if _, err := res.GetPreviousLink(); err == nil || err.Error() != "cannot convert '123' to type *string" {
 		t.Error("expected string error in prev link")
 	}
 
 	_ = res.backingStore.Set(firstKey, 123)
-	if _, err := res.GetFirstLink(); err == nil || err.Error() != "val is not *string" {
+	if _, err := res.GetFirstLink(); err == nil || err.Error() != "cannot convert '123' to type *string" {
 		t.Error("expected string error in first link")
 	}
 
 	_ = res.backingStore.Set(lastKey, 123)
-	if _, err := res.GetLastLink(); err == nil || err.Error() != "val is not *string" {
+	if _, err := res.GetLastLink(); err == nil || err.Error() != "cannot convert '123' to type *string" {
 		t.Error("expected string error in last link")
 	}
 }

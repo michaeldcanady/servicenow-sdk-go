@@ -89,15 +89,15 @@ func TestFileWithContentModel_SetContent(t *testing.T) {
 func TestFileWithContentModel_ErrorBranches(t *testing.T) {
 	mWrongType := NewFileWithContent()
 	_ = mWrongType.GetBackingStore().Set(contentKey, 123)
-	if _, err := mWrongType.GetContent(); err == nil || err.Error() != "content is not []byte" {
+	if _, err := mWrongType.GetContent(); err == nil || err.Error() != "cannot convert '123' to type []uint8" {
 		t.Errorf("expected type error, got %v", err)
 	}
 
 	mNilBS := &FileWithContentModel{File: &mockNilBSFile{}}
-	if _, err := mNilBS.GetContent(); err == nil || err.Error() != "store is nil" {
+	if _, err := mNilBS.GetContent(); err == nil || err.Error() != "backingStore is nil" {
 		t.Errorf("expected BS nil error in Get, got %v", err)
 	}
-	if err := mNilBS.SetContent(nil); err == nil || err.Error() != "store is nil" {
+	if err := mNilBS.SetContent(nil); err == nil || err.Error() != "backingStore is nil" {
 		t.Errorf("expected BS nil error in Set, got %v", err)
 	}
 }

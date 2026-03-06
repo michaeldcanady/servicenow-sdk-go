@@ -219,17 +219,17 @@ func TestMainError_ErrorBranches(t *testing.T) {
 
 	mWrongType := NewMainError()
 	_ = mWrongType.GetBackingStore().Set(detailKey, 123)
-	if _, err := mWrongType.GetDetail(); err == nil || err.Error() != "detail is not *string" {
+	if _, err := mWrongType.GetDetail(); err == nil || err.Error() != "cannot convert '123' to type *string" {
 		t.Errorf("Expected wrong type error, got %v", err)
 	}
 
 	_ = mWrongType.GetBackingStore().Set(messageKey, 123)
-	if _, err := mWrongType.GetMessage(); err == nil || err.Error() != "message is not *string" {
+	if _, err := mWrongType.GetMessage(); err == nil || err.Error() != "cannot convert '123' to type *string" {
 		t.Errorf("Expected wrong type error in Message, got %v", err)
 	}
 
 	_ = mWrongType.GetBackingStore().Set(statusKey, 123)
-	if _, err := mWrongType.GetStatus(); err == nil || err.Error() != "status is not *string" {
+	if _, err := mWrongType.GetStatus(); err == nil || err.Error() != "cannot convert '123' to type *string" {
 		t.Errorf("Expected wrong type error in Status, got %v", err)
 	}
 }
