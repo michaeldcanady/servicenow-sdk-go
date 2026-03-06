@@ -4,6 +4,7 @@ import (
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
 	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	policyapi "github.com/michaeldcanady/servicenow-sdk-go/policy-api"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 )
 
@@ -13,6 +14,11 @@ func NewNowRequestBuilder2(url string, client core.Client2) *NowRequestBuilder {
 	return &NowRequestBuilder{
 		*requestBuilder,
 	}
+}
+
+// Policy returns a PolicyRequestBuilder associated with the NowRequestBuilder.
+func (rB *NowRequestBuilder) Policy() *policyapi.PolicyRequestBuilder {
+	return policyapi.NewPolicyRequestBuilderInternal(rB.PathParameters, rB.Client.(*ServiceNowClient).RequestAdapter)
 }
 
 // Deprecated: deprecated since v1.9.0. Please use [NowRequestBuilder.TableV2]
