@@ -9,6 +9,7 @@ import (
 	"regexp"
 
 	"github.com/jarcoal/httpmock"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
 func isOffline() bool {
@@ -37,25 +38,54 @@ func setupGlobalMocks() {
 	httpmock.RegisterResponder("GET", tableBaseURL+"/incident",
 		func(req *http.Request) (*http.Response, error) {
 			resp := httpmock.NewStringResponse(200, mockIncidentList)
+			resp.Header.Set("Content-Type", "application/json")
 			resp.Header.Set("Link", fmt.Sprintf("<%s/incident?sysparm_limit=2&sysparm_offset=2>; rel=\"next\"", tableBaseURL))
 			return resp, nil
 		})
 	httpmock.RegisterResponder("POST", tableBaseURL+"/incident",
-		httpmock.NewStringResponder(201, mockCreatedIncident))
+		func(req *http.Request) (*http.Response, error) {
+			resp := httpmock.NewStringResponse(201, mockCreatedIncident)
+			resp.Header.Set("Content-Type", "application/json")
+			return resp, nil
+		})
 
 	tableIdRegex := regexp.MustCompile(tableBaseURL + `/+incident(?:/+(?:[a-zA-Z0-9_]+)?)?$`)
-	httpmock.RegisterRegexpResponder("GET", tableIdRegex, httpmock.NewStringResponder(200, mockIncidentItem))
-	httpmock.RegisterRegexpResponder("PUT", tableIdRegex, httpmock.NewStringResponder(200, mockUpdatedIncident))
-	httpmock.RegisterRegexpResponder("PATCH", tableIdRegex, httpmock.NewStringResponder(200, mockPatchedIncident))
+	httpmock.RegisterRegexpResponder("GET", tableIdRegex, func(req *http.Request) (*http.Response, error) {
+		resp := httpmock.NewStringResponse(200, mockIncidentItem)
+		resp.Header.Set("Content-Type", "application/json")
+		return resp, nil
+	})
+	httpmock.RegisterRegexpResponder("PUT", tableIdRegex, func(req *http.Request) (*http.Response, error) {
+		resp := httpmock.NewStringResponse(200, mockUpdatedIncident)
+		resp.Header.Set("Content-Type", "application/json")
+		return resp, nil
+	})
+	httpmock.RegisterRegexpResponder("PATCH", tableIdRegex, func(req *http.Request) (*http.Response, error) {
+		resp := httpmock.NewStringResponse(200, mockPatchedIncident)
+		resp.Header.Set("Content-Type", "application/json")
+		return resp, nil
+	})
 	httpmock.RegisterRegexpResponder("DELETE", tableIdRegex, httpmock.NewStringResponder(204, ""))
 
 	// Attachment API Mocks
 	attachBaseURL := fmt.Sprintf("https://%s.service-now.com/api/now/attachment", instance)
-	httpmock.RegisterResponder("GET", attachBaseURL, httpmock.NewStringResponder(200, mockAttachmentList))
+	httpmock.RegisterResponder("GET", attachBaseURL, func(req *http.Request) (*http.Response, error) {
+		resp := httpmock.NewStringResponse(200, mockAttachmentList)
+		resp.Header.Set("Content-Type", "application/json")
+		return resp, nil
+	})
 
 	attachIdRegex := regexp.MustCompile(attachBaseURL + `/?([a-zA-Z0-9_]+)?$`)
-	httpmock.RegisterRegexpResponder("GET", attachIdRegex, httpmock.NewStringResponder(200, mockAttachmentItem))
-	httpmock.RegisterRegexpResponder("POST", regexp.MustCompile(attachBaseURL+`/+file`), httpmock.NewStringResponder(201, mockAttachmentItem))
+	httpmock.RegisterRegexpResponder("GET", attachIdRegex, func(req *http.Request) (*http.Response, error) {
+		resp := httpmock.NewStringResponse(200, mockAttachmentItem)
+		resp.Header.Set("Content-Type", "application/json")
+		return resp, nil
+	})
+	httpmock.RegisterRegexpResponder("POST", regexp.MustCompile(attachBaseURL+`/+file`), func(req *http.Request) (*http.Response, error) {
+		resp := httpmock.NewStringResponse(201, mockAttachmentItem)
+		resp.Header.Set("Content-Type", "application/json")
+		return resp, nil
+	})
 
 	fileRegex := regexp.MustCompile(attachBaseURL + `/?([a-zA-Z0-9_]+)?/file`)
 	httpmock.RegisterRegexpResponder("GET", fileRegex, func(req *http.Request) (*http.Response, error) {
@@ -68,17 +98,29 @@ func setupGlobalMocks() {
 	// Batch API Mocks
 	batchBaseURL := fmt.Sprintf("https://%s.service-now.com/api/now/v1", instance)
 	httpmock.RegisterResponder("POST", batchBaseURL+"/batch", func(req *http.Request) (*http.Response, error) {
-		return httpmock.NewStringResponse(200, mockBatchMultiResponse), nil
+		resp := httpmock.NewStringResponse(200, mockBatchMultiResponse)
+		resp.Header.Set("Content-Type", "application/json")
+		return resp, nil
 	})
-	httpmock.RegisterResponder("POST", batchBaseURL+"/table/incident", httpmock.NewStringResponder(201, mockCreatedIncident))
-	httpmock.RegisterRegexpResponder("GET", regexp.MustCompile(batchBaseURL+`/+table/+incident/+(?:[a-zA-Z0-9_]+)?$`), httpmock.NewStringResponder(200, mockIncidentItem))
+	httpmock.RegisterResponder("POST", batchBaseURL+"/table/incident", func(req *http.Request) (*http.Response, error) {
+		resp := httpmock.NewStringResponse(201, mockCreatedIncident)
+		resp.Header.Set("Content-Type", "application/json")
+		return resp, nil
+	})
+	httpmock.RegisterRegexpResponder("GET", regexp.MustCompile(batchBaseURL+`/+table/+incident/+(?:[a-zA-Z0-9_]+)?$`), func(req *http.Request) (*http.Response, error) {
+		resp := httpmock.NewStringResponse(200, mockIncidentItem)
+		resp.Header.Set("Content-Type", "application/json")
+		return resp, nil
+	})
 }
 
 func getHttpClient() *http.Client {
 	if isOffline() {
+		// Wrap httpmock transport with Kiota middleware to ensure HeadersInspectionOptions are populated
+		transport := nethttplibrary.NewCustomTransportWithParentTransport(httpmock.DefaultTransport, nethttplibrary.GetDefaultMiddlewares()...)
 		return &http.Client{
-			Transport: httpmock.DefaultTransport,
+			Transport: transport,
 		}
 	}
-	return http.DefaultClient
+	return nil
 }
