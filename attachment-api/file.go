@@ -7,7 +7,9 @@ import (
 	"time"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -329,235 +331,26 @@ func (f *FileModel) GetAverageImageColor() (*string, error) {
 // GetFieldDeserializers returns the deserialization information for this object.
 func (f *FileModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
 	return map[string]func(serialization.ParseNode) error{
-		averageImageColorKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetAverageImageColor(val)
-		},
-		compressedKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val == nil || *val == "" {
-				return nil
-			}
-			boolVal, err := strconv.ParseBool(*val)
-			if err != nil {
-				return err
-			}
-
-			return f.SetCompressed(&boolVal)
-		},
-		contentTypeKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetContentType(val)
-		},
-		createdByNameKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetCreatedByName(val)
-		},
-		downloadLinkKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetDownloadLink(val)
-		},
-		fileNameKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetFileName(val)
-		},
-		imageHeightKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val == nil || *val == "" {
-				return nil
-			}
-
-			floatVal, err := strconv.ParseFloat(*val, 64)
-			if err != nil {
-				return err
-			}
-
-			return f.SetImageHeight(&floatVal)
-		},
-		imageWidthKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val == nil || *val == "" {
-				return nil
-			}
-
-			floatVal, err := strconv.ParseFloat(*val, 64)
-			if err != nil {
-				return err
-			}
-
-			return f.SetImageWidth(&floatVal)
-		},
-		sizeBytesKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val == nil || *val == "" {
-				return nil
-			}
-
-			intVal, err := strconv.Atoi(*val)
-			if err != nil {
-				return err
-			}
-			int64Val := int64(intVal)
-
-			return f.SetSizeBytes(&int64Val)
-		},
-		sizeCompressedKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val == nil || *val == "" {
-				return nil
-			}
-
-			intVal, err := strconv.Atoi(*val)
-			if err != nil {
-				return err
-			}
-			int64Val := int64(intVal)
-
-			return f.SetSizeCompressed(&int64Val)
-		},
-		sysCreatedByKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetSysCreatedBy(val)
-		},
-		sysCreatedOnKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val == nil || *val == "" {
-				return f.SetSysCreatedOn(nil)
-			}
-
-			dateTime, err := time.Parse("2006-01-02 15:04:05", *val)
-			if err != nil {
-				return err
-			}
-
-			return f.SetSysCreatedOn(&dateTime)
-		},
-		sysIDKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetSysID(val)
-		},
-		sysModCountKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val == nil || *val == "" {
-				return nil
-			}
-
-			intVal, err := strconv.Atoi(*val)
-			if err != nil {
-				return err
-			}
-			int64Val := int64(intVal)
-
-			return f.SetSysModCount(&int64Val)
-		},
-		sysTagsKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			// TODO: Figure out delimiter
-			tags := strings.Split(*val, " ")
-
-			return f.SetSysTags(tags)
-		},
-		sysUpdatedByKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetSysUpdatedBy(val)
-		},
-		sysUpdatedOnKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if internal.IsNil(val) || *val == "" {
-				return f.SetSysUpdatedOn(nil)
-			}
-
-			dateTime, err := time.Parse("2006-01-02 15:04:05", *val)
-			if err != nil {
-				return err
-			}
-
-			return f.SetSysUpdatedOn(&dateTime)
-		},
-		tableNameKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetTableName(val)
-		},
-		tableSysIDKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetTableSysID(val)
-		},
-		updatedByNameKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetUpdatedByName(val)
-		},
+		averageImageColorKey: internalSerialization.DeserializeStringFunc(f.SetAverageImageColor),
+		compressedKey:        internalSerialization.DeserializeMutatedStringFunc(f.SetCompressed, conversion.StringPtrToBoolPtr),
+		contentTypeKey:       internalSerialization.DeserializeStringFunc(f.SetContentType),
+		createdByNameKey:     internalSerialization.DeserializeStringFunc(f.SetCreatedByName),
+		downloadLinkKey:      internalSerialization.DeserializeStringFunc(f.SetDownloadLink),
+		fileNameKey:          internalSerialization.DeserializeStringFunc(f.SetFileName),
+		imageHeightKey:       internalSerialization.DeserializeMutatedStringFunc(f.SetImageHeight, conversion.StringPtrToFloat64Ptr),
+		imageWidthKey:        internalSerialization.DeserializeMutatedStringFunc(f.SetImageWidth, conversion.StringPtrToFloat64Ptr),
+		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(f.SetSizeBytes, conversion.StringPtrToInt64Ptr),
+		sizeCompressedKey:    internalSerialization.DeserializeMutatedStringFunc(f.SetSizeCompressed, conversion.StringPtrToInt64Ptr),
+		sysCreatedByKey:      internalSerialization.DeserializeStringFunc(f.SetSysCreatedBy),
+		sysCreatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(f.SetSysCreatedOn, conversion.StringPtrToTimePtr("2006-01-02 15:04:05")),
+		sysIDKey:             internalSerialization.DeserializeStringFunc(f.SetSysID),
+		sysModCountKey:       internalSerialization.DeserializeMutatedStringFunc(f.SetSysModCount, conversion.StringPtrToInt64Ptr),
+		sysTagsKey:           internalSerialization.DeserializeMutatedStringFunc(f.SetSysTags, conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil })),
+		sysUpdatedByKey:      internalSerialization.DeserializeStringFunc(f.SetSysUpdatedBy),
+		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(f.SetSysUpdatedOn, conversion.StringPtrToTimePtr("2006-01-02 15:04:05")),
+		tableNameKey:         internalSerialization.DeserializeStringFunc(f.SetTableName),
+		tableSysIDKey:        internalSerialization.DeserializeStringFunc(f.SetTableSysID),
+		updatedByNameKey:     internalSerialization.DeserializeStringFunc(f.SetUpdatedByName),
 	}
 }
 

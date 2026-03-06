@@ -6,6 +6,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -90,20 +91,8 @@ func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serial
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		nameKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			return bH.SetName(val)
-		},
-		valueKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			return bH.SetValue(val)
-		},
+		nameKey:  internalSerialization.DeserializeStringFunc(bH.SetName),
+		valueKey: internalSerialization.DeserializeStringFunc(bH.SetValue),
 	}
 }
 

@@ -141,15 +141,9 @@ func (rE *Attachment2Model) GetFieldDeserializers() map[string]func(serializatio
 		sysModCountKey:    internalSerialization.DeserializeMutatedStringFunc(rE.setSysModCount, conversion.StringPtrToInt64Ptr),
 		contentTypeKey:    internalSerialization.DeserializeStringFunc(rE.setContentType),
 		sizeCompressedKey: internalSerialization.DeserializeMutatedStringFunc(rE.setSizeCompressed, conversion.StringPtrToInt64Ptr),
-		chunkSizeBytesKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			return rE.setChunkSizeBytes(val)
-		},
-		hashKey:  internalSerialization.DeserializeStringFunc(rE.setHash),
-		stateKey: internalSerialization.DeserializeStringFunc(rE.setState),
+		chunkSizeBytesKey: internalSerialization.DeserializeStringFunc(rE.setChunkSizeBytes),
+		hashKey:           internalSerialization.DeserializeStringFunc(rE.setHash),
+		stateKey:          internalSerialization.DeserializeStringFunc(rE.setState),
 	}
 }
 
