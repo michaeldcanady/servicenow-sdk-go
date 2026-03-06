@@ -192,8 +192,8 @@ func (rE *RestRequestModel) GetFieldDeserializers() map[string]func(serializatio
 			return base64.StdEncoding.DecodeString(*s)
 		}),
 		excludeResponseHeadersKey: internalSerialization.DeserializeBoolFunc(rE.SetExcludeResponseHeaders),
-		headersKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc(rE.SetHeaders, CreateRestRequestHeaderFromDiscriminatorValue),
-		idKey: internalSerialization.DeserializeStringFunc(rE.SetID),
+		headersKey:                internalSerialization.DeserializeCollectionOfObjectValuesFunc(rE.SetHeaders, CreateRestRequestHeaderFromDiscriminatorValue),
+		idKey:                     internalSerialization.DeserializeStringFunc(rE.SetID),
 		methodKey: internalSerialization.DeserializeMutatedStringFunc(rE.SetMethod, func(s *string) (*abstractions.HttpMethod, error) {
 			if s == nil {
 				return nil, nil

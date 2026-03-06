@@ -103,7 +103,7 @@ func (bR *BatchRequestModel) GetFieldDeserializers() map[string]func(serializati
 
 	return map[string]func(serialization.ParseNode) error{
 		batchRequestIDKey: internalSerialization.DeserializeStringFunc(bR.SetBatchRequestID),
-		restRequestsKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc(bR.SetRestRequests, CreateRestRequestFromDiscriminatorValue),
+		restRequestsKey:   internalSerialization.DeserializeCollectionOfObjectValuesFunc(bR.SetRestRequests, CreateRestRequestFromDiscriminatorValue),
 	}
 }
 

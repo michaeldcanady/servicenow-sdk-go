@@ -84,7 +84,7 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 
 			return sR.setExecutionTime(duration)
 		},
-		headersKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc(sR.setHeaders, CreateRestRequestHeaderFromDiscriminatorValue),
+		headersKey:     internalSerialization.DeserializeCollectionOfObjectValuesFunc(sR.setHeaders, CreateRestRequestHeaderFromDiscriminatorValue),
 		idKey:          internalSerialization.DeserializeStringFunc(sR.setID),
 		redirectURLKey: internalSerialization.DeserializeStringFunc(sR.setRedirectURL),
 		statusCodeKey: func(pn serialization.ParseNode) error {
