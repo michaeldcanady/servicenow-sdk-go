@@ -17,7 +17,7 @@
     "-w"
   ],
   "go.buildFlags": [
-    "-tags=preview.query"
+    "-tags=preview.query,integration"
   ],
   "go.lintOnSave": "package",
   "go.lintTool": "golangci-lint",
@@ -113,8 +113,8 @@
   ],
   "gopls": {
     "build.buildFlags": [
-      "-tags=preview.query,preview.tableApiV2"
-    ],
+      "-tags=preview.query,integration"
+    ]
   },
   "go.useLanguageServer": true
 }

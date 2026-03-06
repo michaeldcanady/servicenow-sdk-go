@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strings"
 
 	"github.com/jarcoal/httpmock"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
@@ -37,7 +38,12 @@ func setupGlobalMocks() {
 	tableBaseURL := fmt.Sprintf("https://%s.service-now.com/api/now/v1/table", instance)
 	httpmock.RegisterResponder("GET", tableBaseURL+"/incident",
 		func(req *http.Request) (*http.Response, error) {
-			resp := httpmock.NewStringResponse(200, mockIncidentList)
+			query := req.URL.Query().Get("sysparm_query")
+			data := mockIncidentList
+			if strings.Contains(query, "ORDERBYDESC") {
+				data = mockIncidentListSortedDesc
+			}
+			resp := httpmock.NewStringResponse(200, data)
 			resp.Header.Set("Content-Type", "application/json")
 			resp.Header.Set("Link", fmt.Sprintf("<%s/incident?sysparm_limit=2&sysparm_offset=2>; rel=\"next\"", tableBaseURL))
 			return resp, nil
@@ -49,33 +55,35 @@ func setupGlobalMocks() {
 			return resp, nil
 		})
 
-	tableIdRegex := regexp.MustCompile(tableBaseURL + `/+incident(?:/+(?:[a-zA-Z0-9_]+)?)?$`)
-	httpmock.RegisterRegexpResponder("GET", tableIdRegex, func(req *http.Request) (*http.Response, error) {
-		resp := httpmock.NewStringResponse(200, mockIncidentItem)
-		resp.Header.Set("Content-Type", "application/json")
-		return resp, nil
-	})
-	httpmock.RegisterRegexpResponder("PUT", tableIdRegex, func(req *http.Request) (*http.Response, error) {
+	// Exact match for the default mock incident
+	httpmock.RegisterResponder("GET", tableBaseURL+"/incident/mock_sys_id_1",
+		func(req *http.Request) (*http.Response, error) {
+			resp := httpmock.NewStringResponse(200, mockIncidentItem)
+			resp.Header.Set("Content-Type", "application/json")
+			return resp, nil
+		})
+
+	httpmock.RegisterRegexpResponder("PUT", regexp.MustCompile(tableBaseURL+`/incident/[a-zA-Z0-9_]+$`), func(req *http.Request) (*http.Response, error) {
 		resp := httpmock.NewStringResponse(200, mockUpdatedIncident)
 		resp.Header.Set("Content-Type", "application/json")
 		return resp, nil
 	})
-	httpmock.RegisterRegexpResponder("PATCH", tableIdRegex, func(req *http.Request) (*http.Response, error) {
+	httpmock.RegisterRegexpResponder("PATCH", regexp.MustCompile(tableBaseURL+`/incident/[a-zA-Z0-9_]+$`), func(req *http.Request) (*http.Response, error) {
 		resp := httpmock.NewStringResponse(200, mockPatchedIncident)
 		resp.Header.Set("Content-Type", "application/json")
 		return resp, nil
 	})
-	httpmock.RegisterRegexpResponder("DELETE", tableIdRegex, httpmock.NewStringResponder(204, ""))
+	httpmock.RegisterRegexpResponder("DELETE", regexp.MustCompile(tableBaseURL+`/incident/[a-zA-Z0-9_]+$`), httpmock.NewStringResponder(204, ""))
 
 	// Attachment API Mocks
-	attachBaseURL := fmt.Sprintf("https://%s.service-now.com/api/now/attachment", instance)
+	attachBaseURL := fmt.Sprintf("https://%s.service-now.com/api/now/v1/attachment", instance)
 	httpmock.RegisterResponder("GET", attachBaseURL, func(req *http.Request) (*http.Response, error) {
 		resp := httpmock.NewStringResponse(200, mockAttachmentList)
 		resp.Header.Set("Content-Type", "application/json")
 		return resp, nil
 	})
 
-	attachIdRegex := regexp.MustCompile(attachBaseURL + `/?([a-zA-Z0-9_]+)?$`)
+	attachIdRegex := regexp.MustCompile(attachBaseURL + `(?:/([a-zA-Z0-9_]+))?$`)
 	httpmock.RegisterRegexpResponder("GET", attachIdRegex, func(req *http.Request) (*http.Response, error) {
 		resp := httpmock.NewStringResponse(200, mockAttachmentItem)
 		resp.Header.Set("Content-Type", "application/json")
@@ -87,7 +95,7 @@ func setupGlobalMocks() {
 		return resp, nil
 	})
 
-	fileRegex := regexp.MustCompile(attachBaseURL + `/?([a-zA-Z0-9_]+)?/file`)
+	fileRegex := regexp.MustCompile(attachBaseURL + `(?:/([a-zA-Z0-9_]+))?/file`)
 	httpmock.RegisterRegexpResponder("GET", fileRegex, func(req *http.Request) (*http.Response, error) {
 		resp := httpmock.NewStringResponse(200, "test content")
 		resp.Header.Set("x-attachment-metadata", `{"sys_id":"mock_attach_id_1","file_name":"test.txt"}`)

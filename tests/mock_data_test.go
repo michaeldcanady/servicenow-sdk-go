@@ -19,6 +19,23 @@ var mockIncidentList = `{
   ]
 }`
 
+var mockIncidentListSortedDesc = `{
+  "result": [
+    {
+      "sys_id": "mock_sys_id_2",
+      "short_description": "Mock Incident 2",
+      "active": "true",
+      "sys_created_on": "2023-01-02 00:00:00"
+    },
+    {
+      "sys_id": "mock_sys_id_1",
+      "short_description": "Mock Incident 1",
+      "active": "true",
+      "sys_created_on": "2023-01-01 00:00:00"
+    }
+  ]
+}`
+
 var mockIncidentItem = `{
   "result": {
     "sys_id": "mock_sys_id_1",
