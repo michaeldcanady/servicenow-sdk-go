@@ -31,7 +31,7 @@ func TestUsernamePasswordCredential(t *testing.T) {
 			username:     "user",
 			password:     "pass",
 			handler: func(w http.ResponseWriter, r *http.Request) {
-				_ = r.ParseForm()
+				_ = r.ParseForm() //nolint: gosec // G120 is used for testing
 				if r.Form.Get("grant_type") == "password" {
 					assert.Equal(t, "clientID", r.Form.Get("client_id"))
 					assert.Equal(t, "clientSecret", r.Form.Get("client_secret"))
@@ -64,7 +64,7 @@ func TestUsernamePasswordCredential(t *testing.T) {
 			username:     "user",
 			password:     "pass",
 			handler: func(w http.ResponseWriter, r *http.Request) {
-				_ = r.ParseForm()
+				_ = r.ParseForm() //nolint: gosec // G120 is used for testing
 				assert.Equal(t, "password", r.Form.Get("grant_type"))
 				assert.Equal(t, "clientID", r.Form.Get("client_id"))
 				assert.Empty(t, r.Form.Get("client_secret"))
