@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -76,21 +77,7 @@ func (exc *MainError) GetDetail() (*string, error) {
 	}
 
 	backingStore := exc.GetBackingStore()
-	if IsNil(backingStore) {
-		return nil, errors.New("backingStore is nil")
-	}
-
-	detail, err := backingStore.Get(detailKey)
-	if err != nil {
-		return nil, err
-	}
-
-	detailStr, ok := detail.(*string)
-	if !ok {
-		return nil, errors.New("detail is not *string")
-	}
-
-	return detailStr, nil
+	return DefaultBackedModelAccessorFunc[store.BackingStore, *string](backingStore, detailKey)
 }
 
 // setDetail sets the error details.
@@ -98,11 +85,9 @@ func (exc *MainError) setDetail(detail *string) error {
 	if IsNil(exc) {
 		return nil
 	}
+
 	backingStore := exc.GetBackingStore()
-	if IsNil(backingStore) {
-		return errors.New("backingStore is nil")
-	}
-	return backingStore.Set(detailKey, detail)
+	return DefaultBackedModelMutatorFunc(backingStore, detailKey, detail)
 }
 
 // GetMessage gets the error message.
@@ -112,21 +97,7 @@ func (exc *MainError) GetMessage() (*string, error) {
 	}
 
 	backingStore := exc.GetBackingStore()
-	if IsNil(backingStore) {
-		return nil, errors.New("backingStore is nil")
-	}
-
-	message, err := backingStore.Get(messageKey)
-	if err != nil {
-		return nil, err
-	}
-
-	detailStr, ok := message.(*string)
-	if !ok {
-		return nil, errors.New("message is not *string")
-	}
-
-	return detailStr, nil
+	return DefaultBackedModelAccessorFunc[store.BackingStore, *string](backingStore, messageKey)
 }
 
 // setMessage sets the error message.
@@ -134,11 +105,9 @@ func (exc *MainError) setMessage(message *string) error {
 	if IsNil(exc) {
 		return nil
 	}
+
 	backingStore := exc.GetBackingStore()
-	if IsNil(backingStore) {
-		return errors.New("backingStore is nil")
-	}
-	return backingStore.Set(messageKey, message)
+	return DefaultBackedModelMutatorFunc(backingStore, messageKey, message)
 }
 
 // GetStatus returns the status.
@@ -148,21 +117,7 @@ func (exc *MainError) GetStatus() (*string, error) {
 	}
 
 	backingStore := exc.GetBackingStore()
-	if IsNil(backingStore) {
-		return nil, errors.New("backingStore is nil")
-	}
-
-	status, err := backingStore.Get(statusKey)
-	if err != nil {
-		return nil, err
-	}
-
-	detailStr, ok := status.(*string)
-	if !ok {
-		return nil, errors.New("status is not *string")
-	}
-
-	return detailStr, nil
+	return DefaultBackedModelAccessorFunc[store.BackingStore, *string](backingStore, statusKey)
 }
 
 // setStatus sets the status.
@@ -170,9 +125,7 @@ func (exc *MainError) setStatus(status *string) error {
 	if IsNil(exc) {
 		return nil
 	}
+
 	backingStore := exc.GetBackingStore()
-	if IsNil(backingStore) {
-		return errors.New("backingStore is nil")
-	}
-	return backingStore.Set(statusKey, status)
+	return DefaultBackedModelMutatorFunc(backingStore, statusKey, status)
 }
