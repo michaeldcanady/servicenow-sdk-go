@@ -35,23 +35,37 @@ func TestPolicyRequestBuilder_Definitions(t *testing.T) {
 	tests := []struct {
 		name           string
 		pathParameters map[string]string
+		nilRB          bool
 	}{
 		{
 			name:           "Default",
 			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
 		},
+		{
+			name:  "Nil_RequestBuilder",
+			nilRB: true,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			var rB *PolicyRequestBuilder
 			requestAdapter := mocking.NewMockRequestAdapter()
-			rB := NewPolicyRequestBuilderInternal(tt.pathParameters, requestAdapter)
+
+			if !tt.nilRB {
+				rB = NewPolicyRequestBuilderInternal(tt.pathParameters, requestAdapter)
+			}
+
 			definitionsRB := rB.Definitions()
 
-			assert.NotNil(t, definitionsRB)
-			assert.Equal(t, definitionsURLTemplate, definitionsRB.GetURLTemplate())
-			assert.Equal(t, tt.pathParameters, definitionsRB.GetPathParameters())
-			assert.Equal(t, requestAdapter, definitionsRB.GetRequestAdapter())
+			if tt.nilRB {
+				assert.Nil(t, definitionsRB)
+			} else {
+				assert.NotNil(t, definitionsRB)
+				assert.Equal(t, definitionsURLTemplate, definitionsRB.GetURLTemplate())
+				assert.Equal(t, tt.pathParameters, definitionsRB.GetPathParameters())
+				assert.Equal(t, requestAdapter, definitionsRB.GetRequestAdapter())
+			}
 		})
 	}
 }
