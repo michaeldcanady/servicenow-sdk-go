@@ -3,9 +3,9 @@ package internal
 import (
 	"errors"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 )
 
 const (
