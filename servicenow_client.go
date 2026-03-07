@@ -19,6 +19,12 @@ func (c *ServiceNowClient) Now2() *NowRequestBuilder {
 	return NewNowRequestBuilder2(c.BaseUrl+"/now", c)
 }
 
+// Cdm returns a CdmRequestBuilder associated with the Client.
+// It prepares the CdmRequestBuilder with the base URL for the ServiceNow instance.
+func (c *ServiceNowClient) Cdm() *CdmRequestBuilder {
+	return NewCdmRequestBuilder(c.BaseUrl, c.RequestAdapter)
+}
+
 // NewServiceNowClient2 creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.

@@ -9,11 +9,11 @@ import (
 )
 
 const (
-	policyURLTemplate = "{+baseurl}/api/now/policy"
+	policyURLTemplate = "{+baseurl}/api/sn_cdm/v1/policies"
 )
 
-// PolicyRequestBuilder provides operations to manage Service-Now policies.
-type PolicyRequestBuilder struct {
+// PoliciesRequestBuilder provides operations to manage Service-Now policies.
+type PoliciesRequestBuilder struct {
 	newInternal.RequestBuilder
 }
 
@@ -21,19 +21,17 @@ type PolicyRequestBuilder struct {
 func NewPolicyRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
-) *PolicyRequestBuilder {
-	return &PolicyRequestBuilder{
+) *PoliciesRequestBuilder {
+	return &PoliciesRequestBuilder{
 		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, policyURLTemplate, pathParameters),
 	}
 }
 
-// Definitions provides the way to access Service-Now's policy definitions API
-func (rB *PolicyRequestBuilder) Definitions() *DefinitionsRequestBuilder {
+// Mappings provides the way to access Service-Now's policy definitions API
+func (rB *PoliciesRequestBuilder) Mappings() *PoliciesMappingsRequestBuilder {
 	if internal.IsNil(rB) {
 		return nil
 	}
 
-	pathParameters := maps.Clone(rB.GetPathParameters())
-
-	return NewDefinitionsRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+	return NewPoliciesMappingsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
