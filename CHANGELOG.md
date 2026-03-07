@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/michaeldcanady/servicenow-sdk-go/compare/github.com/michaeldcanady/servicenow-sdk-go-v1.10.0...github.com/michaeldcanady/servicenow-sdk-go-v1.11.0) (2026-03-07)
+
+
+### Features
+
+* **policy:** scaffold list definitions request builder ([#386](https://github.com/michaeldcanady/servicenow-sdk-go/issues/386)) ([#406](https://github.com/michaeldcanady/servicenow-sdk-go/issues/406)) ([f946bf3](https://github.com/michaeldcanady/servicenow-sdk-go/commit/f946bf3a8cb8b441efc191eae3e21120325f42fc))
+
 ## [1.10.0](https://github.com/michaeldcanady/servicenow-sdk-go/compare/github.com/michaeldcanady/servicenow-sdk-go-v1.9.0...github.com/michaeldcanady/servicenow-sdk-go-v1.10.0) (2026-03-06)
 
 
