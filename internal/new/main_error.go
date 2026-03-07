@@ -53,9 +53,9 @@ func (exc *MainError) Serialize(writer serialization.SerializationWriter) error 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (exc *MainError) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		detailKey:  internalSerialization.DeserializeStringFunc()(exc.setDetail),
-		messageKey: internalSerialization.DeserializeStringFunc()(exc.setMessage),
-		statusKey:  internalSerialization.DeserializeStringFunc()(exc.setStatus),
+		detailKey:  internalSerialization.DeserializeStringFunc()(exc.SetDetail),
+		messageKey: internalSerialization.DeserializeStringFunc()(exc.SetMessage),
+		statusKey:  internalSerialization.DeserializeStringFunc()(exc.SetStatus),
 	}
 }
 
@@ -69,8 +69,8 @@ func (exc *MainError) GetDetail() (*string, error) {
 	return DefaultBackedModelAccessorFunc[store.BackingStore, *string](backingStore, detailKey)
 }
 
-// setDetail sets the error details.
-func (exc *MainError) setDetail(detail *string) error {
+// SetDetail sets the error details.
+func (exc *MainError) SetDetail(detail *string) error {
 	if IsNil(exc) {
 		return nil
 	}
@@ -89,8 +89,8 @@ func (exc *MainError) GetMessage() (*string, error) {
 	return DefaultBackedModelAccessorFunc[store.BackingStore, *string](backingStore, messageKey)
 }
 
-// setMessage sets the error message.
-func (exc *MainError) setMessage(message *string) error {
+// SetMessage sets the error message.
+func (exc *MainError) SetMessage(message *string) error {
 	if IsNil(exc) {
 		return nil
 	}
@@ -109,8 +109,8 @@ func (exc *MainError) GetStatus() (*string, error) {
 	return DefaultBackedModelAccessorFunc[store.BackingStore, *string](backingStore, statusKey)
 }
 
-// setStatus sets the status.
-func (exc *MainError) setStatus(status *string) error {
+// SetStatus sets the status.
+func (exc *MainError) SetStatus(status *string) error {
 	if IsNil(exc) {
 		return nil
 	}

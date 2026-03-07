@@ -70,7 +70,7 @@ func TestMainError_Accessors(t *testing.T) {
 		{
 			name:     "Detail Success",
 			model:    NewMainError(),
-			setter:   func(m *MainError, v *string) error { return m.setDetail(v) },
+			setter:   func(m *MainError, v *string) error { return m.SetDetail(v) },
 			getter:   func(m *MainError) (*string, error) { return m.GetDetail() },
 			expected: &val,
 			wantErr:  false,
@@ -78,7 +78,7 @@ func TestMainError_Accessors(t *testing.T) {
 		{
 			name:     "Detail Nil Model",
 			model:    nil,
-			setter:   func(m *MainError, v *string) error { return m.setDetail(v) },
+			setter:   func(m *MainError, v *string) error { return m.SetDetail(v) },
 			getter:   func(m *MainError) (*string, error) { return m.GetDetail() },
 			expected: nil,
 			wantErr:  false,
@@ -86,7 +86,7 @@ func TestMainError_Accessors(t *testing.T) {
 		{
 			name:     "Message Success",
 			model:    NewMainError(),
-			setter:   func(m *MainError, v *string) error { return m.setMessage(v) },
+			setter:   func(m *MainError, v *string) error { return m.SetMessage(v) },
 			getter:   func(m *MainError) (*string, error) { return m.GetMessage() },
 			expected: &val,
 			wantErr:  false,
@@ -94,7 +94,7 @@ func TestMainError_Accessors(t *testing.T) {
 		{
 			name:     "Message Nil Model",
 			model:    nil,
-			setter:   func(m *MainError, v *string) error { return m.setMessage(v) },
+			setter:   func(m *MainError, v *string) error { return m.SetMessage(v) },
 			getter:   func(m *MainError) (*string, error) { return m.GetMessage() },
 			expected: nil,
 			wantErr:  false,
@@ -102,7 +102,7 @@ func TestMainError_Accessors(t *testing.T) {
 		{
 			name:     "Status Success",
 			model:    NewMainError(),
-			setter:   func(m *MainError, v *string) error { return m.setStatus(v) },
+			setter:   func(m *MainError, v *string) error { return m.SetStatus(v) },
 			getter:   func(m *MainError) (*string, error) { return m.GetStatus() },
 			expected: &val,
 			wantErr:  false,
@@ -110,7 +110,7 @@ func TestMainError_Accessors(t *testing.T) {
 		{
 			name:     "Status Nil Model",
 			model:    nil,
-			setter:   func(m *MainError, v *string) error { return m.setStatus(v) },
+			setter:   func(m *MainError, v *string) error { return m.SetStatus(v) },
 			getter:   func(m *MainError) (*string, error) { return m.GetStatus() },
 			expected: nil,
 			wantErr:  false,
@@ -143,11 +143,11 @@ func TestMainError_ErrorBranches(t *testing.T) {
 		wantErr string
 	}{
 		{"GetDetail Nil BS", func() error { _, err := mNilBS.GetDetail(); return err }, "backingStore is nil"},
-		{"setDetail Nil BS", func() error { return mNilBS.setDetail(nil) }, "backingStore is nil"},
+		{"setDetail Nil BS", func() error { return mNilBS.SetDetail(nil) }, "backingStore is nil"},
 		{"GetMessage Nil BS", func() error { _, err := mNilBS.GetMessage(); return err }, "backingStore is nil"},
-		{"setMessage Nil BS", func() error { return mNilBS.setMessage(nil) }, "backingStore is nil"},
+		{"setMessage Nil BS", func() error { return mNilBS.SetMessage(nil) }, "backingStore is nil"},
 		{"GetStatus Nil BS", func() error { _, err := mNilBS.GetStatus(); return err }, "backingStore is nil"},
-		{"setStatus Nil BS", func() error { return mNilBS.setStatus(nil) }, "backingStore is nil"},
+		{"setStatus Nil BS", func() error { return mNilBS.SetStatus(nil) }, "backingStore is nil"},
 	}
 
 	for _, tt := range tests {
