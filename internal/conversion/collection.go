@@ -4,6 +4,10 @@ import "fmt"
 
 // CastCollection converts a slice of one type to another.
 func CastCollection[T, R any](collection []T) ([]R, error) {
+	if collection == nil {
+		return nil, nil
+	}
+
 	var err error
 	newCollection := CollectionApply(collection, func(in T) (R, bool) {
 		out, ok := any(in).(R)
@@ -23,6 +27,10 @@ func CastCollection[T, R any](collection []T) ([]R, error) {
 
 // CollectionApply applies a mutator function to each item in a slice.
 func CollectionApply[T, R any](collection []T, mutator func(in T) (R, bool)) []R {
+	if collection == nil {
+		return nil
+	}
+
 	outputs := make([]R, len(collection))
 	for i, item := range collection {
 		output, ok := mutator(item)
