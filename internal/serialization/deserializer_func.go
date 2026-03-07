@@ -2,6 +2,7 @@ package serialization
 
 import (
 	"errors"
+	"time"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
@@ -61,6 +62,12 @@ func DeserializeFloat64Func(setter ModelSetter[*float64]) serialization.NodePars
 	}
 }
 
+func DeserializeTimeFunc(setter ModelSetter[*time.Time]) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		return SetValueFromSource(node.GetTimeValue, setter)
+	}
+}
+
 func DeserializeByteArrayFunc(setter ModelSetter[[]byte]) serialization.NodeParser {
 	return func(node serialization.ParseNode) error {
 		return SetValueFromSource(node.GetByteArrayValue, setter)
@@ -94,5 +101,27 @@ func DeserializeObjectValueFunc[T serialization.Parsable](setter ModelSetter[T],
 			return err
 		}
 		return setter(val.(T))
+	}
+}
+
+func DeserializeEnumFunc[T any](setter ModelSetter[*T], factory serialization.EnumFactory) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		val, err := node.GetEnumValue(factory)
+		if err != nil {
+			return err
+		}
+		if val == nil {
+			return setter(nil)
+		}
+
+		if v, ok := val.(*T); ok {
+			return setter(v)
+		}
+
+		if v, ok := val.(T); ok {
+			return setter(&v)
+		}
+
+		return errors.New("unexpected type from enum factory")
 	}
 }
