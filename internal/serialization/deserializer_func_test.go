@@ -77,13 +77,13 @@ func TestDeserializeStringFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			node := mocking.NewMockParseNode()
 			tt.mock(node)
-			
+
 			var result *string
 			setter := func(v *string) error {
 				result = v
 				return nil
 			}
-			
+
 			err := DeserializeStringFunc()(setter)(node)
 			if tt.wantErr {
 				assert.Error(t, err)
@@ -118,13 +118,13 @@ func TestDeserializeInt64Func(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			node := mocking.NewMockParseNode()
 			tt.mock(node)
-			
+
 			var result *int64
 			setter := func(v *int64) error {
 				result = v
 				return nil
 			}
-			
+
 			err := DeserializeInt64Func()(setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
@@ -343,7 +343,7 @@ func TestDeserializeMutatedByteArrayFunc(t *testing.T) {
 func TestDeserializeCollectionOfObjectValuesFunc(t *testing.T) {
 	parsable := mocking.NewMockParsable()
 	val := []serialization.Parsable{parsable}
-	
+
 	tests := []struct {
 		name    string
 		mock    func(*mocking.MockParseNode)
@@ -364,13 +364,13 @@ func TestDeserializeCollectionOfObjectValuesFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			node := mocking.NewMockParseNode()
 			tt.mock(node)
-			
+
 			var result []serialization.Parsable
 			setter := func(v []serialization.Parsable) error {
 				result = v
 				return nil
 			}
-			
+
 			err := DeserializeCollectionOfObjectValuesFunc[serialization.Parsable](nil)(setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
@@ -381,7 +381,7 @@ func TestDeserializeCollectionOfObjectValuesFunc(t *testing.T) {
 
 func TestDeserializeObjectValueFunc(t *testing.T) {
 	parsable := mocking.NewMockParsable()
-	
+
 	tests := []struct {
 		name    string
 		mock    func(*mocking.MockParseNode)
@@ -410,13 +410,13 @@ func TestDeserializeObjectValueFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			node := mocking.NewMockParseNode()
 			tt.mock(node)
-			
+
 			var result serialization.Parsable
 			setter := func(v serialization.Parsable) error {
 				result = v
 				return nil
 			}
-			
+
 			err := DeserializeObjectValueFunc[serialization.Parsable](nil)(setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)

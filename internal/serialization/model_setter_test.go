@@ -17,9 +17,9 @@ func TestSetMutatedValueFromSource(t *testing.T) {
 		err     string
 	}{
 		{
-			name: "Success",
-			source: func() (string, error) { return "123", nil },
-			setter: func(v int) error { return nil },
+			name:    "Success",
+			source:  func() (string, error) { return "123", nil },
+			setter:  func(v int) error { return nil },
 			mutator: func(s string) (int, error) { return 123, nil },
 			wantErr: false,
 		},
@@ -123,11 +123,11 @@ func TestWriteMutatedValueToSource(t *testing.T) {
 		err      string
 	}{
 		{
-			name: "Success",
-			writer: func(v string) error { return nil },
+			name:     "Success",
+			writer:   func(v string) error { return nil },
 			accessor: func() (int, error) { return 123, nil },
-			mutator: func(v int) (string, error) { return "123", nil },
-			wantErr: false,
+			mutator:  func(v int) (string, error) { return "123", nil },
+			wantErr:  false,
 		},
 		{
 			name:     "Writer is nil",

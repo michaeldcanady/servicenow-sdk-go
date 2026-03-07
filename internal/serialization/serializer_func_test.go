@@ -13,13 +13,13 @@ import (
 
 func TestSerialize(t *testing.T) {
 	writer := mocking.NewMockSerializationWriter()
-	
+
 	s1 := func(sw serialization.SerializationWriter) error { return nil }
 	s2 := func(sw serialization.SerializationWriter) error { return errors.New("err") }
-	
+
 	err := Serialize(writer, s1)
 	assert.NoError(t, err)
-	
+
 	err = Serialize(writer, s1, s2)
 	assert.Error(t, err)
 }
@@ -35,9 +35,9 @@ func TestSerializeMutatedStringFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (int, error) { return val, nil },
-			mutator: func(v int) (*string, error) { return &mutated, nil },
+			mutator:  func(v int) (*string, error) { return &mutated, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteStringValue", "key", &mutated).Return(nil)
 			},
@@ -65,7 +65,7 @@ func TestSerializeStringFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*string, error) { return &val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteStringValue", "key", &val).Return(nil)
@@ -73,16 +73,16 @@ func TestSerializeStringFunc(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "Nil value",
+			name:     "Nil value",
 			accessor: func() (*string, error) { return nil, nil },
-			mock: func(m *mocking.MockSerializationWriter) {},
-			wantErr: false,
+			mock:     func(m *mocking.MockSerializationWriter) {},
+			wantErr:  false,
 		},
 		{
-			name: "Error",
+			name:     "Error",
 			accessor: func() (*string, error) { return nil, errors.New("err") },
-			mock: func(m *mocking.MockSerializationWriter) {},
-			wantErr: true,
+			mock:     func(m *mocking.MockSerializationWriter) {},
+			wantErr:  true,
 		},
 	}
 
@@ -90,7 +90,7 @@ func TestSerializeStringFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeStringFunc("key")(tt.accessor)(writer)
 			if tt.wantErr {
 				assert.Error(t, err)
@@ -111,7 +111,7 @@ func TestSerializeBoolFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*bool, error) { return &val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteBoolValue", "key", &val).Return(nil)
@@ -124,7 +124,7 @@ func TestSerializeBoolFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeBoolFunc("key")(tt.accessor)(writer)
 			if tt.wantErr {
 				assert.Error(t, err)
@@ -145,7 +145,7 @@ func TestSerializeInt64Func(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*int64, error) { return &val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteInt64Value", "key", &val).Return(nil)
@@ -158,7 +158,7 @@ func TestSerializeInt64Func(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeInt64Func("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -175,7 +175,7 @@ func TestSerializeInt32Func(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*int32, error) { return &val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteInt32Value", "key", &val).Return(nil)
@@ -188,7 +188,7 @@ func TestSerializeInt32Func(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeInt32Func("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -205,7 +205,7 @@ func TestSerializeFloat64Func(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*float64, error) { return &val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteFloat64Value", "key", &val).Return(nil)
@@ -218,7 +218,7 @@ func TestSerializeFloat64Func(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeFloat64Func("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -235,7 +235,7 @@ func TestSerializeFloat32Func(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*float32, error) { return &val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteFloat32Value", "key", &val).Return(nil)
@@ -248,7 +248,7 @@ func TestSerializeFloat32Func(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeFloat32Func("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -265,7 +265,7 @@ func TestSerializeTimeFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*time.Time, error) { return &val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteTimeValue", "key", &val).Return(nil)
@@ -278,7 +278,7 @@ func TestSerializeTimeFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeTimeFunc("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -295,7 +295,7 @@ func TestSerializeObjectValueFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (serialization.Parsable, error) { return val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteObjectValue", "key", val, []serialization.Parsable(nil)).Return(nil)
@@ -308,7 +308,7 @@ func TestSerializeObjectValueFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeObjectValueFunc[serialization.Parsable]("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -325,7 +325,7 @@ func TestSerializeByteArrayFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() ([]byte, error) { return val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteByteArrayValue", "key", val).Return(nil)
@@ -338,7 +338,7 @@ func TestSerializeByteArrayFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeByteArrayFunc("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -355,7 +355,7 @@ func TestSerializeCollectionOfObjectValuesFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() ([]serialization.Parsable, error) { return val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteCollectionOfObjectValues", "key", mock.Anything).Return(nil)
@@ -368,7 +368,7 @@ func TestSerializeCollectionOfObjectValuesFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeCollectionOfObjectValuesFunc[serialization.Parsable]("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -385,7 +385,7 @@ func TestSerializeCollectionOfStringValuesFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() ([]string, error) { return val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteCollectionOfStringValues", "key", val).Return(nil)
@@ -398,7 +398,7 @@ func TestSerializeCollectionOfStringValuesFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeCollectionOfStringValuesFunc("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -407,7 +407,9 @@ func TestSerializeCollectionOfStringValuesFunc(t *testing.T) {
 }
 
 type mockEnum int
+
 const mockEnumVal mockEnum = 1
+
 func (e *mockEnum) String() string { return "mock" }
 
 func TestSerializeEnumFunc(t *testing.T) {
@@ -419,7 +421,7 @@ func TestSerializeEnumFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*mockEnum, error) { return &val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				s := "mock"
@@ -433,7 +435,7 @@ func TestSerializeEnumFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeEnumFunc[mockEnum]("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -450,7 +452,7 @@ func TestSerializeStringToBoolFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*bool, error) { return &val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				s := "true"
@@ -464,7 +466,7 @@ func TestSerializeStringToBoolFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeStringToBoolFunc("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -481,7 +483,7 @@ func TestSerializeStringToFloat64Func(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*float64, error) { return &val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				s := "1.23"
@@ -495,7 +497,7 @@ func TestSerializeStringToFloat64Func(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeStringToFloat64Func("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -512,7 +514,7 @@ func TestSerializeStringToInt64Func(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*int64, error) { return &val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				s := "123"
@@ -526,7 +528,7 @@ func TestSerializeStringToInt64Func(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeStringToInt64Func("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -544,7 +546,7 @@ func TestSerializeStringToTimeFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*time.Time, error) { return &val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				str := val.Format(layout)
@@ -558,7 +560,7 @@ func TestSerializeStringToTimeFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeStringToTimeFunc("key", layout)(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -575,7 +577,7 @@ func TestSerializeISODurationFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (*serialization.ISODuration, error) { return val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteISODurationValue", "key", val).Return(nil)
@@ -588,7 +590,7 @@ func TestSerializeISODurationFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeISODurationFunc("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -605,7 +607,7 @@ func TestSerializeAnyFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() (any, error) { return val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteAnyValue", "key", mock.Anything).Return(nil)
@@ -618,7 +620,7 @@ func TestSerializeAnyFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeAnyFunc("key")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
@@ -635,7 +637,7 @@ func TestSerializeStringToSliceFunc(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "Success",
+			name:     "Success",
 			accessor: func() ([]string, error) { return val, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				s := "a,b"
@@ -649,7 +651,7 @@ func TestSerializeStringToSliceFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			
+
 			err := SerializeStringToSliceFunc("key", ",")(tt.accessor)(writer)
 			assert.NoError(t, err)
 			writer.AssertExpectations(t)
