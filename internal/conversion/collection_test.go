@@ -88,6 +88,14 @@ func TestCollectionApply(t *testing.T) {
 			},
 			want: []string{},
 		},
+		{
+			name:       "Nil collection",
+			collection: nil,
+			mutator: func(i int) (string, bool) {
+				return "", true
+			},
+			want: ([]string)(nil),
+		},
 	}
 
 	for _, tt := range tests {
