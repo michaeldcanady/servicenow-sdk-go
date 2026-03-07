@@ -92,24 +92,24 @@ func CreatePoliciesMappingsInputFromDiscriminatorValue(_ serialization.ParseNode
 // GetFieldDeserializers returns the deserialization information for this object.
 func (p *PoliciesMappingsInput) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		PoliciesMappingsInputsResolvedDescription:      internalSerialization.DeserializeStringFunc(p.SetDescription),
-		PoliciesMappingsInputsResolvedDocument:         internalSerialization.DeserializeStringFunc(p.SetDocument),
-		PoliciesMappingsInputsResolvedDocumentRef:      internalSerialization.DeserializeObjectValueFunc(p.SetDocumentRef, CreateRefFromDiscriminatorValue),
-		PoliciesMappingsInputsResolvedError:            internalSerialization.DeserializeObjectValueFunc(p.SetError, newInternal.CreateMainErrorFromDiscriminatorValue),
-		PoliciesMappingsInputsResolvedException:        internalSerialization.DeserializeStringFunc(p.SetException),
-		PoliciesMappingsInputsResolvedExceptionAllowed: internalSerialization.DeserializeBoolFunc(p.SetExceptionAllowed),
-		PoliciesMappingsInputsResolvedInputStatus:      internalSerialization.DeserializeEnumFunc(p.SetInputStatus, ParseInputStatus),
-		PoliciesMappingsInputsResolvedLastUpdatedBy:    internalSerialization.DeserializeObjectValueFunc(p.SetLastUpdatedBy, CreateRefFromDiscriminatorValue),
-		PoliciesMappingsInputsResolvedNumber:           internalSerialization.DeserializeStringFunc(p.SetNumber),
-		PoliciesMappingsInputsResolvedPolicy:           internalSerialization.DeserializeObjectValueFunc(p.SetPolicy, CreateRefFromDiscriminatorValue),
-		PoliciesMappingsInputsResolvedReason:           internalSerialization.DeserializeStringFunc(p.SetReason),
-		PoliciesMappingsInputsResolvedState:            internalSerialization.DeserializeEnumFunc(p.SetState, ParseState),
-		PoliciesMappingsInputsResolvedSysClassName:     internalSerialization.DeserializeStringFunc(p.SetSysClassName),
-		PoliciesMappingsInputsResolvedSysCreatedBy:     internalSerialization.DeserializeStringFunc(p.SetSysCreatedBy),
-		PoliciesMappingsInputsResolvedSysCreatedOn:     internalSerialization.DeserializeTimeFunc(p.SetSysCreatedOn),
-		PoliciesMappingsInputsResolvedSysId:            internalSerialization.DeserializeStringFunc(p.SetSysId),
-		PoliciesMappingsInputsResolvedSysUpdatedBy:     internalSerialization.DeserializeStringFunc(p.SetSysUpdatedBy),
-		PoliciesMappingsInputsResolvedSysUpdatedOn:     internalSerialization.DeserializeTimeFunc(p.SetSysUpdatedOn),
+		PoliciesMappingsInputsResolvedDescription:      internalSerialization.DeserializeStringFunc()(p.SetDescription),
+		PoliciesMappingsInputsResolvedDocument:         internalSerialization.DeserializeStringFunc()(p.SetDocument),
+		PoliciesMappingsInputsResolvedDocumentRef:      internalSerialization.DeserializeObjectValueFunc[*Ref](CreateRefFromDiscriminatorValue)(p.SetDocumentRef),
+		PoliciesMappingsInputsResolvedError:            internalSerialization.DeserializeObjectValueFunc[*newInternal.MainError](newInternal.CreateMainErrorFromDiscriminatorValue)(p.SetError),
+		PoliciesMappingsInputsResolvedException:        internalSerialization.DeserializeStringFunc()(p.SetException),
+		PoliciesMappingsInputsResolvedExceptionAllowed: internalSerialization.DeserializeBoolFunc()(p.SetExceptionAllowed),
+		PoliciesMappingsInputsResolvedInputStatus:      internalSerialization.DeserializeEnumFunc[InputStatus](ParseInputStatus)(p.SetInputStatus),
+		PoliciesMappingsInputsResolvedLastUpdatedBy:    internalSerialization.DeserializeObjectValueFunc[*Ref](CreateRefFromDiscriminatorValue)(p.SetLastUpdatedBy),
+		PoliciesMappingsInputsResolvedNumber:           internalSerialization.DeserializeStringFunc()(p.SetNumber),
+		PoliciesMappingsInputsResolvedPolicy:           internalSerialization.DeserializeObjectValueFunc[*Ref](CreateRefFromDiscriminatorValue)(p.SetPolicy),
+		PoliciesMappingsInputsResolvedReason:           internalSerialization.DeserializeStringFunc()(p.SetReason),
+		PoliciesMappingsInputsResolvedState:            internalSerialization.DeserializeEnumFunc[State](ParseState)(p.SetState),
+		PoliciesMappingsInputsResolvedSysClassName:     internalSerialization.DeserializeStringFunc()(p.SetSysClassName),
+		PoliciesMappingsInputsResolvedSysCreatedBy:     internalSerialization.DeserializeStringFunc()(p.SetSysCreatedBy),
+		PoliciesMappingsInputsResolvedSysCreatedOn:     internalSerialization.DeserializeTimeFunc()(p.SetSysCreatedOn),
+		PoliciesMappingsInputsResolvedSysId:            internalSerialization.DeserializeStringFunc()(p.SetSysId),
+		PoliciesMappingsInputsResolvedSysUpdatedBy:     internalSerialization.DeserializeStringFunc()(p.SetSysUpdatedBy),
+		PoliciesMappingsInputsResolvedSysUpdatedOn:     internalSerialization.DeserializeTimeFunc()(p.SetSysUpdatedOn),
 	}
 }
 
@@ -119,225 +119,26 @@ func (p *PoliciesMappingsInput) Serialize(writer serialization.SerializationWrit
 		return nil
 	}
 
-	{
-		val, err := p.GetDescription()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteStringValue(PoliciesMappingsInputsResolvedDescription, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetDocument()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteStringValue(PoliciesMappingsInputsResolvedDocument, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetDocumentRef()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteObjectValue(PoliciesMappingsInputsResolvedDocumentRef, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetError()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteObjectValue(PoliciesMappingsInputsResolvedError, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetException()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteStringValue(PoliciesMappingsInputsResolvedException, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetExceptionAllowed()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteBoolValue(PoliciesMappingsInputsResolvedExceptionAllowed, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetInputStatus()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			cast := val.String()
-			err = writer.WriteStringValue(PoliciesMappingsInputsResolvedInputStatus, &cast)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetLastUpdatedBy()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteObjectValue(PoliciesMappingsInputsResolvedLastUpdatedBy, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetNumber()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteStringValue(PoliciesMappingsInputsResolvedNumber, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetPolicy()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteObjectValue(PoliciesMappingsInputsResolvedPolicy, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetReason()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteStringValue(PoliciesMappingsInputsResolvedReason, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetState()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			cast := val.String()
-			err = writer.WriteStringValue(PoliciesMappingsInputsResolvedState, &cast)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetSysClassName()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteStringValue(PoliciesMappingsInputsResolvedSysClassName, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetSysCreatedBy()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteStringValue(PoliciesMappingsInputsResolvedSysCreatedBy, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetSysCreatedOn()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteTimeValue(PoliciesMappingsInputsResolvedSysCreatedOn, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetSysId()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteStringValue(PoliciesMappingsInputsResolvedSysId, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetSysUpdatedBy()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteStringValue(PoliciesMappingsInputsResolvedSysUpdatedBy, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	{
-		val, err := p.GetSysUpdatedOn()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			err = writer.WriteTimeValue(PoliciesMappingsInputsResolvedSysUpdatedOn, val)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	return nil
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(PoliciesMappingsInputsResolvedDescription)(p.GetDescription),
+		internalSerialization.SerializeStringFunc(PoliciesMappingsInputsResolvedDocument)(p.GetDocument),
+		internalSerialization.SerializeObjectValueFunc[*Ref](PoliciesMappingsInputsResolvedDocumentRef)(p.GetDocumentRef),
+		internalSerialization.SerializeObjectValueFunc[*newInternal.MainError](PoliciesMappingsInputsResolvedError)(p.GetError),
+		internalSerialization.SerializeStringFunc(PoliciesMappingsInputsResolvedException)(p.GetException),
+		internalSerialization.SerializeBoolFunc(PoliciesMappingsInputsResolvedExceptionAllowed)(p.GetExceptionAllowed),
+		internalSerialization.SerializeEnumFunc[InputStatus](PoliciesMappingsInputsResolvedInputStatus)(p.GetInputStatus),
+		internalSerialization.SerializeObjectValueFunc[*Ref](PoliciesMappingsInputsResolvedLastUpdatedBy)(p.GetLastUpdatedBy),
+		internalSerialization.SerializeStringFunc(PoliciesMappingsInputsResolvedNumber)(p.GetNumber),
+		internalSerialization.SerializeObjectValueFunc[*Ref](PoliciesMappingsInputsResolvedPolicy)(p.GetPolicy),
+		internalSerialization.SerializeStringFunc(PoliciesMappingsInputsResolvedReason)(p.GetReason),
+		internalSerialization.SerializeEnumFunc[State](PoliciesMappingsInputsResolvedState)(p.GetState),
+		internalSerialization.SerializeStringFunc(PoliciesMappingsInputsResolvedSysClassName)(p.GetSysClassName),
+		internalSerialization.SerializeStringFunc(PoliciesMappingsInputsResolvedSysCreatedBy)(p.GetSysCreatedBy),
+		internalSerialization.SerializeTimeFunc(PoliciesMappingsInputsResolvedSysCreatedOn)(p.GetSysCreatedOn),
+		internalSerialization.SerializeStringFunc(PoliciesMappingsInputsResolvedSysId)(p.GetSysId),
+		internalSerialization.SerializeStringFunc(PoliciesMappingsInputsResolvedSysUpdatedBy)(p.GetSysUpdatedBy),
+		internalSerialization.SerializeTimeFunc(PoliciesMappingsInputsResolvedSysUpdatedOn)(p.GetSysUpdatedOn),
+	)
 }
 
 // Getters and Setters
