@@ -1,8 +1,6 @@
 package batchapi
 
 import (
-	"errors"
-
 	"github.com/google/uuid"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
@@ -56,11 +54,11 @@ func (bR *BatchRequestModel) Serialize(writer serialization.SerializationWriter)
 		return nil
 	}
 
-	serializers := []func(serialization.SerializationWriter) error{
-		func(sw serialization.SerializationWriter) error {
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(batchRequestIDKey)(func() (*string, error) {
 			id, err := bR.GetBatchRequestID()
 			if err != nil {
-				return err
+				return nil, err
 			}
 
 			// ensure request has an id BEFORE serializing
@@ -69,30 +67,10 @@ func (bR *BatchRequestModel) Serialize(writer serialization.SerializationWriter)
 				id = &idString
 			}
 
-			return sw.WriteStringValue(batchRequestIDKey, id)
-		},
-		func(sw serialization.SerializationWriter) error {
-			requests, err := bR.GetRestRequests()
-			if err != nil {
-				return err
-			}
-
-			// Create a new slice of serialization.Parsable
-			parsableRequests := make([]serialization.Parsable, len(requests))
-			for i, header := range requests {
-				parsableRequests[i] = header
-			}
-
-			return sw.WriteCollectionOfObjectValues(restRequestsKey, parsableRequests)
-		},
-	}
-
-	for _, serializer := range serializers {
-		if err := serializer(writer); err != nil {
-			return err
-		}
-	}
-	return nil
+			return id, nil
+		}),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[RestRequest](restRequestsKey)(bR.GetRestRequests),
+	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
@@ -102,8 +80,8 @@ func (bR *BatchRequestModel) GetFieldDeserializers() map[string]func(serializati
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		batchRequestIDKey: internalSerialization.DeserializeStringFunc(bR.SetBatchRequestID),
-		restRequestsKey:   internalSerialization.DeserializeCollectionOfObjectValuesFunc(bR.SetRestRequests, CreateRestRequestFromDiscriminatorValue),
+		batchRequestIDKey: internalSerialization.DeserializeStringFunc()(bR.SetBatchRequestID),
+		restRequestsKey:   internalSerialization.DeserializeCollectionOfObjectValuesFunc[RestRequest](CreateRestRequestFromDiscriminatorValue)(bR.SetRestRequests),
 	}
 }
 
@@ -114,7 +92,7 @@ func (bR *BatchRequestModel) AddRequest(request RestRequest) error {
 	}
 
 	if internal.IsNil(request) {
-		return errors.New("request is nil")
+		return nil
 	}
 
 	requests, err := bR.GetRestRequests()

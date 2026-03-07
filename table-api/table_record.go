@@ -6,6 +6,7 @@ import (
 	"slices"
 
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -39,11 +40,7 @@ func CreateTableRecordFromDiscriminatorValue(node serialization.ParseNode) (seri
 	return nil, fmt.Errorf("unsupported type %T", value)
 }
 
-func recordElementParser(node serialization.ParseNode) (*RecordElement, error) {
-	rawValue, err := node.GetRawValue()
-	if err != nil {
-		return nil, err
-	}
+func recordElementParserFromRaw(rawValue any) (*RecordElement, error) {
 	var (
 		displayValue any
 		link         *string
@@ -110,13 +107,11 @@ func (tR *TableRecord) GetFieldDeserializers() map[string]func(serialization.Par
 	fieldDeserializers := map[string]func(serialization.ParseNode) error{}
 
 	for _, key := range tR.keys {
-		fieldDeserializers[key] = func(node serialization.ParseNode) error {
-			element, err := recordElementParser(node)
-			if err != nil {
-				return err
-			}
-			return tR.SetElement(key, element)
-		}
+		k := key
+		fieldDeserializers[k] = internalSerialization.DeserializeMutatedAnyFunc(recordElementParserFromRaw)(
+			func(element *RecordElement) error {
+				return tR.SetElement(k, element)
+			})
 	}
 
 	return fieldDeserializers
@@ -125,27 +120,26 @@ func (tR *TableRecord) GetFieldDeserializers() map[string]func(serialization.Par
 // Serialize implements serialization.Parsable.
 func (tR *TableRecord) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(tR) {
-		return errors.New("unimplemented")
+		return nil
 	}
 
+	var serializers []internalSerialization.WriterFunc
 	for _, key := range tR.keys {
-		element, err := tR.Get(key)
-		if err != nil {
-			return err
-		}
-		val, err := element.GetValue()
-		if err != nil {
-			return err
-		}
-		rawVal, err := val.GetRawValue()
-		if err != nil {
-			return err
-		}
-		if err := writer.WriteAnyValue(key, rawVal); err != nil {
-			return err
-		}
+		serializers = append(serializers, internalSerialization.SerializeAnyFunc(key)(
+			func() (any, error) {
+				element, err := tR.Get(key)
+				if err != nil {
+					return nil, err
+				}
+				val, err := element.GetValue()
+				if err != nil {
+					return nil, err
+				}
+				return val.GetRawValue()
+			}))
 	}
-	return nil
+
+	return internalSerialization.Serialize(writer, serializers...)
 }
 
 // NewTableRecord creates a new instance of TableRecord.
@@ -158,8 +152,7 @@ func NewTableRecord() *TableRecord {
 
 // Get retrieves a RecordElement associated with the specified key.
 func (tR *TableRecord) Get(key string) (*RecordElement, error) {
-	backingStore := tR.GetBackingStore()
-	elem, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, RecordElement](backingStore, key)
+	elem, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, RecordElement](tR.GetBackingStore(), key)
 
 	return &elem, err
 }

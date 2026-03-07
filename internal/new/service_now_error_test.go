@@ -2,6 +2,8 @@ package internal
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewServicenowError(t *testing.T) {
@@ -23,9 +25,11 @@ func TestCreateServiceNowErrorFromDiscriminatorValue(t *testing.T) {
 
 func TestServicenowError_Serialize(t *testing.T) {
 	err := NewServicenowError().Serialize(nil)
-	if err == nil || err.Error() != "unsupported" {
-		t.Errorf("got err %v, expected unsupported", err)
-	}
+	assert.NoError(t, err)
+
+	var nilE *ServicenowError
+	err = nilE.Serialize(nil)
+	assert.NoError(t, err)
 }
 
 func TestServicenowError_GetFieldDeserializers(t *testing.T) {

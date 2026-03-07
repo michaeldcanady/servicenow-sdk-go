@@ -45,7 +45,11 @@ func (mPN *MockParseNode) GetCollectionOfEnumValues(parser serialization.EnumFac
 // GetObjectValue returns the Parsable value from the node.
 func (mPN *MockParseNode) GetObjectValue(ctor serialization.ParsableFactory) (serialization.Parsable, error) {
 	args := mPN.Called(ctor)
-	return args.Get(0).(serialization.Parsable), args.Error(1)
+	val := args.Get(0)
+	if val == nil {
+		return nil, args.Error(1)
+	}
+	return val.(serialization.Parsable), args.Error(1)
 }
 
 // GetStringValue returns a String value from the nodes.

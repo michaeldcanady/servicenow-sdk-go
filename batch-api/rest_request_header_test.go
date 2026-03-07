@@ -93,13 +93,11 @@ func TestRestRequestHeader_Serialize(t *testing.T) {
 			},
 		},
 		{
-			name: "nil_writer",
+			name: "nil writer",
 			test: func(t *testing.T) {
-				header := NewRestRequestHeader()
-
-				err := header.Serialize(nil)
-
-				assert.Equal(t, errors.New("writer is nil"), err)
+				bR := NewRestRequestHeader()
+				err := bR.Serialize(nil)
+				assert.NoError(t, err)
 			},
 		},
 		{

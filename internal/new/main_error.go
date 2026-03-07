@@ -1,8 +1,7 @@
 package internal
 
 import (
-	"errors"
-
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -39,34 +38,24 @@ func CreateMainErrorFromDiscriminatorValue(_ serialization.ParseNode) (serializa
 }
 
 // Serialize writes the objects properties to the current writer.
-func (exc *MainError) Serialize(_ serialization.SerializationWriter) error {
-	return errors.New("unsupported")
+func (exc *MainError) Serialize(writer serialization.SerializationWriter) error {
+	if IsNil(exc) {
+		return nil
+	}
+
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(detailKey)(exc.GetDetail),
+		internalSerialization.SerializeStringFunc(messageKey)(exc.GetMessage),
+		internalSerialization.SerializeStringFunc(statusKey)(exc.GetStatus),
+	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (exc *MainError) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		detailKey: func(pn serialization.ParseNode) error {
-			val, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-			return exc.setDetail(val)
-		},
-		messageKey: func(pn serialization.ParseNode) error {
-			val, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-			return exc.setMessage(val)
-		},
-		statusKey: func(pn serialization.ParseNode) error {
-			val, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-			return exc.setStatus(val)
-		},
+		detailKey:  internalSerialization.DeserializeStringFunc()(exc.SetDetail),
+		messageKey: internalSerialization.DeserializeStringFunc()(exc.SetMessage),
+		statusKey:  internalSerialization.DeserializeStringFunc()(exc.SetStatus),
 	}
 }
 
@@ -80,8 +69,8 @@ func (exc *MainError) GetDetail() (*string, error) {
 	return DefaultBackedModelAccessorFunc[store.BackingStore, *string](backingStore, detailKey)
 }
 
-// setDetail sets the error details.
-func (exc *MainError) setDetail(detail *string) error {
+// SetDetail sets the error details.
+func (exc *MainError) SetDetail(detail *string) error {
 	if IsNil(exc) {
 		return nil
 	}
@@ -100,8 +89,8 @@ func (exc *MainError) GetMessage() (*string, error) {
 	return DefaultBackedModelAccessorFunc[store.BackingStore, *string](backingStore, messageKey)
 }
 
-// setMessage sets the error message.
-func (exc *MainError) setMessage(message *string) error {
+// SetMessage sets the error message.
+func (exc *MainError) SetMessage(message *string) error {
 	if IsNil(exc) {
 		return nil
 	}
@@ -120,8 +109,8 @@ func (exc *MainError) GetStatus() (*string, error) {
 	return DefaultBackedModelAccessorFunc[store.BackingStore, *string](backingStore, statusKey)
 }
 
-// setStatus sets the status.
-func (exc *MainError) setStatus(status *string) error {
+// SetStatus sets the status.
+func (exc *MainError) SetStatus(status *string) error {
 	if IsNil(exc) {
 		return nil
 	}

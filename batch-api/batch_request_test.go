@@ -1,7 +1,6 @@
 package batchapi
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
@@ -163,7 +162,7 @@ func TestBatchRequest_AddRequest(t *testing.T) {
 
 				err := parsable.AddRequest(nil)
 
-				assert.Equal(t, errors.New("request is nil"), err)
+				assert.NoError(t, err)
 			},
 		},
 	}
