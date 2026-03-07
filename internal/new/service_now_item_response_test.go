@@ -1,9 +1,13 @@
 package internal
 
 import (
+	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestNewBaseServiceNowItemResponse(t *testing.T) {
@@ -16,12 +20,11 @@ func TestNewBaseServiceNowItemResponse(t *testing.T) {
 func TestBaseServiceNowItemResponse_Serialize(t *testing.T) {
 	res := NewBaseServiceNowItemResponse[serialization.Parsable](nil)
 	err := res.Serialize(nil)
-	if err == nil || err.Error() != "serialization is not supported" {
-		t.Errorf("got %v, expected serialization is not supported", err)
-	}
+	assert.NoError(t, err)
+
 	var nilR *BaseServiceNowItemResponse[serialization.Parsable]
-	if err := nilR.Serialize(nil); err == nil {
-		t.Error("nil receiver should return error")
+	if err := nilR.Serialize(nil); err != nil {
+		t.Error("nil receiver should return nil error")
 	}
 }
 
@@ -103,7 +106,9 @@ func TestBaseServiceNowItemResponse_ErrorBranches(t *testing.T) {
 
 	resNilF := NewBaseServiceNowItemResponse[*MainError](nil)
 	deser := resNilF.GetFieldDeserializers()
-	if err := deser[resultKey](nil); err == nil || err.Error() != "factory is nil" {
+	node := mocking.NewMockParseNode()
+	node.On("GetObjectValue", mock.Anything).Return(nil, errors.New("factory is nil"))
+	if err := deser[resultKey](node); err == nil || err.Error() != "factory is nil" {
 		t.Errorf("expected factory nil error, got %v", err)
 	}
 

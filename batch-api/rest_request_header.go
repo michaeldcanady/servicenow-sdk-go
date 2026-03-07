@@ -1,7 +1,6 @@
 package batchapi
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -55,33 +54,10 @@ func (bH *RestRequestHeaderModel) Serialize(writer serialization.SerializationWr
 		return nil
 	}
 
-	if internal.IsNil(writer) {
-		return errors.New("writer is nil")
-	}
-
-	serializers := []func(serialization.SerializationWriter) error{
-		func(sw serialization.SerializationWriter) error {
-			name, err := bH.GetName()
-			if err != nil {
-				return err
-			}
-			return sw.WriteStringValue(nameKey, name)
-		},
-		func(sw serialization.SerializationWriter) error {
-			value, err := bH.GetValue()
-			if err != nil {
-				return err
-			}
-			return sw.WriteStringValue(valueKey, value)
-		},
-	}
-
-	for _, serializer := range serializers {
-		if err := serializer(writer); err != nil {
-			return err
-		}
-	}
-	return nil
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(nameKey)(bH.GetName),
+		internalSerialization.SerializeStringFunc(valueKey)(bH.GetValue),
+	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
@@ -91,8 +67,8 @@ func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serial
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		nameKey:  internalSerialization.DeserializeStringFunc(bH.SetName),
-		valueKey: internalSerialization.DeserializeStringFunc(bH.SetValue),
+		nameKey:  internalSerialization.DeserializeStringFunc()(bH.SetName),
+		valueKey: internalSerialization.DeserializeStringFunc()(bH.SetValue),
 	}
 }
 

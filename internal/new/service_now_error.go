@@ -1,8 +1,7 @@
 package internal
 
 import (
-	"errors"
-
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -30,24 +29,20 @@ func CreateServiceNowErrorFromDiscriminatorValue(_ serialization.ParseNode) (ser
 }
 
 // Serialize writes the objects properties to the current writer.
-func (exc *ServicenowError) Serialize(_ serialization.SerializationWriter) error {
-	return errors.New("unsupported")
+func (exc *ServicenowError) Serialize(writer serialization.SerializationWriter) error {
+	if IsNil(exc) {
+		return nil
+	}
+
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeObjectValueFunc[MainErrorable](errorKey)(exc.GetError),
+	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (exc *ServicenowError) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		errorKey: func(pn serialization.ParseNode) error {
-			parsable, err := pn.GetObjectValue(CreateMainErrorFromDiscriminatorValue)
-			if err != nil {
-				return err
-			}
-			mainError, ok := parsable.(MainErrorable)
-			if !ok {
-				return errors.New("parsable is not MainErrorable")
-			}
-			return exc.setError(mainError)
-		},
+		errorKey: internalSerialization.DeserializeObjectValueFunc[MainErrorable](CreateMainErrorFromDiscriminatorValue)(exc.setError),
 	}
 }
 

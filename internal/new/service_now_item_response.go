@@ -1,10 +1,8 @@
 package internal
 
 import (
-	"errors"
-	"fmt"
-
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -40,31 +38,18 @@ func NewBaseServiceNowItemResponse[T serialization.Parsable](factory serializati
 // Serialize Writes the objects properties to the current writer.
 func (bR *BaseServiceNowItemResponse[T]) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(bR) {
-		return errors.New("serialization is not supported")
+		return nil
 	}
 
-	return errors.New("serialization is not supported")
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeObjectValueFunc[T](resultKey)(bR.GetResult),
+	)
 }
 
 // GetFieldDeserializers Returns the deserialization information for this object.
 func (bR *BaseServiceNowItemResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		resultKey: func(pn serialization.ParseNode) error {
-			var emptyVal T
-			if IsNil(bR.factory) {
-				return errors.New("factory is nil")
-			}
-
-			val, err := pn.GetObjectValue(bR.factory)
-			if err != nil {
-				return err
-			}
-			typedVal, ok := val.(T)
-			if !ok {
-				return fmt.Errorf("val is not %T", emptyVal)
-			}
-			return bR.setResult(typedVal)
-		},
+		resultKey: internalSerialization.DeserializeObjectValueFunc[T](bR.factory)(bR.setResult),
 	}
 }
 

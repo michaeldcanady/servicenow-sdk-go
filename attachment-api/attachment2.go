@@ -1,7 +1,6 @@
 package attachmentapi
 
 import (
-	"errors"
 	"time"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -111,39 +110,61 @@ func CreateAttachment2FromDiscriminatorValue(_ serialization.ParseNode) (seriali
 }
 
 // Serialize writes the objects properties to the current writer.
-func (rE *Attachment2Model) Serialize(_ serialization.SerializationWriter) error {
+func (rE *Attachment2Model) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(rE) {
 		return nil
 	}
 
-	return errors.New("serialization not supported")
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(tableSysIDKey)(rE.GetTableSysID),
+		internalSerialization.SerializeStringToInt64Func(sizeBytesKey)(rE.GetSizeBytes),
+		internalSerialization.SerializeStringFunc(downloadLinkKey)(rE.GetDownloadLink),
+		internalSerialization.SerializeStringToTimeFunc(sysUpdatedOnKey, dateTimeFormat)(rE.GetSysUpdatedOn),
+		internalSerialization.SerializeStringFunc(sysIDKey)(rE.GetSysID),
+		internalSerialization.SerializeStringToFloat64Func(imageHeightKey)(rE.GetImageHeight),
+		internalSerialization.SerializeStringToTimeFunc(sysCreatedOnKey, dateTimeFormat)(rE.GetSysCreatedOn),
+		internalSerialization.SerializeStringFunc(fileNameKey)(rE.GetFileName),
+		internalSerialization.SerializeStringFunc(sysCreatedByKey)(rE.GetSysCreatedBy),
+		internalSerialization.SerializeStringToBoolFunc(compressedKey)(rE.GetCompressed),
+		internalSerialization.SerializeStringFunc(averageImageColorKey)(rE.GetAverageImageColor),
+		internalSerialization.SerializeStringFunc(sysUpdatedByKey)(rE.GetSysUpdatedBy),
+		internalSerialization.SerializeStringToSliceFunc(sysTagsKey, " ")(rE.GetSysTags),
+		internalSerialization.SerializeStringFunc(tableNameKey)(rE.GetTableName),
+		internalSerialization.SerializeStringToFloat64Func(imageWidthKey)(rE.GetImageWidth),
+		internalSerialization.SerializeStringToInt64Func(sysModCountKey)(rE.GetSysModCount),
+		internalSerialization.SerializeStringFunc(contentTypeKey)(rE.GetContentType),
+		internalSerialization.SerializeStringToInt64Func(sizeCompressedKey)(rE.GetSizeCompressed),
+		internalSerialization.SerializeStringFunc(chunkSizeBytesKey)(rE.GetChunkSizeBytes),
+		internalSerialization.SerializeStringFunc(hashKey)(rE.GetHash),
+		internalSerialization.SerializeStringFunc(stateKey)(rE.GetState),
+	)
 }
 
 // Attachment2Model returns the deserialization information for this object.
 func (rE *Attachment2Model) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
 	return map[string]func(serialization.ParseNode) error{
-		tableSysIDKey:        internalSerialization.DeserializeStringFunc(rE.setTableSysID),
-		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(rE.setSizeBytes, conversion.StringPtrToInt64Ptr),
-		downloadLinkKey:      internalSerialization.DeserializeStringFunc(rE.setDownloadLink),
-		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(rE.setSysUpdatedOn, conversion.StringPtrToTimePtr(dateTimeFormat)),
-		sysIDKey:             internalSerialization.DeserializeStringFunc(rE.setSysID),
-		imageHeightKey:       internalSerialization.DeserializeMutatedStringFunc(rE.setImageHeight, conversion.StringPtrToFloat64Ptr),
-		sysCreatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(rE.setSysCreatedOn, conversion.StringPtrToTimePtr(dateTimeFormat)),
-		fileNameKey:          internalSerialization.DeserializeStringFunc(rE.setFileName),
-		sysCreatedByKey:      internalSerialization.DeserializeStringFunc(rE.setSysCreatedBy),
-		compressedKey:        internalSerialization.DeserializeMutatedStringFunc(rE.setCompressed, conversion.StringPtrToBoolPtr),
-		averageImageColorKey: internalSerialization.DeserializeStringFunc(rE.setAverageImageColor),
-		sysUpdatedByKey:      internalSerialization.DeserializeStringFunc(rE.setSysUpdatedBy),
+		tableSysIDKey:        internalSerialization.DeserializeStringFunc()(rE.setTableSysID),
+		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSizeBytes),
+		downloadLinkKey:      internalSerialization.DeserializeStringFunc()(rE.setDownloadLink),
+		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr(dateTimeFormat))(rE.setSysUpdatedOn),
+		sysIDKey:             internalSerialization.DeserializeStringFunc()(rE.setSysID),
+		imageHeightKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(rE.setImageHeight),
+		sysCreatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr(dateTimeFormat))(rE.setSysCreatedOn),
+		fileNameKey:          internalSerialization.DeserializeStringFunc()(rE.setFileName),
+		sysCreatedByKey:      internalSerialization.DeserializeStringFunc()(rE.setSysCreatedBy),
+		compressedKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToBoolPtr)(rE.setCompressed),
+		averageImageColorKey: internalSerialization.DeserializeStringFunc()(rE.setAverageImageColor),
+		sysUpdatedByKey:      internalSerialization.DeserializeStringFunc()(rE.setSysUpdatedBy),
 		// TODO: figure out separator
-		sysTagsKey:        internalSerialization.DeserializeMutatedStringFunc(rE.setSysTags, conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil })),
-		tableNameKey:      internalSerialization.DeserializeStringFunc(rE.setTableName),
-		imageWidthKey:     internalSerialization.DeserializeMutatedStringFunc(rE.setImageWidth, conversion.StringPtrToFloat64Ptr),
-		sysModCountKey:    internalSerialization.DeserializeMutatedStringFunc(rE.setSysModCount, conversion.StringPtrToInt64Ptr),
-		contentTypeKey:    internalSerialization.DeserializeStringFunc(rE.setContentType),
-		sizeCompressedKey: internalSerialization.DeserializeMutatedStringFunc(rE.setSizeCompressed, conversion.StringPtrToInt64Ptr),
-		chunkSizeBytesKey: internalSerialization.DeserializeStringFunc(rE.setChunkSizeBytes),
-		hashKey:           internalSerialization.DeserializeStringFunc(rE.setHash),
-		stateKey:          internalSerialization.DeserializeStringFunc(rE.setState),
+		sysTagsKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil }))(rE.setSysTags),
+		tableNameKey:      internalSerialization.DeserializeStringFunc()(rE.setTableName),
+		imageWidthKey:     internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(rE.setImageWidth),
+		sysModCountKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSysModCount),
+		contentTypeKey:    internalSerialization.DeserializeStringFunc()(rE.setContentType),
+		sizeCompressedKey: internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSizeCompressed),
+		chunkSizeBytesKey: internalSerialization.DeserializeStringFunc()(rE.setChunkSizeBytes),
+		hashKey:           internalSerialization.DeserializeStringFunc()(rE.setHash),
+		stateKey:          internalSerialization.DeserializeStringFunc()(rE.setState),
 	}
 }
 

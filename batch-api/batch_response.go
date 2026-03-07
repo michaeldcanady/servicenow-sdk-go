@@ -1,10 +1,11 @@
 package batchapi
 
 import (
-	"errors"
+	"fmt"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -52,7 +53,11 @@ func (bR *BatchResponseModel) Serialize(writer serialization.SerializationWriter
 		return nil
 	}
 
-	return errors.New("Serialize not implemented")
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(batchRequestIDKey)(bR.GetBatchRequestID),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[ServicedRequest](servicedRequestsKey)(bR.GetServicedRequests),
+		internalSerialization.SerializeCollectionOfStringValuesFunc(unservicedRequestsKey)(bR.GetUnservicedRequests),
+	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object
@@ -62,32 +67,18 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		batchRequestIDKey: func(pn serialization.ParseNode) error {
-			if internal.IsNil(pn) {
-				return nil
-			}
-
-			value, err := pn.GetStringValue()
+		batchRequestIDKey: internalSerialization.DeserializeStringFunc()(bR.setBatchRequestID),
+		servicedRequestsKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetCollectionOfObjectValues(CreateServicedRequestFromDiscriminatorValue)
 			if err != nil {
 				return err
 			}
 
-			return bR.setBatchRequestID(value)
-		}, servicedRequestsKey: func(pn serialization.ParseNode) error {
-			if internal.IsNil(pn) {
-				return nil
-			}
-
-			values, err := pn.GetCollectionOfObjectValues(CreateServicedRequestFromDiscriminatorValue)
-			if err != nil {
-				return err
-			}
-
-			requests := make([]ServicedRequest, len(values))
-			for index, value := range values {
+			requests := make([]ServicedRequest, len(val))
+			for index, value := range val {
 				typedValue, ok := value.(ServicedRequest)
 				if !ok {
-					return errors.New("value is not ServicedRequest")
+					return fmt.Errorf("value is not ServicedRequest")
 				}
 				requests[index] = typedValue
 			}
@@ -95,22 +86,14 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 			return bR.setServicedRequests(requests)
 		},
 		unservicedRequestsKey: func(pn serialization.ParseNode) error {
-			if internal.IsNil(pn) {
-				return nil
-			}
-
-			values, err := pn.GetCollectionOfPrimitiveValues("string")
+			val, err := pn.GetCollectionOfPrimitiveValues("string")
 			if err != nil {
 				return err
 			}
 
-			requests := make([]string, len(values))
-			for index, value := range values {
-				typedValue, ok := value.(string)
-				if !ok {
-					return errors.New("value is not string")
-				}
-				requests[index] = typedValue
+			requests := make([]string, len(val))
+			for index, value := range val {
+				requests[index] = value.(string)
 			}
 
 			return bR.setUnservicedRequests(requests)

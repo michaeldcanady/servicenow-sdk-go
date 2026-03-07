@@ -66,24 +66,20 @@ func TestServicedRequestModel_Serialize(t *testing.T) {
 		test func(*testing.T)
 	}{
 		{
-			name: "Not implemented",
+			name: "Successful",
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
-				intModel := mocking.NewMockModel()
 
-				resp := &ServicedRequestModel{
-					intModel,
-				}
+				resp := NewServicedRequest()
 
 				err := resp.Serialize(writer)
 
-				assert.Equal(t, errors.New("Serialize not implemented"), err)
-				intModel.AssertExpectations(t)
+				assert.NoError(t, err)
 				writer.AssertExpectations(t)
 			},
 		},
 		{
-			name: "",
+			name: "nil model",
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
 

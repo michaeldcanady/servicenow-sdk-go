@@ -69,11 +69,9 @@ func TestBatchResponse_Serialize(t *testing.T) {
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
 
-				resp := &BatchResponseModel{
-					mocking.NewMockModel(),
-				}
+				resp := NewBatchResponse()
 				err := resp.Serialize(writer)
-				assert.Equal(t, errors.New("Serialize not implemented"), err)
+				assert.NoError(t, err)
 			},
 		},
 		{
@@ -170,7 +168,7 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				mockParseNode := (*mocking.MockParseNode)(nil)
+				mockParseNode := mocking.NewMockParseNode()
 
 				resp := &BatchResponseModel{
 					intModel,
@@ -185,6 +183,9 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 					{
 						name: "batchRequestIDKey",
 						test: func(t *testing.T) {
+							mockParseNode.On("GetStringValue").Return((*string)(nil), nil)
+							backingStore.On("Set", batchRequestIDKey, (*string)(nil)).Return(nil)
+
 							err := deserializers[batchRequestIDKey](mockParseNode)
 
 							assert.Nil(t, err)
@@ -193,6 +194,9 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 					{
 						name: "servicedRequestsKey",
 						test: func(t *testing.T) {
+							mockParseNode.On("GetCollectionOfObjectValues", mock.AnythingOfType("serialization.ParsableFactory")).Return(([]serialization.Parsable)(nil), nil)
+							backingStore.On("Set", servicedRequestsKey, []ServicedRequest{}).Return(nil)
+
 							err := deserializers[servicedRequestsKey](mockParseNode)
 
 							assert.Nil(t, err)
@@ -201,6 +205,9 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 					{
 						name: "unservicedRequestsKey",
 						test: func(t *testing.T) {
+							mockParseNode.On("GetCollectionOfPrimitiveValues", "string").Return(([]interface{})(nil), nil)
+							backingStore.On("Set", unservicedRequestsKey, []string{}).Return(nil)
+
 							err := deserializers[unservicedRequestsKey](mockParseNode)
 
 							assert.Nil(t, err)
