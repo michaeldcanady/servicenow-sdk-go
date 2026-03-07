@@ -121,13 +121,32 @@ func TestPoliciesMappingsInput_Serialize(t *testing.T) {
 	_ = p.SetDescription(newInternal.ToPointer("desc"))
 	_ = p.SetInputStatus(newInternal.ToPointer(InputStatusValid))
 	_ = p.SetState(newInternal.ToPointer(StateActive))
+	_ = p.SetExceptionAllowed(newInternal.ToPointer(true))
+	_ = p.SetSysCreatedOn(&time.Time{})
+	_ = p.SetSysUpdatedOn(&time.Time{})
+	_ = p.SetDocumentRef(NewRef())
+	_ = p.SetError(newInternal.NewMainError())
+	_ = p.SetLastUpdatedBy(NewRef())
+	_ = p.SetPolicy(NewRef())
 
 	writer := mocking.NewMockSerializationWriter()
-	writer.On("WriteStringValue", PoliciesMappingsInputsResolvedDescription, mock.Anything).Return(nil)
-	writer.On("WriteStringValue", PoliciesMappingsInputsResolvedInputStatus, mock.Anything).Return(nil)
-	writer.On("WriteStringValue", PoliciesMappingsInputsResolvedState, mock.Anything).Return(nil)
+	writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
+	writer.On("WriteBoolValue", mock.Anything, mock.Anything).Return(nil)
+	writer.On("WriteTimeValue", mock.Anything, mock.Anything).Return(nil)
+	writer.On("WriteObjectValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
 
 	err := p.Serialize(writer)
 	assert.Nil(t, err)
 	writer.AssertExpectations(t)
+
+	var nilP *PoliciesMappingsInput
+	err = nilP.Serialize(writer)
+	assert.Nil(t, err)
+}
+
+func TestPoliciesMappingsInput_GetFieldDeserializers(t *testing.T) {
+	p := NewPoliciesMappingsInput()
+	deser := p.GetFieldDeserializers()
+	assert.NotNil(t, deser)
+	assert.Equal(t, 18, len(deser))
 }
