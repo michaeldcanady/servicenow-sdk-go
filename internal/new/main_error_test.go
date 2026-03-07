@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/microsoft/kiota-abstractions-go/store"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewMainError(t *testing.T) {
@@ -26,9 +27,7 @@ func TestCreateMainErrorFromDiscriminatorValue(t *testing.T) {
 func TestMainError_Serialize(t *testing.T) {
 	m := NewMainError()
 	err := m.Serialize(nil)
-	if err == nil || err.Error() != "unsupported" {
-		t.Errorf("got err %v, expected unsupported", err)
-	}
+	assert.NoError(t, err)
 }
 
 func TestMainError_GetFieldDeserializers(t *testing.T) {

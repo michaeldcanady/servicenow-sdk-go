@@ -3,7 +3,9 @@ package internal
 import (
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewBaseServiceNowCollectionResponse(t *testing.T) {
@@ -14,11 +16,13 @@ func TestNewBaseServiceNowCollectionResponse(t *testing.T) {
 }
 
 func TestBaseServiceNowCollectionResponse_Serialize(t *testing.T) {
+	writer := mocking.NewMockSerializationWriter()
+	writer.On("WriteCollectionOfObjectValues", "result", []serialization.Parsable{}).Return(nil)
+
 	res := NewBaseServiceNowCollectionResponse[serialization.Parsable](nil)
-	err := res.Serialize(nil)
-	if err == nil || err.Error() != "Serialize not implemented" {
-		t.Errorf("got %v, expected Serialize not implemented", err)
-	}
+	err := res.Serialize(writer)
+	assert.NoError(t, err)
+
 	var nilR *BaseServiceNowCollectionResponse[serialization.Parsable]
 	if err := nilR.Serialize(nil); err != nil {
 		t.Error("nil receiver should return nil error")

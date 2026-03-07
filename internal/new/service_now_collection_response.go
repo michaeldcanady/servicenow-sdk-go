@@ -1,10 +1,10 @@
 package internal
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -59,7 +59,13 @@ func (bR *BaseServiceNowCollectionResponse[T]) Serialize(writer serialization.Se
 		return nil
 	}
 
-	return errors.New("Serialize not implemented")
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[T](resultKey)(bR.GetResult),
+		internalSerialization.SerializeStringFunc(nextKey)(bR.GetNextLink),
+		internalSerialization.SerializeStringFunc(previousKey)(bR.GetPreviousLink),
+		internalSerialization.SerializeStringFunc(firstKey)(bR.GetFirstLink),
+		internalSerialization.SerializeStringFunc(lastKey)(bR.GetLastLink),
+	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object
@@ -78,34 +84,10 @@ func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[strin
 
 			return bR.setResult(results)
 		},
-		nextKey: func(pn serialization.ParseNode) error {
-			val, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-			return bR.SetNextLink(val)
-		},
-		previousKey: func(pn serialization.ParseNode) error {
-			val, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-			return bR.SetPreviousLink(val)
-		},
-		firstKey: func(pn serialization.ParseNode) error {
-			val, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-			return bR.SetFirstLink(val)
-		},
-		lastKey: func(pn serialization.ParseNode) error {
-			val, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-			return bR.SetLastLink(val)
-		},
+		nextKey:     internalSerialization.DeserializeStringFunc()(bR.SetNextLink),
+		previousKey: internalSerialization.DeserializeStringFunc()(bR.SetPreviousLink),
+		firstKey:    internalSerialization.DeserializeStringFunc()(bR.SetFirstLink),
+		lastKey:     internalSerialization.DeserializeStringFunc()(bR.SetLastLink),
 	}
 }
 

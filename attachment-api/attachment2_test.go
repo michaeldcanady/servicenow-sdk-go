@@ -50,7 +50,7 @@ func TestAttachment2Model_GetFieldDeserializers(t *testing.T) {
 func TestAttachment2Model_Serialize(t *testing.T) {
 	m := NewAttachment2()
 	err := m.Serialize(nil)
-	assert.Error(t, err)
+	assert.NoError(t, err)
 
 	var nilM *Attachment2Model
 	err = nilM.Serialize(nil)

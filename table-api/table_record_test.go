@@ -61,7 +61,7 @@ func TestCreateTableRecordFromDiscriminatorValue(t *testing.T) {
 	}
 }
 
-func TestRecordElementParser(t *testing.T) {
+func TestRecordElementParserFromRaw(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -69,77 +69,54 @@ func TestRecordElementParser(t *testing.T) {
 		{
 			name: "Successful map, w/o link",
 			test: func(t *testing.T) {
-				parseNode := mocking.NewMockParseNode()
-				parseNode.On("GetRawValue").Return(map[string]any{
-					displayValueKey: internal.ToPointer("displayValue"),
-					valueKey:        internal.ToPointer("value"),
-				}, nil)
+				data := map[string]any{
+					recordDisplayValueKey: internal.ToPointer("displayValue"),
+					recordValueKey:        internal.ToPointer("value"),
+				}
 
-				element, err := recordElementParser(parseNode)
+				element, err := recordElementParserFromRaw(data)
 
 				assert.NotNil(t, element)
 				assert.Nil(t, err)
-				parseNode.AssertExpectations(t)
 			},
 		},
 		{
 			name: "Successful map, w/ link, right type",
 			test: func(t *testing.T) {
-				parseNode := mocking.NewMockParseNode()
-				parseNode.On("GetRawValue").Return(map[string]any{
-					displayValueKey: internal.ToPointer("displayValue"),
-					valueKey:        internal.ToPointer("value"),
-					linkKey:         internal.ToPointer("link"),
-				}, nil)
+				data := map[string]any{
+					recordDisplayValueKey: internal.ToPointer("displayValue"),
+					recordValueKey:        internal.ToPointer("value"),
+					recordLinkKey:         internal.ToPointer("link"),
+				}
 
-				element, err := recordElementParser(parseNode)
+				element, err := recordElementParserFromRaw(data)
 
 				assert.NotNil(t, element)
 				assert.Nil(t, err)
-				parseNode.AssertExpectations(t)
 			},
 		},
 		{
 			name: "Successful map, w/ link, wrong type",
 			test: func(t *testing.T) {
-				parseNode := mocking.NewMockParseNode()
-				parseNode.On("GetRawValue").Return(map[string]any{
-					displayValueKey: internal.ToPointer("displayValue"),
-					valueKey:        internal.ToPointer("value"),
-					linkKey:         internal.ToPointer(true),
-				}, nil)
+				data := map[string]any{
+					recordDisplayValueKey: internal.ToPointer("displayValue"),
+					recordValueKey:        internal.ToPointer("value"),
+					recordLinkKey:         internal.ToPointer(true),
+				}
 
-				element, err := recordElementParser(parseNode)
+				element, err := recordElementParserFromRaw(data)
 
 				assert.Nil(t, element)
 				assert.Equal(t, errors.New("link is not *string"), err)
-				parseNode.AssertExpectations(t)
 			},
 		},
 		{
 			name: "Successful any",
 			test: func(t *testing.T) {
-				parseNode := mocking.NewMockParseNode()
-				parseNode.On("GetRawValue").Return(internal.ToPointer("value"), nil)
-
-				element, err := recordElementParser(parseNode)
+				element, err := recordElementParserFromRaw(internal.ToPointer("value"))
 
 				assert.NotNil(t, element)
 				assert.Nil(t, err)
-				parseNode.AssertExpectations(t)
-			},
-		},
-		{
-			name: "value retrieval error",
-			test: func(t *testing.T) {
-				parseNode := mocking.NewMockParseNode()
-				parseNode.On("GetRawValue").Return(nil, errors.New("error retrieving value"))
-
-				element, err := recordElementParser(parseNode)
-
-				assert.Nil(t, element)
-				assert.Equal(t, errors.New("error retrieving value"), err)
-				parseNode.AssertExpectations(t)
 			},
 		},
 	}
@@ -200,7 +177,7 @@ func TestTableRecord_Serialize(t *testing.T) {
 		test func(*testing.T)
 	}{
 		{
-			name: "error",
+			name: "nil model",
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
 
@@ -208,7 +185,22 @@ func TestTableRecord_Serialize(t *testing.T) {
 
 				err := record.Serialize(writer)
 
-				assert.Equal(t, errors.New("unimplemented"), err)
+				assert.Nil(t, err)
+			},
+		},
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteAnyValue", "key1", mock.Anything).Return(nil)
+
+				record := NewTableRecord()
+				_ = record.SetValue("key1", "value1")
+
+				err := record.Serialize(writer)
+
+				assert.Nil(t, err)
+				writer.AssertExpectations(t)
 			},
 		},
 	}
