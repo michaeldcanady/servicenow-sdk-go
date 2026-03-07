@@ -13,32 +13,32 @@ import (
 )
 
 const (
-	definitionsURLTemplate = "{+baseurl}/api/now/policy/definitions{?sysparm_limit,sysparm_offset,sysparm_query,sysparm_fields}"
+	policiesMappingsInputsResolvedURLTemplate = "{+baseurl}/api/sn_cdm/v1/policies/mappings/inputs/resolved{?deployable_name,policy_name,sysparm_fields}"
 )
 
-// DefinitionsRequestBuilder provides operations to manage Service-Now policy definitions.
-type DefinitionsRequestBuilder struct {
+// PoliciesMappingsInputsResolvedRequestBuilder provides operations to manage Service-Now policy definitions.
+type PoliciesMappingsInputsResolvedRequestBuilder struct {
 	newInternal.RequestBuilder
 }
 
-// NewDefinitionsRequestBuilderInternal instantiates a new DefinitionsRequestBuilder with the provided path parameters and request adapter.
-func NewDefinitionsRequestBuilderInternal(
+// NewPoliciesMappingsInputsResolvedRequestBuilderInternal instantiates a new PoliciesMappingsInputsResolvedRequestBuilder with the provided path parameters and request adapter.
+func NewPoliciesMappingsInputsResolvedRequestBuilderRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
-) *DefinitionsRequestBuilder {
-	return &DefinitionsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, definitionsURLTemplate, pathParameters),
+) *PoliciesMappingsInputsResolvedRequestBuilder {
+	return &PoliciesMappingsInputsResolvedRequestBuilder{
+		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, policiesMappingsInputsResolvedURLTemplate, pathParameters),
 	}
 }
 
-// Get sends an HTTP GET request and returns a collection of policy definitions.
-func (rB *DefinitionsRequestBuilder) Get(ctx context.Context, requestConfiguration *DefinitionsRequestBuilderGetRequestConfiguration) (newInternal.ServiceNowCollectionResponse[*PolicyDefinition], error) {
+// Get sends an HTTP GET request and returns a collection of resolved policy mappings inputs.
+func (rB *PoliciesMappingsInputsResolvedRequestBuilder) Get(ctx context.Context, requestConfiguration *PoliciesMappingsInputsResolvedRequestBuilderGetRequestConfiguration) (newInternal.ServiceNowCollectionResponse[*PoliciesMappingsInput], error) {
 	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
 	if internal.IsNil(requestConfiguration) {
-		requestConfiguration = &DefinitionsRequestBuilderGetRequestConfiguration{}
+		requestConfiguration = &PoliciesMappingsInputsResolvedRequestBuilderGetRequestConfiguration{}
 	}
 
 	headerOpt := nethttplibrary.NewHeadersInspectionOptions()
@@ -55,7 +55,7 @@ func (rB *DefinitionsRequestBuilder) Get(ctx context.Context, requestConfigurati
 		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowCollectionResponseFromDiscriminatorValue[*PolicyDefinition](CreatePolicyDefinitionFromDiscriminatorValue), errorMapping)
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowCollectionResponseFromDiscriminatorValue[*PoliciesMappingsInput](CreatePoliciesMappingsInputFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -64,9 +64,9 @@ func (rB *DefinitionsRequestBuilder) Get(ctx context.Context, requestConfigurati
 		return nil, errors.New("response is nil")
 	}
 
-	typedResp, ok := resp.(newInternal.ServiceNowCollectionResponse[*PolicyDefinition])
+	typedResp, ok := resp.(newInternal.ServiceNowCollectionResponse[*PoliciesMappingsInput])
 	if !ok {
-		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowCollectionResponse[*PolicyDefinition])(nil))
+		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowCollectionResponse[*PoliciesMappingsInput])(nil))
 	}
 
 	newInternal.ParseHeaders(typedResp, headerOpt.GetResponseHeaders())
@@ -75,7 +75,7 @@ func (rB *DefinitionsRequestBuilder) Get(ctx context.Context, requestConfigurati
 }
 
 // ToGetRequestInformation converts provided parameters into request information.
-func (rB *DefinitionsRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *DefinitionsRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *PoliciesMappingsInputsResolvedRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsInputsResolvedRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
