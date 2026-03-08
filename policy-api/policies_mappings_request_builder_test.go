@@ -98,8 +98,8 @@ func TestPoliciesMappingsRequestBuilder_Delete(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:  "Nil_RequestBuilder",
-			nilRB: true,
+			name:    "Nil_RequestBuilder",
+			nilRB:   true,
 			wantErr: false,
 		},
 		{
