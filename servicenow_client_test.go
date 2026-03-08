@@ -205,6 +205,18 @@ func TestServiceNowClient_Now2(t *testing.T) {
 	assert.Equal(t, client, nowBuilder.Client)
 }
 
+func TestServiceNowClient_Cdm(t *testing.T) {
+	cred := credentials.NewUsernamePasswordCredential("username", "password")
+
+	client := NewServiceNowClient(cred, "instance")
+
+	cdmBuilder := client.Cdm()
+
+	assert.IsType(t, &CdmRequestBuilder{}, cdmBuilder)
+	assert.Equal(t, client.BaseUrl, cdmBuilder.GetPathParameters()["baseurl"])
+	assert.Equal(t, client.RequestAdapter, cdmBuilder.GetRequestAdapter())
+}
+
 func TestServiceNowClient_ToRequest(t *testing.T) {
 	requestInfo := &MockRequestInformation{
 		Headers: http.Header{},
