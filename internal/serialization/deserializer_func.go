@@ -2,7 +2,9 @@ package serialization
 
 import (
 	"errors"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -65,6 +67,42 @@ func DeserializeFloat32Func() DeserializerFunc[*float32] {
 	return func(setter ModelSetter[*float32]) serialization.NodeParser {
 		return func(node serialization.ParseNode) error {
 			return SetValueFromSource(node.GetFloat32Value, setter)
+		}
+	}
+}
+
+// DeserializeTimeFunc returns a deserializer function for a time.Time value.
+func DeserializeTimeFunc() DeserializerFunc[*time.Time] {
+	return func(setter ModelSetter[*time.Time]) serialization.NodeParser {
+		return func(node serialization.ParseNode) error {
+			return SetValueFromSource(node.GetTimeValue, setter)
+		}
+	}
+}
+
+// DeserializeTimeOnlyFunc returns a deserializer function for a TimeOnly value.
+func DeserializeTimeOnlyFunc() DeserializerFunc[*serialization.TimeOnly] {
+	return func(setter ModelSetter[*serialization.TimeOnly]) serialization.NodeParser {
+		return func(node serialization.ParseNode) error {
+			return SetValueFromSource(node.GetTimeOnlyValue, setter)
+		}
+	}
+}
+
+// DeserializeDateOnlyFunc returns a deserializer function for a DateOnly value.
+func DeserializeDateOnlyFunc() DeserializerFunc[*serialization.DateOnly] {
+	return func(setter ModelSetter[*serialization.DateOnly]) serialization.NodeParser {
+		return func(node serialization.ParseNode) error {
+			return SetValueFromSource(node.GetDateOnlyValue, setter)
+		}
+	}
+}
+
+// DeserializeUUIDFunc returns a deserializer function for a UUID value.
+func DeserializeUUIDFunc() DeserializerFunc[*uuid.UUID] {
+	return func(setter ModelSetter[*uuid.UUID]) serialization.NodeParser {
+		return func(node serialization.ParseNode) error {
+			return SetValueFromSource(node.GetUUIDValue, setter)
 		}
 	}
 }

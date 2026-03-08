@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPolicyRequestBuilder(t *testing.T) {
+func TestPoliciesMappingsRequestBuilder(t *testing.T) {
 	tests := []struct {
 		name           string
 		pathParameters map[string]string
@@ -21,17 +21,17 @@ func TestPolicyRequestBuilder(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			requestAdapter := mocking.NewMockRequestAdapter()
-			rB := NewPolicyRequestBuilderInternal(tt.pathParameters, requestAdapter)
+			rB := NewPoliciesMappingsRequestBuilderInternal(tt.pathParameters, requestAdapter)
 
 			assert.NotNil(t, rB)
-			assert.Equal(t, policyURLTemplate, rB.GetURLTemplate())
+			assert.Equal(t, policiesMappingsURLTemplate, rB.GetURLTemplate())
 			assert.Equal(t, tt.pathParameters, rB.GetPathParameters())
 			assert.Equal(t, requestAdapter, rB.GetRequestAdapter())
 		})
 	}
 }
 
-func TestPolicyRequestBuilder_Definitions(t *testing.T) {
+func TestPoliciesMappingsRequestBuilder_Inputs(t *testing.T) {
 	tests := []struct {
 		name           string
 		pathParameters map[string]string
@@ -49,22 +49,22 @@ func TestPolicyRequestBuilder_Definitions(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var rB *PolicyRequestBuilder
+			var rB *PoliciesMappingsRequestBuilder
 			requestAdapter := mocking.NewMockRequestAdapter()
 
 			if !tt.nilRB {
-				rB = NewPolicyRequestBuilderInternal(tt.pathParameters, requestAdapter)
+				rB = NewPoliciesMappingsRequestBuilderInternal(tt.pathParameters, requestAdapter)
 			}
 
-			definitionsRB := rB.Definitions()
+			inputsRB := rB.Inputs()
 
 			if tt.nilRB {
-				assert.Nil(t, definitionsRB)
+				assert.Nil(t, inputsRB)
 			} else {
-				assert.NotNil(t, definitionsRB)
-				assert.Equal(t, definitionsURLTemplate, definitionsRB.GetURLTemplate())
-				assert.Equal(t, tt.pathParameters, definitionsRB.GetPathParameters())
-				assert.Equal(t, requestAdapter, definitionsRB.GetRequestAdapter())
+				assert.NotNil(t, inputsRB)
+				assert.Equal(t, policiesMappingsInputsURLTemplate, inputsRB.GetURLTemplate())
+				assert.Equal(t, tt.pathParameters, inputsRB.GetPathParameters())
+				assert.Equal(t, requestAdapter, inputsRB.GetRequestAdapter())
 			}
 		})
 	}

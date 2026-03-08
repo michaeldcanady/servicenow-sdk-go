@@ -110,35 +110,6 @@ func TestNowRequestBuilder_Batch(t *testing.T) {
 	}
 }
 
-func TestNowRequestBuilder_Policy(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				client := NewServiceNowClient(mocking.NewMockCredential(), "instance")
-				url := "https://example.service-now.com/api"
-				builder := NewNowRequestBuilder2(url, client)
-
-				expected := map[string]string{
-					"baseurl": url,
-				}
-
-				policyBuilder := builder.Policy()
-
-				assert.NotNil(t, policyBuilder)
-				assert.Equal(t, expected, policyBuilder.GetPathParameters())
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
-}
-
 func TestNewNowRequestBuilder2(t *testing.T) {
 	client := &ServiceNowClient{}
 	url := "https://example.service-now.com/api"
