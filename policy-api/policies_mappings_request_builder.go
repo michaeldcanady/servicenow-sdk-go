@@ -3,6 +3,7 @@ package policyapi
 import (
 	"context"
 	"errors"
+	"fmt"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -69,6 +70,68 @@ func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestCon
 	}
 
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
+}
+
+func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (newInternal.ServiceNowItemResponse[*PoliciesMappingsInput], error) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
+	if internal.IsNil(requestConfiguration) {
+		return nil, errors.New("requestConfiguration is nil")
+	}
+
+	queryParameters := requestConfiguration.QueryParameters
+	if queryParameters.AppName == "" {
+		return nil, errors.New("AppName is required")
+	}
+
+	if queryParameters.DeployableName == "" {
+		return nil, errors.New("DeployableName is required")
+	}
+
+	if queryParameters.PolicyName == "" {
+		return nil, errors.New("PolicyName is required")
+	}
+
+	requestInfo, err := rB.ToPostRequestInformation(ctx, requestConfiguration)
+	if err != nil {
+		return nil, err
+	}
+
+	errorMapping := abstractions.ErrorMappings{
+		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+	}
+
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[*PoliciesMappingsInput](CreatePoliciesMappingsInputFromDiscriminatorValue), errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp == nil {
+		return nil, errors.New("response is nil")
+	}
+
+	typedResp, ok := resp.(newInternal.ServiceNowItemResponse[*PoliciesMappingsInput])
+	if !ok {
+		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowItemResponse[*PoliciesMappingsInput])(nil))
+	}
+
+	return typedResp, nil
+}
+
+func (rB *PoliciesMappingsRequestBuilder) ToPostRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !internal.IsNil(requestConfiguration) {
+		newInternal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	}
+
+	return kiotaRequestInfo.RequestInformation, nil
 }
 
 func (rB *PoliciesMappingsRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
