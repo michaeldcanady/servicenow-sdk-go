@@ -72,7 +72,7 @@ func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestCon
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
 }
 
-func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (newInternal.ServiceNowItemResponse[*PoliciesMappingsInput], error) {
+func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (newInternal.ServiceNowItemResponse[*PoliciesMapping], error) {
 	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -103,7 +103,7 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[*PoliciesMappingsInput](CreatePoliciesMappingsInputFromDiscriminatorValue), errorMapping)
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -112,9 +112,9 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 		return nil, errors.New("response is nil")
 	}
 
-	typedResp, ok := resp.(newInternal.ServiceNowItemResponse[*PoliciesMappingsInput])
+	typedResp, ok := resp.(newInternal.ServiceNowItemResponse[*PoliciesMapping])
 	if !ok {
-		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowItemResponse[*PoliciesMappingsInput])(nil))
+		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowItemResponse[*PoliciesMapping])(nil))
 	}
 
 	return typedResp, nil

@@ -1,5 +1,0 @@
-package policyapi
-
-import abstractions "github.com/microsoft/kiota-abstractions-go"
-
-type PoliciesMappingsInputsResolvedRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[*PoliciesMappingsInputsResolvedRequestBuilderGetQueryParameters]
