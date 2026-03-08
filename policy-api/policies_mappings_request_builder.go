@@ -1,6 +1,8 @@
 package policyapi
 
 import (
+	"context"
+	"errors"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -33,4 +35,52 @@ func (rB *PoliciesMappingsRequestBuilder) Inputs() *PoliciesMappingsInputsReques
 	}
 
 	return NewPoliciesMappingsInputsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) error {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
+	if internal.IsNil(requestConfiguration) {
+		return errors.New("requestConfiguration is nil")
+	}
+
+	queryParameters := requestConfiguration.QueryParameters
+	if queryParameters.AppName == "" {
+		return errors.New("AppName is required")
+	}
+
+	if queryParameters.DeployableName == "" {
+		return errors.New("DeployableName is required")
+	}
+
+	if queryParameters.PolicyName == "" {
+		return errors.New("PolicyName is required")
+	}
+
+	requestInfo, err := rB.ToDeleteRequestInformation(ctx, requestConfiguration)
+	if err != nil {
+		return err
+	}
+
+	errorMapping := abstractions.ErrorMappings{
+		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+	}
+
+	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
+}
+
+func (rB *PoliciesMappingsRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !internal.IsNil(requestConfiguration) {
+		newInternal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	}
+
+	return kiotaRequestInfo.RequestInformation, nil
 }
