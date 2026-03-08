@@ -3,8 +3,8 @@ package policyapi
 import (
 	"testing"
 
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
