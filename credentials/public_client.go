@@ -2,17 +2,13 @@ package credentials
 
 import (
 	"context"
-	"net/url"
-)
 
-type tokenRequester interface {
-	requestToken(ctx context.Context, params url.Values) (*AccessToken, error)
-}
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
+)
 
 // publicClient represents an application that does not have a client secret.
 type publicClient struct {
-	clientID string
-	tokenRequester
+	oauthClient *oauth2.Client
 }
 
 // newPublicClient creates a new publicClient.
@@ -29,22 +25,25 @@ func newPublicClient(clientID string, authority Authority, options ...clientOpti
 		opt(&opts)
 	}
 
-	return &publicClient{
-		clientID: clientID,
-		tokenRequester: &defaultTokenRequester{
-			authority: authority,
-			options:   opts,
+	oauthClient := &oauth2.Client{
+		ClientID: clientID,
+		Endpoints: &oauth2.Endpoints{
+			TokenURL: authority.TokenURL(),
 		},
+		AuthMethod: oauth2.AuthMethodClientSecretPost, // Public clients don't use secret, but we need a method that doesn't REQUIRE it in internal/oauth2
+		HTTPClient: opts.httpClient,
+	}
+
+	return &publicClient{
+		oauthClient: oauthClient,
 	}, nil
 }
 
 // acquireTokenByUsernamePassword acquires a token using the ROPC flow.
 func (c *publicClient) acquireTokenByUsernamePassword(ctx context.Context, username, password string) (*AccessToken, error) {
-	params := url.Values{}
-	params.Set("grant_type", "password")
-	params.Set("client_id", c.clientID)
-	params.Set("username", username)
-	params.Set("password", password)
-
-	return c.requestToken(ctx, params)
+	token, err := c.oauthClient.ExchangePassword(ctx, username, password, nil)
+	if err != nil {
+		return nil, err
+	}
+	return convertToken(token), nil
 }
