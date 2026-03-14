@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// Deprecated: deprecated since v1.10.0. Use [UsernamePasswordCredential] instead.
+// Deprecated: deprecated since v1.10.0. Use [ROPCCredential] instead.
 //
 // TokenCredential represents the OAuth2 token credentials.
 type TokenCredential struct {
