@@ -3,7 +3,7 @@ package servicenowsdkgo
 import (
 	"maps"
 
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	policyapi "github.com/michaeldcanady/servicenow-sdk-go/policy-api"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -14,15 +14,18 @@ const (
 
 // CdmRequestBuilder provides operations to manage Service-Now CDM.
 type CdmRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
+}
+
+func NewCdmRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CdmRequestBuilder {
+	return &CdmRequestBuilder{
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, cdmURLTemplate, pathParameters),
+	}
 }
 
 // NewCdmRequestBuilder instantiates a new CdmRequestBuilder with the provided path parameters and request adapter.
-func NewCdmRequestBuilder(url string, requestAdapter abstractions.RequestAdapter) *CdmRequestBuilder {
-	pathParameters := map[string]string{"baseurl": url}
-	return &CdmRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, cdmURLTemplate, pathParameters),
-	}
+func NewCdmRequestBuilder(rawURL string, requestAdapter abstractions.RequestAdapter) *CdmRequestBuilder {
+	return NewCdmRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // Policies returns a PolicyRequestBuilder associated with the CdmRequestBuilder.

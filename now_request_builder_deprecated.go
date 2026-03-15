@@ -8,6 +8,7 @@ import (
 
 const nowURLTemplate = "{+baseurl}/Now"
 
+// DEPRECATED: deprecated since v{unreleased}. Please use [NowRequestBuilder2]
 type NowRequestBuilder struct {
 	core.RequestBuilder
 }

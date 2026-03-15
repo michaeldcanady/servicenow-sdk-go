@@ -22,9 +22,11 @@ func (c *ServiceNowClient) Now2() *NowRequestBuilder {
 // Cdm returns a CdmRequestBuilder associated with the Client.
 // It prepares the CdmRequestBuilder with the base URL for the ServiceNow instance.
 func (c *ServiceNowClient) Cdm() *CdmRequestBuilder {
-	return NewCdmRequestBuilder(c.BaseUrl, c.RequestAdapter)
+	return NewCdmRequestBuilderInternal(map[string]string{"baseurl": c.BaseUrl}, c.RequestAdapter)
 }
 
+// DEPRECATED: deprecated since v{unreleased}. Please use [NewServiceNowServiceClient]
+//
 // NewServiceNowClient2 creates a new instance of the ServiceNow client.
 // It accepts a UsernamePasswordCredential and an instance URL.
 // If the instance URL does not end with ".service-now.com/api", it appends the suffix.
@@ -52,12 +54,15 @@ func NewServiceNowClient2WithHTTPClient(credential core.Credential, instance str
 		return nil, err
 	}
 
-	opts := []serviceNowServiceClientOption{withURL(strings.ReplaceAll(instance, "/api", ""))}
+	opts := []ServiceNowServiceClientOption{
+		WithAuthenticationProvider(authenticationProvider),
+		WithURL(strings.ReplaceAll(instance, "/api", "")),
+	}
 	if httpClient != nil {
-		opts = append(opts, withHTTPClient(httpClient))
+		opts = append(opts, WithHTTPClient(httpClient))
 	}
 
-	client, err := newServiceNowServiceClientWithOptions(authenticationProvider, opts...)
+	client, err := NewServiceNowServiceClient(opts...)
 	if err != nil { // nocov // can't test since options are fix, it shouldn't be able to error
 		return nil, err
 	}

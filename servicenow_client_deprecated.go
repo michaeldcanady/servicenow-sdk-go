@@ -13,6 +13,7 @@ type webClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
+// DEPRECATED: deprecated since v{unreleased}. Please use [ServiceNowServiceClient]
 type ServiceNowClient struct {
 	// Deprecated: deprecated since v1.6.0.
 	Credential     core.Credential

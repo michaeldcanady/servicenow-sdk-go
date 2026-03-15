@@ -11,6 +11,70 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestWithAuthenticationProvider(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(t *testing.T)
+	}{
+		{
+			name: "successful",
+			test: func(t *testing.T) {
+				authProvider := mocking.NewMockAuthenticationProvider()
+				option := WithAuthenticationProvider(authProvider)
+				config := &ServiceNowServiceClientConfig{}
+				err := option(config)
+				assert.Nil(t, err)
+				assert.Equal(t, authProvider, config.authenticationProvider)
+			},
+		},
+		{
+			name: "nil auth",
+			test: func(t *testing.T) {
+				option := WithAuthenticationProvider(nil)
+				config := &ServiceNowServiceClientConfig{}
+				err := option(config)
+				assert.Equal(t, errors.New("authenticationProvider is nil"), err)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestWithRequestAdapter(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(t *testing.T)
+	}{
+		{
+			name: "successful",
+			test: func(t *testing.T) {
+				adapter := mocking.NewMockRequestAdapter()
+				option := WithRequestAdapter(adapter)
+				config := &ServiceNowServiceClientConfig{}
+				err := option(config)
+				assert.Nil(t, err)
+				assert.Equal(t, adapter, config.requestAdapter)
+			},
+		},
+		{
+			name: "nil adapter",
+			test: func(t *testing.T) {
+				option := WithRequestAdapter(nil)
+				config := &ServiceNowServiceClientConfig{}
+				err := option(config)
+				assert.Equal(t, errors.New("requestAdapter is nil"), err)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
 func TestWithURL(t *testing.T) {
 	tests := []struct {
 		name string
@@ -20,8 +84,8 @@ func TestWithURL(t *testing.T) {
 			name: "successful",
 			test: func(t *testing.T) {
 				input := "https://exampleurl.com"
-				option := withURL(input)
-				config := &serviceNowServiceClientConfig{}
+				option := WithURL(input)
+				config := &ServiceNowServiceClientConfig{}
 				err := option(config)
 				assert.Nil(t, err)
 				assert.Equal(t, input, config.rawURI)
@@ -31,8 +95,8 @@ func TestWithURL(t *testing.T) {
 			name: "empty uri",
 			test: func(t *testing.T) {
 				input := " "
-				option := withURL(input)
-				config := &serviceNowServiceClientConfig{}
+				option := WithURL(input)
+				config := &ServiceNowServiceClientConfig{}
 				err := option(config)
 				assert.Equal(t, errors.New("url is empty"), err)
 				assert.Equal(t, "", config.rawURI)
@@ -42,8 +106,8 @@ func TestWithURL(t *testing.T) {
 			name: "invalid uri",
 			test: func(t *testing.T) {
 				input := "https://example url.com"
-				option := withURL(input)
-				config := &serviceNowServiceClientConfig{}
+				option := WithURL(input)
+				config := &ServiceNowServiceClientConfig{}
 				err := option(config)
 				assert.Equal(t, errors.New("parse \"https://example url.com\": invalid character \" \" in host name"), err)
 				assert.Equal(t, "", config.rawURI)
@@ -53,8 +117,8 @@ func TestWithURL(t *testing.T) {
 			name: "nil config",
 			test: func(t *testing.T) {
 				input := "https://exampleurl.com"
-				option := withURL(input)
-				config := (*serviceNowServiceClientConfig)(nil)
+				option := WithURL(input)
+				config := (*ServiceNowServiceClientConfig)(nil)
 				err := option(config)
 				assert.Equal(t, errors.New("config is nil"), err)
 			},
@@ -74,10 +138,10 @@ func TestWithMiddleware(t *testing.T) {
 		{
 			name: "successful",
 			test: func(t *testing.T) {
-				config := &serviceNowServiceClientConfig{}
+				config := &ServiceNowServiceClientConfig{}
 				middleware := mocking.NewMockMiddleware()
 
-				option := withMiddleware(middleware)
+				option := WithMiddleware(middleware)
 
 				err := option(config)
 
@@ -89,9 +153,9 @@ func TestWithMiddleware(t *testing.T) {
 			name: "nil config",
 			test: func(t *testing.T) {
 				middleware := mocking.NewMockMiddleware()
-				config := (*serviceNowServiceClientConfig)(nil)
+				config := (*ServiceNowServiceClientConfig)(nil)
 
-				option := withMiddleware(middleware)
+				option := WithMiddleware(middleware)
 				err := option(config)
 				assert.Equal(t, errors.New("config is nil"), err)
 			},
@@ -99,9 +163,9 @@ func TestWithMiddleware(t *testing.T) {
 		{
 			name: "no middleware",
 			test: func(t *testing.T) {
-				config := &serviceNowServiceClientConfig{}
+				config := &ServiceNowServiceClientConfig{}
 
-				option := withMiddleware()
+				option := WithMiddleware()
 
 				err := option(config)
 
@@ -125,9 +189,9 @@ func TestWithInstance(t *testing.T) {
 			name: "successful",
 			test: func(t *testing.T) {
 				instance := "test"
-				config := &serviceNowServiceClientConfig{}
+				config := &ServiceNowServiceClientConfig{}
 
-				option := withInstance(instance)
+				option := WithInstance(instance)
 				err := option(config)
 
 				assert.Nil(t, err)
@@ -138,9 +202,9 @@ func TestWithInstance(t *testing.T) {
 			name: "nil config",
 			test: func(t *testing.T) {
 				instance := "https://exampleurl.com"
-				config := (*serviceNowServiceClientConfig)(nil)
+				config := (*ServiceNowServiceClientConfig)(nil)
 
-				option := withInstance(instance)
+				option := WithInstance(instance)
 
 				err := option(config)
 				assert.Equal(t, errors.New("config is nil"), err)
@@ -150,9 +214,9 @@ func TestWithInstance(t *testing.T) {
 			name: "empty instance",
 			test: func(t *testing.T) {
 				instance := " "
-				config := &serviceNowServiceClientConfig{}
+				config := &ServiceNowServiceClientConfig{}
 
-				option := withInstance(instance)
+				option := WithInstance(instance)
 				err := option(config)
 
 				assert.Equal(t, errors.New("instance is empty"), err)
@@ -175,9 +239,9 @@ func TestWithBackingStore(t *testing.T) {
 			name: "successful",
 			test: func(t *testing.T) {
 				backingStore := store.BackingStoreFactoryInstance
-				config := &serviceNowServiceClientConfig{}
+				config := &ServiceNowServiceClientConfig{}
 
-				option := withBackingStoreFactory(backingStore)
+				option := WithBackingStoreFactory(backingStore)
 				err := option(config)
 
 				assert.Nil(t, err)
@@ -188,9 +252,9 @@ func TestWithBackingStore(t *testing.T) {
 		{
 			name: "nil factory",
 			test: func(t *testing.T) {
-				config := &serviceNowServiceClientConfig{}
+				config := &ServiceNowServiceClientConfig{}
 
-				option := withBackingStoreFactory(nil)
+				option := WithBackingStoreFactory(nil)
 				err := option(config)
 
 				assert.Equal(t, errors.New("backingStoreFactory is nil"), err)
@@ -213,9 +277,9 @@ func TestWithHTTPClient(t *testing.T) {
 			name: "successful",
 			test: func(t *testing.T) {
 				client := &http.Client{}
-				config := &serviceNowServiceClientConfig{}
+				config := &ServiceNowServiceClientConfig{}
 
-				option := withHTTPClient(client)
+				option := WithHTTPClient(client)
 				err := option(config)
 
 				assert.Nil(t, err)

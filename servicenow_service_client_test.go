@@ -9,37 +9,68 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestNewServiceNowServiceClientWithOptions(t *testing.T) {
+func TestNewServiceNowServiceClient(t *testing.T) {
 	tests := []struct {
 		name        string
-		opts        []serviceNowServiceClientOption
+		opts        func() []ServiceNowServiceClientOption
 		expectedErr bool
 	}{
 		{
-			name: "With URL",
-			opts: []serviceNowServiceClientOption{
-				withURL("https://example.com"),
+			name: "With URL and Auth",
+			opts: func() []ServiceNowServiceClientOption {
+				return []ServiceNowServiceClientOption{
+					WithURL("https://example.com"),
+					WithAuthenticationProvider(mocking.NewMockAuthenticationProvider()),
+				}
 			},
 			expectedErr: false,
 		},
 		{
-			name: "With Instance",
-			opts: []serviceNowServiceClientOption{
-				withInstance("test"),
+			name: "With Instance and Auth",
+			opts: func() []ServiceNowServiceClientOption {
+				return []ServiceNowServiceClientOption{
+					WithInstance("test"),
+					WithAuthenticationProvider(mocking.NewMockAuthenticationProvider()),
+				}
 			},
 			expectedErr: false,
 		},
 		{
-			name:        "Neither URL nor Instance",
-			opts:        []serviceNowServiceClientOption{},
+			name: "With RequestAdapter and URL",
+			opts: func() []ServiceNowServiceClientOption {
+				adapter := mocking.NewMockRequestAdapter()
+				adapter.On("EnableBackingStore", mock.Anything).Return()
+				adapter.On("SetBaseUrl", mock.Anything).Return()
+				return []ServiceNowServiceClientOption{
+					WithRequestAdapter(adapter),
+					WithURL("https://example.com"),
+				}
+			},
+			expectedErr: false,
+		},
+		{
+			name: "Missing Auth and Adapter",
+			opts: func() []ServiceNowServiceClientOption {
+				return []ServiceNowServiceClientOption{
+					WithURL("https://example.com"),
+				}
+			},
+			expectedErr: true,
+		},
+		{
+			name: "Missing URL and Instance",
+			opts: func() []ServiceNowServiceClientOption {
+				return []ServiceNowServiceClientOption{
+					WithAuthenticationProvider(mocking.NewMockAuthenticationProvider()),
+				}
+			},
 			expectedErr: true,
 		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			authProvider := mocking.NewMockAuthenticationProvider()
-			client, err := newServiceNowServiceClientWithOptions(authProvider, test.opts...)
+			client, err := NewServiceNowServiceClient(test.opts()...)
 			if test.expectedErr {
 				assert.Error(t, err)
 				assert.Nil(t, client)
@@ -51,42 +82,21 @@ func TestNewServiceNowServiceClientWithOptions(t *testing.T) {
 	}
 }
 
-func TestNewServiceNowServiceClient(t *testing.T) {
-	tests := []struct {
-		name        string
-		baseURL     string
-		expectedErr bool
-	}{
-		{
-			name:        "Valid URL",
-			baseURL:     "https://example.com",
-			expectedErr: false,
-		},
-		{
-			name:        "Empty URL",
-			baseURL:     "",
-			expectedErr: true,
-		},
-	}
+func TestNewServiceNowServiceClient_LowLevel(t *testing.T) {
+	// Verifying that passing a pre-configured adapter works
+	requestAdapter := mocking.NewMockRequestAdapter()
+	requestAdapter.On("EnableBackingStore", mock.Anything).Return()
+	requestAdapter.On("SetBaseUrl", mock.Anything).Return()
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			requestAdapter := mocking.NewMockRequestAdapter()
-			if !test.expectedErr {
-				requestAdapter.On("EnableBackingStore", mock.Anything).Return()
-				requestAdapter.On("SetBaseUrl", mock.Anything).Return()
-			}
+	backingStore := store.BackingStoreFactoryInstance
 
-			backingStore := store.BackingStoreFactoryInstance
+	client, err := NewServiceNowServiceClient(
+		WithRequestAdapter(requestAdapter),
+		WithBackingStoreFactory(backingStore),
+		WithURL("https://example.com"),
+	)
 
-			client, err := newServiceNowServiceClient(requestAdapter, backingStore, test.baseURL)
-			if test.expectedErr {
-				assert.Error(t, err)
-				assert.Nil(t, client)
-			} else {
-				assert.NoError(t, err)
-				assert.NotNil(t, client)
-			}
-		})
-	}
+	assert.NoError(t, err)
+	assert.NotNil(t, client)
+	requestAdapter.AssertExpectations(t)
 }
