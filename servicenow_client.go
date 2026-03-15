@@ -22,7 +22,7 @@ func (c *ServiceNowClient) Now2() *NowRequestBuilder {
 // Cdm returns a CdmRequestBuilder associated with the Client.
 // It prepares the CdmRequestBuilder with the base URL for the ServiceNow instance.
 func (c *ServiceNowClient) Cdm() *CdmRequestBuilder {
-	return NewCdmRequestBuilder(c.BaseUrl, c.RequestAdapter)
+	return NewCdmRequestBuilderInternal(map[string]string{"baseurl": c.BaseUrl}, c.RequestAdapter)
 }
 
 // DEPRECATED: deprecated since v{unreleased}. Please use [NewServiceNowServiceClient]
