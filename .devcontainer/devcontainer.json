@@ -28,6 +28,8 @@
   },
   "remoteUser": "vscode",
   "features": {
+    "./podman-remote": {},
+    "./xdg-utils": {},
     "ghcr.io/shinepukur/devcontainer-features/vale:1": {
       "version": "latest"
     },
@@ -45,5 +47,6 @@
   "runArgs": [
     "--userns=keep-id"
   ],
-  "containerUser": "vscode"
-}
+  "containerUser": "vscode",
+  //"initializeCommand": "mkfifo ~/hostbrowserpipe"
+} 
