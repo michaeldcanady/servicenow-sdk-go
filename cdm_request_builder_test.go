@@ -20,7 +20,7 @@ func TestCdmRequestBuilder(t *testing.T) {
 				builder := NewCdmRequestBuilder(url, requestAdapter)
 
 				expected := map[string]string{
-					"baseurl": url,
+					"request-raw-url": url,
 				}
 
 				assert.NotNil(t, builder)
@@ -45,7 +45,7 @@ func TestCdmRequestBuilder_Policies(t *testing.T) {
 			test: func(t *testing.T) {
 				url := "https://example.service-now.com/api"
 				requestAdapter := mocking.NewMockRequestAdapter()
-				builder := NewCdmRequestBuilder(url, requestAdapter)
+				builder := NewCdmRequestBuilderInternal(map[string]string{"baseurl": url}, requestAdapter)
 
 				policiesBuilder := builder.Policies()
 
