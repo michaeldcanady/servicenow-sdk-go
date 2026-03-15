@@ -52,12 +52,15 @@ func NewServiceNowClient2WithHTTPClient(credential core.Credential, instance str
 		return nil, err
 	}
 
-	opts := []serviceNowServiceClientOption{withURL(strings.ReplaceAll(instance, "/api", ""))}
+	opts := []ServiceNowServiceClientOption{
+		WithAuthenticationProvider(authenticationProvider),
+		WithURL(strings.ReplaceAll(instance, "/api", "")),
+	}
 	if httpClient != nil {
-		opts = append(opts, withHTTPClient(httpClient))
+		opts = append(opts, WithHTTPClient(httpClient))
 	}
 
-	client, err := newServiceNowServiceClientWithOptions(authenticationProvider, opts...)
+	client, err := NewServiceNowServiceClient(opts...)
 	if err != nil { // nocov // can't test since options are fix, it shouldn't be able to error
 		return nil, err
 	}

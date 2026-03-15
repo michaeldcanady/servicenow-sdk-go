@@ -9,18 +9,42 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
-// serviceNowServiceClientOption is a function type that modifies the serviceNowServiceClientConfig.
+// ServiceNowServiceClientOption is a function type that modifies the ServiceNowServiceClientConfig.
 // It returns an error if the modification is not successful.
-type serviceNowServiceClientOption func(*serviceNowServiceClientConfig) error
+type ServiceNowServiceClientOption func(*ServiceNowServiceClientConfig) error
 
-// withURL creates an option to set the base URL for the requests.
+// WithAuthenticationProvider sets the authentication provider for the ServiceNowServiceClient.
+func WithAuthenticationProvider(authenticationProvider authentication.AuthenticationProvider) ServiceNowServiceClientOption {
+	return func(config *ServiceNowServiceClientConfig) error {
+		if internal.IsNil(authenticationProvider) {
+			return errors.New("authenticationProvider is nil")
+		}
+		config.authenticationProvider = authenticationProvider
+		return nil
+	}
+}
+
+// WithRequestAdapter sets a pre-configured RequestAdapter for the ServiceNowServiceClient.
+func WithRequestAdapter(requestAdapter abstractions.RequestAdapter) ServiceNowServiceClientOption {
+	return func(config *ServiceNowServiceClientConfig) error {
+		if internal.IsNil(requestAdapter) {
+			return errors.New("requestAdapter is nil")
+		}
+		config.requestAdapter = requestAdapter
+		return nil
+	}
+}
+
+// WithURL creates an option to set the base URL for the requests.
 // It returns an error if the provided configuration is nil or the URL is empty.
-func withURL(uri string) serviceNowServiceClientOption {
-	return func(config *serviceNowServiceClientConfig) error {
+func WithURL(uri string) ServiceNowServiceClientOption {
+	return func(config *ServiceNowServiceClientConfig) error {
 		if internal.IsNil(config) {
 			return errors.New("config is nil")
 		}
@@ -39,10 +63,10 @@ func withURL(uri string) serviceNowServiceClientOption {
 	}
 }
 
-// withMiddleware creates an option to set the middleware used by the requests.
+// WithMiddleware creates an option to set the middleware used by the requests.
 // It returns an error if the provided configuration is nil or the middleware slice is empty.
-func withMiddleware(middleware ...nethttplibrary.Middleware) serviceNowServiceClientOption {
-	return func(config *serviceNowServiceClientConfig) error {
+func WithMiddleware(middleware ...nethttplibrary.Middleware) ServiceNowServiceClientOption {
+	return func(config *ServiceNowServiceClientConfig) error {
 		if internal.IsNil(config) {
 			return errors.New("config is nil")
 		}
@@ -56,10 +80,10 @@ func withMiddleware(middleware ...nethttplibrary.Middleware) serviceNowServiceCl
 	}
 }
 
-// withInstance creates an option to set the instance of the default ServiceNow URL for the requests.
+// WithInstance creates an option to set the instance of the default ServiceNow URL for the requests.
 // It returns an error if the provided configuration is nil or the instance string is empty.
-func withInstance(instance string) serviceNowServiceClientOption {
-	return func(config *serviceNowServiceClientConfig) error {
+func WithInstance(instance string) ServiceNowServiceClientOption {
+	return func(config *ServiceNowServiceClientConfig) error {
 		if internal.IsNil(config) {
 			return errors.New("config is nil")
 		}
@@ -74,10 +98,10 @@ func withInstance(instance string) serviceNowServiceClientOption {
 	}
 }
 
-// withBackingStoreFactory creates an option to set the backingStoreFactory for the serviceNowServiceClient.
+// WithBackingStoreFactory creates an option to set the backingStoreFactory for the ServiceNowServiceClient.
 // It returns an error if the provided factory is nil.
-func withBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) serviceNowServiceClientOption {
-	return func(config *serviceNowServiceClientConfig) error {
+func WithBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) ServiceNowServiceClientOption {
+	return func(config *ServiceNowServiceClientConfig) error {
 		if internal.IsNil(backingStoreFactory) {
 			return errors.New("backingStoreFactory is nil")
 		}
@@ -88,8 +112,9 @@ func withBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) serv
 	}
 }
 
-func withHTTPClient(client *http.Client) serviceNowServiceClientOption {
-	return func(config *serviceNowServiceClientConfig) error {
+// WithHTTPClient creates an option to set the HTTP client used by the requests.
+func WithHTTPClient(client *http.Client) ServiceNowServiceClientOption {
+	return func(config *ServiceNowServiceClientConfig) error {
 		config.requestAdapterOptions = append(config.requestAdapterOptions, internalHttp.WithClient(client))
 
 		return nil
