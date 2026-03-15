@@ -19,3 +19,8 @@ func NewCustomAuthority(domain string) Authority {
 func (a Authority) TokenURL() string {
 	return string(a) + "/oauth_token.do"
 }
+
+// AuthURL returns the OAuth2 authorization endpoint for the authority.
+func (a Authority) AuthURL() string {
+	return string(a) + "/oauth_auth.do"
+}

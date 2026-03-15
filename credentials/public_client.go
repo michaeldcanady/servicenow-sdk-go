@@ -29,6 +29,7 @@ func newPublicClient(clientID string, authority Authority, options ...clientOpti
 		ClientID: clientID,
 		Endpoints: &oauth2.Endpoints{
 			TokenURL: authority.TokenURL(),
+			AuthURL:  authority.AuthURL(),
 		},
 		AuthMethod: oauth2.AuthMethodClientSecretPost, // Public clients don't use secret, but we need a method that doesn't REQUIRE it in internal/oauth2
 		HTTPClient: opts.httpClient,
