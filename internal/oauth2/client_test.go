@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2/pkce"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
@@ -181,7 +182,7 @@ func TestClient_ExchangeCode(t *testing.T) {
 					AuthMethod: AuthMethodClientSecretPost,
 					HTTPClient: mockClient,
 				}
-				tok, err := client.ExchangeCode(context.Background(), "code123", "http://redirect", "verifier")
+				tok, err := client.ExchangeCode(context.Background(), "code123", "http://redirect", "verifier", "")
 				require.NoError(t, err)
 				require.Equal(t, "jkl", tok.AccessToken)
 
@@ -244,7 +245,7 @@ func TestClient_AuthCodeURL(t *testing.T) {
 						AuthURL: "http://auth",
 					},
 				}
-				u, err := client.AuthCodeURL("http://redirect", "state123", "challenge", PKCEMethodS256.String(), []string{"openid"})
+				u, err := client.AuthCodeURL("http://redirect", "state123", "challenge", pkce.MethodS256.String(), []string{"openid"})
 				require.NoError(t, err)
 
 				parsed, _ := url.Parse(u)
@@ -253,7 +254,7 @@ func TestClient_AuthCodeURL(t *testing.T) {
 				require.Equal(t, "http://redirect", q.Get(RedirectURIKey))
 				require.Equal(t, "state123", q.Get(StateKey))
 				require.Equal(t, "challenge", q.Get(CodeChallengeKey))
-				require.Equal(t, PKCEMethodS256.String(), q.Get(CodeChallengeMethodKey))
+				require.Equal(t, pkce.MethodS256.String(), q.Get(CodeChallengeMethodKey))
 				require.Equal(t, "openid", q.Get(ScopeKey))
 			},
 		},
@@ -266,7 +267,7 @@ func TestClient_AuthCodeURL(t *testing.T) {
 						AuthURL: "",
 					},
 				}
-				u, err := client.AuthCodeURL("http://redirect", "state123", "challenge", PKCEMethodS256.String(), []string{"openid"})
+				u, err := client.AuthCodeURL("http://redirect", "state123", "challenge", pkce.MethodS256.String(), []string{"openid"})
 				require.Error(t, errors.New("authorization endpoint is not set"), err)
 				require.Empty(t, u)
 			},

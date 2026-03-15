@@ -137,12 +137,15 @@ func (c *Client) ExchangePassword(ctx context.Context, user, pass string, scopes
 	return c.Exchange(ctx, params)
 }
 
-func (c *Client) ExchangeCode(ctx context.Context, code, redirectURI, verifier string) (*Token, error) {
+func (c *Client) ExchangeCode(ctx context.Context, code, redirectURI, verifier, state string) (*Token, error) {
 	params := url.Values{}
 	params.Set(GrantTypeKey, GrantTypeAuthCode)
 	params.Set(CodeKey, code)
 	if redirectURI != "" {
 		params.Set(RedirectURIKey, redirectURI)
+	}
+	if state != "" {
+		params.Set(StateKey, state)
 	}
 	if verifier != "" {
 		params.Set(CodeVerifierKey, verifier)

@@ -2,27 +2,77 @@ package credentials
 
 import (
 	"context"
+	"strings"
 
+	"github.com/google/uuid"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2/pkce"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
+	"github.com/pkg/browser"
 )
+
+type authorizationCodeClient interface {
+	getAuthorizationURL(redirectURI, state string, scopes []string) (string, error)
+	acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error)
+	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
+}
 
 // AuthorizationCodeCredential implements the OAuth2 Authorization Code flow.
 type AuthorizationCodeCredential struct {
 	*baseAccessTokenProvider
-	client *confidentialClient
+	client authorizationCodeClient
+	public bool
 }
 
 // NewAuthorizationCodeCredential creates a new AuthorizationCodeCredential.
 // This credential uses the provided authorization code to acquire an access token.
 // The code is one-time use. Subsequent token acquisitions will use the refresh token.
-func NewAuthorizationCodeCredential(clientID, clientSecret, code, redirectURI string, authority Authority, allowedHosts []string) (*AuthorizationCodeCredential, error) {
-	client, err := newConfidentialClient(clientID, clientSecret, authority)
+func NewAuthorizationCodeCredential(clientID, clientSecret, redirectURI string, authority Authority, allowedHosts []string) (*AuthorizationCodeCredential, error) {
+	port := 5001
+
+	var (
+		client authorizationCodeClient
+		err    error
+		public bool
+	)
+
+	if strings.TrimSpace(clientSecret) != "" {
+		client, err = newConfidentialClient(clientID, clientSecret, authority)
+		public = false
+	} else {
+		client, err = newPublicClient(clientID, authority, withPKCEChallenge(pkce.MethodS256))
+		public = true
+	}
 	if err != nil {
 		return nil, err
 	}
 
 	initialFunc := func(ctx context.Context) (*AccessToken, error) {
-		token, err := client.acquireTokenByCode(ctx, code, redirectURI)
+		state := uuid.NewString()
+
+		server, err := oauth2.NewServer(state, port)
+		if err != nil {
+			return nil, err
+		}
+
+		defer server.Shutdown()
+
+		authURL, err := client.getAuthorizationURL(server.Addr, state, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := browser.OpenURL(authURL); err != nil {
+			return nil, err
+		}
+
+		result := server.Result(ctx)
+
+		if err := result.Err; err != nil {
+			return nil, err
+		}
+
+		token, err := client.acquireTokenByCode(ctx, result.Code, server.Addr, state)
 		if err != nil {
 			return nil, err
 		}
@@ -40,22 +90,13 @@ func NewAuthorizationCodeCredential(clientID, clientSecret, code, redirectURI st
 	return &AuthorizationCodeCredential{
 		baseAccessTokenProvider: base,
 		client:                  client,
+		public:                  public,
 	}, nil
 }
 
-// GetAuthorizationCodeURL generates the authorization URL for the 3-legged OAuth flow.
-// This URL is used to redirect the user to the identity provider to sign in and consent to permissions.
-func GetAuthorizationCodeURL(clientID, redirectURI string, authority Authority, state string, scopes []string) (string, error) {
-	client, err := newPublicClient(clientID, authority)
-	if err != nil {
-		return "", err
-	}
-	return client.oauthClient.AuthCodeURL(redirectURI, state, "", "", scopes)
-}
-
 // NewAuthorizationCodeAuthenticationProvider creates a new AuthenticationProvider for the Authorization Code flow.
-func NewAuthorizationCodeAuthenticationProvider(clientID, clientSecret, code, redirectURI string, authority Authority, allowedHosts []string) (authentication.AuthenticationProvider, error) {
-	tokenProvider, err := NewAuthorizationCodeCredential(clientID, clientSecret, code, redirectURI, authority, allowedHosts)
+func NewAuthorizationCodeAuthenticationProvider(clientID, clientSecret, redirectURI string, authority Authority, allowedHosts []string) (authentication.AuthenticationProvider, error) {
+	tokenProvider, err := NewAuthorizationCodeCredential(clientID, clientSecret, redirectURI, authority, allowedHosts)
 	if err != nil {
 		return nil, err
 	}

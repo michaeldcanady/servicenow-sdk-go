@@ -63,8 +63,8 @@ func (c *confidentialClient) acquireTokenByRefreshToken(ctx context.Context, ref
 }
 
 // acquireTokenByCode acquires a token using the authorization code flow.
-func (c *confidentialClient) acquireTokenByCode(ctx context.Context, code, redirectURI string) (*AccessToken, error) {
-	token, err := c.oauthClient.ExchangeCode(ctx, code, redirectURI, "")
+func (c *confidentialClient) acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error) {
+	token, err := c.oauthClient.ExchangeCode(ctx, code, redirectURI, "", state)
 	if err != nil {
 		return nil, err
 	}
