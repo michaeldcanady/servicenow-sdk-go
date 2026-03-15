@@ -2,6 +2,7 @@ package servicenowsdkgo
 
 import (
 	"errors"
+	"maps"
 	"strings"
 	"sync"
 
@@ -61,9 +62,7 @@ func registerDefaultDeserializers() {
 }
 
 // NewServiceNowServiceClient creates a new ServiceNowServiceClient using the provided options.
-func NewServiceNowServiceClient(
-	opts ...ServiceNowServiceClientOption,
-) (*ServiceNowServiceClient, error) {
+func NewServiceNowServiceClient(opts ...ServiceNowServiceClientOption) (*ServiceNowServiceClient, error) {
 	config, err := buildServiceClientConfig(opts...)
 	if err != nil {
 		return nil, err
@@ -87,4 +86,8 @@ func NewServiceNowServiceClient(
 	return &ServiceNowServiceClient{
 		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, baseURLVariable, pathParameters),
 	}, nil
+}
+
+func (rB *ServiceNowServiceClient) Now() *NowRequestBuilder2 {
+	return NewServiceNowRequestBuilder3Internal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
