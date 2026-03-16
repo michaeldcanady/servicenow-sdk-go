@@ -3,6 +3,7 @@ package credentials
 import (
 	"context"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
@@ -22,6 +23,10 @@ type AuthorizationCodeCredential struct {
 	*baseAccessTokenProvider
 	client authorizationCodeClient
 	public bool
+}
+
+type revokeTokenClient interface {
+	revokeToken(ctx context.Context, token, tokenTypeHint string) error
 }
 
 // NewAuthorizationCodeCredential creates a new AuthorizationCodeCredential.
@@ -47,7 +52,7 @@ func NewAuthorizationCodeCredential(clientID, clientSecret, redirectURI string, 
 		return nil, err
 	}
 
-	initialFunc := func(ctx context.Context) (*AccessToken, error) {
+	initialFunc := func(ctx context.Context) (token *AccessToken, err error) {
 		state := uuid.NewString()
 
 		server, err := oauth2.NewServer(state, port)
@@ -55,7 +60,14 @@ func NewAuthorizationCodeCredential(clientID, clientSecret, redirectURI string, 
 			return nil, err
 		}
 
-		defer server.Shutdown()
+		defer func() {
+			shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+
+			if shutdownErr := server.Shutdown(shutdownCtx); shutdownErr != nil && err == nil {
+				err = shutdownErr
+			}
+		}()
 
 		authURL, err := client.getAuthorizationURL(server.Addr, state, nil)
 		if err != nil {
@@ -72,7 +84,7 @@ func NewAuthorizationCodeCredential(clientID, clientSecret, redirectURI string, 
 			return nil, err
 		}
 
-		token, err := client.acquireTokenByCode(ctx, result.Code, server.Addr, state)
+		token, err = client.acquireTokenByCode(ctx, result.Code, server.Addr, state)
 		if err != nil {
 			return nil, err
 		}
@@ -86,6 +98,9 @@ func NewAuthorizationCodeCredential(clientID, clientSecret, redirectURI string, 
 	base := newBaseAccessTokenProvider(allowedHosts)
 	base.retrieveInitialToken = initialFunc
 	base.refreshToken = refreshFunc
+	if rtc, ok := client.(revokeTokenClient); ok {
+		base.revokeToken = rtc.revokeToken
+	}
 
 	return &AuthorizationCodeCredential{
 		baseAccessTokenProvider: base,
