@@ -152,6 +152,7 @@ func (s *Server) writeResponse(w http.ResponseWriter, title, message string, isE
 		color = "#dc3545" // Error red
 	}
 
+	// nolint: gosec // G705 //text comes from exception information not user
 	fmt.Fprintf(w, `
 <!DOCTYPE html>
 <html>
