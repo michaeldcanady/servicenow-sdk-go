@@ -25,7 +25,14 @@ nav:
   - Welcome: index.md
   - User Guide:
       - Getting Started: getting-started.md
-      - Authentication: user-guide/authentication.md
+      - Authentication:
+        - Overview: user-guide/authentication/index.md
+        - ROPC: user-guide/authentication/ropc.md
+        - Authorization Code (Private): user-guide/authentication/auth-code-private.md
+        - Authorization Code (Public): user-guide/authentication/auth-code-public.md
+        - Basic: user-guide/authentication/basic.md
+        - Client Credentials: user-guide/authentication/client-credentials.md
+        - JWT Token: user-guide/authentication/jwt-token.md
       - Table Operations: user-guide/tables.md
       - Attachment Operations: user-guide/attachments.md
       - Batch Operations: user-guide/batch.md

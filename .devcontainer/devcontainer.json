@@ -22,7 +22,8 @@
         "msyrus.go-doc",
         "766b.go-outliner",
         "yzhang.markdown-all-in-one",
-        "Gruntfuggly.todo-tree"
+        "Gruntfuggly.todo-tree",
+        "MermaidChart.vscode-mermaid-chart"
       ]
     }
   },
