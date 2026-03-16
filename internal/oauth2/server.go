@@ -44,8 +44,13 @@ func NewServer(state string, port int) (*Server, error) {
 		return nil, fmt.Errorf("failed to start local server: %w", err)
 	}
 
+	_, portStr, err := net.SplitHostPort(listener.Addr().String())
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse listener address: %w", err)
+	}
+
 	s := &Server{
-		Addr:   fmt.Sprintf("http://%s", listener.Addr().String()),
+		Addr:   fmt.Sprintf("http://%s:%s", localhost, portStr),
 		result: make(chan AuthorizationResult, 1),
 		state:  state,
 	}
