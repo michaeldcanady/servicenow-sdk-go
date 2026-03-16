@@ -18,6 +18,7 @@ require (
 	github.com/microsoft/kiota-serialization-multipart-go v1.1.2
 	github.com/microsoft/kiota-serialization-text-go v1.1.3
 	github.com/mozillazg/go-httpheader v0.4.0
+	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/stretchr/testify v1.11.1
 	github.com/yosida95/uritemplate/v3 v3.0.2
 )
@@ -40,5 +41,6 @@ require (
 	go.opentelemetry.io/otel v1.35.0 // indirect
 	go.opentelemetry.io/otel/metric v1.35.0 // indirect
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
+	golang.org/x/sys v0.1.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

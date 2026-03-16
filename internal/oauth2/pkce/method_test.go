@@ -1,10 +1,10 @@
-package oauth2
+package pkce
 
 import (
 	"testing"
 )
 
-func TestPKCEMethod_String(t *testing.T) {
+func TestMethod_String(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -12,40 +12,40 @@ func TestPKCEMethod_String(t *testing.T) {
 		{
 			name: "Plain returns correct string",
 			test: func(t *testing.T) {
-				got := PKCEMethodPlain.String()
+				got := MethodPlain.String()
 				want := "plain"
 				if got != want {
-					t.Errorf("PKCEMethodPlain.String() = %q, want %q", got, want)
+					t.Errorf("MethodPlain.String() = %q, want %q", got, want)
 				}
 			},
 		},
 		{
 			name: "S256 returns correct string",
 			test: func(t *testing.T) {
-				got := PKCEMethodS256.String()
+				got := MethodS256.String()
 				want := "S256"
 				if got != want {
-					t.Errorf("PKCEMethodS256.String() = %q, want %q", got, want)
+					t.Errorf("MethodS256.String() = %q, want %q", got, want)
 				}
 			},
 		},
 		{
 			name: "Unknown returns correct string",
 			test: func(t *testing.T) {
-				got := PKCEMethodUnknown.String()
+				got := MethodUnknown.String()
 				want := "unknown"
 				if got != want {
-					t.Errorf("PKCEMethodUnknown.String() = %q, want %q", got, want)
+					t.Errorf("MethodUnknown.String() = %q, want %q", got, want)
 				}
 			},
 		},
 		{
 			name: "Unsupported value falls back to Unknown",
 			test: func(t *testing.T) {
-				got := PKCEMethod(999).String()
+				got := Method(999).String()
 				want := "unknown"
 				if got != want {
-					t.Errorf("PKCEMethod(999).String() = %q, want %q", got, want)
+					t.Errorf("Method(999).String() = %q, want %q", got, want)
 				}
 			},
 		},

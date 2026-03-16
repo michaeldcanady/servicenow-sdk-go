@@ -33,6 +33,7 @@ func newConfidentialClient(clientID, clientSecret string, authority Authority, o
 		ClientSecret: clientSecret,
 		Endpoints: &oauth2.Endpoints{
 			TokenURL: authority.TokenURL(),
+			AuthURL:  authority.AuthURL(),
 		},
 		AuthMethod: oauth2.AuthMethodClientSecretPost, // Default to Post
 		HTTPClient: opts.httpClient,
@@ -59,4 +60,18 @@ func (c *confidentialClient) acquireTokenByRefreshToken(ctx context.Context, ref
 		return nil, err
 	}
 	return convertToken(token), nil
+}
+
+// acquireTokenByCode acquires a token using the authorization code flow.
+func (c *confidentialClient) acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error) {
+	token, err := c.oauthClient.ExchangeCode(ctx, code, redirectURI, "", state)
+	if err != nil {
+		return nil, err
+	}
+	return convertToken(token), nil
+}
+
+// getAuthorizationURL returns the authorization URL for the authorization code flow.
+func (c *confidentialClient) getAuthorizationURL(redirectURI, state string, scopes []string) (string, error) {
+	return c.oauthClient.AuthCodeURL(redirectURI, state, "", "", scopes)
 }

@@ -55,6 +55,7 @@
     "golangci",
     "gopath",
     "gosec",
+    "govet",
     "Gruntfuggly",
     "Headerable",
     "httpheader",
