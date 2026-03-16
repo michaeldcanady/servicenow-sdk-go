@@ -133,7 +133,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Download site artifact
-        uses: actions/download-artifact@v8.0.0
+        uses: actions/download-artifact@v8.0.1
         with:
           name: site
           path: site
