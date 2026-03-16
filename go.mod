@@ -18,6 +18,7 @@ require (
 	github.com/microsoft/kiota-serialization-multipart-go v1.1.2
 	github.com/microsoft/kiota-serialization-text-go v1.1.3
 	github.com/mozillazg/go-httpheader v0.4.0
+	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/stretchr/testify v1.11.1
 	github.com/yosida95/uritemplate/v3 v3.0.2
 )
@@ -32,7 +33,6 @@ require (
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-memdb v1.3.4 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
-	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.7 // indirect
 	github.com/std-uritemplate/std-uritemplate/go/v2 v2.0.3 // indirect
