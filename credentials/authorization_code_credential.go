@@ -25,6 +25,7 @@ type AuthorizationCodeCredential struct {
 	public bool
 }
 
+// nolint: unused // needed for later
 type revokeTokenClient interface {
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
 }

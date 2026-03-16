@@ -48,11 +48,13 @@ func TestAuthorizationCodeCredential(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			httpmock.RegisterResponder("POST", authority.TokenURL(), tt.responder)
 
+			// nolint: staticcheck // unused until we can write a headless compatible test
 			cred, err := NewAuthorizationCodeCredential(clientID, clientSecret, redirectURI, authority, nil)
 			assert.NoError(t, err)
 
 			return
 
+			// nolint: govet // tries to launch browser - not good for testing
 			token, err := cred.GetAuthorizationToken(context.Background(), nil, nil)
 
 			if tt.wantErr {
@@ -78,6 +80,7 @@ func TestNewAuthorizationCodeAuthenticationProvider(t *testing.T) {
 
 	return
 
+	// nolint: govet // tries to launch browser - not good for testing
 	provider, err := NewAuthorizationCodeAuthenticationProvider("clientID", "clientSecret", "http://localhost", authority, nil)
 	assert.NoError(t, err)
 	assert.NotNil(t, provider)
