@@ -2,6 +2,7 @@ package credentials
 
 import (
 	"context"
+	"net/url"
 
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
@@ -20,7 +21,7 @@ type ROPCCredential struct {
 
 // NewROPCCredential creates a new ROPCCredential.
 func NewROPCCredential(client ropcStrategy, username, password string, allowedHosts []string) (*ROPCCredential, error) {
-	initialFunc := func(ctx context.Context) (*AccessToken, error) {
+	initialFunc := func(ctx context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
 		return client.acquireTokenByUsernamePassword(ctx, username, password)
 	}
 

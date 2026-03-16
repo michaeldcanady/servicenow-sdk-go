@@ -2,6 +2,7 @@ package credentials
 
 import (
 	"context"
+	"net/url"
 	"strings"
 	"time"
 
@@ -31,7 +32,7 @@ type AuthorizationCodeCredential struct {
 func NewAuthorizationCodeCredential(client authorizationCodeStrategy, allowedHosts []string) (*AuthorizationCodeCredential, error) {
 	port := 5001
 
-	initialFunc := func(ctx context.Context) (token *AccessToken, err error) {
+	initialFunc := func(ctx context.Context, _ *url.URL, _ map[string]interface{}) (token *AccessToken, err error) {
 		state := uuid.NewString()
 
 		server, err := oauth2.NewServer(state, port)

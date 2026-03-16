@@ -17,7 +17,7 @@ type baseAccessTokenProvider struct {
 	mutex                 sync.RWMutex
 	allowedHostsValidator authentication.AllowedHostsValidator
 	// retrieveInitialToken is a function to get the first token.
-	retrieveInitialToken func(ctx context.Context) (*AccessToken, error)
+	retrieveInitialToken func(ctx context.Context, url *url.URL, additionalAuthenticationContext map[string]interface{}) (*AccessToken, error)
 	// refreshToken is a function to refresh the token.
 	refreshToken func(ctx context.Context, refreshToken string) (*AccessToken, error)
 	// revokeToken is a function to revoke the token.
@@ -66,7 +66,7 @@ func (p *baseAccessTokenProvider) GetAllowedHostsValidator() *authentication.All
 }
 
 // GetAuthorizationToken gets the authorization token.
-func (p *baseAccessTokenProvider) GetAuthorizationToken(ctx context.Context, uri *url.URL, _ map[string]interface{}) (string, error) {
+func (p *baseAccessTokenProvider) GetAuthorizationToken(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (string, error) {
 	if uri != nil && !p.allowedHostsValidator.IsUrlHostValid(uri) {
 		return "", nil
 	}
@@ -89,7 +89,7 @@ func (p *baseAccessTokenProvider) GetAuthorizationToken(ctx context.Context, uri
 		return "", fmt.Errorf("token acquisition failed: no initial retrieval function available")
 	}
 
-	newToken, err := p.retrieveInitialToken(ctx)
+	newToken, err := p.retrieveInitialToken(ctx, uri, additionalAuthenticationContext)
 	if err != nil {
 		return "", fmt.Errorf("initial token acquisition failed: %w", err)
 	}

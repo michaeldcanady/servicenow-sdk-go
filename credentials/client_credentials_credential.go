@@ -2,6 +2,7 @@ package credentials
 
 import (
 	"context"
+	"net/url"
 
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
@@ -20,7 +21,7 @@ type ClientCredentialsCredential struct {
 
 // NewClientCredentialsCredential creates a new ClientCredentialsCredential.
 func NewClientCredentialsCredential(client clientCredentialsFlow, scopes []string, allowedHosts []string) (*ClientCredentialsCredential, error) {
-	initialFunc := func(ctx context.Context) (*AccessToken, error) {
+	initialFunc := func(ctx context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
 		return client.acquireTokenByClientCredentials(ctx, scopes)
 	}
 
