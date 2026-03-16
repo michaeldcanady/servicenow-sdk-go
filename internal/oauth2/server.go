@@ -1,204 +1,164 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
-
-// Package local contains a local HTTP server used with interactive authentication.
 package oauth2
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"html"
 	"net"
 	"net/http"
-	"strconv"
-	"strings"
 	"time"
 )
 
-var okPage = []byte(`
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Authentication Complete</title>
-</head>
-<body>
-    <p>Authentication complete. You can return to the application. Feel free to close this browser tab.</p>
-    <p><strong>For your security:</strong> Do not share the contents of this page, the address bar, or take screenshots.</p>
-</body>
-</html>
-`)
-
-const failPage = `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Authentication Failed</title>
-</head>
-<body>
-	<p>Authentication failed. You can return to the application. Feel free to close this browser tab.</p>
-	<p>Error details: error %s error_description: %s</p>
-</body>
-</html>
-`
-
-const unsupportedResponseModePage = `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Authentication Failed</title>
-</head>
-<body>
-    <p>Authentication failed. The response was received via a GET operation, which is not supported.</p>
-    <p>You can return to the application. Feel free to close this browser tab.</p>
-</body>
-</html>
-`
-
-// Result is the result from the redirect.
-type Result struct {
-	// Code is the code sent by the authority server.
+// AuthorizationResult holds the data or error captured by the callback server.
+type AuthorizationResult struct {
+	// Code is the authorization code sent by the server.
 	Code string
-	// Err is set if there was an error.
+	// State is the state parameter returned by the server.
+	State string
+	// Err is set if an error occurred during the callback.
 	Err error
 }
 
-// Server is an HTTP server.
+// Server is a local HTTP server used to capture authorization codes in redirect flows.
 type Server struct {
-	// Addr is the address the server is listening on.
-	Addr     string
-	resultCh chan Result
-	s        *http.Server
-	reqState string
+	// Addr is the full URL where the server is listening.
+	Addr   string
+	server *http.Server
+	result chan AuthorizationResult
+	state  string
 }
 
-// New creates a local HTTP server and starts it.
-func NewServer(reqState string, port int) (*Server, error) {
-	var l net.Listener
-	var err error
-	var portStr string
-	if port > 0 {
-		// use port provided by caller
-		l, err = net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
-		portStr = strconv.FormatInt(int64(port), 10)
-	} else {
-		// find a free port
-		for i := 0; i < 10; i++ {
-			l, err = net.Listen("tcp", "localhost:0")
-			if err != nil {
-				continue
-			}
-			addr := l.Addr().String()
-			portStr = addr[strings.LastIndex(addr, ":")+1:]
-			break
-		}
+const (
+	localhost  = "localhost"
+	tcpNetwork = "tcp"
+)
+
+// NewServer starts a new local HTTP server on the specified port (or a random one if port is 0).
+func NewServer(state string, port int) (*Server, error) {
+	listener, err := net.Listen(tcpNetwork, fmt.Sprintf("%s:%d", localhost, port))
+	if err != nil && port != 0 {
+		// Fallback to random port if specific port is taken
+		listener, err = net.Listen(tcpNetwork, fmt.Sprintf("%s:0", localhost))
 	}
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to start local server: %w", err)
 	}
 
-	serv := &Server{
-		Addr:     fmt.Sprintf("http://localhost:%s", portStr),
-		s:        &http.Server{Addr: "localhost:0", ReadHeaderTimeout: time.Second},
-		reqState: reqState,
-		resultCh: make(chan Result, 1),
+	s := &Server{
+		Addr:   fmt.Sprintf("http://%s", listener.Addr().String()),
+		result: make(chan AuthorizationResult, 1),
+		state:  state,
 	}
-	serv.s.Handler = http.HandlerFunc(serv.handler)
 
-	serv.start(l)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", s.handleCallback)
 
-	return serv, nil
-}
+	s.server = &http.Server{
+		Handler:           mux,
+		ReadHeaderTimeout: 10 * time.Second,
+	}
 
-func (s *Server) start(l net.Listener) {
 	go func() {
-		err := s.s.Serve(l)
-		if err != nil {
-			select {
-			case s.resultCh <- Result{Err: err}:
-			default:
-			}
+		if err := s.server.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			s.result <- AuthorizationResult{Err: err}
 		}
 	}()
+
+	return s, nil
 }
 
-// Result gets the result of the redirect operation. Once a single result is returned, the server
-// is shutdown. ctx deadline will be honored.
-func (s *Server) Result(ctx context.Context) Result {
+// Result waits for and returns the authorization result.
+func (s *Server) Result(ctx context.Context) AuthorizationResult {
 	select {
+	case res := <-s.result:
+		return res
 	case <-ctx.Done():
-		return Result{Err: ctx.Err()}
-	case r := <-s.resultCh:
-		return r
+		return AuthorizationResult{Err: ctx.Err()}
 	}
 }
 
-// Shutdown shuts down the server.
-func (s *Server) Shutdown() {
-	// Note: You might get clever and think you can do this in handler() as a defer, you can't.
-	_ = s.s.Shutdown(context.Background())
+// Shutdown gracefully stops the local HTTP server.
+func (s *Server) Shutdown(ctx context.Context) error {
+	if s.server != nil {
+		return s.server.Shutdown(ctx)
+	}
+	return nil
 }
 
-func (s *Server) putResult(r Result) {
-	select {
-	case s.resultCh <- r:
-	default:
-	}
-}
+func (s *Server) handleCallback(w http.ResponseWriter, r *http.Request) {
+	errParam := r.URL.Query().Get(ErrorKey)
+	errDesc := r.URL.Query().Get(ErrorDescriptionKey)
+	code := r.URL.Query().Get(CodeKey)
+	state := r.URL.Query().Get(StateKey)
 
-func (s *Server) handler(w http.ResponseWriter, r *http.Request) {
-	// Only accept POST requests (form_post response mode)
-	// GET requests with query parameters are not supported for security reasons
-	//if r.Method != http.MethodPost {
-	//	w.WriteHeader(http.StatusMethodNotAllowed)
-	//	_, _ = w.Write([]byte(unsupportedResponseModePage))
-	//	s.putResult(Result{Err: fmt.Errorf("response was received via a GET operation, which is not supported")})
-	//	return
-	//}
-
-	// For form_post response mode, parameters come in the POST body
-	if err := r.ParseForm(); err != nil {
-		s.error(w, http.StatusBadRequest, "failed to parse form data: %v", err)
+	if errParam != "" {
+		errMsg := fmt.Sprintf("server returned error: %s", errParam)
+		if errDesc != "" {
+			errMsg += fmt.Sprintf(" (%s)", errDesc)
+		}
+		err := errors.New(errMsg)
+		s.resultCh(AuthorizationResult{Err: err, State: state})
+		s.writeResponse(w, "Authentication Failed", errMsg, true)
 		return
 	}
 
-	headerErr := r.PostFormValue("error")
-	if headerErr != "" {
-		desc := html.EscapeString(r.PostFormValue("error_description"))
-		escapedHeaderErr := html.EscapeString(headerErr)
-		// Note: It is a little weird we handle some errors by not going to the failPage. If they all should,
-		// change this to s.error() and make s.error() write the failPage instead of an error code.
-		_, _ = w.Write([]byte(fmt.Sprintf(failPage, escapedHeaderErr, desc)))
-		s.putResult(Result{Err: fmt.Errorf("%s", desc)})
-
-		return
-	}
-
-	respState := r.URL.Query().Get("state")
-	switch respState {
-	case s.reqState:
-	case "":
-		s.error(w, http.StatusInternalServerError, "server didn't send OAuth state")
-		return
-	default:
-		s.error(w, http.StatusInternalServerError, "mismatched OAuth state, req(%s), resp(%s)", s.reqState, respState)
-		return
-	}
-
-	code := r.URL.Query().Get("code")
 	if code == "" {
-		s.error(w, http.StatusInternalServerError, "authorization code missing in response")
+		err := errors.New("no code found in callback")
+		s.resultCh(AuthorizationResult{Err: err, State: state})
+		s.writeResponse(w, "Authentication Failed", "No authorization code was found in the callback URL.", true)
 		return
 	}
 
-	_, _ = w.Write(okPage)
-	s.putResult(Result{Code: code})
+	if s.state != "" && state != s.state {
+		err := fmt.Errorf("state mismatch: expected %s, got %s", s.state, state)
+		s.resultCh(AuthorizationResult{Err: err, State: state})
+		s.writeResponse(w, "Authentication Failed", fmt.Sprintf("Security state mismatch. Expected %s, but got %s. Please try again.", s.state, state), true)
+		return
+	}
+
+	s.resultCh(AuthorizationResult{Code: code, State: state})
+	s.writeResponse(w, "Authentication Successful", "You have successfully authenticated. You can now close this window.", false)
 }
 
-func (s *Server) error(w http.ResponseWriter, code int, str string, i ...interface{}) {
-	err := fmt.Errorf(str, i...)
-	http.Error(w, err.Error(), code)
-	s.putResult(Result{Err: err})
+func (s *Server) resultCh(res AuthorizationResult) {
+	select {
+	case s.result <- res:
+	default:
+	}
+}
+
+func (s *Server) writeResponse(w http.ResponseWriter, title, message string, isError bool) {
+	w.Header().Set(ContentTypeKey, "text/html; charset=utf-8")
+	if isError {
+		w.WriteHeader(http.StatusBadRequest)
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
+
+	color := "#28a745" // Success green
+	if isError {
+		color = "#dc3545" // Error red
+	}
+
+	fmt.Fprintf(w, `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>%s</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f8f9fa; }
+        .container { text-align: center; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; }
+        h1 { color: %s; margin-top: 0; }
+        p { color: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>%s</h1>
+        <p>%s</p>
+    </div>
+</body>
+</html>
+`, title, color, title, message)
 }
