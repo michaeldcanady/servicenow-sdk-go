@@ -98,9 +98,6 @@ func NewAuthorizationCodeCredential(clientID, clientSecret, redirectURI string, 
 	base := newBaseAccessTokenProvider(allowedHosts)
 	base.retrieveInitialToken = initialFunc
 	base.refreshToken = refreshFunc
-	if rtc, ok := client.(revokeTokenClient); ok {
-		base.revokeToken = rtc.revokeToken
-	}
 
 	return &AuthorizationCodeCredential{
 		baseAccessTokenProvider: base,
