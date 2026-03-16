@@ -6,56 +6,47 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
+type ropcStrategy interface {
+	acquireTokenByUsernamePassword(ctx context.Context, username, password string) (*AccessToken, error)
+	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
+	revokeToken(ctx context.Context, token, tokenTypeHint string) error
+}
+
 // ROPCCredential implements the ROPC (Resource Owner Password Credentials) flow.
 type ROPCCredential struct {
 	*baseAccessTokenProvider
+	client ropcStrategy
 }
 
 // NewROPCCredential creates a new ROPCCredential.
-// If clientSecret is empty, it uses a public client, otherwise it uses a confidential client.
-func NewROPCCredential(clientID, clientSecret, username, password string, authority Authority, allowedHosts []string) (*ROPCCredential, error) {
-	var initialFunc func(ctx context.Context) (*AccessToken, error)
-	var refreshFunc func(ctx context.Context, refreshToken string) (*AccessToken, error)
-	var revokeToken func(ctx context.Context, token, tokenTypeHint string) error
+func NewROPCCredential(client ropcStrategy, username, password string, allowedHosts []string) (*ROPCCredential, error) {
+	initialFunc := func(ctx context.Context) (*AccessToken, error) {
+		return client.acquireTokenByUsernamePassword(ctx, username, password)
+	}
 
-	if clientSecret == "" {
-		client, err := newPublicClient(clientID, authority)
-		if err != nil {
-			return nil, err
-		}
-		initialFunc = func(ctx context.Context) (*AccessToken, error) {
-			return client.acquireTokenByUsernamePassword(ctx, username, password)
-		}
-		revokeToken = client.revokeToken
-		// Public clients usually don't have a simple refresh_token grant in some OAuth2 implementations
-		// but we can add it if needed.
-	} else {
-		client, err := newConfidentialClient(clientID, clientSecret, authority)
-		if err != nil {
-			return nil, err
-		}
-		initialFunc = func(ctx context.Context) (*AccessToken, error) {
-			return client.acquireTokenByUsernamePassword(ctx, username, password)
-		}
-		refreshFunc = func(ctx context.Context, refreshToken string) (*AccessToken, error) {
-			return client.acquireTokenByRefreshToken(ctx, refreshToken)
-		}
-		revokeToken = client.revokeToken
+	refreshFunc := func(ctx context.Context, refreshToken string) (*AccessToken, error) {
+		return client.acquireTokenByRefreshToken(ctx, refreshToken)
 	}
 
 	base := newBaseAccessTokenProvider(allowedHosts)
 	base.retrieveInitialToken = initialFunc
 	base.refreshToken = refreshFunc
-	base.revokeToken = revokeToken
+	base.revokeToken = client.revokeToken
 
 	return &ROPCCredential{
 		baseAccessTokenProvider: base,
+		client:                  client,
 	}, nil
 }
 
-// NewUsernamePasswordAuthenticationProvider creates a new AuthenticationProvider for the ROPC flow.
+// NewROPCAuthenticationProvider creates a new AuthenticationProvider for the ROPC flow.
 func NewROPCAuthenticationProvider(clientID, clientSecret, username, password string, authority Authority, allowedHosts []string) (authentication.AuthenticationProvider, error) {
-	tokenProvider, err := NewROPCCredential(clientID, clientSecret, username, password, authority, allowedHosts)
+	client, err := newConfidentialClient(clientID, clientSecret, authority)
+	if err != nil {
+		return nil, err
+	}
+
+	tokenProvider, err := NewROPCCredential(client, username, password, allowedHosts)
 	if err != nil {
 		return nil, err
 	}

@@ -12,40 +12,24 @@ import (
 	"github.com/pkg/browser"
 )
 
+type authorizationCodeStrategy interface {
+	getAuthorizationURL(redirectURI, state string, scopes []string) (string, error)
+	acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error)
+	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
+	revokeToken(ctx context.Context, token, tokenTypeHint string) error
+}
+
 // AuthorizationCodeCredential implements the OAuth2 Authorization Code flow.
 type AuthorizationCodeCredential struct {
 	*baseAccessTokenProvider
-	client client
-	public bool
-}
-
-// nolint: unused // needed for later
-type revokeTokenClient interface {
-	revokeToken(ctx context.Context, token, tokenTypeHint string) error
+	client authorizationCodeStrategy
 }
 
 // NewAuthorizationCodeCredential creates a new AuthorizationCodeCredential.
 // This credential uses the provided authorization code to acquire an access token.
 // The code is one-time use. Subsequent token acquisitions will use the refresh token.
-func NewAuthorizationCodeCredential(clientID, clientSecret, redirectURI string, authority Authority, allowedHosts []string) (*AuthorizationCodeCredential, error) {
+func NewAuthorizationCodeCredential(client authorizationCodeStrategy, allowedHosts []string) (*AuthorizationCodeCredential, error) {
 	port := 5001
-
-	var (
-		client client
-		err    error
-		public bool
-	)
-
-	if strings.TrimSpace(clientSecret) != "" {
-		client, err = newConfidentialClient(clientID, clientSecret, authority)
-		public = false
-	} else {
-		client, err = newPublicClient(clientID, authority, withPKCEChallenge(pkce.MethodS256))
-		public = true
-	}
-	if err != nil {
-		return nil, err
-	}
 
 	initialFunc := func(ctx context.Context) (token *AccessToken, err error) {
 		state := uuid.NewString()
@@ -93,17 +77,31 @@ func NewAuthorizationCodeCredential(clientID, clientSecret, redirectURI string, 
 	base := newBaseAccessTokenProvider(allowedHosts)
 	base.retrieveInitialToken = initialFunc
 	base.refreshToken = refreshFunc
+	base.revokeToken = client.revokeToken
 
 	return &AuthorizationCodeCredential{
 		baseAccessTokenProvider: base,
 		client:                  client,
-		public:                  public,
 	}, nil
 }
 
 // NewAuthorizationCodeAuthenticationProvider creates a new AuthenticationProvider for the Authorization Code flow.
-func NewAuthorizationCodeAuthenticationProvider(clientID, clientSecret, redirectURI string, authority Authority, allowedHosts []string) (authentication.AuthenticationProvider, error) {
-	tokenProvider, err := NewAuthorizationCodeCredential(clientID, clientSecret, redirectURI, authority, allowedHosts)
+func NewAuthorizationCodeAuthenticationProvider(clientID, clientSecret string, authority Authority, allowedHosts []string) (authentication.AuthenticationProvider, error) {
+	var (
+		client authorizationCodeStrategy
+		err    error
+	)
+
+	if strings.TrimSpace(clientSecret) != "" {
+		client, err = newConfidentialClient(clientID, clientSecret, authority)
+	} else {
+		client, err = newPublicClient(clientID, authority, withPKCEChallenge(pkce.MethodS256))
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	tokenProvider, err := NewAuthorizationCodeCredential(client, allowedHosts)
 	if err != nil {
 		return nil, err
 	}

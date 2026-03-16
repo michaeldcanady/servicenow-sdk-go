@@ -10,18 +10,19 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
+type jwtFlow interface {
+	acquireTokenByJWT(ctx context.Context, assertion string) (*AccessToken, error)
+	revokeToken(ctx context.Context, token, tokenTypeHint string) error
+}
+
 // JWTCredential implements the OAuth2 JWT Bearer Token flow.
 type JWTCredential struct {
 	*baseAccessTokenProvider
+	client jwtFlow
 }
 
 // NewJWTCredential creates a new JWTCredential.
-func NewJWTCredential(clientID, clientSecret string, privateKey crypto.PrivateKey, issuer, subject, audience string, authority Authority, allowedHosts []string) (*JWTCredential, error) {
-	client, err := newConfidentialClient(clientID, clientSecret, authority) // Secret is dummy here
-	if err != nil {
-		return nil, err
-	}
-
+func NewJWTCredential(client jwtFlow, privateKey crypto.PrivateKey, issuer, subject, audience string, allowedHosts []string) (*JWTCredential, error) {
 	initialFunc := func(ctx context.Context) (*AccessToken, error) {
 		now := time.Now()
 		claims := jwt.MapClaims{
@@ -39,11 +40,7 @@ func NewJWTCredential(clientID, clientSecret string, privateKey crypto.PrivateKe
 			return nil, err
 		}
 
-		tok, err := client.oauthClient.ExchangeJWT(ctx, assertion)
-		if err != nil {
-			return nil, err
-		}
-		return convertToken(tok), nil
+		return client.acquireTokenByJWT(ctx, assertion)
 	}
 
 	base := newBaseAccessTokenProvider(allowedHosts)
@@ -52,12 +49,18 @@ func NewJWTCredential(clientID, clientSecret string, privateKey crypto.PrivateKe
 
 	return &JWTCredential{
 		baseAccessTokenProvider: base,
+		client:                  client,
 	}, nil
 }
 
 // NewJWTAuthenticationProvider creates a new AuthenticationProvider for the JWT Bearer Token flow.
 func NewJWTAuthenticationProvider(clientID, clientSecret string, privateKey crypto.PrivateKey, issuer, subject, audience string, authority Authority, allowedHosts []string) (authentication.AuthenticationProvider, error) {
-	tokenProvider, err := NewJWTCredential(clientID, clientSecret, privateKey, issuer, subject, audience, authority, allowedHosts)
+	client, err := newConfidentialClient(clientID, clientSecret, authority)
+	if err != nil {
+		return nil, err
+	}
+
+	tokenProvider, err := NewJWTCredential(client, privateKey, issuer, subject, audience, allowedHosts)
 	if err != nil {
 		return nil, err
 	}

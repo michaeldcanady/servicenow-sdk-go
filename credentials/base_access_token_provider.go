@@ -11,7 +11,9 @@ import (
 
 // baseAccessTokenProvider provides common functionality for OAuth2 token providers.
 type baseAccessTokenProvider struct {
-	token                 *AccessToken
+	// token the current valid access token
+	token *AccessToken
+	// mutex ensures only one token operation is happening at a time
 	mutex                 sync.RWMutex
 	allowedHostsValidator authentication.AllowedHostsValidator
 	// retrieveInitialToken is a function to get the first token.

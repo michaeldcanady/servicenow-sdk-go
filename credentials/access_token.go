@@ -18,7 +18,7 @@ type AccessToken struct {
 	TokenType string `json:"token_type"`
 }
 
-// IsExpired Checks if the access token is expired
+// IsExpired checks if the access token is expired, including a 20-second buffer for clock skew.
 func (t *AccessToken) IsExpired() bool {
-	return t.ExpiresAt.Before(time.Now())
+	return time.Now().Add(20 * time.Second).After(t.ExpiresAt)
 }

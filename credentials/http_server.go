@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // HTTPServer represents an HTTP server for OAuth2 redirection.
 type HTTPServer struct {
 	server *http.Server

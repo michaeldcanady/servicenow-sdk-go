@@ -8,6 +8,7 @@ import (
 
 // client is an interface for OAuth2 clients.
 type client interface {
+	acquireTokenByClientCredentials(ctx context.Context, scopes []string) (*AccessToken, error)
 	acquireTokenByUsernamePassword(ctx context.Context, username, password string) (*AccessToken, error)
 	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
 	acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error)
