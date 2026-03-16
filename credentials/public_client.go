@@ -34,7 +34,7 @@ func newPublicClient(clientID string, authority Authority, options ...clientOpti
 			TokenURL:         authority.TokenURL(),
 			AuthURL:          authority.AuthURL(),
 			DeviceURL:        "",
-			RevocationURL:    "",
+			RevocationURL:    authority.RevocationURL(),
 			IntrospectionURL: "",
 		},
 		AuthMethod: oauth2.AuthMethodNone,

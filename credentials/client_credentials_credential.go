@@ -33,6 +33,7 @@ func NewClientCredentialsCredential(clientID, clientSecret string, authority Aut
 	base := newBaseAccessTokenProvider(allowedHosts)
 	base.retrieveInitialToken = initialFunc
 	base.refreshToken = refreshFunc
+	base.revokeToken = client.revokeToken
 
 	return &ClientCredentialsCredential{
 		baseAccessTokenProvider: base,

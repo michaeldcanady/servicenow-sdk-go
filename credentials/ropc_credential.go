@@ -16,6 +16,7 @@ type ROPCCredential struct {
 func NewROPCCredential(clientID, clientSecret, username, password string, authority Authority, allowedHosts []string) (*ROPCCredential, error) {
 	var initialFunc func(ctx context.Context) (*AccessToken, error)
 	var refreshFunc func(ctx context.Context, refreshToken string) (*AccessToken, error)
+	var revokeToken func(ctx context.Context, token, tokenTypeHint string) error
 
 	if clientSecret == "" {
 		client, err := newPublicClient(clientID, authority)
@@ -25,6 +26,7 @@ func NewROPCCredential(clientID, clientSecret, username, password string, author
 		initialFunc = func(ctx context.Context) (*AccessToken, error) {
 			return client.acquireTokenByUsernamePassword(ctx, username, password)
 		}
+		revokeToken = client.revokeToken
 		// Public clients usually don't have a simple refresh_token grant in some OAuth2 implementations
 		// but we can add it if needed.
 	} else {
@@ -38,11 +40,13 @@ func NewROPCCredential(clientID, clientSecret, username, password string, author
 		refreshFunc = func(ctx context.Context, refreshToken string) (*AccessToken, error) {
 			return client.acquireTokenByRefreshToken(ctx, refreshToken)
 		}
+		revokeToken = client.revokeToken
 	}
 
 	base := newBaseAccessTokenProvider(allowedHosts)
 	base.retrieveInitialToken = initialFunc
 	base.refreshToken = refreshFunc
+	base.revokeToken = revokeToken
 
 	return &ROPCCredential{
 		baseAccessTokenProvider: base,

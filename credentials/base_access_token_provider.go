@@ -18,6 +18,8 @@ type baseAccessTokenProvider struct {
 	retrieveInitialToken func(ctx context.Context) (*AccessToken, error)
 	// refreshToken is a function to refresh the token.
 	refreshToken func(ctx context.Context, refreshToken string) (*AccessToken, error)
+	// revokeToken is a function to revoke the token.
+	revokeToken func(ctx context.Context, token, tokenTypeHint string) error
 }
 
 func newBaseAccessTokenProvider(allowedHosts []string) *baseAccessTokenProvider {
@@ -25,6 +27,35 @@ func newBaseAccessTokenProvider(allowedHosts []string) *baseAccessTokenProvider 
 		//nolint: staticcheck // while being deprecated there doesn't seem to be a replacement
 		allowedHostsValidator: authentication.NewAllowedHostsValidator(allowedHosts),
 	}
+}
+
+// Revoke revokes the current access token and refresh token.
+func (p *baseAccessTokenProvider) Revoke(ctx context.Context) error {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+
+	if p.token == nil {
+		return nil
+	}
+
+	if p.revokeToken == nil {
+		return fmt.Errorf("token revocation failed: no revocation function available")
+	}
+
+	// Revoke refresh token if present
+	if p.token.RefreshToken != "" {
+		if err := p.revokeToken(ctx, p.token.RefreshToken, "refresh_token"); err != nil {
+			return err
+		}
+	}
+
+	// Revoke access token
+	if err := p.revokeToken(ctx, p.token.AccessToken, "access_token"); err != nil {
+		return err
+	}
+
+	p.token = nil
+	return nil
 }
 
 // GetAllowedHostsValidator returns the allowed hosts validator.
