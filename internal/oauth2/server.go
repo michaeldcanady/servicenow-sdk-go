@@ -114,6 +114,13 @@ func (s *Server) handleCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if s.state != "" && state == "" {
+		err := errors.New("state mismatch: missing state")
+		s.resultCh(AuthorizationResult{Err: err, State: state})
+		s.writeResponse(w, "Authentication Failed", "Security state missing. Expected state but none was found. Please try again.", true)
+		return
+	}
+
 	if s.state != "" && state != s.state {
 		err := fmt.Errorf("state mismatch: expected %s, got %s", s.state, state)
 		s.resultCh(AuthorizationResult{Err: err, State: state})
