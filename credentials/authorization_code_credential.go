@@ -12,16 +12,10 @@ import (
 	"github.com/pkg/browser"
 )
 
-type authorizationCodeClient interface {
-	getAuthorizationURL(redirectURI, state string, scopes []string) (string, error)
-	acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error)
-	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
-}
-
 // AuthorizationCodeCredential implements the OAuth2 Authorization Code flow.
 type AuthorizationCodeCredential struct {
 	*baseAccessTokenProvider
-	client authorizationCodeClient
+	client client
 	public bool
 }
 
@@ -37,7 +31,7 @@ func NewAuthorizationCodeCredential(clientID, clientSecret, redirectURI string, 
 	port := 5001
 
 	var (
-		client authorizationCodeClient
+		client client
 		err    error
 		public bool
 	)

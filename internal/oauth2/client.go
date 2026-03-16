@@ -29,6 +29,50 @@ type Client struct {
 	ErrorParser func(statusCode int, body []byte) error
 }
 
+// Option is a functional option for configuring the Client.
+type Option func(*Client)
+
+// WithClientSecret sets the client secret for confidential clients.
+func WithClientSecret(secret string) Option {
+	return func(c *Client) {
+		c.ClientSecret = secret
+	}
+}
+
+// WithAuthMethod specifies the authentication method.
+func WithAuthMethod(method AuthMethod) Option {
+	return func(c *Client) {
+		c.AuthMethod = method
+	}
+}
+
+// WithHTTPClient sets the underlying HTTP client.
+func WithHTTPClient(client HTTPClient) Option {
+	return func(c *Client) {
+		c.HTTPClient = client
+	}
+}
+
+// WithErrorParser sets a custom error parser.
+func WithErrorParser(parser func(int, []byte) error) Option {
+	return func(c *Client) {
+		c.ErrorParser = parser
+	}
+}
+
+func NewClient(clientID string, endpoints *Endpoints, opts ...Option) *Client {
+	client := &Client{
+		ClientID:  clientID,
+		Endpoints: endpoints,
+	}
+
+	for _, opt := range opts {
+		opt(client)
+	}
+
+	return client
+}
+
 // Exchange performs a generic token exchange by sending the provided parameters to the token endpoint.
 func (c *Client) Exchange(ctx context.Context, params url.Values) (*Token, error) {
 	if err := c.Endpoints.Validate(params.Get(GrantTypeKey)); err != nil {

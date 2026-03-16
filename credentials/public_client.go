@@ -9,9 +9,9 @@ import (
 
 // publicClient represents an application that does not have a client secret.
 type publicClient struct {
-	oauthClient *oauth2.Client
-	method      pkce.Method
-	verifier    string
+	*baseClient
+	method   pkce.Method
+	verifier string
 }
 
 // newPublicClient creates a new publicClient.
@@ -31,26 +31,22 @@ func newPublicClient(clientID string, authority Authority, options ...clientOpti
 	oauthClient := &oauth2.Client{
 		ClientID: clientID,
 		Endpoints: &oauth2.Endpoints{
-			TokenURL: authority.TokenURL(),
-			AuthURL:  authority.AuthURL(),
+			TokenURL:         authority.TokenURL(),
+			AuthURL:          authority.AuthURL(),
+			DeviceURL:        "",
+			RevocationURL:    "",
+			IntrospectionURL: "",
 		},
-		AuthMethod: oauth2.AuthMethodClientSecretPost,
+		AuthMethod: oauth2.AuthMethodNone,
 		HTTPClient: opts.httpClient,
 	}
 
 	return &publicClient{
-		oauthClient: oauthClient,
-		method:      opts.method,
+		baseClient: &baseClient{
+			oauthClient: oauthClient,
+		},
+		method: opts.method,
 	}, nil
-}
-
-// acquireTokenByUsernamePassword acquires a token using the ROPC flow.
-func (c *publicClient) acquireTokenByUsernamePassword(ctx context.Context, username, password string) (*AccessToken, error) {
-	token, err := c.oauthClient.ExchangePassword(ctx, username, password, nil)
-	if err != nil {
-		return nil, err
-	}
-	return convertToken(token), nil
 }
 
 // acquireTokenByCode acquires a token using the authorization code flow.
@@ -92,13 +88,4 @@ func (c *publicClient) getAuthorizationURL(redirectURI, state string, scopes []s
 	}
 
 	return c.oauthClient.AuthCodeURL(redirectURI, state, challenge, c.method.String(), scopes)
-}
-
-// acquireTokenByRefreshToken acquires a new token using a refresh token.
-func (c *publicClient) acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error) {
-	token, err := c.oauthClient.ExchangeRefreshToken(ctx, refreshToken)
-	if err != nil {
-		return nil, err
-	}
-	return convertToken(token), nil
 }

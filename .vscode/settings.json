@@ -60,6 +60,7 @@
     "Headerable",
     "httpheader",
     "httpmock",
+    "Introspector",
     "ISNOTEMPTY",
     "jarcoal",
     "jsonserialization",
