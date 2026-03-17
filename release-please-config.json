@@ -5,14 +5,12 @@
   "bump-minor-pre-major": true,
   "bump-patch-for-minor-pre-major": true,
   "include-v-in-tag": true,
+  "include-component-in-tag": false,
   "packages": {
     ".": {
       "package-name": "github.com/michaeldcanady/servicenow-sdk-go",
       "changelog-path": "CHANGELOG.md",
-      "extra-files": [
-        "VERSION",
-        "version.go"
-      ]
+      "extra-files": ["VERSION", "version.go"]
     }
   }
 }
