@@ -9,30 +9,64 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
-// baseAccessTokenProvider provides common functionality for OAuth2 token providers.
-type baseAccessTokenProvider struct {
+// BaseAccessTokenProvider provides common functionality for OAuth2 token providers.
+type BaseAccessTokenProvider struct {
 	// token the current valid access token
 	token *AccessToken
 	// mutex ensures only one token operation is happening at a time
 	mutex                 sync.RWMutex
-	allowedHostsValidator authentication.AllowedHostsValidator
+	allowedHostsValidator *authentication.AllowedHostsValidator
 	// retrieveInitialToken is a function to get the first token.
 	retrieveInitialToken func(ctx context.Context, url *url.URL, additionalAuthenticationContext map[string]interface{}) (*AccessToken, error)
 	// refreshToken is a function to refresh the token.
 	refreshToken func(ctx context.Context, refreshToken string) (*AccessToken, error)
 	// revokeToken is a function to revoke the token.
 	revokeToken func(ctx context.Context, token, tokenTypeHint string) error
+	// tokenStore is an optional store for persisting and retrieving access tokens.
+	tokenStore TokenStore
+	// instance is the ServiceNow instance name.
+	instance string
+	// baseURL is the base URL for the ServiceNow instance.
+	baseURL string
 }
 
-func newBaseAccessTokenProvider(allowedHosts []string) *baseAccessTokenProvider {
-	return &baseAccessTokenProvider{
-		//nolint: staticcheck // while being deprecated there doesn't seem to be a replacement
-		allowedHostsValidator: authentication.NewAllowedHostsValidator(allowedHosts),
+func newBaseAccessTokenProvider(allowedHosts []string) *BaseAccessTokenProvider {
+	var validator *authentication.AllowedHostsValidator
+	if len(allowedHosts) > 0 {
+		validator, _ = authentication.NewAllowedHostsValidatorErrorCheck(allowedHosts)
+	}
+
+	return &BaseAccessTokenProvider{
+		allowedHostsValidator: validator,
 	}
 }
 
+// Initialize initializes the provider with the instance and base URL.
+func (p *BaseAccessTokenProvider) Initialize(instance, baseURL string) {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+
+	p.instance = instance
+	p.baseURL = baseURL
+
+	if p.allowedHostsValidator == nil && baseURL != "" {
+		u, err := url.Parse(baseURL)
+		if err == nil && u.Host != "" {
+			validator, _ := authentication.NewAllowedHostsValidatorErrorCheck([]string{u.Host})
+			p.allowedHostsValidator = validator
+		}
+	}
+}
+
+// SetTokenStore sets the token store for the provider.
+func (p *BaseAccessTokenProvider) SetTokenStore(store TokenStore) {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	p.tokenStore = store
+}
+
 // Revoke revokes the current access token and refresh token.
-func (p *baseAccessTokenProvider) Revoke(ctx context.Context) error {
+func (p *BaseAccessTokenProvider) Revoke(ctx context.Context) error {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
@@ -61,13 +95,13 @@ func (p *baseAccessTokenProvider) Revoke(ctx context.Context) error {
 }
 
 // GetAllowedHostsValidator returns the allowed hosts validator.
-func (p *baseAccessTokenProvider) GetAllowedHostsValidator() *authentication.AllowedHostsValidator {
-	return &p.allowedHostsValidator
+func (p *BaseAccessTokenProvider) GetAllowedHostsValidator() *authentication.AllowedHostsValidator {
+	return p.allowedHostsValidator
 }
 
 // GetAuthorizationToken gets the authorization token.
-func (p *baseAccessTokenProvider) GetAuthorizationToken(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (string, error) {
-	if uri != nil && !p.allowedHostsValidator.IsUrlHostValid(uri) {
+func (p *BaseAccessTokenProvider) GetAuthorizationToken(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (string, error) {
+	if uri != nil && p.allowedHostsValidator != nil && !p.allowedHostsValidator.IsUrlHostValid(uri) {
 		return "", nil
 	}
 

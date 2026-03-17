@@ -30,6 +30,13 @@ func newCredentialAuthenticationProviderAdapter(credential core.Credential) (*cr
 	}, nil
 }
 
+// Initialize initializes the provided RequestInformation.
+func (provider *credentialAuthenticationProviderAdapter) Initialize(instance, baseURL string) {
+	if preparable, ok := provider.cred.(interface{ Initialize(instance, baseURL string) }); ok {
+		preparable.Initialize(instance, baseURL)
+	}
+}
+
 // AuthenticateRequest authenticates the provided RequestInformation.
 func (provider *credentialAuthenticationProviderAdapter) AuthenticateRequest(_ context.Context, request *abstractions.RequestInformation, _ map[string]interface{}) error {
 	if newInt.IsNil(provider) {

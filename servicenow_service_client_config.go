@@ -94,5 +94,13 @@ func (c *ServiceNowServiceClientConfig) getRequestAdapter() (abstractions.Reques
 	baseURL := c.getBaseURL()
 	requestAdapter.SetBaseUrl(baseURL)
 
+	type preparable interface {
+		Initialize(instance, baseURL string)
+	}
+
+	if p, ok := c.authenticationProvider.(preparable); ok {
+		p.Initialize(c.instance, baseURL)
+	}
+
 	return requestAdapter, nil
 }

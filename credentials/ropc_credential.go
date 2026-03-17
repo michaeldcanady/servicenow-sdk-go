@@ -15,41 +15,62 @@ type ropcStrategy interface {
 
 // ROPCCredential implements the ROPC (Resource Owner Password Credentials) flow.
 type ROPCCredential struct {
-	*baseAccessTokenProvider
-	client ropcStrategy
+	*BaseAccessTokenProvider
+	client   ropcStrategy
+	username string
+	password string
 }
 
 // NewROPCCredential creates a new ROPCCredential.
 func NewROPCCredential(client ropcStrategy, username, password string, allowedHosts []string) (*ROPCCredential, error) {
-	initialFunc := func(ctx context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
-		return client.acquireTokenByUsernamePassword(ctx, username, password)
-	}
-
-	refreshFunc := func(ctx context.Context, refreshToken string) (*AccessToken, error) {
-		return client.acquireTokenByRefreshToken(ctx, refreshToken)
+	c := &ROPCCredential{
+		client:   client,
+		username: username,
+		password: password,
 	}
 
 	base := newBaseAccessTokenProvider(allowedHosts)
-	base.retrieveInitialToken = initialFunc
-	base.refreshToken = refreshFunc
+	base.retrieveInitialToken = c.GetToken
+	base.refreshToken = client.acquireTokenByRefreshToken
 	base.revokeToken = client.revokeToken
 
-	return &ROPCCredential{
-		baseAccessTokenProvider: base,
-		client:                  client,
-	}, nil
+	c.BaseAccessTokenProvider = base
+
+	return c, nil
 }
 
-// NewROPCAuthenticationProvider creates a new AuthenticationProvider for the ROPC flow.
-func NewROPCAuthenticationProvider(clientID, clientSecret, username, password string, authority Authority, allowedHosts []string) (authentication.AuthenticationProvider, error) {
-	client, err := newConfidentialClient(clientID, clientSecret, authority)
+// GetToken acquires a token using the username and password.
+func (c *ROPCCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
+	return c.client.acquireTokenByUsernamePassword(ctx, c.username, c.password)
+}
+
+// NewROPCProvider creates a new AuthenticationProvider for the ROPC flow using functional options.
+func NewROPCProvider(clientID, clientSecret, username, password string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	config := defaultAuthConfig()
+	for _, opt := range opts {
+		opt(config)
+	}
+
+	authority := Authority(config.baseURL)
+	if authority == "" && config.instance != "" {
+		authority = NewInstanceAuthority(config.instance)
+	}
+
+	client, err := newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
+		co.httpClient = config.httpClient
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	tokenProvider, err := NewROPCCredential(client, username, password, allowedHosts)
+	tokenProvider, err := NewROPCCredential(client, username, password, config.allowedHosts)
 	if err != nil {
 		return nil, err
 	}
-	return authentication.NewBaseBearerTokenAuthenticationProvider(tokenProvider), nil
+
+	if config.tokenStore != nil {
+		tokenProvider.SetTokenStore(config.tokenStore)
+	}
+
+	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
 }

@@ -56,7 +56,7 @@ func TestBasicAuthenticationProvider_AuthenticateRequest(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			provider := NewBasicAuthenticationProvider(tt.username, tt.password)
+			provider := NewBasicProvider(tt.username, tt.password)
 			request := abstractions.NewRequestInformation()
 
 			err := provider.AuthenticateRequest(tt.ctx, request, nil)

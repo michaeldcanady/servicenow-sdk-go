@@ -17,7 +17,7 @@ type jwtFlow interface {
 
 // JWTCredential implements the OAuth2 JWT Bearer Token flow.
 type JWTCredential struct {
-	*baseAccessTokenProvider
+	*BaseAccessTokenProvider
 	tokenProvider authentication.AccessTokenProvider
 	client        jwtFlow
 }
@@ -63,40 +63,61 @@ func validateJWT(rawToken string) error {
 
 // NewJWTCredential creates a new JWTCredential.
 func NewJWTCredential(client jwtFlow, tokenProvider authentication.AccessTokenProvider, allowedHosts []string) (*JWTCredential, error) {
-	initialFunc := func(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (*AccessToken, error) {
-
-		assertion, err := tokenProvider.GetAuthorizationToken(ctx, uri, additionalAuthenticationContext)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := validateJWT(assertion); err != nil {
-			return nil, err
-		}
-
-		return client.acquireTokenByJWT(ctx, assertion)
+	c := &JWTCredential{
+		client:        client,
+		tokenProvider: tokenProvider,
 	}
 
 	base := newBaseAccessTokenProvider(allowedHosts)
-	base.retrieveInitialToken = initialFunc
+	base.retrieveInitialToken = c.GetToken
 	base.revokeToken = client.revokeToken
 
-	return &JWTCredential{
-		baseAccessTokenProvider: base,
-		client:                  client,
-	}, nil
+	c.BaseAccessTokenProvider = base
+
+	return c, nil
 }
 
-// NewJWTAuthenticationProvider creates a new AuthenticationProvider for the JWT Bearer Token flow.
-func NewJWTAuthenticationProvider(clientID, clientSecret string, tokenProvider authentication.AccessTokenProvider, authority Authority, allowedHosts []string) (authentication.AuthenticationProvider, error) {
-	client, err := newConfidentialClient(clientID, clientSecret, authority)
+// GetToken acquires a token using the JWT assertion.
+func (c *JWTCredential) GetToken(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (*AccessToken, error) {
+	assertion, err := c.tokenProvider.GetAuthorizationToken(ctx, uri, additionalAuthenticationContext)
 	if err != nil {
 		return nil, err
 	}
 
-	snTokenProvider, err := NewJWTCredential(client, tokenProvider, allowedHosts)
+	if err := validateJWT(assertion); err != nil {
+		return nil, err
+	}
+
+	return c.client.acquireTokenByJWT(ctx, assertion)
+}
+
+// NewJWTProvider creates a new AuthenticationProvider for the JWT Bearer Token flow using functional options.
+func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.AccessTokenProvider, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	config := defaultAuthConfig()
+	for _, opt := range opts {
+		opt(config)
+	}
+
+	authority := Authority(config.baseURL)
+	if authority == "" && config.instance != "" {
+		authority = NewInstanceAuthority(config.instance)
+	}
+
+	client, err := newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
+		co.httpClient = config.httpClient
+	})
 	if err != nil {
 		return nil, err
 	}
-	return authentication.NewBaseBearerTokenAuthenticationProvider(snTokenProvider), nil
+
+	snTokenProvider, err := NewJWTCredential(client, tokenProvider, config.allowedHosts)
+	if err != nil {
+		return nil, err
+	}
+
+	if config.tokenStore != nil {
+		snTokenProvider.SetTokenStore(config.tokenStore)
+	}
+
+	return NewBearerTokenAuthenticationProvider(snTokenProvider), nil
 }

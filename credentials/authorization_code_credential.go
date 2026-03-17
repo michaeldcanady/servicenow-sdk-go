@@ -13,6 +13,8 @@ import (
 	"github.com/pkg/browser"
 )
 
+var _ authentication.AccessTokenProvider = (*AuthorizationCodeCredential)(nil)
+
 type authorizationCodeStrategy interface {
 	getAuthorizationURL(redirectURI, state string, scopes []string) (string, error)
 	acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error)
@@ -22,7 +24,7 @@ type authorizationCodeStrategy interface {
 
 // AuthorizationCodeCredential implements the OAuth2 Authorization Code flow.
 type AuthorizationCodeCredential struct {
-	*baseAccessTokenProvider
+	*BaseAccessTokenProvider
 	client authorizationCodeStrategy
 }
 
@@ -30,81 +32,99 @@ type AuthorizationCodeCredential struct {
 // This credential uses the provided authorization code to acquire an access token.
 // The code is one-time use. Subsequent token acquisitions will use the refresh token.
 func NewAuthorizationCodeCredential(client authorizationCodeStrategy, allowedHosts []string) (*AuthorizationCodeCredential, error) {
-	port := 5001
-
-	initialFunc := func(ctx context.Context, _ *url.URL, _ map[string]interface{}) (token *AccessToken, err error) {
-		state := uuid.NewString()
-
-		server, err := oauth2.NewServer(state, port)
-		if err != nil {
-			return nil, err
-		}
-
-		defer func() {
-			shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-			defer cancel()
-
-			if shutdownErr := server.Shutdown(shutdownCtx); shutdownErr != nil && err == nil {
-				err = shutdownErr
-			}
-		}()
-
-		authURL, err := client.getAuthorizationURL(server.Addr, state, nil)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := browser.OpenURL(authURL); err != nil {
-			return nil, err
-		}
-
-		result := server.Result(ctx)
-
-		if err := result.Err; err != nil {
-			return nil, err
-		}
-
-		token, err = client.acquireTokenByCode(ctx, result.Code, server.Addr, state)
-		if err != nil {
-			return nil, err
-		}
-		return token, nil
-	}
-
-	refreshFunc := func(ctx context.Context, refreshToken string) (*AccessToken, error) {
-		return client.acquireTokenByRefreshToken(ctx, refreshToken)
+	c := &AuthorizationCodeCredential{
+		client: client,
 	}
 
 	base := newBaseAccessTokenProvider(allowedHosts)
-	base.retrieveInitialToken = initialFunc
-	base.refreshToken = refreshFunc
+	base.retrieveInitialToken = c.GetToken
+	base.refreshToken = client.acquireTokenByRefreshToken
 	base.revokeToken = client.revokeToken
 
-	return &AuthorizationCodeCredential{
-		baseAccessTokenProvider: base,
-		client:                  client,
-	}, nil
+	c.BaseAccessTokenProvider = base
+
+	return c, nil
 }
 
-// NewAuthorizationCodeAuthenticationProvider creates a new AuthenticationProvider for the Authorization Code flow.
-func NewAuthorizationCodeAuthenticationProvider(clientID, clientSecret string, authority Authority, allowedHosts []string) (authentication.AuthenticationProvider, error) {
+func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (token *AccessToken, err error) {
+	port := 5001
+
+	state := uuid.NewString()
+
+	server, err := oauth2.NewServer(state, port)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		if shutdownErr := server.Shutdown(shutdownCtx); shutdownErr != nil && err == nil {
+			err = shutdownErr
+		}
+	}()
+
+	authURL, err := c.client.getAuthorizationURL(server.Addr, state, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := browser.OpenURL(authURL); err != nil {
+		return nil, err
+	}
+
+	result := server.Result(ctx)
+
+	if err := result.Err; err != nil {
+		return nil, err
+	}
+
+	token, err = c.client.acquireTokenByCode(ctx, result.Code, server.Addr, state)
+	if err != nil {
+		return nil, err
+	}
+	return token, nil
+}
+
+// NewAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization Code flow using functional options.
+func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	config := defaultAuthConfig()
+	for _, opt := range opts {
+		opt(config)
+	}
+
+	authority := Authority(config.baseURL)
+	if authority == "" && config.instance != "" {
+		authority = NewInstanceAuthority(config.instance)
+	}
+
 	var (
 		client authorizationCodeStrategy
 		err    error
 	)
 
 	if strings.TrimSpace(clientSecret) != "" {
-		client, err = newConfidentialClient(clientID, clientSecret, authority)
+		client, err = newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
+			co.httpClient = config.httpClient
+		})
 	} else {
-		client, err = newPublicClient(clientID, authority, withPKCEChallenge(pkce.MethodS256))
+		client, err = newPublicClient(clientID, authority, withPKCEChallenge(pkce.MethodS256), func(co *clientOptions) {
+			co.httpClient = config.httpClient
+		})
 	}
 	if err != nil {
 		return nil, err
 	}
 
-	tokenProvider, err := NewAuthorizationCodeCredential(client, allowedHosts)
+	tokenProvider, err := NewAuthorizationCodeCredential(client, config.allowedHosts)
 	if err != nil {
 		return nil, err
 	}
-	return authentication.NewBaseBearerTokenAuthenticationProvider(tokenProvider), nil
+
+	if config.tokenStore != nil {
+		tokenProvider.SetTokenStore(config.tokenStore)
+	}
+
+	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
 }

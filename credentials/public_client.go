@@ -3,7 +3,6 @@ package credentials
 import (
 	"context"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2/pkce"
 )
 
@@ -19,39 +18,34 @@ func newPublicClient(clientID string, authority Authority, options ...clientOpti
 	if clientID == "" {
 		return nil, EmptyClientID
 	}
-	if authority == "" {
-		return nil, EmptyBaseURL
-	}
 
 	opts := defaultOptions()
 	for _, opt := range options {
 		opt(&opts)
 	}
 
-	oauthClient := &oauth2.Client{
-		ClientID: clientID,
-		Endpoints: &oauth2.Endpoints{
-			TokenURL:         authority.TokenURL(),
-			AuthURL:          authority.AuthURL(),
-			DeviceURL:        "",
-			RevocationURL:    authority.RevocationURL(),
-			IntrospectionURL: "",
-		},
-		AuthMethod: oauth2.AuthMethodNone,
-		HTTPClient: opts.httpClient,
-	}
-
-	return &publicClient{
+	c := &publicClient{
 		baseClient: &baseClient{
-			oauthClient: oauthClient,
+			clientID:   clientID,
+			httpClient: opts.httpClient,
 		},
 		method: opts.method,
-	}, nil
+	}
+
+	if authority != "" {
+		c.Initialize("", string(authority))
+	}
+
+	return c, nil
 }
 
 // acquireTokenByCode acquires a token using the authorization code flow.
 func (c *publicClient) acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error) {
-	token, err := c.oauthClient.ExchangeCode(ctx, code, redirectURI, c.verifier, state)
+	client, err := c.getOAuthClient()
+	if err != nil {
+		return nil, err
+	}
+	token, err := client.ExchangeCode(ctx, code, redirectURI, c.verifier, state)
 	if err != nil {
 		return nil, err
 	}
@@ -82,10 +76,18 @@ func (c *publicClient) generateChallenge() (string, error) {
 
 // getAuthorizationURL returns the authorization URL for the authorization code flow.
 func (c *publicClient) getAuthorizationURL(redirectURI, state string, scopes []string) (string, error) {
+	client, err := c.getOAuthClient()
+	if err != nil {
+		return "", err
+	}
 	challenge, err := c.generateChallenge()
 	if err != nil {
 		return "", err
 	}
 
-	return c.oauthClient.AuthCodeURL(redirectURI, state, challenge, c.method.String(), scopes)
+	return client.AuthCodeURL(redirectURI, state, challenge, c.method.String(), scopes)
+}
+
+func (c *publicClient) Initialize(instance, baseURL string) {
+	c.baseClient.Initialize(instance, baseURL)
 }
