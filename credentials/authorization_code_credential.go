@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2/pkce"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/pkg/browser"
@@ -31,23 +30,6 @@ type AuthorizationCodeCredential struct {
 	stateGenerator func() string
 	urlOpener      func(string) error
 	serverFactory  ServerFactory
-}
-
-type serverWrapper struct {
-	*oauth2.Server
-}
-
-func (s *serverWrapper) Result(ctx context.Context) (string, string, error) {
-	res := s.Server.Result(ctx)
-	return res.Code, res.State, res.Err
-}
-
-func defaultServerFactory(state string, port int) (AuthorizationCodeServer, error) {
-	s, err := oauth2.NewServer(state, port)
-	if err != nil {
-		return nil, err
-	}
-	return &serverWrapper{s}, nil
 }
 
 // NewAuthorizationCodeCredential creates a new AuthorizationCodeCredential.
