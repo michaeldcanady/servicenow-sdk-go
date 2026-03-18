@@ -2,12 +2,13 @@ package credentials
 
 import (
 	"context"
+	"net/http"
 	"net/url"
 
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
-type clientCredentialsFlow interface {
+type clientCredentialsClient interface {
 	acquireTokenByClientCredentials(ctx context.Context, scopes []string) (*AccessToken, error)
 	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
@@ -16,12 +17,12 @@ type clientCredentialsFlow interface {
 // ClientCredentialsCredential implements the OAuth2 Client Credentials flow.
 type ClientCredentialsCredential struct {
 	*BaseAccessTokenProvider
-	client clientCredentialsFlow
+	client clientCredentialsClient
 	scopes []string
 }
 
 // NewClientCredentialsCredential creates a new ClientCredentialsCredential.
-func NewClientCredentialsCredential(client clientCredentialsFlow, scopes []string, allowedHosts []string) (*ClientCredentialsCredential, error) {
+func NewClientCredentialsCredential(client clientCredentialsClient, scopes []string, allowedHosts []string) (*ClientCredentialsCredential, error) {
 	c := &ClientCredentialsCredential{
 		client: client,
 		scopes: scopes,
@@ -43,8 +44,14 @@ func (c *ClientCredentialsCredential) GetToken(ctx context.Context, _ *url.URL, 
 }
 
 // NewClientCredentialsProvider creates a new AuthenticationProvider for the Client Credentials flow using functional options.
-func NewClientCredentialsProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
-	config := defaultAuthConfig()
+func NewClientCredentialsProvider(clientID, clientSecret string, opts ...func(*clientCredentialsConfig)) (authentication.AuthenticationProvider, error) {
+	config := &clientCredentialsConfig{
+		oauth2Config: oauth2Config{
+			baseAuthConfig: baseAuthConfig{
+				httpClient: http.DefaultClient,
+			},
+		},
+	}
 	for _, opt := range opts {
 		opt(config)
 	}

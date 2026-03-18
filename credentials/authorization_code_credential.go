@@ -2,6 +2,7 @@ package credentials
 
 import (
 	"context"
+	"net/http"
 	"net/url"
 	"strings"
 	"time"
@@ -15,7 +16,7 @@ import (
 
 var _ authentication.AccessTokenProvider = (*AuthorizationCodeCredential)(nil)
 
-type authorizationCodeStrategy interface {
+type authorizationCodeClient interface {
 	getAuthorizationURL(redirectURI, state string, scopes []string) (string, error)
 	acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error)
 	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
@@ -25,15 +26,53 @@ type authorizationCodeStrategy interface {
 // AuthorizationCodeCredential implements the OAuth2 Authorization Code flow.
 type AuthorizationCodeCredential struct {
 	*BaseAccessTokenProvider
-	client authorizationCodeStrategy
+	client         authorizationCodeClient
+	port           int
+	stateGenerator func() string
+	urlOpener      func(string) error
+	serverFactory  ServerFactory
+}
+
+type serverWrapper struct {
+	*oauth2.Server
+}
+
+func (s *serverWrapper) Result(ctx context.Context) (string, string, error) {
+	res := s.Server.Result(ctx)
+	return res.Code, res.State, res.Err
+}
+
+func defaultServerFactory(state string, port int) (AuthorizationCodeServer, error) {
+	s, err := oauth2.NewServer(state, port)
+	if err != nil {
+		return nil, err
+	}
+	return &serverWrapper{s}, nil
 }
 
 // NewAuthorizationCodeCredential creates a new AuthorizationCodeCredential.
 // This credential uses the provided authorization code to acquire an access token.
 // The code is one-time use. Subsequent token acquisitions will use the refresh token.
-func NewAuthorizationCodeCredential(client authorizationCodeStrategy, allowedHosts []string) (*AuthorizationCodeCredential, error) {
+func NewAuthorizationCodeCredential(client authorizationCodeClient, allowedHosts []string, port int, stateGenerator func() string, urlOpener func(string) error, serverFactory ServerFactory) (*AuthorizationCodeCredential, error) {
+	if port == 0 {
+		port = 5001
+	}
+	if stateGenerator == nil {
+		stateGenerator = uuid.NewString
+	}
+	if urlOpener == nil {
+		urlOpener = browser.OpenURL
+	}
+	if serverFactory == nil {
+		serverFactory = defaultServerFactory
+	}
+
 	c := &AuthorizationCodeCredential{
-		client: client,
+		client:         client,
+		port:           port,
+		stateGenerator: stateGenerator,
+		urlOpener:      urlOpener,
+		serverFactory:  serverFactory,
 	}
 
 	base := newBaseAccessTokenProvider(allowedHosts)
@@ -46,12 +85,11 @@ func NewAuthorizationCodeCredential(client authorizationCodeStrategy, allowedHos
 	return c, nil
 }
 
+// GetToken acquires a token using the authorization code flow.
 func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (token *AccessToken, err error) {
-	port := 5001
+	state := c.stateGenerator()
 
-	state := uuid.NewString()
-
-	server, err := oauth2.NewServer(state, port)
+	server, err := c.serverFactory(state, c.port)
 	if err != nil {
 		return nil, err
 	}
@@ -65,22 +103,21 @@ func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, 
 		}
 	}()
 
-	authURL, err := c.client.getAuthorizationURL(server.Addr, state, nil)
+	authURL, err := c.client.getAuthorizationURL(server.GetAddr(), state, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := browser.OpenURL(authURL); err != nil {
+	if err := c.urlOpener(authURL); err != nil {
 		return nil, err
 	}
 
-	result := server.Result(ctx)
-
-	if err := result.Err; err != nil {
+	code, _, err := server.Result(ctx)
+	if err != nil {
 		return nil, err
 	}
 
-	token, err = c.client.acquireTokenByCode(ctx, result.Code, server.Addr, state)
+	token, err = c.client.acquireTokenByCode(ctx, code, server.GetAddr(), state)
 	if err != nil {
 		return nil, err
 	}
@@ -88,8 +125,15 @@ func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, 
 }
 
 // NewAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization Code flow using functional options.
-func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
-	config := defaultAuthConfig()
+func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...func(*authCodeConfig)) (authentication.AuthenticationProvider, error) {
+	config := &authCodeConfig{
+		oauth2Config: oauth2Config{
+			baseAuthConfig: baseAuthConfig{
+				httpClient: http.DefaultClient,
+			},
+		},
+		port: 5001,
+	}
 	for _, opt := range opts {
 		opt(config)
 	}
@@ -100,7 +144,7 @@ func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOpt
 	}
 
 	var (
-		client authorizationCodeStrategy
+		client authorizationCodeClient
 		err    error
 	)
 
@@ -117,7 +161,7 @@ func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOpt
 		return nil, err
 	}
 
-	tokenProvider, err := NewAuthorizationCodeCredential(client, config.allowedHosts)
+	tokenProvider, err := NewAuthorizationCodeCredential(client, config.allowedHosts, config.port, config.stateGenerator, config.urlOpener, config.serverFactory)
 	if err != nil {
 		return nil, err
 	}
@@ -127,4 +171,12 @@ func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOpt
 	}
 
 	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
+}
+
+func NewPrivateAuthorizationCodeProvider(clientID, clientSecret string, opts ...func(*authCodeConfig)) (authentication.AuthenticationProvider, error) {
+	return NewAuthorizationCodeProvider(clientID, clientSecret, opts...)
+}
+
+func NewPublicAuthorizationCodeProvider(clientID string, opts ...func(*authCodeConfig)) (authentication.AuthenticationProvider, error) {
+	return NewAuthorizationCodeProvider(clientID, "", opts...)
 }

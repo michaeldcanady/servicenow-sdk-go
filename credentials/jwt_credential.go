@@ -3,6 +3,7 @@ package credentials
 import (
 	"context"
 	"errors"
+	"net/http"
 	"net/url"
 	"time"
 
@@ -10,7 +11,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
-type jwtFlow interface {
+type jwtClient interface {
 	acquireTokenByJWT(ctx context.Context, assertion string) (*AccessToken, error)
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
 }
@@ -19,7 +20,7 @@ type jwtFlow interface {
 type JWTCredential struct {
 	*BaseAccessTokenProvider
 	tokenProvider authentication.AccessTokenProvider
-	client        jwtFlow
+	client        jwtClient
 }
 
 func validateJWT(rawToken string) error {
@@ -62,7 +63,7 @@ func validateJWT(rawToken string) error {
 }
 
 // NewJWTCredential creates a new JWTCredential.
-func NewJWTCredential(client jwtFlow, tokenProvider authentication.AccessTokenProvider, allowedHosts []string) (*JWTCredential, error) {
+func NewJWTCredential(client jwtClient, tokenProvider authentication.AccessTokenProvider, allowedHosts []string) (*JWTCredential, error) {
 	c := &JWTCredential{
 		client:        client,
 		tokenProvider: tokenProvider,
@@ -92,8 +93,14 @@ func (c *JWTCredential) GetToken(ctx context.Context, uri *url.URL, additionalAu
 }
 
 // NewJWTProvider creates a new AuthenticationProvider for the JWT Bearer Token flow using functional options.
-func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.AccessTokenProvider, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
-	config := defaultAuthConfig()
+func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.AccessTokenProvider, opts ...func(*jwtConfig)) (authentication.AuthenticationProvider, error) {
+	config := &jwtConfig{
+		oauth2Config: oauth2Config{
+			baseAuthConfig: baseAuthConfig{
+				httpClient: http.DefaultClient,
+			},
+		},
+	}
 	for _, opt := range opts {
 		opt(config)
 	}

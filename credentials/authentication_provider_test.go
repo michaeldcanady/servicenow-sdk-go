@@ -53,6 +53,47 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 				assert.Equal(t, instance, tp.instance)
 				assert.Equal(t, baseURL, tp.baseURL)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
+				assert.Equal(t, 5001, tp.port) // Default port
+			},
+		},
+		{
+			name: "Authorization Code Provider with Custom Options",
+			provider: func() (authentication.AuthenticationProvider, error) {
+				customStateGen := func() string { return "custom-state" }
+				customURLOpener := func(url string) error { return nil }
+				return NewAuthorizationCodeProvider("client-id", "client-secret",
+					WithPort(8080),
+					WithStateGenerator(customStateGen),
+					WithURLOpener(customURLOpener),
+				)
+			},
+			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
+				bearer := p.(*BearerTokenAuthenticationProvider)
+				tp := bearer.tokenProvider.(*AuthorizationCodeCredential)
+				assert.Equal(t, 8080, tp.port)
+				assert.NotNil(t, tp.stateGenerator)
+				assert.Equal(t, "custom-state", tp.stateGenerator())
+				assert.NotNil(t, tp.urlOpener)
+			},
+		},
+		{
+			name: "Authorization Code Provider with Custom Server Factory",
+			provider: func() (authentication.AuthenticationProvider, error) {
+				customServerFactory := func(state string, port int) (AuthorizationCodeServer, error) {
+					m := &mockAuthorizationCodeServer{}
+					m.On("GetAddr").Return("http://localhost:1234")
+					return m, nil
+				}
+				return NewAuthorizationCodeProvider("client-id", "client-secret",
+					WithServerFactory(customServerFactory),
+				)
+			},
+			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
+				bearer := p.(*BearerTokenAuthenticationProvider)
+				tp := bearer.tokenProvider.(*AuthorizationCodeCredential)
+				assert.NotNil(t, tp.serverFactory)
+				s, _ := tp.serverFactory("state", 0)
+				assert.Equal(t, "http://localhost:1234", s.GetAddr())
 			},
 		},
 		{

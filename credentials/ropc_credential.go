@@ -2,12 +2,13 @@ package credentials
 
 import (
 	"context"
+	"net/http"
 	"net/url"
 
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
-type ropcStrategy interface {
+type ropcClient interface {
 	acquireTokenByUsernamePassword(ctx context.Context, username, password string) (*AccessToken, error)
 	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
@@ -16,13 +17,13 @@ type ropcStrategy interface {
 // ROPCCredential implements the ROPC (Resource Owner Password Credentials) flow.
 type ROPCCredential struct {
 	*BaseAccessTokenProvider
-	client   ropcStrategy
+	client   ropcClient
 	username string
 	password string
 }
 
 // NewROPCCredential creates a new ROPCCredential.
-func NewROPCCredential(client ropcStrategy, username, password string, allowedHosts []string) (*ROPCCredential, error) {
+func NewROPCCredential(client ropcClient, username, password string, allowedHosts []string) (*ROPCCredential, error) {
 	c := &ROPCCredential{
 		client:   client,
 		username: username,
@@ -45,8 +46,14 @@ func (c *ROPCCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]
 }
 
 // NewROPCProvider creates a new AuthenticationProvider for the ROPC flow using functional options.
-func NewROPCProvider(clientID, clientSecret, username, password string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
-	config := defaultAuthConfig()
+func NewROPCProvider(clientID, clientSecret, username, password string, opts ...func(*ropcConfig)) (authentication.AuthenticationProvider, error) {
+	config := &ropcConfig{
+		oauth2Config: oauth2Config{
+			baseAuthConfig: baseAuthConfig{
+				httpClient: http.DefaultClient,
+			},
+		},
+	}
 	for _, opt := range opts {
 		opt(config)
 	}
