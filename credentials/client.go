@@ -9,17 +9,6 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
 )
 
-// client is an interface for OAuth2 clients.
-type client interface {
-	acquireTokenByClientCredentials(ctx context.Context, scopes []string) (*AccessToken, error)
-	acquireTokenByUsernamePassword(ctx context.Context, username, password string) (*AccessToken, error)
-	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
-	acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error)
-	acquireTokenByJWT(ctx context.Context, assertion string) (*AccessToken, error)
-	revokeToken(ctx context.Context, token, tokenTypeHint string) error
-	getAuthorizationURL(redirectURI, state string, scopes []string) (string, error)
-}
-
 // baseClient provides a base implementation for an OAuth2 client.
 type baseClient struct {
 	oauthClient  *oauth2.Client
