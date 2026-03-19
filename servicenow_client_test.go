@@ -31,7 +31,7 @@ type test[T any] struct {
 }
 
 var (
-	sharedUsernameAndPasswordCred = credentials.NewUsernamePasswordCredential("username", "password")
+	sharedUsernameAndPasswordCred = credentials.NewUsernamePasswordCredential("username", "password") //nolint: staticcheck // the testing is needed to confirm functionality
 )
 
 // TODO: should be mocked
@@ -113,7 +113,7 @@ func (rI *MockRequestInformation) AddHeaders(rawHeaders interface{}) error {
 }
 
 func TestNewServiceNowClient(t *testing.T) {
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password") //nolint: staticcheck // the testing is needed to confirm functionality
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -453,7 +453,7 @@ func TestServiceNowClient_SendWithContext(t *testing.T) {
 		{
 			name: "Send Error",
 			client: func() *ServiceNowClient {
-				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance")
+				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance") //nolint: staticcheck // the testing is needed to confirm functionality
 				c.Session = &MockWebClient{
 					Err: errors.New("network error"),
 				}
