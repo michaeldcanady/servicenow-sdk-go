@@ -44,22 +44,15 @@ func (c *ClientCredentialsCredential) GetToken(ctx context.Context, _ *url.URL, 
 }
 
 // NewClientCredentialsProvider creates a new AuthenticationProvider for the Client Credentials flow using functional options.
-func NewClientCredentialsProvider(clientID, clientSecret string, opts ...func(*clientCredentialsConfig)) (authentication.AuthenticationProvider, error) {
-	config := &clientCredentialsConfig{
-		oauth2Config: oauth2Config{
-			baseAuthConfig: baseAuthConfig{
-				httpClient: http.DefaultClient,
-			},
-		},
+func NewClientCredentialsProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	config := &AuthConfig{
+		httpClient: http.DefaultClient,
 	}
 	for _, opt := range opts {
 		opt(config)
 	}
 
 	authority := Authority(config.baseURL)
-	if authority == "" && config.instance != "" {
-		authority = NewInstanceAuthority(config.instance)
-	}
 
 	client, err := newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
 		co.httpClient = config.httpClient
@@ -72,6 +65,8 @@ func NewClientCredentialsProvider(clientID, clientSecret string, opts ...func(*c
 	if err != nil {
 		return nil, err
 	}
+
+	tokenProvider.Initialize(string(authority))
 
 	if config.tokenStore != nil {
 		tokenProvider.SetTokenStore(config.tokenStore)

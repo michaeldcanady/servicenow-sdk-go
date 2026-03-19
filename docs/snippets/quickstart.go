@@ -11,14 +11,17 @@ import (
 
 func _() {
 	// [START quickstart]
-	cred := credentials.NewUsernamePasswordCredential("xSDK_USERNAMEx", "xSDK_PASSWORDx")
-	client, err := servicenowsdkgo.NewServiceNowClient2(cred, "xSDK_SN_INSTANCEx")
+	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
+	client, err := servicenowsdkgo.NewServiceNowServiceClient(
+		servicenowsdkgo.WithAuthenticationProvider(cred),
+		servicenowsdkgo.WithURL("xSDK_SN_URLx"),
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	ctx := context.Background()
-	response, err := client.Now2().TableV2("xSDK_SN_TABLEx").Get(ctx, nil)
+	response, err := client.Now().Table("xSDK_SN_TABLEx").Get(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -33,7 +33,7 @@ func newPublicClient(clientID string, authority Authority, options ...clientOpti
 	}
 
 	if authority != "" {
-		c.Initialize("", string(authority))
+		c.Initialize(string(authority))
 	}
 
 	return c, nil
@@ -88,6 +88,6 @@ func (c *publicClient) getAuthorizationURL(redirectURI, state string, scopes []s
 	return client.AuthCodeURL(redirectURI, state, challenge, c.method.String(), scopes)
 }
 
-func (c *publicClient) Initialize(instance, baseURL string) {
-	c.baseClient.Initialize(instance, baseURL)
+func (c *publicClient) Initialize(baseURL string) {
+	c.baseClient.Initialize(baseURL)
 }

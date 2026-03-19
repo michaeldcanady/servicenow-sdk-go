@@ -16,7 +16,7 @@ type BaseAccessTokenProvider struct {
 	// mutex ensures only one token operation is happening at a time
 	mutex                 sync.RWMutex
 	allowedHostsValidator *authentication.AllowedHostsValidator
-	// retrieveInitialToken is a function to get the first token.
+	// retrieveInitialToken is a function to get the ServiceNow token.
 	retrieveInitialToken func(ctx context.Context, url *url.URL, additionalAuthenticationContext map[string]interface{}) (*AccessToken, error)
 	// refreshToken is a function to refresh the token.
 	refreshToken func(ctx context.Context, refreshToken string) (*AccessToken, error)
@@ -24,8 +24,6 @@ type BaseAccessTokenProvider struct {
 	revokeToken func(ctx context.Context, token, tokenTypeHint string) error
 	// tokenStore is an optional store for persisting and retrieving access tokens.
 	tokenStore TokenStore
-	// instance is the ServiceNow instance name.
-	instance string
 	// baseURL is the base URL for the ServiceNow instance.
 	baseURL string
 }
@@ -41,12 +39,11 @@ func newBaseAccessTokenProvider(allowedHosts []string) *BaseAccessTokenProvider 
 	}
 }
 
-// Initialize initializes the provider with the instance and base URL.
-func (p *BaseAccessTokenProvider) Initialize(instance, baseURL string) {
+// Initialize initializes the provider with the base URL.
+func (p *BaseAccessTokenProvider) Initialize(baseURL string) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	p.instance = instance
 	p.baseURL = baseURL
 
 	if p.allowedHostsValidator == nil && baseURL != "" {

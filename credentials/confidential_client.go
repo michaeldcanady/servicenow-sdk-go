@@ -32,7 +32,7 @@ func newConfidentialClient(clientID, clientSecret string, authority Authority, o
 	}
 
 	if authority != "" {
-		c.Initialize("", string(authority))
+		c.Initialize(string(authority))
 	}
 
 	return c, nil
@@ -73,6 +73,6 @@ func (c *confidentialClient) getAuthorizationURL(redirectURI, state string, scop
 	return client.AuthCodeURL(redirectURI, state, "", "", scopes)
 }
 
-func (c *confidentialClient) Initialize(instance, baseURL string) {
-	c.baseClient.Initialize(instance, baseURL)
+func (c *confidentialClient) Initialize(baseURL string) {
+	c.baseClient.Initialize(baseURL)
 }

@@ -2,6 +2,7 @@ package credentials
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
@@ -15,132 +16,92 @@ type AuthorizationCodeServer interface {
 // ServerFactory is a function that creates a new AuthorizationCodeServer.
 type ServerFactory func(state string, port int) (AuthorizationCodeServer, error)
 
-// baseAuthConfig contains options shared by all authentication providers.
-type baseAuthConfig struct {
-	instance     string
-	baseURL      string
-	allowedHosts []string
-	tokenStore   TokenStore
-	httpClient   *http.Client
-}
-
-func (c *baseAuthConfig) getBase() *baseAuthConfig {
-	return c
-}
-
-// oauth2Config contains options shared by all OAuth2 providers.
-type oauth2Config struct {
-	baseAuthConfig
-	scopes []string
-}
-
-// ropcConfig contains options specific to the ROPC flow.
-type ropcConfig struct {
-	oauth2Config
-}
-
-// clientCredentialsConfig contains options specific to the Client Credentials flow.
-type clientCredentialsConfig struct {
-	oauth2Config
-}
-
-// authCodeConfig contains options specific to the Authorization Code flow.
-type authCodeConfig struct {
-	oauth2Config
+// AuthConfig contains options shared by all authentication providers.
+type AuthConfig struct {
+	baseURL        string
+	allowedHosts   []string
+	tokenStore     TokenStore
+	httpClient     *http.Client
+	scopes         []string
 	port           int
 	stateGenerator func() string
 	urlOpener      func(string) error
 	serverFactory  ServerFactory
 }
 
-// jwtConfig contains options specific to the JWT flow.
-type jwtConfig struct {
-	oauth2Config
-}
+// AuthOption is a function type that modifies the AuthConfig.
+type AuthOption func(*AuthConfig)
 
-type baseConfigurable interface {
-	getBase() *baseAuthConfig
-}
+// --- Shared Options ---
 
-type oauth2Configurable interface {
-	baseConfigurable
-	getOAuth2() *oauth2Config
-}
-
-func (c *oauth2Config) getOAuth2() *oauth2Config {
-	return c
-}
-
-// --- Shared Options (Generics) ---
+const defaultBaseURL = "service-now.com"
 
 // WithInstance sets the ServiceNow instance name (e.g., "dev12345").
-func WithInstance[T baseConfigurable](instance string) func(T) {
-	return func(c T) {
-		c.getBase().instance = instance
-	}
+func WithInstance(instance string) AuthOption {
+	return WithURL(fmt.Sprintf("%s.%s", instance, defaultBaseURL))
 }
 
 // WithURL sets the full base URL for the ServiceNow instance.
-func WithURL[T baseConfigurable](url string) func(T) {
-	return func(c T) {
-		c.getBase().baseURL = url
+func WithURL(url string) AuthOption {
+	return func(c *AuthConfig) {
+		c.baseURL = url
 	}
 }
 
 // WithAllowedHosts sets the allowed hosts for the provider.
-func WithAllowedHosts[T baseConfigurable](hosts ...string) func(T) {
-	return func(c T) {
-		c.getBase().allowedHosts = hosts
+func WithAllowedHosts(hosts ...string) AuthOption {
+	return func(c *AuthConfig) {
+		c.allowedHosts = hosts
 	}
 }
 
 // WithTokenStore sets the token store for the provider.
-func WithTokenStore[T baseConfigurable](store TokenStore) func(T) {
-	return func(c T) {
-		c.getBase().tokenStore = store
+func WithTokenStore(store TokenStore) AuthOption {
+	return func(c *AuthConfig) {
+		c.tokenStore = store
 	}
 }
 
 // WithHTTPClient sets the HTTP client for the provider.
-func WithHTTPClient[T baseConfigurable](client *http.Client) func(T) {
-	return func(c T) {
-		c.getBase().httpClient = client
+func WithHTTPClient(client *http.Client) AuthOption {
+	return func(c *AuthConfig) {
+		c.httpClient = client
 	}
 }
 
 // WithScopes sets the OAuth2 scopes.
-func WithScopes[T oauth2Configurable](scopes ...string) func(T) {
-	return func(c T) {
-		c.getOAuth2().scopes = scopes
+func WithScopes(scopes ...string) AuthOption {
+	return func(c *AuthConfig) {
+		c.scopes = scopes
 	}
 }
 
 // --- Auth Code Specific Options ---
 
 // WithPort sets the port for the local callback server.
-func WithPort(port int) func(*authCodeConfig) {
-	return func(c *authCodeConfig) {
+func WithPort(port int) AuthOption {
+	return func(c *AuthConfig) {
 		c.port = port
 	}
 }
 
 // WithStateGenerator sets the state generator function.
-func WithStateGenerator(generator func() string) func(*authCodeConfig) {
-	return func(c *authCodeConfig) {
+func WithStateGenerator(generator func() string) AuthOption {
+	return func(c *AuthConfig) {
 		c.stateGenerator = generator
 	}
 }
 
 // WithURLOpener sets the function to open the authorization URL.
-func WithURLOpener(opener func(string) error) func(*authCodeConfig) {
-	return func(c *authCodeConfig) {
+func WithURLOpener(opener func(string) error) AuthOption {
+	return func(c *AuthConfig) {
 		c.urlOpener = opener
 	}
 }
 
 // WithServerFactory sets the factory function for creating the local callback server.
-func WithServerFactory(factory ServerFactory) func(*authCodeConfig) {
-	return func(c *authCodeConfig) {
+func WithServerFactory(factory ServerFactory) AuthOption {
+	return func(c *AuthConfig) {
 		c.serverFactory = factory
 	}
 }

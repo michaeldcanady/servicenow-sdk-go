@@ -93,22 +93,15 @@ func (c *JWTCredential) GetToken(ctx context.Context, uri *url.URL, additionalAu
 }
 
 // NewJWTProvider creates a new AuthenticationProvider for the JWT Bearer Token flow using functional options.
-func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.AccessTokenProvider, opts ...func(*jwtConfig)) (authentication.AuthenticationProvider, error) {
-	config := &jwtConfig{
-		oauth2Config: oauth2Config{
-			baseAuthConfig: baseAuthConfig{
-				httpClient: http.DefaultClient,
-			},
-		},
+func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.AccessTokenProvider, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	config := &AuthConfig{
+		httpClient: http.DefaultClient,
 	}
 	for _, opt := range opts {
 		opt(config)
 	}
 
 	authority := Authority(config.baseURL)
-	if authority == "" && config.instance != "" {
-		authority = NewInstanceAuthority(config.instance)
-	}
 
 	client, err := newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
 		co.httpClient = config.httpClient
@@ -121,6 +114,8 @@ func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.
 	if err != nil {
 		return nil, err
 	}
+
+	snTokenProvider.Initialize(string(authority))
 
 	if config.tokenStore != nil {
 		snTokenProvider.SetTokenStore(config.tokenStore)

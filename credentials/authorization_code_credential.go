@@ -107,23 +107,16 @@ func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, 
 }
 
 // NewAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization Code flow using functional options.
-func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...func(*authCodeConfig)) (authentication.AuthenticationProvider, error) {
-	config := &authCodeConfig{
-		oauth2Config: oauth2Config{
-			baseAuthConfig: baseAuthConfig{
-				httpClient: http.DefaultClient,
-			},
-		},
-		port: 5001,
+func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	config := &AuthConfig{
+		httpClient: http.DefaultClient,
+		port:       5001,
 	}
 	for _, opt := range opts {
 		opt(config)
 	}
 
 	authority := Authority(config.baseURL)
-	if authority == "" && config.instance != "" {
-		authority = NewInstanceAuthority(config.instance)
-	}
 
 	var (
 		client authorizationCodeClient
@@ -148,6 +141,8 @@ func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...func(*a
 		return nil, err
 	}
 
+	tokenProvider.Initialize(string(authority))
+
 	if config.tokenStore != nil {
 		tokenProvider.SetTokenStore(config.tokenStore)
 	}
@@ -155,10 +150,10 @@ func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...func(*a
 	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
 }
 
-func NewPrivateAuthorizationCodeProvider(clientID, clientSecret string, opts ...func(*authCodeConfig)) (authentication.AuthenticationProvider, error) {
+func NewPrivateAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
 	return NewAuthorizationCodeProvider(clientID, clientSecret, opts...)
 }
 
-func NewPublicAuthorizationCodeProvider(clientID string, opts ...func(*authCodeConfig)) (authentication.AuthenticationProvider, error) {
+func NewPublicAuthorizationCodeProvider(clientID string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
 	return NewAuthorizationCodeProvider(clientID, "", opts...)
 }

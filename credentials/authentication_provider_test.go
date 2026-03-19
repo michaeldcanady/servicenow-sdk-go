@@ -8,7 +8,6 @@ import (
 )
 
 func TestAuthenticationProviders_Initialization(t *testing.T) {
-	instance := "dev12345"
 	baseURL := "https://dev12345.service-now.com"
 
 	tests := []struct {
@@ -17,40 +16,43 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 		verify   func(t *testing.T, p authentication.AuthenticationProvider)
 	}{
 		{
-			name: "ROPC Provider",
+			name: "ROPC Provider with Options",
 			provider: func() (authentication.AuthenticationProvider, error) {
-				return NewROPCProvider("client-id", "client-secret", "username", "password")
+				return NewROPCProvider("client-id", "client-secret", "username", "password",
+					WithURL(baseURL),
+				)
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
 				tp := bearer.tokenProvider.(*ROPCCredential)
-				assert.Equal(t, instance, tp.instance)
 				assert.Equal(t, baseURL, tp.baseURL)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
 			},
 		},
 		{
-			name: "Client Credentials Provider",
+			name: "Client Credentials Provider with Options",
 			provider: func() (authentication.AuthenticationProvider, error) {
-				return NewClientCredentialsProvider("client-id", "client-secret")
+				return NewClientCredentialsProvider("client-id", "client-secret",
+					WithURL(baseURL),
+				)
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
 				tp := bearer.tokenProvider.(*ClientCredentialsCredential)
-				assert.Equal(t, instance, tp.instance)
 				assert.Equal(t, baseURL, tp.baseURL)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
 			},
 		},
 		{
-			name: "Authorization Code Provider",
+			name: "Authorization Code Provider with Options",
 			provider: func() (authentication.AuthenticationProvider, error) {
-				return NewAuthorizationCodeProvider("client-id", "client-secret")
+				return NewAuthorizationCodeProvider("client-id", "client-secret",
+					WithURL(baseURL),
+				)
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
 				tp := bearer.tokenProvider.(*AuthorizationCodeCredential)
-				assert.Equal(t, instance, tp.instance)
 				assert.Equal(t, baseURL, tp.baseURL)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
 				assert.Equal(t, 5001, tp.port) // Default port
@@ -97,16 +99,17 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			},
 		},
 		{
-			name: "JWT Provider",
+			name: "JWT Provider with Options",
 			provider: func() (authentication.AuthenticationProvider, error) {
 				// Mock token provider for JWT
 				mockTP := &BaseAccessTokenProvider{}
-				return NewJWTProvider("client-id", "client-secret", mockTP)
+				return NewJWTProvider("client-id", "client-secret", mockTP,
+					WithURL(baseURL),
+				)
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
 				tp := bearer.tokenProvider.(*JWTCredential)
-				assert.Equal(t, instance, tp.instance)
 				assert.Equal(t, baseURL, tp.baseURL)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
 			},
@@ -118,10 +121,6 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			p, err := tt.provider()
 			assert.NoError(t, err)
 
-			preparable, ok := p.(Preparable)
-			assert.True(t, ok, "Provider should be Preparable")
-
-			preparable.Initialize(instance, baseURL)
 			tt.verify(t, p)
 		})
 	}

@@ -18,7 +18,7 @@ type baseClient struct {
 	mutex        sync.RWMutex
 }
 
-func (c *baseClient) Initialize(instance, baseURL string) {
+func (c *baseClient) Initialize(baseURL string) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 

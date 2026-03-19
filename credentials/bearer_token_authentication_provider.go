@@ -23,9 +23,9 @@ func NewBearerTokenAuthenticationProvider(tokenProvider authentication.AccessTok
 }
 
 // Initialize initializes the underlying token provider if it is Preparable.
-func (p *BearerTokenAuthenticationProvider) Initialize(instance, baseURL string) {
+func (p *BearerTokenAuthenticationProvider) Initialize(baseURL string) {
 	if preparable, ok := p.tokenProvider.(Preparable); ok {
-		preparable.Initialize(instance, baseURL)
+		preparable.Initialize(baseURL)
 	}
 }
 

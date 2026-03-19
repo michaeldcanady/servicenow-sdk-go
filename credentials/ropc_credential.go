@@ -46,22 +46,15 @@ func (c *ROPCCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]
 }
 
 // NewROPCProvider creates a new AuthenticationProvider for the ROPC flow using functional options.
-func NewROPCProvider(clientID, clientSecret, username, password string, opts ...func(*ropcConfig)) (authentication.AuthenticationProvider, error) {
-	config := &ropcConfig{
-		oauth2Config: oauth2Config{
-			baseAuthConfig: baseAuthConfig{
-				httpClient: http.DefaultClient,
-			},
-		},
+func NewROPCProvider(clientID, clientSecret, username, password string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	config := &AuthConfig{
+		httpClient: http.DefaultClient,
 	}
 	for _, opt := range opts {
 		opt(config)
 	}
 
 	authority := Authority(config.baseURL)
-	if authority == "" && config.instance != "" {
-		authority = NewInstanceAuthority(config.instance)
-	}
 
 	client, err := newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
 		co.httpClient = config.httpClient
@@ -74,6 +67,8 @@ func NewROPCProvider(clientID, clientSecret, username, password string, opts ...
 	if err != nil {
 		return nil, err
 	}
+
+	tokenProvider.Initialize(string(authority))
 
 	if config.tokenStore != nil {
 		tokenProvider.SetTokenStore(config.tokenStore)
