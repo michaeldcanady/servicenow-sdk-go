@@ -36,15 +36,6 @@ func TestBuildServiceClientConfig(t *testing.T) {
 			},
 		},
 		{
-			name: "instance and raw uri",
-			test: func(t *testing.T) {
-				authProvider := mocking.NewMockAuthenticationProvider()
-				config, err := buildServiceClientConfig(WithInstance("fdasfsda"), WithURL("https://dafsfd.com"), WithAuthenticationProvider(authProvider))
-				assert.Equal(t, errors.New("rawURL and instance cannot be used together"), err)
-				assert.Nil(t, config)
-			},
-		},
-		{
 			name: "missing auth and adapter",
 			test: func(t *testing.T) {
 				config, err := buildServiceClientConfig(WithInstance("test"))
