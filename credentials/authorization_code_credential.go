@@ -16,6 +16,7 @@ import (
 var _ authentication.AccessTokenProvider = (*AuthorizationCodeCredential)(nil)
 
 type authorizationCodeClient interface {
+	Initialize(baseURL string)
 	getAuthorizationURL(redirectURI, state string, scopes []string) (string, error)
 	acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error)
 	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
@@ -65,6 +66,12 @@ func NewAuthorizationCodeCredential(client authorizationCodeClient, allowedHosts
 	c.BaseAccessTokenProvider = base
 
 	return c, nil
+}
+
+// Initialize initializes the provider and its internal client with the base URL.
+func (c *AuthorizationCodeCredential) Initialize(baseURL string) {
+	c.BaseAccessTokenProvider.Initialize(baseURL)
+	c.client.Initialize(baseURL)
 }
 
 // GetToken acquires a token using the authorization code flow.

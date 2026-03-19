@@ -17,10 +17,13 @@ type baseClient struct {
 	httpClient   *http.Client
 	mutex        sync.RWMutex
 }
-
 func (c *baseClient) Initialize(baseURL string) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
+
+	if baseURL == "" {
+		return
+	}
 
 	if c.oauthClient != nil {
 		return
@@ -42,6 +45,7 @@ func (c *baseClient) Initialize(baseURL string) {
 		HTTPClient: c.httpClient,
 	}
 }
+
 
 func (c *baseClient) getOAuthClient() (*oauth2.Client, error) {
 	c.mutex.RLock()

@@ -9,6 +9,7 @@ import (
 )
 
 type ropcClient interface {
+	Initialize(baseURL string)
 	acquireTokenByUsernamePassword(ctx context.Context, username, password string) (*AccessToken, error)
 	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
@@ -38,6 +39,12 @@ func NewROPCCredential(client ropcClient, username, password string, allowedHost
 	c.BaseAccessTokenProvider = base
 
 	return c, nil
+}
+
+// Initialize initializes the provider and its internal client with the base URL.
+func (c *ROPCCredential) Initialize(baseURL string) {
+	c.BaseAccessTokenProvider.Initialize(baseURL)
+	c.client.Initialize(baseURL)
 }
 
 // GetToken acquires a token using the username and password.

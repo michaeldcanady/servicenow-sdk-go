@@ -12,6 +12,7 @@ import (
 )
 
 type jwtClient interface {
+	Initialize(baseURL string)
 	acquireTokenByJWT(ctx context.Context, assertion string) (*AccessToken, error)
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
 }
@@ -76,6 +77,12 @@ func NewJWTCredential(client jwtClient, tokenProvider authentication.AccessToken
 	c.BaseAccessTokenProvider = base
 
 	return c, nil
+}
+
+// Initialize initializes the provider and its internal client with the base URL.
+func (c *JWTCredential) Initialize(baseURL string) {
+	c.BaseAccessTokenProvider.Initialize(baseURL)
+	c.client.Initialize(baseURL)
 }
 
 // GetToken acquires a token using the JWT assertion.

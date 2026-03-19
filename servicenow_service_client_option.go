@@ -83,19 +83,13 @@ func WithMiddleware(middleware ...nethttplibrary.Middleware) ServiceNowServiceCl
 // WithInstance creates an option to set the instance of the default ServiceNow URL for the requests.
 // It returns an error if the provided configuration is nil or the instance string is empty.
 func WithInstance(instance string) ServiceNowServiceClientOption {
-	return func(config *ServiceNowServiceClientConfig) error {
-		if internal.IsNil(config) {
-			return errors.New("config is nil")
-		}
-		instance = strings.TrimSpace(instance)
-		if instance == "" {
+	instance = strings.TrimSpace(instance)
+	if instance == "" {
+		return func(_ *ServiceNowServiceClientConfig) error {
 			return errors.New("instance is empty")
 		}
-
-		config.instance = instance
-
-		return nil
 	}
+	return WithURL(fmt.Sprintf("https://%s.%s", instance, defaultServiceNowHost))
 }
 
 // WithBackingStoreFactory creates an option to set the backingStoreFactory for the ServiceNowServiceClient.
