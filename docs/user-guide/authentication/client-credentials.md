@@ -1,7 +1,7 @@
-# Client Credentials
+# Client credentials
 
-The Client Credentials flow is designed for server‑to‑server integrations where
-no user is involved. The SDK authenticates using a client ID and client secret,
+The Client Credentials flow works for server‑to‑server integrations where
+no user participates. The SDK authenticates using a client ID and client secret,
 and ServiceNow issues an access token representing the application itself.
 
 ## Objective
@@ -19,7 +19,7 @@ Your administrator must provide:
 | Client ID       | From a ServiceNow OAuth application registry entry |
 | Client Secret   | From the same registry entry                       |
 
-## SDK FLow
+## SDK flow
 
 
 ```mermaid

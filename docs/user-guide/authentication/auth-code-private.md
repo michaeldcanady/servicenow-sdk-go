@@ -1,13 +1,13 @@
-# Authorization Code (Private)
+# Authorization code (private)
 
-The Authorization Code (Private) flow is designed for applications that can
-securely store a client secret (e.g., backend services, desktop apps). A user
+The Authorization Code (private) flow works for applications that can
+securely store a client secret (for example, server-side services, desktop apps). A user
 authenticates interactively, and the SDK exchanges the authorization code for
 tokens.
 
 ## Objective
 
-Configure and use the Authorization Code (Private) OAuth flow with the
+Configure and use the Authorization Code (private) OAuth flow with the
 Service‑Now SDK using values provided by your ServiceNow administrator.
 
 ## Required values
@@ -23,7 +23,7 @@ Your administrator must provide:
 | Authorization URL | OAuth authorization endpoint                         |
 | Token URL         | OAuth token endpoint                                 |
 
-## SDK Flow
+## SDK flow
 
 ```mermaid
 flowchart TD

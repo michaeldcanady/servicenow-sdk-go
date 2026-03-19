@@ -1,6 +1,6 @@
-# JWT Token Authentication
+# JWT token authentication
 
-JWT Token authentication allows the SDK to authenticate using a signed JSON Web
+JWT Token authentication lets the SDK authenticate using a signed JSON Web
 Token (JWT). ServiceNow validates the signature using a public key configured in
 your instance and issues an access token. This method is ideal for secure,
 non‑interactive server‑to‑server integrations.
@@ -25,7 +25,7 @@ Your application must also provide:
 - **Private key** used to sign the JWT assertion
 - A **token provider** capable of generating signed JWT assertions
 
-## SDK Flow
+## SDK flow
 
 
 ```mermaid

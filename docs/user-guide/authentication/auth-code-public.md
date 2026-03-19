@@ -1,12 +1,12 @@
-# Authorization Code (Public)
+# Authorization code (public)
 
-The Authorization Code (Public) flow is designed for applications that
-authenticate users interactively but cannot securely store a client secret
-(e.g., SPAs, mobile apps, CLI tools).
+The Authorization Code (public) flow works for applications that
+authenticate users interactively but can't securely store a client secret
+(for example, SPAs, mobile apps, CLI tools).
 
 ## Objective
 
-Configure and use the Authorization Code (Public) OAuth flow with the
+Configure and use the Authorization Code (public) OAuth flow with the
 Service‑Now SDK using values provided by your ServiceNow administrator.
 
 ## Required values
@@ -21,7 +21,7 @@ Your administrator must provide:
 | Authorization URL | OAuth authorization endpoint                         |
 | Token URL         | OAuth token endpoint                                 |
 
-## SDK Flow
+## SDK flow
 
 ```mermaid
 flowchart TD

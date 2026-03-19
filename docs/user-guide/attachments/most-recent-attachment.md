@@ -1,19 +1,19 @@
-# Find the Most Recent Attachment
+# Find the most recent attachment
 
-When working with attachments, you often don’t need all of them - you need the latest log, screenshot, export, or document. This task shows you how to list attachments for a specific record, sort them by creation time, and select the most recent one.
+When working with attachments, you often don’t need every attachment—you need the latest log, screenshot, export, or document. This task shows you how to list attachments for a specific record, sort them by creation time, and select the most recent one.
 
-This is a foundational workflow that pairs naturally with downloading, processing, or deleting attachments.
+This is a foundational workflow that pairs with downloading, processing, or deleting attachments.
 
-## When to Use This Pattern
+## When to use this pattern
 
 Use this pattern when you need to:
 
 - Retrieve the newest log file for debugging
 - Identify the latest user‑submitted document
 - Prepare for a follow‑up action (download, delete, archive)
-- Build automations that react to new attachments
+- Build automation workflows that react to new attachments
 
-## Required Values
+## Required values
 
 | Value    | Description              |
 | -------- | ------------------------ |
@@ -95,7 +95,7 @@ func main() {
 
 ## Tips
 
-- Use `ORDERBYDESCsys_created_on` to ensure the newest attachment appears first.
+- Use `ORDERBYDESCsys_created_on` to make sure the newest attachment appears first.
 - Limit your query (`sysparm_limit`) to reduce response size and improve performance.
 - Filter by table and `sys_id` when you only care about attachments for a specific record.
-- Always check for empty results — not all records have attachments.
+- Always check for empty results—not all records have attachments.

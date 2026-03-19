@@ -1,18 +1,18 @@
-# Upload Attachment from Disk
+# Upload attachment from disk
 
 Uploading a file from disk is the most common way developers attach documents, logs, screenshots, or exports to a ServiceNow record. This variation walks through the workflow end‑to‑end and highlights the key decisions you’ll make along the way.
 
-## When to Use This Pattern
+## When to use this pattern
 
-- You have a file already stored locally (e.g., a .txt, .pdf, .png, .zip)
+- You have a file already stored locally (for example, a .txt, .pdf, .png, .zip)
 - You’re building a CLI tool, automation script, or integration service
 - You want a simple, reliable way to attach files without streaming or buffering logic
 
-## Required Values
+## Required values
 
 | Value         | Description                               |
 | ------------- | ----------------------------------------- |
-| Table Name    | the record’s table (e.g., `incident`)     |
+| Table Name    | the record’s table (for example, `incident`) |
 | Record sys_id | the specific record to attach the file to |
 | File name     | the name that will appear in Service-Now  |
 | File content  | read directly from disk                   |
@@ -94,7 +94,7 @@ func main() {
 
 ## Tips
 
-- Use absolute paths when running from cron jobs or containerized environments.
-- Set the correct MIME type (`text/plain`, `application/pdf`, `image/png`, etc.) so ServiceNow handles previews correctly.
-- Check for duplicates by listing attachments first if your workflow might upload the same file repeatedly.
+- Use absolute paths when running from `cron` jobs or containerized environments.
+- Set the correct Multipurpose Internet Mail Extensions (MIME) type (`text/plain`, `application/pdf`, `image/png`, etc.) so ServiceNow handles previews correctly.
+- Check for duplicates by listing attachments first if your workflow might upload the same file.
 - Validate file size if your instance enforces attachment limits.

@@ -1,8 +1,8 @@
-# Basic Authentication
+# Basic authentication
 
 Basic Authentication uses a ServiceNow username and password to authenticate
-API calls. It is simple to configure but should be used primarily for
-development, testing, or tightly controlled system‑to‑system integrations.
+API calls. it's simple to configure, but use it primarily for
+development, testing, or controlled system‑to‑system integrations.
 
 ## Objective
 
@@ -19,7 +19,7 @@ Your administrator must provide:
 | Username        | Integration user’s username |
 | Password        | Integration user’s password |
 
-## SDK Flow
+## SDK flow
 
 ```mermaid
 flowchart TD

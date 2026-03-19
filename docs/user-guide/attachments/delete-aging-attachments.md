@@ -1,18 +1,18 @@
-# Delete Attachments Older Than X Days
-As attachments accumulate over time, they can consume storage and clutter records. Many teams implement retention policies to automatically remove older files — especially logs, exports, or temporary documents. This task shows you how to identify attachments older than a specified number of days and delete them safely.
+# Delete attachments older than X days
+As attachments accumulate over time, they can consume storage and clutter records. Many teams implement retention policies to automatically remove older files—especially logs, exports, or temporary documents. This task shows you how to identify attachments older than a specified number of days and delete them.
 
-This workflow pairs naturally with listing and downloading attachments.
+This workflow pairs with listing and downloading attachments.
 
-## When to Use This Pattern
+## When to use this pattern
 
 Use this pattern when you need to:
 
-- Enforce retention policies (e.g., delete logs older than 30 days)  
+- Enforce retention policies (for example, delete logs older than 30 days)  
 - Clean up temporary or auto‑generated files  
 - Reduce storage usage on large tables  
 - Prepare a record for archival or migration
 
-## Required Values
+## Required values
 
 ## Example
 
@@ -109,8 +109,8 @@ func main() {
 
 ## Tips
 
-- Always **log deletions** for auditability.  
-- Consider performing a **dry run** first — list what *would* be deleted without deleting.  
+- Always **log deletions** for auditing.  
+- Consider performing a **dry run** first—list what you would delete without deleting.  
 - Download attachments before deleting them if you need to archive them.  
 - Use `sysparm_limit` and pagination for tables with many attachments.  
 - Combine this with the **Download All Attachments** task to archive before cleanup.

@@ -1,13 +1,13 @@
-# Resource Owner Password Credentials (ROPC)
+# Resource owner password credentials
 
-The Resource Owner Password Credentials (ROPC) flow allows the SDK to exchange a
+The resource owner password credentials flow lets the SDK exchange a
 username and password for an OAuth access token. This method is typically used
 only in controlled environments or legacy integrations where interactive login
-is not possible.
+isn't possible.
 
 ## Objective
 
-Configure and use the ROPC OAuth flow with the Service‑Now SDK using values
+Configure and use the Resource Owner Password Credentials (ROPC) OAuth flow with the Service‑Now SDK using values
 provided by your ServiceNow administrator.
 
 ## Required values
@@ -22,7 +22,7 @@ Your administrator must provide:
 | Username        | ServiceNow user account used for authentication    |
 | Password        | Password for the user account                      |
 
-## SDK Flow
+## SDK flow
 
 
 ```mermaid

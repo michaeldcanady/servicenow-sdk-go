@@ -6,7 +6,7 @@ different security requirements and deployment environments.
 
 ## Choose an authentication method
 
-ServiceNow provides several OAuth and non‑OAuth authentication models.  
+ServiceNow provides multiple OAuth and non‑OAuth authentication models.  
 The SDK currently supports:
 
 - [Basic Authentication](./basic.md)

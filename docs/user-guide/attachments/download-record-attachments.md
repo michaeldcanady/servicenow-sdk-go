@@ -1,18 +1,18 @@
-# Download All Attachments for a Record
+# Download all attachments for a record
 
-Once you’ve identified which attachments belong to a record, the next step is often to download them - for backups, migrations, processing, or exporting to another system. This task shows you how to retrieve the file content for each attachment and save it locally.
+Once you’ve identified which attachments belong to a record, the next step is often to download them—for backups, migrations, processing, or exporting to another system. This task shows you how to retrieve the file content for each attachment and save it locally.
 
-This workflow pairs naturally with listing attachments and with cleanup tasks like deleting older files.
+This workflow pairs with listing attachments and with cleanup tasks like deleting older files.
 
-## When to Use This Pattern
+## When to use this pattern
 
 - Use this pattern when you need to:
 - Export all attachments for a record
 - Back up files before deleting or archiving them
-- Process attachments locally (e.g., parse logs, read CSVs, extract text)
+- Process attachments locally (for example, parse logs, read CSV files, get text)
 - Migrate attachments to another system
 
-## Required Values
+## Required values
 
 | Value             | Description              |
 | ----------------- | ------------------------ |
