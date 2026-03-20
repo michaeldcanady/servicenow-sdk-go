@@ -392,8 +392,8 @@ func (c *Client) newAuthenticatedRequest(ctx context.Context, method, url string
 
 // AuthCodeURL builds the authorization URL for 3-legged flows.
 func (c *Client) AuthCodeURL(redirectURI, state, codeChallenge, codeChallengeMethod string, scopes []string) (string, error) {
-	if c.Endpoints == nil || strings.TrimSpace(c.Endpoints.AuthURL) == "" {
-		return "", errors.New("authorization endpoint is not set")
+	if err := c.Endpoints.Validate(GrantTypeAuthCode); err != nil {
+		return "", err
 	}
 
 	u, err := url.Parse(c.Endpoints.AuthURL)

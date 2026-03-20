@@ -6,13 +6,26 @@ import (
 	"net/http"
 	"sync"
 
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
 )
 
+type oauth2Client interface {
+	oauth2.PasswordExchanger
+	oauth2.RefreshTokenExchanger
+	oauth2.JWTExchanger
+	oauth2.Revoker
+	oauth2.CodeExchanger
+	oauth2.ClientCredentialsExchanger
+	AuthCodeURL(redirectURI, state, codeChallenge, codeChallengeMethod string, scopes []string) (string, error)
+}
+
 // baseClient provides a base implementation for an OAuth2 client.
 type baseClient struct {
-	oauthClient  *oauth2.Client
-	clientID     string
+	oauthClient oauth2Client
+	// clientID stored to be injected into oauth client later
+	clientID string
+	// clientSecret stored to be injected into oauth client later
 	clientSecret string
 	httpClient   *http.Client
 	mutex        sync.RWMutex
@@ -26,7 +39,7 @@ func (c *baseClient) Initialize(baseURL string) {
 		return
 	}
 
-	if c.oauthClient != nil {
+	if !internal.IsNil(c.oauthClient) {
 		return
 	}
 
@@ -47,7 +60,7 @@ func (c *baseClient) Initialize(baseURL string) {
 	}
 }
 
-func (c *baseClient) getOAuthClient() (*oauth2.Client, error) {
+func (c *baseClient) getOAuthClient() (oauth2Client, error) {
 	c.mutex.RLock()
 	defer c.mutex.RUnlock()
 
