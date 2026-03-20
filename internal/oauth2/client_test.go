@@ -404,7 +404,8 @@ func TestClient_AuthCodeURL(t *testing.T) {
 				client := &Client{
 					ClientID: "id",
 					Endpoints: &Endpoints{
-						AuthURL: "http://auth",
+						AuthURL:  "http://auth",
+						TokenURL: "http://auth/token",
 					},
 				}
 				u, err := client.AuthCodeURL("http://redirect", "state123", "challenge", pkce.MethodS256.String(), []string{"openid"})
@@ -426,7 +427,8 @@ func TestClient_AuthCodeURL(t *testing.T) {
 				client := &Client{
 					ClientID: "id",
 					Endpoints: &Endpoints{
-						AuthURL: "",
+						AuthURL:  "",
+						TokenURL: "https://url/token",
 					},
 				}
 				u, err := client.AuthCodeURL("http://redirect", "state123", "challenge", pkce.MethodS256.String(), []string{"openid"})
