@@ -26,9 +26,3 @@ func ToPointer[T any](value T) *T {
 func IsPointer(value any) bool {
 	return reflect.ValueOf(value).Kind() == reflect.Pointer
 }
-
-// ModelSetter represents a function that sets a value.
-type ModelSetter[T any] func(val T) error
-
-// Mutator represents a function that transforms a value.
-type Mutator[T, S any] func(input T) (S, error)

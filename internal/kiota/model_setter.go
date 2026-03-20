@@ -1,82 +1,36 @@
 package kiota
 
 import (
-	"errors"
-
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
-	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
-type ModelSetter[T any] func(val T) error
+type ModelSetter[T any] = utils.ModelSetter[T]
 
-type ModelAccessor[T any] func() (T, error)
+type ModelAccessor[T any] = utils.ModelAccessor[T]
 
-type Mutator[T, S any] func(input T) (S, error)
+type Mutator[T, S any] = utils.Mutator[T, S]
 
-type WriterFunc func(serialization.SerializationWriter) error
+type WriterFunc = utils.WriterFunc
 
-type SerializerFunc[T any] func(accessor ModelAccessor[T]) WriterFunc
+type SerializerFunc[T any] = utils.SerializerFunc[T]
 
-type DeserializerFunc[T any] func(setter ModelSetter[T]) serialization.NodeParser
+type DeserializerFunc[T any] = utils.DeserializerFunc[T]
 
-func SetMutatedValueFromSource[T, S any](source func() (T, error), setter ModelSetter[S], mutator Mutator[T, S]) error {
-	if source == nil {
-		return errors.New("source is nil")
-	}
-
-	if mutator == nil {
-		return errors.New("mutator is nil")
-	}
-
-	if setter == nil {
-		return errors.New("setter is nil")
-	}
-
-	val, err := source()
-	if err != nil {
-		return err
-	}
-
-	mutatedT, err := mutator(val)
-	if err != nil {
-		return err
-	}
-	return setter(mutatedT)
+func SetMutatedValueFromSource[T, S any](source utils.ModelGetter[T], setter ModelSetter[S], mutator Mutator[T, S]) error {
+	return utils.SetMutatedValueFromSource(source, setter, mutator)
 }
 
 func SetValueFromSource[T any](source func() (T, error), setter ModelSetter[T]) error {
 	return SetMutatedValueFromSource(source, setter, func(t T) (T, error) { return t, nil })
 }
 
-func WriteMutatedValueToSource[T, S any](writer func(S) error, accessor ModelAccessor[T], mutator Mutator[T, S]) error {
-	if writer == nil {
-		return errors.New("writer is nil")
-	}
-
-	if mutator == nil {
-		return errors.New("mutator is nil")
-	}
-
-	if accessor == nil {
-		return errors.New("accessor is nil")
-	}
-
-	val, err := accessor()
-	if err != nil {
-		return err
-	}
-
-	mutatedT, err := mutator(val)
-	if err != nil {
-		return err
-	}
-
-	return writer(mutatedT)
+func WriteMutatedValueToSource[T, S any](writer utils.ModelSetter[S], accessor ModelAccessor[T], mutator Mutator[T, S]) error {
+	return utils.WriteMutatedValueToSource(writer, accessor, mutator)
 }
 
-func WriteValueToSource[T any](writer func(T) error, accessor ModelAccessor[T]) error {
-	return WriteMutatedValueToSource(writer, accessor, func(t T) (T, error) { return t, nil })
+func WriteValueToSource[T any](writer utils.ModelSetter[T], accessor ModelAccessor[T]) error {
+	return utils.WriteValueToSource(writer, accessor)
 }
 
 func ConfigureRequestInformation[T any](request *KiotaRequestInformation, config *abstractions.RequestConfiguration[T]) {
