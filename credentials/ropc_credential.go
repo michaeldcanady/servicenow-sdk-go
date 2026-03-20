@@ -2,58 +2,84 @@ package credentials
 
 import (
 	"context"
+	"net/http"
+	"net/url"
 
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
+type ropcClient interface {
+	Initialize(baseURL string)
+	acquireTokenByUsernamePassword(ctx context.Context, username, password string) (*AccessToken, error)
+	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
+	revokeToken(ctx context.Context, token, tokenTypeHint string) error
+}
+
 // ROPCCredential implements the ROPC (Resource Owner Password Credentials) flow.
 type ROPCCredential struct {
-	*baseAccessTokenProvider
+	*BaseAccessTokenProvider
+	client   ropcClient
+	username string
+	password string
 }
 
 // NewROPCCredential creates a new ROPCCredential.
-// If clientSecret is empty, it uses a public client, otherwise it uses a confidential client.
-func NewROPCCredential(clientID, clientSecret, username, password string, authority Authority, allowedHosts []string) (*ROPCCredential, error) {
-	var initialFunc func(ctx context.Context) (*AccessToken, error)
-	var refreshFunc func(ctx context.Context, refreshToken string) (*AccessToken, error)
-
-	if clientSecret == "" {
-		client, err := newPublicClient(clientID, authority)
-		if err != nil {
-			return nil, err
-		}
-		initialFunc = func(ctx context.Context) (*AccessToken, error) {
-			return client.acquireTokenByUsernamePassword(ctx, username, password)
-		}
-		// Public clients usually don't have a simple refresh_token grant in some OAuth2 implementations
-		// but we can add it if needed.
-	} else {
-		client, err := newConfidentialClient(clientID, clientSecret, authority)
-		if err != nil {
-			return nil, err
-		}
-		initialFunc = func(ctx context.Context) (*AccessToken, error) {
-			return client.acquireTokenByUsernamePassword(ctx, username, password)
-		}
-		refreshFunc = func(ctx context.Context, refreshToken string) (*AccessToken, error) {
-			return client.acquireTokenByRefreshToken(ctx, refreshToken)
-		}
+func NewROPCCredential(client ropcClient, username, password string, allowedHosts []string) (*ROPCCredential, error) {
+	c := &ROPCCredential{
+		client:   client,
+		username: username,
+		password: password,
 	}
 
 	base := newBaseAccessTokenProvider(allowedHosts)
-	base.retrieveInitialToken = initialFunc
-	base.refreshToken = refreshFunc
+	base.retrieveInitialToken = c.GetToken
+	base.refreshToken = client.acquireTokenByRefreshToken
+	base.revokeToken = client.revokeToken
 
-	return &ROPCCredential{
-		baseAccessTokenProvider: base,
-	}, nil
+	c.BaseAccessTokenProvider = base
+
+	return c, nil
 }
 
-// NewUsernamePasswordAuthenticationProvider creates a new AuthenticationProvider for the ROPC flow.
-func NewROPCAuthenticationProvider(clientID, clientSecret, username, password string, authority Authority, allowedHosts []string) (authentication.AuthenticationProvider, error) {
-	tokenProvider, err := NewROPCCredential(clientID, clientSecret, username, password, authority, allowedHosts)
+// Initialize initializes the provider and its internal client with the base URL.
+func (c *ROPCCredential) Initialize(baseURL string) {
+	c.BaseAccessTokenProvider.Initialize(baseURL)
+	c.client.Initialize(baseURL)
+}
+
+// GetToken acquires a token using the username and password.
+func (c *ROPCCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
+	return c.client.acquireTokenByUsernamePassword(ctx, c.username, c.password)
+}
+
+// NewROPCProvider creates a new AuthenticationProvider for the ROPC flow using functional options.
+func NewROPCProvider(clientID, clientSecret, username, password string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	config := &AuthConfig{
+		httpClient: http.DefaultClient,
+	}
+	for _, opt := range opts {
+		opt(config)
+	}
+
+	authority := Authority(config.baseURL)
+
+	client, err := newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
+		co.httpClient = config.httpClient
+	})
 	if err != nil {
 		return nil, err
 	}
-	return authentication.NewBaseBearerTokenAuthenticationProvider(tokenProvider), nil
+
+	tokenProvider, err := NewROPCCredential(client, username, password, config.allowedHosts)
+	if err != nil {
+		return nil, err
+	}
+
+	tokenProvider.Initialize(string(authority))
+
+	if config.tokenStore != nil {
+		tokenProvider.SetTokenStore(config.tokenStore)
+	}
+
+	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
 }

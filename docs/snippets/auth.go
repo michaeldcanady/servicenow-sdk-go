@@ -19,27 +19,27 @@ type Credential interface {
 
 func _() {
 	// [START auth_basic_admin]
-	credAdmin := credentials.NewUsernamePasswordCredential("admin", "password")
+	credAdmin := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
 	// [END auth_basic_admin]
 
 	// [START client_init_panic]
-	clientPanic, err := servicenowsdkgo.NewServiceNowClient2(credAdmin, "xSDK_SN_URLx")
+	clientPanic, err := servicenowsdkgo.NewServiceNowServiceClient(
+		servicenowsdkgo.WithAuthenticationProvider(credAdmin),
+		servicenowsdkgo.WithURL("xSDK_SN_URLx"),
+	)
 	if err != nil {
 		panic(err)
 	}
 	// [END client_init_panic]
 
 	// [START auth_basic]
-	cred := credentials.NewUsernamePasswordCredential("xSDK_USERNAMEx", "xSDK_PASSWORDx")
+	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
 	// [END auth_basic]
 
 	// [START auth_token]
-	// You'll need your Client ID, Client Secret, and the Base URL of your instance.
-	credToken, err := credentials.NewTokenCredential( // nolint: staticcheck // allow until ROPCCredential is more mature
+	// You'll need your Client ID.
+	credToken, err := credentials.NewPublicAuthorizationCodeProvider(
 		"your-client-id",
-		"your-client-secret",
-		"https://your-instance.service-now.com",
-		nil, // Use default prompt for username/password or provide your own
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -47,7 +47,10 @@ func _() {
 	// [END auth_token]
 
 	// [START client_init]
-	client, err := servicenowsdkgo.NewServiceNowClient2(cred, "xSDK_SN_URLx")
+	client, err := servicenowsdkgo.NewServiceNowServiceClient(
+		servicenowsdkgo.WithAuthenticationProvider(cred),
+		servicenowsdkgo.WithURL("xSDK_SN_URLx"),
+	)
 	if err != nil {
 		log.Fatal(err)
 	}

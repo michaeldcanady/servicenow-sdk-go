@@ -72,6 +72,11 @@ func NewServer(state string, port int) (*Server, error) {
 	return s, nil
 }
 
+// Addr returns the full URL where the server is listening.
+func (s *Server) GetAddr() string {
+	return s.Addr
+}
+
 // Result waits for and returns the authorization result.
 func (s *Server) Result(ctx context.Context) AuthorizationResult {
 	select {

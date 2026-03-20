@@ -24,3 +24,8 @@ func (a Authority) TokenURL() string {
 func (a Authority) AuthURL() string {
 	return string(a) + "/oauth_auth.do"
 }
+
+// RevocationURL returns the OAuth2 token revocation endpoint for the authority.
+func (a Authority) RevocationURL() string {
+	return string(a) + "/oauth_revoke.do"
+}

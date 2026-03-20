@@ -31,7 +31,7 @@ type test[T any] struct {
 }
 
 var (
-	sharedUsernameAndPasswordCred = credentials.NewUsernamePasswordCredential("username", "password")
+	sharedUsernameAndPasswordCred = credentials.NewUsernamePasswordCredential("username", "password") //nolint: staticcheck // the testing is needed to confirm functionality
 )
 
 // TODO: should be mocked
@@ -113,7 +113,7 @@ func (rI *MockRequestInformation) AddHeaders(rawHeaders interface{}) error {
 }
 
 func TestNewServiceNowClient(t *testing.T) {
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password") //nolint: staticcheck // the testing is needed to confirm functionality
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -137,7 +137,7 @@ func TestNewServiceNowClient2(t *testing.T) {
 		},
 		{
 			Title:       "Nil Credential",
-			Input:       []interface{}{"instance", (*credentials.UsernamePasswordCredential)(nil)},
+			Input:       []interface{}{"instance", (*credentials.UsernamePasswordCredential)(nil)}, //nolint: staticcheck // the testing is needed to confirm functionality
 			Expected:    nil,
 			expectedErr: internal.ErrNilCredential,
 		},
@@ -165,11 +165,26 @@ func TestNewServiceNowClient2(t *testing.T) {
 }
 
 func TestServiceNowClient_URL(t *testing.T) {
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+	tests := []struct {
+		Title    string
+		Instance string
+		BaseURL  string
+	}{
+		{
+			Title:    "Non-blank instance",
+			Instance: "instance",
+			BaseURL:  "https://instance.service-now.com/api",
+		},
+	}
 
-	client := NewServiceNowClient(cred, "instance")
+	for _, test := range tests {
+		t.Run(test.Title, func(t *testing.T) {
+			cred := credentials.NewUsernamePasswordCredential("username", "password") //nolint: staticcheck // the testing is needed to confirm functionality
+			client := NewServiceNowClient(cred, test.Instance)
 
-	assert.Equal(t, client.BaseUrl, "https://instance.service-now.com/api")
+			assert.Equal(t, client.BaseUrl, test.BaseURL)
+		})
+	}
 }
 
 type MockWebClient struct {
@@ -182,7 +197,7 @@ func (m *MockWebClient) Do(req *http.Request) (*http.Response, error) {
 }
 
 func TestServiceNowClient_Now(t *testing.T) {
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password") //nolint: staticcheck // the testing is needed to confirm functionality
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -194,7 +209,7 @@ func TestServiceNowClient_Now(t *testing.T) {
 }
 
 func TestServiceNowClient_Now2(t *testing.T) {
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password") //nolint: staticcheck // the testing is needed to confirm functionality
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -206,7 +221,7 @@ func TestServiceNowClient_Now2(t *testing.T) {
 }
 
 func TestServiceNowClient_Cdm(t *testing.T) {
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password") //nolint: staticcheck // the testing is needed to confirm functionality
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -222,7 +237,7 @@ func TestServiceNowClient_ToRequest(t *testing.T) {
 		Headers: http.Header{},
 	}
 
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password") //nolint: staticcheck // the testing is needed to confirm functionality
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -256,7 +271,7 @@ func (e *ErrorReader) Close() error {
 }
 
 func TestServiceNowClient_UnmarshallError(t *testing.T) {
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password") //nolint: staticcheck // the testing is needed to confirm functionality
 
 	client := NewServiceNowClient(cred, "instance")
 
@@ -323,7 +338,7 @@ func TestServiceNowClient_ToRequestWithContext(t *testing.T) {
 		Headers: http.Header{},
 	}
 
-	cred := credentials.NewUsernamePasswordCredential("username", "password")
+	cred := credentials.NewUsernamePasswordCredential("username", "password") //nolint: staticcheck // the testing is needed to confirm functionality
 
 	ctx := context.TODO()
 
@@ -422,7 +437,7 @@ func TestServiceNowClient_SendWithContext(t *testing.T) {
 		{
 			name: "Successful Send",
 			client: func() *ServiceNowClient {
-				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance")
+				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance") //nolint: staticcheck // the testing is needed to confirm functionality
 				c.Session = &MockWebClient{
 					Response: &http.Response{
 						StatusCode: 200,
@@ -438,7 +453,7 @@ func TestServiceNowClient_SendWithContext(t *testing.T) {
 		{
 			name: "Send Error",
 			client: func() *ServiceNowClient {
-				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance")
+				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance") //nolint: staticcheck // the testing is needed to confirm functionality
 				c.Session = &MockWebClient{
 					Err: errors.New("network error"),
 				}
@@ -451,7 +466,7 @@ func TestServiceNowClient_SendWithContext(t *testing.T) {
 		{
 			name: "Failed Status Error",
 			client: func() *ServiceNowClient {
-				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance")
+				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance") //nolint: staticcheck // the testing is needed to confirm functionality
 				c.Session = &MockWebClient{
 					Response: &http.Response{
 						StatusCode: 404,
@@ -467,7 +482,7 @@ func TestServiceNowClient_SendWithContext(t *testing.T) {
 		{
 			name: "ToRequest Error",
 			client: func() *ServiceNowClient {
-				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance")
+				c := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance") //nolint: staticcheck // the testing is needed to confirm functionality
 				return c
 			}(),
 			requestInfo: &MockRequestInformation{Headers: http.Header{}, ReturnError: errors.New("to request error")},
@@ -489,7 +504,7 @@ func TestServiceNowClient_SendWithContext(t *testing.T) {
 }
 
 func TestServiceNowClient_Send(t *testing.T) {
-	client := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance")
+	client := NewServiceNowClient(credentials.NewUsernamePasswordCredential("user", "pass"), "instance") //nolint: staticcheck // the testing is needed to confirm functionality
 	client.Session = &MockWebClient{
 		Response: &http.Response{
 			StatusCode: 200,

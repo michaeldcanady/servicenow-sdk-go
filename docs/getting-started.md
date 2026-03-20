@@ -48,7 +48,7 @@ for more details.
 
 Now that you have the basic setup, explore these topics to dive deeper:
 
-- **[Authentication Guide](user-guide/authentication.md):** Learn about OAuth2
+- **[Authentication Guide](user-guide/authentication/index.md):** Learn about OAuth2
   and alternative credential types.
 - **[Table Operations](user-guide/tables.md):** Master CRUD operations for
   ServiceNow records.

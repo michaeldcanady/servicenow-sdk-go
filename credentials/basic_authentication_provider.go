@@ -16,8 +16,8 @@ type BasicAuthenticationProvider struct {
 	password string
 }
 
-// NewBasicAuthenticationProvider instantiates
-func NewBasicAuthenticationProvider(username, password string) *BasicAuthenticationProvider {
+// NewBasicProvider instantiates a new BasicAuthenticationProvider.
+func NewBasicProvider(username, password string) *BasicAuthenticationProvider {
 	return &BasicAuthenticationProvider{
 		username: username,
 		password: password,

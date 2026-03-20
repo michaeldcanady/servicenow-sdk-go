@@ -2,6 +2,7 @@ package servicenowsdkgo
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"testing"
 
@@ -195,7 +196,7 @@ func TestWithInstance(t *testing.T) {
 				err := option(config)
 
 				assert.Nil(t, err)
-				assert.Equal(t, instance, config.instance)
+				assert.Equal(t, fmt.Sprintf("https://%s.%s", instance, defaultServiceNowHost), config.rawURI)
 			},
 		},
 		{
@@ -220,7 +221,7 @@ func TestWithInstance(t *testing.T) {
 				err := option(config)
 
 				assert.Equal(t, errors.New("instance is empty"), err)
-				assert.Equal(t, "", config.instance)
+				assert.Equal(t, "", config.rawURI)
 			},
 		},
 	}

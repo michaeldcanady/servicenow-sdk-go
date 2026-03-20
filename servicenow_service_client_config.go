@@ -2,7 +2,6 @@ package servicenowsdkgo
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -20,7 +19,6 @@ type ServiceNowServiceClientConfig struct {
 	requestAdapter         abstractions.RequestAdapter
 	middleware             []nethttplibrary.Middleware
 	rawURI                 string
-	instance               string
 	backingStoreFactory    store.BackingStoreFactory
 	requestAdapterOptions  []internalHttp.ServiceNowRequestAdapterOption
 }
@@ -56,22 +54,11 @@ func (c *ServiceNowServiceClientConfig) Validate() error {
 		return errors.New("must provide either an AuthenticationProvider or a RequestAdapter")
 	}
 
-	if c.rawURI == "" && c.instance == "" {
-		return errors.New("must provide either a URL or an instance name")
-	}
-
-	if c.rawURI != "" && c.instance != "" {
-		return errors.New("rawURL and instance cannot be used together")
-	}
-
 	return nil
 }
 
 // getBaseURL resolves the base URL from the configuration.
 func (c *ServiceNowServiceClientConfig) getBaseURL() string {
-	if c.instance != "" {
-		return fmt.Sprintf("https://%s.%s", c.instance, defaultServiceNowHost)
-	}
 	return strings.TrimSpace(c.rawURI)
 }
 
@@ -93,6 +80,14 @@ func (c *ServiceNowServiceClientConfig) getRequestAdapter() (abstractions.Reques
 
 	baseURL := c.getBaseURL()
 	requestAdapter.SetBaseUrl(baseURL)
+
+	type preparable interface {
+		Initialize(baseURL string)
+	}
+
+	if p, ok := c.authenticationProvider.(preparable); ok {
+		p.Initialize(baseURL)
+	}
 
 	return requestAdapter, nil
 }
