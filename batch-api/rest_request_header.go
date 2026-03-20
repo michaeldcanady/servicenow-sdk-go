@@ -3,11 +3,9 @@ package batchapi
 import (
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -30,7 +28,7 @@ type RestRequestHeader interface {
 	// SetValue sets the value of the header
 	SetValue(*string) error
 	serialization.Parsable
-	newInternal.Model
+	model.Model
 }
 
 // RestRequestHeaderModel implementation of RestRequestHeader
@@ -41,7 +39,7 @@ type RestRequestHeaderModel struct {
 // NewRestRequestHeader creates new instance of BatchHeader
 func NewRestRequestHeader() *RestRequestHeaderModel {
 	return &RestRequestHeaderModel{
-		newInternal.NewBaseModel(),
+		model.NewBaseModel(),
 	}
 }
 
@@ -81,7 +79,7 @@ func (bH *RestRequestHeaderModel) GetName() (*string, error) {
 	}
 
 	backingStore := bH.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, nameKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, nameKey)
 }
 
 // SetName sets name to provided value
@@ -90,7 +88,7 @@ func (bH *RestRequestHeaderModel) SetName(name *string) error {
 		return nil
 	}
 
-	return store.DefaultBackedModelMutatorFunc(bH.GetBackingStore(), nameKey, name)
+	return kiota.DefaultBackedModelMutatorFunc(bH.GetBackingStore(), nameKey, name)
 }
 
 // GetValue returns the value of the header
@@ -99,7 +97,7 @@ func (bH *RestRequestHeaderModel) GetValue() (*string, error) {
 		return nil, nil
 	}
 
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](bH.GetBackingStore(), valueKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](bH.GetBackingStore(), valueKey)
 }
 
 // SetValue sets the value to the provided value
@@ -108,7 +106,7 @@ func (bH *RestRequestHeaderModel) SetValue(value *string) error {
 		return nil
 	}
 
-	return store.DefaultBackedModelMutatorFunc(bH.GetBackingStore(), valueKey, value)
+	return kiota.DefaultBackedModelMutatorFunc(bH.GetBackingStore(), valueKey, value)
 }
 
 // headers support headers types
@@ -121,7 +119,7 @@ func createRestRequestHeaderFromHeaders[h headers](headers h) ([]RestRequestHead
 	batchHeaders := make([]RestRequestHeader, 0)
 
 	if requestHeaders, ok := interface{}(headers).(*abstractions.RequestHeaders); ok {
-		if internal.IsNil(requestHeaders) {
+		if utils.IsNil(requestHeaders) {
 			return batchHeaders, nil
 		}
 		for _, key := range requestHeaders.ListKeys() {

@@ -103,11 +103,11 @@ func TestRestRequest_Serialize(t *testing.T) {
 			name: "Successful",
 			setup: func(m *RestRequestModel) {
 				_ = m.SetBody([]byte("test"))
-				_ = m.SetExcludeResponseHeaders(internal.ToPointer(true))
+				_ = m.SetExcludeResponseHeaders(utils.ToPointer(true))
 				_ = m.SetHeaders([]RestRequestHeader{NewRestRequestHeader()})
-				_ = m.SetID(internal.ToPointer("id"))
-				_ = m.SetMethod(internal.ToPointer(abstractions.GET))
-				_ = m.SetURL(internal.ToPointer("/api/test"))
+				_ = m.SetID(utils.ToPointer("id"))
+				_ = m.SetMethod(utils.ToPointer(abstractions.GET))
+				_ = m.SetURL(utils.ToPointer("/api/test"))
 			},
 			expectedErr: false,
 		},

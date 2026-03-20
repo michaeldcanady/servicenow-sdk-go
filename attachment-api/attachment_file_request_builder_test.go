@@ -7,6 +7,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	model "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -84,7 +85,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockHeaders.Add("Content-Type", "application/json")
 				mockContent := []byte("testing")
 				mockURLTemplate := ""
-				mockParsable := newInternal.NewBaseServiceNowItemResponse[File](CreateFileFromDiscriminatorValue)
+				mockParsable := model.NewBaseServiceNowItemResponse[File](CreateFileFromDiscriminatorValue)
 
 				expected := &abstractions.RequestInformation{
 					Method:             abstractions.POST,

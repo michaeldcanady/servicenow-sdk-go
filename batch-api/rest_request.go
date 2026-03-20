@@ -3,15 +3,13 @@ package batchapi
 import (
 	"encoding/base64"
 	"errors"
+	u "net/url"
 	"strings"
 
-	u "net/url"
-
 	"github.com/google/uuid"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -45,13 +43,13 @@ type RestRequest interface {
 
 // RestRequestModel implementation of RestRequestable
 type RestRequestModel struct {
-	newInternal.Model
+	model.Model
 }
 
 // NewRestRequest creates a new rest request
 func NewRestRequest() *RestRequestModel {
 	return &RestRequestModel{
-		newInternal.NewBaseModel(),
+		model.NewBaseModel(),
 	}
 }
 
@@ -101,14 +99,14 @@ func (rE *RestRequestModel) Serialize(writer serialization.SerializationWriter) 
 		return nil
 	}
 
-	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeMutatedStringFunc(bodyKey, func(body []byte) (*string, error) {
+	return kiota.Serialize(writer,
+		kiota.SerializeMutatedStringFunc(bodyKey, func(body []byte) (*string, error) {
 			encodedBody := base64.StdEncoding.EncodeToString(body)
 			return &encodedBody, nil
 		})(rE.GetBody),
-		internalSerialization.SerializeBoolFunc(excludeResponseHeadersKey)(rE.GetExcludeResponseHeaders),
-		internalSerialization.SerializeCollectionOfObjectValuesFunc[RestRequestHeader](headersKey)(rE.GetHeaders),
-		internalSerialization.SerializeStringFunc(idKey)(func() (*string, error) {
+		kiota.SerializeBoolFunc(excludeResponseHeadersKey)(rE.GetExcludeResponseHeaders),
+		kiota.SerializeCollectionOfObjectValuesFunc[RestRequestHeader](headersKey)(rE.GetHeaders),
+		kiota.SerializeStringFunc(idKey)(func() (*string, error) {
 			id, err := rE.GetID()
 			if err != nil {
 				return nil, err
@@ -122,14 +120,14 @@ func (rE *RestRequestModel) Serialize(writer serialization.SerializationWriter) 
 
 			return id, nil
 		}),
-		internalSerialization.SerializeMutatedStringFunc(methodKey, func(method *abstractions.HttpMethod) (*string, error) {
-			if internal.IsNil(method) {
+		kiota.SerializeMutatedStringFunc(methodKey, func(method *abstractions.HttpMethod) (*string, error) {
+			if utils.IsNil(method) {
 				return nil, errors.New("method can't be nil")
 			}
 			strMethod := (*method).String()
 			return &strMethod, nil
 		})(rE.GetMethod),
-		internalSerialization.SerializeStringFunc(urlKey)(rE.GetURL),
+		kiota.SerializeStringFunc(urlKey)(rE.GetURL),
 	)
 }
 
@@ -140,16 +138,16 @@ func (rE *RestRequestModel) GetFieldDeserializers() map[string]func(serializatio
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		bodyKey: internalSerialization.DeserializeMutatedStringFunc(func(s *string) ([]byte, error) {
+		bodyKey: kiota.DeserializeMutatedStringFunc(func(s *string) ([]byte, error) {
 			if s == nil {
 				return nil, nil
 			}
 			return base64.StdEncoding.DecodeString(*s)
 		})(rE.SetBody),
-		excludeResponseHeadersKey: internalSerialization.DeserializeBoolFunc()(rE.SetExcludeResponseHeaders),
-		headersKey:                internalSerialization.DeserializeCollectionOfObjectValuesFunc[RestRequestHeader](CreateRestRequestHeaderFromDiscriminatorValue)(rE.SetHeaders),
-		idKey:                     internalSerialization.DeserializeStringFunc()(rE.SetID),
-		methodKey: internalSerialization.DeserializeMutatedStringFunc(func(s *string) (*abstractions.HttpMethod, error) {
+		excludeResponseHeadersKey: kiota.DeserializeBoolFunc()(rE.SetExcludeResponseHeaders),
+		headersKey:                kiota.DeserializeCollectionOfObjectValuesFunc[RestRequestHeader](CreateRestRequestHeaderFromDiscriminatorValue)(rE.SetHeaders),
+		idKey:                     kiota.DeserializeStringFunc(rE.SetID),
+		methodKey: kiota.DeserializeMutatedStringFunc(func(s *string) (*abstractions.HttpMethod, error) {
 			if s == nil {
 				return nil, nil
 			}
@@ -191,8 +189,7 @@ func (rE *RestRequestModel) GetBody() ([]byte, error) {
 		return nil, nil
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []byte](backingStore, bodyKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []byte](rE.GetBackingStore(), bodyKey)
 }
 
 // SetBodyFromParsable serializes the provided parsable and sets the output to the request's body.
@@ -250,8 +247,7 @@ func (rE *RestRequestModel) SetBody(body []byte) error {
 		return nil
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, bodyKey, body)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), bodyKey, body)
 }
 
 // GetExcludeResponseHeaders returns if the request will exclude response headers.
@@ -260,8 +256,7 @@ func (rE *RestRequestModel) GetExcludeResponseHeaders() (*bool, error) {
 		return nil, nil
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](backingStore, excludeResponseHeadersKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](rE.GetBackingStore(), excludeResponseHeadersKey)
 }
 
 // SetExcludeResponseHeaders set if to include or exclude response headers.
@@ -270,8 +265,7 @@ func (rE *RestRequestModel) SetExcludeResponseHeaders(excludeResponseHeaders *bo
 		return nil
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, excludeResponseHeadersKey, excludeResponseHeaders)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), excludeResponseHeadersKey, excludeResponseHeaders)
 }
 
 // GetHeaders returns the headers of the request.
@@ -280,8 +274,7 @@ func (rE *RestRequestModel) GetHeaders() ([]RestRequestHeader, error) {
 		return nil, nil
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []RestRequestHeader](backingStore, headersKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []RestRequestHeader](rE.GetBackingStore(), headersKey)
 }
 
 // SetHeaders sets the headers for the request.
@@ -290,8 +283,7 @@ func (rE *RestRequestModel) SetHeaders(headers []RestRequestHeader) error {
 		return nil
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, headersKey, headers)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), headersKey, headers)
 }
 
 // GetID returns the id of the request.
@@ -300,8 +292,7 @@ func (rE *RestRequestModel) GetID() (*string, error) {
 		return nil, nil
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, idKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](rE.GetBackingStore(), idKey)
 }
 
 // SetID sets the id of the request.
@@ -310,8 +301,7 @@ func (rE *RestRequestModel) SetID(id *string) error {
 		return nil
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, idKey, id)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), idKey, id)
 }
 
 // GetMethod returns the method of the request
@@ -320,8 +310,7 @@ func (rE *RestRequestModel) GetMethod() (*abstractions.HttpMethod, error) {
 		return nil, nil
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *abstractions.HttpMethod](backingStore, methodKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *abstractions.HttpMethod](rE.GetBackingStore(), methodKey)
 }
 
 // SetMethod sets the method of the request
@@ -330,8 +319,7 @@ func (rE *RestRequestModel) SetMethod(method *abstractions.HttpMethod) error {
 		return nil
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, methodKey, method)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), methodKey, method)
 }
 
 // GetURL returns the relative URL of the request.
@@ -340,8 +328,7 @@ func (rE *RestRequestModel) GetURL() (*string, error) {
 		return nil, nil
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, urlKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](rE.GetBackingStore(), urlKey)
 }
 
 // SetURL sets the URL of the request (if not relative, will be converted).
@@ -368,6 +355,5 @@ func (rE *RestRequestModel) SetURL(url *string) error {
 		return errors.New("invalid URL: path doesn't begin with \"/api\"")
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, urlKey, &relativeURL)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), urlKey, &relativeURL)
 }

@@ -5,11 +5,10 @@ import (
 	"math"
 	"reflect"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -28,13 +27,13 @@ const (
 
 // ServicedRequestModel represents Service-Now Batch API response's serviced request.
 type ServicedRequestModel struct {
-	newInternal.Model
+	model.Model
 }
 
 // NewServicedRequest instantiates a new ServicedRequest.
 func NewServicedRequest() *ServicedRequestModel {
 	return &ServicedRequestModel{
-		newInternal.NewBaseModel(),
+		model.NewBaseModel(),
 	}
 }
 
@@ -155,12 +154,7 @@ func (sR *ServicedRequestModel) GetBody() ([]byte, error) {
 		return nil, nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []byte](backingStore, bodyKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []byte](sR.GetBackingStore(), bodyKey)
 }
 
 // setBody sets the raw body for the batch item.
@@ -169,12 +163,7 @@ func (sR *ServicedRequestModel) setBody(body []byte) error {
 		return nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, bodyKey, body)
+	return kiota.DefaultBackedModelMutatorFunc(sR.GetBackingStore(), bodyKey, body)
 }
 
 // GetErrorMessage returns, if present, the error messages.
@@ -183,12 +172,7 @@ func (sR *ServicedRequestModel) GetErrorMessage() (*string, error) {
 		return nil, nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, errorMessageKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](sR.GetBackingStore(), errorMessageKey)
 }
 
 // setErrorMessage sets the error messages.
@@ -197,12 +181,7 @@ func (sR *ServicedRequestModel) setErrorMessage(errorMessage *string) error {
 		return nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, errorMessageKey, errorMessage)
+	return kiota.DefaultBackedModelMutatorFunc(sR.GetBackingStore(), errorMessageKey, errorMessage)
 }
 
 // GetExecutionTime returns time it took to execute the batch item request.
@@ -211,26 +190,16 @@ func (sR *ServicedRequestModel) GetExecutionTime() (*serialization.ISODuration, 
 		return nil, nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *serialization.ISODuration](backingStore, executionTimeKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *serialization.ISODuration](sR.GetBackingStore(), executionTimeKey)
 }
 
 // setExecutionTime sets the time it took to execute the batch item request.
 func (sR *ServicedRequestModel) setExecutionTime(executionTime *serialization.ISODuration) error {
-	if internal.IsNil(sR) {
+	if utils.IsNil(sR) {
 		return nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
-		return nil
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, executionTimeKey, executionTime)
+	return kiota.DefaultBackedModelMutatorFunc(sR.GetBackingStore(), executionTimeKey, executionTime)
 }
 
 // GetHeaders returns headers for the batch item.
@@ -239,12 +208,7 @@ func (sR *ServicedRequestModel) GetHeaders() ([]RestRequestHeader, error) {
 		return nil, nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []RestRequestHeader](backingStore, headersKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []RestRequestHeader](sR.GetBackingStore(), headersKey)
 }
 
 // setHeaders sets headers for the batch item.
@@ -253,12 +217,7 @@ func (sR *ServicedRequestModel) setHeaders(headers []RestRequestHeader) error {
 		return nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, headersKey, headers)
+	return kiota.DefaultBackedModelMutatorFunc(sR.GetBackingStore(), headersKey, headers)
 }
 
 // GetID returns ID of the batch item that matches the `rest_requests.id` parameter in the request.
@@ -267,12 +226,7 @@ func (sR *ServicedRequestModel) GetID() (*string, error) {
 		return nil, nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, idKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](sR.GetBackingStore(), idKey)
 }
 
 // setID sets the id of the batch item.
@@ -281,12 +235,7 @@ func (sR *ServicedRequestModel) setID(id *string) error {
 		return nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, idKey, id)
+	return kiota.DefaultBackedModelMutatorFunc(sR.GetBackingStore(), idKey, id)
 }
 
 // GetRedirectURL, if present, returns redirect url for batch item.
@@ -295,12 +244,7 @@ func (sR *ServicedRequestModel) GetRedirectURL() (*string, error) {
 		return nil, nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, redirectURLKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](sR.GetBackingStore(), redirectURLKey)
 }
 
 // setRedirectURL sets redirect url for batch item.
@@ -309,12 +253,7 @@ func (sR *ServicedRequestModel) setRedirectURL(redirectURL *string) error {
 		return nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, redirectURLKey, redirectURL)
+	return kiota.DefaultBackedModelMutatorFunc(sR.GetBackingStore(), redirectURLKey, redirectURL)
 }
 
 // GetStatusCode returns status code for batch item.
@@ -323,12 +262,7 @@ func (sR *ServicedRequestModel) GetStatusCode() (*int64, error) {
 		return nil, nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int64](backingStore, statusCodeKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int64](sR.GetBackingStore(), statusCodeKey)
 }
 
 // setStatusCode sets status code for batch item.
@@ -337,12 +271,7 @@ func (sR *ServicedRequestModel) setStatusCode(statusCode *int64) error {
 		return nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, statusCodeKey, statusCode)
+	return kiota.DefaultBackedModelMutatorFunc(sR.GetBackingStore(), statusCodeKey, statusCode)
 }
 
 // GetStatusText returns status text for batch item.
@@ -351,12 +280,7 @@ func (sR *ServicedRequestModel) GetStatusText() (*string, error) {
 		return nil, nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, statusTextKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](sR.GetBackingStore(), statusTextKey)
 }
 
 // setStatusText sets status text for batch item.
@@ -365,10 +289,5 @@ func (sR *ServicedRequestModel) setStatusText(statusText *string) error {
 		return nil
 	}
 
-	backingStore := sR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, statusTextKey, statusText)
+	return kiota.DefaultBackedModelMutatorFunc(sR.GetBackingStore(), statusTextKey, statusText)
 }

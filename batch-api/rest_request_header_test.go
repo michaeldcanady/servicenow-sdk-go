@@ -561,8 +561,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 
 				assert.Nil(t, err)
 			},
-		},
-	}
+		}}
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)

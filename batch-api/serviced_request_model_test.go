@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
@@ -27,7 +27,7 @@ func TestNewServicedRequest(t *testing.T) {
 				assert.IsType(t, &ServicedRequestModel{}, parsable)
 
 				assert.NotNil(t, parsable.Model)
-				assert.IsType(t, &internal.BaseModel{}, parsable.Model)
+				assert.IsType(t, &model.BaseModel{}, parsable.Model)
 			},
 		},
 	}
@@ -164,7 +164,7 @@ func TestServicedRequestModel_GetBodyAsParsable(t *testing.T) {
 				_ = h.SetName(&n)
 				_ = h.SetValue(&v)
 				_ = m.setHeaders([]RestRequestHeader{h})
-				_ = m.setStatusCode(internal.ToPointer(int64(200)))
+				_ = m.setStatusCode(utils.ToPointer(int64(200)))
 
 				serialization.DefaultSerializationWriterFactoryInstance.ContentTypeAssociatedFactories["application/json"] = mocking.NewMockSerializationWriterFactory()
 				serialization.DefaultParseNodeFactoryInstance.ContentTypeAssociatedFactories["application/json"] = mocking.NewMockParseNodeFactory()
@@ -174,7 +174,7 @@ func TestServicedRequestModel_GetBodyAsParsable(t *testing.T) {
 		{
 			name: "Error mapping",
 			setup: func(m *ServicedRequestModel) {
-				_ = m.setStatusCode(internal.ToPointer(int64(400)))
+				_ = m.setStatusCode(utils.ToPointer(int64(400)))
 				_ = m.setBody([]byte(`{"error":"bad"}`))
 			},
 			expectedErr: true,

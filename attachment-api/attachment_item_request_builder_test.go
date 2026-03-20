@@ -7,6 +7,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	model "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -140,7 +141,7 @@ func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 				}
 				expectedRequestInformation.AddRequestOptions(make([]abstractions.RequestOption, 0))
 
-				mockParsable := newInternal.NewBaseServiceNowItemResponse[Attachment2](CreateAttachment2FromDiscriminatorValue)
+				mockParsable := model.NewBaseServiceNowItemResponse[Attachment2](CreateAttachment2FromDiscriminatorValue)
 
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
 				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(mockParsable, nil)

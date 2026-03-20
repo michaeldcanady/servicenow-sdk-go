@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
-	internalStore "github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 
@@ -121,25 +121,25 @@ func (rE *Attachment2Model) Serialize(_ serialization.SerializationWriter) error
 // Attachment2Model returns the deserialization information for this object.
 func (rE *Attachment2Model) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
 	return map[string]func(serialization.ParseNode) error{
-		tableSysIDKey:        internalSerialization.DeserializeStringFunc(rE.setTableSysID),
-		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(rE.setSizeBytes, utils.StringPtrToInt64Ptr),
-		downloadLinkKey:      internalSerialization.DeserializeStringFunc(rE.setDownloadLink),
-		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(rE.setSysUpdatedOn, utils.StringPtrToTimePtr(dateTimeFormat)),
-		sysIDKey:             internalSerialization.DeserializeStringFunc(rE.setSysID),
-		imageHeightKey:       internalSerialization.DeserializeMutatedStringFunc(rE.setImageHeight, utils.StringPtrToFloat64Ptr),
-		sysCreatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(rE.setSysCreatedOn, utils.StringPtrToTimePtr(dateTimeFormat)),
-		fileNameKey:          internalSerialization.DeserializeStringFunc(rE.setFileName),
-		sysCreatedByKey:      internalSerialization.DeserializeStringFunc(rE.setSysCreatedBy),
-		compressedKey:        internalSerialization.DeserializeMutatedStringFunc(rE.setCompressed, utils.StringPtrToBoolPtr),
-		averageImageColorKey: internalSerialization.DeserializeStringFunc(rE.setAverageImageColor),
-		sysUpdatedByKey:      internalSerialization.DeserializeStringFunc(rE.setSysUpdatedBy),
+		tableSysIDKey:        kiota.DeserializeStringFunc(rE.setTableSysID),
+		sizeBytesKey:         kiota.DeserializeMutatedStringFunc(utils.StringPtrToInt64Ptr)(rE.setSizeBytes),
+		downloadLinkKey:      kiota.DeserializeStringFunc(rE.setDownloadLink),
+		sysUpdatedOnKey:      kiota.DeserializeMutatedStringFunc(utils.StringPtrToTimePtr(dateTimeFormat))(rE.setSysUpdatedOn),
+		sysIDKey:             kiota.DeserializeStringFunc(rE.setSysID),
+		imageHeightKey:       kiota.DeserializeMutatedStringFunc(utils.StringPtrToFloat64Ptr)(rE.setImageHeight),
+		sysCreatedOnKey:      kiota.DeserializeMutatedStringFunc(utils.StringPtrToTimePtr(dateTimeFormat))(rE.setSysCreatedOn),
+		fileNameKey:          kiota.DeserializeStringFunc(rE.setFileName),
+		sysCreatedByKey:      kiota.DeserializeStringFunc(rE.setSysCreatedBy),
+		compressedKey:        kiota.DeserializeMutatedStringFunc(utils.StringPtrToBoolPtr)(rE.setCompressed),
+		averageImageColorKey: kiota.DeserializeStringFunc(rE.setAverageImageColor),
+		sysUpdatedByKey:      kiota.DeserializeStringFunc(rE.setSysUpdatedBy),
 		// TODO: figure out separator
-		sysTagsKey:        internalSerialization.DeserializeMutatedStringFunc(rE.setSysTags, utils.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil })),
+		sysTagsKey:        internalSerialization.DeserializeMutatedStringFunc(utils.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil }))(rE.setSysTags),
 		tableNameKey:      internalSerialization.DeserializeStringFunc(rE.setTableName),
-		imageWidthKey:     internalSerialization.DeserializeMutatedStringFunc(rE.setImageWidth, utils.StringPtrToFloat64Ptr),
-		sysModCountKey:    internalSerialization.DeserializeMutatedStringFunc(rE.setSysModCount, utils.StringPtrToInt64Ptr),
+		imageWidthKey:     internalSerialization.DeserializeMutatedStringFunc(utils.StringPtrToFloat64Ptr)(rE.setImageWidth),
+		sysModCountKey:    internalSerialization.DeserializeMutatedStringFunc(utils.StringPtrToInt64Ptr)(rE.setSysModCount),
 		contentTypeKey:    internalSerialization.DeserializeStringFunc(rE.setContentType),
-		sizeCompressedKey: internalSerialization.DeserializeMutatedStringFunc(rE.setSizeCompressed, utils.StringPtrToInt64Ptr),
+		sizeCompressedKey: internalSerialization.DeserializeMutatedStringFunc(utils.StringPtrToInt64Ptr)(rE.setSizeCompressed),
 		chunkSizeBytesKey: func(node serialization.ParseNode) error {
 			val, err := node.GetStringValue()
 			if err != nil {
@@ -154,211 +154,211 @@ func (rE *Attachment2Model) GetFieldDeserializers() map[string]func(serializatio
 
 // GetTableSysID returns the table sys id
 func (rE *Attachment2Model) GetTableSysID() (*string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, tableSysIDKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *string](rE.GetBackingStore(), tableSysIDKey)
 }
 
 // setTableSysID sets the table sys id to the provide value
 func (rE *Attachment2Model) setTableSysID(tableSysID *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, tableSysIDKey, tableSysID)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), tableSysIDKey, tableSysID)
 }
 
 // GetSizeBytes returns the attachment's size in bytes
 func (rE *Attachment2Model) GetSizeBytes() (*int64, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *int64](rE, sizeBytesKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *int64](rE.GetBackingStore(), sizeBytesKey)
 }
 
 // setSizeBytes sets the size (in bytes) to the provided value
 func (rE *Attachment2Model) setSizeBytes(size *int64) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, sizeBytesKey, size)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), sizeBytesKey, size)
 }
 
 // GetDownloadLink returns the download link
 func (rE *Attachment2Model) GetDownloadLink() (*string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, downloadLinkKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *string](rE.GetBackingStore(), downloadLinkKey)
 }
 
 // setDownloadLink sets the download link to the provided value
 func (rE *Attachment2Model) setDownloadLink(link *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, downloadLinkKey, link)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), downloadLinkKey, link)
 }
 
 // GetSysUpdatedOn return the last updated timestamp
 func (rE *Attachment2Model) GetSysUpdatedOn() (*time.Time, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *time.Time](rE, sysUpdatedOnKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *time.Time](rE.GetBackingStore(), sysUpdatedOnKey)
 }
 
 // setSysUpdatedOn sets the last updated timestamp to the provided value
 func (rE *Attachment2Model) setSysUpdatedOn(val *time.Time) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, sysUpdatedOnKey, val)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), sysUpdatedOnKey, val)
 }
 
 // GetSysID returns the sys id
 func (rE *Attachment2Model) GetSysID() (*string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, sysIDKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *string](rE.GetBackingStore(), sysIDKey)
 }
 
 // setSysID sets the sys id to the provide value
 func (rE *Attachment2Model) setSysID(val *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, sysIDKey, val)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), sysIDKey, val)
 }
 
 // GetImageHeight returns the image's height, if the attachment is an image
 func (rE *Attachment2Model) GetImageHeight() (*float64, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *float64](rE, imageHeightKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *float64](rE.GetBackingStore(), imageHeightKey)
 }
 
 // setImageHeight sets the image height to the provided value
 func (rE *Attachment2Model) setImageHeight(val *float64) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, imageHeightKey, val)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), imageHeightKey, val)
 }
 
 // GetSysCreatedOn returns the created on timestamp
 func (rE *Attachment2Model) GetSysCreatedOn() (*time.Time, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *time.Time](rE, sysCreatedOnKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *time.Time](rE.GetBackingStore(), sysCreatedOnKey)
 }
 
 // setSysCreatedOn sets the created on timestamp to the provided value
 func (rE *Attachment2Model) setSysCreatedOn(timestamp *time.Time) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, sysCreatedOnKey, timestamp)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), sysCreatedOnKey, timestamp)
 }
 
 // GetFileName returns the file name
 func (rE *Attachment2Model) GetFileName() (*string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, fileNameKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *string](rE.GetBackingStore(), fileNameKey)
 }
 
 // setFileName sets the file name to the provide value
 func (rE *Attachment2Model) setFileName(name *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, fileNameKey, name)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), fileNameKey, name)
 }
 
 // GetSysCreatedBy returns the username of who created it
 func (rE *Attachment2Model) GetSysCreatedBy() (*string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, sysCreatedByKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *string](rE.GetBackingStore(), sysCreatedByKey)
 }
 
 // setSysCreatedBy sets the username of who created it to the provided value
 func (rE *Attachment2Model) setSysCreatedBy(val *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, sysCreatedByKey, val)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), sysCreatedByKey, val)
 }
 
 // GetCompressed returns if the attachment is compressed
 func (rE *Attachment2Model) GetCompressed() (*bool, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *bool](rE, compressedKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *bool](rE.GetBackingStore(), compressedKey)
 }
 
 // setCompressed sets if the attachment is compressed
 func (rE *Attachment2Model) setCompressed(compressed *bool) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, compressedKey, compressed)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), compressedKey, compressed)
 }
 
 // GetAverageImageColor returns the average image color, if an image
 func (rE *Attachment2Model) GetAverageImageColor() (*string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, averageImageColorKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *string](rE.GetBackingStore(), averageImageColorKey)
 }
 
 // setAverageImageColor sets the average image color to the provided value
 func (rE *Attachment2Model) setAverageImageColor(color *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, averageImageColorKey, color)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), averageImageColorKey, color)
 }
 
 // GetSysUpdatedBy returns the username of the account that last updated the attachment
 func (rE *Attachment2Model) GetSysUpdatedBy() (*string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, sysUpdatedByKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *string](rE.GetBackingStore(), sysUpdatedByKey)
 }
 
 // setSysUpdatedBy sets the username of the account that last updated the attachment to the provide value
 func (rE *Attachment2Model) setSysUpdatedBy(username *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, sysUpdatedByKey, username)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), sysUpdatedByKey, username)
 }
 
 // GetSysTags returns slice of tags
 func (rE *Attachment2Model) GetSysTags() ([]string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, []string](rE, sysTagsKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, []string](rE.GetBackingStore(), sysTagsKey)
 }
 
 // setSysTags sets the sys tags to the provided values
 func (rE *Attachment2Model) setSysTags(tags []string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, sysTagsKey, tags)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), sysTagsKey, tags)
 }
 
 // GetTableName returns associated table name
 func (rE *Attachment2Model) GetTableName() (*string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, tableNameKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *string](rE.GetBackingStore(), tableNameKey)
 }
 
 // setTableName sets table name to provided value
 func (rE *Attachment2Model) setTableName(name *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, tableNameKey, name)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), tableNameKey, name)
 }
 
 // GetImageWidth returns the width, if attachment is an image
 func (rE *Attachment2Model) GetImageWidth() (*float64, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *float64](rE, imageWidthKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *float64](rE.GetBackingStore(), imageWidthKey)
 }
 
 // setImageWidth sets the width to the provide value
 func (rE *Attachment2Model) setImageWidth(width *float64) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, imageWidthKey, width)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), imageWidthKey, width)
 }
 
 // GetSysModCount returns the mod count
 func (rE *Attachment2Model) GetSysModCount() (*int64, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *int64](rE, sysModCountKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *int64](rE.GetBackingStore(), sysModCountKey)
 }
 
 // setSysModCount sets the count to the provided value
 func (rE *Attachment2Model) setSysModCount(count *int64) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, sysModCountKey, count)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), sysModCountKey, count)
 }
 
 // GetContentType returns the content type of the attachment
 func (rE *Attachment2Model) GetContentType() (*string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, contentTypeKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *string](rE.GetBackingStore(), contentTypeKey)
 }
 
 // setContentType sets the content type to the provided value
 func (rE *Attachment2Model) setContentType(contentType *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, contentTypeKey, contentType)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), contentTypeKey, contentType)
 }
 
 // GetSizeCompressed returns compressed size of attachment
 func (rE *Attachment2Model) GetSizeCompressed() (*int64, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *int64](rE, sizeCompressedKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *int64](rE.GetBackingStore(), sizeCompressedKey)
 }
 
 // setSizeCompressed sets compressed size to provided value
 func (rE *Attachment2Model) setSizeCompressed(size *int64) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, sizeCompressedKey, size)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), sizeCompressedKey, size)
 }
 
 // TODO: should be int64
 // GetChunkSizeBytes returns chunk size (in bytes) of attachment
 func (rE *Attachment2Model) GetChunkSizeBytes() (*string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, chunkSizeBytesKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *string](rE.GetBackingStore(), chunkSizeBytesKey)
 }
 
 // setChunkSizeBytes sets chunk size to provided value
 func (rE *Attachment2Model) setChunkSizeBytes(size *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, chunkSizeBytesKey, size)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), chunkSizeBytesKey, size)
 }
 
 // GetHash returns hash of attachment
 func (rE *Attachment2Model) GetHash() (*string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, hashKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *string](rE.GetBackingStore(), hashKey)
 }
 
 // setHash sets hash to provided value
 func (rE *Attachment2Model) setHash(hash *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, hashKey, hash)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), hashKey, hash)
 }
 
 // GetState returns the state
 func (rE *Attachment2Model) GetState() (*string, error) {
-	return internalStore.DefaultBackedModelAccessorFunc[*Attachment2Model, *string](rE, stateKey)
+	return kiota.DefaultBackedModelAccessorFunc[store.BackingStore, *string](rE.GetBackingStore(), stateKey)
 }
 
 // setState sets the state
 func (rE *Attachment2Model) setState(val *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(rE, stateKey, val)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), stateKey, val)
 }

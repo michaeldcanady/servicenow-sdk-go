@@ -8,6 +8,7 @@ import (
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	model "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -86,7 +87,7 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 		"XXX": model.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[Attachment2](CreateAttachment2FromDiscriminatorValue), errorMapping)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, model.ServiceNowItemResponseFromDiscriminatorValue[Attachment2](CreateAttachment2FromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}

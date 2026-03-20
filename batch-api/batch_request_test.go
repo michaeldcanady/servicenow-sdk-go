@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -24,7 +24,7 @@ func TestNewBatchRequestModel(t *testing.T) {
 				assert.IsType(t, &BatchRequestModel{}, parsable)
 
 				assert.NotNil(t, parsable.Model)
-				assert.IsType(t, &internal.BaseModel{}, parsable.Model)
+				assert.IsType(t, &model.BaseModel{}, parsable.Model)
 			},
 		},
 	}

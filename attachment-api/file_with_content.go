@@ -1,7 +1,7 @@
 package attachmentapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -57,8 +57,7 @@ func (f *FileWithContentModel) GetContent() ([]byte, error) {
 		return nil, nil
 	}
 
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []byte](backingStore, contentKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []byte](f.GetBackingStore(), contentKey)
 }
 
 // SetContent sets the content to the provided value
@@ -67,6 +66,5 @@ func (f *FileWithContentModel) SetContent(content []byte) error {
 		return nil
 	}
 
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, contentKey, content)
+	return kiota.DefaultBackedModelMutatorFunc(f.GetBackingStore(), contentKey, content)
 }
