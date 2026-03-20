@@ -403,6 +403,7 @@ func TestClient_AuthCodeURL(t *testing.T) {
 			test: func(t *testing.T) {
 				client := &Client{
 					ClientID: "id",
+					// nolint: gosec // no credentials
 					Endpoints: &Endpoints{
 						AuthURL:  "http://auth",
 						TokenURL: "http://auth/token",
@@ -425,6 +426,7 @@ func TestClient_AuthCodeURL(t *testing.T) {
 			name: "error if AuthURL is empty",
 			test: func(t *testing.T) {
 				client := &Client{
+					// nolint: gosec // no credentials
 					ClientID: "id",
 					Endpoints: &Endpoints{
 						AuthURL:  "",
