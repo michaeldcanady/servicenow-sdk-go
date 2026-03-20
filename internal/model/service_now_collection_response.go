@@ -3,8 +3,8 @@ package model
 import (
 	"fmt"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -61,10 +61,6 @@ func (bR *BaseServiceNowCollectionResponse[T]) Serialize(writer serialization.Se
 
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeCollectionOfObjectValuesFunc[T](resultKey)(bR.GetResult),
-		internalSerialization.SerializeStringFunc(nextKey)(bR.GetNextLink),
-		internalSerialization.SerializeStringFunc(previousKey)(bR.GetPreviousLink),
-		internalSerialization.SerializeStringFunc(firstKey)(bR.GetFirstLink),
-		internalSerialization.SerializeStringFunc(lastKey)(bR.GetLastLink),
 	)
 }
 
@@ -84,71 +80,71 @@ func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[strin
 
 			return bR.setResult(results)
 		},
-		nextKey:     internalSerialization.DeserializeStringFunc()(bR.SetNextLink),
-		previousKey: internalSerialization.DeserializeStringFunc()(bR.SetPreviousLink),
-		firstKey:    internalSerialization.DeserializeStringFunc()(bR.SetFirstLink),
-		lastKey:     internalSerialization.DeserializeStringFunc()(bR.SetLastLink),
+		nextKey:     kiota.DeserializeStringFunc(bR.SetNextLink),
+		previousKey: kiota.DeserializeStringFunc(bR.SetPreviousLink),
+		firstKey:    kiota.DeserializeStringFunc(bR.SetFirstLink),
+		lastKey:     kiota.DeserializeStringFunc(bR.SetLastLink),
 	}
 }
 
 // setResult Sets the result values of the response.
 func (r *BaseServiceNowCollectionResponse[T]) setResult(val []any) error {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil
 	}
 
 	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, resultKey, val)
+	return kiota.DefaultBackedModelMutatorFunc(backingStore, resultKey, val)
 }
 
 // SetNextLink Sets the url to the next page of results.
 func (r *BaseServiceNowCollectionResponse[T]) SetNextLink(val *string) error {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil
 	}
 
 	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, nextKey, val)
+	return kiota.DefaultBackedModelMutatorFunc(backingStore, nextKey, val)
 }
 
 // SetPreviousLink Sets the url to the previous page of results.
 func (r *BaseServiceNowCollectionResponse[T]) SetPreviousLink(val *string) error {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil
 	}
 
 	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, previousKey, val)
+	return kiota.DefaultBackedModelMutatorFunc(backingStore, previousKey, val)
 }
 
 // SetFirstLink Sets the url to the first page of results.
 func (r *BaseServiceNowCollectionResponse[T]) SetFirstLink(val *string) error {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil
 	}
 
 	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, firstKey, val)
+	return kiota.DefaultBackedModelMutatorFunc(backingStore, firstKey, val)
 }
 
 // SetLastLink Sets the url to the last page of results.
 func (r *BaseServiceNowCollectionResponse[T]) SetLastLink(val *string) error {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil
 	}
 
 	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, lastKey, val)
+	return kiota.DefaultBackedModelMutatorFunc(backingStore, lastKey, val)
 }
 
-// GetBackingStore returns the backing store, if store is nil it instantiates a new store.
+// GetBackingStore returns the backing store, if store is nil it instantiates a new kiota.
 func (r *BaseServiceNowCollectionResponse[T]) GetBackingStore() kiotaStore.BackingStore {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil
 	}
 
-	if IsNil(r.backingStore) {
-		if IsNil(r.backingStoreFactory) {
+	if utils.IsNil(r.backingStore) {
+		if utils.IsNil(r.backingStoreFactory) {
 			return nil
 		}
 		r.backingStore = r.backingStoreFactory()
@@ -164,7 +160,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
 	}
 
 	backingStore := r.GetBackingStore()
-	unknownSlice, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []any](backingStore, resultKey)
+	unknownSlice, err := kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []any](backingStore, resultKey)
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +186,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
 	}
 
 	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, nextKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, nextKey)
 }
 
 // GetPreviousLink Returns the url to the previous page of results.
@@ -200,7 +196,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error)
 	}
 
 	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, previousKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, previousKey)
 }
 
 // GetFirstLink Returns the url to the first page of results.
@@ -210,7 +206,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
 	}
 
 	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, firstKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, firstKey)
 }
 
 // GetLastLink Returns the url to the last page of results.
@@ -220,5 +216,5 @@ func (r *BaseServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
 	}
 
 	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, lastKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, lastKey)
 }

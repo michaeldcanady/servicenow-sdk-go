@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -242,7 +242,7 @@ func TestPoliciesMappingsRequestBuilder_Post(t *testing.T) {
 				},
 			},
 			setup: func(adapter *mocking.MockRequestAdapter) {
-				adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(newInternal.NewBaseServiceNowItemResponse[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue), nil)
+				adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(model.NewBaseServiceNowItemResponse[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue), nil)
 			},
 			wantErr: false,
 		},

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,6 +15,6 @@ func TestNewPoliciesMappingsInputsResolvedRequestBuilderInternal(t *testing.T) {
 	assert.NotNil(t, builder)
 }
 
-func NewBasePoliciesMappingsInputCollectionResponse() *newInternal.BaseServiceNowCollectionResponse[*PoliciesMapping] {
-	return newInternal.NewBaseServiceNowCollectionResponse[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue)
+func NewBasePoliciesMappingsInputCollectionResponse() *model.BaseServiceNowCollectionResponse[*PoliciesMapping] {
+	return model.NewBaseServiceNowCollectionResponse[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue)
 }

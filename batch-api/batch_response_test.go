@@ -841,7 +841,7 @@ func TestBatchResponse_GetServicedRequestByID(t *testing.T) {
 			id:   "1",
 			setup: func(m *BatchResponseModel) {
 				req := NewMockServicedRequest()
-				req.On("GetID").Return(internal.ToPointer("1"), nil)
+				req.On("GetID").Return(utils.ToPointer("1"), nil)
 				_ = m.setServicedRequests([]ServicedRequest{req})
 			},
 			expectedNil: false,
@@ -851,7 +851,7 @@ func TestBatchResponse_GetServicedRequestByID(t *testing.T) {
 			id:   "2",
 			setup: func(m *BatchResponseModel) {
 				req := NewMockServicedRequest()
-				req.On("GetID").Return(internal.ToPointer("1"), nil)
+				req.On("GetID").Return(utils.ToPointer("1"), nil)
 				_ = m.setServicedRequests([]ServicedRequest{req})
 			},
 			expectedNil: true,

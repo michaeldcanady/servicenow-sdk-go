@@ -1,8 +1,8 @@
 package model
 
 import (
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -31,7 +31,7 @@ func CreateServiceNowErrorFromDiscriminatorValue(_ serialization.ParseNode) (ser
 
 // Serialize writes the objects properties to the current writer.
 func (exc *ServicenowError) Serialize(writer serialization.SerializationWriter) error {
-	if IsNil(exc) {
+	if utils.IsNil(exc) {
 		return nil
 	}
 
@@ -54,7 +54,7 @@ func (exc *ServicenowError) GetError() (MainErrorable, error) {
 	}
 
 	backingStore := exc.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, MainErrorable](backingStore, errorKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, MainErrorable](backingStore, errorKey)
 }
 
 // setError sets the main error
@@ -64,7 +64,7 @@ func (exc *ServicenowError) setError(mainError MainErrorable) error {
 	}
 
 	backingStore := exc.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, errorKey, mainError)
+	return kiota.DefaultBackedModelMutatorFunc(backingStore, errorKey, mainError)
 }
 
 func (exc *ServicenowError) Error() string {

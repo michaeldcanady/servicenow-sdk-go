@@ -72,7 +72,7 @@ func serviceNowRequestAdapterDefaultOptions() ServiceNowRequestAdapterOption {
 			config.client = nethttplibrary.GetDefaultClient(config.middleware...)
 		}
 
-		if internal.IsNil(config.serializationWriterFactory) {
+		if utils.IsNil(config.serializationWriterFactory) {
 			config.serializationWriterFactory = serialization.DefaultSerializationWriterFactoryInstance
 		}
 		if utils.IsNil(config.parseNodeFactory) {

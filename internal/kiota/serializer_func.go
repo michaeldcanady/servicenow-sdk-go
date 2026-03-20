@@ -1,4 +1,4 @@
-package serialization
+package kiota
 
 import (
 	"fmt"

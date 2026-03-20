@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewBaseServiceNowCollectionResponse(t *testing.T) {
@@ -35,10 +36,8 @@ func TestBaseServiceNowCollectionResponse_GetFieldDeserializers(t *testing.T) {
 func TestBaseServiceNowCollectionResponse_GetBackingStore(t *testing.T) {
 	res := NewBaseServiceNowCollectionResponse[serialization.Parsable](nil)
 	res.backingStore = nil
-	bs, err := res.GetBackingStore()
-	if err != nil || bs == nil {
-		t.Error("failed to get backing store")
-	}
+	bs := res.GetBackingStore()
+	assert.NotNil(t, bs)
 }
 
 func TestBaseServiceNowCollectionResponse_GetResult(t *testing.T) {

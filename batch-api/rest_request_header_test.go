@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -24,8 +23,8 @@ func TestRestRequestHeader_Serialize(t *testing.T) {
 		{
 			name: "Successfully",
 			test: func(t *testing.T) {
-				expName := internal.ToPointer("name")
-				expValue := internal.ToPointer("value")
+				expName := utils.ToPointer("name")
+				expValue := utils.ToPointer("value")
 
 				writer := mocking.NewMockSerializationWriter()
 				writer.On("WriteStringValue", nameKey, expName).Return(nil)
@@ -72,7 +71,7 @@ func TestRestRequestHeader_Serialize(t *testing.T) {
 		{
 			name: "Value retrieval error",
 			test: func(t *testing.T) {
-				expName := internal.ToPointer("name")
+				expName := utils.ToPointer("name")
 
 				writer := mocking.NewMockSerializationWriter()
 				writer.On("WriteStringValue", nameKey, expName).Return(nil)
@@ -307,7 +306,7 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 		{
 			name: "Successfully",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("name")
+				input := utils.ToPointer("name")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", nameKey, input).Return(nil)
@@ -328,7 +327,7 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 		{
 			name: "Store error",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("name")
+				input := utils.ToPointer("name")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", nameKey, input).Return(errors.New("store error"))
@@ -349,7 +348,7 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 		{
 			name: "Nil backing store",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("name")
+				input := utils.ToPointer("name")
 
 				backingStore := (*mocking.MockBackingStore)(nil)
 
@@ -370,7 +369,7 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 			test: func(t *testing.T) {
 				header := (*RestRequestHeaderModel)(nil)
 
-				err := header.SetName(internal.ToPointer("name"))
+				err := header.SetName(utils.ToPointer("name"))
 
 				assert.Nil(t, err)
 			},
@@ -390,7 +389,7 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 		{
 			name: "Successfully",
 			test: func(t *testing.T) {
-				expValue := internal.ToPointer("value")
+				expValue := utils.ToPointer("value")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", valueKey).Return(expValue, nil)
@@ -412,7 +411,7 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				expValue := internal.ToPointer(true)
+				expValue := utils.ToPointer(true)
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", valueKey).Return(expValue, nil)
@@ -495,7 +494,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 		{
 			name: "Successfully",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("value")
+				input := utils.ToPointer("value")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", valueKey, input).Return(nil)
@@ -516,7 +515,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 		{
 			name: "Store error",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("value")
+				input := utils.ToPointer("value")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", valueKey, input).Return(errors.New("store error"))
@@ -537,7 +536,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 		{
 			name: "Nil backing store",
 			test: func(t *testing.T) {
-				input := internal.ToPointer("value")
+				input := utils.ToPointer("value")
 
 				backingStore := (*mocking.MockBackingStore)(nil)
 
@@ -558,7 +557,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 			test: func(t *testing.T) {
 				header := (*RestRequestHeaderModel)(nil)
 
-				err := header.SetValue(internal.ToPointer("value"))
+				err := header.SetValue(utils.ToPointer("value"))
 
 				assert.Nil(t, err)
 			},

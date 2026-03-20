@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -26,7 +26,7 @@ func NewBasicProvider(username, password string) *BasicAuthenticationProvider {
 
 // AuthenticateRequest authenticates the provided RequestInformation.
 func (b *BasicAuthenticationProvider) AuthenticateRequest(context context.Context, request *abstractions.RequestInformation, _ map[string]interface{}) error {
-	if internal.IsNil(b) {
+	if utils.IsNil(b) {
 		return errors.New("provider is nil")
 	}
 

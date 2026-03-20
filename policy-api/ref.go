@@ -1,10 +1,10 @@
 package policyapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -21,18 +21,18 @@ type Refable interface {
 	GetValue() (*string, error)
 	SetValue(*string) error
 	serialization.Parsable
-	newInternal.Model
+	model.Model
 }
 
 // Ref represents a reference with a link and a value.
 type Ref struct {
-	newInternal.Model
+	model.Model
 }
 
 // NewRef creates a new instance of Ref.
 func NewRef() *Ref {
 	return &Ref{
-		Model: newInternal.NewBaseModel(),
+		Model: model.NewBaseModel(),
 	}
 }
 
@@ -51,32 +51,32 @@ func (r *Ref) GetFieldDeserializers() map[string]func(serialization.ParseNode) e
 
 // Serialize writes the objects properties to the current writer.
 func (r *Ref) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(r) {
+	if utils.IsNil(r) {
 		return nil
 	}
 
-	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(refLinkKey)(r.GetLink),
-		internalSerialization.SerializeStringFunc(refValueKey)(r.GetValue),
+	return kiota.Serialize(writer,
+		kiota.SerializeStringFunc(refLinkKey)(r.GetLink),
+		kiota.SerializeStringFunc(refValueKey)(r.GetValue),
 	)
 }
 
 // GetLink returns the link.
 func (r *Ref) GetLink() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), refLinkKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), refLinkKey)
 }
 
 // SetLink sets the link.
 func (r *Ref) SetLink(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), refLinkKey, val)
+	return kiota.DefaultBackedModelMutatorFunc(r.GetBackingStore(), refLinkKey, val)
 }
 
 // GetValue returns the value.
 func (r *Ref) GetValue() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), refValueKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), refValueKey)
 }
 
 // SetValue sets the value.
 func (r *Ref) SetValue(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), refValueKey, val)
+	return kiota.DefaultBackedModelMutatorFunc(r.GetBackingStore(), refValueKey, val)
 }

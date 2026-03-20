@@ -9,7 +9,7 @@ import (
 func TestView2_String(t *testing.T) {
 	tests := []struct {
 		name     string
-		value    View2
+		value    View
 		expected string
 	}{
 		{
@@ -34,7 +34,7 @@ func TestView2_String(t *testing.T) {
 		},
 		{
 			name:     "Invalid value falls back to Unknown",
-			value:    View2(42),
+			value:    View(42),
 			expected: View2Unknown.String(), // fallback
 		},
 	}

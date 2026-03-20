@@ -23,7 +23,8 @@ var (
 	ErrWrongResponseType = errors.New("incorrect Response Type")
 	ErrParsing           = errors.New("parsing nextLink url failed")
 	ErrNilCallback       = errors.New("callback can't be nil")
-	ErrNoMoreItems       = errors.New("no more items")
+	// ErrNoMoreItems is returned when the iterator has reached the end of the collection.
+	ErrNoMoreItems = errors.New("no more items")
 
 	//Authorization Provider
 

@@ -1,7 +1,7 @@
 package policyapi
 
 import (
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -11,7 +11,7 @@ const (
 
 // PoliciesMappingsInputsResolvedRequestBuilder provides operations to manage Service-Now policy definitions.
 type PoliciesMappingsInputsResolvedRequestBuilder struct {
-	newInternal.RequestBuilder
+	kiota.RequestBuilder
 }
 
 // NewPoliciesMappingsInputsResolvedRequestBuilderInternal instantiates a new PoliciesMappingsInputsResolvedRequestBuilder with the provided path parameters and request adapter.
@@ -20,6 +20,6 @@ func NewPoliciesMappingsInputsResolvedRequestBuilderRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *PoliciesMappingsInputsResolvedRequestBuilder {
 	return &PoliciesMappingsInputsResolvedRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, policiesMappingsInputsResolvedURLTemplate, pathParameters),
+		RequestBuilder: kiota.NewBaseRequestBuilder(requestAdapter, policiesMappingsInputsResolvedURLTemplate, pathParameters),
 	}
 }

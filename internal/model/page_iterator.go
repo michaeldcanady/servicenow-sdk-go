@@ -6,14 +6,10 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
-)
-
-// ErrNoMoreItems is returned when the iterator has reached the end of the collection.
-var (
-	ErrNoMoreItems = errors.New("no more items")
 )
 
 // PageIterator represents an iterator for paginated collections.
@@ -39,7 +35,7 @@ func NewPageIterator[T serialization.Parsable](
 	res ServiceNowCollectionResponse[T],
 	reqAdapter abstractions.RequestAdapter,
 	constructorFunc serialization.ParsableFactory,
-	options ...Option[*PageIterator[T]],
+	options ...kiota.Option[*PageIterator[T]],
 ) (*PageIterator[T], error) {
 	if reqAdapter == nil {
 		return nil, errors.New("reqAdapter can't be nil")
@@ -68,7 +64,7 @@ func NewPageIterator[T serialization.Parsable](
 		reqOptions:      []abstractions.RequestOption{headerOpt},
 	}
 
-	if err := ApplyOptions(iterator, options...); err != nil {
+	if err := kiota.ApplyOptions(iterator, options...); err != nil {
 		return nil, err
 	}
 
@@ -87,7 +83,7 @@ func (i *PageIterator[T]) ResetPage() {
 }
 
 // WithHeaders sets the headers for the next page request.
-func WithHeaders[T serialization.Parsable](headers *abstractions.RequestHeaders) Option[*PageIterator[T]] {
+func WithHeaders[T serialization.Parsable](headers *abstractions.RequestHeaders) kiota.Option[*PageIterator[T]] {
 	return func(i *PageIterator[T]) error {
 		i.headers = headers
 		return nil
@@ -95,7 +91,7 @@ func WithHeaders[T serialization.Parsable](headers *abstractions.RequestHeaders)
 }
 
 // WithRequestOptions adds the request options for the next page request.
-func WithRequestOptions[T serialization.Parsable](options ...abstractions.RequestOption) Option[*PageIterator[T]] {
+func WithRequestOptions[T serialization.Parsable](options ...abstractions.RequestOption) kiota.Option[*PageIterator[T]] {
 	return func(i *PageIterator[T]) error {
 		i.reqOptions = append(i.reqOptions, options...)
 		return nil

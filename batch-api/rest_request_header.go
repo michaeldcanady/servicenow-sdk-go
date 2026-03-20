@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -34,7 +35,7 @@ type RestRequestHeader interface {
 
 // RestRequestHeaderModel implementation of RestRequestHeader
 type RestRequestHeaderModel struct {
-	newInternal.Model
+	model.Model
 }
 
 // NewRestRequestHeader creates new instance of BatchHeader
@@ -89,8 +90,7 @@ func (bH *RestRequestHeaderModel) SetName(name *string) error {
 		return nil
 	}
 
-	backingStore := bH.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, nameKey, name)
+	return store.DefaultBackedModelMutatorFunc(bH.GetBackingStore(), nameKey, name)
 }
 
 // GetValue returns the value of the header
@@ -99,8 +99,7 @@ func (bH *RestRequestHeaderModel) GetValue() (*string, error) {
 		return nil, nil
 	}
 
-	backingStore := bH.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, valueKey)
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](bH.GetBackingStore(), valueKey)
 }
 
 // SetValue sets the value to the provided value
@@ -109,8 +108,7 @@ func (bH *RestRequestHeaderModel) SetValue(value *string) error {
 		return nil
 	}
 
-	backingStore := bH.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, valueKey, value)
+	return store.DefaultBackedModelMutatorFunc(bH.GetBackingStore(), valueKey, value)
 }
 
 // headers support headers types

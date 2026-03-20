@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestNumericRange2_Compatible(t *testing.T) {
+func TestNumericRange_Compatible(t *testing.T) {
 	tests := []struct {
 		name     string
 		rng      *numericRange2
@@ -25,14 +25,14 @@ func TestNumericRange2_Compatible(t *testing.T) {
 	}
 }
 
-func TestNewNumericRange2(t *testing.T) {
+func TestNewNumericRange(t *testing.T) {
 	rng := newNumericRange2(100, 0, false)
 	if rng.max != 100 || rng.min != 0 || rng.allowDecimal != false {
 		t.Error("newNumericRange2 failed")
 	}
 }
 
-func TestNumericRange2_Within(t *testing.T) {
+func TestNumericRange_Within(t *testing.T) {
 	rng := newNumericRange2(10, 0, false)
 	if !rng.Within(5) || rng.Within(15) || rng.Within(-5) {
 		t.Error("Within failed")

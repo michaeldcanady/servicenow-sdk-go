@@ -40,7 +40,7 @@ func TestMainError_GetFieldDeserializers(t *testing.T) {
 func TestMainError_GetDetail(t *testing.T) {
 	s := "d"
 	m := NewMainError()
-	_ = m.setDetail(&s)
+	_ = m.SetDetail(&s)
 	var nilM *MainError
 
 	tests := []struct {
@@ -81,7 +81,7 @@ func TestMainError_setDetail(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.model.setDetail(tt.val)
+			err := tt.model.SetDetail(tt.val)
 			if (err != nil) != tt.err {
 				t.Errorf("err: got %v, expected %v", err, tt.err)
 			}
@@ -92,7 +92,7 @@ func TestMainError_setDetail(t *testing.T) {
 func TestMainError_GetMessage(t *testing.T) {
 	s := "m"
 	m := NewMainError()
-	_ = m.setMessage(&s)
+	_ = m.SetMessage(&s)
 	var nilM *MainError
 
 	tests := []struct {
@@ -133,7 +133,7 @@ func TestMainError_setMessage(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.model.setMessage(tt.val)
+			err := tt.model.SetMessage(tt.val)
 			if (err != nil) != tt.err {
 				t.Errorf("err: got %v, expected %v", err, tt.err)
 			}
@@ -144,7 +144,7 @@ func TestMainError_setMessage(t *testing.T) {
 func TestMainError_GetStatus(t *testing.T) {
 	s := "s"
 	m := NewMainError()
-	_ = m.setStatus(&s)
+	_ = m.SetStatus(&s)
 	var nilM *MainError
 
 	tests := []struct {
@@ -185,7 +185,7 @@ func TestMainError_setStatus(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.model.setStatus(tt.val)
+			err := tt.model.SetStatus(tt.val)
 			if (err != nil) != tt.err {
 				t.Errorf("err: got %v, expected %v", err, tt.err)
 			}
@@ -199,19 +199,19 @@ func TestMainError_ErrorBranches(t *testing.T) {
 	if _, err := mNilBS.GetDetail(); err == nil || err.Error() != "backingStore is nil" {
 		t.Errorf("Expected backingStore is nil error, got %v", err)
 	}
-	if err := mNilBS.setDetail(nil); err == nil || err.Error() != "backingStore is nil" {
+	if err := mNilBS.SetDetail(nil); err == nil || err.Error() != "backingStore is nil" {
 		t.Error("Expected BS nil error in setDetail")
 	}
 	if _, err := mNilBS.GetMessage(); err == nil || err.Error() != "backingStore is nil" {
 		t.Error("Expected BS nil error in GetMessage")
 	}
-	if err := mNilBS.setMessage(nil); err == nil || err.Error() != "backingStore is nil" {
+	if err := mNilBS.SetMessage(nil); err == nil || err.Error() != "backingStore is nil" {
 		t.Error("Expected BS nil error in setMessage")
 	}
 	if _, err := mNilBS.GetStatus(); err == nil || err.Error() != "backingStore is nil" {
 		t.Error("Expected BS nil error in GetStatus")
 	}
-	if err := mNilBS.setStatus(nil); err == nil || err.Error() != "backingStore is nil" {
+	if err := mNilBS.SetStatus(nil); err == nil || err.Error() != "backingStore is nil" {
 		t.Error("Expected BS nil error in setStatus")
 	}
 

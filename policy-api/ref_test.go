@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -65,8 +65,8 @@ func TestRef_Serialize(t *testing.T) {
 	writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
 
 	ref := NewRef()
-	_ = ref.SetLink(newInternal.ToPointer("link"))
-	_ = ref.SetValue(newInternal.ToPointer("value"))
+	_ = ref.SetLink(utils.ToPointer("link"))
+	_ = ref.SetValue(utils.ToPointer("value"))
 
 	err := ref.Serialize(writer)
 	assert.NoError(t, err)

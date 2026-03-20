@@ -1,9 +1,7 @@
 package model
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -38,7 +36,7 @@ func NewBaseServiceNowItemResponse[T serialization.Parsable](factory serializati
 
 // Serialize Writes the objects properties to the current writer.
 func (bR *BaseServiceNowItemResponse[T]) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(bR) {
+	if utils.IsNil(bR) {
 		return nil
 	}
 
@@ -56,12 +54,12 @@ func (bR *BaseServiceNowItemResponse[T]) GetFieldDeserializers() map[string]func
 
 // GetBackingStore Returns the backing store, if store is nil it instantiates a new store.
 func (r *BaseServiceNowItemResponse[T]) GetBackingStore() kiotaStore.BackingStore {
-	if IsNil(r) {
+	if utils.IsNil(r) {
 		return nil
 	}
 
-	if IsNil(r.backingStore) {
-		if IsNil(r.backingStoreFactory) {
+	if utils.IsNil(r.backingStore) {
+		if utils.IsNil(r.backingStoreFactory) {
 			return nil
 		}
 		r.backingStore = r.backingStoreFactory()
@@ -72,13 +70,13 @@ func (r *BaseServiceNowItemResponse[T]) GetBackingStore() kiotaStore.BackingStor
 
 // GetResult Returns the result value of the response.
 func (bR *BaseServiceNowItemResponse[T]) GetResult() (T, error) {
-	if IsNil(bR) {
+	if utils.IsNil(bR) {
 		var typedVal T
 		return typedVal, nil
 	}
 
 	backingStore := bR.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, T](backingStore, resultKey)
+	return DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, T](backingStore, resultKey)
 }
 
 // setResult Sets the result value of the response.
@@ -88,5 +86,5 @@ func (bR *BaseServiceNowItemResponse[T]) setResult(result T) error {
 	}
 
 	backingStore := bR.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, resultKey, result)
+	return DefaultBackedModelMutatorFunc(backingStore, resultKey, result)
 }

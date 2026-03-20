@@ -2,10 +2,9 @@ package batchapi
 
 import (
 	"github.com/google/uuid"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -28,13 +27,13 @@ type BatchRequest interface {
 
 // BatchRequestModel implementation of BatchRequest
 type BatchRequestModel struct {
-	newInternal.Model
+	model.Model
 }
 
 // NewBatchRequestModel creates a new BatchRequest.
 func NewBatchRequestModel() *BatchRequestModel {
 	request := &BatchRequestModel{
-		newInternal.NewBaseModel(),
+		model.NewBaseModel(),
 	}
 
 	id := uuid.NewString()
@@ -92,7 +91,7 @@ func (bR *BatchRequestModel) AddRequest(request RestRequest) error {
 		return nil
 	}
 
-	if internal.IsNil(request) {
+	if utils.IsNil(request) {
 		return nil
 	}
 
@@ -115,7 +114,7 @@ func (bR *BatchRequestModel) GetBatchRequestID() (*string, error) {
 		return nil, nil
 	}
 	backingStore := bR.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, batchRequestIDKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, batchRequestIDKey)
 }
 
 // SetBatchRequestID sets the id of the request.
@@ -124,7 +123,7 @@ func (bR *BatchRequestModel) SetBatchRequestID(id *string) error {
 		return nil
 	}
 	backingStore := bR.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, batchRequestIDKey, id)
+	return kiota.DefaultBackedModelMutatorFunc(backingStore, batchRequestIDKey, id)
 }
 
 // GetRestRequests returns batched requests.
@@ -134,7 +133,7 @@ func (bR *BatchRequestModel) GetRestRequests() ([]RestRequest, error) {
 	}
 
 	backingStore := bR.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []RestRequest](backingStore, restRequestsKey)
+	return kiota.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []RestRequest](backingStore, restRequestsKey)
 }
 
 // SetRestRequests sets the batched requests.
@@ -144,5 +143,5 @@ func (bR *BatchRequestModel) SetRestRequests(requests []RestRequest) error {
 	}
 
 	backingStore := bR.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, restRequestsKey, requests)
+	return kiota.DefaultBackedModelMutatorFunc(backingStore, restRequestsKey, requests)
 }

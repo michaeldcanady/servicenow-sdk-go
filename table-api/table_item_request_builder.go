@@ -49,11 +49,11 @@ func NewDefaultTableItemRequestBuilder(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 ) *TableItemRequestBuilder[*TableRecord] {
-	return NewTableItemRequestBuilder3[*TableRecord](rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
+	return NewTableItemRequestBuilder[*TableRecord](rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
-// NewTableItemRequestBuilder3 instantiates a new TableItemRequestBuilder with a raw URL and custom parsable.
-func NewTableItemRequestBuilder3[T model.ServiceNowItem](
+// NewTableItemRequestBuilder instantiates a new TableItemRequestBuilder with a raw URL and custom parsable.
+func NewTableItemRequestBuilder[T model.ServiceNowItem](
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 	factory serialization.ParsableFactory,

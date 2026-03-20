@@ -4,6 +4,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -30,7 +31,7 @@ func NewRecordElement() *RecordElement {
 
 // GetDisplayValue retrieves the display value associated with the element.
 func (rE *RecordElement) GetDisplayValue() (*ElementValue, error) {
-	val, err := kiota.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, displayValueKey)
+	val, err := kiota.DefaultBackedModelAccessorFunc[store.BackingStore, ElementValue](rE.GetBackingStore(), displayValueKey)
 	return &val, err
 }
 
@@ -43,12 +44,12 @@ func (rE *RecordElement) SetDisplayValue(value any) error {
 		}
 	}
 
-	return kiota.DefaultBackedModelMutatorFunc(rE, displayValueKey, value)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), displayValueKey, value)
 }
 
 // GetValue retrieves the raw stored value of the element.
 func (rE *RecordElement) GetValue() (*ElementValue, error) {
-	val, err := kiota.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, valueKey)
+	val, err := kiota.DefaultBackedModelAccessorFunc[store.BackingStore, ElementValue](rE.GetBackingStore(), valueKey)
 	return &val, err
 }
 
@@ -61,16 +62,16 @@ func (rE *RecordElement) SetValue(value any) error {
 		}
 	}
 
-	return kiota.DefaultBackedModelMutatorFunc(rE, valueKey, value)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), valueKey, value)
 }
 
 // GetLink retrieves the optional link associated with the element.
 func (rE *RecordElement) GetLink() (*string, error) {
-	val, err := kiota.DefaultBackedModelAccessorFunc[*RecordElement, string](rE, linkKey)
+	val, err := kiota.DefaultBackedModelAccessorFunc[store.BackingStore, string](rE.GetBackingStore(), linkKey)
 	return &val, err
 }
 
 // SetLink assigns an optional reference link to the element.
 func (rE *RecordElement) SetLink(link *string) error {
-	return kiota.DefaultBackedModelMutatorFunc(rE, linkKey, link)
+	return kiota.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), linkKey, link)
 }

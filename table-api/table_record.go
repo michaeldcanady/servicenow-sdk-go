@@ -9,6 +9,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
 var _ serialization.Parsable = (*TableRecord)(nil)
@@ -52,15 +53,15 @@ func recordElementParserFromRaw(rawValue any) (*RecordElement, error) {
 
 	switch typedVal := rawValue.(type) {
 	case map[string]any:
-		if dv, ok := typedVal[recordDisplayValueKey]; ok {
+		if dv, ok := typedVal[displayValueKey]; ok {
 			displayValue = dv
 		}
 
-		if v, ok := typedVal[recordValueKey]; ok {
+		if v, ok := typedVal[valueKey]; ok {
 			value = v
 		}
 
-		if rawLink, ok := typedVal[recordLinkKey]; ok {
+		if rawLink, ok := typedVal[linkKey]; ok {
 			strLink, ok := rawLink.(*string)
 			if !ok {
 				return nil, errors.New("link is not *string")
@@ -112,7 +113,7 @@ func (tR *TableRecord) GetFieldDeserializers() map[string]func(serialization.Par
 
 	for _, key := range tR.keys {
 		k := key
-		fieldDeserializers[k] = internalSerialization.DeserializeMutatedAnyFunc(recordElementParserFromRaw)(
+		fieldDeserializers[k] = kiota.DeserializeMutatedAnyFunc(recordElementParserFromRaw)(
 			func(element *RecordElement) error {
 				return tR.SetElement(k, element)
 			})
@@ -136,14 +137,14 @@ func NewTableRecord() *TableRecord {
 
 // Get retrieves a RecordElement associated with the specified key.
 func (tR *TableRecord) Get(key string) (*RecordElement, error) {
-	elem, err := kiota.DefaultBackedModelAccessorFunc[*TableRecord, RecordElement](tR, key)
+	elem, err := kiota.DefaultBackedModelAccessorFunc[store.BackingStore, RecordElement](tR.GetBackingStore(), key)
 
 	return &elem, err
 }
 
 // SetElement assigns a RecordElement to the specified key.
 func (tR *TableRecord) SetElement(key string, element *RecordElement) error {
-	return kiota.DefaultBackedModelMutatorFunc(tR, key, element)
+	return kiota.DefaultBackedModelMutatorFunc(tR.GetBackingStore(), key, element)
 }
 
 // SetValue assigns a value to the specified key using a RecordElement wrapper.

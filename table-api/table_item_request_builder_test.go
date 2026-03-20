@@ -50,7 +50,7 @@ func TestTableItemRequestBuilder_Get(t *testing.T) {
 			mockAdapter := new(mocking.MockRequestAdapter)
 			tt.setupMock(mockAdapter)
 
-			builder := NewTableItemRequestBuilder3[*TableRecord](
+			builder := NewTableItemRequestBuilder[*TableRecord](
 				"https://example.com/api/now/v1/table/test/sysid",
 				mockAdapter,
 				CreateTableRecordFromDiscriminatorValue,
@@ -99,7 +99,7 @@ func TestTableItemRequestBuilder_Delete(t *testing.T) {
 			mockAdapter := new(mocking.MockRequestAdapter)
 			tt.setupMock(mockAdapter)
 
-			builder := NewTableItemRequestBuilder3[*TableRecord](
+			builder := NewTableItemRequestBuilder[*TableRecord](
 				"https://example.com/api/now/v1/table/test/sysid",
 				mockAdapter,
 				CreateTableRecordFromDiscriminatorValue,
@@ -156,7 +156,7 @@ func TestTableItemRequestBuilder_Put(t *testing.T) {
 			mockAdapter := new(mocking.MockRequestAdapter)
 			tt.setupMock(mockAdapter)
 
-			builder := NewTableItemRequestBuilder3[*TableRecord](
+			builder := NewTableItemRequestBuilder[*TableRecord](
 				"https://example.com/api/now/v1/table/test/sysid",
 				mockAdapter,
 				CreateTableRecordFromDiscriminatorValue,
@@ -215,7 +215,7 @@ func TestTableItemRequestBuilder_Patch(t *testing.T) {
 			mockAdapter := new(mocking.MockRequestAdapter)
 			tt.setupMock(mockAdapter)
 
-			builder := NewTableItemRequestBuilder3[*TableRecord](
+			builder := NewTableItemRequestBuilder[*TableRecord](
 				"https://example.com/api/now/v1/table/test/sysid",
 				mockAdapter,
 				CreateTableRecordFromDiscriminatorValue,
@@ -237,7 +237,7 @@ func TestTableItemRequestBuilder_Patch(t *testing.T) {
 
 func TestTableItemRequestBuilder_ToRequestInformation(t *testing.T) {
 	mockAdapter := new(mocking.MockRequestAdapter)
-	builder := NewTableItemRequestBuilder3[*TableRecord](
+	builder := NewTableItemRequestBuilder[*TableRecord](
 		"https://example.com/api/now/v1/table/test/sysid",
 		mockAdapter,
 		CreateTableRecordFromDiscriminatorValue,

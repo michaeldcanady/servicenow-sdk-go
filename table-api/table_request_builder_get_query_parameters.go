@@ -38,7 +38,7 @@ type TableRequestBuilderGetQueryParameters struct {
 	//- mobile
 	//- both
 	//If you also specify the sysparm_fields parameter, it takes precedent.
-	View                     View2  `url:"sysparm_view,omitempty"`
+	View                     View   `url:"sysparm_view,omitempty"`
 	Limit                    int    `url:"sysparm_limit,omitempty"`
 	NoCount                  bool   `url:"sysparm_no_count,omitempty"`
 	Offset                   int    `url:"sysparm_offset,omitempty"`
