@@ -21,7 +21,7 @@ func TestConvertSliceToArrayNode(t *testing.T) {
 			if node == nil {
 				t.Fatal("Expected node, got nil")
 			}
-			// We can't easily check internal state without exporting or using a visitor, 
+			// We can't easily check internal state without exporting or using a visitor,
 			// but we can check if it's correct via a Condition.
 			c := String("f").IsOneOf(tt.input...)
 			expectedFull := "fIN" + tt.expected

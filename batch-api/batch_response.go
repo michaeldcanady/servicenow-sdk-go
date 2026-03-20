@@ -1,12 +1,15 @@
 package batchapi
 
 import (
-	"errors"
+	"fmt"
 
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/microsoft/kiota-abstractions-go/store"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -25,7 +28,7 @@ type BatchResponse interface {
 	GetUnservicedRequests() ([]string, error)
 	setUnservicedRequests([]string) error
 	serialization.Parsable
-	store.BackedModel
+	kiotaStore.BackedModel
 }
 
 // BatchResponseModel implementation of BatchResponse
@@ -51,7 +54,11 @@ func (bR *BatchResponseModel) Serialize(writer serialization.SerializationWriter
 		return nil
 	}
 
-	return errors.New("Serialize not implemented")
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(batchRequestIDKey)(bR.GetBatchRequestID),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[ServicedRequest](servicedRequestsKey)(bR.GetServicedRequests),
+		internalSerialization.SerializeCollectionOfStringValuesFunc(unservicedRequestsKey)(bR.GetUnservicedRequests),
+	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object
@@ -61,33 +68,18 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		batchRequestIDKey: func(pn serialization.ParseNode) error {
-			if utils.IsNil(pn) {
-				return nil
-			}
-
-			value, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return bR.setBatchRequestID(value)
-		},
+		batchRequestIDKey: internalSerialization.DeserializeStringFunc()(bR.setBatchRequestID),
 		servicedRequestsKey: func(pn serialization.ParseNode) error {
-			if utils.IsNil(pn) {
-				return nil
-			}
-
-			values, err := pn.GetCollectionOfObjectValues(CreateServicedRequestFromDiscriminatorValue)
+			val, err := pn.GetCollectionOfObjectValues(CreateServicedRequestFromDiscriminatorValue)
 			if err != nil {
 				return err
 			}
 
-			requests := make([]ServicedRequest, len(values))
-			for index, value := range values {
+			requests := make([]ServicedRequest, len(val))
+			for index, value := range val {
 				typedValue, ok := value.(ServicedRequest)
 				if !ok {
-					return errors.New("value is not ServicedRequest")
+					return fmt.Errorf("value is not ServicedRequest")
 				}
 				requests[index] = typedValue
 			}
@@ -95,22 +87,14 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 			return bR.setServicedRequests(requests)
 		},
 		unservicedRequestsKey: func(pn serialization.ParseNode) error {
-			if utils.IsNil(pn) {
-				return nil
-			}
-
-			values, err := pn.GetCollectionOfPrimitiveValues("string")
+			val, err := pn.GetCollectionOfPrimitiveValues("string")
 			if err != nil {
 				return err
 			}
 
-			requests := make([]string, len(values))
-			for index, value := range values {
-				typedValue, ok := value.(string)
-				if !ok {
-					return errors.New("value is not string")
-				}
-				requests[index] = typedValue
+			requests := make([]string, len(val))
+			for index, value := range val {
+				requests[index] = value.(string)
 			}
 
 			return bR.setUnservicedRequests(requests)
@@ -125,30 +109,12 @@ func (bR *BatchResponseModel) GetBatchRequestID() (*string, error) {
 	}
 
 	backingStore := bR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	id, err := backingStore.Get(batchRequestIDKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(id) {
-		return nil, nil
-	}
-
-	strID, ok := id.(*string)
-	if !ok {
-		return nil, errors.New("id is not *string")
-	}
-
-	return strID, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, batchRequestIDKey)
 }
 
 // GetServicedRequestByID returns the serviced request with the provided id
 func (bR *BatchResponseModel) GetServicedRequestByID(id string) (ServicedRequest, error) {
-	if utils.IsNil(bR) {
+	if internal.IsNil(bR) {
 		return nil, nil
 	}
 
@@ -178,11 +144,7 @@ func (bR *BatchResponseModel) setBatchRequestID(id *string) error {
 	}
 
 	backingStore := bR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(batchRequestIDKey, id)
+	return store.DefaultBackedModelMutatorFunc(backingStore, batchRequestIDKey, id)
 }
 
 // GetServicedRequests returns serviced requests
@@ -192,25 +154,7 @@ func (bR *BatchResponseModel) GetServicedRequests() ([]ServicedRequest, error) {
 	}
 
 	backingStore := bR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	servicedRequests, err := backingStore.Get(servicedRequestsKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(servicedRequests) {
-		return nil, nil
-	}
-
-	typedServicedRequests, ok := servicedRequests.([]ServicedRequest)
-	if !ok {
-		return nil, errors.New("servicedRequests is not []ServicedRequestable")
-	}
-
-	return typedServicedRequests, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []ServicedRequest](backingStore, servicedRequestsKey)
 }
 
 // setServicedRequests sets the serviced requests to the provided values
@@ -220,11 +164,7 @@ func (bR *BatchResponseModel) setServicedRequests(requests []ServicedRequest) er
 	}
 
 	backingStore := bR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(servicedRequestsKey, requests)
+	return store.DefaultBackedModelMutatorFunc(backingStore, servicedRequestsKey, requests)
 }
 
 // GetUnservicedRequests returns the unserviced requests' id
@@ -234,25 +174,7 @@ func (bR *BatchResponseModel) GetUnservicedRequests() ([]string, error) {
 	}
 
 	backingStore := bR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	unservicedRequests, err := backingStore.Get(unservicedRequestsKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(unservicedRequests) {
-		return nil, nil
-	}
-
-	typedUnservicedRequests, ok := unservicedRequests.([]string)
-	if !ok {
-		return nil, errors.New("unservicedRequests is not []string")
-	}
-
-	return typedUnservicedRequests, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []string](backingStore, unservicedRequestsKey)
 }
 
 // setUnservicedRequests sets the ids of the unserviced requests to the provided value
@@ -262,9 +184,5 @@ func (bR *BatchResponseModel) setUnservicedRequests(unservicedRequests []string)
 	}
 
 	backingStore := bR.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(unservicedRequestsKey, unservicedRequests)
+	return store.DefaultBackedModelMutatorFunc(backingStore, unservicedRequestsKey, unservicedRequests)
 }

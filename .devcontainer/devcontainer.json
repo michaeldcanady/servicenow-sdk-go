@@ -1,5 +1,5 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/go:1.23",
+  "image": "mcr.microsoft.com/devcontainers/go:1.25",
   "customizations": {
     "vscode": {
       "settings": {
@@ -22,23 +22,32 @@
         "msyrus.go-doc",
         "766b.go-outliner",
         "yzhang.markdown-all-in-one",
-        "Gruntfuggly.todo-tree"
+        "Gruntfuggly.todo-tree",
+        "MermaidChart.vscode-mermaid-chart"
       ]
     }
   },
   "remoteUser": "vscode",
   "features": {
+    "./podman-remote": {},
+    "./xdg-utils": {},
+    "ghcr.io/shinepukur/devcontainer-features/vale:1": {
+      "version": "latest"
+    },
     "ghcr.io/devcontainers/features/github-cli:1": {
       "version": "latest"
     },
     "ghcr.io/devcontainers/features/powershell:2": {
       "version": "latest"
     },
-    "ghcr.io/stu-bell/devcontainer-features/gemini-cli:0": {},
+    "ghcr.io/stu-bell/devcontainer-features/gemini-cli:0": {
+      "gemini_version": "0.32.0"
+    },
     "ghcr.io/guiyomh/features/just:0": {}
   },
   "runArgs": [
     "--userns=keep-id"
   ],
-  "containerUser": "vscode"
-}
+  "containerUser": "vscode",
+  //"initializeCommand": "mkfifo ~/hostbrowserpipe"
+} 

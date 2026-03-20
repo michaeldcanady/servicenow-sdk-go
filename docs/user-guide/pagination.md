@@ -11,6 +11,7 @@ pagination. The SDK abstracts this complexity by providing an iterator that
 can automatically fetch subsequent pages as you process records.
 
 The SDK provides specialized iterators for common APIs:
+
 - `TablePageIterator`: For table record collections.
 - `AttachmentPageIterator`: For attachment collections.
 
@@ -22,7 +23,7 @@ To iterate over multiple pages of records, use the `NewDefaultTablePageIterator`
 (for standard table records) or `NewTablePageIterator` (for custom types).
 
 ```go
-{% include-markdown '../snippets/pagination.go' start='// [START pagination_table_basic]' end='// [START pagination_table_basic]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown '../snippets/pagination.go' start='// [START pagination_table_basic]' end='// [END pagination_table_basic]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ### Iterate item-by-item
@@ -31,7 +32,7 @@ If you need more control than a callback, you can use `NextItem` and `HasNext`
 to pull items one at a time.
 
 ```go
-{% include-markdown '../snippets/pagination.go' start='// [START pagination_item_by_item]' end='// [START pagination_item_by_item]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown '../snippets/pagination.go' start='// [START pagination_item_by_item]' end='// [END pagination_item_by_item]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ### Attachment iteration
@@ -39,7 +40,7 @@ to pull items one at a time.
 Iterating over attachments is similar, using the `AttachmentPageIterator`.
 
 ```go
-{% include-markdown '../snippets/pagination.go' start='// [START pagination_attachment]' end='// [START pagination_attachment]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown '../snippets/pagination.go' start='// [START pagination_attachment]' end='// [END pagination_attachment]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ### Reverse iteration
@@ -63,7 +64,7 @@ You can navigate between pages manually using methods like `Next()`,
 `Previous()`, `First()`, and `Last()`.
 
 ```go
-{% include-markdown '../snippets/pagination.go' start='// [START pagination_table_manual]' end='// [START pagination_table_manual]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown '../snippets/pagination.go' start='// [START pagination_table_manual]' end='// [END pagination_table_manual]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ### State management
@@ -71,7 +72,7 @@ You can navigate between pages manually using methods like `Next()`,
 The iterator maintains state, allowing you to reset or restart iteration.
 
 ```go
-{% include-markdown '../snippets/pagination.go' start='// [START pagination_state_management]' end='// [START pagination_state_management]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown '../snippets/pagination.go' start='// [START pagination_state_management]' end='// [END pagination_state_management]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 - `Reset()`: Returns the iterator to the first page and first item.
@@ -81,5 +82,5 @@ The iterator maintains state, allowing you to reset or restart iteration.
 
 - **[Table Operations](tables.md):** Learn more about the initial requests
   that produce paginated results.
-- **[Querying](querying.md):** Learn how to use queries to limit the number
+- **[Querying](query-builder.md):** Learn how to use queries to limit the number
   of records returned.

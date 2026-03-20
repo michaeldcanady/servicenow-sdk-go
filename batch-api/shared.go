@@ -5,8 +5,6 @@ import (
 	"strings"
 
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -38,7 +36,7 @@ func throwErrors(req ServicedRequest, typeName string) error {
 		bodyBytes = []byte(*body)
 	}
 
-	return model.NewServiceNowErrorThrower(model.GetErrorRegistryInstance(), kiota.NewKiotaDeserializer()).Throw(typeName, *code, contentType, bodyBytes)
+	return newInternal.NewServiceNowErrorThrower(newInternal.GetErrorRegistryInstance(), newInternal.NewKiotaDeserializer()).Throw(typeName, *code, contentType, bodyBytes)
 }
 
 // serializeContent serializes the provided content using the provided ParsableFactory

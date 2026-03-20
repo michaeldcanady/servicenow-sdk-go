@@ -70,11 +70,9 @@ func TestBatchResponse_Serialize(t *testing.T) {
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
 
-				resp := &BatchResponseModel{
-					mocking.NewMockModel(),
-				}
+				resp := NewBatchResponse()
 				err := resp.Serialize(writer)
-				assert.Equal(t, errors.New("Serialize not implemented"), err)
+				assert.NoError(t, err)
 			},
 		},
 		{
@@ -171,7 +169,7 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
 
-				mockParseNode := (*mocking.MockParseNode)(nil)
+				mockParseNode := mocking.NewMockParseNode()
 
 				resp := &BatchResponseModel{
 					intModel,
@@ -186,6 +184,9 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 					{
 						name: "batchRequestIDKey",
 						test: func(t *testing.T) {
+							mockParseNode.On("GetStringValue").Return((*string)(nil), nil)
+							backingStore.On("Set", batchRequestIDKey, (*string)(nil)).Return(nil)
+
 							err := deserializers[batchRequestIDKey](mockParseNode)
 
 							assert.Nil(t, err)
@@ -194,6 +195,9 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 					{
 						name: "servicedRequestsKey",
 						test: func(t *testing.T) {
+							mockParseNode.On("GetCollectionOfObjectValues", mock.AnythingOfType("serialization.ParsableFactory")).Return(([]serialization.Parsable)(nil), nil)
+							backingStore.On("Set", servicedRequestsKey, []ServicedRequest{}).Return(nil)
+
 							err := deserializers[servicedRequestsKey](mockParseNode)
 
 							assert.Nil(t, err)
@@ -202,6 +206,9 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 					{
 						name: "unservicedRequestsKey",
 						test: func(t *testing.T) {
+							mockParseNode.On("GetCollectionOfPrimitiveValues", "string").Return(([]interface{})(nil), nil)
+							backingStore.On("Set", unservicedRequestsKey, []string{}).Return(nil)
+
 							err := deserializers[unservicedRequestsKey](mockParseNode)
 
 							assert.Nil(t, err)
@@ -327,7 +334,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				}
 
 				id, err := resp.GetBatchRequestID()
-				assert.Equal(t, errors.New("id is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -361,7 +368,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				}
 
 				id, err := resp.GetBatchRequestID()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -443,7 +450,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 				}
 
 				err := resp.setBatchRequestID(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -505,7 +512,7 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				}
 
 				id, err := resp.GetServicedRequests()
-				assert.Equal(t, errors.New("servicedRequests is not []ServicedRequestable"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type []batchapi.ServicedRequest"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -539,7 +546,7 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				}
 
 				id, err := resp.GetServicedRequests()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -621,7 +628,7 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 				}
 
 				err := resp.setServicedRequests(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -683,7 +690,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				}
 
 				id, err := resp.GetUnservicedRequests()
-				assert.Equal(t, errors.New("unservicedRequests is not []string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type []string"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -717,7 +724,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				}
 
 				id, err := resp.GetUnservicedRequests()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -799,7 +806,7 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 				}
 
 				err := resp.setUnservicedRequests(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -834,7 +841,7 @@ func TestBatchResponse_GetServicedRequestByID(t *testing.T) {
 			id:   "1",
 			setup: func(m *BatchResponseModel) {
 				req := NewMockServicedRequest()
-				req.On("GetID").Return(utils.ToPointer("1"), nil)
+				req.On("GetID").Return(internal.ToPointer("1"), nil)
 				_ = m.setServicedRequests([]ServicedRequest{req})
 			},
 			expectedNil: false,
@@ -844,7 +851,7 @@ func TestBatchResponse_GetServicedRequestByID(t *testing.T) {
 			id:   "2",
 			setup: func(m *BatchResponseModel) {
 				req := NewMockServicedRequest()
-				req.On("GetID").Return(utils.ToPointer("1"), nil)
+				req.On("GetID").Return(internal.ToPointer("1"), nil)
 				_ = m.setServicedRequests([]ServicedRequest{req})
 			},
 			expectedNil: true,

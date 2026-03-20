@@ -84,7 +84,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockHeaders.Add("Content-Type", "application/json")
 				mockContent := []byte("testing")
 				mockURLTemplate := ""
-				mockParsable := &FileModel{}
+				mockParsable := newInternal.NewBaseServiceNowItemResponse[File](CreateFileFromDiscriminatorValue)
 
 				expected := &abstractions.RequestInformation{
 					Method:             abstractions.POST,
@@ -265,7 +265,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				result, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, result)
-				assert.Equal(t, errors.New("resp is not *FileModel"), err)
+				assert.Equal(t, errors.New("resp is not ServiceNowItemResponse[File]"), err)
 			},
 		},
 		{

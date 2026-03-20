@@ -1,0 +1,48 @@
+name: release-please
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Create release
+        uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+
+      - name: Checkout PR branch
+        if: ${{ steps.release.outputs.pr }}
+        uses: actions/checkout@v6
+        with:
+          # Use the head branch name from the release-please PR
+          ref: ${{ fromJSON(steps.release.outputs.pr).headBranchName }}
+
+      - name: Update {unreleased} in PR branch
+        if: ${{ steps.release.outputs.pr }}
+        run: |
+          # Get the version proposed in the PR (strip comments if present)
+          VERSION=$(sed '/^#/d' VERSION | xargs)
+          TAG="${VERSION}"
+          
+          # Replace {unreleased} with the proposed tag
+          ./scripts/replace_unreleased.sh "${TAG}"
+          
+          # Commit and push back to the PR branch
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Action"
+          git add .
+          if git commit -m "chore: replace {unreleased} with ${TAG} for release"; then
+            # Since we checked out the specific ref, we can push to origin
+            git push origin HEAD:${{ fromJSON(steps.release.outputs.pr).headBranchName }}
+          else
+            echo "No changes to commit"
+          fi

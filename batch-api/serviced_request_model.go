@@ -2,13 +2,17 @@ package batchapi
 
 import (
 	"encoding/base64"
-	"errors"
+	"math"
 	"reflect"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -45,7 +49,22 @@ func (sR *ServicedRequestModel) Serialize(writer serialization.SerializationWrit
 		return nil
 	}
 
-	return errors.New("Serialize not implemented")
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeMutatedStringFunc(bodyKey, func(body []byte) (*string, error) {
+			if body == nil {
+				return nil, nil
+			}
+			encodedBody := base64.StdEncoding.EncodeToString(body)
+			return &encodedBody, nil
+		})(sR.GetBody),
+		internalSerialization.SerializeStringFunc(errorMessageKey)(sR.GetErrorMessage),
+		internalSerialization.SerializeISODurationFunc(executionTimeKey)(sR.GetExecutionTime),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[RestRequestHeader](headersKey)(sR.GetHeaders),
+		internalSerialization.SerializeStringFunc(idKey)(sR.GetID),
+		internalSerialization.SerializeStringFunc(redirectURLKey)(sR.GetRedirectURL),
+		internalSerialization.SerializeInt64Func(statusCodeKey)(sR.GetStatusCode),
+		internalSerialization.SerializeStringFunc(statusTextKey)(sR.GetStatusText),
+	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
@@ -55,28 +74,24 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		bodyKey: func(pn serialization.ParseNode) error {
-			encodedBody, err := pn.GetStringValue()
-			if err != nil {
-				return err
+		bodyKey: internalSerialization.DeserializeMutatedStringFunc(func(s *string) ([]byte, error) {
+			if s == nil {
+				return nil, nil
 			}
-
-			body, err := base64.StdEncoding.DecodeString(*encodedBody)
-			if err != nil {
-				return err
-			}
-
-			return sR.setBody(body)
-		},
-		errorMessageKey: func(pn serialization.ParseNode) error {
-			errorMessage, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return sR.setErrorMessage(errorMessage)
-		},
+			return base64.StdEncoding.DecodeString(*s)
+		})(sR.setBody),
+		errorMessageKey: internalSerialization.DeserializeStringFunc()(sR.setErrorMessage),
 		executionTimeKey: func(pn serialization.ParseNode) error {
+			// ServiceNow returns execution_time as a number (milliseconds)
+			// GetISODurationValue fails if it's a number in the JSON tree.
+			floatTime, err := pn.GetFloat64Value()
+			if err == nil && floatTime != nil {
+				seconds := int(*floatTime / 1000)
+				milliseconds := int(math.Mod(*floatTime, 1000))
+				isoDuration := serialization.NewDuration(0, 0, 0, 0, 0, seconds, milliseconds)
+				return sR.setExecutionTime(isoDuration)
+			}
+
 			duration, err := pn.GetISODurationValue()
 			if err != nil {
 				return err
@@ -84,55 +99,25 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 
 			return sR.setExecutionTime(duration)
 		},
-		headersKey: func(pn serialization.ParseNode) error {
-			headers, err := pn.GetCollectionOfObjectValues(CreateRestRequestHeaderFromDiscriminatorValue)
-			if err != nil {
-				return err
-			}
-
-			batchHeaders := make([]RestRequestHeader, len(headers))
-			for index, header := range headers {
-				batchHeader, ok := header.(RestRequestHeader)
-				if !ok {
-					return errors.New("header is not RestRequestHeader")
-				}
-				batchHeaders[index] = batchHeader
-			}
-
-			return sR.setHeaders(batchHeaders)
-		},
-		idKey: func(pn serialization.ParseNode) error {
-			id, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return sR.setID(id)
-		},
-		redirectURLKey: func(pn serialization.ParseNode) error {
-			redirectURL, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return sR.setRedirectURL(redirectURL)
-		},
+		headersKey:     internalSerialization.DeserializeCollectionOfObjectValuesFunc[RestRequestHeader](CreateRestRequestHeaderFromDiscriminatorValue)(sR.setHeaders),
+		idKey:          internalSerialization.DeserializeStringFunc()(sR.setID),
+		redirectURLKey: internalSerialization.DeserializeStringFunc()(sR.setRedirectURL),
 		statusCodeKey: func(pn serialization.ParseNode) error {
-			statusCode, err := pn.GetInt64Value()
+			// ServiceNow sometimes returns status_code as a number that gets parsed as float64
+			// GetInt64Value fails if it's a float64 in the JSON tree.
+			floatCode, err := pn.GetFloat64Value()
 			if err != nil {
 				return err
 			}
 
-			return sR.setStatusCode(statusCode)
-		},
-		statusTextKey: func(pn serialization.ParseNode) error {
-			statusText, err := pn.GetStringValue()
-			if err != nil {
-				return err
+			if floatCode != nil {
+				statusCode := int64(*floatCode)
+				return sR.setStatusCode(&statusCode)
 			}
 
-			return sR.setStatusText(statusText)
+			return nil
 		},
+		statusTextKey: internalSerialization.DeserializeStringFunc()(sR.setStatusText),
 	}
 }
 
@@ -175,21 +160,7 @@ func (sR *ServicedRequestModel) GetBody() ([]byte, error) {
 		return nil, nil
 	}
 
-	body, err := backingStore.Get(bodyKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(body) {
-		return nil, nil
-	}
-
-	typedBody, ok := body.([]byte)
-	if !ok {
-		return nil, errors.New("body is not []byte")
-	}
-
-	return typedBody, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []byte](backingStore, bodyKey)
 }
 
 // setBody sets the raw body for the batch item.
@@ -203,7 +174,7 @@ func (sR *ServicedRequestModel) setBody(body []byte) error {
 		return nil
 	}
 
-	return backingStore.Set(bodyKey, body)
+	return store.DefaultBackedModelMutatorFunc(backingStore, bodyKey, body)
 }
 
 // GetErrorMessage returns, if present, the error messages.
@@ -217,21 +188,7 @@ func (sR *ServicedRequestModel) GetErrorMessage() (*string, error) {
 		return nil, nil
 	}
 
-	message, err := backingStore.Get(errorMessageKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(message) {
-		return nil, nil
-	}
-
-	stringMessage, ok := message.(*string)
-	if !ok {
-		return nil, errors.New("message is not *string")
-	}
-
-	return stringMessage, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, errorMessageKey)
 }
 
 // setErrorMessage sets the error messages.
@@ -245,7 +202,7 @@ func (sR *ServicedRequestModel) setErrorMessage(errorMessage *string) error {
 		return nil
 	}
 
-	return backingStore.Set(errorMessageKey, errorMessage)
+	return store.DefaultBackedModelMutatorFunc(backingStore, errorMessageKey, errorMessage)
 }
 
 // GetExecutionTime returns time it took to execute the batch item request.
@@ -254,30 +211,26 @@ func (sR *ServicedRequestModel) GetExecutionTime() (*serialization.ISODuration, 
 		return nil, nil
 	}
 
-	executionTime, err := sR.GetBackingStore().Get(executionTimeKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(executionTime) {
+	backingStore := sR.GetBackingStore()
+	if internal.IsNil(backingStore) {
 		return nil, nil
 	}
 
-	typedExecutionTime, ok := executionTime.(*serialization.ISODuration)
-	if !ok {
-		return nil, errors.New("executionTime is not *serialization.ISODuration")
-	}
-
-	return typedExecutionTime, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *serialization.ISODuration](backingStore, executionTimeKey)
 }
 
 // setExecutionTime sets the time it took to execute the batch item request.
 func (sR *ServicedRequestModel) setExecutionTime(executionTime *serialization.ISODuration) error {
-	if utils.IsNil(sR) {
+	if internal.IsNil(sR) {
 		return nil
 	}
 
-	return sR.GetBackingStore().Set(executionTimeKey, executionTime)
+	backingStore := sR.GetBackingStore()
+	if internal.IsNil(backingStore) {
+		return nil
+	}
+
+	return store.DefaultBackedModelMutatorFunc(backingStore, executionTimeKey, executionTime)
 }
 
 // GetHeaders returns headers for the batch item.
@@ -291,21 +244,7 @@ func (sR *ServicedRequestModel) GetHeaders() ([]RestRequestHeader, error) {
 		return nil, nil
 	}
 
-	headers, err := backingStore.Get(headersKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(headers) {
-		return nil, nil
-	}
-
-	typedHeaders, ok := headers.([]RestRequestHeader)
-	if !ok {
-		return nil, errors.New("headers is not []RestRequestHeader")
-	}
-
-	return typedHeaders, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []RestRequestHeader](backingStore, headersKey)
 }
 
 // setHeaders sets headers for the batch item.
@@ -319,7 +258,7 @@ func (sR *ServicedRequestModel) setHeaders(headers []RestRequestHeader) error {
 		return nil
 	}
 
-	return backingStore.Set(headersKey, headers)
+	return store.DefaultBackedModelMutatorFunc(backingStore, headersKey, headers)
 }
 
 // GetID returns ID of the batch item that matches the `rest_requests.id` parameter in the request.
@@ -333,21 +272,7 @@ func (sR *ServicedRequestModel) GetID() (*string, error) {
 		return nil, nil
 	}
 
-	id, err := backingStore.Get(idKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(id) {
-		return nil, nil
-	}
-
-	typedID, ok := id.(*string)
-	if !ok {
-		return nil, errors.New("id is not *string")
-	}
-
-	return typedID, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, idKey)
 }
 
 // setID sets the id of the batch item.
@@ -361,7 +286,7 @@ func (sR *ServicedRequestModel) setID(id *string) error {
 		return nil
 	}
 
-	return backingStore.Set(idKey, id)
+	return store.DefaultBackedModelMutatorFunc(backingStore, idKey, id)
 }
 
 // GetRedirectURL, if present, returns redirect url for batch item.
@@ -375,21 +300,7 @@ func (sR *ServicedRequestModel) GetRedirectURL() (*string, error) {
 		return nil, nil
 	}
 
-	redirectURL, err := backingStore.Get(redirectURLKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(redirectURL) {
-		return nil, nil
-	}
-
-	typedRedirectURL, ok := redirectURL.(*string)
-	if !ok {
-		return nil, errors.New("redirectURL is not *string")
-	}
-
-	return typedRedirectURL, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, redirectURLKey)
 }
 
 // setRedirectURL sets redirect url for batch item.
@@ -403,7 +314,7 @@ func (sR *ServicedRequestModel) setRedirectURL(redirectURL *string) error {
 		return nil
 	}
 
-	return backingStore.Set(redirectURLKey, redirectURL)
+	return store.DefaultBackedModelMutatorFunc(backingStore, redirectURLKey, redirectURL)
 }
 
 // GetStatusCode returns status code for batch item.
@@ -417,21 +328,7 @@ func (sR *ServicedRequestModel) GetStatusCode() (*int64, error) {
 		return nil, nil
 	}
 
-	statusCode, err := backingStore.Get(statusCodeKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(statusCode) {
-		return nil, nil
-	}
-
-	typedStatusCode, ok := statusCode.(*int64)
-	if !ok {
-		return nil, errors.New("statusCode is not *int64")
-	}
-
-	return typedStatusCode, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int64](backingStore, statusCodeKey)
 }
 
 // setStatusCode sets status code for batch item.
@@ -445,7 +342,7 @@ func (sR *ServicedRequestModel) setStatusCode(statusCode *int64) error {
 		return nil
 	}
 
-	return backingStore.Set(statusCodeKey, statusCode)
+	return store.DefaultBackedModelMutatorFunc(backingStore, statusCodeKey, statusCode)
 }
 
 // GetStatusText returns status text for batch item.
@@ -459,21 +356,7 @@ func (sR *ServicedRequestModel) GetStatusText() (*string, error) {
 		return nil, nil
 	}
 
-	statusText, err := backingStore.Get(statusTextKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(statusText) {
-		return nil, nil
-	}
-
-	typedStatusText, ok := statusText.(*string)
-	if !ok {
-		return nil, errors.New("statusText is not *string")
-	}
-
-	return typedStatusText, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, statusTextKey)
 }
 
 // setStatusText sets status text for batch item.
@@ -487,5 +370,5 @@ func (sR *ServicedRequestModel) setStatusText(statusText *string) error {
 		return nil
 	}
 
-	return backingStore.Set(statusTextKey, statusText)
+	return store.DefaultBackedModelMutatorFunc(backingStore, statusTextKey, statusText)
 }

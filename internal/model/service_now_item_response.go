@@ -1,12 +1,12 @@
 package model
 
 import (
-	"errors"
-	"fmt"
-
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/microsoft/kiota-abstractions-go/store"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 // ServiceNowItemResponse[T] Represents a Service-Now API response containing a single result
@@ -22,91 +22,63 @@ type BaseServiceNowItemResponse[T serialization.Parsable] struct {
 	// factory The ParsableFactory for serializing the result type.
 	factory serialization.ParsableFactory
 	// backingStoreFactory The BackingStoreFactory for creating the BackingStore to use.
-	backingStoreFactory store.BackingStoreFactory
+	backingStoreFactory kiotaStore.BackingStoreFactory
 	// backingStore The BackingStore
-	backingStore store.BackingStore
+	backingStore kiotaStore.BackingStore
 }
 
 // NewBaseServiceNowItemResponse Creates a new instance of the BaseServiceNowItemResponse.
 func NewBaseServiceNowItemResponse[T serialization.Parsable](factory serialization.ParsableFactory) *BaseServiceNowItemResponse[T] {
 	return &BaseServiceNowItemResponse[T]{
 		factory:             factory,
-		backingStoreFactory: store.NewInMemoryBackingStore,
-		backingStore:        store.NewInMemoryBackingStore(),
+		backingStoreFactory: kiotaStore.NewInMemoryBackingStore,
+		backingStore:        kiotaStore.NewInMemoryBackingStore(),
 	}
 }
 
 // Serialize Writes the objects properties to the current writer.
 func (bR *BaseServiceNowItemResponse[T]) Serialize(writer serialization.SerializationWriter) error {
-	if utils.IsNil(bR) {
-		return errors.New("serialization is not supported")
+	if internal.IsNil(bR) {
+		return nil
 	}
 
-	return errors.New("serialization is not supported")
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeObjectValueFunc[T](resultKey)(bR.GetResult),
+	)
 }
 
 // GetFieldDeserializers Returns the deserialization information for this object.
 func (bR *BaseServiceNowItemResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		resultKey: func(pn serialization.ParseNode) error {
-			var emptyVal T
-			if utils.IsNil(bR.factory) {
-				return errors.New("factory is nil")
-			}
-
-			val, err := pn.GetObjectValue(bR.factory)
-			if err != nil {
-				return err
-			}
-			typedVal, ok := val.(T)
-			if !ok {
-				return fmt.Errorf("val is not %T", emptyVal)
-			}
-			return bR.setResult(typedVal)
-		},
+		resultKey: internalSerialization.DeserializeObjectValueFunc[T](bR.factory)(bR.setResult),
 	}
 }
 
 // GetBackingStore Returns the backing store, if store is nil it instantiates a new store.
-func (r *BaseServiceNowItemResponse[T]) GetBackingStore() (store.BackingStore, error) {
-	if utils.IsNil(r) {
-		return nil, nil
+func (r *BaseServiceNowItemResponse[T]) GetBackingStore() kiotaStore.BackingStore {
+	if IsNil(r) {
+		return nil
 	}
 
-	if utils.IsNil(r.backingStore) {
-		if utils.IsNil(r.backingStoreFactory) {
-			return nil, errors.New("store is nil")
+	if IsNil(r.backingStore) {
+		if IsNil(r.backingStoreFactory) {
+			return nil
 		}
 		r.backingStore = r.backingStoreFactory()
 	}
 
-	return r.backingStore, nil
+	return r.backingStore
 }
 
 // GetResult Returns the result value of the response.
 func (bR *BaseServiceNowItemResponse[T]) GetResult() (T, error) {
-	var typedVal T
-
-	if utils.IsNil(bR) {
+	if IsNil(bR) {
+		var typedVal T
 		return typedVal, nil
 	}
 
-	store, err := bR.GetBackingStore()
-	if err != nil {
-		return typedVal, err
-	}
-
-	val, err := store.Get(resultKey)
-	if err != nil {
-		return typedVal, err
-	}
-
-	typedVal, ok := val.(T)
-	if !ok {
-		return typedVal, fmt.Errorf("value is not %T", typedVal)
-	}
-
-	return typedVal, nil
+	backingStore := bR.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, T](backingStore, resultKey)
 }
 
 // setResult Sets the result value of the response.
@@ -115,10 +87,6 @@ func (bR *BaseServiceNowItemResponse[T]) setResult(result T) error {
 		return nil
 	}
 
-	store, err := bR.GetBackingStore()
-	if err != nil {
-		return err
-	}
-
-	return store.Set(resultKey, result)
+	backingStore := bR.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, resultKey, result)
 }

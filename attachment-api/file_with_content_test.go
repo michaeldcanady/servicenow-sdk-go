@@ -4,9 +4,13 @@ import (
 	"testing"
 
 	"github.com/microsoft/kiota-abstractions-go/store"
+	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
 func TestNewFileWithContent(t *testing.T) {
+	res := NewFileWithContent()
+	if res == nil {
+		t.Error("returned nil")
 	res := NewFileWithContent()
 	if res == nil {
 		t.Error("returned nil")
@@ -32,8 +36,32 @@ func TestFileWithContentModel_GetFieldDeserializers(t *testing.T) {
 	var nilM *FileWithContentModel
 	if nilM.GetFieldDeserializers() != nil {
 		t.Error("expected nil")
+	res, err := CreateFileWithContentFromDiscriminatorValue(nil)
+	if err != nil {
+		t.Errorf("unexpected err %v", err)
+	}
+	if res == nil {
+		t.Error("returned nil")
 	}
 }
+
+func TestFileWithContentModel_GetFieldDeserializers(t *testing.T) {
+	m := NewFileWithContent()
+	deser := m.GetFieldDeserializers()
+	if deser == nil {
+		t.Error("expected non-nil deser")
+	}
+	var nilM *FileWithContentModel
+	if nilM.GetFieldDeserializers() != nil {
+		t.Error("expected nil")
+	}
+}
+
+func TestFileWithContentModel_GetContent(t *testing.T) {
+	m := NewFileWithContent()
+	data := []byte("test")
+	_ = m.SetContent(data)
+	var nilM *FileWithContentModel
 
 func TestFileWithContentModel_GetContent(t *testing.T) {
 	m := NewFileWithContent()
@@ -62,6 +90,31 @@ func TestFileWithContentModel_GetContent(t *testing.T) {
 		})
 	}
 }
+		name     string
+		model    FileWithContent
+		expected []byte
+		err      bool
+	}{
+		{"Ok", m, data, false},
+		{"NilM", nilM, nil, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := tt.model.GetContent()
+			if (err != nil) != tt.err {
+				t.Errorf("err: got %v, expected %v", err, tt.err)
+			}
+			if string(res) != string(tt.expected) {
+				t.Errorf("got %v, expected %v", res, tt.expected)
+			}
+		})
+	}
+}
+
+func TestFileWithContentModel_SetContent(t *testing.T) {
+	m := NewFileWithContent()
+	data := []byte("test")
+	var nilM *FileWithContentModel
 
 func TestFileWithContentModel_SetContent(t *testing.T) {
 	m := NewFileWithContent()

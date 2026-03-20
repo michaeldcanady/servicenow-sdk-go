@@ -6,7 +6,6 @@ import (
 	"maps"
 	"strings"
 
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -35,25 +34,29 @@ type ServiceNowServiceClient struct {
 
 // registerDefaultSerializers registers default serializers
 func registerDefaultSerializers() {
-	abstractions.RegisterDefaultSerializer(func() serialization.SerializationWriterFactory {
-		return jsonserialization.NewJsonSerializationWriterFactory()
-	})
-	abstractions.RegisterDefaultSerializer(func() serialization.SerializationWriterFactory {
-		return textserialization.NewTextSerializationWriterFactory()
-	})
-	abstractions.RegisterDefaultSerializer(func() serialization.SerializationWriterFactory {
-		return formserialization.NewFormSerializationWriterFactory()
-	})
-	abstractions.RegisterDefaultSerializer(func() serialization.SerializationWriterFactory {
-		return multipartserialization.NewMultipartSerializationWriterFactory()
+	registerSerializersOnce.Do(func() {
+		abstractions.RegisterDefaultSerializer(func() serialization.SerializationWriterFactory {
+			return jsonserialization.NewJsonSerializationWriterFactory()
+		})
+		abstractions.RegisterDefaultSerializer(func() serialization.SerializationWriterFactory {
+			return textserialization.NewTextSerializationWriterFactory()
+		})
+		abstractions.RegisterDefaultSerializer(func() serialization.SerializationWriterFactory {
+			return formserialization.NewFormSerializationWriterFactory()
+		})
+		abstractions.RegisterDefaultSerializer(func() serialization.SerializationWriterFactory {
+			return multipartserialization.NewMultipartSerializationWriterFactory()
+		})
 	})
 }
 
 // registerDefaultDeserializers registers default deserializers
 func registerDefaultDeserializers() {
-	abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return jsonserialization.NewJsonParseNodeFactory() })
-	abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return textserialization.NewTextParseNodeFactory() })
-	abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return formserialization.NewFormParseNodeFactory() })
+	registerDeserializersOnce.Do(func() {
+		abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return jsonserialization.NewJsonParseNodeFactory() })
+		abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return textserialization.NewTextParseNodeFactory() })
+		abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return formserialization.NewFormParseNodeFactory() })
+	})
 }
 
 // NewServiceNowServiceClientWithOptions creates new serviceNowServiceClient using provided options.
@@ -66,7 +69,7 @@ func NewServiceNowServiceClientWithOptions(
 		return nil, err
 	}
 
-	requestAdapter, err := internalHttp.NewServiceNowRequestAdapter(authenticationProvider, config.requestAdapterOptions...)
+	requestAdapter, err := config.getRequestAdapter()
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +105,6 @@ func NewServiceNowServiceClient(
 		requestAdapter.EnableBackingStore(backingStoreFactory)
 	}
 
-	requestAdapter.SetBaseUrl(baseURL)
 	pathParameters := map[string]string{baseURLParameter: baseURL}
 
 	registerDefaultSerializers()

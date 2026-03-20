@@ -8,7 +8,7 @@ assignees: ''
 
 ### Feature
 
-[Please include the feature(s) you're wanting to improve]
+[Please include the features you're wanting to improve]
 
 ### Description
 

@@ -18,14 +18,28 @@ plugins:
       placeholder_extra_js: ""
       placeholder_file: "placeholder-plugin.yaml"
   - include-markdown
+  - mermaid2
+  - search
 
 nav:
   - Welcome: index.md
   - User Guide:
       - Getting Started: getting-started.md
-      - Authentication: user-guide/authentication.md
+      - Authentication:
+        - Overview: user-guide/authentication/index.md
+        - ROPC: user-guide/authentication/ropc.md
+        - Authorization Code (Private): user-guide/authentication/auth-code-private.md
+        - Authorization Code (Public): user-guide/authentication/auth-code-public.md
+        - Basic: user-guide/authentication/basic.md
+        - Client Credentials: user-guide/authentication/client-credentials.md
+        - JWT Token: user-guide/authentication/jwt-token.md
       - Table Operations: user-guide/tables.md
-      - Attachment Operations: user-guide/attachments.md
+      - Attachment Operations:
+        - Overview: user-guide/attachments/index.md
+        - Upload: user-guide/attachments/upload-from-disk.md
+        - Delete: user-guide/attachments/delete-aging-attachments.md
+        - Download: user-guide/attachments/download-record-attachments.md
+        - List: user-guide/attachments/most-recent-attachment.md
       - Batch Operations: user-guide/batch.md
       - Pagination: user-guide/pagination.md
       - Preview Features: user-guide/preview-features.md

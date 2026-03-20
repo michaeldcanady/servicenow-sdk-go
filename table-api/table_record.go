@@ -5,16 +5,19 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
 var _ serialization.Parsable = (*TableRecord)(nil)
 
 // TableRecord represents a structured record in a Service-Now table.
+// TableRecord represents a structured record in a Service-Now table.
 //
+// This model provides a flexible way to store and retrieve attributes from a table entry
+// using a backing store. It supports both raw values and structured RecordElement instances.
 // This model provides a flexible way to store and retrieve attributes from a table entry
 // using a backing store. It supports both raw values and structured RecordElement instances.
 type TableRecord struct {
@@ -22,6 +25,7 @@ type TableRecord struct {
 	internal.Model
 }
 
+// CreateTableRecordFromDiscriminatorValue creates a new TableRecord from a ParseNode.
 // CreateTableRecordFromDiscriminatorValue creates a new TableRecord from a ParseNode.
 func CreateTableRecordFromDiscriminatorValue(node serialization.ParseNode) (serialization.Parsable, error) {
 	value, err := node.GetRawValue()
@@ -39,11 +43,7 @@ func CreateTableRecordFromDiscriminatorValue(node serialization.ParseNode) (seri
 	return nil, fmt.Errorf("unsupported type %T", value)
 }
 
-func recordElementParser(node serialization.ParseNode) (*RecordElement, error) {
-	rawValue, err := node.GetRawValue()
-	if err != nil {
-		return nil, err
-	}
+func recordElementParserFromRaw(rawValue any) (*RecordElement, error) {
 	var (
 		displayValue any
 		link         *string
@@ -52,15 +52,15 @@ func recordElementParser(node serialization.ParseNode) (*RecordElement, error) {
 
 	switch typedVal := rawValue.(type) {
 	case map[string]any:
-		if dv, ok := typedVal[displayValueKey]; ok {
+		if dv, ok := typedVal[recordDisplayValueKey]; ok {
 			displayValue = dv
 		}
 
-		if v, ok := typedVal[valueKey]; ok {
+		if v, ok := typedVal[recordValueKey]; ok {
 			value = v
 		}
 
-		if rawLink, ok := typedVal[linkKey]; ok {
+		if rawLink, ok := typedVal[recordLinkKey]; ok {
 			strLink, ok := rawLink.(*string)
 			if !ok {
 				return nil, errors.New("link is not *string")
@@ -91,6 +91,7 @@ func recordElementParser(node serialization.ParseNode) (*RecordElement, error) {
 }
 
 // GetSysID returns the sys_id of the record if it exists.
+// GetSysID returns the sys_id of the record if it exists.
 func (tR *TableRecord) GetSysID() (*string, error) {
 	element, err := tR.Get("sys_id")
 	if err != nil {
@@ -110,13 +111,11 @@ func (tR *TableRecord) GetFieldDeserializers() map[string]func(serialization.Par
 	fieldDeserializers := map[string]func(serialization.ParseNode) error{}
 
 	for _, key := range tR.keys {
-		fieldDeserializers[key] = func(node serialization.ParseNode) error {
-			element, err := recordElementParser(node)
-			if err != nil {
-				return err
-			}
-			return tR.SetElement(key, element)
-		}
+		k := key
+		fieldDeserializers[k] = internalSerialization.DeserializeMutatedAnyFunc(recordElementParserFromRaw)(
+			func(element *RecordElement) error {
+				return tR.SetElement(k, element)
+			})
 	}
 
 	return fieldDeserializers

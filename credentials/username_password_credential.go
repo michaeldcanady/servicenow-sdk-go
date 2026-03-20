@@ -2,11 +2,16 @@ package credentials
 
 import "encoding/base64"
 
+// Deprecated: deprecated since v{unreleased}. Use [BasicAuthenticationProvider] instead.
+//
+// UsernamePasswordCredential
 type UsernamePasswordCredential struct {
 	Username string
-	Password string
+	Password string //nolint:gosec // G117: Needed for flow, not secret
 }
 
+// Deprecated: deprecated since v{unreleased}. Use [NewBasicProvider] instead.
+//
 // NewUsernamePasswordCredential creates a new instance of UsernamePasswordCredential.
 // It accepts the username and password as parameters and returns a pointer to the created UsernamePasswordCredential.
 func NewUsernamePasswordCredential(username, password string) *UsernamePasswordCredential {

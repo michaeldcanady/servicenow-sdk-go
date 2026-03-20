@@ -42,7 +42,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 				value := &ElementValue{val: utils.ToPointer("")}
 
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", displayValueKey).Return(value, nil)
+				backingStore.On("Get", "display_value").Return(value, nil)
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
@@ -61,7 +61,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 			name: "Retrieval error",
 			test: func(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", displayValueKey).Return(nil, errors.New("retrieval error"))
+				backingStore.On("Get", "display_value").Return(nil, errors.New("retrieval error"))
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
@@ -71,7 +71,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 				elementValue, err := model.GetDisplayValue()
 
 				assert.Equal(t, errors.New("retrieval error"), err)
-				assert.Equal(t, &ElementValue{}, elementValue)
+				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
 		{
@@ -85,7 +85,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 				elementValue, err := model.GetDisplayValue()
 
 				assert.Equal(t, errors.New("store is nil"), err)
-				assert.Equal(t, &ElementValue{}, elementValue)
+				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
 		{
@@ -96,7 +96,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 				elementValue, err := model.GetDisplayValue()
 
 				assert.Equal(t, errors.New("model is nil"), err)
-				assert.Equal(t, &ElementValue{}, elementValue)
+				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
 	}
@@ -175,7 +175,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 				value := &ElementValue{val: utils.ToPointer("")}
 
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", valueKey).Return(value, nil)
+				backingStore.On("Get", "value").Return(value, nil)
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
@@ -194,7 +194,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 			name: "Retrieval error",
 			test: func(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", valueKey).Return(nil, errors.New("retrieval error"))
+				backingStore.On("Get", "value").Return(nil, errors.New("retrieval error"))
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
@@ -204,7 +204,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 				elementValue, err := model.GetValue()
 
 				assert.Equal(t, errors.New("retrieval error"), err)
-				assert.Equal(t, &ElementValue{}, elementValue)
+				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
 		{
@@ -218,7 +218,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 				elementValue, err := model.GetValue()
 
 				assert.Equal(t, errors.New("store is nil"), err)
-				assert.Equal(t, &ElementValue{}, elementValue)
+				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
 		{
@@ -229,7 +229,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 				elementValue, err := model.GetValue()
 
 				assert.Equal(t, errors.New("model is nil"), err)
-				assert.Equal(t, &ElementValue{}, elementValue)
+				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
 	}
@@ -249,7 +249,7 @@ func TestRecordElementModel_SetValue(t *testing.T) {
 			name: "Successful",
 			test: func(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Set", "value", mock.AnythingOfType("*tableapi.ElementValue")).Return(nil)
+				backingStore.On("Set", "value", mock.AnythingOfType("tableapi.ElementValue")).Return(nil)
 
 				innerModel := mocking.NewMockModel()
 				innerModel.On("GetBackingStore").Return(backingStore)
@@ -267,7 +267,7 @@ func TestRecordElementModel_SetValue(t *testing.T) {
 			name: "Store error",
 			test: func(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Set", "value", mock.AnythingOfType("*tableapi.ElementValue")).Return(errors.New("store error"))
+				backingStore.On("Set", "value", mock.AnythingOfType("tableapi.ElementValue")).Return(errors.New("store error"))
 
 				innerModel := mocking.NewMockModel()
 				innerModel.On("GetBackingStore").Return(backingStore)
@@ -309,7 +309,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 				value := utils.ToPointer("")
 
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", linkKey).Return(value, nil)
+				backingStore.On("Get", "link").Return(value, nil)
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
@@ -320,14 +320,14 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 
 				assert.Nil(t, err)
 				assert.NotNil(t, elementValue)
-				assert.Equal(t, value, elementValue)
+				assert.Equal(t, *value, elementValue)
 			},
 		},
 		{
 			name: "Retrieval error",
 			test: func(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", linkKey).Return(nil, errors.New("retrieval error"))
+				backingStore.On("Get", "link").Return(nil, errors.New("retrieval error"))
 
 				intModel := mocking.NewMockModel()
 				intModel.On("GetBackingStore").Return(backingStore)
@@ -383,7 +383,7 @@ func TestRecordElementModel_SetLink(t *testing.T) {
 				link := utils.ToPointer("value")
 
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Set", "link", link).Return(nil)
+				backingStore.On("Set", "link", *link).Return(nil)
 
 				innerModel := mocking.NewMockModel()
 				innerModel.On("GetBackingStore").Return(backingStore)
@@ -403,7 +403,7 @@ func TestRecordElementModel_SetLink(t *testing.T) {
 				link := utils.ToPointer("value")
 
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Set", "link", link).Return(errors.New("store error"))
+				backingStore.On("Set", "link", *link).Return(errors.New("store error"))
 
 				innerModel := mocking.NewMockModel()
 				innerModel.On("GetBackingStore").Return(backingStore)

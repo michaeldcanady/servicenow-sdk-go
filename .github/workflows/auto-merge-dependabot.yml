@@ -2,15 +2,15 @@ name: Auto-merge dependabot updates
 
 on:
   pull_request:
-    branches: [main]
-
-permissions:
-  pull-requests: write
-  contents: write
+    branches:
+      - main
 
 jobs:
   dependabot-merge:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
 
     if: ${{ github.actor == 'dependabot[bot]' }}
 

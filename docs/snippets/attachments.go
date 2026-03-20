@@ -34,7 +34,7 @@ func _() {
 
 	// [START attachment_std_get_item]
 	// Step 3: Define raw URL
-	get_item_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/xSDK_SN_TABLE_SYS_IDx"
+	get_item_rawURL := "https://xSDK_SN_URLx/api/now/attachment/xSDK_SN_TABLE_SYS_IDx"
 
 	// Step 4: Configure request
 	get_item_std_config := &attachmentapi.AttachmentItemRequestBuilderGetRequestConfiguration{
@@ -63,7 +63,7 @@ func _() {
 
 	// [START attachment_std_list]
 	// Step 3: Define raw URL
-	list_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment"
+	list_rawURL := "https://xSDK_SN_URLx/api/now/attachment"
 
 	// Step 4: Configure request
 	list_std_config := &attachmentapi.AttachmentRequestBuilder2GetRequestConfiguration{
@@ -93,7 +93,7 @@ func _() {
 
 	// [START attachment_std_delete]
 	// Step 3: Define raw URL
-	rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/xSDK_SN_TABLE_SYS_IDx"
+	rawURL := "https://xSDK_SN_URLx/api/now/attachment/xSDK_SN_TABLE_SYS_IDx"
 
 	// Step 4: Configure request
 	deleteConfig = &attachmentapi.AttachmentItemRequestBuilderDeleteRequestConfiguration{
@@ -114,11 +114,15 @@ func _() {
 	data := []byte("this is example data")
 	media := attachmentapi.NewMedia(dataContentType, data)
 
+	create_file_table_sys_id := "xSDK_SN_TABLE_SYS_IDx"
+	create_file_table_name := "xSDK_SN_TABLEx"
+	create_file_file_name := "example.txt"
+
 	create_file_config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
 		QueryParameters: &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
-			TableSysID: "xSDK_SN_TABLE_SYS_IDx", // required
-			TableName:  "xSDK_SN_TABLEx",        // required
-			FileName:   "example.txt",           // required
+			TableSysID: &create_file_table_sys_id, // required
+			TableName:  &create_file_table_name,   // required
+			FileName:   &create_file_file_name,    // required
 		},
 		// Optional configurations
 	}
@@ -131,19 +135,23 @@ func _() {
 
 	// [START attachment_std_file_create]
 	// Step 3: Define raw URL
-	file_create_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/file"
+	file_create_rawURL := "https://xSDK_SN_URLx/api/now/attachment/file"
 
 	// Step 4: Build media type
 	file_create_dataContentType := "text/plain"
 	file_create_data := []byte("this is example data")
 	file_create_media := attachmentapi.NewMedia(file_create_dataContentType, file_create_data)
 
+	file_create_table_sys_id := "xSDK_SN_TABLE_SYS_IDx"
+	file_create_table_name := "xSDK_SN_TABLEx"
+	file_create_file_name := "example.txt"
+
 	// Step 5: Configure request
 	file_create_std_config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
 		QueryParameters: &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
-			TableSysID: "xSDK_SN_TABLE_SYS_IDx", // required
-			TableName:  "xSDK_SN_TABLEx",        // required
-			FileName:   "example.txt",           // required
+			TableSysID: &file_create_table_sys_id, // required
+			TableName:  &file_create_table_name,   // required
+			FileName:   &file_create_file_name,    // required
 		},
 		// Optional configurations
 	}
@@ -173,7 +181,7 @@ func _() {
 
 	// [START attachment_std_upload_create]
 	// Step 3: Define raw URL
-	upload_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/upload"
+	upload_rawURL := "https://xSDK_SN_URLx/api/now/attachment/upload"
 
 	// Step 4: Build multipart body
 	var upload_std_body abstractions.MultipartBody
@@ -205,7 +213,7 @@ func _() {
 
 	// [START attachment_std_file_get]
 	// Step 3: Define raw URL
-	file_get_rawURL := "https://xSDK_SN_URLx/api/now/v1/attachment/xSDK_SN_TABLE_SYS_IDx/file"
+	file_get_rawURL := "https://xSDK_SN_URLx/api/now/attachment/xSDK_SN_TABLE_SYS_IDx/file"
 
 	// Step 4: Configure request
 	file_get_std_config := &attachmentapi.AttachmentItemFileRequestBuilderGetRequestConfiguration{
@@ -243,13 +251,17 @@ func _() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
+	defer file.Close() //nolint:errcheck
 
 	// Upload attachment for an incident
+	guide_table_name := "xSDK_SN_TABLEx"
+	guide_table_sys_id := "xSDK_SN_TABLE_SYS_IDx"
+	guide_file_name := "file.txt"
+
 	params := &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
-		TableName:  "xSDK_SN_TABLEx",
-		TableSysID: "xSDK_SN_TABLE_SYS_IDx",
-		FileName:   "file.txt",
+		TableName:  &guide_table_name,
+		TableSysID: &guide_table_sys_id,
+		FileName:   &guide_file_name,
 	}
 
 	config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
@@ -257,12 +269,17 @@ func _() {
 	}
 
 	// Assuming 'file' can be used as media content
-	create_guide_response, err := client.Now2().Attachment2().File().Post(ctx, nil, config) // Placeholder
+	createGuideResponse, err := client.Now2().Attachment2().File().Post(ctx, nil, config) // Placeholder
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	id, err := create_guide_response.GetSysID()
+	result, err := createGuideResponse.GetResult()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	id, err := result.GetSysID()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -284,9 +301,17 @@ func _() {
 	// [END attachment_download_guide]
 
 	_ = get_item_response
+	_ = get_item_std_response
 	_ = list_response
+	_ = list_std_response
 	_ = create_file_response
+	_ = file_create_std_response
 	_ = upload_response
+	_ = upload_std_response
+	_ = file_get_response
+	_ = file_get_std_response
 	_ = list_guide_results
+	_ = createGuideResponse
+	_ = id
 	_ = content
 }

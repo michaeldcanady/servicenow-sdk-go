@@ -1,6 +1,7 @@
 package mocking
 
 import (
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/mock"
@@ -35,6 +36,26 @@ func (m *MockServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
 	return NilAllowed[*string](args, 0), args.Error(1)
 }
 
+func (m *MockServiceNowCollectionResponse[T]) SetNextLink(val *string) error {
+	args := m.Called(val)
+	return args.Error(0)
+}
+
+func (m *MockServiceNowCollectionResponse[T]) SetPreviousLink(val *string) error {
+	args := m.Called(val)
+	return args.Error(0)
+}
+
+func (m *MockServiceNowCollectionResponse[T]) SetFirstLink(val *string) error {
+	args := m.Called(val)
+	return args.Error(0)
+}
+
+func (m *MockServiceNowCollectionResponse[T]) SetLastLink(val *string) error {
+	args := m.Called(val)
+	return args.Error(0)
+}
+
 // Serialize writes the objects properties to the current writer.
 func (mP *MockServiceNowCollectionResponse[T]) Serialize(writer serialization.SerializationWriter) error {
 	args := mP.Called(writer)
@@ -50,5 +71,9 @@ func (mP *MockServiceNowCollectionResponse[T]) GetFieldDeserializers() map[strin
 // GetBackingStore returns the BackingStore of the model.
 func (mM *MockServiceNowCollectionResponse[T]) GetBackingStore() (store.BackingStore, error) {
 	args := mM.Called()
-	return args.Get(0).(store.BackingStore), args.Error(1)
+	return args.Get(0).(store.BackingStore)
+}
+
+func (mM *MockServiceNowCollectionResponse[T]) ParseHeaders(header *abstractions.ResponseHeaders) {
+	_ = mM.Called(header)
 }

@@ -45,6 +45,16 @@ func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuild
 	return tableapi.NewDefaultTableRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
+// TableV2 returns a TableRequestBuilder2 associated with the NowRequestBuilder.
+func (rB *NowRequestBuilder) TableV2(tableName string) *tableapi.TableRequestBuilder2[*tableapi.TableRecord] {
+	pathParameters := make(map[string]string)
+	for k, v := range rB.PathParameters {
+		pathParameters[k] = v
+	}
+	pathParameters["table"] = tableName
+	return tableapi.NewDefaultTableRequestBuilder2Internal(pathParameters, rB.Client.(*ServiceNowClient).RequestAdapter)
+}
+
 // Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
 // It allows you to work with attachments and manage attachments in ServiceNow.
 func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilder2 {

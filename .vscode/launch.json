@@ -10,7 +10,8 @@
             "request": "launch",
             "mode": "auto",
             "program": "${file}",
-            "buildFlags": "-tags=preview.query"
+            "cwd": "${workspaceFolder}",
+            "buildFlags": "-tags=preview.query,integration"
         } 
     ]
 }

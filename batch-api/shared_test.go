@@ -7,6 +7,7 @@ import (
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -23,7 +24,7 @@ func TestThrowErrors(t *testing.T) {
 		{
 			name: "No Error",
 			setup: func(m *MockServicedRequest) {
-				m.On("GetStatusCode").Return(utils.ToPointer(int64(200)), nil)
+				m.On("GetStatusCode").Return(newInternal.ToPointer(int64(200)), nil)
 			},
 			expectedErr: false,
 		},
@@ -37,8 +38,8 @@ func TestThrowErrors(t *testing.T) {
 		{
 			name: "Mapped Error",
 			setup: func(m *MockServicedRequest) {
-				m.On("GetStatusCode").Return(utils.ToPointer(int64(400)), nil)
-				m.On("GetErrorMessage").Return(utils.ToPointer(`{"error":"bad"}`), nil)
+				m.On("GetStatusCode").Return(newInternal.ToPointer(int64(400)), nil)
+				m.On("GetErrorMessage").Return(newInternal.ToPointer(`{"error":"bad"}`), nil)
 				m.On("GetHeaders").Return([]RestRequestHeader{}, nil)
 			},
 			expectedErr: true,

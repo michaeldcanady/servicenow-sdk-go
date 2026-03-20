@@ -4,9 +4,9 @@ import (
 	"errors"
 	"time"
 
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	internalStore "github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"

@@ -1,4 +1,4 @@
-# Table API Overview
+# Table API overview
 
 The Table API enables you to perform Create, Read, Update, and Delete (CRUD) operations on ServiceNow tables. Each endpoint corresponds to a specific operation and supports both fluent and standard usage patterns.
 
@@ -7,9 +7,9 @@ Commonly used for:
 - Retrieving records from tables like `incident`, `change_request`, or `sys_user`.
 - Creating new records with specific field values.
 - Updating existing records by their unique system ID (`sys_id`).
-- Deleting records when they are no longer needed.
+- Deleting records when they're no longer needed.
 
-## Basic Usage
+## Basic usage
 
 To interact with a table, you start from the `ServiceNowClient`, access the `now` namespace, and then specify the table name using `TableV2`.
 
@@ -23,7 +23,7 @@ incidentTable := client.Now2().TableV2("incident")
 result, err := incidentTable.Get(context.Background(), nil)
 ```
 
-## Available Operations
+## Available operations
 
 The Table API supports the following standard REST operations:
 

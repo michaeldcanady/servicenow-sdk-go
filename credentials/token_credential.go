@@ -5,12 +5,15 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
+// Deprecated: deprecated since v1.10.0. Use [ROPCCredential] instead.
+//
 // TokenCredential represents the OAuth2 token credentials.
 type TokenCredential struct {
 	ClientID     string
-	ClientSecret string
+	ClientSecret string //nolint:gosec // G117: needed for flow, not secret
 	Token        *AccessToken
 	BaseURL      string
 	Prompt       func() (string, string, error)
@@ -30,6 +33,8 @@ func DefaultPrompt() (string, string, error) {
 	return username, password, nil
 }
 
+// Deprecated: deprecated since v1.10.0. Use [NewROPCCredential] instead.
+//
 // NewTokenCredential creates a new token credential
 func NewTokenCredential(clientID, clientSecret, baseURL string, prompt func() (string, string, error)) (*TokenCredential, error) {
 	address := "localhost:5000"
@@ -102,7 +107,11 @@ func (tc *TokenCredential) requestToken(data url.Values) (*AccessToken, error) {
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, err := http.DefaultClient.Do(req)
+	client := &http.Client{
+		Timeout: 30 * time.Second,
+	}
+
+	resp, err := client.Do(req) //nolint:gosec // G704: SSRF via taint analysis (Internal URL)
 	if err != nil {
 		return nil, err
 	}

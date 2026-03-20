@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -16,11 +17,8 @@ func TestBuildServiceClientConfig(t *testing.T) {
 		{
 			name: "successful",
 			test: func(t *testing.T) {
-				strct := newMockServiceNowClientOption()
-				strct.On("ServiceNowServiceClientOption", mock.IsType(&serviceNowServiceClientConfig{})).Return(nil)
-				option := strct.ServiceNowServiceClientOption
-
-				config, err := buildServiceClientConfig(option)
+				authProvider := mocking.NewMockAuthenticationProvider()
+				config, err := buildServiceClientConfig(WithInstance("test"), WithAuthenticationProvider(authProvider))
 				assert.Nil(t, err)
 				assert.NotNil(t, config)
 			},
@@ -29,7 +27,7 @@ func TestBuildServiceClientConfig(t *testing.T) {
 			name: "option error",
 			test: func(t *testing.T) {
 				strct := newMockServiceNowClientOption()
-				strct.On("ServiceNowServiceClientOption", mock.IsType(&serviceNowServiceClientConfig{})).Return(errors.New("option error"))
+				strct.On("ServiceNowServiceClientOption", mock.IsType(&ServiceNowServiceClientConfig{})).Return(errors.New("option error"))
 				option := strct.ServiceNowServiceClientOption
 
 				config, err := buildServiceClientConfig(option)
@@ -38,10 +36,10 @@ func TestBuildServiceClientConfig(t *testing.T) {
 			},
 		},
 		{
-			name: "instance and raw uri",
+			name: "missing auth and adapter",
 			test: func(t *testing.T) {
-				config, err := buildServiceClientConfig(withInstance("fdasfsda"), withURL("https://dafsfd.com"))
-				assert.Equal(t, errors.New("rawURL and instance cannot be used together"), err)
+				config, err := buildServiceClientConfig(WithInstance("test"))
+				assert.Equal(t, errors.New("must provide either an AuthenticationProvider or a RequestAdapter"), err)
 				assert.Nil(t, config)
 			},
 		},

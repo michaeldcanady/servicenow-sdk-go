@@ -9,63 +9,11 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
 
 func TestNewRestRequestHeader(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				header := NewRestRequestHeader()
-
-				assert.NotNil(t, header)
-				assert.IsType(t, &RestRequestHeaderModel{}, header)
-
-				assert.NotNil(t, header.Model)
-				assert.IsType(t, &internal.BaseModel{}, header.Model)
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
-}
-
-func TestCreateRestRequestHeaderFromDiscriminatorValue(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{
-			name: "with parse node",
-			test: func(t *testing.T) {
-				parseNode := mocking.NewMockParseNode()
-
-				parsable, err := CreateRestRequestHeaderFromDiscriminatorValue(parseNode)
-				assert.Nil(t, err)
-				assert.NotNil(t, parsable)
-				assert.IsType(t, &RestRequestHeaderModel{}, parsable)
-			},
-		},
-		{
-			name: "with nil parse node",
-			test: func(t *testing.T) {
-				parsable, err := CreateRestRequestHeaderFromDiscriminatorValue(nil)
-				assert.Nil(t, err)
-				assert.NotNil(t, parsable)
-				assert.IsType(t, &RestRequestHeaderModel{}, parsable)
-			},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
+	header := NewRestRequestHeader()
+	assert.NotNil(t, header)
 }
 
 func TestRestRequestHeader_Serialize(t *testing.T) {
@@ -74,43 +22,92 @@ func TestRestRequestHeader_Serialize(t *testing.T) {
 		test func(*testing.T)
 	}{
 		{
-			name: "Successful",
+			name: "Successfully",
+			test: func(t *testing.T) {
+				expName := internal.ToPointer("name")
+				expValue := internal.ToPointer("value")
+
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteStringValue", nameKey, expName).Return(nil)
+				writer.On("WriteStringValue", valueKey, expValue).Return(nil)
+
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Get", nameKey).Return(expName, nil)
+				backingStore.On("Get", valueKey).Return(expValue, nil)
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				header := &RestRequestHeaderModel{intModel}
+
+				err := header.Serialize(writer)
+
+				assert.Nil(t, err)
+				writer.AssertExpectations(t)
+				backingStore.AssertExpectations(t)
+				intModel.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Name retrieval error",
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
-				writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
 
-				m := NewRestRequestHeader()
-				n := "name"
-				v := "value"
-				_ = m.SetName(&n)
-				_ = m.SetValue(&v)
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Get", nameKey).Return(nil, errors.New("retrieval error"))
 
-				err := m.Serialize(writer)
-				assert.Nil(t, err)
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				header := &RestRequestHeaderModel{intModel}
+
+				err := header.Serialize(writer)
+
+				assert.Equal(t, errors.New("retrieval error"), err)
+				writer.AssertExpectations(t)
+				backingStore.AssertExpectations(t)
+				intModel.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Value retrieval error",
+			test: func(t *testing.T) {
+				expName := internal.ToPointer("name")
+
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteStringValue", nameKey, expName).Return(nil)
+
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Get", nameKey).Return(expName, nil)
+				backingStore.On("Get", valueKey).Return(nil, errors.New("retrieval error"))
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				header := &RestRequestHeaderModel{intModel}
+
+				err := header.Serialize(writer)
+
+				assert.Equal(t, errors.New("retrieval error"), err)
+				writer.AssertExpectations(t)
+				backingStore.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
 			name: "nil writer",
 			test: func(t *testing.T) {
-				writer := (*mocking.MockSerializationWriter)(nil)
-
-				model := mocking.NewMockModel()
-
-				header := &RestRequestHeaderModel{model}
-
-				err := header.Serialize(writer)
-
-				assert.Equal(t, errors.New("write is nil"), err)
+				bR := NewRestRequestHeader()
+				err := bR.Serialize(nil)
+				assert.NoError(t, err)
 			},
 		},
 		{
-			name: "nil model",
+			name: "nil_model",
 			test: func(t *testing.T) {
-				writer := (*mocking.MockSerializationWriter)(nil)
+				var header *RestRequestHeaderModel
 
-				header := (*RestRequestHeaderModel)(nil)
-
-				err := header.Serialize(writer)
+				err := header.Serialize(mocking.NewMockSerializationWriter())
 
 				assert.Nil(t, err)
 			},
@@ -170,21 +167,24 @@ func TestRestRequestHeader_GetFieldDeserializers(t *testing.T) {
 		{
 			name: "Successfully",
 			test: func(t *testing.T) {
-				model := &RestRequestHeaderModel{}
+				header := NewRestRequestHeader()
 
-				deserializers := model.GetFieldDeserializers()
+				deser := header.GetFieldDeserializers()
 
-				assert.Nil(t, deserializers)
+				assert.NotNil(t, deser)
+				assert.Len(t, deser, 2)
+				assert.Contains(t, deser, nameKey)
+				assert.Contains(t, deser, valueKey)
 			},
 		},
 		{
-			name: "Nil model",
+			name: "Nil_model",
 			test: func(t *testing.T) {
-				model := (*RestRequestHeaderModel)(nil)
+				header := (*RestRequestHeaderModel)(nil)
 
-				deserializers := model.GetFieldDeserializers()
+				deser := header.GetFieldDeserializers()
 
-				assert.Nil(t, deserializers)
+				assert.Nil(t, deser)
 			},
 		},
 	}
@@ -200,17 +200,17 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 		test func(*testing.T)
 	}{
 		{
-			name: "Successful",
+			name: "Successfully",
 			test: func(t *testing.T) {
 				expName := utils.ToPointer("name")
 
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", nameKey).Return(expName, nil)
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return(backingStore)
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
 
-				header := &RestRequestHeaderModel{model}
+				header := &RestRequestHeaderModel{intModel}
 
 				name, err := header.GetName()
 
@@ -218,7 +218,7 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 				assert.Equal(t, expName, name)
 
 				backingStore.AssertExpectations(t)
-				model.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -229,18 +229,18 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", nameKey).Return(expName, nil)
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return(backingStore)
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
 
-				header := &RestRequestHeaderModel{model}
+				header := &RestRequestHeaderModel{intModel}
 
 				name, err := header.GetName()
 
-				assert.Equal(t, errors.New("name is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, name)
 
 				backingStore.AssertExpectations(t)
-				model.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -249,10 +249,10 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", nameKey).Return(nil, errors.New("error retrieving"))
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return(backingStore)
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
 
-				header := &RestRequestHeaderModel{model}
+				header := &RestRequestHeaderModel{intModel}
 
 				name, err := header.GetName()
 
@@ -260,7 +260,7 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 				assert.Nil(t, name)
 
 				backingStore.AssertExpectations(t)
-				model.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -268,17 +268,17 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 			test: func(t *testing.T) {
 				backingStore := (*mocking.MockBackingStore)(nil)
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return(backingStore)
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
 
-				header := &RestRequestHeaderModel{model}
+				header := &RestRequestHeaderModel{intModel}
 
 				name, err := header.GetName()
 
 				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, name)
 
-				model.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -305,51 +305,72 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 		test func(*testing.T)
 	}{
 		{
-			name: "Successful",
+			name: "Successfully",
 			test: func(t *testing.T) {
-				expName := utils.ToPointer("name")
+				input := internal.ToPointer("name")
 
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Set", nameKey, expName).Return(nil)
+				backingStore.On("Set", nameKey, input).Return(nil)
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return(backingStore)
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
 
-				header := &RestRequestHeaderModel{model}
+				header := &RestRequestHeaderModel{intModel}
 
-				err := header.SetName(expName)
+				err := header.SetName(input)
 
 				assert.Nil(t, err)
 
 				backingStore.AssertExpectations(t)
-				model.AssertExpectations(t)
+				intModel.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Store error",
+			test: func(t *testing.T) {
+				input := internal.ToPointer("name")
+
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Set", nameKey, input).Return(errors.New("store error"))
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				header := &RestRequestHeaderModel{intModel}
+
+				err := header.SetName(input)
+
+				assert.Equal(t, errors.New("store error"), err)
+
+				backingStore.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
 			name: "Nil backing store",
 			test: func(t *testing.T) {
-				expName := utils.ToPointer("name")
+				input := internal.ToPointer("name")
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
+				backingStore := (*mocking.MockBackingStore)(nil)
 
-				header := &RestRequestHeaderModel{model}
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
 
-				err := header.SetName(expName)
+				header := &RestRequestHeaderModel{intModel}
+
+				err := header.SetName(input)
 
 				assert.Equal(t, errors.New("backingStore is nil"), err)
 
-				model.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				expName := utils.ToPointer("name")
-
 				header := (*RestRequestHeaderModel)(nil)
 
-				err := header.SetName(expName)
+				err := header.SetName(internal.ToPointer("name"))
 
 				assert.Nil(t, err)
 			},
@@ -367,47 +388,47 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 		test func(*testing.T)
 	}{
 		{
-			name: "Successful",
+			name: "Successfully",
 			test: func(t *testing.T) {
-				expName := utils.ToPointer("value")
+				expValue := internal.ToPointer("value")
 
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", valueKey).Return(expName, nil)
+				backingStore.On("Get", valueKey).Return(expValue, nil)
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return(backingStore)
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
 
-				header := &RestRequestHeaderModel{model}
+				header := &RestRequestHeaderModel{intModel}
 
-				name, err := header.GetValue()
+				value, err := header.GetValue()
 
 				assert.Nil(t, err)
-				assert.Equal(t, expName, name)
+				assert.Equal(t, expValue, value)
 
 				backingStore.AssertExpectations(t)
-				model.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
 			name: "Wrong type",
 			test: func(t *testing.T) {
-				expName := utils.ToPointer(true)
+				expValue := internal.ToPointer(true)
 
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Get", valueKey).Return(expName, nil)
+				backingStore.On("Get", valueKey).Return(expValue, nil)
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return(backingStore)
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
 
-				header := &RestRequestHeaderModel{model}
+				header := &RestRequestHeaderModel{intModel}
 
-				name, err := header.GetValue()
+				value, err := header.GetValue()
 
-				assert.Equal(t, errors.New("value is not *string"), err)
-				assert.Nil(t, name)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
+				assert.Nil(t, value)
 
 				backingStore.AssertExpectations(t)
-				model.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -416,18 +437,18 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", valueKey).Return(nil, errors.New("error retrieving"))
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return(backingStore)
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
 
-				header := &RestRequestHeaderModel{model}
+				header := &RestRequestHeaderModel{intModel}
 
-				name, err := header.GetValue()
+				value, err := header.GetValue()
 
 				assert.Equal(t, errors.New("error retrieving"), err)
-				assert.Nil(t, name)
+				assert.Nil(t, value)
 
 				backingStore.AssertExpectations(t)
-				model.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -435,17 +456,17 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 			test: func(t *testing.T) {
 				backingStore := (*mocking.MockBackingStore)(nil)
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return(backingStore)
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
 
-				header := &RestRequestHeaderModel{model}
+				header := &RestRequestHeaderModel{intModel}
 
-				name, err := header.GetValue()
+				value, err := header.GetValue()
 
 				assert.Equal(t, errors.New("backingStore is nil"), err)
-				assert.Nil(t, name)
+				assert.Nil(t, value)
 
-				model.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -453,10 +474,10 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 			test: func(t *testing.T) {
 				header := (*RestRequestHeaderModel)(nil)
 
-				name, err := header.GetValue()
+				value, err := header.GetValue()
 
 				assert.Nil(t, err)
-				assert.Nil(t, name)
+				assert.Nil(t, value)
 			},
 		},
 	}
@@ -472,51 +493,72 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 		test func(*testing.T)
 	}{
 		{
-			name: "Successful",
+			name: "Successfully",
 			test: func(t *testing.T) {
-				expName := utils.ToPointer("value")
+				input := internal.ToPointer("value")
 
 				backingStore := mocking.NewMockBackingStore()
-				backingStore.On("Set", valueKey, expName).Return(nil)
+				backingStore.On("Set", valueKey, input).Return(nil)
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return(backingStore)
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
 
-				header := &RestRequestHeaderModel{model}
+				header := &RestRequestHeaderModel{intModel}
 
-				err := header.SetValue(expName)
+				err := header.SetValue(input)
 
 				assert.Nil(t, err)
 
 				backingStore.AssertExpectations(t)
-				model.AssertExpectations(t)
+				intModel.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Store error",
+			test: func(t *testing.T) {
+				input := internal.ToPointer("value")
+
+				backingStore := mocking.NewMockBackingStore()
+				backingStore.On("Set", valueKey, input).Return(errors.New("store error"))
+
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
+
+				header := &RestRequestHeaderModel{intModel}
+
+				err := header.SetValue(input)
+
+				assert.Equal(t, errors.New("store error"), err)
+
+				backingStore.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
 			name: "Nil backing store",
 			test: func(t *testing.T) {
-				expName := utils.ToPointer("value")
+				input := internal.ToPointer("value")
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
+				backingStore := (*mocking.MockBackingStore)(nil)
 
-				header := &RestRequestHeaderModel{model}
+				intModel := mocking.NewMockModel()
+				intModel.On("GetBackingStore").Return(backingStore)
 
-				err := header.SetValue(expName)
+				header := &RestRequestHeaderModel{intModel}
+
+				err := header.SetValue(input)
 
 				assert.Equal(t, errors.New("backingStore is nil"), err)
 
-				model.AssertExpectations(t)
+				intModel.AssertExpectations(t)
 			},
 		},
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {
-				expName := utils.ToPointer("value")
-
 				header := (*RestRequestHeaderModel)(nil)
 
-				err := header.SetValue(expName)
+				err := header.SetValue(internal.ToPointer("value"))
 
 				assert.Nil(t, err)
 			},

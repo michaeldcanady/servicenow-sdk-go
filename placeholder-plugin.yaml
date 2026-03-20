@@ -19,10 +19,18 @@ placeholders:
     default: "{instance}"
   SDK_SN_URL:
     description: "Your Service-Now base url."
-    default: "{custom-url.com}"
+    default: "https://xSDK_SN_INSTANCEx.service-now.com"
+    allow_nested: true
   SDK_SN_TABLE:
     description: "The name of the Service-Now table."
     default: "{TableName}"
   SDK_SN_TABLE_SYS_ID:
     description: "The sys id of the Service-Now table record."
     default: "{SysID}"
+  SDK_SN_TABLE_DISPLAY_VALUE:
+    description: ""
+    values:
+      "unset": "unset"
+      "tableapi.DisplayValue2True": "tableapi.DisplayValue2True"
+      "tableapi.DisplayValue2False": "tableapi.DisplayValue2False"
+      "tableapi.DisplayValue2All": "tableapi.DisplayValue2All"

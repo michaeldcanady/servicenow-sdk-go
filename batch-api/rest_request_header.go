@@ -1,13 +1,16 @@
 package batchapi
 
 import (
-	"errors"
 	"strings"
 
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -52,33 +55,10 @@ func (bH *RestRequestHeaderModel) Serialize(writer serialization.SerializationWr
 		return nil
 	}
 
-	if utils.IsNil(writer) {
-		return errors.New("write is nil")
-	}
-
-	serializers := []func(serialization.SerializationWriter) error{
-		func(sw serialization.SerializationWriter) error {
-			name, err := bH.GetName()
-			if err != nil {
-				return err
-			}
-			return sw.WriteStringValue(nameKey, name)
-		},
-		func(sw serialization.SerializationWriter) error {
-			value, err := bH.GetValue()
-			if err != nil {
-				return err
-			}
-			return sw.WriteStringValue(valueKey, value)
-		},
-	}
-
-	for _, serializer := range serializers {
-		if err := serializer(writer); err != nil {
-			return err
-		}
-	}
-	return nil
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(nameKey)(bH.GetName),
+		internalSerialization.SerializeStringFunc(valueKey)(bH.GetValue),
+	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
@@ -87,7 +67,10 @@ func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serial
 		return nil
 	}
 
-	return nil
+	return map[string]func(serialization.ParseNode) error{
+		nameKey:  internalSerialization.DeserializeStringFunc()(bH.SetName),
+		valueKey: internalSerialization.DeserializeStringFunc()(bH.SetValue),
+	}
 }
 
 // GetName returns the name of the header
@@ -97,21 +80,7 @@ func (bH *RestRequestHeaderModel) GetName() (*string, error) {
 	}
 
 	backingStore := bH.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, errors.New("backingStore is nil")
-	}
-
-	name, err := backingStore.Get(nameKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedName, ok := name.(*string)
-	if !ok {
-		return nil, errors.New("name is not *string")
-	}
-
-	return typedName, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, nameKey)
 }
 
 // SetName sets name to provided value
@@ -121,11 +90,7 @@ func (bH *RestRequestHeaderModel) SetName(name *string) error {
 	}
 
 	backingStore := bH.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return errors.New("backingStore is nil")
-	}
-
-	return backingStore.Set(nameKey, name)
+	return store.DefaultBackedModelMutatorFunc(backingStore, nameKey, name)
 }
 
 // GetValue returns the value of the header
@@ -135,21 +100,7 @@ func (bH *RestRequestHeaderModel) GetValue() (*string, error) {
 	}
 
 	backingStore := bH.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, errors.New("backingStore is nil")
-	}
-
-	value, err := backingStore.Get(valueKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedValue, ok := value.(*string)
-	if !ok {
-		return nil, errors.New("value is not *string")
-	}
-
-	return typedValue, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, valueKey)
 }
 
 // SetValue sets the value to the provided value
@@ -159,11 +110,7 @@ func (bH *RestRequestHeaderModel) SetValue(value *string) error {
 	}
 
 	backingStore := bH.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return errors.New("backingStore is nil")
-	}
-
-	return backingStore.Set(valueKey, value)
+	return store.DefaultBackedModelMutatorFunc(backingStore, valueKey, value)
 }
 
 // headers support headers types
@@ -176,7 +123,7 @@ func createRestRequestHeaderFromHeaders[h headers](headers h) ([]RestRequestHead
 	batchHeaders := make([]RestRequestHeader, 0)
 
 	if requestHeaders, ok := interface{}(headers).(*abstractions.RequestHeaders); ok {
-		if utils.IsNil(requestHeaders) {
+		if internal.IsNil(requestHeaders) {
 			return batchHeaders, nil
 		}
 		for _, key := range requestHeaders.ListKeys() {

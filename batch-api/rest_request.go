@@ -8,11 +8,14 @@ import (
 	u "net/url"
 
 	"github.com/google/uuid"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/microsoft/kiota-abstractions-go/store"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -37,7 +40,7 @@ type RestRequest interface {
 	GetURL() (*string, error)
 	SetURL(*string) error
 	serialization.Parsable
-	store.BackedModel
+	kiotaStore.BackedModel
 }
 
 // RestRequestModel implementation of RestRequestable
@@ -98,43 +101,17 @@ func (rE *RestRequestModel) Serialize(writer serialization.SerializationWriter) 
 		return nil
 	}
 
-	serializers := []func(serialization.SerializationWriter) error{
-		func(sw serialization.SerializationWriter) error {
-			body, err := rE.GetBody()
-			if err != nil {
-				return err
-			}
-
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeMutatedStringFunc(bodyKey, func(body []byte) (*string, error) {
 			encodedBody := base64.StdEncoding.EncodeToString(body)
-
-			return sw.WriteStringValue(bodyKey, &encodedBody)
-		},
-		func(sw serialization.SerializationWriter) error {
-			excludeResponseHeaders, err := rE.GetExcludeResponseHeaders()
-			if err != nil {
-				return err
-			}
-
-			return sw.WriteBoolValue(excludeResponseHeadersKey, excludeResponseHeaders)
-		},
-		func(sw serialization.SerializationWriter) error {
-			headers, err := rE.GetHeaders()
-			if err != nil {
-				return err
-			}
-
-			// Create a new slice of serialization.Parsable
-			parsableHeaders := make([]serialization.Parsable, len(headers))
-			for i, header := range headers {
-				parsableHeaders[i] = header
-			}
-
-			return sw.WriteCollectionOfObjectValues(headersKey, parsableHeaders)
-		},
-		func(sw serialization.SerializationWriter) error {
+			return &encodedBody, nil
+		})(rE.GetBody),
+		internalSerialization.SerializeBoolFunc(excludeResponseHeadersKey)(rE.GetExcludeResponseHeaders),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[RestRequestHeader](headersKey)(rE.GetHeaders),
+		internalSerialization.SerializeStringFunc(idKey)(func() (*string, error) {
 			id, err := rE.GetID()
 			if err != nil {
-				return err
+				return nil, err
 			}
 
 			// ensure request has an id BEFORE serializing
@@ -143,37 +120,17 @@ func (rE *RestRequestModel) Serialize(writer serialization.SerializationWriter) 
 				id = &idString
 			}
 
-			return sw.WriteStringValue(idKey, id)
-		},
-		func(sw serialization.SerializationWriter) error {
-			method, err := rE.GetMethod()
-			if err != nil {
-				return err
+			return id, nil
+		}),
+		internalSerialization.SerializeMutatedStringFunc(methodKey, func(method *abstractions.HttpMethod) (*string, error) {
+			if internal.IsNil(method) {
+				return nil, errors.New("method can't be nil")
 			}
-			if utils.IsNil(method) {
-				return errors.New("method can't be nil")
-			}
-
 			strMethod := (*method).String()
-
-			return sw.WriteStringValue(methodKey, &strMethod)
-		},
-		func(sw serialization.SerializationWriter) error {
-			url, err := rE.GetURL()
-			if err != nil {
-				return err
-			}
-
-			return sw.WriteStringValue(urlKey, url)
-		},
-	}
-
-	for _, serializer := range serializers {
-		if err := serializer(writer); err != nil {
-			return err
-		}
-	}
-	return nil
+			return &strMethod, nil
+		})(rE.GetMethod),
+		internalSerialization.SerializeStringFunc(urlKey)(rE.GetURL),
+	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
@@ -182,7 +139,50 @@ func (rE *RestRequestModel) GetFieldDeserializers() map[string]func(serializatio
 		return nil
 	}
 
-	return nil
+	return map[string]func(serialization.ParseNode) error{
+		bodyKey: internalSerialization.DeserializeMutatedStringFunc(func(s *string) ([]byte, error) {
+			if s == nil {
+				return nil, nil
+			}
+			return base64.StdEncoding.DecodeString(*s)
+		})(rE.SetBody),
+		excludeResponseHeadersKey: internalSerialization.DeserializeBoolFunc()(rE.SetExcludeResponseHeaders),
+		headersKey:                internalSerialization.DeserializeCollectionOfObjectValuesFunc[RestRequestHeader](CreateRestRequestHeaderFromDiscriminatorValue)(rE.SetHeaders),
+		idKey:                     internalSerialization.DeserializeStringFunc()(rE.SetID),
+		methodKey: internalSerialization.DeserializeMutatedStringFunc(func(s *string) (*abstractions.HttpMethod, error) {
+			if s == nil {
+				return nil, nil
+			}
+			m, err := parseHttpMethod(*s)
+			return &m, err
+		})(rE.SetMethod),
+		urlKey: internalSerialization.DeserializeStringFunc()(rE.SetURL),
+	}
+}
+
+func parseHttpMethod(method string) (abstractions.HttpMethod, error) {
+	switch strings.ToUpper(method) {
+	case "GET":
+		return abstractions.GET, nil
+	case "POST":
+		return abstractions.POST, nil
+	case "PATCH":
+		return abstractions.PATCH, nil
+	case "DELETE":
+		return abstractions.DELETE, nil
+	case "OPTIONS":
+		return abstractions.OPTIONS, nil
+	case "CONNECT":
+		return abstractions.CONNECT, nil
+	case "PUT":
+		return abstractions.PUT, nil
+	case "TRACE":
+		return abstractions.TRACE, nil
+	case "HEAD":
+		return abstractions.HEAD, nil
+	default:
+		return 0, errors.New("invalid HTTP method")
+	}
 }
 
 // GetBody returns the requests body in bytes.
@@ -192,25 +192,7 @@ func (rE *RestRequestModel) GetBody() ([]byte, error) {
 	}
 
 	backingStore := rE.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	body, err := backingStore.Get(bodyKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(body) {
-		return nil, nil
-	}
-
-	typedBody, ok := body.([]byte)
-	if !ok {
-		return nil, errors.New("body is not []byte")
-	}
-
-	return typedBody, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []byte](backingStore, bodyKey)
 }
 
 // SetBodyFromParsable serializes the provided parsable and sets the output to the request's body.
@@ -269,11 +251,7 @@ func (rE *RestRequestModel) SetBody(body []byte) error {
 	}
 
 	backingStore := rE.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(bodyKey, body)
+	return store.DefaultBackedModelMutatorFunc(backingStore, bodyKey, body)
 }
 
 // GetExcludeResponseHeaders returns if the request will exclude response headers.
@@ -283,25 +261,7 @@ func (rE *RestRequestModel) GetExcludeResponseHeaders() (*bool, error) {
 	}
 
 	backingStore := rE.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	excludeResponseHeaders, err := backingStore.Get(excludeResponseHeadersKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(excludeResponseHeaders) {
-		return nil, nil
-	}
-
-	typedExcludeResponseHeaders, ok := excludeResponseHeaders.(*bool)
-	if !ok {
-		return nil, errors.New("excludeResponseHeaders is not *bool")
-	}
-
-	return typedExcludeResponseHeaders, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](backingStore, excludeResponseHeadersKey)
 }
 
 // SetExcludeResponseHeaders set if to include or exclude response headers.
@@ -311,11 +271,7 @@ func (rE *RestRequestModel) SetExcludeResponseHeaders(excludeResponseHeaders *bo
 	}
 
 	backingStore := rE.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(excludeResponseHeadersKey, excludeResponseHeaders)
+	return store.DefaultBackedModelMutatorFunc(backingStore, excludeResponseHeadersKey, excludeResponseHeaders)
 }
 
 // GetHeaders returns the headers of the request.
@@ -325,25 +281,7 @@ func (rE *RestRequestModel) GetHeaders() ([]RestRequestHeader, error) {
 	}
 
 	backingStore := rE.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	headers, err := backingStore.Get(headersKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(headers) {
-		return nil, nil
-	}
-
-	typedheaders, ok := headers.([]RestRequestHeader)
-	if !ok {
-		return nil, errors.New("headers is not []RestRequestHeader")
-	}
-
-	return typedheaders, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []RestRequestHeader](backingStore, headersKey)
 }
 
 // SetHeaders sets the headers for the request.
@@ -353,11 +291,7 @@ func (rE *RestRequestModel) SetHeaders(headers []RestRequestHeader) error {
 	}
 
 	backingStore := rE.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(headersKey, headers)
+	return store.DefaultBackedModelMutatorFunc(backingStore, headersKey, headers)
 }
 
 // GetID returns the id of the request.
@@ -367,25 +301,7 @@ func (rE *RestRequestModel) GetID() (*string, error) {
 	}
 
 	backingStore := rE.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	id, err := backingStore.Get(idKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(id) {
-		return nil, nil
-	}
-
-	typedID, ok := id.(*string)
-	if !ok {
-		return nil, errors.New("id is not *string")
-	}
-
-	return typedID, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, idKey)
 }
 
 // SetID sets the id of the request.
@@ -395,11 +311,7 @@ func (rE *RestRequestModel) SetID(id *string) error {
 	}
 
 	backingStore := rE.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(idKey, id)
+	return store.DefaultBackedModelMutatorFunc(backingStore, idKey, id)
 }
 
 // GetMethod returns the method of the request
@@ -409,25 +321,7 @@ func (rE *RestRequestModel) GetMethod() (*abstractions.HttpMethod, error) {
 	}
 
 	backingStore := rE.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	method, err := backingStore.Get(methodKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(method) {
-		return nil, nil
-	}
-
-	typedMethod, ok := method.(*abstractions.HttpMethod)
-	if !ok {
-		return nil, errors.New("method is not *abstractions.HttpMethod")
-	}
-
-	return typedMethod, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *abstractions.HttpMethod](backingStore, methodKey)
 }
 
 // SetMethod sets the method of the request
@@ -437,11 +331,7 @@ func (rE *RestRequestModel) SetMethod(method *abstractions.HttpMethod) error {
 	}
 
 	backingStore := rE.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(methodKey, method)
+	return store.DefaultBackedModelMutatorFunc(backingStore, methodKey, method)
 }
 
 // GetURL returns the relative URL of the request.
@@ -451,25 +341,7 @@ func (rE *RestRequestModel) GetURL() (*string, error) {
 	}
 
 	backingStore := rE.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil, nil
-	}
-
-	url, err := backingStore.Get(urlKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(url) {
-		return nil, nil
-	}
-
-	typedURL, ok := url.(*string)
-	if !ok {
-		return nil, errors.New("url is not *string")
-	}
-
-	return typedURL, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, urlKey)
 }
 
 // SetURL sets the URL of the request (if not relative, will be converted).
@@ -497,9 +369,5 @@ func (rE *RestRequestModel) SetURL(url *string) error {
 	}
 
 	backingStore := rE.GetBackingStore()
-	if utils.IsNil(backingStore) {
-		return nil
-	}
-
-	return backingStore.Set(urlKey, &relativeURL)
+	return store.DefaultBackedModelMutatorFunc(backingStore, urlKey, &relativeURL)
 }

@@ -8,11 +8,11 @@ import (
 
 // PageResult represents a page object built from a graph response object
 type PageResult[T serialization.Parsable] struct {
-	nextLink  *string
-	prevLink  *string
-	firstLink *string
-	lastLink  *string
-	value     []T
+	NextLink  *string
+	PrevLink  *string
+	FirstLink *string
+	LastLink  *string
+	Result    []T
 }
 
 func convertToPage[T serialization.Parsable](response ServiceNowCollectionResponse[T]) (PageResult[T], error) {
@@ -46,10 +46,10 @@ func convertToPage[T serialization.Parsable](response ServiceNowCollectionRespon
 	}
 
 	return PageResult[T]{
-		nextLink:  nextLink,
-		prevLink:  prevLink,
-		firstLink: firstLink,
-		lastLink:  lastLink,
-		value:     results,
+		NextLink:  nextLink,
+		PrevLink:  prevLink,
+		FirstLink: firstLink,
+		LastLink:  lastLink,
+		Result:    results,
 	}, nil
 }

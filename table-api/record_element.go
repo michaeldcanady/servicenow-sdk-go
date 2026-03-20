@@ -1,9 +1,9 @@
 package tableapi
 
 import (
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 )
 
 const (
@@ -15,10 +15,12 @@ const (
 // RecordElement represents a single field in a TableRecord.
 //
 // It contains the raw value, the display value, and an optional reference link.
+// It contains the raw value, the display value, and an optional reference link.
 type RecordElement struct {
 	internal.Model
 }
 
+// NewRecordElement creates a new instance of RecordElement.
 // NewRecordElement creates a new instance of RecordElement.
 func NewRecordElement() *RecordElement {
 	return &RecordElement{

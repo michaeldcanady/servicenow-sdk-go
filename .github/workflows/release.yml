@@ -1,6 +1,4 @@
 name: Release
-permissions:
-  contents: read
 
 on:
   workflow_dispatch: # Manual trigger for stable releases
@@ -15,6 +13,8 @@ jobs:
   detect-changes:
     name: Detect Go Changes Since Last Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       go_changed: ${{ steps.go_diff.outputs.any_changed }}
       latest_tag: ${{ steps.latest_tag.outputs.tag }}
@@ -29,7 +29,7 @@ jobs:
         run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
 
       - name: Compare Go files against latest release
-        uses: tj-actions/changed-files@v47.0.4
+        uses: tj-actions/changed-files@v47.0.5
         id: go_diff
         with:
           base_sha: ${{ steps.latest_tag.outputs.tag }}
@@ -70,8 +70,7 @@ jobs:
 
       - name: Replace {unreleased} in .go files
         if: ${{ steps.release_meta.outputs.prerelease == 'false' }}
-        run: |
-          find . -name "*.go" -type f -exec sed -i "s/{unreleased}/${{ steps.release_meta.outputs.tag }}/g" {} \;
+        run: ./scripts/replace_unreleased.sh "${{ steps.release_meta.outputs.tag }}"
 
       - name: Update Changelog
         if: ${{ steps.release_meta.outputs.prerelease == 'false' }}

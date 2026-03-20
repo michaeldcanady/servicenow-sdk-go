@@ -1,14 +1,14 @@
-# Attachment File Overview
+# Attachment file overview
 
-The Attachment File API allows you to interact with the raw binary content of file attachments. Unlike the base Attachment API which handles metadata (like filenames and sizes), the File sub-module is used for the actual upload and download of file data.
+The Attachment File API lets you interact with the raw binary content of file attachments. Unlike the base Attachment API which handles metadata (like filenames and sizes), the File sub-module handles the actual upload and download of file data.
 
 Commonly used for:
 - Uploading a new file and attaching it to a specific record.
 - Downloading the content of an existing attachment by its `sys_id`.
 
-## Basic Usage
+## Basic usage
 
-### Uploading a File
+### Uploading a file
 
 To upload a file, you specify the target table and record ID, along with the desired filename and the raw data.
 
@@ -27,7 +27,7 @@ config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
 result, err := client.Now2().Attachment2().File().Post(context.Background(), media, config)
 ```
 
-### Downloading a File
+### Downloading a file
 
 To download a file, you use the `ByID` method with the attachment's `sys_id` and then access the `File()` sub-module.
 
@@ -38,7 +38,7 @@ content, _ := downloadedFile.GetContent()
 // content is a []byte containing the file data
 ```
 
-## Available Operations
+## Available operations
 
 - [**Upload File**](create.md): Upload raw binary data as an attachment.
 - [**Download File**](get.md): Retrieve the raw binary data of an attachment.

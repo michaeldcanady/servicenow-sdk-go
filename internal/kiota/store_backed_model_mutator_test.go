@@ -22,12 +22,8 @@ func TestDefaultBackedModelMutatorFunc(t *testing.T) {
 				store := mocking.NewMockBackingStore()
 				store.On("Set", key, value).Return(nil)
 
-				model := mocking.NewMockModel()
-				model.On("GetBackingStore").Return(store)
-
-				err := DefaultBackedModelMutatorFunc(model, key, value)
+				err := DefaultBackedModelMutatorFunc(store, key, value)
 				assert.Nil(t, err)
-				model.AssertExpectations(t)
 				store.AssertExpectations(t)
 			},
 		},
@@ -37,10 +33,10 @@ func TestDefaultBackedModelMutatorFunc(t *testing.T) {
 				key := "key"
 				value := "value"
 
-				model := (*mocking.MockModel)(nil)
+				model := (*mocking.MockBackingStore)(nil)
 
 				err := DefaultBackedModelMutatorFunc(model, key, value)
-				assert.Equal(t, errors.New("model is nil"), err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 			},
 		},
 	}

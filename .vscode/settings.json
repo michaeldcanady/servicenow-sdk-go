@@ -17,7 +17,7 @@
     "-w"
   ],
   "go.buildFlags": [
-    "-tags=preview.query"
+    "-tags=preview.query,integration"
   ],
   "go.lintOnSave": "package",
   "go.lintTool": "golangci-lint",
@@ -45,19 +45,23 @@
     "errorlens",
     "esbenp",
     "Expt",
+    "Fatalf",
     "findstr",
     "formserialization",
     "gitblame",
     "githistory",
     "gocognit",
+    "Godog",
     "gofmt",
     "golangci",
     "gopath",
     "gosec",
+    "govet",
     "Gruntfuggly",
     "Headerable",
     "httpheader",
     "httpmock",
+    "Introspector",
     "ISNOTEMPTY",
     "jarcoal",
     "jsonserialization",
@@ -79,13 +83,19 @@
     "NSAMEAS",
     "oldstable",
     "outliner",
+    "Paginatable",
     "Paramters",
+    "parsables",
     "PKCE",
     "PKCES",
+    "policyapi",
+    "Refable",
     "Requestable",
     "Responseable",
+    "ROPC",
     "SAMEAS",
     "servicenowsdkgo",
+    "shinepukur",
     "STARTSWITH",
     "staticcheck",
     "strct",
@@ -109,8 +119,8 @@
   ],
   "gopls": {
     "build.buildFlags": [
-      "-tags=preview.query,preview.tableApiV2"
-    ],
+      "-tags=preview.query,integration"
+    ]
   },
   "go.useLanguageServer": true
 }

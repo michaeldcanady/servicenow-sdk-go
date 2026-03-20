@@ -16,4 +16,5 @@ func TestMyFeature(t *testing.T) {
 
 	// ... test logic ...
 }
+
 // [END testing_mocking]

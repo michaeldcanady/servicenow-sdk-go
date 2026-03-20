@@ -13,6 +13,9 @@ func StringPtrToInt64Ptr(input *string) (*int64, error) {
 	if input == nil {
 		return nil, errors.New("input is nil")
 	}
+	if *input == "" {
+		return nil, nil
+	}
 	intVal, err := strconv.Atoi(*input)
 	if err != nil {
 		return nil, err
@@ -26,6 +29,9 @@ func StringPtrToFloat64Ptr(input *string) (*float64, error) {
 	if input == nil {
 		return nil, errors.New("input is nil")
 	}
+	if *input == "" {
+		return nil, nil
+	}
 	floatVal, err := strconv.ParseFloat(*input, 64)
 	if err != nil {
 		return nil, err
@@ -37,6 +43,9 @@ func StringPtrToFloat64Ptr(input *string) (*float64, error) {
 func StringPtrToBoolPtr(input *string) (*bool, error) {
 	if input == nil {
 		return nil, errors.New("input is nil")
+	}
+	if *input == "" {
+		return nil, nil
 	}
 	boolVal, err := strconv.ParseBool(*input)
 	if err != nil {
@@ -51,6 +60,9 @@ func StringPtrToTimePtr(format string) Mutator[*string, *time.Time] {
 		if input == nil {
 			return nil, errors.New("input is nil")
 		}
+		if *input == "" {
+			return nil, nil
+		}
 		dateTime, err := time.Parse(format, *input)
 		if err != nil {
 			return &time.Time{}, err
@@ -63,6 +75,9 @@ func StringPtrToTimePtr(format string) Mutator[*string, *time.Time] {
 // StringPtrToPrimitiveSlice Converts string pointer to slice of primitive type T
 func StringPtrToPrimitiveSlice[T any](delimiter string, mutator func(string) (T, error)) Mutator[*string, []T] {
 	return func(input *string) ([]T, error) {
+		if input == nil || *input == "" {
+			return nil, nil
+		}
 		sliceString := *input
 
 		stringSlice := strings.Split(sliceString, delimiter)

@@ -1,22 +1,19 @@
 package kiota
 
 import (
-	"errors"
-
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
-	"github.com/microsoft/kiota-abstractions-go/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
-// BackedModelMutatorFunc[S, T] defines a generic function signature for setting the value of a backed model
+// BackedModelMutatorFunc[S, T] defines a generic function signature for setting the value of a backing store
 // using a specified key.
-type BackedModelMutatorFunc[M store.BackedModel, T any] func(M, string, T) error
+type BackedModelMutatorFunc[S kiotaStore.BackingStore, T any] func(S, string, T) error
 
-// DefaultStoreMutatorFunc[S, T] is a generic implementation of StoreMutatorFunc[S, T] that sets the value
+// ModelMutator represents a function for mutating (setting) the property for a store backed model.
+type ModelMutator[S kiotaStore.BackingStore, T any] BackedModelMutatorFunc[S, T]
+
+// DefaultBackedModelMutatorFunc[S, T] is a generic implementation of BackedModelMutatorFunc that sets the value
 // of a backed model.
-func DefaultBackedModelMutatorFunc[M store.BackedModel, T any](model M, key string, value T) error {
-	if utils.IsNil(model) {
-		return errors.New("model is nil")
-	}
-
-	return DefaultStoreMutatorFunc(model.GetBackingStore(), key, value)
+func DefaultBackedModelMutatorFunc[S kiotaStore.BackingStore, T any](backingStore S, key string, value T) error {
+	return conversion.DefaultBackedModelMutatorFunc(backingStore, key, value)
 }

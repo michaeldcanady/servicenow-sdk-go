@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
@@ -67,24 +67,20 @@ func TestServicedRequestModel_Serialize(t *testing.T) {
 		test func(*testing.T)
 	}{
 		{
-			name: "Not implemented",
+			name: "Successful",
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
-				intModel := mocking.NewMockModel()
 
-				resp := &ServicedRequestModel{
-					intModel,
-				}
+				resp := NewServicedRequest()
 
 				err := resp.Serialize(writer)
 
-				assert.Equal(t, errors.New("Serialize not implemented"), err)
-				intModel.AssertExpectations(t)
+				assert.NoError(t, err)
 				writer.AssertExpectations(t)
 			},
 		},
 		{
-			name: "",
+			name: "nil model",
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
 
@@ -121,14 +117,17 @@ func TestServicedRequestModel_GetFieldDeserializers(t *testing.T) {
 					if key == bodyKey {
 						s = base64.StdEncoding.EncodeToString([]byte("test"))
 					}
-					if key == statusCodeKey {
+					switch key {
+					case statusCodeKey:
+						node.On("GetFloat64Value").Return((*float64)(nil), nil)
 						i := int64(200)
 						node.On("GetInt64Value").Return(&i, nil)
-					} else if key == executionTimeKey {
+					case executionTimeKey:
+						node.On("GetFloat64Value").Return((*float64)(nil), nil)
 						node.On("GetISODurationValue").Return(&serialization.ISODuration{}, nil)
-					} else if key == headersKey {
+					case headersKey:
 						node.On("GetCollectionOfObjectValues", mock.Anything).Return([]serialization.Parsable{NewRestRequestHeader()}, nil)
-					} else {
+					default:
 						node.On("GetStringValue").Return(&s, nil)
 					}
 					_ = fn(node)
@@ -165,7 +164,7 @@ func TestServicedRequestModel_GetBodyAsParsable(t *testing.T) {
 				_ = h.SetName(&n)
 				_ = h.SetValue(&v)
 				_ = m.setHeaders([]RestRequestHeader{h})
-				_ = m.setStatusCode(utils.ToPointer(int64(200)))
+				_ = m.setStatusCode(internal.ToPointer(int64(200)))
 
 				serialization.DefaultSerializationWriterFactoryInstance.ContentTypeAssociatedFactories["application/json"] = mocking.NewMockSerializationWriterFactory()
 				serialization.DefaultParseNodeFactoryInstance.ContentTypeAssociatedFactories["application/json"] = mocking.NewMockParseNodeFactory()
@@ -175,7 +174,7 @@ func TestServicedRequestModel_GetBodyAsParsable(t *testing.T) {
 		{
 			name: "Error mapping",
 			setup: func(m *ServicedRequestModel) {
-				_ = m.setStatusCode(utils.ToPointer(int64(400)))
+				_ = m.setStatusCode(internal.ToPointer(int64(400)))
 				_ = m.setBody([]byte(`{"error":"bad"}`))
 			},
 			expectedErr: true,
@@ -249,7 +248,7 @@ func TestServicedRequestModel_GetBody(t *testing.T) {
 
 				id, err := resp.GetBody()
 
-				assert.Equal(t, errors.New("body is not []byte"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type []uint8"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -437,7 +436,7 @@ func TestServicedRequestModel_GetErrorMessage(t *testing.T) {
 
 				id, err := resp.GetErrorMessage()
 
-				assert.Equal(t, errors.New("message is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -686,7 +685,7 @@ func TestServicedRequestModel_GetHeaders(t *testing.T) {
 
 				id, err := resp.GetHeaders()
 
-				assert.Equal(t, errors.New("headers is not []RestRequestHeader"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type []batchapi.RestRequestHeader"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -874,7 +873,7 @@ func TestServicedRequestModel_GetID(t *testing.T) {
 
 				id, err := resp.GetID()
 
-				assert.Equal(t, errors.New("id is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -1062,7 +1061,7 @@ func TestServicedRequestModel_GetRedirectURL(t *testing.T) {
 
 				id, err := resp.GetRedirectURL()
 
-				assert.Equal(t, errors.New("redirectURL is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -1250,7 +1249,7 @@ func TestServicedRequestModel_GetStatusCode(t *testing.T) {
 
 				id, err := resp.GetStatusCode()
 
-				assert.Equal(t, errors.New("statusCode is not *int64"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *int64"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -1438,7 +1437,7 @@ func TestServicedRequestModel_GetStatusText(t *testing.T) {
 
 				id, err := resp.GetStatusText()
 
-				assert.Equal(t, errors.New("statusText is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)

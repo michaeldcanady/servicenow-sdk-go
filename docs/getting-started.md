@@ -5,12 +5,12 @@ make your first successful API call in just a few minutes.
 
 ## Prerequisites
 
-Before you begin, ensure your development environment meets these requirements:
+Before you begin, make sure your development environment meets these
+requirements:
 
 - **Go:** Version 1.23 or higher installed.
 - **ServiceNow Instance:** Access to a ServiceNow instance (a
-  [Personal Developer Instance](https://developer.servicenow.com/) works
-  perfectly).
+  [Personal Developer Instance](https://developer.servicenow.com/) works).
 
 ## Install the SDK
 
@@ -40,7 +40,7 @@ func main() {
 
 ## Make your first request
 
-Once your client is initialized, you can perform operations like retrieving
+Once you initialize your client, you can perform operations like retrieving
 records from a table. See the [Table Operations](user-guide/tables.md) guide
 for more details.
 
@@ -48,7 +48,7 @@ for more details.
 
 Now that you have the basic setup, explore these topics to dive deeper:
 
-- **[Authentication Guide](user-guide/authentication.md):** Learn about OAuth2
+- **[Authentication Guide](user-guide/authentication/index.md):** Learn about OAuth2
   and alternative credential types.
 - **[Table Operations](user-guide/tables.md):** Master CRUD operations for
   ServiceNow records.

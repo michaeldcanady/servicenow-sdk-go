@@ -6,9 +6,8 @@ minimizing network overhead and latency.
 
 ## Understand batch requests
 
-A batch request consists of multiple individual sub-requests. Each sub-request
-is executed by ServiceNow, and the results are returned in a single combined
-response.
+A batch request consists of multiple individual sub-requests. ServiceNow
+executes each sub-request and returns the results in a single combined response.
 
 ### Key benefits
 
@@ -24,7 +23,7 @@ using the SDK's request builders and then combine them into a
 `BatchRequestModel`.
 
 ```go
-{% include-markdown 'snippets/batch.go' start='// [START batch_create]' end='// [START batch_create]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/batch.go' start='// [START batch_create]' end='// [END batch_create]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ### Batch helper
@@ -33,7 +32,7 @@ Combining multiple requests can involve repetitive code. You can use a helper
 function to streamline the process of adding requests to your batch model.
 
 ```go
-{% include-markdown 'snippets/batch.go' start='// [START batch_helper]' end='// [START batch_helper]' comments=false trailing-newlines=false dedent=true %}
+{% include-markdown 'snippets/batch.go' start='// [START batch_helper]' end='// [END batch_helper]' comments=false trailing-newlines=false dedent=true %}
 ```
 
 ## Next steps

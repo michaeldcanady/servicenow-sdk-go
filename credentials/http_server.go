@@ -4,8 +4,11 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 )
 
+// Deprecated: deprecated since v{unreleased}.
+//
 // HTTPServer represents an HTTP server for OAuth2 redirection.
 type HTTPServer struct {
 	server *http.Server
@@ -19,7 +22,7 @@ func NewHTTPServer(address string) *HTTPServer {
 	httpServer := &http.Server{
 		Addr:              address,
 		Handler:           mux,
-		ReadHeaderTimeout: 1000,
+		ReadHeaderTimeout: 1 * time.Second,
 	}
 
 	return &HTTPServer{server: httpServer}

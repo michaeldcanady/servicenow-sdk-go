@@ -2,8 +2,6 @@ package model
 
 import (
 	"testing"
-
-	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
 func TestNewMainError(t *testing.T) {
@@ -233,7 +231,3 @@ func TestMainError_ErrorBranches(t *testing.T) {
 		t.Errorf("Expected wrong type error in Status, got %v", err)
 	}
 }
-
-type mockNilBSModel struct{ BaseModel }
-
-func (m *mockNilBSModel) GetBackingStore() store.BackingStore { return nil }

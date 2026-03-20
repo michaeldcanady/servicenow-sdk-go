@@ -1,13 +1,14 @@
 package batchapi
 
 import (
-	"errors"
-
 	"github.com/google/uuid"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/microsoft/kiota-abstractions-go/store"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -22,7 +23,7 @@ type BatchRequest interface {
 	SetRestRequests([]RestRequest) error
 	AddRequest(RestRequest) error
 	serialization.Parsable
-	store.BackedModel
+	kiotaStore.BackedModel
 }
 
 // BatchRequestModel implementation of BatchRequest
@@ -54,11 +55,11 @@ func (bR *BatchRequestModel) Serialize(writer serialization.SerializationWriter)
 		return nil
 	}
 
-	serializers := []func(serialization.SerializationWriter) error{
-		func(sw serialization.SerializationWriter) error {
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(batchRequestIDKey)(func() (*string, error) {
 			id, err := bR.GetBatchRequestID()
 			if err != nil {
-				return err
+				return nil, err
 			}
 
 			// ensure request has an id BEFORE serializing
@@ -67,30 +68,10 @@ func (bR *BatchRequestModel) Serialize(writer serialization.SerializationWriter)
 				id = &idString
 			}
 
-			return sw.WriteStringValue(batchRequestIDKey, id)
-		},
-		func(sw serialization.SerializationWriter) error {
-			requests, err := bR.GetRestRequests()
-			if err != nil {
-				return err
-			}
-
-			// Create a new slice of serialization.Parsable
-			parsableRequests := make([]serialization.Parsable, len(requests))
-			for i, header := range requests {
-				parsableRequests[i] = header
-			}
-
-			return sw.WriteCollectionOfObjectValues(restRequestsKey, parsableRequests)
-		},
-	}
-
-	for _, serializer := range serializers {
-		if err := serializer(writer); err != nil {
-			return err
-		}
-	}
-	return nil
+			return id, nil
+		}),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[RestRequest](restRequestsKey)(bR.GetRestRequests),
+	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
@@ -100,32 +81,8 @@ func (bR *BatchRequestModel) GetFieldDeserializers() map[string]func(serializati
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		batchRequestIDKey: func(pn serialization.ParseNode) error {
-			id, err := pn.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return bR.SetBatchRequestID(id)
-		},
-		restRequestsKey: func(pn serialization.ParseNode) error {
-			requests, err := pn.GetCollectionOfObjectValues(CreateRestRequestFromDiscriminatorValue)
-			if err != nil {
-				return err
-			}
-
-			typedRequest := make([]RestRequest, 0, len(requests))
-
-			for _, request := range requests {
-				request, ok := request.(RestRequest)
-				if !ok {
-					return errors.New("request is not RestRequestable")
-				}
-				typedRequest = append(typedRequest, request)
-			}
-
-			return bR.SetRestRequests(typedRequest)
-		},
+		batchRequestIDKey: internalSerialization.DeserializeStringFunc()(bR.SetBatchRequestID),
+		restRequestsKey:   internalSerialization.DeserializeCollectionOfObjectValuesFunc[RestRequest](CreateRestRequestFromDiscriminatorValue)(bR.SetRestRequests),
 	}
 }
 
@@ -135,8 +92,8 @@ func (bR *BatchRequestModel) AddRequest(request RestRequest) error {
 		return nil
 	}
 
-	if utils.IsNil(request) {
-		return errors.New("request is nil")
+	if internal.IsNil(request) {
+		return nil
 	}
 
 	requests, err := bR.GetRestRequests()
@@ -157,18 +114,8 @@ func (bR *BatchRequestModel) GetBatchRequestID() (*string, error) {
 	if utils.IsNil(bR) {
 		return nil, nil
 	}
-
-	id, err := bR.GetBackingStore().Get(batchRequestIDKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedID, ok := id.(*string)
-	if !ok {
-		return nil, errors.New("id is not *string")
-	}
-
-	return typedID, nil
+	backingStore := bR.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, batchRequestIDKey)
 }
 
 // SetBatchRequestID sets the id of the request.
@@ -176,8 +123,8 @@ func (bR *BatchRequestModel) SetBatchRequestID(id *string) error {
 	if utils.IsNil(bR) {
 		return nil
 	}
-
-	return bR.GetBackingStore().Set(batchRequestIDKey, id)
+	backingStore := bR.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, batchRequestIDKey, id)
 }
 
 // GetRestRequests returns batched requests.
@@ -186,21 +133,8 @@ func (bR *BatchRequestModel) GetRestRequests() ([]RestRequest, error) {
 		return nil, nil
 	}
 
-	requests, err := bR.GetBackingStore().Get(restRequestsKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if utils.IsNil(requests) {
-		return nil, nil
-	}
-
-	typedRequests, ok := requests.([]RestRequest)
-	if !ok {
-		return nil, errors.New("requests is not []RestRequestable")
-	}
-
-	return typedRequests, nil
+	backingStore := bR.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []RestRequest](backingStore, restRequestsKey)
 }
 
 // SetRestRequests sets the batched requests.
@@ -209,5 +143,6 @@ func (bR *BatchRequestModel) SetRestRequests(requests []RestRequest) error {
 		return nil
 	}
 
-	return bR.GetBackingStore().Set(restRequestsKey, requests)
+	backingStore := bR.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, restRequestsKey, requests)
 }

@@ -12,7 +12,7 @@ func newMockServiceNowClientOption() *mockServiceNowClientOption {
 	}
 }
 
-func (sCO *mockServiceNowClientOption) ServiceNowServiceClientOption(config *serviceNowServiceClientConfig) error {
+func (sCO *mockServiceNowClientOption) ServiceNowServiceClientOption(config *ServiceNowServiceClientConfig) error {
 	args := sCO.Called(config)
 
 	return args.Error(0)

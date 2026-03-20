@@ -12,17 +12,17 @@ Upload file of any supported content type. Requires you to provide the table sys
 
 ## Optional query parameters
 
-| Name                | Type      | Possible values | Description                                                  |
-|---------------------|-----------|-----------------|--------------------------------------------------------------|
-| `EncryptionContext` | `*string` | N/A             | `sys_id` of an encryption context record.                      |
+| Name                | Type      | Possible values | Description                               |
+| ------------------- | --------- | --------------- | ----------------------------------------- |
+| `EncryptionContext` | `*string` | N/A             | `sys_id` of an encryption context record. |
 
 ## Required query parameters
 
-| Name                | Type      | Possible values | Description                                                                       |
-|---------------------|-----------|-----------------|-----------------------------------------------------------------------------------|
-| `FileName`          | `*string` | N/A             | Name to provided file.                                                            |
-| `TableName`         | `*string` | N/A             | Name of the designated table which contains the record to attach the file to.     |
-| `TableSysID`        | `*string` | N/A             | Specifies the `sys_id` of the record in the designated table to attach the file to. |
+| Name         | Type      | Possible values | Description                                                                         |
+| ------------ | --------- | --------------- | ----------------------------------------------------------------------------------- |
+| `FileName`   | `*string` | N/A             | Name to provided file.                                                              |
+| `TableName`  | `*string` | N/A             | Name of the designated table which contains the record to attach the file to.       |
+| `TableSysID` | `*string` | N/A             | Specifies the `sys_id` of the record in the designated table to attach the file to. |
 
 ## Examples
 

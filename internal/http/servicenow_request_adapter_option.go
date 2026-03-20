@@ -6,6 +6,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
 // ServiceNowRequestAdapterOption represents an option for the ServiceNowRequestAdapter
@@ -67,8 +68,11 @@ func serviceNowRequestAdapterDefaultOptions() ServiceNowRequestAdapterOption {
 				return err
 			}
 			config.client = client
+		} else if len(config.middleware) > 0 {
+			config.client = nethttplibrary.GetDefaultClient(config.middleware...)
 		}
-		if utils.IsNil(config.serializationWriterFactory) {
+
+		if internal.IsNil(config.serializationWriterFactory) {
 			config.serializationWriterFactory = serialization.DefaultSerializationWriterFactoryInstance
 		}
 		if utils.IsNil(config.parseNodeFactory) {

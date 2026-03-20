@@ -1,10 +1,10 @@
 package attachmentapi
 
 import (
-	"errors"
-
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -57,22 +57,8 @@ func (f *FileWithContentModel) GetContent() ([]byte, error) {
 		return nil, nil
 	}
 
-	store := f.GetBackingStore()
-	if utils.IsNil(store) {
-		return nil, errors.New("store is nil")
-	}
-
-	val, err := store.Get(contentKey)
-	if err != nil {
-		return nil, err
-	}
-
-	content, ok := val.([]byte)
-	if !ok {
-		return nil, errors.New("content is not []byte")
-	}
-
-	return content, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []byte](backingStore, contentKey)
 }
 
 // SetContent sets the content to the provided value
@@ -81,10 +67,6 @@ func (f *FileWithContentModel) SetContent(content []byte) error {
 		return nil
 	}
 
-	store := f.GetBackingStore()
-	if utils.IsNil(store) {
-		return errors.New("store is nil")
-	}
-
-	return store.Set(contentKey, content)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, contentKey, content)
 }

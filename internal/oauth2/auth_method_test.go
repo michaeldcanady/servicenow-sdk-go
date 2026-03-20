@@ -41,6 +41,16 @@ func TestAuthMethod_String(t *testing.T) {
 			},
 		},
 		{
+			name: "None returns correct string",
+			test: func(t *testing.T) {
+				got := AuthMethodNone.String()
+				want := "none"
+				if got != want {
+					t.Errorf("got %q, want %q", got, want)
+				}
+			},
+		},
+		{
 			name: "Unknown returns correct string",
 			test: func(t *testing.T) {
 				got := AuthMethodUnknown.String()

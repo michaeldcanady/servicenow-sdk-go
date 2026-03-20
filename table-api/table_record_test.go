@@ -61,7 +61,7 @@ func TestCreateTableRecordFromDiscriminatorValue(t *testing.T) {
 	}
 }
 
-func TestRecordElementParser(t *testing.T) {
+func TestRecordElementParserFromRaw(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -75,11 +75,10 @@ func TestRecordElementParser(t *testing.T) {
 					valueKey:        utils.ToPointer("value"),
 				}, nil)
 
-				element, err := recordElementParser(parseNode)
+				element, err := recordElementParserFromRaw(data)
 
 				assert.NotNil(t, element)
 				assert.Nil(t, err)
-				parseNode.AssertExpectations(t)
 			},
 		},
 		{
@@ -92,11 +91,10 @@ func TestRecordElementParser(t *testing.T) {
 					linkKey:         utils.ToPointer("link"),
 				}, nil)
 
-				element, err := recordElementParser(parseNode)
+				element, err := recordElementParserFromRaw(data)
 
 				assert.NotNil(t, element)
 				assert.Nil(t, err)
-				parseNode.AssertExpectations(t)
 			},
 		},
 		{
@@ -109,11 +107,10 @@ func TestRecordElementParser(t *testing.T) {
 					linkKey:         utils.ToPointer(true),
 				}, nil)
 
-				element, err := recordElementParser(parseNode)
+				element, err := recordElementParserFromRaw(data)
 
 				assert.Nil(t, element)
 				assert.Equal(t, errors.New("link is not *string"), err)
-				parseNode.AssertExpectations(t)
 			},
 		},
 		{
@@ -185,6 +182,7 @@ func TestTableRecord_GetFieldDeserializers(t *testing.T) {
 
 				deserializers := record.GetFieldDeserializers()
 				assert.ElementsMatch(t, expectedKeys, keys(deserializers))
+				assert.ElementsMatch(t, expectedKeys, keys(deserializers))
 			},
 		},
 	}
@@ -200,7 +198,7 @@ func TestTableRecord_Serialize(t *testing.T) {
 		test func(*testing.T)
 	}{
 		{
-			name: "error",
+			name: "nil model",
 			test: func(t *testing.T) {
 				writer := mocking.NewMockSerializationWriter()
 
@@ -208,7 +206,22 @@ func TestTableRecord_Serialize(t *testing.T) {
 
 				err := record.Serialize(writer)
 
-				assert.Equal(t, errors.New("unimplemented"), err)
+				assert.Nil(t, err)
+			},
+		},
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				writer := mocking.NewMockSerializationWriter()
+				writer.On("WriteAnyValue", "key1", mock.Anything).Return(nil)
+
+				record := NewTableRecord()
+				_ = record.SetValue("key1", "value1")
+
+				err := record.Serialize(writer)
+
+				assert.Nil(t, err)
+				writer.AssertExpectations(t)
 			},
 		},
 	}

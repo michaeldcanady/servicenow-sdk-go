@@ -32,4 +32,6 @@ var (
 	EmptyClientID     = NewOauth2Error("clientId is empty")
 	EmptyClientSecret = NewOauth2Error("clientSecret is empty")
 	EmptyBaseURL      = NewOauth2Error("baseURL is empty")
+	EmptyUsername     = NewOauth2Error("username is empty")
+	EmptyPassword     = NewOauth2Error("password is empty")
 )

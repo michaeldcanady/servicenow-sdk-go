@@ -1,16 +1,15 @@
 package attachmentapi
 
 import (
-	"errors"
-	"fmt"
-	"strconv"
-	"strings"
 	"time"
 
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/microsoft/kiota-abstractions-go/store"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -28,6 +27,8 @@ type File interface {
 	SetContentType(*string) error
 	GetCreatedByName() (*string, error)
 	SetCreatedByName(*string) error
+	GetCreatedBy() (*string, error)
+	SetCreatedBy(*string) error
 	GetDownloadLink() (*string, error)
 	SetDownloadLink(*string) error
 	GetFileName() (*string, error)
@@ -61,7 +62,7 @@ type File interface {
 	GetUpdatedByName() (*string, error)
 	SetUpdatedByName(*string) error
 	serialization.Parsable
-	store.BackedModel
+	kiotaStore.BackedModel
 }
 
 type FileModel struct {
@@ -91,194 +92,28 @@ func (f *FileModel) Serialize(writer serialization.SerializationWriter) error { 
 		return nil
 	}
 
-	fieldSerializers := map[string]func(serialization.SerializationWriter) error{
-		averageImageColorKey: func(writer serialization.SerializationWriter) error {
-			averageImageColor, err := f.GetAverageImageColor()
-			if err != nil {
-				return err
-			}
-
-			return writer.WriteStringValue(averageImageColorKey, averageImageColor)
-		},
-		compressedKey: func(writer serialization.SerializationWriter) error {
-			compressed, err := f.GetCompressed()
-			if err != nil {
-				return err
-			}
-			compressedString := fmt.Sprintf("%v", *compressed)
-
-			return writer.WriteStringValue(compressedKey, &compressedString)
-		},
-		contentTypeKey: func(writer serialization.SerializationWriter) error {
-			contentType, err := f.GetContentType()
-			if err != nil {
-				return err
-			}
-
-			return writer.WriteStringValue(contentTypeKey, contentType)
-		},
-		createdByNameKey: func(writer serialization.SerializationWriter) error {
-			createdByName, err := f.GetCreatedByName()
-			if err != nil {
-				return err
-			}
-
-			return writer.WriteStringValue(createdByNameKey, createdByName)
-		},
-		downloadLinkKey: func(writer serialization.SerializationWriter) error {
-			downloadLink, err := f.GetDownloadLink()
-			if err != nil {
-				return err
-			}
-
-			return writer.WriteStringValue(createdByNameKey, downloadLink)
-		},
-		fileNameKey: func(writer serialization.SerializationWriter) error {
-			fileName, err := f.GetFileName()
-			if err != nil {
-				return err
-			}
-
-			return writer.WriteStringValue(fileNameKey, fileName)
-		},
-		imageHeightKey: func(writer serialization.SerializationWriter) error {
-			imageHeight, err := f.GetImageHeight()
-			if err != nil {
-				return err
-			}
-
-			imageHeightString := strconv.FormatFloat(*imageHeight, 'f', -1, 64)
-
-			return writer.WriteStringValue(imageHeightKey, &imageHeightString)
-		},
-		imageWidthKey: func(writer serialization.SerializationWriter) error {
-			imageWidth, err := f.GetImageWidth()
-			if err != nil {
-				return err
-			}
-
-			imageWidthString := strconv.FormatFloat(*imageWidth, 'f', -1, 64)
-
-			return writer.WriteStringValue(imageHeightKey, &imageWidthString)
-		},
-		sizeBytesKey: func(writer serialization.SerializationWriter) error {
-			sizeBytes, err := f.GetSizeBytes()
-			if err != nil {
-				return err
-			}
-
-			sizeBytesString := fmt.Sprintf("%v", sizeBytes)
-
-			return writer.WriteStringValue(sizeBytesKey, &sizeBytesString)
-		},
-		sizeCompressedKey: func(writer serialization.SerializationWriter) error {
-			sizeCompressed, err := f.GetSizeCompressed()
-			if err != nil {
-				return err
-			}
-
-			sizeCompressedString := fmt.Sprintf("%v", sizeCompressed)
-
-			return writer.WriteStringValue(sizeCompressedKey, &sizeCompressedString)
-		},
-		sysCreatedByKey: func(writer serialization.SerializationWriter) error {
-			sysCreatedBy, err := f.GetSysCreatedBy()
-			if err != nil {
-				return err
-			}
-
-			return writer.WriteStringValue(sysCreatedByKey, sysCreatedBy)
-		},
-		sysCreatedOnKey: func(writer serialization.SerializationWriter) error {
-			sysCreatedOn, err := f.GetSysCreatedOn()
-			if err != nil {
-				return err
-			}
-
-			sysCreatedOnString := sysCreatedOn.Format(time.RFC3339)
-
-			return writer.WriteStringValue(sysCreatedOnKey, &sysCreatedOnString)
-		},
-		sysIDKey: func(writer serialization.SerializationWriter) error {
-			sysID, err := f.GetSysID()
-			if err != nil {
-				return err
-			}
-
-			return writer.WriteStringValue(sysIDKey, sysID)
-		},
-		sysModCountKey: func(writer serialization.SerializationWriter) error {
-			sysModCount, err := f.GetSysModCount()
-			if err != nil {
-				return err
-			}
-
-			sysModCountString := fmt.Sprintf("%v", sysModCount)
-
-			return writer.WriteStringValue(sysModCountKey, &sysModCountString)
-		},
-		sysTagsKey: func(writer serialization.SerializationWriter) error {
-			sysTags, err := f.GetSysTags()
-			if err != nil {
-				return err
-			}
-
-			// TODO: confirm file separator
-			sysTagsString := strings.Join(sysTags, " ")
-
-			return writer.WriteStringValue(sysTagsKey, &sysTagsString)
-		},
-		sysUpdatedByKey: func(writer serialization.SerializationWriter) error {
-			sysUpdatedBy, err := f.GetSysUpdatedBy()
-			if err != nil {
-				return err
-			}
-
-			return writer.WriteStringValue(sysUpdatedByKey, sysUpdatedBy)
-		},
-		sysUpdatedOnKey: func(writer serialization.SerializationWriter) error {
-			sysUpdatedOn, err := f.GetSysUpdatedOn()
-			if err != nil {
-				return err
-			}
-
-			sysUpdatedOnString := sysUpdatedOn.Format(time.RFC3339)
-
-			return writer.WriteStringValue(sysUpdatedOnKey, &sysUpdatedOnString)
-		},
-		tableNameKey: func(writer serialization.SerializationWriter) error {
-			tableName, err := f.GetTableName()
-			if err != nil {
-				return err
-			}
-
-			return writer.WriteStringValue(tableNameKey, tableName)
-		},
-		tableSysIDKey: func(writer serialization.SerializationWriter) error {
-			tableSysID, err := f.GetTableSysID()
-			if err != nil {
-				return err
-			}
-
-			return writer.WriteStringValue(tableSysIDKey, tableSysID)
-		},
-		updatedByNameKey: func(writer serialization.SerializationWriter) error {
-			updatedByName, err := f.GetUpdatedByName()
-			if err != nil {
-				return err
-			}
-
-			return writer.WriteStringValue(updatedByNameKey, updatedByName)
-		},
-	}
-
-	for _, serializer := range fieldSerializers {
-		if err := serializer(writer); err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(averageImageColorKey)(f.GetAverageImageColor),
+		internalSerialization.SerializeStringToBoolFunc(compressedKey)(f.GetCompressed),
+		internalSerialization.SerializeStringFunc(contentTypeKey)(f.GetContentType),
+		internalSerialization.SerializeStringFunc(createdByNameKey)(f.GetCreatedByName),
+		internalSerialization.SerializeStringFunc(downloadLinkKey)(f.GetDownloadLink),
+		internalSerialization.SerializeStringFunc(fileNameKey)(f.GetFileName),
+		internalSerialization.SerializeStringToFloat64Func(imageHeightKey)(f.GetImageHeight),
+		internalSerialization.SerializeStringToFloat64Func(imageWidthKey)(f.GetImageWidth),
+		internalSerialization.SerializeStringToInt64Func(sizeBytesKey)(f.GetSizeBytes),
+		internalSerialization.SerializeStringToInt64Func(sizeCompressedKey)(f.GetSizeCompressed),
+		internalSerialization.SerializeStringFunc(sysCreatedByKey)(f.GetSysCreatedBy),
+		internalSerialization.SerializeStringToTimeFunc(sysCreatedOnKey, time.RFC3339)(f.GetSysCreatedOn),
+		internalSerialization.SerializeStringFunc(sysIDKey)(f.GetSysID),
+		internalSerialization.SerializeStringToInt64Func(sysModCountKey)(f.GetSysModCount),
+		internalSerialization.SerializeStringToSliceFunc(sysTagsKey, " ")(f.GetSysTags),
+		internalSerialization.SerializeStringFunc(sysUpdatedByKey)(f.GetSysUpdatedBy),
+		internalSerialization.SerializeStringToTimeFunc(sysUpdatedOnKey, time.RFC3339)(f.GetSysUpdatedOn),
+		internalSerialization.SerializeStringFunc(tableNameKey)(f.GetTableName),
+		internalSerialization.SerializeStringFunc(tableSysIDKey)(f.GetTableSysID),
+		internalSerialization.SerializeStringFunc(updatedByNameKey)(f.GetUpdatedByName),
+	)
 }
 
 // GetAverageImageColor returns, If the attachment is an image, the sum of all colors.
@@ -287,237 +122,33 @@ func (f *FileModel) GetAverageImageColor() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(averageImageColorKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, averageImageColorKey)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (f *FileModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
-	if utils.IsNil(f) {
-		f = NewFile()
-	}
-
 	return map[string]func(serialization.ParseNode) error{
-		averageImageColorKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetAverageImageColor(val)
-		},
-		compressedKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			boolVal, err := strconv.ParseBool(*val)
-			if err != nil {
-				return err
-			}
-
-			return f.SetCompressed(&boolVal)
-		},
-		contentTypeKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetContentType(val)
-		},
-		createdByNameKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetCreatedByName(val)
-		},
-		downloadLinkKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetDownloadLink(val)
-		},
-		fileNameKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetFileName(val)
-		},
-		imageHeightKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			floatVal, err := strconv.ParseFloat(*val, 64)
-			if err != nil {
-				return err
-			}
-
-			return f.SetImageHeight(&floatVal)
-		},
-		imageWidthKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			floatVal, err := strconv.ParseFloat(*val, 64)
-			if err != nil {
-				return err
-			}
-
-			return f.SetImageWidth(&floatVal)
-		},
-		sizeBytesKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			intVal, err := strconv.Atoi(*val)
-			if err != nil {
-				return err
-			}
-			int64Val := int64(intVal)
-
-			return f.SetSizeBytes(&int64Val)
-		},
-		sizeCompressedKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			intVal, err := strconv.Atoi(*val)
-			if err != nil {
-				return err
-			}
-			int64Val := int64(intVal)
-
-			return f.SetSizeCompressed(&int64Val)
-		},
-		sysCreatedByKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetSysCreatedBy(val)
-		},
-		sysCreatedOnKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if utils.IsNil(val) || *val == "" {
-				return f.SetSysUpdatedOn(nil)
-			}
-
-			dateTime, err := time.Parse("2006-01-02 15:04:05", *val)
-			if err != nil {
-				return err
-			}
-
-			return f.SetSysCreatedOn(&dateTime)
-		},
-		sysIDKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetSysID(val)
-		},
-		sysModCountKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			intVal, err := strconv.Atoi(*val)
-			if err != nil {
-				return err
-			}
-			int64Val := int64(intVal)
-
-			return f.SetSysModCount(&int64Val)
-		},
-		sysTagsKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			// TODO: Figure out delimiter
-			tags := strings.Split(*val, " ")
-
-			return f.SetSysTags(tags)
-		},
-		sysUpdatedByKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetSysUpdatedBy(val)
-		},
-		sysUpdatedOnKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if utils.IsNil(val) || *val == "" {
-				return f.SetSysUpdatedOn(nil)
-			}
-
-			dateTime, err := time.Parse("2006-01-02 15:04:05", *val)
-			if err != nil {
-				return err
-			}
-
-			return f.SetSysUpdatedOn(&dateTime)
-		},
-		tableNameKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetTableName(val)
-		},
-		tableSysIDKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetTableSysID(val)
-		},
-		updatedByNameKey: func(node serialization.ParseNode) error {
-			val, err := node.GetStringValue()
-			if err != nil {
-				return err
-			}
-
-			return f.SetUpdatedByName(val)
-		},
+		averageImageColorKey: internalSerialization.DeserializeStringFunc()(f.SetAverageImageColor),
+		compressedKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToBoolPtr)(f.SetCompressed),
+		contentTypeKey:       internalSerialization.DeserializeStringFunc()(f.SetContentType),
+		createdByNameKey:     internalSerialization.DeserializeStringFunc()(f.SetCreatedByName),
+		downloadLinkKey:      internalSerialization.DeserializeStringFunc()(f.SetDownloadLink),
+		fileNameKey:          internalSerialization.DeserializeStringFunc()(f.SetFileName),
+		imageHeightKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageHeight),
+		imageWidthKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageWidth),
+		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeBytes),
+		sizeCompressedKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeCompressed),
+		sysCreatedByKey:      internalSerialization.DeserializeStringFunc()(f.SetSysCreatedBy),
+		sysCreatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysCreatedOn),
+		sysIDKey:             internalSerialization.DeserializeStringFunc()(f.SetSysID),
+		sysModCountKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSysModCount),
+		sysTagsKey:           internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil }))(f.SetSysTags),
+		sysUpdatedByKey:      internalSerialization.DeserializeStringFunc()(f.SetSysUpdatedBy),
+		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysUpdatedOn),
+		tableNameKey:         internalSerialization.DeserializeStringFunc()(f.SetTableName),
+		tableSysIDKey:        internalSerialization.DeserializeStringFunc()(f.SetTableSysID),
+		updatedByNameKey:     internalSerialization.DeserializeStringFunc()(f.SetUpdatedByName),
 	}
 }
 
@@ -527,7 +158,8 @@ func (f *FileModel) SetAverageImageColor(averageImageColor *string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(averageImageColorKey, averageImageColor)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, averageImageColorKey, averageImageColor)
 }
 
 // GetCompressed return flag that indicates whether the attachment file has been compressed.
@@ -536,17 +168,8 @@ func (f *FileModel) GetCompressed() (*bool, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(compressedKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*bool)
-	if !ok {
-		return nil, errors.New("val is not *bool")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](backingStore, compressedKey)
 }
 
 // SetCompressed Sets flag that indicates whether the attachment file has been compressed.
@@ -555,7 +178,8 @@ func (f *FileModel) SetCompressed(compressed *bool) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(compressedKey, compressed)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, compressedKey, compressed)
 }
 
 // GetContentType returns content-type of the associated attachment file, such as image or jpeg or application/x-shockwave-flash.
@@ -564,17 +188,8 @@ func (f *FileModel) GetContentType() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(contentTypeKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, contentTypeKey)
 }
 
 // SetContentType Sets content-type of the associated attachment file, such as image or jpeg or application/x-shockwave-flash.
@@ -583,7 +198,8 @@ func (f *FileModel) SetContentType(contentType *string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(contentTypeKey, contentType)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, contentTypeKey, contentType)
 }
 
 // GetCreatedByName returns full name of entity that originally created the attachment file.
@@ -592,17 +208,8 @@ func (f *FileModel) GetCreatedByName() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(createdByNameKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, createdByNameKey)
 }
 
 // SetCreatedByName Sets full name of entity that originally created the attachment file.
@@ -611,7 +218,18 @@ func (f *FileModel) SetCreatedByName(createdByName *string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(createdByNameKey, createdByName)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, createdByNameKey, createdByName)
+}
+
+// GetCreatedBy returns the entity that originally created the attachment file.
+func (f *FileModel) GetCreatedBy() (*string, error) {
+	return f.GetSysCreatedBy()
+}
+
+// SetCreatedBy Sets the entity that originally created the attachment file.
+func (f *FileModel) SetCreatedBy(createdBy *string) error {
+	return f.SetSysCreatedBy(createdBy)
 }
 
 // GetDownloadLink returns download URL of the attachment on the ServiceNow instance.
@@ -620,17 +238,8 @@ func (f *FileModel) GetDownloadLink() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(downloadLinkKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, downloadLinkKey)
 }
 
 // SetDownloadLink Sets download URL of the attachment on the ServiceNow instance.
@@ -639,7 +248,8 @@ func (f *FileModel) SetDownloadLink(downloadLink *string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(downloadLinkKey, downloadLink)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, downloadLinkKey, downloadLink)
 }
 
 // GetFileName returns the file name of the attachment.
@@ -648,17 +258,8 @@ func (f *FileModel) GetFileName() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(fileNameKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, fileNameKey)
 }
 
 // SetFileName Sets the file name of the attachment.
@@ -667,7 +268,8 @@ func (f *FileModel) SetFileName(fileName *string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(fileNameKey, fileName)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, fileNameKey, fileName)
 }
 
 // GetImageHeight returns if an image file, the height of the image.
@@ -676,17 +278,8 @@ func (f *FileModel) GetImageHeight() (*float64, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(imageHeightKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*float64)
-	if !ok {
-		return nil, errors.New("val is not *float64")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *float64](backingStore, imageHeightKey)
 }
 
 // SetImageHeight Sets if an image file, the height of the image.
@@ -695,7 +288,8 @@ func (f *FileModel) SetImageHeight(imageHeight *float64) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(imageHeightKey, imageHeight)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, imageHeightKey, imageHeight)
 }
 
 // GetImageWidth returns if an image file, the width of the image.
@@ -704,17 +298,8 @@ func (f *FileModel) GetImageWidth() (*float64, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(imageWidthKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*float64)
-	if !ok {
-		return nil, errors.New("val is not *float64")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *float64](backingStore, imageWidthKey)
 }
 
 // SetImageWidth Sets if an image file, the width of the image.
@@ -723,7 +308,8 @@ func (f *FileModel) SetImageWidth(imageWidth *float64) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(imageWidthKey, imageWidth)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, imageWidthKey, imageWidth)
 }
 
 // GetSizeBytes returns size of the attachment.
@@ -732,17 +318,8 @@ func (f *FileModel) GetSizeBytes() (*int64, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(sizeBytesKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*int64)
-	if !ok {
-		return nil, errors.New("val is not *int64")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int64](backingStore, sizeBytesKey)
 }
 
 // SetSizeBytes Sets size of the attachment.
@@ -751,7 +328,8 @@ func (f *FileModel) SetSizeBytes(sizeBytes *int64) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(sizeBytesKey, sizeBytes)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, sizeBytesKey, sizeBytes)
 }
 
 // GetSizeCompressed returns size of the compressed attachment file. If the file is not compressed, empty.
@@ -760,17 +338,8 @@ func (f *FileModel) GetSizeCompressed() (*int64, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(sizeCompressedKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*int64)
-	if !ok {
-		return nil, errors.New("val is not *int64")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int64](backingStore, sizeCompressedKey)
 }
 
 // SetSizeCompressed Sets size of the compressed attachment file.
@@ -779,7 +348,8 @@ func (f *FileModel) SetSizeCompressed(sizeCompressed *int64) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(sizeCompressedKey, sizeCompressed)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, sizeCompressedKey, sizeCompressed)
 }
 
 // GetSysCreatedBy returns the entity that originally created the attachment file.
@@ -788,17 +358,8 @@ func (f *FileModel) GetSysCreatedBy() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(sysCreatedByKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, sysCreatedByKey)
 }
 
 // SetSysCreatedBy Sets the entity that originally created the attachment file.
@@ -807,7 +368,8 @@ func (f *FileModel) SetSysCreatedBy(sysCreatedBy *string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(sysCreatedByKey, sysCreatedBy)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, sysCreatedByKey, sysCreatedBy)
 }
 
 // GetSysCreatedOn returns the date and time that the attachment file was initially saved to the instance.
@@ -816,17 +378,8 @@ func (f *FileModel) GetSysCreatedOn() (*time.Time, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(sysCreatedOnKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*time.Time)
-	if !ok {
-		return nil, errors.New("val is not *time.Time")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *time.Time](backingStore, sysCreatedOnKey)
 }
 
 // SetSysCreatedOn Sets the date and time that the attachment file was initially saved to the instance.
@@ -835,7 +388,8 @@ func (f *FileModel) SetSysCreatedOn(sysCreatedOn *time.Time) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(sysCreatedOnKey, sysCreatedOn)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, sysCreatedOnKey, sysCreatedOn)
 }
 
 // GetSysID returns the sys_id of the attachment file. Read-Only.
@@ -844,17 +398,8 @@ func (f *FileModel) GetSysID() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(sysIDKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, sysIDKey)
 }
 
 // SetSysID Sets the sys_id of the attachment file.
@@ -863,7 +408,8 @@ func (f *FileModel) SetSysID(sysID *string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(sysIDKey, sysID)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, sysIDKey, sysID)
 }
 
 // GetSysModCount returns the number of times the attachment file has been modified (uploaded to the instance).
@@ -872,17 +418,8 @@ func (f *FileModel) GetSysModCount() (*int64, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(sysModCountKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*int64)
-	if !ok {
-		return nil, errors.New("val is not *int64")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int64](backingStore, sysModCountKey)
 }
 
 // SetSysModCount Sets the number of times the attachment file has been modified (uploaded to the instance).
@@ -891,7 +428,8 @@ func (f *FileModel) SetSysModCount(sysModCount *int64) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(sysModCountKey, sysModCount)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, sysModCountKey, sysModCount)
 }
 
 // GetSysTags returns any system tags associated with the attachment file.
@@ -900,17 +438,8 @@ func (f *FileModel) GetSysTags() ([]string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(sysTagsKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.([]string)
-	if !ok {
-		return nil, errors.New("val is not []string")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []string](backingStore, sysTagsKey)
 }
 
 // SetSysTags Sets any system tags associated with the attachment file.
@@ -919,7 +448,8 @@ func (f *FileModel) SetSysTags(sysTags []string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(sysTagsKey, sysTags)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, sysTagsKey, sysTags)
 }
 
 // GetSysUpdatedBy returns the entity that last updated the attachment file.
@@ -928,17 +458,8 @@ func (f *FileModel) GetSysUpdatedBy() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(sysUpdatedByKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, sysUpdatedByKey)
 }
 
 // SetSysUpdatedBy Sets the entity that last updated the attachment file.
@@ -947,7 +468,8 @@ func (f *FileModel) SetSysUpdatedBy(sysUpdatedBy *string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(sysUpdatedByKey, sysUpdatedBy)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, sysUpdatedByKey, sysUpdatedBy)
 }
 
 // GetSysUpdatedOn returns the date and time that the attachment file was last updated.
@@ -956,17 +478,8 @@ func (f *FileModel) GetSysUpdatedOn() (*time.Time, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(sysUpdatedOnKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*time.Time)
-	if !ok {
-		return nil, errors.New("val is not *time.Time")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *time.Time](backingStore, sysUpdatedOnKey)
 }
 
 // SetSysUpdatedOn Sets the date and time that the attachment file was last updated.
@@ -975,7 +488,8 @@ func (f *FileModel) SetSysUpdatedOn(sysUpdatedOn *time.Time) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(sysUpdatedOnKey, sysUpdatedOn)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, sysUpdatedOnKey, sysUpdatedOn)
 }
 
 // GetTableName returns the name of the table to which the attachment is associated.
@@ -984,17 +498,8 @@ func (f *FileModel) GetTableName() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(tableNameKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, tableNameKey)
 }
 
 // SetTableName Sets the name of the table to which the attachment is associated.
@@ -1003,7 +508,8 @@ func (f *FileModel) SetTableName(tableName *string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(tableNameKey, tableName)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, tableNameKey, tableName)
 }
 
 // GetTableSysID returns the sys_id of the table associated with the attachment.
@@ -1012,17 +518,8 @@ func (f *FileModel) GetTableSysID() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(tableSysIDKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, tableSysIDKey)
 }
 
 // SetTableSysID Sets the sys_id of the table associated with the attachment.
@@ -1031,7 +528,8 @@ func (f *FileModel) SetTableSysID(tableSysID *string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(tableSysIDKey, tableSysID)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, tableSysIDKey, tableSysID)
 }
 
 // GetUpdatedByName returns the full name of entity that last updated the attachment file.
@@ -1040,17 +538,8 @@ func (f *FileModel) GetUpdatedByName() (*string, error) {
 		return nil, nil
 	}
 
-	val, err := f.GetBackingStore().Get(updatedByNameKey)
-	if err != nil {
-		return nil, err
-	}
-
-	typedVal, ok := val.(*string)
-	if !ok {
-		return nil, errors.New("val is not *string")
-	}
-
-	return typedVal, nil
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, updatedByNameKey)
 }
 
 // SetUpdatedByName Sets the full name of entity that last updated the attachment file.
@@ -1059,5 +548,6 @@ func (f *FileModel) SetUpdatedByName(updatedByName *string) error {
 		return nil
 	}
 
-	return f.GetBackingStore().Set(updatedByNameKey, updatedByName)
+	backingStore := f.GetBackingStore()
+	return store.DefaultBackedModelMutatorFunc(backingStore, updatedByNameKey, updatedByName)
 }

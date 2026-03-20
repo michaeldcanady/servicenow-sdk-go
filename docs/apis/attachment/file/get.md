@@ -2,7 +2,7 @@
 
 ## Overview
 
-Retrieves an attachment's file by sys id.
+Retrieves an attachment's file data by sys id.
 
 ## Path parameters
 

@@ -103,11 +103,11 @@ func TestRestRequest_Serialize(t *testing.T) {
 			name: "Successful",
 			setup: func(m *RestRequestModel) {
 				_ = m.SetBody([]byte("test"))
-				_ = m.SetExcludeResponseHeaders(utils.ToPointer(true))
+				_ = m.SetExcludeResponseHeaders(internal.ToPointer(true))
 				_ = m.SetHeaders([]RestRequestHeader{NewRestRequestHeader()})
-				_ = m.SetID(utils.ToPointer("id"))
-				_ = m.SetMethod(utils.ToPointer(abstractions.GET))
-				_ = m.SetURL(utils.ToPointer("/api/test"))
+				_ = m.SetID(internal.ToPointer("id"))
+				_ = m.SetMethod(internal.ToPointer(abstractions.GET))
+				_ = m.SetURL(internal.ToPointer("/api/test"))
 			},
 			expectedErr: false,
 		},
@@ -155,7 +155,7 @@ func TestRestRequest_GetFieldDeserializers(t *testing.T) {
 
 				deserializers := model.GetFieldDeserializers()
 
-				assert.Nil(t, deserializers)
+				assert.NotNil(t, deserializers)
 			},
 		},
 		{
@@ -214,7 +214,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 				}
 
 				id, err := resp.GetBody()
-				assert.Equal(t, errors.New("body is not []byte"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type []uint8"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -248,7 +248,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 				}
 
 				id, err := resp.GetBody()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -376,7 +376,7 @@ func TestRestRequest_SetBody(t *testing.T) {
 				}
 
 				err := resp.SetBody(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -438,7 +438,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				}
 
 				id, err := resp.GetExcludeResponseHeaders()
-				assert.Equal(t, errors.New("excludeResponseHeaders is not *bool"), err)
+				assert.Equal(t, errors.New("cannot convert 'test' to type *bool"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -472,7 +472,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				}
 
 				id, err := resp.GetExcludeResponseHeaders()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -554,7 +554,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 				}
 
 				err := resp.SetExcludeResponseHeaders(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -616,7 +616,7 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				}
 
 				id, err := resp.GetHeaders()
-				assert.Equal(t, errors.New("headers is not []RestRequestHeader"), err)
+				assert.Equal(t, errors.New("cannot convert 'test' to type []batchapi.RestRequestHeader"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -650,7 +650,7 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				}
 
 				id, err := resp.GetHeaders()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -732,7 +732,7 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 				}
 
 				err := resp.SetHeaders(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -794,7 +794,7 @@ func TestRestRequest_GetID(t *testing.T) {
 				}
 
 				id, err := resp.GetID()
-				assert.Equal(t, errors.New("id is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -828,7 +828,7 @@ func TestRestRequest_GetID(t *testing.T) {
 				}
 
 				id, err := resp.GetID()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -910,7 +910,7 @@ func TestRestRequest_SetID(t *testing.T) {
 				}
 
 				err := resp.SetID(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -972,7 +972,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				}
 
 				id, err := resp.GetMethod()
-				assert.Equal(t, errors.New("method is not *abstractions.HttpMethod"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *abstractions.HttpMethod"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -1006,7 +1006,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				}
 
 				id, err := resp.GetMethod()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -1088,7 +1088,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 				}
 
 				err := resp.SetMethod(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -1150,7 +1150,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 				}
 
 				id, err := resp.GetURL()
-				assert.Equal(t, errors.New("url is not *string"), err)
+				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -1184,7 +1184,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 				}
 
 				id, err := resp.GetURL()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -1283,7 +1283,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 				}
 
 				err := resp.SetURL(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},

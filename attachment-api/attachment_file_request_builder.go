@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	model "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
+	model "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -98,14 +98,18 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 		return nil, errors.New("requestAdapter is nil")
 	}
 
-	resp, err := requestAdapter.Send(ctx, requestInfo, CreateFileFromDiscriminatorValue, errorMapping)
+	resp, err := requestAdapter.Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[File](CreateFileFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
 
-	typedResp, ok := resp.(*FileModel)
+	if internal.IsNil(resp) {
+		return nil, errors.New("response is nil")
+	}
+
+	typedResp, ok := resp.(newInternal.ServiceNowItemResponse[File])
 	if !ok {
-		return nil, errors.New("resp is not *FileModel")
+		return nil, errors.New("resp is not ServiceNowItemResponse[File]")
 	}
 
 	return typedResp, nil
@@ -137,9 +141,7 @@ func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(ctx context.Con
 		return nil, errors.New("requestAdapter is nil")
 	}
 
-	if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), media.GetContentType(), media); err != nil {
-		return nil, err
-	}
+	kiotaRequestInfo.SetStreamContentAndContentType(media.GetData(), media.GetContentType())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
