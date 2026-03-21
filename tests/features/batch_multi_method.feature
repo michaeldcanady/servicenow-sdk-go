@@ -5,8 +5,8 @@ Feature: ServiceNow Batch API Multi-Method Operations
   So that I can perform mixed operations in a single call
 
   Background:
-    And I have a valid ServiceNow instance and credentials
-    And I have initialized the ServiceNow client
+    Given I have a valid ServiceNow instance
+    And I authenticate with Basic Auth
 
   @integration @batch @multi-method
   Scenario: Successfully send a batch request with POST and GET operations

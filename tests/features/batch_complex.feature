@@ -5,8 +5,8 @@ Feature: ServiceNow Batch API Complex Operations
   So that I can perform varied operations in a single call
 
   Background:
-    And I have a valid ServiceNow instance and credentials
-    And I have initialized the ServiceNow client
+    Given I have a valid ServiceNow instance
+    And I authenticate with Basic Auth
 
   @integration @batch @complex
   Scenario: Successfully send a batch request with multiple GET operations

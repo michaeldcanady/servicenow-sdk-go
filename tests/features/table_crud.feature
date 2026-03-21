@@ -5,21 +5,21 @@ Feature: ServiceNow Table API CRUD Operations
   So that I can manage data in my instance
 
   Background:
-    And I have a valid ServiceNow instance and credentials
-    And I have initialized the ServiceNow client
+    Given I have a valid ServiceNow instance
+    And I authenticate with Basic Auth
 
   @integration @table @crud
   Scenario: Successfully perform CRUD operations on incident table
-    When I create a new incident with description "Created by Godog"
+    When I create a new record in "incident" with description "Created by Godog"
     Then the response should not be an error
     And the created record should have a valid "sys_id"
     
-    When I update the incident description to "Updated by Godog"
+    When I update the record description to "Updated by Godog"
     Then the response should not be an error
     And the record should have description "Updated by Godog"
 
-    When I delete the created incident
+    When I delete the created record
     Then the response should not be an error
 
-    When I request the deleted incident by its "sys_id"
+    When I request the record by its "sys_id"
     Then the response should be a 404 error

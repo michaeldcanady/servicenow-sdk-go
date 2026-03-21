@@ -3,13 +3,16 @@
 package tests
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
 	"regexp"
 	"strings"
 
+	"github.com/cucumber/godog"
 	"github.com/jarcoal/httpmock"
+	"github.com/joho/godotenv"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
@@ -33,11 +36,14 @@ func setupGlobalMocks() {
 		instance = "mock_instance"
 		_ = os.Setenv("SN_INSTANCE", instance)
 	}
+	fmt.Printf("DEBUG: setupGlobalMocks using instance: %q\n", instance)
 
 	// Table API Mocks
 	tableBaseURL := fmt.Sprintf("https://%s.service-now.com/api/now/v1/table", instance)
+	fmt.Printf("DEBUG: registering GET %s/incident\n", tableBaseURL)
 	httpmock.RegisterResponder("GET", tableBaseURL+"/incident",
 		func(req *http.Request) (*http.Response, error) {
+			fmt.Printf("DEBUG: GET %s/incident called\n", tableBaseURL)
 			query := req.URL.Query().Get("sysparm_query")
 			data := mockIncidentList
 			if strings.Contains(query, "ORDERBYDESC") {
@@ -48,8 +54,10 @@ func setupGlobalMocks() {
 			resp.Header.Set("Link", fmt.Sprintf("<%s/incident?sysparm_limit=2&sysparm_offset=2>; rel=\"next\"", tableBaseURL))
 			return resp, nil
 		})
+	fmt.Printf("DEBUG: registering POST %s/incident\n", tableBaseURL)
 	httpmock.RegisterResponder("POST", tableBaseURL+"/incident",
 		func(req *http.Request) (*http.Response, error) {
+			fmt.Printf("DEBUG: POST %s/incident called\n", tableBaseURL)
 			resp := httpmock.NewStringResponse(201, mockCreatedIncident)
 			resp.Header.Set("Content-Type", "application/json")
 			return resp, nil
@@ -63,17 +71,17 @@ func setupGlobalMocks() {
 			return resp, nil
 		})
 
-	httpmock.RegisterRegexpResponder("PUT", regexp.MustCompile(tableBaseURL+`/incident/[a-zA-Z0-9_]+$`), func(req *http.Request) (*http.Response, error) {
+	httpmock.RegisterRegexpResponder("PUT", regexp.MustCompile(regexp.QuoteMeta(tableBaseURL)+`/incident/[a-zA-Z0-9_]+$`), func(req *http.Request) (*http.Response, error) {
 		resp := httpmock.NewStringResponse(200, mockUpdatedIncident)
 		resp.Header.Set("Content-Type", "application/json")
 		return resp, nil
 	})
-	httpmock.RegisterRegexpResponder("PATCH", regexp.MustCompile(tableBaseURL+`/incident/[a-zA-Z0-9_]+$`), func(req *http.Request) (*http.Response, error) {
+	httpmock.RegisterRegexpResponder("PATCH", regexp.MustCompile(regexp.QuoteMeta(tableBaseURL)+`/incident/[a-zA-Z0-9_]+$`), func(req *http.Request) (*http.Response, error) {
 		resp := httpmock.NewStringResponse(200, mockPatchedIncident)
 		resp.Header.Set("Content-Type", "application/json")
 		return resp, nil
 	})
-	httpmock.RegisterRegexpResponder("DELETE", regexp.MustCompile(tableBaseURL+`/incident/[a-zA-Z0-9_]+$`), httpmock.NewStringResponder(204, ""))
+	httpmock.RegisterRegexpResponder("DELETE", regexp.MustCompile(regexp.QuoteMeta(tableBaseURL)+`/incident/[a-zA-Z0-9_]+$`), httpmock.NewStringResponder(204, ""))
 
 	// Attachment API Mocks
 	attachBaseURL := fmt.Sprintf("https://%s.service-now.com/api/now/v1/attachment", instance)
@@ -131,4 +139,25 @@ func getHttpClient() *http.Client {
 		}
 	}
 	return nil
+}
+
+func InitializeScenario(ctx *godog.ScenarioContext) {
+	_ = godotenv.Load("../.env")
+	tc := &testContext{}
+
+	ctx.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
+		setupGlobalMocks()
+		tc.reset()
+		return ctx, nil
+	})
+
+	ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
+		httpmock.DeactivateAndReset()
+		return ctx, nil
+	})
+
+	registerSharedSteps(ctx, tc)
+	InitializeTableScenario(ctx, tc)
+	InitializeAttachmentScenario(ctx, tc)
+	InitializeBatchScenario(ctx, tc)
 }

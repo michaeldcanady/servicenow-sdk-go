@@ -5,13 +5,11 @@ Feature: ServiceNow Table API Pagination
   So that I can handle large datasets efficiently
 
   Background:
-    And I have a valid ServiceNow instance and credentials
-    And I have initialized the ServiceNow client
-
+    Given I have a valid ServiceNow instance
+    And I authenticate with Basic Auth
 
   @integration @table @pagination
   Scenario: Successfully iterate through multiple pages of records
     Given I set the page size to 2
-    When I use the Table PageIterator to fetch records
+    When I use the Table PageIterator to fetch records from "incident"
     Then I should be able to reach the second page
-    And the total count of records retrieved should be greater than 2

@@ -5,14 +5,14 @@ Feature: ServiceNow Batch API DELETE Operations
   So that I can delete multiple records in a single call
 
   Background:
-    And I have a valid ServiceNow instance and credentials
-    And I have initialized the ServiceNow client
+    Given I have a valid ServiceNow instance
+    And I authenticate with Basic Auth
 
   @integration @batch @delete
   Scenario: Successfully send a batch request with a DELETE operation
-    Given I create a new incident with description "Created for Batch DELETE"
-    When I send a batch request with a DELETE operation for the created incident
+    Given I create a new record in "incident" with description "Created for Batch DELETE"
+    When I send a batch request with a DELETE operation for the created record
     Then the response should not be an error
     And the batch response should contain a successful result for the operation
-    When I request the deleted incident by its "sys_id"
+    When I request the record by its "sys_id"
     Then the response should be a 404 error

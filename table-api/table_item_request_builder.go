@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	tableItemURLTemplate2 = "{+baseurl}/api/now/v1/table/{/table}/{sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view}"
+	tableItemURLTemplate2 = "{+baseurl}/api/now/v1/table{/table}/{sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view}"
 )
 
 // TableItemRequestBuilder provides operations to manage a single Service-Now table record.

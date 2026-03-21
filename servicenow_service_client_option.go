@@ -9,8 +9,6 @@ import (
 
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
-	abstractions "github.com/microsoft/kiota-abstractions-go"
-	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
@@ -18,28 +16,6 @@ import (
 // ServiceNowServiceClientOption is a function type that modifies the ServiceNowServiceClientConfig.
 // It returns an error if the modification is not successful.
 type ServiceNowServiceClientOption func(*ServiceNowServiceClientConfig) error
-
-// WithAuthenticationProvider sets the authentication provider for the ServiceNowServiceClient.
-func WithAuthenticationProvider(authenticationProvider authentication.AuthenticationProvider) ServiceNowServiceClientOption {
-	return func(config *ServiceNowServiceClientConfig) error {
-		if utils.IsNil(authenticationProvider) {
-			return errors.New("authenticationProvider is nil")
-		}
-		config.authenticationProvider = authenticationProvider
-		return nil
-	}
-}
-
-// WithRequestAdapter sets a pre-configured RequestAdapter for the ServiceNowServiceClient.
-func WithRequestAdapter(requestAdapter abstractions.RequestAdapter) ServiceNowServiceClientOption {
-	return func(config *ServiceNowServiceClientConfig) error {
-		if utils.IsNil(requestAdapter) {
-			return errors.New("requestAdapter is nil")
-		}
-		config.requestAdapter = requestAdapter
-		return nil
-	}
-}
 
 // WithURL creates an option to set the base URL for the requests.
 // It returns an error if the provided configuration is nil or the URL is empty.

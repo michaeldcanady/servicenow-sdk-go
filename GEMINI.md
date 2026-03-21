@@ -1,93 +1,58 @@
 # ServiceNow SDK for Go - Project Context
 
-This project is a ServiceNow API client for Go, designed to provide a simple and uniform way to interact with ServiceNow. It is built on a request/response pipeline architecture inspired by Microsoft Kiota, ensuring a consistent developer experience for multiple ServiceNow API modules.
+This project is a Service-Now API client enabling Go programs to interact with Service-Now in a simple and uniform way. It is built on top of Microsoft Kiota abstractions and follows its request/response pipeline patterns.
 
 ## Project Overview
-- **Purpose**: To provide a robust, type-safe, and scalable Go SDK for interacting with the ServiceNow platform.
-- **Main Technologies**:
-  - **Go (v1.24+)**: Core language.
-  - **Microsoft Kiota**: Abstractions and HTTP library for building request/response flows.
-  - **Gherkin/Godog**: Used for BDD-style integration testing.
-  - **Testify**: Standard unit testing and mocking.
-- **Architecture**:
-  - **Modules**: Separate packages for `table-api`, `attachment-api`, and `batch-api`.
-  - **Internal Core**: `internal/new/` contains shared Kiota-based request builders, serialization helpers, and response models.
-  - **Client**: `ServiceNowClient` serves as the main entry point, providing access to the different API namespaces.
 
-## Building and Running
-The following commands are essential for developing and validating the SDK:
+- **Purpose:** Provide a type-safe, idiomatic Go SDK for ServiceNow APIs.
+- **Main Technologies:**
+  - **Language:** Go 1.23+
+  - **API Framework:** Microsoft Kiota (abstractions, serialization, http-go).
+  - **Testing:** Standard `go test`, [Testify](https://github.com/stretchr/testify), [httpmock](https://github.com/jarcoal/httpmock), and [Godog](https://github.com/cucumber/godog) for BDD.
+  - **Documentation:** MkDocs (run via Docker/Podman using `justfile`).
 
-- **Testing**:
-  - Run all tests: `go test ./...`
-  - Run integration tests (requires environment variables): `go test ./tests/...`
-- **Documentation**:
-  - Build docs container: `just build-docs` (Requires `just` and `podman/docker`)
+## Architecture and Structure
+
+The SDK is organized by API modules, with a core client providing access to them.
+
+- **`servicenow_service_client.go`**: Entry point for the SDK. It initializes the `RequestAdapter` and registers default serializers/deserializers.
+- **`table-api/`**, **`attachment-api/`**, **`batch-api/`**, **`policy-api/`**: Module-specific implementations following the Kiota `RequestBuilder` pattern.
+- **`internal/`**:
+  - `kiota/`: Custom Kiota extensions and base RequestBuilder.
+  - `http/`: HTTP-related utilities and constants.
+  - `model/`: Shared data models and interfaces.
+  - `serialization/`: Custom serialization logic.
+- **`credentials/`**: Authentication providers and credential management (OAuth2, Basic Auth).
+
+### RequestBuilder Pattern
+
+The SDK extensively uses the Kiota `RequestBuilder` pattern. Each API endpoint is represented by a RequestBuilder that provides methods like `Get`, `Post`, `Put`, `Delete`, etc.
+Endpoints with path parameters (e.g., `sys_id`) are accessed via methods like `ById(sysId)`.
+
+## Key Commands
+
+- **Build:** `go build ./...`
+- **Test:** `go test ./...`
+- **BDD Tests:** `go test ./tests/...` (requires `godog`)
+- **Linting:** `golangci-lint run` (uses `.golangci.yml`)
+- **Documentation:**
+  - Build docs image: `just build-docs`
   - Serve docs locally: `just serve-docs`
   - Generate static site: `just generate-docs`
-- **Cleaning**:
-  - Remove doc artifacts: `just clean-docs`
 
-## Core Mandates & Engineering Standards
-- **Surgical Changes**: Always prefer minimal, targeted edits over large refactors unless explicitly requested.
-- **Idiomatic Go**: Follow standard Go conventions (gofmt, linting, proper error handling).
-- **Kiota Alignment**: Maintain consistency with Kiota's request builder and serialization patterns.
-- **Testing Requirements**:
-  - **Unit Tests**: Every new feature or bug fix must have accompanying unit tests in the same package (e.g., `*_test.go`).
-  - **Integration Tests**: Significant API changes should be verified with Godog features in the `tests/` directory.
-  - **Mocking**: Use `testify/mock` for internal mocks and `httpmock` for simulating ServiceNow API responses.
-- **Error Handling**: Use the `core.ServiceNowError` and `core.ApiError` structures for API-related failures.
+## Development Conventions
 
-## Governance & Behavioral Rules
-Gemini operates as an AI contributor and must strictly adhere to the following rules for all changes.
+- **Kiota Compliance:** New API modules should follow the Kiota pattern:
+  - Use `RequestBuilder` for defining endpoints.
+  - Use `To[Method]RequestInformation` for request preparation.
+  - Use `Parsable` interfaces for serialization.
+- **Generics:** Use generics for type-safe API responses where applicable (see `TableRequestBuilder`).
+- **Testing:**
+  - Unit tests should use `httpmock` for mocking ServiceNow API responses.
+  - BDD tests in `tests/` should use `godog` and Gherkin features in `tests/features/`.
+- **Error Handling:** Use the custom error types and discriminator-based error creation (e.g., `CreateServiceNowErrorFromDiscriminatorValue`).
+- **Formatting:** Code must be formatted with `gofmt` (enforced by `golangci-lint`).
 
-### 1. Semantic Versioning (SemVer 2.0.0)
-Gemini must follow SemVer for all changes affecting code, schemas, workflows, or documentation.
-- **MAJOR**: Backwards-incompatible changes.
-- **MINOR**: Backwards-compatible feature additions.
-- **PATCH**: Bug fixes, refactors, documentation, internal improvements.
+## Documentation
 
-**Required for every update:**
-- Current and proposed version.
-- Justification for the version increment.
-- Categorized list of changes (MAJOR/MINOR/PATCH).
-- Changelog-ready summary.
-- **Never apply a version bump silently or infer it without explicit reasoning.**
-
-### 2. Conventional Commits & Atomicity
-All changes must be broken into **atomic, logically isolated commits**.
-- **Atomic**: One conceptual change per commit (e.g., do not mix refactors with features).
-- **Types**: `feat:`, `fix:`, `refactor:`, `docs:`, `perf:`, `chore:`, `test:`.
-- **Breaking Changes**: Use `BREAKING CHANGE:` footer for MAJOR updates.
-
-### 3. Commit-Ready Blocks
-For every change, Gemini must output a "Commit-Ready Block" containing:
-1. Proposed version bump and reason.
-2. Code diff.
-3. SemVer classification.
-4. Conventional Commit message.
-5. Changelog entry.
-6. **Pause for user confirmation.**
-
-## Project Structure
-- `core/`: Base abstractions and common types.
-- `credentials/`: Authentication and credential providers.
-- `internal/new/`: Reusable Kiota-based components (RequestBuilder, PageIterator, etc.).
-- `table-api/`, `attachment-api/`, `batch-api/`: Specific API implementations.
-- `tests/`: BDD integration tests (Godog features).
-
-## Development Workflows
-### Research -> Strategy -> Execution
-1. **Research**: Identify the relevant API package and Kiota abstractions. Verify existing patterns.
-2. **Strategy**: Propose changes that align with the `RequestBuilder` and `Parsable` patterns. Determine SemVer impact.
-3. **Execution**:
-   - Update/Create models and request builders.
-   - Add unit tests and run `go test ./...`.
-   - Produce a **Commit-Ready Block** and wait for approval.
-   - (Optional) Update integration tests in `tests/`.
-
-## Key Files
-- `servicenow_client.go`: Main entry point for the SDK.
-- `now_request_builder.go`: Entry point for the "Now" API namespace.
-- `internal/new/kiota_utils.go`: Utility functions for Kiota integration.
-- `VERSION`: File containing the current project version.
-- `CHANGELOG.md`: Record of all notable changes.
+Documentation source is in the `/docs` directory. It uses MkDocs with the Material theme. API documentation is often generated or manually updated based on ServiceNow's API specifications.

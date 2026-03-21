@@ -74,6 +74,10 @@ func NewServiceNowServiceClientWithOptions(
 		return nil, err
 	}
 
+	if authenticationProvider == nil {
+
+	}
+
 	requestAdapter, err := config.getRequestAdapter()
 	if err != nil {
 		return nil, err

@@ -5,13 +5,13 @@ Feature: ServiceNow Table API PATCH Operation
   So that I can efficiently update specific fields without sending the entire record
 
   Background:
-    And I have a valid ServiceNow instance and credentials
-    And I have initialized the ServiceNow client
+    Given I have a valid ServiceNow instance
+    And I authenticate with Basic Auth
 
   @integration @table @patch
   Scenario: Successfully perform PATCH operation on incident table
-    Given I create a new incident with description "Created for PATCH"
-    When I patch the incident description to "Patched by Godog"
+    Given I create a new record in "incident" with description "Created for PATCH"
+    When I patch the record description to "Patched by Godog"
     Then the response should not be an error
     And the record should have description "Patched by Godog"
-    And I delete the created incident
+    And I delete the created record

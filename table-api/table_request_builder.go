@@ -16,7 +16,7 @@ import (
 
 const (
 	// tableURLTemplate the url template for Service-Now batch API
-	tableURLTemplate = "{+baseurl}/api/now/v1/table/{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
+	tableURLTemplate = "{+baseurl}/api/now/v1/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
 )
 
 // TableRequestBuilder provides operations to manage Service-Now table collections.
@@ -75,6 +75,9 @@ func (rB *TableRequestBuilder[T]) Get(ctx context.Context, requestConfiguration 
 	if err != nil {
 		return nil, err
 	}
+
+	uri, _ := requestInfo.GetUri()
+	fmt.Printf("DEBUG: TableRequestBuilder.Get URI: %q\n", uri)
 
 	errorMapping := abstractions.ErrorMappings{
 		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,

@@ -11,68 +11,22 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/jarcoal/httpmock"
-	"github.com/joho/godotenv"
-	sdk "github.com/michaeldcanady/servicenow-sdk-go"
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 )
 
-type attachmentTestContext struct {
-	client        *sdk.ServiceNowClient
-	response      interface{} // Generic response to support either collection or item
-	err           error
-	lastSysID     string
-	incidentSysID string
-}
-
-func (c *attachmentTestContext) iHaveAValidServiceNowInstanceAndCredentials() error {
-	_ = godotenv.Load("../.env")
-	return nil
-}
-
-func (c *attachmentTestContext) iHaveInitializedTheServiceNowClient() error {
-	instance := os.Getenv("SN_INSTANCE")
-	if instance == "" {
-		instance = "mock_instance"
-	}
-
-	cred := credentials.NewUsernamePasswordCredential(
-		os.Getenv("SN_USERNAME"),
-		os.Getenv("SN_PASSWORD"),
-	)
-
-	client, err := sdk.NewServiceNowClient2WithHTTPClient(cred, instance, getHttpClient())
-	if err != nil {
-		return err
-	}
-	c.client = client
-	return nil
-}
-
-func (c *attachmentTestContext) iRequestAllAttachments() error {
-	resp, err := c.client.Now2().Attachment2().Get(context.Background(), nil)
+func (c *testContext) iRequestAllAttachments() error {
+	resp, err := c.client.Now().Attachment().Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil
 }
 
-func (c *attachmentTestContext) theResponseShouldNotBeAnError() error {
-	if c.err != nil {
-		if snErr, ok := c.err.(*core.ServiceNowError); ok {
-			return fmt.Errorf("expected no error, but got: %v (Message: %s, Detail: %s, Status: %s)",
-				c.err, snErr.Exception.Message, snErr.Exception.Detail, snErr.Status)
-		}
-		return fmt.Errorf("expected no error, but got: %v", c.err)
-	}
-	return nil
-}
-
-func (c *attachmentTestContext) theResultsShouldContainAtLeastRecords(minCount int) error {
-	collection, ok := c.response.(*attachmentapi.AttachmentCollectionResponse2Model)
+func (c *testContext) theAttachmentResultsShouldContainAtLeastRecords(minCount int) error {
+	collection, ok := c.response.(attachmentapi.AttachmentCollectionResponse2)
 	if !ok {
-		return fmt.Errorf("expected a collection response, but got %T", c.response)
+		return fmt.Errorf("resp is not attachmentapi.AttachmentCollectionResponse2, got %T", c.response)
 	}
 	results, err := collection.GetResult()
 	if err != nil {
@@ -85,8 +39,8 @@ func (c *attachmentTestContext) theResultsShouldContainAtLeastRecords(minCount i
 	return nil
 }
 
-func (c *attachmentTestContext) iHaveAtLeastAttachmentInTheInstance(minCount int) error {
-	resp, err := c.client.Now2().Attachment2().Get(context.Background(), nil)
+func (c *testContext) iHaveAtLeastAttachmentInTheInstance(minCount int) error {
+	resp, err := c.client.Now().Attachment().Get(context.Background(), nil)
 	if err != nil {
 		return err
 	}
@@ -108,17 +62,17 @@ func (c *attachmentTestContext) iHaveAtLeastAttachmentInTheInstance(minCount int
 	return nil
 }
 
-func (c *attachmentTestContext) iRequestTheAttachmentByItsSysID() error {
-	resp, err := c.client.Now2().Attachment2().ByID(c.lastSysID).Get(context.Background(), nil)
+func (c *testContext) iRequestTheAttachmentByItsSysID() error {
+	resp, err := c.client.Now().Attachment().ByID(c.lastSysID).Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil
 }
 
-func (c *attachmentTestContext) theResultShouldHaveTheCorrectSysID() error {
-	response, ok := c.response.(newInternal.ServiceNowItemResponse[attachmentapi.Attachment2])
+func (c *testContext) theAttachmentResultShouldHaveTheCorrectSysID() error {
+	response, ok := c.response.(model.ServiceNowItemResponse[attachmentapi.Attachment2])
 	if !ok {
-		return fmt.Errorf("expected a ServiceNowItemResponse[Attachment2], but got %T", c.response)
+		return fmt.Errorf("resp is not model.ServiceNowItemResponse[attachmentapi.Attachment2], got %T", c.response)
 	}
 
 	item, err := response.GetResult()
@@ -141,28 +95,7 @@ func (c *attachmentTestContext) theResultShouldHaveTheCorrectSysID() error {
 	return nil
 }
 
-func (c *attachmentTestContext) iHaveAnIncidentRecordInTheTable(tableName string) error {
-	if !isOffline() {
-		resp, err := c.client.Now2().TableV2(tableName).Get(context.Background(), nil)
-		if err != nil {
-			return err
-		}
-		results, err := resp.GetResult()
-		if err != nil {
-			return err
-		}
-		if len(results) == 0 {
-			return fmt.Errorf("no incidents found in table %s", tableName)
-		}
-		sysID, _ := results[0].GetSysID()
-		c.incidentSysID = *sysID
-	} else {
-		c.incidentSysID = "mock_sys_id_1"
-	}
-	return nil
-}
-
-func (c *attachmentTestContext) iUploadTheFileFromTheResourcesDirectoryToTheIncident(fileName string) error {
+func (c *testContext) iUploadTheFileFromTheResourcesDirectoryToTheRecord(fileName string) error {
 	var data []byte
 	var err error
 
@@ -180,14 +113,14 @@ func (c *attachmentTestContext) iUploadTheFileFromTheResourcesDirectoryToTheInci
 	config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
 		QueryParameters: &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
 			FileName:   &fileName,
-			TableName:  ptr("incident"),
-			TableSysID: &c.incidentSysID,
+			TableName:  &c.tableName,
+			TableSysID: &c.lastSysID,
 		},
 	}
-	resp, err := c.client.Now2().Attachment2().File().Post(context.Background(), media, config)
+	resp, err := c.client.Now().Attachment().File().Post(context.Background(), media, config)
 	c.response = resp
 	c.err = err
-	if err == nil && !newInternal.IsNil(resp) {
+	if err == nil && !utils.IsNil(resp) {
 		item, err := resp.GetResult()
 		if err != nil {
 			return fmt.Errorf("failed to get result from response: %w", err)
@@ -204,10 +137,10 @@ func (c *attachmentTestContext) iUploadTheFileFromTheResourcesDirectoryToTheInci
 	return nil
 }
 
-func (c *attachmentTestContext) theCreatedAttachmentShouldHaveAValidSysID() error {
-	response, ok := c.response.(newInternal.ServiceNowItemResponse[attachmentapi.File])
+func (c *testContext) theCreatedAttachmentShouldHaveAValidSysID() error {
+	response, ok := c.response.(model.ServiceNowItemResponse[attachmentapi.File])
 	if !ok {
-		return fmt.Errorf("expected a ServiceNowItemResponse[File], but got %T", c.response)
+		return fmt.Errorf("resp is not model.ServiceNowItemResponse[attachmentapi.File], got %T", c.response)
 	}
 	item, err := response.GetResult()
 	if err != nil {
@@ -220,10 +153,10 @@ func (c *attachmentTestContext) theCreatedAttachmentShouldHaveAValidSysID() erro
 	return nil
 }
 
-func (c *attachmentTestContext) theAttachmentFilenameShouldBe(fileName string) error {
-	response, ok := c.response.(newInternal.ServiceNowItemResponse[attachmentapi.File])
+func (c *testContext) theAttachmentFilenameShouldBe(fileName string) error {
+	response, ok := c.response.(model.ServiceNowItemResponse[attachmentapi.File])
 	if !ok {
-		return fmt.Errorf("expected a ServiceNowItemResponse[File], but got %T", c.response)
+		return fmt.Errorf("resp is not model.ServiceNowItemResponse[attachmentapi.File], got %T", c.response)
 	}
 	item, err := response.GetResult()
 	if err != nil {
@@ -236,14 +169,14 @@ func (c *attachmentTestContext) theAttachmentFilenameShouldBe(fileName string) e
 	return nil
 }
 
-func (c *attachmentTestContext) iRequestTheContentOfTheCreatedAttachment() error {
-	resp, err := c.client.Now2().Attachment2().ByID(c.lastSysID).File().Get(context.Background(), nil)
+func (c *testContext) iRequestTheContentOfTheCreatedAttachment() error {
+	resp, err := c.client.Now().Attachment().ByID(c.lastSysID).File().Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil
 }
 
-func (c *attachmentTestContext) theRetrievedContentShouldMatchTheOriginalFile(fileName string) error {
+func (c *testContext) theRetrievedContentShouldMatchTheOriginalFile(fileName string) error {
 	var originalData []byte
 	var err error
 
@@ -257,9 +190,9 @@ func (c *attachmentTestContext) theRetrievedContentShouldMatchTheOriginalFile(fi
 		originalData = []byte("test content")
 	}
 
-	fileWithContent, ok := c.response.(*attachmentapi.FileWithContentModel)
+	fileWithContent, ok := c.response.(attachmentapi.FileWithContent)
 	if !ok {
-		return fmt.Errorf("expected *FileWithContentModel, but got %T", c.response)
+		return fmt.Errorf("resp is not attachmentapi.FileWithContent, got %T", c.response)
 	}
 
 	retrievedData, err := fileWithContent.GetContent()
@@ -273,72 +206,45 @@ func (c *attachmentTestContext) theRetrievedContentShouldMatchTheOriginalFile(fi
 	return nil
 }
 
-func (c *attachmentTestContext) iDeleteTheCreatedAttachment() error {
-	err := c.client.Now2().Attachment2().ByID(c.lastSysID).Delete(context.Background(), nil)
+func (c *testContext) iDeleteTheCreatedAttachment() error {
+	err := c.client.Now().Attachment().ByID(c.lastSysID).Delete(context.Background(), nil)
 	c.err = err
 	return nil
 }
 
-func (c *attachmentTestContext) iRequestTheDeletedAttachmentByItsSysID() error {
+func (c *testContext) iRequestTheDeletedAttachmentByItsSysID() error {
 	if isOffline() {
-		baseURL := fmt.Sprintf("https://%s.service-now.com/api/now/v1/attachment", os.Getenv("SN_INSTANCE"))
+		instance := os.Getenv("SN_INSTANCE")
+		baseURL := fmt.Sprintf("https://%s.service-now.com/api/now/v1/attachment", instance)
 		url := fmt.Sprintf("%s/%s", baseURL, c.lastSysID)
 		httpmock.RegisterResponder("GET", url,
 			httpmock.NewStringResponder(404, `{"error":{"message":"No Record found","detail":""},"status":"failure"}`))
 	}
-	resp, err := c.client.Now2().Attachment2().ByID(c.lastSysID).Get(context.Background(), nil)
+	resp, err := c.client.Now().Attachment().ByID(c.lastSysID).Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil
 }
 
-func (c *attachmentTestContext) theResponseShouldBeA404Error() error {
-	if c.err == nil {
-		return fmt.Errorf("expected a 404 error, but got no error")
-	}
-	return nil
-}
-
-func ptr[T any](v T) *T {
-	return &v
-}
-
-func InitializeAttachmentScenario(ctx *godog.ScenarioContext) {
-	tc := &attachmentTestContext{}
-
-	ctx.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
-		setupGlobalMocks()
-		return ctx, nil
-	})
-
-	ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
-		httpmock.DeactivateAndReset()
-		return ctx, nil
-	})
-
-	ctx.Step(`^I have a valid ServiceNow instance and credentials$`, tc.iHaveAValidServiceNowInstanceAndCredentials)
-	ctx.Step(`^I have initialized the ServiceNow client$`, tc.iHaveInitializedTheServiceNowClient)
+func InitializeAttachmentScenario(ctx *godog.ScenarioContext, tc *testContext) {
 	ctx.Step(`^I request all attachments$`, tc.iRequestAllAttachments)
-	ctx.Step(`^the response should not be an error$`, tc.theResponseShouldNotBeAnError)
-	ctx.Step(`^the results should contain at least (\d+) records$`, tc.theResultsShouldContainAtLeastRecords)
+	ctx.Step(`^the attachment results should contain at least (\d+) records$`, tc.theAttachmentResultsShouldContainAtLeastRecords)
 	ctx.Step(`^I have at least (\d+) attachment in the instance$`, tc.iHaveAtLeastAttachmentInTheInstance)
 	ctx.Step(`^I request the attachment by its "sys_id"$`, tc.iRequestTheAttachmentByItsSysID)
-	ctx.Step(`^the result should have the correct "sys_id"$`, tc.theResultShouldHaveTheCorrectSysID)
+	ctx.Step(`^the attachment result should have the correct "sys_id"$`, tc.theAttachmentResultShouldHaveTheCorrectSysID)
 
-	ctx.Step(`^I have an incident record in the "([^"]*)" table$`, tc.iHaveAnIncidentRecordInTheTable)
-	ctx.Step(`^I upload the file "([^"]*)" from the resources directory to the incident$`, tc.iUploadTheFileFromTheResourcesDirectoryToTheIncident)
+	ctx.Step(`^I upload the file "([^"]*)" from the resources directory to the record$`, tc.iUploadTheFileFromTheResourcesDirectoryToTheRecord)
 	ctx.Step(`^the created attachment should have a valid "sys_id"$`, tc.theCreatedAttachmentShouldHaveAValidSysID)
 	ctx.Step(`^the attachment filename should be "([^"]*)"$`, tc.theAttachmentFilenameShouldBe)
 	ctx.Step(`^I request the content of the created attachment$`, tc.iRequestTheContentOfTheCreatedAttachment)
 	ctx.Step(`^the retrieved content should match the original file "([^"]*)"$`, tc.theRetrievedContentShouldMatchTheOriginalFile)
 	ctx.Step(`^I delete the created attachment$`, tc.iDeleteTheCreatedAttachment)
 	ctx.Step(`^I request the deleted attachment by its "sys_id"$`, tc.iRequestTheDeletedAttachmentByItsSysID)
-	ctx.Step(`^the response should be a 404 error$`, tc.theResponseShouldBeA404Error)
 }
 
 func TestAttachmentFeatures(t *testing.T) {
 	suite := godog.TestSuite{
-		ScenarioInitializer: InitializeAttachmentScenario,
+		ScenarioInitializer: InitializeScenario,
 		Options: &godog.Options{
 			Format:   "pretty",
 			Paths:    []string{"features/attachment_api.feature", "features/attachment_crud.feature", "features/attachment_content.feature"},

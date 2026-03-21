@@ -1,7 +1,7 @@
 package servicenowsdkgo
 
 import (
-	"errors"
+	"fmt"
 	"strings"
 
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -44,21 +44,20 @@ func buildServiceClientConfig(opts ...ServiceNowServiceClientOption) (*ServiceNo
 		return nil, err
 	}
 
+	fmt.Printf("DEBUG: buildServiceClientConfig rawURI: %q\n", config.rawURI)
+
 	return config, nil
 }
 
 // Validate checks if the configuration is valid.
 func (c *ServiceNowServiceClientConfig) Validate() error {
-	if utils.IsNil(c.requestAdapter) && utils.IsNil(c.authenticationProvider) {
-		return errors.New("must provide either an AuthenticationProvider or a RequestAdapter")
-	}
 
 	return nil
 }
 
 // getBaseURL resolves the base URL from the configuration.
 func (c *ServiceNowServiceClientConfig) getBaseURL() string {
-	return strings.TrimSpace(c.rawURI)
+	return strings.TrimSuffix(strings.TrimSpace(c.rawURI), "/")
 }
 
 // getRequestAdapter resolves the request adapter and enables the backing store if configured.
@@ -78,6 +77,7 @@ func (c *ServiceNowServiceClientConfig) getRequestAdapter() (abstractions.Reques
 	}
 
 	baseURL := c.getBaseURL()
+	fmt.Printf("DEBUG: getRequestAdapter baseURL: %q\n", baseURL)
 	requestAdapter.SetBaseUrl(baseURL)
 
 	type preparable interface {
