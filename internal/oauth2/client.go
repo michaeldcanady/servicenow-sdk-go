@@ -404,6 +404,9 @@ func (c *Client) AuthCodeURL(redirectURI, state, codeChallenge, codeChallengeMet
 	q := u.Query()
 	q.Set(ResponseTypeKey, ResponseTypeCode)
 	q.Set(ClientIDKey, c.ClientID)
+	if secret := strings.TrimSpace(c.ClientSecret); secret != "" {
+		q.Set(ClientSecretKey, secret)
+	}
 	if redirectURI != "" {
 		q.Set(RedirectURIKey, redirectURI)
 	}
