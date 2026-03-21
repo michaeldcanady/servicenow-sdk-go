@@ -52,6 +52,7 @@
     "githistory",
     "gocognit",
     "Godog",
+    "godotenv",
     "gofmt",
     "golangci",
     "gopath",

@@ -60,7 +60,7 @@ func NewServer(state string, port int) (*Server, error) {
 
 	s.server = &http.Server{
 		Handler:           mux,
-		ReadHeaderTimeout: 10 * time.Second,
+		ReadHeaderTimeout: 1 * time.Second,
 	}
 
 	go func() {

@@ -23,7 +23,8 @@
         "766b.go-outliner",
         "yzhang.markdown-all-in-one",
         "Gruntfuggly.todo-tree",
-        "MermaidChart.vscode-mermaid-chart"
+        "MermaidChart.vscode-mermaid-chart",
+        "alexkrechik.cucumberautocomplete"
       ]
     }
   },
