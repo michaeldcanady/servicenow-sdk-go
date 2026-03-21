@@ -50,7 +50,7 @@ func NewAttachmentFileRequestBuilder(
 }
 
 // Post uploads provided content to Service-Now using provided parameters
-func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (model.ServiceNowItemResponse[*FileModel], error) {
+func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (model.ServiceNowItemResponse[File], error) {
 	if utils.IsNil(rB) {
 		return nil, nil
 	}

@@ -11,57 +11,35 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-const (
-	// tableURLTemplate2 the url template for Service-Now batch API
-	nowURLTemplate = "{+baseurl}/api/now/"
-)
+const nowURLTemplate2 = "{+baseurl}/api/now"
 
 type NowRequestBuilder struct {
 	kiota.RequestBuilder
 }
 
-func NewNowRequestBuilderInternal(
-	pathParameters map[string]string,
-	requestAdapter abstractions.RequestAdapter,
-) *NowRequestBuilder {
-	m := &NowRequestBuilder{
-		RequestBuilder: kiota.NewBaseRequestBuilder(requestAdapter, nowURLTemplate, pathParameters),
+func NewNowRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *NowRequestBuilder {
+	return &NowRequestBuilder{
+		kiota.NewBaseRequestBuilder(requestAdapter, nowURLTemplate2, pathParameters),
 	}
-	return m
 }
 
-func NewNowRequestBuilder(
+func NewServiceNowRequestBuilder(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 ) *NowRequestBuilder {
 	return NewNowRequestBuilderInternal(map[string]string{utils.RawURLKey: rawURL}, requestAdapter)
 }
 
-// Table returns a TableRequestBuilder2 associated with the NowRequestBuilder.
 func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder[*tableapi.TableRecord] {
 	pathParameters := maps.Clone(rB.GetPathParameters())
-
 	pathParameters["table"] = tableName
 	return tableapi.NewDefaultTableRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
-// TableV2 returns a TableRequestBuilder2 associated with the NowRequestBuilder.
-func (rB *NowRequestBuilder) TableV2(tableName string) *tableapi.TableRequestBuilder2[*tableapi.TableRecord] {
-	pathParameters := make(map[string]string)
-	for k, v := range rB.PathParameters {
-		pathParameters[k] = v
-	}
-	pathParameters["table"] = tableName
-	return tableapi.NewDefaultTableRequestBuilder2Internal(pathParameters, rB.Client.(*ServiceNowClient).RequestAdapter)
-}
-
-// Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
-// It allows you to work with attachments and manage attachments in ServiceNow.
-func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilder2 {
+func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilder {
 	return attachmentapi.NewAttachmentRequestBuilder2Internal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
-// Batch returns a BatchRequestBuilder, entrypoint into the batch api.
 func (rB *NowRequestBuilder) Batch() *batchapi.BatchRequestBuilder {
 	return batchapi.NewBatchRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

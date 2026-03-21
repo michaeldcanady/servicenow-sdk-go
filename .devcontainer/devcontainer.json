@@ -31,9 +31,9 @@
   "features": {
     "./podman-remote": {},
     "./xdg-utils": {},
-    "ghcr.io/shinepukur/devcontainer-features/vale:1": {
-      "version": "latest"
-    },
+    //"ghcr.io/shinepukur/devcontainer-features/vale:1": {
+    //  "version": "latest"
+    //},
     "ghcr.io/devcontainers/features/github-cli:1": {
       "version": "latest"
     },

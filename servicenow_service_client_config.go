@@ -4,9 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/microsoft/kiota-abstractions-go/store"
@@ -50,7 +49,7 @@ func buildServiceClientConfig(opts ...ServiceNowServiceClientOption) (*ServiceNo
 
 // Validate checks if the configuration is valid.
 func (c *ServiceNowServiceClientConfig) Validate() error {
-	if internal.IsNil(c.requestAdapter) && internal.IsNil(c.authenticationProvider) {
+	if utils.IsNil(c.requestAdapter) && utils.IsNil(c.authenticationProvider) {
 		return errors.New("must provide either an AuthenticationProvider or a RequestAdapter")
 	}
 
@@ -67,14 +66,14 @@ func (c *ServiceNowServiceClientConfig) getRequestAdapter() (abstractions.Reques
 	requestAdapter := c.requestAdapter
 	var err error
 
-	if internal.IsNil(requestAdapter) {
+	if utils.IsNil(requestAdapter) {
 		requestAdapter, err = internalHttp.NewServiceNowRequestAdapter(c.authenticationProvider, c.requestAdapterOptions...)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	if !newInternal.IsNil(c.backingStoreFactory) {
+	if !utils.IsNil(c.backingStoreFactory) {
 		requestAdapter.EnableBackingStore(c.backingStoreFactory)
 	}
 

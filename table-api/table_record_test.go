@@ -6,9 +6,18 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
+
+func recordElementParser(node serialization.ParseNode) (*RecordElement, error) {
+	rawValue, err := node.GetRawValue()
+	if err != nil {
+		return nil, err
+	}
+	return recordElementParserFromRaw(rawValue)
+}
 
 func TestCreateTableRecordFromDiscriminatorValue(t *testing.T) {
 	tests := []struct {
@@ -69,11 +78,10 @@ func TestRecordElementParserFromRaw(t *testing.T) {
 		{
 			name: "Successful map, w/o link",
 			test: func(t *testing.T) {
-				parseNode := mocking.NewMockParseNode()
-				parseNode.On("GetRawValue").Return(map[string]any{
+				data := map[string]any{
 					displayValueKey: utils.ToPointer("displayValue"),
 					valueKey:        utils.ToPointer("value"),
-				}, nil)
+				}
 
 				element, err := recordElementParserFromRaw(data)
 
@@ -84,12 +92,11 @@ func TestRecordElementParserFromRaw(t *testing.T) {
 		{
 			name: "Successful map, w/ link, right type",
 			test: func(t *testing.T) {
-				parseNode := mocking.NewMockParseNode()
-				parseNode.On("GetRawValue").Return(map[string]any{
+				data := map[string]any{
 					displayValueKey: utils.ToPointer("displayValue"),
 					valueKey:        utils.ToPointer("value"),
 					linkKey:         utils.ToPointer("link"),
-				}, nil)
+				}
 
 				element, err := recordElementParserFromRaw(data)
 
@@ -100,12 +107,11 @@ func TestRecordElementParserFromRaw(t *testing.T) {
 		{
 			name: "Successful map, w/ link, wrong type",
 			test: func(t *testing.T) {
-				parseNode := mocking.NewMockParseNode()
-				parseNode.On("GetRawValue").Return(map[string]any{
+				data := map[string]any{
 					displayValueKey: utils.ToPointer("displayValue"),
 					valueKey:        utils.ToPointer("value"),
 					linkKey:         utils.ToPointer(true),
-				}, nil)
+				}
 
 				element, err := recordElementParserFromRaw(data)
 
@@ -182,7 +188,6 @@ func TestTableRecord_GetFieldDeserializers(t *testing.T) {
 
 				deserializers := record.GetFieldDeserializers()
 				assert.ElementsMatch(t, expectedKeys, keys(deserializers))
-				assert.ElementsMatch(t, expectedKeys, keys(deserializers))
 			},
 		},
 	}
@@ -237,7 +242,7 @@ func TestTableRecord_Get(t *testing.T) {
 		test func(*testing.T)
 	}{
 		{
-			name: "",
+			name: "Successful",
 			test: func(t *testing.T) {
 				result := NewRecordElement()
 
@@ -317,8 +322,8 @@ func TestTableRecord_SetValue(t *testing.T) {
 				innerModel.On("GetBackingStore").Return(store)
 
 				record := &TableRecord{
-					make([]string, 0),
-					innerModel,
+					keys:  make([]string, 0),
+					Model: innerModel,
 				}
 
 				err := record.SetValue("Test", "value")
@@ -332,8 +337,8 @@ func TestTableRecord_SetValue(t *testing.T) {
 			name: "Unsupported",
 			test: func(t *testing.T) {
 				record := &TableRecord{
-					make([]string, 0),
-					nil,
+					keys:  make([]string, 0),
+					Model: nil,
 				}
 
 				err := record.SetValue("Test", make(chan int))

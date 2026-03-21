@@ -8,6 +8,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -124,7 +125,23 @@ func (tR *TableRecord) GetFieldDeserializers() map[string]func(serialization.Par
 
 // Serialize implements serialization.Parsable.
 func (tR *TableRecord) Serialize(writer serialization.SerializationWriter) error {
-	return errors.New("unimplemented")
+	if utils.IsNil(tR) {
+		return nil
+	}
+
+	for _, key := range tR.keys {
+		element, err := tR.Get(key)
+		if err != nil {
+			return err
+		}
+
+		err = writer.WriteAnyValue(key, element)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // NewTableRecord creates a new instance of TableRecord.
@@ -144,6 +161,9 @@ func (tR *TableRecord) Get(key string) (*RecordElement, error) {
 
 // SetElement assigns a RecordElement to the specified key.
 func (tR *TableRecord) SetElement(key string, element *RecordElement) error {
+	if !tR.HasAttribute(key) {
+		tR.keys = append(tR.keys, key)
+	}
 	return kiota.DefaultBackedModelMutatorFunc(tR.GetBackingStore(), key, element)
 }
 

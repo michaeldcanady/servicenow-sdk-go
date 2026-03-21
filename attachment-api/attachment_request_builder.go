@@ -5,8 +5,8 @@ import (
 	"errors"
 	"maps"
 
-	model "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
+	model "github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
@@ -17,14 +17,14 @@ const (
 	attachmentURLTemplate = "{+baseurl}/api/now/v1/attachment{?sysparm_limit,sysparm_offset,sysparm_query}"
 )
 
-// AttachmentRequestBuilder2 provides operations to manage Service-Now attachments.
-type AttachmentRequestBuilder2 struct {
+// AttachmentRequestBuilder provides operations to manage Service-Now attachments.
+type AttachmentRequestBuilder struct {
 	kiota.RequestBuilder
 }
 
 // newAttachmentRequestBuilder2Internal instantiates a new AttachmentRequestBuilder2 with the provided requestBuilder
-func newAttachmentRequestBuilder2Internal(requestBuilder kiota.RequestBuilder) *AttachmentRequestBuilder2 {
-	m := &AttachmentRequestBuilder2{
+func newAttachmentRequestBuilder2Internal(requestBuilder kiota.RequestBuilder) *AttachmentRequestBuilder {
+	m := &AttachmentRequestBuilder{
 		requestBuilder,
 	}
 	return m
@@ -34,7 +34,7 @@ func newAttachmentRequestBuilder2Internal(requestBuilder kiota.RequestBuilder) *
 func NewAttachmentRequestBuilder2Internal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
-) *AttachmentRequestBuilder2 {
+) *AttachmentRequestBuilder {
 	return newAttachmentRequestBuilder2Internal(
 		kiota.NewBaseRequestBuilder(requestAdapter, attachmentURLTemplate, pathParameters),
 	)
@@ -44,14 +44,14 @@ func NewAttachmentRequestBuilder2Internal(
 func NewAttachmentRequestBuilder2(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
-) *AttachmentRequestBuilder2 {
+) *AttachmentRequestBuilder {
 	urlParams := make(map[string]string)
 	urlParams[utils.RawURLKey] = rawURL
 	return NewAttachmentRequestBuilder2Internal(urlParams, requestAdapter)
 }
 
 // ByID provides the way to manage attachment item with provided sys id
-func (rB *AttachmentRequestBuilder2) ByID(sysID string) *AttachmentItemRequestBuilder {
+func (rB *AttachmentRequestBuilder) ByID(sysID string) *AttachmentItemRequestBuilder {
 	if utils.IsNil(rB) {
 		return nil
 	}
@@ -63,7 +63,7 @@ func (rB *AttachmentRequestBuilder2) ByID(sysID string) *AttachmentItemRequestBu
 }
 
 // File provides the way to access Service-Now's attachment file API
-func (rB *AttachmentRequestBuilder2) File() *AttachmentFileRequestBuilder {
+func (rB *AttachmentRequestBuilder) File() *AttachmentFileRequestBuilder {
 	if utils.IsNil(rB) {
 		return nil
 	}
@@ -74,7 +74,7 @@ func (rB *AttachmentRequestBuilder2) File() *AttachmentFileRequestBuilder {
 }
 
 // Upload provides the way to access Service-Now's attachment upload API
-func (rB *AttachmentRequestBuilder2) Upload() *AttachmentUploadRequestBuilder {
+func (rB *AttachmentRequestBuilder) Upload() *AttachmentUploadRequestBuilder {
 	if utils.IsNil(rB) {
 		return nil
 	}
@@ -85,7 +85,7 @@ func (rB *AttachmentRequestBuilder2) Upload() *AttachmentUploadRequestBuilder {
 }
 
 // Get returns AttachmentCollectionResponse using provided arguments
-func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfiguration *AttachmentRequestBuilder2GetRequestConfiguration) (*AttachmentCollectionResponse2Model, error) {
+func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentRequestBuilder2GetRequestConfiguration) (*AttachmentCollectionResponse2Model, error) {
 	if utils.IsNil(rB) {
 		return nil, nil
 	}
@@ -126,7 +126,7 @@ func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfigurati
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.
-func (rB *AttachmentRequestBuilder2) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *AttachmentRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if utils.IsNil(rB) {
 		return nil, nil
 	}

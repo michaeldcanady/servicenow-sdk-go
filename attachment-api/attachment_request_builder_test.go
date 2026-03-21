@@ -26,7 +26,7 @@ func TestNewAttachmentRequestBuilder2Internal(t *testing.T) {
 
 				builder := NewAttachmentRequestBuilder2Internal(pathParameters, requestAdapter)
 
-				assert.IsType(t, &AttachmentRequestBuilder2{}, builder)
+				assert.IsType(t, &AttachmentRequestBuilder{}, builder)
 				assert.IsType(t, &kiota.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, pathParameters, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
@@ -54,7 +54,7 @@ func TestNewAttachmentRequestBuilder2(t *testing.T) {
 
 				builder := NewAttachmentRequestBuilder2(rawURL, requestAdapter)
 
-				assert.IsType(t, &AttachmentRequestBuilder2{}, builder)
+				assert.IsType(t, &AttachmentRequestBuilder{}, builder)
 				assert.IsType(t, &kiota.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, urlParams, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
@@ -82,7 +82,7 @@ func TestAttachmentRequestBuilder2_ByID(t *testing.T) {
 				internalRequestBuilder.On("GetPathParameters").Return(pathParameters)
 				internalRequestBuilder.On("GetRequestAdapter").Return(requestAdapter)
 
-				builder := &AttachmentRequestBuilder2{internalRequestBuilder}
+				builder := &AttachmentRequestBuilder{internalRequestBuilder}
 
 				itemBuilder := builder.ByID("id")
 
@@ -100,7 +100,7 @@ func TestAttachmentRequestBuilder2_ByID(t *testing.T) {
 		{
 			name: "Nil requestBuilder",
 			test: func(t *testing.T) {
-				builder := (*AttachmentRequestBuilder2)(nil)
+				builder := (*AttachmentRequestBuilder)(nil)
 				itemBuilder := builder.ByID("id")
 
 				assert.Nil(t, itemBuilder)
@@ -128,7 +128,7 @@ func TestAttachmentRequestBuilder2_File(t *testing.T) {
 				internalRequestBuilder.On("GetPathParameters").Return(pathParameters)
 				internalRequestBuilder.On("GetRequestAdapter").Return(requestAdapter)
 
-				builder := &AttachmentRequestBuilder2{internalRequestBuilder}
+				builder := &AttachmentRequestBuilder{internalRequestBuilder}
 
 				itemBuilder := builder.File()
 
@@ -146,7 +146,7 @@ func TestAttachmentRequestBuilder2_File(t *testing.T) {
 		{
 			name: "Nil requestBuilder",
 			test: func(t *testing.T) {
-				builder := (*AttachmentRequestBuilder2)(nil)
+				builder := (*AttachmentRequestBuilder)(nil)
 				itemBuilder := builder.File()
 
 				assert.Nil(t, itemBuilder)
@@ -174,7 +174,7 @@ func TestAttachmentRequestBuilder2_Upload(t *testing.T) {
 				internalRequestBuilder.On("GetPathParameters").Return(pathParameters)
 				internalRequestBuilder.On("GetRequestAdapter").Return(requestAdapter)
 
-				builder := &AttachmentRequestBuilder2{internalRequestBuilder}
+				builder := &AttachmentRequestBuilder{internalRequestBuilder}
 
 				itemBuilder := builder.Upload()
 
@@ -192,7 +192,7 @@ func TestAttachmentRequestBuilder2_Upload(t *testing.T) {
 		{
 			name: "Nil requestBuilder",
 			test: func(t *testing.T) {
-				builder := (*AttachmentRequestBuilder2)(nil)
+				builder := (*AttachmentRequestBuilder)(nil)
 				itemBuilder := builder.Upload()
 
 				assert.Nil(t, itemBuilder)
@@ -300,7 +300,7 @@ func TestAttachmentRequestBuilder2_ToGetRequestInformation(t *testing.T) {
 
 				requestConfiguration := &AttachmentRequestBuilder2GetRequestConfiguration{}
 
-				builder := &AttachmentRequestBuilder2{mockInternalRequestBuilder}
+				builder := &AttachmentRequestBuilder{mockInternalRequestBuilder}
 
 				requestInformation, err := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
 
@@ -345,7 +345,7 @@ func TestAttachmentRequestBuilder2_ToGetRequestInformation(t *testing.T) {
 					Headers: headers,
 				}
 
-				builder := &AttachmentRequestBuilder2{mockInternalRequestBuilder}
+				builder := &AttachmentRequestBuilder{mockInternalRequestBuilder}
 
 				requestInformation, err := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
 
@@ -389,7 +389,7 @@ func TestAttachmentRequestBuilder2_ToGetRequestInformation(t *testing.T) {
 					Options: []abstractions.RequestOption{mockRequestOption},
 				}
 
-				builder := &AttachmentRequestBuilder2{mockInternalRequestBuilder}
+				builder := &AttachmentRequestBuilder{mockInternalRequestBuilder}
 
 				requestInformation, err := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
 
@@ -434,7 +434,7 @@ func TestAttachmentRequestBuilder2_ToGetRequestInformation(t *testing.T) {
 					QueryParameters: queryParameters,
 				}
 
-				builder := &AttachmentRequestBuilder2{mockInternalRequestBuilder}
+				builder := &AttachmentRequestBuilder{mockInternalRequestBuilder}
 
 				requestInformation, err := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
 
@@ -447,7 +447,7 @@ func TestAttachmentRequestBuilder2_ToGetRequestInformation(t *testing.T) {
 			test: func(t *testing.T) {
 				requestConfiguration := &AttachmentRequestBuilder2GetRequestConfiguration{}
 
-				builder := (*AttachmentRequestBuilder2)(nil)
+				builder := (*AttachmentRequestBuilder)(nil)
 
 				requestInformation, err := builder.ToGetRequestInformation(context.Background(), requestConfiguration)
 

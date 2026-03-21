@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/microsoft/kiota-abstractions-go/store"
@@ -22,7 +22,7 @@ type ServiceNowServiceClientOption func(*ServiceNowServiceClientConfig) error
 // WithAuthenticationProvider sets the authentication provider for the ServiceNowServiceClient.
 func WithAuthenticationProvider(authenticationProvider authentication.AuthenticationProvider) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
-		if internal.IsNil(authenticationProvider) {
+		if utils.IsNil(authenticationProvider) {
 			return errors.New("authenticationProvider is nil")
 		}
 		config.authenticationProvider = authenticationProvider
@@ -33,7 +33,7 @@ func WithAuthenticationProvider(authenticationProvider authentication.Authentica
 // WithRequestAdapter sets a pre-configured RequestAdapter for the ServiceNowServiceClient.
 func WithRequestAdapter(requestAdapter abstractions.RequestAdapter) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
-		if internal.IsNil(requestAdapter) {
+		if utils.IsNil(requestAdapter) {
 			return errors.New("requestAdapter is nil")
 		}
 		config.requestAdapter = requestAdapter
@@ -45,7 +45,7 @@ func WithRequestAdapter(requestAdapter abstractions.RequestAdapter) ServiceNowSe
 // It returns an error if the provided configuration is nil or the URL is empty.
 func WithURL(uri string) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
-		if internal.IsNil(config) {
+		if utils.IsNil(config) {
 			return errors.New("config is nil")
 		}
 		uri = strings.TrimSpace(uri)
@@ -67,7 +67,7 @@ func WithURL(uri string) ServiceNowServiceClientOption {
 // It returns an error if the provided configuration is nil or the middleware slice is empty.
 func WithMiddleware(middleware ...nethttplibrary.Middleware) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
-		if internal.IsNil(config) {
+		if utils.IsNil(config) {
 			return errors.New("config is nil")
 		}
 		if len(middleware) == 0 {
@@ -96,7 +96,7 @@ func WithInstance(instance string) ServiceNowServiceClientOption {
 // It returns an error if the provided factory is nil.
 func WithBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
-		if internal.IsNil(backingStoreFactory) {
+		if utils.IsNil(backingStoreFactory) {
 			return errors.New("backingStoreFactory is nil")
 		}
 

@@ -2,9 +2,9 @@ package servicenowsdkgo
 
 import (
 	"errors"
-	"fmt"
 	"maps"
 	"strings"
+	"sync"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/kiota"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/utils"
@@ -25,6 +25,11 @@ const (
 	baseURLParameter = "baseurl"
 	// baseURLVariable the url template variable for the base url
 	baseURLVariable = "{+baseurl}"
+)
+
+var (
+	registerSerializersOnce   sync.Once
+	registerDeserializersOnce sync.Once
 )
 
 // ServiceNowServiceClient is the core service used by ServiceNowServiceClient to make requests to Service-Now's APIs
@@ -74,21 +79,12 @@ func NewServiceNowServiceClientWithOptions(
 		return nil, err
 	}
 
-	var baseURL = config.rawURI
-	if baseURL == "" && config.instance == "" {
-		return nil, errors.New("have to use either withURL or WithInstance")
-	}
-
-	if config.instance != "" {
-		baseURL = fmt.Sprintf("https://%s.%s", config.instance, defaultServiceNowHost)
-	}
-
 	var backingStoreFactory = config.backingStoreFactory
 	if utils.IsNil(backingStoreFactory) {
 		backingStoreFactory = store.BackingStoreFactoryInstance
 	}
 
-	return NewServiceNowServiceClient(requestAdapter, backingStoreFactory, baseURL)
+	return NewServiceNowServiceClient(requestAdapter, backingStoreFactory, config.rawURI)
 }
 
 // NewServiceNowServiceClient creates a new ServiceNowBaseServiceClient with the given parameters

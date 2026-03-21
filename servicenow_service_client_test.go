@@ -18,14 +18,14 @@ func TestNewServiceNowServiceClientWithOptions(t *testing.T) {
 		{
 			name: "With URL",
 			opts: []ServiceNowServiceClientOption{
-				withURL("https://example.com"),
+				WithURL("https://example.com"),
 			},
 			expectedErr: false,
 		},
 		{
 			name: "With Instance",
 			opts: []ServiceNowServiceClientOption{
-				withInstance("test"),
+				WithInstance("test"),
 			},
 			expectedErr: false,
 		},
