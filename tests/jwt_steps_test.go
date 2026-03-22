@@ -2,6 +2,9 @@ package tests
 
 import (
 	"context"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 
@@ -10,30 +13,53 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func (c *sharedTestContext) correctJWTAreSupplied(ctx context.Context) error {
+type jwtTestContext struct {
+	*sharedTestContext
+	server *httptest.Server
+}
+
+func (c *jwtTestContext) correctJWTAreSupplied(ctx context.Context) error {
 	t := godog.T(ctx)
 
-	clientID, ok := os.LookupEnv("SN_CLIENT_ID")
-	require.True(t, ok)
-	require.NotEmpty(t, clientID)
+	var clientID, clientSecret, jwtToken string
+	var ok bool
 
-	clientSecret, ok := os.LookupEnv("SN_CLIENT_SECRET")
-	require.True(t, ok)
-	require.NotEmpty(t, clientSecret)
+	if isOffline() {
+		clientID = "mock-client-id"
+		clientSecret = "mock-client-secret"
+		jwtToken = "mock-jwt-token"
+	} else {
+		clientID, ok = os.LookupEnv("SN_CLIENT_ID")
+		require.True(t, ok)
+		require.NotEmpty(t, clientID)
 
-	jwtToken, ok := os.LookupEnv("SN_JWT_TOKEN")
-	require.True(t, ok)
-	require.NotEmpty(t, jwtToken)
+		clientSecret, ok = os.LookupEnv("SN_CLIENT_SECRET")
+		require.True(t, ok)
+		require.NotEmpty(t, clientSecret)
 
-	provider, err := credentials.NewJWTProvider(clientID, clientSecret, NewStaticTokenProvider(jwtToken), credentials.WithInstance(c.instance))
+		jwtToken, ok = os.LookupEnv("SN_JWT_TOKEN")
+		require.True(t, ok)
+		require.NotEmpty(t, jwtToken)
+	}
+
+	if isOffline() {
+		c.instance = c.server.URL
+	}
+
+	provider, err := credentials.NewJWTProvider(clientID, clientSecret, NewStaticTokenProvider(jwtToken), credentials.WithURL(c.instance))
 	require.NoError(t, err)
 
 	c.provider = provider
 	return nil
 }
 
-func (c *sharedTestContext) incorrectJWTAreSupplied(ctx context.Context) error {
-	provider, err := credentials.NewJWTProvider("invalid-id", "invalid-secret", NewStaticTokenProvider("invalid-jwt"), credentials.WithInstance(c.instance))
+func (c *jwtTestContext) incorrectJWTAreSupplied(ctx context.Context) error {
+	instance := c.instance
+	if isOffline() {
+		instance = c.server.URL
+	}
+
+	provider, err := credentials.NewJWTProvider("invalid-id", "invalid-secret", NewStaticTokenProvider("invalid-jwt"), credentials.WithURL(instance))
 	if err == nil {
 		c.provider = provider
 	}
@@ -41,9 +67,38 @@ func (c *sharedTestContext) incorrectJWTAreSupplied(ctx context.Context) error {
 }
 
 func InitializeJWTAuthenticationScenario(ctx *godog.ScenarioContext) {
-	feat := &sharedTestContext{}
+	feat := &jwtTestContext{
+		sharedTestContext: &sharedTestContext{},
+	}
 
-	RegisterSharedSteps(ctx, feat)
+	ctx.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
+		if isOffline() {
+			mux := http.NewServeMux()
+			mux.HandleFunc("/oauth_token.do", func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				fmt.Fprint(w, `{
+					"access_token": "mock_jwt_access_token",
+					"token_type": "Bearer",
+					"expires_in": 3600
+				}`)
+			})
+			mux.HandleFunc("/api/now/v1/table/incident", func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				fmt.Fprint(w, `{"result": []}`)
+			})
+			feat.server = httptest.NewServer(mux)
+		}
+		return ctx, nil
+	})
+
+	ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
+		if feat.server != nil {
+			feat.server.Close()
+		}
+		return ctx, nil
+	})
+
+	RegisterSharedSteps(ctx, feat.sharedTestContext)
 
 	ctx.When(`^correct credentials are supplied$`, feat.correctJWTAreSupplied)
 	ctx.When(`^incorrect credentials are supplied$`, feat.incorrectJWTAreSupplied)

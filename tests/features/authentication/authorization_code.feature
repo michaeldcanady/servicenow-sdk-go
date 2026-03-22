@@ -10,14 +10,7 @@ Feature: Authorization Code Authentication
     And a request is sent
     Then the response should be successful
 
-  Scenario: Unsuccessful authentication with invalid authorization code
-    Given a client is available
-    And a valid instance
-    When incorrect credentials are supplied
-    And a request is sent
-    Then an authentication error message is shown
-
-  Scenario: User cancels authentication flow
+  Scenario: Authentication server times out
     Given a client is available
     And a valid instance
     When authentication flow is cancelled

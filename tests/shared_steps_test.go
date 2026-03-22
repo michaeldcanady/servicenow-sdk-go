@@ -8,6 +8,7 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/joho/godotenv"
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 	"github.com/stretchr/testify/require"
 )
 
@@ -25,6 +26,45 @@ func (c *sharedTestContext) aValidInstance(ctx context.Context) error {
 	require.NotEmpty(t, instance)
 
 	c.instance = instance
+	return nil
+}
+
+func (c *sharedTestContext) aRecordExistsInTheTable(ctx context.Context, tableName string) error {
+	t := godog.T(ctx)
+	c.tableName = tableName
+
+	// We need to ensure we have a client and provider set up for this background task
+	// This might require calling the auth steps manually if not already called
+	if c.client == nil {
+		instanceOpt := servicenowsdkgo.WithInstance(c.instance)
+		if strings.HasPrefix(c.instance, "http") {
+			instanceOpt = servicenowsdkgo.WithURL(c.instance)
+		}
+		client, err := servicenowsdkgo.NewServiceNowServiceClient(
+			servicenowsdkgo.WithAuthenticationProvider(c.provider),
+			instanceOpt,
+		)
+		require.NoError(t, err)
+		c.client = client
+	}
+
+	record := tableapi.NewTableRecord()
+	err := record.SetValue("short_description", "Pre-existing record for BDD test")
+	require.NoError(t, err)
+
+	resp, err := c.client.Now().Table(tableName).Post(ctx, record, nil)
+	require.NoError(t, err)
+	require.NotNil(t, resp)
+
+	results, err := resp.GetResult()
+	require.NoError(t, err)
+
+	sysID, err := results.GetSysID()
+	require.NoError(t, err)
+	require.NotNil(t, sysID)
+
+	c.sysID = *sysID
+
 	return nil
 }
 
@@ -49,8 +89,12 @@ func (c *sharedTestContext) aRequestIsSent(ctx context.Context) error {
 
 	c.client = client
 
-	// Use a small, common request to verify connectivity/auth
-	c.resp, c.err = client.Now().Table("incident").Get(context.Background(), nil)
+	// If a specific execution function is set, use it. Otherwise, default to incident GET.
+	if c.executeReq != nil {
+		c.resp, c.err = c.executeReq()
+	} else {
+		c.resp, c.err = client.Now().Table("incident").Get(context.Background(), nil)
+	}
 
 	return nil
 }
