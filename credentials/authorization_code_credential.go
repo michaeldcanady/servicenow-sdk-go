@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2/pkce"
@@ -82,8 +83,15 @@ func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, 
 		return nil, err
 	}
 
+	// Create a context with timeout for the entire code acquisition process
+	authCtx, cancelAuth := context.WithTimeout(ctx, 100*time.Second)
+	defer cancelAuth()
+
+	shutdownCtx, cancelShutdown := context.WithTimeout(authCtx, 5*time.Second)
+	defer cancelShutdown()
+
 	defer func() {
-		if shutdownErr := server.Shutdown(ctx); shutdownErr != nil && err == nil {
+		if shutdownErr := server.Shutdown(shutdownCtx); shutdownErr != nil && err == nil {
 			err = shutdownErr
 		}
 	}()
@@ -97,12 +105,12 @@ func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, 
 		return nil, err
 	}
 
-	code, _, err := server.Result(ctx)
+	code, _, err := server.Result(shutdownCtx)
 	if err != nil {
 		return nil, err
 	}
 
-	token, err = c.client.acquireTokenByCode(ctx, code, server.GetAddr(), state)
+	token, err = c.client.acquireTokenByCode(authCtx, code, server.GetAddr(), state)
 	if err != nil {
 		return nil, err
 	}
