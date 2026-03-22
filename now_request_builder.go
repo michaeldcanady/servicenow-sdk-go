@@ -7,7 +7,7 @@ import (
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 )
 
-// DEPRECATED: deprecated since v{unreleased}. Please use [NewServiceNowRequestBuilder3]
+// DEPRECATED: deprecated since v1.11.0. Please use [NewServiceNowRequestBuilder3]
 //
 // NewNowRequestBuilder2
 func NewNowRequestBuilder2(url string, client core.Client2) *NowRequestBuilder {

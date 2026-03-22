@@ -1,6 +1,6 @@
 package credentials
 
-// DEPRECATED: deprecated since v{unreleased}. Use [authentication.AuthenticationProvider] implementation instead.
+// DEPRECATED: deprecated since v1.11.0. Use [authentication.AuthenticationProvider] implementation instead.
 //
 // Credential
 type Credential interface {
