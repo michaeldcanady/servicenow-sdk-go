@@ -96,9 +96,6 @@ func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, 
 	defer cancelShutdown()
 
 	defer func() {
-		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-
 		if shutdownErr := server.Shutdown(shutdownCtx); shutdownErr != nil && err == nil {
 			err = shutdownErr
 		}
