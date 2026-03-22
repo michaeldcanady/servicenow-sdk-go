@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// Deprecated: deprecated since v{unreleased}.
+// Deprecated: deprecated since v1.11.0.
 //
 // HTTPServer represents an HTTP server for OAuth2 redirection.
 type HTTPServer struct {

@@ -2,7 +2,7 @@ package credentials
 
 import "encoding/base64"
 
-// Deprecated: deprecated since v{unreleased}. Use [BasicAuthenticationProvider] instead.
+// Deprecated: deprecated since v1.11.0. Use [BasicAuthenticationProvider] instead.
 //
 // UsernamePasswordCredential
 type UsernamePasswordCredential struct {
@@ -10,7 +10,7 @@ type UsernamePasswordCredential struct {
 	Password string //nolint:gosec // G117: Needed for flow, not secret
 }
 
-// Deprecated: deprecated since v{unreleased}. Use [NewBasicProvider] instead.
+// Deprecated: deprecated since v1.11.0. Use [NewBasicProvider] instead.
 //
 // NewUsernamePasswordCredential creates a new instance of UsernamePasswordCredential.
 // It accepts the username and password as parameters and returns a pointer to the created UsernamePasswordCredential.
