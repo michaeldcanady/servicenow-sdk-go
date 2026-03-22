@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -31,6 +32,7 @@ type AuthorizationCodeCredential struct {
 	stateGenerator func() string
 	urlOpener      func(string) error
 	serverFactory  ServerFactory
+	tokenMutex     sync.Mutex
 }
 
 // NewAuthorizationCodeCredential creates a new AuthorizationCodeCredential.
@@ -56,6 +58,7 @@ func NewAuthorizationCodeCredential(client authorizationCodeClient, allowedHosts
 		stateGenerator: stateGenerator,
 		urlOpener:      urlOpener,
 		serverFactory:  serverFactory,
+		tokenMutex:     sync.Mutex{},
 	}
 
 	base := newBaseAccessTokenProvider(allowedHosts)
@@ -76,6 +79,8 @@ func (c *AuthorizationCodeCredential) Initialize(baseURL string) {
 
 // GetToken acquires a token using the authorization code flow.
 func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (token *AccessToken, err error) {
+	c.tokenMutex.Lock()
+	defer c.tokenMutex.Unlock()
 	state := c.stateGenerator()
 
 	server, err := c.serverFactory(state, c.port)
