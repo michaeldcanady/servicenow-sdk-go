@@ -88,6 +88,13 @@ func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, 
 		return nil, err
 	}
 
+	// Create a context with timeout for the entire code acquisition process
+	authCtx, cancelAuth := context.WithTimeout(ctx, 100*time.Second)
+	defer cancelAuth()
+
+	shutdownCtx, cancelShutdown := context.WithTimeout(authCtx, 5*time.Second)
+	defer cancelShutdown()
+
 	defer func() {
 		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
@@ -106,12 +113,12 @@ func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, 
 		return nil, err
 	}
 
-	code, _, err := server.Result(ctx)
+	code, _, err := server.Result(shutdownCtx)
 	if err != nil {
 		return nil, err
 	}
 
-	token, err = c.client.acquireTokenByCode(ctx, code, server.GetAddr(), state)
+	token, err = c.client.acquireTokenByCode(authCtx, code, server.GetAddr(), state)
 	if err != nil {
 		return nil, err
 	}
