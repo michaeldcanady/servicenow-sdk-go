@@ -31,7 +31,7 @@ func batchRequests(excludeResponseHeaders bool, requests ...*abstractions.Reques
 // [END batch_helper]
 
 func _() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var requests []*abstractions.RequestInformation
 
 	// [START batch_create]
@@ -45,7 +45,7 @@ func _() {
 	postConfig := &batchapi.BatchRequestBuilderPostRequestConfiguration{}
 
 	// Step 5: Execute request
-	batch_response, err := client.Now2().Batch().Post(context.Background(), body, postConfig)
+	batch_response, err := client.Now().Batch().Post(context.Background(), body, postConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,7 +65,7 @@ func _() {
 	postConfig = &batchapi.BatchRequestBuilderPostRequestConfiguration{}
 
 	// Step 6: Build request
-	requestBuilder := batchapi.NewBatchRequestBuilder(rawURL, client.RequestAdapter)
+	requestBuilder := batchapi.NewBatchRequestBuilder(rawURL, client.GetRequestAdapter())
 
 	// Step 7: Execute request
 	resp, err := requestBuilder.Post(context.Background(), body, postConfig)
@@ -74,6 +74,7 @@ func _() {
 	}
 	// [END batch_std_create]
 
+	// Need to be "used" to be valid
 	_ = batch_response
 	_ = resp
 }

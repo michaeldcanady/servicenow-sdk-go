@@ -23,7 +23,7 @@ func _() {
 }
 
 func tableBasicSetup() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
 	var collectionRequestBuilder *tableapi.TableRequestBuilder2[*tableapi.TableRecord]
 
@@ -32,7 +32,7 @@ func tableBasicSetup() {
 	rawURL := "https://xSDK_SN_URLx/api/now/v1/table/xSDK_SN_TABLEx"
 
 	// Step 4: Build request
-	requestBuilder = tableapi.NewDefaultTableItemRequestBuilder2(rawURL, client.RequestAdapter)
+	requestBuilder = tableapi.NewDefaultTableItemRequestBuilder2(rawURL, client.GetRequestAdapter())
 	// [END table_standard_setup]
 
 	// [START table_collection_standard_setup]
@@ -40,14 +40,14 @@ func tableBasicSetup() {
 	rawURL = "https://xSDK_SN_URLx/api/now/v1/table/xSDK_SN_TABLEx"
 
 	// Step 4: Build request
-	collectionRequestBuilder = tableapi.NewDefaultTableRequestBuilder2(rawURL, client.RequestAdapter)
+	collectionRequestBuilder = tableapi.NewDefaultTableRequestBuilder2(rawURL, client.GetRequestAdapter())
 	// [END table_collection_standard_setup]
 	_ = requestBuilder
 	_ = collectionRequestBuilder
 }
 
 func tableGetSnippets() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_get_fluent]
@@ -59,7 +59,7 @@ func tableGetSnippets() {
 	}
 
 	// Step 4: Execute request
-	getResponse, err := client.Now2().TableV2("xSDK_SN_TABLEx").ById("xSDK_SN_TABLE_SYS_IDx").Get(context.Background(), getConfig)
+	getResponse, err := client.Now().Table("xSDK_SN_TABLEx").ById("xSDK_SN_TABLE_SYS_IDx").Get(context.Background(), getConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -84,7 +84,7 @@ func tableGetSnippets() {
 }
 
 func tableListSnippets() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var collectionRequestBuilder *tableapi.TableRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_list_fluent]
@@ -96,7 +96,7 @@ func tableListSnippets() {
 	}
 
 	// Step 4: Execute request
-	list_response, err := client.Now2().TableV2("xSDK_SN_TABLEx").Get(context.Background(), listConfig)
+	list_response, err := client.Now().Table("xSDK_SN_TABLEx").Get(context.Background(), listConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -104,14 +104,14 @@ func tableListSnippets() {
 
 	// [START table_list_standard]
 	// Step 5: Configure request
-	listStdConfig := &tableapi.TableRequestBuilder2GetRequestConfiguration{
+	config := &tableapi.TableRequestBuilder2GetRequestConfiguration{
 		QueryParameters: &tableapi.TableRequestBuilder2GetQueryParameters{
 			// Optional configurations
 		},
 	}
 
 	// Step 6: Execute request
-	list_std_response, err := collectionRequestBuilder.Get(context.Background(), listStdConfig)
+	list_std_response, err := collectionRequestBuilder.Get(context.Background(), config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -121,12 +121,12 @@ func tableListSnippets() {
 }
 
 func tableCreateSnippets() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var collectionRequestBuilder *tableapi.TableRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_create_fluent]
 	// Step 3: Configure request
-	createConfig := &tableapi.TableRequestBuilder2PostRequestConfiguration{
+	config := &tableapi.TableRequestBuilder2PostRequestConfiguration{
 		QueryParameters: &tableapi.TableRequestBuilder2PostQueryParameters{
 			// Optional configurations
 		},
@@ -142,7 +142,7 @@ func tableCreateSnippets() {
 	}
 
 	// Step 5: Execute request
-	create_response, err := client.Now2().TableV2("xSDK_SN_TABLEx").Post(context.Background(), createData, createConfig)
+	create_response, err := client.Now().Table("xSDK_SN_TABLEx").Post(context.Background(), createData, config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -176,7 +176,7 @@ func tableCreateSnippets() {
 }
 
 func tableUpdateSnippets() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_update_fluent]
@@ -194,7 +194,7 @@ func tableUpdateSnippets() {
 	}
 
 	// Step 5: Execute request
-	updateResponse, err := client.Now2().TableV2("xSDK_SN_TABLEx").ById("xSDK_SN_TABLE_SYS_IDx").Put(context.Background(), updateData, update_config)
+	updateResponse, err := client.Now().Table("xSDK_SN_TABLEx").ById("xSDK_SN_TABLE_SYS_IDx").Put(context.Background(), updateData, update_config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -225,7 +225,7 @@ func tableUpdateSnippets() {
 }
 
 func tableDeleteSnippets() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_delete_fluent]
@@ -237,7 +237,7 @@ func tableDeleteSnippets() {
 	}
 
 	// Step 4: Execute request
-	err := client.Now2().TableV2("xSDK_SN_TABLEx").ById("xSDK_SN_TABLE_SYS_IDx").Delete(context.Background(), delete_config)
+	err := client.Now().Table("xSDK_SN_TABLEx").ById("xSDK_SN_TABLE_SYS_IDx").Delete(context.Background(), delete_config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -260,12 +260,12 @@ func tableDeleteSnippets() {
 }
 
 func tableGuideSnippets() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 
 	// [START table_list_guide]
 	// Get records from the 'incident' table
-	listGuideResponse, err := client.Now2().TableV2("xSDK_SN_TABLEx").Get(ctx, nil)
+	listGuideResponse, err := client.Now().Table("xSDK_SN_TABLEx").Get(ctx, nil)
 	if err != nil {
 		log.Fatalf("Error: %v", err)
 	}
@@ -303,7 +303,7 @@ func tableGuideSnippets() {
 		log.Fatal(err)
 	}
 
-	create_guide_response, err := client.Now2().TableV2("xSDK_SN_TABLEx").Post(ctx, newIncident, nil)
+	create_guide_response, err := client.Now().Table("xSDK_SN_TABLEx").Post(ctx, newIncident, nil)
 	if err != nil {
 		log.Fatalf("Error: %v", err)
 	}
@@ -322,7 +322,7 @@ func tableGuideSnippets() {
 		log.Fatal(err)
 	}
 
-	update_guide_response, err := client.Now2().TableV2("xSDK_SN_TABLEx").ById(sysIdStr).Put(ctx, updateGuideData, nil)
+	update_guide_response, err := client.Now().Table("xSDK_SN_TABLEx").ById(sysIdStr).Put(ctx, updateGuideData, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -330,7 +330,7 @@ func tableGuideSnippets() {
 
 	// [START table_delete_guide]
 	sysIdToDelete := "xSDK_SN_TABLE_SYS_IDx"
-	err = client.Now2().TableV2("xSDK_SN_TABLEx").ById(sysIdToDelete).Delete(ctx, nil)
+	err = client.Now().Table("xSDK_SN_TABLEx").ById(sysIdToDelete).Delete(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -346,7 +346,7 @@ func tableGuideSnippets() {
 		QueryParameters: params,
 	}
 
-	query_guide_response, err := client.Now2().TableV2("xSDK_SN_TABLEx").Get(ctx, config)
+	query_guide_response, err := client.Now().Table("xSDK_SN_TABLEx").Get(ctx, config)
 	if err != nil {
 		log.Fatal(err)
 	}

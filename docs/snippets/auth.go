@@ -25,7 +25,7 @@ func _() {
 	// [START client_init_panic]
 	clientPanic, err := servicenowsdkgo.NewServiceNowServiceClient(
 		servicenowsdkgo.WithAuthenticationProvider(credAdmin),
-		servicenowsdkgo.WithURL("xSDK_SN_URLx"),
+		servicenowsdkgo.WithInstance("xSDK_SN_INSTANCEx"),
 	)
 	if err != nil {
 		panic(err)
@@ -49,13 +49,14 @@ func _() {
 	// [START client_init]
 	client, err := servicenowsdkgo.NewServiceNowServiceClient(
 		servicenowsdkgo.WithAuthenticationProvider(cred),
-		servicenowsdkgo.WithURL("xSDK_SN_URLx"),
+		servicenowsdkgo.WithInstance("xSDK_SN_INSTANCEx"),
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
 	// [END client_init]
 
+	// Need to be "used" to be valid
 	_ = clientPanic
 	_ = client
 	_ = credToken

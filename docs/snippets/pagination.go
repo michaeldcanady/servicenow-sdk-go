@@ -11,18 +11,18 @@ import (
 )
 
 func _() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 
 	// [START pagination_table_basic]
 	// 1. Execute a list request
-	listResponse, err := client.Now2().TableV2("incident").Get(ctx, nil)
+	listResponse, err := client.Now().Table("incident").Get(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// 2. Create the iterator
-	iterator, err := tableapi.NewDefaultTablePageIterator(listResponse, client.RequestAdapter)
+	iterator, err := tableapi.NewDefaultTablePageIterator(listResponse, client.GetRequestAdapter())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,13 +56,13 @@ func _() {
 
 	// [START pagination_attachment]
 	// 1. Execute an attachment list request
-	attachmentResponse, err := client.Now2().Attachment2().Get(ctx, nil)
+	attachmentResponse, err := client.Now().Attachment().Get(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// 2. Create the iterator
-	attachmentIterator, err := attachmentapi.NewAttachmentPageIterator(attachmentResponse, client.RequestAdapter)
+	attachmentIterator, err := attachmentapi.NewAttachmentPageIterator(attachmentResponse, client.GetRequestAdapter())
 	if err != nil {
 		log.Fatal(err)
 	}

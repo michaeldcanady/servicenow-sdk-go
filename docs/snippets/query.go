@@ -16,7 +16,7 @@ import (
 // [END query_basic_imports]
 
 func _() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 
 	// [START query_basic]
@@ -40,7 +40,7 @@ func _() {
 		QueryParameters: params,
 	}
 
-	response, err := client.Now2().TableV2("xSDK_SN_TABLEx").Get(ctx, config)
+	response, err := client.Now().Table("xSDK_SN_TABLEx").Get(ctx, config)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -5,17 +5,17 @@ import (
 )
 
 func _() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 
 	// [START fluent_table]
-	client.Now2().TableV2("xSDK_SN_TABLEx")
+	client.Now().Table("xSDK_SN_TABLEx")
 	// [END fluent_table]
 
 	// [START fluent_attachment]
-	client.Now2().Attachment2()
+	client.Now().Attachment()
 	// [END fluent_attachment]
 
 	// [START fluent_batch]
-	client.Now2().Batch()
+	client.Now().Batch()
 	// [END fluent_batch]
 }
