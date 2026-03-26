@@ -1,0 +1,90 @@
+package {{.Package}}
+
+import (
+    "time"
+
+    "github.com/michaeldcanady/servicenow-sdk-go/internal"
+    "github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+    newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+    internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
+    "github.com/michaeldcanady/servicenow-sdk-go/internal/store"
+
+    "github.com/microsoft/kiota-abstractions-go/serialization"
+    kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
+)
+
+{{$modelName := .Name}}
+{{$interfaceName := .Name}}
+{{$structName := printf "%sModel" .Name}}
+
+// {{$interfaceName}} defines the interface for {{$modelName}}
+type {{$interfaceName}} interface {
+    {{range $name, $prop := .Properties}}
+    Get{{pascal $name}}() ({{goType $prop}}, error)
+    set{{pascal $name}}({{goType $prop}}) error
+    {{end}}
+
+    serialization.Parsable
+    kiotaStore.BackedModel
+}
+
+// {{$structName}} implementation of {{$interfaceName}}
+type {{$structName}} struct {
+    newInternal.Model
+}
+
+// New{{$modelName}} creates a new instance of {{$structName}}
+func New{{$modelName}}() *{{$structName}} {
+    return &{{$structName}}{
+        newInternal.NewBaseModel(),
+    }
+}
+
+// Create{{$modelName}}FromDiscriminatorValue is a parsable factory for creating {{$structName}}
+func Create{{$modelName}}FromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+    return New{{$modelName}}(), nil
+}
+
+// Serialize writes the objects properties to the current writer.
+func (m *{{$structName}}) Serialize(writer serialization.SerializationWriter) error {
+    if internal.IsNil(m) {
+        return nil
+    }
+
+    return internalSerialization.Serialize(writer,
+        {{range $name, $prop := .Properties}}
+        {{serializeFunc $name $prop}}(m.Get{{pascal $name}}),
+        {{end}}
+    )
+}
+
+// GetFieldDeserializers returns the deserialization information for this object.
+func (m *{{$structName}}) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+    return map[string]func(serialization.ParseNode) error{
+        {{range $name, $prop := .Properties}}
+        "{{$name}}": {{deserializeFunc $prop}}(m.set{{pascal $name}}),
+        {{end}}
+    }
+}
+
+{{range $name, $prop := .Properties}}
+// Get{{pascal $name}} returns the {{$name}} property value.
+func (m *{{$structName}}) Get{{pascal $name}}() ({{goType $prop}}, error) {
+    if internal.IsNil(m) {
+        {{if isSlice $prop}}return nil, nil{{else}}return nil, nil{{end}}
+    }
+
+    backingStore := m.GetBackingStore()
+    return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, {{goType $prop}}](backingStore, "{{$name}}")
+}
+
+// set{{pascal $name}} sets the {{$name}} property value.
+func (m *{{$structName}}) set{{pascal $name}}(val {{goType $prop}}) error {
+    if internal.IsNil(m) {
+        return nil
+    }
+
+    backingStore := m.GetBackingStore()
+    return store.DefaultBackedModelMutatorFunc(backingStore, "{{$name}}", val)
+}
+{{end}}

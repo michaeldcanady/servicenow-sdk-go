@@ -1,0 +1,159 @@
+{
+  "$schema": "https://spec.openapis.org/oas/3.0/schema/2024-10-18",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ServiceNow Account API",
+    "description": "The Account API provides endpoints to retrieve Customer Service Management (CSM) account records.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/now/account": {
+      "x-go-name": "Account",
+      "get": {
+        "summary": "Retrieves a specified set of Customer Service Management (CSM) accounts.",
+        "x-go-response-type": "*AccountCollectionResponseModel",
+        "x-go-response-factory": "CreateAccountCollectionResponseFromDiscriminatorValue",
+        "x-go-is-collection": true,
+        "parameters": [
+          {
+            "name": "sysparm_limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            },
+            "description": "Maximum number of records to return."
+          },
+          {
+            "name": "sysparm_offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "description": "Starting record index for which to begin retrieving records."
+          },
+          {
+            "name": "sysparm_query",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Encoded query used to filter the result set."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful. The request was successfully processed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountCollectionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/now/account/{sys_id}": {
+      "x-go-name": "AccountItem",
+      "get": {
+        "summary": "Retrieves the specified Customer Service Management (CSM) account.",
+        "x-go-response-type": "newInternal.ServiceNowItemResponse[Account]",
+        "x-go-response-factory": "newInternal.ServiceNowItemResponseFromDiscriminatorValue[Account](CreateAccountFromDiscriminatorValue)",
+        "responses": {
+          "200": {
+            "description": "Successful. The request was successfully processed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountCollectionResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Account"
+            }
+          }
+        }
+      },
+      "AccountResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/Account"
+          }
+        }
+      },
+      "Account": {
+        "type": "object",
+        "properties": {
+          "account_code": { "type": "string", "maxLength": 255 },
+          "account_parent": { "type": "string" },
+          "account_path": { "type": "string", "maxLength": 255 },
+          "active_escalation": { "type": "string" },
+          "apple_icon": { "type": "string" },
+          "banner_image": { "type": "string" },
+          "banner_image_light": { "type": "string" },
+          "banner_text": { "type": "string", "maxLength": 4000 },
+          "city": { "type": "string", "maxLength": 50 },
+          "contact": { "type": "string" },
+          "country": { "type": "string", "maxLength": 40, "default": "USA" },
+          "customer": { "type": "boolean", "default": false },
+          "discount": { "type": "number" },
+          "fax_phone": { "type": "string", "maxLength": 40 },
+          "fiscal_year": { "type": "string" },
+          "lat_long_error": { "type": "string", "maxLength": 1000 },
+          "latitude": { "type": "number", "format": "float" },
+          "longitude": { "type": "number", "format": "float" },
+          "manufacturer": { "type": "boolean", "default": false },
+          "market_cap": { "type": "number" },
+          "name": { "type": "string", "maxLength": 80 },
+          "notes": { "type": "string", "maxLength": 4000 },
+          "num_employees": { "type": "integer" },
+          "number": { "type": "string", "maxLength": 40 },
+          "parent": { "type": "string" },
+          "partner": { "type": "boolean", "default": false },
+          "phone": { "type": "string" },
+          "primary": { "type": "boolean", "default": false },
+          "primary_contact": { "type": "string" },
+          "profits": { "type": "number" },
+          "publicly_traded": { "type": "boolean" },
+          "rank_tier": { "type": "string", "enum": ["blacklist", "other", "strategic", "tactical", "valued"] },
+          "registration_code": { "type": "string", "maxLength": 40 },
+          "revenue_per_year": { "type": "number" },
+          "state": { "type": "string", "maxLength": 40 },
+          "stock_price": { "type": "string" },
+          "stock_symbol": { "type": "string" },
+          "street": { "type": "string", "maxLength": 255 },
+          "sys_class_name": { "type": "string" },
+          "sys_created_by": { "type": "string" },
+          "sys_created_on": { "type": "string", "format": "date-time" },
+          "sys_id": { "type": "string" },
+          "sys_mod_count": { "type": "integer" },
+          "sys_updated_by": { "type": "string" },
+          "sys_updated_on": { "type": "string", "format": "date-time" },
+          "theme": { "type": "string" },
+          "vendor": { "type": "boolean", "default": false },
+          "vendor_manager": { "type": "string" },
+          "vendor_type": { "type": "string" },
+          "website": { "type": "string", "maxLength": 1024 },
+          "zip": { "type": "string", "maxLength": 40 }
+        }
+      }
+    }
+  }
+}

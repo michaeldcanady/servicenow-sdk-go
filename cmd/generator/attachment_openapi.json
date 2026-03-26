@@ -1,0 +1,102 @@
+{
+  "$schema": "https://spec.openapis.org/oas/3.0/schema/2024-10-18",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ServiceNow Attachment API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/now/v1/attachment": {
+      "get": {
+        "x-go-response-type": "*AttachmentCollectionResponse2Model",
+        "x-go-response-factory": "CreateAttachmentCollectionResponse2FromDiscriminatorValue",
+        "x-go-is-collection": true,
+        "parameters": [
+          {
+            "name": "sysparm_limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Limit to be applied on pagination."
+          },
+          {
+            "name": "sysparm_offset",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of records to exclude from the query."
+          },
+          {
+            "name": "sysparm_query",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Encoded query for sys_attachment."
+          }
+        ]
+      }
+    },
+    "/api/now/v1/attachment/file": {
+      "post": {
+        "x-go-request-type": "*Media",
+        "x-go-response-type": "newInternal.ServiceNowItemResponse[File]",
+        "x-go-response-factory": "newInternal.ServiceNowItemResponseFromDiscriminatorValue[File](CreateFileFromDiscriminatorValue)",
+        "x-go-is-stream": true,
+        "parameters": [
+          {
+            "name": "encryption_context",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "file_name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "table_name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "table_sys_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/now/v1/attachment/upload": {
+      "post": {
+        "x-go-request-type": "abstractions.MultipartBody",
+        "x-go-response-type": "*FileModel",
+        "x-go-response-factory": "CreateFileFromDiscriminatorValue",
+        "x-go-is-multipart": true
+      }
+    },
+    "/api/now/v1/attachment/{sys_id}": {
+      "get": {
+        "x-go-response-type": "newInternal.ServiceNowItemResponse[Attachment2]",
+        "x-go-response-factory": "newInternal.ServiceNowItemResponseFromDiscriminatorValue[Attachment2](CreateAttachment2FromDiscriminatorValue)"
+      },
+      "delete": {}
+    },
+    "/api/now/v1/attachment/{sys_id}/file": {
+      "get": {
+        "x-go-response-type": "*FileWithContentModel",
+        "x-go-is-attachment-file": true
+      }
+    }
+  }
+}
