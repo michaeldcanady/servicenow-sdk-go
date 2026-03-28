@@ -1,0 +1,83 @@
+{
+  "$schema": "https://spec.openapis.org/oas/3.0/schema/2024-10-18",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ServiceNow Table API",
+    "version": "1.0.0"
+  },
+  "x-go-generic-type": "T",
+  "x-go-base-type": "model.ServiceNowItem",
+  "paths": {
+    "/api/now/v1/table/{table}": {
+      "x-go-name": "Table",
+      "get": {
+        "x-go-response-type": "newInternal.ServiceNowCollectionResponse[T]",
+        "x-go-is-collection": true,
+        "parameters": [
+          { "name": "sysparm_display_value", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_exclude_reference_link", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "sysparm_fields", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_query_no_domain", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "sysparm_view", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "sysparm_no_count", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "sysparm_offset", "in": "query", "schema": { "type": "integer" } },
+          { "name": "sysparm_query", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_query_category", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_suppress_pagination_header", "in": "query", "schema": { "type": "boolean" } }
+        ]
+      },
+      "post": {
+        "x-go-request-type": "T",
+        "x-go-response-type": "newInternal.ServiceNowItemResponse[T]",
+        "parameters": [
+          { "name": "sysparm_display_value", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_exclude_reference_link", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "sysparm_fields", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_input_display_value", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "sysparm_view", "in": "query", "schema": { "type": "string" } }
+        ]
+      }
+    },
+    "/api/now/v1/table/{table}/{sysId}": {
+      "x-go-name": "TableItem",
+      "get": {
+        "x-go-response-type": "newInternal.ServiceNowItemResponse[T]",
+        "parameters": [
+          { "name": "sysparm_display_value", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_exclude_reference_link", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "sysparm_fields", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_query_no_domain", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "sysparm_view", "in": "query", "schema": { "type": "string" } }
+        ]
+      },
+      "delete": {
+        "parameters": [
+          { "name": "sysparm_query_no_domain", "in": "query", "schema": { "type": "boolean" } }
+        ]
+      },
+      "put": {
+        "x-go-request-type": "T",
+        "x-go-response-type": "newInternal.ServiceNowItemResponse[T]",
+        "parameters": [
+          { "name": "sysparm_display_value", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_exclude_reference_link", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "sysparm_fields", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_input_display_value", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "sysparm_view", "in": "query", "schema": { "type": "string" } }
+        ]
+      },
+      "patch": {
+        "x-go-request-type": "T",
+        "x-go-response-type": "newInternal.ServiceNowItemResponse[T]",
+        "parameters": [
+          { "name": "sysparm_display_value", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_exclude_reference_link", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "sysparm_fields", "in": "query", "schema": { "type": "string" } },
+          { "name": "sysparm_input_display_value", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "sysparm_view", "in": "query", "schema": { "type": "string" } }
+        ]
+      }
+    }
+  }
+}

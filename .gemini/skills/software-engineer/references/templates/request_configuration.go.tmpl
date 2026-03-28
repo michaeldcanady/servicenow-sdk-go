@@ -1,0 +1,6 @@
+package {{.Package}}
+
+import abstractions "github.com/microsoft/kiota-abstractions-go"
+
+// {{.BuilderName}}RequestBuilder{{.MethodName}}RequestConfiguration represents a set of options to be used when making HTTP requests.
+type {{.BuilderName}}RequestBuilder{{.MethodName}}RequestConfiguration = abstractions.RequestConfiguration[{{if .HasParams}}{{.BuilderName}}RequestBuilder{{.MethodName}}QueryParameters{{else}}abstractions.DefaultQueryParameters{{end}}]
