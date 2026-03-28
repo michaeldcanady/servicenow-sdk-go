@@ -6,16 +6,95 @@ import (
 	"strings"
 )
 
-func GenerateAPI(root *Endpoint, schemas map[string]*Schema, outputDir string, rbTemplatePath, modelTemplatePath string) error {
+func GenerateAPI(root *Endpoint, schemas map[string]*Schema, outputDir string, templates map[string]string) error {
 	// Derive package name from root
 	root.Package = root.NameLower + "api"
 
-	if err := generateEndpointRecursive(root, outputDir, rbTemplatePath, root.Package); err != nil {
+	if err := generateEndpointRecursive(root, outputDir, templates, root.Package); err != nil {
 		return err
 	}
 
 	for name, schema := range schemas {
-		if err := generateModel(name, schema, outputDir, modelTemplatePath, root.Package); err != nil {
+		if err := generateModel(name, schema, outputDir, templates["model"], root.Package); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func generateEndpointRecursive(ep *Endpoint, outputDir string, templates map[string]string, pkg string) error {
+	fmt.Println(">>> GENERATING ENDPOINT:", ep.Name, "Kind:", ep.Kind, "Path:", ep.FullPath)
+
+	ep.Package = pkg
+
+	// 1. Generate main builder file
+	builderFileName := fmt.Sprintf("%s_request_builder.go", ToSnakeCase(ep.Name))
+	builderOutFile := filepath.Join(outputDir, builderFileName)
+	if err := RenderTemplate(templates["builder"], ep, builderOutFile); err != nil {
+		return err
+	}
+
+	// 2. Generate per-method files
+	for _, m := range ep.Methods {
+		// a. Query Parameters
+		if len(m.QueryParameters) > 0 {
+			qpData := struct {
+				Package     string
+				BuilderName string
+				MethodName  string
+				Parameters  []QueryParam
+			}{
+				Package:     pkg,
+				BuilderName: ep.Name,
+				MethodName:  m.Name,
+				Parameters:  m.QueryParameters,
+			}
+			qpFileName := fmt.Sprintf("%s_request_builder_%s_query_parameters.go", ToSnakeCase(ep.Name), strings.ToLower(m.Name))
+			qpOutFile := filepath.Join(outputDir, qpFileName)
+			if err := RenderTemplate(templates["query_parameters"], qpData, qpOutFile); err != nil {
+				return err
+			}
+		}
+
+		// b. Request Configuration
+		rcData := struct {
+			Package     string
+			BuilderName string
+			MethodName  string
+			HasParams   bool
+		}{
+			Package:     pkg,
+			BuilderName: ep.Name,
+			MethodName:  m.Name,
+			HasParams:   len(m.QueryParameters) > 0,
+		}
+		rcFileName := fmt.Sprintf("%s_request_builder_%s_request_configuration.go", ToSnakeCase(ep.Name), strings.ToLower(m.Name))
+		rcOutFile := filepath.Join(outputDir, rcFileName)
+		if err := RenderTemplate(templates["request_configuration"], rcData, rcOutFile); err != nil {
+			return err
+		}
+	}
+
+	// Generate non-item children
+	for i := range ep.Children {
+		child := &ep.Children[i]
+		if child.Kind != "item" {
+			if err := generateEndpointRecursive(child, outputDir, templates, pkg); err != nil {
+				return err
+			}
+		} else {
+			fmt.Println("    GENERATING item child:", child.Name)
+			if err := generateEndpointRecursive(child, outputDir, templates, pkg); err != nil {
+				return err
+			}
+		}
+	}
+
+	// Generate item child
+	if ep.HasItemChild && ep.ItemChild != nil {
+		fmt.Println("    GENERATING item child:", ep.ItemChild.Name)
+		if err := generateEndpointRecursive(ep.ItemChild, outputDir, templates, pkg); err != nil {
 			return err
 		}
 	}
@@ -36,13 +115,13 @@ func generateModel(name string, schema *Schema, outputDir, templatePath, pkg str
 		Properties: schema.Properties,
 	}
 
-	fileName := fmt.Sprintf("%s.go", toSnakeCase(name))
+	fileName := fmt.Sprintf("%s.go", ToSnakeCase(name))
 	outFile := filepath.Join(outputDir, fileName)
 
 	return RenderTemplate(templatePath, data, outFile)
 }
 
-func toSnakeCase(s string) string {
+func ToSnakeCase(s string) string {
 	var out []rune
 	for i, r := range s {
 		if i > 0 && r >= 'A' && r <= 'Z' {
@@ -51,61 +130,6 @@ func toSnakeCase(s string) string {
 		out = append(out, r)
 	}
 	return strings.ToLower(string(out))
-}
-
-func mergeQueryParams(groups ...[]QueryParam) []QueryParam {
-	seen := map[string]bool{}
-	out := []QueryParam{}
-
-	for _, group := range groups {
-		for _, p := range group {
-			if !seen[p.Name] {
-				seen[p.Name] = true
-				out = append(out, p)
-			}
-		}
-	}
-	return out
-}
-
-func generateEndpointRecursive(ep *Endpoint, outputDir, templatePath, pkg string) error {
-	fmt.Println(">>> GENERATING:", ep.Name, "Kind:", ep.Kind, "Path:", ep.FullPath)
-
-	ep.Package = pkg
-
-	fileName := fmt.Sprintf("%s_request_builder.go", toSnakeCase(ep.Name))
-	outFile := filepath.Join(outputDir, fileName)
-
-	if err := RenderTemplate(templatePath, ep, outFile); err != nil {
-		return err
-	}
-
-	// Generate non-item children
-	for i := range ep.Children {
-		child := &ep.Children[i]
-		if child.Kind != "item" {
-			// Non-item children generate methods + files
-			if err := generateEndpointRecursive(child, outputDir, templatePath, pkg); err != nil {
-				return err
-			}
-		} else {
-			// Item children DO NOT generate methods, but DO generate files
-			fmt.Println("    GENERATING item child:", child.Name)
-			if err := generateEndpointRecursive(child, outputDir, templatePath, pkg); err != nil {
-				return err
-			}
-		}
-	}
-
-	// Generate item child
-	if ep.HasItemChild && ep.ItemChild != nil {
-		fmt.Println("    GENERATING item child:", ep.ItemChild.Name)
-		if err := generateEndpointRecursive(ep.ItemChild, outputDir, templatePath, pkg); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 func lower(s string) string {
