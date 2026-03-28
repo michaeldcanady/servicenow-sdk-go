@@ -38,7 +38,7 @@ const defaultBaseURL = "service-now.com"
 
 // WithInstance sets the ServiceNow instance name (e.g., "dev12345").
 func WithInstance(instance string) AuthOption {
-	return WithURL(fmt.Sprintf("%s.%s", instance, defaultBaseURL))
+	return WithURL(fmt.Sprintf("https://%s.%s", instance, defaultBaseURL))
 }
 
 // WithURL sets the full base URL for the ServiceNow instance.
