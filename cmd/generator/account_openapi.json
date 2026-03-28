@@ -11,9 +11,8 @@
       "x-go-name": "Account",
       "get": {
         "summary": "Retrieves a specified set of Customer Service Management (CSM) accounts.",
-        "x-go-response-type": "*AccountCollectionResponseModel",
-        "x-go-response-factory": "CreateAccountCollectionResponseFromDiscriminatorValue",
         "x-go-is-collection": true,
+        "x-go-result-type": "Account",
         "parameters": [
           {
             "name": "sysparm_limit",
@@ -41,104 +40,61 @@
             },
             "description": "Encoded query used to filter the result set."
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful. The request was successfully processed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccountCollectionResponse"
-                }
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/api/now/account/{sys_id}": {
       "x-go-name": "AccountItem",
       "get": {
         "summary": "Retrieves the specified Customer Service Management (CSM) account.",
-        "x-go-response-type": "newInternal.ServiceNowItemResponse[Account]",
-        "x-go-response-factory": "newInternal.ServiceNowItemResponseFromDiscriminatorValue[Account](CreateAccountFromDiscriminatorValue)",
-        "responses": {
-          "200": {
-            "description": "Successful. The request was successfully processed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccountResponse"
-                }
-              }
-            }
-          }
-        }
+        "x-go-is-item": true,
+        "x-go-result-type": "Account"
       }
     }
   },
   "components": {
     "schemas": {
-      "AccountCollectionResponse": {
-        "type": "object",
-        "properties": {
-          "result": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Account"
-            }
-          }
-        }
-      },
-      "AccountResponse": {
-        "type": "object",
-        "properties": {
-          "result": {
-            "$ref": "#/components/schemas/Account"
-          }
-        }
-      },
       "Account": {
         "type": "object",
         "properties": {
-          "account_code": { "type": "string", "maxLength": 255 },
+          "account_code": { "type": "string" },
           "account_parent": { "type": "string" },
-          "account_path": { "type": "string", "maxLength": 255 },
+          "account_path": { "type": "string" },
           "active_escalation": { "type": "string" },
           "apple_icon": { "type": "string" },
           "banner_image": { "type": "string" },
           "banner_image_light": { "type": "string" },
-          "banner_text": { "type": "string", "maxLength": 4000 },
-          "city": { "type": "string", "maxLength": 50 },
+          "banner_text": { "type": "string" },
+          "city": { "type": "string" },
           "contact": { "type": "string" },
-          "country": { "type": "string", "maxLength": 40, "default": "USA" },
-          "customer": { "type": "boolean", "default": false },
+          "country": { "type": "string" },
+          "customer": { "type": "boolean" },
           "discount": { "type": "number" },
-          "fax_phone": { "type": "string", "maxLength": 40 },
+          "fax_phone": { "type": "string" },
           "fiscal_year": { "type": "string" },
-          "lat_long_error": { "type": "string", "maxLength": 1000 },
-          "latitude": { "type": "number", "format": "float" },
-          "longitude": { "type": "number", "format": "float" },
-          "manufacturer": { "type": "boolean", "default": false },
+          "lat_long_error": { "type": "string" },
+          "latitude": { "type": "number" },
+          "longitude": { "type": "number" },
+          "manufacturer": { "type": "boolean" },
           "market_cap": { "type": "number" },
-          "name": { "type": "string", "maxLength": 80 },
-          "notes": { "type": "string", "maxLength": 4000 },
+          "name": { "type": "string" },
+          "notes": { "type": "string" },
           "num_employees": { "type": "integer" },
-          "number": { "type": "string", "maxLength": 40 },
+          "number": { "type": "string" },
           "parent": { "type": "string" },
-          "partner": { "type": "boolean", "default": false },
+          "partner": { "type": "boolean" },
           "phone": { "type": "string" },
-          "primary": { "type": "boolean", "default": false },
+          "primary": { "type": "boolean" },
           "primary_contact": { "type": "string" },
           "profits": { "type": "number" },
           "publicly_traded": { "type": "boolean" },
-          "rank_tier": { "type": "string", "enum": ["blacklist", "other", "strategic", "tactical", "valued"] },
-          "registration_code": { "type": "string", "maxLength": 40 },
+          "rank_tier": { "type": "string" },
+          "registration_code": { "type": "string" },
           "revenue_per_year": { "type": "number" },
-          "state": { "type": "string", "maxLength": 40 },
+          "state": { "type": "string" },
           "stock_price": { "type": "string" },
           "stock_symbol": { "type": "string" },
-          "street": { "type": "string", "maxLength": 255 },
+          "street": { "type": "string" },
           "sys_class_name": { "type": "string" },
           "sys_created_by": { "type": "string" },
           "sys_created_on": { "type": "string", "format": "date-time" },
@@ -147,11 +103,11 @@
           "sys_updated_by": { "type": "string" },
           "sys_updated_on": { "type": "string", "format": "date-time" },
           "theme": { "type": "string" },
-          "vendor": { "type": "boolean", "default": false },
+          "vendor": { "type": "boolean" },
           "vendor_manager": { "type": "string" },
           "vendor_type": { "type": "string" },
-          "website": { "type": "string", "maxLength": 1024 },
-          "zip": { "type": "string", "maxLength": 40 }
+          "website": { "type": "string" },
+          "zip": { "type": "string" }
         }
       }
     }

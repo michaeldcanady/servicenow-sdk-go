@@ -32,8 +32,10 @@ type Method struct {
 	IsMultipart      bool
 	IsPrimitive      bool
 	PrimitiveType    string // e.g. "[]byte"
-	IsCollection     bool   // If true, ParseHeaders will be called
+	IsCollection     bool   // If true, ServiceNowCollectionResponse[T] will be used
+	IsItem           bool   // If true, ServiceNowItemResponse[T] will be used
 	IsAttachmentFile bool   // If true, special logic for Attachment File Get will be used
+	ResultType       string // The underlying item type, e.g. "Account"
 }
 
 func (e *Endpoint) AllQueryParameters() []QueryParam {

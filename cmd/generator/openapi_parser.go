@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"sort"
 	"strings"
@@ -37,7 +38,9 @@ type Operation struct {
 	XGoIsPrimitive      bool        `json:"x-go-is-primitive"`
 	XGoPrimitiveType    string      `json:"x-go-primitive-type"`
 	XGoIsCollection     bool        `json:"x-go-is-collection"`
+	XGoIsItem           bool        `json:"x-go-is-item"`
 	XGoIsAttachmentFile bool        `json:"x-go-is-attachment-file"`
+	XGoResultType       string      `json:"x-go-result-type"`
 }
 
 type Parameter struct {
@@ -160,7 +163,28 @@ func mapOperation(defaultName, verb string, op *Operation) Method {
 		IsPrimitive:      op.XGoIsPrimitive,
 		PrimitiveType:    op.XGoPrimitiveType,
 		IsCollection:     op.XGoIsCollection,
+		IsItem:           op.XGoIsItem,
 		IsAttachmentFile: op.XGoIsAttachmentFile,
+		ResultType:       op.XGoResultType,
+	}
+
+	if m.ResultType != "" {
+		factory := fmt.Sprintf("Create%sFromDiscriminatorValue", m.ResultType)
+		if m.IsCollection {
+			if m.ResponseType == "" {
+				m.ResponseType = fmt.Sprintf("newInternal.ServiceNowCollectionResponse[%s]", m.ResultType)
+			}
+			if m.ResponseFactory == "" {
+				m.ResponseFactory = fmt.Sprintf("newInternal.ServiceNowCollectionResponseFromDiscriminatorValue[%s](%s)", m.ResultType, factory)
+			}
+		} else if m.IsItem {
+			if m.ResponseType == "" {
+				m.ResponseType = fmt.Sprintf("newInternal.ServiceNowItemResponse[%s]", m.ResultType)
+			}
+			if m.ResponseFactory == "" {
+				m.ResponseFactory = fmt.Sprintf("newInternal.ServiceNowItemResponseFromDiscriminatorValue[%s](%s)", m.ResultType, factory)
+			}
+		}
 	}
 
 	return m

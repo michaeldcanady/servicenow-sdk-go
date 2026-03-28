@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"go/format"
 	"os"
 	"path/filepath"
 	"strings"
@@ -82,24 +84,24 @@ func RenderTemplate(templatePath string, data any, outputPath string) error {
 		"isSlice": func(s *Schema) bool {
 			return s.Type == "array"
 		},
-		"serializeFunc": func(name string, s *Schema) string {
+		"serializeFunc": func(keyExpr string, s *Schema) string {
 			if s.Type == "array" {
-				return fmt.Sprintf("internalSerialization.SerializeStringToSliceFunc(\"%s\", \" \")", name)
+				return fmt.Sprintf("internalSerialization.SerializeStringToSliceFunc(%s, \" \")", keyExpr)
 			}
 			switch s.Type {
 			case "string":
 				if s.Format == "date-time" {
-					return fmt.Sprintf("internalSerialization.SerializeStringToTimeFunc(\"%s\", \"2006-01-02 15:04:05\")", name)
+					return fmt.Sprintf("internalSerialization.SerializeStringToTimeFunc(%s, \"2006-01-02 15:04:05\")", keyExpr)
 				}
-				return fmt.Sprintf("internalSerialization.SerializeStringFunc(\"%s\")", name)
+				return fmt.Sprintf("internalSerialization.SerializeStringFunc(%s)", keyExpr)
 			case "integer":
-				return fmt.Sprintf("internalSerialization.SerializeStringToInt64Func(\"%s\")", name)
+				return fmt.Sprintf("internalSerialization.SerializeStringToInt64Func(%s)", keyExpr)
 			case "boolean":
-				return fmt.Sprintf("internalSerialization.SerializeStringToBoolFunc(\"%s\")", name)
+				return fmt.Sprintf("internalSerialization.SerializeStringToBoolFunc(%s)", keyExpr)
 			case "number":
-				return fmt.Sprintf("internalSerialization.SerializeStringToFloat64Func(\"%s\")", name)
+				return fmt.Sprintf("internalSerialization.SerializeStringToFloat64Func(%s)", keyExpr)
 			default:
-				return fmt.Sprintf("internalSerialization.SerializeStringFunc(\"%s\")", name)
+				return fmt.Sprintf("internalSerialization.SerializeStringFunc(%s)", keyExpr)
 			}
 		},
 		"deserializeFunc": func(s *Schema) string {
@@ -123,18 +125,23 @@ func RenderTemplate(templatePath string, data any, outputPath string) error {
 			}
 		},
 	})
+
 	tmpl, err := tmpl.ParseFiles(templatePath)
-
 	if err != nil {
 		return err
 	}
 
-	f, err := os.Create(outputPath)
-	if err != nil {
+	var buf bytes.Buffer
+	if err := tmpl.ExecuteTemplate(&buf, filepath.Base(templatePath), data); err != nil {
 		return err
 	}
-	defer f.Close()
 
-	// Execute the template by filename
-	return tmpl.ExecuteTemplate(f, filepath.Base(templatePath), data)
+	formatted, err := format.Source(buf.Bytes())
+	if err != nil {
+		// If formatting fails, we still write the unformatted source to disk for debugging
+		_ = os.WriteFile(outputPath, buf.Bytes(), 0o644)
+		return fmt.Errorf("error formatting generated code for %s: %v", outputPath, err)
+	}
+
+	return os.WriteFile(outputPath, formatted, 0o644)
 }

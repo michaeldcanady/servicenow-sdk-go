@@ -3,56 +3,61 @@ package main
 import (
 	"log"
 	"os"
+	"path/filepath"
 )
 
 func main() {
-	var openAPIs []string
-	outputDir := "generated"
-
-	switch len(os.Args) {
-	case 3:
+	if len(os.Args) == 3 {
 		openAPIPath := os.Args[1]
-		outputDir = os.Args[2]
+		outputDir := os.Args[2]
 
-		openAPIs = append(openAPIs, openAPIPath)
-	case 1:
-		openAPIs = []string{
+		if err := processOpenAPI(openAPIPath, outputDir); err != nil {
+			log.Fatalf("Error processing %s: %v", openAPIPath, err)
+		}
+	} else if len(os.Args) == 1 {
+		openAPIs := []string{
 			"cmd/generator/attachment_openapi.json",
 			"cmd/generator/table_openapi.json",
 			"cmd/generator/account_openapi.json",
 		}
-	default:
-		log.Fatal("Usage: generator <openapi_spec> <output_dir> or run without arguments for defaults")
-	}
 
-	for _, openAPIPath := range openAPIs {
-		if err := processOpenAPI(openAPIPath, outputDir); err != nil {
-			log.Fatalf("Error processing %s: %v", openAPIPath, err)
+		for _, openAPIPath := range openAPIs {
+			if err := processOpenAPI(openAPIPath, "generated"); err != nil {
+				log.Fatalf("Error processing %s: %v", openAPIPath, err)
+			}
 		}
+	} else {
+		log.Fatal("Usage: generator <openapi_spec> <output_dir> or run without arguments for defaults")
 	}
 
 	log.Println("Generation complete!")
 }
 
 func processOpenAPI(openAPIPath, outputDir string) error {
-	log.Printf("Processing %s into %s...", openAPIPath, outputDir)
+	log.Printf("Processing %s...", openAPIPath)
 	api, schemas, err := ParseOpenAPI(openAPIPath)
 	if err != nil {
 		return err
 	}
 
-	if err := EnsureDir(outputDir); err != nil {
+	apiOutputDir := filepath.Join(outputDir, ToSnakeCase(api.Name))
+	if err := EnsureDir(apiOutputDir); err != nil {
 		return err
 	}
 
-	rbTemplate := "/workspaces/servicenow-sdk-go/.gemini/skills/software-engineer/references/templates/request_builder.go.tmpl"
-	modelTemplate := "/workspaces/servicenow-sdk-go/.gemini/skills/software-engineer/references/templates/model.go.tmpl"
+	log.Printf("Writing to %s...", apiOutputDir)
+
+	templates := map[string]string{
+		"builder":               "/workspaces/servicenow-sdk-go/.gemini/skills/software-engineer/references/templates/builder.go.tmpl",
+		"query_parameters":      "/workspaces/servicenow-sdk-go/.gemini/skills/software-engineer/references/templates/query_parameters.go.tmpl",
+		"request_configuration": "/workspaces/servicenow-sdk-go/.gemini/skills/software-engineer/references/templates/request_configuration.go.tmpl",
+		"model":                 "/workspaces/servicenow-sdk-go/.gemini/skills/software-engineer/references/templates/model.go.tmpl",
+	}
 
 	return GenerateAPI(
 		api,
 		schemas,
-		outputDir,
-		rbTemplate,
-		modelTemplate,
+		apiOutputDir,
+		templates,
 	)
 }
