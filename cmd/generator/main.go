@@ -18,8 +18,8 @@ func main() {
 		openAPIs := []string{
 			//"cmd/generator/attachment_openapi.json",
 			//"cmd/generator/table_openapi.json",
-			"cmd/generator/policy_openapi.json",
-			//"cmd/generator/account_openapi.json",
+			//"cmd/generator/policy_openapi.json",
+			"cmd/generator/account_openapi.json",
 		}
 
 		for _, openAPIPath := range openAPIs {

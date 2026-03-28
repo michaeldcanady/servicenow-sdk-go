@@ -3,6 +3,7 @@ package servicenowsdkgo
 import (
 	"maps"
 
+	accountapi "github.com/michaeldcanady/servicenow-sdk-go/account-api"
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
 	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
@@ -22,10 +23,7 @@ func NewServiceNowRequestBuilder3Internal(pathParameters map[string]string, requ
 	}
 }
 
-func NewServiceNowRequestBuilder3(
-	rawURL string,
-	requestAdapter abstractions.RequestAdapter,
-) *NowRequestBuilder2 {
+func NewServiceNowRequestBuilder3(rawURL string, requestAdapter abstractions.RequestAdapter) *NowRequestBuilder2 {
 	return NewServiceNowRequestBuilder3Internal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
@@ -37,6 +35,10 @@ func (rB *NowRequestBuilder2) Table(tableName string) *tableapi.TableRequestBuil
 
 func (rB *NowRequestBuilder2) Attachment() *attachmentapi.AttachmentRequestBuilder2 {
 	return attachmentapi.NewAttachmentRequestBuilder2Internal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+func (rB *NowRequestBuilder2) Account() *accountapi.AccountRequestBuilder {
+	return accountapi.NewAccountRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 func (rB *NowRequestBuilder2) Batch() *batchapi.BatchRequestBuilder {

@@ -23,6 +23,7 @@
   "go.lintTool": "golangci-lint",
   "go.lintFlags": [],
   "cSpell.words": [
+    "accountapi",
     "APIV",
     "attachmentapi",
     "Batchable",
