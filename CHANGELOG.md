@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.1](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v1.11.0...v1.11.1) (2026-03-28)
+
+
+### Bug Fixes
+
+* **credential:** fix "unsupported protocol scheme" ([#427](https://github.com/michaeldcanady/servicenow-sdk-go/issues/427)) ([a616770](https://github.com/michaeldcanady/servicenow-sdk-go/commit/a61677089c5c494d0003f0a99ddfc29f3dd98616))
+
 ## [1.11.0](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v1.10.0...v1.11.0) (2026-03-22)
 
 
