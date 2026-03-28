@@ -28,7 +28,7 @@ func NewCdmRequestBuilder(rawURL string, requestAdapter abstractions.RequestAdap
 	return NewCdmRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
-// Policies returns a PolicyRequestBuilder associated with the CdmRequestBuilder.
-func (rB *CdmRequestBuilder) Policies() *policyapi.PoliciesRequestBuilder {
-	return policyapi.NewPolicyRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+// PolicyMappings returns a PolicyMappingsRequestBuilder associated with the CdmRequestBuilder.
+func (rB *CdmRequestBuilder) PolicyMappings() *policyapi.PolicyMappingsRequestBuilder {
+	return policyapi.NewPolicyMappingsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
