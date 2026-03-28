@@ -1,0 +1,9 @@
+package {{.Package}}
+
+// {{.BuilderName}}RequestBuilder{{.MethodName}}QueryParameters represents the query parameters for {{.MethodName}}
+type {{.BuilderName}}RequestBuilder{{.MethodName}}QueryParameters struct {
+    {{range $index, $p := .Parameters}}
+    // {{pascal $p.Name}} {{if $p.Description}}{{$p.Description}}{{else}}represents the {{$p.Name}} query parameter{{end}}
+    {{pascal $p.Name}} *{{$p.Type}} `url:"{{$p.Name}},omitempty"`
+    {{end}}
+}

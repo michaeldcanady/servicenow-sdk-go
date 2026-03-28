@@ -15,6 +15,14 @@ serve-docs: build-docs
 generate-docs: build-docs
     podman run --rm {{DOC_IMAGE}} mkdocs build --clean
 
+# Run golangci-lint on the project
+lint:
+	golangci-lint run ./...
+
+# Format all Go files in the project
+fmt:
+	gofmt -s -w .
+
 # Clean up local build artifacts
 clean-docs:
-    rm -rf site
+	rm -rf site

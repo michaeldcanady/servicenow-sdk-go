@@ -106,6 +106,7 @@
     "tableapi",
     "textserialization",
     "timeonly",
+    "tmpl",
     "typedheaders",
     "unconvert",
     "Unmarshall",

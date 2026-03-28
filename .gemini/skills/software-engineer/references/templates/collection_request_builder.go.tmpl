@@ -1,0 +1,267 @@
+package {{.Package}}
+
+import (
+    "context"
+    "errors"
+    "maps"
+    {{if .GenericType}}"fmt"{{end}}
+
+    "github.com/michaeldcanady/servicenow-sdk-go/internal"
+    internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+    {{if .GenericType}}"github.com/michaeldcanady/servicenow-sdk-go/internal/model"{{end}}
+    newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+    abstractions "github.com/microsoft/kiota-abstractions-go"
+    "github.com/microsoft/kiota-abstractions-go/serialization"
+    nethttplibrary "github.com/microsoft/kiota-http-go"
+    jsonserialization "github.com/microsoft/kiota-serialization-json-go"
+)
+
+const (
+    // {{camel .Name}}URLTemplate is the URL template for this endpoint
+    {{camel .Name}}URLTemplate = "{+baseurl}{{.FullPath}}{{if .AllQueryParameters}}{?{{range $i, $p := .AllQueryParameters}}{{if $i}},{{end}}{{$p.Name}}{{end}}}{{end}}"
+)
+
+// {{.Name}}RequestBuilder provides operations for the {{.Name}} endpoint.
+type {{.Name}}RequestBuilder{{if .GenericType}}[{{.GenericType}} {{.BaseType}}]{{end}} struct {
+    newInternal.RequestBuilder
+    {{if .GenericType}}factory serialization.ParsableFactory{{end}}
+}
+
+// new{{.Name}}RequestBuilderInternal creates a new builder using an existing base request builder.
+func new{{.Name}}RequestBuilderInternal{{if .GenericType}}[{{.GenericType}} {{.BaseType}}]{{end}}(rb newInternal.RequestBuilder {{if .GenericType}}, factory serialization.ParsableFactory{{end}}) *{{.Name}}RequestBuilder{{if .GenericType}}[{{.GenericType}}]{{end}} {
+    return &{{.Name}}RequestBuilder{{if .GenericType}}[{{.GenericType}}]{{end}}{rb {{if .GenericType}}, factory{{end}}}
+}
+
+// New{{.Name}}RequestBuilderInternal creates a new builder using path parameters.
+func New{{.Name}}RequestBuilderInternal{{if .GenericType}}[{{.GenericType}} {{.BaseType}}]{{end}}(
+    pathParameters map[string]string,
+    requestAdapter abstractions.RequestAdapter,
+    {{if .GenericType}}factory serialization.ParsableFactory,{{end}}
+) *{{.Name}}RequestBuilder{{if .GenericType}}[{{.GenericType}}]{{end}} {
+    return new{{.Name}}RequestBuilderInternal{{if .GenericType}}[{{.GenericType}}]{{end}}(
+        newInternal.NewBaseRequestBuilder(requestAdapter, {{camel .Name}}URLTemplate, pathParameters),
+        {{if .GenericType}}factory,{{end}}
+    )
+}
+
+// New{{.Name}}RequestBuilder creates a new builder using a raw URL.
+func New{{.Name}}RequestBuilder{{if .GenericType}}[{{.GenericType}} {{.BaseType}}]{{end}}(
+    rawURL string,
+    requestAdapter abstractions.RequestAdapter,
+    {{if .GenericType}}factory serialization.ParsableFactory,{{end}}
+) *{{.Name}}RequestBuilder{{if .GenericType}}[{{.GenericType}}]{{end}} {
+    urlParams := map[string]string{newInternal.RawURLKey: rawURL}
+    return New{{.Name}}RequestBuilderInternal{{if .GenericType}}[{{.GenericType}}]{{end}}(urlParams, requestAdapter {{if .GenericType}}, factory{{end}})
+}
+
+{{/* ------------------------------------------------------------ */}}
+{{/* CHILD ENDPOINTS (non-item only)                             */}}
+{{/* ------------------------------------------------------------ */}}
+
+{{range .Children}}
+func (rB *{{$.Name}}RequestBuilder{{if $.GenericType}}[{{$.GenericType}}]{{end}}) {{.MethodName}}() *{{.Name}}RequestBuilder{{if .GenericType}}[{{.GenericType}}]{{end}} {
+    if internal.IsNil(rB) {
+        return nil
+    }
+
+    pathParameters := maps.Clone(rB.GetPathParameters())
+    return New{{.Name}}RequestBuilderInternal{{if .GenericType}}[{{.GenericType}}]{{end}}(pathParameters, rB.GetRequestAdapter() {{if .GenericType}}, rB.factory{{end}})
+}
+{{end}}
+
+{{/* ------------------------------------------------------------ */}}
+{{/* ITEM BUILDER (ByID)                                         */}}
+{{/* ------------------------------------------------------------ */}}
+
+{{if .HasItemChild}}
+func (rB *{{.Name}}RequestBuilder{{if .GenericType}}[{{.GenericType}}]{{end}}) {{.ItemChild.MethodName}}(sysID string) *{{.ItemChild.Name}}RequestBuilder{{if .ItemChild.GenericType}}[{{.ItemChild.GenericType}}]{{end}} {
+    if internal.IsNil(rB) {
+        return nil
+    }
+
+    pathParameters := maps.Clone(rB.GetPathParameters())
+    pathParameters["{{.ItemChild.ItemKey}}"] = sysID
+
+    return New{{.ItemChild.Name}}RequestBuilderInternal{{if .ItemChild.GenericType}}[{{.ItemChild.GenericType}}]{{end}}(pathParameters, rB.GetRequestAdapter() {{if .ItemChild.GenericType}}, rB.factory{{end}})
+}
+{{end}}
+
+{{/* ------------------------------------------------------------ */}}
+{{/* METHODS (Get, Post, etc.)                                   */}}
+{{/* ------------------------------------------------------------ */}}
+
+{{range .Methods}}
+func (rB *{{$.Name}}RequestBuilder{{if $.GenericType}}[{{$.GenericType}}]{{end}}) {{.Name}}(
+    ctx context.Context,
+    {{if .RequestType}}body {{.RequestType}},{{end}}
+    requestConfiguration *{{$.Name}}RequestBuilder{{.Name}}RequestConfiguration,
+) (
+    {{if .ResponseType}}{{.ResponseType}},{{end}}
+    error,
+) {
+    if internal.IsNil(rB) {
+        {{if .ResponseType}}return nil, nil{{else}}return nil{{end}}
+    }
+
+    if internal.IsNil(requestConfiguration) {
+        requestConfiguration = &{{$.Name}}RequestBuilder{{.Name}}RequestConfiguration{}
+    }
+
+    {{if or .IsCollection .IsAttachmentFile}}
+    headerOpt := nethttplibrary.NewHeadersInspectionOptions()
+    headerOpt.InspectResponseHeaders = true
+    requestConfiguration.Options = append(requestConfiguration.Options, headerOpt)
+    {{end}}
+
+    requestInfo, err := rB.To{{.Name}}RequestInformation(ctx, {{if .RequestType}}body,{{end}} requestConfiguration)
+    if err != nil {
+        {{if .ResponseType}}return nil, err{{else}}return err{{end}}
+    }
+
+    errorMapping := abstractions.ErrorMappings{
+        "XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+    }
+
+    {{if eq .HTTPVerb "DELETE"}}
+    return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
+    {{else}}
+    {{if .IsAttachmentFile}}
+    resp, err := rB.GetRequestAdapter().SendPrimitive(ctx, requestInfo, "[]byte", errorMapping)
+    if err != nil {
+        return nil, err
+    }
+    if resp == nil {
+        return nil, nil
+    }
+    typedResp, ok := resp.([]byte)
+    if !ok {
+        return nil, errors.New("resp is not []byte")
+    }
+
+    var file serialization.Parsable = NewFileWithContent()
+
+    metadataHeaders := headerOpt.GetResponseHeaders().Get("x-attachment-metadata")
+    if len(metadataHeaders) > 0 {
+        metadata := metadataHeaders[0]
+
+        var node serialization.ParseNode
+
+        node, err = jsonserialization.NewJsonParseNode([]byte(metadata))
+        if err != nil {
+            return nil, err
+        }
+
+        file, err = node.GetObjectValue(CreateFileWithContentFromDiscriminatorValue)
+        if err != nil {
+            return nil, err
+        }
+    }
+
+    typedFile, ok := file.(*FileWithContentModel)
+    if !ok {
+        return nil, errors.New("file is not *FileWithContentModel")
+    }
+
+    if err := typedFile.SetContent(typedResp); err != nil {
+        return nil, err
+    }
+
+    return typedFile, nil
+    {{else}}
+    {{if .IsPrimitive}}
+    res, err := rB.GetRequestAdapter().SendPrimitive(ctx, requestInfo, "{{.PrimitiveType}}", errorMapping)
+    {{else}}
+    res, err := rB.GetRequestAdapter().Send(
+        ctx,
+        requestInfo,
+        {{if .ResponseFactory}}{{.ResponseFactory}}{{else if $.GenericType}}newInternal.{{if .IsCollection}}ServiceNowCollectionResponse{{else}}ServiceNowItemResponse{{end}}FromDiscriminatorValue[{{$.GenericType}}](rB.factory){{else}}nil{{end}},
+        errorMapping,
+    )
+    {{end}}
+    if err != nil {
+        return {{if .ResponseType}}nil, {{end}}err
+    }
+
+    if internal.IsNil(res) {
+        return nil, nil
+    }
+
+    {{if $.GenericType}}
+    typedRes, ok := res.({{.ResponseType}})
+    if !ok {
+        return nil, fmt.Errorf("resp is not %T", (*{{.ResponseType}})(nil))
+    }
+    {{else}}
+    typedRes, ok := res.({{.ResponseType}})
+    if !ok {
+        return nil, errors.New("unexpected response type")
+    }
+    {{end}}
+
+    {{if .IsCollection}}
+    newInternal.ParseHeaders(typedRes, headerOpt.GetResponseHeaders())
+    {{end}}
+    return typedRes, nil
+    {{end}}
+    {{end}}
+}
+
+func (rB *{{$.Name}}RequestBuilder{{if $.GenericType}}[{{$.GenericType}}]{{end}}) To{{.Name}}RequestInformation(
+    ctx context.Context,
+    {{if .RequestType}}body {{.RequestType}},{{end}}
+    requestConfiguration *{{$.Name}}RequestBuilder{{.Name}}RequestConfiguration,
+) (*abstractions.RequestInformation, error) {
+
+    if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+        return nil, nil
+    }
+
+    requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(
+        abstractions.{{.HTTPVerb}},
+        rB.GetURLTemplate(),
+        rB.GetPathParameters(),
+    )
+
+    kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+
+    if !internal.IsNil(requestConfiguration) {
+        if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+            kiotaRequestInfo.Headers.AddAll(headers)
+        }
+        if options := requestConfiguration.Options; !internal.IsNil(options) {
+            kiotaRequestInfo.AddRequestOptions(options)
+        }
+        if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
+            kiotaRequestInfo.AddQueryParameters(queryParams)
+        }
+    }
+
+    {{if or (eq .HTTPVerb "GET") (eq .HTTPVerb "HEAD")}}
+    kiotaRequestInfo.Headers.TryAdd(
+        internalHttp.RequestHeaderAccept.String(),
+        newInternal.ContentTypeApplicationJSON,
+    )
+    {{end}}
+
+    {{if .IsStream}}
+    kiotaRequestInfo.SetStreamContentAndContentType(body.GetData(), body.GetContentType())
+    {{else if .IsMultipart}}
+    err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+    if err != nil {
+        return nil, err
+    }
+    {{else if .RequestType}}
+    kiotaRequestInfo.Headers.TryAdd(
+        internalHttp.RequestHeaderAccept.String(),
+        newInternal.ContentTypeApplicationJSON,
+    )
+    if !internal.IsNil(body) {
+        if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body); err != nil {
+            return nil, err
+        }
+    }
+    {{end}}
+
+    return kiotaRequestInfo.RequestInformation, nil
+}
+{{end}}
