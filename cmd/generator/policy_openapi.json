@@ -1,0 +1,284 @@
+{
+  "$schema": "https://spec.openapis.org/oas/3.0/schema/2024-10-18",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ServiceNow Policies API",
+    "description": "The Policies API provides endpoints to manage policy mappings for CDM deployables.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/sn_cdm/v1/policies/mappings": {
+      "x-go-name": "PolicyMappings",
+      "post": {
+        "summary": "Maps a specified policy to a deployable.",
+        "x-go-is-item": true,
+        "x-go-result-type": "PolicyMapping",
+        "parameters": [
+          {
+            "name": "appName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Name of the CDM application for which to map the policy."
+          },
+          {
+            "name": "deployableName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Name of the CDM deployable for which to map the policy."
+          },
+          {
+            "name": "policyName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Name of the associated policy."
+          },
+          {
+            "name": "returnFields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "description": "List of fields to return as part of the response."
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Deletes the mapping of a specified policy to a deployable.",
+        "parameters": [
+          {
+            "name": "appName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Name of the CDM application for which to remove the mapping."
+          },
+          {
+            "name": "deployableName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Name of the CDM deployable for which to remove the mapping."
+          },
+          {
+            "name": "policyName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Name of the associated policy."
+          }
+        ]
+      }
+    },
+
+    "/api/sn_cdm/v1/policies/mappings/inputs/resolved": {
+      "x-go-name": "PolicyMappingResolvedInputs",
+      "get": {
+        "summary": "Returns the resolved inputs for a specified policy mapping.",
+        "x-go-is-item": true,
+        "x-go-result-type": "ResolvedInputs",
+        "parameters": [
+          {
+            "name": "appName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Name of the CDM application."
+          },
+          {
+            "name": "deployableName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Name of the CDM deployable."
+          },
+          {
+            "name": "policyName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Name of the associated policy."
+          }
+        ]
+      }
+    },
+
+    "/api/sn_cdm/v1/policies/mappings/inputs/additional-deployables": {
+      "x-go-name": "PolicyMappingAdditionalDeployablesInput",
+      "put": {
+        "summary": "Updates the additionalDeployablesInput variable of a policy mapping.",
+        "x-go-result-type": "MappingInputVariable",
+        "parameters": [
+          {
+            "name": "additionalDeployables",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/AdditionalDeployable" }
+            },
+            "description": "List of deployables to add."
+          },
+          {
+            "name": "appName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "deployableName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "policyName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "returnFields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        ]
+      }
+    },
+
+    "/api/sn_cdm/v1/policies/mappings/inputs": {
+      "x-go-name": "PolicyMappingInputs",
+      "put": {
+        "summary": "Updates a specified input variable for a policy mapping.",
+        "x-go-is-item": true,
+        "x-go-result-type": "MappingInputVariable",
+        "parameters": [
+          {
+            "name": "appName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "deployableName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "inputName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "inputValue",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "policyName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "returnFields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        ]
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "LinkRef": {
+        "type": "object",
+        "properties": {
+          "link": { "type": "string" },
+          "value": { "type": "string" }
+        }
+      },
+
+      "PolicyMapping": {
+        "type": "object",
+        "properties": {
+          "description": { "type": "string", "nullable": true },
+          "document": { "type": "string" },
+          "document_ref": { "$ref": "#/components/schemas/LinkRef" },
+          "error": { "$ref": "#/components/schemas/Error" },
+          "exception": { "type": "string", "nullable": true },
+          "exception_allowed": { "type": "string" },
+          "input_status": { "type": "string" },
+          "last_updated_by": { "$ref": "#/components/schemas/LinkRef" },
+          "number": { "type": "string" },
+          "policy": { "$ref": "#/components/schemas/LinkRef" },
+          "reason": { "type": "string", "nullable": true },
+          "state": { "type": "string" },
+          "sys_class_name": { "type": "string" },
+          "sys_created_by": { "type": "string" },
+          "sys_created_on": { "type": "string" },
+          "sys_id": { "type": "string" },
+          "sys_updated_by": { "type": "string" },
+          "sys_updated_on": { "type": "string" }
+        }
+      },
+
+      "AdditionalDeployable": {
+        "type": "object",
+        "properties": {
+          "appName": { "type": "string" },
+          "deployableName": { "type": "string" }
+        },
+        "required": ["appName", "deployableName"]
+      },
+
+      "MappingInputVariable": {
+        "type": "object",
+        "properties": {
+          "io_definition": { "$ref": "#/components/schemas/LinkRef" },
+          "is_unused": { "type": "boolean" },
+          "mapped_value": {
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            ]
+          },
+          "policy_mapping": { "$ref": "#/components/schemas/LinkRef" },
+          "sys_created_by": { "type": "string" },
+          "sys_created_on": { "type": "string" },
+          "sys_id": { "type": "string" },
+          "sys_updated_by": { "type": "string" },
+          "sys_updated_on": { "type": "string" }
+        }
+      },
+
+      "ResolvedInputs": {
+        "type": "object",
+        "description": "Name-value pair list of all resolved inputs.",
+        "additionalProperties": { "type": "string" }
+      }
+    }
+  }
+}

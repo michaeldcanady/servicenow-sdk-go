@@ -47,7 +47,7 @@ func TestCdmRequestBuilder_Policies(t *testing.T) {
 				requestAdapter := mocking.NewMockRequestAdapter()
 				builder := NewCdmRequestBuilderInternal(map[string]string{"baseurl": url}, requestAdapter)
 
-				policiesBuilder := builder.Policies()
+				policiesBuilder := builder.PolicyMappings()
 
 				expected := map[string]string{
 					"baseurl": url,

@@ -105,6 +105,22 @@ func (rB *{{$.Name}}RequestBuilder{{if $.GenericType}}[{{$.GenericType}}]{{end}}
         requestConfiguration = &{{$.Name}}RequestBuilder{{.Name}}RequestConfiguration{}
     }
 
+    {{/* ------------------------------------------------------------ */}}
+    {{/* REQUIRED QUERY PARAMETER VALIDATION                          */}}
+    {{/* ------------------------------------------------------------ */}}
+    {{ $responseType := .ResponseType }}
+    {{if .QueryParameters}}
+        // Validate required query parameters
+        queryParameters := requestConfiguration.QueryParameters
+        {{range .QueryParameters}}
+            {{if .Required}}
+        if queryParameters.{{pascal .Name}} == nil || *queryParameters.{{pascal .Name}} == "" {
+            return {{if $responseType}}nil, {{end}}errors.New("{{pascal .Name}} is required")
+        }
+            {{end}}
+        {{end}}
+    {{end}}
+
     {{if or .IsCollection .IsAttachmentFile}}
     headerOpt := nethttplibrary.NewHeadersInspectionOptions()
     headerOpt.InspectResponseHeaders = true
