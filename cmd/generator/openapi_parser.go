@@ -48,6 +48,7 @@ type Parameter struct {
 	In          string `json:"in"`
 	Schema      Schema `json:"schema"`
 	Description string `json:"description"`
+	Required    bool   `json:"required"`
 }
 
 type Schema struct {
@@ -256,6 +257,7 @@ func mapParams(params []Parameter) []QueryParam {
 				Name:        p.Name,
 				Type:        mapType(p.Schema.Type),
 				Description: p.Description,
+				Required:    p.Required,
 			})
 		}
 	}
