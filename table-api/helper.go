@@ -52,7 +52,7 @@ func convertFromTableEntry(entry interface{}) (map[string]string, error) {
 
 	// Check if entry is a pointer
 	val := reflect.ValueOf(entry)
-	if val.Kind() == reflect.Ptr {
+	if val.Kind() == reflect.Pointer {
 		// Dereference the pointer and call the function again
 		return convertFromTableEntry(val.Elem().Interface())
 	}

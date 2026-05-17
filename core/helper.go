@@ -91,7 +91,7 @@ func IsPointer(value interface{}) bool {
 
 	valueKind := reflect.ValueOf(value).Kind()
 
-	return valueKind == reflect.Ptr
+	return valueKind == reflect.Pointer
 }
 
 func FromJson[T any](response *http.Response, v *T) error {

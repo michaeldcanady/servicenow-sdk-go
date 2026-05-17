@@ -70,7 +70,7 @@ func DefaultBackedModelMutatorFunc[S store.BackingStore, T any](backingStore S, 
 
 // Dereference recursively unwraps nested pointers.
 func Dereference(v reflect.Value) reflect.Value {
-	for v.Kind() == reflect.Ptr {
+	for v.Kind() == reflect.Pointer {
 		if v.IsNil() {
 			return reflect.Zero(v.Type().Elem())
 		}
@@ -153,7 +153,7 @@ func Convert(input any, output any) error {
 	}
 
 	outVal := reflect.ValueOf(output)
-	if outVal.Kind() != reflect.Ptr || outVal.IsNil() {
+	if outVal.Kind() != reflect.Pointer || outVal.IsNil() {
 		return errors.New("output must be a non-nil pointer")
 	}
 
@@ -177,7 +177,7 @@ func Convert(input any, output any) error {
 	}
 
 	// Case 2: Target is a pointer type
-	if targetType.Kind() == reflect.Ptr {
+	if targetType.Kind() == reflect.Pointer {
 		elemType := targetType.Elem()
 
 		// If input is already pointer to correct type
