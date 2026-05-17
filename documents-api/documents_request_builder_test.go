@@ -25,6 +25,23 @@ func TestDocumentsRequestBuilder2_Builders(t *testing.T) {
 		assert.NotNil(t, createBuilder)
 	})
 
+	t.Run("CreateDocument", func(t *testing.T) {
+		createDocumentBuilder := builder.CreateDocument()
+		assert.NotNil(t, createDocumentBuilder)
+	})
+
+	t.Run("VersionState", func(t *testing.T) {
+		versionStateBuilder := builder.VersionState("version_sys_id")
+		assert.NotNil(t, versionStateBuilder)
+		assert.Equal(t, "version_sys_id", versionStateBuilder.GetPathParameters()["version_sys_id"])
+	})
+
+	t.Run("Attach", func(t *testing.T) {
+		attachBuilder := builder.Attach("provider_id")
+		assert.NotNil(t, attachBuilder)
+		assert.Equal(t, "provider_id", attachBuilder.GetPathParameters()["provider_id"])
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		deleteBuilder := builder.Delete()
 		assert.NotNil(t, deleteBuilder)
@@ -40,6 +57,12 @@ func TestDocumentsRequestBuilder2_Builders(t *testing.T) {
 		contentBuilder := builder.Content("doc_sys_id")
 		assert.NotNil(t, contentBuilder)
 		assert.Equal(t, "doc_sys_id", contentBuilder.GetPathParameters()["document_sys_id"])
+	})
+
+	t.Run("SyncDown", func(t *testing.T) {
+		syncDownBuilder := builder.SyncDown("doc_sys_id")
+		assert.NotNil(t, syncDownBuilder)
+		assert.Equal(t, "doc_sys_id", syncDownBuilder.GetPathParameters()["documentSysId"])
 	})
 
 	t.Run("Action", func(t *testing.T) {
