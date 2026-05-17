@@ -53,3 +53,5 @@ site/
 
 .gemini/tmp/**
 !.gemini/tmp/.gitkeep
+spec/**
+!.gitkeep
