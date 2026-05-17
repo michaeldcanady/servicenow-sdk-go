@@ -30,13 +30,13 @@ func TestDocumentsRequestBuilder2_Builders(t *testing.T) {
 			builder: builder.CreateDocument(),
 		},
 		{
-			name:    "VersionState",
-			builder: builder.VersionState("version_sys_id"),
+			name:     "VersionState",
+			builder:  builder.VersionState("version_sys_id"),
 			expected: map[string]string{"version_sys_id": "version_sys_id"},
 		},
 		{
-			name:    "Attach",
-			builder: builder.Attach("provider_id"),
+			name:     "Attach",
+			builder:  builder.Attach("provider_id"),
 			expected: map[string]string{"provider_id": "provider_id"},
 		},
 		{
@@ -44,23 +44,23 @@ func TestDocumentsRequestBuilder2_Builders(t *testing.T) {
 			builder: builder.Delete(),
 		},
 		{
-			name:    "Versions",
-			builder: builder.Versions("doc_sys_id"),
+			name:     "Versions",
+			builder:  builder.Versions("doc_sys_id"),
 			expected: map[string]string{"document_sys_id": "doc_sys_id"},
 		},
 		{
-			name:    "Content",
-			builder: builder.Content("doc_sys_id"),
+			name:     "Content",
+			builder:  builder.Content("doc_sys_id"),
 			expected: map[string]string{"document_sys_id": "doc_sys_id"},
 		},
 		{
-			name:    "SyncDown",
-			builder: builder.SyncDown("doc_sys_id"),
+			name:     "SyncDown",
+			builder:  builder.SyncDown("doc_sys_id"),
 			expected: map[string]string{"documentSysId": "doc_sys_id"},
 		},
 		{
-			name:    "Action",
-			builder: builder.Action("move"),
+			name:     "Action",
+			builder:  builder.Action("move"),
 			expected: map[string]string{"action": "move"},
 		},
 	}

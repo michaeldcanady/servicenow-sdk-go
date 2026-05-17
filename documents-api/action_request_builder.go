@@ -94,7 +94,10 @@ func (rB *VersionActionRequestBuilder) ToPatchRequestInformation(ctx context.Con
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 		if data := requestConfiguration.Data; !internal.IsNil(data) {
-			kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, data)
+			err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, data)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)

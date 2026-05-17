@@ -64,7 +64,10 @@ func (rB *AttachRequestBuilder) ToPostRequestInformation(ctx context.Context, re
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 		if data := requestConfiguration.Data; !internal.IsNil(data) {
-			kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, data)
+			err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, data)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
