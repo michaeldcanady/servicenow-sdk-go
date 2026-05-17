@@ -56,7 +56,7 @@ func As[T any](in interface{}, out T) error {
 	}
 
 	valValue := reflect.ValueOf(in)
-	for valValue.Kind() == reflect.Ptr {
+	for valValue.Kind() == reflect.Pointer {
 		valValue = valValue.Elem()
 		in = valValue.Interface()
 	}
@@ -106,7 +106,7 @@ func As2[T any](in any, out T, strict bool) error {
 	}
 
 	// Try dereferencing input if it's a pointer
-	if inVal.Kind() == reflect.Ptr && !inVal.IsNil() {
+	if inVal.Kind() == reflect.Pointer && !inVal.IsNil() {
 		derefIn := inVal.Elem()
 		if derefIn.Type().AssignableTo(outType) {
 			outValElem.Set(derefIn)
@@ -116,7 +116,7 @@ func As2[T any](in any, out T, strict bool) error {
 
 	// General conversion logic for numeric and other convertible types
 	currIn := inVal
-	for currIn.Kind() == reflect.Ptr && !currIn.IsNil() {
+	for currIn.Kind() == reflect.Pointer && !currIn.IsNil() {
 		currIn = currIn.Elem()
 	}
 	rawIn := currIn.Interface()
