@@ -62,3 +62,10 @@ func (rB *DocumentsRequestBuilder2) Content(documentSysID string) *ContentReques
 	pathParameters["document_sys_id"] = documentSysID
 	return NewContentRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
+
+// Action provides operations to manage document actions.
+func (rB *DocumentsRequestBuilder2) Action(action string) *ActionRequestBuilder {
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters["action"] = action
+	return NewActionRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
