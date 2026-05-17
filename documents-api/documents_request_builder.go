@@ -56,6 +56,13 @@ func (rB *DocumentsRequestBuilder2) VersionState(versionSysID string) *VersionSt
 	return NewVersionStateRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
+// Attach provides operations to manage document attachments via a provider.
+func (rB *DocumentsRequestBuilder2) Attach(providerID string) *AttachRequestBuilder {
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters["provider_id"] = providerID
+	return NewAttachRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
+
 // Delete provides operations to manage the delete endpoint.
 func (rB *DocumentsRequestBuilder2) Delete() *DeleteRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
