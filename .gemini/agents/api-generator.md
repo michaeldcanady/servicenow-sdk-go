@@ -15,7 +15,9 @@ description: A specialized sub-agent designed to automate the creation of Go SDK
 1. **Blueprint Ingestion**: Start by reading the Technical Blueprint provided by the `openapi-architect`.
 2. **Directory Setup**: Create the target package directory if it doesn't exist.
 3. **RequestBuilder Generation**:
-    - Implement a `RequestBuilder2` struct for each API endpoint.
+    - **One Builder Per Segment**: Implement a dedicated `RequestBuilder` struct for each path segment of the API (e.g., `/api`, `/now`, `/cmdb` each get their own builder).
+    - **Namespace Connections**: ONLY top-level namespaces (e.g., `now`, `sn_cdm`) should be connected directly to the root `ServiceNowClient`.
+    - **Hierarchical Linking**: All other path segments must be linked hierarchically through their parent builders (e.g., `Now() -> Cmdb() -> Instance()`).
     - Use `internal/new.NewBaseRequestBuilder`.
     - Implement methods for each HTTP verb (Get, Post, etc.) following the established signature: `func (rB *RB) Method(ctx context.Context, config *Config) (*Response, error)`.
 4. **Model Generation**:
@@ -27,6 +29,8 @@ description: A specialized sub-agent designed to automate the creation of Go SDK
 
 ## Mandatory Patterns
 
+- **Path Hierarchy**: Strictly adhere to the "one builder per segment" rule. Do not skip path segments or flatten the hierarchy.
+- **Client Connectivity**: Do not connect sub-paths (e.g., `cmdb`) to the `ServiceNowClient`. Use parent builders to navigate the hierarchy.
 - **Package Naming**: Use lowercase package names without underscores (e.g., `tableapi`, `attachmentapi`).
 - **Internal Aliases**: Use `newInternal` for `github.com/michaeldcanady/servicenow-sdk-go/internal/new`.
 - **URL Templates**: Define URL templates as constants within the RequestBuilder files.
