@@ -18,8 +18,8 @@ func TestCmdbInstanceRequestBuilder2_Builders(t *testing.T) {
 		expected map[string]string
 	}{
 		{
-			name:    "ByClass",
-			builder: builder.ByClass("cmdb_ci_linux_server"),
+			name:     "ByClass",
+			builder:  builder.ByClass("cmdb_ci_linux_server"),
 			expected: map[string]string{"className": "cmdb_ci_linux_server"},
 		},
 	}

@@ -15,7 +15,7 @@ description: A specialized sub-agent designed to automate the creation of Go SDK
 1. **Blueprint Ingestion**: Start by reading the Technical Blueprint provided by the `openapi-architect`.
 2. **Directory Setup**: Create the target package directory if it doesn't exist.
 3. **RequestBuilder Generation**:
-    - **One Builder Per Segment**: Implement a dedicated `RequestBuilder` struct for each path segment of the API (e.g., `/api`, `/now`, `/cmdb` each get their own builder).
+    - **One Builder Per Segment**: Implement a dedicated `RequestBuilder` struct for each path segment of the API (e.g., `/now`, `/cmdb` each get their own builder).
     - **Namespace Connections**: ONLY top-level namespaces (e.g., `now`, `sn_cdm`) should be connected directly to the root `ServiceNowClient`.
     - **Hierarchical Linking**: All other path segments must be linked hierarchically through their parent builders (e.g., `Now() -> Cmdb() -> Instance()`).
     - Use `internal/new.NewBaseRequestBuilder`.
