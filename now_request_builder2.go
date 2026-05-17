@@ -50,7 +50,7 @@ func (rB *NowRequestBuilder2) Documents() *documentsapi.DocumentsRequestBuilder2
 	return documentsapi.NewDocumentsRequestBuilder2Internal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
-// CmdbInstance returns a CmdbInstanceRequestBuilder2 associated with the NowRequestBuilder.
-func (rB *NowRequestBuilder2) CmdbInstance() *cmdbinstanceapi.CmdbInstanceRequestBuilder2 {
-	return cmdbinstanceapi.NewCmdbInstanceRequestBuilder2Internal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+// Cmdb returns a CmdbRequestBuilder associated with the NowRequestBuilder.
+func (rB *NowRequestBuilder2) Cmdb() *cmdbinstanceapi.CmdbRequestBuilder {
+	return cmdbinstanceapi.NewCmdbRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
