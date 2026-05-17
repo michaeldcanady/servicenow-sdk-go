@@ -11,7 +11,6 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/cmdb-instance-api"
 )
 
 // Now2 returns a NowRequestBuilder associated with the Client.
@@ -24,11 +23,6 @@ func (c *ServiceNowClient) Now2() *NowRequestBuilder {
 // It prepares the CdmRequestBuilder with the base URL for the ServiceNow instance.
 func (c *ServiceNowClient) Cdm() *CdmRequestBuilder {
 	return NewCdmRequestBuilderInternal(map[string]string{"baseurl": c.BaseUrl}, c.RequestAdapter)
-}
-
-// Cmdb returns a CmdbRequestBuilder associated with the Client.
-func (c *ServiceNowClient) Cmdb() *cmdbinstanceapi.CmdbRequestBuilder {
-	return cmdbinstanceapi.NewCmdbRequestBuilderInternal(map[string]string{"baseurl": c.BaseUrl}, c.RequestAdapter)
 }
 
 // DEPRECATED: deprecated since v1.11.0. Please use [NewServiceNowServiceClient]
