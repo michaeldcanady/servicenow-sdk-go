@@ -48,3 +48,10 @@ func (rB *DocumentsRequestBuilder2) Delete() *DeleteRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	return NewDeleteRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
+
+// Versions provides operations to manage document versions.
+func (rB *DocumentsRequestBuilder2) Versions(documentSysID string) *VersionsRequestBuilder {
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters["document_sys_id"] = documentSysID
+	return NewVersionsRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
