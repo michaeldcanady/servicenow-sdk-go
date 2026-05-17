@@ -83,6 +83,13 @@ func (rB *DocumentsRequestBuilder2) Content(documentSysID string) *ContentReques
 	return NewContentRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
+// SyncDown provides operations to manage document synchronization.
+func (rB *DocumentsRequestBuilder2) SyncDown(documentSysID string) *SyncDownRequestBuilder {
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters["documentSysId"] = documentSysID
+	return NewSyncDownRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
+
 // Action provides operations to manage document actions.
 func (rB *DocumentsRequestBuilder2) Action(action string) *ActionRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
