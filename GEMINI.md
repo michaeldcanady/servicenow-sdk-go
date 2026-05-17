@@ -41,17 +41,15 @@ The following commands are essential for developing and validating the SDK:
 Gemini operates as an AI contributor and must strictly adhere to the following rules for all changes.
 
 ### 1. Semantic Versioning (SemVer 2.0.0)
-Gemini must follow SemVer for all changes affecting code, schemas, workflows, or documentation.
+The project follows SemVer for all changes. **Versioning and Changelog management are handled automatically by `release-please`.**
 - **MAJOR**: Backwards-incompatible changes.
 - **MINOR**: Backwards-compatible feature additions.
 - **PATCH**: Bug fixes, refactors, documentation, internal improvements.
 
-**Required for every update:**
-- Current and proposed version.
-- Justification for the version increment.
-- Categorized list of changes (MAJOR/MINOR/PATCH).
-- Changelog-ready summary.
-- **Never apply a version bump silently or infer it without explicit reasoning.**
+**Gemini Mandate:**
+- Do **not** manually update the `VERSION` file or `CHANGELOG.md`.
+- Categorize changes (MAJOR/MINOR/PATCH) in your strategy and commit messages to ensure `release-please` can correctly determine the next version.
+- **Never apply a version bump silently.**
 
 ### 2. Conventional Commits & Atomicity
 All changes must be broken into **atomic, logically isolated commits**.
