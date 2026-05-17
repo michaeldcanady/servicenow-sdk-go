@@ -1,9 +1,8 @@
 package internal
 
 import (
-	"fmt"
-
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -36,21 +35,19 @@ type ServiceNowCollectionResponse[T serialization.Parsable] interface {
 
 // BaseServiceNowCollectionResponse[T] Basic implementation of the ServiceNowCollectionResponse[T]
 type BaseServiceNowCollectionResponse[T serialization.Parsable] struct {
+	BaseModel
 	// factory The ParsableFactory for serializing the result type.
 	factory serialization.ParsableFactory
-	// backingStoreFactory The BackingStoreFactory for creating the BackingStore to use.
-	backingStoreFactory kiotaStore.BackingStoreFactory
-	// backingStore The BackingStore
-	backingStore kiotaStore.BackingStore
 }
 
 // NewBaseServiceNowCollectionResponse[T] Creates a new instance of the BaseServiceNowCollectionResponse[T].
 func NewBaseServiceNowCollectionResponse[T serialization.Parsable](factory serialization.ParsableFactory) *BaseServiceNowCollectionResponse[T] {
-	return &BaseServiceNowCollectionResponse[T]{
-		factory:             factory,
-		backingStoreFactory: kiotaStore.NewInMemoryBackingStore,
-		backingStore:        kiotaStore.NewInMemoryBackingStore(),
+	res := &BaseServiceNowCollectionResponse[T]{
+		BaseModel: *NewBaseModel(),
+		factory:   factory,
 	}
+	res.GetBackingStore()
+	return res
 }
 
 // Serialize writes the objects properties to the current writer
@@ -71,19 +68,7 @@ func (bR *BaseServiceNowCollectionResponse[T]) Serialize(writer serialization.Se
 // GetFieldDeserializers returns the deserialization information for this object
 func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		resultKey: func(pn serialization.ParseNode) error {
-			val, err := pn.GetCollectionOfObjectValues(bR.factory)
-			if err != nil {
-				return err
-			}
-
-			results := make([]any, len(val))
-			for i, v := range val {
-				results[i] = v
-			}
-
-			return bR.setResult(results)
-		},
+		resultKey:   internalSerialization.DeserializeCollectionOfObjectValuesFunc[T](bR.factory)(bR.setResult),
 		nextKey:     internalSerialization.DeserializeStringFunc()(bR.SetNextLink),
 		previousKey: internalSerialization.DeserializeStringFunc()(bR.SetPreviousLink),
 		firstKey:    internalSerialization.DeserializeStringFunc()(bR.SetFirstLink),
@@ -92,13 +77,14 @@ func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[strin
 }
 
 // setResult Sets the result values of the response.
-func (r *BaseServiceNowCollectionResponse[T]) setResult(val []any) error {
+func (r *BaseServiceNowCollectionResponse[T]) setResult(val []T) error {
 	if IsNil(r) {
 		return nil
 	}
 
-	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, resultKey, val)
+	anySlice, _ := conversion.CastCollection[T, any](val)
+
+	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), resultKey, anySlice)
 }
 
 // SetNextLink Sets the url to the next page of results.
@@ -107,8 +93,7 @@ func (r *BaseServiceNowCollectionResponse[T]) SetNextLink(val *string) error {
 		return nil
 	}
 
-	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, nextKey, val)
+	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), nextKey, val)
 }
 
 // SetPreviousLink Sets the url to the previous page of results.
@@ -117,8 +102,7 @@ func (r *BaseServiceNowCollectionResponse[T]) SetPreviousLink(val *string) error
 		return nil
 	}
 
-	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, previousKey, val)
+	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), previousKey, val)
 }
 
 // SetFirstLink Sets the url to the first page of results.
@@ -127,8 +111,7 @@ func (r *BaseServiceNowCollectionResponse[T]) SetFirstLink(val *string) error {
 		return nil
 	}
 
-	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, firstKey, val)
+	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), firstKey, val)
 }
 
 // SetLastLink Sets the url to the last page of results.
@@ -137,24 +120,7 @@ func (r *BaseServiceNowCollectionResponse[T]) SetLastLink(val *string) error {
 		return nil
 	}
 
-	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, lastKey, val)
-}
-
-// GetBackingStore returns the backing store, if store is nil it instantiates a new store.
-func (r *BaseServiceNowCollectionResponse[T]) GetBackingStore() kiotaStore.BackingStore {
-	if IsNil(r) {
-		return nil
-	}
-
-	if IsNil(r.backingStore) {
-		if IsNil(r.backingStoreFactory) {
-			return nil
-		}
-		r.backingStore = r.backingStoreFactory()
-	}
-
-	return r.backingStore
+	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), lastKey, val)
 }
 
 // GetResult Returns the result values of the response.
@@ -163,24 +129,12 @@ func (r *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
 		return nil, nil
 	}
 
-	backingStore := r.GetBackingStore()
-	unknownSlice, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []any](backingStore, resultKey)
+	unknownSlice, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []any](r.GetBackingStore(), resultKey)
 	if err != nil {
 		return nil, err
 	}
 
-	results := make([]T, len(unknownSlice))
-
-	for index, value := range unknownSlice {
-		result, ok := value.(T)
-		if !ok {
-			return nil, fmt.Errorf("value is not %T", new(T))
-		}
-
-		results[index] = result
-	}
-
-	return results, nil
+	return conversion.CastCollection[any, T](unknownSlice)
 }
 
 // GetNextLink Returns the url to the next page of results.
@@ -189,8 +143,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
 		return nil, nil
 	}
 
-	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, nextKey)
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), nextKey)
 }
 
 // GetPreviousLink Returns the url to the previous page of results.
@@ -199,8 +152,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error)
 		return nil, nil
 	}
 
-	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, previousKey)
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), previousKey)
 }
 
 // GetFirstLink Returns the url to the first page of results.
@@ -209,8 +161,7 @@ func (r *BaseServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
 		return nil, nil
 	}
 
-	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, firstKey)
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), firstKey)
 }
 
 // GetLastLink Returns the url to the last page of results.
@@ -219,6 +170,5 @@ func (r *BaseServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
 		return nil, nil
 	}
 
-	backingStore := r.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, lastKey)
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), lastKey)
 }
