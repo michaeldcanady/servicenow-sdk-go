@@ -43,6 +43,12 @@ func (rB *DocumentsRequestBuilder2) Create() *CreateRequestBuilder {
 	return NewCreateRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
+// CreateDocument provides operations to manage the createDocument endpoint.
+func (rB *DocumentsRequestBuilder2) CreateDocument() *CreateDocumentRequestBuilder {
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	return NewCreateDocumentRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
+
 // Delete provides operations to manage the delete endpoint.
 func (rB *DocumentsRequestBuilder2) Delete() *DeleteRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
