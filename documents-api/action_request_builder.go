@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	actionURLTemplate = "{+baseurl}/api/now/documents/action/{action}/document/{documentSysId}/version/{versionSysId}"
+	actionURLTemplate = "{+baseurl}/api/now/v1/documents/action/{action}/document/{documentSysId}/version/{versionSysId}"
 )
 
 // ActionRequestBuilder provides operations to manage document actions.

@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	versionStateURLTemplate = "{+baseurl}/api/now/documents/versionstate/{version_sys_id}"
+	versionStateURLTemplate = "{+baseurl}/api/now/v1/documents/versionstate/{version_sys_id}"
 )
 
 // VersionStateRequestBuilder provides operations to manage the versionstate endpoint.

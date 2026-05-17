@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	attachURLTemplate = "{+baseurl}/api/now/documents/{provider_id}/attach"
+	attachURLTemplate = "{+baseurl}/api/now/v1/documents/{provider_id}/attach"
 )
 
 // AttachRequestBuilder provides operations to manage the attach endpoint.

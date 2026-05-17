@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	contentURLTemplate = "{+baseurl}/api/now/documents/{document_sys_id}/content"
+	contentURLTemplate = "{+baseurl}/api/now/v1/documents/{document_sys_id}/content"
 )
 
 // ContentRequestBuilder provides operations to manage document content.

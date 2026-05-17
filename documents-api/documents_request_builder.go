@@ -9,7 +9,7 @@ import (
 
 const (
 	// documentsURLTemplate is the url template for the Documents API endpoint
-	documentsURLTemplate = "{+baseurl}/api/now/documents"
+	documentsURLTemplate = "{+baseurl}/api/now/v1/documents"
 )
 
 // DocumentsRequestBuilder2 provides operations to manage ServiceNow documents.

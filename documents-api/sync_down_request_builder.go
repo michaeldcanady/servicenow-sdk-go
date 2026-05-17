@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	syncDownURLTemplate = "{+baseurl}/api/now/documents/{documentSysId}/syncDown"
+	syncDownURLTemplate = "{+baseurl}/api/now/v1/documents/{documentSysId}/syncDown"
 )
 
 // SyncDownRequestBuilder provides operations to manage the syncDown endpoint.

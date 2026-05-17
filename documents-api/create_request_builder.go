@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	createURLTemplate = "{+baseurl}/api/now/documents/create"
+	createURLTemplate = "{+baseurl}/api/now/v1/documents/create"
 )
 
 // CreateRequestBuilder provides operations to manage the create endpoint.

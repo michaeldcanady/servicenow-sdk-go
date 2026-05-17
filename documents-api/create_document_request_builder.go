@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	createDocumentURLTemplate = "{+baseurl}/api/now/documents/createDocument"
+	createDocumentURLTemplate = "{+baseurl}/api/now/v1/documents/createDocument"
 )
 
 // CreateDocumentRequestBuilder provides operations to manage the createDocument endpoint.

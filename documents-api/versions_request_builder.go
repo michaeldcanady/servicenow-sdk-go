@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	versionsURLTemplate = "{+baseurl}/api/now/documents/versions/{document_sys_id}"
+	versionsURLTemplate = "{+baseurl}/api/now/v1/documents/versions/{document_sys_id}"
 )
 
 // VersionsRequestBuilder provides operations to manage document versions.

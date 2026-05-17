@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	exploreURLTemplate = "{+baseurl}/api/now/documents/explore{?page,limit,query,table_name,folder_sys_id,record_sys_id}"
+	exploreURLTemplate = "{+baseurl}/api/now/v1/documents/explore{?page,limit,query,table_name,folder_sys_id,record_sys_id}"
 )
 
 // ExploreRequestBuilder provides operations to manage the explore endpoint.

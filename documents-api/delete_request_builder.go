@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	deleteURLTemplate = "{+baseurl}/api/now/documents/delete{?doc_sys_id,record_sys_id,table_name}"
+	deleteURLTemplate = "{+baseurl}/api/now/v1/documents/delete{?doc_sys_id,record_sys_id,table_name}"
 )
 
 // DeleteRequestBuilder provides operations to manage the delete endpoint.
