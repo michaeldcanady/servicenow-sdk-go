@@ -5,6 +5,7 @@ import (
 
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
 	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
+	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/cmdb-instance-api"
 	documentsapi "github.com/michaeldcanady/servicenow-sdk-go/documents-api"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
@@ -47,4 +48,9 @@ func (rB *NowRequestBuilder2) Batch() *batchapi.BatchRequestBuilder {
 // Documents returns a DocumentsRequestBuilder2 associated with the NowRequestBuilder.
 func (rB *NowRequestBuilder2) Documents() *documentsapi.DocumentsRequestBuilder2 {
 	return documentsapi.NewDocumentsRequestBuilder2Internal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+// Cmdb returns a CmdbRequestBuilder associated with the NowRequestBuilder.
+func (rB *NowRequestBuilder2) Cmdb() *cmdbinstanceapi.CmdbRequestBuilder {
+	return cmdbinstanceapi.NewCmdbRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
