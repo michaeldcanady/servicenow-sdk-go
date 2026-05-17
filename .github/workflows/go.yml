@@ -55,7 +55,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        go-versions: &go-versions ["stable", "oldstable"]
+        go-version: &go-versions ["stable", "oldstable"]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
