@@ -1,7 +1,11 @@
 ---
-name: api-generator
-description: A specialized sub-agent designed to automate the creation of Go SDK modules based on architectural blueprints derived from OpenAPI specifications. It specializes in generating Kiota-compliant code that leverages the `internal/new/` abstractions of the ServiceNow Go SDK.
+name: api-creator
+description: Automates the creation of Go SDK modules based on architectural blueprints derived from OpenAPI specifications. Use when Gemini CLI needs to generate Kiota-compliant code, including RequestBuilders, Models, and RequestConfigurations, that leverages the `internal/new/` abstractions of the ServiceNow Go SDK.
 ---
+
+# 🛠 API Creator
+
+The `api-creator` skill is a specialized tool for automating the generation of ServiceNow Go SDK modules. It ensures that all generated code follows the established Kiota-based architecture, naming conventions, and structural patterns.
 
 ## Core Capabilities
 
@@ -10,7 +14,7 @@ description: A specialized sub-agent designed to automate the creation of Go SDK
 - **Dependency Management**: Correctly handles imports for Kiota abstractions and internal SDK packages.
 - **Unit Testing**: Generates initial unit tests for the generated components using `testify/mock`.
 
-## Instructions
+## 🔄 Workflow
 
 1. **Blueprint Ingestion**: Start by reading the Technical Blueprint provided by the `openapi-architect`.
 2. **Directory Setup**: Create the target package directory if it doesn't exist.
@@ -19,7 +23,7 @@ description: A specialized sub-agent designed to automate the creation of Go SDK
     - **Namespace Connections**: ONLY top-level namespaces (e.g., `now`, `sn_cdm`) should be connected directly to the root `ServiceNowClient`.
     - **Hierarchical Linking**: All other path segments must be linked hierarchically through their parent builders (e.g., `Now() -> Cmdb() -> Instance()`).
     - Use `internal/new.NewBaseRequestBuilder`.
-    - Implement methods for each HTTP verb (Get, Post, etc.) following the established signature: `func (rB *RB) Method(ctx context.Context, config *Config) (*Response, error)`.
+    - Implement methods for each HTTP verb following the signature: `func (rB *RB) Method(ctx context.Context, config *Config) (*Response, error)`.
 4. **Model Generation**:
     - Implement `Parsable` models using `internal/new.BaseModel`.
     - Generate `Serialize` and `GetFieldDeserializers` methods.
@@ -27,7 +31,7 @@ description: A specialized sub-agent designed to automate the creation of Go SDK
     - Generate `RequestConfiguration` and `QueryParameters` structs for each method.
 6. **Verification**: Run `go fmt` and `go vet` on the generated files to ensure basic correctness.
 
-## Mandatory Patterns
+## 📏 Mandatory Patterns
 
 - **Path Hierarchy**: Strictly adhere to the "one builder per segment" rule. Do not skip path segments or flatten the hierarchy.
 - **Client Connectivity**: Do not connect sub-paths (e.g., `cmdb`) to the `ServiceNowClient`. Use parent builders to navigate the hierarchy.
@@ -37,5 +41,9 @@ description: A specialized sub-agent designed to automate the creation of Go SDK
 
 ## ⚖️ Usage Distinctions
 
-- **Use `api-generator` for**: Bulk generation of API support code once a blueprint is approved.
+- **Use `api-creator` for**: Bulk generation of API support code once a blueprint is approved.
 - **Do NOT use for**: Designing the API architecture (`openapi-architect`) or fixing complex logic bugs (`software-engineer`).
+
+## 📚 Resources
+
+- **Process Guide**: Refer to [docs/api_generation_process.md](../../../docs/api_generation_process.md) for detailed templates and examples.

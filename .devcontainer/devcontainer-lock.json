@@ -1,0 +1,32 @@
+{
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "1.1.0",
+      "resolved": "ghcr.io/devcontainers/features/github-cli@sha256:d22f50b70ed75339b4eed1ba9ecde3a1791f90e88d37936517e3bace0bbad671",
+      "integrity": "sha256:d22f50b70ed75339b4eed1ba9ecde3a1791f90e88d37936517e3bace0bbad671"
+    },
+    "ghcr.io/devcontainers/features/powershell:2": {
+      "version": "2.0.2",
+      "resolved": "ghcr.io/devcontainers/features/powershell@sha256:82ea3880c5706ac3963f1b5e940a7f5871835393a5472f80008148b995d58d61",
+      "integrity": "sha256:82ea3880c5706ac3963f1b5e940a7f5871835393a5472f80008148b995d58d61"
+    },
+    "ghcr.io/guiyomh/features/just:0": {
+      "version": "0.1.0",
+      "resolved": "ghcr.io/guiyomh/features/just@sha256:8311dff976bd153a54a879021353a7e149963e580022b25af49c45cfc5f13bec",
+      "integrity": "sha256:8311dff976bd153a54a879021353a7e149963e580022b25af49c45cfc5f13bec"
+    },
+    "ghcr.io/stu-bell/devcontainer-features/gemini-cli:0": {
+      "version": "0.1.7",
+      "resolved": "ghcr.io/stu-bell/devcontainer-features/gemini-cli@sha256:c8007e24206445779f51d162636452d003cdd63fe70cbb67dc2228f6a5178b26",
+      "integrity": "sha256:c8007e24206445779f51d162636452d003cdd63fe70cbb67dc2228f6a5178b26",
+      "dependsOn": [
+        "ghcr.io/stu-bell/devcontainer-features/node"
+      ]
+    },
+    "ghcr.io/stu-bell/devcontainer-features/node": {
+      "version": "0.5.2",
+      "resolved": "ghcr.io/stu-bell/devcontainer-features/node@sha256:044479bdbf55bf9191f6bea70306818c7669259f6962add77af2ff7d93658541",
+      "integrity": "sha256:044479bdbf55bf9191f6bea70306818c7669259f6962add77af2ff7d93658541"
+    }
+  }
+}
