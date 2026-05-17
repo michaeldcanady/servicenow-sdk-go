@@ -49,6 +49,13 @@ func (rB *DocumentsRequestBuilder2) CreateDocument() *CreateDocumentRequestBuild
 	return NewCreateDocumentRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
+// VersionState provides operations to manage document version states.
+func (rB *DocumentsRequestBuilder2) VersionState(versionSysID string) *VersionStateRequestBuilder {
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters["version_sys_id"] = versionSysID
+	return NewVersionStateRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
+
 // Delete provides operations to manage the delete endpoint.
 func (rB *DocumentsRequestBuilder2) Delete() *DeleteRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
