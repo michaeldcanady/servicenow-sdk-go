@@ -55,3 +55,10 @@ func (rB *DocumentsRequestBuilder2) Versions(documentSysID string) *VersionsRequ
 	pathParameters["document_sys_id"] = documentSysID
 	return NewVersionsRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
+
+// Content provides operations to manage document content.
+func (rB *DocumentsRequestBuilder2) Content(documentSysID string) *ContentRequestBuilder {
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters["document_sys_id"] = documentSysID
+	return NewContentRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
