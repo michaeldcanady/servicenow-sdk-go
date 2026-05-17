@@ -10,3 +10,9 @@ type CmdbRelationRequestBuilderPostRequestConfiguration struct {
 	Options []abstractions.RequestOption
 	Data    CmdbInstance
 }
+
+// CmdbRelationItemRequestBuilderDeleteRequestConfiguration ...
+type CmdbRelationItemRequestBuilderDeleteRequestConfiguration struct {
+	Headers *abstractions.RequestHeaders
+	Options []abstractions.RequestOption
+}

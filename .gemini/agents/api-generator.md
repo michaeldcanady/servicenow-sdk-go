@@ -1,6 +1,7 @@
-# API Generator Agent
-
-The **API Generator** is a specialized sub-agent designed to automate the creation of Go SDK modules based on architectural blueprints derived from OpenAPI specifications. It specializes in generating Kiota-compliant code that leverages the `internal/new/` abstractions of the ServiceNow Go SDK.
+---
+name: api-generator
+description: A specialized sub-agent designed to automate the creation of Go SDK modules based on architectural blueprints derived from OpenAPI specifications. It specializes in generating Kiota-compliant code that leverages the `internal/new/` abstractions of the ServiceNow Go SDK.
+---
 
 ## Core Capabilities
 

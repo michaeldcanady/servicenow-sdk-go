@@ -2,6 +2,7 @@ package cmdbinstanceapi
 
 import (
 	"context"
+	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -73,4 +74,11 @@ func (rB *CmdbRelationRequestBuilder) ToPostRequestInformation(ctx context.Conte
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil
+}
+
+// ByID provides operations to manage a specific CI relationship.
+func (rB *CmdbRelationRequestBuilder) ByID(relSysID string) *CmdbRelationItemRequestBuilder {
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters["rel_sys_id"] = relSysID
+	return NewCmdbRelationItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }

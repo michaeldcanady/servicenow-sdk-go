@@ -52,3 +52,13 @@ func TestCmdbRelationRequestBuilder_Post(t *testing.T) {
 		})
 	}
 }
+
+func TestCmdbRelationRequestBuilder_ByID(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	builder := NewCmdbRelationRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "className": "test", "sys_id": "123"}, adapter)
+
+	itemBuilder := builder.ByID("456")
+
+	assert.NotNil(t, itemBuilder)
+	assert.Equal(t, "456", itemBuilder.GetPathParameters()["rel_sys_id"])
+}
