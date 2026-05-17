@@ -154,6 +154,6 @@ jobs:
           name: ${{ matrix.os }}-coverage-report-${{ matrix.go-version }}-${{ hashFiles('go.sum') }}) }}
           path: cover.html
       - name: Upload to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
