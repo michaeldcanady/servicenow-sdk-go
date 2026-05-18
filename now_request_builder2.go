@@ -14,15 +14,9 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-...
+const nowURLTemplate2 = "{+baseurl}/api/now"
 
-// ActSub returns an ActSubRequestBuilder associated with the NowRequestBuilder.
-func (rB *NowRequestBuilder2) ActSub() *actsubapi.ActSubRequestBuilder {
-	return actsubapi.NewActSubRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
-}
-
-// Account returns an AccountRequestBuilder associated with the NowRequestBuilder.
-
+type NowRequestBuilder2 struct {
 	internal.RequestBuilder
 }
 
@@ -53,9 +47,9 @@ func (rB *NowRequestBuilder2) Batch() *batchapi.BatchRequestBuilder {
 	return batchapi.NewBatchRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
-// Documents returns a DocumentsRequestBuilder2 associated with the NowRequestBuilder.
-func (rB *NowRequestBuilder2) Documents() *documentsapi.DocumentsRequestBuilder2 {
-	return documentsapi.NewDocumentsRequestBuilder2Internal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+// Documents returns a DocumentsRequestBuilder associated with the NowRequestBuilder.
+func (rB *NowRequestBuilder2) Documents() *documentsapi.DocumentsRequestBuilder {
+	return documentsapi.NewDocumentsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // Cmdb returns a CmdbRequestBuilder associated with the NowRequestBuilder.
@@ -66,4 +60,9 @@ func (rB *NowRequestBuilder2) Cmdb() *cmdbinstanceapi.CmdbRequestBuilder {
 // Account returns an AccountRequestBuilder associated with the NowRequestBuilder.
 func (rB *NowRequestBuilder2) Account() *accountapi.AccountRequestBuilder {
 	return accountapi.NewAccountRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+// ActSub returns an ActSubRequestBuilder associated with the NowRequestBuilder.
+func (rB *NowRequestBuilder2) ActSub() *actsubapi.ActSubRequestBuilder {
+	return actsubapi.NewActSubRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
