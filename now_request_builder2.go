@@ -3,8 +3,8 @@ package servicenowsdkgo
 import (
 	"maps"
 
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
 	accountapi "github.com/michaeldcanady/servicenow-sdk-go/account-api"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
 	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
 	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/cmdb-instance-api"
 	documentsapi "github.com/michaeldcanady/servicenow-sdk-go/documents-api"
