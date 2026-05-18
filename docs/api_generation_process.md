@@ -35,7 +35,8 @@ A sub-agent tasked with the actual code generation based on the blueprint provid
 2. **Code Generation**:
     - `RequestBuilder` files using `internal/new.BaseRequestBuilder`.
     - `Model` files implementing `serialization.Parsable` with `internal/new.BaseModel`.
-    - `Configuration` and `QueryParameters` files.
+    - `QueryParameters` structs with `url` tags for each parameter.
+    - `RequestConfiguration` as a type alias of `abstractions.RequestConfiguration[T]`.
 3. **Boilerplate Integration**: Ensure imports and exports are correctly handled.
 
 ### Phase 4: Validation & Quality Assurance
@@ -46,31 +47,17 @@ A sub-agent tasked with the actual code generation based on the blueprint provid
 
 ## 4. Templates & Conventions
 
-### 4.1. RequestBuilder Pattern
-```go
-type %Name%RequestBuilder struct {
-    newInternal.RequestBuilder
-}
+All code generation must adhere to the templates located in the `api-creator` skill directory:
+- **Location**: `.gemini/skills/api-creator/assets/templates/`
 
-func New%Name%RequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *%Name%RequestBuilder {
-    return &%Name%RequestBuilder{
-        newInternal.NewBaseRequestBuilder(requestAdapter, %URLTemplate%, pathParameters),
-    }
-}
-```
+### 4.1. RequestBuilder Pattern
+Refer to `request_builder.go.tmpl`.
 
 ### 4.2. Parsable Model Pattern
-```go
-type %Model% struct {
-    newInternal.BaseModel
-}
+Refer to `model.go.tmpl`.
 
-func New%Model%() *%Model% {
-    return &%Model%{
-        BaseModel: *newInternal.NewBaseModel(),
-    }
-}
-```
+### 4.3. Configuration & QueryParameters Pattern
+Refer to `query_parameters.go.tmpl` and `request_configuration.go.tmpl`.
 
 ## 5. Automation Commands
 - `gemini invoke api-generator --spec spec/my_api.json` (Conceptual)

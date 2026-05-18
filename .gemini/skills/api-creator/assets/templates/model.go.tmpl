@@ -1,0 +1,15 @@
+package %Package%
+
+import (
+    newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+)
+
+type %Model% struct {
+    newInternal.BaseModel
+}
+
+func New%Model%() *%Model% {
+    return &%Model%{
+        BaseModel: *newInternal.NewBaseModel(),
+    }
+}

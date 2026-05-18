@@ -10,7 +10,7 @@ The `api-creator` skill is a specialized tool for automating the generation of S
 ## Core Capabilities
 
 - **Code Generation**: Generates `RequestBuilder`, `Model`, `RequestConfiguration`, and `QueryParameters` Go files.
-- **Pattern Adherence**: Strictly follows the templates defined in `docs/api_generation_process.md`.
+- **Pattern Adherence**: Strictly follows the templates defined in `assets/templates/`.
 - **Dependency Management**: Correctly handles imports for Kiota abstractions and internal SDK packages.
 - **Unit Testing**: Generates initial unit tests for the generated components using `testify/mock`.
 
@@ -22,13 +22,15 @@ The `api-creator` skill is a specialized tool for automating the generation of S
     - **One Builder Per Segment**: Implement a dedicated `RequestBuilder` struct for each path segment of the API (e.g., `/now`, `/cmdb` each get their own builder).
     - **Namespace Connections**: ONLY top-level namespaces (e.g., `now`, `sn_cdm`) should be connected directly to the root `ServiceNowClient`.
     - **Hierarchical Linking**: All other path segments must be linked hierarchically through their parent builders (e.g., `Now() -> Cmdb() -> Instance()`).
-    - Use `internal/new.NewBaseRequestBuilder`.
+    - Use `newInternal.NewBaseRequestBuilder`.
     - Implement methods for each HTTP verb following the signature: `func (rB *RB) Method(ctx context.Context, config *Config) (*Response, error)`.
+    - **ToVerbRequestInformation**: Implement request information builders that wrap `abstractions.RequestInformation` with `newInternal.KiotaRequestInformation`. Use `internal.IsNil` for null checks and ensure `Accept` headers are set.
 4. **Model Generation**:
     - Implement `Parsable` models using `internal/new.BaseModel`.
     - Generate `Serialize` and `GetFieldDeserializers` methods.
 5. **Configuration & Parameters**:
-    - Generate `RequestConfiguration` and `QueryParameters` structs for each method.
+    - **QueryParameters**: Generate structs with `url` tags for each parameter (e.g., `type %Name%RequestBuilder%Verb%QueryParameters struct { ... }`). Use `*int`, `*string`, etc., for fields to support `omitempty`.
+    - **RequestConfiguration**: Define as a type alias of `abstractions.RequestConfiguration[%QueryParameters%]`. (e.g., `type %Name%RequestBuilder%Verb%RequestConfiguration = abstractions.RequestConfiguration[%QueryParameters%]`).
 6. **Verification**: Run `go fmt` and `go vet` on the generated files to ensure basic correctness.
 
 ## 📏 Mandatory Patterns
@@ -38,6 +40,13 @@ The `api-creator` skill is a specialized tool for automating the generation of S
 - **Package Naming**: Use lowercase package names without underscores (e.g., `tableapi`, `attachmentapi`).
 - **Internal Aliases**: Use `newInternal` for `github.com/michaeldcanady/servicenow-sdk-go/internal/new`.
 - **URL Templates**: Define URL templates as constants within the RequestBuilder files.
+- **Configuration Alias**: Always use the `abstractions.RequestConfiguration[T]` type alias for request configurations.
+- **URL Tags**: Always include `url:"parameter_name,omitempty"` tags in query parameter structs.
+- **Templates**: Always use the templates located in `assets/templates/`:
+    - `request_builder.go.tmpl`: Template for `RequestBuilder` files.
+    - `model.go.tmpl`: Template for `Parsable` model files.
+    - `query_parameters.go.tmpl`: Template for `QueryParameters` structs.
+    - `request_configuration.go.tmpl`: Template for `RequestConfiguration` type aliases.
 
 ## ⚖️ Usage Distinctions
 
