@@ -5,21 +5,13 @@ import (
 )
 
 // CmdbItemRequestBuilderGetRequestConfiguration ...
-type CmdbItemRequestBuilderGetRequestConfiguration struct {
-	Headers *abstractions.RequestHeaders
-	Options []abstractions.RequestOption
-}
+type CmdbItemRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
 // CmdbItemRequestBuilderPutRequestConfiguration ...
-type CmdbItemRequestBuilderPutRequestConfiguration struct {
-	Headers *abstractions.RequestHeaders
-	Options []abstractions.RequestOption
-	Data    CmdbInstance
-}
+type CmdbItemRequestBuilderPutRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
 // CmdbItemRequestBuilderPatchRequestConfiguration ...
-type CmdbItemRequestBuilderPatchRequestConfiguration struct {
-	Headers *abstractions.RequestHeaders
-	Options []abstractions.RequestOption
-	Data    CmdbInstance
-}
+type CmdbItemRequestBuilderPatchRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
+
+// CmdbItemRequestBuilderDeleteRequestConfiguration ...
+type CmdbItemRequestBuilderDeleteRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]

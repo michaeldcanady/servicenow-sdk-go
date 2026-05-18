@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCmdbInstanceRequestBuilder2_Builders(t *testing.T) {
+func TestCmdbInstanceRequestBuilder_Builders(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
-	builder := NewCmdbInstanceRequestBuilder2Internal(map[string]string{"baseurl": "https://example.com"}, adapter)
+	builder := NewCmdbInstanceRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 	tests := []struct {
 		name     string

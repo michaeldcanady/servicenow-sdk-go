@@ -27,12 +27,8 @@ func NewCmdbClassRequestBuilderInternal(pathParameters map[string]string, reques
 }
 
 // Get queries records for a CMDB class.
-func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, requestConfiguration *CmdbClassRequestBuilderGetRequestConfiguration) (*newInternal.BaseServiceNowCollectionResponse[CmdbInstance], error) {
-	if internal.IsNil(rB) {
-		return nil, nil
-	}
-
-	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
+func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, config *CmdbClassRequestBuilderGetRequestConfiguration) (*newInternal.BaseServiceNowCollectionResponse[CmdbInstance], error) {
+	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
@@ -54,12 +50,8 @@ func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, requestConfiguration
 }
 
 // Post creates a record with associated relations.
-func (rB *CmdbClassRequestBuilder) Post(ctx context.Context, requestConfiguration *CmdbClassRequestBuilderPostRequestConfiguration) (*newInternal.BaseServiceNowItemResponse[CmdbInstance], error) {
-	if internal.IsNil(rB) {
-		return nil, nil
-	}
-
-	requestInfo, err := rB.ToPostRequestInformation(ctx, requestConfiguration)
+func (rB *CmdbClassRequestBuilder) Post(ctx context.Context, body CmdbInstance, config *CmdbClassRequestBuilderPostRequestConfiguration) (*newInternal.BaseServiceNowItemResponse[CmdbInstance], error) {
+	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
 	}
@@ -81,46 +73,47 @@ func (rB *CmdbClassRequestBuilder) Post(ctx context.Context, requestConfiguratio
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.
-func (rB *CmdbClassRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *CmdbClassRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *CmdbClassRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CmdbClassRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	if !internal.IsNil(config) {
+		if headers := config.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := config.Options; !internal.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
-		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
-			kiotaRequestInfo.AddQueryParameters(queryParams)
+		if queryParameters := config.QueryParameters; !internal.IsNil(queryParameters) {
+			kiotaRequestInfo.AddQueryParameters(queryParameters)
 		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }
 
 // ToPostRequestInformation converts request configurations to Post request information.
-func (rB *CmdbClassRequestBuilder) ToPostRequestInformation(ctx context.Context, requestConfiguration *CmdbClassRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *CmdbClassRequestBuilder) ToPostRequestInformation(ctx context.Context, body CmdbInstance, config *CmdbClassRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	if !internal.IsNil(config) {
+		if headers := config.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := config.Options; !internal.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if data := requestConfiguration.Data; !internal.IsNil(data) {
-			err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, data)
-			if err != nil {
-				return nil, err
-			}
 		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
-	return kiotaRequestInfo.RequestInformation, nil
+	if !internal.IsNil(body) {
+		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return requestInfo, nil
 }
 
 // ByID provides operations to manage a specific CI record.

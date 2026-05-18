@@ -82,7 +82,7 @@ func TestCmdbItemRequestBuilder_Put(t *testing.T) {
 			tt.setupMock(adapter)
 
 			builder := NewCmdbItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "className": "test", "sys_id": "123"}, adapter)
-			resp, err := builder.Put(context.Background(), nil)
+			resp, err := builder.Put(context.Background(), nil, nil)
 
 			if tt.expectedErr != nil {
 				assert.EqualError(t, err, tt.expectedErr.Error())
@@ -124,7 +124,7 @@ func TestCmdbItemRequestBuilder_Patch(t *testing.T) {
 			tt.setupMock(adapter)
 
 			builder := NewCmdbItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "className": "test", "sys_id": "123"}, adapter)
-			resp, err := builder.Patch(context.Background(), nil)
+			resp, err := builder.Patch(context.Background(), nil, nil)
 
 			if tt.expectedErr != nil {
 				assert.EqualError(t, err, tt.expectedErr.Error())

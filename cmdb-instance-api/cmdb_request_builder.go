@@ -30,7 +30,7 @@ func NewCmdbRequestBuilder(rawURL string, requestAdapter abstractions.RequestAda
 	return NewCmdbRequestBuilderInternal(urlParams, requestAdapter)
 }
 
-// Instance returns a CmdbInstanceRequestBuilder2 associated with the CmdbRequestBuilder.
-func (rB *CmdbRequestBuilder) Instance() *CmdbInstanceRequestBuilder2 {
-	return NewCmdbInstanceRequestBuilder2Internal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+// Instance returns a CmdbInstanceRequestBuilder associated with the CmdbRequestBuilder.
+func (rB *CmdbRequestBuilder) Instance() *CmdbInstanceRequestBuilder {
+	return NewCmdbInstanceRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

@@ -27,12 +27,8 @@ func NewCmdbItemRequestBuilderInternal(pathParameters map[string]string, request
 }
 
 // Get queries attributes and relationship information for a specific record.
-func (rB *CmdbItemRequestBuilder) Get(ctx context.Context, requestConfiguration *CmdbItemRequestBuilderGetRequestConfiguration) (*newInternal.BaseServiceNowItemResponse[CmdbInstance], error) {
-	if internal.IsNil(rB) {
-		return nil, nil
-	}
-
-	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
+func (rB *CmdbItemRequestBuilder) Get(ctx context.Context, config *CmdbItemRequestBuilderGetRequestConfiguration) (*newInternal.BaseServiceNowItemResponse[CmdbInstance], error) {
+	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
@@ -54,12 +50,8 @@ func (rB *CmdbItemRequestBuilder) Get(ctx context.Context, requestConfiguration 
 }
 
 // Put replaces a CI record.
-func (rB *CmdbItemRequestBuilder) Put(ctx context.Context, requestConfiguration *CmdbItemRequestBuilderPutRequestConfiguration) (*newInternal.BaseServiceNowItemResponse[CmdbInstance], error) {
-	if internal.IsNil(rB) {
-		return nil, nil
-	}
-
-	requestInfo, err := rB.ToPutRequestInformation(ctx, requestConfiguration)
+func (rB *CmdbItemRequestBuilder) Put(ctx context.Context, body CmdbInstance, config *CmdbItemRequestBuilderPutRequestConfiguration) (*newInternal.BaseServiceNowItemResponse[CmdbInstance], error) {
+	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
 	}
@@ -81,12 +73,8 @@ func (rB *CmdbItemRequestBuilder) Put(ctx context.Context, requestConfiguration 
 }
 
 // Patch updates a CI record.
-func (rB *CmdbItemRequestBuilder) Patch(ctx context.Context, requestConfiguration *CmdbItemRequestBuilderPatchRequestConfiguration) (*newInternal.BaseServiceNowItemResponse[CmdbInstance], error) {
-	if internal.IsNil(rB) {
-		return nil, nil
-	}
-
-	requestInfo, err := rB.ToPatchRequestInformation(ctx, requestConfiguration)
+func (rB *CmdbItemRequestBuilder) Patch(ctx context.Context, body CmdbInstance, config *CmdbItemRequestBuilderPatchRequestConfiguration) (*newInternal.BaseServiceNowItemResponse[CmdbInstance], error) {
+	requestInfo, err := rB.ToPatchRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
 	}
@@ -108,66 +96,68 @@ func (rB *CmdbItemRequestBuilder) Patch(ctx context.Context, requestConfiguratio
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.
-func (rB *CmdbItemRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *CmdbItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *CmdbItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CmdbItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	if !internal.IsNil(config) {
+		if headers := config.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := config.Options; !internal.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }
 
 // ToPutRequestInformation converts request configurations to Put request information.
-func (rB *CmdbItemRequestBuilder) ToPutRequestInformation(ctx context.Context, requestConfiguration *CmdbItemRequestBuilderPutRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *CmdbItemRequestBuilder) ToPutRequestInformation(ctx context.Context, body CmdbInstance, config *CmdbItemRequestBuilderPutRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	if !internal.IsNil(config) {
+		if headers := config.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := config.Options; !internal.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if data := requestConfiguration.Data; !internal.IsNil(data) {
-			err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, data)
-			if err != nil {
-				return nil, err
-			}
 		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
-	return kiotaRequestInfo.RequestInformation, nil
+	if !internal.IsNil(body) {
+		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return requestInfo, nil
 }
 
 // ToPatchRequestInformation converts request configurations to Patch request information.
-func (rB *CmdbItemRequestBuilder) ToPatchRequestInformation(ctx context.Context, requestConfiguration *CmdbItemRequestBuilderPatchRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *CmdbItemRequestBuilder) ToPatchRequestInformation(ctx context.Context, body CmdbInstance, config *CmdbItemRequestBuilderPatchRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PATCH, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	if !internal.IsNil(config) {
+		if headers := config.Headers; !internal.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := config.Options; !internal.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if data := requestConfiguration.Data; !internal.IsNil(data) {
-			err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, data)
-			if err != nil {
-				return nil, err
-			}
 		}
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
-	return kiotaRequestInfo.RequestInformation, nil
+	if !internal.IsNil(body) {
+		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return requestInfo, nil
 }
 
 // Relation provides operations to manage CI relationships.
