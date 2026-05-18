@@ -6,21 +6,13 @@ import (
 
 // CmdbClassRequestBuilderGetQueryParameters ...
 type CmdbClassRequestBuilderGetQueryParameters struct {
-	Query  *string `uriparametername:"sysparm_query"`
-	Limit  *int    `uriparametername:"sysparm_limit"`
-	Offset *int    `uriparametername:"sysparm_offset"`
+	Query  *string `url:"sysparm_query,omitempty"`
+	Limit  *int    `url:"sysparm_limit,omitempty"`
+	Offset *int    `url:"sysparm_offset,omitempty"`
 }
 
 // CmdbClassRequestBuilderGetRequestConfiguration ...
-type CmdbClassRequestBuilderGetRequestConfiguration struct {
-	Headers         *abstractions.RequestHeaders
-	Options         []abstractions.RequestOption
-	QueryParameters *CmdbClassRequestBuilderGetQueryParameters
-}
+type CmdbClassRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[CmdbClassRequestBuilderGetQueryParameters]
 
 // CmdbClassRequestBuilderPostRequestConfiguration ...
-type CmdbClassRequestBuilderPostRequestConfiguration struct {
-	Headers *abstractions.RequestHeaders
-	Options []abstractions.RequestOption
-	Data    CmdbInstance
-}
+type CmdbClassRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]

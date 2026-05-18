@@ -1,0 +1,59 @@
+package %Package%
+
+import (
+	"context"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+)
+
+type %Name%RequestBuilder struct {
+    newInternal.RequestBuilder
+}
+
+func New%Name%RequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *%Name%RequestBuilder {
+    return &%Name%RequestBuilder{
+        newInternal.NewBaseRequestBuilder(requestAdapter, %URLTemplate%, pathParameters),
+    }
+}
+
+// %Verb% sends a %VERB% request.
+func (rB *%Name%RequestBuilder) %Verb%(ctx context.Context, config *%Name%RequestBuilder%Verb%RequestConfiguration) (%Response%, error) {
+	requestInfo, err := rB.To%Verb%RequestInformation(ctx, config)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, Create%Response%FromDiscriminatorValue, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if res == nil {
+		return nil, nil
+	}
+
+	return res.(%Response%), nil
+}
+
+// To%Verb%RequestInformation creates a RequestInformation object for a %VERB% request.
+func (rB *%Name%RequestBuilder) To%Verb%RequestInformation(ctx context.Context, config *%Name%RequestBuilder%Verb%RequestConfiguration) (*abstractions.RequestInformation, error) {
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.%VERB%, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !internal.IsNil(config) {
+		if headers := config.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
+		if options := config.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
+		if queryParameters := config.QueryParameters; !internal.IsNil(queryParameters) {
+			kiotaRequestInfo.AddQueryParameters(queryParameters)
+		}
+	}
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+
+	return requestInfo, nil
+}

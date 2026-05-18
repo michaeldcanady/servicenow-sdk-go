@@ -49,7 +49,7 @@ This blueprint outlines the architectural plan for implementing the ServiceNow C
 ## 5. Implementation Strategy
 1. **Scaffold Directory**: Create `cmdb-instance-api/`.
 2. **Base Builders**:
-    - `CmdbInstanceRequestBuilder2` (root)
+    - `CmdbInstanceRequestBuilder` (root)
     - `CmdbClassRequestBuilder` (by class name)
     - `CmdbItemRequestBuilder` (by sys id)
 3. **Configurations**: Generate `RequestConfiguration` and `QueryParameters` for all operations.

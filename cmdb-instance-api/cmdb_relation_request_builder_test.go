@@ -40,7 +40,7 @@ func TestCmdbRelationRequestBuilder_Post(t *testing.T) {
 			tt.setupMock(adapter)
 
 			builder := NewCmdbRelationRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "className": "test", "sys_id": "123"}, adapter)
-			resp, err := builder.Post(context.Background(), nil)
+			resp, err := builder.Post(context.Background(), nil, nil)
 
 			if tt.expectedErr != nil {
 				assert.EqualError(t, err, tt.expectedErr.Error())

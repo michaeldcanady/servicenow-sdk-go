@@ -5,14 +5,7 @@ import (
 )
 
 // CmdbRelationRequestBuilderPostRequestConfiguration ...
-type CmdbRelationRequestBuilderPostRequestConfiguration struct {
-	Headers *abstractions.RequestHeaders
-	Options []abstractions.RequestOption
-	Data    CmdbInstance
-}
+type CmdbRelationRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
 // CmdbRelationItemRequestBuilderDeleteRequestConfiguration ...
-type CmdbRelationItemRequestBuilderDeleteRequestConfiguration struct {
-	Headers *abstractions.RequestHeaders
-	Options []abstractions.RequestOption
-}
+type CmdbRelationItemRequestBuilderDeleteRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
