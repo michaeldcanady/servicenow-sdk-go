@@ -5,7 +5,7 @@ import (
 )
 
 // CmdbRelationRequestBuilderPostRequestConfiguration ...
-type CmdbRelationRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[struct{}]
+type CmdbRelationRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
 // CmdbRelationItemRequestBuilderDeleteRequestConfiguration ...
-type CmdbRelationItemRequestBuilderDeleteRequestConfiguration = abstractions.RequestConfiguration[struct{}]
+type CmdbRelationItemRequestBuilderDeleteRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]

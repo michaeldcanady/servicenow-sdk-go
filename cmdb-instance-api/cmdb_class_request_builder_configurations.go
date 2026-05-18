@@ -15,4 +15,4 @@ type CmdbClassRequestBuilderGetQueryParameters struct {
 type CmdbClassRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[CmdbClassRequestBuilderGetQueryParameters]
 
 // CmdbClassRequestBuilderPostRequestConfiguration ...
-type CmdbClassRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[struct{}]
+type CmdbClassRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]

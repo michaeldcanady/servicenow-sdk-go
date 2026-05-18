@@ -30,7 +30,9 @@ The `api-creator` skill is a specialized tool for automating the generation of S
     - Generate `Serialize` and `GetFieldDeserializers` methods.
 5. **Configuration & Parameters**:
     - **QueryParameters**: Generate structs with `url` tags for each parameter (e.g., `type %Name%RequestBuilder%Verb%QueryParameters struct { ... }`). Use `*int`, `*string`, etc., for fields to support `omitempty`.
-    - **RequestConfiguration**: Define as a type alias of `abstractions.RequestConfiguration[%QueryParameters%]`. (e.g., `type %Name%RequestBuilder%Verb%RequestConfiguration = abstractions.RequestConfiguration[%QueryParameters%]`).
+    - **RequestConfiguration**: Define as a type alias of `abstractions.RequestConfiguration[T]`. 
+        - If query parameters exist, use the generated struct: `type %Name%RequestBuilder%Verb%RequestConfiguration = abstractions.RequestConfiguration[%QueryParameters%]`.
+        - If NO specific query parameters exist, use `abstractions.DefaultQueryParameters`: `type %Name%RequestBuilder%Verb%RequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]`.
 6. **Verification**: Run `go fmt` and `go vet` on the generated files to ensure basic correctness.
 
 ## 📏 Mandatory Patterns

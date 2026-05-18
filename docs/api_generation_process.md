@@ -36,7 +36,7 @@ A sub-agent tasked with the actual code generation based on the blueprint provid
     - `RequestBuilder` files using `internal/new.BaseRequestBuilder`.
     - `Model` files implementing `serialization.Parsable` with `internal/new.BaseModel`.
     - `QueryParameters` structs with `url` tags for each parameter.
-    - `RequestConfiguration` as a type alias of `abstractions.RequestConfiguration[T]`.
+    - `RequestConfiguration` as a type alias of `abstractions.RequestConfiguration[T]`. (Use `abstractions.DefaultQueryParameters` if no specific parameters exist).
 3. **Boilerplate Integration**: Ensure imports and exports are correctly handled.
 
 ### Phase 4: Validation & Quality Assurance
