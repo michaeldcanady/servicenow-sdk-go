@@ -1,6 +1,7 @@
 package accountapi
 
 import (
+	"context"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
@@ -42,8 +43,8 @@ func TestAccountItemRequestBuilder_GetRequestInformation(t *testing.T) {
 	builder := NewAccountItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "account_id": "test-id"}, adapter)
 
 	tests := []struct {
-		name     string
-		wantErr  bool
+		name    string
+		wantErr bool
 	}{
 		{
 			name:    "Successful Request Information Generation",
@@ -53,7 +54,7 @@ func TestAccountItemRequestBuilder_GetRequestInformation(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			requestInfo, err := builder.ToGetRequestInformation(nil)
+			requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {

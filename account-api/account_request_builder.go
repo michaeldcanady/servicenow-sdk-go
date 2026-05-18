@@ -4,6 +4,8 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -29,24 +31,9 @@ func (rB *AccountRequestBuilder) ByID(accountID string) *AccountItemRequestBuild
 	return NewAccountItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
-// AccountRequestBuilderGetQueryParameters represents the query parameters for a GET request.
-type AccountRequestBuilderGetQueryParameters struct{}
-
-// AccountRequestBuilderGetRequestConfiguration represents the configuration for a GET request.
-type AccountRequestBuilderGetRequestConfiguration struct {
-	Header          *abstractions.RequestHeaders
-	Options         []abstractions.RequestOption
-	QueryParameters *AccountRequestBuilderGetQueryParameters
-}
-
 // Get sends a GET request to retrieve a list of accounts.
 func (rB *AccountRequestBuilder) Get(ctx context.Context, config *AccountRequestBuilderGetRequestConfiguration) (AccountCollectionResponse, error) {
-	var queryParams *AccountRequestBuilderGetQueryParameters
-	if config != nil {
-		queryParams = config.QueryParameters
-	}
-
-	requestInfo, err := rB.ToGetRequestInformation(ctx, queryParams)
+	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
@@ -64,15 +51,21 @@ func (rB *AccountRequestBuilder) Get(ctx context.Context, config *AccountRequest
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *AccountRequestBuilder) ToGetRequestInformation(ctx context.Context, queryParams *AccountRequestBuilderGetQueryParameters) (*abstractions.RequestInformation, error) {
-	requestInfo := abstractions.NewRequestInformation()
-	requestInfo.Method = abstractions.GET
-	requestInfo.UrlTemplate = rB.GetURLTemplate()
-	requestInfo.PathParameters = rB.GetPathParameters()
-
-	if queryParams != nil {
-		requestInfo.AddQueryParameters(queryParams)
+func (rB *AccountRequestBuilder) ToGetRequestInformation(ctx context.Context, config *AccountRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !internal.IsNil(config) {
+		if headers := config.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
+		if options := config.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
+		if queryParameters := config.QueryParameters; !internal.IsNil(queryParameters) {
+			kiotaRequestInfo.AddQueryParameters(queryParameters)
+		}
 	}
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
 	return requestInfo, nil
 }

@@ -3,6 +3,8 @@ package accountapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -21,15 +23,9 @@ func NewAccountItemRequestBuilderInternal(pathParameters map[string]string, requ
 	}
 }
 
-// AccountItemRequestBuilderGetRequestConfiguration represents the configuration for a GET request.
-type AccountItemRequestBuilderGetRequestConfiguration struct {
-	Header  *abstractions.RequestHeaders
-	Options []abstractions.RequestOption
-}
-
 // Get sends a GET request to retrieve a single account.
 func (rB *AccountItemRequestBuilder) Get(ctx context.Context, config *AccountItemRequestBuilderGetRequestConfiguration) (AccountItemResponse, error) {
-	requestInfo, err := rB.ToGetRequestInformation(ctx)
+	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
@@ -47,11 +43,18 @@ func (rB *AccountItemRequestBuilder) Get(ctx context.Context, config *AccountIte
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *AccountItemRequestBuilder) ToGetRequestInformation(ctx context.Context) (*abstractions.RequestInformation, error) {
-	requestInfo := abstractions.NewRequestInformation()
-	requestInfo.Method = abstractions.GET
-	requestInfo.UrlTemplate = rB.GetURLTemplate()
-	requestInfo.PathParameters = rB.GetPathParameters()
+func (rB *AccountItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *AccountItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !internal.IsNil(config) {
+		if headers := config.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
+		if options := config.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
+	}
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
 
 	return requestInfo, nil
 }
