@@ -4,6 +4,7 @@ import (
 	"maps"
 
 	accountapi "github.com/michaeldcanady/servicenow-sdk-go/account-api"
+	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/actsub-api"
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
 	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
 	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/cmdb-instance-api"
@@ -13,9 +14,15 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-const nowURLTemplate2 = "{+baseurl}/api/now"
+...
 
-type NowRequestBuilder2 struct {
+// ActSub returns an ActSubRequestBuilder associated with the NowRequestBuilder.
+func (rB *NowRequestBuilder2) ActSub() *actsubapi.ActSubRequestBuilder {
+	return actsubapi.NewActSubRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+// Account returns an AccountRequestBuilder associated with the NowRequestBuilder.
+
 	internal.RequestBuilder
 }
 

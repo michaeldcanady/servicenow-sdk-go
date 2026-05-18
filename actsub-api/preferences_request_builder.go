@@ -1,0 +1,130 @@
+package actsubapi
+
+import (
+	"context"
+	"maps"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+)
+
+const (
+	preferencesURLTemplate = "{+baseurl}/api/now/v1/actsub/preferences"
+)
+
+// PreferencesRequestBuilder provides operations to manage preferences.
+type PreferencesRequestBuilder struct {
+	newInternal.RequestBuilder
+}
+
+// NewPreferencesRequestBuilderInternal instantiates a new PreferencesRequestBuilder.
+func NewPreferencesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *PreferencesRequestBuilder {
+	return &PreferencesRequestBuilder{
+		newInternal.NewBaseRequestBuilder(requestAdapter, preferencesURLTemplate, pathParameters),
+	}
+}
+
+// Post sends a POST request to create preferences.
+func (rB *PreferencesRequestBuilder) Post(ctx context.Context, body *ActivitySubscriptionModel, config *PreferencesRequestBuilderPostRequestConfiguration) (*newInternal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if res == nil {
+		return nil, nil
+	}
+
+	return res.(*newInternal.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+}
+
+// ToPostRequestInformation creates a RequestInformation object for a POST request.
+func (rB *PreferencesRequestBuilder) ToPostRequestInformation(ctx context.Context, body *ActivitySubscriptionModel, config *PreferencesRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !internal.IsNil(config) {
+		if headers := config.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
+		if options := config.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
+	}
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+
+	if !internal.IsNil(body) {
+		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return requestInfo, nil
+}
+
+// ByProfileId returns a PreferenceItemRequestBuilder.
+func (rB *PreferencesRequestBuilder) ByProfileId(profileId string) *PreferenceItemRequestBuilder {
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters["profileId"] = profileId
+	return NewPreferenceItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
+
+// PreferenceItemRequestBuilder provides operations to manage preferences for a specific profile.
+type PreferenceItemRequestBuilder struct {
+	newInternal.RequestBuilder
+}
+
+const preferenceItemURLTemplate = "{+baseurl}/api/now/v1/actsub/preferences/{profileId}"
+
+// NewPreferenceItemRequestBuilderInternal instantiates a new PreferenceItemRequestBuilder.
+func NewPreferenceItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *PreferenceItemRequestBuilder {
+	return &PreferenceItemRequestBuilder{
+		newInternal.NewBaseRequestBuilder(requestAdapter, preferenceItemURLTemplate, pathParameters),
+	}
+}
+
+// Get sends a GET request to retrieve preferences.
+func (rB *PreferenceItemRequestBuilder) Get(ctx context.Context, config *PreferencesRequestBuilderGetRequestConfiguration) (*newInternal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if res == nil {
+		return nil, nil
+	}
+
+	return res.(*newInternal.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+}
+
+// ToGetRequestInformation creates a RequestInformation object for a GET request.
+func (rB *PreferenceItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *PreferencesRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !internal.IsNil(config) {
+		if headers := config.Headers; !internal.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
+		if options := config.Options; !internal.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
+		if queryParameters := config.QueryParameters; !internal.IsNil(queryParameters) {
+			kiotaRequestInfo.AddQueryParameters(queryParameters)
+		}
+	}
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+
+	return requestInfo, nil
+}
