@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDocumentsRequestBuilder2_Builders(t *testing.T) {
+func TestDocumentsRequestBuilder_Builders(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
-	builder := NewDocumentsRequestBuilder2Internal(map[string]string{"baseurl": "https://example.com"}, adapter)
+	builder := NewDocumentsRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 	tests := []struct {
 		name     string
