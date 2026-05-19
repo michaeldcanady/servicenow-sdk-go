@@ -6,6 +6,7 @@ import (
 	"strings"
 	"sync"
 
+	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/appointmentbooking-api"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -94,4 +95,8 @@ func (rB *ServiceNowServiceClient) Now() *NowRequestBuilder2 {
 
 func (rB *ServiceNowServiceClient) Cdm() *CdmRequestBuilder {
 	return NewCdmRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+func (rB *ServiceNowServiceClient) AppointmentBooking() *appointmentbookingapi.AppointmentBookingRequestBuilder {
+	return appointmentbookingapi.NewAppointmentBookingRequestBuilder(rB.GetRequestAdapter(), maps.Clone(rB.GetPathParameters()))
 }

@@ -10,63 +10,6 @@ import (
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
-const (
-	// ConfigurationResult keys
-	activeKey                      = "active"
-	activeStringKey                = "active_string"
-	advancedCalendarViewPortalKey  = "advanced_calendar_view_portal"
-	autoAcceptanceKey              = "auto_acceptance"
-	localeLanguageKey              = "locale_language"
-	serviceConfigKey               = "service_config"
-	taskTableKey                   = "task_table"
-	translationsKey                = "translations"
-	userDateFormatOptionsKey       = "userDateFormatOptions"
-	useRRKey                       = "useRR"
-	userTimeFormatKey              = "userTimeFormat"
-	userTimeFormatOptionsKey       = "userTimeFormatOptions"
-	viewScaleKey                   = "view_scale"
-
-	// ServiceConfig keys
-	appointmentBookingConfigKey    = "appointment_booking_config"
-	appointmentDurationKey         = "appointment_duration"
-	appointmentsPerBookableSlotKey = "appointments_per_bookable_slot"
-	bookableDaysKey                = "bookable_days"
-	cancelByTimeKey                = "cancel_by_time"
-	defaultTimezoneKey             = "default_timezone"
-	enableAdvancedConfigKey        = "enable_advanced_config"
-	fieldMappingKey                = "field_mapping"
-	futureBookableMaxDaysKey       = "future_bookable_max_days"
-	leadTimeKey                    = "lead_time"
-	mandatoryKey                   = "mandatory"
-	useSlotEndTimeAsKey            = "use_slot_end_time_as"
-	workDurationKey                = "work_duration"
-
-	// FieldMapping keys
-	contactKey           = "contact"
-	contactRPVariableKey = "contactRPVariable"
-	locationKey          = "location"
-	locationRPVariableKey = "locationRPVariable"
-
-	// RPVariable keys
-	displayNameKey = "displayName"
-	labelKey       = "label"
-	nameKey        = "name"
-
-	// UserDateFormatOptions keys
-	dayKey     = "day"
-	monthKey   = "month"
-	weekKey    = "week"
-	weekdayKey = "weekday"
-
-	// UserTimeFormat keys
-	typeKey  = "type"
-	valueKey = "value"
-
-	// UserTimeFormatOptions keys
-	hourKey      = "hour"
-	hourCycleKey = "hourCycle"
-	minuteKey    = "minute"
-)
 
 // ConfigurationResponse represents the configuration response.
 type ConfigurationResponse = newInternal.ServiceNowItemResponse[*ConfigurationResultModel]
