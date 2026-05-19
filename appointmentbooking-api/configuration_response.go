@@ -26,15 +26,12 @@ const (
 	viewScaleKey                   = "view_scale"
 )
 
-// ConfigurationResponse represents the configuration response.
 type ConfigurationResponse = newInternal.ServiceNowItemResponse[*ConfigurationResultModel]
 
-// CreateConfigurationResponseFromDiscriminatorValue is a factory for creating a ConfigurationResponse.
 func CreateConfigurationResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return newInternal.NewBaseServiceNowItemResponse[*ConfigurationResultModel](CreateConfigurationResultFromDiscriminatorValue), nil
 }
 
-// ConfigurationResult represents the result object in configuration response.
 type ConfigurationResult interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
@@ -48,25 +45,24 @@ type ConfigurationResult interface {
 	setAutoAcceptance(*bool) error
 	GetLocaleLanguage() (*string, error)
 	setLocaleLanguage(*string) error
-	GetServiceConfig() (any, error)
-	setServiceConfig(any) error
+	GetServiceConfig() (ServiceConfig, error)
+	setServiceConfig(ServiceConfig) error
 	GetTaskTable() (*string, error)
 	setTaskTable(*string) error
-	GetTranslations() (any, error)
-	setTranslations(any) error
-	GetUserDateFormatOptions() (any, error)
-	setUserDateFormatOptions(any) error
+	GetTranslations() (map[string]interface{}, error)
+	setTranslations(map[string]interface{}) error
+	GetUserDateFormatOptions() (UserDateFormatOptions, error)
+	setUserDateFormatOptions(UserDateFormatOptions) error
 	GetUseRR() (*bool, error)
 	setUseRR(*bool) error
-	GetUserTimeFormat() (any, error)
-	setUserTimeFormat(any) error
-	GetUserTimeFormatOptions() (any, error)
-	setUserTimeFormatOptions(any) error
+	GetUserTimeFormat() (UserTimeFormat, error)
+	setUserTimeFormat(UserTimeFormat) error
+	GetUserTimeFormatOptions() (UserTimeFormatOptions, error)
+	setUserTimeFormatOptions(UserTimeFormatOptions) error
 	GetViewScale() (*string, error)
 	setViewScale(*string) error
 }
 
-// ConfigurationResultModel implementation of ConfigurationResult
 type ConfigurationResultModel struct {
 	newInternal.BaseModel
 }
@@ -87,13 +83,13 @@ func (m *ConfigurationResultModel) Serialize(writer serialization.SerializationW
 		internalSerialization.SerializeBoolFunc(advancedCalendarViewPortalKey)(m.GetAdvancedCalendarViewPortal),
 		internalSerialization.SerializeBoolFunc(autoAcceptanceKey)(m.GetAutoAcceptance),
 		internalSerialization.SerializeStringFunc(localeLanguageKey)(m.GetLocaleLanguage),
-		internalSerialization.SerializeAnyFunc(serviceConfigKey)(m.GetServiceConfig),
+		internalSerialization.SerializeObjectValueFunc[ServiceConfig](serviceConfigKey)(m.GetServiceConfig),
 		internalSerialization.SerializeStringFunc(taskTableKey)(m.GetTaskTable),
 		internalSerialization.SerializeAnyFunc(translationsKey)(m.GetTranslations),
-		internalSerialization.SerializeAnyFunc(userDateFormatOptionsKey)(m.GetUserDateFormatOptions),
+		internalSerialization.SerializeObjectValueFunc[UserDateFormatOptions](userDateFormatOptionsKey)(m.GetUserDateFormatOptions),
 		internalSerialization.SerializeBoolFunc(useRRKey)(m.GetUseRR),
-		internalSerialization.SerializeAnyFunc(userTimeFormatKey)(m.GetUserTimeFormat),
-		internalSerialization.SerializeAnyFunc(userTimeFormatOptionsKey)(m.GetUserTimeFormatOptions),
+		internalSerialization.SerializeObjectValueFunc[UserTimeFormat](userTimeFormatKey)(m.GetUserTimeFormat),
+		internalSerialization.SerializeObjectValueFunc[UserTimeFormatOptions](userTimeFormatOptionsKey)(m.GetUserTimeFormatOptions),
 		internalSerialization.SerializeStringFunc(viewScaleKey)(m.GetViewScale),
 	)
 }
@@ -105,13 +101,13 @@ func (m *ConfigurationResultModel) GetFieldDeserializers() map[string]func(seria
 		advancedCalendarViewPortalKey:  internalSerialization.DeserializeBoolFunc()(m.setAdvancedCalendarViewPortal),
 		autoAcceptanceKey:              internalSerialization.DeserializeBoolFunc()(m.setAutoAcceptance),
 		localeLanguageKey:              internalSerialization.DeserializeStringFunc()(m.setLocaleLanguage),
-		serviceConfigKey:               internalSerialization.DeserializeAnyFunc()(m.setServiceConfig),
+		serviceConfigKey:               internalSerialization.DeserializeObjectValueFunc[ServiceConfig](CreateServiceConfigFromDiscriminatorValue)(m.setServiceConfig),
 		taskTableKey:                   internalSerialization.DeserializeStringFunc()(m.setTaskTable),
 		translationsKey:                internalSerialization.DeserializeAnyFunc()(m.setTranslations),
-		userDateFormatOptionsKey:       internalSerialization.DeserializeAnyFunc()(m.setUserDateFormatOptions),
+		userDateFormatOptionsKey:       internalSerialization.DeserializeObjectValueFunc[UserDateFormatOptions](CreateUserDateFormatOptionsFromDiscriminatorValue)(m.setUserDateFormatOptions),
 		useRRKey:                       internalSerialization.DeserializeBoolFunc()(m.setUseRR),
-		userTimeFormatKey:              internalSerialization.DeserializeAnyFunc()(m.setUserTimeFormat),
-		userTimeFormatOptionsKey:       internalSerialization.DeserializeAnyFunc()(m.setUserTimeFormatOptions),
+		userTimeFormatKey:              internalSerialization.DeserializeObjectValueFunc[UserTimeFormat](CreateUserTimeFormatFromDiscriminatorValue)(m.setUserTimeFormat),
+		userTimeFormatOptionsKey:       internalSerialization.DeserializeObjectValueFunc[UserTimeFormatOptions](CreateUserTimeFormatOptionsFromDiscriminatorValue)(m.setUserTimeFormatOptions),
 		viewScaleKey:                   internalSerialization.DeserializeStringFunc()(m.setViewScale),
 	}
 }
@@ -126,23 +122,51 @@ func (m *ConfigurationResultModel) GetAutoAcceptance() (*bool, error) { return s
 func (m *ConfigurationResultModel) setAutoAcceptance(val *bool) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), autoAcceptanceKey, val) }
 func (m *ConfigurationResultModel) GetLocaleLanguage() (*string, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), localeLanguageKey) }
 func (m *ConfigurationResultModel) setLocaleLanguage(val *string) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), localeLanguageKey, val) }
-func (m *ConfigurationResultModel) GetServiceConfig() (any, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, any](m.GetBackingStore(), serviceConfigKey) }
-func (m *ConfigurationResultModel) setServiceConfig(val any) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), serviceConfigKey, val) }
+func (m *ConfigurationResultModel) GetServiceConfig() (ServiceConfig, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, ServiceConfig](m.GetBackingStore(), serviceConfigKey) }
+func (m *ConfigurationResultModel) setServiceConfig(val ServiceConfig) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), serviceConfigKey, val) }
 func (m *ConfigurationResultModel) GetTaskTable() (*string, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), taskTableKey) }
 func (m *ConfigurationResultModel) setTaskTable(val *string) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), taskTableKey, val) }
 func (m *ConfigurationResultModel) GetTranslations() (any, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, any](m.GetBackingStore(), translationsKey) }
 func (m *ConfigurationResultModel) setTranslations(val any) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), translationsKey, val) }
-func (m *ConfigurationResultModel) GetUserDateFormatOptions() (any, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, any](m.GetBackingStore(), userDateFormatOptionsKey) }
-func (m *ConfigurationResultModel) setUserDateFormatOptions(val any) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), userDateFormatOptionsKey, val) }
+func (m *ConfigurationResultModel) GetUserDateFormatOptions() (UserDateFormatOptions, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, UserDateFormatOptions](m.GetBackingStore(), userDateFormatOptionsKey) }
+func (m *ConfigurationResultModel) setUserDateFormatOptions(val UserDateFormatOptions) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), userDateFormatOptionsKey, val) }
 func (m *ConfigurationResultModel) GetUseRR() (*bool, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), useRRKey) }
 func (m *ConfigurationResultModel) setUseRR(val *bool) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), useRRKey, val) }
-func (m *ConfigurationResultModel) GetUserTimeFormat() (any, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, any](m.GetBackingStore(), userTimeFormatKey) }
-func (m *ConfigurationResultModel) setUserTimeFormat(val any) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), userTimeFormatKey, val) }
-func (m *ConfigurationResultModel) GetUserTimeFormatOptions() (any, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, any](m.GetBackingStore(), userTimeFormatOptionsKey) }
-func (m *ConfigurationResultModel) setUserTimeFormatOptions(val any) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), userTimeFormatOptionsKey, val) }
+func (m *ConfigurationResultModel) GetUserTimeFormat() (UserTimeFormat, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, UserTimeFormat](m.GetBackingStore(), userTimeFormatKey) }
+func (m *ConfigurationResultModel) setUserTimeFormat(val UserTimeFormat) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), userTimeFormatKey, val) }
+func (m *ConfigurationResultModel) GetUserTimeFormatOptions() (UserTimeFormatOptions, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, UserTimeFormatOptions](m.GetBackingStore(), userTimeFormatOptionsKey) }
+func (m *ConfigurationResultModel) setUserTimeFormatOptions(val UserTimeFormatOptions) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), userTimeFormatOptionsKey, val) }
 func (m *ConfigurationResultModel) GetViewScale() (*string, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), viewScaleKey) }
 func (m *ConfigurationResultModel) setViewScale(val *string) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), viewScaleKey, val) }
 
 func CreateConfigurationResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewConfigurationResult(), nil
 }
+
+type ServiceConfig interface { serialization.Parsable; kiotaStore.BackedModel }
+type ServiceConfigModel struct { newInternal.BaseModel }
+func NewServiceConfig() *ServiceConfigModel { return &ServiceConfigModel{BaseModel: *newInternal.NewBaseModel()} }
+func (m *ServiceConfigModel) Serialize(writer serialization.SerializationWriter) error { val, _ := m.GetBackingStore().Get("additionalData"); if val != nil { return writer.WriteAdditionalData(val.(map[string]interface{})) }; return nil }
+func (m *ServiceConfigModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { return map[string]func(serialization.ParseNode) error{"*": func(n serialization.ParseNode) error { val, _ := n.GetRawValue(); m.GetBackingStore().Set("additionalData", val); return nil }} }
+func CreateServiceConfigFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) { return NewServiceConfig(), nil }
+
+type UserDateFormatOptions interface { serialization.Parsable; kiotaStore.BackedModel }
+type UserDateFormatOptionsModel struct { newInternal.BaseModel }
+func NewUserDateFormatOptions() *UserDateFormatOptionsModel { return &UserDateFormatOptionsModel{BaseModel: *newInternal.NewBaseModel()} }
+func (m *UserDateFormatOptionsModel) Serialize(writer serialization.SerializationWriter) error { val, _ := m.GetBackingStore().Get("additionalData"); if val != nil { return writer.WriteAdditionalData(val.(map[string]interface{})) }; return nil }
+func (m *UserDateFormatOptionsModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { return map[string]func(serialization.ParseNode) error{"*": func(n serialization.ParseNode) error { val, _ := n.GetRawValue(); m.GetBackingStore().Set("additionalData", val); return nil }} }
+func CreateUserDateFormatOptionsFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) { return NewUserDateFormatOptions(), nil }
+
+type UserTimeFormat interface { serialization.Parsable; kiotaStore.BackedModel }
+type UserTimeFormatModel struct { newInternal.BaseModel }
+func NewUserTimeFormat() *UserTimeFormatModel { return &UserTimeFormatModel{BaseModel: *newInternal.NewBaseModel()} }
+func (m *UserTimeFormatModel) Serialize(writer serialization.SerializationWriter) error { val, _ := m.GetBackingStore().Get("additionalData"); if val != nil { return writer.WriteAdditionalData(val.(map[string]interface{})) }; return nil }
+func (m *UserTimeFormatModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { return map[string]func(serialization.ParseNode) error{"*": func(n serialization.ParseNode) error { val, _ := n.GetRawValue(); m.GetBackingStore().Set("additionalData", val); return nil }} }
+func CreateUserTimeFormatFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) { return NewUserTimeFormat(), nil }
+
+type UserTimeFormatOptions interface { serialization.Parsable; kiotaStore.BackedModel }
+type UserTimeFormatOptionsModel struct { newInternal.BaseModel }
+func NewUserTimeFormatOptions() *UserTimeFormatOptionsModel { return &UserTimeFormatOptionsModel{BaseModel: *newInternal.NewBaseModel()} }
+func (m *UserTimeFormatOptionsModel) Serialize(writer serialization.SerializationWriter) error { val, _ := m.GetBackingStore().Get("additionalData"); if val != nil { return writer.WriteAdditionalData(val.(map[string]interface{})) }; return nil }
+func (m *UserTimeFormatOptionsModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { return map[string]func(serialization.ParseNode) error{"*": func(n serialization.ParseNode) error { val, _ := n.GetRawValue(); m.GetBackingStore().Set("additionalData", val); return nil }} }
+func CreateUserTimeFormatOptionsFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) { return NewUserTimeFormatOptions(), nil }
