@@ -1,0 +1,20 @@
+package appointmentbookingapi
+
+import (
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+)
+
+// AvailabilityRequestBuilderPostRequestConfiguration represents the configuration for POST /availability.
+type AvailabilityRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
+
+// CalendarRequestBuilderGetRequestConfiguration represents the configuration for GET /calendar.
+type CalendarRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[CalendarRequestBuilderGetQueryParameters]
+
+// ConfigurationRequestBuilderGetRequestConfiguration represents the configuration for GET /configuration.
+type ConfigurationRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[ConfigurationRequestBuilderGetQueryParameters]
+
+// ExecuteRuleConditionsRequestBuilderPostRequestConfiguration represents the configuration for POST /execute_rule_conditions.
+type ExecuteRuleConditionsRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
+
+// UserWindowRequestBuilderPostRequestConfiguration represents the configuration for POST /userwindow.
+type UserWindowRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
