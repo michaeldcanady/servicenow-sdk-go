@@ -10,7 +10,6 @@ import (
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
-
 // AppointmentResponse represents the appointment response.
 type AppointmentResponse = newInternal.ServiceNowItemResponse[*AppointmentResultModel]
 
@@ -67,11 +66,27 @@ func (m *AppointmentResultModel) GetFieldDeserializers() map[string]func(seriali
 	}
 }
 
-func (m *AppointmentResultModel) GetData() (*string, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), dataKey) }
-func (m *AppointmentResultModel) setData(val *string) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), dataKey, val) }
-func (m *AppointmentResultModel) GetMessage() (*string, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), messageKey) }
-func (m *AppointmentResultModel) setMessage(val *string) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), messageKey, val) }
-func (m *AppointmentResultModel) GetReason() (*string, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), reasonKey) }
-func (m *AppointmentResultModel) setReason(val *string) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), reasonKey, val) }
-func (m *AppointmentResultModel) GetSuccess() (*bool, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), successKey) }
-func (m *AppointmentResultModel) setSuccess(val *bool) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), successKey, val) }
+func (m *AppointmentResultModel) GetData() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), dataKey)
+}
+func (m *AppointmentResultModel) setData(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), dataKey, val)
+}
+func (m *AppointmentResultModel) GetMessage() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), messageKey)
+}
+func (m *AppointmentResultModel) setMessage(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), messageKey, val)
+}
+func (m *AppointmentResultModel) GetReason() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), reasonKey)
+}
+func (m *AppointmentResultModel) setReason(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), reasonKey, val)
+}
+func (m *AppointmentResultModel) GetSuccess() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), successKey)
+}
+func (m *AppointmentResultModel) setSuccess(val *bool) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), successKey, val)
+}
