@@ -10,7 +10,6 @@ import (
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
-
 // ConfigurationResponse represents the configuration response.
 type ConfigurationResponse = newInternal.ServiceNowItemResponse[*ConfigurationResultModel]
 
@@ -98,19 +97,19 @@ func (m *ConfigurationResultModel) Serialize(writer serialization.SerializationW
 // GetFieldDeserializers returns the deserialization information for this object.
 func (m *ConfigurationResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		activeKey:                      internalSerialization.DeserializeBoolFunc()(m.setActive),
-		activeStringKey:                internalSerialization.DeserializeStringFunc()(m.setActiveString),
-		advancedCalendarViewPortalKey:  internalSerialization.DeserializeBoolFunc()(m.setAdvancedCalendarViewPortal),
-		autoAcceptanceKey:              internalSerialization.DeserializeBoolFunc()(m.setAutoAcceptance),
-		localeLanguageKey:              internalSerialization.DeserializeStringFunc()(m.setLocaleLanguage),
-		serviceConfigKey:               internalSerialization.DeserializeObjectValueFunc[ServiceConfig](CreateServiceConfigFromDiscriminatorValue)(m.setServiceConfig),
-		taskTableKey:                   internalSerialization.DeserializeStringFunc()(m.setTaskTable),
-		translationsKey:                internalSerialization.DeserializeAnyFunc()(m.setTranslations),
-		userDateFormatOptionsKey:       internalSerialization.DeserializeObjectValueFunc[UserDateFormatOptions](CreateUserDateFormatOptionsFromDiscriminatorValue)(m.setUserDateFormatOptions),
-		useRRKey:                       internalSerialization.DeserializeBoolFunc()(m.setUseRR),
-		userTimeFormatKey:              internalSerialization.DeserializeObjectValueFunc[UserTimeFormat](CreateUserTimeFormatFromDiscriminatorValue)(m.setUserTimeFormat),
-		userTimeFormatOptionsKey:       internalSerialization.DeserializeObjectValueFunc[UserTimeFormatOptions](CreateUserTimeFormatOptionsFromDiscriminatorValue)(m.setUserTimeFormatOptions),
-		viewScaleKey:                   internalSerialization.DeserializeStringFunc()(m.setViewScale),
+		activeKey:                     internalSerialization.DeserializeBoolFunc()(m.setActive),
+		activeStringKey:               internalSerialization.DeserializeStringFunc()(m.setActiveString),
+		advancedCalendarViewPortalKey: internalSerialization.DeserializeBoolFunc()(m.setAdvancedCalendarViewPortal),
+		autoAcceptanceKey:             internalSerialization.DeserializeBoolFunc()(m.setAutoAcceptance),
+		localeLanguageKey:             internalSerialization.DeserializeStringFunc()(m.setLocaleLanguage),
+		serviceConfigKey:              internalSerialization.DeserializeObjectValueFunc[ServiceConfig](CreateServiceConfigFromDiscriminatorValue)(m.setServiceConfig),
+		taskTableKey:                  internalSerialization.DeserializeStringFunc()(m.setTaskTable),
+		translationsKey:               internalSerialization.DeserializeAnyFunc()(m.setTranslations),
+		userDateFormatOptionsKey:      internalSerialization.DeserializeObjectValueFunc[UserDateFormatOptions](CreateUserDateFormatOptionsFromDiscriminatorValue)(m.setUserDateFormatOptions),
+		useRRKey:                      internalSerialization.DeserializeBoolFunc()(m.setUseRR),
+		userTimeFormatKey:             internalSerialization.DeserializeObjectValueFunc[UserTimeFormat](CreateUserTimeFormatFromDiscriminatorValue)(m.setUserTimeFormat),
+		userTimeFormatOptionsKey:      internalSerialization.DeserializeObjectValueFunc[UserTimeFormatOptions](CreateUserTimeFormatOptionsFromDiscriminatorValue)(m.setUserTimeFormatOptions),
+		viewScaleKey:                  internalSerialization.DeserializeStringFunc()(m.setViewScale),
 	}
 }
 
@@ -421,9 +420,9 @@ func (m *FieldMappingModel) Serialize(writer serialization.SerializationWriter) 
 
 func (m *FieldMappingModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		contactKey:           internalSerialization.DeserializeStringFunc()(m.setContact),
-		contactRPVariableKey: internalSerialization.DeserializeObjectValueFunc[RPVariable](CreateRPVariableFromDiscriminatorValue)(m.setContactRPVariable),
-		locationKey:          internalSerialization.DeserializeStringFunc()(m.setLocation),
+		contactKey:            internalSerialization.DeserializeStringFunc()(m.setContact),
+		contactRPVariableKey:  internalSerialization.DeserializeObjectValueFunc[RPVariable](CreateRPVariableFromDiscriminatorValue)(m.setContactRPVariable),
+		locationKey:           internalSerialization.DeserializeStringFunc()(m.setLocation),
 		locationRPVariableKey: internalSerialization.DeserializeObjectValueFunc[RPVariable](CreateRPVariableFromDiscriminatorValue)(m.setLocationRPVariable),
 	}
 }

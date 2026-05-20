@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	caseItemURLTemplate       = "{+baseurl}/api/sn_customerservice/v1/case/{id}"
-	caseActivitiesURLTemplate = "{+baseurl}/api/sn_customerservice/v1/case/{id}/activities"
-	fieldValuesURLTemplate    = "{+baseurl}/api/sn_customerservice/v1/case/field_values/{field_name}"
+	caseItemURLTemplate        = "{+baseurl}/api/sn_customerservice/v1/case/{id}"
+	caseActivitiesURLTemplate  = "{+baseurl}/api/sn_customerservice/v1/case/{id}/activities"
+	fieldValuesURLTemplate     = "{+baseurl}/api/sn_customerservice/v1/case/field_values/{field_name}"
 	itemFieldValuesURLTemplate = "{+baseurl}/api/sn_customerservice/v1/case/{id}/field_values/{field_name}"
 )
 

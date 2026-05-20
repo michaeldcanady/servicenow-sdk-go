@@ -3,6 +3,7 @@ package servicenowsdkgo
 import (
 	"maps"
 
+	cdmchangesetapi "github.com/michaeldcanady/servicenow-sdk-go/cdm-changeset-api"
 	cdmeditorapi "github.com/michaeldcanady/servicenow-sdk-go/cdm-editor-api"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	policyapi "github.com/michaeldcanady/servicenow-sdk-go/policy-api"
@@ -37,4 +38,9 @@ func (rB *CdmRequestBuilder) Policies() *policyapi.PoliciesRequestBuilder {
 // Editor returns a CdmEditorRequestBuilder associated with the CdmRequestBuilder.
 func (rB *CdmRequestBuilder) Editor() *cdmeditorapi.CdmEditorRequestBuilder {
 	return cdmeditorapi.NewCdmEditorRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+// Changesets returns a ChangesetsRequestBuilder associated with the CdmRequestBuilder.
+func (rB *CdmRequestBuilder) Changesets() *cdmchangesetapi.ChangesetsRequestBuilder {
+	return cdmchangesetapi.NewChangesetsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

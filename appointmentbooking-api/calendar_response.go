@@ -10,7 +10,6 @@ import (
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
-
 // CalendarResponse represents the calendar response.
 type CalendarResponse interface {
 	serialization.Parsable

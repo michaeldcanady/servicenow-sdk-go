@@ -59,8 +59,8 @@ const (
 	workDurationKey                = "work_duration"
 
 	// FieldMapping specific keys
-	contactKey           = "contact"
-	contactRPVariableKey = "contactRPVariable"
+	contactKey            = "contact"
+	contactRPVariableKey  = "contactRPVariable"
 	locationRPVariableKey = "locationRPVariable"
 
 	// RPVariable specific keys

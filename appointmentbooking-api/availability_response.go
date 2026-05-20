@@ -10,7 +10,6 @@ import (
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
-
 // AvailabilityResponse represents the availability response.
 type AvailabilityResponse = newInternal.ServiceNowItemResponse[*AvailabilityResultModel]
 
@@ -79,20 +78,48 @@ func (m *AvailabilityResultModel) GetFieldDeserializers() map[string]func(serial
 	}
 }
 
-func (m *AvailabilityResultModel) GetAvailability() ([]AvailabilitySlot, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []AvailabilitySlot](m.GetBackingStore(), availabilityKey) }
-func (m *AvailabilityResultModel) setAvailability(val []AvailabilitySlot) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), availabilityKey, val) }
-func (m *AvailabilityResultModel) GetHasMore() (*bool, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), hasMoreKey) }
-func (m *AvailabilityResultModel) setHasMore(val *bool) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), hasMoreKey, val) }
-func (m *AvailabilityResultModel) GetNextAvailableSlot() (any, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, any](m.GetBackingStore(), nextAvailableSlotKey) }
-func (m *AvailabilityResultModel) setNextAvailableSlot(val any) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nextAvailableSlotKey, val) }
-func (m *AvailabilityResultModel) GetNoApptAvailable() (*bool, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), noApptAvailableKey) }
-func (m *AvailabilityResultModel) setNoApptAvailable(val *bool) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), noApptAvailableKey, val) }
-func (m *AvailabilityResultModel) GetSuccess() (*bool, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), successKey) }
-func (m *AvailabilityResultModel) setSuccess(val *bool) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), successKey, val) }
-func (m *AvailabilityResultModel) GetTimeZone() (*string, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), "time_zone") }
-func (m *AvailabilityResultModel) setTimeZone(val *string) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), "time_zone", val) }
-func (m *AvailabilityResultModel) GetTimeZoneDisplayValue() (*string, error) { return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), timeZoneDisplayValueKey) }
-func (m *AvailabilityResultModel) setTimeZoneDisplayValue(val *string) error { return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), timeZoneDisplayValueKey, val) }
+func (m *AvailabilityResultModel) GetAvailability() ([]AvailabilitySlot, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []AvailabilitySlot](m.GetBackingStore(), availabilityKey)
+}
+func (m *AvailabilityResultModel) setAvailability(val []AvailabilitySlot) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), availabilityKey, val)
+}
+func (m *AvailabilityResultModel) GetHasMore() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), hasMoreKey)
+}
+func (m *AvailabilityResultModel) setHasMore(val *bool) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), hasMoreKey, val)
+}
+func (m *AvailabilityResultModel) GetNextAvailableSlot() (any, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, any](m.GetBackingStore(), nextAvailableSlotKey)
+}
+func (m *AvailabilityResultModel) setNextAvailableSlot(val any) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nextAvailableSlotKey, val)
+}
+func (m *AvailabilityResultModel) GetNoApptAvailable() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), noApptAvailableKey)
+}
+func (m *AvailabilityResultModel) setNoApptAvailable(val *bool) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), noApptAvailableKey, val)
+}
+func (m *AvailabilityResultModel) GetSuccess() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), successKey)
+}
+func (m *AvailabilityResultModel) setSuccess(val *bool) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), successKey, val)
+}
+func (m *AvailabilityResultModel) GetTimeZone() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), "time_zone")
+}
+func (m *AvailabilityResultModel) setTimeZone(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), "time_zone", val)
+}
+func (m *AvailabilityResultModel) GetTimeZoneDisplayValue() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), timeZoneDisplayValueKey)
+}
+func (m *AvailabilityResultModel) setTimeZoneDisplayValue(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), timeZoneDisplayValueKey, val)
+}
 
 // AvailabilitySlot represents an available slot.
 type AvailabilitySlot interface {
