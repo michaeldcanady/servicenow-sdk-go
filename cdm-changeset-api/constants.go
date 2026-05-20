@@ -8,6 +8,14 @@ const (
 	typeKey   = "type"
 	linkKey   = "link"
 	valueKey  = "value"
+	nodeKey   = "node"
+	nameKey   = "name"
+
+	// Audit keys
+	sysCreatedByKey = "sys_created_by"
+	sysCreatedOnKey = "sys_created_on"
+	sysUpdatedByKey = "sys_updated_by"
+	sysUpdatedOnKey = "sys_updated_on"
 
 	// Changeset keys
 	autoValidateKey              = "auto_validate"
@@ -28,4 +36,29 @@ const (
 	newValueKey    = "new_value"
 	oldValueKey    = "old_value"
 	secureKey      = "secure"
+
+	// Impacted Shared Component keys
+	cdmSharedLibraryKey = "cdm_shared__library"
+	nodeMainKey         = "node_main"
+	versionCounterKey   = "version_counter"
+
+	// Impacted Deployable keys (Query-based)
+	cdiCountKey               = "cdi_count"
+	cdiUsageKey               = "cdi_usage"
+	cdmAppKey                 = "cdm_app"
+	cdmCiKey                  = "cdm_ci"
+	environmentTypeKey        = "environment_type"
+	snapshotVersionCounterKey = "snapshot_version_counter"
+
+	// Impacted Deployable keys (Path-based)
+	conflictTypeKey   = "conflict_type"
+	effectiveFromKey  = "effective_from"
+	effectiveToKey    = "effective_to"
+	levelKey          = "level"
+	linkedToKey       = "linked_to"
+	mainIdKey         = "main_id"
+	mainIdEncodedKey  = "main_id_encoded"
+	nodeClassifierKey = "node_classifier"
+	statusKey         = "status"
+	secureValueKey    = "secure_value"
 )

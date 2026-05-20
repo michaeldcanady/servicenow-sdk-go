@@ -300,3 +300,436 @@ func (m *CommitStatusResult) setState(val *string) error {
 func CreateCommitStatusResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewCommitStatusResult(), nil
 }
+
+// ImpactedSharedComponentResult represents an impacted shared component.
+type ImpactedSharedComponentResult struct {
+	newInternal.BaseModel
+}
+
+func NewImpactedSharedComponentResult() *ImpactedSharedComponentResult {
+	return &ImpactedSharedComponentResult{BaseModel: *newInternal.NewBaseModel()}
+}
+
+func (m *ImpactedSharedComponentResult) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(m) {
+		return nil
+	}
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(cdmSharedLibraryKey)(m.GetCdmSharedLibrary),
+		internalSerialization.SerializeStringFunc(descriptionKey)(m.GetDescription),
+		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
+		internalSerialization.SerializeStringFunc(nodeKey)(m.GetNode),
+		internalSerialization.SerializeStringFunc(nodeMainKey)(m.GetNodeMain),
+		internalSerialization.SerializeStringFunc(stateKey)(m.GetState),
+		internalSerialization.SerializeStringFunc(sysCreatedByKey)(m.GetSysCreatedBy),
+		internalSerialization.SerializeStringFunc(sysCreatedOnKey)(m.GetSysCreatedOn),
+		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysUpdatedByKey)(m.GetSysUpdatedBy),
+		internalSerialization.SerializeStringFunc(sysUpdatedOnKey)(m.GetSysUpdatedOn),
+		internalSerialization.SerializeInt32Func(versionCounterKey)(m.GetVersionCounter),
+	)
+}
+
+func (m *ImpactedSharedComponentResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		cdmSharedLibraryKey: internalSerialization.DeserializeStringFunc()(m.setCdmSharedLibrary),
+		descriptionKey:      internalSerialization.DeserializeStringFunc()(m.setDescription),
+		nameKey:             internalSerialization.DeserializeStringFunc()(m.setName),
+		nodeKey:             internalSerialization.DeserializeStringFunc()(m.setNode),
+		nodeMainKey:         internalSerialization.DeserializeStringFunc()(m.setNodeMain),
+		stateKey:            internalSerialization.DeserializeStringFunc()(m.setState),
+		sysCreatedByKey:     internalSerialization.DeserializeStringFunc()(m.setSysCreatedBy),
+		sysCreatedOnKey:     internalSerialization.DeserializeStringFunc()(m.setSysCreatedOn),
+		sysIdKey:            internalSerialization.DeserializeStringFunc()(m.setSysId),
+		sysUpdatedByKey:     internalSerialization.DeserializeStringFunc()(m.setSysUpdatedBy),
+		sysUpdatedOnKey:     internalSerialization.DeserializeStringFunc()(m.setSysUpdatedOn),
+		versionCounterKey:   internalSerialization.DeserializeInt32Func()(m.setVersionCounter),
+	}
+}
+
+func (m *ImpactedSharedComponentResult) GetCdmSharedLibrary() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), cdmSharedLibraryKey)
+}
+func (m *ImpactedSharedComponentResult) setCdmSharedLibrary(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), cdmSharedLibraryKey, val)
+}
+func (m *ImpactedSharedComponentResult) GetDescription() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), descriptionKey)
+}
+func (m *ImpactedSharedComponentResult) setDescription(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), descriptionKey, val)
+}
+func (m *ImpactedSharedComponentResult) GetName() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nameKey)
+}
+func (m *ImpactedSharedComponentResult) setName(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nameKey, val)
+}
+func (m *ImpactedSharedComponentResult) GetNode() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nodeKey)
+}
+func (m *ImpactedSharedComponentResult) setNode(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nodeKey, val)
+}
+func (m *ImpactedSharedComponentResult) GetNodeMain() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nodeMainKey)
+}
+func (m *ImpactedSharedComponentResult) setNodeMain(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nodeMainKey, val)
+}
+func (m *ImpactedSharedComponentResult) GetState() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), stateKey)
+}
+func (m *ImpactedSharedComponentResult) setState(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), stateKey, val)
+}
+func (m *ImpactedSharedComponentResult) GetSysCreatedBy() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysCreatedByKey)
+}
+func (m *ImpactedSharedComponentResult) setSysCreatedBy(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysCreatedByKey, val)
+}
+func (m *ImpactedSharedComponentResult) GetSysCreatedOn() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysCreatedOnKey)
+}
+func (m *ImpactedSharedComponentResult) setSysCreatedOn(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysCreatedOnKey, val)
+}
+func (m *ImpactedSharedComponentResult) GetSysId() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysIdKey)
+}
+func (m *ImpactedSharedComponentResult) setSysId(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysIdKey, val)
+}
+func (m *ImpactedSharedComponentResult) GetSysUpdatedBy() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysUpdatedByKey)
+}
+func (m *ImpactedSharedComponentResult) setSysUpdatedBy(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysUpdatedByKey, val)
+}
+func (m *ImpactedSharedComponentResult) GetSysUpdatedOn() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysUpdatedOnKey)
+}
+func (m *ImpactedSharedComponentResult) setSysUpdatedOn(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysUpdatedOnKey, val)
+}
+func (m *ImpactedSharedComponentResult) GetVersionCounter() (*int32, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int32](m.GetBackingStore(), versionCounterKey)
+}
+func (m *ImpactedSharedComponentResult) setVersionCounter(val *int32) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), versionCounterKey, val)
+}
+
+func CreateImpactedSharedComponentResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewImpactedSharedComponentResult(), nil
+}
+
+// ImpactedDeployableResult represents an impacted deployable (query-based).
+type ImpactedDeployableResult struct {
+	newInternal.BaseModel
+}
+
+func NewImpactedDeployableResult() *ImpactedDeployableResult {
+	return &ImpactedDeployableResult{BaseModel: *newInternal.NewBaseModel()}
+}
+
+func (m *ImpactedDeployableResult) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(m) {
+		return nil
+	}
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeInt32Func(cdiCountKey)(m.GetCdiCount),
+		internalSerialization.SerializeStringFunc(cdiUsageKey)(m.GetCdiUsage),
+		internalSerialization.SerializeObjectValueFunc[*Reference](cdmAppKey)(m.GetCdmApp),
+		internalSerialization.SerializeObjectValueFunc[*Reference](cdmCiKey)(m.GetCdmCi),
+		internalSerialization.SerializeStringFunc(descriptionKey)(m.GetDescription),
+		internalSerialization.SerializeStringFunc(environmentTypeKey)(m.GetEnvironmentType),
+		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
+		internalSerialization.SerializeObjectValueFunc[*Reference](nodeKey)(m.GetNode),
+		internalSerialization.SerializeInt32Func(snapshotVersionCounterKey)(m.GetSnapshotVersionCounter),
+		internalSerialization.SerializeStringFunc(stateKey)(m.GetState),
+		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysCreatedByKey)(m.GetSysCreatedBy),
+		internalSerialization.SerializeStringFunc(sysCreatedOnKey)(m.GetSysCreatedOn),
+		internalSerialization.SerializeStringFunc(sysUpdatedByKey)(m.GetSysUpdatedBy),
+		internalSerialization.SerializeStringFunc(sysUpdatedOnKey)(m.GetSysUpdatedOn),
+	)
+}
+
+func (m *ImpactedDeployableResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		cdiCountKey:               internalSerialization.DeserializeInt32Func()(m.setCdiCount),
+		cdiUsageKey:               internalSerialization.DeserializeStringFunc()(m.setCdiUsage),
+		cdmAppKey:                 internalSerialization.DeserializeObjectValueFunc[*Reference](CreateReferenceFromDiscriminatorValue)(m.setCdmApp),
+		cdmCiKey:                  internalSerialization.DeserializeObjectValueFunc[*Reference](CreateReferenceFromDiscriminatorValue)(m.setCdmCi),
+		descriptionKey:            internalSerialization.DeserializeStringFunc()(m.setDescription),
+		environmentTypeKey:        internalSerialization.DeserializeStringFunc()(m.setEnvironmentType),
+		nameKey:                   internalSerialization.DeserializeStringFunc()(m.setName),
+		nodeKey:                   internalSerialization.DeserializeObjectValueFunc[*Reference](CreateReferenceFromDiscriminatorValue)(m.setNode),
+		snapshotVersionCounterKey: internalSerialization.DeserializeInt32Func()(m.setSnapshotVersionCounter),
+		stateKey:                  internalSerialization.DeserializeStringFunc()(m.setState),
+		sysIdKey:                  internalSerialization.DeserializeStringFunc()(m.setSysId),
+		sysCreatedByKey:           internalSerialization.DeserializeStringFunc()(m.setSysCreatedBy),
+		sysCreatedOnKey:           internalSerialization.DeserializeStringFunc()(m.setSysCreatedOn),
+		sysUpdatedByKey:           internalSerialization.DeserializeStringFunc()(m.setSysUpdatedBy),
+		sysUpdatedOnKey:           internalSerialization.DeserializeStringFunc()(m.setSysUpdatedOn),
+	}
+}
+
+func (m *ImpactedDeployableResult) GetCdiCount() (*int32, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int32](m.GetBackingStore(), cdiCountKey)
+}
+func (m *ImpactedDeployableResult) setCdiCount(val *int32) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), cdiCountKey, val)
+}
+func (m *ImpactedDeployableResult) GetCdiUsage() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), cdiUsageKey)
+}
+func (m *ImpactedDeployableResult) setCdiUsage(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), cdiUsageKey, val)
+}
+func (m *ImpactedDeployableResult) GetCdmApp() (*Reference, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *Reference](m.GetBackingStore(), cdmAppKey)
+}
+func (m *ImpactedDeployableResult) setCdmApp(val *Reference) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), cdmAppKey, val)
+}
+func (m *ImpactedDeployableResult) GetCdmCi() (*Reference, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *Reference](m.GetBackingStore(), cdmCiKey)
+}
+func (m *ImpactedDeployableResult) setCdmCi(val *Reference) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), cdmCiKey, val)
+}
+func (m *ImpactedDeployableResult) GetDescription() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), descriptionKey)
+}
+func (m *ImpactedDeployableResult) setDescription(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), descriptionKey, val)
+}
+func (m *ImpactedDeployableResult) GetEnvironmentType() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), environmentTypeKey)
+}
+func (m *ImpactedDeployableResult) setEnvironmentType(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), environmentTypeKey, val)
+}
+func (m *ImpactedDeployableResult) GetName() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nameKey)
+}
+func (m *ImpactedDeployableResult) setName(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nameKey, val)
+}
+func (m *ImpactedDeployableResult) GetNode() (*Reference, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *Reference](m.GetBackingStore(), nodeKey)
+}
+func (m *ImpactedDeployableResult) setNode(val *Reference) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nodeKey, val)
+}
+func (m *ImpactedDeployableResult) GetSnapshotVersionCounter() (*int32, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int32](m.GetBackingStore(), snapshotVersionCounterKey)
+}
+func (m *ImpactedDeployableResult) setSnapshotVersionCounter(val *int32) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), snapshotVersionCounterKey, val)
+}
+func (m *ImpactedDeployableResult) GetState() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), stateKey)
+}
+func (m *ImpactedDeployableResult) setState(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), stateKey, val)
+}
+func (m *ImpactedDeployableResult) GetSysId() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysIdKey)
+}
+func (m *ImpactedDeployableResult) setSysId(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysIdKey, val)
+}
+func (m *ImpactedDeployableResult) GetSysCreatedBy() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysCreatedByKey)
+}
+func (m *ImpactedDeployableResult) setSysCreatedBy(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysCreatedByKey, val)
+}
+func (m *ImpactedDeployableResult) GetSysCreatedOn() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysCreatedOnKey)
+}
+func (m *ImpactedDeployableResult) setSysCreatedOn(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysCreatedOnKey, val)
+}
+func (m *ImpactedDeployableResult) GetSysUpdatedBy() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysUpdatedByKey)
+}
+func (m *ImpactedDeployableResult) setSysUpdatedBy(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysUpdatedByKey, val)
+}
+func (m *ImpactedDeployableResult) GetSysUpdatedOn() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysUpdatedOnKey)
+}
+func (m *ImpactedDeployableResult) setSysUpdatedOn(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysUpdatedOnKey, val)
+}
+
+func CreateImpactedDeployableResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewImpactedDeployableResult(), nil
+}
+
+// ImpactedDeployableBySysIdResult represents an impacted deployable (path-based).
+type ImpactedDeployableBySysIdResult struct {
+	newInternal.BaseModel
+}
+
+func NewImpactedDeployableBySysIdResult() *ImpactedDeployableBySysIdResult {
+	return &ImpactedDeployableBySysIdResult{BaseModel: *newInternal.NewBaseModel()}
+}
+
+func (m *ImpactedDeployableBySysIdResult) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(m) {
+		return nil
+	}
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(changesetIdKey)(m.GetChangesetId),
+		internalSerialization.SerializeBoolFunc(conflictKey)(m.GetConflict),
+		internalSerialization.SerializeStringFunc(conflictTypeKey)(m.GetConflictType),
+		internalSerialization.SerializeStringFunc(descriptionKey)(m.GetDescription),
+		internalSerialization.SerializeStringFunc(effectiveFromKey)(m.GetEffectiveFrom),
+		internalSerialization.SerializeStringFunc(effectiveToKey)(m.GetEffectiveTo),
+		internalSerialization.SerializeInt32Func(levelKey)(m.GetLevel),
+		internalSerialization.SerializeStringFunc(linkedToKey)(m.GetLinkedTo),
+		internalSerialization.SerializeStringFunc(mainIdKey)(m.GetMainId),
+		internalSerialization.SerializeStringFunc(mainIdEncodedKey)(m.GetMainIdEncoded),
+		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
+		internalSerialization.SerializeStringFunc(nodeClassifierKey)(m.GetNodeClassifier),
+		internalSerialization.SerializeStringFunc(statusKey)(m.GetStatus),
+		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
+		internalSerialization.SerializeStringFunc(typeKey)(m.GetType),
+		internalSerialization.SerializeStringFunc(valueKey)(m.GetValue),
+		internalSerialization.SerializeStringFunc(secureValueKey)(m.GetSecureValue),
+	)
+}
+
+func (m *ImpactedDeployableBySysIdResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		changesetIdKey:    internalSerialization.DeserializeStringFunc()(m.setChangesetId),
+		conflictKey:       internalSerialization.DeserializeBoolFunc()(m.setConflict),
+		conflictTypeKey:   internalSerialization.DeserializeStringFunc()(m.setConflictType),
+		descriptionKey:    internalSerialization.DeserializeStringFunc()(m.setDescription),
+		effectiveFromKey:  internalSerialization.DeserializeStringFunc()(m.setEffectiveFrom),
+		effectiveToKey:    internalSerialization.DeserializeStringFunc()(m.setEffectiveTo),
+		levelKey:          internalSerialization.DeserializeInt32Func()(m.setLevel),
+		linkedToKey:       internalSerialization.DeserializeStringFunc()(m.setLinkedTo),
+		mainIdKey:         internalSerialization.DeserializeStringFunc()(m.setMainId),
+		mainIdEncodedKey:  internalSerialization.DeserializeStringFunc()(m.setMainIdEncoded),
+		nameKey:           internalSerialization.DeserializeStringFunc()(m.setName),
+		nodeClassifierKey: internalSerialization.DeserializeStringFunc()(m.setNodeClassifier),
+		statusKey:         internalSerialization.DeserializeStringFunc()(m.setStatus),
+		sysIdKey:          internalSerialization.DeserializeStringFunc()(m.setSysId),
+		typeKey:           internalSerialization.DeserializeStringFunc()(m.setType),
+		valueKey:          internalSerialization.DeserializeStringFunc()(m.setValue),
+		secureValueKey:    internalSerialization.DeserializeStringFunc()(m.setSecureValue),
+	}
+}
+
+func (m *ImpactedDeployableBySysIdResult) GetChangesetId() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), changesetIdKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setChangesetId(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), changesetIdKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetConflict() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), conflictKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setConflict(val *bool) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), conflictKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetConflictType() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), conflictTypeKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setConflictType(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), conflictTypeKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetDescription() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), descriptionKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setDescription(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), descriptionKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetEffectiveFrom() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), effectiveFromKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setEffectiveFrom(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), effectiveFromKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetEffectiveTo() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), effectiveToKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setEffectiveTo(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), effectiveToKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetLevel() (*int32, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int32](m.GetBackingStore(), levelKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setLevel(val *int32) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), levelKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetLinkedTo() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), linkedToKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setLinkedTo(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), linkedToKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetMainId() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), mainIdKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setMainId(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), mainIdKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetMainIdEncoded() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), mainIdEncodedKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setMainIdEncoded(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), mainIdEncodedKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetName() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nameKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setName(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nameKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetNodeClassifier() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nodeClassifierKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setNodeClassifier(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nodeClassifierKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetStatus() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), statusKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setStatus(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), statusKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetSysId() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysIdKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setSysId(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysIdKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetType() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), typeKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setType(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), typeKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetValue() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), valueKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setValue(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), valueKey, val)
+}
+func (m *ImpactedDeployableBySysIdResult) GetSecureValue() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), secureValueKey)
+}
+func (m *ImpactedDeployableBySysIdResult) setSecureValue(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), secureValueKey, val)
+}
+
+func CreateImpactedDeployableBySysIdResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewImpactedDeployableBySysIdResult(), nil
+}
