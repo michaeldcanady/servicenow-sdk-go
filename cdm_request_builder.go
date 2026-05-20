@@ -3,6 +3,7 @@ package servicenowsdkgo
 import (
 	"maps"
 
+	cdmeditorapi "github.com/michaeldcanady/servicenow-sdk-go/cdm-editor-api"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	policyapi "github.com/michaeldcanady/servicenow-sdk-go/policy-api"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -31,4 +32,9 @@ func NewCdmRequestBuilder(rawURL string, requestAdapter abstractions.RequestAdap
 // Policies returns a PolicyRequestBuilder associated with the CdmRequestBuilder.
 func (rB *CdmRequestBuilder) Policies() *policyapi.PoliciesRequestBuilder {
 	return policyapi.NewPolicyRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+// Editor returns a CdmEditorRequestBuilder associated with the CdmRequestBuilder.
+func (rB *CdmRequestBuilder) Editor() *cdmeditorapi.CdmEditorRequestBuilder {
+	return cdmeditorapi.NewCdmEditorRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
