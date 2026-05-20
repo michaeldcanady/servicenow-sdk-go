@@ -31,19 +31,19 @@
   "features": {
     "./podman-remote": {},
     "./xdg-utils": {},
+    "./antigravity": {},
     "ghcr.io/devcontainers/features/github-cli:1": {
       "version": "latest"
     },
     "ghcr.io/devcontainers/features/powershell:2": {
       "version": "latest"
     },
-  "ghcr.io/stu-bell/devcontainer-features/gemini-cli:0": {
-    },
+    //"ghcr.io/stu-bell/devcontainer-features/gemini-cli:0": {},
     "ghcr.io/guiyomh/features/just:0": {}
   },
   "runArgs": [
     "--userns=keep-id"
   ],
-  "containerUser": "vscode",
+  "containerUser": "vscode"
   //"initializeCommand": "mkfifo ~/hostbrowserpipe"
-} 
+}

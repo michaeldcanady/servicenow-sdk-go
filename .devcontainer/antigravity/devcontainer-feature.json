@@ -1,0 +1,10 @@
+{
+    "id": "google-antigravity-cli",
+    "version": "1.0.0",
+    "name": "Google Antigravity CLI",
+    "description": "Installs the Google Antigravity CLI into a devcontainer (headless, CLI-only).",
+    "documentationURL": "https://antigravity.google/download#antigravity-cli",
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}
