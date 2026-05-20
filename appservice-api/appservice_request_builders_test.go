@@ -9,165 +9,137 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAppServiceRequestBuilder_CreateOrUpdateService(t *testing.T) {
+func TestAppServiceRequestBuilder_Create(t *testing.T) {
 	adapter := mocking.NewMockRequestAdapter()
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
-	
+
 	builder := NewAppServiceRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
 
-	createOrUpdateBuilder := builder.CreateOrUpdateService()
-	assert.NotNil(t, createOrUpdateBuilder)
-	assert.Equal(t, createOrUpdateServiceURLTemplate, createOrUpdateBuilder.GetURLTemplate())
+	createBuilder := builder.Create()
+	assert.NotNil(t, createBuilder)
+	assert.Equal(t, createURLTemplate, createBuilder.GetURLTemplate())
 
 	// Test URL and body serialization
-	req := NewCreateOrUpdateServiceRequest()
-	name := "AppService-Test"
+	req := NewCreateServiceRequest()
+	name := "AppService-CreateTest"
+	comments := "Testing creation endpoint"
 	_ = req.setName(&name)
+	_ = req.setComments(&comments)
 
-	requestInfo, err := createOrUpdateBuilder.ToPostRequestInformation(context.Background(), req, nil)
+	requestInfo, err := createBuilder.ToPostRequestInformation(context.Background(), req, nil)
 	assert.Nil(t, err)
 
 	uri, err := requestInfo.GetUri()
 	assert.Nil(t, err)
-	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/app_service/createOrUpdateService", uri.String())
+	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/app_service/create", uri.String())
 }
 
-
-func TestAppServiceRequestBuilder_ByID(t *testing.T) {
+func TestAppServiceRequestBuilder_Csdm_FindService(t *testing.T) {
 	adapter := mocking.NewMockRequestAdapter()
+
 	builder := NewAppServiceRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
 
-	itemBuilder := builder.ByID("service123")
-	assert.NotNil(t, itemBuilder)
-	assert.Equal(t, appServiceItemURLTemplate, itemBuilder.GetURLTemplate())
+	csdmBuilder := builder.Csdm()
+	assert.NotNil(t, csdmBuilder)
+	assert.Equal(t, csdmAppServiceURLTemplate, csdmBuilder.GetURLTemplate())
 
-	getContentBuilder := itemBuilder.GetContent()
-	assert.NotNil(t, getContentBuilder)
-	assert.Equal(t, getContentURLTemplate, getContentBuilder.GetURLTemplate())
+	findBuilder := csdmBuilder.FindService()
+	assert.NotNil(t, findBuilder)
+	assert.Equal(t, findServiceURLTemplate, findBuilder.GetURLTemplate())
 
-	// Test GetContent URL serialization with query parameter
-	mode := "Full"
-	config := &GetContentRequestBuilderGetRequestConfiguration{
-		QueryParameters: &GetContentRequestBuilderGetQueryParameters{
-			Mode: &mode,
+	name := "Email_East"
+	number := "SNSVC0001018"
+	config := &FindServiceRequestConfiguration{
+		QueryParameters: &FindServiceQueryParameters{
+			Name:   &name,
+			Number: &number,
 		},
 	}
 
-	requestInfo, err := getContentBuilder.ToGetRequestInformation(context.Background(), config)
+	requestInfo, err := findBuilder.ToGetRequestInformation(context.Background(), config)
 	assert.Nil(t, err)
 
 	uri, err := requestInfo.GetUri()
 	assert.Nil(t, err)
-	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/app_service/service123/getContent?Mode=Full", uri.String())
+	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/csdm/app_service/find_service?name=Email_East&number=SNSVC0001018", uri.String())
 }
 
-func TestCreateOrUpdateServiceRequest_Serialization(t *testing.T) {
-	req := NewCreateOrUpdateServiceRequest()
-	assert.NotNil(t, req)
+func TestAppServiceRequestBuilder_Csdm_RegisterService(t *testing.T) {
+	adapter := mocking.NewMockRequestAdapter()
+	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 
-	name := "AppService-Test"
-	typ := "manual"
+	builder := NewAppServiceRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
 
-	err := req.setName(&name)
-	assert.Nil(t, err)
-	err = req.setType(&typ)
+	registerBuilder := builder.Csdm().RegisterService()
+	assert.NotNil(t, registerBuilder)
+	assert.Equal(t, registerServiceURLTemplate, registerBuilder.GetURLTemplate())
+
+	req := NewRegisterServiceRequest()
+	details := NewBasicDetails()
+	env := "Test Lab 2"
+	name := "Service Name Here"
+	_ = details.setEnvironment(&env)
+	_ = details.setName(&name)
+	_ = req.setBasicDetails(details)
+
+	requestInfo, err := registerBuilder.ToPostRequestInformation(context.Background(), req, nil)
 	assert.Nil(t, err)
 
-	retName, err := req.GetName()
+	uri, err := requestInfo.GetUri()
 	assert.Nil(t, err)
-	assert.Equal(t, &name, retName)
-
-	retType, err := req.GetType()
-	assert.Nil(t, err)
-	assert.Equal(t, &typ, retType)
+	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/csdm/app_service/register_service", uri.String())
 }
 
-func TestCreateOrUpdateServiceResult_Serialization(t *testing.T) {
-	res := NewCreateOrUpdateServiceResult()
-	assert.NotNil(t, res)
+func TestAppServiceRequestBuilder_Csdm_PopulateService(t *testing.T) {
+	adapter := mocking.NewMockRequestAdapter()
+	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 
-	sysID := "sys-12345"
-	name := "MyManualService"
-	className := "cmdb_ci_service_discovered"
+	builder := NewAppServiceRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
 
-	err := res.setSysId(&sysID)
-	assert.Nil(t, err)
-	err = res.setName(&name)
-	assert.Nil(t, err)
-	err = res.setClassName(&className)
-	assert.Nil(t, err)
+	populateBuilder := builder.Csdm().ByID("service123").PopulateService()
+	assert.NotNil(t, populateBuilder)
+	assert.Equal(t, populateServiceURLTemplate, populateBuilder.GetURLTemplate())
 
-	retSysID, err := res.GetSysId()
-	assert.Nil(t, err)
-	assert.Equal(t, &sysID, retSysID)
-
-	retName, err := res.GetName()
-	assert.Nil(t, err)
-	assert.Equal(t, &name, retName)
-
-	retClassName, err := res.GetClassName()
-	assert.Nil(t, err)
-	assert.Equal(t, &className, retClassName)
-}
-
-func TestGetContentResult_Serialization(t *testing.T) {
-	res := NewGetContentResult()
-	assert.NotNil(t, res)
-
-	ci := NewCIInfo()
-	sysID := "ci-123"
-	ciName := "CI-One"
-	ciClass := "cmdb_ci_linux_server"
-	_ = ci.setSysId(&sysID)
-	_ = ci.setName(&ciName)
-	_ = ci.setClassName(&ciClass)
-
-	rel := NewRelationshipInfo()
-	parent := "ci-123"
-	child := "ci-456"
+	req := NewPopulateServiceRequest()
+	rel := NewServiceRelation()
+	parent := "parent123"
+	child := "child456"
 	relType := "Depends on::Used by"
 	_ = rel.setParent(&parent)
 	_ = rel.setChild(&child)
 	_ = rel.setType(&relType)
+	_ = req.setServiceRelations([]*ServiceRelation{rel})
 
-	err := res.setCis([]*CIInfo{ci})
-	assert.Nil(t, err)
-	err = res.setRelations([]*RelationshipInfo{rel})
+	requestInfo, err := populateBuilder.ToPutRequestInformation(context.Background(), req, nil)
 	assert.Nil(t, err)
 
-	retCis, err := res.GetCis()
+	uri, err := requestInfo.GetUri()
 	assert.Nil(t, err)
-	assert.Len(t, retCis, 1)
-	
-	retSysID, err := retCis[0].GetSysId()
-	assert.Nil(t, err)
-	assert.Equal(t, &sysID, retSysID)
-
-	retRels, err := res.GetRelations()
-	assert.Nil(t, err)
-	assert.Len(t, retRels, 1)
-	
-	retParent, err := retRels[0].GetParent()
-	assert.Nil(t, err)
-	assert.Equal(t, &parent, retParent)
+	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/csdm/app_service/service123/populate_service", uri.String())
 }
 
-
-func TestAppServiceRequestBuilder_RawURL(t *testing.T) {
+func TestAppServiceRequestBuilder_Csdm_ServiceDetails(t *testing.T) {
 	adapter := mocking.NewMockRequestAdapter()
-	builder := NewAppServiceRequestBuilder("https://example.service-now.com/api/now/v1/cmdb/app_service", adapter)
-	assert.NotNil(t, builder)
-	assert.Equal(t, appServiceURLTemplate, builder.GetURLTemplate())
-}
+	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 
-func TestGetContentResponse_Discriminator(t *testing.T) {
-	p, err := CreateGetContentResponseFromDiscriminatorValue(nil)
-	assert.Nil(t, err)
-	assert.NotNil(t, p)
-}
+	builder := NewAppServiceRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
 
-func TestCreateOrUpdateServiceResponse_Discriminator(t *testing.T) {
-	p, err := CreateCreateOrUpdateServiceResponseFromDiscriminatorValue(nil)
+	detailsBuilder := builder.Csdm().ByID("service123").ServiceDetails()
+	assert.NotNil(t, detailsBuilder)
+	assert.Equal(t, serviceDetailsURLTemplate, detailsBuilder.GetURLTemplate())
+
+	req := NewServiceDetailsRequest()
+	details := NewBasicDetails()
+	env := "Production"
+	name := "Service Name Updated"
+	_ = details.setEnvironment(&env)
+	_ = details.setName(&name)
+	_ = req.setBasicDetails(details)
+
+	requestInfo, err := detailsBuilder.ToPutRequestInformation(context.Background(), req, nil)
 	assert.Nil(t, err)
-	assert.NotNil(t, p)
+
+	uri, err := requestInfo.GetUri()
+	assert.Nil(t, err)
+	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/csdm/app_service/service123/service_details", uri.String())
 }

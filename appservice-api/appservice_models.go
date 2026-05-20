@@ -9,183 +9,409 @@ import (
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
-// CreateOrUpdateServiceRequest represents the request body for creating or updating an application service.
-type CreateOrUpdateServiceRequest struct {
+// CreateServiceRequest represents the request body for creating an application service.
+type CreateServiceRequest struct {
 	newInternal.BaseModel
 }
 
-func NewCreateOrUpdateServiceRequest() *CreateOrUpdateServiceRequest {
-	return &CreateOrUpdateServiceRequest{BaseModel: *newInternal.NewBaseModel()}
+func NewCreateServiceRequest() *CreateServiceRequest {
+	return &CreateServiceRequest{BaseModel: *newInternal.NewBaseModel()}
 }
 
-func (m *CreateOrUpdateServiceRequest) Serialize(writer serialization.SerializationWriter) error {
+func (m *CreateServiceRequest) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(typeKey)(m.GetType),
+		internalSerialization.SerializeStringFunc(commentsKey)(m.GetComments),
 	)
 }
 
-func (m *CreateOrUpdateServiceRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (m *CreateServiceRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		nameKey: internalSerialization.DeserializeStringFunc()(m.setName),
-		typeKey: internalSerialization.DeserializeStringFunc()(m.setType),
+		nameKey:     internalSerialization.DeserializeStringFunc()(m.setName),
+		commentsKey: internalSerialization.DeserializeStringFunc()(m.setComments),
 	}
 }
 
-func (m *CreateOrUpdateServiceRequest) GetName() (*string, error) {
+func (m *CreateServiceRequest) GetName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nameKey)
 }
 
-func (m *CreateOrUpdateServiceRequest) setName(val *string) error {
+func (m *CreateServiceRequest) setName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nameKey, val)
 }
 
-func (m *CreateOrUpdateServiceRequest) GetType() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), typeKey)
+func (m *CreateServiceRequest) GetComments() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), commentsKey)
 }
 
-func (m *CreateOrUpdateServiceRequest) setType(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), typeKey, val)
+func (m *CreateServiceRequest) setComments(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), commentsKey, val)
 }
 
-func CreateCreateOrUpdateServiceRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewCreateOrUpdateServiceRequest(), nil
+func CreateCreateServiceRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewCreateServiceRequest(), nil
 }
 
-// CreateOrUpdateServiceResult represents the result details of a created or updated application service.
-type CreateOrUpdateServiceResult struct {
+// CreateServiceResult represents the result details of a created application service.
+type CreateServiceResult struct {
 	newInternal.BaseModel
 }
 
-func NewCreateOrUpdateServiceResult() *CreateOrUpdateServiceResult {
-	return &CreateOrUpdateServiceResult{BaseModel: *newInternal.NewBaseModel()}
+func NewCreateServiceResult() *CreateServiceResult {
+	return &CreateServiceResult{BaseModel: *newInternal.NewBaseModel()}
 }
 
-func (m *CreateOrUpdateServiceResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
-		return nil
-	}
-	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(classNameKey)(m.GetClassName),
-	)
-}
-
-func (m *CreateOrUpdateServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:     internalSerialization.DeserializeStringFunc()(m.setSysId),
-		nameKey:      internalSerialization.DeserializeStringFunc()(m.setName),
-		classNameKey: internalSerialization.DeserializeStringFunc()(m.setClassName),
-	}
-}
-
-func (m *CreateOrUpdateServiceResult) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysIdKey)
-}
-
-func (m *CreateOrUpdateServiceResult) setSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysIdKey, val)
-}
-
-func (m *CreateOrUpdateServiceResult) GetName() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nameKey)
-}
-
-func (m *CreateOrUpdateServiceResult) setName(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nameKey, val)
-}
-
-func (m *CreateOrUpdateServiceResult) GetClassName() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), classNameKey)
-}
-
-func (m *CreateOrUpdateServiceResult) setClassName(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), classNameKey, val)
-}
-
-func CreateCreateOrUpdateServiceResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewCreateOrUpdateServiceResult(), nil
-}
-
-// CreateOrUpdateServiceResponse represents the response containing the created or updated application service details.
-type CreateOrUpdateServiceResponse interface {
-	newInternal.ServiceNowItemResponse[*CreateOrUpdateServiceResult]
-}
-
-func CreateCreateOrUpdateServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*CreateOrUpdateServiceResult](CreateCreateOrUpdateServiceResultFromDiscriminatorValue), nil
-}
-
-// CIInfo represents a Configuration Item in the application service content.
-type CIInfo struct {
-	newInternal.BaseModel
-}
-
-func NewCIInfo() *CIInfo {
-	return &CIInfo{BaseModel: *newInternal.NewBaseModel()}
-}
-
-func (m *CIInfo) Serialize(writer serialization.SerializationWriter) error {
+func (m *CreateServiceResult) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
 		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(classNameKey)(m.GetClassName),
+		internalSerialization.SerializeStringFunc(commentsKey)(m.GetComments),
 	)
 }
 
-func (m *CIInfo) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (m *CreateServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		sysIdKey:     internalSerialization.DeserializeStringFunc()(m.setSysId),
 		nameKey:      internalSerialization.DeserializeStringFunc()(m.setName),
-		classNameKey: internalSerialization.DeserializeStringFunc()(m.setClassName),
+		commentsKey: internalSerialization.DeserializeStringFunc()(m.setComments),
 	}
 }
 
-func (m *CIInfo) GetSysId() (*string, error) {
+func (m *CreateServiceResult) GetSysId() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysIdKey)
 }
 
-func (m *CIInfo) setSysId(val *string) error {
+func (m *CreateServiceResult) setSysId(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysIdKey, val)
 }
 
-func (m *CIInfo) GetName() (*string, error) {
+func (m *CreateServiceResult) GetName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nameKey)
 }
 
-func (m *CIInfo) setName(val *string) error {
+func (m *CreateServiceResult) setName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nameKey, val)
 }
 
-func (m *CIInfo) GetClassName() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), classNameKey)
+func (m *CreateServiceResult) GetComments() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), commentsKey)
 }
 
-func (m *CIInfo) setClassName(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), classNameKey, val)
+func (m *CreateServiceResult) setComments(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), commentsKey, val)
 }
 
-func CreateCIInfoFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewCIInfo(), nil
+func CreateCreateServiceResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewCreateServiceResult(), nil
 }
 
-// RelationshipInfo represents a relationship between CIs.
-type RelationshipInfo struct {
+// CreateServiceResponse represents the response containing the created application service details.
+type CreateServiceResponse interface {
+	newInternal.ServiceNowItemResponse[*CreateServiceResult]
+}
+
+func CreateCreateServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return newInternal.NewBaseServiceNowItemResponse[*CreateServiceResult](CreateCreateServiceResultFromDiscriminatorValue), nil
+}
+
+// FindServiceResult represents the result details retrieved from the find_service endpoint.
+type FindServiceResult struct {
 	newInternal.BaseModel
 }
 
-func NewRelationshipInfo() *RelationshipInfo {
-	return &RelationshipInfo{BaseModel: *newInternal.NewBaseModel()}
+func NewFindServiceResult() *FindServiceResult {
+	return &FindServiceResult{BaseModel: *newInternal.NewBaseModel()}
 }
 
-func (m *RelationshipInfo) Serialize(writer serialization.SerializationWriter) error {
+func (m *FindServiceResult) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(m) {
+		return nil
+	}
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
+		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
+		internalSerialization.SerializeStringFunc(numberKey)(m.GetNumber),
+		internalSerialization.SerializeStringFunc(environmentKey)(m.GetEnvironment),
+		internalSerialization.SerializeStringFunc(versionKey)(m.GetVersion),
+	)
+}
+
+func (m *FindServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		sysIdKey:       internalSerialization.DeserializeStringFunc()(m.setSysId),
+		nameKey:        internalSerialization.DeserializeStringFunc()(m.setName),
+		numberKey:      internalSerialization.DeserializeStringFunc()(m.setNumber),
+		environmentKey: internalSerialization.DeserializeStringFunc()(m.setEnvironment),
+		versionKey:     internalSerialization.DeserializeStringFunc()(m.setVersion),
+	}
+}
+
+func (m *FindServiceResult) GetSysId() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysIdKey)
+}
+
+func (m *FindServiceResult) setSysId(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysIdKey, val)
+}
+
+func (m *FindServiceResult) GetName() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nameKey)
+}
+
+func (m *FindServiceResult) setName(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nameKey, val)
+}
+
+func (m *FindServiceResult) GetNumber() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), numberKey)
+}
+
+func (m *FindServiceResult) setNumber(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), numberKey, val)
+}
+
+func (m *FindServiceResult) GetEnvironment() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), environmentKey)
+}
+
+func (m *FindServiceResult) setEnvironment(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), environmentKey, val)
+}
+
+func (m *FindServiceResult) GetVersion() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), versionKey)
+}
+
+func (m *FindServiceResult) setVersion(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), versionKey, val)
+}
+
+func CreateFindServiceResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewFindServiceResult(), nil
+}
+
+// FindServiceResponse represents the response containing the found application service details.
+type FindServiceResponse interface {
+	newInternal.ServiceNowItemResponse[*FindServiceResult]
+}
+
+func CreateFindServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return newInternal.NewBaseServiceNowItemResponse[*FindServiceResult](CreateFindServiceResultFromDiscriminatorValue), nil
+}
+
+// BasicDetails represents the basic details schema inside CSDM requests.
+type BasicDetails struct {
+	newInternal.BaseModel
+}
+
+func NewBasicDetails() *BasicDetails {
+	return &BasicDetails{BaseModel: *newInternal.NewBaseModel()}
+}
+
+func (m *BasicDetails) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(m) {
+		return nil
+	}
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(environmentKey)(m.GetEnvironment),
+		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
+		internalSerialization.SerializeStringFunc(versionKey)(m.GetVersion),
+		internalSerialization.SerializeStringFunc(businessAppKey)(m.GetBusinessApp),
+		internalSerialization.SerializeStringFunc(businessServiceOfferingKey)(m.GetBusinessServiceOffering),
+		internalSerialization.SerializeStringFunc(technicalServiceOfferingKey)(m.GetTechnicalServiceOffering),
+	)
+}
+
+func (m *BasicDetails) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		environmentKey:              internalSerialization.DeserializeStringFunc()(m.setEnvironment),
+		nameKey:                     internalSerialization.DeserializeStringFunc()(m.setName),
+		versionKey:                  internalSerialization.DeserializeStringFunc()(m.setVersion),
+		businessAppKey:              internalSerialization.DeserializeStringFunc()(m.setBusinessApp),
+		businessServiceOfferingKey:  internalSerialization.DeserializeStringFunc()(m.setBusinessServiceOffering),
+		technicalServiceOfferingKey: internalSerialization.DeserializeStringFunc()(m.setTechnicalServiceOffering),
+	}
+}
+
+func (m *BasicDetails) GetEnvironment() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), environmentKey)
+}
+
+func (m *BasicDetails) setEnvironment(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), environmentKey, val)
+}
+
+func (m *BasicDetails) GetName() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nameKey)
+}
+
+func (m *BasicDetails) setName(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nameKey, val)
+}
+
+func (m *BasicDetails) GetVersion() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), versionKey)
+}
+
+func (m *BasicDetails) setVersion(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), versionKey, val)
+}
+
+func (m *BasicDetails) GetBusinessApp() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), businessAppKey)
+}
+
+func (m *BasicDetails) setBusinessApp(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), businessAppKey, val)
+}
+
+func (m *BasicDetails) GetBusinessServiceOffering() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), businessServiceOfferingKey)
+}
+
+func (m *BasicDetails) setBusinessServiceOffering(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), businessServiceOfferingKey, val)
+}
+
+func (m *BasicDetails) GetTechnicalServiceOffering() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), technicalServiceOfferingKey)
+}
+
+func (m *BasicDetails) setTechnicalServiceOffering(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), technicalServiceOfferingKey, val)
+}
+
+func CreateBasicDetailsFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewBasicDetails(), nil
+}
+
+// RegisterServiceRequest represents the request body for registering a CSDM service.
+type RegisterServiceRequest struct {
+	newInternal.BaseModel
+}
+
+func NewRegisterServiceRequest() *RegisterServiceRequest {
+	return &RegisterServiceRequest{BaseModel: *newInternal.NewBaseModel()}
+}
+
+func (m *RegisterServiceRequest) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(m) {
+		return nil
+	}
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeObjectValueFunc[*BasicDetails](basicDetailsKey)(m.GetBasicDetails),
+	)
+}
+
+func (m *RegisterServiceRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		basicDetailsKey: internalSerialization.DeserializeObjectValueFunc[*BasicDetails](CreateBasicDetailsFromDiscriminatorValue)(m.setBasicDetails),
+	}
+}
+
+func (m *RegisterServiceRequest) GetBasicDetails() (*BasicDetails, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *BasicDetails](m.GetBackingStore(), basicDetailsKey)
+}
+
+func (m *RegisterServiceRequest) setBasicDetails(val *BasicDetails) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), basicDetailsKey, val)
+}
+
+func CreateRegisterServiceRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewRegisterServiceRequest(), nil
+}
+
+// RegisterServiceResult represents the result details of a registered CSDM service.
+type RegisterServiceResult struct {
+	newInternal.BaseModel
+}
+
+func NewRegisterServiceResult() *RegisterServiceResult {
+	return &RegisterServiceResult{BaseModel: *newInternal.NewBaseModel()}
+}
+
+func (m *RegisterServiceResult) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(m) {
+		return nil
+	}
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
+		internalSerialization.SerializeStringFunc(numberKey)(m.GetNumber),
+		internalSerialization.SerializeStringFunc(statusKey)(m.GetStatus),
+		internalSerialization.SerializeStringFunc(messageKey)(m.GetMessage),
+	)
+}
+
+func (m *RegisterServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		sysIdKey:   internalSerialization.DeserializeStringFunc()(m.setSysId),
+		numberKey:  internalSerialization.DeserializeStringFunc()(m.setNumber),
+		statusKey:  internalSerialization.DeserializeStringFunc()(m.setStatus),
+		messageKey: internalSerialization.DeserializeStringFunc()(m.setMessage),
+	}
+}
+
+func (m *RegisterServiceResult) GetSysId() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysIdKey)
+}
+
+func (m *RegisterServiceResult) setSysId(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysIdKey, val)
+}
+
+func (m *RegisterServiceResult) GetNumber() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), numberKey)
+}
+
+func (m *RegisterServiceResult) setNumber(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), numberKey, val)
+}
+
+func (m *RegisterServiceResult) GetStatus() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), statusKey)
+}
+
+func (m *RegisterServiceResult) setStatus(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), statusKey, val)
+}
+
+func (m *RegisterServiceResult) GetMessage() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), messageKey)
+}
+
+func (m *RegisterServiceResult) setMessage(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), messageKey, val)
+}
+
+func CreateRegisterServiceResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewRegisterServiceResult(), nil
+}
+
+// RegisterServiceResponse represents the response containing the registered CSDM service details.
+type RegisterServiceResponse interface {
+	newInternal.ServiceNowItemResponse[*RegisterServiceResult]
+}
+
+func CreateRegisterServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return newInternal.NewBaseServiceNowItemResponse[*RegisterServiceResult](CreateRegisterServiceResultFromDiscriminatorValue), nil
+}
+
+// ServiceRelation represents a relationship between components inside Populate request.
+type ServiceRelation struct {
+	newInternal.BaseModel
+}
+
+func NewServiceRelation() *ServiceRelation {
+	return &ServiceRelation{BaseModel: *newInternal.NewBaseModel()}
+}
+
+func (m *ServiceRelation) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(m) {
 		return nil
 	}
@@ -196,7 +422,7 @@ func (m *RelationshipInfo) Serialize(writer serialization.SerializationWriter) e
 	)
 }
 
-func (m *RelationshipInfo) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (m *ServiceRelation) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		parentKey: internalSerialization.DeserializeStringFunc()(m.setParent),
 		childKey:  internalSerialization.DeserializeStringFunc()(m.setChild),
@@ -204,85 +430,213 @@ func (m *RelationshipInfo) GetFieldDeserializers() map[string]func(serialization
 	}
 }
 
-func (m *RelationshipInfo) GetParent() (*string, error) {
+func (m *ServiceRelation) GetParent() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), parentKey)
 }
 
-func (m *RelationshipInfo) setParent(val *string) error {
+func (m *ServiceRelation) setParent(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), parentKey, val)
 }
 
-func (m *RelationshipInfo) GetChild() (*string, error) {
+func (m *ServiceRelation) GetChild() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), childKey)
 }
 
-func (m *RelationshipInfo) setChild(val *string) error {
+func (m *ServiceRelation) setChild(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), childKey, val)
 }
 
-func (m *RelationshipInfo) GetType() (*string, error) {
+func (m *ServiceRelation) GetType() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), typeKey)
 }
 
-func (m *RelationshipInfo) setType(val *string) error {
+func (m *ServiceRelation) setType(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), typeKey, val)
 }
 
-func CreateRelationshipInfoFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewRelationshipInfo(), nil
+func CreateServiceRelationFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewServiceRelation(), nil
 }
 
-// GetContentResult represents the result details retrieved from the getContent endpoint.
-type GetContentResult struct {
+// PopulateServiceRequest represents the request body for populating a CSDM service.
+type PopulateServiceRequest struct {
 	newInternal.BaseModel
 }
 
-func NewGetContentResult() *GetContentResult {
-	return &GetContentResult{BaseModel: *newInternal.NewBaseModel()}
+func NewPopulateServiceRequest() *PopulateServiceRequest {
+	return &PopulateServiceRequest{BaseModel: *newInternal.NewBaseModel()}
 }
 
-func (m *GetContentResult) Serialize(writer serialization.SerializationWriter) error {
+func (m *PopulateServiceRequest) Serialize(writer serialization.SerializationWriter) error {
 	if internal.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeCollectionOfObjectValuesFunc[*CIInfo](cisKey)(m.GetCis),
-		internalSerialization.SerializeCollectionOfObjectValuesFunc[*RelationshipInfo](relationsKey)(m.GetRelations),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[*ServiceRelation](serviceRelationsKey)(m.GetServiceRelations),
 	)
 }
 
-func (m *GetContentResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (m *PopulateServiceRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		cisKey:       internalSerialization.DeserializeCollectionOfObjectValuesFunc[*CIInfo](CreateCIInfoFromDiscriminatorValue)(m.setCis),
-		relationsKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc[*RelationshipInfo](CreateRelationshipInfoFromDiscriminatorValue)(m.setRelations),
+		serviceRelationsKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc[*ServiceRelation](CreateServiceRelationFromDiscriminatorValue)(m.setServiceRelations),
 	}
 }
 
-func (m *GetContentResult) GetCis() ([]*CIInfo, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []*CIInfo](m.GetBackingStore(), cisKey)
+func (m *PopulateServiceRequest) GetServiceRelations() ([]*ServiceRelation, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []*ServiceRelation](m.GetBackingStore(), serviceRelationsKey)
 }
 
-func (m *GetContentResult) setCis(val []*CIInfo) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), cisKey, val)
+func (m *PopulateServiceRequest) setServiceRelations(val []*ServiceRelation) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), serviceRelationsKey, val)
 }
 
-func (m *GetContentResult) GetRelations() ([]*RelationshipInfo, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []*RelationshipInfo](m.GetBackingStore(), relationsKey)
+func CreatePopulateServiceRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewPopulateServiceRequest(), nil
 }
 
-func (m *GetContentResult) setRelations(val []*RelationshipInfo) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), relationsKey, val)
+// PopulateServiceResult represents the result details of populating a service.
+type PopulateServiceResult struct {
+	newInternal.BaseModel
 }
 
-func CreateGetContentResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewGetContentResult(), nil
+func NewPopulateServiceResult() *PopulateServiceResult {
+	return &PopulateServiceResult{BaseModel: *newInternal.NewBaseModel()}
 }
 
-// GetContentResponse represents the response containing the application service content details.
-type GetContentResponse interface {
-	newInternal.ServiceNowItemResponse[*GetContentResult]
+func (m *PopulateServiceResult) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(m) {
+		return nil
+	}
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(statusKey)(m.GetStatus),
+		internalSerialization.SerializeStringFunc(messageKey)(m.GetMessage),
+	)
 }
 
-func CreateGetContentResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*GetContentResult](CreateGetContentResultFromDiscriminatorValue), nil
+func (m *PopulateServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		statusKey:  internalSerialization.DeserializeStringFunc()(m.setStatus),
+		messageKey: internalSerialization.DeserializeStringFunc()(m.setMessage),
+	}
+}
+
+func (m *PopulateServiceResult) GetStatus() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), statusKey)
+}
+
+func (m *PopulateServiceResult) setStatus(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), statusKey, val)
+}
+
+func (m *PopulateServiceResult) GetMessage() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), messageKey)
+}
+
+func (m *PopulateServiceResult) setMessage(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), messageKey, val)
+}
+
+func CreatePopulateServiceResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewPopulateServiceResult(), nil
+}
+
+// PopulateServiceResponse represents the response containing populate result details.
+type PopulateServiceResponse interface {
+	newInternal.ServiceNowItemResponse[*PopulateServiceResult]
+}
+
+func CreatePopulateServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return newInternal.NewBaseServiceNowItemResponse[*PopulateServiceResult](CreatePopulateServiceResultFromDiscriminatorValue), nil
+}
+
+// ServiceDetailsRequest represents the request body for modifying basic details of a CSDM service.
+type ServiceDetailsRequest struct {
+	newInternal.BaseModel
+}
+
+func NewServiceDetailsRequest() *ServiceDetailsRequest {
+	return &ServiceDetailsRequest{BaseModel: *newInternal.NewBaseModel()}
+}
+
+func (m *ServiceDetailsRequest) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(m) {
+		return nil
+	}
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeObjectValueFunc[*BasicDetails](basicDetailsKey)(m.GetBasicDetails),
+	)
+}
+
+func (m *ServiceDetailsRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		basicDetailsKey: internalSerialization.DeserializeObjectValueFunc[*BasicDetails](CreateBasicDetailsFromDiscriminatorValue)(m.setBasicDetails),
+	}
+}
+
+func (m *ServiceDetailsRequest) GetBasicDetails() (*BasicDetails, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *BasicDetails](m.GetBackingStore(), basicDetailsKey)
+}
+
+func (m *ServiceDetailsRequest) setBasicDetails(val *BasicDetails) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), basicDetailsKey, val)
+}
+
+
+func CreateServiceDetailsRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewServiceDetailsRequest(), nil
+}
+
+// ServiceDetailsResult represents the result details of modifying service details.
+type ServiceDetailsResult struct {
+	newInternal.BaseModel
+}
+
+func NewServiceDetailsResult() *ServiceDetailsResult {
+	return &ServiceDetailsResult{BaseModel: *newInternal.NewBaseModel()}
+}
+
+func (m *ServiceDetailsResult) Serialize(writer serialization.SerializationWriter) error {
+	if internal.IsNil(m) {
+		return nil
+	}
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(statusKey)(m.GetStatus),
+		internalSerialization.SerializeStringFunc(messageKey)(m.GetMessage),
+	)
+}
+
+func (m *ServiceDetailsResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		statusKey:  internalSerialization.DeserializeStringFunc()(m.setStatus),
+		messageKey: internalSerialization.DeserializeStringFunc()(m.setMessage),
+	}
+}
+
+func (m *ServiceDetailsResult) GetStatus() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), statusKey)
+}
+
+func (m *ServiceDetailsResult) setStatus(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), statusKey, val)
+}
+
+func (m *ServiceDetailsResult) GetMessage() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), messageKey)
+}
+
+func (m *ServiceDetailsResult) setMessage(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), messageKey, val)
+}
+
+func CreateServiceDetailsResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewServiceDetailsResult(), nil
+}
+
+// ServiceDetailsResponse represents the response containing service details update status.
+type ServiceDetailsResponse interface {
+	newInternal.ServiceNowItemResponse[*ServiceDetailsResult]
+}
+
+func CreateServiceDetailsResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return newInternal.NewBaseServiceNowItemResponse[*ServiceDetailsResult](CreateServiceDetailsResultFromDiscriminatorValue), nil
 }

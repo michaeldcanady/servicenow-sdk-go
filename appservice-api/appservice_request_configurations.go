@@ -4,14 +4,25 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-// AppServiceRequestBuilderCreateOrUpdateServiceRequestConfiguration represents the configuration for a CreateOrUpdateService request.
-type AppServiceRequestBuilderCreateOrUpdateServiceRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
+// CreateRequestConfiguration represents the configuration for a Create request.
+type CreateRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// GetContentRequestBuilderGetQueryParameters represents the query parameters for a GetContent request.
-type GetContentRequestBuilderGetQueryParameters struct {
-	// Mode determines the amount of relationship data returned.
-	Mode *string `url:"Mode,omitempty"`
+// FindServiceQueryParameters represents the query parameters for a find_service request.
+type FindServiceQueryParameters struct {
+	// Name of the application service (required if number is not provided)
+	Name *string `url:"name,omitempty"`
+	// Number of the application service (required if name is not provided)
+	Number *string `url:"number,omitempty"`
 }
 
-// GetContentRequestBuilderGetRequestConfiguration represents the configuration for a Get request on the getContent endpoint.
-type GetContentRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[GetContentRequestBuilderGetQueryParameters]
+// FindServiceRequestConfiguration represents the configuration for a find_service request.
+type FindServiceRequestConfiguration = abstractions.RequestConfiguration[FindServiceQueryParameters]
+
+// RegisterServiceRequestConfiguration represents the configuration for a register_service request.
+type RegisterServiceRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
+
+// PopulateServiceRequestConfiguration represents the configuration for a populate_service request.
+type PopulateServiceRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
+
+// ServiceDetailsRequestConfiguration represents the configuration for a service_details request.
+type ServiceDetailsRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
