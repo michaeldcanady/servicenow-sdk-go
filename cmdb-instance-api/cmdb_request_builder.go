@@ -3,6 +3,7 @@ package cmdbinstanceapi
 import (
 	"maps"
 
+	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/appservice-api"
 	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -34,3 +35,9 @@ func NewCmdbRequestBuilder(rawURL string, requestAdapter abstractions.RequestAda
 func (rB *CmdbRequestBuilder) Instance() *CmdbInstanceRequestBuilder {
 	return NewCmdbInstanceRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
+
+// AppService returns an AppServiceRequestBuilder associated with the CmdbRequestBuilder.
+func (rB *CmdbRequestBuilder) AppService() *appserviceapi.AppServiceRequestBuilder {
+	return appserviceapi.NewAppServiceRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
