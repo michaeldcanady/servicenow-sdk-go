@@ -7,7 +7,7 @@
     "options": {
         "hostSocketPath": {
             "type": "string",
-            "propose": "/var/run/user/1000/podman/podman.sock",
+            "default": "/var/run/user/1000/podman/podman.sock",
             "description": "Path to the host Podman socket"
         }
     },
@@ -19,7 +19,7 @@
     },
     "mounts": [
         {
-            "source": "${options:hostSocketPath}",
+            "source": "/var/run/user/1000/podman/podman.sock",
             "target": "/tmp/podman.sock",
             "type": "bind"
         }

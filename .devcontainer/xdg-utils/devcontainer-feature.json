@@ -6,8 +6,13 @@
     "options": {
         "hostBrowserPipePath": {
             "type": "string",
-            "propose": "/home/michael/hostbrowserpipe",
+            "default": "/tmp/hostbrowserpipe",
             "description": "Path to the host browser pipe"
+        },
+        "containerBrowserPipePath": {
+            "type": "string",
+            "default": "/tmp/hostbrowserpipe",
+            "description": "Path to the container browser pipe"
         }
     },
     "installsAfter": [
@@ -15,7 +20,7 @@
     ],
     "mounts": [
         {
-            "source": "${options:hostBrowserPipePath}",
+            "source": "/tmp/hostbrowserpipe",
             "target": "/tmp/hostbrowserpipe",
             "type": "bind"
         }

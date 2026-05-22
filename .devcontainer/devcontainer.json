@@ -27,6 +27,7 @@
   "updateContentCommand": "go mod download",
   "postCreateCommand": "just --version",
   "features": {
+    "./xdg-utils": {},
     "./gemini-persistence": {},
     "./go-cache": {},
     "./antigravity": {},
