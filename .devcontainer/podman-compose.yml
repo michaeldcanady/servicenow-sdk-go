@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/go:1.25
+    volumes:
+      - ..:/workspaces/servicenow-sdk-go:cached
+    userns_mode: keep-id
+    # Overrides default command so container doesn't exit
+    command: /bin/sh -c "while sleep 1000; do :; done"

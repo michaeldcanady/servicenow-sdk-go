@@ -1,0 +1,10 @@
+{
+    "id": "ollama-server",
+    "version": "1.0.0",
+    "name": "Ollama Server",
+    "description": "Adds an Ollama server service to the devcontainer setup via Docker Compose.",
+    "dockerComposeFile": "docker-compose.yml",
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}

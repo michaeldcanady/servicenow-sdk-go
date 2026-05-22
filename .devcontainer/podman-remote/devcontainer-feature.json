@@ -4,6 +4,13 @@
     "name": "Podman Remote Client",
     "documentationURL": "https://github.com/containers/podman",
     "description": "Installs the Podman CLI and configures it to talk to the host Podman socket.",
+    "options": {
+        "hostSocketPath": {
+            "type": "string",
+            "propose": "/var/run/user/1000/podman/podman.sock",
+            "description": "Path to the host Podman socket"
+        }
+    },
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils"
     ],
@@ -12,7 +19,7 @@
     },
     "mounts": [
         {
-            "source": "/var/run/user/1000/podman/podman.sock",
+            "source": "${options:hostSocketPath}",
             "target": "/tmp/podman.sock",
             "type": "bind"
         }

@@ -1,0 +1,12 @@
+{
+    "id": "ollama-cli",
+    "version": "1.0.0",
+    "name": "Ollama CLI",
+    "description": "Installs the Ollama CLI and configures the host environment variable.",
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ],
+    "containerEnv": {
+        "OLLAMA_HOST": "http://ollama:11434"
+    }
+}

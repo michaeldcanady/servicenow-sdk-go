@@ -1,0 +1,19 @@
+{
+    "id": "go-cache",
+    "version": "1.0.0",
+    "name": "Go Cache Persistence",
+    "description": "Configures persistent volumes for Go package and build caches.",
+    "mounts": [
+        {
+            "source": "go-pkg",
+            "target": "/go/pkg",
+            "type": "volume"
+        },
+        {
+            "source": "go-cache",
+            "target": "/home/vscode/.cache/go-build",
+            "type": "volume"
+        }
+    ],
+    "postCreateCommand": "sudo chown -R vscode:vscode /go/pkg /home/vscode/.cache/go-build"
+}

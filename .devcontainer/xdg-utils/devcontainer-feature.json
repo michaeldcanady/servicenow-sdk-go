@@ -1,15 +1,21 @@
 {
     "id": "xdg-utils",
     "version": "1.0.0",
-    "name": "Podman Remote Client",
-    "documentationURL": "https://github.com/containers/podman",
-    "description": "Installs the Podman CLI and configures it to talk to the host Podman socket.",
+    "name": "XDG Utils",
+    "description": "Installs xdg-utils and configures a mount for the host browser pipe.",
+    "options": {
+        "hostBrowserPipePath": {
+            "type": "string",
+            "propose": "/home/michael/hostbrowserpipe",
+            "description": "Path to the host browser pipe"
+        }
+    },
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils"
     ],
     "mounts": [
         {
-            "source": "/home/michael/hostbrowserpipe",
+            "source": "${options:hostBrowserPipePath}",
             "target": "/tmp/hostbrowserpipe",
             "type": "bind"
         }
