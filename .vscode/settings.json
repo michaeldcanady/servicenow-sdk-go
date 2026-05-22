@@ -1,27 +1,15 @@
 {
-  "editor.formatOnSave": false,
-  "editor.formatOnPaste": true,
   "json.schemas": [
     {
-      "https://squidfunk.github.io/mkdocs-material/schema.json": "mkdocs.yml"
+      "fileMatch": [
+        "mkdocs.yml"
+      ],
+      "url": "https://squidfunk.github.io/mkdocs-material/schema.json"
     }
-  ],
-  "go.addTags": {
-    "tags": "json,url,header",
-    "promptForTags": true
-  },
-  "go.testOnSave": true,
-  "go.coverOnSave": true,
-  "go.formatFlags": [
-    "-s",
-    "-w"
   ],
   "go.buildFlags": [
     "-tags=preview.query,integration"
   ],
-  "go.lintOnSave": "package",
-  "go.lintTool": "golangci-lint",
-  "go.lintFlags": [],
   "cSpell.words": [
     "APIV",
     "attachmentapi",
@@ -122,6 +110,5 @@
     "build.buildFlags": [
       "-tags=preview.query,integration"
     ]
-  },
-  "go.useLanguageServer": true
+  }
 }
