@@ -36,12 +36,6 @@
   "features": {
     "./gemini-persistence": {},
     "./go-cache": {},
-    "./podman-remote": {
-      "hostSocketPath": "/var/run/user/1000/podman/podman.sock"
-    },
-    "./xdg-utils": {
-      "hostBrowserPipePath": "/home/michael/hostbrowserpipe"
-    },
     "./antigravity": {},
     "./ollama-cli": {},
     "./ollama-server": {},
