@@ -32,7 +32,6 @@
     "./go-cache": {},
     "./antigravity": {},
     "./ollama-cli": {},
-    "./ollama-server": {},
     "ghcr.io/stu-bell/devcontainer-features/gemini-cli:0": {},
     "ghcr.io/devcontainers/features/github-cli:1": {
       "version": "latest"

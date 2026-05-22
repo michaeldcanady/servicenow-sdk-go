@@ -8,3 +8,21 @@ services:
     userns_mode: keep-id
     # Overrides default command so container doesn't exit
     command: /bin/sh -c "while sleep 1000; do :; done"
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    # Uncomment the following lines if you have an NVIDIA GPU and the NVIDIA Container Toolkit installed
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+volumes:
+  ollama:

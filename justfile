@@ -13,7 +13,7 @@ serve-docs: build-docs
 
 # Build static site output (without serving)
 generate-docs: build-docs
-    podman run --rm {{DOC_IMAGE}} mkdocs build --clean
+    podman run --rm {{DOC_IMAGE}} build --clean
 
 # Run golangci-lint on the project
 lint:
