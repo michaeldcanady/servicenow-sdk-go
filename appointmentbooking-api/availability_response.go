@@ -151,8 +151,7 @@ func (m *AvailabilitySlotModel) GetFieldDeserializers() map[string]func(serializ
 	return map[string]func(serialization.ParseNode) error{
 		"*": func(n serialization.ParseNode) error {
 			val, _ := n.GetRawValue()
-			m.GetBackingStore().Set("additionalData", val)
-			return nil
+			return m.GetBackingStore().Set("additionalData", val)
 		},
 	}
 }

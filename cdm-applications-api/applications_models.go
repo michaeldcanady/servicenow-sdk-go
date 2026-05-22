@@ -621,4 +621,3 @@ func (p *Media) Serialize(writer serialization.SerializationWriter) error {
 func (p *Media) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return nil
 }
-
