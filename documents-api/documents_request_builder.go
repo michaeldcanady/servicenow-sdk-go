@@ -3,7 +3,7 @@ package documentsapi
 import (
 	"maps"
 
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -14,20 +14,20 @@ const (
 
 // DocumentsRequestBuilder provides operations to manage ServiceNow documents.
 type DocumentsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewDocumentsRequestBuilderInternal instantiates a new DocumentsRequestBuilder with the provided request parameters.
 func NewDocumentsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *DocumentsRequestBuilder {
 	return &DocumentsRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, documentsURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, documentsURLTemplate, pathParameters),
 	}
 }
 
 // NewDocumentsRequestBuilder instantiates a new DocumentsRequestBuilder with the provided raw URL.
 func NewDocumentsRequestBuilder(rawURL string, requestAdapter abstractions.RequestAdapter) *DocumentsRequestBuilder {
 	urlParams := make(map[string]string)
-	urlParams[newInternal.RawURLKey] = rawURL
+	urlParams[internal.RawURLKey] = rawURL
 	return NewDocumentsRequestBuilderInternal(urlParams, requestAdapter)
 }
 

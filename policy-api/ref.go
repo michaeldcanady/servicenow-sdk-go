@@ -2,7 +2,7 @@ package policyapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -21,18 +21,18 @@ type Refable interface {
 	GetValue() (*string, error)
 	SetValue(*string) error
 	serialization.Parsable
-	newInternal.Model
+	internal.BackedModel
 }
 
 // Ref represents a reference with a link and a value.
 type Ref struct {
-	newInternal.Model
+	internal.BackedModel
 }
 
 // NewRef creates a new instance of Ref.
 func NewRef() *Ref {
 	return &Ref{
-		Model: newInternal.NewBaseModel(),
+		BackedModel: internal.NewBaseModel(),
 	}
 }
 
@@ -51,7 +51,7 @@ func (r *Ref) GetFieldDeserializers() map[string]func(serialization.ParseNode) e
 
 // Serialize writes the objects properties to the current writer.
 func (r *Ref) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(r) {
+	if conversion.IsNil(r) {
 		return nil
 	}
 

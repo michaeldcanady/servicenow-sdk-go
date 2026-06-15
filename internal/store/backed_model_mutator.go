@@ -1,7 +1,10 @@
 package store
 
 import (
+	"errors"
+
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	"github.com/microsoft/kiota-abstractions-go/store"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
@@ -14,6 +17,12 @@ type ModelMutator[S kiotaStore.BackingStore, T any] BackedModelMutatorFunc[S, T]
 
 // DefaultBackedModelMutatorFunc[S, T] is a generic implementation of BackedModelMutatorFunc that sets the value
 // of a backed model.
-func DefaultBackedModelMutatorFunc[S kiotaStore.BackingStore, T any](backingStore S, key string, value T) error {
-	return conversion.DefaultBackedModelMutatorFunc(backingStore, key, value)
+// DefaultBackedModelMutatorFunc[S, T] is a generic implementation of BackedModelMutatorFunc that sets the value
+// of a backing store.
+func DefaultBackedModelMutatorFunc[S store.BackingStore, T any](backingStore S, key string, value T) error {
+	if conversion.IsNil(backingStore) {
+		return errors.New("backingStore is nil")
+	}
+
+	return backingStore.Set(key, value)
 }

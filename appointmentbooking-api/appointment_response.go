@@ -2,7 +2,7 @@ package appointmentbookingapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 
@@ -11,11 +11,11 @@ import (
 )
 
 // AppointmentResponse represents the appointment response.
-type AppointmentResponse = newInternal.ServiceNowItemResponse[*AppointmentResultModel]
+type AppointmentResponse = internal.ServiceNowItemResponse[*AppointmentResultModel]
 
 // CreateAppointmentResponseFromDiscriminatorValue is a factory for creating an AppointmentResponse.
 func CreateAppointmentResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*AppointmentResultModel](CreateAppointmentResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowItemResponse[*AppointmentResultModel](CreateAppointmentResultFromDiscriminatorValue), nil
 }
 
 // AppointmentResult represents the result object in appointment response.
@@ -34,11 +34,11 @@ type AppointmentResult interface {
 }
 
 type AppointmentResultModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewAppointmentResult() *AppointmentResultModel {
-	return &AppointmentResultModel{BaseModel: *newInternal.NewBaseModel()}
+	return &AppointmentResultModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func CreateAppointmentResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
@@ -46,7 +46,7 @@ func CreateAppointmentResultFromDiscriminatorValue(_ serialization.ParseNode) (s
 }
 
 func (m *AppointmentResultModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,

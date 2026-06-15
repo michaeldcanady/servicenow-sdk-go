@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,7 +13,7 @@ func TestSetMutatedValueFromSource(t *testing.T) {
 		name    string
 		source  func() (string, error)
 		setter  ModelSetter[int]
-		mutator Mutator[string, int]
+		mutator conversion.Mutator[string, int]
 		wantErr bool
 		err     string
 	}{
@@ -118,7 +119,7 @@ func TestWriteMutatedValueToSource(t *testing.T) {
 		name     string
 		writer   func(string) error
 		accessor ModelAccessor[int]
-		mutator  Mutator[int, string]
+		mutator  conversion.Mutator[int, string]
 		wantErr  bool
 		err      string
 	}{

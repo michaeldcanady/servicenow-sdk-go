@@ -5,8 +5,8 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -17,11 +17,11 @@ const (
 
 // AttachmentUploadRequestBuilder provides operations to manage Service-Now attachments.
 type AttachmentUploadRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // newAttachmentUploadRequestBuilderInternal instantiates a new AttachmentUploadRequestBuilder with the provided requestBuilder
-func newAttachmentUploadRequestBuilderInternal(requestBuilder newInternal.RequestBuilder) *AttachmentUploadRequestBuilder {
+func newAttachmentUploadRequestBuilderInternal(requestBuilder internal.RequestBuilder) *AttachmentUploadRequestBuilder {
 	m := &AttachmentUploadRequestBuilder{
 		requestBuilder,
 	}
@@ -34,7 +34,7 @@ func NewAttachmentUploadRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentUploadRequestBuilder {
 	return newAttachmentUploadRequestBuilderInternal(
-		newInternal.NewBaseRequestBuilder(requestAdapter, attachmentUploadURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, attachmentUploadURLTemplate, pathParameters),
 	)
 }
 
@@ -44,17 +44,17 @@ func NewAttachmentUploadRequestBuilder(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentUploadRequestBuilder {
 	urlParams := make(map[string]string)
-	urlParams[newInternal.RawURLKey] = rawURL
+	urlParams[internal.RawURLKey] = rawURL
 	return NewAttachmentUploadRequestBuilderInternal(urlParams, requestAdapter)
 }
 
 // Post Uploads the provided attachment using the provided arguments
 func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstractions.MultipartBody, requestConfiguration *AttachmentUploadRequestBuilderPostRequestConfiguration) (*FileModel, error) {
-	if internal.IsNil(rB) {
+	if conversion.IsNil(rB) {
 		return nil, nil
 	}
 
-	if newInternal.IsNil(body) {
+	if conversion.IsNil(body) {
 		return nil, errors.New("body is nil")
 	}
 
@@ -93,7 +93,7 @@ func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstrac
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateFileFromDiscriminatorValue, errorMapping)
@@ -115,23 +115,23 @@ func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstrac
 
 // ToPostRequestInformation converts request configurations to Post request information.
 func (rB *AttachmentUploadRequestBuilder) ToPostRequestInformation(ctx context.Context, body abstractions.MultipartBody, requestConfiguration *AttachmentUploadRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) {
+	if conversion.IsNil(rB) {
 		return nil, nil
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := requestConfiguration.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}

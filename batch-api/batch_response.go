@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -32,13 +32,13 @@ type BatchResponse interface {
 
 // BatchResponseModel implementation of BatchResponse
 type BatchResponseModel struct {
-	newInternal.Model
+	internal.BackedModel
 }
 
 // NewBatchResponse creates a new batch response
 func NewBatchResponse() *BatchResponseModel {
 	return &BatchResponseModel{
-		newInternal.NewBaseModel(),
+		internal.NewBaseModel(),
 	}
 }
 
@@ -49,7 +49,7 @@ func CreateBatchResponseFromDiscriminatorValue(_ serialization.ParseNode) (seria
 
 // Serialize writes the objects properties to the current writer
 func (bR *BatchResponseModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(bR) {
+	if conversion.IsNil(bR) {
 		return nil
 	}
 
@@ -62,7 +62,7 @@ func (bR *BatchResponseModel) Serialize(writer serialization.SerializationWriter
 
 // GetFieldDeserializers returns the deserialization information for this object
 func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	if internal.IsNil(bR) {
+	if conversion.IsNil(bR) {
 		return nil
 	}
 
@@ -103,7 +103,7 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 
 // GetBatchRequestID returns the id of the associated batch request
 func (bR *BatchResponseModel) GetBatchRequestID() (*string, error) {
-	if internal.IsNil(bR) {
+	if conversion.IsNil(bR) {
 		return nil, nil
 	}
 
@@ -113,7 +113,7 @@ func (bR *BatchResponseModel) GetBatchRequestID() (*string, error) {
 
 // GetServicedRequestByID returns the serviced request with the provided id
 func (bR *BatchResponseModel) GetServicedRequestByID(id string) (ServicedRequest, error) {
-	if internal.IsNil(bR) {
+	if conversion.IsNil(bR) {
 		return nil, nil
 	}
 
@@ -138,7 +138,7 @@ func (bR *BatchResponseModel) GetServicedRequestByID(id string) (ServicedRequest
 
 // setBatchRequestID sets the id of the associated batch request
 func (bR *BatchResponseModel) setBatchRequestID(id *string) error {
-	if internal.IsNil(bR) {
+	if conversion.IsNil(bR) {
 		return nil
 	}
 
@@ -148,7 +148,7 @@ func (bR *BatchResponseModel) setBatchRequestID(id *string) error {
 
 // GetServicedRequests returns serviced requests
 func (bR *BatchResponseModel) GetServicedRequests() ([]ServicedRequest, error) {
-	if internal.IsNil(bR) {
+	if conversion.IsNil(bR) {
 		return nil, nil
 	}
 
@@ -158,7 +158,7 @@ func (bR *BatchResponseModel) GetServicedRequests() ([]ServicedRequest, error) {
 
 // setServicedRequests sets the serviced requests to the provided values
 func (bR *BatchResponseModel) setServicedRequests(requests []ServicedRequest) error {
-	if internal.IsNil(bR) {
+	if conversion.IsNil(bR) {
 		return nil
 	}
 
@@ -168,7 +168,7 @@ func (bR *BatchResponseModel) setServicedRequests(requests []ServicedRequest) er
 
 // GetUnservicedRequests returns the unserviced requests' id
 func (bR *BatchResponseModel) GetUnservicedRequests() ([]string, error) {
-	if internal.IsNil(bR) {
+	if conversion.IsNil(bR) {
 		return nil, nil
 	}
 
@@ -178,7 +178,7 @@ func (bR *BatchResponseModel) GetUnservicedRequests() ([]string, error) {
 
 // setUnservicedRequests sets the ids of the unserviced requests to the provided value
 func (bR *BatchResponseModel) setUnservicedRequests(unservicedRequests []string) error {
-	if internal.IsNil(bR) {
+	if conversion.IsNil(bR) {
 		return nil
 	}
 

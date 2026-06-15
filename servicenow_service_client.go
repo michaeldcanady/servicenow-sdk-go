@@ -8,7 +8,7 @@ import (
 
 	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/appointmentbooking-api"
 	caseapi "github.com/michaeldcanady/servicenow-sdk-go/case-api"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	formserialization "github.com/microsoft/kiota-serialization-form-go"
@@ -33,7 +33,7 @@ var (
 
 // ServiceNowServiceClient is the core service used by ServiceNowServiceClient to make requests to Service-Now's APIs
 type ServiceNowServiceClient struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // registerDefaultSerializers registers default serializers
@@ -86,7 +86,7 @@ func NewServiceNowServiceClient(opts ...ServiceNowServiceClientOption) (*Service
 	registerDefaultDeserializers()
 
 	return &ServiceNowServiceClient{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, baseURLVariable, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, baseURLVariable, pathParameters),
 	}, nil
 }
 

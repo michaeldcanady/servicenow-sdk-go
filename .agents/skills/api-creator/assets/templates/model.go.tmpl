@@ -1,15 +1,15 @@
 package %Package%
 
 import (
-    newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+    newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
 type %Model% struct {
-    newInternal.BaseModel
+    internal.BaseModel
 }
 
 func New%Model%() *%Model% {
     return &%Model%{
-        BaseModel: *newInternal.NewBaseModel(),
+        BaseModel: *internal.NewBaseModel(),
     }
 }

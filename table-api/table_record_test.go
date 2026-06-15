@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -227,8 +227,8 @@ func TestTableRecord_Get(t *testing.T) {
 				innerModel.On("GetBackingStore").Return(store)
 
 				record := &TableRecord{
-					keys:  make([]string, 0),
-					Model: innerModel,
+					keys:        make([]string, 0),
+					BackedModel: innerModel,
 				}
 
 				elem, err := record.Get("Test")
@@ -263,8 +263,8 @@ func TestTableRecord_SetElement(t *testing.T) {
 				innerModel.On("GetBackingStore").Return(store)
 
 				record := &TableRecord{
-					keys:  make([]string, 0),
-					Model: innerModel,
+					keys:        make([]string, 0),
+					BackedModel: innerModel,
 				}
 
 				err := record.SetElement("Test", input)

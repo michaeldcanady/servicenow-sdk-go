@@ -22,9 +22,9 @@ The `api-creator` skill is a specialized tool for automating the generation of S
     - **One Builder Per Segment**: Implement a dedicated `RequestBuilder` struct for each path segment of the API (e.g., `/now`, `/cmdb` each get their own builder).
     - **Namespace Connections**: ONLY top-level namespaces (e.g., `now`, `sn_cdm`) should be connected directly to the root `ServiceNowClient`.
     - **Hierarchical Linking**: All other path segments must be linked hierarchically through their parent builders (e.g., `Now() -> Cmdb() -> Instance()`).
-    - Use `newInternal.NewBaseRequestBuilder`.
+    - Use `internal.NewBaseRequestBuilder`.
     - Implement methods for each HTTP verb following the signature: `func (rB *RB) Method(ctx context.Context, config *Config) (*Response, error)`.
-    - **ToVerbRequestInformation**: Implement request information builders that wrap `abstractions.RequestInformation` with `newInternal.KiotaRequestInformation`. Use `internal.IsNil` for null checks and ensure `Accept` headers are set.
+    - **ToVerbRequestInformation**: Implement request information builders that wrap `abstractions.RequestInformation` with `internal.KiotaRequestInformation`. Use `conversion.IsNil` for null checks and ensure `Accept` headers are set.
 4. **Model Generation**:
     - Implement `Parsable` models using `internal/new.BaseModel`.
     - Generate `Serialize` and `GetFieldDeserializers` methods.
@@ -40,7 +40,7 @@ The `api-creator` skill is a specialized tool for automating the generation of S
 - **Path Hierarchy**: Strictly adhere to the "one builder per segment" rule. Do not skip path segments or flatten the hierarchy.
 - **Client Connectivity**: Do not connect sub-paths (e.g., `cmdb`) to the `ServiceNowClient`. Use parent builders to navigate the hierarchy.
 - **Package Naming**: Use lowercase package names without underscores (e.g., `tableapi`, `attachmentapi`).
-- **Internal Aliases**: Use `newInternal` for `github.com/michaeldcanady/servicenow-sdk-go/internal/new`.
+- **Internal Aliases**: Use `newInternal` for `github.com/michaeldcanady/servicenow-sdk-go/internal`.
 - **URL Templates**: Define URL templates as constants within the RequestBuilder files.
 - **Configuration Alias**: Always use the `abstractions.RequestConfiguration[T]` type alias for request configurations.
 - **URL Tags**: Always include `url:"parameter_name,omitempty"` tags in query parameter structs.

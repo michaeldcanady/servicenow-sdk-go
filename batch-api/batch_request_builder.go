@@ -5,8 +5,8 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -17,7 +17,7 @@ const (
 
 // BatchRequestBuilder constructs batch requests for the specified base URL.
 type BatchRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewBatchRequestBuilderInternal instantiates a new BatchRequestBuilder with custom parsable for table entries.
@@ -26,7 +26,7 @@ func NewBatchRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *BatchRequestBuilder {
 	m := &BatchRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, batchURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, batchURLTemplate, pathParameters),
 	}
 	return m
 }
@@ -37,17 +37,17 @@ func NewBatchRequestBuilder(
 	requestAdapter abstractions.RequestAdapter,
 ) *BatchRequestBuilder {
 	urlParams := make(map[string]string)
-	urlParams[newInternal.RawURLKey] = rawURL
+	urlParams[internal.RawURLKey] = rawURL
 	return NewBatchRequestBuilderInternal(urlParams, requestAdapter)
 }
 
 // Post produces a batch response using the specified parameters
 func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requestConfiguration *BatchRequestBuilderPostRequestConfiguration) (*BatchResponseModel, error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
-	if internal.IsNil(body) {
+	if conversion.IsNil(body) {
 		return nil, errors.New("body can't be nil")
 	}
 
@@ -57,7 +57,7 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateBatchResponseFromDiscriminatorValue, errorMapping)
@@ -79,23 +79,23 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 
 // toPostRequestInformation converts provided parameters into request information
 func (rB *BatchRequestBuilder) toPostRequestInformation(ctx context.Context, body BatchRequest, requestConfiguration *BatchRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := requestConfiguration.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}

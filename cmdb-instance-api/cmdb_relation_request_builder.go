@@ -5,8 +5,8 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -16,55 +16,55 @@ const (
 
 // CmdbRelationRequestBuilder provides operations to manage CI relationships.
 type CmdbRelationRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewCmdbRelationRequestBuilderInternal instantiates a new CmdbRelationRequestBuilder.
 func NewCmdbRelationRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CmdbRelationRequestBuilder {
 	return &CmdbRelationRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, cmdbRelationURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, cmdbRelationURLTemplate, pathParameters),
 	}
 }
 
 // Post creates a Relation for the CI.
-func (rB *CmdbRelationRequestBuilder) Post(ctx context.Context, body CmdbInstance, config *CmdbRelationRequestBuilderPostRequestConfiguration) (*newInternal.BaseServiceNowItemResponse[CmdbInstance], error) {
+func (rB *CmdbRelationRequestBuilder) Post(ctx context.Context, body CmdbInstance, config *CmdbRelationRequestBuilderPostRequestConfiguration) (*internal.BaseServiceNowItemResponse[CmdbInstance], error) {
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue), errorMapping)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
 
-	if internal.IsNil(res) {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
-	return res.(*newInternal.BaseServiceNowItemResponse[CmdbInstance]), nil
+	return res.(*internal.BaseServiceNowItemResponse[CmdbInstance]), nil
 }
 
 // ToPostRequestInformation converts request configurations to Post request information.
 func (rB *CmdbRelationRequestBuilder) ToPostRequestInformation(ctx context.Context, body CmdbInstance, config *CmdbRelationRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
-		if headers := config.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
+		if headers := config.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := config.Options; !internal.IsNil(options) {
+		if options := config.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
-	if !internal.IsNil(body) {
-		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	if !conversion.IsNil(body) {
+		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 		if err != nil {
 			return nil, err
 		}

@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 

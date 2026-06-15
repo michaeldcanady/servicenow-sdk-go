@@ -1,49 +1,36 @@
 package internal
 
 import (
-	"encoding/json"
-	"io"
-	"net/http"
 	"reflect"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-// FromJSON[T] Unmarshalls response body into v
-func FromJSON[T any](response *http.Response, v T) error {
-	if response == nil {
-		return ErrNilResponse
-	}
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return err
-	}
-	defer response.Body.Close() //nolint:errcheck
-
-	if len(body) == 0 {
-		return ErrNilResponseBody
-	}
-
-	if err := json.Unmarshal(body, v); err != nil {
-		return err
-	}
-
-	return nil
+// ToPointer Converts provided value to pointer.
+func ToPointer[T any](value T) *T {
+	return &value
 }
 
-// ParseResponse[T] parses the HTTP Response to the provided type
-func ParseResponse[T Response](response *http.Response, value T) error {
-	err := FromJSON(response, value)
-	if err != nil {
-		return err
-	}
-
-	value.ParseHeaders(response.Header)
-
-	return nil
+// IsPointer
+func IsPointer(value any) bool {
+	return reflect.ValueOf(value).Kind() == reflect.Pointer
 }
 
-// IsNil checks if a value is nil or a nil interface
-func IsNil(a interface{}) bool {
-	defer func() { _ = recover() }()
-	return a == nil || reflect.ValueOf(a).IsNil()
+func ConfigureRequestInformation[T any](request *KiotaRequestInformation, config *abstractions.RequestConfiguration[T]) {
+	if request == nil {
+		return
+	}
+	if config == nil {
+		return
+	}
+	if headers := config.Headers; !conversion.IsNil(headers) {
+		request.Headers.AddAll(headers)
+	}
+	if options := config.Options; !conversion.IsNil(options) {
+		request.AddRequestOptions(options)
+	}
+	if queryParams := config.QueryParameters; !conversion.IsNil(queryParams) {
+		request.AddQueryParameters(queryParams)
+	}
 }

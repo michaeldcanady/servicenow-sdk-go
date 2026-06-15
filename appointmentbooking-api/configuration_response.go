@@ -2,7 +2,7 @@ package appointmentbookingapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 
@@ -11,15 +11,15 @@ import (
 )
 
 // ConfigurationResponse represents the configuration response.
-type ConfigurationResponse = newInternal.ServiceNowItemResponse[*ConfigurationResultModel]
+type ConfigurationResponse = internal.ServiceNowItemResponse[*ConfigurationResultModel]
 
 // CreateConfigurationResponseFromDiscriminatorValue is a factory for creating a ConfigurationResponse.
 func CreateConfigurationResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*ConfigurationResultModel](CreateConfigurationResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowItemResponse[*ConfigurationResultModel](CreateConfigurationResultFromDiscriminatorValue), nil
 }
 
 // ConfigurationResponseModel is the implementation of ConfigurationResponse.
-type ConfigurationResponseModel = newInternal.BaseServiceNowItemResponse[*ConfigurationResultModel]
+type ConfigurationResponseModel = internal.BaseServiceNowItemResponse[*ConfigurationResultModel]
 
 // ConfigurationResult represents the result object in configuration response.
 type ConfigurationResult interface {
@@ -56,13 +56,13 @@ type ConfigurationResult interface {
 
 // ConfigurationResultModel implementation of ConfigurationResult
 type ConfigurationResultModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 // NewConfigurationResult creates a new instance of ConfigurationResultModel
 func NewConfigurationResult() *ConfigurationResultModel {
 	return &ConfigurationResultModel{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 
@@ -73,7 +73,7 @@ func CreateConfigurationResultFromDiscriminatorValue(_ serialization.ParseNode) 
 
 // Serialize writes the objects properties to the current writer.
 func (m *ConfigurationResultModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 
@@ -230,12 +230,12 @@ type ServiceConfig interface {
 }
 
 type ServiceConfigModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewServiceConfig() *ServiceConfigModel {
 	return &ServiceConfigModel{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 
@@ -244,7 +244,7 @@ func CreateServiceConfigFromDiscriminatorValue(_ serialization.ParseNode) (seria
 }
 
 func (m *ServiceConfigModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -393,12 +393,12 @@ type FieldMapping interface {
 }
 
 type FieldMappingModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewFieldMapping() *FieldMappingModel {
 	return &FieldMappingModel{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 
@@ -407,7 +407,7 @@ func CreateFieldMappingFromDiscriminatorValue(_ serialization.ParseNode) (serial
 }
 
 func (m *FieldMappingModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -466,12 +466,12 @@ type RPVariable interface {
 }
 
 type RPVariableModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewRPVariable() *RPVariableModel {
 	return &RPVariableModel{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 
@@ -480,7 +480,7 @@ func CreateRPVariableFromDiscriminatorValue(_ serialization.ParseNode) (serializ
 }
 
 func (m *RPVariableModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -533,12 +533,12 @@ type UserDateFormatOptions interface {
 }
 
 type UserDateFormatOptionsModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewUserDateFormatOptions() *UserDateFormatOptionsModel {
 	return &UserDateFormatOptionsModel{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 
@@ -547,7 +547,7 @@ func CreateUserDateFormatOptionsFromDiscriminatorValue(_ serialization.ParseNode
 }
 
 func (m *UserDateFormatOptionsModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -604,12 +604,12 @@ type UserTimeFormat interface {
 }
 
 type UserTimeFormatModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewUserTimeFormat() *UserTimeFormatModel {
 	return &UserTimeFormatModel{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 
@@ -618,7 +618,7 @@ func CreateUserTimeFormatFromDiscriminatorValue(_ serialization.ParseNode) (seri
 }
 
 func (m *UserTimeFormatModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -661,12 +661,12 @@ type UserTimeFormatOptions interface {
 }
 
 type UserTimeFormatOptionsModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewUserTimeFormatOptions() *UserTimeFormatOptionsModel {
 	return &UserTimeFormatOptionsModel{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 
@@ -675,7 +675,7 @@ func CreateUserTimeFormatOptionsFromDiscriminatorValue(_ serialization.ParseNode
 }
 
 func (m *UserTimeFormatOptionsModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,

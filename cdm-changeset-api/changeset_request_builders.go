@@ -5,8 +5,8 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -21,12 +21,12 @@ const (
 
 // ChangesetsRequestBuilder handles /changesets endpoint.
 type ChangesetsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 func NewChangesetsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ChangesetsRequestBuilder {
 	return &ChangesetsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, changesetsURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, changesetsURLTemplate, pathParameters),
 	}
 }
 
@@ -59,8 +59,8 @@ func (rB *ChangesetsRequestBuilder) ByID(id string) *ChangesetItemRequestBuilder
 
 func (rB *ChangesetsRequestBuilder) Get(ctx context.Context, config *ChangesetsRequestBuilderGetRequestConfiguration) (ChangesetsResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -71,7 +71,7 @@ func (rB *ChangesetsRequestBuilder) Get(ctx context.Context, config *ChangesetsR
 			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateChangesetsResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -81,8 +81,8 @@ func (rB *ChangesetsRequestBuilder) Get(ctx context.Context, config *ChangesetsR
 
 func (rB *ChangesetsRequestBuilder) Delete(ctx context.Context, config *ChangesetsRequestBuilderDeleteRequestConfiguration) error {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -98,19 +98,19 @@ func (rB *ChangesetsRequestBuilder) Delete(ctx context.Context, config *Changese
 
 // ChangesetActivityRequestBuilder handles /changesets/activity endpoint.
 type ChangesetActivityRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 func NewChangesetActivityRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ChangesetActivityRequestBuilder {
 	return &ChangesetActivityRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, changesetActivityURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, changesetActivityURLTemplate, pathParameters),
 	}
 }
 
 func (rB *ChangesetActivityRequestBuilder) Get(ctx context.Context, config *ChangesetActivityRequestBuilderGetRequestConfiguration) (ChangesetActivityResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -121,7 +121,7 @@ func (rB *ChangesetActivityRequestBuilder) Get(ctx context.Context, config *Chan
 			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateChangesetActivityResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -131,12 +131,12 @@ func (rB *ChangesetActivityRequestBuilder) Get(ctx context.Context, config *Chan
 
 // CommitStatusRequestBuilder handles /changesets/commit-status endpoint.
 type CommitStatusRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 func NewCommitStatusRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CommitStatusRequestBuilder {
 	return &CommitStatusRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, commitStatusURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, commitStatusURLTemplate, pathParameters),
 	}
 }
 
@@ -148,19 +148,19 @@ func (rB *CommitStatusRequestBuilder) ByID(commitId string) *CommitStatusItemReq
 
 // CommitStatusItemRequestBuilder handles /changesets/commit-status/{commit_id} endpoint.
 type CommitStatusItemRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 func NewCommitStatusItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CommitStatusItemRequestBuilder {
 	return &CommitStatusItemRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, commitStatusURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, commitStatusURLTemplate, pathParameters),
 	}
 }
 
 func (rB *CommitStatusItemRequestBuilder) Get(ctx context.Context, config *CommitStatusRequestBuilderGetRequestConfiguration) (CommitStatusResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -168,7 +168,7 @@ func (rB *CommitStatusItemRequestBuilder) Get(ctx context.Context, config *Commi
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCommitStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -178,19 +178,19 @@ func (rB *CommitStatusItemRequestBuilder) Get(ctx context.Context, config *Commi
 
 // ImpactedSharedComponentsRequestBuilder handles /changesets/impacted-shared-components endpoint.
 type ImpactedSharedComponentsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 func NewImpactedSharedComponentsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ImpactedSharedComponentsRequestBuilder {
 	return &ImpactedSharedComponentsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, impactedSharedComponentsURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, impactedSharedComponentsURLTemplate, pathParameters),
 	}
 }
 
 func (rB *ImpactedSharedComponentsRequestBuilder) Get(ctx context.Context, config *ImpactedSharedComponentsRequestBuilderGetRequestConfiguration) (ImpactedSharedComponentsResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -201,7 +201,7 @@ func (rB *ImpactedSharedComponentsRequestBuilder) Get(ctx context.Context, confi
 			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedSharedComponentsResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -211,19 +211,19 @@ func (rB *ImpactedSharedComponentsRequestBuilder) Get(ctx context.Context, confi
 
 // ImpactedDeployablesRequestBuilder handles /changesets/impacted-deployables endpoint.
 type ImpactedDeployablesRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 func NewImpactedDeployablesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ImpactedDeployablesRequestBuilder {
 	return &ImpactedDeployablesRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, impactedDeployablesURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, impactedDeployablesURLTemplate, pathParameters),
 	}
 }
 
 func (rB *ImpactedDeployablesRequestBuilder) Get(ctx context.Context, config *ImpactedDeployablesRequestBuilderGetRequestConfiguration) (ImpactedDeployablesResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -234,7 +234,7 @@ func (rB *ImpactedDeployablesRequestBuilder) Get(ctx context.Context, config *Im
 			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedDeployablesResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -244,12 +244,12 @@ func (rB *ImpactedDeployablesRequestBuilder) Get(ctx context.Context, config *Im
 
 // ChangesetItemRequestBuilder handles /changesets/{changeset_id} endpoint.
 type ChangesetItemRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 func NewChangesetItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ChangesetItemRequestBuilder {
 	return &ChangesetItemRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, changesetItemImpactedDeployablesURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, changesetItemImpactedDeployablesURLTemplate, pathParameters),
 	}
 }
 
@@ -260,19 +260,19 @@ func (rB *ChangesetItemRequestBuilder) ImpactedDeployables() *ImpactedDeployable
 
 // ImpactedDeployablesBySysIdRequestBuilder handles /changesets/{changeset_id}/impacted-deployables endpoint.
 type ImpactedDeployablesBySysIdRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 func NewImpactedDeployablesBySysIdRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ImpactedDeployablesBySysIdRequestBuilder {
 	return &ImpactedDeployablesBySysIdRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, changesetItemImpactedDeployablesURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, changesetItemImpactedDeployablesURLTemplate, pathParameters),
 	}
 }
 
 func (rB *ImpactedDeployablesBySysIdRequestBuilder) Get(ctx context.Context, config *ImpactedDeployablesBySysIdRequestBuilderGetRequestConfiguration) (ImpactedDeployablesBySysIdResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -280,7 +280,7 @@ func (rB *ImpactedDeployablesBySysIdRequestBuilder) Get(ctx context.Context, con
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedDeployablesBySysIdResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err

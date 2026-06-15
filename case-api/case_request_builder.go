@@ -5,8 +5,8 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -14,13 +14,13 @@ const caseURLTemplate = "{+baseurl}/api/sn_customerservice/v1/case{?sysparm_quer
 
 // CaseRequestBuilder provides operations to manage cases.
 type CaseRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewCaseRequestBuilderInternal instantiates a new CaseRequestBuilder with the provided request parameters.
 func NewCaseRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CaseRequestBuilder {
 	return &CaseRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, caseURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, caseURLTemplate, pathParameters),
 	}
 }
 
@@ -60,19 +60,19 @@ func (rB *CaseRequestBuilder) Get(ctx context.Context, config *CaseRequestBuilde
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *CaseRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CaseRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
-		if headers := config.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
+		if headers := config.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := config.Options; !internal.IsNil(options) {
+		if options := config.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
-		if queryParameters := config.QueryParameters; !internal.IsNil(queryParameters) {
+		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
 			kiotaRequestInfo.AddQueryParameters(queryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return requestInfo, nil
 }
@@ -99,18 +99,18 @@ func (rB *CaseRequestBuilder) Post(ctx context.Context, body CaseResult, config 
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *CaseRequestBuilder) ToPostRequestInformation(ctx context.Context, body CaseResult, config *CaseRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
-		if headers := config.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
+		if headers := config.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := config.Options; !internal.IsNil(options) {
+		if options := config.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}

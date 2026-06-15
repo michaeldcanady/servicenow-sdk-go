@@ -5,8 +5,8 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -29,13 +29,13 @@ const (
 
 // ApplicationsRequestBuilder provides operations to manage applications.
 type ApplicationsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewApplicationsRequestBuilderInternal instantiates a new ApplicationsRequestBuilder.
 func NewApplicationsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ApplicationsRequestBuilder {
 	return &ApplicationsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, applicationsURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, applicationsURLTemplate, pathParameters),
 	}
 }
 
@@ -66,21 +66,21 @@ func (rB *ApplicationsRequestBuilder) Uploads() *UploadsRequestBuilder {
 
 // DeployablesRequestBuilder provides operations to manage deployables.
 type DeployablesRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewDeployablesRequestBuilderInternal instantiates a new DeployablesRequestBuilder.
 func NewDeployablesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *DeployablesRequestBuilder {
 	return &DeployablesRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, deployablesURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, deployablesURLTemplate, pathParameters),
 	}
 }
 
 // Delete deletes a deployable.
 func (rB *DeployablesRequestBuilder) Delete(ctx context.Context, config *DeployablesRequestBuilderDeleteRequestConfiguration) error {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -97,8 +97,8 @@ func (rB *DeployablesRequestBuilder) Delete(ctx context.Context, config *Deploya
 // Put updates deployables.
 func (rB *DeployablesRequestBuilder) Put(ctx context.Context, body *DeployableUpdateRequest, config *DeployablesRequestBuilderPutRequestConfiguration) (DeployableUpdateResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -106,8 +106,8 @@ func (rB *DeployablesRequestBuilder) Put(ctx context.Context, body *DeployableUp
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}
@@ -125,21 +125,21 @@ func (rB *DeployablesRequestBuilder) Exports() *ExportsRequestBuilder {
 
 // SharedComponentsRequestBuilder provides operations to manage shared components.
 type SharedComponentsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewSharedComponentsRequestBuilderInternal instantiates a new SharedComponentsRequestBuilder.
 func NewSharedComponentsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SharedComponentsRequestBuilder {
 	return &SharedComponentsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, sharedComponentsURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, sharedComponentsURLTemplate, pathParameters),
 	}
 }
 
 // Delete deletes shared component references.
 func (rB *SharedComponentsRequestBuilder) Delete(ctx context.Context, config *SharedComponentsRequestBuilderDeleteRequestConfiguration) error {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -156,8 +156,8 @@ func (rB *SharedComponentsRequestBuilder) Delete(ctx context.Context, config *Sh
 // Put updates shared components.
 func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, body *SharedComponentUpdateRequest, config *SharedComponentsRequestBuilderPutRequestConfiguration) (SharedComponentUpdateResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -165,8 +165,8 @@ func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, body *SharedC
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}
@@ -179,13 +179,13 @@ func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, body *SharedC
 
 // UploadStatusRequestBuilder provides operations to access upload status.
 type UploadStatusRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewUploadStatusRequestBuilderInternal instantiates a new UploadStatusRequestBuilder.
 func NewUploadStatusRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadStatusRequestBuilder {
 	return &UploadStatusRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, uploadStatusURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadStatusURLTemplate, pathParameters),
 	}
 }
 
@@ -198,21 +198,21 @@ func (rB *UploadStatusRequestBuilder) ByID(uploadId string) *UploadStatusItemReq
 
 // UploadStatusItemRequestBuilder provides operations to access a specific upload status.
 type UploadStatusItemRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewUploadStatusItemRequestBuilderInternal instantiates a new UploadStatusItemRequestBuilder.
 func NewUploadStatusItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadStatusItemRequestBuilder {
 	return &UploadStatusItemRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, uploadStatusURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadStatusURLTemplate, pathParameters),
 	}
 }
 
 // Get gets the status of a specific upload.
 func (rB *UploadStatusItemRequestBuilder) Get(ctx context.Context, config *UploadStatusItemRequestBuilderGetRequestConfiguration) (UploadStatusResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -220,7 +220,7 @@ func (rB *UploadStatusItemRequestBuilder) Get(ctx context.Context, config *Uploa
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -230,21 +230,21 @@ func (rB *UploadStatusItemRequestBuilder) Get(ctx context.Context, config *Uploa
 
 // ExportsRequestBuilder provides operations to manage deployable exports.
 type ExportsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewExportsRequestBuilderInternal instantiates a new ExportsRequestBuilder.
 func NewExportsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ExportsRequestBuilder {
 	return &ExportsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, exportsURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, exportsURLTemplate, pathParameters),
 	}
 }
 
 // Get gets the collection of deployable exports.
 func (rB *ExportsRequestBuilder) Get(ctx context.Context, config *ExportsRequestBuilderGetRequestConfiguration) (ExportsResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -255,7 +255,7 @@ func (rB *ExportsRequestBuilder) Get(ctx context.Context, config *ExportsRequest
 			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateExportsResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -272,13 +272,13 @@ func (rB *ExportsRequestBuilder) ByID(exportId string) *ExportItemRequestBuilder
 
 // ExportItemRequestBuilder provides operations to manage a specific deployable export.
 type ExportItemRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewExportItemRequestBuilderInternal instantiates a new ExportItemRequestBuilder.
 func NewExportItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ExportItemRequestBuilder {
 	return &ExportItemRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, exportItemURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, exportItemURLTemplate, pathParameters),
 	}
 }
 
@@ -294,21 +294,21 @@ func (rB *ExportItemRequestBuilder) Status() *ExportItemStatusRequestBuilder {
 
 // ExportItemStatusRequestBuilder provides operations to check export status.
 type ExportItemStatusRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewExportItemStatusRequestBuilderInternal instantiates a new ExportItemStatusRequestBuilder.
 func NewExportItemStatusRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ExportItemStatusRequestBuilder {
 	return &ExportItemStatusRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, exportItemStatusURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, exportItemStatusURLTemplate, pathParameters),
 	}
 }
 
 // Get gets the status of a specific export.
 func (rB *ExportItemStatusRequestBuilder) Get(ctx context.Context, config *ExportItemStatusRequestBuilderGetRequestConfiguration) (ExportStatusResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -316,7 +316,7 @@ func (rB *ExportItemStatusRequestBuilder) Get(ctx context.Context, config *Expor
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateExportStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -326,21 +326,21 @@ func (rB *ExportItemStatusRequestBuilder) Get(ctx context.Context, config *Expor
 
 // ExportItemContentRequestBuilder provides operations to download export content.
 type ExportItemContentRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewExportItemContentRequestBuilderInternal instantiates a new ExportItemContentRequestBuilder.
 func NewExportItemContentRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ExportItemContentRequestBuilder {
 	return &ExportItemContentRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, exportItemContentURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, exportItemContentURLTemplate, pathParameters),
 	}
 }
 
 // Get fetches the export content.
 func (rB *ExportItemContentRequestBuilder) Get(ctx context.Context, config *ExportItemContentRequestBuilderGetRequestConfiguration) ([]byte, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -348,12 +348,12 @@ func (rB *ExportItemContentRequestBuilder) Get(ctx context.Context, config *Expo
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationOctetStream)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationOctetStream)
 	res, err := rB.GetRequestAdapter().SendPrimitive(ctx, requestInfo, "[]byte", nil)
 	if err != nil {
 		return nil, err
 	}
-	if internal.IsNil(res) {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 	return res.([]byte), nil
@@ -361,13 +361,13 @@ func (rB *ExportItemContentRequestBuilder) Get(ctx context.Context, config *Expo
 
 // SharedLibrariesRequestBuilder provides operations to manage shared libraries.
 type SharedLibrariesRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewSharedLibrariesRequestBuilderInternal instantiates a new SharedLibrariesRequestBuilder.
 func NewSharedLibrariesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SharedLibrariesRequestBuilder {
 	return &SharedLibrariesRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/shared_libraries", pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/shared_libraries", pathParameters),
 	}
 }
 
@@ -378,13 +378,13 @@ func (rB *SharedLibrariesRequestBuilder) Components() *SharedLibrariesComponents
 
 // SharedLibrariesComponentsRequestBuilder provides operations to manage shared library components.
 type SharedLibrariesComponentsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewSharedLibrariesComponentsRequestBuilderInternal instantiates a new SharedLibrariesComponentsRequestBuilder.
 func NewSharedLibrariesComponentsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SharedLibrariesComponentsRequestBuilder {
 	return &SharedLibrariesComponentsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/shared_libraries/components", pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/shared_libraries/components", pathParameters),
 	}
 }
 
@@ -395,21 +395,21 @@ func (rB *SharedLibrariesComponentsRequestBuilder) Applications() *SharedLibrari
 
 // SharedLibrariesComponentsApplicationsRequestBuilder provides operations to access shared library component applications.
 type SharedLibrariesComponentsApplicationsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewSharedLibrariesComponentsApplicationsRequestBuilderInternal instantiates a new SharedLibrariesComponentsApplicationsRequestBuilder.
 func NewSharedLibrariesComponentsApplicationsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SharedLibrariesComponentsApplicationsRequestBuilder {
 	return &SharedLibrariesComponentsApplicationsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, sharedLibrariesComponentsApplicationsURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, sharedLibrariesComponentsApplicationsURLTemplate, pathParameters),
 	}
 }
 
 // Get gets the collection of shared library component applications.
 func (rB *SharedLibrariesComponentsApplicationsRequestBuilder) Get(ctx context.Context, config *SharedLibrariesComponentsApplicationsRequestBuilderGetRequestConfiguration) (SharedLibrariesComponentsApplicationsResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -420,7 +420,7 @@ func (rB *SharedLibrariesComponentsApplicationsRequestBuilder) Get(ctx context.C
 			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateSharedLibrariesComponentsApplicationsResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -430,13 +430,13 @@ func (rB *SharedLibrariesComponentsApplicationsRequestBuilder) Get(ctx context.C
 
 // UploadsRequestBuilder provides operations to manage uploads.
 type UploadsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewUploadsRequestBuilderInternal instantiates a new UploadsRequestBuilder.
 func NewUploadsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsRequestBuilder {
 	return &UploadsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/uploads", pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/uploads", pathParameters),
 	}
 }
 
@@ -457,21 +457,21 @@ func (rB *UploadsRequestBuilder) Deployables() *UploadsDeployablesRequestBuilder
 
 // UploadsComponentsRequestBuilder provides operations to upload components.
 type UploadsComponentsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewUploadsComponentsRequestBuilderInternal instantiates a new UploadsComponentsRequestBuilder.
 func NewUploadsComponentsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsComponentsRequestBuilder {
 	return &UploadsComponentsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, uploadsComponentsURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadsComponentsURLTemplate, pathParameters),
 	}
 }
 
 // Post uploads components.
 func (rB *UploadsComponentsRequestBuilder) Post(ctx context.Context, body *ComponentUploadRequest, config *UploadsComponentsRequestBuilderPostRequestConfiguration) (UploadStatusResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -479,8 +479,8 @@ func (rB *UploadsComponentsRequestBuilder) Post(ctx context.Context, body *Compo
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}
@@ -498,21 +498,21 @@ func (rB *UploadsComponentsRequestBuilder) Vars() *UploadsComponentsVarsRequestB
 
 // UploadsComponentsVarsRequestBuilder provides operations to upload component variables.
 type UploadsComponentsVarsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewUploadsComponentsVarsRequestBuilderInternal instantiates a new UploadsComponentsVarsRequestBuilder.
 func NewUploadsComponentsVarsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsComponentsVarsRequestBuilder {
 	return &UploadsComponentsVarsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, uploadsComponentsVarsURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadsComponentsVarsURLTemplate, pathParameters),
 	}
 }
 
 // Post uploads component variables.
 func (rB *UploadsComponentsVarsRequestBuilder) Post(ctx context.Context, body *ComponentVarsUploadRequest, config *UploadsComponentsVarsRequestBuilderPostRequestConfiguration) (UploadStatusResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -520,8 +520,8 @@ func (rB *UploadsComponentsVarsRequestBuilder) Post(ctx context.Context, body *C
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}
@@ -534,21 +534,21 @@ func (rB *UploadsComponentsVarsRequestBuilder) Post(ctx context.Context, body *C
 
 // UploadsCollectionsRequestBuilder provides operations to upload collections.
 type UploadsCollectionsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewUploadsCollectionsRequestBuilderInternal instantiates a new UploadsCollectionsRequestBuilder.
 func NewUploadsCollectionsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsCollectionsRequestBuilder {
 	return &UploadsCollectionsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, uploadsCollectionsURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadsCollectionsURLTemplate, pathParameters),
 	}
 }
 
 // Post uploads collections.
 func (rB *UploadsCollectionsRequestBuilder) Post(ctx context.Context, body *CollectionUploadRequest, config *UploadsCollectionsRequestBuilderPostRequestConfiguration) (UploadStatusResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -556,8 +556,8 @@ func (rB *UploadsCollectionsRequestBuilder) Post(ctx context.Context, body *Coll
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}
@@ -575,21 +575,21 @@ func (rB *UploadsCollectionsRequestBuilder) File() *UploadsCollectionsFileReques
 
 // UploadsCollectionsFileRequestBuilder provides operations to upload collection files.
 type UploadsCollectionsFileRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewUploadsCollectionsFileRequestBuilderInternal instantiates a new UploadsCollectionsFileRequestBuilder.
 func NewUploadsCollectionsFileRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsCollectionsFileRequestBuilder {
 	return &UploadsCollectionsFileRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, uploadsCollectionsFileURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadsCollectionsFileURLTemplate, pathParameters),
 	}
 }
 
 // Post uploads collection files using a stream payload (like attachment-api)
 func (rB *UploadsCollectionsFileRequestBuilder) Post(ctx context.Context, media *Media, config *UploadsCollectionsFileRequestBuilderPostRequestConfiguration) (UploadStatusResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -600,7 +600,7 @@ func (rB *UploadsCollectionsFileRequestBuilder) Post(ctx context.Context, media 
 			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	kiotaRequestInfo.SetStreamContentAndContentType(media.GetData(), media.GetContentType())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {
@@ -611,13 +611,13 @@ func (rB *UploadsCollectionsFileRequestBuilder) Post(ctx context.Context, media 
 
 // UploadsDeployablesRequestBuilder provides operations to manage deployables uploads.
 type UploadsDeployablesRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewUploadsDeployablesRequestBuilderInternal instantiates a new UploadsDeployablesRequestBuilder.
 func NewUploadsDeployablesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsDeployablesRequestBuilder {
 	return &UploadsDeployablesRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/uploads/deployables", pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/uploads/deployables", pathParameters),
 	}
 }
 
@@ -628,21 +628,21 @@ func (rB *UploadsDeployablesRequestBuilder) File() *UploadsDeployablesFileReques
 
 // UploadsDeployablesFileRequestBuilder provides operations to upload deployable files.
 type UploadsDeployablesFileRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewUploadsDeployablesFileRequestBuilderInternal instantiates a new UploadsDeployablesFileRequestBuilder.
 func NewUploadsDeployablesFileRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsDeployablesFileRequestBuilder {
 	return &UploadsDeployablesFileRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, uploadsDeployablesFileURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadsDeployablesFileURLTemplate, pathParameters),
 	}
 }
 
 // Post uploads deployable files.
 func (rB *UploadsDeployablesFileRequestBuilder) Post(ctx context.Context, media *Media, config *UploadsDeployablesFileRequestBuilderPostRequestConfiguration) (UploadStatusResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
 		if config.Headers != nil {
 			kiotaRequestInfo.Headers.AddAll(config.Headers)
 		}
@@ -653,7 +653,7 @@ func (rB *UploadsDeployablesFileRequestBuilder) Post(ctx context.Context, media 
 			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	kiotaRequestInfo.SetStreamContentAndContentType(media.GetData(), media.GetContentType())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {

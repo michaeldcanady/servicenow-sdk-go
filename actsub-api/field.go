@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -20,12 +20,12 @@ const (
 )
 
 type Field struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewField() *Field {
 	return &Field{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 
@@ -34,7 +34,7 @@ func CreateFieldFromDiscriminatorValue(_ serialization.ParseNode) (serialization
 }
 
 func (m *Field) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return nil
@@ -106,12 +106,12 @@ func (m *Field) GetFieldDeserializers() map[string]func(serialization.ParseNode)
 }
 
 func (m *Field) GetDeepLinkToSubObject() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -119,7 +119,7 @@ func (m *Field) GetDeepLinkToSubObject() (*string, error) {
 }
 
 func (m *Field) SetDeepLinkToSubObject(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
@@ -127,12 +127,12 @@ func (m *Field) SetDeepLinkToSubObject(value *string) error {
 }
 
 func (m *Field) GetDisplayAsTimeAgo() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -140,7 +140,7 @@ func (m *Field) GetDisplayAsTimeAgo() (*string, error) {
 }
 
 func (m *Field) SetDisplayAsTimeAgo(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
@@ -148,12 +148,12 @@ func (m *Field) SetDisplayAsTimeAgo(value *string) error {
 }
 
 func (m *Field) GetLabel() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -161,7 +161,7 @@ func (m *Field) GetLabel() (*string, error) {
 }
 
 func (m *Field) SetLabel(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
@@ -169,12 +169,12 @@ func (m *Field) SetLabel(value *string) error {
 }
 
 func (m *Field) GetShowLabel() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -182,7 +182,7 @@ func (m *Field) GetShowLabel() (*string, error) {
 }
 
 func (m *Field) SetShowLabel(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
@@ -190,12 +190,12 @@ func (m *Field) SetShowLabel(value *string) error {
 }
 
 func (m *Field) GetType() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -203,7 +203,7 @@ func (m *Field) GetType() (*string, error) {
 }
 
 func (m *Field) SetType(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
@@ -211,12 +211,12 @@ func (m *Field) SetType(value *string) error {
 }
 
 func (m *Field) GetValue() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -224,7 +224,7 @@ func (m *Field) GetValue() (*string, error) {
 }
 
 func (m *Field) SetValue(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 

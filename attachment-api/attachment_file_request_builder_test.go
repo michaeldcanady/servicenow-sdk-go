@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -26,7 +26,7 @@ func TestNewAttachmentFileRequestBuilderInternal(t *testing.T) {
 				builder := NewAttachmentFileRequestBuilderInternal(pathParameters, requestAdapter)
 
 				assert.IsType(t, &AttachmentFileRequestBuilder{}, builder)
-				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.IsType(t, &internal.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, pathParameters, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},
@@ -49,12 +49,12 @@ func TestNewAttachmentFileRequestBuilder(t *testing.T) {
 				rawURL := ""
 				requestAdapter := mocking.NewMockRequestAdapter()
 
-				urlParams := map[string]string{newInternal.RawURLKey: rawURL}
+				urlParams := map[string]string{internal.RawURLKey: rawURL}
 
 				builder := NewAttachmentFileRequestBuilder(rawURL, requestAdapter)
 
 				assert.IsType(t, &AttachmentFileRequestBuilder{}, builder)
-				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.IsType(t, &internal.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, urlParams, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},
@@ -83,7 +83,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockHeaders.Add("Content-Type", "application/json")
 				mockContent := []byte("testing")
 				mockURLTemplate := ""
-				mockParsable := newInternal.NewBaseServiceNowItemResponse[File](CreateFileFromDiscriminatorValue)
+				mockParsable := internal.NewBaseServiceNowItemResponse[File](CreateFileFromDiscriminatorValue)
 
 				expected := &abstractions.RequestInformation{
 					Method:             abstractions.POST,
@@ -123,9 +123,9 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: newInternal.ToPointer("sysId"),
-						TableName:  newInternal.ToPointer("tableName"),
-						FileName:   newInternal.ToPointer("fileName"),
+						TableSysID: internal.ToPointer("sysId"),
+						TableName:  internal.ToPointer("tableName"),
+						FileName:   internal.ToPointer("fileName"),
 					},
 				}
 
@@ -188,9 +188,9 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: newInternal.ToPointer("sysId"),
-						TableName:  newInternal.ToPointer("tableName"),
-						FileName:   newInternal.ToPointer("fileName"),
+						TableSysID: internal.ToPointer("sysId"),
+						TableName:  internal.ToPointer("tableName"),
+						FileName:   internal.ToPointer("fileName"),
 					},
 				}
 
@@ -253,9 +253,9 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: newInternal.ToPointer("sysId"),
-						TableName:  newInternal.ToPointer("tableName"),
-						FileName:   newInternal.ToPointer("fileName"),
+						TableSysID: internal.ToPointer("sysId"),
+						TableName:  internal.ToPointer("tableName"),
+						FileName:   internal.ToPointer("fileName"),
 					},
 				}
 
@@ -285,9 +285,9 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockData := []byte("testing")
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: newInternal.ToPointer("sysId"),
-						TableName:  newInternal.ToPointer("tableName"),
-						FileName:   newInternal.ToPointer("fileName"),
+						TableSysID: internal.ToPointer("sysId"),
+						TableName:  internal.ToPointer("tableName"),
+						FileName:   internal.ToPointer("fileName"),
 					},
 				}
 
@@ -313,9 +313,9 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockData := []byte{}
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: newInternal.ToPointer("sysId"),
-						TableName:  newInternal.ToPointer("tableName"),
-						FileName:   newInternal.ToPointer("fileName"),
+						TableSysID: internal.ToPointer("sysId"),
+						TableName:  internal.ToPointer("tableName"),
+						FileName:   internal.ToPointer("fileName"),
 					},
 				}
 
@@ -341,9 +341,9 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockData := []byte{}
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: newInternal.ToPointer("sysId"),
-						TableName:  newInternal.ToPointer("tableName"),
-						FileName:   newInternal.ToPointer("fileName"),
+						TableSysID: internal.ToPointer("sysId"),
+						TableName:  internal.ToPointer("tableName"),
+						FileName:   internal.ToPointer("fileName"),
 					},
 				}
 
@@ -369,8 +369,8 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockData := []byte{}
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: newInternal.ToPointer("sysId"),
-						TableName:  newInternal.ToPointer("tableName"),
+						TableSysID: internal.ToPointer("sysId"),
+						TableName:  internal.ToPointer("tableName"),
 					},
 				}
 
@@ -396,7 +396,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockData := []byte{}
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: newInternal.ToPointer("sysId"),
+						TableSysID: internal.ToPointer("sysId"),
 					},
 				}
 
@@ -751,7 +751,7 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
 				queryParameters := &AttachmentFileRequestBuilderPostQueryParameters{
-					FileName: newInternal.ToPointer("file name"),
+					FileName: internal.ToPointer("file name"),
 				}
 
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{

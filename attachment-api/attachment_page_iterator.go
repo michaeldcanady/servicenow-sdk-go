@@ -1,15 +1,15 @@
 package attachmentapi
 
 import (
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
 // NewAttachmentPageIterator creates a new AttachmentPageIterator instance.
 func NewAttachmentPageIterator(
-	res newInternal.ServiceNowCollectionResponse[Attachment2],
+	res internal.ServiceNowCollectionResponse[Attachment2],
 	reqAdapter abstractions.RequestAdapter,
-	options ...newInternal.Option[*newInternal.PageIterator[Attachment2]],
-) (*newInternal.PageIterator[Attachment2], error) {
-	return newInternal.NewPageIterator[Attachment2](res, reqAdapter, CreateAttachment2FromDiscriminatorValue, options...)
+	options ...internal.Option[*internal.PageIterator[Attachment2]],
+) (*internal.PageIterator[Attachment2], error) {
+	return internal.NewPageIterator[Attachment2](res, reqAdapter, CreateAttachment2FromDiscriminatorValue, options...)
 }

@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -20,13 +20,13 @@ const (
 
 // ActivitySubscriptionModel represents a generic model for Activity Subscriptions.
 type ActivitySubscriptionModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 // NewActivitySubscriptionModel creates a new instance of ActivitySubscriptionModel.
 func NewActivitySubscriptionModel() *ActivitySubscriptionModel {
 	return &ActivitySubscriptionModel{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 
@@ -37,7 +37,7 @@ func CreateActivitySubscriptionModelFromDiscriminatorValue(serialization.ParseNo
 
 // Serialize writes the objects properties to the current writer.
 func (m *ActivitySubscriptionModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return nil
@@ -106,12 +106,12 @@ func (m *ActivitySubscriptionModel) GetFieldDeserializers() map[string]func(seri
 }
 
 func (m *ActivitySubscriptionModel) GetMessage() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -124,12 +124,12 @@ func (m *ActivitySubscriptionModel) GetMessage() (*string, error) {
 }
 
 func (m *ActivitySubscriptionModel) SetMessage(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 
@@ -137,12 +137,12 @@ func (m *ActivitySubscriptionModel) SetMessage(value *string) error {
 }
 
 func (m *ActivitySubscriptionModel) GetStream() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -155,12 +155,12 @@ func (m *ActivitySubscriptionModel) GetStream() (*string, error) {
 }
 
 func (m *ActivitySubscriptionModel) SetStream(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 
@@ -168,12 +168,12 @@ func (m *ActivitySubscriptionModel) SetStream(value *string) error {
 }
 
 func (m *ActivitySubscriptionModel) GetUser() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -181,12 +181,12 @@ func (m *ActivitySubscriptionModel) GetUser() (*string, error) {
 }
 
 func (m *ActivitySubscriptionModel) SetUser(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 
@@ -194,12 +194,12 @@ func (m *ActivitySubscriptionModel) SetUser(value *string) error {
 }
 
 func (m *ActivitySubscriptionModel) GetActivities() ([]*Activity, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -207,12 +207,12 @@ func (m *ActivitySubscriptionModel) GetActivities() ([]*Activity, error) {
 }
 
 func (m *ActivitySubscriptionModel) SetActivities(value []*Activity) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 
@@ -220,12 +220,12 @@ func (m *ActivitySubscriptionModel) SetActivities(value []*Activity) error {
 }
 
 func (m *ActivitySubscriptionModel) GetStatus() (*int64, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -233,12 +233,12 @@ func (m *ActivitySubscriptionModel) GetStatus() (*int64, error) {
 }
 
 func (m *ActivitySubscriptionModel) SetStatus(value *int64) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 

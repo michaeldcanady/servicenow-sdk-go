@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -15,19 +15,19 @@ const (
 
 // CreateRequestBuilder provides operations to manage the create endpoint.
 type CreateRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewCreateRequestBuilderInternal instantiates a new CreateRequestBuilder.
 func NewCreateRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CreateRequestBuilder {
 	return &CreateRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, createURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, createURLTemplate, pathParameters),
 	}
 }
 
 // Post creates a new document.
-func (rB *CreateRequestBuilder) Post(ctx context.Context, requestConfiguration *CreateRequestBuilderPostRequestConfiguration) (*newInternal.BaseServiceNowItemResponse[Document], error) {
-	if internal.IsNil(rB) {
+func (rB *CreateRequestBuilder) Post(ctx context.Context, requestConfiguration *CreateRequestBuilderPostRequestConfiguration) (*internal.BaseServiceNowItemResponse[Document], error) {
+	if conversion.IsNil(rB) {
 		return nil, nil
 	}
 
@@ -37,40 +37,40 @@ func (rB *CreateRequestBuilder) Post(ctx context.Context, requestConfiguration *
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[Document](CreateDocumentFromDiscriminatorValue), errorMapping)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[Document](CreateDocumentFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
 
-	if internal.IsNil(res) {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
-	return res.(*newInternal.BaseServiceNowItemResponse[Document]), nil
+	return res.(*internal.BaseServiceNowItemResponse[Document]), nil
 }
 
 // ToPostRequestInformation ...
 func (rB *CreateRequestBuilder) ToPostRequestInformation(ctx context.Context, requestConfiguration *CreateRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := requestConfiguration.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
-		if data := requestConfiguration.Data; !internal.IsNil(data) {
-			err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, data)
+		if data := requestConfiguration.Data; !conversion.IsNil(data) {
+			err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, data)
 			if err != nil {
 				return nil, err
 			}
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil
 }

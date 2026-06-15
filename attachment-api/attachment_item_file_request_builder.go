@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
@@ -19,11 +19,11 @@ const (
 
 // AttachmentItemFileRequestBuilder provides operations to manage Service-Now attachments.
 type AttachmentItemFileRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // newAttachmentItemFileRequestBuilderInternal instantiates a new AttachmentItemFileRequestBuilder with the provided requestBuilder
-func newAttachmentItemFileRequestBuilderInternal(requestBuilder newInternal.RequestBuilder) *AttachmentItemFileRequestBuilder {
+func newAttachmentItemFileRequestBuilderInternal(requestBuilder internal.RequestBuilder) *AttachmentItemFileRequestBuilder {
 	m := &AttachmentItemFileRequestBuilder{
 		requestBuilder,
 	}
@@ -36,7 +36,7 @@ func NewAttachmentItemFileRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentItemFileRequestBuilder {
 	return newAttachmentItemFileRequestBuilderInternal(
-		newInternal.NewBaseRequestBuilder(requestAdapter, attachmentItemFileURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, attachmentItemFileURLTemplate, pathParameters),
 	)
 }
 
@@ -46,17 +46,17 @@ func NewAttachmentItemFileRequestBuilder(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentItemFileRequestBuilder {
 	urlParams := make(map[string]string)
-	urlParams[newInternal.RawURLKey] = rawURL
+	urlParams[internal.RawURLKey] = rawURL
 	return NewAttachmentItemFileRequestBuilderInternal(urlParams, requestAdapter)
 }
 
 // Get returns file with content using provided parameters
 func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration) (*FileWithContentModel, error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
-	if internal.IsNil(requestConfiguration) {
+	if conversion.IsNil(requestConfiguration) {
 		requestConfiguration = &AttachmentItemFileRequestBuilderGetRequestConfiguration{}
 	}
 
@@ -71,11 +71,11 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	requestAdapter := rB.GetRequestAdapter()
-	if internal.IsNil(requestAdapter) {
+	if conversion.IsNil(requestAdapter) {
 		return nil, errors.New("requestAdapter is nil")
 	}
 
@@ -124,17 +124,17 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 
 // ToGetRequestInformation converts request configurations to Get request information.
 func (rB *AttachmentItemFileRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := requestConfiguration.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}

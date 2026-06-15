@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -22,12 +22,12 @@ const (
 )
 
 type Activity struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewActivity() *Activity {
 	return &Activity{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 
@@ -36,7 +36,7 @@ func CreateActivityFromDiscriminatorValue(_ serialization.ParseNode) (serializat
 }
 
 func (m *Activity) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return nil
@@ -140,12 +140,12 @@ func (m *Activity) GetFieldDeserializers() map[string]func(serialization.ParseNo
 }
 
 func (m *Activity) GetActivityTypeID() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -158,12 +158,12 @@ func (m *Activity) GetActivityTypeID() (*string, error) {
 }
 
 func (m *Activity) SetActivityTypeID(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 
@@ -171,12 +171,12 @@ func (m *Activity) SetActivityTypeID(value *string) error {
 }
 
 func (m *Activity) GetSourceTableName() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -184,12 +184,12 @@ func (m *Activity) GetSourceTableName() (*string, error) {
 }
 
 func (m *Activity) SetSourceTableName(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 
@@ -197,12 +197,12 @@ func (m *Activity) SetSourceTableName(value *string) error {
 }
 
 func (m *Activity) GetSubObjectTableName() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -210,12 +210,12 @@ func (m *Activity) GetSubObjectTableName() (*string, error) {
 }
 
 func (m *Activity) SetSubObjectTableName(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 
@@ -223,12 +223,12 @@ func (m *Activity) SetSubObjectTableName(value *string) error {
 }
 
 func (m *Activity) GetSubObjectSysID() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -236,12 +236,12 @@ func (m *Activity) GetSubObjectSysID() (*string, error) {
 }
 
 func (m *Activity) SetSubObjectSysID(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 
@@ -249,12 +249,12 @@ func (m *Activity) SetSubObjectSysID(value *string) error {
 }
 
 func (m *Activity) GetTitle() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -262,12 +262,12 @@ func (m *Activity) GetTitle() (*string, error) {
 }
 
 func (m *Activity) SetTitle(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 
@@ -275,12 +275,12 @@ func (m *Activity) SetTitle(value *string) error {
 }
 
 func (m *Activity) GetSysIDKey() (*string, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -288,12 +288,12 @@ func (m *Activity) GetSysIDKey() (*string, error) {
 }
 
 func (m *Activity) SetSysIDKey(value *string) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 
@@ -301,12 +301,12 @@ func (m *Activity) SetSysIDKey(value *string) error {
 }
 
 func (m *Activity) GetContentFields() ([]*Field, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -314,12 +314,12 @@ func (m *Activity) GetContentFields() ([]*Field, error) {
 }
 
 func (m *Activity) SetContentFields(value []*Field) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 
@@ -327,12 +327,12 @@ func (m *Activity) SetContentFields(value []*Field) error {
 }
 
 func (m *Activity) GetSubheaderFields() ([]*Field, error) {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil, errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, errors.New("store is nil")
 	}
 
@@ -340,12 +340,12 @@ func (m *Activity) GetSubheaderFields() ([]*Field, error) {
 }
 
 func (m *Activity) SetSubheaderFields(value []*Field) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return errors.New("model is nil")
 	}
 
 	backingStore := m.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return errors.New("store is nil")
 	}
 

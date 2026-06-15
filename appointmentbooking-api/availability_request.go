@@ -2,7 +2,7 @@ package appointmentbookingapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 
@@ -47,15 +47,15 @@ type AvailabilityRequest interface {
 }
 
 type AvailabilityRequestModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewAvailabilityRequest() *AvailabilityRequestModel {
-	return &AvailabilityRequestModel{BaseModel: *newInternal.NewBaseModel()}
+	return &AvailabilityRequestModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *AvailabilityRequestModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,

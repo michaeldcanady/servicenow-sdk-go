@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -26,7 +26,7 @@ func TestNewAttachmentItemRequestBuilderInternal(t *testing.T) {
 				builder := NewAttachmentItemRequestBuilderInternal(pathParameters, requestAdapter)
 
 				assert.IsType(t, &AttachmentItemRequestBuilder{}, builder)
-				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.IsType(t, &internal.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, pathParameters, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},
@@ -49,12 +49,12 @@ func TestNewAttachmentItemRequestBuilder(t *testing.T) {
 				rawURL := ""
 				requestAdapter := mocking.NewMockRequestAdapter()
 
-				urlParams := map[string]string{newInternal.RawURLKey: rawURL}
+				urlParams := map[string]string{internal.RawURLKey: rawURL}
 
 				builder := NewAttachmentItemRequestBuilder(rawURL, requestAdapter)
 
 				assert.IsType(t, &AttachmentItemRequestBuilder{}, builder)
-				assert.IsType(t, &newInternal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.IsType(t, &internal.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, urlParams, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},
@@ -86,7 +86,7 @@ func TestAttachmentItemRequestBuilder_File(t *testing.T) {
 				fileBuilder := builder.File()
 
 				assert.Equal(t, &AttachmentItemFileRequestBuilder{
-					&newInternal.BaseRequestBuilder{
+					&internal.BaseRequestBuilder{
 						BaseRequestBuilder: abstractions.BaseRequestBuilder{
 							PathParameters: pathParameters,
 							RequestAdapter: requestAdapter,
@@ -139,7 +139,7 @@ func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 				}
 				expectedRequestInformation.AddRequestOptions(make([]abstractions.RequestOption, 0))
 
-				mockParsable := newInternal.NewBaseServiceNowItemResponse[Attachment2](CreateAttachment2FromDiscriminatorValue)
+				mockParsable := internal.NewBaseServiceNowItemResponse[Attachment2](CreateAttachment2FromDiscriminatorValue)
 
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
 				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(mockParsable, nil)

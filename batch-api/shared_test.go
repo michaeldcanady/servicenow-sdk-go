@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
@@ -22,7 +22,7 @@ func TestThrowErrors(t *testing.T) {
 		{
 			name: "No Error",
 			setup: func(m *MockServicedRequest) {
-				m.On("GetStatusCode").Return(newInternal.ToPointer(int64(200)), nil)
+				m.On("GetStatusCode").Return(internal.ToPointer(int64(200)), nil)
 			},
 			expectedErr: false,
 		},
@@ -36,8 +36,8 @@ func TestThrowErrors(t *testing.T) {
 		{
 			name: "Mapped Error",
 			setup: func(m *MockServicedRequest) {
-				m.On("GetStatusCode").Return(newInternal.ToPointer(int64(400)), nil)
-				m.On("GetErrorMessage").Return(newInternal.ToPointer(`{"error":"bad"}`), nil)
+				m.On("GetStatusCode").Return(internal.ToPointer(int64(400)), nil)
+				m.On("GetErrorMessage").Return(internal.ToPointer(`{"error":"bad"}`), nil)
 				m.On("GetHeaders").Return([]RestRequestHeader{}, nil)
 			},
 			expectedErr: true,
@@ -141,7 +141,7 @@ func TestSerializeContent(t *testing.T) {
 
 				abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return parseNodeFactory })
 
-				parsable, err := serializeContent[*newInternal.MainError](contentType, []byte{}, factory)
+				parsable, err := serializeContent[*internal.MainError](contentType, []byte{}, factory)
 				assert.Equal(t, errors.New("result is not *internal.MainError"), err)
 				assert.Nil(t, parsable)
 			},
@@ -163,8 +163,8 @@ func TestGetHTTPHeader(t *testing.T) {
 			name: "Successful",
 			test: func(t *testing.T) {
 				header := mocking.NewMockBatchHeader()
-				header.On("GetName").Return(newInternal.ToPointer(internalHttp.HTTPHeaderContentType.String()), nil)
-				header.On("GetValue").Return(newInternal.ToPointer("application/json"), nil)
+				header.On("GetName").Return(internal.ToPointer(internalHttp.HTTPHeaderContentType.String()), nil)
+				header.On("GetValue").Return(internal.ToPointer("application/json"), nil)
 				headers := []RestRequestHeader{header}
 				defaultValue := ""
 				value := getHTTPHeader(headers, internalHttp.HTTPHeaderContentType, defaultValue)
@@ -176,7 +176,7 @@ func TestGetHTTPHeader(t *testing.T) {
 			test: func(t *testing.T) {
 				header := mocking.NewMockBatchHeader()
 				header.On("GetName").Return((*string)(nil), errors.New("no name"))
-				header.On("GetValue").Return(newInternal.ToPointer("application/json"), nil)
+				header.On("GetValue").Return(internal.ToPointer("application/json"), nil)
 				headers := []RestRequestHeader{header}
 				defaultValue := ""
 				value := getHTTPHeader(headers, internalHttp.HTTPHeaderContentType, defaultValue)

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/stretchr/testify/assert"
 )
 

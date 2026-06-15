@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -28,18 +28,18 @@ type RestRequestHeader interface {
 	// SetValue sets the value of the header
 	SetValue(*string) error
 	serialization.Parsable
-	newInternal.Model
+	internal.BackedModel
 }
 
 // RestRequestHeaderModel implementation of RestRequestHeader
 type RestRequestHeaderModel struct {
-	newInternal.Model
+	internal.BackedModel
 }
 
 // NewRestRequestHeader creates new instance of BatchHeader
 func NewRestRequestHeader() *RestRequestHeaderModel {
 	return &RestRequestHeaderModel{
-		newInternal.NewBaseModel(),
+		internal.NewBaseModel(),
 	}
 }
 
@@ -50,7 +50,7 @@ func CreateRestRequestHeaderFromDiscriminatorValue(_ serialization.ParseNode) (s
 
 // Serialize writes the objects properties to the current writer.
 func (bH *RestRequestHeaderModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(bH) {
+	if conversion.IsNil(bH) {
 		return nil
 	}
 
@@ -62,7 +62,7 @@ func (bH *RestRequestHeaderModel) Serialize(writer serialization.SerializationWr
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	if internal.IsNil(bH) {
+	if conversion.IsNil(bH) {
 		return nil
 	}
 
@@ -74,7 +74,7 @@ func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serial
 
 // GetName returns the name of the header
 func (bH *RestRequestHeaderModel) GetName() (*string, error) {
-	if internal.IsNil(bH) {
+	if conversion.IsNil(bH) {
 		return nil, nil
 	}
 
@@ -84,7 +84,7 @@ func (bH *RestRequestHeaderModel) GetName() (*string, error) {
 
 // SetName sets name to provided value
 func (bH *RestRequestHeaderModel) SetName(name *string) error {
-	if internal.IsNil(bH) {
+	if conversion.IsNil(bH) {
 		return nil
 	}
 
@@ -94,7 +94,7 @@ func (bH *RestRequestHeaderModel) SetName(name *string) error {
 
 // GetValue returns the value of the header
 func (bH *RestRequestHeaderModel) GetValue() (*string, error) {
-	if internal.IsNil(bH) {
+	if conversion.IsNil(bH) {
 		return nil, nil
 	}
 
@@ -104,7 +104,7 @@ func (bH *RestRequestHeaderModel) GetValue() (*string, error) {
 
 // SetValue sets the value to the provided value
 func (bH *RestRequestHeaderModel) SetValue(value *string) error {
-	if internal.IsNil(bH) {
+	if conversion.IsNil(bH) {
 		return nil
 	}
 
@@ -122,7 +122,7 @@ func createRestRequestHeaderFromHeaders[h headers](headers h) ([]RestRequestHead
 	batchHeaders := make([]RestRequestHeader, 0)
 
 	if requestHeaders, ok := interface{}(headers).(*abstractions.RequestHeaders); ok {
-		if internal.IsNil(requestHeaders) {
+		if conversion.IsNil(requestHeaders) {
 			return batchHeaders, nil
 		}
 		for _, key := range requestHeaders.ListKeys() {

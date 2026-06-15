@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
@@ -16,7 +17,7 @@ func TestDeserializeMutatedStringFunc(t *testing.T) {
 	tests := []struct {
 		name    string
 		mock    func(*mocking.MockParseNode)
-		mutator Mutator[*string, int]
+		mutator conversion.Mutator[*string, int]
 		wantErr bool
 		wantVal int
 	}{
@@ -309,7 +310,7 @@ func TestDeserializeMutatedByteArrayFunc(t *testing.T) {
 	tests := []struct {
 		name    string
 		mock    func(*mocking.MockParseNode)
-		mutator Mutator[[]byte, string]
+		mutator conversion.Mutator[[]byte, string]
 		wantErr bool
 		wantVal string
 	}{
@@ -515,7 +516,7 @@ func TestDeserializeMutatedAnyFunc(t *testing.T) {
 	tests := []struct {
 		name    string
 		mock    func(*mocking.MockParseNode)
-		mutator Mutator[any, int]
+		mutator conversion.Mutator[any, int]
 		wantErr bool
 		wantVal int
 	}{

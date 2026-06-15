@@ -1,42 +1,42 @@
 package cdmeditorapi
 
 import (
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
 // NodesResponse represents the response for a list of nodes.
 type NodesResponse interface {
-	newInternal.ServiceNowCollectionResponse[*NodeResultModel]
+	internal.ServiceNowCollectionResponse[*NodeResultModel]
 }
 
 func CreateNodesResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowCollectionResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowCollectionResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue), nil
 }
 
 // NodeResponse represents the response for a single node.
 type NodeResponse interface {
-	newInternal.ServiceNowItemResponse[*NodeResultModel]
+	internal.ServiceNowItemResponse[*NodeResultModel]
 }
 
 func CreateNodeResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowItemResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue), nil
 }
 
 // ValidationResponse represents the response for configuration validation.
 type ValidationResponse interface {
-	newInternal.ServiceNowItemResponse[*ValidationResultModel]
+	internal.ServiceNowItemResponse[*ValidationResultModel]
 }
 
 func CreateValidationResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*ValidationResultModel](CreateValidationResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowItemResponse[*ValidationResultModel](CreateValidationResultFromDiscriminatorValue), nil
 }
 
 // NodeDeleteResponse represents the response for deleting a node.
 type NodeDeleteResponse interface {
-	newInternal.ServiceNowItemResponse[*MessageResult]
+	internal.ServiceNowItemResponse[*MessageResult]
 }
 
 func CreateNodeDeleteResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*MessageResult](CreateMessageResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowItemResponse[*MessageResult](CreateMessageResultFromDiscriminatorValue), nil
 }

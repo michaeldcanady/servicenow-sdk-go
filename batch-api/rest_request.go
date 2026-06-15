@@ -9,7 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -44,13 +44,13 @@ type RestRequest interface {
 
 // RestRequestModel implementation of RestRequestable
 type RestRequestModel struct {
-	newInternal.Model
+	internal.BackedModel
 }
 
 // NewRestRequest creates a new rest request
 func NewRestRequest() *RestRequestModel {
 	return &RestRequestModel{
-		newInternal.NewBaseModel(),
+		internal.NewBaseModel(),
 	}
 }
 
@@ -96,7 +96,7 @@ func CreateRestRequestFromRequestInformation(requestInfo *abstractions.RequestIn
 
 // Serialize writes the objects properties to the current writer.
 func (rE *RestRequestModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -114,7 +114,7 @@ func (rE *RestRequestModel) Serialize(writer serialization.SerializationWriter) 
 			}
 
 			// ensure request has an id BEFORE serializing
-			if internal.IsNil(id) || *id == "" {
+			if conversion.IsNil(id) || *id == "" {
 				idString := uuid.NewString()
 				id = &idString
 			}
@@ -122,7 +122,7 @@ func (rE *RestRequestModel) Serialize(writer serialization.SerializationWriter) 
 			return id, nil
 		}),
 		internalSerialization.SerializeMutatedStringFunc(methodKey, func(method *abstractions.HttpMethod) (*string, error) {
-			if internal.IsNil(method) {
+			if conversion.IsNil(method) {
 				return nil, errors.New("method can't be nil")
 			}
 			strMethod := (*method).String()
@@ -134,7 +134,7 @@ func (rE *RestRequestModel) Serialize(writer serialization.SerializationWriter) 
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (rE *RestRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -186,7 +186,7 @@ func parseHttpMethod(method string) (abstractions.HttpMethod, error) {
 
 // GetBody returns the requests body in bytes.
 func (rE *RestRequestModel) GetBody() ([]byte, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -196,7 +196,7 @@ func (rE *RestRequestModel) GetBody() ([]byte, error) {
 
 // SetBodyFromParsable serializes the provided parsable and sets the output to the request's body.
 func (rE *RestRequestModel) SetBodyFromParsable(contentType string, parsable serialization.Parsable) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -212,7 +212,7 @@ func (rE *RestRequestModel) SetBodyFromParsable(contentType string, parsable ser
 		return err
 	}
 
-	if internal.IsNil(headers) {
+	if conversion.IsNil(headers) {
 		headers = make([]RestRequestHeader, 0)
 	}
 
@@ -245,7 +245,7 @@ func (rE *RestRequestModel) SetBodyFromParsable(contentType string, parsable ser
 
 // SetBody sets the requests body to the provided content.
 func (rE *RestRequestModel) SetBody(body []byte) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -255,7 +255,7 @@ func (rE *RestRequestModel) SetBody(body []byte) error {
 
 // GetExcludeResponseHeaders returns if the request will exclude response headers.
 func (rE *RestRequestModel) GetExcludeResponseHeaders() (*bool, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -265,7 +265,7 @@ func (rE *RestRequestModel) GetExcludeResponseHeaders() (*bool, error) {
 
 // SetExcludeResponseHeaders set if to include or exclude response headers.
 func (rE *RestRequestModel) SetExcludeResponseHeaders(excludeResponseHeaders *bool) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -275,7 +275,7 @@ func (rE *RestRequestModel) SetExcludeResponseHeaders(excludeResponseHeaders *bo
 
 // GetHeaders returns the headers of the request.
 func (rE *RestRequestModel) GetHeaders() ([]RestRequestHeader, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -285,7 +285,7 @@ func (rE *RestRequestModel) GetHeaders() ([]RestRequestHeader, error) {
 
 // SetHeaders sets the headers for the request.
 func (rE *RestRequestModel) SetHeaders(headers []RestRequestHeader) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -295,7 +295,7 @@ func (rE *RestRequestModel) SetHeaders(headers []RestRequestHeader) error {
 
 // GetID returns the id of the request.
 func (rE *RestRequestModel) GetID() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -305,7 +305,7 @@ func (rE *RestRequestModel) GetID() (*string, error) {
 
 // SetID sets the id of the request.
 func (rE *RestRequestModel) SetID(id *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -315,7 +315,7 @@ func (rE *RestRequestModel) SetID(id *string) error {
 
 // GetMethod returns the method of the request
 func (rE *RestRequestModel) GetMethod() (*abstractions.HttpMethod, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -325,7 +325,7 @@ func (rE *RestRequestModel) GetMethod() (*abstractions.HttpMethod, error) {
 
 // SetMethod sets the method of the request
 func (rE *RestRequestModel) SetMethod(method *abstractions.HttpMethod) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -335,7 +335,7 @@ func (rE *RestRequestModel) SetMethod(method *abstractions.HttpMethod) error {
 
 // GetURL returns the relative URL of the request.
 func (rE *RestRequestModel) GetURL() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -345,7 +345,7 @@ func (rE *RestRequestModel) GetURL() (*string, error) {
 
 // SetURL sets the URL of the request (if not relative, will be converted).
 func (rE *RestRequestModel) SetURL(url *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 

@@ -9,7 +9,7 @@ import (
 	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
 	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/cmdb-instance-api"
 	documentsapi "github.com/michaeldcanady/servicenow-sdk-go/documents-api"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )

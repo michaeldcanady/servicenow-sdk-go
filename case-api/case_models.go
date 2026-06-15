@@ -2,7 +2,7 @@ package caseapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -21,15 +21,15 @@ type Reference interface {
 }
 
 type ReferenceModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewReference() *ReferenceModel {
-	return &ReferenceModel{BaseModel: *newInternal.NewBaseModel()}
+	return &ReferenceModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ReferenceModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -96,15 +96,15 @@ type CaseResult interface {
 }
 
 type CaseResultModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewCaseResult() *CaseResultModel {
-	return &CaseResultModel{BaseModel: *newInternal.NewBaseModel()}
+	return &CaseResultModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *CaseResultModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -245,15 +245,15 @@ type ActivitiesResult interface {
 }
 
 type ActivitiesResultModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewActivitiesResult() *ActivitiesResultModel {
-	return &ActivitiesResultModel{BaseModel: *newInternal.NewBaseModel()}
+	return &ActivitiesResultModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ActivitiesResultModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -334,15 +334,15 @@ type FieldValuesResult interface {
 }
 
 type FieldValuesResultModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewFieldValuesResult() *FieldValuesResultModel {
-	return &FieldValuesResultModel{BaseModel: *newInternal.NewBaseModel()}
+	return &FieldValuesResultModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *FieldValuesResultModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,

@@ -5,8 +5,8 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -14,13 +14,13 @@ const accountURLTemplate = "{+baseurl}/api/now/v1/account"
 
 // AccountRequestBuilder provides operations to manage accounts.
 type AccountRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewAccountRequestBuilderInternal instantiates a new AccountRequestBuilder with the provided request parameters.
 func NewAccountRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AccountRequestBuilder {
 	return &AccountRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, accountURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, accountURLTemplate, pathParameters),
 	}
 }
 
@@ -53,19 +53,19 @@ func (rB *AccountRequestBuilder) Get(ctx context.Context, config *AccountRequest
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *AccountRequestBuilder) ToGetRequestInformation(ctx context.Context, config *AccountRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
-		if headers := config.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
+		if headers := config.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := config.Options; !internal.IsNil(options) {
+		if options := config.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
-		if queryParameters := config.QueryParameters; !internal.IsNil(queryParameters) {
+		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
 			kiotaRequestInfo.AddQueryParameters(queryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return requestInfo, nil
 }

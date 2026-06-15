@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -14,13 +14,13 @@ const (
 
 // CmdbRelationItemRequestBuilder provides operations to manage a specific CI relationship.
 type CmdbRelationItemRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewCmdbRelationItemRequestBuilderInternal instantiates a new CmdbRelationItemRequestBuilder.
 func NewCmdbRelationItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CmdbRelationItemRequestBuilder {
 	return &CmdbRelationItemRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, cmdbRelationItemURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, cmdbRelationItemURLTemplate, pathParameters),
 	}
 }
 
@@ -32,7 +32,7 @@ func (rB *CmdbRelationItemRequestBuilder) Delete(ctx context.Context, config *Cm
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
@@ -46,12 +46,12 @@ func (rB *CmdbRelationItemRequestBuilder) Delete(ctx context.Context, config *Cm
 // ToDeleteRequestInformation converts request configurations to Delete request information.
 func (rB *CmdbRelationItemRequestBuilder) ToDeleteRequestInformation(ctx context.Context, config *CmdbRelationItemRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
-		if headers := config.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
+		if headers := config.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := config.Options; !internal.IsNil(options) {
+		if options := config.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}

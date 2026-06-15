@@ -1,7 +1,7 @@
 package documentsapi
 
 import (
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -29,13 +29,13 @@ type Document interface {
 
 // DocumentModel implementation of Document
 type DocumentModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 // NewDocument creates a new instance of DocumentModel
 func NewDocument() *DocumentModel {
 	return &DocumentModel{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 

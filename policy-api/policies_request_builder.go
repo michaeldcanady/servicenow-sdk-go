@@ -4,7 +4,7 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -14,7 +14,7 @@ const (
 
 // PoliciesRequestBuilder provides operations to manage Service-Now policies.
 type PoliciesRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewPolicyRequestBuilderInternal instantiates a new PolicyRequestBuilder with the provided path parameters and request adapter.
@@ -23,13 +23,13 @@ func NewPolicyRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *PoliciesRequestBuilder {
 	return &PoliciesRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, policyURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, policyURLTemplate, pathParameters),
 	}
 }
 
 // Mappings provides the way to access Service-Now's policy definitions API
 func (rB *PoliciesRequestBuilder) Mappings() *PoliciesMappingsRequestBuilder {
-	if internal.IsNil(rB) {
+	if conversion.IsNil(rB) {
 		return nil
 	}
 

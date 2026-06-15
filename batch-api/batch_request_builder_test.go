@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -54,7 +54,7 @@ func TestNewBatchRequestBuilder2(t *testing.T) {
 				assert.NotNil(t, builder)
 				assert.IsType(t, &BatchRequestBuilder{}, builder)
 				assert.Equal(t, mockAdapter, builder.GetRequestAdapter())
-				assert.Equal(t, map[string]string{newInternal.RawURLKey: rawURL}, builder.GetPathParameters())
+				assert.Equal(t, map[string]string{internal.RawURLKey: rawURL}, builder.GetPathParameters())
 			},
 		},
 	}

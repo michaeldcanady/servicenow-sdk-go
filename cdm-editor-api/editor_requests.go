@@ -2,7 +2,7 @@ package cdmeditorapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -25,15 +25,15 @@ type NodeCreateRequest interface {
 }
 
 type NodeCreateRequestModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewNodeCreateRequest() *NodeCreateRequestModel {
-	return &NodeCreateRequestModel{BaseModel: *newInternal.NewBaseModel()}
+	return &NodeCreateRequestModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *NodeCreateRequestModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -94,15 +94,15 @@ type NodeUpdateRequest interface {
 }
 
 type NodeUpdateRequestModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewNodeUpdateRequest() *NodeUpdateRequestModel {
-	return &NodeUpdateRequestModel{BaseModel: *newInternal.NewBaseModel()}
+	return &NodeUpdateRequestModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *NodeUpdateRequestModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,

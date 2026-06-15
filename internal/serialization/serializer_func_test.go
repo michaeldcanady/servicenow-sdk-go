@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
@@ -30,7 +31,7 @@ func TestSerializeMutatedStringFunc(t *testing.T) {
 	tests := []struct {
 		name     string
 		accessor ModelAccessor[int]
-		mutator  Mutator[int, *string]
+		mutator  conversion.Mutator[int, *string]
 		mock     func(*mocking.MockSerializationWriter)
 		wantErr  bool
 	}{

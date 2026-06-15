@@ -2,7 +2,7 @@ package cdmeditorapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -29,15 +29,15 @@ type NodeResult interface {
 }
 
 type NodeResultModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewNodeResult() *NodeResultModel {
-	return &NodeResultModel{BaseModel: *newInternal.NewBaseModel()}
+	return &NodeResultModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *NodeResultModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -116,15 +116,15 @@ type ValidationResult interface {
 }
 
 type ValidationResultModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewValidationResult() *ValidationResultModel {
-	return &ValidationResultModel{BaseModel: *newInternal.NewBaseModel()}
+	return &ValidationResultModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ValidationResultModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -167,13 +167,13 @@ func CreateValidationResultFromDiscriminatorValue(_ serialization.ParseNode) (se
 
 // MessageResult represents a simple string result.
 type MessageResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 	Message *string
 }
 
 func NewMessageResult(message *string) *MessageResult {
 	return &MessageResult{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 		Message:   message,
 	}
 }

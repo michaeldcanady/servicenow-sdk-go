@@ -6,8 +6,8 @@ import (
 	"reflect"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -27,13 +27,13 @@ const (
 
 // ServicedRequestModel represents Service-Now Batch API response's serviced request.
 type ServicedRequestModel struct {
-	newInternal.Model
+	internal.BackedModel
 }
 
 // NewServicedRequest instantiates a new ServicedRequest.
 func NewServicedRequest() *ServicedRequestModel {
 	return &ServicedRequestModel{
-		newInternal.NewBaseModel(),
+		internal.NewBaseModel(),
 	}
 }
 
@@ -44,7 +44,7 @@ func CreateServicedRequestFromDiscriminatorValue(_ serialization.ParseNode) (ser
 
 // Serialize writes the objects properties to the current writer.
 func (sR *ServicedRequestModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil
 	}
 
@@ -68,7 +68,7 @@ func (sR *ServicedRequestModel) Serialize(writer serialization.SerializationWrit
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil
 	}
 
@@ -122,7 +122,7 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 
 // GetBodyAsParsable returns the body serialized.
 func (sR *ServicedRequestModel) GetBodyAsParsable(constructor serialization.ParsableFactory) (serialization.Parsable, error) {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil, nil
 	}
 
@@ -150,12 +150,12 @@ func (sR *ServicedRequestModel) GetBodyAsParsable(constructor serialization.Pars
 
 // GetBody returns the raw body for the batch item.
 func (sR *ServicedRequestModel) GetBody() ([]byte, error) {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil, nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, nil
 	}
 
@@ -164,12 +164,12 @@ func (sR *ServicedRequestModel) GetBody() ([]byte, error) {
 
 // setBody sets the raw body for the batch item.
 func (sR *ServicedRequestModel) setBody(body []byte) error {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil
 	}
 
@@ -178,12 +178,12 @@ func (sR *ServicedRequestModel) setBody(body []byte) error {
 
 // GetErrorMessage returns, if present, the error messages.
 func (sR *ServicedRequestModel) GetErrorMessage() (*string, error) {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil, nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, nil
 	}
 
@@ -192,12 +192,12 @@ func (sR *ServicedRequestModel) GetErrorMessage() (*string, error) {
 
 // setErrorMessage sets the error messages.
 func (sR *ServicedRequestModel) setErrorMessage(errorMessage *string) error {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil
 	}
 
@@ -206,12 +206,12 @@ func (sR *ServicedRequestModel) setErrorMessage(errorMessage *string) error {
 
 // GetExecutionTime returns time it took to execute the batch item request.
 func (sR *ServicedRequestModel) GetExecutionTime() (*serialization.ISODuration, error) {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil, nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, nil
 	}
 
@@ -220,12 +220,12 @@ func (sR *ServicedRequestModel) GetExecutionTime() (*serialization.ISODuration, 
 
 // setExecutionTime sets the time it took to execute the batch item request.
 func (sR *ServicedRequestModel) setExecutionTime(executionTime *serialization.ISODuration) error {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil
 	}
 
@@ -234,12 +234,12 @@ func (sR *ServicedRequestModel) setExecutionTime(executionTime *serialization.IS
 
 // GetHeaders returns headers for the batch item.
 func (sR *ServicedRequestModel) GetHeaders() ([]RestRequestHeader, error) {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil, nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, nil
 	}
 
@@ -248,12 +248,12 @@ func (sR *ServicedRequestModel) GetHeaders() ([]RestRequestHeader, error) {
 
 // setHeaders sets headers for the batch item.
 func (sR *ServicedRequestModel) setHeaders(headers []RestRequestHeader) error {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil
 	}
 
@@ -262,12 +262,12 @@ func (sR *ServicedRequestModel) setHeaders(headers []RestRequestHeader) error {
 
 // GetID returns ID of the batch item that matches the `rest_requests.id` parameter in the request.
 func (sR *ServicedRequestModel) GetID() (*string, error) {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil, nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, nil
 	}
 
@@ -276,12 +276,12 @@ func (sR *ServicedRequestModel) GetID() (*string, error) {
 
 // setID sets the id of the batch item.
 func (sR *ServicedRequestModel) setID(id *string) error {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil
 	}
 
@@ -290,12 +290,12 @@ func (sR *ServicedRequestModel) setID(id *string) error {
 
 // GetRedirectURL, if present, returns redirect url for batch item.
 func (sR *ServicedRequestModel) GetRedirectURL() (*string, error) {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil, nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, nil
 	}
 
@@ -304,12 +304,12 @@ func (sR *ServicedRequestModel) GetRedirectURL() (*string, error) {
 
 // setRedirectURL sets redirect url for batch item.
 func (sR *ServicedRequestModel) setRedirectURL(redirectURL *string) error {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil
 	}
 
@@ -318,12 +318,12 @@ func (sR *ServicedRequestModel) setRedirectURL(redirectURL *string) error {
 
 // GetStatusCode returns status code for batch item.
 func (sR *ServicedRequestModel) GetStatusCode() (*int64, error) {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil, nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, nil
 	}
 
@@ -332,12 +332,12 @@ func (sR *ServicedRequestModel) GetStatusCode() (*int64, error) {
 
 // setStatusCode sets status code for batch item.
 func (sR *ServicedRequestModel) setStatusCode(statusCode *int64) error {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil
 	}
 
@@ -346,12 +346,12 @@ func (sR *ServicedRequestModel) setStatusCode(statusCode *int64) error {
 
 // GetStatusText returns status text for batch item.
 func (sR *ServicedRequestModel) GetStatusText() (*string, error) {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil, nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil, nil
 	}
 
@@ -360,12 +360,12 @@ func (sR *ServicedRequestModel) GetStatusText() (*string, error) {
 
 // setStatusText sets status text for batch item.
 func (sR *ServicedRequestModel) setStatusText(statusText *string) error {
-	if internal.IsNil(sR) {
+	if conversion.IsNil(sR) {
 		return nil
 	}
 
 	backingStore := sR.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return nil
 	}
 

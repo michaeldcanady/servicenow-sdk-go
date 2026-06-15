@@ -3,6 +3,7 @@ package serialization
 import (
 	"errors"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -10,15 +11,13 @@ type ModelSetter[T any] func(val T) error
 
 type ModelAccessor[T any] func() (T, error)
 
-type Mutator[T, S any] func(input T) (S, error)
-
 type WriterFunc func(serialization.SerializationWriter) error
 
 type SerializerFunc[T any] func(accessor ModelAccessor[T]) WriterFunc
 
 type DeserializerFunc[T any] func(setter ModelSetter[T]) serialization.NodeParser
 
-func SetMutatedValueFromSource[T, S any](source func() (T, error), setter ModelSetter[S], mutator Mutator[T, S]) error {
+func SetMutatedValueFromSource[T, S any](source func() (T, error), setter ModelSetter[S], mutator conversion.Mutator[T, S]) error {
 	if source == nil {
 		return errors.New("source is nil")
 	}
@@ -47,7 +46,7 @@ func SetValueFromSource[T any](source func() (T, error), setter ModelSetter[T]) 
 	return SetMutatedValueFromSource(source, setter, func(t T) (T, error) { return t, nil })
 }
 
-func WriteMutatedValueToSource[T, S any](writer func(S) error, accessor ModelAccessor[T], mutator Mutator[T, S]) error {
+func WriteMutatedValueToSource[T, S any](writer func(S) error, accessor ModelAccessor[T], mutator conversion.Mutator[T, S]) error {
 	if writer == nil {
 		return errors.New("writer is nil")
 	}

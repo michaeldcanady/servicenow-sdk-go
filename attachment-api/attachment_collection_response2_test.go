@@ -3,8 +3,8 @@ package attachmentapi
 import (
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,7 +21,7 @@ func TestCreateAttachmentCollectionResponse2FromDiscriminatorValue(t *testing.T)
 				model, err := CreateAttachmentCollectionResponse2FromDiscriminatorValue(mockParseNode)
 
 				assert.Nil(t, err)
-				assert.IsType(t, &newInternal.BaseServiceNowCollectionResponse[Attachment2]{}, model)
+				assert.IsType(t, &internal.BaseServiceNowCollectionResponse[Attachment2]{}, model)
 			},
 		},
 	}

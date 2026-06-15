@@ -2,7 +2,7 @@ package accountapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 
@@ -178,13 +178,13 @@ type Account interface {
 
 // AccountModel implementation of Account
 type AccountModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 // NewAccount creates a new instance of AccountModel
 func NewAccount() *AccountModel {
 	return &AccountModel{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 
@@ -195,7 +195,7 @@ func CreateAccountFromDiscriminatorValue(_ serialization.ParseNode) (serializati
 
 // Serialize writes the objects properties to the current writer.
 func (m *AccountModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 

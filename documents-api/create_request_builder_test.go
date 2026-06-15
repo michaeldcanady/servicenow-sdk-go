@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -20,7 +20,7 @@ func TestCreateRequestBuilder_Post(t *testing.T) {
 		{
 			name: "Success",
 			setupMock: func(m *mocking.MockRequestAdapter) {
-				resp := newInternal.NewBaseServiceNowItemResponse[Document](CreateDocumentFromDiscriminatorValue)
+				resp := internal.NewBaseServiceNowItemResponse[Document](CreateDocumentFromDiscriminatorValue)
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(resp, nil)
 			},
 			expectedErr: nil,

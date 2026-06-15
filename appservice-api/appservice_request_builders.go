@@ -5,8 +5,8 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -23,20 +23,20 @@ const (
 
 // AppServiceRequestBuilder provides operations to manage ServiceNow Application Services.
 type AppServiceRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewAppServiceRequestBuilderInternal instantiates a new AppServiceRequestBuilder with path parameters.
 func NewAppServiceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AppServiceRequestBuilder {
 	return &AppServiceRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, appServiceURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, appServiceURLTemplate, pathParameters),
 	}
 }
 
 // NewAppServiceRequestBuilder instantiates a new AppServiceRequestBuilder with a raw URL.
 func NewAppServiceRequestBuilder(rawURL string, requestAdapter abstractions.RequestAdapter) *AppServiceRequestBuilder {
 	urlParams := make(map[string]string)
-	urlParams[newInternal.RawURLKey] = rawURL
+	urlParams[internal.RawURLKey] = rawURL
 	return NewAppServiceRequestBuilderInternal(urlParams, requestAdapter)
 }
 
@@ -52,13 +52,13 @@ func (rB *AppServiceRequestBuilder) Csdm() *CsdmRequestBuilder {
 
 // CreateRequestBuilder provides operations to create an application service.
 type CreateRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewCreateRequestBuilderInternal instantiates a new CreateRequestBuilder.
 func NewCreateRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CreateRequestBuilder {
 	return &CreateRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, createURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, createURLTemplate, pathParameters),
 	}
 }
 
@@ -69,7 +69,7 @@ func (rB *CreateRequestBuilder) Post(ctx context.Context, body *CreateServiceReq
 		return nil, err
 	}
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCreateServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
@@ -84,17 +84,17 @@ func (rB *CreateRequestBuilder) Post(ctx context.Context, body *CreateServiceReq
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *CreateRequestBuilder) ToPostRequestInformation(ctx context.Context, body *CreateServiceRequest, config *CreateRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
-		if headers := config.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
+		if headers := config.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := config.Options; !internal.IsNil(options) {
+		if options := config.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}
@@ -103,13 +103,13 @@ func (rB *CreateRequestBuilder) ToPostRequestInformation(ctx context.Context, bo
 
 // CsdmRequestBuilder provides operations under /api/now/v1/cmdb/csdm/app_service.
 type CsdmRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewCsdmRequestBuilderInternal instantiates a new CsdmRequestBuilder.
 func NewCsdmRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CsdmRequestBuilder {
 	return &CsdmRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, csdmAppServiceURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, csdmAppServiceURLTemplate, pathParameters),
 	}
 }
 
@@ -132,13 +132,13 @@ func (rB *CsdmRequestBuilder) ByID(sysID string) *CsdmAppServiceItemRequestBuild
 
 // FindServiceRequestBuilder provides operations to find an application service.
 type FindServiceRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewFindServiceRequestBuilderInternal instantiates a new FindServiceRequestBuilder.
 func NewFindServiceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *FindServiceRequestBuilder {
 	return &FindServiceRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, findServiceURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, findServiceURLTemplate, pathParameters),
 	}
 }
 
@@ -149,7 +149,7 @@ func (rB *FindServiceRequestBuilder) Get(ctx context.Context, config *FindServic
 		return nil, err
 	}
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateFindServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
@@ -164,31 +164,31 @@ func (rB *FindServiceRequestBuilder) Get(ctx context.Context, config *FindServic
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *FindServiceRequestBuilder) ToGetRequestInformation(_ context.Context, config *FindServiceRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
-		if headers := config.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
+		if headers := config.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := config.Options; !internal.IsNil(options) {
+		if options := config.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
-		if queryParameters := config.QueryParameters; !internal.IsNil(queryParameters) {
+		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
 			kiotaRequestInfo.AddQueryParameters(queryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 	return requestInfo, nil
 }
 
 // RegisterServiceRequestBuilder provides operations to register a CSDM service.
 type RegisterServiceRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewRegisterServiceRequestBuilderInternal instantiates a new RegisterServiceRequestBuilder.
 func NewRegisterServiceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *RegisterServiceRequestBuilder {
 	return &RegisterServiceRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, registerServiceURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, registerServiceURLTemplate, pathParameters),
 	}
 }
 
@@ -199,7 +199,7 @@ func (rB *RegisterServiceRequestBuilder) Post(ctx context.Context, body *Registe
 		return nil, err
 	}
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateRegisterServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
@@ -214,17 +214,17 @@ func (rB *RegisterServiceRequestBuilder) Post(ctx context.Context, body *Registe
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *RegisterServiceRequestBuilder) ToPostRequestInformation(ctx context.Context, body *RegisterServiceRequest, config *RegisterServiceRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
-		if headers := config.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
+		if headers := config.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := config.Options; !internal.IsNil(options) {
+		if options := config.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}
@@ -233,13 +233,13 @@ func (rB *RegisterServiceRequestBuilder) ToPostRequestInformation(ctx context.Co
 
 // CsdmAppServiceItemRequestBuilder provides operations for a specific CSDM application service.
 type CsdmAppServiceItemRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewCsdmAppServiceItemRequestBuilderInternal instantiates a new CsdmAppServiceItemRequestBuilder.
 func NewCsdmAppServiceItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CsdmAppServiceItemRequestBuilder {
 	return &CsdmAppServiceItemRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, csdmAppServiceItemURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, csdmAppServiceItemURLTemplate, pathParameters),
 	}
 }
 
@@ -255,13 +255,13 @@ func (rB *CsdmAppServiceItemRequestBuilder) ServiceDetails() *ServiceDetailsRequ
 
 // PopulateServiceRequestBuilder provides operations to populate a CSDM service.
 type PopulateServiceRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewPopulateServiceRequestBuilderInternal instantiates a new PopulateServiceRequestBuilder.
 func NewPopulateServiceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *PopulateServiceRequestBuilder {
 	return &PopulateServiceRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, populateServiceURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, populateServiceURLTemplate, pathParameters),
 	}
 }
 
@@ -272,7 +272,7 @@ func (rB *PopulateServiceRequestBuilder) Put(ctx context.Context, body *Populate
 		return nil, err
 	}
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreatePopulateServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
@@ -287,17 +287,17 @@ func (rB *PopulateServiceRequestBuilder) Put(ctx context.Context, body *Populate
 // ToPutRequestInformation creates a RequestInformation object for a PUT request.
 func (rB *PopulateServiceRequestBuilder) ToPutRequestInformation(ctx context.Context, body *PopulateServiceRequest, config *PopulateServiceRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
-		if headers := config.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
+		if headers := config.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := config.Options; !internal.IsNil(options) {
+		if options := config.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}
@@ -306,13 +306,13 @@ func (rB *PopulateServiceRequestBuilder) ToPutRequestInformation(ctx context.Con
 
 // ServiceDetailsRequestBuilder provides operations to update details of a CSDM service.
 type ServiceDetailsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewServiceDetailsRequestBuilderInternal instantiates a new ServiceDetailsRequestBuilder.
 func NewServiceDetailsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ServiceDetailsRequestBuilder {
 	return &ServiceDetailsRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, serviceDetailsURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, serviceDetailsURLTemplate, pathParameters),
 	}
 }
 
@@ -323,7 +323,7 @@ func (rB *ServiceDetailsRequestBuilder) Put(ctx context.Context, body *ServiceDe
 		return nil, err
 	}
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateServiceDetailsResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
@@ -338,17 +338,17 @@ func (rB *ServiceDetailsRequestBuilder) Put(ctx context.Context, body *ServiceDe
 // ToPutRequestInformation creates a RequestInformation object for a PUT request.
 func (rB *ServiceDetailsRequestBuilder) ToPutRequestInformation(ctx context.Context, body *ServiceDetailsRequest, config *ServiceDetailsRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
-		if headers := config.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
+		if headers := config.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := config.Options; !internal.IsNil(options) {
+		if options := config.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
 	if err != nil {
 		return nil, err
 	}

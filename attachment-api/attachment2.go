@@ -5,7 +5,6 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 
@@ -89,16 +88,16 @@ type Attachment2 interface {
 
 // Attachment2Model implementation of Attachment2
 type Attachment2Model struct {
-	newInternal.Model
+	internal.BackedModel
 }
 
 // NewAttachment creates a new instance of Attachment2Model
 func NewAttachment2() *Attachment2Model {
-	return newAttachment2(newInternal.NewBaseModel())
+	return newAttachment2(internal.NewBaseModel())
 }
 
 // newAttachment2 creates a new instance of Attachment2Model with the provided model underlying it
-func newAttachment2(model newInternal.Model) *Attachment2Model {
+func newAttachment2(model internal.BackedModel) *Attachment2Model {
 	return &Attachment2Model{
 		model,
 	}
@@ -111,7 +110,7 @@ func CreateAttachment2FromDiscriminatorValue(_ serialization.ParseNode) (seriali
 
 // Serialize writes the objects properties to the current writer.
 func (rE *Attachment2Model) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -146,7 +145,7 @@ func (rE *Attachment2Model) GetFieldDeserializers() map[string]func(serializatio
 		tableSysIDKey:        internalSerialization.DeserializeStringFunc()(rE.setTableSysID),
 		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSizeBytes),
 		downloadLinkKey:      internalSerialization.DeserializeStringFunc()(rE.setDownloadLink),
-		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr(dateTimeFormat))(rE.setSysUpdatedOn),
+		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc[*time.Time](conversion.StringPtrToTimePtr(dateTimeFormat))(rE.setSysUpdatedOn),
 		sysIDKey:             internalSerialization.DeserializeStringFunc()(rE.setSysID),
 		imageHeightKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(rE.setImageHeight),
 		sysCreatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr(dateTimeFormat))(rE.setSysCreatedOn),
@@ -170,7 +169,7 @@ func (rE *Attachment2Model) GetFieldDeserializers() map[string]func(serializatio
 
 // GetTableSysID returns the table sys id
 func (rE *Attachment2Model) GetTableSysID() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -180,7 +179,7 @@ func (rE *Attachment2Model) GetTableSysID() (*string, error) {
 
 // setTableSysID sets the table sys id to the provide value
 func (rE *Attachment2Model) setTableSysID(tableSysID *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -190,7 +189,7 @@ func (rE *Attachment2Model) setTableSysID(tableSysID *string) error {
 
 // GetSizeBytes returns the attachment's size in bytes
 func (rE *Attachment2Model) GetSizeBytes() (*int64, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -200,7 +199,7 @@ func (rE *Attachment2Model) GetSizeBytes() (*int64, error) {
 
 // setSizeBytes sets the size (in bytes) to the provided value
 func (rE *Attachment2Model) setSizeBytes(size *int64) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -210,7 +209,7 @@ func (rE *Attachment2Model) setSizeBytes(size *int64) error {
 
 // GetDownloadLink returns the download link
 func (rE *Attachment2Model) GetDownloadLink() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -220,7 +219,7 @@ func (rE *Attachment2Model) GetDownloadLink() (*string, error) {
 
 // setDownloadLink sets the download link to the provided value
 func (rE *Attachment2Model) setDownloadLink(link *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -230,7 +229,7 @@ func (rE *Attachment2Model) setDownloadLink(link *string) error {
 
 // GetSysUpdatedOn return the last updated timestamp
 func (rE *Attachment2Model) GetSysUpdatedOn() (*time.Time, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -240,7 +239,7 @@ func (rE *Attachment2Model) GetSysUpdatedOn() (*time.Time, error) {
 
 // setSysUpdatedOn sets the last updated timestamp to the provided value
 func (rE *Attachment2Model) setSysUpdatedOn(val *time.Time) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -250,7 +249,7 @@ func (rE *Attachment2Model) setSysUpdatedOn(val *time.Time) error {
 
 // GetSysID returns the sys id
 func (rE *Attachment2Model) GetSysID() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -260,7 +259,7 @@ func (rE *Attachment2Model) GetSysID() (*string, error) {
 
 // setSysID sets the sys id to the provide value
 func (rE *Attachment2Model) setSysID(val *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -270,7 +269,7 @@ func (rE *Attachment2Model) setSysID(val *string) error {
 
 // GetImageHeight returns the image's height, if the attachment is an image
 func (rE *Attachment2Model) GetImageHeight() (*float64, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -280,7 +279,7 @@ func (rE *Attachment2Model) GetImageHeight() (*float64, error) {
 
 // setImageHeight sets the image height to the provided value
 func (rE *Attachment2Model) setImageHeight(val *float64) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -290,7 +289,7 @@ func (rE *Attachment2Model) setImageHeight(val *float64) error {
 
 // GetSysCreatedOn returns the created on timestamp
 func (rE *Attachment2Model) GetSysCreatedOn() (*time.Time, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -300,7 +299,7 @@ func (rE *Attachment2Model) GetSysCreatedOn() (*time.Time, error) {
 
 // setSysCreatedOn sets the created on timestamp to the provided value
 func (rE *Attachment2Model) setSysCreatedOn(timestamp *time.Time) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -310,7 +309,7 @@ func (rE *Attachment2Model) setSysCreatedOn(timestamp *time.Time) error {
 
 // GetFileName returns the file name
 func (rE *Attachment2Model) GetFileName() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -326,7 +325,7 @@ func (rE *Attachment2Model) setFileName(name *string) error {
 
 // GetSysCreatedBy returns the username of who created it
 func (rE *Attachment2Model) GetSysCreatedBy() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -336,7 +335,7 @@ func (rE *Attachment2Model) GetSysCreatedBy() (*string, error) {
 
 // setSysCreatedBy sets the username of who created it to the provided value
 func (rE *Attachment2Model) setSysCreatedBy(val *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -346,7 +345,7 @@ func (rE *Attachment2Model) setSysCreatedBy(val *string) error {
 
 // GetCompressed returns if the attachment is compressed
 func (rE *Attachment2Model) GetCompressed() (*bool, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -356,7 +355,7 @@ func (rE *Attachment2Model) GetCompressed() (*bool, error) {
 
 // setCompressed sets if the attachment is compressed
 func (rE *Attachment2Model) setCompressed(compressed *bool) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -366,7 +365,7 @@ func (rE *Attachment2Model) setCompressed(compressed *bool) error {
 
 // GetAverageImageColor returns the average image color, if an image
 func (rE *Attachment2Model) GetAverageImageColor() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -376,7 +375,7 @@ func (rE *Attachment2Model) GetAverageImageColor() (*string, error) {
 
 // setAverageImageColor sets the average image color to the provided value
 func (rE *Attachment2Model) setAverageImageColor(color *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -386,7 +385,7 @@ func (rE *Attachment2Model) setAverageImageColor(color *string) error {
 
 // GetSysUpdatedBy returns the username of the account that last updated the attachment
 func (rE *Attachment2Model) GetSysUpdatedBy() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -396,7 +395,7 @@ func (rE *Attachment2Model) GetSysUpdatedBy() (*string, error) {
 
 // setSysUpdatedBy sets the username of the account that last updated the attachment to the provide value
 func (rE *Attachment2Model) setSysUpdatedBy(username *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -406,7 +405,7 @@ func (rE *Attachment2Model) setSysUpdatedBy(username *string) error {
 
 // GetSysTags returns slice of tags
 func (rE *Attachment2Model) GetSysTags() ([]string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -416,7 +415,7 @@ func (rE *Attachment2Model) GetSysTags() ([]string, error) {
 
 // setSysTags sets the sys tags to the provided values
 func (rE *Attachment2Model) setSysTags(tags []string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -426,7 +425,7 @@ func (rE *Attachment2Model) setSysTags(tags []string) error {
 
 // GetTableName returns associated table name
 func (rE *Attachment2Model) GetTableName() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -436,7 +435,7 @@ func (rE *Attachment2Model) GetTableName() (*string, error) {
 
 // setTableName sets table name to provided value
 func (rE *Attachment2Model) setTableName(name *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -446,7 +445,7 @@ func (rE *Attachment2Model) setTableName(name *string) error {
 
 // GetImageWidth returns the width, if attachment is an image
 func (rE *Attachment2Model) GetImageWidth() (*float64, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -456,7 +455,7 @@ func (rE *Attachment2Model) GetImageWidth() (*float64, error) {
 
 // setImageWidth sets the width to the provide value
 func (rE *Attachment2Model) setImageWidth(width *float64) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -466,7 +465,7 @@ func (rE *Attachment2Model) setImageWidth(width *float64) error {
 
 // GetSysModCount returns the mod count
 func (rE *Attachment2Model) GetSysModCount() (*int64, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -476,7 +475,7 @@ func (rE *Attachment2Model) GetSysModCount() (*int64, error) {
 
 // setSysModCount sets the count to the provided value
 func (rE *Attachment2Model) setSysModCount(count *int64) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -486,7 +485,7 @@ func (rE *Attachment2Model) setSysModCount(count *int64) error {
 
 // GetContentType returns the content type of the attachment
 func (rE *Attachment2Model) GetContentType() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -496,7 +495,7 @@ func (rE *Attachment2Model) GetContentType() (*string, error) {
 
 // setContentType sets the content type to the provided value
 func (rE *Attachment2Model) setContentType(contentType *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -506,7 +505,7 @@ func (rE *Attachment2Model) setContentType(contentType *string) error {
 
 // GetSizeCompressed returns compressed size of attachment
 func (rE *Attachment2Model) GetSizeCompressed() (*int64, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -516,7 +515,7 @@ func (rE *Attachment2Model) GetSizeCompressed() (*int64, error) {
 
 // setSizeCompressed sets compressed size to provided value
 func (rE *Attachment2Model) setSizeCompressed(size *int64) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -527,7 +526,7 @@ func (rE *Attachment2Model) setSizeCompressed(size *int64) error {
 // TODO: should be int64
 // GetChunkSizeBytes returns chunk size (in bytes) of attachment
 func (rE *Attachment2Model) GetChunkSizeBytes() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -537,7 +536,7 @@ func (rE *Attachment2Model) GetChunkSizeBytes() (*string, error) {
 
 // setChunkSizeBytes sets chunk size to provided value
 func (rE *Attachment2Model) setChunkSizeBytes(size *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -547,7 +546,7 @@ func (rE *Attachment2Model) setChunkSizeBytes(size *string) error {
 
 // GetHash returns hash of attachment
 func (rE *Attachment2Model) GetHash() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -557,7 +556,7 @@ func (rE *Attachment2Model) GetHash() (*string, error) {
 
 // setHash sets hash to provided value
 func (rE *Attachment2Model) setHash(hash *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 
@@ -567,7 +566,7 @@ func (rE *Attachment2Model) setHash(hash *string) error {
 
 // GetState returns the state
 func (rE *Attachment2Model) GetState() (*string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
@@ -577,7 +576,7 @@ func (rE *Attachment2Model) GetState() (*string, error) {
 
 // setState sets the state
 func (rE *Attachment2Model) setState(val *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return nil
 	}
 

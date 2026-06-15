@@ -2,7 +2,7 @@ package appserviceapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -11,15 +11,15 @@ import (
 
 // CreateServiceRequest represents the request body for creating an application service.
 type CreateServiceRequest struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewCreateServiceRequest() *CreateServiceRequest {
-	return &CreateServiceRequest{BaseModel: *newInternal.NewBaseModel()}
+	return &CreateServiceRequest{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *CreateServiceRequest) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -57,15 +57,15 @@ func CreateCreateServiceRequestFromDiscriminatorValue(_ serialization.ParseNode)
 
 // CreateServiceResult represents the result details of a created application service.
 type CreateServiceResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewCreateServiceResult() *CreateServiceResult {
-	return &CreateServiceResult{BaseModel: *newInternal.NewBaseModel()}
+	return &CreateServiceResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *CreateServiceResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -113,24 +113,24 @@ func CreateCreateServiceResultFromDiscriminatorValue(_ serialization.ParseNode) 
 
 // CreateServiceResponse represents the response containing the created application service details.
 type CreateServiceResponse interface {
-	newInternal.ServiceNowItemResponse[*CreateServiceResult]
+	internal.ServiceNowItemResponse[*CreateServiceResult]
 }
 
 func CreateCreateServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*CreateServiceResult](CreateCreateServiceResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowItemResponse[*CreateServiceResult](CreateCreateServiceResultFromDiscriminatorValue), nil
 }
 
 // FindServiceResult represents the result details retrieved from the find_service endpoint.
 type FindServiceResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewFindServiceResult() *FindServiceResult {
-	return &FindServiceResult{BaseModel: *newInternal.NewBaseModel()}
+	return &FindServiceResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *FindServiceResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -198,24 +198,24 @@ func CreateFindServiceResultFromDiscriminatorValue(_ serialization.ParseNode) (s
 
 // FindServiceResponse represents the response containing the found application service details.
 type FindServiceResponse interface {
-	newInternal.ServiceNowItemResponse[*FindServiceResult]
+	internal.ServiceNowItemResponse[*FindServiceResult]
 }
 
 func CreateFindServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*FindServiceResult](CreateFindServiceResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowItemResponse[*FindServiceResult](CreateFindServiceResultFromDiscriminatorValue), nil
 }
 
 // BasicDetails represents the basic details schema inside CSDM requests.
 type BasicDetails struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewBasicDetails() *BasicDetails {
-	return &BasicDetails{BaseModel: *newInternal.NewBaseModel()}
+	return &BasicDetails{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *BasicDetails) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -293,15 +293,15 @@ func CreateBasicDetailsFromDiscriminatorValue(_ serialization.ParseNode) (serial
 
 // RegisterServiceRequest represents the request body for registering a CSDM service.
 type RegisterServiceRequest struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewRegisterServiceRequest() *RegisterServiceRequest {
-	return &RegisterServiceRequest{BaseModel: *newInternal.NewBaseModel()}
+	return &RegisterServiceRequest{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *RegisterServiceRequest) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -329,15 +329,15 @@ func CreateRegisterServiceRequestFromDiscriminatorValue(_ serialization.ParseNod
 
 // RegisterServiceResult represents the result details of a registered CSDM service.
 type RegisterServiceResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewRegisterServiceResult() *RegisterServiceResult {
-	return &RegisterServiceResult{BaseModel: *newInternal.NewBaseModel()}
+	return &RegisterServiceResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *RegisterServiceResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -395,24 +395,24 @@ func CreateRegisterServiceResultFromDiscriminatorValue(_ serialization.ParseNode
 
 // RegisterServiceResponse represents the response containing the registered CSDM service details.
 type RegisterServiceResponse interface {
-	newInternal.ServiceNowItemResponse[*RegisterServiceResult]
+	internal.ServiceNowItemResponse[*RegisterServiceResult]
 }
 
 func CreateRegisterServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*RegisterServiceResult](CreateRegisterServiceResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowItemResponse[*RegisterServiceResult](CreateRegisterServiceResultFromDiscriminatorValue), nil
 }
 
 // ServiceRelation represents a relationship between components inside Populate request.
 type ServiceRelation struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewServiceRelation() *ServiceRelation {
-	return &ServiceRelation{BaseModel: *newInternal.NewBaseModel()}
+	return &ServiceRelation{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ServiceRelation) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -460,15 +460,15 @@ func CreateServiceRelationFromDiscriminatorValue(_ serialization.ParseNode) (ser
 
 // PopulateServiceRequest represents the request body for populating a CSDM service.
 type PopulateServiceRequest struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewPopulateServiceRequest() *PopulateServiceRequest {
-	return &PopulateServiceRequest{BaseModel: *newInternal.NewBaseModel()}
+	return &PopulateServiceRequest{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *PopulateServiceRequest) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -496,15 +496,15 @@ func CreatePopulateServiceRequestFromDiscriminatorValue(_ serialization.ParseNod
 
 // PopulateServiceResult represents the result details of populating a service.
 type PopulateServiceResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewPopulateServiceResult() *PopulateServiceResult {
-	return &PopulateServiceResult{BaseModel: *newInternal.NewBaseModel()}
+	return &PopulateServiceResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *PopulateServiceResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -542,24 +542,24 @@ func CreatePopulateServiceResultFromDiscriminatorValue(_ serialization.ParseNode
 
 // PopulateServiceResponse represents the response containing populate result details.
 type PopulateServiceResponse interface {
-	newInternal.ServiceNowItemResponse[*PopulateServiceResult]
+	internal.ServiceNowItemResponse[*PopulateServiceResult]
 }
 
 func CreatePopulateServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*PopulateServiceResult](CreatePopulateServiceResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowItemResponse[*PopulateServiceResult](CreatePopulateServiceResultFromDiscriminatorValue), nil
 }
 
 // ServiceDetailsRequest represents the request body for modifying basic details of a CSDM service.
 type ServiceDetailsRequest struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewServiceDetailsRequest() *ServiceDetailsRequest {
-	return &ServiceDetailsRequest{BaseModel: *newInternal.NewBaseModel()}
+	return &ServiceDetailsRequest{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ServiceDetailsRequest) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -588,15 +588,15 @@ func CreateServiceDetailsRequestFromDiscriminatorValue(_ serialization.ParseNode
 
 // ServiceDetailsResult represents the result details of modifying service details.
 type ServiceDetailsResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewServiceDetailsResult() *ServiceDetailsResult {
-	return &ServiceDetailsResult{BaseModel: *newInternal.NewBaseModel()}
+	return &ServiceDetailsResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ServiceDetailsResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -634,9 +634,9 @@ func CreateServiceDetailsResultFromDiscriminatorValue(_ serialization.ParseNode)
 
 // ServiceDetailsResponse represents the response containing service details update status.
 type ServiceDetailsResponse interface {
-	newInternal.ServiceNowItemResponse[*ServiceDetailsResult]
+	internal.ServiceNowItemResponse[*ServiceDetailsResult]
 }
 
 func CreateServiceDetailsResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*ServiceDetailsResult](CreateServiceDetailsResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowItemResponse[*ServiceDetailsResult](CreateServiceDetailsResultFromDiscriminatorValue), nil
 }

@@ -3,7 +3,8 @@ package tableapi
 import (
 	"errors"
 
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -12,7 +13,7 @@ import (
 //
 // It contains the raw value, the display value, and an optional reference link.
 type RecordElement struct {
-	internal.Model
+	internal.BackedModel
 }
 
 // NewRecordElement creates a new instance of RecordElement.
@@ -30,12 +31,12 @@ const (
 
 // GetDisplayValue returns the display value of the element.
 func (rE *RecordElement) GetDisplayValue() (ElementValue, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return ElementValue{}, errors.New("model is nil")
 	}
 
 	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return ElementValue{}, errors.New("store is nil")
 	}
 
@@ -49,7 +50,7 @@ func (rE *RecordElement) GetDisplayValue() (ElementValue, error) {
 
 // SetDisplayValue sets the display value of the element.
 func (rE *RecordElement) SetDisplayValue(value any) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return errors.New("model is nil")
 	}
 
@@ -64,12 +65,12 @@ func (rE *RecordElement) SetDisplayValue(value any) error {
 
 // GetValue returns the raw value of the element.
 func (rE *RecordElement) GetValue() (ElementValue, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return ElementValue{}, errors.New("model is nil")
 	}
 
 	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return ElementValue{}, errors.New("store is nil")
 	}
 
@@ -83,7 +84,7 @@ func (rE *RecordElement) GetValue() (ElementValue, error) {
 
 // SetValue sets the raw value of the element.
 func (rE *RecordElement) SetValue(value any) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return errors.New("model is nil")
 	}
 
@@ -98,12 +99,12 @@ func (rE *RecordElement) SetValue(value any) error {
 
 // GetLink returns the reference link of the element, if it is a reference field.
 func (rE *RecordElement) GetLink() (string, error) {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return "", errors.New("model is nil")
 	}
 
 	backingStore := rE.GetBackingStore()
-	if internal.IsNil(backingStore) {
+	if conversion.IsNil(backingStore) {
 		return "", errors.New("store is nil")
 	}
 
@@ -117,7 +118,7 @@ func (rE *RecordElement) GetLink() (string, error) {
 
 // SetLink sets the reference link of the element.
 func (rE *RecordElement) SetLink(link *string) error {
-	if internal.IsNil(rE) {
+	if conversion.IsNil(rE) {
 		return errors.New("model is nil")
 	}
 

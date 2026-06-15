@@ -3,7 +3,7 @@ package actsubapi
 import (
 	"maps"
 
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -13,13 +13,13 @@ const (
 
 // ActSubRequestBuilder provides operations to manage Activity Subscriptions.
 type ActSubRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewActSubRequestBuilderInternal instantiates a new ActSubRequestBuilder.
 func NewActSubRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ActSubRequestBuilder {
 	return &ActSubRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, actSubURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, actSubURLTemplate, pathParameters),
 	}
 }
 

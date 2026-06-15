@@ -6,9 +6,9 @@ import (
 	"fmt"
 
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
@@ -19,7 +19,7 @@ const (
 
 // TableItemRequestBuilder2 provides operations to manage a single Service-Now table record.
 type TableItemRequestBuilder2[T model.ServiceNowItem] struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 	factory serialization.ParsableFactory
 }
 
@@ -30,7 +30,7 @@ func NewTableItemRequestBuilder2Internal[T model.ServiceNowItem](
 	factory serialization.ParsableFactory,
 ) *TableItemRequestBuilder2[T] {
 	m := &TableItemRequestBuilder2[T]{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, tableItemURLTemplate2, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, tableItemURLTemplate2, pathParameters),
 		factory:        factory,
 	}
 	return m
@@ -58,13 +58,13 @@ func NewTableItemRequestBuilder3[T model.ServiceNowItem](
 	factory serialization.ParsableFactory,
 ) *TableItemRequestBuilder2[T] {
 	urlParams := make(map[string]string)
-	urlParams[newInternal.RawURLKey] = rawURL
+	urlParams[internal.RawURLKey] = rawURL
 	return NewTableItemRequestBuilder2Internal[T](urlParams, requestAdapter, factory)
 }
 
 // Get sends an HTTP GET request and returns the single table record.
-func (rB *TableItemRequestBuilder2[T]) Get(ctx context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (newInternal.ServiceNowItemResponse[T], error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+func (rB *TableItemRequestBuilder2[T]) Get(ctx context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (internal.ServiceNowItemResponse[T], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
@@ -74,10 +74,10 @@ func (rB *TableItemRequestBuilder2[T]) Get(ctx context.Context, requestConfigura
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -86,9 +86,9 @@ func (rB *TableItemRequestBuilder2[T]) Get(ctx context.Context, requestConfigura
 		return nil, errors.New("response is nil")
 	}
 
-	typedResp, ok := resp.(newInternal.ServiceNowItemResponse[T])
+	typedResp, ok := resp.(internal.ServiceNowItemResponse[T])
 	if !ok {
-		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowItemResponse[T])(nil))
+		return nil, fmt.Errorf("resp is not %T", (*internal.ServiceNowItemResponse[T])(nil))
 	}
 
 	return typedResp, nil
@@ -96,7 +96,7 @@ func (rB *TableItemRequestBuilder2[T]) Get(ctx context.Context, requestConfigura
 
 // Delete sends an HTTP DELETE request to remove the single table record.
 func (rB *TableItemRequestBuilder2[T]) Delete(ctx context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) error {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
 
@@ -106,19 +106,19 @@ func (rB *TableItemRequestBuilder2[T]) Delete(ctx context.Context, requestConfig
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
 }
 
 // Put updates a table item using an HTTP PUT request, replacing the entire record.
-func (rB *TableItemRequestBuilder2[T]) Put(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (newInternal.ServiceNowItemResponse[T], error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+func (rB *TableItemRequestBuilder2[T]) Put(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (internal.ServiceNowItemResponse[T], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
-	if internal.IsNil(body) {
+	if conversion.IsNil(body) {
 		return nil, errors.New("body is nil")
 	}
 
@@ -128,10 +128,10 @@ func (rB *TableItemRequestBuilder2[T]) Put(ctx context.Context, body T, requestC
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -140,21 +140,21 @@ func (rB *TableItemRequestBuilder2[T]) Put(ctx context.Context, body T, requestC
 		return nil, errors.New("response is nil")
 	}
 
-	typedResp, ok := resp.(newInternal.ServiceNowItemResponse[T])
+	typedResp, ok := resp.(internal.ServiceNowItemResponse[T])
 	if !ok {
-		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowItemResponse[T])(nil))
+		return nil, fmt.Errorf("resp is not %T", (*internal.ServiceNowItemResponse[T])(nil))
 	}
 
 	return typedResp, nil
 }
 
 // Patch updates a table item using an HTTP PATCH request, applying partial updates.
-func (rB *TableItemRequestBuilder2[T]) Patch(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilder2PatchRequestConfiguration) (newInternal.ServiceNowItemResponse[T], error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+func (rB *TableItemRequestBuilder2[T]) Patch(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilder2PatchRequestConfiguration) (internal.ServiceNowItemResponse[T], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
-	if internal.IsNil(body) {
+	if conversion.IsNil(body) {
 		return nil, errors.New("body is nil")
 	}
 
@@ -164,10 +164,10 @@ func (rB *TableItemRequestBuilder2[T]) Patch(ctx context.Context, body T, reques
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -176,9 +176,9 @@ func (rB *TableItemRequestBuilder2[T]) Patch(ctx context.Context, body T, reques
 		return nil, errors.New("response is nil")
 	}
 
-	typedResp, ok := resp.(newInternal.ServiceNowItemResponse[T])
+	typedResp, ok := resp.(internal.ServiceNowItemResponse[T])
 	if !ok {
-		return nil, fmt.Errorf("resp is not %T", (*newInternal.ServiceNowItemResponse[T])(nil))
+		return nil, fmt.Errorf("resp is not %T", (*internal.ServiceNowItemResponse[T])(nil))
 	}
 
 	return typedResp, nil
@@ -186,75 +186,75 @@ func (rB *TableItemRequestBuilder2[T]) Patch(ctx context.Context, body T, reques
 
 // ToGetRequestInformation converts provided parameters into request information
 func (rB *TableItemRequestBuilder2[T]) ToGetRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := requestConfiguration.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
-		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
+		if queryParams := requestConfiguration.QueryParameters; !conversion.IsNil(queryParams) {
 			kiotaRequestInfo.AddQueryParameters(queryParams)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
 
 // ToDeleteRequestInformation converts provided parameters into request information
 func (rB *TableItemRequestBuilder2[T]) ToDeleteRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := requestConfiguration.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
-		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
+		if queryParams := requestConfiguration.QueryParameters; !conversion.IsNil(queryParams) {
 			kiotaRequestInfo.AddQueryParameters(queryParams)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
 
 // ToPutRequestInformation converts provided parameters into request information
 func (rB *TableItemRequestBuilder2[T]) ToPutRequestInformation(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := requestConfiguration.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
-		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
+		if queryParams := requestConfiguration.QueryParameters; !conversion.IsNil(queryParams) {
 			kiotaRequestInfo.AddQueryParameters(queryParams)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
-	if !internal.IsNil(body) {
-		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body); err != nil {
+	if !conversion.IsNil(body) {
+		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body); err != nil {
 			return nil, err
 		}
 	}
@@ -264,27 +264,27 @@ func (rB *TableItemRequestBuilder2[T]) ToPutRequestInformation(ctx context.Conte
 
 // ToPatchRequestInformation converts provided parameters into request information
 func (rB *TableItemRequestBuilder2[T]) ToPatchRequestInformation(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilder2PatchRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if internal.IsNil(rB) || internal.IsNil(rB.RequestBuilder) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PATCH, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := requestConfiguration.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
-		if queryParams := requestConfiguration.QueryParameters; !internal.IsNil(queryParams) {
+		if queryParams := requestConfiguration.QueryParameters; !conversion.IsNil(queryParams) {
 			kiotaRequestInfo.AddQueryParameters(queryParams)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
-	if !internal.IsNil(body) {
-		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, body); err != nil {
+	if !conversion.IsNil(body) {
+		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body); err != nil {
 			return nil, err
 		}
 	}

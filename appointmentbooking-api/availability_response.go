@@ -2,7 +2,7 @@ package appointmentbookingapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 
@@ -11,11 +11,11 @@ import (
 )
 
 // AvailabilityResponse represents the availability response.
-type AvailabilityResponse = newInternal.ServiceNowItemResponse[*AvailabilityResultModel]
+type AvailabilityResponse = internal.ServiceNowItemResponse[*AvailabilityResultModel]
 
 // CreateAvailabilityResponseFromDiscriminatorValue is a factory for creating an AvailabilityResponse.
 func CreateAvailabilityResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*AvailabilityResultModel](CreateAvailabilityResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowItemResponse[*AvailabilityResultModel](CreateAvailabilityResultFromDiscriminatorValue), nil
 }
 
 // AvailabilityResult represents the result object in availability response.
@@ -40,11 +40,11 @@ type AvailabilityResult interface {
 }
 
 type AvailabilityResultModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewAvailabilityResult() *AvailabilityResultModel {
-	return &AvailabilityResultModel{BaseModel: *newInternal.NewBaseModel()}
+	return &AvailabilityResultModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func CreateAvailabilityResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
@@ -52,7 +52,7 @@ func CreateAvailabilityResultFromDiscriminatorValue(_ serialization.ParseNode) (
 }
 
 func (m *AvailabilityResultModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -128,11 +128,11 @@ type AvailabilitySlot interface {
 }
 
 type AvailabilitySlotModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewAvailabilitySlot() *AvailabilitySlotModel {
-	return &AvailabilitySlotModel{BaseModel: *newInternal.NewBaseModel()}
+	return &AvailabilitySlotModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func CreateAvailabilitySlotFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {

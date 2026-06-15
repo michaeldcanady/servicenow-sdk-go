@@ -5,11 +5,12 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
 // DeserializeMutatedStringFunc returns a deserializer function for a string value that is transformed into another type.
-func DeserializeMutatedStringFunc[T any](mutator Mutator[*string, T]) DeserializerFunc[T] {
+func DeserializeMutatedStringFunc[T any](mutator conversion.Mutator[*string, T]) DeserializerFunc[T] {
 	return func(setter ModelSetter[T]) serialization.NodeParser {
 		return func(node serialization.ParseNode) error {
 			return SetMutatedValueFromSource(node.GetStringValue, setter, mutator)
@@ -117,7 +118,7 @@ func DeserializeByteArrayFunc() DeserializerFunc[[]byte] {
 }
 
 // DeserializeMutatedByteArrayFunc returns a deserializer function for a byte array value that is transformed into another type.
-func DeserializeMutatedByteArrayFunc[T any](mutator Mutator[[]byte, T]) DeserializerFunc[T] {
+func DeserializeMutatedByteArrayFunc[T any](mutator conversion.Mutator[[]byte, T]) DeserializerFunc[T] {
 	return func(setter ModelSetter[T]) serialization.NodeParser {
 		return func(node serialization.ParseNode) error {
 			return SetMutatedValueFromSource(node.GetByteArrayValue, setter, mutator)
@@ -194,7 +195,7 @@ func DeserializeAnyFunc() DeserializerFunc[any] {
 }
 
 // DeserializeMutatedAnyFunc returns a deserializer function for an any value that is transformed into another type.
-func DeserializeMutatedAnyFunc[T any](mutator Mutator[any, T]) DeserializerFunc[T] {
+func DeserializeMutatedAnyFunc[T any](mutator conversion.Mutator[any, T]) DeserializerFunc[T] {
 	return func(setter ModelSetter[T]) serialization.NodeParser {
 		return func(node serialization.ParseNode) error {
 			return SetMutatedValueFromSource(node.GetRawValue, setter, mutator)

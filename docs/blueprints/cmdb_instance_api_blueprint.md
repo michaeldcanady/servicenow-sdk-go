@@ -5,7 +5,7 @@ This blueprint outlines the architectural plan for implementing the ServiceNow C
 ## 1. Package Overview
 - **Package Name**: `cmdbinstanceapi`
 - **Base Path**: `/api/now/v1/cmdb/instance`
-- **Internal Alias**: `newInternal` (`github.com/michaeldcanady/servicenow-sdk-go/internal/new`)
+- **Internal Alias**: `newInternal` (`github.com/michaeldcanady/servicenow-sdk-go/internal`)
 
 ## 2. RequestBuilder Hierarchy
 

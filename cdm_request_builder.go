@@ -6,7 +6,7 @@ import (
 	cdmapplicationsapi "github.com/michaeldcanady/servicenow-sdk-go/cdm-applications-api"
 	cdmchangesetapi "github.com/michaeldcanady/servicenow-sdk-go/cdm-changeset-api"
 	cdmeditorapi "github.com/michaeldcanady/servicenow-sdk-go/cdm-editor-api"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	policyapi "github.com/michaeldcanady/servicenow-sdk-go/policy-api"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )

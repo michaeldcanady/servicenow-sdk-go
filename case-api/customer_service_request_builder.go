@@ -3,7 +3,7 @@ package caseapi
 import (
 	"maps"
 
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -11,13 +11,13 @@ const customerServiceURLTemplate = "{+baseurl}/api/sn_customerservice"
 
 // CustomerServiceRequestBuilder provides operations to manage Customer Service APIs.
 type CustomerServiceRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewCustomerServiceRequestBuilderInternal instantiates a new CustomerServiceRequestBuilder.
 func NewCustomerServiceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CustomerServiceRequestBuilder {
 	return &CustomerServiceRequestBuilder{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, customerServiceURLTemplate, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, customerServiceURLTemplate, pathParameters),
 	}
 }
 

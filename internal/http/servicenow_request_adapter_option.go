@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
@@ -15,7 +15,7 @@ type ServiceNowRequestAdapterOption func(*serviceNowRequestAdapterConfig) error
 // WithClient provides a http.Client to be used by the ServiceNowRequestAdapter
 func WithClient(client *http.Client) ServiceNowRequestAdapterOption {
 	return func(config *serviceNowRequestAdapterConfig) error {
-		if internal.IsNil(client) {
+		if conversion.IsNil(client) {
 			return errors.New("client is nil")
 		}
 
@@ -27,7 +27,7 @@ func WithClient(client *http.Client) ServiceNowRequestAdapterOption {
 // WithParseNodeFactory provides a ParseNodeFactory to be used by the ServiceNowRequestAdapter
 func WithParseNodeFactory(factory serialization.ParseNodeFactory) ServiceNowRequestAdapterOption {
 	return func(config *serviceNowRequestAdapterConfig) error {
-		if internal.IsNil(factory) {
+		if conversion.IsNil(factory) {
 			return errors.New("factory is nil")
 		}
 		config.parseNodeFactory = factory
@@ -50,7 +50,7 @@ func WithServiceNowClientOptions(opts ...serviceNowClientOption) ServiceNowReque
 // WithSerializationFactory provides a SerializationFactory to be used by the ServiceNowRequestAdapter
 func WithSerializationFactory(factory serialization.SerializationWriterFactory) ServiceNowRequestAdapterOption {
 	return func(config *serviceNowRequestAdapterConfig) error {
-		if internal.IsNil(factory) {
+		if conversion.IsNil(factory) {
 			return errors.New("factory is nil")
 		}
 		config.serializationWriterFactory = factory
@@ -61,7 +61,7 @@ func WithSerializationFactory(factory serialization.SerializationWriterFactory) 
 // serviceNowRequestAdapterDefaultOptions configures default options if an option is not supplied for the ServiceNowRequestAdapterConfig
 func serviceNowRequestAdapterDefaultOptions() ServiceNowRequestAdapterOption {
 	return func(config *serviceNowRequestAdapterConfig) error {
-		if internal.IsNil(config.client) {
+		if conversion.IsNil(config.client) {
 			client, err := GetDefaultClient()
 			// can't test since an error can't be forced
 			if err != nil {
@@ -72,10 +72,10 @@ func serviceNowRequestAdapterDefaultOptions() ServiceNowRequestAdapterOption {
 			config.client = nethttplibrary.GetDefaultClient(config.middleware...)
 		}
 
-		if internal.IsNil(config.serializationWriterFactory) {
+		if conversion.IsNil(config.serializationWriterFactory) {
 			config.serializationWriterFactory = serialization.DefaultSerializationWriterFactoryInstance
 		}
-		if internal.IsNil(config.parseNodeFactory) {
+		if conversion.IsNil(config.parseNodeFactory) {
 			config.parseNodeFactory = serialization.DefaultParseNodeFactoryInstance
 		}
 		return nil

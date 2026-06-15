@@ -16,7 +16,8 @@ import (
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 )
 
 type attachmentTestContext struct {
@@ -116,7 +117,7 @@ func (c *attachmentTestContext) iRequestTheAttachmentByItsSysID() error {
 }
 
 func (c *attachmentTestContext) theResultShouldHaveTheCorrectSysID() error {
-	response, ok := c.response.(newInternal.ServiceNowItemResponse[attachmentapi.Attachment2])
+	response, ok := c.response.(internal.ServiceNowItemResponse[attachmentapi.Attachment2])
 	if !ok {
 		return fmt.Errorf("expected a ServiceNowItemResponse[Attachment2], but got %T", c.response)
 	}
@@ -187,7 +188,7 @@ func (c *attachmentTestContext) iUploadTheFileFromTheResourcesDirectoryToTheInci
 	resp, err := c.client.Now2().Attachment2().File().Post(context.Background(), media, config)
 	c.response = resp
 	c.err = err
-	if err == nil && !newInternal.IsNil(resp) {
+	if err == nil && !conversion.IsNil(resp) {
 		item, err := resp.GetResult()
 		if err != nil {
 			return fmt.Errorf("failed to get result from response: %w", err)
@@ -205,7 +206,7 @@ func (c *attachmentTestContext) iUploadTheFileFromTheResourcesDirectoryToTheInci
 }
 
 func (c *attachmentTestContext) theCreatedAttachmentShouldHaveAValidSysID() error {
-	response, ok := c.response.(newInternal.ServiceNowItemResponse[attachmentapi.File])
+	response, ok := c.response.(internal.ServiceNowItemResponse[attachmentapi.File])
 	if !ok {
 		return fmt.Errorf("expected a ServiceNowItemResponse[File], but got %T", c.response)
 	}
@@ -221,7 +222,7 @@ func (c *attachmentTestContext) theCreatedAttachmentShouldHaveAValidSysID() erro
 }
 
 func (c *attachmentTestContext) theAttachmentFilenameShouldBe(fileName string) error {
-	response, ok := c.response.(newInternal.ServiceNowItemResponse[attachmentapi.File])
+	response, ok := c.response.(internal.ServiceNowItemResponse[attachmentapi.File])
 	if !ok {
 		return fmt.Errorf("expected a ServiceNowItemResponse[File], but got %T", c.response)
 	}

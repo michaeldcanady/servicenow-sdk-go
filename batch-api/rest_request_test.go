@@ -5,8 +5,8 @@ import (
 	"net/url"
 	"testing"
 
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
@@ -26,8 +26,8 @@ func TestNewRestRequest(t *testing.T) {
 				assert.NotNil(t, parsable)
 				assert.IsType(t, &RestRequestModel{}, parsable)
 
-				assert.NotNil(t, parsable.Model)
-				assert.IsType(t, &internal.BaseModel{}, parsable.Model)
+				assert.NotNil(t, parsable.BackedModel)
+				assert.IsType(t, &internal.BaseModel{}, parsable.BackedModel)
 			},
 		},
 	}

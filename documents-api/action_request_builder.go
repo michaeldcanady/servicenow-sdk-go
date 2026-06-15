@@ -5,8 +5,8 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -16,13 +16,13 @@ const (
 
 // ActionRequestBuilder provides operations to manage document actions.
 type ActionRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewActionRequestBuilderInternal instantiates a new ActionRequestBuilder.
 func NewActionRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ActionRequestBuilder {
 	return &ActionRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, actionURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, actionURLTemplate, pathParameters),
 	}
 }
 
@@ -35,13 +35,13 @@ func (rB *ActionRequestBuilder) Document(documentSysID string) *DocumentActionRe
 
 // DocumentActionRequestBuilder ...
 type DocumentActionRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewDocumentActionRequestBuilderInternal ...
 func NewDocumentActionRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *DocumentActionRequestBuilder {
 	return &DocumentActionRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, actionURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, actionURLTemplate, pathParameters),
 	}
 }
 
@@ -54,19 +54,19 @@ func (rB *DocumentActionRequestBuilder) Version(versionSysID string) *VersionAct
 
 // VersionActionRequestBuilder ...
 type VersionActionRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewVersionActionRequestBuilderInternal ...
 func NewVersionActionRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *VersionActionRequestBuilder {
 	return &VersionActionRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, actionURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, actionURLTemplate, pathParameters),
 	}
 }
 
 // Patch executes the specified action on the document version.
 func (rB *VersionActionRequestBuilder) Patch(ctx context.Context, requestConfiguration *VersionActionRequestBuilderPatchRequestConfiguration) error {
-	if internal.IsNil(rB) {
+	if conversion.IsNil(rB) {
 		return nil
 	}
 
@@ -76,7 +76,7 @@ func (rB *VersionActionRequestBuilder) Patch(ctx context.Context, requestConfigu
 	}
 
 	errorMapping := abstractions.ErrorMappings{
-		"XXX": newInternal.CreateServiceNowErrorFromDiscriminatorValue,
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
@@ -85,22 +85,22 @@ func (rB *VersionActionRequestBuilder) Patch(ctx context.Context, requestConfigu
 // ToPatchRequestInformation converts request configurations to Patch request information.
 func (rB *VersionActionRequestBuilder) ToPatchRequestInformation(ctx context.Context, requestConfiguration *VersionActionRequestBuilderPatchRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PATCH, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := requestConfiguration.Options; !internal.IsNil(options) {
+		if options := requestConfiguration.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
-		if data := requestConfiguration.Data; !internal.IsNil(data) {
-			err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), newInternal.ContentTypeApplicationJSON, data)
+		if data := requestConfiguration.Data; !conversion.IsNil(data) {
+			err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, data)
 			if err != nil {
 				return nil, err
 			}
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil
 }

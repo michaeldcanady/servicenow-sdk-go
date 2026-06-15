@@ -1,7 +1,7 @@
 package cmdbinstanceapi
 
 import (
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -29,13 +29,13 @@ type CmdbInstance interface {
 
 // CmdbInstanceModel implementation of CmdbInstance
 type CmdbInstanceModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 // NewCmdbInstance creates a new instance of CmdbInstanceModel
 func NewCmdbInstance() *CmdbInstanceModel {
 	return &CmdbInstanceModel{
-		BaseModel: *newInternal.NewBaseModel(),
+		BaseModel: *internal.NewBaseModel(),
 	}
 }
 

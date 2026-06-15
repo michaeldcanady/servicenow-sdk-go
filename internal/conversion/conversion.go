@@ -8,10 +8,6 @@ import (
 	"strconv"
 	"sync"
 	"time"
-
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
-	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
 var (
@@ -26,47 +22,6 @@ var (
 	})()
 	floatType = reflect.TypeOf(float64(0))
 )
-
-// BackedModelAccessorFunc[S,T] defines a generic function signature for retrieving a value from a backing store
-// using a specified key and converting it to a desired type.
-type BackedModelAccessorFunc[S store.BackingStore, T any] func(S, string) (T, error)
-
-// DefaultBackedModelAccessorFunc[S, T] is a generic implementation of BackedModelAccessorFunc that retrieves a value
-// from a backing store and attempts to convert it to the specified type.
-func DefaultBackedModelAccessorFunc[S store.BackingStore, T any](backingStore S, key string) (T, error) {
-	var result T
-
-	if internal.IsNil(backingStore) {
-		return result, errors.New("backingStore is nil")
-	}
-
-	val, err := backingStore.Get(key)
-	if err != nil {
-		return result, err
-	}
-
-	if err := As2(val, &result, true); err != nil {
-		return result, err
-	}
-
-	return result, nil
-}
-
-// BackedModelMutatorFunc[S, T] defines a generic function signature for setting the value of a backing store
-// using a specified key.
-type BackedModelMutatorFunc[S store.BackingStore, T any] func(S, string, T) error
-
-// DefaultBackedModelMutatorFunc[S, T] is a generic implementation of BackedModelMutatorFunc that sets the value
-// of a backing store.
-func DefaultBackedModelMutatorFunc[S store.BackingStore, T any](backingStore S, key string, value T) error {
-	if internal.IsNil(backingStore) {
-		return errors.New("backingStore is nil")
-	}
-
-	return backingStore.Set(key, value)
-}
-
-//TODO: add converter type?
 
 // Dereference recursively unwraps nested pointers.
 func Dereference(v reflect.Value) reflect.Value {
@@ -207,7 +162,7 @@ func Convert(input any, output any) error {
 	return nil
 }
 
-func StringToTime(format string) serialization.Mutator[string, time.Time] {
+func StringToTime(format string) Mutator[string, time.Time] {
 	return func(input string) (time.Time, error) {
 		dateTime, err := time.Parse(format, input)
 		if err != nil {

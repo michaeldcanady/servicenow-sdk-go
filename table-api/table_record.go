@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"slices"
 
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -20,7 +21,7 @@ var _ serialization.Parsable = (*TableRecord)(nil)
 // using a backing store. It supports both raw values and structured RecordElement instances.
 type TableRecord struct {
 	keys []string
-	internal.Model
+	internal.BackedModel
 }
 
 // CreateTableRecordFromDiscriminatorValue creates a new TableRecord from a ParseNode.
@@ -119,7 +120,7 @@ func (tR *TableRecord) GetFieldDeserializers() map[string]func(serialization.Par
 
 // Serialize implements serialization.Parsable.
 func (tR *TableRecord) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(tR) {
+	if conversion.IsNil(tR) {
 		return nil
 	}
 
@@ -145,8 +146,8 @@ func (tR *TableRecord) Serialize(writer serialization.SerializationWriter) error
 // NewTableRecord creates a new instance of TableRecord.
 func NewTableRecord() *TableRecord {
 	return &TableRecord{
-		keys:  make([]string, 0),
-		Model: internal.NewBaseModel(),
+		keys:        make([]string, 0),
+		BackedModel: internal.NewBaseModel(),
 	}
 }
 

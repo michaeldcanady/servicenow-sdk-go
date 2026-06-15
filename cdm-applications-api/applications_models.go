@@ -2,7 +2,7 @@ package cdmapplicationsapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -11,17 +11,17 @@ import (
 
 // UploadStatusOutput represents the output metadata from an upload.
 type UploadStatusOutput struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 // NewUploadStatusOutput instantiates a new UploadStatusOutput.
 func NewUploadStatusOutput() *UploadStatusOutput {
-	return &UploadStatusOutput{BaseModel: *newInternal.NewBaseModel()}
+	return &UploadStatusOutput{BaseModel: *internal.NewBaseModel()}
 }
 
 // Serialize serializes information the current object.
 func (m *UploadStatusOutput) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -65,17 +65,17 @@ func CreateUploadStatusOutputFromDiscriminatorValue(_ serialization.ParseNode) (
 
 // UploadStatusResult represents the status response of an upload.
 type UploadStatusResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 // NewUploadStatusResult instantiates a new UploadStatusResult.
 func NewUploadStatusResult() *UploadStatusResult {
-	return &UploadStatusResult{BaseModel: *newInternal.NewBaseModel()}
+	return &UploadStatusResult{BaseModel: *internal.NewBaseModel()}
 }
 
 // Serialize serializes information the current object.
 func (m *UploadStatusResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -131,15 +131,15 @@ func CreateUploadStatusResultFromDiscriminatorValue(_ serialization.ParseNode) (
 
 // ExportResult represents an export result.
 type ExportResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewExportResult() *ExportResult {
-	return &ExportResult{BaseModel: *newInternal.NewBaseModel()}
+	return &ExportResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ExportResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -198,15 +198,15 @@ func CreateExportResultFromDiscriminatorValue(_ serialization.ParseNode) (serial
 
 // ExportStatusResult represents the status of an export.
 type ExportStatusResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewExportStatusResult() *ExportStatusResult {
-	return &ExportStatusResult{BaseModel: *newInternal.NewBaseModel()}
+	return &ExportStatusResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ExportStatusResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -257,15 +257,15 @@ func CreateExportStatusResultFromDiscriminatorValue(_ serialization.ParseNode) (
 
 // SharedLibraryComponentApplication represents an application associated with shared libraries.
 type SharedLibraryComponentApplication struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewSharedLibraryComponentApplication() *SharedLibraryComponentApplication {
-	return &SharedLibraryComponentApplication{BaseModel: *newInternal.NewBaseModel()}
+	return &SharedLibraryComponentApplication{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *SharedLibraryComponentApplication) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -324,15 +324,15 @@ func CreateSharedLibraryComponentApplicationFromDiscriminatorValue(_ serializati
 
 // ComponentUploadRequest represents the body for uploading components.
 type ComponentUploadRequest struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewComponentUploadRequest() *ComponentUploadRequest {
-	return &ComponentUploadRequest{BaseModel: *newInternal.NewBaseModel()}
+	return &ComponentUploadRequest{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ComponentUploadRequest) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -383,15 +383,15 @@ func CreateComponentUploadRequestFromDiscriminatorValue(_ serialization.ParseNod
 
 // ComponentVarsUploadRequest represents the body for uploading component variables.
 type ComponentVarsUploadRequest struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewComponentVarsUploadRequest() *ComponentVarsUploadRequest {
-	return &ComponentVarsUploadRequest{BaseModel: *newInternal.NewBaseModel()}
+	return &ComponentVarsUploadRequest{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ComponentVarsUploadRequest) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -434,15 +434,15 @@ func CreateComponentVarsUploadRequestFromDiscriminatorValue(_ serialization.Pars
 
 // CollectionUploadRequest represents the body for uploading collections.
 type CollectionUploadRequest struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewCollectionUploadRequest() *CollectionUploadRequest {
-	return &CollectionUploadRequest{BaseModel: *newInternal.NewBaseModel()}
+	return &CollectionUploadRequest{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *CollectionUploadRequest) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -493,15 +493,15 @@ func CreateCollectionUploadRequestFromDiscriminatorValue(_ serialization.ParseNo
 
 // DeployableUpdateRequest represents the body for updating deployables.
 type DeployableUpdateRequest struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewDeployableUpdateRequest() *DeployableUpdateRequest {
-	return &DeployableUpdateRequest{BaseModel: *newInternal.NewBaseModel()}
+	return &DeployableUpdateRequest{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *DeployableUpdateRequest) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -544,15 +544,15 @@ func CreateDeployableUpdateRequestFromDiscriminatorValue(_ serialization.ParseNo
 
 // SharedComponentUpdateRequest represents the body for updating shared components.
 type SharedComponentUpdateRequest struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewSharedComponentUpdateRequest() *SharedComponentUpdateRequest {
-	return &SharedComponentUpdateRequest{BaseModel: *newInternal.NewBaseModel()}
+	return &SharedComponentUpdateRequest{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *SharedComponentUpdateRequest) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,

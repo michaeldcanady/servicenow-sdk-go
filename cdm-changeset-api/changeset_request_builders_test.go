@@ -3,8 +3,8 @@ package cdmchangesetapi
 import (
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 )
@@ -21,7 +21,7 @@ func TestChangesetsRequestBuilder_Get(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 
 	uri, _ := requestInfo.GetUri()
@@ -40,7 +40,7 @@ func TestChangesetActivityRequestBuilder_Get(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 
 	uri, _ := requestInfo.GetUri()
@@ -72,7 +72,7 @@ func TestChangesetsRequestBuilder_ImpactedSharedComponents(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.ImpactedSharedComponents().GetURLTemplate(), builder.ImpactedSharedComponents().GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 
 	uri, _ := requestInfo.GetUri()
@@ -91,7 +91,7 @@ func TestChangesetsRequestBuilder_ImpactedDeployables(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.ImpactedDeployables().GetURLTemplate(), builder.ImpactedDeployables().GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 
 	uri, _ := requestInfo.GetUri()

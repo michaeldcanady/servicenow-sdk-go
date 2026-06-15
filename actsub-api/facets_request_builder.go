@@ -5,8 +5,8 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -16,13 +16,13 @@ const (
 
 // FacetsRequestBuilder provides operations to manage facets.
 type FacetsRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 // NewFacetsRequestBuilderInternal instantiates a new FacetsRequestBuilder.
 func NewFacetsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *FacetsRequestBuilder {
 	return &FacetsRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, facetsURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, facetsURLTemplate, pathParameters),
 	}
 }
 
@@ -35,7 +35,7 @@ func (rB *FacetsRequestBuilder) ByContext(activityContext string) *FacetsContext
 
 // FacetsContextRequestBuilder provides operations to manage facets for a specific context.
 type FacetsContextRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 const facetsContextURLTemplate = "{+baseurl}/api/now/v1/actsub/facets/{activity_context}"
@@ -43,7 +43,7 @@ const facetsContextURLTemplate = "{+baseurl}/api/now/v1/actsub/facets/{activity_
 // NewFacetsContextRequestBuilderInternal instantiates a new FacetsContextRequestBuilder.
 func NewFacetsContextRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *FacetsContextRequestBuilder {
 	return &FacetsContextRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, facetsContextURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, facetsContextURLTemplate, pathParameters),
 	}
 }
 
@@ -56,7 +56,7 @@ func (rB *FacetsContextRequestBuilder) ByInstance(contextInstance string) *Facet
 
 // FacetsInstanceRequestBuilder provides operations to manage facets for a specific context instance.
 type FacetsInstanceRequestBuilder struct {
-	newInternal.RequestBuilder
+	internal.RequestBuilder
 }
 
 const facetsInstanceURLTemplate = "{+baseurl}/api/now/v1/actsub/facets/{activity_context}/{context_instance}"
@@ -64,18 +64,18 @@ const facetsInstanceURLTemplate = "{+baseurl}/api/now/v1/actsub/facets/{activity
 // NewFacetsInstanceRequestBuilderInternal instantiates a new FacetsInstanceRequestBuilder.
 func NewFacetsInstanceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *FacetsInstanceRequestBuilder {
 	return &FacetsInstanceRequestBuilder{
-		newInternal.NewBaseRequestBuilder(requestAdapter, facetsInstanceURLTemplate, pathParameters),
+		internal.NewBaseRequestBuilder(requestAdapter, facetsInstanceURLTemplate, pathParameters),
 	}
 }
 
 // Get sends a GET request to retrieve facets.
-func (rB *FacetsInstanceRequestBuilder) Get(ctx context.Context, config *FacetsRequestBuilderGetRequestConfiguration) (*newInternal.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+func (rB *FacetsInstanceRequestBuilder) Get(ctx context.Context, config *FacetsRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, newInternal.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -84,25 +84,25 @@ func (rB *FacetsInstanceRequestBuilder) Get(ctx context.Context, config *FacetsR
 		return nil, nil
 	}
 
-	return res.(*newInternal.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel]), nil
+	return res.(*internal.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel]), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *FacetsInstanceRequestBuilder) ToGetRequestInformation(ctx context.Context, config *FacetsRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !internal.IsNil(config) {
-		if headers := config.Headers; !internal.IsNil(headers) {
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(config) {
+		if headers := config.Headers; !conversion.IsNil(headers) {
 			kiotaRequestInfo.Headers.AddAll(headers)
 		}
-		if options := config.Options; !internal.IsNil(options) {
+		if options := config.Options; !conversion.IsNil(options) {
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
-		if queryParameters := config.QueryParameters; !internal.IsNil(queryParameters) {
+		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
 			kiotaRequestInfo.AddQueryParameters(queryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), newInternal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return requestInfo, nil
 }

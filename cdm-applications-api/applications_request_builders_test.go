@@ -3,8 +3,8 @@ package cdmapplicationsapi
 import (
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 )
@@ -50,7 +50,7 @@ func TestDeployablesRequestBuilder_Delete(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, builder.GetURLTemplate(), builder.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 
 	uri, err := requestInfo.GetUri()
@@ -72,7 +72,7 @@ func TestSharedComponentsRequestBuilder_Delete(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, builder.GetURLTemplate(), builder.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 
 	uri, err := requestInfo.GetUri()
@@ -148,7 +148,7 @@ func TestExportsRequestBuilder_Get(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 
 	uri, err := requestInfo.GetUri()
@@ -192,7 +192,7 @@ func TestSharedLibrariesComponentsApplicationsRequestBuilder_Get(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 
 	uri, err := requestInfo.GetUri()
@@ -248,7 +248,7 @@ func TestUploadsCollectionsFileRequestBuilder_Post(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, builder.GetURLTemplate(), builder.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 
 	uri, err := requestInfo.GetUri()
@@ -271,7 +271,7 @@ func TestUploadsDeployablesFileRequestBuilder_Post(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, builder.GetURLTemplate(), builder.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 
 	uri, err := requestInfo.GetUri()

@@ -3,8 +3,8 @@ package cdmeditorapi
 import (
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 )
@@ -21,7 +21,7 @@ func TestNodesRequestBuilder_Get(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 
 	uri, _ := requestInfo.GetUri()
@@ -53,7 +53,7 @@ func TestValidationRequestBuilder_Get(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
-	kiotaRequestInfo := &newInternal.KiotaRequestInformation{RequestInformation: requestInfo}
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 
 	uri, _ := requestInfo.GetUri()

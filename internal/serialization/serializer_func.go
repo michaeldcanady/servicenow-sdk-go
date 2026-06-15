@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -21,7 +21,7 @@ func Serialize(writer serialization.SerializationWriter, serializers ...WriterFu
 }
 
 // SerializeMutatedStringFunc returns a serializer function for a string value that is transformed from another type.
-func SerializeMutatedStringFunc[T any](key string, mutator Mutator[T, *string]) SerializerFunc[T] {
+func SerializeMutatedStringFunc[T any](key string, mutator conversion.Mutator[T, *string]) SerializerFunc[T] {
 	return func(accessor ModelAccessor[T]) WriterFunc {
 		return func(sw serialization.SerializationWriter) error {
 			return WriteMutatedValueToSource(func(v *string) error {
@@ -137,7 +137,7 @@ func SerializeObjectValueFunc[T serialization.Parsable](key string) SerializerFu
 	return func(accessor ModelAccessor[T]) WriterFunc {
 		return func(sw serialization.SerializationWriter) error {
 			return WriteValueToSource(func(v T) error {
-				if !internal.IsNil(v) {
+				if !conversion.IsNil(v) {
 					return sw.WriteObjectValue(key, v)
 				}
 				return nil

@@ -2,7 +2,7 @@ package appointmentbookingapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 
@@ -23,11 +23,11 @@ type ExecuteRuleConditionsRequest interface {
 }
 
 type ExecuteRuleConditionsRequestModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewExecuteRuleConditionsRequest() *ExecuteRuleConditionsRequestModel {
-	return &ExecuteRuleConditionsRequestModel{BaseModel: *newInternal.NewBaseModel()}
+	return &ExecuteRuleConditionsRequestModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func CreateExecuteRuleConditionsRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
@@ -35,7 +35,7 @@ func CreateExecuteRuleConditionsRequestFromDiscriminatorValue(_ serialization.Pa
 }
 
 func (m *ExecuteRuleConditionsRequestModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -73,11 +73,11 @@ func (m *ExecuteRuleConditionsRequestModel) setTaskId(val *string) error {
 }
 
 // ExecuteRuleConditionsResponse represents the response from execute_rule_conditions.
-type ExecuteRuleConditionsResponse = newInternal.ServiceNowItemResponse[*ExecuteRuleConditionsResultModel]
+type ExecuteRuleConditionsResponse = internal.ServiceNowItemResponse[*ExecuteRuleConditionsResultModel]
 
 // CreateExecuteRuleConditionsResponseFromDiscriminatorValue is a factory.
 func CreateExecuteRuleConditionsResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return newInternal.NewBaseServiceNowItemResponse[*ExecuteRuleConditionsResultModel](CreateExecuteRuleConditionsResultFromDiscriminatorValue), nil
+	return internal.NewBaseServiceNowItemResponse[*ExecuteRuleConditionsResultModel](CreateExecuteRuleConditionsResultFromDiscriminatorValue), nil
 }
 
 type ExecuteRuleConditionsResult interface {
@@ -95,11 +95,11 @@ type ExecuteRuleConditionsResult interface {
 }
 
 type ExecuteRuleConditionsResultModel struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewExecuteRuleConditionsResult() *ExecuteRuleConditionsResultModel {
-	return &ExecuteRuleConditionsResultModel{BaseModel: *newInternal.NewBaseModel()}
+	return &ExecuteRuleConditionsResultModel{BaseModel: *internal.NewBaseModel()}
 }
 
 func CreateExecuteRuleConditionsResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
@@ -107,7 +107,7 @@ func CreateExecuteRuleConditionsResultFromDiscriminatorValue(_ serialization.Par
 }
 
 func (m *ExecuteRuleConditionsResultModel) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,

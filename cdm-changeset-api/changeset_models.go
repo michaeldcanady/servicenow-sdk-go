@@ -2,7 +2,7 @@ package cdmchangesetapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -11,15 +11,15 @@ import (
 
 // Reference represents a link and value pair.
 type Reference struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewReference() *Reference {
-	return &Reference{BaseModel: *newInternal.NewBaseModel()}
+	return &Reference{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *Reference) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -54,15 +54,15 @@ func CreateReferenceFromDiscriminatorValue(_ serialization.ParseNode) (serializa
 
 // ChangesetResult represents a changeset.
 type ChangesetResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewChangesetResult() *ChangesetResult {
-	return &ChangesetResult{BaseModel: *newInternal.NewBaseModel()}
+	return &ChangesetResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ChangesetResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -169,15 +169,15 @@ func CreateChangesetResultFromDiscriminatorValue(_ serialization.ParseNode) (ser
 
 // ChangesetActivityResult represents a changeset activity.
 type ChangesetActivityResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewChangesetActivityResult() *ChangesetActivityResult {
-	return &ChangesetActivityResult{BaseModel: *newInternal.NewBaseModel()}
+	return &ChangesetActivityResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ChangesetActivityResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -268,15 +268,15 @@ func CreateChangesetActivityResultFromDiscriminatorValue(_ serialization.ParseNo
 
 // CommitStatusResult represents a commit status.
 type CommitStatusResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewCommitStatusResult() *CommitStatusResult {
-	return &CommitStatusResult{BaseModel: *newInternal.NewBaseModel()}
+	return &CommitStatusResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *CommitStatusResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -303,15 +303,15 @@ func CreateCommitStatusResultFromDiscriminatorValue(_ serialization.ParseNode) (
 
 // ImpactedSharedComponentResult represents an impacted shared component.
 type ImpactedSharedComponentResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewImpactedSharedComponentResult() *ImpactedSharedComponentResult {
-	return &ImpactedSharedComponentResult{BaseModel: *newInternal.NewBaseModel()}
+	return &ImpactedSharedComponentResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ImpactedSharedComponentResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -426,15 +426,15 @@ func CreateImpactedSharedComponentResultFromDiscriminatorValue(_ serialization.P
 
 // ImpactedDeployableResult represents an impacted deployable (query-based).
 type ImpactedDeployableResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewImpactedDeployableResult() *ImpactedDeployableResult {
-	return &ImpactedDeployableResult{BaseModel: *newInternal.NewBaseModel()}
+	return &ImpactedDeployableResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ImpactedDeployableResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
@@ -573,15 +573,15 @@ func CreateImpactedDeployableResultFromDiscriminatorValue(_ serialization.ParseN
 
 // ImpactedDeployableBySysIdResult represents an impacted deployable (path-based).
 type ImpactedDeployableBySysIdResult struct {
-	newInternal.BaseModel
+	internal.BaseModel
 }
 
 func NewImpactedDeployableBySysIdResult() *ImpactedDeployableBySysIdResult {
-	return &ImpactedDeployableBySysIdResult{BaseModel: *newInternal.NewBaseModel()}
+	return &ImpactedDeployableBySysIdResult{BaseModel: *internal.NewBaseModel()}
 }
 
 func (m *ImpactedDeployableBySysIdResult) Serialize(writer serialization.SerializationWriter) error {
-	if internal.IsNil(m) {
+	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
