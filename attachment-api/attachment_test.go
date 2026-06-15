@@ -52,7 +52,7 @@ func TestAttachment2Model_Serialize(t *testing.T) {
 	err := m.Serialize(nil)
 	assert.NoError(t, err)
 
-	var nilM *Attachment2Model
+	var nilM *Attachment
 	err = nilM.Serialize(nil)
 	assert.NoError(t, err)
 }
@@ -64,7 +64,7 @@ func TestAttachment2Model_GetTableSysID(t *testing.T) {
 
 	tests := []struct {
 		name     string
-		model    *Attachment2Model
+		model    *Attachment
 		expected *string
 	}{
 		{"Ok", m, &s},
@@ -86,7 +86,7 @@ func TestAttachment2Model_setTableSysID(t *testing.T) {
 
 	tests := []struct {
 		name  string
-		model *Attachment2Model
+		model *Attachment
 		val   *string
 	}{
 		{"Ok", m, &s},

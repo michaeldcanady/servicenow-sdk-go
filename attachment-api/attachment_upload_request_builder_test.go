@@ -169,7 +169,7 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 				mockSerializationWriterFactory.On("GetSerializationWriter", mock.Anything).Return(mockSerializationWriter, nil)
 
 				ra.On("GetSerializationWriterFactory").Return(mockSerializationWriterFactory)
-				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&Attachment2Model{}, nil)
+				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&Attachment{}, nil)
 			},
 			expectedErr: true,
 		},

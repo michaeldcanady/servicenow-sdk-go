@@ -7,9 +7,9 @@ import (
 
 // NewAttachmentPageIterator creates a new AttachmentPageIterator instance.
 func NewAttachmentPageIterator(
-	res internal.ServiceNowCollectionResponse[Attachment2],
+	res internal.ServiceNowCollectionResponse[*Attachment],
 	reqAdapter abstractions.RequestAdapter,
-	options ...internal.Option[*internal.PageIterator[Attachment2]],
-) (*internal.PageIterator[Attachment2], error) {
-	return internal.NewPageIterator[Attachment2](res, reqAdapter, CreateAttachment2FromDiscriminatorValue, options...)
+	options ...internal.Option[*internal.PageIterator[*Attachment]],
+) (*internal.PageIterator[*Attachment], error) {
+	return internal.NewPageIterator[*Attachment](res, reqAdapter, CreateAttachment2FromDiscriminatorValue, options...)
 }

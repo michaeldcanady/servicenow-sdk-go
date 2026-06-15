@@ -21,7 +21,7 @@ func TestCreateAttachmentCollectionResponse2FromDiscriminatorValue(t *testing.T)
 				model, err := CreateAttachmentCollectionResponse2FromDiscriminatorValue(mockParseNode)
 
 				assert.Nil(t, err)
-				assert.IsType(t, &internal.BaseServiceNowCollectionResponse[Attachment2]{}, model)
+				assert.IsType(t, &internal.BaseServiceNowCollectionResponse[*Attachment]{}, model)
 			},
 		},
 	}

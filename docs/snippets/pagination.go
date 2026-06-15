@@ -68,7 +68,7 @@ func _() {
 	}
 
 	// 3. Iterate over attachments
-	if err := attachmentIterator.Iterate(ctx, false, func(attachment attachmentapi.Attachment2) bool {
+	if err := attachmentIterator.Iterate(ctx, false, func(attachment attachmentapi.Attachment) bool {
 		fileName, _ := attachment.GetFileName()
 		fmt.Printf("Attachment: %s\n", *fileName)
 		return true

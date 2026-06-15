@@ -15,13 +15,13 @@ func TestAttachmentRequestBuilder2_Get(t *testing.T) {
 	tests := []struct {
 		name        string
 		setupMock   func(*mocking.MockRequestAdapter)
-		config      *AttachmentRequestBuilder2GetRequestConfiguration
+		config      *AttachmentRequestBuilderGetRequestConfiguration
 		expectedErr error
 	}{
 		{
 			name: "Success",
 			setupMock: func(m *mocking.MockRequestAdapter) {
-				resp := internal.NewBaseServiceNowCollectionResponse[Attachment2](CreateAttachment2FromDiscriminatorValue)
+				resp := internal.NewBaseServiceNowCollectionResponse[*Attachment](CreateAttachment2FromDiscriminatorValue)
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(resp, nil)
 			},
 			expectedErr: nil,
@@ -47,7 +47,7 @@ func TestAttachmentRequestBuilder2_Get(t *testing.T) {
 			adapter := &mocking.MockRequestAdapter{}
 			tt.setupMock(adapter)
 
-			builder := NewAttachmentRequestBuilder2Internal(map[string]string{"baseurl": "https://example.com"}, adapter)
+			builder := NewAttachmentRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 			resp, err := builder.Get(context.Background(), tt.config)
 
 			if tt.expectedErr != nil {
@@ -67,7 +67,7 @@ func TestAttachmentRequestBuilder2_Get(t *testing.T) {
 
 func TestAttachmentRequestBuilder2_Builders(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
-	builder := NewAttachmentRequestBuilder2Internal(map[string]string{"baseurl": "https://example.com"}, adapter)
+	builder := NewAttachmentRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 	t.Run("ByID", func(t *testing.T) {
 		itemBuilder := builder.ByID("sys_id_123")

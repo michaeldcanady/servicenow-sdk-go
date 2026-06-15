@@ -51,7 +51,7 @@ func _() {
 	// [END attachment_std_get_item]
 
 	// [START attachment_list]
-	list_config := &attachmentapi.AttachmentRequestBuilder2GetRequestConfiguration{
+	list_config := &attachmentapi.AttachmentRequestBuilderGetRequestConfiguration{
 		// Optional configurations
 	}
 
@@ -66,12 +66,12 @@ func _() {
 	list_rawURL := "https://xSDK_SN_URLx/api/now/attachment"
 
 	// Step 4: Configure request
-	list_std_config := &attachmentapi.AttachmentRequestBuilder2GetRequestConfiguration{
+	list_std_config := &attachmentapi.AttachmentRequestBuilderGetRequestConfiguration{
 		// Optional configurations
 	}
 
 	// Step 5: Build request
-	list_builder := attachmentapi.NewAttachmentRequestBuilder2(list_rawURL, client.RequestAdapter)
+	list_builder := attachmentapi.NewAttachmentRequestBuilder(list_rawURL, client.RequestAdapter)
 
 	list_std_response, err := list_builder.Get(context.Background(), list_std_config)
 	if err != nil {

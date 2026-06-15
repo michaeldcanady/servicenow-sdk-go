@@ -39,8 +39,8 @@ func (rB *NowRequestBuilder2) Table(tableName string) *tableapi.TableRequestBuil
 	return tableapi.NewDefaultTableRequestBuilder2Internal(pathParameters, rB.GetRequestAdapter())
 }
 
-func (rB *NowRequestBuilder2) Attachment() *attachmentapi.AttachmentRequestBuilder2 {
-	return attachmentapi.NewAttachmentRequestBuilder2Internal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+func (rB *NowRequestBuilder2) Attachment() *attachmentapi.AttachmentRequestBuilder {
+	return attachmentapi.NewAttachmentRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 func (rB *NowRequestBuilder2) Batch() *batchapi.BatchRequestBuilder {

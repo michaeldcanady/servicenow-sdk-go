@@ -117,7 +117,7 @@ func (c *attachmentTestContext) iRequestTheAttachmentByItsSysID() error {
 }
 
 func (c *attachmentTestContext) theResultShouldHaveTheCorrectSysID() error {
-	response, ok := c.response.(internal.ServiceNowItemResponse[attachmentapi.Attachment2])
+	response, ok := c.response.(internal.ServiceNowItemResponse[attachmentapi.Attachment])
 	if !ok {
 		return fmt.Errorf("expected a ServiceNowItemResponse[Attachment2], but got %T", c.response)
 	}

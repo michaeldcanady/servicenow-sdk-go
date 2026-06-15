@@ -74,7 +74,7 @@ func (rB *AttachmentItemRequestBuilder) File() *AttachmentItemFileRequestBuilder
 }
 
 // Get returns an Attachment using the provided arguments
-func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentItemRequestBuilderGetRequestConfiguration) (internal.ServiceNowItemResponse[Attachment2], error) {
+func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentItemRequestBuilderGetRequestConfiguration) (internal.ServiceNowItemResponse[*Attachment], error) {
 	if rB.isNil() {
 		return nil, nil
 	}
@@ -85,7 +85,7 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[Attachment2](CreateAttachment2FromDiscriminatorValue), errorMapping)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*Attachment](CreateAttachment2FromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -94,9 +94,9 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 		return nil, errors.New("response is nil")
 	}
 
-	typedRes, ok := res.(internal.ServiceNowItemResponse[Attachment2])
+	typedRes, ok := res.(internal.ServiceNowItemResponse[*Attachment])
 	if !ok {
-		return nil, errors.New("res is not ServiceNowItemResponse[Attachment2]")
+		return nil, errors.New("res is not ServiceNowItemResponse[*Attachment]")
 	}
 
 	return typedRes, nil

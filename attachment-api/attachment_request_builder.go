@@ -17,41 +17,41 @@ const (
 	attachmentURLTemplate = "{+baseurl}/api/now/v1/attachment{?sysparm_limit,sysparm_offset,sysparm_query}"
 )
 
-// AttachmentRequestBuilder2 provides operations to manage Service-Now attachments.
-type AttachmentRequestBuilder2 struct {
+// AttachmentRequestBuilder provides operations to manage Service-Now attachments.
+type AttachmentRequestBuilder struct {
 	internal.RequestBuilder
 }
 
-// newAttachmentRequestBuilder2Internal instantiates a new AttachmentRequestBuilder2 with the provided requestBuilder
-func newAttachmentRequestBuilder2Internal(requestBuilder internal.RequestBuilder) *AttachmentRequestBuilder2 {
-	m := &AttachmentRequestBuilder2{
+// newAttachmentRequestBuilderInternal instantiates a new AttachmentRequestBuilder2 with the provided requestBuilder
+func newAttachmentRequestBuilderInternal(requestBuilder internal.RequestBuilder) *AttachmentRequestBuilder {
+	m := &AttachmentRequestBuilder{
 		requestBuilder,
 	}
 	return m
 }
 
-// NewAttachmentRequestBuilder2Internal instantiates a new AttachmentRequestBuilder2 with custom parsable for table entries.
-func NewAttachmentRequestBuilder2Internal(
+// NewAttachmentRequestBuilderInternal instantiates a new AttachmentRequestBuilder2 with custom parsable for table entries.
+func NewAttachmentRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
-) *AttachmentRequestBuilder2 {
-	return newAttachmentRequestBuilder2Internal(
+) *AttachmentRequestBuilder {
+	return newAttachmentRequestBuilderInternal(
 		internal.NewBaseRequestBuilder(requestAdapter, attachmentURLTemplate, pathParameters),
 	)
 }
 
-// NewAttachmentRequestBuilder2 instantiates a new AttachmentRequestBuilder2 with custom parsable for table entries.
-func NewAttachmentRequestBuilder2(
+// NewAttachmentRequestBuilder instantiates a new AttachmentRequestBuilder2 with custom parsable for table entries.
+func NewAttachmentRequestBuilder(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
-) *AttachmentRequestBuilder2 {
+) *AttachmentRequestBuilder {
 	urlParams := make(map[string]string)
 	urlParams[internal.RawURLKey] = rawURL
-	return NewAttachmentRequestBuilder2Internal(urlParams, requestAdapter)
+	return NewAttachmentRequestBuilderInternal(urlParams, requestAdapter)
 }
 
 // ByID provides the way to manage attachment item with provided sys id
-func (rB *AttachmentRequestBuilder2) ByID(sysID string) *AttachmentItemRequestBuilder {
+func (rB *AttachmentRequestBuilder) ByID(sysID string) *AttachmentItemRequestBuilder {
 	if conversion.IsNil(rB) {
 		return nil
 	}
@@ -63,7 +63,7 @@ func (rB *AttachmentRequestBuilder2) ByID(sysID string) *AttachmentItemRequestBu
 }
 
 // File provides the way to access Service-Now's attachment file API
-func (rB *AttachmentRequestBuilder2) File() *AttachmentFileRequestBuilder {
+func (rB *AttachmentRequestBuilder) File() *AttachmentFileRequestBuilder {
 	if conversion.IsNil(rB) {
 		return nil
 	}
@@ -74,7 +74,7 @@ func (rB *AttachmentRequestBuilder2) File() *AttachmentFileRequestBuilder {
 }
 
 // Upload provides the way to access Service-Now's attachment upload API
-func (rB *AttachmentRequestBuilder2) Upload() *AttachmentUploadRequestBuilder {
+func (rB *AttachmentRequestBuilder) Upload() *AttachmentUploadRequestBuilder {
 	if conversion.IsNil(rB) {
 		return nil
 	}
@@ -85,13 +85,13 @@ func (rB *AttachmentRequestBuilder2) Upload() *AttachmentUploadRequestBuilder {
 }
 
 // Get returns AttachmentCollectionResponse using provided arguments
-func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfiguration *AttachmentRequestBuilder2GetRequestConfiguration) (*AttachmentCollectionResponse2Model, error) {
+func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*AttachmentCollectionResponse2Model, error) {
 	if conversion.IsNil(rB) {
 		return nil, nil
 	}
 
 	if conversion.IsNil(requestConfiguration) {
-		requestConfiguration = &AttachmentRequestBuilder2GetRequestConfiguration{}
+		requestConfiguration = &AttachmentRequestBuilderGetRequestConfiguration{}
 	}
 
 	headerOpt := nethttplibrary.NewHeadersInspectionOptions()
@@ -128,7 +128,7 @@ func (rB *AttachmentRequestBuilder2) Get(ctx context.Context, requestConfigurati
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.
-func (rB *AttachmentRequestBuilder2) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *AttachmentRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
