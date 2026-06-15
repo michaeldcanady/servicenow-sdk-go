@@ -2,6 +2,6 @@ package servicenowsdkgo
 
 // Version is the current version of the SDK
 // x-release-please-start-version
-const Version = "1.11.1"
+const Version = "1.12.0"
 
 // x-release-please-end
