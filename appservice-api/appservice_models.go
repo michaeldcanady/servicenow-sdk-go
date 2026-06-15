@@ -77,8 +77,8 @@ func (m *CreateServiceResult) Serialize(writer serialization.SerializationWriter
 
 func (m *CreateServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:     internalSerialization.DeserializeStringFunc()(m.setSysId),
-		nameKey:      internalSerialization.DeserializeStringFunc()(m.setName),
+		sysIdKey:    internalSerialization.DeserializeStringFunc()(m.setSysId),
+		nameKey:     internalSerialization.DeserializeStringFunc()(m.setName),
 		commentsKey: internalSerialization.DeserializeStringFunc()(m.setComments),
 	}
 }
@@ -580,7 +580,6 @@ func (m *ServiceDetailsRequest) GetBasicDetails() (*BasicDetails, error) {
 func (m *ServiceDetailsRequest) setBasicDetails(val *BasicDetails) error {
 	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), basicDetailsKey, val)
 }
-
 
 func CreateServiceDetailsRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewServiceDetailsRequest(), nil

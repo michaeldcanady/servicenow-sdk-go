@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	"github.com/microsoft/kiota-abstractions-go/store"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
@@ -19,7 +18,7 @@ type ModelAccessor[S kiotaStore.BackingStore, T any] BackedModelAccessorFunc[S, 
 // from a backing store and attempts to convert it to the specified type.
 // DefaultBackedModelAccessorFunc[S, T] is a generic implementation of BackedModelAccessorFunc that retrieves a value
 // from a backing store and attempts to convert it to the specified type.
-func DefaultBackedModelAccessorFunc[S store.BackingStore, T any](backingStore S, key string) (T, error) {
+func DefaultBackedModelAccessorFunc[S kiotaStore.BackingStore, T any](backingStore S, key string) (T, error) {
 	var result T
 
 	if conversion.IsNil(backingStore) {
