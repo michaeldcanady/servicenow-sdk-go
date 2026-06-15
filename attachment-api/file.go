@@ -86,12 +86,16 @@ func CreateFileFromDiscriminatorValue(_ serialization.ParseNode) (serialization.
 }
 
 // Serialize writes the objects properties to the current writer.
-func (f *File) Serialize(writer serialization.SerializationWriter) error { //nolint:gocognit
+func (f *File) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
 
-	return internalSerialization.Serialize(writer,
+	return internalSerialization.Serialize(writer, f.getSerializationFields()...)
+}
+
+func (f *File) getSerializationFields() []internalSerialization.WriterFunc {
+	return []internalSerialization.WriterFunc{
 		internalSerialization.SerializeStringFunc(averageImageColorKey)(f.GetAverageImageColor),
 		internalSerialization.SerializeStringToBoolFunc(compressedKey)(f.GetCompressed),
 		internalSerialization.SerializeStringFunc(contentTypeKey)(f.GetContentType),
@@ -112,7 +116,7 @@ func (f *File) Serialize(writer serialization.SerializationWriter) error { //nol
 		internalSerialization.SerializeStringFunc(tableNameKey)(f.GetTableName),
 		internalSerialization.SerializeStringFunc(tableSysIDKey)(f.GetTableSysID),
 		internalSerialization.SerializeStringFunc(updatedByNameKey)(f.GetUpdatedByName),
-	)
+	}
 }
 
 // GetAverageImageColor returns, If the attachment is an image, the sum of all colors.
@@ -126,28 +130,38 @@ func (f *File) GetAverageImageColor() (*string, error) {
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (f *File) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
-	return map[string]func(serialization.ParseNode) error{
+func (f *File) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	deserializers := map[string]func(serialization.ParseNode) error{
 		averageImageColorKey: internalSerialization.DeserializeStringFunc()(f.SetAverageImageColor),
 		compressedKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToBoolPtr)(f.SetCompressed),
 		contentTypeKey:       internalSerialization.DeserializeStringFunc()(f.SetContentType),
 		createdByNameKey:     internalSerialization.DeserializeStringFunc()(f.SetCreatedByName),
 		downloadLinkKey:      internalSerialization.DeserializeStringFunc()(f.SetDownloadLink),
-		fileNameKey:          internalSerialization.DeserializeStringFunc()(f.SetFileName),
-		imageHeightKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageHeight),
-		imageWidthKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageWidth),
-		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeBytes),
-		sizeCompressedKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeCompressed),
-		sysCreatedByKey:      internalSerialization.DeserializeStringFunc()(f.SetSysCreatedBy),
-		sysCreatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysCreatedOn),
-		sysIDKey:             internalSerialization.DeserializeStringFunc()(f.SetSysID),
-		sysModCountKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSysModCount),
-		sysTagsKey:           internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil }))(f.SetSysTags),
-		sysUpdatedByKey:      internalSerialization.DeserializeStringFunc()(f.SetSysUpdatedBy),
-		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysUpdatedOn),
-		tableNameKey:         internalSerialization.DeserializeStringFunc()(f.SetTableName),
-		tableSysIDKey:        internalSerialization.DeserializeStringFunc()(f.SetTableSysID),
-		updatedByNameKey:     internalSerialization.DeserializeStringFunc()(f.SetUpdatedByName),
+	}
+
+	for k, v := range f.getAdditionalFieldDeserializers() {
+		deserializers[k] = v
+	}
+	return deserializers
+}
+
+func (f *File) getAdditionalFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		fileNameKey:        internalSerialization.DeserializeStringFunc()(f.SetFileName),
+		imageHeightKey:     internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageHeight),
+		imageWidthKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageWidth),
+		sizeBytesKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeBytes),
+		sizeCompressedKey:  internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeCompressed),
+		sysCreatedByKey:    internalSerialization.DeserializeStringFunc()(f.SetSysCreatedBy),
+		sysCreatedOnKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysCreatedOn),
+		sysIDKey:           internalSerialization.DeserializeStringFunc()(f.SetSysID),
+		sysModCountKey:     internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSysModCount),
+		sysTagsKey:         internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil }))(f.SetSysTags),
+		sysUpdatedByKey:    internalSerialization.DeserializeStringFunc()(f.SetSysUpdatedBy),
+		sysUpdatedOnKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysUpdatedOn),
+		tableNameKey:       internalSerialization.DeserializeStringFunc()(f.SetTableName),
+		tableSysIDKey:      internalSerialization.DeserializeStringFunc()(f.SetTableSysID),
+		updatedByNameKey:   internalSerialization.DeserializeStringFunc()(f.SetUpdatedByName),
 	}
 }
 
