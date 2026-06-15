@@ -44,98 +44,46 @@ func (m *Activity) Serialize(writer serialization.SerializationWriter) error {
 
 func (m *Activity) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		activityTypeIDKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetActivityTypeID(val)
-			}
-			return nil
-		},
-		sourceTableNameKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetSourceTableName(val)
-			}
-			return nil
-		},
-		subObjectTableNameKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetSubObjectTableName(val)
-			}
-			return nil
-		},
-		subObjectSysIDKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetSubObjectSysID(val)
-			}
-			return nil
-		},
-		titleKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetTitle(val)
-			}
-			return nil
-		},
-		sysIDKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetSysIDKey(val)
-			}
-			return nil
-		},
-		contentFieldsKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetCollectionOfObjectValues(CreateFieldFromDiscriminatorValue)
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				res := make([]*Field, len(val))
-				for i, v := range val {
-					if v != nil {
-						res[i] = v.(*Field)
-					}
+		activityTypeIDKey:     m.parseStringField(m.SetActivityTypeID),
+		sourceTableNameKey:    m.parseStringField(m.SetSourceTableName),
+		subObjectTableNameKey: m.parseStringField(m.SetSubObjectTableName),
+		subObjectSysIDKey:     m.parseStringField(m.SetSubObjectSysID),
+		titleKey:              m.parseStringField(m.SetTitle),
+		sysIDKey:              m.parseStringField(m.SetSysIDKey),
+		contentFieldsKey:      m.parseFieldCollectionField(m.SetContentFields),
+		subheaderFieldsKey:    m.parseFieldCollectionField(m.SetSubheaderFields),
+	}
+}
+
+func (m *Activity) parseStringField(setter func(*string) error) func(serialization.ParseNode) error {
+	return func(parseNode serialization.ParseNode) error {
+		val, err := parseNode.GetStringValue()
+		if err != nil {
+			return err
+		}
+		if val != nil {
+			return setter(val)
+		}
+		return nil
+	}
+}
+
+func (m *Activity) parseFieldCollectionField(setter func([]*Field) error) func(serialization.ParseNode) error {
+	return func(parseNode serialization.ParseNode) error {
+		val, err := parseNode.GetCollectionOfObjectValues(CreateFieldFromDiscriminatorValue)
+		if err != nil {
+			return err
+		}
+		if val != nil {
+			res := make([]*Field, len(val))
+			for i, v := range val {
+				if v != nil {
+					res[i] = v.(*Field)
 				}
-				return m.SetContentFields(res)
 			}
-			return nil
-		},
-		subheaderFieldsKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetCollectionOfObjectValues(CreateFieldFromDiscriminatorValue)
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				res := make([]*Field, len(val))
-				for i, v := range val {
-					if v != nil {
-						res[i] = v.(*Field)
-					}
-				}
-				return m.SetSubheaderFields(res)
-			}
-			return nil
-		},
+			return setter(res)
+		}
+		return nil
 	}
 }
 
