@@ -49,7 +49,7 @@ func NewAttachmentFileRequestBuilder(
 }
 
 // Post uploads provided content to Service-Now using provided parameters
-func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (internal.ServiceNowItemResponse[File], error) {
+func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (internal.ServiceNowItemResponse[*File], error) {
 	if conversion.IsNil(rB) {
 		return nil, nil
 	}
@@ -97,7 +97,7 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 		return nil, errors.New("requestAdapter is nil")
 	}
 
-	resp, err := requestAdapter.Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[File](CreateFileFromDiscriminatorValue), errorMapping)
+	resp, err := requestAdapter.Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*File](CreateFileFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -106,9 +106,9 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 		return nil, errors.New("response is nil")
 	}
 
-	typedResp, ok := resp.(internal.ServiceNowItemResponse[File])
+	typedResp, ok := resp.(internal.ServiceNowItemResponse[*File])
 	if !ok {
-		return nil, errors.New("resp is not ServiceNowItemResponse[File]")
+		return nil, errors.New("resp is not ServiceNowItemResponse[*File]")
 	}
 
 	return typedResp, nil

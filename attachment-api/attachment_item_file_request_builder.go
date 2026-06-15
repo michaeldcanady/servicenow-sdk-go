@@ -51,7 +51,7 @@ func NewAttachmentItemFileRequestBuilder(
 }
 
 // Get returns file with content using provided parameters
-func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration) (*FileWithContentModel, error) {
+func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration) (*FileWithContent, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -110,7 +110,7 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 		}
 	}
 
-	typedFile, ok := file.(*FileWithContentModel)
+	typedFile, ok := file.(*FileWithContent)
 	if !ok {
 		return nil, errors.New("file is not *FileWithContentModel")
 	}

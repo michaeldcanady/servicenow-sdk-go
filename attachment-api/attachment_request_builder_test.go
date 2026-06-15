@@ -21,7 +21,7 @@ func TestAttachmentRequestBuilder2_Get(t *testing.T) {
 		{
 			name: "Success",
 			setupMock: func(m *mocking.MockRequestAdapter) {
-				resp := internal.NewBaseServiceNowCollectionResponse[*Attachment](CreateAttachment2FromDiscriminatorValue)
+				resp := internal.NewBaseServiceNowCollectionResponse[*Attachment](CreateAttachmentFromDiscriminatorValue)
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(resp, nil)
 			},
 			expectedErr: nil,

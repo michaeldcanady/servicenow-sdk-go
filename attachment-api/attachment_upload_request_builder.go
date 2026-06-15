@@ -49,7 +49,7 @@ func NewAttachmentUploadRequestBuilder(
 }
 
 // Post Uploads the provided attachment using the provided arguments
-func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstractions.MultipartBody, requestConfiguration *AttachmentUploadRequestBuilderPostRequestConfiguration) (*FileModel, error) {
+func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstractions.MultipartBody, requestConfiguration *AttachmentUploadRequestBuilderPostRequestConfiguration) (*File, error) {
 	if conversion.IsNil(rB) {
 		return nil, nil
 	}
@@ -105,7 +105,7 @@ func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstrac
 		return nil, nil
 	}
 
-	file, ok := resp.(*FileModel)
+	file, ok := resp.(*File)
 	if !ok {
 		return nil, errors.New("resp is not Fileable")
 	}

@@ -139,7 +139,7 @@ func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 				}
 				expectedRequestInformation.AddRequestOptions(make([]abstractions.RequestOption, 0))
 
-				mockParsable := internal.NewBaseServiceNowItemResponse[*Attachment](CreateAttachment2FromDiscriminatorValue)
+				mockParsable := internal.NewBaseServiceNowItemResponse[*Attachment](CreateAttachmentFromDiscriminatorValue)
 
 				mockRequestAdapter := mocking.NewMockRequestAdapter()
 				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(mockParsable, nil)

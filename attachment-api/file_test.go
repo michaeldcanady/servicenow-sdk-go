@@ -73,7 +73,7 @@ func TestFileModel_GetFieldDeserializers(t *testing.T) {
 				_ = fn(nodeParseError)
 			}
 
-			var nilM *FileModel
+			var nilM *File
 			assert.NotNil(t, nilM.GetFieldDeserializers())
 		})
 	}
@@ -82,11 +82,11 @@ func TestFileModel_GetFieldDeserializers(t *testing.T) {
 func TestFileModel_Serialize(t *testing.T) {
 	tests := []struct {
 		name string
-		m    *FileModel
+		m    *File
 	}{
 		{
 			name: "Standard serialize",
-			m: func() *FileModel {
+			m: func() *File {
 				m := NewFile()
 				s := "test"
 				b := true
@@ -143,30 +143,30 @@ func TestFileModel_Accessors(t *testing.T) {
 	now := time.Now()
 	tests := []struct {
 		name   string
-		set    func(m *FileModel)
-		get    func(m *FileModel) (interface{}, error)
+		set    func(m *File)
+		get    func(m *File) (interface{}, error)
 		expect interface{}
 	}{
-		{"AverageImageColor", func(m *FileModel) { s := "red"; _ = m.SetAverageImageColor(&s) }, func(m *FileModel) (interface{}, error) { return m.GetAverageImageColor() }, "red"},
-		{"Compressed", func(m *FileModel) { v := true; _ = m.SetCompressed(&v) }, func(m *FileModel) (interface{}, error) { return m.GetCompressed() }, true},
-		{"ContentType", func(m *FileModel) { s := "text/plain"; _ = m.SetContentType(&s) }, func(m *FileModel) (interface{}, error) { return m.GetContentType() }, "text/plain"},
-		{"CreatedByName", func(m *FileModel) { s := "admin"; _ = m.SetCreatedByName(&s) }, func(m *FileModel) (interface{}, error) { return m.GetCreatedByName() }, "admin"},
-		{"DownloadLink", func(m *FileModel) { s := "http://link"; _ = m.SetDownloadLink(&s) }, func(m *FileModel) (interface{}, error) { return m.GetDownloadLink() }, "http://link"},
-		{"FileName", func(m *FileModel) { s := "file.txt"; _ = m.SetFileName(&s) }, func(m *FileModel) (interface{}, error) { return m.GetFileName() }, "file.txt"},
-		{"ImageHeight", func(m *FileModel) { v := 100.0; _ = m.SetImageHeight(&v) }, func(m *FileModel) (interface{}, error) { return m.GetImageHeight() }, 100.0},
-		{"ImageWidth", func(m *FileModel) { v := 200.0; _ = m.SetImageWidth(&v) }, func(m *FileModel) (interface{}, error) { return m.GetImageWidth() }, 200.0},
-		{"SizeBytes", func(m *FileModel) { v := int64(1024); _ = m.SetSizeBytes(&v) }, func(m *FileModel) (interface{}, error) { return m.GetSizeBytes() }, int64(1024)},
-		{"SizeCompressed", func(m *FileModel) { v := int64(512); _ = m.SetSizeCompressed(&v) }, func(m *FileModel) (interface{}, error) { return m.GetSizeCompressed() }, int64(512)},
-		{"SysCreatedBy", func(m *FileModel) { s := "user"; _ = m.SetSysCreatedBy(&s) }, func(m *FileModel) (interface{}, error) { return m.GetSysCreatedBy() }, "user"},
-		{"SysCreatedOn", func(m *FileModel) { _ = m.SetSysCreatedOn(&now) }, func(m *FileModel) (interface{}, error) { return m.GetSysCreatedOn() }, &now},
-		{"SysID", func(m *FileModel) { s := "sys_id"; _ = m.SetSysID(&s) }, func(m *FileModel) (interface{}, error) { return m.GetSysID() }, "sys_id"},
-		{"SysModCount", func(m *FileModel) { v := int64(5); _ = m.SetSysModCount(&v) }, func(m *FileModel) (interface{}, error) { return m.GetSysModCount() }, int64(5)},
-		{"SysTags", func(m *FileModel) { v := []string{"tag1"}; _ = m.SetSysTags(v) }, func(m *FileModel) (interface{}, error) { return m.GetSysTags() }, []string{"tag1"}},
-		{"SysUpdatedBy", func(m *FileModel) { s := "updater"; _ = m.SetSysUpdatedBy(&s) }, func(m *FileModel) (interface{}, error) { return m.GetSysUpdatedBy() }, "updater"},
-		{"SysUpdatedOn", func(m *FileModel) { _ = m.SetSysUpdatedOn(&now) }, func(m *FileModel) (interface{}, error) { return m.GetSysUpdatedOn() }, &now},
-		{"TableName", func(m *FileModel) { s := "incident"; _ = m.SetTableName(&s) }, func(m *FileModel) (interface{}, error) { return m.GetTableName() }, "incident"},
-		{"TableSysID", func(m *FileModel) { s := "table_sid"; _ = m.SetTableSysID(&s) }, func(m *FileModel) (interface{}, error) { return m.GetTableSysID() }, "table_sid"},
-		{"UpdatedByName", func(m *FileModel) { s := "updated_by"; _ = m.SetUpdatedByName(&s) }, func(m *FileModel) (interface{}, error) { return m.GetUpdatedByName() }, "updated_by"},
+		{"AverageImageColor", func(m *File) { s := "red"; _ = m.SetAverageImageColor(&s) }, func(m *File) (interface{}, error) { return m.GetAverageImageColor() }, "red"},
+		{"Compressed", func(m *File) { v := true; _ = m.SetCompressed(&v) }, func(m *File) (interface{}, error) { return m.GetCompressed() }, true},
+		{"ContentType", func(m *File) { s := "text/plain"; _ = m.SetContentType(&s) }, func(m *File) (interface{}, error) { return m.GetContentType() }, "text/plain"},
+		{"CreatedByName", func(m *File) { s := "admin"; _ = m.SetCreatedByName(&s) }, func(m *File) (interface{}, error) { return m.GetCreatedByName() }, "admin"},
+		{"DownloadLink", func(m *File) { s := "http://link"; _ = m.SetDownloadLink(&s) }, func(m *File) (interface{}, error) { return m.GetDownloadLink() }, "http://link"},
+		{"FileName", func(m *File) { s := "file.txt"; _ = m.SetFileName(&s) }, func(m *File) (interface{}, error) { return m.GetFileName() }, "file.txt"},
+		{"ImageHeight", func(m *File) { v := 100.0; _ = m.SetImageHeight(&v) }, func(m *File) (interface{}, error) { return m.GetImageHeight() }, 100.0},
+		{"ImageWidth", func(m *File) { v := 200.0; _ = m.SetImageWidth(&v) }, func(m *File) (interface{}, error) { return m.GetImageWidth() }, 200.0},
+		{"SizeBytes", func(m *File) { v := int64(1024); _ = m.SetSizeBytes(&v) }, func(m *File) (interface{}, error) { return m.GetSizeBytes() }, int64(1024)},
+		{"SizeCompressed", func(m *File) { v := int64(512); _ = m.SetSizeCompressed(&v) }, func(m *File) (interface{}, error) { return m.GetSizeCompressed() }, int64(512)},
+		{"SysCreatedBy", func(m *File) { s := "user"; _ = m.SetSysCreatedBy(&s) }, func(m *File) (interface{}, error) { return m.GetSysCreatedBy() }, "user"},
+		{"SysCreatedOn", func(m *File) { _ = m.SetSysCreatedOn(&now) }, func(m *File) (interface{}, error) { return m.GetSysCreatedOn() }, &now},
+		{"SysID", func(m *File) { s := "sys_id"; _ = m.SetSysID(&s) }, func(m *File) (interface{}, error) { return m.GetSysID() }, "sys_id"},
+		{"SysModCount", func(m *File) { v := int64(5); _ = m.SetSysModCount(&v) }, func(m *File) (interface{}, error) { return m.GetSysModCount() }, int64(5)},
+		{"SysTags", func(m *File) { v := []string{"tag1"}; _ = m.SetSysTags(v) }, func(m *File) (interface{}, error) { return m.GetSysTags() }, []string{"tag1"}},
+		{"SysUpdatedBy", func(m *File) { s := "updater"; _ = m.SetSysUpdatedBy(&s) }, func(m *File) (interface{}, error) { return m.GetSysUpdatedBy() }, "updater"},
+		{"SysUpdatedOn", func(m *File) { _ = m.SetSysUpdatedOn(&now) }, func(m *File) (interface{}, error) { return m.GetSysUpdatedOn() }, &now},
+		{"TableName", func(m *File) { s := "incident"; _ = m.SetTableName(&s) }, func(m *File) (interface{}, error) { return m.GetTableName() }, "incident"},
+		{"TableSysID", func(m *File) { s := "table_sid"; _ = m.SetTableSysID(&s) }, func(m *File) (interface{}, error) { return m.GetTableSysID() }, "table_sid"},
+		{"UpdatedByName", func(m *File) { s := "updated_by"; _ = m.SetUpdatedByName(&s) }, func(m *File) (interface{}, error) { return m.GetUpdatedByName() }, "updated_by"},
 	}
 
 	for _, test := range tests {
@@ -199,28 +199,28 @@ func TestFileModel_ErrorBranches(t *testing.T) {
 	tests := []struct {
 		name string
 		key  string
-		get  func(m *FileModel) (interface{}, error)
+		get  func(m *File) (interface{}, error)
 	}{
-		{"AverageImageColor", averageImageColorKey, func(m *FileModel) (interface{}, error) { return m.GetAverageImageColor() }},
-		{"Compressed", compressedKey, func(m *FileModel) (interface{}, error) { return m.GetCompressed() }},
-		{"ContentType", contentTypeKey, func(m *FileModel) (interface{}, error) { return m.GetContentType() }},
-		{"CreatedByName", createdByNameKey, func(m *FileModel) (interface{}, error) { return m.GetCreatedByName() }},
-		{"DownloadLink", downloadLinkKey, func(m *FileModel) (interface{}, error) { return m.GetDownloadLink() }},
-		{"FileName", fileNameKey, func(m *FileModel) (interface{}, error) { return m.GetFileName() }},
-		{"ImageHeight", imageHeightKey, func(m *FileModel) (interface{}, error) { return m.GetImageHeight() }},
-		{"ImageWidth", imageWidthKey, func(m *FileModel) (interface{}, error) { return m.GetImageWidth() }},
-		{"SizeBytes", sizeBytesKey, func(m *FileModel) (interface{}, error) { return m.GetSizeBytes() }},
-		{"SizeCompressed", sizeCompressedKey, func(m *FileModel) (interface{}, error) { return m.GetSizeCompressed() }},
-		{"SysCreatedBy", sysCreatedByKey, func(m *FileModel) (interface{}, error) { return m.GetSysCreatedBy() }},
-		{"SysCreatedOn", sysCreatedOnKey, func(m *FileModel) (interface{}, error) { return m.GetSysCreatedOn() }},
-		{"SysID", sysIDKey, func(m *FileModel) (interface{}, error) { return m.GetSysID() }},
-		{"SysModCount", sysModCountKey, func(m *FileModel) (interface{}, error) { return m.GetSysModCount() }},
-		{"SysTags", sysTagsKey, func(m *FileModel) (interface{}, error) { return m.GetSysTags() }},
-		{"SysUpdatedBy", sysUpdatedByKey, func(m *FileModel) (interface{}, error) { return m.GetSysUpdatedBy() }},
-		{"SysUpdatedOn", sysUpdatedOnKey, func(m *FileModel) (interface{}, error) { return m.GetSysUpdatedOn() }},
-		{"TableName", tableNameKey, func(m *FileModel) (interface{}, error) { return m.GetTableName() }},
-		{"TableSysID", tableSysIDKey, func(m *FileModel) (interface{}, error) { return m.GetTableSysID() }},
-		{"UpdatedByName", updatedByNameKey, func(m *FileModel) (interface{}, error) { return m.GetUpdatedByName() }},
+		{"AverageImageColor", averageImageColorKey, func(m *File) (interface{}, error) { return m.GetAverageImageColor() }},
+		{"Compressed", compressedKey, func(m *File) (interface{}, error) { return m.GetCompressed() }},
+		{"ContentType", contentTypeKey, func(m *File) (interface{}, error) { return m.GetContentType() }},
+		{"CreatedByName", createdByNameKey, func(m *File) (interface{}, error) { return m.GetCreatedByName() }},
+		{"DownloadLink", downloadLinkKey, func(m *File) (interface{}, error) { return m.GetDownloadLink() }},
+		{"FileName", fileNameKey, func(m *File) (interface{}, error) { return m.GetFileName() }},
+		{"ImageHeight", imageHeightKey, func(m *File) (interface{}, error) { return m.GetImageHeight() }},
+		{"ImageWidth", imageWidthKey, func(m *File) (interface{}, error) { return m.GetImageWidth() }},
+		{"SizeBytes", sizeBytesKey, func(m *File) (interface{}, error) { return m.GetSizeBytes() }},
+		{"SizeCompressed", sizeCompressedKey, func(m *File) (interface{}, error) { return m.GetSizeCompressed() }},
+		{"SysCreatedBy", sysCreatedByKey, func(m *File) (interface{}, error) { return m.GetSysCreatedBy() }},
+		{"SysCreatedOn", sysCreatedOnKey, func(m *File) (interface{}, error) { return m.GetSysCreatedOn() }},
+		{"SysID", sysIDKey, func(m *File) (interface{}, error) { return m.GetSysID() }},
+		{"SysModCount", sysModCountKey, func(m *File) (interface{}, error) { return m.GetSysModCount() }},
+		{"SysTags", sysTagsKey, func(m *File) (interface{}, error) { return m.GetSysTags() }},
+		{"SysUpdatedBy", sysUpdatedByKey, func(m *File) (interface{}, error) { return m.GetSysUpdatedBy() }},
+		{"SysUpdatedOn", sysUpdatedOnKey, func(m *File) (interface{}, error) { return m.GetSysUpdatedOn() }},
+		{"TableName", tableNameKey, func(m *File) (interface{}, error) { return m.GetTableName() }},
+		{"TableSysID", tableSysIDKey, func(m *File) (interface{}, error) { return m.GetTableSysID() }},
+		{"UpdatedByName", updatedByNameKey, func(m *File) (interface{}, error) { return m.GetUpdatedByName() }},
 	}
 
 	for _, test := range tests {
@@ -233,7 +233,7 @@ func TestFileModel_ErrorBranches(t *testing.T) {
 	}
 
 	t.Run("NilReceiver_Accessors", func(t *testing.T) {
-		var nilM *FileModel
+		var nilM *File
 		for _, test := range tests {
 			res, err := test.get(nilM)
 			assert.NoError(t, err)

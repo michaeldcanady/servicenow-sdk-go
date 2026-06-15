@@ -11,27 +11,20 @@ const (
 	contentKey = "content"
 )
 
-// FileWithContent represents Service-Now File with it's content
-type FileWithContent interface {
-	File
-	GetContent() ([]byte, error)
-	SetContent([]byte) error
-}
-
-// FileWithContentModel implementation of FileWithContent
-type FileWithContentModel struct {
-	File
+// FileWithContent implementation of FileWithContent
+type FileWithContent struct {
+	file
 }
 
 // NewFileWithContent creates a new instance of FileWithContent
-func newFileWithContent(file File) FileWithContent {
-	return &FileWithContentModel{
+func newFileWithContent(file file) *FileWithContent {
+	return &FileWithContent{
 		file,
 	}
 }
 
 // NewFileWithContent creates a new instance of FileWithContent
-func NewFileWithContent() FileWithContent {
+func NewFileWithContent() *FileWithContent {
 	return newFileWithContent(
 		NewFile(),
 	)
@@ -43,16 +36,16 @@ func CreateFileWithContentFromDiscriminatorValue(parseNode serialization.ParseNo
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (f *FileWithContentModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (f *FileWithContent) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
 
-	return f.File.GetFieldDeserializers()
+	return f.file.GetFieldDeserializers()
 }
 
 // GetContent returns contents of file
-func (f *FileWithContentModel) GetContent() ([]byte, error) {
+func (f *FileWithContent) GetContent() ([]byte, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -62,7 +55,7 @@ func (f *FileWithContentModel) GetContent() ([]byte, error) {
 }
 
 // SetContent sets the content to the provided value
-func (f *FileWithContentModel) SetContent(content []byte) error {
+func (f *FileWithContent) SetContent(content []byte) error {
 	if conversion.IsNil(f) {
 		return nil
 	}

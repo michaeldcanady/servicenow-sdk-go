@@ -9,15 +9,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewAttachment2(t *testing.T) {
-	res := NewAttachment2()
+func TestNewAttachment(t *testing.T) {
+	res := NewAttachment()
 	if res == nil {
 		t.Error("returned nil")
 	}
 }
 
-func TestAttachment2Model_GetFieldDeserializers(t *testing.T) {
-	m := NewAttachment2()
+func TestAttachmentModel_GetFieldDeserializers(t *testing.T) {
+	m := NewAttachment()
 	deser := m.GetFieldDeserializers()
 	assert.NotNil(t, deser[tableSysIDKey])
 
@@ -47,8 +47,8 @@ func TestAttachment2Model_GetFieldDeserializers(t *testing.T) {
 	}
 }
 
-func TestAttachment2Model_Serialize(t *testing.T) {
-	m := NewAttachment2()
+func TestAttachmentModel_Serialize(t *testing.T) {
+	m := NewAttachment()
 	err := m.Serialize(nil)
 	assert.NoError(t, err)
 
@@ -57,9 +57,9 @@ func TestAttachment2Model_Serialize(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestAttachment2Model_GetTableSysID(t *testing.T) {
+func TestAttachment_GetTableSysID(t *testing.T) {
 	s := "sid"
-	m := NewAttachment2()
+	m := NewAttachment()
 	_ = m.setTableSysID(&s)
 
 	tests := []struct {
@@ -80,9 +80,9 @@ func TestAttachment2Model_GetTableSysID(t *testing.T) {
 	}
 }
 
-func TestAttachment2Model_setTableSysID(t *testing.T) {
+func TestAttachment_SetTableSysID(t *testing.T) {
 	s := "sid"
-	m := NewAttachment2()
+	m := NewAttachment()
 
 	tests := []struct {
 		name  string
@@ -99,14 +99,14 @@ func TestAttachment2Model_setTableSysID(t *testing.T) {
 	}
 }
 
-func TestCreateAttachment2FromDiscriminatorValue(t *testing.T) {
-	res, err := CreateAttachment2FromDiscriminatorValue(nil)
+func TestCreateAttachmentFromDiscriminatorValue(t *testing.T) {
+	res, err := CreateAttachmentFromDiscriminatorValue(nil)
 	assert.NoError(t, err)
 	assert.NotNil(t, res)
 }
 
-func TestAttachment2Model_BasicAccessors(t *testing.T) {
-	m := NewAttachment2()
+func TestAttachment_BasicAccessors(t *testing.T) {
+	m := NewAttachment()
 
 	t.Run("SizeBytes", func(t *testing.T) {
 		v := int64(1)
@@ -163,8 +163,8 @@ func TestAttachment2Model_BasicAccessors(t *testing.T) {
 	})
 }
 
-func TestAttachment2Model_AuditAccessors(t *testing.T) {
-	m := NewAttachment2()
+func TestAttachment_AuditAccessors(t *testing.T) {
+	m := NewAttachment()
 
 	t.Run("SysUpdatedOn", func(t *testing.T) {
 		v := time.Now()
@@ -212,8 +212,8 @@ func TestAttachment2Model_AuditAccessors(t *testing.T) {
 	})
 }
 
-func TestAttachment2Model_ImageAccessors(t *testing.T) {
-	m := NewAttachment2()
+func TestAttachment_ImageAccessors(t *testing.T) {
+	m := NewAttachment()
 
 	t.Run("ImageHeight", func(t *testing.T) {
 		v := float64(100)
@@ -243,8 +243,8 @@ func TestAttachment2Model_ImageAccessors(t *testing.T) {
 	})
 }
 
-func TestAttachment2Model_MetadataAccessors(t *testing.T) {
-	m := NewAttachment2()
+func TestAttachment_MetadataAccessors(t *testing.T) {
+	m := NewAttachment()
 
 	t.Run("TableName", func(t *testing.T) {
 		v := "table"

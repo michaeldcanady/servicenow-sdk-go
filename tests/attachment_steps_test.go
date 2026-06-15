@@ -258,7 +258,7 @@ func (c *attachmentTestContext) theRetrievedContentShouldMatchTheOriginalFile(fi
 		originalData = []byte("test content")
 	}
 
-	fileWithContent, ok := c.response.(*attachmentapi.FileWithContentModel)
+	fileWithContent, ok := c.response.(*attachmentapi.FileWithContent)
 	if !ok {
 		return fmt.Errorf("expected *FileWithContentModel, but got %T", c.response)
 	}

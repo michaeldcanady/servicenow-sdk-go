@@ -90,8 +90,8 @@ func NewServiceNowServiceClient(opts ...ServiceNowServiceClientOption) (*Service
 	}, nil
 }
 
-func (rB *ServiceNowServiceClient) Now() *NowRequestBuilder2 {
-	return NewServiceNowRequestBuilder3Internal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+func (rB *ServiceNowServiceClient) Now() *NowRequestBuilder {
+	return NewServiceNowRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 func (rB *ServiceNowServiceClient) Cdm() *CdmRequestBuilder {

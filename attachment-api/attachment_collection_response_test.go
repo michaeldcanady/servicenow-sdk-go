@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateAttachmentCollectionResponse2FromDiscriminatorValue(t *testing.T) {
+func TestCreateAttachmentCollectionResponseFromDiscriminatorValue(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
@@ -18,7 +18,7 @@ func TestCreateAttachmentCollectionResponse2FromDiscriminatorValue(t *testing.T)
 			test: func(t *testing.T) {
 				mockParseNode := mocking.NewMockParseNode()
 
-				model, err := CreateAttachmentCollectionResponse2FromDiscriminatorValue(mockParseNode)
+				model, err := CreateAttachmentCollectionResponseFromDiscriminatorValue(mockParseNode)
 
 				assert.Nil(t, err)
 				assert.IsType(t, &internal.BaseServiceNowCollectionResponse[*Attachment]{}, model)

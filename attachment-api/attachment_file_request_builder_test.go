@@ -83,7 +83,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockHeaders.Add("Content-Type", "application/json")
 				mockContent := []byte("testing")
 				mockURLTemplate := ""
-				mockParsable := internal.NewBaseServiceNowItemResponse[File](CreateFileFromDiscriminatorValue)
+				mockParsable := internal.NewBaseServiceNowItemResponse[*File](CreateFileFromDiscriminatorValue)
 
 				expected := &abstractions.RequestInformation{
 					Method:             abstractions.POST,

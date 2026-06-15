@@ -16,8 +16,8 @@ const (
 	updatedByNameKey = "update_by_name"
 )
 
-// File defines a serializable model object.
-type File interface {
+// file defines a serializable model object.
+type file interface {
 	GetAverageImageColor() (*string, error)
 	SetAverageImageColor(*string) error
 	GetCompressed() (*bool, error)
@@ -64,18 +64,18 @@ type File interface {
 	kiotaStore.BackedModel
 }
 
-type FileModel struct {
+type File struct {
 	internal.BackedModel
 }
 
 // NewFile creates a new instance of FileModel
-func NewFile() *FileModel {
+func NewFile() *File {
 	return newFile(internal.NewBaseModel())
 }
 
 // newFile creates a new instance of FileModel with the provided model underlying it
-func newFile(model internal.BackedModel) *FileModel {
-	return &FileModel{
+func newFile(model internal.BackedModel) *File {
+	return &File{
 		model,
 	}
 }
@@ -86,7 +86,7 @@ func CreateFileFromDiscriminatorValue(_ serialization.ParseNode) (serialization.
 }
 
 // Serialize writes the objects properties to the current writer.
-func (f *FileModel) Serialize(writer serialization.SerializationWriter) error { //nolint:gocognit
+func (f *File) Serialize(writer serialization.SerializationWriter) error { //nolint:gocognit
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -116,7 +116,7 @@ func (f *FileModel) Serialize(writer serialization.SerializationWriter) error { 
 }
 
 // GetAverageImageColor returns, If the attachment is an image, the sum of all colors.
-func (f *FileModel) GetAverageImageColor() (*string, error) {
+func (f *File) GetAverageImageColor() (*string, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -126,7 +126,7 @@ func (f *FileModel) GetAverageImageColor() (*string, error) {
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (f *FileModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
+func (f *File) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
 	return map[string]func(serialization.ParseNode) error{
 		averageImageColorKey: internalSerialization.DeserializeStringFunc()(f.SetAverageImageColor),
 		compressedKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToBoolPtr)(f.SetCompressed),
@@ -152,7 +152,7 @@ func (f *FileModel) GetFieldDeserializers() map[string]func(serialization.ParseN
 }
 
 // SetAverageImageColor Sets the sum of all colors.
-func (f *FileModel) SetAverageImageColor(averageImageColor *string) error {
+func (f *File) SetAverageImageColor(averageImageColor *string) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -162,7 +162,7 @@ func (f *FileModel) SetAverageImageColor(averageImageColor *string) error {
 }
 
 // GetCompressed return flag that indicates whether the attachment file has been compressed.
-func (f *FileModel) GetCompressed() (*bool, error) {
+func (f *File) GetCompressed() (*bool, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -172,7 +172,7 @@ func (f *FileModel) GetCompressed() (*bool, error) {
 }
 
 // SetCompressed Sets flag that indicates whether the attachment file has been compressed.
-func (f *FileModel) SetCompressed(compressed *bool) error {
+func (f *File) SetCompressed(compressed *bool) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -182,7 +182,7 @@ func (f *FileModel) SetCompressed(compressed *bool) error {
 }
 
 // GetContentType returns content-type of the associated attachment file, such as image or jpeg or application/x-shockwave-flash.
-func (f *FileModel) GetContentType() (*string, error) {
+func (f *File) GetContentType() (*string, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -192,7 +192,7 @@ func (f *FileModel) GetContentType() (*string, error) {
 }
 
 // SetContentType Sets content-type of the associated attachment file, such as image or jpeg or application/x-shockwave-flash.
-func (f *FileModel) SetContentType(contentType *string) error {
+func (f *File) SetContentType(contentType *string) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -202,7 +202,7 @@ func (f *FileModel) SetContentType(contentType *string) error {
 }
 
 // GetCreatedByName returns full name of entity that originally created the attachment file.
-func (f *FileModel) GetCreatedByName() (*string, error) {
+func (f *File) GetCreatedByName() (*string, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -212,7 +212,7 @@ func (f *FileModel) GetCreatedByName() (*string, error) {
 }
 
 // SetCreatedByName Sets full name of entity that originally created the attachment file.
-func (f *FileModel) SetCreatedByName(createdByName *string) error {
+func (f *File) SetCreatedByName(createdByName *string) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -222,17 +222,17 @@ func (f *FileModel) SetCreatedByName(createdByName *string) error {
 }
 
 // GetCreatedBy returns the entity that originally created the attachment file.
-func (f *FileModel) GetCreatedBy() (*string, error) {
+func (f *File) GetCreatedBy() (*string, error) {
 	return f.GetSysCreatedBy()
 }
 
 // SetCreatedBy Sets the entity that originally created the attachment file.
-func (f *FileModel) SetCreatedBy(createdBy *string) error {
+func (f *File) SetCreatedBy(createdBy *string) error {
 	return f.SetSysCreatedBy(createdBy)
 }
 
 // GetDownloadLink returns download URL of the attachment on the ServiceNow instance.
-func (f *FileModel) GetDownloadLink() (*string, error) {
+func (f *File) GetDownloadLink() (*string, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -242,7 +242,7 @@ func (f *FileModel) GetDownloadLink() (*string, error) {
 }
 
 // SetDownloadLink Sets download URL of the attachment on the ServiceNow instance.
-func (f *FileModel) SetDownloadLink(downloadLink *string) error {
+func (f *File) SetDownloadLink(downloadLink *string) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -252,7 +252,7 @@ func (f *FileModel) SetDownloadLink(downloadLink *string) error {
 }
 
 // GetFileName returns the file name of the attachment.
-func (f *FileModel) GetFileName() (*string, error) {
+func (f *File) GetFileName() (*string, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -262,7 +262,7 @@ func (f *FileModel) GetFileName() (*string, error) {
 }
 
 // SetFileName Sets the file name of the attachment.
-func (f *FileModel) SetFileName(fileName *string) error {
+func (f *File) SetFileName(fileName *string) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -272,7 +272,7 @@ func (f *FileModel) SetFileName(fileName *string) error {
 }
 
 // GetImageHeight returns if an image file, the height of the image.
-func (f *FileModel) GetImageHeight() (*float64, error) {
+func (f *File) GetImageHeight() (*float64, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -282,7 +282,7 @@ func (f *FileModel) GetImageHeight() (*float64, error) {
 }
 
 // SetImageHeight Sets if an image file, the height of the image.
-func (f *FileModel) SetImageHeight(imageHeight *float64) error {
+func (f *File) SetImageHeight(imageHeight *float64) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -292,7 +292,7 @@ func (f *FileModel) SetImageHeight(imageHeight *float64) error {
 }
 
 // GetImageWidth returns if an image file, the width of the image.
-func (f *FileModel) GetImageWidth() (*float64, error) {
+func (f *File) GetImageWidth() (*float64, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -302,7 +302,7 @@ func (f *FileModel) GetImageWidth() (*float64, error) {
 }
 
 // SetImageWidth Sets if an image file, the width of the image.
-func (f *FileModel) SetImageWidth(imageWidth *float64) error {
+func (f *File) SetImageWidth(imageWidth *float64) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -312,7 +312,7 @@ func (f *FileModel) SetImageWidth(imageWidth *float64) error {
 }
 
 // GetSizeBytes returns size of the attachment.
-func (f *FileModel) GetSizeBytes() (*int64, error) {
+func (f *File) GetSizeBytes() (*int64, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -322,7 +322,7 @@ func (f *FileModel) GetSizeBytes() (*int64, error) {
 }
 
 // SetSizeBytes Sets size of the attachment.
-func (f *FileModel) SetSizeBytes(sizeBytes *int64) error {
+func (f *File) SetSizeBytes(sizeBytes *int64) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -332,7 +332,7 @@ func (f *FileModel) SetSizeBytes(sizeBytes *int64) error {
 }
 
 // GetSizeCompressed returns size of the compressed attachment file. If the file is not compressed, empty.
-func (f *FileModel) GetSizeCompressed() (*int64, error) {
+func (f *File) GetSizeCompressed() (*int64, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -342,7 +342,7 @@ func (f *FileModel) GetSizeCompressed() (*int64, error) {
 }
 
 // SetSizeCompressed Sets size of the compressed attachment file.
-func (f *FileModel) SetSizeCompressed(sizeCompressed *int64) error {
+func (f *File) SetSizeCompressed(sizeCompressed *int64) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -352,7 +352,7 @@ func (f *FileModel) SetSizeCompressed(sizeCompressed *int64) error {
 }
 
 // GetSysCreatedBy returns the entity that originally created the attachment file.
-func (f *FileModel) GetSysCreatedBy() (*string, error) {
+func (f *File) GetSysCreatedBy() (*string, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -362,7 +362,7 @@ func (f *FileModel) GetSysCreatedBy() (*string, error) {
 }
 
 // SetSysCreatedBy Sets the entity that originally created the attachment file.
-func (f *FileModel) SetSysCreatedBy(sysCreatedBy *string) error {
+func (f *File) SetSysCreatedBy(sysCreatedBy *string) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -372,7 +372,7 @@ func (f *FileModel) SetSysCreatedBy(sysCreatedBy *string) error {
 }
 
 // GetSysCreatedOn returns the date and time that the attachment file was initially saved to the instance.
-func (f *FileModel) GetSysCreatedOn() (*time.Time, error) {
+func (f *File) GetSysCreatedOn() (*time.Time, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -382,7 +382,7 @@ func (f *FileModel) GetSysCreatedOn() (*time.Time, error) {
 }
 
 // SetSysCreatedOn Sets the date and time that the attachment file was initially saved to the instance.
-func (f *FileModel) SetSysCreatedOn(sysCreatedOn *time.Time) error {
+func (f *File) SetSysCreatedOn(sysCreatedOn *time.Time) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -392,7 +392,7 @@ func (f *FileModel) SetSysCreatedOn(sysCreatedOn *time.Time) error {
 }
 
 // GetSysID returns the sys_id of the attachment file. Read-Only.
-func (f *FileModel) GetSysID() (*string, error) {
+func (f *File) GetSysID() (*string, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -402,7 +402,7 @@ func (f *FileModel) GetSysID() (*string, error) {
 }
 
 // SetSysID Sets the sys_id of the attachment file.
-func (f *FileModel) SetSysID(sysID *string) error {
+func (f *File) SetSysID(sysID *string) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -412,7 +412,7 @@ func (f *FileModel) SetSysID(sysID *string) error {
 }
 
 // GetSysModCount returns the number of times the attachment file has been modified (uploaded to the instance).
-func (f *FileModel) GetSysModCount() (*int64, error) {
+func (f *File) GetSysModCount() (*int64, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -422,7 +422,7 @@ func (f *FileModel) GetSysModCount() (*int64, error) {
 }
 
 // SetSysModCount Sets the number of times the attachment file has been modified (uploaded to the instance).
-func (f *FileModel) SetSysModCount(sysModCount *int64) error {
+func (f *File) SetSysModCount(sysModCount *int64) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -432,7 +432,7 @@ func (f *FileModel) SetSysModCount(sysModCount *int64) error {
 }
 
 // GetSysTags returns any system tags associated with the attachment file.
-func (f *FileModel) GetSysTags() ([]string, error) {
+func (f *File) GetSysTags() ([]string, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -442,7 +442,7 @@ func (f *FileModel) GetSysTags() ([]string, error) {
 }
 
 // SetSysTags Sets any system tags associated with the attachment file.
-func (f *FileModel) SetSysTags(sysTags []string) error {
+func (f *File) SetSysTags(sysTags []string) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -452,7 +452,7 @@ func (f *FileModel) SetSysTags(sysTags []string) error {
 }
 
 // GetSysUpdatedBy returns the entity that last updated the attachment file.
-func (f *FileModel) GetSysUpdatedBy() (*string, error) {
+func (f *File) GetSysUpdatedBy() (*string, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -462,7 +462,7 @@ func (f *FileModel) GetSysUpdatedBy() (*string, error) {
 }
 
 // SetSysUpdatedBy Sets the entity that last updated the attachment file.
-func (f *FileModel) SetSysUpdatedBy(sysUpdatedBy *string) error {
+func (f *File) SetSysUpdatedBy(sysUpdatedBy *string) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -472,7 +472,7 @@ func (f *FileModel) SetSysUpdatedBy(sysUpdatedBy *string) error {
 }
 
 // GetSysUpdatedOn returns the date and time that the attachment file was last updated.
-func (f *FileModel) GetSysUpdatedOn() (*time.Time, error) {
+func (f *File) GetSysUpdatedOn() (*time.Time, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -482,7 +482,7 @@ func (f *FileModel) GetSysUpdatedOn() (*time.Time, error) {
 }
 
 // SetSysUpdatedOn Sets the date and time that the attachment file was last updated.
-func (f *FileModel) SetSysUpdatedOn(sysUpdatedOn *time.Time) error {
+func (f *File) SetSysUpdatedOn(sysUpdatedOn *time.Time) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -492,7 +492,7 @@ func (f *FileModel) SetSysUpdatedOn(sysUpdatedOn *time.Time) error {
 }
 
 // GetTableName returns the name of the table to which the attachment is associated.
-func (f *FileModel) GetTableName() (*string, error) {
+func (f *File) GetTableName() (*string, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -502,7 +502,7 @@ func (f *FileModel) GetTableName() (*string, error) {
 }
 
 // SetTableName Sets the name of the table to which the attachment is associated.
-func (f *FileModel) SetTableName(tableName *string) error {
+func (f *File) SetTableName(tableName *string) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -512,7 +512,7 @@ func (f *FileModel) SetTableName(tableName *string) error {
 }
 
 // GetTableSysID returns the sys_id of the table associated with the attachment.
-func (f *FileModel) GetTableSysID() (*string, error) {
+func (f *File) GetTableSysID() (*string, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -522,7 +522,7 @@ func (f *FileModel) GetTableSysID() (*string, error) {
 }
 
 // SetTableSysID Sets the sys_id of the table associated with the attachment.
-func (f *FileModel) SetTableSysID(tableSysID *string) error {
+func (f *File) SetTableSysID(tableSysID *string) error {
 	if conversion.IsNil(f) {
 		return nil
 	}
@@ -532,7 +532,7 @@ func (f *FileModel) SetTableSysID(tableSysID *string) error {
 }
 
 // GetUpdatedByName returns the full name of entity that last updated the attachment file.
-func (f *FileModel) GetUpdatedByName() (*string, error) {
+func (f *File) GetUpdatedByName() (*string, error) {
 	if conversion.IsNil(f) {
 		return nil, nil
 	}
@@ -542,7 +542,7 @@ func (f *FileModel) GetUpdatedByName() (*string, error) {
 }
 
 // SetUpdatedByName Sets the full name of entity that last updated the attachment file.
-func (f *FileModel) SetUpdatedByName(updatedByName *string) error {
+func (f *File) SetUpdatedByName(updatedByName *string) error {
 	if conversion.IsNil(f) {
 		return nil
 	}

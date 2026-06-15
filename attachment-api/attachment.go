@@ -42,21 +42,21 @@ type Attachment struct {
 	internal.BackedModel
 }
 
-// NewAttachment creates a new instance of Attachment2Model
-func NewAttachment2() *Attachment {
-	return newAttachment2(internal.NewBaseModel())
+// NewAttachment creates a new instance of AttachmentModel
+func NewAttachment() *Attachment {
+	return newAttachment(internal.NewBaseModel())
 }
 
-// newAttachment2 creates a new instance of Attachment2Model with the provided model underlying it
-func newAttachment2(model internal.BackedModel) *Attachment {
+// newAttachment creates a new instance of AttachmentModel with the provided model underlying it
+func newAttachment(model internal.BackedModel) *Attachment {
 	return &Attachment{
 		model,
 	}
 }
 
-// CreateAttachment2FromDiscriminatorValue is a parsable factory for creating an Attachment2Model
-func CreateAttachment2FromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewAttachment2(), nil
+// CreateAttachmentFromDiscriminatorValue is a parsable factory for creating an AttachmentModel
+func CreateAttachmentFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewAttachment(), nil
 }
 
 // Serialize writes the objects properties to the current writer.

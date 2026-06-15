@@ -29,7 +29,7 @@ func TestFileWithContentModel_GetFieldDeserializers(t *testing.T) {
 	if deser == nil {
 		t.Error("expected non-nil deser")
 	}
-	var nilM *FileWithContentModel
+	var nilM *FileWithContent
 	if nilM.GetFieldDeserializers() != nil {
 		t.Error("expected nil")
 	}
@@ -39,11 +39,11 @@ func TestFileWithContentModel_GetContent(t *testing.T) {
 	m := NewFileWithContent()
 	data := []byte("test")
 	_ = m.SetContent(data)
-	var nilM *FileWithContentModel
+	var nilM *FileWithContent
 
 	tests := []struct {
 		name     string
-		model    FileWithContent
+		model    *FileWithContent
 		expected []byte
 		err      bool
 	}{
@@ -66,11 +66,11 @@ func TestFileWithContentModel_GetContent(t *testing.T) {
 func TestFileWithContentModel_SetContent(t *testing.T) {
 	m := NewFileWithContent()
 	data := []byte("test")
-	var nilM *FileWithContentModel
+	var nilM *FileWithContent
 
 	tests := []struct {
 		name  string
-		model FileWithContent
+		model *FileWithContent
 		err   bool
 	}{
 		{"Ok", m, false},
@@ -93,7 +93,7 @@ func TestFileWithContentModel_ErrorBranches(t *testing.T) {
 		t.Errorf("expected type error, got %v", err)
 	}
 
-	mNilBS := &FileWithContentModel{File: &mockNilBSFile{}}
+	mNilBS := &FileWithContent{file: &mockNilBSFile{}}
 	if _, err := mNilBS.GetContent(); err == nil || err.Error() != "backingStore is nil" {
 		t.Errorf("expected BS nil error in Get, got %v", err)
 	}
@@ -102,6 +102,6 @@ func TestFileWithContentModel_ErrorBranches(t *testing.T) {
 	}
 }
 
-type mockNilBSFile struct{ FileModel }
+type mockNilBSFile struct{ File }
 
 func (m *mockNilBSFile) GetBackingStore() store.BackingStore { return nil }

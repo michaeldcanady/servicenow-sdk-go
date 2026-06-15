@@ -85,7 +85,7 @@ func (rB *AttachmentRequestBuilder) Upload() *AttachmentUploadRequestBuilder {
 }
 
 // Get returns AttachmentCollectionResponse using provided arguments
-func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*AttachmentCollectionResponse2Model, error) {
+func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*AttachmentCollectionResponse, error) {
 	if conversion.IsNil(rB) {
 		return nil, nil
 	}
@@ -108,7 +108,7 @@ func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguratio
 		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachmentCollectionResponse2FromDiscriminatorValue, errorMapping)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachmentCollectionResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -117,9 +117,9 @@ func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguratio
 		return nil, nil
 	}
 
-	snRes, ok := res.(*AttachmentCollectionResponse2Model)
+	snRes, ok := res.(*AttachmentCollectionResponse)
 	if !ok {
-		return nil, errors.New("res is not *AttachmentCollectionResponse2Model")
+		return nil, errors.New("res is not *AttachmentCollectionResponse")
 	}
 
 	internal.ParseHeaders(snRes, headerOpt.GetResponseHeaders())

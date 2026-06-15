@@ -83,7 +83,7 @@ func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 				mockQueryParametersAny := map[string]any{}
 				mockURLTemplate := ""
 				mockContent := []byte("testing")
-				mockParsable := &FileWithContentModel{
+				mockParsable := &FileWithContent{
 					NewFile(),
 				}
 
@@ -149,7 +149,7 @@ func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 				mockQueryParametersAny := map[string]any{}
 				mockURLTemplate := ""
 				mockContent := []byte("testing")
-				mockParsable := &FileWithContentModel{
+				mockParsable := &FileWithContent{
 					NewFile(),
 				}
 				err := mockParsable.SetContent(mockContent)
@@ -211,7 +211,7 @@ func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 				mockQueryParametersAny := map[string]any{}
 				mockURLTemplate := ""
 				mockContent := []byte("testing")
-				mockParsable := &FileWithContentModel{
+				mockParsable := &FileWithContent{
 					NewFile(),
 				}
 				err := mockParsable.SetContent(mockContent)
