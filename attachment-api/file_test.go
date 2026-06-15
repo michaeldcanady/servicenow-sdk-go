@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

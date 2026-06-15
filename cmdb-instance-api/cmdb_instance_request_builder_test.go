@@ -3,8 +3,8 @@ package cmdbinstanceapi
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
 

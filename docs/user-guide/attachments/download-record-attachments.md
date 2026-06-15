@@ -31,10 +31,10 @@ import (
     "os"
     "path/filepath"
 
-    servicenow "github.com/michaeldcanady/servicenow-sdk-go/v2"
-    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachment-api"
-    "github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
-    "github.com/michaeldcanady/servicenow-sdk-go/v2/query2"
+    servicenow "github.com/michaeldcanady/servicenow-sdk-go"
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
+    "github.com/michaeldcanady/servicenow-sdk-go/query2"
 )
 
 func main() {

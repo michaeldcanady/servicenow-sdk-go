@@ -11,11 +11,11 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/jarcoal/httpmock"
 	"github.com/joho/godotenv"
-	sdk "github.com/michaeldcanady/servicenow-sdk-go/v2"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/table-api"
+	sdk "github.com/michaeldcanady/servicenow-sdk-go"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 )
 
 type tableTestContext struct {

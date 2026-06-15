@@ -40,7 +40,7 @@ The `api-creator` skill is a specialized tool for automating the generation of S
 - **Path Hierarchy**: Strictly adhere to the "one builder per segment" rule. Do not skip path segments or flatten the hierarchy.
 - **Client Connectivity**: Do not connect sub-paths (e.g., `cmdb`) to the `ServiceNowClient`. Use parent builders to navigate the hierarchy.
 - **Package Naming**: Use lowercase package names without underscores (e.g., `tableapi`, `attachmentapi`).
-- **Internal Aliases**: Use `newInternal` for `github.com/michaeldcanady/servicenow-sdk-go/v2/internal`.
+- **Internal Aliases**: Use `newInternal` for `github.com/michaeldcanady/servicenow-sdk-go/internal`.
 - **URL Templates**: Define URL templates as constants within the RequestBuilder files.
 - **Configuration Alias**: Always use the `abstractions.RequestConfiguration[T]` type alias for request configurations.
 - **URL Tags**: Always include `url:"parameter_name,omitempty"` tags in query parameter structs.

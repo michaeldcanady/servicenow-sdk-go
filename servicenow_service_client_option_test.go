@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 	"github.com/stretchr/testify/assert"

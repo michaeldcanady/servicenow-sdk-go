@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
 )
 
 func decodeAccessToken(response *http.Response) (*AccessToken, error) {

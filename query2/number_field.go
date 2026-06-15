@@ -5,7 +5,7 @@ package query2
 import (
 	"fmt"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/ast2"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast2"
 )
 
 // NumberField represents a numeric field in ServiceNow.

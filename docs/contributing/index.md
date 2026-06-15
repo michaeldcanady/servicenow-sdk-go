@@ -29,7 +29,7 @@ Follow this path to start contributing:
 3.  **Review the [Testing Guide](testing.md):** Learn how to write and run both
     unit and integration tests.
 4.  **Find an issue:** Look for "good first issue" or "help wanted" labels on
-    the [GitHub issue tracker](https://github.com/michaeldcanady/servicenow-sdk-go/v2/issues).
+    the [GitHub issue tracker](https://github.com/michaeldcanady/servicenow-sdk-go/issues).
 
 ## Philosophy
 

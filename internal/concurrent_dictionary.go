@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 )
 
 type ConcurrentDictionary[K comparable, V any] struct {

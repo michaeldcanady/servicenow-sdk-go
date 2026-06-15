@@ -11,10 +11,10 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/jarcoal/httpmock"
 	"github.com/joho/godotenv"
-	sdk "github.com/michaeldcanady/servicenow-sdk-go/v2"
-	batchapi "github.com/michaeldcanady/servicenow-sdk-go/v2/batch-api"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/table-api"
+	sdk "github.com/michaeldcanady/servicenow-sdk-go"
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
+	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

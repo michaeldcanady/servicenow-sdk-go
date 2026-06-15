@@ -3,7 +3,7 @@ package internal
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 

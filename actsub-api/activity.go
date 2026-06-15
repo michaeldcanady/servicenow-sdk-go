@@ -3,9 +3,9 @@ package actsubapi
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )

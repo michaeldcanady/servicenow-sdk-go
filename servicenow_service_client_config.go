@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/microsoft/kiota-abstractions-go/store"

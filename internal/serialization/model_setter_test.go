@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/stretchr/testify/assert"
 )
 

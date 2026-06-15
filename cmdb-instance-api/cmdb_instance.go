@@ -1,9 +1,9 @@
 package cmdbinstanceapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
-	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/serialization"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )

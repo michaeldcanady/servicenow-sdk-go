@@ -1,4 +1,4 @@
-repo_url: https://github.com/michaeldcanady/servicenow-sdk-go/v2
+repo_url: https://github.com/michaeldcanady/servicenow-sdk-go
 site_name: Service-Now SDK for Go Docs
 markdown_extensions:
   - pymdownx.superfences
@@ -73,7 +73,7 @@ nav:
       - Development Setup: contributing/setup.md
       - Architecture: contributing/architecture.md
       - Testing: contributing/testing.md
-  - Releases ⧉: https://github.com/michaeldcanady/servicenow-sdk-go/v2/releases
+  - Releases ⧉: https://github.com/michaeldcanady/servicenow-sdk-go/releases
   - Roadmap ⧉: https://github.com/users/michaeldcanady/projects/7/views/9
 
 theme:

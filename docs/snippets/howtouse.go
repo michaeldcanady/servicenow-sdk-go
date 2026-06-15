@@ -1,7 +1,7 @@
 package snippets
 
 import (
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
 )
 
 func _() {

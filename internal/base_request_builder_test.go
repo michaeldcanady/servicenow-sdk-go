@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 )
 
 func TestNewBaseRequestBuilder(t *testing.T) {

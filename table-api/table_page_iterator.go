@@ -1,8 +1,8 @@
 package tableapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )

@@ -6,9 +6,9 @@ import (
 	"strings"
 	"sync"
 
-	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/v2/appointmentbooking-api"
-	caseapi "github.com/michaeldcanady/servicenow-sdk-go/v2/case-api"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/appointmentbooking-api"
+	caseapi "github.com/michaeldcanady/servicenow-sdk-go/case-api"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	formserialization "github.com/microsoft/kiota-serialization-form-go"

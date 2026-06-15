@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2/pkce"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

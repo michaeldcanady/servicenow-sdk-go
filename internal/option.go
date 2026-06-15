@@ -1,6 +1,6 @@
 package internal
 
-import "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 
 // Option[T] represents an optional parameter.
 type Option[T any] func(T) error

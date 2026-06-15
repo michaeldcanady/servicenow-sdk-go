@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2/pkce"
 )
 
 // clientOptions contains configuration for both public and confidential clients.

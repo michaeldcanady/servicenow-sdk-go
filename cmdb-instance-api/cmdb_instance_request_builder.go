@@ -3,7 +3,7 @@ package cmdbinstanceapi
 import (
 	"maps"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

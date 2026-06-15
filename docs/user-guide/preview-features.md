@@ -28,6 +28,6 @@ The following features are currently in preview:
 
 ## Next steps
 
-- **[Feedback](https://github.com/michaeldcanady/servicenow-sdk-go/v2/issues):**
+- **[Feedback](https://github.com/michaeldcanady/servicenow-sdk-go/issues):**
   If you encounter issues or have suggestions, please open an issue on GitHub.
 - **[Query Builder](query-builder.md):** Learn more about the query builder.

@@ -8,9 +8,12 @@
   "include-component-in-tag": false,
   "packages": {
     ".": {
-      "package-name": "github.com/michaeldcanady/servicenow-sdk-go/v2",
+      "package-name": "github.com/michaeldcanady/servicenow-sdk-go",
       "changelog-path": "CHANGELOG.md",
-      "extra-files": ["VERSION", "version.go"]
+      "extra-files": [
+        "VERSION",
+        "version.go"
+      ]
     }
   }
 }

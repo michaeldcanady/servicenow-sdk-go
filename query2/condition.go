@@ -5,7 +5,7 @@ package query2
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/ast2"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast2"
 )
 
 // Condition represents a part of a ServiceNow query.

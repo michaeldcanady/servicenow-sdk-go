@@ -1,6 +1,6 @@
 # Welcome to ServiceNow SDK for Go
 
-[![GoDoc](https://img.shields.io/static/v1?style=plastic&label=godoc&message=reference&color=blue)](https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go/v2)
+[![GoDoc](https://img.shields.io/static/v1?style=plastic&label=godoc&message=reference&color=blue)](https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go)
 ![GitHub Go version](https://img.shields.io/github/go-mod/go-version/michaeldcanady/servicenow-sdk-go?style=plastic)
 ![GitHub release](https://img.shields.io/github/v/release/michaeldcanady/servicenow-sdk-go?style=plastic)
 
