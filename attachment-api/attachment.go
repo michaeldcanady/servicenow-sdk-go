@@ -93,11 +93,11 @@ func (rE *Attachment) Serialize(writer serialization.SerializationWriter) error 
 // AttachmentModel returns the deserialization information for this object.
 func (rE *Attachment) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	deserializers := map[string]func(serialization.ParseNode) error{
-		tableSysIDKey:        internalSerialization.DeserializeStringFunc()(rE.setTableSysID),
-		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSizeBytes),
-		downloadLinkKey:      internalSerialization.DeserializeStringFunc()(rE.setDownloadLink),
-		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr(dateTimeFormat))(rE.setSysUpdatedOn),
-		sysIDKey:             internalSerialization.DeserializeStringFunc()(rE.setSysID),
+		tableSysIDKey:   internalSerialization.DeserializeStringFunc()(rE.setTableSysID),
+		sizeBytesKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSizeBytes),
+		downloadLinkKey: internalSerialization.DeserializeStringFunc()(rE.setDownloadLink),
+		sysUpdatedOnKey: internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr(dateTimeFormat))(rE.setSysUpdatedOn),
+		sysIDKey:        internalSerialization.DeserializeStringFunc()(rE.setSysID),
 	}
 
 	for k, v := range rE.getAdditionalFieldDeserializers() {

@@ -147,21 +147,21 @@ func (f *File) GetFieldDeserializers() map[string]func(serialization.ParseNode) 
 
 func (f *File) getAdditionalFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		fileNameKey:        internalSerialization.DeserializeStringFunc()(f.SetFileName),
-		imageHeightKey:     internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageHeight),
-		imageWidthKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageWidth),
-		sizeBytesKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeBytes),
-		sizeCompressedKey:  internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeCompressed),
-		sysCreatedByKey:    internalSerialization.DeserializeStringFunc()(f.SetSysCreatedBy),
-		sysCreatedOnKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysCreatedOn),
-		sysIDKey:           internalSerialization.DeserializeStringFunc()(f.SetSysID),
-		sysModCountKey:     internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSysModCount),
-		sysTagsKey:         internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil }))(f.SetSysTags),
-		sysUpdatedByKey:    internalSerialization.DeserializeStringFunc()(f.SetSysUpdatedBy),
-		sysUpdatedOnKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysUpdatedOn),
-		tableNameKey:       internalSerialization.DeserializeStringFunc()(f.SetTableName),
-		tableSysIDKey:      internalSerialization.DeserializeStringFunc()(f.SetTableSysID),
-		updatedByNameKey:   internalSerialization.DeserializeStringFunc()(f.SetUpdatedByName),
+		fileNameKey:       internalSerialization.DeserializeStringFunc()(f.SetFileName),
+		imageHeightKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageHeight),
+		imageWidthKey:     internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageWidth),
+		sizeBytesKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeBytes),
+		sizeCompressedKey: internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeCompressed),
+		sysCreatedByKey:   internalSerialization.DeserializeStringFunc()(f.SetSysCreatedBy),
+		sysCreatedOnKey:   internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysCreatedOn),
+		sysIDKey:          internalSerialization.DeserializeStringFunc()(f.SetSysID),
+		sysModCountKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSysModCount),
+		sysTagsKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil }))(f.SetSysTags),
+		sysUpdatedByKey:   internalSerialization.DeserializeStringFunc()(f.SetSysUpdatedBy),
+		sysUpdatedOnKey:   internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysUpdatedOn),
+		tableNameKey:      internalSerialization.DeserializeStringFunc()(f.SetTableName),
+		tableSysIDKey:     internalSerialization.DeserializeStringFunc()(f.SetTableSysID),
+		updatedByNameKey:  internalSerialization.DeserializeStringFunc()(f.SetUpdatedByName),
 	}
 }
 
