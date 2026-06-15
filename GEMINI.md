@@ -89,3 +89,8 @@ For every change, Gemini must output a "Commit-Ready Block" containing:
 - `internal/new/kiota_utils.go`: Utility functions for Kiota integration.
 - `VERSION`: File containing the current project version.
 - `CHANGELOG.md`: Record of all notable changes.
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
