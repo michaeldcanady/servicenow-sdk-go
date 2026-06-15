@@ -14,7 +14,6 @@ import (
 	"github.com/joho/godotenv"
 	sdk "github.com/michaeldcanady/servicenow-sdk-go"
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -61,7 +60,7 @@ func (c *attachmentTestContext) iRequestAllAttachments() error {
 
 func (c *attachmentTestContext) theResponseShouldNotBeAnError() error {
 	if c.err != nil {
-		if snErr, ok := c.err.(*core.ServiceNowError); ok {
+		if snErr, ok := c.err.(*internal.ServicenowError); ok {
 			return fmt.Errorf("expected no error, but got: %v (Message: %s, Detail: %s, Status: %s)",
 				c.err, snErr.Exception.Message, snErr.Exception.Detail, snErr.Status)
 		}

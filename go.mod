@@ -4,7 +4,6 @@ go 1.25.0
 
 require (
 	github.com/cucumber/godog v0.15.1
-	github.com/gabriel-vasile/mimetype v1.4.13
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/google/go-querystring v1.2.0
 	github.com/google/uuid v1.6.0
@@ -16,10 +15,8 @@ require (
 	github.com/microsoft/kiota-serialization-json-go v1.1.2
 	github.com/microsoft/kiota-serialization-multipart-go v1.1.2
 	github.com/microsoft/kiota-serialization-text-go v1.1.3
-	github.com/mozillazg/go-httpheader v0.4.0
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/stretchr/testify v1.11.1
-	github.com/yosida95/uritemplate/v3 v3.0.2
 )
 
 require (

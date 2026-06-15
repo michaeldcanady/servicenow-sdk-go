@@ -12,7 +12,6 @@ import (
 	"github.com/jarcoal/httpmock"
 	"github.com/joho/godotenv"
 	sdk "github.com/michaeldcanady/servicenow-sdk-go"
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
@@ -62,7 +61,7 @@ func (c *tableTestContext) iRequestAllIncidentsFromTheTable(tableName string) er
 
 func (c *tableTestContext) theResponseShouldNotBeAnError() error {
 	if c.err != nil {
-		if snErr, ok := c.err.(*core.ServiceNowError); ok {
+		if snErr, ok := c.err.(*internal.ServicenowError); ok {
 			return fmt.Errorf("expected no error, but got: %v (Message: %s, Detail: %s, Status: %s)",
 				c.err, snErr.Exception.Message, snErr.Exception.Detail, snErr.Status)
 		}
