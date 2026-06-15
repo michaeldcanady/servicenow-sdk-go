@@ -91,6 +91,5 @@ For every change, Gemini must output a "Commit-Ready Block" containing:
 - `CHANGELOG.md`: Record of all notable changes.
 
 <!-- SPECKIT START -->
-For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+- [v2 Release Prep](specs/002-v2-release-prep/plan.md)
 <!-- SPECKIT END -->
