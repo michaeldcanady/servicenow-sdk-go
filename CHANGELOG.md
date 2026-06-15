@@ -1,5 +1,39 @@
 # Changelog
 
+## [1.12.0](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v1.11.1...v1.12.0) (2026-06-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* Removed incorrect methods `CreateOrUpdateService` and `GetContent` from `AppServiceRequestBuilder` and nested items.
+* Renames CmdbInstanceRequestBuilder2 to CmdbInstanceRequestBuilder. Changes Post, Put, and Patch method signatures to accept the request body as a separate parameter.
+* Renames CmdbInstanceRequestBuilder2 to CmdbInstanceRequestBuilder. Changes Post, Put, and Patch method signatures to accept the request body as a separate parameter.
+
+### Features
+
+* **actsub:** implement ServiceNow Activity Subscriptions API support ([d377fb1](https://github.com/michaeldcanady/servicenow-sdk-go/commit/d377fb10acef21947f124f728c477c649bfcdbd9))
+* add account api ([#444](https://github.com/michaeldcanady/servicenow-sdk-go/issues/444)) ([0c9f5b3](https://github.com/michaeldcanady/servicenow-sdk-go/commit/0c9f5b37dfdfae9c4e073fb834d0b723c414c112))
+* add account api ([#446](https://github.com/michaeldcanady/servicenow-sdk-go/issues/446)) ([9833e5d](https://github.com/michaeldcanady/servicenow-sdk-go/commit/9833e5dea15b8bb5bc8eb183d1af7d70a1329052))
+* add appointment api ([#447](https://github.com/michaeldcanady/servicenow-sdk-go/issues/447)) ([b912091](https://github.com/michaeldcanady/servicenow-sdk-go/commit/b912091cf790d5480b854e36e10f3f032644f877))
+* add case api support ([#448](https://github.com/michaeldcanady/servicenow-sdk-go/issues/448)) ([174fc91](https://github.com/michaeldcanady/servicenow-sdk-go/commit/174fc91267540943c70021efab7e46743f3289fb))
+* add cdm editor api module ([#449](https://github.com/michaeldcanady/servicenow-sdk-go/issues/449)) ([d65bb0c](https://github.com/michaeldcanady/servicenow-sdk-go/commit/d65bb0cc4369a98e14eb745e233ec7e9ed22e725))
+* add ServiceNow CMDB Instance API support ([#443](https://github.com/michaeldcanady/servicenow-sdk-go/issues/443)) ([b9dc6be](https://github.com/michaeldcanady/servicenow-sdk-go/commit/b9dc6be942cf91b81779df114b2125660afbe5b4))
+* add ServiceNow Documents API support ([#442](https://github.com/michaeldcanady/servicenow-sdk-go/issues/442)) ([4a97413](https://github.com/michaeldcanady/servicenow-sdk-go/commit/4a9741376d3971ac7969cdefe0d60a6bb1d04547))
+* add specification for prerelease workflow ([b4fbc0e](https://github.com/michaeldcanady/servicenow-sdk-go/commit/b4fbc0ed389b1ebd81dc905083035cd70dc29aa6))
+* add support for application service api ([#452](https://github.com/michaeldcanady/servicenow-sdk-go/issues/452)) ([f236120](https://github.com/michaeldcanady/servicenow-sdk-go/commit/f23612081762ff8b6d8b8086ff14470e6a5d710e))
+* add support for cdm applications api ([#451](https://github.com/michaeldcanady/servicenow-sdk-go/issues/451)) ([8b4ab42](https://github.com/michaeldcanady/servicenow-sdk-go/commit/8b4ab42f009069a975a96ecae49ada8e799ad49a))
+* add support for cdm changeset api ([#450](https://github.com/michaeldcanady/servicenow-sdk-go/issues/450)) ([6bae5c5](https://github.com/michaeldcanady/servicenow-sdk-go/commit/6bae5c55d278a697c38dd4ad34d95d7c929db62c))
+* integrate AI-driven API generation framework ([#440](https://github.com/michaeldcanady/servicenow-sdk-go/issues/440)) ([59927ed](https://github.com/michaeldcanady/servicenow-sdk-go/commit/59927ed2073f86d2baacdb86723ed05662dfbf1f))
+
+
+### Bug Fixes
+
+* **api:** correct model deserialization and remove trailing newline ([efab807](https://github.com/michaeldcanady/servicenow-sdk-go/commit/efab80796d402abb4655bd76db64f025d7c6ef4f))
+* **document:** remove unneeded "2" suffix ([b64dcec](https://github.com/michaeldcanady/servicenow-sdk-go/commit/b64dcec24811ace4ad8e8fdfe6ee35be52584378))
+* fix broken NowRequestBuilder2 ([9f3db3a](https://github.com/michaeldcanady/servicenow-sdk-go/commit/9f3db3a3f66f9774e98ceb2f8547a1a13d44cc99))
+* remove problematic commented-out features from devcontainer.json ([e8d7b27](https://github.com/michaeldcanady/servicenow-sdk-go/commit/e8d7b274d2fdad160504e3eea03b88d70fb61984))
+* resolve dev container boot failure by hardcoding mount paths ([c004deb](https://github.com/michaeldcanady/servicenow-sdk-go/commit/c004deb65c2e86093f41f30baced2543020c5c57))
+
 ## [1.11.1](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v1.11.0...v1.11.1) (2026-03-28)
 
 
