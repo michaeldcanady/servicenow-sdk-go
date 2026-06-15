@@ -22,8 +22,8 @@ A sub-agent tasked with the actual code generation based on the blueprint provid
 ### Phase 1: Research & Mapping (Inquiry)
 1. **Spec Ingestion**: Read the OpenAPI spec from `spec/`.
 2. **Analysis**: Use `openapi-architect` to identify URL hierarchies, query parameters, and data models.
-3. **Consistency Check**: Verify mappings against existing modules (e.g., `attachment-api/`).
-4. **Output**: A **Technical Blueprint** (Markdown) describing the proposed package structure, RequestBuilders, and Parsable models.
+3. **Consistency Check**: Verify mappings against existing modules (for example `attachment-api/`).
+4. **Output**: A **Technical Blueprint** (Markdown) describing the proposed package structure, RequestBuilders, and parsable models.
 
 ### Phase 2: Strategy & Approval (Directives)
 1. **Blueprint Review**: User/Architect reviews the Blueprint.
@@ -53,7 +53,7 @@ All code generation must adhere to the templates located in the `api-creator` sk
 ### 4.1. RequestBuilder Pattern
 Refer to `request_builder.go.tmpl`.
 
-### 4.2. Parsable Model Pattern
+### 4.2. parsable Model Pattern
 Refer to `model.go.tmpl`.
 
 ### 4.3. Configuration & QueryParameters Pattern
