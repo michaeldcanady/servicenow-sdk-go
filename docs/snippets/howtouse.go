@@ -1,11 +1,11 @@
 package snippets
 
 import (
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
 )
 
 func _() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 
 	// [START fluent_table]
 	client.Now2().TableV2("xSDK_SN_TABLEx")

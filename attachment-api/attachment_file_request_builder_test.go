@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -264,7 +264,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				result, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, result)
-				assert.Equal(t, errors.New("resp is not ServiceNowItemResponse[File]"), err)
+				assert.Equal(t, errors.New("resp is not ServiceNowItemResponse[*File]"), err)
 			},
 		},
 		{

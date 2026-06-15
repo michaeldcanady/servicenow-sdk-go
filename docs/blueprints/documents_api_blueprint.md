@@ -5,7 +5,7 @@ This blueprint outlines the architectural plan for implementing the ServiceNow D
 ## 1. Package Overview
 - **Package Name**: `documentsapi`
 - **Base Path**: `/api/now/documents`
-- **Internal Alias**: `newInternal` (`github.com/michaeldcanady/servicenow-sdk-go/internal`)
+- **Internal Alias**: `newInternal` (`github.com/michaeldcanady/servicenow-sdk-go/v2/internal`)
 
 ## 2. RequestBuilder Hierarchy
 

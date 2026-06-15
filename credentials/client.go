@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
 )
 
 type oauth2Client interface {

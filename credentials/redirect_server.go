@@ -3,7 +3,7 @@ package credentials
 import (
 	"context"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
 )
 
 type redirectServer struct {

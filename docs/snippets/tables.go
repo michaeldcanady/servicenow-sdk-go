@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/table-api"
 )
 
 // [END table_imports]
@@ -23,7 +23,7 @@ func _() {
 }
 
 func tableBasicSetup() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
 	var collectionRequestBuilder *tableapi.TableRequestBuilder2[*tableapi.TableRecord]
 
@@ -47,7 +47,7 @@ func tableBasicSetup() {
 }
 
 func tableGetSnippets() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_get_fluent]
@@ -84,7 +84,7 @@ func tableGetSnippets() {
 }
 
 func tableListSnippets() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var collectionRequestBuilder *tableapi.TableRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_list_fluent]
@@ -121,7 +121,7 @@ func tableListSnippets() {
 }
 
 func tableCreateSnippets() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var collectionRequestBuilder *tableapi.TableRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_create_fluent]
@@ -176,7 +176,7 @@ func tableCreateSnippets() {
 }
 
 func tableUpdateSnippets() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_update_fluent]
@@ -225,7 +225,7 @@ func tableUpdateSnippets() {
 }
 
 func tableDeleteSnippets() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
 
 	// [START table_delete_fluent]
@@ -260,7 +260,7 @@ func tableDeleteSnippets() {
 }
 
 func tableGuideSnippets() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 
 	// [START table_list_guide]

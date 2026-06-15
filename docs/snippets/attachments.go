@@ -7,9 +7,9 @@ import (
 	"log"
 	"os"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachment-api"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -18,7 +18,7 @@ import (
 func _() {
 	var _ credentials.AccessToken
 
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 
 	// [START attachment_get_item]

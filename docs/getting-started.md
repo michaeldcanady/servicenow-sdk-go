@@ -17,7 +17,7 @@ requirements:
 Add the SDK to your existing Go module using the `go get` command:
 
 ```bash
-go get github.com/michaeldcanady/servicenow-sdk-go
+go get github.com/michaeldcanady/servicenow-sdk-go/v2
 ```
 
 ## Initialize the client

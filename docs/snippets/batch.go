@@ -5,8 +5,8 @@ import (
 	"context"
 	"log"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/v2/batch-api"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -31,7 +31,7 @@ func batchRequests(excludeResponseHeaders bool, requests ...*abstractions.Reques
 // [END batch_helper]
 
 func _() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	var requests []*abstractions.RequestInformation
 
 	// [START batch_create]

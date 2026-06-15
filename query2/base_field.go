@@ -3,7 +3,7 @@
 package query2
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/ast2"
 )
 
 //https://www.servicenow.com/docs/r/platform-user-interface/r_OpAvailableFiltersQueries.html

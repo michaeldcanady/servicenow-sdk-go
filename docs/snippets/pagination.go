@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"log"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachment-api"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/table-api"
 )
 
 func _() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 
 	// [START pagination_table_basic]
@@ -68,7 +68,7 @@ func _() {
 	}
 
 	// 3. Iterate over attachments
-	if err := attachmentIterator.Iterate(ctx, false, func(attachment attachmentapi.Attachment) bool {
+	if err := attachmentIterator.Iterate(ctx, false, func(attachment *attachmentapi.Attachment) bool {
 		fileName, _ := attachment.GetFileName()
 		fmt.Printf("Attachment: %s\n", *fileName)
 		return true

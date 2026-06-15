@@ -10,7 +10,7 @@ Deletes the specified record from the specified table.
 package main
 
 import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/table-api"
 )
 
 func main() {
@@ -43,7 +43,7 @@ Retrieves multiple records for the specified table.
 package main
 
 import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/table-api"
 )
 
 func main() {
@@ -76,7 +76,7 @@ Retrieves the record identified by the specified sys_id from the specified table
 package main
 
 import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/table-api"
 )
 
 func main() {
@@ -110,7 +110,7 @@ Inserts one record in the specified table. Multiple record insertion is not supp
 package main
 
 import (
-    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/table-api"
 )
 
 func main() {

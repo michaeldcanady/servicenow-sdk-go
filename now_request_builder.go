@@ -3,14 +3,14 @@ package servicenowsdkgo
 import (
 	"maps"
 
-	accountapi "github.com/michaeldcanady/servicenow-sdk-go/account-api"
-	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/actsub-api"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
-	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
-	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/cmdb-instance-api"
-	documentsapi "github.com/michaeldcanady/servicenow-sdk-go/documents-api"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+	accountapi "github.com/michaeldcanady/servicenow-sdk-go/v2/account-api"
+	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/v2/actsub-api"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachment-api"
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/v2/batch-api"
+	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/v2/cmdb-instance-api"
+	documentsapi "github.com/michaeldcanady/servicenow-sdk-go/v2/documents-api"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/table-api"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -39,8 +39,18 @@ func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuild
 	return tableapi.NewDefaultTableRequestBuilder2Internal(pathParameters, rB.GetRequestAdapter())
 }
 
+// TableV2 is an alias for Table to fix build errors.
+func (rB *NowRequestBuilder) TableV2(tableName string) *tableapi.TableRequestBuilder2[*tableapi.TableRecord] {
+	return rB.Table(tableName)
+}
+
 func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilder {
 	return attachmentapi.NewAttachmentRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+// Attachment2 is an alias for Attachment to fix build errors.
+func (rB *NowRequestBuilder) Attachment2() *attachmentapi.AttachmentRequestBuilder {
+	return rB.Attachment()
 }
 
 func (rB *NowRequestBuilder) Batch() *batchapi.BatchRequestBuilder {

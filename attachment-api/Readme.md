@@ -13,7 +13,7 @@ package main
 import (
     "context"
 
-    serviceNow "github.com/michaeldcanady/servicenow-sdk-go"
+    serviceNow "github.com/michaeldcanady/servicenow-sdk-go/v2"
 )
 
 func main() {
@@ -46,7 +46,7 @@ package main
 import (
     "context"
 
-    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachment-api"
 )
 
 func main() {
@@ -93,7 +93,7 @@ package main
 import (
     "context"
 
-    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachment-api"
 )
 
 func main() {
@@ -118,7 +118,7 @@ package main
 import (
     "context"
 
-    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachment-api"
 )
 
 func main() {
@@ -143,7 +143,7 @@ package main
 import (
     "context"
 
-    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachment-api"
 )
 
 func main() {
@@ -165,7 +165,7 @@ package main
 import (
     "context"
 
-    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachment-api"
 )
 
 func main() {

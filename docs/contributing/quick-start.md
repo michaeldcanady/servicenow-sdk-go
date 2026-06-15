@@ -29,5 +29,5 @@ Examples:
 
     ```bash
     cd servicenow-sdk-go
-    git remote add upstream https://github.com/michaeldcanady/servicenow-sdk-go.git
+    git remote add upstream https://github.com/michaeldcanady/servicenow-sdk-go/v2.git
     ```

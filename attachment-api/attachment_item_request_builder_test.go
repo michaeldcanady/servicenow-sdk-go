@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -230,7 +230,7 @@ func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 				result, err := builder.Get(context.Background(), nil)
 
 				assert.Nil(t, result)
-				assert.Equal(t, errors.New("res is not ServiceNowItemResponse[Attachment2]"), err)
+				assert.Equal(t, errors.New("res is not ServiceNowItemResponse[*Attachment]"), err)
 			},
 		},
 		{
