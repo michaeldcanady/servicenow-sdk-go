@@ -16,7 +16,7 @@ func _() {
 
 	// [START pagination_table_basic]
 	// 1. Execute a list request
-	listResponse, err := client.Now2().TableV2("incident").Get(ctx, nil)
+	listResponse, err := client.Now().Table("incident").Get(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,7 +56,7 @@ func _() {
 
 	// [START pagination_attachment]
 	// 1. Execute an attachment list request
-	attachmentResponse, err := client.Now2().Attachment2().Get(ctx, nil)
+	attachmentResponse, err := client.Now().Attachment().Get(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

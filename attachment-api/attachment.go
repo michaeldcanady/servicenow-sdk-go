@@ -90,7 +90,7 @@ func (rE *Attachment) Serialize(writer serialization.SerializationWriter) error 
 	)
 }
 
-// Attachment2Model returns the deserialization information for this object.
+// AttachmentModel returns the deserialization information for this object.
 func (rE *Attachment) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
 	return map[string]func(serialization.ParseNode) error{
 		tableSysIDKey:        internalSerialization.DeserializeStringFunc()(rE.setTableSysID),

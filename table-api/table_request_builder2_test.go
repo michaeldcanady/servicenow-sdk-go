@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestTableRequestBuilder2_Get(t *testing.T) {
+func TestTableRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
@@ -49,7 +49,7 @@ func TestTableRequestBuilder2_Get(t *testing.T) {
 			mockAdapter := new(mocking.MockRequestAdapter)
 			tt.setupMock(mockAdapter)
 
-			builder := NewTableRequestBuilder2[*TableRecord](
+			builder := NewTableRequestBuilder[*TableRecord](
 				"https://example.com/api/now/v1/table/test",
 				mockAdapter,
 				CreateTableRecordFromDiscriminatorValue,
@@ -69,7 +69,7 @@ func TestTableRequestBuilder2_Get(t *testing.T) {
 	}
 }
 
-func TestTableRequestBuilder2_Post(t *testing.T) {
+func TestTableRequestBuilder_Post(t *testing.T) {
 	tests := []struct {
 		name      string
 		body      *TableRecord
@@ -129,7 +129,7 @@ func TestTableRequestBuilder2_Post(t *testing.T) {
 			mockAdapter := new(mocking.MockRequestAdapter)
 			tt.setupMock(mockAdapter)
 
-			builder := NewTableRequestBuilder2[*TableRecord](
+			builder := NewTableRequestBuilder[*TableRecord](
 				"https://example.com/api/now/v1/table/test",
 				mockAdapter,
 				CreateTableRecordFromDiscriminatorValue,
@@ -149,9 +149,9 @@ func TestTableRequestBuilder2_Post(t *testing.T) {
 	}
 }
 
-func TestTableRequestBuilder2_ById(t *testing.T) {
+func TestTableRequestBuilder_ById(t *testing.T) {
 	mockAdapter := new(mocking.MockRequestAdapter)
-	builder := NewTableRequestBuilder2[*TableRecord](
+	builder := NewTableRequestBuilder[*TableRecord](
 		"https://example.com/api/now/v1/table/test",
 		mockAdapter,
 		CreateTableRecordFromDiscriminatorValue,
@@ -162,17 +162,17 @@ func TestTableRequestBuilder2_ById(t *testing.T) {
 	assert.Equal(t, "sysid123", itemBuilder.GetPathParameters()["sysId"])
 }
 
-func TestTableRequestBuilder2_ToRequestInformation(t *testing.T) {
+func TestTableRequestBuilder_ToRequestInformation(t *testing.T) {
 	mockAdapter := new(mocking.MockRequestAdapter)
-	builder := NewTableRequestBuilder2[*TableRecord](
+	builder := NewTableRequestBuilder[*TableRecord](
 		"https://example.com/api/now/v1/table/test",
 		mockAdapter,
 		CreateTableRecordFromDiscriminatorValue,
 	)
 
 	t.Run("ToGetRequestInformation", func(t *testing.T) {
-		config := &TableRequestBuilder2GetRequestConfiguration{
-			QueryParameters: &TableRequestBuilder2GetQueryParameters{
+		config := &TableRequestBuilderGetRequestConfiguration{
+			QueryParameters: &TableRequestBuilderGetQueryParameters{
 				Limit: 10,
 			},
 		}

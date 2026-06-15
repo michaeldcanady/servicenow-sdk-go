@@ -24,7 +24,7 @@ config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
     },
 }
 
-result, err := client.Now2().Attachment2().File().Post(context.Background(), media, config)
+result, err := client.Now().Attachment().File().Post(context.Background(), media, config)
 ```
 
 ### Downloading a file
@@ -32,7 +32,7 @@ result, err := client.Now2().Attachment2().File().Post(context.Background(), med
 To download a file, you use the `ByID` method with the attachment's `sys_id` and then access the `File()` sub-module.
 
 ```go
-downloadedFile, err := client.Now2().Attachment2().ByID("ATTACHMENT_SYS_ID").File().Get(context.Background(), nil)
+downloadedFile, err := client.Now().Attachment().ByID("ATTACHMENT_SYS_ID").File().Get(context.Background(), nil)
 
 content, _ := downloadedFile.GetContent()
 // content is a []byte containing the file data

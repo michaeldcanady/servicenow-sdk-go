@@ -73,7 +73,7 @@ func main() {
     }
 
     // Step 6: Upload the file
-    resp, err := client.Now2().Attachment2().File().Post(
+    resp, err := client.Now().Attachment().File().Post(
         context.Background(),
         media,
         config,

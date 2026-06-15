@@ -36,15 +36,15 @@ func NewTableItemRequestBuilder2Internal[T model.ServiceNowItem](
 	return m
 }
 
-// NewDefaultTableItemRequestBuilder2Internal instantiates a new TableItemRequestBuilder2 with default table record parsable.
-func NewDefaultTableItemRequestBuilder2Internal(
+// NewDefaultTableItemRequestBuilderInternal instantiates a new TableItemRequestBuilder2 with default table record parsable.
+func NewDefaultTableItemRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 ) *TableItemRequestBuilder2[*TableRecord] {
 	return NewTableItemRequestBuilder2Internal[*TableRecord](pathParameters, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
-func NewDefaultTableItemRequestBuilder2(
+func NewDefaultTableItemRequestBuilder(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 ) *TableItemRequestBuilder2[*TableRecord] {

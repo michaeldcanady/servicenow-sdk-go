@@ -11,13 +11,13 @@ Commonly used for:
 
 ## Basic usage
 
-To interact with a table, you start from the `ServiceNowClient`, access the `now` namespace, and then specify the table name using `TableV2`.
+To interact with a table, you start from the `ServiceNowClient`, access the `now` namespace, and then specify the table name using `Table`.
 
 ```go
 client, _ := servicenowsdkgo.NewServiceNowClient2(credential, instance)
 
 // Access the incident table
-incidentTable := client.Now2().TableV2("incident")
+incidentTable := client.Now().Table("incident")
 
 // Fetch a list of records
 result, err := incidentTable.Get(context.Background(), nil)

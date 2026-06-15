@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestAttachmentRequestBuilder2_Get(t *testing.T) {
+func TestAttachmentRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
 		name        string
 		setupMock   func(*mocking.MockRequestAdapter)
@@ -65,7 +65,7 @@ func TestAttachmentRequestBuilder2_Get(t *testing.T) {
 	}
 }
 
-func TestAttachmentRequestBuilder2_Builders(t *testing.T) {
+func TestAttachmentRequestBuilder_Builders(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewAttachmentRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 

@@ -31,7 +31,7 @@ graph TD
 
 Request builders provide the primary "fluent" interface for the SDK. They map
 directly to the ServiceNow API hierarchy. For example, the path
-`client.Now2().TableV2("incident")` corresponds to the `/api/now/table/incident`
+`client.Now().Table("incident")` corresponds to the `/api/now/table/incident`
 endpoint.
 
 Builders are responsible for:

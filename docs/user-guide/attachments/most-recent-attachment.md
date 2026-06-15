@@ -50,14 +50,14 @@ func main() {
     }
 
     // Step 3: List attachments (filter using query params as needed)
-    config := &attachmentapi.AttachmentRequestBuilder2GetRequestConfiguration{
-        QueryParameters: &attachmentapi.AttachmentRequestBuilder2GetQueryParameters{
+    config := &attachmentapi.AttachmentRequestBuilderGetRequestConfiguration{
+        QueryParameters: &attachmentapi.AttachmentRequestBuilderGetQueryParameters{
             SysparmLimit: 1,
             SysparmQuery: "ORDERBYDESCsys_created_on",
         },
     }
 
-    resp, err := client.Now2().Attachment2().Get(
+    resp, err := client.Now().Attachment().Get(
         context.Background(),
         config,
     )

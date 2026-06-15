@@ -53,7 +53,7 @@ func (c *attachmentTestContext) iHaveInitializedTheServiceNowClient() error {
 }
 
 func (c *attachmentTestContext) iRequestAllAttachments() error {
-	resp, err := c.client.Now2().Attachment2().Get(context.Background(), nil)
+	resp, err := c.client.Now().Attachment().Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -87,7 +87,7 @@ func (c *attachmentTestContext) theResultsShouldContainAtLeastRecords(minCount i
 }
 
 func (c *attachmentTestContext) iHaveAtLeastAttachmentInTheInstance(minCount int) error {
-	resp, err := c.client.Now2().Attachment2().Get(context.Background(), nil)
+	resp, err := c.client.Now().Attachment().Get(context.Background(), nil)
 	if err != nil {
 		return err
 	}
@@ -110,7 +110,7 @@ func (c *attachmentTestContext) iHaveAtLeastAttachmentInTheInstance(minCount int
 }
 
 func (c *attachmentTestContext) iRequestTheAttachmentByItsSysID() error {
-	resp, err := c.client.Now2().Attachment2().ByID(c.lastSysID).Get(context.Background(), nil)
+	resp, err := c.client.Now().Attachment().ByID(c.lastSysID).Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -119,7 +119,7 @@ func (c *attachmentTestContext) iRequestTheAttachmentByItsSysID() error {
 func (c *attachmentTestContext) theResultShouldHaveTheCorrectSysID() error {
 	response, ok := c.response.(internal.ServiceNowItemResponse[attachmentapi.Attachment])
 	if !ok {
-		return fmt.Errorf("expected a ServiceNowItemResponse[Attachment2], but got %T", c.response)
+		return fmt.Errorf("expected a ServiceNowItemResponse[Attachment], but got %T", c.response)
 	}
 
 	item, err := response.GetResult()
@@ -144,7 +144,7 @@ func (c *attachmentTestContext) theResultShouldHaveTheCorrectSysID() error {
 
 func (c *attachmentTestContext) iHaveAnIncidentRecordInTheTable(tableName string) error {
 	if !isOffline() {
-		resp, err := c.client.Now2().TableV2(tableName).Get(context.Background(), nil)
+		resp, err := c.client.Now().Table(tableName).Get(context.Background(), nil)
 		if err != nil {
 			return err
 		}
@@ -185,7 +185,7 @@ func (c *attachmentTestContext) iUploadTheFileFromTheResourcesDirectoryToTheInci
 			TableSysID: &c.incidentSysID,
 		},
 	}
-	resp, err := c.client.Now2().Attachment2().File().Post(context.Background(), media, config)
+	resp, err := c.client.Now().Attachment().File().Post(context.Background(), media, config)
 	c.response = resp
 	c.err = err
 	if err == nil && !conversion.IsNil(resp) {
@@ -238,7 +238,7 @@ func (c *attachmentTestContext) theAttachmentFilenameShouldBe(fileName string) e
 }
 
 func (c *attachmentTestContext) iRequestTheContentOfTheCreatedAttachment() error {
-	resp, err := c.client.Now2().Attachment2().ByID(c.lastSysID).File().Get(context.Background(), nil)
+	resp, err := c.client.Now().Attachment().ByID(c.lastSysID).File().Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -275,7 +275,7 @@ func (c *attachmentTestContext) theRetrievedContentShouldMatchTheOriginalFile(fi
 }
 
 func (c *attachmentTestContext) iDeleteTheCreatedAttachment() error {
-	err := c.client.Now2().Attachment2().ByID(c.lastSysID).Delete(context.Background(), nil)
+	err := c.client.Now().Attachment().ByID(c.lastSysID).Delete(context.Background(), nil)
 	c.err = err
 	return nil
 }
@@ -287,7 +287,7 @@ func (c *attachmentTestContext) iRequestTheDeletedAttachmentByItsSysID() error {
 		httpmock.RegisterResponder("GET", url,
 			httpmock.NewStringResponder(404, `{"error":{"message":"No Record found","detail":""},"status":"failure"}`))
 	}
-	resp, err := c.client.Now2().Attachment2().ByID(c.lastSysID).Get(context.Background(), nil)
+	resp, err := c.client.Now().Attachment().ByID(c.lastSysID).Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil

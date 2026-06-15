@@ -15,15 +15,15 @@ Batching involves collecting multiple `RequestInformation` objects (from other A
 client, _ := servicenowsdkgo.NewServiceNowClient2(credential, instance)
 
 // 1. Prepare individual requests using ToRequestInformation methods
-request1, _ := client.Now2().TableV2("incident").ToGetRequestInformation(context.Background(), nil)
-request2, _ := client.Now2().TableV2("sys_user").ToGetRequestInformation(context.Background(), nil)
+request1, _ := client.Now().Table("incident").ToGetRequestInformation(context.Background(), nil)
+request2, _ := client.Now().Table("sys_user").ToGetRequestInformation(context.Background(), nil)
 
 // 2. Create a batch request model
 body := batchapi.NewBatchRequestModel()
 // (Add requests to body - usually via a helper function)
 
 // 3. Execute the batch
-response, err := client.Now2().Batch().Post(context.Background(), body, nil)
+response, err := client.Now().Batch().Post(context.Background(), body, nil)
 ```
 
 ## Available operations

@@ -54,7 +54,7 @@ func (c *tableTestContext) iHaveInitializedTheServiceNowClient() error {
 }
 
 func (c *tableTestContext) iRequestAllIncidentsFromTheTable(tableName string) error {
-	resp, err := c.client.Now2().TableV2(tableName).Get(context.Background(), nil)
+	resp, err := c.client.Now().Table(tableName).Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -104,7 +104,7 @@ func (c *tableTestContext) eachRecordShouldHaveAValidSysID() error {
 }
 
 func (c *tableTestContext) iHaveAtLeastIncidentInTheTable(minCount int, tableName string) error {
-	resp, err := c.client.Now2().TableV2(tableName).Get(context.Background(), nil)
+	resp, err := c.client.Now().Table(tableName).Get(context.Background(), nil)
 	if err != nil {
 		return err
 	}
@@ -121,7 +121,7 @@ func (c *tableTestContext) iHaveAtLeastIncidentInTheTable(minCount int, tableNam
 }
 
 func (c *tableTestContext) iRequestTheIncidentByItsSysID() error {
-	resp, err := c.client.Now2().TableV2("incident").ById(c.lastSysID).Get(context.Background(), nil)
+	resp, err := c.client.Now().Table("incident").ById(c.lastSysID).Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -147,7 +147,7 @@ func (c *tableTestContext) iCreateANewIncidentWithDescription(description string
 	record := tableapi.NewTableRecord()
 	_ = record.SetValue("short_description", description)
 
-	resp, err := c.client.Now2().TableV2("incident").Post(context.Background(), record, nil)
+	resp, err := c.client.Now().Table("incident").Post(context.Background(), record, nil)
 	c.response = resp
 	c.err = err
 	if err == nil {
@@ -178,7 +178,7 @@ func (c *tableTestContext) iUpdateTheIncidentDescriptionTo(description string) e
 	record := tableapi.NewTableRecord()
 	_ = record.SetValue("short_description", description)
 
-	resp, err := c.client.Now2().TableV2("incident").ById(c.lastSysID).Put(context.Background(), record, nil)
+	resp, err := c.client.Now().Table("incident").ById(c.lastSysID).Put(context.Background(), record, nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -188,7 +188,7 @@ func (c *tableTestContext) iPatchTheIncidentDescriptionTo(description string) er
 	record := tableapi.NewTableRecord()
 	_ = record.SetValue("short_description", description)
 
-	resp, err := c.client.Now2().TableV2("incident").ById(c.lastSysID).Patch(context.Background(), record, nil)
+	resp, err := c.client.Now().Table("incident").ById(c.lastSysID).Patch(context.Background(), record, nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -213,7 +213,7 @@ func (c *tableTestContext) theRecordShouldHaveDescription(description string) er
 }
 
 func (c *tableTestContext) iDeleteTheCreatedIncident() error {
-	err := c.client.Now2().TableV2("incident").ById(c.lastSysID).Delete(context.Background(), nil)
+	err := c.client.Now().Table("incident").ById(c.lastSysID).Delete(context.Background(), nil)
 	c.err = err
 	return nil
 }
@@ -226,7 +226,7 @@ func (c *tableTestContext) iRequestTheDeletedIncidentByItsSysID() error {
 			httpmock.NewStringResponder(404, `{"error":{"message":"No Record found","detail":""},"status":"failure"}`))
 	}
 
-	resp, err := c.client.Now2().TableV2("incident").ById(c.lastSysID).Get(context.Background(), nil)
+	resp, err := c.client.Now().Table("incident").ById(c.lastSysID).Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -240,13 +240,13 @@ func (c *tableTestContext) theResponseShouldBeA404Error() error {
 }
 
 func (c *tableTestContext) iRequestIncidentsWithQueryAndLimit(query string, limit int) error {
-	config := &tableapi.TableRequestBuilder2GetRequestConfiguration{
-		QueryParameters: &tableapi.TableRequestBuilder2GetQueryParameters{
+	config := &tableapi.TableRequestBuilderGetRequestConfiguration{
+		QueryParameters: &tableapi.TableRequestBuilderGetQueryParameters{
 			Query: query,
 			Limit: limit,
 		},
 	}
-	resp, err := c.client.Now2().TableV2("incident").Get(context.Background(), config)
+	resp, err := c.client.Now().Table("incident").Get(context.Background(), config)
 	c.response = resp
 	c.err = err
 	return nil
@@ -285,12 +285,12 @@ func (c *tableTestContext) eachRecordShouldHaveSetTo(field, value string) error 
 }
 
 func (c *tableTestContext) iRequestIncidentsSortedByDescending(field string) error {
-	config := &tableapi.TableRequestBuilder2GetRequestConfiguration{
-		QueryParameters: &tableapi.TableRequestBuilder2GetQueryParameters{
+	config := &tableapi.TableRequestBuilderGetRequestConfiguration{
+		QueryParameters: &tableapi.TableRequestBuilderGetQueryParameters{
 			Query: "ORDERBYDESC" + field,
 		},
 	}
-	resp, err := c.client.Now2().TableV2("incident").Get(context.Background(), config)
+	resp, err := c.client.Now().Table("incident").Get(context.Background(), config)
 	c.response = resp
 	c.err = err
 	return nil
@@ -332,13 +332,13 @@ func (c *tableTestContext) iSetTheFieldsTo(fields []string) error {
 }
 
 func (c *tableTestContext) iUseTheTablePageIteratorToFetchRecords() error {
-	config := &tableapi.TableRequestBuilder2GetRequestConfiguration{
-		QueryParameters: &tableapi.TableRequestBuilder2GetQueryParameters{
+	config := &tableapi.TableRequestBuilderGetRequestConfiguration{
+		QueryParameters: &tableapi.TableRequestBuilderGetQueryParameters{
 			Limit:  c.pageSize,
 			Fields: c.fields,
 		},
 	}
-	resp, err := c.client.Now2().TableV2("incident").Get(context.Background(), config)
+	resp, err := c.client.Now().Table("incident").Get(context.Background(), config)
 	if err != nil {
 		return err
 	}

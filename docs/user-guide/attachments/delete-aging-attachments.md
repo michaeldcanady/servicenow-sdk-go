@@ -51,8 +51,8 @@ func main() {
     cutoff := time.Now().AddDate(0, 0, -retentionDays)
 
     // Step 4: List attachments for a specific record
-    config := &attachmentapi.AttachmentRequestBuilder2GetRequestConfiguration{
-        QueryParameters: &attachmentapi.AttachmentRequestBuilder2GetQueryParameters{
+    config := &attachmentapi.AttachmentRequestBuilderGetRequestConfiguration{
+        QueryParameters: &attachmentapi.AttachmentRequestBuilderGetQueryParameters{
             SysparmQuery: query.And(
                 query.String("table_sys_id").Is("{table entry's sys_id}"),
                 query.String("table_name").Is("{name of table}"),

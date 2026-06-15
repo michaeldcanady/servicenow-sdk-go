@@ -76,7 +76,7 @@ func (c *batchTestContext) iSendABatchRequestWithAGETOperationForTable(tableName
 		return fmt.Errorf("failed to add request: %w", err)
 	}
 
-	resp, err := c.client.Now2().Batch().Post(context.Background(), batchReq, nil)
+	resp, err := c.client.Now().Batch().Post(context.Background(), batchReq, nil)
 	c.response = resp
 	if err != nil {
 		c.err = fmt.Errorf("failed to send post request: %w", err)
@@ -121,7 +121,7 @@ func (c *batchTestContext) iSendABatchRequestWithAPOSTToAndAGETFor(postTable, ge
 		return fmt.Errorf("failed to add get request: %w", err)
 	}
 
-	resp, err := c.client.Now2().Batch().Post(context.Background(), batchReq, nil)
+	resp, err := c.client.Now().Batch().Post(context.Background(), batchReq, nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -175,7 +175,7 @@ func (c *batchTestContext) iSendABatchRequestWithGETOperationsForAndTables(table
 		}
 	}
 
-	resp, err := c.client.Now2().Batch().Post(context.Background(), batchReq, nil)
+	resp, err := c.client.Now().Batch().Post(context.Background(), batchReq, nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -209,7 +209,7 @@ func (c *batchTestContext) iCreateANewIncidentWithDescription(description string
 	record := tableapi.NewTableRecord()
 	_ = record.SetValue("short_description", description)
 
-	resp, err := c.client.Now2().TableV2("incident").Post(context.Background(), record, nil)
+	resp, err := c.client.Now().Table("incident").Post(context.Background(), record, nil)
 	if err != nil {
 		return err
 	}
@@ -235,7 +235,7 @@ func (c *batchTestContext) iSendABatchRequestWithADELETEOperationForTheCreatedIn
 		return fmt.Errorf("failed to add delete request: %w", err)
 	}
 
-	resp, err := c.client.Now2().Batch().Post(context.Background(), batchReq, nil)
+	resp, err := c.client.Now().Batch().Post(context.Background(), batchReq, nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -248,7 +248,7 @@ func (c *batchTestContext) iRequestTheDeletedIncidentByItsSysID() error {
 		httpmock.RegisterResponder("GET", url,
 			httpmock.NewStringResponder(404, `{"error":{"message":"No Record found","detail":""},"status":"failure"}`))
 	}
-	_, err := c.client.Now2().TableV2("incident").ById(c.lastSysID).Get(context.Background(), nil)
+	_, err := c.client.Now().Table("incident").ById(c.lastSysID).Get(context.Background(), nil)
 	c.err = err
 	return nil
 }

@@ -27,7 +27,7 @@ func main() {
 
     // Call the get method, with or without AttachmentRequestBuilderGetQueryParameters.
     // Response is a AttachmentCollectionResponse.
-    response, err := client.Now().Attachment2().Get(context.Background(), nil)
+    response, err := client.Now().Attachment().Get(context.Background(), nil)
 
     // Test err, should be nil
     if err != nil {
@@ -74,7 +74,7 @@ func main() {
 
     // Call the post method with your content type, data, and request configurations.
     // Response is the uploaded file.
-    response, err := client.Now().Attachment2().Post(context.Background(), media, requestConfiguration)
+    response, err := client.Now().Attachment().Post(context.Background(), media, requestConfiguration)
 
     // Test err, should be nil
     if err != nil {
@@ -101,7 +101,7 @@ func main() {
 
     // Call the post method with your content type, data, and request configurations.
     // Response is the uploaded file.
-    response, err := client.Now().Attachment2().Post(context.Background(), body, nil)
+    response, err := client.Now().Attachment().Post(context.Background(), body, nil)
 
     // Test err, should be nil
     if err != nil {
@@ -124,7 +124,7 @@ import (
 func main() {
     // Call the get method with/without request configurations.
     // Response is the attachment item.
-    response, err := client.Now().Attachment2().ByID("sys id here").Get(context.Background(), nil)
+    response, err := client.Now().Attachment().ByID("sys id here").Get(context.Background(), nil)
 
     // Test err, should be nil
     if err != nil {
@@ -148,7 +148,7 @@ import (
 
 func main() {
     // Call the delete method with/without request configurations.
-    err := client.Now().Attachment2().ByID("sys id here").Delete(context.Background(), nil)
+    err := client.Now().Attachment().ByID("sys id here").Delete(context.Background(), nil)
 
     // Test err, should be nil
     if err != nil {
@@ -171,7 +171,7 @@ import (
 func main() {
     // Call the delete method with/without request configurations.
     // response is the file with its metadata
-    response, err := client.Now().Attachment2().ByID("sys id here").Get(context.Background(), nil)
+    response, err := client.Now().Attachment().ByID("sys id here").Get(context.Background(), nil)
 
     // Test err, should be nil
     if err != nil {

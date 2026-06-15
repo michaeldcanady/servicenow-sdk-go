@@ -32,15 +32,15 @@ func _() {
 		And(query2.String("priority").
 			IsOneOf("1", "2")).String()
 
-	params := &tableapi.TableRequestBuilder2GetQueryParameters{
+	params := &tableapi.TableRequestBuilderGetQueryParameters{
 		Query: q2,
 	}
 
-	config := &tableapi.TableRequestBuilder2GetRequestConfiguration{
+	config := &tableapi.TableRequestBuilderGetRequestConfiguration{
 		QueryParameters: params,
 	}
 
-	response, err := client.Now2().TableV2("xSDK_SN_TABLEx").Get(ctx, config)
+	response, err := client.Now().Table("xSDK_SN_TABLEx").Get(ctx, config)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -96,11 +96,6 @@ func (rB *ServiceNowServiceClient) Now() *NowRequestBuilder {
 	return NewServiceNowRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
-// Now2 is a temporary alias for Now() to fix build errors in docs and tests.
-func (rB *ServiceNowServiceClient) Now2() *NowRequestBuilder {
-	return rB.Now()
-}
-
 func (rB *ServiceNowServiceClient) Cdm() *CdmRequestBuilder {
 	return NewCdmRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

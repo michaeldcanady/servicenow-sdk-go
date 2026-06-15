@@ -22,7 +22,7 @@ type AttachmentRequestBuilder struct {
 	internal.RequestBuilder
 }
 
-// newAttachmentRequestBuilderInternal instantiates a new AttachmentRequestBuilder2 with the provided requestBuilder
+// newAttachmentRequestBuilderInternal instantiates a new AttachmentRequestBuilder with the provided requestBuilder
 func newAttachmentRequestBuilderInternal(requestBuilder internal.RequestBuilder) *AttachmentRequestBuilder {
 	m := &AttachmentRequestBuilder{
 		requestBuilder,
@@ -30,7 +30,7 @@ func newAttachmentRequestBuilderInternal(requestBuilder internal.RequestBuilder)
 	return m
 }
 
-// NewAttachmentRequestBuilderInternal instantiates a new AttachmentRequestBuilder2 with custom parsable for table entries.
+// NewAttachmentRequestBuilderInternal instantiates a new AttachmentRequestBuilder with custom parsable for table entries.
 func NewAttachmentRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
@@ -40,7 +40,7 @@ func NewAttachmentRequestBuilderInternal(
 	)
 }
 
-// NewAttachmentRequestBuilder instantiates a new AttachmentRequestBuilder2 with custom parsable for table entries.
+// NewAttachmentRequestBuilder instantiates a new AttachmentRequestBuilder with custom parsable for table entries.
 func NewAttachmentRequestBuilder(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,

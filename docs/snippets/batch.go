@@ -45,7 +45,7 @@ func _() {
 	postConfig := &batchapi.BatchRequestBuilderPostRequestConfiguration{}
 
 	// Step 5: Execute request
-	batch_response, err := client.Now2().Batch().Post(context.Background(), body, postConfig)
+	batch_response, err := client.Now().Batch().Post(context.Background(), body, postConfig)
 	if err != nil {
 		log.Fatal(err)
 	}

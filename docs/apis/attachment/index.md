@@ -12,13 +12,13 @@ Commonly used for:
 
 ## Basic usage
 
-To interact with attachments, you use the `Attachment2` method from the `now` namespace.
+To interact with attachments, you use the `Attachment` method from the `now` namespace.
 
 ```go
 client, _ := servicenowsdkgo.NewServiceNowClient2(credential, instance)
 
 // Access the attachment API
-attachmentAPI := client.Now2().Attachment2()
+attachmentAPI := client.Now().Attachment()
 
 // Fetch metadata for all attachments (optionally filtered)
 result, err := attachmentAPI.Get(context.Background(), nil)

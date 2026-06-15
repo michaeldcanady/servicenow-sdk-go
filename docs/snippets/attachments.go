@@ -26,7 +26,7 @@ func _() {
 		// Optional configurations
 	}
 
-	get_item_response, err := client.Now2().Attachment2().ByID("xSDK_SN_TABLE_SYS_IDx").Get(context.Background(), get_item_config)
+	get_item_response, err := client.Now().Attachment().ByID("xSDK_SN_TABLE_SYS_IDx").Get(context.Background(), get_item_config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,7 +55,7 @@ func _() {
 		// Optional configurations
 	}
 
-	list_response, err := client.Now2().Attachment2().Get(context.Background(), list_config)
+	list_response, err := client.Now().Attachment().Get(context.Background(), list_config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -85,7 +85,7 @@ func _() {
 		// Optional configurations
 	}
 
-	err = client.Now2().Attachment2().ByID("xSDK_SN_TABLE_SYS_IDx").Delete(context.Background(), deleteConfig)
+	err = client.Now().Attachment().ByID("xSDK_SN_TABLE_SYS_IDx").Delete(context.Background(), deleteConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -127,7 +127,7 @@ func _() {
 		// Optional configurations
 	}
 
-	create_file_response, err := client.Now2().Attachment2().File().Post(context.Background(), media, create_file_config)
+	create_file_response, err := client.Now().Attachment().File().Post(context.Background(), media, create_file_config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -173,7 +173,7 @@ func _() {
 		// Optional configurations
 	}
 
-	upload_response, err := client.Now2().Attachment2().Upload().Post(context.Background(), body, upload_config)
+	upload_response, err := client.Now().Attachment().Upload().Post(context.Background(), body, upload_config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -205,7 +205,7 @@ func _() {
 		// Optional configurations
 	}
 
-	file_get_response, err := client.Now2().Attachment2().ByID("xSDK_SN_TABLE_SYS_IDx").File().Get(context.Background(), file_get_config)
+	file_get_response, err := client.Now().Attachment().ByID("xSDK_SN_TABLE_SYS_IDx").File().Get(context.Background(), file_get_config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -231,7 +231,7 @@ func _() {
 
 	// [START attachment_list_guide]
 	// List all attachments
-	list_guide_response, err := client.Now2().Attachment2().Get(ctx, nil)
+	list_guide_response, err := client.Now().Attachment().Get(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -269,7 +269,7 @@ func _() {
 	}
 
 	// Assuming 'file' can be used as media content
-	createGuideResponse, err := client.Now2().Attachment2().File().Post(ctx, nil, config) // Placeholder
+	createGuideResponse, err := client.Now().Attachment().File().Post(ctx, nil, config) // Placeholder
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -291,7 +291,7 @@ func _() {
 
 	config2 := &attachmentapi.AttachmentItemFileRequestBuilderGetRequestConfiguration{}
 
-	download_file, err := client.Now2().Attachment2().ByID(sysIdToDownload).File().Get(ctx, config2)
+	download_file, err := client.Now().Attachment().ByID(sysIdToDownload).File().Get(ctx, config2)
 	if err != nil {
 		log.Fatal(err)
 	}

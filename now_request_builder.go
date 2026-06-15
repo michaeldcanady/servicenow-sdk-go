@@ -33,24 +33,14 @@ func NewServiceNowRequestBuilder(
 	return NewServiceNowRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
-func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder2[*tableapi.TableRecord] {
+func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder[*tableapi.TableRecord] {
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["table"] = tableName
-	return tableapi.NewDefaultTableRequestBuilder2Internal(pathParameters, rB.GetRequestAdapter())
-}
-
-// TableV2 is an alias for Table to fix build errors.
-func (rB *NowRequestBuilder) TableV2(tableName string) *tableapi.TableRequestBuilder2[*tableapi.TableRecord] {
-	return rB.Table(tableName)
+	return tableapi.NewDefaultTableRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
 func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilder {
 	return attachmentapi.NewAttachmentRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
-}
-
-// Attachment2 is an alias for Attachment to fix build errors.
-func (rB *NowRequestBuilder) Attachment2() *attachmentapi.AttachmentRequestBuilder {
-	return rB.Attachment()
 }
 
 func (rB *NowRequestBuilder) Batch() *batchapi.BatchRequestBuilder {
