@@ -91,13 +91,23 @@ func (rE *Attachment) Serialize(writer serialization.SerializationWriter) error 
 }
 
 // AttachmentModel returns the deserialization information for this object.
-func (rE *Attachment) GetFieldDeserializers() map[string]func(serialization.ParseNode) error { //nolint:gocognit
-	return map[string]func(serialization.ParseNode) error{
+func (rE *Attachment) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	deserializers := map[string]func(serialization.ParseNode) error{
 		tableSysIDKey:        internalSerialization.DeserializeStringFunc()(rE.setTableSysID),
 		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSizeBytes),
 		downloadLinkKey:      internalSerialization.DeserializeStringFunc()(rE.setDownloadLink),
 		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr(dateTimeFormat))(rE.setSysUpdatedOn),
 		sysIDKey:             internalSerialization.DeserializeStringFunc()(rE.setSysID),
+	}
+
+	for k, v := range rE.getAdditionalFieldDeserializers() {
+		deserializers[k] = v
+	}
+	return deserializers
+}
+
+func (rE *Attachment) getAdditionalFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
 		imageHeightKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(rE.setImageHeight),
 		sysCreatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr(dateTimeFormat))(rE.setSysCreatedOn),
 		fileNameKey:          internalSerialization.DeserializeStringFunc()(rE.setFileName),
@@ -105,16 +115,15 @@ func (rE *Attachment) GetFieldDeserializers() map[string]func(serialization.Pars
 		compressedKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToBoolPtr)(rE.setCompressed),
 		averageImageColorKey: internalSerialization.DeserializeStringFunc()(rE.setAverageImageColor),
 		sysUpdatedByKey:      internalSerialization.DeserializeStringFunc()(rE.setSysUpdatedBy),
-		// TODO: figure out separator
-		sysTagsKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil }))(rE.setSysTags),
-		tableNameKey:      internalSerialization.DeserializeStringFunc()(rE.setTableName),
-		imageWidthKey:     internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(rE.setImageWidth),
-		sysModCountKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSysModCount),
-		contentTypeKey:    internalSerialization.DeserializeStringFunc()(rE.setContentType),
-		sizeCompressedKey: internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSizeCompressed),
-		chunkSizeBytesKey: internalSerialization.DeserializeStringFunc()(rE.setChunkSizeBytes),
-		hashKey:           internalSerialization.DeserializeStringFunc()(rE.setHash),
-		stateKey:          internalSerialization.DeserializeStringFunc()(rE.setState),
+		sysTagsKey:           internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil }))(rE.setSysTags),
+		tableNameKey:         internalSerialization.DeserializeStringFunc()(rE.setTableName),
+		imageWidthKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(rE.setImageWidth),
+		sysModCountKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSysModCount),
+		contentTypeKey:       internalSerialization.DeserializeStringFunc()(rE.setContentType),
+		sizeCompressedKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSizeCompressed),
+		chunkSizeBytesKey:    internalSerialization.DeserializeStringFunc()(rE.setChunkSizeBytes),
+		hashKey:              internalSerialization.DeserializeStringFunc()(rE.setHash),
+		stateKey:             internalSerialization.DeserializeStringFunc()(rE.setState),
 	}
 }
 
