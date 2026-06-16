@@ -18,6 +18,11 @@ linters:
           - errcheck
           - dupl
           - gosec
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+      - docs/assets/snippets/.*\.go$
 formatters:
   enable:
     - gofmt
