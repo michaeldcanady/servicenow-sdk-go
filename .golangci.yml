@@ -13,17 +13,16 @@ linters:
     - gocyclo
     - errcheck
     - dupl
-  exclusions:
-    rules:
-      - path: _test\.go
-        linters:
-          - gocyclo
-          - errcheck
-          - dupl
-          - gosec
-          - typecheck
 issues:
-  exclude-files:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+        - typecheck
+  exclude-paths:
     - docs/snippets/.*\.go
 formatters:
   enable:
