@@ -23,7 +23,7 @@ linters:
           - dupl
           - gosec
     paths:
-      - docs/assets/snippets/.*\.go$
+      - docs/snippets/.*\.go$
 formatters:
   enable:
     - gofmt
@@ -31,7 +31,7 @@ formatters:
     warn-unused: true
     generated: lax
     paths:
-      - docs/assets/snippets/.*\.go$
+      - docs/snippets/.*\.go$
 run:
   build-tags:
     - preview.query
