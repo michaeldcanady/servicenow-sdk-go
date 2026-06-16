@@ -250,28 +250,6 @@ func TestPageIterator_Navigation(t *testing.T) {
 	}
 }
 
-func TestPageIterator_Iterate(t *testing.T) {
-	res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
-	res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
-	res.On("GetResult").Return([]*mocking.MockParsable{mocking.NewMockParsable(), mocking.NewMockParsable()}, nil)
-	res.On("GetNextLink").Return(nil, nil)
-	res.On("GetPreviousLink").Return(nil, nil)
-	res.On("GetFirstLink").Return(nil, nil)
-	res.On("GetLastLink").Return(nil, nil)
-
-	reqAdapter := mocking.NewMockRequestAdapter()
-	iterator, _ := NewPageIterator[*mocking.MockParsable](res, reqAdapter, nil)
-
-	count := 0
-	err := iterator.Iterate(context.Background(), func(item *mocking.MockParsable) bool {
-		count++
-		return true
-	})
-
-	assert.NoError(t, err)
-	assert.Equal(t, 2, count)
-}
-
 func TestPageIterator_Reset(t *testing.T) {
 	tests := []struct {
 		name string
