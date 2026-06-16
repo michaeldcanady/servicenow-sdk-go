@@ -67,15 +67,15 @@ func getHTTPHeader(headers []RestRequestHeader, httpHeader internalHttp.HTTPHead
 	for _, header := range headers {
 		name, err := header.GetName()
 		if err != nil {
-			continue // Skip this header if there's an error
+			continue
 		}
 
 		if strings.EqualFold(*name, httpHeader.String()) {
 			value, err := header.GetValue()
 			if err == nil {
-				return *value // Return the value if no error
+				return *value
 			}
 		}
 	}
-	return defaultValue // Return the provided default value if no match is found
+	return defaultValue
 }
