@@ -18,7 +18,7 @@ type Client struct {
 	// ClientID is the public identifier for the application.
 	ClientID string
 	// ClientSecret is the secret identifier for the application (confidential clients only).
-	ClientSecret string //nolint:gosec // G117: Needed for flow, no secret
+	ClientSecret string //nolint:gosec // G117: Confirmed secret used for OAuth2 authentication flow
 	// Endpoints holds the URLs for the various OAuth2 service endpoints.
 	Endpoints *Endpoints
 	// AuthMethod specifies how the client identifies itself to the authorization server.

@@ -37,7 +37,7 @@ func TestValidator(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			//nolint: staticcheck // while being deprecated there doesn't seem to be a replacement
+			//nolint:staticcheck // NewAllowedHostsValidator is deprecated in kiota-abstractions-go, but no alternative is currently available for this test scenario
 			v := authentication.NewAllowedHostsValidator(test.allowedHosts)
 			u, _ := url.Parse(test.url)
 			assert.Equal(t, test.expected, v.IsUrlHostValid(u))
