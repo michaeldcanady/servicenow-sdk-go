@@ -17,18 +17,6 @@ rules:
       - errcheck
       - dupl
       - gosec
-exclusions:
-  generated: lax
-  presets:
-    - comments
-    - common-false-positives
-    - legacy
-    - std-error-handling
-  paths:
-    - third_party$
-    - builtin$
-    - examples$
-    - docs/assets/snippets/.*\.go$
 formatters:
   enable:
     - gofmt
