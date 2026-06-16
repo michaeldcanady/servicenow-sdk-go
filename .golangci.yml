@@ -11,6 +11,7 @@ linters:
     - unparam
     - whitespace
   exclusions:
+    warn-unused: true
     rules:
       - path: _test\.go
         linters:
@@ -27,6 +28,7 @@ formatters:
   enable:
     - gofmt
   exclusions:
+    warn-unused: true
     generated: lax
     paths:
       - third_party$
