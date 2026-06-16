@@ -6,7 +6,9 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestAccountRequestBuilder_Builders(t *testing.T) {
@@ -36,6 +38,52 @@ func TestAccountRequestBuilder_Builders(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestAccountRequestBuilder_Get(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	builder := NewAccountRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+	mockResponse := &AccountCollectionResponseMock{}
+	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockResponse, nil)
+
+	res, err := builder.Get(context.Background(), nil)
+	assert.NoError(t, err)
+	assert.NotNil(t, res)
+}
+
+type AccountCollectionResponseMock struct {
+	internal.BaseServiceNowCollectionResponse[*AccountModel]
+}
+
+func (m *AccountCollectionResponseMock) Serialize(writer serialization.SerializationWriter) error {
+	return nil
+}
+func (m *AccountCollectionResponseMock) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return nil
+}
+
+func TestAccountItemRequestBuilder_Get(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	builder := NewAccountItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "account_id": "test-id"}, adapter)
+
+	mockResponse := &AccountItemResponseMock{}
+	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockResponse, nil)
+
+	res, err := builder.Get(context.Background(), nil)
+	assert.NoError(t, err)
+	assert.NotNil(t, res)
+}
+
+type AccountItemResponseMock struct {
+	internal.BaseServiceNowItemResponse[*AccountModel]
+}
+
+func (m *AccountItemResponseMock) Serialize(writer serialization.SerializationWriter) error {
+	return nil
+}
+func (m *AccountItemResponseMock) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return nil
 }
 
 func TestAccountItemRequestBuilder_GetRequestInformation(t *testing.T) {
