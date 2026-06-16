@@ -22,9 +22,8 @@ linters:
           - dupl
           - gosec
           - typecheck
-      - path: docs/snippets/.*\.go
-        linters:
-          - all
+    paths:
+      - docs/snippets/.*\.go
 formatters:
   enable:
     - gofmt
