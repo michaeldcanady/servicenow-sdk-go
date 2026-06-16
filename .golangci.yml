@@ -24,7 +24,7 @@ linters:
           - gosec
           - typecheck
     paths:
-      - docs/snippets/*\.go$
+      - docs/snippets/**\.go$
 formatters:
   enable:
     - gofmt
@@ -32,7 +32,7 @@ formatters:
     warn-unused: true
     generated: lax
     paths:
-      - docs/snippets/*\.go$
+      - docs/snippets/**\.go$
 run:
   build-tags:
     - preview.query
