@@ -57,6 +57,6 @@ const (
 	GrantTypeClientCreds  = "client_credentials"
 	GrantTypeRefreshToken = "refresh_token"
 	GrantTypePassword     = "password"
-	GrantTypeJWTBearer    = "urn:ietf:params:oauth:grant-type:jwt-bearer"
+	GrantTypeJWTBearer    = "urn:ietf:params:oauth:grant-type:jwt-bearer" //nolint:gosec
 	GrantTypeDeviceCode   = "urn:ietf:params:oauth:grant-type:device_code"
 )
