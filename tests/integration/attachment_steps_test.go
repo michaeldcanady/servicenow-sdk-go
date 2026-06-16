@@ -1,6 +1,6 @@
 //go:build integration
 
-package tests
+package integration
 
 import (
 	"bytes"
@@ -28,7 +28,7 @@ type attachmentTestContext struct {
 }
 
 func (c *attachmentTestContext) iHaveAValidServiceNowInstanceAndCredentials() error {
-	_ = godotenv.Load("../.env")
+	_ = godotenv.Load("../../.env")
 	return nil
 }
 

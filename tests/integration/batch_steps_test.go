@@ -1,6 +1,6 @@
 //go:build integration
 
-package tests
+package integration
 
 import (
 	"context"
@@ -26,7 +26,7 @@ type batchTestContext struct {
 }
 
 func (c *batchTestContext) iHaveAValidServiceNowInstanceAndCredentials() error {
-	_ = godotenv.Load("../.env")
+	_ = godotenv.Load("../../.env")
 	return nil
 }
 

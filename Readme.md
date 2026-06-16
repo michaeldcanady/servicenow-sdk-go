@@ -59,3 +59,23 @@ We welcome contributions from the community! Whether you're fixing a bug, adding
 a new feature, or improving documentation, please review our
 [Contributor Guide](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/)
 to get started.
+
+## Testing
+
+The project uses a comprehensive testing framework including unit, integration, and E2E tests.
+
+### Running Tests
+
+Use the unified test runner:
+```bash
+./scripts/test.sh --report
+```
+
+### Writing Tests
+
+See the [Robust Testing Framework Quickstart](specs/003-robust-testing-framework/quickstart.md) for detailed instructions on writing unit, integration, and E2E tests.
+
+#### Key Principles:
+- **Unit Tests**: Use the Test Table pattern and mocking utilities in `internal/new/mocking`.
+- **Integration Tests**: Use BDD features in `tests/integration`.
+- **E2E Tests**: Use live instances with credentials in `.env` (manual trigger with `e2e` tag).

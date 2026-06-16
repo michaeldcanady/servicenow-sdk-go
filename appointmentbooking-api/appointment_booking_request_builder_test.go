@@ -28,6 +28,18 @@ func TestAppointmentBookingRequestBuilder_ToGetRequestInformation(t *testing.T) 
 		assert.NotNil(t, requestInfo)
 		assert.Equal(t, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/configuration{?catalog_id}", requestInfo.UrlTemplate)
 	})
+
+	t.Run("Availability", func(t *testing.T) {
+		assert.NotNil(t, builder.Availability())
+	})
+
+	t.Run("ExecuteRuleConditions", func(t *testing.T) {
+		assert.NotNil(t, builder.ExecuteRuleConditions())
+	})
+
+	t.Run("UserWindow", func(t *testing.T) {
+		assert.NotNil(t, builder.UserWindow())
+	})
 }
 
 func TestAppointmentRequestBuilder_ToPostRequestInformation(t *testing.T) {
