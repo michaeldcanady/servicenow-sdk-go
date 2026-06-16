@@ -35,3 +35,6 @@ formatters:
       - builtin$
       - examples$
       - docs/assets/snippets/.*\.go$
+run:
+  build-tags:
+    - preview.query
