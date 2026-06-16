@@ -10,11 +10,13 @@ linters:
     - unconvert
     - unparam
     - whitespace
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - gosec
+rules:
+  - path: _test\.go
+    linters:
+      - gocyclo
+      - errcheck
+      - dupl
+      - gosec
 exclusions:
   generated: lax
   presets:

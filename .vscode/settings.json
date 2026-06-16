@@ -5,6 +5,12 @@
         "mkdocs.yml"
       ],
       "url": "https://squidfunk.github.io/mkdocs-material/schema.json"
+    },
+    {
+      "fileMatch": [
+        ".golangci.yml"
+      ],
+      "url": "https://raw.githubusercontent.com/golangci/golangci-lint/refs/heads/main/jsonschema/golangci.v2.9.jsonschema.json"
     }
   ],
   "go.buildFlags": [
