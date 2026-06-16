@@ -16,7 +16,7 @@ import (
 // [END query_basic_imports]
 
 func _() {
-	var client *servicenowsdkgo.ServiceNowClient
+	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 
 	// [START query_basic]
