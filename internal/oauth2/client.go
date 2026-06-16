@@ -132,7 +132,7 @@ func (c *Client) doRequest(req *http.Request) (*Token, error) {
 	if err != nil {
 		return nil, fmt.Errorf("token request failed: %w", err)
 	}
-	defer res.Body.Close() //nolint:errcheck
+	defer func() { _ = res.Body.Close() }()
 
 	body, _ := io.ReadAll(res.Body)
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
