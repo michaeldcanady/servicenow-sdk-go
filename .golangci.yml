@@ -23,7 +23,7 @@ linters:
           - gosec
           - typecheck
     paths:
-      - docs/snippets/.*\.go
+      - .*/docs/snippets/.*\.go
 formatters:
   enable:
     - gofmt
