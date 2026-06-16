@@ -248,7 +248,7 @@ func (c *Client) RequestDeviceAuthorization(ctx context.Context, scopes []string
 	if err != nil {
 		return nil, err
 	}
-	defer res.Body.Close()
+	defer func() { _ = res.Body.Close() }()
 
 	body, _ := io.ReadAll(res.Body)
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
@@ -298,7 +298,7 @@ func (c *Client) Revoke(ctx context.Context, token, tokenTypeHint string) error 
 	if err != nil {
 		return err
 	}
-	defer res.Body.Close()
+	defer func() { _ = res.Body.Close() }()
 
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		body, _ := io.ReadAll(res.Body)
@@ -336,7 +336,7 @@ func (c *Client) Introspect(ctx context.Context, token, tokenTypeHint string) (*
 	if err != nil {
 		return nil, err
 	}
-	defer res.Body.Close()
+	defer func() { _ = res.Body.Close() }()
 
 	body, _ := io.ReadAll(res.Body)
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
