@@ -20,9 +20,6 @@ linters:
           - dupl
           - gosec
     paths:
-      - third_party$
-      - builtin$
-      - examples$
       - docs/assets/snippets/.*\.go$
 formatters:
   enable:
@@ -31,9 +28,6 @@ formatters:
     warn-unused: true
     generated: lax
     paths:
-      - third_party$
-      - builtin$
-      - examples$
       - docs/assets/snippets/.*\.go$
 run:
   build-tags:
