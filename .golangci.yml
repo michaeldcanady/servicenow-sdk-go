@@ -13,26 +13,28 @@ linters:
     - gocyclo
     - errcheck
     - dupl
-  exclusions:
-    warn-unused: true
-    rules:
-      - path: _test\.go
-        linters:
-          - gocyclo
-          - errcheck
-          - dupl
-          - gosec
-          - typecheck
-    paths:
-      - docs/snippets/**\.go$
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+        - typecheck
+    - path: docs/snippets/.*\.go
+      linters:
+        - all
+exclusions:
+  generated: lax
+  presets:
+    - comments
+    - common-false-positives
+    - legacy
+    - std-error-handling
 formatters:
   enable:
     - gofmt
-  exclusions:
-    warn-unused: true
-    generated: lax
-    paths:
-      - docs/snippets/**\.go$
 run:
   build-tags:
     - preview.query
