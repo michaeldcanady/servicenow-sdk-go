@@ -10,18 +10,23 @@ linters:
     - unconvert
     - unparam
     - whitespace
-  exclusions:
-    generated: lax
-    presets:
-      - comments
-      - common-false-positives
-      - legacy
-      - std-error-handling
-    paths:
-      - third_party$
-      - builtin$
-      - examples$
-      - docs/assets/snippets/.*\.go$
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gosec
+exclusions:
+  generated: lax
+  presets:
+    - comments
+    - common-false-positives
+    - legacy
+    - std-error-handling
+  paths:
+    - third_party$
+    - builtin$
+    - examples$
+    - docs/assets/snippets/.*\.go$
 formatters:
   enable:
     - gofmt
