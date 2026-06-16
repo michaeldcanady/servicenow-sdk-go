@@ -25,13 +25,6 @@ linters:
       - path: docs/snippets/.*\.go
         linters:
           - all
-exclusions:
-  generated: lax
-  presets:
-    - comments
-    - common-false-positives
-    - legacy
-    - std-error-handling
 formatters:
   enable:
     - gofmt
