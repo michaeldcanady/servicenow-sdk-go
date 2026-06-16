@@ -10,6 +10,9 @@ linters:
     - unconvert
     - unparam
     - whitespace
+    - gocyclo
+    - errcheck
+    - dupl
   exclusions:
     warn-unused: true
     rules:
