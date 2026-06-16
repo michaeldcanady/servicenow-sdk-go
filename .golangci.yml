@@ -1,8 +1,14 @@
 version: "2"
+run:
+  build-tags:
+    - preview.query
 linters:
   enable:
     - dogsled
+    - dupl
+    - errcheck
     - gocognit
+    - gocyclo
     - gosec
     - misspell
     - nakedret
@@ -10,23 +16,23 @@ linters:
     - unconvert
     - unparam
     - whitespace
-    - gocyclo
-    - errcheck
-    - dupl
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - gocyclo
-        - errcheck
-        - dupl
-        - gosec
-        - typecheck
-  exclude-paths:
-    - docs/snippets/.*\.go
+  settings:
+    dupl:
+      threshold: 200
+  exclusions:
+    rules:
+      - linters:
+          - dupl
+          - errcheck
+          - gocyclo
+          - gosec
+          - typecheck
+        path: _test\.go
+      - path: (actsub-api|documents-api|table-api)/.*
+        linters:
+          - dupl
+    paths:
+      - docs/snippets/.*\.go
 formatters:
   enable:
     - gofmt
-run:
-  build-tags:
-    - preview.query

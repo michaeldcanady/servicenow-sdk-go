@@ -158,7 +158,7 @@ func (s *Server) writeResponse(w http.ResponseWriter, title, message string, isE
 	}
 
 	// nolint: gosec // G705 //text comes from exception information not user
-	fmt.Fprintf(w, `
+	_, _ = fmt.Fprintf(w, `
 <!DOCTYPE html>
 <html>
 <head>

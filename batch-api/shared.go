@@ -63,7 +63,8 @@ func serializeContent[T serialization.Parsable](contentType string, content []by
 }
 
 // getHTTPHeader gets the requested header's value from a slice of RestRequestHeader
-func getHTTPHeader(headers []RestRequestHeader, httpHeader internalHttp.HTTPHeader, defaultValue string) string { // nolint: unparam // httpHeader currently on receives one value; however, can be used for any header in the future.
+// nolint: unparam
+func getHTTPHeader(headers []RestRequestHeader, httpHeader internalHttp.HTTPHeader, defaultValue string) string {
 	for _, header := range headers {
 		name, err := header.GetName()
 		if err != nil {
