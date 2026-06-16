@@ -110,6 +110,7 @@ jobs:
           fail_on_error: true
           files: docs
           filter_mode: nofilter
+          reporter: github-pr-check
 
   deploy:
     name: deploy-docs
