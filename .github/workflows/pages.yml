@@ -111,6 +111,7 @@ jobs:
           files: docs
           filter_mode: nofilter
           reporter: local
+          level: error
 
   deploy:
     name: deploy-docs
