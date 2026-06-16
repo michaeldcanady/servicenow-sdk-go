@@ -45,7 +45,7 @@ func (eV *ElementValue) IsNil() bool {
 	return conversion.IsNil(eV) || conversion.IsNil(eV.val)
 }
 
-func (eV *ElementValue) setValue(val any) error { //nolint:unused // Used in tests
+func (eV *ElementValue) setValue(val any) error {
 	if conversion.IsNil(eV) {
 		return nil
 	}
