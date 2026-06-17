@@ -27,8 +27,15 @@ type PackageResult struct {
 }
 
 func main() {
+	results := parseTestEvents(os.Stdin)
+
+	printReportTable(results)
+	printFailedTests(results)
+}
+
+func parseTestEvents(input *os.File) map[string]*PackageResult {
 	results := make(map[string]*PackageResult)
-	scanner := bufio.NewScanner(os.Stdin)
+	scanner := bufio.NewScanner(input)
 
 	for scanner.Scan() {
 		var event TestEvent
@@ -41,32 +48,35 @@ func main() {
 		}
 
 		res := results[event.Package]
-		switch event.Action {
-		case "pass":
-			if event.Test != "" {
-				res.Passed++
-			} else {
-				res.Elapsed = event.Elapsed
-			}
-		case "fail":
-			if event.Test != "" {
-				res.Failed++
-				res.FailedTests = append(res.FailedTests, event.Test)
-			}
-		case "skip":
-			res.Skipped++
-		}
+		updatePackageResult(res, &event)
 	}
+	return results
+}
 
+func updatePackageResult(res *PackageResult, event *TestEvent) {
+	switch event.Action {
+	case "pass":
+		if event.Test != "" {
+			res.Passed++
+		} else {
+			res.Elapsed = event.Elapsed
+		}
+	case "fail":
+		if event.Test != "" {
+			res.Failed++
+			res.FailedTests = append(res.FailedTests, event.Test)
+		}
+	case "skip":
+		res.Skipped++
+	}
+}
+
+func printReportTable(results map[string]*PackageResult) {
 	fmt.Println("### 🧪 Go Test Report")
 	fmt.Println("| Status  | Elapsed | Package | Cover | Pass | Fail | Skip |")
 	fmt.Println("|---------|---------|---------|-------|------|------|------|")
 
-	var packages []string
-	for pkg := range results {
-		packages = append(packages, pkg)
-	}
-	sort.Strings(packages)
+	packages := getSortedPackageNames(results)
 
 	for _, pkgName := range packages {
 		res := results[pkgName]
@@ -76,8 +86,10 @@ func main() {
 		}
 		fmt.Printf("| %s | %.2fs | %s | -- | %d | %d | %d |\n", status, res.Elapsed, res.Name, res.Passed, res.Failed, res.Skipped)
 	}
+}
 
-	// Print failed tests
+func printFailedTests(results map[string]*PackageResult) {
+	packages := getSortedPackageNames(results)
 	hasFailures := false
 	for _, res := range results {
 		if res.Failed > 0 {
@@ -102,4 +114,13 @@ func main() {
 		}
 		fmt.Println("</details>")
 	}
+}
+
+func getSortedPackageNames(results map[string]*PackageResult) []string {
+	var packages []string
+	for pkg := range results {
+		packages = append(packages, pkg)
+	}
+	sort.Strings(packages)
+	return packages
 }
