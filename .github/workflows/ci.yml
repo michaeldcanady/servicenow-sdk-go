@@ -91,7 +91,9 @@ jobs:
           go-version: ${{ matrix.go-version }}
           cache: true
       - name: Install just
-        run: go install github.com/casey/just@latest
+        run: |
+          go install github.com/casey/just@latest
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
       - run: go mod download
       - name: Build Go Code
         run: just build
@@ -142,7 +144,9 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Install just
-        run: go install github.com/casey/just@latest
+        run: |
+          go install github.com/casey/just@latest
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
       - name: Install tparse
         run: go install github.com/mfridman/tparse@latest
       - name: Run tests
