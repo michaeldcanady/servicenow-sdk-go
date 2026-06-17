@@ -7,7 +7,7 @@ The following entities and types will be removed or replaced as part of the v2.0
 ### attachment-api
 - Removed `Attachment`, `AttachmentCollectionResponse`, `AttachmentItemResponse`.
 - Removed `AttachmentRequestBuilder` (deprecated methods only).
-- Unified on `Attachment`, `AttachmentCollectionResponse2`, etc.
+- Unified on `Attachment`, `AttachmentCollectionResponse`, etc.
 
 ### core
 - Removed `RequestBuilder` (older versions like `NewRequestBuilder`).

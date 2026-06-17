@@ -17,53 +17,53 @@ const (
 	tableItemURLTemplate2 = "{+baseurl}/api/now/v1/table/{table}/{sysId}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view}"
 )
 
-// TableItemRequestBuilder2 provides operations to manage a single Service-Now table record.
-type TableItemRequestBuilder2[T model.ServiceNowItem] struct {
+// TableItemRequestBuilder provides operations to manage a single Service-Now table record.
+type TableItemRequestBuilder[T model.ServiceNowItem] struct {
 	internal.RequestBuilder
 	factory serialization.ParsableFactory
 }
 
-// NewTableItemRequestBuilder2Internal instantiates a new TableItemRequestBuilder2.
-func NewTableItemRequestBuilder2Internal[T model.ServiceNowItem](
+// NewTableItemRequestBuilderInternal instantiates a new TableItemRequestBuilder.
+func NewTableItemRequestBuilderInternal[T model.ServiceNowItem](
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 	factory serialization.ParsableFactory,
-) *TableItemRequestBuilder2[T] {
-	m := &TableItemRequestBuilder2[T]{
+) *TableItemRequestBuilder[T] {
+	m := &TableItemRequestBuilder[T]{
 		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, tableItemURLTemplate2, pathParameters),
 		factory:        factory,
 	}
 	return m
 }
 
-// NewDefaultTableItemRequestBuilderInternal instantiates a new TableItemRequestBuilder2 with default table record parsable.
+// NewDefaultTableItemRequestBuilderInternal instantiates a new TableItemRequestBuilder with default table record parsable.
 func NewDefaultTableItemRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
-) *TableItemRequestBuilder2[*TableRecord] {
-	return NewTableItemRequestBuilder2Internal[*TableRecord](pathParameters, requestAdapter, CreateTableRecordFromDiscriminatorValue)
+) *TableItemRequestBuilder[*TableRecord] {
+	return NewTableItemRequestBuilderInternal[*TableRecord](pathParameters, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
 func NewDefaultTableItemRequestBuilder(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
-) *TableItemRequestBuilder2[*TableRecord] {
+) *TableItemRequestBuilder[*TableRecord] {
 	return NewTableItemRequestBuilder3[*TableRecord](rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
-// NewTableItemRequestBuilder3 instantiates a new TableItemRequestBuilder2 with a raw URL and custom parsable.
+// NewTableItemRequestBuilder3 instantiates a new TableItemRequestBuilder with a raw URL and custom parsable.
 func NewTableItemRequestBuilder3[T model.ServiceNowItem](
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 	factory serialization.ParsableFactory,
-) *TableItemRequestBuilder2[T] {
+) *TableItemRequestBuilder[T] {
 	urlParams := make(map[string]string)
 	urlParams[internal.RawURLKey] = rawURL
-	return NewTableItemRequestBuilder2Internal[T](urlParams, requestAdapter, factory)
+	return NewTableItemRequestBuilderInternal[T](urlParams, requestAdapter, factory)
 }
 
 // Get sends an HTTP GET request and returns the single table record.
-func (rB *TableItemRequestBuilder2[T]) Get(ctx context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (internal.ServiceNowItemResponse[T], error) {
+func (rB *TableItemRequestBuilder[T]) Get(ctx context.Context, requestConfiguration *TableItemRequestBuilderGetRequestConfiguration) (internal.ServiceNowItemResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -95,7 +95,7 @@ func (rB *TableItemRequestBuilder2[T]) Get(ctx context.Context, requestConfigura
 }
 
 // Delete sends an HTTP DELETE request to remove the single table record.
-func (rB *TableItemRequestBuilder2[T]) Delete(ctx context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) error {
+func (rB *TableItemRequestBuilder[T]) Delete(ctx context.Context, requestConfiguration *TableItemRequestBuilderDeleteRequestConfiguration) error {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
@@ -113,7 +113,7 @@ func (rB *TableItemRequestBuilder2[T]) Delete(ctx context.Context, requestConfig
 }
 
 // Put updates a table item using an HTTP PUT request, replacing the entire record.
-func (rB *TableItemRequestBuilder2[T]) Put(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (internal.ServiceNowItemResponse[T], error) {
+func (rB *TableItemRequestBuilder[T]) Put(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPutRequestConfiguration) (internal.ServiceNowItemResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -149,7 +149,7 @@ func (rB *TableItemRequestBuilder2[T]) Put(ctx context.Context, body T, requestC
 }
 
 // Patch updates a table item using an HTTP PATCH request, applying partial updates.
-func (rB *TableItemRequestBuilder2[T]) Patch(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilder2PatchRequestConfiguration) (internal.ServiceNowItemResponse[T], error) {
+func (rB *TableItemRequestBuilder[T]) Patch(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPatchRequestConfiguration) (internal.ServiceNowItemResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -185,7 +185,7 @@ func (rB *TableItemRequestBuilder2[T]) Patch(ctx context.Context, body T, reques
 }
 
 // ToGetRequestInformation converts provided parameters into request information
-func (rB *TableItemRequestBuilder2[T]) ToGetRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2GetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *TableItemRequestBuilder[T]) ToGetRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -209,7 +209,7 @@ func (rB *TableItemRequestBuilder2[T]) ToGetRequestInformation(_ context.Context
 }
 
 // ToDeleteRequestInformation converts provided parameters into request information
-func (rB *TableItemRequestBuilder2[T]) ToDeleteRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilder2DeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *TableItemRequestBuilder[T]) ToDeleteRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -233,7 +233,7 @@ func (rB *TableItemRequestBuilder2[T]) ToDeleteRequestInformation(_ context.Cont
 }
 
 // ToPutRequestInformation converts provided parameters into request information
-func (rB *TableItemRequestBuilder2[T]) ToPutRequestInformation(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilder2PutRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *TableItemRequestBuilder[T]) ToPutRequestInformation(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPutRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -263,7 +263,7 @@ func (rB *TableItemRequestBuilder2[T]) ToPutRequestInformation(ctx context.Conte
 }
 
 // ToPatchRequestInformation converts provided parameters into request information
-func (rB *TableItemRequestBuilder2[T]) ToPatchRequestInformation(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilder2PatchRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *TableItemRequestBuilder[T]) ToPatchRequestInformation(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPatchRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}

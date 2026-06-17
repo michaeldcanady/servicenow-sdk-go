@@ -70,7 +70,7 @@ func (c *attachmentTestContext) theResponseShouldNotBeAnError() error {
 }
 
 func (c *attachmentTestContext) theResultsShouldContainAtLeastRecords(minCount int) error {
-	collection, ok := c.response.(*attachmentapi.AttachmentCollectionResponse2Model)
+	collection, ok := c.response.(*attachmentapi.AttachmentCollectionResponseModel)
 	if !ok {
 		return fmt.Errorf("expected a collection response, but got %T", c.response)
 	}

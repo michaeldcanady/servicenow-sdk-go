@@ -4,10 +4,10 @@ import (
 	"testing"
 )
 
-func TestNumericRange2_Compatible(t *testing.T) {
+func TestNumericRange_Compatible(t *testing.T) {
 	tests := []struct {
 		name     string
-		rng      *numericRange2
+		rng      *numericRange
 		val      float64
 		expected bool
 	}{
@@ -25,15 +25,15 @@ func TestNumericRange2_Compatible(t *testing.T) {
 	}
 }
 
-func TestNewNumericRange2(t *testing.T) {
-	rng := newNumericRange2(100, 0, false)
+func TestNewNumericRange(t *testing.T) {
+	rng := newNumericRange(100, 0, false)
 	if rng.max != 100 || rng.min != 0 || rng.allowDecimal != false {
-		t.Error("newNumericRange2 failed")
+		t.Error("newNumericRange failed")
 	}
 }
 
-func TestNumericRange2_Within(t *testing.T) {
-	rng := newNumericRange2(10, 0, false)
+func TestNumericRange_Within(t *testing.T) {
+	rng := newNumericRange(10, 0, false)
 	if !rng.Within(5) || rng.Within(15) || rng.Within(-5) {
 		t.Error("Within failed")
 	}

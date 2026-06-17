@@ -1,7 +1,8 @@
 package tableapi
 
-// TableRequestBuilderGetQueryParameters represents the query parameters for a Table collection GET request.
-type TableRequestBuilderGetQueryParameters struct {
+// TableItemRequestBuilderPutQueryParameters represents the query parameters for a Table item PUT request.
+type TableItemRequestBuilderPutQueryParameters struct {
+	//DisplayValue determines the type of data returned, either the actual values from the database or the display values of the fields.
 	//Display values are manipulated based on the actual value in the database and user or system settings and preferences.
 	//If returning display values, the value that is returned is dependent on the field type.
 	//- Choice fields: The database value may be a number, but the display value will be more descriptive.
@@ -11,26 +12,27 @@ type TableRequestBuilderGetQueryParameters struct {
 	//- Encrypted text: The database value is encrypted, while the displayed value is unencrypted based on the user's encryption context.
 	//
 	//- Reference fields: The database value is sys_id, but the display value is a display field of the referenced record.
-	DisplayValue DisplayValue2 `url:"sysparm_display_value,omitempty"`
-	//Flag that indicates whether to exclude Table API links for reference fields.
+	DisplayValue DisplayValue `url:"sysparm_display_value"`
+	//ExcludeReferenceLink flag that indicates whether to exclude Table API links for reference fields.
 	//
 	//Valid values:
 	//
 	//- true: Exclude Table API links for reference fields.
 	//
 	//- false: Include Table API links for reference fields.
-	ExcludeReferenceLink bool `url:"sysparm_exclude_reference_link,omitempty"`
-	//list of fields to return in the response.
-	Fields []string `url:"sysparm_fields,omitempty"`
-	//Flag that indicates whether to restrict the record search to only the domains for which the logged in user is configured.
+	ExcludeReferenceLink bool `url:"sysparm_exclude_reference_link"`
+	// Fields list of fields to return in the response.
+	Fields            []string `url:"sysparm_fields"`
+	InputDisplayValue bool     `url:"sysparm_input_display_value"`
+	// QueryNoDomain flag that indicates whether to restrict the record search to only the domains for which the logged in user is configured.
 	//
 	//Valid values:
 	//
 	//- false: Exclude the record if it is in a domain that the currently logged in user is not configured to access.
 	//
 	//- true: Include the record even if it is in a domain that the currently logged in user is not configured to access.
-	QueryNoDomain bool `url:"sysparm_query_no_domain,omitempty"`
-	//	UI view for which to render the data. Determines the fields returned in the response.
+	QueryNoDomain bool `url:"sysparm_query_no_domain"`
+	// View	UI view for which to render the data. Determines the fields returned in the response.
 	//
 	//Valid values:
 	//
@@ -38,11 +40,5 @@ type TableRequestBuilderGetQueryParameters struct {
 	//- mobile
 	//- both
 	//If you also specify the sysparm_fields parameter, it takes precedent.
-	View                     View2  `url:"sysparm_view,omitempty"`
-	Limit                    int    `url:"sysparm_limit,omitempty"`
-	NoCount                  bool   `url:"sysparm_no_count,omitempty"`
-	Offset                   int    `url:"sysparm_offset,omitempty"`
-	Query                    string `url:"sysparm_query,omitempty"`
-	QueryCategory            string `url:"sysparm_query_category,omitempty"`
-	SuppressPaginationHeader bool   `url:"sysparm_suppress_pagination_header,omitempty"`
+	View View `url:"sysparm_view"`
 }

@@ -17,7 +17,7 @@ import (
 
 const (
 	// batchURLTemplate the url template for Service-Now batch API
-	tableURLTemplate2 = "{+baseurl}/api/now/v1/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
+	tableURLTemplate = "{+baseurl}/api/now/v1/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
 )
 
 // TableRequestBuilder provides operations to manage Service-Now table collections.
@@ -33,7 +33,7 @@ func NewTableRequestBuilderInternal[T model.ServiceNowItem](
 	factory serialization.ParsableFactory,
 ) *TableRequestBuilder[T] {
 	m := &TableRequestBuilder[T]{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, tableURLTemplate2, pathParameters),
+		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, tableURLTemplate, pathParameters),
 		factory:        factory,
 	}
 	return m
@@ -145,14 +145,14 @@ func (rB *TableRequestBuilder[T]) Post(ctx context.Context, body T, requestConfi
 	return typedResp, nil
 }
 
-// ById returns a TableItemRequestBuilder2 for the specified sysId.
-func (rB *TableRequestBuilder[T]) ById(sysId string) *TableItemRequestBuilder2[T] {
+// ById returns a TableItemRequestBuilder for the specified sysId.
+func (rB *TableRequestBuilder[T]) ById(sysId string) *TableItemRequestBuilder[T] {
 	pathParameters := make(map[string]string)
 	for k, v := range rB.GetPathParameters() {
 		pathParameters[k] = v
 	}
 	pathParameters["sysId"] = sysId
-	return NewTableItemRequestBuilder2Internal[T](pathParameters, rB.GetRequestAdapter(), rB.factory)
+	return NewTableItemRequestBuilderInternal[T](pathParameters, rB.GetRequestAdapter(), rB.factory)
 }
 
 // TODO: Add Head method which returns headers

@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestTableItemRequestBuilder2_Get(t *testing.T) {
+func TestTableItemRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
@@ -70,7 +70,7 @@ func TestTableItemRequestBuilder2_Get(t *testing.T) {
 	}
 }
 
-func TestTableItemRequestBuilder2_Delete(t *testing.T) {
+func TestTableItemRequestBuilder_Delete(t *testing.T) {
 	tests := []struct {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
@@ -117,7 +117,7 @@ func TestTableItemRequestBuilder2_Delete(t *testing.T) {
 	}
 }
 
-func TestTableItemRequestBuilder2_Put(t *testing.T) {
+func TestTableItemRequestBuilder_Put(t *testing.T) {
 	tests := []struct {
 		name      string
 		body      *TableRecord
@@ -176,7 +176,7 @@ func TestTableItemRequestBuilder2_Put(t *testing.T) {
 	}
 }
 
-func TestTableItemRequestBuilder2_Patch(t *testing.T) {
+func TestTableItemRequestBuilder_Patch(t *testing.T) {
 	tests := []struct {
 		name      string
 		body      *TableRecord
@@ -237,7 +237,7 @@ func TestTableItemRequestBuilder2_Patch(t *testing.T) {
 
 // ... (rest of tests)
 
-func TestTableItemRequestBuilder2_ToRequestInformation(t *testing.T) {
+func TestTableItemRequestBuilder_ToRequestInformation(t *testing.T) {
 	mockAdapter := new(mocking.MockRequestAdapter)
 	builder := NewTableItemRequestBuilder3[*TableRecord](
 		"https://example.com/api/now/v1/table/test/sysid",
@@ -246,9 +246,9 @@ func TestTableItemRequestBuilder2_ToRequestInformation(t *testing.T) {
 	)
 
 	t.Run("ToGetRequestInformation", func(t *testing.T) {
-		config := &TableItemRequestBuilder2GetRequestConfiguration{
-			QueryParameters: &TableItemRequestBuilder2GetQueryParameters{
-				DisplayValue: DisplayValue2All,
+		config := &TableItemRequestBuilderGetRequestConfiguration{
+			QueryParameters: &TableItemRequestBuilderGetQueryParameters{
+				DisplayValue: DisplayValueAll,
 			},
 		}
 		requestInfo, err := builder.ToGetRequestInformation(context.Background(), config)

@@ -24,7 +24,7 @@ func _() {
 
 func tableBasicSetup() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
-	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
+	var requestBuilder *tableapi.TableItemRequestBuilder[*tableapi.TableRecord]
 	var collectionRequestBuilder *tableapi.TableRequestBuilder[*tableapi.TableRecord]
 
 	// [START table_standard_setup]
@@ -48,12 +48,12 @@ func tableBasicSetup() {
 
 func tableGetSnippets() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
-	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
+	var requestBuilder *tableapi.TableItemRequestBuilder[*tableapi.TableRecord]
 
 	// [START table_get_fluent]
 	// Step 3: Configure request
-	getConfig := &tableapi.TableItemRequestBuilder2GetRequestConfiguration{
-		QueryParameters: &tableapi.TableItemRequestBuilder2GetQueryParameters{
+	getConfig := &tableapi.TableItemRequestBuilderGetRequestConfiguration{
+		QueryParameters: &tableapi.TableItemRequestBuilderGetQueryParameters{
 			// Optional configurations
 		},
 	}
@@ -67,8 +67,8 @@ func tableGetSnippets() {
 
 	// [START table_get_standard]
 	// Step 5: Configure request
-	getStdConfig := &tableapi.TableItemRequestBuilder2GetRequestConfiguration{
-		QueryParameters: &tableapi.TableItemRequestBuilder2GetQueryParameters{
+	getStdConfig := &tableapi.TableItemRequestBuilderGetRequestConfiguration{
+		QueryParameters: &tableapi.TableItemRequestBuilderGetQueryParameters{
 			// Optional configurations
 		},
 	}
@@ -177,12 +177,12 @@ func tableCreateSnippets() {
 
 func tableUpdateSnippets() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
-	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
+	var requestBuilder *tableapi.TableItemRequestBuilder[*tableapi.TableRecord]
 
 	// [START table_update_fluent]
 	// Step 3: Configure request
-	update_config := &tableapi.TableItemRequestBuilder2PutRequestConfiguration{
-		QueryParameters: &tableapi.TableItemRequestBuilder2PutQueryParameters{
+	update_config := &tableapi.TableItemRequestBuilderPutRequestConfiguration{
+		QueryParameters: &tableapi.TableItemRequestBuilderPutQueryParameters{
 			// Optional configurations
 		},
 	}
@@ -202,8 +202,8 @@ func tableUpdateSnippets() {
 
 	// [START table_update_standard]
 	// Step 5: Configure request
-	updateStdConfig := &tableapi.TableItemRequestBuilder2PutRequestConfiguration{
-		QueryParameters: &tableapi.TableItemRequestBuilder2PutQueryParameters{
+	updateStdConfig := &tableapi.TableItemRequestBuilderPutRequestConfiguration{
+		QueryParameters: &tableapi.TableItemRequestBuilderPutQueryParameters{
 			// Optional configurations
 		},
 	}
@@ -226,12 +226,12 @@ func tableUpdateSnippets() {
 
 func tableDeleteSnippets() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
-	var requestBuilder *tableapi.TableItemRequestBuilder2[*tableapi.TableRecord]
+	var requestBuilder *tableapi.TableItemRequestBuilder[*tableapi.TableRecord]
 
 	// [START table_delete_fluent]
 	// Step 3: Configure request
-	delete_config := &tableapi.TableItemRequestBuilder2DeleteRequestConfiguration{
-		QueryParameters: &tableapi.TableItemRequestBuilder2DeleteQueryParameters{
+	delete_config := &tableapi.TableItemRequestBuilderDeleteRequestConfiguration{
+		QueryParameters: &tableapi.TableItemRequestBuilderDeleteQueryParameters{
 			// Optional configurations
 		},
 	}
@@ -245,8 +245,8 @@ func tableDeleteSnippets() {
 
 	// [START table_delete_standard]
 	// Step 5: Configure request
-	delete_std_config := &tableapi.TableItemRequestBuilder2DeleteRequestConfiguration{
-		QueryParameters: &tableapi.TableItemRequestBuilder2DeleteQueryParameters{
+	delete_std_config := &tableapi.TableItemRequestBuilderDeleteRequestConfiguration{
+		QueryParameters: &tableapi.TableItemRequestBuilderDeleteQueryParameters{
 			// Optional configurations
 		},
 	}

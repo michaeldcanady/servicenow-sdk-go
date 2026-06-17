@@ -31,6 +31,6 @@ placeholders:
     description: ""
     values:
       "unset": "unset"
-      "tableapi.DisplayValue2True": "tableapi.DisplayValue2True"
-      "tableapi.DisplayValue2False": "tableapi.DisplayValue2False"
-      "tableapi.DisplayValue2All": "tableapi.DisplayValue2All"
+      "tableapi.DisplayValueTrue": "tableapi.DisplayValueTrue"
+      "tableapi.DisplayValueFalse": "tableapi.DisplayValueFalse"
+      "tableapi.DisplayValueAll": "tableapi.DisplayValueAll"
