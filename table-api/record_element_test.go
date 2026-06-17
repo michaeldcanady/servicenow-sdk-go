@@ -239,7 +239,6 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestRecordElementModel_SetValue(t *testing.T) {
 	tests := []struct {
 		name string

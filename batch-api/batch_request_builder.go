@@ -8,6 +8,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
 const (
@@ -39,6 +40,57 @@ func NewBatchRequestBuilder(
 	urlParams := make(map[string]string)
 	urlParams[internal.RawURLKey] = rawURL
 	return NewBatchRequestBuilderInternal(urlParams, requestAdapter)
+}
+
+// Head sends an HTTP HEAD request and returns the response headers.
+func (rB *BatchRequestBuilder) Head(ctx context.Context, requestConfiguration *BatchRequestBuilderGetRequestConfiguration) (*abstractions.ResponseHeaders, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
+	if conversion.IsNil(requestConfiguration) {
+		requestConfiguration = &BatchRequestBuilderGetRequestConfiguration{}
+	}
+
+	headerOpt := nethttplibrary.NewHeadersInspectionOptions()
+	headerOpt.InspectResponseHeaders = true
+	requestConfiguration.Options = append(requestConfiguration.Options, headerOpt)
+
+	requestInfo, err := rB.ToHeadRequestInformation(ctx, requestConfiguration)
+	if err != nil {
+		return nil, err
+	}
+
+	errorMapping := abstractions.ErrorMappings{
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
+	}
+
+	if err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping); err != nil {
+		return nil, err
+	}
+
+	return headerOpt.GetResponseHeaders(), nil
+}
+
+// ToHeadRequestInformation converts provided parameters into request information
+func (rB *BatchRequestBuilder) ToHeadRequestInformation(_ context.Context, requestConfiguration *BatchRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.HEAD, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
+		if options := requestConfiguration.Options; !conversion.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
+	}
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+
+	return kiotaRequestInfo.RequestInformation, nil
 }
 
 // Post produces a batch response using the specified parameters

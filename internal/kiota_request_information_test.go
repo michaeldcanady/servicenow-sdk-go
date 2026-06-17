@@ -44,16 +44,17 @@ func TestNewRequestInformation(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestNewRequestInformationWithMethodAndURLTemplateAndPathParameters(t *testing.T) {
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{}
+	method := abstractions.GET
+	urlTemplate := "http://example.com"
+	pathParameters := map[string]string{"foo": "bar"}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
-	}
+	requestInformation := NewRequestInformationWithMethodAndURLTemplateAndPathParameters(method, urlTemplate, pathParameters)
+
+	assert.NotNil(t, requestInformation)
+	assert.Equal(t, method, requestInformation.Method)
+	assert.Equal(t, urlTemplate, requestInformation.UrlTemplate)
+	assert.Equal(t, "bar", requestInformation.PathParameters["foo"])
 }
 
 func TestKiotaRequestInformation_AddQueryParameters(t *testing.T) {

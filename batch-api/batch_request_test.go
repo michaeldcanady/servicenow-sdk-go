@@ -135,12 +135,32 @@ func TestBatchRequest_GetFieldDeserializers(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestBatchRequest_AddRequest(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)
 	}{
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				model := mocking.NewMockModel()
+				backingStore := mocking.NewMockBackingStore()
+				model.On("GetBackingStore").Return(backingStore)
+				
+				parsable := &BatchRequestModel{model}
+				req := newMockRestRequest()
+
+				// Expectation that backingStore.Set is called
+				backingStore.On("Set", restRequestsKey, []RestRequest{req}).Return(nil)
+				backingStore.On("Get", restRequestsKey).Return([]RestRequest{}, nil)
+
+				err := parsable.AddRequest(req)
+
+				assert.NoError(t, err)
+				backingStore.AssertExpectations(t)
+				model.AssertExpectations(t)
+			},
+		},
 		{
 			name: "Nil model",
 			test: func(t *testing.T) {

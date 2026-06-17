@@ -6,7 +6,7 @@ Thanks for your interest in contributing to ServiceNow SDK Go! We welcome contri
 
 To get started, you'll need to have the following tools installed:
 
-- [Golang v1.21+](https://go.dev/doc/install)
+- [Golang v1.25.0+](https://go.dev/doc/install)
 
 ## Recommended tools
 
@@ -26,7 +26,7 @@ To get started, you'll need to have the following tools installed:
 4. Make your changes and commit them: `git commit -am 'Add some feature'`
    1. Include tests that cover your changes.
    2. Update the documentation to reflect your changes, where appropriate.
-   3. Add and entry to the `changelog.md` file describing your changes if appropriate.
+   3. **Note:** Do not manually update `CHANGELOG.md` or the `VERSION` file. These are managed automatically by `release-please` based on your conventional commit messages.
 5. Push your changes to your fork: `git push origin my-new-feature`
 6. Create a pull request from your fork to the main repository: `gh pr create` (With the GitHub CLI)
 

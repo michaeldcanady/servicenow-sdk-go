@@ -153,7 +153,6 @@ func TestSerializeContent(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestGetHTTPHeader(t *testing.T) {
 	tests := []struct {
 		name string
@@ -169,6 +168,15 @@ func TestGetHTTPHeader(t *testing.T) {
 				defaultValue := ""
 				value := getHTTPHeader(headers, internalHttp.HTTPHeaderContentType, defaultValue)
 				assert.Equal(t, "application/json", value)
+			},
+		},
+		{
+			name: "Not Found",
+			test: func(t *testing.T) {
+				headers := []RestRequestHeader{}
+				defaultValue := "default"
+				value := getHTTPHeader(headers, internalHttp.HTTPHeaderContentType, defaultValue)
+				assert.Equal(t, defaultValue, value)
 			},
 		},
 		{
