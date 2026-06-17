@@ -153,17 +153,19 @@ jobs:
         shell: bash
         run: |
           echo "### ❌ Test Failures" > test-summary.md
-          tparse -file test-output.json -format markdown >> test-summary.md
-          # Read file content into environment variable using a robust method
-          echo 'SUMMARY<<EOF' >> $GITHUB_ENV
-          cat test-summary.md >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
+          tparse -file test-output.json -format markdown >> test-summary.md || echo "tparse failed, but proceeding"
+          # Use a GitHub Action output to pass multi-line content safely instead of GITHUB_ENV
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "SUMMARY<<$EOF" >> $GITHUB_OUTPUT
+          cat test-summary.md >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT
+        id: create-summary
       - name: Post Sticky Comment
         if: steps.run-tests.outputs.test_failed == 'true'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: test-failure-summary
-          message: ${{ env.SUMMARY }}
+          message: ${{ steps.create-summary.outputs.SUMMARY }}
       - name: Delete Test Failure Comment
         if: steps.run-tests.outputs.test_failed != 'true'
         uses: marocchino/sticky-pull-request-comment@v2
