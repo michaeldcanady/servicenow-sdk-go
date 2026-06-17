@@ -144,44 +144,24 @@ jobs:
         run: |
           go install github.com/mfridman/tparse@latest
           echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
-      - name: Run tests
-        id: run-tests
-        run: |
-          go test -json -v ./... > test-output.json || echo "test_failed=true" >> $GITHUB_OUTPUT
-      - name: Post Test Failures
-        if: steps.run-tests.outputs.test_failed == 'true'
-        shell: bash
-        run: |
-          # Generate summary to a temporary file
-          echo "### ❌ Test Failure Summary" > test-summary.md
-          # Pass full JSON directly to tparse; it is designed to filter failures natively
-          tparse -file test-output.json -format markdown >> test-summary.md || echo "tparse exited with $?"
-          
-          # Read file content into a multiline output variable
-          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-          echo "SUMMARY<<$EOF" >> $GITHUB_OUTPUT
-          cat test-summary.md >> $GITHUB_OUTPUT
-          echo "$EOF" >> $GITHUB_OUTPUT
+      - name: Run Tests & Report
+        run: .github/scripts/report-tests.sh
+        id: test-run
+      - name: Prepare Test Summary
+        if: failure()
         id: create-summary
-      - name: Truncate Summary
-        if: steps.run-tests.outputs.test_failed == 'true'
-        shell: bash
         run: |
-          # Truncate to 60000 characters to ensure we stay under the 65536 byte limit
-          TRUNCATED=$(echo "${{ steps.create-summary.outputs.SUMMARY }}" | head -c 60000)
-          echo "TRUNCATED_SUMMARY<<EOF" >> $GITHUB_ENV
-          echo "$TRUNCATED" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo "SUMMARY<<EOF" >> $GITHUB_OUTPUT
+          head -c 60000 test-summary.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       - name: Post Sticky Comment
-        if: steps.run-tests.outputs.test_failed == 'true'
+        if: failure()
         uses: marocchino/sticky-pull-request-comment@v2.9.1
         with:
           header: test-failure-summary
-          # Truncate to 60000 chars to allow overhead for headers/formatting, limit is 65536
-          message: |
-            ${{ env.TRUNCATED_SUMMARY }}
+          message: ${{ steps.create-summary.outputs.SUMMARY }}
       - name: Delete Test Failure Comment
-        if: steps.run-tests.outputs.test_failed != 'true'
+        if: success()
         uses: marocchino/sticky-pull-request-comment@v2.9.1
         with:
           header: test-failure-summary
