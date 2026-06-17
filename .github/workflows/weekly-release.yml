@@ -11,7 +11,31 @@ permissions:
   pull-requests: write
 
 jobs:
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      should_release: ${{ steps.diff.outputs.any_changed }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Needed to fetch all tags
+
+      - name: Get latest tag
+        id: latest_tag
+        run: echo "tag=$(git describe --tags --abbrev=0 || echo "")" >> $GITHUB_OUTPUT
+
+      - name: Check for changes since latest tag
+        id: diff
+        uses: tj-actions/changed-files@v47.0.6
+        with:
+          base_sha: ${{ steps.latest_tag.outputs.tag }}
+
   release-please:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.should_release == 'true' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
       - name: Create preview release
