@@ -163,18 +163,30 @@ jobs:
           cat test-summary.md >> $GITHUB_OUTPUT
           echo "$EOF" >> $GITHUB_OUTPUT
         id: create-summary
+      - name: Truncate Summary
+        if: steps.run-tests.outputs.test_failed == 'true'
+        shell: bash
+        run: |
+          # Truncate to 60000 characters to ensure we stay under the 65536 byte limit
+          TRUNCATED=$(echo "${{ steps.create-summary.outputs.SUMMARY }}" | head -c 60000)
+          echo "TRUNCATED_SUMMARY<<EOF" >> $GITHUB_ENV
+          echo "$TRUNCATED" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       - name: Post Sticky Comment
         if: steps.run-tests.outputs.test_failed == 'true'
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v2.9.1
         with:
           header: test-failure-summary
-          message: ${{ steps.create-summary.outputs.SUMMARY }}
+          # Truncate to 60000 chars to allow overhead for headers/formatting, limit is 65536
+          message: |
+            ${{ env.TRUNCATED_SUMMARY }}
       - name: Delete Test Failure Comment
         if: steps.run-tests.outputs.test_failed != 'true'
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v2.9.1
         with:
           header: test-failure-summary
           delete: true
+
       - name: Upload coverage to Codecov
         if: runner.os == 'Linux' && matrix.go-version == 'stable'
         uses: codecov/codecov-action@v4
