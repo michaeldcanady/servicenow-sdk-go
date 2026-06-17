@@ -60,6 +60,7 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
+          cache: true
       - run: go mod download
       - run: go mod verify
       - run: |
@@ -87,14 +88,15 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
-          cache: false
+          cache: true
+      - name: Install just
+        run: go install github.com/casey/just@latest
       - run: go mod download
       - name: Build Go Code
-        run: |
-          PACKAGES=$(go list ./... | grep -v "/docs")
-          go build $PACKAGES
+        run: just build
 
-  lint-go:
+      lint-go:
+
     name: Lint Go Code
     needs:
       - changes
@@ -138,8 +140,10 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
+      - name: Install just
+        run: go install github.com/casey/just@latest
       - name: Run tests
-        run: go test -v -coverprofile=${{ env.COVERAGE_FILE }} ./...
+        run: just test
       - name: Upload coverage to Codecov
         if: runner.os == 'Linux' && matrix.go-version == 'stable'
         uses: codecov/codecov-action@v4
