@@ -3,35 +3,25 @@
 go test -json -v ./... > test-output.json
 TEST_EXIT_CODE=$?
 
-# Extract summary data using tparse to get totals
-PASS=$(tparse -file test-output.json -format markdown --summary | grep "Pass" | awk '{print $4}')
-FAIL=$(tparse -file test-output.json -format markdown --summary | grep "Fail" | awk '{print $4}')
-SKIP=$(tparse -file test-output.json -format markdown --summary | grep "Skip" | awk '{print $4}')
-TOTAL=$(($PASS + $FAIL + $SKIP))
-
-# Construct the custom Markdown report
+# Generate the report
 {
-  echo "### Go Test Report"
-  echo "| Metric | Value |"
-  echo "| - | - |"
-  echo "| Total Tests | $TOTAL |"
-  echo "| Passed | $PASS |"
-  echo "| Failed | $FAIL |"
-  echo "| Skipped | $SKIP |"
+  echo "### 🧪 Go Test Report"
   echo ""
-  echo "### Failed Tests"
+  # Tparse summary is cleaner and automatically includes pass/fail counts
+  tparse -file test-output.json -format markdown --summary
+  echo ""
+  echo "### ❌ Failed Tests"
   echo "<details>"
   echo "<summary>Click to expand failed tests</summary>"
   echo ""
-  # Use tparse to show just the failed test details
+  # Tparse's default output without --summary shows failed tests
   tparse -file test-output.json -format markdown
   echo ""
   echo "</details>"
 } > test-summary.md
 
-# Output to GitHub Actions Job Summary (Native visualization)
-echo "### 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
+# Output to GitHub Actions Job Summary
 cat test-summary.md >> $GITHUB_STEP_SUMMARY
 
-# Exit with the original test exit code
+# Exit with original test exit code
 exit $TEST_EXIT_CODE
