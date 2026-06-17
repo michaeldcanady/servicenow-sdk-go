@@ -1,0 +1,78 @@
+name: PR Checks
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  lint-title:
+    name: Validate PR Title
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - uses: amannn/action-semantic-pull-request@v6
+        id: lint_title
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            fix
+            feat
+            chore
+            docs
+            style
+            refactor
+            perf
+            test
+          requireScope: false
+          postErrorComment: false
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: always() && steps.lint_title.outputs.error_message != ''
+        with:
+          header: pr-title-lint-error
+          message: |
+            Hey there and thank you for opening this pull request!
+
+            We require that pull request titles follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
+
+            It looks like your proposed title needs to be adjusted.
+
+            Details:
+            ```
+            ${{ steps.lint_title.outputs.error_message }}
+            ```
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: !cancelled() && steps.lint_title.outputs.error_message == ''
+        with:
+          header: pr-title-lint-error
+          delete: true
+
+  dependabot-merge:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3.1.0
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Enable auto-merge for Dependabot PRs
+        if: ${{steps.metadata.outputs.update-type != 'version-update:semver-major'}}
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

@@ -1,6 +1,6 @@
 //go:build integration
 
-package tests
+package integration
 
 import (
 	"context"
@@ -29,7 +29,7 @@ type tableTestContext struct {
 }
 
 func (c *tableTestContext) iHaveAValidServiceNowInstanceAndCredentials() error {
-	_ = godotenv.Load("../.env")
+	_ = godotenv.Load("../../.env")
 	return nil
 }
 

@@ -1,5 +1,4 @@
-name: Go CI
-
+name: CI
 on:
   workflow_dispatch:
   push:
@@ -8,12 +7,12 @@ on:
     paths:
       - "**.go"
       - "!docs/snippets/**"
-      - ".github/workflows/go.yml"
+      - ".github/workflows/ci.yml"
   pull_request:
     paths:
       - "**.go"
       - "!docs/snippets/**"
-      - ".github/workflows/go.yml"
+      - ".github/workflows/ci.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -43,7 +42,7 @@ jobs:
           files: |
             **.go
             !docs/snippets/**
-            .github/workflows/go.yml
+            .github/workflows/ci.yml
 
   check-go:
     name: Check Go Modules
@@ -55,12 +54,13 @@ jobs:
       contents: read
     strategy:
       matrix:
-        go-version: &go-versions ["stable", "oldstable"]
+        go-version: ["stable", "oldstable"]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
+          cache: true
       - run: go mod download
       - run: go mod verify
       - run: |
@@ -75,11 +75,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: &os-platforms [ubuntu-latest, macos-latest, windows-latest]
-        go-version: *go-versions
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ["stable", "oldstable"]
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
+      pull-requests: write
     defaults:
       run:
         shell: bash
@@ -88,8 +89,7 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
-          cache: false
-      - run: go mod download
+          cache: true
       - name: Build Go Code
         run: |
           PACKAGES=$(go list ./... | grep -v "/docs")
@@ -105,7 +105,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        go-version: *go-versions
+        go-version: ["stable", "oldstable"]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
@@ -126,11 +126,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: *os-platforms
-        go-version: *go-versions
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ["stable", "oldstable"]
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
+      pull-requests: write
     defaults:
       run:
         shell: bash
@@ -139,21 +140,37 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
-          cache: false
-      - name: Run tests
+      - name: Install tparse
         run: |
-          PACKAGES=$(go list ./... | grep -v "/docs")
-          COVERPKG=$(echo "$PACKAGES" | paste -sd "," -)
-          go test -count=1 -tags=preview.query -coverpkg="$COVERPKG" -covermode=atomic -coverprofile=$COVERAGE_FILE $PACKAGES
-          grep -v -E -f .covignore $COVERAGE_FILE > coverage.filtered.out && mv coverage.filtered.out $COVERAGE_FILE
-          go tool cover -func=$COVERAGE_FILE
-          go tool cover -html=$COVERAGE_FILE -o cover.html
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v7
+          go install github.com/mfridman/tparse@latest
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+      - name: Run Tests & Report
+        run: .github/scripts/report-tests.sh
+        id: test-run
+      - name: Prepare Test Summary
+        if: failure()
+        id: create-summary
+        run: |
+          echo "SUMMARY<<EOF" >> $GITHUB_OUTPUT
+          head -c 60000 test-summary.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Post Sticky Comment
+        if: failure()
+        uses: marocchino/sticky-pull-request-comment@v2.9.1
         with:
-          name: ${{ matrix.os }}-coverage-report-${{ matrix.go-version }}-${{ hashFiles('go.sum') }}) }}
-          path: cover.html
-      - name: Upload to Codecov
-        uses: codecov/codecov-action@v6
+          header: test-failure-summary
+          message: ${{ steps.create-summary.outputs.SUMMARY }}
+      - name: Delete Test Failure Comment
+        if: success()
+        uses: marocchino/sticky-pull-request-comment@v2.9.1
         with:
+          header: test-failure-summary
+          delete: true
+
+      - name: Upload coverage to Codecov
+        if: runner.os == 'Linux' && matrix.go-version == 'stable'
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./${{ env.COVERAGE_FILE }}
+          fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}

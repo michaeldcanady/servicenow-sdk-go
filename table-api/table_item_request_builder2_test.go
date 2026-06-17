@@ -235,6 +235,8 @@ func TestTableItemRequestBuilder2_Patch(t *testing.T) {
 	}
 }
 
+// ... (rest of tests)
+
 func TestTableItemRequestBuilder2_ToRequestInformation(t *testing.T) {
 	mockAdapter := new(mocking.MockRequestAdapter)
 	builder := NewTableItemRequestBuilder3[*TableRecord](

@@ -8,12 +8,12 @@ on:
     paths:
       - "docs/**"
       - "mkdocs.yml"
-      - ".github/workflows/pages.yml"
+      - ".github/workflows/docs.yml"
   pull_request:
     paths:
       - "docs/**"
       - "mkdocs.yml"
-      - ".github/workflows/pages.yml"
+      - ".github/workflows/docs.yml"
 
 env:
   PYTHON_VERSION: "3.x"
@@ -145,3 +145,21 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: mkdocs gh-deploy --force --config-file mkdocs.yml --site-dir site
+
+  report-failure:
+    name: Report Docs Failure
+    if: failure()
+    needs: [build, lint]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Post Failure Summary
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: docs-failure-summary
+          message: |
+            ### ❌ Documentation CI/CD Failed
+            One or more jobs in the Documentation pipeline failed.
+            
+            Please check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.

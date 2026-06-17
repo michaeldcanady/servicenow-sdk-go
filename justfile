@@ -7,6 +7,14 @@ export DOC_PATH := "."
 build-docs:
     podman build -f doc.dockerfile -t {{DOC_IMAGE}}
 
+# Build the project
+build:
+	go build ./...
+
+# Run tests
+test:
+	go test -v ./...
+
 # Serve docs locally with live reload
 serve-docs: build-docs
     podman run --rm -p {{DOC_PORT}}:8000 {{DOC_IMAGE}}
