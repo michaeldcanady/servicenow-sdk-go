@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -20,6 +21,7 @@ type ServiceNowServiceClientConfig struct {
 	rawURI                 string
 	backingStoreFactory    store.BackingStoreFactory
 	requestAdapterOptions  []internalHttp.ServiceNowRequestAdapterOption
+	logger                internal.Logger
 }
 
 // newServiceNowClientConfig instantiates a new empty config with default values.
@@ -28,6 +30,7 @@ func newServiceNowClientConfig() *ServiceNowServiceClientConfig {
 		middleware:            make([]nethttplibrary.Middleware, 0),
 		backingStoreFactory:   store.BackingStoreFactoryInstance,
 		requestAdapterOptions: make([]internalHttp.ServiceNowRequestAdapterOption, 0),
+		logger:                &internal.NoOpLogger{},
 	}
 }
 

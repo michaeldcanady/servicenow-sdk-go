@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -111,6 +112,17 @@ func WithHTTPClient(client *http.Client) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
 		config.requestAdapterOptions = append(config.requestAdapterOptions, internalHttp.WithClient(client))
 
+		return nil
+	}
+}
+
+// WithLogger creates an option to set the logger used by the service client.
+func WithLogger(logger internal.Logger) ServiceNowServiceClientOption {
+	return func(config *ServiceNowServiceClientConfig) error {
+		if conversion.IsNil(logger) {
+			return errors.New("logger is nil")
+		}
+		config.logger = logger
 		return nil
 	}
 }
