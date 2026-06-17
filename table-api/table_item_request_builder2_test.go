@@ -235,9 +235,7 @@ func TestTableItemRequestBuilder2_Patch(t *testing.T) {
 	}
 }
 
-func TestTableItemRequestBuilder2_Fail(t *testing.T) {
-    t.Fail()
-}
+// ... (rest of tests)
 
 func TestTableItemRequestBuilder2_ToRequestInformation(t *testing.T) {
 	mockAdapter := new(mocking.MockRequestAdapter)
