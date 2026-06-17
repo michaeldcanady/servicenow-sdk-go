@@ -43,14 +43,19 @@ jobs:
         with:
           header: pr-title-lint-error
           message: |
-            ### ⚠️ Invalid PR Title
-            The PR title does not follow semantic conventions.
-            Please use a conventional commit title, e.g.: `feat(scope): add feature` or `fix: resolve issue`.
-            
+            Hey there and thank you for opening this pull request!
+
+            We require that pull request titles follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
+
+            It looks like your proposed title needs to be adjusted.
+
+            Details:
+            ```
             ${{ steps.lint_title.outputs.error_message }}
+            ```
 
       - uses: marocchino/sticky-pull-request-comment@v2
-        if: always() && steps.lint_title.outputs.error_message == ''
+        if: !cancelled() && steps.lint_title.outputs.error_message == ''
         with:
           header: pr-title-lint-error
           delete: true
