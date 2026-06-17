@@ -176,21 +176,3 @@ jobs:
           files: ./${{ env.COVERAGE_FILE }}
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
-
-  report-failure:
-    name: Report CI Failure
-    if: failure()
-    needs: [check-go, build-go, lint-go, test-go]
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    steps:
-      - name: Post Failure Summary
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: ci-failure-summary
-          message: |
-            ### ❌ CI Pipeline Failed
-            One or more jobs in the CI pipeline failed.
-            
-            Please check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.
