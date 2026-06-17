@@ -80,6 +80,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
+      pull-requests: write
     defaults:
       run:
         shell: bash
@@ -131,6 +132,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
+      pull-requests: write
     defaults:
       run:
         shell: bash
