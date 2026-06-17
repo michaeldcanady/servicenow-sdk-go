@@ -18,7 +18,8 @@ jobs:
     name: Validate PR Title
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: read
+      pull-requests: write
+      contents: read
     steps:
       - uses: amannn/action-semantic-pull-request@v6
         env:
@@ -34,6 +35,12 @@ jobs:
             perf
             test
           requireScope: false
+          # Post a comment on the PR if the title is invalid
+          postErrorComment: true
+          # Optional: customized error message
+          errorComment: >
+            The PR title does not follow semantic conventions.
+            Please use a conventional commit title, e.g.: `feat(scope): add feature` or `fix: resolve issue`.
 
   dependabot-merge:
     runs-on: ubuntu-latest
