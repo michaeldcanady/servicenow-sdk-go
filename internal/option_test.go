@@ -8,7 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TODO: add tests
 func TestApplyOptions(t *testing.T) {
 	tests := []struct {
 		name string

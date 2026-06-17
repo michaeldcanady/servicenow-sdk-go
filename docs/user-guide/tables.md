@@ -15,7 +15,7 @@ The SDK offers two distinct ways to build and execute requests.
 
 ## Get a single record
 
-To retrieve a specific record, use the `ById` method in the fluent interface.
+To retrieve a specific record, use the `ByID` method in the fluent interface.
 
 ```go
 {% include-markdown 'snippets/tables.go' start='// [START table_get_fluent]' end='// [END table_get_fluent]' comments=false trailing-newlines=false dedent=true %}

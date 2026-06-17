@@ -93,6 +93,11 @@ func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstrac
 	}
 
 	errorMapping := abstractions.ErrorMappings{
+		"400": internal.CreateServiceNowErrorFromDiscriminatorValue,
+		"401": internal.CreateServiceNowErrorFromDiscriminatorValue,
+		"403": internal.CreateServiceNowErrorFromDiscriminatorValue,
+		"404": internal.CreateServiceNowErrorFromDiscriminatorValue,
+		"500": internal.CreateServiceNowErrorFromDiscriminatorValue,
 		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 

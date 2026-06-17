@@ -120,7 +120,7 @@ func (c *tableTestContext) iHaveAtLeastIncidentInTheTable(minCount int, tableNam
 }
 
 func (c *tableTestContext) iRequestTheIncidentByItsSysID() error {
-	resp, err := c.client.Now().Table("incident").ById(c.lastSysID).Get(context.Background(), nil)
+	resp, err := c.client.Now().Table("incident").ByID(c.lastSysID).Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -177,7 +177,7 @@ func (c *tableTestContext) iUpdateTheIncidentDescriptionTo(description string) e
 	record := tableapi.NewTableRecord()
 	_ = record.SetValue("short_description", description)
 
-	resp, err := c.client.Now().Table("incident").ById(c.lastSysID).Put(context.Background(), record, nil)
+	resp, err := c.client.Now().Table("incident").ByID(c.lastSysID).Put(context.Background(), record, nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -187,7 +187,7 @@ func (c *tableTestContext) iPatchTheIncidentDescriptionTo(description string) er
 	record := tableapi.NewTableRecord()
 	_ = record.SetValue("short_description", description)
 
-	resp, err := c.client.Now().Table("incident").ById(c.lastSysID).Patch(context.Background(), record, nil)
+	resp, err := c.client.Now().Table("incident").ByID(c.lastSysID).Patch(context.Background(), record, nil)
 	c.response = resp
 	c.err = err
 	return nil
@@ -212,7 +212,7 @@ func (c *tableTestContext) theRecordShouldHaveDescription(description string) er
 }
 
 func (c *tableTestContext) iDeleteTheCreatedIncident() error {
-	err := c.client.Now().Table("incident").ById(c.lastSysID).Delete(context.Background(), nil)
+	err := c.client.Now().Table("incident").ByID(c.lastSysID).Delete(context.Background(), nil)
 	c.err = err
 	return nil
 }
@@ -225,7 +225,7 @@ func (c *tableTestContext) iRequestTheDeletedIncidentByItsSysID() error {
 			httpmock.NewStringResponder(404, `{"error":{"message":"No Record found","detail":""},"status":"failure"}`))
 	}
 
-	resp, err := c.client.Now().Table("incident").ById(c.lastSysID).Get(context.Background(), nil)
+	resp, err := c.client.Now().Table("incident").ByID(c.lastSysID).Get(context.Background(), nil)
 	c.response = resp
 	c.err = err
 	return nil

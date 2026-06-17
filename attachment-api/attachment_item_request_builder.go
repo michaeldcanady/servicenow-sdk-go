@@ -82,6 +82,11 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 	requestInfo := rB.ToGetRequestInformation(ctx, requestConfiguration)
 
 	errorMapping := abstractions.ErrorMappings{
+		"400": internal.CreateServiceNowErrorFromDiscriminatorValue,
+		"401": internal.CreateServiceNowErrorFromDiscriminatorValue,
+		"403": internal.CreateServiceNowErrorFromDiscriminatorValue,
+		"404": internal.CreateServiceNowErrorFromDiscriminatorValue,
+		"500": internal.CreateServiceNowErrorFromDiscriminatorValue,
 		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 
@@ -111,6 +116,11 @@ func (rB *AttachmentItemRequestBuilder) Delete(ctx context.Context, requestConfi
 	requestInfo := rB.ToDeleteRequestInformation(ctx, requestConfiguration)
 
 	errorMapping := abstractions.ErrorMappings{
+		"400": internal.CreateServiceNowErrorFromDiscriminatorValue,
+		"401": internal.CreateServiceNowErrorFromDiscriminatorValue,
+		"403": internal.CreateServiceNowErrorFromDiscriminatorValue,
+		"404": internal.CreateServiceNowErrorFromDiscriminatorValue,
+		"500": internal.CreateServiceNowErrorFromDiscriminatorValue,
 		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
 	}
 

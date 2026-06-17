@@ -149,7 +149,7 @@ func TestTableRequestBuilder_Post(t *testing.T) {
 	}
 }
 
-func TestTableRequestBuilder_ById(t *testing.T) {
+func TestTableRequestBuilder_ByID(t *testing.T) {
 	mockAdapter := new(mocking.MockRequestAdapter)
 	builder := NewTableRequestBuilder[*TableRecord](
 		"https://example.com/api/now/v1/table/test",
@@ -157,7 +157,7 @@ func TestTableRequestBuilder_ById(t *testing.T) {
 		CreateTableRecordFromDiscriminatorValue,
 	)
 
-	itemBuilder := builder.ById("sysid123")
+	itemBuilder := builder.ByID("sysid123")
 	assert.NotNil(t, itemBuilder)
 	assert.Equal(t, "sysid123", itemBuilder.GetPathParameters()["sysId"])
 }

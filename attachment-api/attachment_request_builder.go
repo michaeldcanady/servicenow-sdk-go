@@ -127,6 +127,60 @@ func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguratio
 	return snRes, nil
 }
 
+// Head sends an HTTP HEAD request and returns the response headers.
+func (rB *AttachmentRequestBuilder) Head(ctx context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*abstractions.ResponseHeaders, error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
+
+	if conversion.IsNil(requestConfiguration) {
+		requestConfiguration = &AttachmentRequestBuilderGetRequestConfiguration{}
+	}
+
+	headerOpt := nethttplibrary.NewHeadersInspectionOptions()
+	headerOpt.InspectResponseHeaders = true
+	requestConfiguration.Options = append(requestConfiguration.Options, headerOpt)
+
+	requestInfo, err := rB.ToHeadRequestInformation(ctx, requestConfiguration)
+	if err != nil {
+		return nil, err
+	}
+
+	errorMapping := abstractions.ErrorMappings{
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
+	}
+
+	if err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping); err != nil {
+		return nil, err
+	}
+
+	return headerOpt.GetResponseHeaders(), nil
+}
+
+// ToHeadRequestInformation converts request configurations to Head request information.
+func (rB *AttachmentRequestBuilder) ToHeadRequestInformation(_ context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.HEAD, rB.GetURLTemplate(), rB.GetPathParameters())
+	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	if !conversion.IsNil(requestConfiguration) {
+		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
+			kiotaRequestInfo.Headers.AddAll(headers)
+		}
+		if options := requestConfiguration.Options; !conversion.IsNil(options) {
+			kiotaRequestInfo.AddRequestOptions(options)
+		}
+		if queryParams := requestConfiguration.QueryParameters; !conversion.IsNil(queryParams) {
+			kiotaRequestInfo.AddQueryParameters(queryParams)
+		}
+	}
+	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+
+	return kiotaRequestInfo.RequestInformation, nil
+}
+
 // ToGetRequestInformation converts request configurations to Get request information.
 func (rB *AttachmentRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {

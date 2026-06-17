@@ -91,7 +91,6 @@ func TestBatchResponse_Serialize(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 	tests := []struct {
 		name string

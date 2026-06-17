@@ -248,7 +248,7 @@ func (c *batchTestContext) iRequestTheDeletedIncidentByItsSysID() error {
 		httpmock.RegisterResponder("GET", url,
 			httpmock.NewStringResponder(404, `{"error":{"message":"No Record found","detail":""},"status":"failure"}`))
 	}
-	_, err := c.client.Now().Table("incident").ById(c.lastSysID).Get(context.Background(), nil)
+	_, err := c.client.Now().Table("incident").ByID(c.lastSysID).Get(context.Background(), nil)
 	c.err = err
 	return nil
 }

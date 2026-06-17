@@ -655,7 +655,6 @@ func TestElementValueModel_GetEnumValue(t *testing.T) {
 	}
 }
 
-// TODO: add tests
 func TestElementValueModel_GetCollectionOfPrimitiveValues(t *testing.T) {
 	tests := []struct {
 		name string
@@ -673,6 +672,17 @@ func TestElementValueModel_GetCollectionOfPrimitiveValues(t *testing.T) {
 
 				assert.Nil(t, err)
 				assert.Equal(t, value, ret)
+			},
+		},
+		{
+			name: "Unsupported Type",
+			test: func(t *testing.T) {
+				model, err := NewElementValue("not a collection")
+				assert.Nil(t, err)
+
+				result, err := model.GetCollectionOfPrimitiveValues(PrimitiveString)
+				assert.NotNil(t, err)
+				assert.Nil(t, result)
 			},
 		},
 	}

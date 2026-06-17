@@ -145,8 +145,8 @@ func (rB *TableRequestBuilder[T]) Post(ctx context.Context, body T, requestConfi
 	return typedResp, nil
 }
 
-// ById returns a TableItemRequestBuilder for the specified sysId.
-func (rB *TableRequestBuilder[T]) ById(sysId string) *TableItemRequestBuilder[T] {
+// ByID returns a TableItemRequestBuilder for the specified sysId.
+func (rB *TableRequestBuilder[T]) ByID(sysId string) *TableItemRequestBuilder[T] {
 	pathParameters := make(map[string]string)
 	for k, v := range rB.GetPathParameters() {
 		pathParameters[k] = v
@@ -155,7 +155,35 @@ func (rB *TableRequestBuilder[T]) ById(sysId string) *TableItemRequestBuilder[T]
 	return NewTableItemRequestBuilderInternal[T](pathParameters, rB.GetRequestAdapter(), rB.factory)
 }
 
-// TODO: Add Head method which returns headers
+// Head sends an HTTP HEAD request and returns the response headers.
+func (rB *TableRequestBuilder[T]) Head(ctx context.Context, requestConfiguration *TableRequestBuilderGetRequestConfiguration) (*abstractions.ResponseHeaders, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
+	if conversion.IsNil(requestConfiguration) {
+		requestConfiguration = &TableRequestBuilderGetRequestConfiguration{}
+	}
+
+	headerOpt := nethttplibrary.NewHeadersInspectionOptions()
+	headerOpt.InspectResponseHeaders = true
+	requestConfiguration.Options = append(requestConfiguration.Options, headerOpt)
+
+	requestInfo, err := rB.ToHeadRequestInformation(ctx, requestConfiguration)
+	if err != nil {
+		return nil, err
+	}
+
+	errorMapping := abstractions.ErrorMappings{
+		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
+	}
+
+	if err := rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping); err != nil {
+		return nil, err
+	}
+
+	return headerOpt.GetResponseHeaders(), nil
+}
 
 // ToGetRequestInformation converts provided parameters into request information
 func (rB *TableRequestBuilder[T]) ToGetRequestInformation(_ context.Context, requestConfiguration *TableRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {

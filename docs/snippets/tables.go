@@ -59,7 +59,7 @@ func tableGetSnippets() {
 	}
 
 	// Step 4: Execute request
-	getResponse, err := client.Now().Table("xSDK_SN_TABLEx").ById("xSDK_SN_TABLE_SYS_IDx").Get(context.Background(), getConfig)
+	getResponse, err := client.Now().Table("xSDK_SN_TABLEx").ByID("xSDK_SN_TABLE_SYS_IDx").Get(context.Background(), getConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -194,7 +194,7 @@ func tableUpdateSnippets() {
 	}
 
 	// Step 5: Execute request
-	updateResponse, err := client.Now().Table("xSDK_SN_TABLEx").ById("xSDK_SN_TABLE_SYS_IDx").Put(context.Background(), updateData, update_config)
+	updateResponse, err := client.Now().Table("xSDK_SN_TABLEx").ByID("xSDK_SN_TABLE_SYS_IDx").Put(context.Background(), updateData, update_config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -237,7 +237,7 @@ func tableDeleteSnippets() {
 	}
 
 	// Step 4: Execute request
-	err := client.Now().Table("xSDK_SN_TABLEx").ById("xSDK_SN_TABLE_SYS_IDx").Delete(context.Background(), delete_config)
+	err := client.Now().Table("xSDK_SN_TABLEx").ByID("xSDK_SN_TABLE_SYS_IDx").Delete(context.Background(), delete_config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -322,7 +322,7 @@ func tableGuideSnippets() {
 		log.Fatal(err)
 	}
 
-	update_guide_response, err := client.Now().Table("xSDK_SN_TABLEx").ById(sysIdStr).Put(ctx, updateGuideData, nil)
+	update_guide_response, err := client.Now().Table("xSDK_SN_TABLEx").ByID(sysIdStr).Put(ctx, updateGuideData, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -330,7 +330,7 @@ func tableGuideSnippets() {
 
 	// [START table_delete_guide]
 	sysIdToDelete := "xSDK_SN_TABLE_SYS_IDx"
-	err = client.Now().Table("xSDK_SN_TABLEx").ById(sysIdToDelete).Delete(ctx, nil)
+	err = client.Now().Table("xSDK_SN_TABLEx").ByID(sysIdToDelete).Delete(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
