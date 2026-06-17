@@ -6,8 +6,8 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
+	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -134,4 +134,3 @@ func TestValidationRequestBuilder_Get(t *testing.T) {
 		assert.Equal(t, mockRes, resp)
 	})
 }
-

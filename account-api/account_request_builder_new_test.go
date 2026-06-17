@@ -34,7 +34,7 @@ func TestAccountRequestBuilder_Get_New(t *testing.T) {
 				assert.NoError(t, err)
 				assert.NotNil(t, res)
 			}
-			
+
 			// Verify request info was captured correctly
 			assert.NotNil(t, adapter.LastRequest)
 			assert.Equal(t, abstractions.GET, adapter.LastRequest.Method)

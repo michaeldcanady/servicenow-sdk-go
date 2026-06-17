@@ -272,4 +272,3 @@ func (rB *UserWindowRequestBuilder) ToPostRequestInformation(ctx context.Context
 
 	return requestInfo, nil
 }
-

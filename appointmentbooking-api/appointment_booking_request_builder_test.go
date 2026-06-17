@@ -100,7 +100,6 @@ func TestUserWindowRequestBuilder_Post(t *testing.T) {
 	assert.Equal(t, mockRes, resp)
 }
 
-
 func TestAppointmentRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())

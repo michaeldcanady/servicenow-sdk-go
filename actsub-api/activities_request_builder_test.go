@@ -21,10 +21,10 @@ func TestActivitiesRequestBuilder_Get(t *testing.T) {
 
 	tests := []testCase{
 		{
-			name:   "Success",
-			config: nil,
-			mockRes: internal.NewBaseServiceNowCollectionResponse[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue),
-			mockErr: nil,
+			name:      "Success",
+			config:    nil,
+			mockRes:   internal.NewBaseServiceNowCollectionResponse[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue),
+			mockErr:   nil,
 			expectErr: false,
 		},
 		{

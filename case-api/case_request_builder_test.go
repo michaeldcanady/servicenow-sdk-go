@@ -134,4 +134,3 @@ func TestCustomerServiceRequestBuilder_Hierarchy(t *testing.T) {
 
 	assert.NotNil(t, builder.Case())
 }
-

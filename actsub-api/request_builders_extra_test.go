@@ -188,4 +188,3 @@ func TestActSubRequestBuilder_Hierarchy_Extra(t *testing.T) {
 	assert.NotNil(t, builder.Preferences().ByProfileId("prof1"))
 	assert.NotNil(t, builder.Subscribers().BySubObject("obj1"))
 }
-

@@ -34,5 +34,5 @@ func (l *StructuredLogger) LogFailure(testName string, err error, context interf
 	}
 
 	data, _ := json.Marshal(entry)
-	fmt.Fprintln(l.Output, string(data))
+	_, _ = fmt.Fprintln(l.Output, string(data))
 }

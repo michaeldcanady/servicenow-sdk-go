@@ -10,6 +10,7 @@ import (
 // LoadJSON loads a JSON file from the specified path and unmarshals it into the provided interface.
 // It assumes the path is relative to the calling test's directory unless it's an absolute path.
 func LoadJSON(path string, v interface{}) error {
+	// #nosec G304
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return fmt.Errorf("failed to read JSON file: %w", err)
