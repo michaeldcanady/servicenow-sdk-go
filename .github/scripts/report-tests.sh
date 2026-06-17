@@ -1,6 +1,6 @@
 #!/bin/bash
-# Run tests and capture JSON output
-go test -json -v ./... > test-output.json
+# Run tests and capture JSON output and generate coverage profile
+go test -coverprofile=coverage.out -json -v ./... > test-output.json
 TEST_EXIT_CODE=$?
 
 # Generate the report using the new custom tool
