@@ -152,9 +152,9 @@ jobs:
         if: steps.run-tests.outputs.test_failed == 'true'
         shell: bash
         run: |
-          echo "### ❌ Test Failures" > test-summary.md
-          tparse -file test-output.json -format markdown >> test-summary.md || echo "tparse failed, but proceeding"
-          # Use a GitHub Action output to pass multi-line content safely instead of GITHUB_ENV
+          echo "### ❌ Test Failure Summary" > test-summary.md
+          tparse -file test-output.json -format markdown --summary --no-show-passed >> test-summary.md || echo "tparse failed, but proceeding"
+          # Use a GitHub Action output to pass multi-line content safely
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "SUMMARY<<$EOF" >> $GITHUB_OUTPUT
           cat test-summary.md >> $GITHUB_OUTPUT
