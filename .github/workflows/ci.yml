@@ -112,12 +112,10 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
+      - name: Install just
+        run: go install github.com/casey/just@latest
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v9
-        with:
-          version: latest
-          skip-cache: false
-          args: --timeout=5m
+        run: just lint
 
   test-go:
     name: Test Go Code
