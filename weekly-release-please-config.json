@@ -6,6 +6,7 @@
   "bump-patch-for-minor-pre-major": true,
   "include-v-in-tag": true,
   "include-component-in-tag": false,
+  "prerelease": true,
   "packages": {
     ".": {
       "package-name": "github.com/michaeldcanady/servicenow-sdk-go",
