@@ -3,11 +3,11 @@ package servicenowsdkgo
 import (
 	"maps"
 
-	cdmapplicationsapi "github.com/michaeldcanady/servicenow-sdk-go/cdm-applications-api"
-	cdmchangesetapi "github.com/michaeldcanady/servicenow-sdk-go/cdm-changeset-api"
-	cdmeditorapi "github.com/michaeldcanady/servicenow-sdk-go/cdm-editor-api"
+	cdmapplicationsapi "github.com/michaeldcanady/servicenow-sdk-go/cdmapplicationsapi"
+	cdmchangesetapi "github.com/michaeldcanady/servicenow-sdk-go/cdmchangesetapi"
+	cdmeditorapi "github.com/michaeldcanady/servicenow-sdk-go/cdmeditorapi"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
-	policyapi "github.com/michaeldcanady/servicenow-sdk-go/policy-api"
+	policyapi "github.com/michaeldcanady/servicenow-sdk-go/policyapi"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

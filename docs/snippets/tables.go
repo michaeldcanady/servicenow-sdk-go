@@ -7,7 +7,7 @@ import (
 	"log"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
 )
 
 // [END table_imports]

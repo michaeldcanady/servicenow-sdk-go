@@ -1,4 +1,3 @@
-//go:build preview.query
 
 package ast2
 

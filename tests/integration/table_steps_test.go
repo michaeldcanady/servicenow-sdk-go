@@ -14,7 +14,7 @@ import (
 	sdk "github.com/michaeldcanady/servicenow-sdk-go"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
 )
 
 type tableTestContext struct {

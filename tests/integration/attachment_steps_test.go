@@ -13,7 +13,7 @@ import (
 	"github.com/jarcoal/httpmock"
 	"github.com/joho/godotenv"
 	sdk "github.com/michaeldcanady/servicenow-sdk-go"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"

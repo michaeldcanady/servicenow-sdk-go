@@ -1,0 +1,63 @@
+./documentsapi/create_document_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./documentsapi/action_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./documentsapi/version_state_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./documentsapi/create_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./documentsapi/delete_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./documentsapi/content_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./documentsapi/attach_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./documentsapi/sync_down_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./documentsapi/versions_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./documentsapi/explore_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./internal/page_iterator.go:	errorMapping := abstractions.ErrorMappings{
+./internal/servicenow_error_thrower_test.go:				errorMapping := abstractions.ErrorMappings{"5XX": factory}
+./internal/servicenow_error_thrower_test.go:				errorMapping := abstractions.ErrorMappings{"4XX": factory}
+./internal/servicenow_error_thrower_test.go:				errorMapping := abstractions.ErrorMappings{"401": factory}
+./internal/servicenow_error_thrower_test.go:				errorMapping := abstractions.ErrorMappings{"XXX": factory}
+./internal/servicenow_error_thrower_test.go:				errorMapping := abstractions.ErrorMappings{}
+./internal/servicenow_error_thrower_test.go:				errorMapping := abstractions.ErrorMappings{"5XX": factory}
+./internal/servicenow_error_thrower_test.go:				errorMapping := abstractions.ErrorMappings{"5XX": factory}
+./internal/servicenow_error_thrower_test.go:				errorMapping := abstractions.ErrorMappings{"5XX": factory}
+./internal/servicenow_error_thrower_test.go:				errorMapping := abstractions.ErrorMappings{}
+./attachmentapi/attachment_item_file_request_builder_test.go:				mockRequestAdapter.On("SendPrimitive", context.Background(), expected, "[]byte", mock.IsType(abstractions.ErrorMappings{})).Return(mockContent, nil).Run(func(args mock.Arguments) {
+./attachmentapi/attachment_item_file_request_builder_test.go:				mockRequestAdapter.On("SendPrimitive", context.Background(), expected, "[]byte", mock.IsType(abstractions.ErrorMappings{})).Return((*mocking.MockParsable)(nil), errors.New("send error")).Run(func(args mock.Arguments) {
+./attachmentapi/attachment_item_file_request_builder_test.go:				mockRequestAdapter.On("SendPrimitive", context.Background(), expected, "[]byte", mock.IsType(abstractions.ErrorMappings{})).Return(mocking.NewMockParsable(), nil)
+./attachmentapi/attachment_item_file_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./attachmentapi/attachment_item_request_builder_test.go:				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(mockParsable, nil)
+./attachmentapi/attachment_item_request_builder_test.go:				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return((*mocking.MockParsable)(nil), errors.New("send error"))
+./attachmentapi/attachment_item_request_builder_test.go:				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(mocking.NewMockParsable(), nil)
+./attachmentapi/attachment_item_request_builder_test.go:				mockRequestAdapter.On("Send", context.Background(), expectedRequestInformation, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return((*mocking.MockParsable)(nil), nil)
+./attachmentapi/attachment_item_request_builder_test.go:				mockRequestAdapter.On("SendNoContent", context.Background(), expectedRequestInformation, mock.IsType(abstractions.ErrorMappings{})).Return(nil)
+./attachmentapi/attachment_item_request_builder_test.go:				mockRequestAdapter.On("SendNoContent", context.Background(), expectedRequestInformation, mock.IsType(abstractions.ErrorMappings{})).Return(errors.New("send error"))
+./attachmentapi/attachment_upload_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./attachmentapi/attachment_file_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./attachmentapi/attachment_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./attachmentapi/attachment_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./attachmentapi/attachment_item_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./attachmentapi/attachment_item_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./policyapi/policies_mappings_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./policyapi/policies_mappings_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./cmdbinstanceapi/cmdb_relation_item_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./cmdbinstanceapi/cmdb_item_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./cmdbinstanceapi/cmdb_item_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./cmdbinstanceapi/cmdb_item_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./cmdbinstanceapi/cmdb_relation_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./cmdbinstanceapi/cmdb_class_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./cmdbinstanceapi/cmdb_class_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./batchapi/batch_request_builder_test.go:				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(mockContent, nil)
+./batchapi/batch_request_builder_test.go:				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(nil, errors.New("send error"))
+./batchapi/batch_request_builder_test.go:				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(mockContent, nil)
+./batchapi/batch_request_builder_test.go:				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.IsType(abstractions.ErrorMappings{})).Return(nil, nil)
+./batchapi/batch_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./batchapi/batch_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./appserviceapi/appservice_request_builders.go:	errorMapping := abstractions.ErrorMappings{
+./appserviceapi/appservice_request_builders.go:	errorMapping := abstractions.ErrorMappings{
+./appserviceapi/appservice_request_builders.go:	errorMapping := abstractions.ErrorMappings{
+./appserviceapi/appservice_request_builders.go:	errorMapping := abstractions.ErrorMappings{
+./appserviceapi/appservice_request_builders.go:	errorMapping := abstractions.ErrorMappings{
+./tableapi/table_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./tableapi/table_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./tableapi/table_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./tableapi/table_item_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./tableapi/table_item_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./tableapi/table_item_request_builder.go:	errorMapping := abstractions.ErrorMappings{
+./tableapi/table_item_request_builder.go:	errorMapping := abstractions.ErrorMappings{

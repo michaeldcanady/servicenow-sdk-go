@@ -8,7 +8,7 @@ import (
 	"os"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -101,7 +101,7 @@ func _() {
 	}
 
 	// Step 5: Build request
-	collectionRequestBuilder := attachmentapi.NewAttachmentItemRequestBuilder2(rawURL, client.RequestAdapter)
+	collectionRequestBuilder := attachmentapi.NewAttachmentItemRequestBuilder(rawURL, client.RequestAdapter)
 
 	if err := collectionRequestBuilder.Delete(context.Background(), deleteConfig); err != nil {
 		log.Fatal(err)

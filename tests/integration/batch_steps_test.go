@@ -12,9 +12,9 @@ import (
 	"github.com/jarcoal/httpmock"
 	"github.com/joho/godotenv"
 	sdk "github.com/michaeldcanady/servicenow-sdk-go"
-	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batchapi"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

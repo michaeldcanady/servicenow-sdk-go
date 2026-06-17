@@ -6,8 +6,8 @@ import (
 	"strings"
 	"sync"
 
-	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/appointmentbooking-api"
-	caseapi "github.com/michaeldcanady/servicenow-sdk-go/case-api"
+	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/appointmentbookingapi"
+	caseapi "github.com/michaeldcanady/servicenow-sdk-go/caseapi"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"

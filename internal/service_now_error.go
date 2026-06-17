@@ -17,6 +17,36 @@ type ServicenowError struct {
 	BackedModel
 }
 
+// BadRequestError represents a 400 Bad Request error
+type BadRequestError struct {
+	ServicenowError
+}
+
+// UnauthorizedError represents a 401 Unauthorized error
+type UnauthorizedError struct {
+	ServicenowError
+}
+
+// ForbiddenError represents a 403 Forbidden error
+type ForbiddenError struct {
+	ServicenowError
+}
+
+// NotFoundError represents a 404 Not Found error
+type NotFoundError struct {
+	ServicenowError
+}
+
+// TooManyRequestsError represents a 429 Too Many Requests error
+type TooManyRequestsError struct {
+	ServicenowError
+}
+
+// ServerError represents a 5XX Server error
+type ServerError struct {
+	ServicenowError
+}
+
 // NewServicenowError instantiates a new Service-Now error
 func NewServicenowError() *ServicenowError {
 	return &ServicenowError{
@@ -27,6 +57,36 @@ func NewServicenowError() *ServicenowError {
 // CreateServiceNowErrorFromDiscriminatorValue is a parsable factory for creating a ServicenowError
 func CreateServiceNowErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewServicenowError(), nil
+}
+
+// CreateBadRequestErrorFromDiscriminatorValue creates a BadRequestError
+func CreateBadRequestErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return &BadRequestError{*NewServicenowError()}, nil
+}
+
+// CreateUnauthorizedErrorFromDiscriminatorValue creates a UnauthorizedError
+func CreateUnauthorizedErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return &UnauthorizedError{*NewServicenowError()}, nil
+}
+
+// CreateForbiddenErrorFromDiscriminatorValue creates a ForbiddenError
+func CreateForbiddenErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return &ForbiddenError{*NewServicenowError()}, nil
+}
+
+// CreateNotFoundErrorFromDiscriminatorValue creates a NotFoundError
+func CreateNotFoundErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return &NotFoundError{*NewServicenowError()}, nil
+}
+
+// CreateTooManyRequestsErrorFromDiscriminatorValue creates a TooManyRequestsError
+func CreateTooManyRequestsErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return &TooManyRequestsError{*NewServicenowError()}, nil
+}
+
+// CreateServerErrorFromDiscriminatorValue creates a ServerError
+func CreateServerErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return &ServerError{*NewServicenowError()}, nil
 }
 
 // Serialize writes the objects properties to the current writer.

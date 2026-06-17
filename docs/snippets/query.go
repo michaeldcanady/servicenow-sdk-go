@@ -9,8 +9,8 @@ import (
 	"log"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	"github.com/michaeldcanady/servicenow-sdk-go/query2"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+	"github.com/michaeldcanady/servicenow-sdk-go/query"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
 )
 
 // [END query_basic_imports]

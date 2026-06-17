@@ -6,8 +6,8 @@ import (
 	"log"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
 )
 
 func _() {
