@@ -1,5 +1,4 @@
-name: Go CI
-
+name: CI
 on:
   workflow_dispatch:
   push:
@@ -8,12 +7,12 @@ on:
     paths:
       - "**.go"
       - "!docs/snippets/**"
-      - ".github/workflows/go.yml"
+      - ".github/workflows/ci.yml"
   pull_request:
     paths:
       - "**.go"
       - "!docs/snippets/**"
-      - ".github/workflows/go.yml"
+      - ".github/workflows/ci.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -43,7 +42,7 @@ jobs:
           files: |
             **.go
             !docs/snippets/**
-            .github/workflows/go.yml
+            .github/workflows/ci.yml
 
   check-go:
     name: Check Go Modules
@@ -55,7 +54,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        go-version: &go-versions ["stable", "oldstable"]
+        go-version: ["stable", "oldstable"]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
@@ -75,8 +74,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: &os-platforms [ubuntu-latest, macos-latest, windows-latest]
-        go-version: *go-versions
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ["stable", "oldstable"]
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
@@ -105,7 +104,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        go-version: *go-versions
+        go-version: ["stable", "oldstable"]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
@@ -126,8 +125,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: *os-platforms
-        go-version: *go-versions
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ["stable", "oldstable"]
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
@@ -139,21 +138,11 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
-          cache: false
       - name: Run tests
-        run: |
-          PACKAGES=$(go list ./... | grep -v "/docs")
-          COVERPKG=$(echo "$PACKAGES" | paste -sd "," -)
-          go test -count=1 -tags=preview.query -coverpkg="$COVERPKG" -covermode=atomic -coverprofile=$COVERAGE_FILE $PACKAGES
-          grep -v -E -f .covignore $COVERAGE_FILE > coverage.filtered.out && mv coverage.filtered.out $COVERAGE_FILE
-          go tool cover -func=$COVERAGE_FILE
-          go tool cover -html=$COVERAGE_FILE -o cover.html
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v7
+        run: go test -v -coverprofile=${{ env.COVERAGE_FILE }} ./...
+      - name: Upload coverage to Codecov
+        if: runner.os == 'Linux' && matrix.go-version == 'stable'
+        uses: codecov/codecov-action@v4
         with:
-          name: ${{ matrix.os }}-coverage-report-${{ matrix.go-version }}-${{ hashFiles('go.sum') }}) }}
-          path: cover.html
-      - name: Upload to Codecov
-        uses: codecov/codecov-action@v6
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./${{ env.COVERAGE_FILE }}
+          fail_ci_if_error: true

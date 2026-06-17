@@ -1,4 +1,4 @@
-name: Release
+name: Weekly
 
 on:
   workflow_dispatch: # Manual trigger for stable releases

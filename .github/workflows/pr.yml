@@ -1,19 +1,43 @@
-name: Auto-merge dependabot updates
-
+name: PR Checks
 on:
   pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
     branches:
       - main
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
-  dependabot-merge:
+  lint-title:
+    name: Validate PR Title
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
-      contents: write
+      pull-requests: read
+    steps:
+      - uses: amannn/action-semantic-pull-request@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            fix
+            feat
+            chore
+            docs
+            style
+            refactor
+            perf
+            test
+          requireScope: false
 
+  dependabot-merge:
+    runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' }}
-
     steps:
       - name: Dependabot metadata
         id: metadata
@@ -22,7 +46,6 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Enable auto-merge for Dependabot PRs
-        # Only if version bump is not a major version change
         if: ${{steps.metadata.outputs.update-type != 'version-update:semver-major'}}
         run: gh pr merge --auto --merge "$PR_URL"
         env:
