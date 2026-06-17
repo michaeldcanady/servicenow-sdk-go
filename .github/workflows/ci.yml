@@ -154,8 +154,8 @@ jobs:
         run: |
           # Generate summary to a temporary file
           echo "### ❌ Test Failure Summary" > test-summary.md
-          # Force exit code to 0 to prevent workflow step failure. Filter JSON to keep only relevant events.
-          cat test-output.json | jq -c 'select(.Action == "fail" or .Action == "output" or .Action == "run")' | tparse -format markdown >> test-summary.md || echo "tparse exited with $?"
+          # Pass full JSON directly to tparse; it is designed to filter failures natively
+          tparse -file test-output.json -format markdown >> test-summary.md || echo "tparse exited with $?"
           
           # Read file content into a multiline output variable
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
