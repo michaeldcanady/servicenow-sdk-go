@@ -95,8 +95,7 @@ jobs:
       - name: Build Go Code
         run: just build
 
-      lint-go:
-
+  lint-go:
     name: Lint Go Code
     needs:
       - changes
