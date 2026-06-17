@@ -152,9 +152,11 @@ jobs:
         if: steps.run-tests.outputs.test_failed == 'true'
         shell: bash
         run: |
+          echo "### ❌ Test Failures" > test-summary.md
+          tparse -file test-output.json -format markdown >> test-summary.md
+          # Read file content into environment variable using a robust method
           echo 'SUMMARY<<EOF' >> $GITHUB_ENV
-          echo "### ❌ Test Failures" >> $GITHUB_ENV
-          tparse -file test-output.json -format markdown >> $GITHUB_ENV
+          cat test-summary.md >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
       - name: Post Sticky Comment
         if: steps.run-tests.outputs.test_failed == 'true'
