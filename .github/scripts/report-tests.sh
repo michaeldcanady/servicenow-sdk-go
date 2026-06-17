@@ -3,22 +3,31 @@
 go test -json -v ./... > test-output.json
 TEST_EXIT_CODE=$?
 
-# Initialize report files
-echo "### 🧪 Go Test Report" > test-summary.md
-echo "" >> test-summary.md
+# Extract summary data using tparse to get totals
+PASS=$(tparse -file test-output.json -format markdown --summary | grep "Pass" | awk '{print $4}')
+FAIL=$(tparse -file test-output.json -format markdown --summary | grep "Fail" | awk '{print $4}')
+SKIP=$(tparse -file test-output.json -format markdown --summary | grep "Skip" | awk '{print $4}')
+TOTAL=$(($PASS + $FAIL + $SKIP))
 
-# 1. Summary Table
-echo "#### Summary" >> test-summary.md
-tparse -file test-output.json -format markdown --summary >> test-summary.md
-echo "" >> test-summary.md
-
-# 2. Collapsible Failed Tests
-echo "<details><summary>❌ Failed Tests</summary>" >> test-summary.md
-echo "" >> test-summary.md
-# We use tparse's ability to show just the failures
-tparse -file test-output.json -format markdown >> test-summary.md
-echo "" >> test-summary.md
-echo "</details>" >> test-summary.md
+# Construct the custom Markdown report
+{
+  echo "### Go Test Report"
+  echo "| Metric | Value |"
+  echo "| - | - |"
+  echo "| Total Tests | $TOTAL |"
+  echo "| Passed | $PASS |"
+  echo "| Failed | $FAIL |"
+  echo "| Skipped | $SKIP |"
+  echo ""
+  echo "### Failed Tests"
+  echo "<details>"
+  echo "<summary>Click to expand failed tests</summary>"
+  echo ""
+  # Use tparse to show just the failed test details
+  tparse -file test-output.json -format markdown
+  echo ""
+  echo "</details>"
+} > test-summary.md
 
 # Output to GitHub Actions Job Summary (Native visualization)
 echo "### 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
