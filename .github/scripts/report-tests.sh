@@ -7,17 +7,24 @@ TEST_EXIT_CODE=$?
 {
   echo "### 🧪 Go Test Report"
   echo ""
-  # Tparse summary is cleaner and automatically includes pass/fail counts
-  tparse -file test-output.json -format markdown --summary
+  
+  # 1. Full Package Table (tparse defaults to this without --summary)
+  tparse -file test-output.json -format markdown
   echo ""
+  
+  # 2. Collapsible Failed Tests
   echo "### ❌ Failed Tests"
   echo "<details>"
   echo "<summary>Click to expand failed tests</summary>"
   echo ""
-  # Tparse's default output without --summary shows failed tests
-  tparse -file test-output.json -format markdown
+  
+  # Extract failures and format specifically
+  # This relies on tparse structure to output failures
+  tparse -file test-output.json -format markdown --all | sed -n '/FAIL/,$p'
+  
   echo ""
   echo "</details>"
+  echo "<!-- Sticky Pull Request Commenttest-failure-summary -->"
 } > test-summary.md
 
 # Output to GitHub Actions Job Summary
