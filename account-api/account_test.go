@@ -9,14 +9,26 @@ import (
 )
 
 func TestAccountSerialization(t *testing.T) {
-	account := NewAccount()
-	name := "Boxeo EMEA"
-	err := account.setName(&name)
-	assert.NoError(t, err)
+	tests := []struct {
+		name string
+		val  string
+	}{
+		{"ValidName", "Boxeo EMEA"},
+		{"EmptyName", ""},
+	}
 
-	retrievedName, err := account.GetName()
-	assert.NoError(t, err)
-	assert.Equal(t, &name, retrievedName)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			account := NewAccount()
+			name := tt.val
+			err := account.setName(&name)
+			assert.NoError(t, err)
+
+			retrievedName, err := account.GetName()
+			assert.NoError(t, err)
+			assert.Equal(t, &name, retrievedName)
+		})
+	}
 }
 
 func TestAccountGettersSetters(t *testing.T) {
@@ -94,29 +106,35 @@ func TestAccountGettersSetters(t *testing.T) {
 }
 
 func TestAccountModel_GetFieldDeserializers(t *testing.T) {
-	account := NewAccount()
-	deserializers := account.GetFieldDeserializers()
-	assert.NotNil(t, deserializers)
-	assert.NotEmpty(t, deserializers)
+	t.Run("ValidDeserializers", func(t *testing.T) {
+		account := NewAccount()
+		deserializers := account.GetFieldDeserializers()
+		assert.NotNil(t, deserializers)
+		assert.NotEmpty(t, deserializers)
+	})
 }
 
 func TestAccountModel_Serialize(t *testing.T) {
-	account := NewAccount()
-	name := "test-account"
-	_ = account.setName(&name)
+	t.Run("SuccessfulSerialization", func(t *testing.T) {
+		account := NewAccount()
+		name := "test-account"
+		_ = account.setName(&name)
 
-	writer := &mocking.MockSerializationWriter{}
-	writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
-	writer.On("WriteObjectValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
-	writer.On("WriteAdditionalData", mock.Anything).Return(nil)
+		writer := &mocking.MockSerializationWriter{}
+		writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
+		writer.On("WriteObjectValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+		writer.On("WriteAdditionalData", mock.Anything).Return(nil)
 
-	err := account.Serialize(writer)
-	assert.NoError(t, err)
+		err := account.Serialize(writer)
+		assert.NoError(t, err)
+	})
 }
 
 func TestCreateAccountFromDiscriminatorValue(t *testing.T) {
-	instance, err := CreateAccountFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
-	assert.NotNil(t, instance)
-	assert.IsType(t, &AccountModel{}, instance)
+	t.Run("SuccessfulCreation", func(t *testing.T) {
+		instance, err := CreateAccountFromDiscriminatorValue(nil)
+		assert.NoError(t, err)
+		assert.NotNil(t, instance)
+		assert.IsType(t, &AccountModel{}, instance)
+	})
 }
