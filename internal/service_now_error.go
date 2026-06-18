@@ -13,81 +13,81 @@ const (
 	errorKey = "error"
 )
 
-// ServicenowError represents a Service-Now API error
-type ServicenowError struct {
+// ServiceNowError represents a Service-Now API error
+type ServiceNowError struct {
 	BackedModel
 }
 
 // BadRequestError represents a 400 Bad Request error
 type BadRequestError struct {
-	ServicenowError
+	ServiceNowError
 }
 
 // UnauthorizedError represents a 401 Unauthorized error
 type UnauthorizedError struct {
-	ServicenowError
+	ServiceNowError
 }
 
 // ForbiddenError represents a 403 Forbidden error
 type ForbiddenError struct {
-	ServicenowError
+	ServiceNowError
 }
 
 // NotFoundError represents a 404 Not Found error
 type NotFoundError struct {
-	ServicenowError
+	ServiceNowError
 }
 
 // TooManyRequestsError represents a 429 Too Many Requests error
 type TooManyRequestsError struct {
-	ServicenowError
+	ServiceNowError
 }
 
 // ServerError represents a 5XX Server error
 type ServerError struct {
-	ServicenowError
+	ServiceNowError
 }
 
-// NewServicenowError instantiates a new Service-Now error
-func NewServicenowError() *ServicenowError {
-	return &ServicenowError{
+// NewServiceNowError instantiates a new Service-Now error
+func NewServiceNowError() *ServiceNowError {
+	return &ServiceNowError{
 		NewBaseModel(),
 	}
 }
 
-// CreateServiceNowErrorFromDiscriminatorValue is a parsable factory for creating a ServicenowError
+// CreateServiceNowErrorFromDiscriminatorValue is a parsable factory for creating a ServiceNowError
 func CreateServiceNowErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewServicenowError(), nil
+	return NewServiceNowError(), nil
 }
 
 // CreateBadRequestErrorFromDiscriminatorValue creates a BadRequestError
 func CreateBadRequestErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return &BadRequestError{*NewServicenowError()}, nil
+	return &BadRequestError{*NewServiceNowError()}, nil
 }
 
 // CreateUnauthorizedErrorFromDiscriminatorValue creates a UnauthorizedError
 func CreateUnauthorizedErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return &UnauthorizedError{*NewServicenowError()}, nil
+	return &UnauthorizedError{*NewServiceNowError()}, nil
 }
 
 // CreateForbiddenErrorFromDiscriminatorValue creates a ForbiddenError
 func CreateForbiddenErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return &ForbiddenError{*NewServicenowError()}, nil
+	return &ForbiddenError{*NewServiceNowError()}, nil
 }
 
 // CreateNotFoundErrorFromDiscriminatorValue creates a NotFoundError
 func CreateNotFoundErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return &NotFoundError{*NewServicenowError()}, nil
+	return &NotFoundError{*NewServiceNowError()}, nil
 }
 
 // CreateTooManyRequestsErrorFromDiscriminatorValue creates a TooManyRequestsError
 func CreateTooManyRequestsErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return &TooManyRequestsError{*NewServicenowError()}, nil
+	return &TooManyRequestsError{*NewServiceNowError()}, nil
 }
 
 // CreateServerErrorFromDiscriminatorValue creates a ServerError
 func CreateServerErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return &ServerError{*NewServicenowError()}, nil
+	return &ServerError{*NewServiceNowError()}, nil
 }
 
 // DefaultErrorMapping returns the standard error mappings for Service-Now APIs.
@@ -104,7 +104,7 @@ func DefaultErrorMapping() abstractions.ErrorMappings {
 }
 
 // Serialize writes the objects properties to the current writer.
-func (exc *ServicenowError) Serialize(writer serialization.SerializationWriter) error {
+func (exc *ServiceNowError) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(exc) {
 		return nil
 	}
@@ -115,14 +115,14 @@ func (exc *ServicenowError) Serialize(writer serialization.SerializationWriter) 
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (exc *ServicenowError) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (exc *ServiceNowError) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		errorKey: internalSerialization.DeserializeObjectValueFunc[MainErrorable](CreateMainErrorFromDiscriminatorValue)(exc.setError),
 	}
 }
 
 // GetError returns the main error
-func (exc *ServicenowError) GetError() (MainErrorable, error) {
+func (exc *ServiceNowError) GetError() (MainErrorable, error) {
 	if conversion.IsNil(exc) {
 		return nil, nil
 	}
@@ -132,7 +132,7 @@ func (exc *ServicenowError) GetError() (MainErrorable, error) {
 }
 
 // setError sets the main error
-func (exc *ServicenowError) setError(mainError MainErrorable) error {
+func (exc *ServiceNowError) setError(mainError MainErrorable) error {
 	if conversion.IsNil(exc) {
 		return nil
 	}
@@ -141,7 +141,7 @@ func (exc *ServicenowError) setError(mainError MainErrorable) error {
 	return store.DefaultBackedModelMutatorFunc(backingStore, errorKey, mainError)
 }
 
-func (exc *ServicenowError) Error() string {
+func (exc *ServiceNowError) Error() string {
 	mainErr, _ := exc.GetError()
 	msg, _ := mainErr.GetMessage()
 	if msg != nil {

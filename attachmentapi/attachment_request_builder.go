@@ -159,17 +159,9 @@ func (rB *AttachmentRequestBuilder) ToHeadRequestInformation(_ context.Context, 
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.HEAD, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParams := requestConfiguration.QueryParameters; !conversion.IsNil(queryParams) {
-			kiotaRequestInfo.AddQueryParameters(queryParams)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil
@@ -183,17 +175,9 @@ func (rB *AttachmentRequestBuilder) ToGetRequestInformation(_ context.Context, r
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParams := requestConfiguration.QueryParameters; !conversion.IsNil(queryParams) {
-			kiotaRequestInfo.AddQueryParameters(queryParams)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil

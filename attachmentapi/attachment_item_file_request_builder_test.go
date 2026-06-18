@@ -212,7 +212,7 @@ func TestAttachmentItemFileRequestBuilder_ToGetRequestInformation(t *testing.T) 
 			},
 		},
 		{
-			name:                 "Successful - with headers",
+			name: "Successful - with headers",
 			requestConfiguration: &AttachmentItemFileRequestBuilderGetRequestConfiguration{
 				Headers: func() *abstractions.RequestHeaders {
 					h := abstractions.NewRequestHeaders()
@@ -234,7 +234,7 @@ func TestAttachmentItemFileRequestBuilder_ToGetRequestInformation(t *testing.T) 
 			},
 		},
 		{
-			name:                 "Successful - with options",
+			name: "Successful - with options",
 			requestConfiguration: &AttachmentItemFileRequestBuilderGetRequestConfiguration{
 				Options: func() []abstractions.RequestOption {
 					mockOption := mocking.NewMockRequestOption()

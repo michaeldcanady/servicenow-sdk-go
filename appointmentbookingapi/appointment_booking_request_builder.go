@@ -1,7 +1,10 @@
 package appointmentbookingapi
 
 import (
+	"maps"
+
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -19,30 +22,48 @@ func NewAppointmentBookingRequestBuilder(requestAdapter abstractions.RequestAdap
 
 // Appointment returns a RequestBuilder for the '/appointment' path.
 func (rB *AppointmentBookingRequestBuilder) Appointment() *AppointmentRequestBuilder {
-	return NewAppointmentRequestBuilder(rB.GetPathParameters(), rB.GetRequestAdapter())
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+	return NewAppointmentRequestBuilder(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // Availability returns a RequestBuilder for the '/availability' path.
 func (rB *AppointmentBookingRequestBuilder) Availability() *AvailabilityRequestBuilder {
-	return NewAvailabilityRequestBuilder(rB.GetPathParameters(), rB.GetRequestAdapter())
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+	return NewAvailabilityRequestBuilder(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // Calendar returns a RequestBuilder for the '/calendar' path.
 func (rB *AppointmentBookingRequestBuilder) Calendar() *CalendarRequestBuilder {
-	return NewCalendarRequestBuilder(rB.GetPathParameters(), rB.GetRequestAdapter())
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+	return NewCalendarRequestBuilder(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // Configuration returns a RequestBuilder for the '/configuration' path.
 func (rB *AppointmentBookingRequestBuilder) Configuration() *ConfigurationRequestBuilder {
-	return NewConfigurationRequestBuilder(rB.GetPathParameters(), rB.GetRequestAdapter())
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+	return NewConfigurationRequestBuilder(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // ExecuteRuleConditions returns a RequestBuilder for the '/execute_rule_conditions' path.
 func (rB *AppointmentBookingRequestBuilder) ExecuteRuleConditions() *ExecuteRuleConditionsRequestBuilder {
-	return NewExecuteRuleConditionsRequestBuilder(rB.GetPathParameters(), rB.GetRequestAdapter())
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+	return NewExecuteRuleConditionsRequestBuilder(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // UserWindow returns a RequestBuilder for the '/userwindow' path.
 func (rB *AppointmentBookingRequestBuilder) UserWindow() *UserWindowRequestBuilder {
-	return NewUserWindowRequestBuilder(rB.GetPathParameters(), rB.GetRequestAdapter())
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+	return NewUserWindowRequestBuilder(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

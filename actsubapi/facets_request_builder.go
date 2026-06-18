@@ -28,6 +28,10 @@ func NewFacetsRequestBuilderInternal(pathParameters map[string]string, requestAd
 
 // ByContext returns a FacetsContextRequestBuilder.
 func (rB *FacetsRequestBuilder) ByContext(activityContext string) *FacetsContextRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["activity_context"] = activityContext
 	return NewFacetsContextRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -49,6 +53,10 @@ func NewFacetsContextRequestBuilderInternal(pathParameters map[string]string, re
 
 // ByInstance returns a FacetsInstanceRequestBuilder.
 func (rB *FacetsContextRequestBuilder) ByInstance(contextInstance string) *FacetsInstanceRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["context_instance"] = contextInstance
 	return NewFacetsInstanceRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -70,12 +78,16 @@ func NewFacetsInstanceRequestBuilderInternal(pathParameters map[string]string, r
 
 // Get sends a GET request to retrieve facets.
 func (rB *FacetsInstanceRequestBuilder) Get(ctx context.Context, config *FacetsRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -89,19 +101,15 @@ func (rB *FacetsInstanceRequestBuilder) Get(ctx context.Context, config *FacetsR
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *FacetsInstanceRequestBuilder) ToGetRequestInformation(ctx context.Context, config *FacetsRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
-			kiotaRequestInfo.AddQueryParameters(queryParameters)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return requestInfo, nil

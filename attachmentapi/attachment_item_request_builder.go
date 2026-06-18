@@ -70,7 +70,10 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 		return nil, nil
 	}
 
-	requestInfo := rB.ToGetRequestInformation(ctx, requestConfiguration)
+	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
+	if err != nil {
+		return nil, err
+	}
 
 	errorMapping := internal.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*Attachment](CreateAttachmentFromDiscriminatorValue), errorMapping)
@@ -96,48 +99,43 @@ func (rB *AttachmentItemRequestBuilder) Delete(ctx context.Context, requestConfi
 		return nil
 	}
 
-	requestInfo := rB.ToDeleteRequestInformation(ctx, requestConfiguration)
+	requestInfo, err := rB.ToDeleteRequestInformation(ctx, requestConfiguration)
+	if err != nil {
+		return err
+	}
 
 	errorMapping := internal.DefaultErrorMapping()
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
 }
 
 // ToGetRequestInformation converts request configurations to Post request information.
-func (rB *AttachmentItemRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentItemRequestBuilderGetRequestConfiguration) *abstractions.RequestInformation {
+func (rB *AttachmentItemRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if rB.isNil() {
-		return nil
+		return nil, nil
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+
 	requestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
-	return kiotaRequestInfo.RequestInformation
+
+	return kiotaRequestInfo.RequestInformation, nil
 }
 
 // ToDeleteRequestInformation converts request configurations to Delete request information.
-func (rB *AttachmentItemRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *AttachmentItemRequestBuilderDeleteRequestConfiguration) *abstractions.RequestInformation {
+func (rB *AttachmentItemRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *AttachmentItemRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if rB.isNil() {
-		return nil
+		return nil, nil
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+
 	requestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
-	return kiotaRequestInfo.RequestInformation
+
+	return kiotaRequestInfo.RequestInformation, nil
 }

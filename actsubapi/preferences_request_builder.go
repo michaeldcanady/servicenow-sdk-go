@@ -28,12 +28,16 @@ func NewPreferencesRequestBuilderInternal(pathParameters map[string]string, requ
 
 // Post sends a POST request to create preferences.
 func (rB *PreferencesRequestBuilder) Post(ctx context.Context, body *ActivitySubscriptionModel, config *PreferencesRequestBuilderPostRequestConfiguration) (*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -47,16 +51,15 @@ func (rB *PreferencesRequestBuilder) Post(ctx context.Context, body *ActivitySub
 
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *PreferencesRequestBuilder) ToPostRequestInformation(ctx context.Context, body *ActivitySubscriptionModel, config *PreferencesRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	if !conversion.IsNil(body) {
@@ -71,6 +74,10 @@ func (rB *PreferencesRequestBuilder) ToPostRequestInformation(ctx context.Contex
 
 // ByProfileId returns a PreferenceItemRequestBuilder.
 func (rB *PreferencesRequestBuilder) ByProfileId(profileId string) *PreferenceItemRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["profileId"] = profileId
 	return NewPreferenceItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -92,12 +99,16 @@ func NewPreferenceItemRequestBuilderInternal(pathParameters map[string]string, r
 
 // Get sends a GET request to retrieve preferences.
 func (rB *PreferenceItemRequestBuilder) Get(ctx context.Context, config *PreferencesRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -111,19 +122,15 @@ func (rB *PreferenceItemRequestBuilder) Get(ctx context.Context, config *Prefere
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *PreferenceItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *PreferencesRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
-			kiotaRequestInfo.AddQueryParameters(queryParameters)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return requestInfo, nil

@@ -8,7 +8,7 @@ As the ServiceNow SDK for Go approaches its v2.0 release, it is essential to ens
 ## 2. Goals
 - **Architectural Purity**: Remove all "2" suffixes from internal packages and types (excluding protocol-specific names like `oauth2`).
 - **Dry Error Handling**: Centralize the repetitive `ErrorMappings` logic found across all RequestBuilders.
-- **Robustness**: Ensure `ServicenowError` is safe and informative, even when underlying data is missing.
+- **Robustness**: Ensure `ServiceNowError` is safe and informative, even when underlying data is missing.
 - **Debt Elimination**: Resolve remaining `TODO` markers and misleading documentation.
 
 ## 3. Requirements
@@ -23,7 +23,7 @@ As the ServiceNow SDK for Go approaches its v2.0 release, it is essential to ens
 - Update all `RequestBuilder` methods to use this central function instead of local map literals.
 
 ### 3.3 Error Model Safety
-- Update `ServicenowError.Error()` in `internal/service_now_error.go` to safely handle cases where `GetError()` or its components are nil.
+- Update `ServiceNowError.Error()` in `internal/service_now_error.go` to safely handle cases where `GetError()` or its components are nil.
 - Ensure the error message includes as much context as possible (Message, Detail, Status).
 
 ### 3.4 Technical Debt & Documentation
@@ -39,5 +39,5 @@ As the ServiceNow SDK for Go approaches its v2.0 release, it is essential to ens
 - [ ] `go test ./...` passes with 0 failures.
 - [ ] No `ast2` references remain in the codebase.
 - [ ] `ErrorMappings` is centralized and used everywhere.
-- [ ] `ServicenowError.Error()` does not panic on nil data.
+- [ ] `ServiceNowError.Error()` does not panic on nil data.
 - [ ] 0 `TODO` markers remaining in the core SDK packages.

@@ -18,6 +18,6 @@ func CreateMultipartBody(fileName string, contentType string, fileContent io.Rea
 	// Add table details
 	body.AddOrReplacePart("table_name", "", tableName)
 	body.AddOrReplacePart("table_sys_id", "", tableSysID)
-	
+
 	return body, nil
 }

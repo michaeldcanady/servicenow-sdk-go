@@ -32,4 +32,4 @@ To get started, you'll need to have the following tools installed:
 
 ## Reporting Bugs
 
-If you find a bug in Servicenow-SDK-Go, please report it by opening a new issue in the issue tracker. Please include as much detail as possible, including steps to reproduce the bug and any relevant error messages.
+If you find a bug in ServiceNow-SDK-Go, please report it by opening a new issue in the issue tracker. Please include as much detail as possible, including steps to reproduce the bug and any relevant error messages.

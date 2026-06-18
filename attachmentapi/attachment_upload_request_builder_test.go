@@ -245,7 +245,7 @@ func TestAttachmentUploadRequestBuilder_ToPostRequestInformation(t *testing.T) {
 			expectedMethod:       abstractions.POST,
 		},
 		{
-			name:                 "Successful - with headers",
+			name: "Successful - with headers",
 			requestConfiguration: &AttachmentUploadRequestBuilderPostRequestConfiguration{
 				Headers: func() *abstractions.RequestHeaders {
 					h := abstractions.NewRequestHeaders()
@@ -256,7 +256,7 @@ func TestAttachmentUploadRequestBuilder_ToPostRequestInformation(t *testing.T) {
 			expectedMethod: abstractions.POST,
 		},
 		{
-			name:                 "Successful - with options",
+			name: "Successful - with options",
 			requestConfiguration: &AttachmentUploadRequestBuilderPostRequestConfiguration{
 				Options: func() []abstractions.RequestOption {
 					mockOption := mocking.NewMockRequestOption()

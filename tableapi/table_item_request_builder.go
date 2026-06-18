@@ -48,11 +48,11 @@ func NewDefaultTableItemRequestBuilder(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 ) *TableItemRequestBuilder[*TableRecord] {
-	return NewTableItemRequestBuilder3[*TableRecord](rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
+	return NewTableItemRequestBuilder[*TableRecord](rawURL, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
-// NewTableItemRequestBuilder3 instantiates a new TableItemRequestBuilder with a raw URL and custom parsable.
-func NewTableItemRequestBuilder3[T model.ServiceNowItem](
+// NewTableItemRequestBuilder instantiates a new TableItemRequestBuilder with a raw URL and custom parsable.
+func NewTableItemRequestBuilder[T model.ServiceNowItem](
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 	factory serialization.ParsableFactory,
@@ -180,17 +180,9 @@ func (rB *TableItemRequestBuilder[T]) ToGetRequestInformation(_ context.Context,
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParams := requestConfiguration.QueryParameters; !conversion.IsNil(queryParams) {
-			kiotaRequestInfo.AddQueryParameters(queryParams)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil
@@ -204,17 +196,9 @@ func (rB *TableItemRequestBuilder[T]) ToDeleteRequestInformation(_ context.Conte
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParams := requestConfiguration.QueryParameters; !conversion.IsNil(queryParams) {
-			kiotaRequestInfo.AddQueryParameters(queryParams)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil
@@ -228,17 +212,9 @@ func (rB *TableItemRequestBuilder[T]) ToPutRequestInformation(ctx context.Contex
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParams := requestConfiguration.QueryParameters; !conversion.IsNil(queryParams) {
-			kiotaRequestInfo.AddQueryParameters(queryParams)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	if !conversion.IsNil(body) {
@@ -258,17 +234,9 @@ func (rB *TableItemRequestBuilder[T]) ToPatchRequestInformation(ctx context.Cont
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PATCH, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParams := requestConfiguration.QueryParameters; !conversion.IsNil(queryParams) {
-			kiotaRequestInfo.AddQueryParameters(queryParams)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	if !conversion.IsNil(body) {

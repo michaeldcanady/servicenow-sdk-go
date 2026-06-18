@@ -40,10 +40,10 @@ We will implement explicit error mapping for ServiceNow's common HTTP status cod
 | **404** | `NotFoundError` | `"404"` | The requested resource or record does not exist. |
 | **429** | `TooManyRequestsError` | `"429"` | Rate limit exceeded. |
 | **5XX** | `ServerError` | `"5XX"` | ServiceNow internal platform error. |
-| **XXX** | `ServicenowError` | `"XXX"` | Default fallback for other error codes. |
+| **XXX** | `ServiceNowError` | `"XXX"` | Default fallback for other error codes. |
 
 #### Implementation Steps:
-1. Define specific error structs in `internal/service_now_error.go` that embed `ServicenowError`.
+1. Define specific error structs in `internal/service_now_error.go` that embed `ServiceNowError`.
 2. Update `ErrorMappings` in all `RequestBuilders`:
    ```go
    errorMapping := abstractions.ErrorMappings{

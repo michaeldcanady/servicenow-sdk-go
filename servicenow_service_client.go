@@ -34,7 +34,6 @@ var (
 // ServiceNowServiceClient is the core service used by ServiceNowServiceClient to make requests to Service-Now's APIs
 type ServiceNowServiceClient struct {
 	internal.RequestBuilder
-	RequestAdapter abstractions.RequestAdapter
 }
 
 // registerDefaultSerializers registers default serializers
@@ -88,7 +87,6 @@ func NewServiceNowServiceClient(opts ...ServiceNowServiceClientOption) (*Service
 
 	return &ServiceNowServiceClient{
 		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, baseURLVariable, pathParameters),
-		RequestAdapter: requestAdapter,
 	}, nil
 }
 

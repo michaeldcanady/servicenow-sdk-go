@@ -61,7 +61,7 @@ func (c *tableTestContext) iRequestAllIncidentsFromTheTable(tableName string) er
 
 func (c *tableTestContext) theResponseShouldNotBeAnError() error {
 	if c.err != nil {
-		if snErr, ok := c.err.(*internal.ServicenowError); ok {
+		if snErr, ok := c.err.(*internal.ServiceNowError); ok {
 			return fmt.Errorf("expected no error, but got: %v (Message: %s, Detail: %s, Status: %s)",
 				c.err, snErr.Exception.Message, snErr.Exception.Detail, snErr.Status)
 		}

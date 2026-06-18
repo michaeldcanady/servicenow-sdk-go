@@ -28,6 +28,10 @@ func NewFollowingsRequestBuilderInternal(pathParameters map[string]string, reque
 
 // ByFollower returns a FollowingItemRequestBuilder.
 func (rB *FollowingsRequestBuilder) ByFollower(follower string) *FollowingItemRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["follower"] = follower
 	return NewFollowingItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -49,12 +53,16 @@ func NewFollowingItemRequestBuilderInternal(pathParameters map[string]string, re
 
 // Get sends a GET request to retrieve following.
 func (rB *FollowingItemRequestBuilder) Get(ctx context.Context, config *FollowingsRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -68,19 +76,15 @@ func (rB *FollowingItemRequestBuilder) Get(ctx context.Context, config *Followin
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *FollowingItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *FollowingsRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
-			kiotaRequestInfo.AddQueryParameters(queryParameters)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return requestInfo, nil

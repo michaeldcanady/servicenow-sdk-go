@@ -33,12 +33,17 @@ func (rB *AccountRequestBuilder) ByID(accountID string) *AccountItemRequestBuild
 
 // Get sends a GET request to retrieve a list of accounts.
 func (rB *AccountRequestBuilder) Get(ctx context.Context, config *AccountRequestBuilderGetRequestConfiguration) (AccountCollectionResponse, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAccountCollectionResponseFromDiscriminatorValue, nil)
+	errorMapping := internal.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAccountCollectionResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -51,21 +56,17 @@ func (rB *AccountRequestBuilder) Get(ctx context.Context, config *AccountRequest
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *AccountRequestBuilder) ToGetRequestInformation(ctx context.Context, config *AccountRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *AccountRequestBuilder) ToGetRequestInformation(_ context.Context, config *AccountRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
-			kiotaRequestInfo.AddQueryParameters(queryParameters)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
-	return requestInfo, nil
+	return kiotaRequestInfo.RequestInformation, nil
 }

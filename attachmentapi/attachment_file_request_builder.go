@@ -113,23 +113,15 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 
 // ToPostRequestInformation converts request configurations to Post request information.
 func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if conversion.IsNil(rB) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if parameters := requestConfiguration.QueryParameters; !conversion.IsNil(parameters) {
-			kiotaRequestInfo.AddQueryParameters(parameters)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	requestAdapter := rB.GetRequestAdapter()

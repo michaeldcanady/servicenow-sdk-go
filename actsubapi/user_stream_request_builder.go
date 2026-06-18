@@ -28,6 +28,10 @@ func NewUserStreamRequestBuilderInternal(pathParameters map[string]string, reque
 
 // ByProfileId returns a UserStreamItemRequestBuilder.
 func (rB *UserStreamRequestBuilder) ByProfileId(profileId string) *UserStreamItemRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["profileId"] = profileId
 	return NewUserStreamItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -49,12 +53,17 @@ func NewUserStreamItemRequestBuilderInternal(pathParameters map[string]string, r
 
 // Get sends a GET request to retrieve a specific user activity stream.
 func (rB *UserStreamItemRequestBuilder) Get(ctx context.Context, config *UserStreamRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
+	errorMapping := internal.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -67,33 +76,34 @@ func (rB *UserStreamItemRequestBuilder) Get(ctx context.Context, config *UserStr
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *UserStreamItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *UserStreamRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *UserStreamItemRequestBuilder) ToGetRequestInformation(_ context.Context, config *UserStreamRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
-			kiotaRequestInfo.AddQueryParameters(queryParameters)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
-	return requestInfo, nil
+	return kiotaRequestInfo.RequestInformation, nil
 }
 
 // Put sends a PUT request to update a specific user activity stream.
 func (rB *UserStreamItemRequestBuilder) Put(ctx context.Context, body *ActivitySubscriptionModel, config *UserStreamRequestBuilderPutRequestConfiguration) (*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
+	errorMapping := internal.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -107,16 +117,15 @@ func (rB *UserStreamItemRequestBuilder) Put(ctx context.Context, body *ActivityS
 
 // ToPutRequestInformation creates a RequestInformation object for a PUT request.
 func (rB *UserStreamItemRequestBuilder) ToPutRequestInformation(ctx context.Context, body *ActivitySubscriptionModel, config *UserStreamRequestBuilderPutRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	if !conversion.IsNil(body) {
@@ -126,5 +135,5 @@ func (rB *UserStreamItemRequestBuilder) ToPutRequestInformation(ctx context.Cont
 		}
 	}
 
-	return requestInfo, nil
+	return kiotaRequestInfo.RequestInformation, nil
 }

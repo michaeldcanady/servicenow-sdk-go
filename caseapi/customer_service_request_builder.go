@@ -4,6 +4,7 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -23,5 +24,8 @@ func NewCustomerServiceRequestBuilderInternal(pathParameters map[string]string, 
 
 // Case returns a CaseRequestBuilder.
 func (rB *CustomerServiceRequestBuilder) Case() *CaseRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewCaseRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

@@ -26,6 +26,9 @@ func NewCaseRequestBuilderInternal(pathParameters map[string]string, requestAdap
 
 // ByID returns a CaseItemRequestBuilder for the specified case ID.
 func (rB *CaseRequestBuilder) ByID(id string) *CaseItemRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["id"] = id
 	return NewCaseItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -33,6 +36,9 @@ func (rB *CaseRequestBuilder) ByID(id string) *CaseItemRequestBuilder {
 
 // FieldValues returns a CaseFieldValuesRequestBuilder for the specified field name.
 func (rB *CaseRequestBuilder) FieldValues(fieldName string) *CaseFieldValuesRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["field_name"] = fieldName
 	return NewCaseFieldValuesRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -40,12 +46,15 @@ func (rB *CaseRequestBuilder) FieldValues(fieldName string) *CaseFieldValuesRequ
 
 // Get sends a GET request to search cases.
 func (rB *CaseRequestBuilder) Get(ctx context.Context, config *CaseRequestBuilderGetRequestConfiguration) (CaseCollectionResponse, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCaseCollectionResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCaseCollectionResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -59,32 +68,29 @@ func (rB *CaseRequestBuilder) Get(ctx context.Context, config *CaseRequestBuilde
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *CaseRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CaseRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
-			kiotaRequestInfo.AddQueryParameters(queryParameters)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
-	return requestInfo, nil
+	return kiotaRequestInfo.RequestInformation, nil
 }
 
 // Post sends a POST request to create a case.
 func (rB *CaseRequestBuilder) Post(ctx context.Context, body CaseResult, config *CaseRequestBuilderPostRequestConfiguration) (CaseItemResponse, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCaseItemResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCaseItemResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -98,16 +104,13 @@ func (rB *CaseRequestBuilder) Post(ctx context.Context, body CaseResult, config 
 
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *CaseRequestBuilder) ToPostRequestInformation(ctx context.Context, body CaseResult, config *CaseRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
@@ -115,5 +118,5 @@ func (rB *CaseRequestBuilder) ToPostRequestInformation(ctx context.Context, body
 		return nil, err
 	}
 
-	return requestInfo, nil
+	return kiotaRequestInfo.RequestInformation, nil
 }

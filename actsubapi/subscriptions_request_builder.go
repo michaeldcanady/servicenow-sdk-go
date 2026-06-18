@@ -28,6 +28,10 @@ func NewSubscriptionsRequestBuilderInternal(pathParameters map[string]string, re
 
 // BySubscriberId returns a SubscriptionItemRequestBuilder.
 func (rB *SubscriptionsRequestBuilder) BySubscriberId(subscriberId string) *SubscriptionItemRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["subscriber_id"] = subscriberId
 	return NewSubscriptionItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -35,6 +39,10 @@ func (rB *SubscriptionsRequestBuilder) BySubscriberId(subscriberId string) *Subs
 
 // ByObjectId returns a SubscriptionObjectRequestBuilder.
 func (rB *SubscriptionsRequestBuilder) ByObjectId(subObjId string) *SubscriptionObjectRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["sub_obj_id"] = subObjId
 	return NewSubscriptionObjectRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -56,12 +64,16 @@ func NewSubscriptionItemRequestBuilderInternal(pathParameters map[string]string,
 
 // Get sends a GET request to retrieve a specific subscription.
 func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *SubscriptionsRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -75,19 +87,15 @@ func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *Subsc
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *SubscriptionItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *SubscriptionsRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
-			kiotaRequestInfo.AddQueryParameters(queryParameters)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return requestInfo, nil
@@ -109,16 +117,28 @@ func NewSubscriptionObjectRequestBuilderInternal(pathParameters map[string]strin
 
 // IsSubscribed returns an IsSubscribedRequestBuilder.
 func (rB *SubscriptionObjectRequestBuilder) IsSubscribed() *IsSubscribedRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	return NewIsSubscribedRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // Subscribe returns a SubscribeRequestBuilder.
 func (rB *SubscriptionObjectRequestBuilder) Subscribe() *SubscribeRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	return NewSubscribeRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // Unsubscribe returns an UnsubscribeRequestBuilder.
 func (rB *SubscriptionObjectRequestBuilder) Unsubscribe() *UnsubscribeRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	return NewUnsubscribeRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
@@ -138,12 +158,16 @@ func NewIsSubscribedRequestBuilderInternal(pathParameters map[string]string, req
 
 // Get sends a GET request to check if the current user is subscribed.
 func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscribedRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -157,19 +181,15 @@ func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscri
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *IsSubscribedRequestBuilder) ToGetRequestInformation(ctx context.Context, config *IsSubscribedRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
-			kiotaRequestInfo.AddQueryParameters(queryParameters)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return requestInfo, nil
@@ -191,12 +211,16 @@ func NewSubscribeRequestBuilderInternal(pathParameters map[string]string, reques
 
 // Post sends a POST request to subscribe to an object.
 func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubscriptionModel, config *SubscribeRequestBuilderPostRequestConfiguration) (*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -210,16 +234,15 @@ func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubsc
 
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *SubscribeRequestBuilder) ToPostRequestInformation(ctx context.Context, body *ActivitySubscriptionModel, config *SubscribeRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	if !conversion.IsNil(body) {
@@ -248,12 +271,16 @@ func NewUnsubscribeRequestBuilderInternal(pathParameters map[string]string, requ
 
 // Delete sends a DELETE request to unsubscribe from an object.
 func (rB *UnsubscribeRequestBuilder) Delete(ctx context.Context, config *UnsubscribeRequestBuilderDeleteRequestConfiguration) error {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	requestInfo, err := rB.ToDeleteRequestInformation(ctx, config)
 	if err != nil {
 		return err
 	}
 
-	err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, nil)
+	err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, internal.DefaultErrorMapping())
 	if err != nil {
 		return err
 	}
@@ -263,16 +290,15 @@ func (rB *UnsubscribeRequestBuilder) Delete(ctx context.Context, config *Unsubsc
 
 // ToDeleteRequestInformation creates a RequestInformation object for a DELETE request.
 func (rB *UnsubscribeRequestBuilder) ToDeleteRequestInformation(ctx context.Context, config *UnsubscribeRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(config) {
-		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return requestInfo, nil

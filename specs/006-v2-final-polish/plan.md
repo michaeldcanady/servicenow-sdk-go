@@ -22,7 +22,7 @@ Finalize the ServiceNow SDK for Go v2.0 release by cleaning up architectural art
     - Add `func DefaultErrorMapping() abstractions.ErrorMappings` to `internal/error.go` (or `internal/service_now_error.go`).
     - Replace all inline `ErrorMappings` literals in RequestBuilders with a call to this function.
 - **Stringer Safety**:
-    - Update `ServicenowError.Error()` to include nil checks for every level of the error model.
+    - Update `ServiceNowError.Error()` to include nil checks for every level of the error model.
     - Improve the error string format: `ServiceNow Error: [Status] [Message] - [Detail]`.
 
 ### Phase 3: Debt & Feature Gaps

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -141,10 +142,7 @@ func (rB *TableRequestBuilder[T]) Post(ctx context.Context, body T, requestConfi
 
 // ByID returns a TableItemRequestBuilder for the specified sysId.
 func (rB *TableRequestBuilder[T]) ByID(sysId string) *TableItemRequestBuilder[T] {
-	pathParameters := make(map[string]string)
-	for k, v := range rB.GetPathParameters() {
-		pathParameters[k] = v
-	}
+	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["sysId"] = sysId
 	return NewTableItemRequestBuilderInternal[T](pathParameters, rB.GetRequestAdapter(), rB.factory)
 }
@@ -184,9 +182,9 @@ func (rB *TableRequestBuilder[T]) ToGetRequestInformation(_ context.Context, req
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil
@@ -200,9 +198,9 @@ func (rB *TableRequestBuilder[T]) ToPostRequestInformation(ctx context.Context, 
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	if !conversion.IsNil(body) {
@@ -222,9 +220,9 @@ func (rB *TableRequestBuilder[T]) ToHeadRequestInformation(_ context.Context, re
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.HEAD, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
-	}
+
+	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+
 	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
 
 	return kiotaRequestInfo.RequestInformation, nil

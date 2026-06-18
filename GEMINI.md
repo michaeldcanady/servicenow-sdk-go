@@ -93,4 +93,5 @@ For every change, Gemini must output a "Commit-Ready Block" containing:
 <!-- SPECKIT START -->
 - [v2 Release Prep](specs/002-v2-release-prep/plan.md)
 - [Robust Testing Framework](specs/003-robust-testing-framework/plan.md)
+- [v2.0 Error Standardization](specs/007-v2-error-standardization/plan.md)
 <!-- SPECKIT END -->

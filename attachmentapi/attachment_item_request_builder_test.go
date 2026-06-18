@@ -300,7 +300,7 @@ func TestAttachmentItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 			},
 		},
 		{
-			name:                 "Successful - with headers",
+			name: "Successful - with headers",
 			requestConfiguration: &AttachmentItemRequestBuilderGetRequestConfiguration{
 				Headers: func() *abstractions.RequestHeaders {
 					h := abstractions.NewRequestHeaders()
@@ -321,7 +321,7 @@ func TestAttachmentItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 			},
 		},
 		{
-			name:                 "Successful - with options",
+			name: "Successful - with options",
 			requestConfiguration: &AttachmentItemRequestBuilderGetRequestConfiguration{
 				Options: func() []abstractions.RequestOption {
 					mockOption := mocking.NewMockRequestOption()
@@ -357,7 +357,7 @@ func TestAttachmentItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 				builder = &AttachmentItemRequestBuilder{tt.setupMocks()}
 			}
 
-			info := builder.ToGetRequestInformation(context.Background(), tt.requestConfiguration)
+			info, _ := builder.ToGetRequestInformation(context.Background(), tt.requestConfiguration)
 
 			if tt.validate != nil {
 				tt.validate(t, info)
@@ -389,7 +389,7 @@ func TestAttachmentItemRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
 			},
 		},
 		{
-			name:                 "Successful - with headers",
+			name: "Successful - with headers",
 			requestConfiguration: &AttachmentItemRequestBuilderDeleteRequestConfiguration{
 				Headers: func() *abstractions.RequestHeaders {
 					h := abstractions.NewRequestHeaders()
@@ -410,7 +410,7 @@ func TestAttachmentItemRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
 			},
 		},
 		{
-			name:                 "Successful - with options",
+			name: "Successful - with options",
 			requestConfiguration: &AttachmentItemRequestBuilderDeleteRequestConfiguration{
 				Options: func() []abstractions.RequestOption {
 					mockOption := mocking.NewMockRequestOption()
@@ -446,7 +446,7 @@ func TestAttachmentItemRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
 				builder = &AttachmentItemRequestBuilder{tt.setupMocks()}
 			}
 
-			info := builder.ToDeleteRequestInformation(context.Background(), tt.requestConfiguration)
+			info, _ := builder.ToDeleteRequestInformation(context.Background(), tt.requestConfiguration)
 
 			if tt.validate != nil {
 				tt.validate(t, info)

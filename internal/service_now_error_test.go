@@ -6,10 +6,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewServicenowError(t *testing.T) {
-	err := NewServicenowError()
+func TestNewServiceNowError(t *testing.T) {
+	err := NewServiceNowError()
 	if err == nil {
-		t.Fatal("NewServicenowError returned nil")
+		t.Fatal("NewServiceNowError returned nil")
 	}
 }
 
@@ -23,31 +23,31 @@ func TestCreateServiceNowErrorFromDiscriminatorValue(t *testing.T) {
 	}
 }
 
-func TestServicenowError_Serialize(t *testing.T) {
-	err := NewServicenowError().Serialize(nil)
+func TestServiceNowError_Serialize(t *testing.T) {
+	err := NewServiceNowError().Serialize(nil)
 	assert.NoError(t, err)
 
-	var nilE *ServicenowError
+	var nilE *ServiceNowError
 	err = nilE.Serialize(nil)
 	assert.NoError(t, err)
 }
 
-func TestServicenowError_GetFieldDeserializers(t *testing.T) {
-	deser := NewServicenowError().GetFieldDeserializers()
+func TestServiceNowError_GetFieldDeserializers(t *testing.T) {
+	deser := NewServiceNowError().GetFieldDeserializers()
 	if deser[errorKey] == nil {
 		t.Error("missing deserializer")
 	}
 }
 
-func TestServicenowError_GetError(t *testing.T) {
+func TestServiceNowError_GetError(t *testing.T) {
 	me := NewMainError()
-	e := NewServicenowError()
+	e := NewServiceNowError()
 	_ = e.setError(me)
-	var nilE *ServicenowError
+	var nilE *ServiceNowError
 
 	tests := []struct {
 		name     string
-		model    *ServicenowError
+		model    *ServiceNowError
 		expected MainErrorable
 		err      bool
 	}{
@@ -67,14 +67,14 @@ func TestServicenowError_GetError(t *testing.T) {
 	}
 }
 
-func TestServicenowError_setError(t *testing.T) {
+func TestServiceNowError_setError(t *testing.T) {
 	me := NewMainError()
-	e := NewServicenowError()
-	var nilE *ServicenowError
+	e := NewServiceNowError()
+	var nilE *ServiceNowError
 
 	tests := []struct {
 		name  string
-		model *ServicenowError
+		model *ServiceNowError
 		val   MainErrorable
 		err   bool
 	}{
@@ -91,14 +91,14 @@ func TestServicenowError_setError(t *testing.T) {
 	}
 }
 
-func TestServicenowError_ErrorBranches(t *testing.T) {
-	eWrongType := NewServicenowError()
+func TestServiceNowError_ErrorBranches(t *testing.T) {
+	eWrongType := NewServiceNowError()
 	_ = eWrongType.GetBackingStore().Set(errorKey, 123)
 	if _, err := eWrongType.GetError(); err == nil || err.Error() != "cannot convert '123' to type internal.MainErrorable" {
 		t.Errorf("Expected wrong type error, got %v", err)
 	}
 
-	eNilBS := &ServicenowError{BackedModel: &mockNilBSModel{}}
+	eNilBS := &ServiceNowError{BackedModel: &mockNilBSModel{}}
 	if err := eNilBS.setError(nil); err == nil || err.Error() != "backingStore is nil" {
 		t.Errorf("Expected BS nil error, got %v", err)
 	}
