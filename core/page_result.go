@@ -15,41 +15,39 @@ type PageResult[T serialization.Parsable] struct {
 	Result    []T
 }
 
+// convertToPage converts a ServiceNowCollectionResponse to a PageResult
 func convertToPage[T serialization.Parsable](response ServiceNowCollectionResponse[T]) (PageResult[T], error) {
+	var page PageResult[T]
+	var err error
+
 	if response == nil {
-		return PageResult[T]{}, errors.New("response cannot be nil")
+		return page, errors.New("response cannot be nil")
 	}
 
-	results, err := response.GetResult()
+	page.Result, err = response.GetResult()
 	if err != nil {
-		return PageResult[T]{}, err
+		return page, err
 	}
 
-	nextLink, err := response.GetNextLink()
+	page.NextLink, err = response.GetNextLink()
 	if err != nil {
-		return PageResult[T]{}, err
+		return page, err
 	}
 
-	prevLink, err := response.GetPreviousLink()
+	page.PrevLink, err = response.GetPreviousLink()
 	if err != nil {
-		return PageResult[T]{}, err
+		return page, err
 	}
 
-	firstLink, err := response.GetFirstLink()
+	page.FirstLink, err = response.GetFirstLink()
 	if err != nil {
-		return PageResult[T]{}, err
+		return page, err
 	}
 
-	lastLink, err := response.GetLastLink()
+	page.LastLink, err = response.GetLastLink()
 	if err != nil {
-		return PageResult[T]{}, err
+		return page, err
 	}
 
-	return PageResult[T]{
-		NextLink:  nextLink,
-		PrevLink:  prevLink,
-		FirstLink: firstLink,
-		LastLink:  lastLink,
-		Result:    results,
-	}, nil
+	return page, nil
 }

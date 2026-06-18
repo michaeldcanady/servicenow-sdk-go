@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
@@ -240,7 +241,7 @@ func TestPageIterator_PreviousItem(t *testing.T) {
 	}
 }
 
-func TestPageIterator_Navigation(t *testing.T) {
+func TestPageIterator_Next(t *testing.T) {
 	tests := []struct {
 		name      string
 		mockSetup func(*mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], *mocking.MockRequestAdapter)
@@ -455,6 +456,77 @@ func TestPageIterator_Reset(t *testing.T) {
 			iterator, err := NewPageIterator[*mocking.MockParsable](res, reqAdapter, nil)
 			require.NoError(t, err)
 			tt.run(t, iterator)
+		})
+	}
+}
+
+
+func TestPageIterator_Navigation_Errors(t *testing.T) {
+	tests := []struct {
+		name      string
+		mockSetup func(*mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], *mocking.MockRequestAdapter)
+		navFunc   func(context.Context, *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error)
+	}{
+		{
+			name: "Send error",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				link := "https://example.com/next"
+				res.On("GetNextLink").Return(&link, nil)
+				req.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, errors.New("send error"))
+			},
+			navFunc: func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
+				return pi.Next(ctx)
+			},
+		},
+		{
+			name: "Wrong response type",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				link := "https://example.com/next"
+				res.On("GetNextLink").Return(&link, nil)
+				// Return a mock that is not ServiceNowCollectionResponse
+				req.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&mocking.MockParsable{}, nil)
+			},
+			navFunc: func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
+				return pi.Next(ctx)
+			},
+		},
+
+		{
+			name: "convertToPage error",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				link := "https://example.com/next"
+				res.On("GetNextLink").Return(&link, nil)
+
+				// Return a response that will cause convertToPage to fail
+				badRes := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
+				// Return an empty slice instead of nil to avoid panic in mock
+				badRes.On("GetResult").Return([]*mocking.MockParsable{}, errors.New("get result error"))
+
+				req.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(badRes, nil)
+			},
+			navFunc: func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
+				return pi.Next(ctx)
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
+			res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
+			res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
+			res.On("GetPreviousLink").Return(nil, nil)
+			res.On("GetFirstLink").Return(nil, nil)
+			res.On("GetLastLink").Return(nil, nil)
+
+			reqAdapter := &mocking.MockRequestAdapter{}
+			tt.mockSetup(res, reqAdapter)
+
+			iterator, err := NewPageIterator[*mocking.MockParsable](res, reqAdapter, mocking.NewMockParsableFactory().Factory)
+			require.NoError(t, err)
+
+			_, err = tt.navFunc(context.Background(), iterator)
+			assert.Error(t, err)
 		})
 	}
 }
