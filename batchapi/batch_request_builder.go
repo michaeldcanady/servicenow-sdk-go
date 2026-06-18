@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -94,7 +95,7 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 	}
 
 	if conversion.IsNil(body) {
-		return nil, errors.New("body can't be nil")
+		return nil, snerrors.NewValidationError("body")
 	}
 
 	requestInfo, err := rB.toPostRequestInformation(ctx, body, requestConfiguration)
