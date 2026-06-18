@@ -40,7 +40,6 @@ var (
 	}
 )
 
-
 func newNumericRange(max, min float64, allowDecimal bool) *numericRange {
 	return &numericRange{
 		min:          min,

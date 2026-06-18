@@ -1,5 +1,4 @@
-
-package ast2
+package ast
 
 // BinaryNode represents a binary operation (e.g., field=value, fieldLIKEvalue).
 type BinaryNode struct {

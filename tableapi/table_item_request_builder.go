@@ -73,16 +73,7 @@ func (rB *TableItemRequestBuilder[T]) Get(ctx context.Context, requestConfigurat
 		return nil, err
 	}
 
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
-
+	errorMapping := internal.DefaultErrorMapping()
 	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
@@ -111,16 +102,7 @@ func (rB *TableItemRequestBuilder[T]) Delete(ctx context.Context, requestConfigu
 		return err
 	}
 
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
-
+	errorMapping := internal.DefaultErrorMapping()
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
 }
 
@@ -139,16 +121,7 @@ func (rB *TableItemRequestBuilder[T]) Put(ctx context.Context, body T, requestCo
 		return nil, err
 	}
 
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
-
+	errorMapping := internal.DefaultErrorMapping()
 	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
@@ -181,16 +154,7 @@ func (rB *TableItemRequestBuilder[T]) Patch(ctx context.Context, body T, request
 		return nil, err
 	}
 
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
-
+	errorMapping := internal.DefaultErrorMapping()
 	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err

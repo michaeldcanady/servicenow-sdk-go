@@ -1,5 +1,4 @@
-
-package ast2
+package ast
 
 // Primitive represents any base type.
 type Primitive interface {

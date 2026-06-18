@@ -31,16 +31,7 @@ func (rB *CmdbRelationItemRequestBuilder) Delete(ctx context.Context, config *Cm
 		return err
 	}
 
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
-
+	errorMapping := internal.DefaultErrorMapping()
 	err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
 	if err != nil {
 		return err

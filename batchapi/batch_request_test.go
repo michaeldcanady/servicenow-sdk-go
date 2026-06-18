@@ -146,7 +146,7 @@ func TestBatchRequest_AddRequest(t *testing.T) {
 				model := mocking.NewMockModel()
 				backingStore := mocking.NewMockBackingStore()
 				model.On("GetBackingStore").Return(backingStore)
-				
+
 				parsable := &BatchRequestModel{model}
 				req := newMockRestRequest()
 

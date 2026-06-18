@@ -50,10 +50,7 @@ func NewPageIterator[T serialization.Parsable](
 		return nil, err
 	}
 
-	errorMapping := abstractions.ErrorMappings{
-		"XXX": CreateServiceNowErrorFromDiscriminatorValue,
-	}
-
+	errorMapping := DefaultErrorMapping()
 	headerOpt := nethttplibrary.NewHeadersInspectionOptions()
 	headerOpt.InspectResponseHeaders = true
 

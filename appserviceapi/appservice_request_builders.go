@@ -68,15 +68,7 @@ func (rB *CreateRequestBuilder) Post(ctx context.Context, body *CreateServiceReq
 	if err != nil {
 		return nil, err
 	}
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
+	errorMapping := internal.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCreateServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
@@ -154,15 +146,7 @@ func (rB *FindServiceRequestBuilder) Get(ctx context.Context, config *FindServic
 	if err != nil {
 		return nil, err
 	}
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
+	errorMapping := internal.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateFindServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
@@ -210,15 +194,7 @@ func (rB *RegisterServiceRequestBuilder) Post(ctx context.Context, body *Registe
 	if err != nil {
 		return nil, err
 	}
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
+	errorMapping := internal.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateRegisterServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
@@ -289,15 +265,7 @@ func (rB *PopulateServiceRequestBuilder) Put(ctx context.Context, body *Populate
 	if err != nil {
 		return nil, err
 	}
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
+	errorMapping := internal.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreatePopulateServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
@@ -346,15 +314,7 @@ func (rB *ServiceDetailsRequestBuilder) Put(ctx context.Context, body *ServiceDe
 	if err != nil {
 		return nil, err
 	}
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
+	errorMapping := internal.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateServiceDetailsResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err

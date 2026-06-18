@@ -21,7 +21,7 @@ type ServiceNowServiceClientConfig struct {
 	rawURI                 string
 	backingStoreFactory    store.BackingStoreFactory
 	requestAdapterOptions  []internalHttp.ServiceNowRequestAdapterOption
-	logger                internal.Logger
+	logger                 internal.Logger
 }
 
 // newServiceNowClientConfig instantiates a new empty config with default values.

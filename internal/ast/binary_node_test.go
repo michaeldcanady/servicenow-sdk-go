@@ -1,5 +1,4 @@
-
-package ast2
+package ast
 
 import (
 	"testing"

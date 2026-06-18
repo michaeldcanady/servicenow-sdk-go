@@ -70,16 +70,7 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 		return nil, err
 	}
 
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
-
+	errorMapping := internal.DefaultErrorMapping()
 	requestAdapter := rB.GetRequestAdapter()
 	if conversion.IsNil(requestAdapter) {
 		return nil, errors.New("requestAdapter is nil")

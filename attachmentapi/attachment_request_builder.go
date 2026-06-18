@@ -104,16 +104,7 @@ func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguratio
 		return nil, err
 	}
 
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
-
+	errorMapping := internal.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachmentCollectionResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
@@ -152,16 +143,7 @@ func (rB *AttachmentRequestBuilder) Head(ctx context.Context, requestConfigurati
 		return nil, err
 	}
 
-	errorMapping := abstractions.ErrorMappings{
-		"400": internal.CreateBadRequestErrorFromDiscriminatorValue,
-		"401": internal.CreateUnauthorizedErrorFromDiscriminatorValue,
-		"403": internal.CreateForbiddenErrorFromDiscriminatorValue,
-		"404": internal.CreateNotFoundErrorFromDiscriminatorValue,
-		"429": internal.CreateTooManyRequestsErrorFromDiscriminatorValue,
-		"5XX": internal.CreateServerErrorFromDiscriminatorValue,
-		"XXX": internal.CreateServiceNowErrorFromDiscriminatorValue,
-	}
-
+	errorMapping := internal.DefaultErrorMapping()
 	if err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping); err != nil {
 		return nil, err
 	}

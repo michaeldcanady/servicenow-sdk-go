@@ -1,5 +1,4 @@
-
-package ast2
+package ast
 
 // PairNode represents a pair of values, typically used for BETWEEN.
 type PairNode struct {

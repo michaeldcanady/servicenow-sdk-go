@@ -38,7 +38,7 @@ func TestNewBatchRequestBuilderInternal(t *testing.T) {
 	}
 }
 
-func TestNewBatchRequestBuilder2(t *testing.T) {
+func TestNewBatchRequestBuilder(t *testing.T) {
 	tests := []struct {
 		name string
 		test func(*testing.T)

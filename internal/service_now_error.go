@@ -4,6 +4,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -87,6 +88,19 @@ func CreateTooManyRequestsErrorFromDiscriminatorValue(_ serialization.ParseNode)
 // CreateServerErrorFromDiscriminatorValue creates a ServerError
 func CreateServerErrorFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return &ServerError{*NewServicenowError()}, nil
+}
+
+// DefaultErrorMapping returns the standard error mappings for Service-Now APIs.
+func DefaultErrorMapping() abstractions.ErrorMappings {
+	return abstractions.ErrorMappings{
+		"400": CreateBadRequestErrorFromDiscriminatorValue,
+		"401": CreateUnauthorizedErrorFromDiscriminatorValue,
+		"403": CreateForbiddenErrorFromDiscriminatorValue,
+		"404": CreateNotFoundErrorFromDiscriminatorValue,
+		"429": CreateTooManyRequestsErrorFromDiscriminatorValue,
+		"5XX": CreateServerErrorFromDiscriminatorValue,
+		"XXX": CreateServiceNowErrorFromDiscriminatorValue,
+	}
 }
 
 // Serialize writes the objects properties to the current writer.

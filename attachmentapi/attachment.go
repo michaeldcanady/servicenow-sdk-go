@@ -84,7 +84,7 @@ func (rE *Attachment) Serialize(writer serialization.SerializationWriter) error 
 		internalSerialization.SerializeStringToInt64Func(sysModCountKey)(rE.GetSysModCount),
 		internalSerialization.SerializeStringFunc(contentTypeKey)(rE.GetContentType),
 		internalSerialization.SerializeStringToInt64Func(sizeCompressedKey)(rE.GetSizeCompressed),
-		internalSerialization.SerializeStringFunc(chunkSizeBytesKey)(rE.GetChunkSizeBytes),
+		internalSerialization.SerializeStringToInt64Func(chunkSizeBytesKey)(rE.GetChunkSizeBytes),
 		internalSerialization.SerializeStringFunc(hashKey)(rE.GetHash),
 		internalSerialization.SerializeStringFunc(stateKey)(rE.GetState),
 	)
@@ -121,7 +121,7 @@ func (rE *Attachment) getAdditionalFieldDeserializers() map[string]func(serializ
 		sysModCountKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSysModCount),
 		contentTypeKey:       internalSerialization.DeserializeStringFunc()(rE.setContentType),
 		sizeCompressedKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setSizeCompressed),
-		chunkSizeBytesKey:    internalSerialization.DeserializeStringFunc()(rE.setChunkSizeBytes),
+		chunkSizeBytesKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(rE.setChunkSizeBytes),
 		hashKey:              internalSerialization.DeserializeStringFunc()(rE.setHash),
 		stateKey:             internalSerialization.DeserializeStringFunc()(rE.setState),
 	}
@@ -483,19 +483,18 @@ func (rE *Attachment) setSizeCompressed(size *int64) error {
 	return store.DefaultBackedModelMutatorFunc(backingStore, sizeCompressedKey, size)
 }
 
-// TODO: should be int64
 // GetChunkSizeBytes returns chunk size (in bytes) of attachment
-func (rE *Attachment) GetChunkSizeBytes() (*string, error) {
+func (rE *Attachment) GetChunkSizeBytes() (*int64, error) {
 	if conversion.IsNil(rE) {
 		return nil, nil
 	}
 
 	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, chunkSizeBytesKey)
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int64](backingStore, chunkSizeBytesKey)
 }
 
 // setChunkSizeBytes sets chunk size to provided value
-func (rE *Attachment) setChunkSizeBytes(size *string) error {
+func (rE *Attachment) setChunkSizeBytes(size *int64) error {
 	if conversion.IsNil(rE) {
 		return nil
 	}

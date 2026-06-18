@@ -1,11 +1,10 @@
-
 package query
 
 import (
 	"testing"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast2"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
 )
 
 func TestDateTimeField_On(t *testing.T) {
@@ -515,11 +514,11 @@ func TestCoverageHacks(t *testing.T) {
 	df := DateTime("f")
 	tests := []struct {
 		name     string
-		op       ast2.Operator
+		op       ast.Operator
 		val      any
 		expected string
 	}{
-		{"DefaultBranch", ast2.OperatorIs, 123, "f=123"},
+		{"DefaultBranch", ast.OperatorIs, 123, "f=123"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

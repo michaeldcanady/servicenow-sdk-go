@@ -274,7 +274,7 @@ func TestAttachment_MetadataAccessors(t *testing.T) {
 	})
 
 	t.Run("ChunkSizeBytes", func(t *testing.T) {
-		v := "1024"
+		v := int64(1024)
 		_ = m.setChunkSizeBytes(&v)
 		res, _ := m.GetChunkSizeBytes()
 		if *res != v {

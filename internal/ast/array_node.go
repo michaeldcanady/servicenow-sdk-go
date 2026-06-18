@@ -1,5 +1,4 @@
-
-package ast2
+package ast
 
 // ArrayNode represents a list of values, typically used for IN/NOT IN.
 type ArrayNode struct {

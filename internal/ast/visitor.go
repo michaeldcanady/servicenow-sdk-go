@@ -1,5 +1,4 @@
-
-package ast2
+package ast
 
 // Visitor represents a visitor for the AST.
 type Visitor interface {
