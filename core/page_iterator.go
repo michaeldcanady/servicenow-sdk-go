@@ -40,7 +40,7 @@ func NewPageIterator[T serialization.Parsable](
 	res ServiceNowCollectionResponse[T],
 	reqAdapter abstractions.RequestAdapter,
 	constructorFunc serialization.ParsableFactory,
-	options ...internal.Option[*PageIterator[T]],
+	options ...PageIteratorOption[T],
 ) (*PageIterator[T], error) {
 	if reqAdapter == nil {
 		return nil, errors.New("reqAdapter can't be nil")
@@ -82,22 +82,6 @@ func (i *PageIterator[T]) Reset() {
 // ResetPage restarts the iteration of the current page.
 func (i *PageIterator[T]) ResetPage() {
 	i.pauseIndex = 0
-}
-
-// WithHeaders sets the headers for the next page request.
-func WithHeaders[T serialization.Parsable](headers *abstractions.RequestHeaders) internal.Option[*PageIterator[T]] {
-	return func(i *PageIterator[T]) error {
-		i.headers = headers
-		return nil
-	}
-}
-
-// WithRequestOptions adds the request options for the next page request.
-func WithRequestOptions[T serialization.Parsable](options ...abstractions.RequestOption) internal.Option[*PageIterator[T]] {
-	return func(i *PageIterator[T]) error {
-		i.reqOptions = append(i.reqOptions, options...)
-		return nil
-	}
 }
 
 // Iterate traverses the pages and invokes the callback for each item.
