@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strings"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -43,7 +44,7 @@ func NewPageIterator[T serialization.Parsable](
 	options ...PageIteratorOption[T],
 ) (*PageIterator[T], error) {
 	if reqAdapter == nil {
-		return nil, errors.New("reqAdapter can't be nil")
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	page, err := convertToPage(res)

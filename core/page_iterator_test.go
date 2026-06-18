@@ -46,7 +46,7 @@ func TestNewPageIterator(t *testing.T) {
 			reqAdapter:  nil,
 			constructor: parsableFactory,
 			wantErr:     true,
-			errMsg:      "reqAdapter can't be nil",
+			errMsg:      "requestAdapter cannot be nil",
 		},
 		{
 			name:        "Nil response",
@@ -459,7 +459,6 @@ func TestPageIterator_Reset(t *testing.T) {
 		})
 	}
 }
-
 
 func TestPageIterator_Navigation_Errors(t *testing.T) {
 	tests := []struct {
