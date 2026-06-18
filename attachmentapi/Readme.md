@@ -98,11 +98,10 @@ import (
 
 func main() {
     // Create multipart body
-body, contentType, err := attachmentapi.CreateMultipartBody("filename.txt", "text/plain", fileReader, "incident", "sys_id_here")
+body, err := attachmentapi.CreateMultipartBody("filename.txt", "text/plain", fileReader, "incident", "sys_id_here")
 if err != nil {
     // handle error
 }
-// Use contentType in request headers
 
     // Call the post method with your content type, data, and request configurations.
     // Response is the uploaded file.

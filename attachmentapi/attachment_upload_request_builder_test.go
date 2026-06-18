@@ -15,55 +15,53 @@ import (
 
 func TestNewAttachmentUploadRequestBuilderInternal(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name           string
+		pathParameters map[string]string
+		requestAdapter abstractions.RequestAdapter
 	}{
 		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				pathParameters := map[string]string{}
-				requestAdapter := mocking.NewMockRequestAdapter()
-
-				builder := NewAttachmentUploadRequestBuilderInternal(pathParameters, requestAdapter)
-
-				assert.IsType(t, &AttachmentUploadRequestBuilder{}, builder)
-				assert.IsType(t, &internal.BaseRequestBuilder{}, builder.RequestBuilder)
-				assert.Equal(t, pathParameters, builder.GetPathParameters())
-				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
-			},
+			name:           "Successful",
+			pathParameters: map[string]string{},
+			requestAdapter: mocking.NewMockRequestAdapter(),
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			builder := NewAttachmentUploadRequestBuilderInternal(tt.pathParameters, tt.requestAdapter)
+
+			assert.NotNil(t, builder)
+			assert.IsType(t, &AttachmentUploadRequestBuilder{}, builder)
+			assert.IsType(t, &internal.BaseRequestBuilder{}, builder.RequestBuilder)
+			assert.Equal(t, tt.pathParameters, builder.GetPathParameters())
+			assert.Equal(t, tt.requestAdapter, builder.GetRequestAdapter())
+		})
 	}
 }
 
 func TestNewAttachmentUploadRequestBuilder(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name           string
+		rawURL         string
+		requestAdapter abstractions.RequestAdapter
 	}{
 		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				rawURL := ""
-				requestAdapter := mocking.NewMockRequestAdapter()
-
-				urlParams := map[string]string{internal.RawURLKey: rawURL}
-
-				builder := NewAttachmentUploadRequestBuilder(rawURL, requestAdapter)
-
-				assert.IsType(t, &AttachmentUploadRequestBuilder{}, builder)
-				assert.IsType(t, &internal.BaseRequestBuilder{}, builder.RequestBuilder)
-				assert.Equal(t, urlParams, builder.GetPathParameters())
-				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
-			},
+			name:           "Successful",
+			rawURL:         "",
+			requestAdapter: mocking.NewMockRequestAdapter(),
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			builder := NewAttachmentUploadRequestBuilder(tt.rawURL, tt.requestAdapter)
+
+			assert.NotNil(t, builder)
+			assert.IsType(t, &AttachmentUploadRequestBuilder{}, builder)
+			assert.IsType(t, &internal.BaseRequestBuilder{}, builder.RequestBuilder)
+			assert.Equal(t, map[string]string{internal.RawURLKey: tt.rawURL}, builder.GetPathParameters())
+			assert.Equal(t, tt.requestAdapter, builder.GetRequestAdapter())
+		})
 	}
 }
 
@@ -72,6 +70,7 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 		name        string
 		setup       func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody)
 		expectedErr bool
+		nilRes      bool
 	}{
 		{
 			name: "Successful",
@@ -96,10 +95,8 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 			expectedErr: false,
 		},
 		{
-			name: "Missing Content-Type",
-			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
-				// empty body
-			},
+			name:        "Missing Content-Type",
+			setup:       func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {},
 			expectedErr: true,
 		},
 		{
@@ -194,24 +191,25 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
 			},
 			expectedErr: false,
+			nilRes:      true,
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
 			ra := mocking.NewMockRequestAdapter()
 			body := abstractions.NewMultipartBody()
-			test.setup(ra, body)
+			tt.setup(ra, body)
 
 			rb := NewAttachmentUploadRequestBuilder("url", ra)
 			res, err := rb.Post(context.Background(), body, nil)
 
-			if test.expectedErr {
+			if tt.expectedErr {
 				assert.Error(t, err)
 				assert.Nil(t, res)
 			} else {
 				assert.NoError(t, err)
-				if test.name == "Nil Result" {
+				if tt.nilRes {
 					assert.Nil(t, res)
 				} else {
 					assert.NotNil(t, res)
@@ -222,226 +220,91 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 }
 
 func TestAttachmentUploadRequestBuilder_ToPostRequestInformation(t *testing.T) {
+	setupMockSerialization := func(mockContent abstractions.MultipartBody) *mocking.MockSerializationWriterFactory {
+		mockSerializationWriter := mocking.NewMockSerializationWriter()
+		mockSerializationWriter.On("WriteObjectValue", "", mockContent, ([]serialization.Parsable)(nil)).Return(nil)
+		mockSerializationWriter.On("GetSerializedContent").Return([]byte("content"), nil)
+		mockSerializationWriter.On("Close").Return(nil)
+
+		mockSerializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+		mockSerializationWriterFactory.On("GetSerializationWriter", "application/json").Return(mockSerializationWriter, nil)
+		return mockSerializationWriterFactory
+	}
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name                 string
+		isNilBuilder         bool
+		requestConfiguration *AttachmentUploadRequestBuilderPostRequestConfiguration
+		headers              func() *abstractions.RequestHeaders
+		options              func() []abstractions.RequestOption
+		expectedMethod       abstractions.HttpMethod
 	}{
 		{
-			name: "Successful - minimal",
-			test: func(t *testing.T) {
-				mockContent := abstractions.NewMultipartBody()
-
-				mockSerializationWriter := mocking.NewMockSerializationWriter()
-				mockSerializationWriter.On("WriteObjectValue", "", mockContent, ([]serialization.Parsable)(nil)).Return(nil)
-				mockSerializationWriter.On("GetSerializedContent").Return([]byte("content"), nil)
-				mockSerializationWriter.On("Close").Return(nil)
-
-				mockSerializationWriterFactory := mocking.NewMockSerializationWriterFactory()
-				mockSerializationWriterFactory.On("GetSerializationWriter", "application/json").Return(mockSerializationWriter, nil)
-
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("GetSerializationWriterFactory").Return(mockSerializationWriterFactory)
-
-				mockPathParameters := map[string]string{}
-				mockPathParametersAny := map[string]any{}
-				mockQueryParameters := map[string]string{}
-				mockQueryParametersAny := map[string]any{}
-				mockHeaders := &abstractions.RequestHeaders{}
-				mockHeaders.Add("Accept", "application/json")
-				// TODO: has to include a boundary value, which is changing
-				mockHeaders.Add("content-type", "application/json")
-				mockURLTemplate := ""
-
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
-				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
-				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
-
-				expected := &abstractions.RequestInformation{
-					Method:             abstractions.POST,
-					UrlTemplate:        mockURLTemplate,
-					PathParameters:     mockPathParameters,
-					PathParametersAny:  mockPathParametersAny,
-					QueryParameters:    mockQueryParameters,
-					QueryParametersAny: mockQueryParametersAny,
-					Headers:            mockHeaders,
-				}
-
-				expected.AddRequestOptions([]abstractions.RequestOption{})
-
-				requestConfiguration := &AttachmentUploadRequestBuilderPostRequestConfiguration{}
-
-				builder := &AttachmentUploadRequestBuilder{mockInternalRequestBuilder}
-
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), mockContent, requestConfiguration)
-
-				assert.Nil(t, err)
-				assert.Equal(t, expected.Method, requestInformation.Method)
-				assert.Equal(t, expected.UrlTemplate, requestInformation.UrlTemplate)
-				assert.Equal(t, expected.PathParameters, requestInformation.PathParameters)
-				assert.Equal(t, expected.PathParametersAny, requestInformation.PathParametersAny)
-				assert.Equal(t, expected.QueryParameters, requestInformation.QueryParameters)
-				assert.Equal(t, expected.QueryParametersAny, requestInformation.QueryParametersAny)
-			},
+			name:                 "Successful - minimal",
+			requestConfiguration: &AttachmentUploadRequestBuilderPostRequestConfiguration{},
+			expectedMethod:       abstractions.POST,
 		},
 		{
-			name: "Successful - with headers",
-			test: func(t *testing.T) {
-				mockContent := abstractions.NewMultipartBody()
-
-				mockSerializationWriter := mocking.NewMockSerializationWriter()
-				mockSerializationWriter.On("WriteObjectValue", "", mockContent, ([]serialization.Parsable)(nil)).Return(nil)
-				mockSerializationWriter.On("GetSerializedContent").Return([]byte("content"), nil)
-				mockSerializationWriter.On("Close").Return(nil)
-
-				mockSerializationWriterFactory := mocking.NewMockSerializationWriterFactory()
-				mockSerializationWriterFactory.On("GetSerializationWriter", "application/json").Return(mockSerializationWriter, nil)
-
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("GetSerializationWriterFactory").Return(mockSerializationWriterFactory)
-
-				mockPathParameters := map[string]string{}
-				mockPathParametersAny := map[string]any{}
-				mockQueryParameters := map[string]string{}
-				mockQueryParametersAny := map[string]any{}
-				mockHeaders := &abstractions.RequestHeaders{}
-				mockHeaders.Add("Accept", "application/json")
-				// TODO: has to include a boundary value, which is changing
-				mockHeaders.Add("content-type", "application/json")
-				mockHeaders.Add("test", "test1")
-				mockURLTemplate := ""
-
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
-				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
-				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
-
-				expected := &abstractions.RequestInformation{
-					Method:             abstractions.POST,
-					UrlTemplate:        mockURLTemplate,
-					PathParameters:     mockPathParameters,
-					PathParametersAny:  mockPathParametersAny,
-					QueryParameters:    mockQueryParameters,
-					QueryParametersAny: mockQueryParametersAny,
-					Headers:            mockHeaders,
-					Content:            []byte("content"),
-				}
-
-				expected.AddRequestOptions([]abstractions.RequestOption{})
-
-				headers := &abstractions.RequestHeaders{}
-				headers.Add("test", "test1")
-
-				requestConfiguration := &AttachmentUploadRequestBuilderPostRequestConfiguration{
-					Headers: headers,
-				}
-
-				builder := &AttachmentUploadRequestBuilder{mockInternalRequestBuilder}
-
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), mockContent, requestConfiguration)
-
-				assert.Nil(t, err)
-				assert.Equal(t, expected.Method, requestInformation.Method)
-				assert.Equal(t, expected.UrlTemplate, requestInformation.UrlTemplate)
-				assert.Equal(t, expected.PathParameters, requestInformation.PathParameters)
-				assert.Equal(t, expected.PathParametersAny, requestInformation.PathParametersAny)
-				assert.Equal(t, expected.QueryParameters, requestInformation.QueryParameters)
-				assert.Equal(t, expected.QueryParametersAny, requestInformation.QueryParametersAny)
+			name:                 "Successful - with headers",
+			requestConfiguration: &AttachmentUploadRequestBuilderPostRequestConfiguration{
+				Headers: func() *abstractions.RequestHeaders {
+					h := abstractions.NewRequestHeaders()
+					h.Add("test", "test1")
+					return h
+				}(),
 			},
+			expectedMethod: abstractions.POST,
 		},
 		{
-			name: "Successful - with options",
-			test: func(t *testing.T) {
-				mockContent := abstractions.NewMultipartBody()
-
-				mockSerializationWriter := mocking.NewMockSerializationWriter()
-				mockSerializationWriter.On("WriteObjectValue", "", mockContent, ([]serialization.Parsable)(nil)).Return(nil)
-				mockSerializationWriter.On("GetSerializedContent").Return([]byte("content"), nil)
-				mockSerializationWriter.On("Close").Return(nil)
-
-				mockSerializationWriterFactory := mocking.NewMockSerializationWriterFactory()
-				mockSerializationWriterFactory.On("GetSerializationWriter", "application/json").Return(mockSerializationWriter, nil)
-
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("GetSerializationWriterFactory").Return(mockSerializationWriterFactory)
-
-				mockPathParameters := map[string]string{}
-				mockPathParametersAny := map[string]any{}
-				mockQueryParameters := map[string]string{}
-				mockQueryParametersAny := map[string]any{}
-				mockHeaders := &abstractions.RequestHeaders{}
-				mockHeaders.Add("Accept", "application/json")
-				// TODO: has to include a boundary value, which is changing
-				mockHeaders.Add("content-type", "application/json")
-				mockURLTemplate := ""
-
-				mockRequestOption := mocking.NewMockRequestOption()
-				mockRequestOption.On("GetKey").Return(abstractions.RequestOptionKey{Key: "key"})
-
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
-				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
-				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
-
-				expected := &abstractions.RequestInformation{
-					Method:             abstractions.POST,
-					UrlTemplate:        mockURLTemplate,
-					PathParameters:     mockPathParameters,
-					PathParametersAny:  mockPathParametersAny,
-					QueryParameters:    mockQueryParameters,
-					QueryParametersAny: mockQueryParametersAny,
-					Headers:            mockHeaders,
-					Content:            []byte("content"),
-				}
-
-				expected.AddRequestOptions([]abstractions.RequestOption{mockRequestOption})
-
-				requestConfiguration := &AttachmentUploadRequestBuilderPostRequestConfiguration{
-					Options: []abstractions.RequestOption{mockRequestOption},
-				}
-
-				builder := &AttachmentUploadRequestBuilder{mockInternalRequestBuilder}
-
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), mockContent, requestConfiguration)
-
-				assert.Nil(t, err)
-				assert.Equal(t, expected.Method, requestInformation.Method)
-				assert.Equal(t, expected.UrlTemplate, requestInformation.UrlTemplate)
-				assert.Equal(t, expected.PathParameters, requestInformation.PathParameters)
-				assert.Equal(t, expected.PathParametersAny, requestInformation.PathParametersAny)
-				assert.Equal(t, expected.QueryParameters, requestInformation.QueryParameters)
-				assert.Equal(t, expected.QueryParametersAny, requestInformation.QueryParametersAny)
+			name:                 "Successful - with options",
+			requestConfiguration: &AttachmentUploadRequestBuilderPostRequestConfiguration{
+				Options: func() []abstractions.RequestOption {
+					mockOption := mocking.NewMockRequestOption()
+					mockOption.On("GetKey").Return(abstractions.RequestOptionKey{Key: "key"})
+					return []abstractions.RequestOption{mockOption}
+				}(),
 			},
+			expectedMethod: abstractions.POST,
 		},
 		{
-			name: "Nil model",
-			test: func(t *testing.T) {
-				mockContent := abstractions.NewMultipartBody()
-
-				mockSerializationWriter := mocking.NewMockSerializationWriter()
-				mockSerializationWriter.On("WriteObjectValue", "", mockContent, ([]serialization.Parsable)(nil)).Return(nil)
-				mockSerializationWriter.On("GetSerializedContent").Return([]byte("content"), nil)
-				mockSerializationWriter.On("Close").Return(nil)
-
-				mockSerializationWriterFactory := mocking.NewMockSerializationWriterFactory()
-				mockSerializationWriterFactory.On("GetSerializationWriter", "application/json").Return(mockSerializationWriter, nil)
-
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("GetSerializationWriterFactory").Return(mockSerializationWriterFactory)
-
-				requestConfiguration := &AttachmentUploadRequestBuilderPostRequestConfiguration{}
-
-				builder := (*AttachmentUploadRequestBuilder)(nil)
-
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), mockContent, requestConfiguration)
-
-				assert.Nil(t, requestInformation)
-				assert.Nil(t, err)
-			},
+			name:                 "Nil model",
+			isNilBuilder:         true,
+			requestConfiguration: &AttachmentUploadRequestBuilderPostRequestConfiguration{},
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockContent := abstractions.NewMultipartBody()
+			mockRequestAdapter := mocking.NewMockRequestAdapter()
+			mockRequestAdapter.On("GetSerializationWriterFactory").Return(setupMockSerialization(mockContent))
+
+			mockInternal := mocking.NewMockRequestBuilder()
+			mockInternal.On("GetRequestAdapter").Return(mockRequestAdapter)
+			mockInternal.On("GetURLTemplate").Return("")
+			mockInternal.On("GetPathParameters").Return(map[string]string{})
+
+			var builder *AttachmentUploadRequestBuilder
+			if !tt.isNilBuilder {
+				builder = &AttachmentUploadRequestBuilder{mockInternal}
+			}
+
+			info, err := builder.ToPostRequestInformation(context.Background(), mockContent, tt.requestConfiguration)
+
+			if tt.isNilBuilder {
+				assert.Nil(t, info)
+				assert.Nil(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.expectedMethod, info.Method)
+				if tt.requestConfiguration.Headers != nil {
+					val := info.Headers.Get("test")
+					assert.Equal(t, []string{"test1"}, val)
+				}
+				if tt.requestConfiguration.Options != nil {
+					assert.Len(t, info.GetRequestOptions(), 1)
+				}
+			}
+		})
 	}
 }

@@ -1,37 +1,23 @@
 package attachmentapi
 
 import (
-	"bytes"
 	"io"
-	"mime/multipart"
+
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
 // CreateMultipartBody creates a multipart/form-data body for attachment uploads.
 // It maps the file data to the expected ServiceNow attachment API fields.
-func CreateMultipartBody(fileName string, contentType string, fileContent io.Reader, tableName string, tableSysID string) (*bytes.Buffer, string, error) {
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
+func CreateMultipartBody(fileName string, contentType string, fileContent io.Reader, tableName string, tableSysID string) (serialization.Parsable, error) {
+	body := abstractions.NewMultipartBody()
 
 	// Add file content
-	part, err := writer.CreateFormFile("file", fileName)
-	if err != nil {
-		return nil, "", err
-	}
-	if _, err := io.Copy(part, fileContent); err != nil {
-		return nil, "", err
-	}
+	body.AddOrReplacePart("file", fileName, fileContent)
 
 	// Add table details
-	if err := writer.WriteField("table_name", tableName); err != nil {
-		return nil, "", err
-	}
-	if err := writer.WriteField("table_sys_id", tableSysID); err != nil {
-		return nil, "", err
-	}
-
-	if err := writer.Close(); err != nil {
-		return nil, "", err
-	}
-
-	return body, writer.FormDataContentType(), nil
+	body.AddOrReplacePart("table_name", "", tableName)
+	body.AddOrReplacePart("table_sys_id", "", tableSysID)
+	
+	return body, nil
 }
