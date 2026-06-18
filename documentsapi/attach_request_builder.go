@@ -3,6 +3,7 @@ package documentsapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -15,18 +16,18 @@ const (
 
 // AttachRequestBuilder provides operations to manage the attach endpoint.
 type AttachRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewAttachRequestBuilderInternal instantiates a new AttachRequestBuilder.
 func NewAttachRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AttachRequestBuilder {
 	return &AttachRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, attachURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, attachURLTemplate, pathParameters),
 	}
 }
 
 // Post attaches a document using the specified provider.
-func (rB *AttachRequestBuilder) Post(ctx context.Context, requestConfiguration *AttachRequestBuilderPostRequestConfiguration) (*internal.BaseServiceNowItemResponse[Document], error) {
+func (rB *AttachRequestBuilder) Post(ctx context.Context, requestConfiguration *AttachRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[Document], error) {
 	if conversion.IsNil(rB) {
 		return nil, nil
 	}
@@ -36,8 +37,8 @@ func (rB *AttachRequestBuilder) Post(ctx context.Context, requestConfiguration *
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[Document](CreateDocumentFromDiscriminatorValue), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[Document](CreateDocumentFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +47,7 @@ func (rB *AttachRequestBuilder) Post(ctx context.Context, requestConfiguration *
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowItemResponse[Document]), nil
+	return res.(*core.BaseServiceNowItemResponse[Document]), nil
 }
 
 // ToPostRequestInformation ...

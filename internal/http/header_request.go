@@ -1,4 +1,4 @@
-package internal
+package http
 
 // RequestHeader A request header is an HTTP header that can be used in an HTTP request to provide information about
 // the request context, so that the server can tailor the response.

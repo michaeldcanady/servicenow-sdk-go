@@ -1,13 +1,14 @@
-package internal
+package core
 
 import (
 	"errors"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
-type ModelOption = Option[Model]
+type ModelOption = internal.Option[Model]
 
 type backingStoreSettableOption[T BackingStoreFactorySetter] func(T) error
 

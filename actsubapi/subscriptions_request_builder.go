@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -16,13 +17,13 @@ const (
 
 // SubscriptionsRequestBuilder provides operations to manage subscriptions.
 type SubscriptionsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewSubscriptionsRequestBuilderInternal instantiates a new SubscriptionsRequestBuilder.
 func NewSubscriptionsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SubscriptionsRequestBuilder {
 	return &SubscriptionsRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, subscriptionsURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, subscriptionsURLTemplate, pathParameters),
 	}
 }
 
@@ -50,7 +51,7 @@ func (rB *SubscriptionsRequestBuilder) ByObjectId(subObjId string) *Subscription
 
 // SubscriptionItemRequestBuilder provides operations to manage a specific subscription.
 type SubscriptionItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 const subscriptionItemURLTemplate = "{+baseurl}/api/now/v1/actsub/subscriptions/{subscriber_id}"
@@ -58,12 +59,12 @@ const subscriptionItemURLTemplate = "{+baseurl}/api/now/v1/actsub/subscriptions/
 // NewSubscriptionItemRequestBuilderInternal instantiates a new SubscriptionItemRequestBuilder.
 func NewSubscriptionItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SubscriptionItemRequestBuilder {
 	return &SubscriptionItemRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, subscriptionItemURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, subscriptionItemURLTemplate, pathParameters),
 	}
 }
 
 // Get sends a GET request to retrieve a specific subscription.
-func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *SubscriptionsRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *SubscriptionsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -73,7 +74,7 @@ func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *Subsc
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +83,7 @@ func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *Subsc
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
@@ -103,7 +104,7 @@ func (rB *SubscriptionItemRequestBuilder) ToGetRequestInformation(ctx context.Co
 
 // SubscriptionObjectRequestBuilder provides operations to manage subscriptions for a specific object.
 type SubscriptionObjectRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 const subscriptionObjectURLTemplate = "{+baseurl}/api/now/v1/actsub/subscriptions/{sub_obj_id}"
@@ -111,7 +112,7 @@ const subscriptionObjectURLTemplate = "{+baseurl}/api/now/v1/actsub/subscription
 // NewSubscriptionObjectRequestBuilderInternal instantiates a new SubscriptionObjectRequestBuilder.
 func NewSubscriptionObjectRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SubscriptionObjectRequestBuilder {
 	return &SubscriptionObjectRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, subscriptionObjectURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, subscriptionObjectURLTemplate, pathParameters),
 	}
 }
 
@@ -144,7 +145,7 @@ func (rB *SubscriptionObjectRequestBuilder) Unsubscribe() *UnsubscribeRequestBui
 
 // IsSubscribedRequestBuilder provides operations to check if the current user is subscribed to an object.
 type IsSubscribedRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 const isSubscribedURLTemplate = "{+baseurl}/api/now/v1/actsub/subscriptions/{sub_obj_id}/isSubscribed"
@@ -152,12 +153,12 @@ const isSubscribedURLTemplate = "{+baseurl}/api/now/v1/actsub/subscriptions/{sub
 // NewIsSubscribedRequestBuilderInternal instantiates a new IsSubscribedRequestBuilder.
 func NewIsSubscribedRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *IsSubscribedRequestBuilder {
 	return &IsSubscribedRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, isSubscribedURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, isSubscribedURLTemplate, pathParameters),
 	}
 }
 
 // Get sends a GET request to check if the current user is subscribed.
-func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscribedRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscribedRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -167,7 +168,7 @@ func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscri
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -176,7 +177,7 @@ func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscri
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
@@ -197,7 +198,7 @@ func (rB *IsSubscribedRequestBuilder) ToGetRequestInformation(ctx context.Contex
 
 // SubscribeRequestBuilder provides operations to subscribe to an object.
 type SubscribeRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 const subscribeURLTemplate = "{+baseurl}/api/now/v1/actsub/subscriptions/{sub_obj_id}/subscribe"
@@ -205,12 +206,12 @@ const subscribeURLTemplate = "{+baseurl}/api/now/v1/actsub/subscriptions/{sub_ob
 // NewSubscribeRequestBuilderInternal instantiates a new SubscribeRequestBuilder.
 func NewSubscribeRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SubscribeRequestBuilder {
 	return &SubscribeRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, subscribeURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, subscribeURLTemplate, pathParameters),
 	}
 }
 
 // Post sends a POST request to subscribe to an object.
-func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubscriptionModel, config *SubscribeRequestBuilderPostRequestConfiguration) (*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubscriptionModel, config *SubscribeRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -220,7 +221,7 @@ func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubsc
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -229,7 +230,7 @@ func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubsc
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
 }
 
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
@@ -257,7 +258,7 @@ func (rB *SubscribeRequestBuilder) ToPostRequestInformation(ctx context.Context,
 
 // UnsubscribeRequestBuilder provides operations to unsubscribe from an object.
 type UnsubscribeRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 const unsubscribeURLTemplate = "{+baseurl}/api/now/v1/actsub/subscriptions/{sub_obj_id}/unsubscribe"
@@ -265,7 +266,7 @@ const unsubscribeURLTemplate = "{+baseurl}/api/now/v1/actsub/subscriptions/{sub_
 // NewUnsubscribeRequestBuilderInternal instantiates a new UnsubscribeRequestBuilder.
 func NewUnsubscribeRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UnsubscribeRequestBuilder {
 	return &UnsubscribeRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, unsubscribeURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, unsubscribeURLTemplate, pathParameters),
 	}
 }
 
@@ -280,7 +281,7 @@ func (rB *UnsubscribeRequestBuilder) Delete(ctx context.Context, config *Unsubsc
 		return err
 	}
 
-	err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, internal.DefaultErrorMapping())
+	err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, core.DefaultErrorMapping())
 	if err != nil {
 		return err
 	}

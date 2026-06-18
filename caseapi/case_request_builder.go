@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -14,13 +15,13 @@ const caseURLTemplate = "{+baseurl}/api/sn_customerservice/v1/case{?sysparm_quer
 
 // CaseRequestBuilder provides operations to manage cases.
 type CaseRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewCaseRequestBuilderInternal instantiates a new CaseRequestBuilder with the provided request parameters.
 func NewCaseRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CaseRequestBuilder {
 	return &CaseRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, caseURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, caseURLTemplate, pathParameters),
 	}
 }
 
@@ -54,7 +55,7 @@ func (rB *CaseRequestBuilder) Get(ctx context.Context, config *CaseRequestBuilde
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCaseCollectionResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCaseCollectionResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +91,7 @@ func (rB *CaseRequestBuilder) Post(ctx context.Context, body CaseResult, config 
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCaseItemResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCaseItemResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}

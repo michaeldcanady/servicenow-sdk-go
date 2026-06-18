@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -19,11 +20,11 @@ const (
 
 // AttachmentItemFileRequestBuilder provides operations to manage Service-Now attachments.
 type AttachmentItemFileRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // newAttachmentItemFileRequestBuilderInternal instantiates a new AttachmentItemFileRequestBuilder with the provided requestBuilder
-func newAttachmentItemFileRequestBuilderInternal(requestBuilder internal.RequestBuilder) *AttachmentItemFileRequestBuilder {
+func newAttachmentItemFileRequestBuilderInternal(requestBuilder core.RequestBuilder) *AttachmentItemFileRequestBuilder {
 	m := &AttachmentItemFileRequestBuilder{
 		requestBuilder,
 	}
@@ -36,7 +37,7 @@ func NewAttachmentItemFileRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentItemFileRequestBuilder {
 	return newAttachmentItemFileRequestBuilderInternal(
-		internal.NewBaseRequestBuilder(requestAdapter, attachmentItemFileURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, attachmentItemFileURLTemplate, pathParameters),
 	)
 }
 
@@ -70,7 +71,7 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	requestAdapter := rB.GetRequestAdapter()
 	if conversion.IsNil(requestAdapter) {
 		return nil, errors.New("requestAdapter is nil")

@@ -1,7 +1,7 @@
 package appointmentbookingapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -11,11 +11,11 @@ import (
 )
 
 // AvailabilityResponse represents the availability response.
-type AvailabilityResponse = internal.ServiceNowItemResponse[*AvailabilityResultModel]
+type AvailabilityResponse = core.ServiceNowItemResponse[*AvailabilityResultModel]
 
 // CreateAvailabilityResponseFromDiscriminatorValue is a factory for creating an AvailabilityResponse.
 func CreateAvailabilityResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return internal.NewBaseServiceNowItemResponse[*AvailabilityResultModel](CreateAvailabilityResultFromDiscriminatorValue), nil
+	return core.NewBaseServiceNowItemResponse[*AvailabilityResultModel](CreateAvailabilityResultFromDiscriminatorValue), nil
 }
 
 // AvailabilityResult represents the result object in availability response.
@@ -40,11 +40,11 @@ type AvailabilityResult interface {
 }
 
 type AvailabilityResultModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewAvailabilityResult() *AvailabilityResultModel {
-	return &AvailabilityResultModel{BaseModel: *internal.NewBaseModel()}
+	return &AvailabilityResultModel{BaseModel: *core.NewBaseModel()}
 }
 
 func CreateAvailabilityResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
@@ -128,11 +128,11 @@ type AvailabilitySlot interface {
 }
 
 type AvailabilitySlotModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewAvailabilitySlot() *AvailabilitySlotModel {
-	return &AvailabilitySlotModel{BaseModel: *internal.NewBaseModel()}
+	return &AvailabilitySlotModel{BaseModel: *core.NewBaseModel()}
 }
 
 func CreateAvailabilitySlotFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {

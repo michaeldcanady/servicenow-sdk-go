@@ -5,6 +5,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -26,7 +27,7 @@ func TestNewAttachmentFileRequestBuilderInternal(t *testing.T) {
 				builder := NewAttachmentFileRequestBuilderInternal(pathParameters, requestAdapter)
 
 				assert.IsType(t, &AttachmentFileRequestBuilder{}, builder)
-				assert.IsType(t, &internal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.IsType(t, &core.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, pathParameters, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},
@@ -54,7 +55,7 @@ func TestNewAttachmentFileRequestBuilder(t *testing.T) {
 				builder := NewAttachmentFileRequestBuilder(rawURL, requestAdapter)
 
 				assert.IsType(t, &AttachmentFileRequestBuilder{}, builder)
-				assert.IsType(t, &internal.BaseRequestBuilder{}, builder.RequestBuilder)
+				assert.IsType(t, &core.BaseRequestBuilder{}, builder.RequestBuilder)
 				assert.Equal(t, urlParams, builder.GetPathParameters())
 				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
 			},
@@ -83,7 +84,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockHeaders.Add("Content-Type", "application/json")
 				mockContent := []byte("testing")
 				mockURLTemplate := ""
-				mockParsable := internal.NewBaseServiceNowItemResponse[*File](CreateFileFromDiscriminatorValue)
+				mockParsable := core.NewBaseServiceNowItemResponse[*File](CreateFileFromDiscriminatorValue)
 
 				expected := &abstractions.RequestInformation{
 					Method:             abstractions.POST,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -18,7 +19,7 @@ const (
 
 // BatchRequestBuilder constructs batch requests for the specified base URL.
 type BatchRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewBatchRequestBuilderInternal instantiates a new BatchRequestBuilder with custom parsable for table entries.
@@ -27,7 +28,7 @@ func NewBatchRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *BatchRequestBuilder {
 	m := &BatchRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, batchURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, batchURLTemplate, pathParameters),
 	}
 	return m
 }
@@ -61,7 +62,7 @@ func (rB *BatchRequestBuilder) Head(ctx context.Context, requestConfiguration *B
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 
 	if err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping); err != nil {
 		return nil, err
@@ -101,7 +102,7 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 
 	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateBatchResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {

@@ -1,7 +1,7 @@
 package cdmchangesetapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -11,11 +11,11 @@ import (
 
 // Reference represents a link and value pair.
 type Reference struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewReference() *Reference {
-	return &Reference{BaseModel: *internal.NewBaseModel()}
+	return &Reference{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *Reference) Serialize(writer serialization.SerializationWriter) error {
@@ -54,11 +54,11 @@ func CreateReferenceFromDiscriminatorValue(_ serialization.ParseNode) (serializa
 
 // ChangesetResult represents a changeset.
 type ChangesetResult struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewChangesetResult() *ChangesetResult {
-	return &ChangesetResult{BaseModel: *internal.NewBaseModel()}
+	return &ChangesetResult{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *ChangesetResult) Serialize(writer serialization.SerializationWriter) error {
@@ -169,11 +169,11 @@ func CreateChangesetResultFromDiscriminatorValue(_ serialization.ParseNode) (ser
 
 // ChangesetActivityResult represents a changeset activity.
 type ChangesetActivityResult struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewChangesetActivityResult() *ChangesetActivityResult {
-	return &ChangesetActivityResult{BaseModel: *internal.NewBaseModel()}
+	return &ChangesetActivityResult{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *ChangesetActivityResult) Serialize(writer serialization.SerializationWriter) error {
@@ -268,11 +268,11 @@ func CreateChangesetActivityResultFromDiscriminatorValue(_ serialization.ParseNo
 
 // CommitStatusResult represents a commit status.
 type CommitStatusResult struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewCommitStatusResult() *CommitStatusResult {
-	return &CommitStatusResult{BaseModel: *internal.NewBaseModel()}
+	return &CommitStatusResult{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *CommitStatusResult) Serialize(writer serialization.SerializationWriter) error {
@@ -303,11 +303,11 @@ func CreateCommitStatusResultFromDiscriminatorValue(_ serialization.ParseNode) (
 
 // ImpactedSharedComponentResult represents an impacted shared component.
 type ImpactedSharedComponentResult struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewImpactedSharedComponentResult() *ImpactedSharedComponentResult {
-	return &ImpactedSharedComponentResult{BaseModel: *internal.NewBaseModel()}
+	return &ImpactedSharedComponentResult{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *ImpactedSharedComponentResult) Serialize(writer serialization.SerializationWriter) error {
@@ -426,11 +426,11 @@ func CreateImpactedSharedComponentResultFromDiscriminatorValue(_ serialization.P
 
 // ImpactedDeployableResult represents an impacted deployable (query-based).
 type ImpactedDeployableResult struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewImpactedDeployableResult() *ImpactedDeployableResult {
-	return &ImpactedDeployableResult{BaseModel: *internal.NewBaseModel()}
+	return &ImpactedDeployableResult{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *ImpactedDeployableResult) Serialize(writer serialization.SerializationWriter) error {
@@ -573,11 +573,11 @@ func CreateImpactedDeployableResultFromDiscriminatorValue(_ serialization.ParseN
 
 // ImpactedDeployableBySysIdResult represents an impacted deployable (path-based).
 type ImpactedDeployableBySysIdResult struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewImpactedDeployableBySysIdResult() *ImpactedDeployableBySysIdResult {
-	return &ImpactedDeployableBySysIdResult{BaseModel: *internal.NewBaseModel()}
+	return &ImpactedDeployableBySysIdResult{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *ImpactedDeployableBySysIdResult) Serialize(writer serialization.SerializationWriter) error {

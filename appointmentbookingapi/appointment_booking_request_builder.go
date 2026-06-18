@@ -3,20 +3,20 @@ package appointmentbookingapi
 import (
 	"maps"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
 // AppointmentBookingRequestBuilder builds and executes requests for the 'api/sn_apptmnt_booking/v1/appointment' path.
 type AppointmentBookingRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewAppointmentBookingRequestBuilder creates a new instance of the AppointmentBookingRequestBuilder.
 func NewAppointmentBookingRequestBuilder(requestAdapter abstractions.RequestAdapter, pathParameters map[string]string) *AppointmentBookingRequestBuilder {
 	return &AppointmentBookingRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment", pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment", pathParameters),
 	}
 }
 

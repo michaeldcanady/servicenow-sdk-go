@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -21,12 +22,12 @@ const (
 
 // ChangesetsRequestBuilder handles /changesets endpoint.
 type ChangesetsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewChangesetsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ChangesetsRequestBuilder {
 	return &ChangesetsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, changesetsURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, changesetsURLTemplate, pathParameters),
 	}
 }
 
@@ -98,12 +99,12 @@ func (rB *ChangesetsRequestBuilder) Delete(ctx context.Context, config *Changese
 
 // ChangesetActivityRequestBuilder handles /changesets/activity endpoint.
 type ChangesetActivityRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewChangesetActivityRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ChangesetActivityRequestBuilder {
 	return &ChangesetActivityRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, changesetActivityURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, changesetActivityURLTemplate, pathParameters),
 	}
 }
 
@@ -131,12 +132,12 @@ func (rB *ChangesetActivityRequestBuilder) Get(ctx context.Context, config *Chan
 
 // CommitStatusRequestBuilder handles /changesets/commit-status endpoint.
 type CommitStatusRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewCommitStatusRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CommitStatusRequestBuilder {
 	return &CommitStatusRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, commitStatusURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, commitStatusURLTemplate, pathParameters),
 	}
 }
 
@@ -148,12 +149,12 @@ func (rB *CommitStatusRequestBuilder) ByID(commitId string) *CommitStatusItemReq
 
 // CommitStatusItemRequestBuilder handles /changesets/commit-status/{commit_id} endpoint.
 type CommitStatusItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewCommitStatusItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CommitStatusItemRequestBuilder {
 	return &CommitStatusItemRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, commitStatusURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, commitStatusURLTemplate, pathParameters),
 	}
 }
 
@@ -178,12 +179,12 @@ func (rB *CommitStatusItemRequestBuilder) Get(ctx context.Context, config *Commi
 
 // ImpactedSharedComponentsRequestBuilder handles /changesets/impacted-shared-components endpoint.
 type ImpactedSharedComponentsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewImpactedSharedComponentsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ImpactedSharedComponentsRequestBuilder {
 	return &ImpactedSharedComponentsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, impactedSharedComponentsURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, impactedSharedComponentsURLTemplate, pathParameters),
 	}
 }
 
@@ -211,12 +212,12 @@ func (rB *ImpactedSharedComponentsRequestBuilder) Get(ctx context.Context, confi
 
 // ImpactedDeployablesRequestBuilder handles /changesets/impacted-deployables endpoint.
 type ImpactedDeployablesRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewImpactedDeployablesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ImpactedDeployablesRequestBuilder {
 	return &ImpactedDeployablesRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, impactedDeployablesURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, impactedDeployablesURLTemplate, pathParameters),
 	}
 }
 
@@ -244,12 +245,12 @@ func (rB *ImpactedDeployablesRequestBuilder) Get(ctx context.Context, config *Im
 
 // ChangesetItemRequestBuilder handles /changesets/{changeset_id} endpoint.
 type ChangesetItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewChangesetItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ChangesetItemRequestBuilder {
 	return &ChangesetItemRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, changesetItemImpactedDeployablesURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, changesetItemImpactedDeployablesURLTemplate, pathParameters),
 	}
 }
 
@@ -260,12 +261,12 @@ func (rB *ChangesetItemRequestBuilder) ImpactedDeployables() *ImpactedDeployable
 
 // ImpactedDeployablesBySysIdRequestBuilder handles /changesets/{changeset_id}/impacted-deployables endpoint.
 type ImpactedDeployablesBySysIdRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewImpactedDeployablesBySysIdRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ImpactedDeployablesBySysIdRequestBuilder {
 	return &ImpactedDeployablesBySysIdRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, changesetItemImpactedDeployablesURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, changesetItemImpactedDeployablesURLTemplate, pathParameters),
 	}
 }
 

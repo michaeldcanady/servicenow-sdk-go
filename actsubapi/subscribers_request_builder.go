@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -16,13 +17,13 @@ const (
 
 // SubscribersRequestBuilder provides operations to manage subscribers.
 type SubscribersRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewSubscribersRequestBuilderInternal instantiates a new SubscribersRequestBuilder.
 func NewSubscribersRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SubscribersRequestBuilder {
 	return &SubscribersRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, subscribersURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, subscribersURLTemplate, pathParameters),
 	}
 }
 
@@ -39,7 +40,7 @@ func (rB *SubscribersRequestBuilder) BySubObject(subObject string) *SubscriberIt
 
 // SubscriberItemRequestBuilder provides operations to manage subscribers for a specific object.
 type SubscriberItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 const subscriberItemURLTemplate = "{+baseurl}/api/now/v1/actsub/subscribers/{sub_object}"
@@ -47,12 +48,12 @@ const subscriberItemURLTemplate = "{+baseurl}/api/now/v1/actsub/subscribers/{sub
 // NewSubscriberItemRequestBuilderInternal instantiates a new SubscriberItemRequestBuilder.
 func NewSubscriberItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SubscriberItemRequestBuilder {
 	return &SubscriberItemRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, subscriberItemURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, subscriberItemURLTemplate, pathParameters),
 	}
 }
 
 // Get sends a GET request to retrieve subscribers.
-func (rB *SubscriberItemRequestBuilder) Get(ctx context.Context, config *SubscribersRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+func (rB *SubscriberItemRequestBuilder) Get(ctx context.Context, config *SubscribersRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -62,7 +63,7 @@ func (rB *SubscriberItemRequestBuilder) Get(ctx context.Context, config *Subscri
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +72,7 @@ func (rB *SubscriberItemRequestBuilder) Get(ctx context.Context, config *Subscri
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel]), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.

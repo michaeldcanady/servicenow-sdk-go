@@ -6,6 +6,7 @@ import (
 	cdmapplicationsapi "github.com/michaeldcanady/servicenow-sdk-go/cdmapplicationsapi"
 	cdmchangesetapi "github.com/michaeldcanady/servicenow-sdk-go/cdmchangesetapi"
 	cdmeditorapi "github.com/michaeldcanady/servicenow-sdk-go/cdmeditorapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	policyapi "github.com/michaeldcanady/servicenow-sdk-go/policyapi"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -17,12 +18,12 @@ const (
 
 // CdmRequestBuilder provides operations to manage Service-Now CDM.
 type CdmRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewCdmRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CdmRequestBuilder {
 	return &CdmRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, cdmURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, cdmURLTemplate, pathParameters),
 	}
 }
 

@@ -1,7 +1,7 @@
 package caseapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -21,11 +21,11 @@ type Reference interface {
 }
 
 type ReferenceModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewReference() *ReferenceModel {
-	return &ReferenceModel{BaseModel: *internal.NewBaseModel()}
+	return &ReferenceModel{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *ReferenceModel) Serialize(writer serialization.SerializationWriter) error {
@@ -96,11 +96,11 @@ type CaseResult interface {
 }
 
 type CaseResultModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewCaseResult() *CaseResultModel {
-	return &CaseResultModel{BaseModel: *internal.NewBaseModel()}
+	return &CaseResultModel{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *CaseResultModel) Serialize(writer serialization.SerializationWriter) error {
@@ -245,11 +245,11 @@ type ActivitiesResult interface {
 }
 
 type ActivitiesResultModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewActivitiesResult() *ActivitiesResultModel {
-	return &ActivitiesResultModel{BaseModel: *internal.NewBaseModel()}
+	return &ActivitiesResultModel{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *ActivitiesResultModel) Serialize(writer serialization.SerializationWriter) error {
@@ -334,11 +334,11 @@ type FieldValuesResult interface {
 }
 
 type FieldValuesResultModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewFieldValuesResult() *FieldValuesResultModel {
-	return &FieldValuesResultModel{BaseModel: *internal.NewBaseModel()}
+	return &FieldValuesResultModel{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *FieldValuesResultModel) Serialize(writer serialization.SerializationWriter) error {

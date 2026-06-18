@@ -3,7 +3,7 @@ package actsubapi
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -20,13 +20,13 @@ const (
 
 // ActivitySubscriptionModel represents a generic model for Activity Subscriptions.
 type ActivitySubscriptionModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 // NewActivitySubscriptionModel creates a new instance of ActivitySubscriptionModel.
 func NewActivitySubscriptionModel() *ActivitySubscriptionModel {
 	return &ActivitySubscriptionModel{
-		BaseModel: *internal.NewBaseModel(),
+		BaseModel: *core.NewBaseModel(),
 	}
 }
 

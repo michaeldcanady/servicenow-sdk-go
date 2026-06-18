@@ -3,7 +3,7 @@ package batchapi
 import (
 	"fmt"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -32,13 +32,13 @@ type BatchResponse interface {
 
 // BatchResponseModel implementation of BatchResponse
 type BatchResponseModel struct {
-	internal.BackedModel
+	core.BackedModel
 }
 
 // NewBatchResponse creates a new batch response
 func NewBatchResponse() *BatchResponseModel {
 	return &BatchResponseModel{
-		internal.NewBaseModel(),
+		core.NewBaseModel(),
 	}
 }
 

@@ -3,7 +3,7 @@ package actsubapi
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -22,12 +22,12 @@ const (
 )
 
 type Activity struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewActivity() *Activity {
 	return &Activity{
-		BaseModel: *internal.NewBaseModel(),
+		BaseModel: *core.NewBaseModel(),
 	}
 }
 

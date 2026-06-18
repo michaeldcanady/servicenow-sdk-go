@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -23,7 +23,7 @@ func TestActivitiesRequestBuilder_Get(t *testing.T) {
 		{
 			name:      "Success",
 			config:    nil,
-			mockRes:   internal.NewBaseServiceNowCollectionResponse[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue),
+			mockRes:   core.NewBaseServiceNowCollectionResponse[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue),
 			mockErr:   nil,
 			expectErr: false,
 		},

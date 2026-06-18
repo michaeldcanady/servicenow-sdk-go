@@ -5,6 +5,7 @@ import (
 	"errors"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -18,11 +19,11 @@ const (
 
 // AttachmentItemRequestBuilder provides operations to manage Service-Now attachments.
 type AttachmentItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // newAttachmentItemRequestBuilderInternal instantiates a new AttachmentItemRequestBuilder with the provided requestBuilder
-func newAttachmentItemRequestBuilderInternal(requestBuilder internal.RequestBuilder) *AttachmentItemRequestBuilder {
+func newAttachmentItemRequestBuilderInternal(requestBuilder core.RequestBuilder) *AttachmentItemRequestBuilder {
 	m := &AttachmentItemRequestBuilder{
 		requestBuilder,
 	}
@@ -35,7 +36,7 @@ func NewAttachmentItemRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentItemRequestBuilder {
 	return newAttachmentItemRequestBuilderInternal(
-		internal.NewBaseRequestBuilder(requestAdapter, attachmentItemURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, attachmentItemURLTemplate, pathParameters),
 	)
 }
 
@@ -65,7 +66,7 @@ func (rB *AttachmentItemRequestBuilder) File() *AttachmentItemFileRequestBuilder
 }
 
 // Get returns an Attachment using the provided arguments
-func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentItemRequestBuilderGetRequestConfiguration) (internal.ServiceNowItemResponse[*Attachment], error) {
+func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentItemRequestBuilderGetRequestConfiguration) (core.ServiceNowItemResponse[*Attachment], error) {
 	if rB.isNil() {
 		return nil, nil
 	}
@@ -75,8 +76,8 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*Attachment](CreateAttachmentFromDiscriminatorValue), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*Attachment](CreateAttachmentFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +86,7 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 		return nil, errors.New("response is nil")
 	}
 
-	typedRes, ok := res.(internal.ServiceNowItemResponse[*Attachment])
+	typedRes, ok := res.(core.ServiceNowItemResponse[*Attachment])
 	if !ok {
 		return nil, errors.New("res is not ServiceNowItemResponse[*Attachment]")
 	}
@@ -104,7 +105,7 @@ func (rB *AttachmentItemRequestBuilder) Delete(ctx context.Context, requestConfi
 		return err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
 }
 

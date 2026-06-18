@@ -1,7 +1,7 @@
 package appointmentbookingapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -22,12 +22,12 @@ type CalendarResponse interface {
 
 // CalendarResponseModel implementation of CalendarResponse
 type CalendarResponseModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewCalendarResponse() *CalendarResponseModel {
 	return &CalendarResponseModel{
-		BaseModel: *internal.NewBaseModel(),
+		BaseModel: *core.NewBaseModel(),
 	}
 }
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -16,13 +17,13 @@ const (
 
 // UserStreamRequestBuilder provides operations to manage user activity streams.
 type UserStreamRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewUserStreamRequestBuilderInternal instantiates a new UserStreamRequestBuilder.
 func NewUserStreamRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UserStreamRequestBuilder {
 	return &UserStreamRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, userStreamURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, userStreamURLTemplate, pathParameters),
 	}
 }
 
@@ -39,7 +40,7 @@ func (rB *UserStreamRequestBuilder) ByProfileId(profileId string) *UserStreamIte
 
 // UserStreamItemRequestBuilder provides operations to manage a specific user activity stream.
 type UserStreamItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 const userStreamItemURLTemplate = "{+baseurl}/api/now/v1/actsub/userstream/{profileId}"
@@ -47,12 +48,12 @@ const userStreamItemURLTemplate = "{+baseurl}/api/now/v1/actsub/userstream/{prof
 // NewUserStreamItemRequestBuilderInternal instantiates a new UserStreamItemRequestBuilder.
 func NewUserStreamItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UserStreamItemRequestBuilder {
 	return &UserStreamItemRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, userStreamItemURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, userStreamItemURLTemplate, pathParameters),
 	}
 }
 
 // Get sends a GET request to retrieve a specific user activity stream.
-func (rB *UserStreamItemRequestBuilder) Get(ctx context.Context, config *UserStreamRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+func (rB *UserStreamItemRequestBuilder) Get(ctx context.Context, config *UserStreamRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -62,8 +63,8 @@ func (rB *UserStreamItemRequestBuilder) Get(ctx context.Context, config *UserStr
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +73,7 @@ func (rB *UserStreamItemRequestBuilder) Get(ctx context.Context, config *UserStr
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
@@ -92,7 +93,7 @@ func (rB *UserStreamItemRequestBuilder) ToGetRequestInformation(_ context.Contex
 }
 
 // Put sends a PUT request to update a specific user activity stream.
-func (rB *UserStreamItemRequestBuilder) Put(ctx context.Context, body *ActivitySubscriptionModel, config *UserStreamRequestBuilderPutRequestConfiguration) (*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+func (rB *UserStreamItemRequestBuilder) Put(ctx context.Context, body *ActivitySubscriptionModel, config *UserStreamRequestBuilderPutRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -102,8 +103,8 @@ func (rB *UserStreamItemRequestBuilder) Put(ctx context.Context, body *ActivityS
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +113,7 @@ func (rB *UserStreamItemRequestBuilder) Put(ctx context.Context, body *ActivityS
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
 }
 
 // ToPutRequestInformation creates a RequestInformation object for a PUT request.

@@ -3,6 +3,7 @@ package documentsapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -15,18 +16,18 @@ const (
 
 // ExploreRequestBuilder provides operations to manage the explore endpoint.
 type ExploreRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewExploreRequestBuilderInternal instantiates a new ExploreRequestBuilder.
 func NewExploreRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ExploreRequestBuilder {
 	return &ExploreRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, exploreURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, exploreURLTemplate, pathParameters),
 	}
 }
 
 // Get retrieves folder and document metadata with filters, sorting, and pagination.
-func (rB *ExploreRequestBuilder) Get(ctx context.Context, requestConfiguration *ExploreRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowCollectionResponse[Document], error) {
+func (rB *ExploreRequestBuilder) Get(ctx context.Context, requestConfiguration *ExploreRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[Document], error) {
 	if conversion.IsNil(rB) {
 		return nil, nil
 	}
@@ -36,8 +37,8 @@ func (rB *ExploreRequestBuilder) Get(ctx context.Context, requestConfiguration *
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowCollectionResponseFromDiscriminatorValue[Document](CreateDocumentFromDiscriminatorValue), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowCollectionResponseFromDiscriminatorValue[Document](CreateDocumentFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +47,7 @@ func (rB *ExploreRequestBuilder) Get(ctx context.Context, requestConfiguration *
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowCollectionResponse[Document]), nil
+	return res.(*core.BaseServiceNowCollectionResponse[Document]), nil
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.

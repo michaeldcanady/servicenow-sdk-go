@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
@@ -34,7 +35,7 @@ func TestPoliciesMappingsInput_Getters(t *testing.T) {
 		{"GetDescription", PoliciesMappingsResolvedDescription, internal.ToPointer("desc"), func(p *PoliciesMapping) (interface{}, error) { return p.GetDescription() }},
 		{"GetDocument", PoliciesMappingsResolvedDocument, internal.ToPointer("doc"), func(p *PoliciesMapping) (interface{}, error) { return p.GetDocument() }},
 		{"GetDocumentRef", PoliciesMappingsResolvedDocumentRef, NewRef(), func(p *PoliciesMapping) (interface{}, error) { return p.GetDocumentRef() }},
-		{"GetError", PoliciesMappingsResolvedError, internal.NewMainError(), func(p *PoliciesMapping) (interface{}, error) { return p.GetError() }},
+		{"GetError", PoliciesMappingsResolvedError, core.NewMainError(), func(p *PoliciesMapping) (interface{}, error) { return p.GetError() }},
 		{"GetException", PoliciesMappingsResolvedException, internal.ToPointer("exc"), func(p *PoliciesMapping) (interface{}, error) { return p.GetException() }},
 		{"GetExceptionAllowed", PoliciesMappingsResolvedExceptionAllowed, internal.ToPointer(true), func(p *PoliciesMapping) (interface{}, error) { return p.GetExceptionAllowed() }},
 		{"GetInputStatus", PoliciesMappingsResolvedInputStatus, internal.ToPointer(InputStatusValid), func(p *PoliciesMapping) (interface{}, error) { return p.GetInputStatus() }},
@@ -81,7 +82,7 @@ func TestPoliciesMappingsInput_Setters(t *testing.T) {
 		{"SetDescription", PoliciesMappingsResolvedDescription, internal.ToPointer("desc"), func(p *PoliciesMapping) error { return p.SetDescription(internal.ToPointer("desc")) }},
 		{"SetDocument", PoliciesMappingsResolvedDocument, internal.ToPointer("doc"), func(p *PoliciesMapping) error { return p.SetDocument(internal.ToPointer("doc")) }},
 		{"SetDocumentRef", PoliciesMappingsResolvedDocumentRef, NewRef(), func(p *PoliciesMapping) error { return p.SetDocumentRef(NewRef()) }},
-		{"SetError", PoliciesMappingsResolvedError, internal.NewMainError(), func(p *PoliciesMapping) error { return p.SetError(internal.NewMainError()) }},
+		{"SetError", PoliciesMappingsResolvedError, core.NewMainError(), func(p *PoliciesMapping) error { return p.SetError(core.NewMainError()) }},
 		{"SetException", PoliciesMappingsResolvedException, internal.ToPointer("exc"), func(p *PoliciesMapping) error { return p.SetException(internal.ToPointer("exc")) }},
 		{"SetExceptionAllowed", PoliciesMappingsResolvedExceptionAllowed, internal.ToPointer(true), func(p *PoliciesMapping) error { return p.SetExceptionAllowed(internal.ToPointer(true)) }},
 		{"SetInputStatus", PoliciesMappingsResolvedInputStatus, internal.ToPointer(InputStatusValid), func(p *PoliciesMapping) error { return p.SetInputStatus(internal.ToPointer(InputStatusValid)) }},
@@ -125,7 +126,7 @@ func TestPoliciesMappingsInput_Serialize(t *testing.T) {
 	_ = p.SetSysCreatedOn(&time.Time{})
 	_ = p.SetSysUpdatedOn(&time.Time{})
 	_ = p.SetDocumentRef(NewRef())
-	_ = p.SetError(internal.NewMainError())
+	_ = p.SetError(core.NewMainError())
 	_ = p.SetLastUpdatedBy(NewRef())
 	_ = p.SetPolicy(NewRef())
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
@@ -36,7 +36,7 @@ func TestCaseRequestBuilder_Get(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewCaseRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	mockRes := internal.NewBaseServiceNowCollectionResponse[*CaseResultModel](CreateCaseResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowCollectionResponse[*CaseResultModel](CreateCaseResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Get(context.Background(), nil)
@@ -50,7 +50,7 @@ func TestCaseRequestBuilder_Post(t *testing.T) {
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	builder := NewCaseRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	mockRes := internal.NewBaseServiceNowItemResponse[*CaseResultModel](CreateCaseResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*CaseResultModel](CreateCaseResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Post(context.Background(), NewCaseResult(), nil)
@@ -63,7 +63,7 @@ func TestCaseItemRequestBuilder_Get(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewCaseItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "id": "test-id"}, adapter)
 
-	mockRes := internal.NewBaseServiceNowItemResponse[*CaseResultModel](CreateCaseResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*CaseResultModel](CreateCaseResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Get(context.Background(), nil)
@@ -77,7 +77,7 @@ func TestCaseItemRequestBuilder_Put(t *testing.T) {
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	builder := NewCaseItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "id": "test-id"}, adapter)
 
-	mockRes := internal.NewBaseServiceNowItemResponse[*CaseResultModel](CreateCaseResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*CaseResultModel](CreateCaseResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Put(context.Background(), NewCaseResult(), nil)
@@ -90,7 +90,7 @@ func TestCaseActivitiesRequestBuilder_Get(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewCaseActivitiesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "id": "test-id"}, adapter)
 
-	mockRes := internal.NewBaseServiceNowItemResponse[*ActivitiesResultModel](CreateActivitiesResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*ActivitiesResultModel](CreateActivitiesResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Get(context.Background(), nil)
@@ -103,7 +103,7 @@ func TestCaseFieldValuesRequestBuilder_Get(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewCaseFieldValuesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "field_name": "state"}, adapter)
 
-	mockRes := internal.NewBaseServiceNowItemResponse[*FieldValuesResultModel](CreateFieldValuesResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*FieldValuesResultModel](CreateFieldValuesResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Get(context.Background(), nil)

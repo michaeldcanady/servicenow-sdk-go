@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -17,11 +18,11 @@ const (
 
 // AttachmentFileRequestBuilder provides operations to manage Service-Now attachments.
 type AttachmentFileRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // newAttachmentFileRequestBuilderInternal instantiates a new AttachmentFileRequestBuilder with the provided requestBuilder
-func newAttachmentFileRequestBuilderInternal(requestBuilder internal.RequestBuilder) *AttachmentFileRequestBuilder {
+func newAttachmentFileRequestBuilderInternal(requestBuilder core.RequestBuilder) *AttachmentFileRequestBuilder {
 	m := &AttachmentFileRequestBuilder{
 		requestBuilder,
 	}
@@ -34,7 +35,7 @@ func NewAttachmentFileRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentFileRequestBuilder {
 	return newAttachmentFileRequestBuilderInternal(
-		internal.NewBaseRequestBuilder(requestAdapter, attachmentFileURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, attachmentFileURLTemplate, pathParameters),
 	)
 }
 
@@ -49,7 +50,7 @@ func NewAttachmentFileRequestBuilder(
 }
 
 // Post uploads provided content to Service-Now using provided parameters
-func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (internal.ServiceNowItemResponse[*File], error) {
+func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (core.ServiceNowItemResponse[*File], error) {
 	if conversion.IsNil(rB) {
 		return nil, nil
 	}
@@ -88,13 +89,13 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	requestAdapter := rB.GetRequestAdapter()
 	if conversion.IsNil(requestAdapter) {
 		return nil, errors.New("requestAdapter is nil")
 	}
 
-	resp, err := requestAdapter.Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*File](CreateFileFromDiscriminatorValue), errorMapping)
+	resp, err := requestAdapter.Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*File](CreateFileFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +104,7 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 		return nil, errors.New("response is nil")
 	}
 
-	typedResp, ok := resp.(internal.ServiceNowItemResponse[*File])
+	typedResp, ok := resp.(core.ServiceNowItemResponse[*File])
 	if !ok {
 		return nil, errors.New("resp is not ServiceNowItemResponse[*File]")
 	}

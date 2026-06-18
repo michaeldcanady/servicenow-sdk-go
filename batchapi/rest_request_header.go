@@ -3,7 +3,7 @@ package batchapi
 import (
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -28,18 +28,18 @@ type RestRequestHeader interface {
 	// SetValue sets the value of the header
 	SetValue(*string) error
 	serialization.Parsable
-	internal.BackedModel
+	core.BackedModel
 }
 
 // RestRequestHeaderModel implementation of RestRequestHeader
 type RestRequestHeaderModel struct {
-	internal.BackedModel
+	core.BackedModel
 }
 
 // NewRestRequestHeader creates new instance of BatchHeader
 func NewRestRequestHeader() *RestRequestHeaderModel {
 	return &RestRequestHeaderModel{
-		internal.NewBaseModel(),
+		core.NewBaseModel(),
 	}
 }
 

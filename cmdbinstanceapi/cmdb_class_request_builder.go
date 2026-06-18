@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -16,25 +17,25 @@ const (
 
 // CmdbClassRequestBuilder provides operations to manage a specific CMDB class.
 type CmdbClassRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewCmdbClassRequestBuilderInternal instantiates a new CmdbClassRequestBuilder.
 func NewCmdbClassRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CmdbClassRequestBuilder {
 	return &CmdbClassRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, cmdbClassURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, cmdbClassURLTemplate, pathParameters),
 	}
 }
 
 // Get queries records for a CMDB class.
-func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, config *CmdbClassRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowCollectionResponse[CmdbInstance], error) {
+func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, config *CmdbClassRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[CmdbInstance], error) {
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowCollectionResponseFromDiscriminatorValue[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowCollectionResponseFromDiscriminatorValue[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -43,18 +44,18 @@ func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, config *CmdbClassReq
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowCollectionResponse[CmdbInstance]), nil
+	return res.(*core.BaseServiceNowCollectionResponse[CmdbInstance]), nil
 }
 
 // Post creates a record with associated relations.
-func (rB *CmdbClassRequestBuilder) Post(ctx context.Context, body CmdbInstance, config *CmdbClassRequestBuilderPostRequestConfiguration) (*internal.BaseServiceNowItemResponse[CmdbInstance], error) {
+func (rB *CmdbClassRequestBuilder) Post(ctx context.Context, body CmdbInstance, config *CmdbClassRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +64,7 @@ func (rB *CmdbClassRequestBuilder) Post(ctx context.Context, body CmdbInstance, 
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowItemResponse[CmdbInstance]), nil
+	return res.(*core.BaseServiceNowItemResponse[CmdbInstance]), nil
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.

@@ -3,6 +3,7 @@ package documentsapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -15,13 +16,13 @@ const (
 
 // DeleteRequestBuilder provides operations to manage the delete endpoint.
 type DeleteRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewDeleteRequestBuilderInternal instantiates a new DeleteRequestBuilder.
 func NewDeleteRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *DeleteRequestBuilder {
 	return &DeleteRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, deleteURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, deleteURLTemplate, pathParameters),
 	}
 }
 
@@ -36,7 +37,7 @@ func (rB *DeleteRequestBuilder) Delete(ctx context.Context, requestConfiguration
 		return err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
 }
 

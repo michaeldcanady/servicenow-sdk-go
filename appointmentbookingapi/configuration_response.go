@@ -1,7 +1,7 @@
 package appointmentbookingapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -11,15 +11,15 @@ import (
 )
 
 // ConfigurationResponse represents the configuration response.
-type ConfigurationResponse = internal.ServiceNowItemResponse[*ConfigurationResultModel]
+type ConfigurationResponse = core.ServiceNowItemResponse[*ConfigurationResultModel]
 
 // CreateConfigurationResponseFromDiscriminatorValue is a factory for creating a ConfigurationResponse.
 func CreateConfigurationResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return internal.NewBaseServiceNowItemResponse[*ConfigurationResultModel](CreateConfigurationResultFromDiscriminatorValue), nil
+	return core.NewBaseServiceNowItemResponse[*ConfigurationResultModel](CreateConfigurationResultFromDiscriminatorValue), nil
 }
 
 // ConfigurationResponseModel is the implementation of ConfigurationResponse.
-type ConfigurationResponseModel = internal.BaseServiceNowItemResponse[*ConfigurationResultModel]
+type ConfigurationResponseModel = core.BaseServiceNowItemResponse[*ConfigurationResultModel]
 
 // ConfigurationResult represents the result object in configuration response.
 type ConfigurationResult interface {
@@ -56,13 +56,13 @@ type ConfigurationResult interface {
 
 // ConfigurationResultModel implementation of ConfigurationResult
 type ConfigurationResultModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 // NewConfigurationResult creates a new instance of ConfigurationResultModel
 func NewConfigurationResult() *ConfigurationResultModel {
 	return &ConfigurationResultModel{
-		BaseModel: *internal.NewBaseModel(),
+		BaseModel: *core.NewBaseModel(),
 	}
 }
 
@@ -230,12 +230,12 @@ type ServiceConfig interface {
 }
 
 type ServiceConfigModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewServiceConfig() *ServiceConfigModel {
 	return &ServiceConfigModel{
-		BaseModel: *internal.NewBaseModel(),
+		BaseModel: *core.NewBaseModel(),
 	}
 }
 
@@ -393,12 +393,12 @@ type FieldMapping interface {
 }
 
 type FieldMappingModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewFieldMapping() *FieldMappingModel {
 	return &FieldMappingModel{
-		BaseModel: *internal.NewBaseModel(),
+		BaseModel: *core.NewBaseModel(),
 	}
 }
 
@@ -466,12 +466,12 @@ type RPVariable interface {
 }
 
 type RPVariableModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewRPVariable() *RPVariableModel {
 	return &RPVariableModel{
-		BaseModel: *internal.NewBaseModel(),
+		BaseModel: *core.NewBaseModel(),
 	}
 }
 
@@ -533,12 +533,12 @@ type UserDateFormatOptions interface {
 }
 
 type UserDateFormatOptionsModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewUserDateFormatOptions() *UserDateFormatOptionsModel {
 	return &UserDateFormatOptionsModel{
-		BaseModel: *internal.NewBaseModel(),
+		BaseModel: *core.NewBaseModel(),
 	}
 }
 
@@ -604,12 +604,12 @@ type UserTimeFormat interface {
 }
 
 type UserTimeFormatModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewUserTimeFormat() *UserTimeFormatModel {
 	return &UserTimeFormatModel{
-		BaseModel: *internal.NewBaseModel(),
+		BaseModel: *core.NewBaseModel(),
 	}
 }
 
@@ -661,12 +661,12 @@ type UserTimeFormatOptions interface {
 }
 
 type UserTimeFormatOptionsModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewUserTimeFormatOptions() *UserTimeFormatOptionsModel {
 	return &UserTimeFormatOptionsModel{
-		BaseModel: *internal.NewBaseModel(),
+		BaseModel: *core.NewBaseModel(),
 	}
 }
 

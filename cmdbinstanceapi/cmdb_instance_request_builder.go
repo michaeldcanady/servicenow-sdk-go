@@ -3,6 +3,7 @@ package cmdbinstanceapi
 import (
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -13,13 +14,13 @@ const (
 
 // CmdbInstanceRequestBuilder provides operations to manage ServiceNow CMDB instances.
 type CmdbInstanceRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewCmdbInstanceRequestBuilderInternal instantiates a new CmdbInstanceRequestBuilder with the provided request parameters.
 func NewCmdbInstanceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CmdbInstanceRequestBuilder {
 	return &CmdbInstanceRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, cmdbInstanceURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, cmdbInstanceURLTemplate, pathParameters),
 	}
 }
 

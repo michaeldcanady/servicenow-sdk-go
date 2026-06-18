@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -17,7 +18,7 @@ const (
 
 // PoliciesMappingsRequestBuilder provides operations to manage Service-Now policy definitions.
 type PoliciesMappingsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewPoliciesMappingsRequestBuilderInternal instantiates a new PoliciesMappingsRequestBuilder with the provided path parameters and request adapter.
@@ -26,7 +27,7 @@ func NewPoliciesMappingsRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *PoliciesMappingsRequestBuilder {
 	return &PoliciesMappingsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, policiesMappingsURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, policiesMappingsURLTemplate, pathParameters),
 	}
 }
 
@@ -65,11 +66,11 @@ func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestCon
 		return err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
 }
 
-func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (internal.ServiceNowItemResponse[*PoliciesMapping], error) {
+func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (core.ServiceNowItemResponse[*PoliciesMapping], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -96,8 +97,8 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -106,9 +107,9 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 		return nil, errors.New("response is nil")
 	}
 
-	typedResp, ok := resp.(internal.ServiceNowItemResponse[*PoliciesMapping])
+	typedResp, ok := resp.(core.ServiceNowItemResponse[*PoliciesMapping])
 	if !ok {
-		return nil, fmt.Errorf("resp is not %T", (*internal.ServiceNowItemResponse[*PoliciesMapping])(nil))
+		return nil, fmt.Errorf("resp is not %T", (*core.ServiceNowItemResponse[*PoliciesMapping])(nil))
 	}
 
 	return typedResp, nil

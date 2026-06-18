@@ -1,7 +1,7 @@
 package appointmentbookingapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -23,11 +23,11 @@ type ExecuteRuleConditionsRequest interface {
 }
 
 type ExecuteRuleConditionsRequestModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewExecuteRuleConditionsRequest() *ExecuteRuleConditionsRequestModel {
-	return &ExecuteRuleConditionsRequestModel{BaseModel: *internal.NewBaseModel()}
+	return &ExecuteRuleConditionsRequestModel{BaseModel: *core.NewBaseModel()}
 }
 
 func CreateExecuteRuleConditionsRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
@@ -73,11 +73,11 @@ func (m *ExecuteRuleConditionsRequestModel) setTaskId(val *string) error {
 }
 
 // ExecuteRuleConditionsResponse represents the response from execute_rule_conditions.
-type ExecuteRuleConditionsResponse = internal.ServiceNowItemResponse[*ExecuteRuleConditionsResultModel]
+type ExecuteRuleConditionsResponse = core.ServiceNowItemResponse[*ExecuteRuleConditionsResultModel]
 
 // CreateExecuteRuleConditionsResponseFromDiscriminatorValue is a factory.
 func CreateExecuteRuleConditionsResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return internal.NewBaseServiceNowItemResponse[*ExecuteRuleConditionsResultModel](CreateExecuteRuleConditionsResultFromDiscriminatorValue), nil
+	return core.NewBaseServiceNowItemResponse[*ExecuteRuleConditionsResultModel](CreateExecuteRuleConditionsResultFromDiscriminatorValue), nil
 }
 
 type ExecuteRuleConditionsResult interface {
@@ -95,11 +95,11 @@ type ExecuteRuleConditionsResult interface {
 }
 
 type ExecuteRuleConditionsResultModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewExecuteRuleConditionsResult() *ExecuteRuleConditionsResultModel {
-	return &ExecuteRuleConditionsResultModel{BaseModel: *internal.NewBaseModel()}
+	return &ExecuteRuleConditionsResultModel{BaseModel: *core.NewBaseModel()}
 }
 
 func CreateExecuteRuleConditionsResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {

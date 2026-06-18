@@ -1,7 +1,7 @@
 package policyapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -21,18 +21,18 @@ type Refable interface {
 	GetValue() (*string, error)
 	SetValue(*string) error
 	serialization.Parsable
-	internal.BackedModel
+	core.BackedModel
 }
 
 // Ref represents a reference with a link and a value.
 type Ref struct {
-	internal.BackedModel
+	core.BackedModel
 }
 
 // NewRef creates a new instance of Ref.
 func NewRef() *Ref {
 	return &Ref{
-		BackedModel: internal.NewBaseModel(),
+		BackedModel: core.NewBaseModel(),
 	}
 }
 

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -19,7 +20,7 @@ const (
 
 // TableItemRequestBuilder provides operations to manage a single Service-Now table record.
 type TableItemRequestBuilder[T model.ServiceNowItem] struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 	factory serialization.ParsableFactory
 }
 
@@ -30,7 +31,7 @@ func NewTableItemRequestBuilderInternal[T model.ServiceNowItem](
 	factory serialization.ParsableFactory,
 ) *TableItemRequestBuilder[T] {
 	m := &TableItemRequestBuilder[T]{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, tableItemURLTemplate2, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, tableItemURLTemplate2, pathParameters),
 		factory:        factory,
 	}
 	return m
@@ -63,7 +64,7 @@ func NewTableItemRequestBuilder[T model.ServiceNowItem](
 }
 
 // Get sends an HTTP GET request and returns the single table record.
-func (rB *TableItemRequestBuilder[T]) Get(ctx context.Context, requestConfiguration *TableItemRequestBuilderGetRequestConfiguration) (internal.ServiceNowItemResponse[T], error) {
+func (rB *TableItemRequestBuilder[T]) Get(ctx context.Context, requestConfiguration *TableItemRequestBuilderGetRequestConfiguration) (core.ServiceNowItemResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -73,8 +74,8 @@ func (rB *TableItemRequestBuilder[T]) Get(ctx context.Context, requestConfigurat
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -83,9 +84,9 @@ func (rB *TableItemRequestBuilder[T]) Get(ctx context.Context, requestConfigurat
 		return nil, errors.New("response is nil")
 	}
 
-	typedResp, ok := resp.(internal.ServiceNowItemResponse[T])
+	typedResp, ok := resp.(core.ServiceNowItemResponse[T])
 	if !ok {
-		return nil, fmt.Errorf("resp is not %T", (*internal.ServiceNowItemResponse[T])(nil))
+		return nil, fmt.Errorf("resp is not %T", (*core.ServiceNowItemResponse[T])(nil))
 	}
 
 	return typedResp, nil
@@ -102,12 +103,12 @@ func (rB *TableItemRequestBuilder[T]) Delete(ctx context.Context, requestConfigu
 		return err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
 }
 
 // Put updates a table item using an HTTP PUT request, replacing the entire record.
-func (rB *TableItemRequestBuilder[T]) Put(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPutRequestConfiguration) (internal.ServiceNowItemResponse[T], error) {
+func (rB *TableItemRequestBuilder[T]) Put(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPutRequestConfiguration) (core.ServiceNowItemResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -121,8 +122,8 @@ func (rB *TableItemRequestBuilder[T]) Put(ctx context.Context, body T, requestCo
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -131,16 +132,16 @@ func (rB *TableItemRequestBuilder[T]) Put(ctx context.Context, body T, requestCo
 		return nil, errors.New("response is nil")
 	}
 
-	typedResp, ok := resp.(internal.ServiceNowItemResponse[T])
+	typedResp, ok := resp.(core.ServiceNowItemResponse[T])
 	if !ok {
-		return nil, fmt.Errorf("resp is not %T", (*internal.ServiceNowItemResponse[T])(nil))
+		return nil, fmt.Errorf("resp is not %T", (*core.ServiceNowItemResponse[T])(nil))
 	}
 
 	return typedResp, nil
 }
 
 // Patch updates a table item using an HTTP PATCH request, applying partial updates.
-func (rB *TableItemRequestBuilder[T]) Patch(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPatchRequestConfiguration) (internal.ServiceNowItemResponse[T], error) {
+func (rB *TableItemRequestBuilder[T]) Patch(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPatchRequestConfiguration) (core.ServiceNowItemResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -154,8 +155,8 @@ func (rB *TableItemRequestBuilder[T]) Patch(ctx context.Context, body T, request
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[T](rB.factory), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -164,9 +165,9 @@ func (rB *TableItemRequestBuilder[T]) Patch(ctx context.Context, body T, request
 		return nil, errors.New("response is nil")
 	}
 
-	typedResp, ok := resp.(internal.ServiceNowItemResponse[T])
+	typedResp, ok := resp.(core.ServiceNowItemResponse[T])
 	if !ok {
-		return nil, fmt.Errorf("resp is not %T", (*internal.ServiceNowItemResponse[T])(nil))
+		return nil, fmt.Errorf("resp is not %T", (*core.ServiceNowItemResponse[T])(nil))
 	}
 
 	return typedResp, nil

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
@@ -31,7 +31,7 @@ func TestAccountRequestBuilder_Builders(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.NotNil(t, tt.builder)
 			if tt.expected != nil {
-				rb := tt.builder.(internal.RequestBuilder)
+				rb := tt.builder.(core.RequestBuilder)
 				for k, v := range tt.expected {
 					assert.Equal(t, v, rb.GetPathParameters()[k])
 				}
@@ -53,7 +53,7 @@ func TestAccountRequestBuilder_Get(t *testing.T) {
 }
 
 type AccountCollectionResponseMock struct {
-	internal.BaseServiceNowCollectionResponse[*AccountModel]
+	core.BaseServiceNowCollectionResponse[*AccountModel]
 }
 
 func (m *AccountCollectionResponseMock) Serialize(writer serialization.SerializationWriter) error {
@@ -76,14 +76,16 @@ func TestAccountItemRequestBuilder_Get(t *testing.T) {
 }
 
 type AccountItemResponseMock struct {
-	internal.BaseServiceNowItemResponse[*AccountModel]
+	mock.Mock
 }
 
 func (m *AccountItemResponseMock) Serialize(writer serialization.SerializationWriter) error {
-	return nil
+	args := m.Called(writer)
+	return args.Error(0)
 }
 func (m *AccountItemResponseMock) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	return nil
+	args := m.Called()
+	return args.Get(0).(map[string]func(serialization.ParseNode) error)
 }
 
 func TestAccountItemRequestBuilder_GetRequestInformation(t *testing.T) {

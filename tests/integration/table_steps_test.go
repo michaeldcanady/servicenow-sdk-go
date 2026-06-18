@@ -12,6 +12,7 @@ import (
 	"github.com/jarcoal/httpmock"
 	"github.com/joho/godotenv"
 	sdk "github.com/michaeldcanady/servicenow-sdk-go"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
@@ -71,7 +72,7 @@ func (c *tableTestContext) theResponseShouldNotBeAnError() error {
 }
 
 func (c *tableTestContext) theResultsShouldContainAtLeastRecord(minCount int) error {
-	collection, ok := c.response.(internal.ServiceNowCollectionResponse[*tableapi.TableRecord])
+	collection, ok := c.response.(core.ServiceNowCollectionResponse[*tableapi.TableRecord])
 	if !ok {
 		return fmt.Errorf("expected a collection response, but got %T", c.response)
 	}
@@ -87,7 +88,7 @@ func (c *tableTestContext) theResultsShouldContainAtLeastRecord(minCount int) er
 }
 
 func (c *tableTestContext) eachRecordShouldHaveAValidSysID() error {
-	collection, ok := c.response.(internal.ServiceNowCollectionResponse[*tableapi.TableRecord])
+	collection, ok := c.response.(core.ServiceNowCollectionResponse[*tableapi.TableRecord])
 	if !ok {
 		return fmt.Errorf("expected a collection response, but got %T", c.response)
 	}
@@ -127,7 +128,7 @@ func (c *tableTestContext) iRequestTheIncidentByItsSysID() error {
 }
 
 func (c *tableTestContext) theResultShouldHaveTheCorrectSysID() error {
-	item, ok := c.response.(internal.ServiceNowItemResponse[*tableapi.TableRecord])
+	item, ok := c.response.(core.ServiceNowItemResponse[*tableapi.TableRecord])
 	if !ok {
 		return fmt.Errorf("expected an item response, but got %T", c.response)
 	}
@@ -158,7 +159,7 @@ func (c *tableTestContext) iCreateANewIncidentWithDescription(description string
 }
 
 func (c *tableTestContext) theCreatedRecordShouldHaveAValidSysID() error {
-	item, ok := c.response.(internal.ServiceNowItemResponse[*tableapi.TableRecord])
+	item, ok := c.response.(core.ServiceNowItemResponse[*tableapi.TableRecord])
 	if !ok {
 		return fmt.Errorf("expected an item response, but got %T", c.response)
 	}
@@ -194,7 +195,7 @@ func (c *tableTestContext) iPatchTheIncidentDescriptionTo(description string) er
 }
 
 func (c *tableTestContext) theRecordShouldHaveDescription(description string) error {
-	item, ok := c.response.(internal.ServiceNowItemResponse[*tableapi.TableRecord])
+	item, ok := c.response.(core.ServiceNowItemResponse[*tableapi.TableRecord])
 	if !ok {
 		return fmt.Errorf("expected an item response, but got %T", c.response)
 	}
@@ -252,7 +253,7 @@ func (c *tableTestContext) iRequestIncidentsWithQueryAndLimit(query string, limi
 }
 
 func (c *tableTestContext) theResultsShouldContainAtMostRecords(maxCount int) error {
-	collection, ok := c.response.(internal.ServiceNowCollectionResponse[*tableapi.TableRecord])
+	collection, ok := c.response.(core.ServiceNowCollectionResponse[*tableapi.TableRecord])
 	if !ok {
 		return fmt.Errorf("expected a collection response, but got %T", c.response)
 	}
@@ -264,7 +265,7 @@ func (c *tableTestContext) theResultsShouldContainAtMostRecords(maxCount int) er
 }
 
 func (c *tableTestContext) eachRecordShouldHaveSetTo(field, value string) error {
-	collection, ok := c.response.(internal.ServiceNowCollectionResponse[*tableapi.TableRecord])
+	collection, ok := c.response.(core.ServiceNowCollectionResponse[*tableapi.TableRecord])
 	if !ok {
 		return fmt.Errorf("expected a collection response, but got %T", c.response)
 	}
@@ -296,7 +297,7 @@ func (c *tableTestContext) iRequestIncidentsSortedByDescending(field string) err
 }
 
 func (c *tableTestContext) theRecordsShouldBeInDescendingOrderOf(field string) error {
-	collection, ok := c.response.(internal.ServiceNowCollectionResponse[*tableapi.TableRecord])
+	collection, ok := c.response.(core.ServiceNowCollectionResponse[*tableapi.TableRecord])
 	if !ok {
 		return fmt.Errorf("expected a collection response, but got %T", c.response)
 	}

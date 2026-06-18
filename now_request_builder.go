@@ -8,6 +8,7 @@ import (
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
 	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batchapi"
 	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/cmdbinstanceapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	documentsapi "github.com/michaeldcanady/servicenow-sdk-go/documentsapi"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
@@ -17,12 +18,12 @@ import (
 const nowURLTemplate = "{+baseurl}/api/now"
 
 type NowRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewServiceNowRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *NowRequestBuilder {
 	return &NowRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, nowURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, nowURLTemplate, pathParameters),
 	}
 }
 

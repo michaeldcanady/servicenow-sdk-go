@@ -3,7 +3,7 @@ package tableapi
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
@@ -13,13 +13,13 @@ import (
 //
 // It contains the raw value, the display value, and an optional reference link.
 type RecordElement struct {
-	internal.BackedModel
+	core.BackedModel
 }
 
 // NewRecordElement creates a new instance of RecordElement.
 func NewRecordElement() *RecordElement {
 	return &RecordElement{
-		internal.NewBaseModel(),
+		core.NewBaseModel(),
 	}
 }
 

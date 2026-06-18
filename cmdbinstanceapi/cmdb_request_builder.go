@@ -4,6 +4,7 @@ import (
 	"maps"
 
 	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/appserviceapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -14,13 +15,13 @@ const (
 
 // CmdbRequestBuilder provides operations to manage ServiceNow CMDB.
 type CmdbRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewCmdbRequestBuilderInternal instantiates a new CmdbRequestBuilder with the provided request parameters.
 func NewCmdbRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CmdbRequestBuilder {
 	return &CmdbRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, cmdbURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, cmdbURLTemplate, pathParameters),
 	}
 }
 

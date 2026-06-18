@@ -3,6 +3,7 @@ package documentsapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -15,18 +16,18 @@ const (
 
 // VersionStateRequestBuilder provides operations to manage the versionstate endpoint.
 type VersionStateRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewVersionStateRequestBuilderInternal instantiates a new VersionStateRequestBuilder.
 func NewVersionStateRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *VersionStateRequestBuilder {
 	return &VersionStateRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, versionStateURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, versionStateURLTemplate, pathParameters),
 	}
 }
 
 // Get retrieves the state of the specified document version.
-func (rB *VersionStateRequestBuilder) Get(ctx context.Context, requestConfiguration *VersionStateRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowItemResponse[Document], error) {
+func (rB *VersionStateRequestBuilder) Get(ctx context.Context, requestConfiguration *VersionStateRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[Document], error) {
 	if conversion.IsNil(rB) {
 		return nil, nil
 	}
@@ -36,8 +37,8 @@ func (rB *VersionStateRequestBuilder) Get(ctx context.Context, requestConfigurat
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[Document](CreateDocumentFromDiscriminatorValue), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[Document](CreateDocumentFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +47,7 @@ func (rB *VersionStateRequestBuilder) Get(ctx context.Context, requestConfigurat
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowItemResponse[Document]), nil
+	return res.(*core.BaseServiceNowItemResponse[Document]), nil
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.

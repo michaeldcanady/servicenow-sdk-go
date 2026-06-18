@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -20,7 +20,7 @@ func TestCmdbItemRequestBuilder_Get(t *testing.T) {
 		{
 			name: "Success",
 			setupMock: func(m *mocking.MockRequestAdapter) {
-				resp := internal.NewBaseServiceNowItemResponse[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue)
+				resp := core.NewBaseServiceNowItemResponse[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue)
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(resp, nil)
 			},
 			expectedErr: nil,
@@ -62,7 +62,7 @@ func TestCmdbItemRequestBuilder_Put(t *testing.T) {
 		{
 			name: "Success",
 			setupMock: func(m *mocking.MockRequestAdapter) {
-				resp := internal.NewBaseServiceNowItemResponse[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue)
+				resp := core.NewBaseServiceNowItemResponse[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue)
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(resp, nil)
 			},
 			expectedErr: nil,
@@ -104,7 +104,7 @@ func TestCmdbItemRequestBuilder_Patch(t *testing.T) {
 		{
 			name: "Success",
 			setupMock: func(m *mocking.MockRequestAdapter) {
-				resp := internal.NewBaseServiceNowItemResponse[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue)
+				resp := core.NewBaseServiceNowItemResponse[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue)
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(resp, nil)
 			},
 			expectedErr: nil,

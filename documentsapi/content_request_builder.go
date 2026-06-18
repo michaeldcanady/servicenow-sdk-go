@@ -3,6 +3,7 @@ package documentsapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -15,13 +16,13 @@ const (
 
 // ContentRequestBuilder provides operations to manage document content.
 type ContentRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewContentRequestBuilderInternal instantiates a new ContentRequestBuilder.
 func NewContentRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ContentRequestBuilder {
 	return &ContentRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, contentURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, contentURLTemplate, pathParameters),
 	}
 }
 
@@ -36,7 +37,7 @@ func (rB *ContentRequestBuilder) Get(ctx context.Context, requestConfiguration *
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().SendPrimitive(ctx, requestInfo, "[]byte", errorMapping)
 	if err != nil {
 		return nil, err

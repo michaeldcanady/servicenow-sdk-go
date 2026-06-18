@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -19,12 +20,12 @@ const (
 
 // CaseItemRequestBuilder provides operations to manage a single case.
 type CaseItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewCaseItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CaseItemRequestBuilder {
 	return &CaseItemRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, caseItemURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, caseItemURLTemplate, pathParameters),
 	}
 }
 
@@ -56,7 +57,7 @@ func (rB *CaseItemRequestBuilder) Get(ctx context.Context, config *CaseItemReque
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCaseItemResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCaseItemResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +93,7 @@ func (rB *CaseItemRequestBuilder) Put(ctx context.Context, body CaseResult, conf
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCaseItemResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCaseItemResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -125,12 +126,12 @@ func (rB *CaseItemRequestBuilder) ToPutRequestInformation(ctx context.Context, b
 
 // CaseActivitiesRequestBuilder provides operations to manage case activities.
 type CaseActivitiesRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewCaseActivitiesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CaseActivitiesRequestBuilder {
 	return &CaseActivitiesRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, caseActivitiesURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, caseActivitiesURLTemplate, pathParameters),
 	}
 }
 
@@ -144,7 +145,7 @@ func (rB *CaseActivitiesRequestBuilder) Get(ctx context.Context, config *CaseAct
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateActivitiesResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateActivitiesResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -172,18 +173,18 @@ func (rB *CaseActivitiesRequestBuilder) ToGetRequestInformation(ctx context.Cont
 
 // CaseFieldValuesRequestBuilder provides operations to manage field values.
 type CaseFieldValuesRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewCaseFieldValuesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CaseFieldValuesRequestBuilder {
 	return &CaseFieldValuesRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, fieldValuesURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, fieldValuesURLTemplate, pathParameters),
 	}
 }
 
 func NewItemFieldValuesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CaseFieldValuesRequestBuilder {
 	return &CaseFieldValuesRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, itemFieldValuesURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, itemFieldValuesURLTemplate, pathParameters),
 	}
 }
 
@@ -197,7 +198,7 @@ func (rB *CaseFieldValuesRequestBuilder) Get(ctx context.Context, config *CaseFi
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateFieldValuesResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateFieldValuesResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}

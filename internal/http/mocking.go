@@ -1,4 +1,4 @@
-package internal
+package http
 
 import "github.com/stretchr/testify/mock"
 

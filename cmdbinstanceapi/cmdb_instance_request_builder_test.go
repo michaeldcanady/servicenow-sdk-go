@@ -3,7 +3,7 @@ package cmdbinstanceapi
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
@@ -28,7 +28,7 @@ func TestCmdbInstanceRequestBuilder_Builders(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.NotNil(t, tt.builder)
 			if tt.expected != nil {
-				rb := tt.builder.(internal.RequestBuilder)
+				rb := tt.builder.(core.RequestBuilder)
 				for k, v := range tt.expected {
 					assert.Equal(t, v, rb.GetPathParameters()[k])
 				}

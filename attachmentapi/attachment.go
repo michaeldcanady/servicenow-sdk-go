@@ -3,7 +3,7 @@ package attachmentapi
 import (
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -39,16 +39,16 @@ const (
 
 // Attachment
 type Attachment struct {
-	internal.BackedModel
+	core.BackedModel
 }
 
 // NewAttachment creates a new instance of AttachmentModel
 func NewAttachment() *Attachment {
-	return newAttachment(internal.NewBaseModel())
+	return newAttachment(core.NewBaseModel())
 }
 
 // newAttachment creates a new instance of AttachmentModel with the provided model underlying it
-func newAttachment(model internal.BackedModel) *Attachment {
+func newAttachment(model core.BackedModel) *Attachment {
 	return &Attachment{
 		model,
 	}

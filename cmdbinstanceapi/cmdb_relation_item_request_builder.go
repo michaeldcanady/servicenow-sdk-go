@@ -3,6 +3,7 @@ package cmdbinstanceapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -14,13 +15,13 @@ const (
 
 // CmdbRelationItemRequestBuilder provides operations to manage a specific CI relationship.
 type CmdbRelationItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewCmdbRelationItemRequestBuilderInternal instantiates a new CmdbRelationItemRequestBuilder.
 func NewCmdbRelationItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CmdbRelationItemRequestBuilder {
 	return &CmdbRelationItemRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, cmdbRelationItemURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, cmdbRelationItemURLTemplate, pathParameters),
 	}
 }
 
@@ -31,7 +32,7 @@ func (rB *CmdbRelationItemRequestBuilder) Delete(ctx context.Context, config *Cm
 		return err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
 	if err != nil {
 		return err

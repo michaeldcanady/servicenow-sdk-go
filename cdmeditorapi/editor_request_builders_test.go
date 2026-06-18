@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -40,7 +41,7 @@ func TestNodesRequestBuilder_Get(t *testing.T) {
 	})
 
 	t.Run("Execution", func(t *testing.T) {
-		mockRes := internal.NewBaseServiceNowCollectionResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue)
+		mockRes := core.NewBaseServiceNowCollectionResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue)
 		adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 		resp, err := builder.Get(context.Background(), nil)
@@ -55,7 +56,7 @@ func TestNodesRequestBuilder_Post(t *testing.T) {
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	builder := NewNodesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	mockRes := internal.NewBaseServiceNowItemResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Post(context.Background(), NewNodeCreateRequest(), nil)
@@ -79,7 +80,7 @@ func TestNodeItemRequestBuilder_Put(t *testing.T) {
 	})
 
 	t.Run("Execution", func(t *testing.T) {
-		mockRes := internal.NewBaseServiceNowItemResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue)
+		mockRes := core.NewBaseServiceNowItemResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue)
 		adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 		resp, err := builder.Put(context.Background(), NewNodeUpdateRequest(), nil)
@@ -96,7 +97,7 @@ func TestNodeItemRequestBuilder_Delete(t *testing.T) {
 		"node_sys_id": "node123",
 	}, adapter)
 
-	mockRes := internal.NewBaseServiceNowItemResponse[*MessageResult](CreateMessageResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*MessageResult](CreateMessageResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Delete(context.Background(), nil)
@@ -125,7 +126,7 @@ func TestValidationRequestBuilder_Get(t *testing.T) {
 	})
 
 	t.Run("Execution", func(t *testing.T) {
-		mockRes := internal.NewBaseServiceNowItemResponse[*ValidationResultModel](CreateValidationResultFromDiscriminatorValue)
+		mockRes := core.NewBaseServiceNowItemResponse[*ValidationResultModel](CreateValidationResultFromDiscriminatorValue)
 		adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 		resp, err := builder.Get(context.Background(), nil)

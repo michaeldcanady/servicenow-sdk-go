@@ -1,7 +1,7 @@
 package accountapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -178,13 +178,13 @@ type Account interface {
 
 // AccountModel implementation of Account
 type AccountModel struct {
-	internal.BaseModel
+	core.BackedModel
 }
 
 // NewAccount creates a new instance of AccountModel
 func NewAccount() *AccountModel {
 	return &AccountModel{
-		BaseModel: *internal.NewBaseModel(),
+		BackedModel: core.NewBaseModel(),
 	}
 }
 

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -32,7 +33,7 @@ func TestNewAttachmentItemFileRequestBuilderInternal(t *testing.T) {
 
 			assert.NotNil(t, builder)
 			assert.IsType(t, &AttachmentItemFileRequestBuilder{}, builder)
-			assert.IsType(t, &internal.BaseRequestBuilder{}, builder.RequestBuilder)
+			assert.IsType(t, &core.BaseRequestBuilder{}, builder.RequestBuilder)
 			assert.Equal(t, tt.pathParameters, builder.GetPathParameters())
 			assert.Equal(t, tt.requestAdapter, builder.GetRequestAdapter())
 		})
@@ -60,7 +61,7 @@ func TestNewAttachmentItemFileRequestBuilder(t *testing.T) {
 
 			assert.NotNil(t, builder)
 			assert.IsType(t, &AttachmentItemFileRequestBuilder{}, builder)
-			assert.IsType(t, &internal.BaseRequestBuilder{}, builder.RequestBuilder)
+			assert.IsType(t, &core.BaseRequestBuilder{}, builder.RequestBuilder)
 			assert.Equal(t, urlParams, builder.GetPathParameters())
 			assert.Equal(t, tt.requestAdapter, builder.GetRequestAdapter())
 		})

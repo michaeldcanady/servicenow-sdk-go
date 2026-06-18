@@ -3,7 +3,7 @@ package policyapi
 import (
 	"maps"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -14,7 +14,7 @@ const (
 
 // PoliciesRequestBuilder provides operations to manage Service-Now policies.
 type PoliciesRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewPolicyRequestBuilderInternal instantiates a new PolicyRequestBuilder with the provided path parameters and request adapter.
@@ -23,7 +23,7 @@ func NewPolicyRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *PoliciesRequestBuilder {
 	return &PoliciesRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, policyURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, policyURLTemplate, pathParameters),
 	}
 }
 

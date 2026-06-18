@@ -3,6 +3,7 @@ package accountapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -13,13 +14,13 @@ const accountItemURLTemplate = "{+baseurl}/api/now/v1/account/{account_id}"
 
 // AccountItemRequestBuilder provides operations to manage a single account.
 type AccountItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewAccountItemRequestBuilderInternal instantiates a new AccountItemRequestBuilder with the provided request parameters.
 func NewAccountItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AccountItemRequestBuilder {
 	return &AccountItemRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, accountItemURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, accountItemURLTemplate, pathParameters),
 	}
 }
 
@@ -34,7 +35,7 @@ func (rB *AccountItemRequestBuilder) Get(ctx context.Context, config *AccountIte
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAccountItemResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err

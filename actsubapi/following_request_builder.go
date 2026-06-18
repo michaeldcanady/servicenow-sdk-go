@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -16,13 +17,13 @@ const (
 
 // FollowingsRequestBuilder provides operations to manage followings.
 type FollowingsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewFollowingsRequestBuilderInternal instantiates a new FollowingsRequestBuilder.
 func NewFollowingsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *FollowingsRequestBuilder {
 	return &FollowingsRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, followingsURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, followingsURLTemplate, pathParameters),
 	}
 }
 
@@ -39,7 +40,7 @@ func (rB *FollowingsRequestBuilder) ByFollower(follower string) *FollowingItemRe
 
 // FollowingItemRequestBuilder provides operations to manage following for a specific user.
 type FollowingItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 const followingItemURLTemplate = "{+baseurl}/api/now/v1/actsub/followings/{follower}"
@@ -47,12 +48,12 @@ const followingItemURLTemplate = "{+baseurl}/api/now/v1/actsub/followings/{follo
 // NewFollowingItemRequestBuilderInternal instantiates a new FollowingItemRequestBuilder.
 func NewFollowingItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *FollowingItemRequestBuilder {
 	return &FollowingItemRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, followingItemURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, followingItemURLTemplate, pathParameters),
 	}
 }
 
 // Get sends a GET request to retrieve following.
-func (rB *FollowingItemRequestBuilder) Get(ctx context.Context, config *FollowingsRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+func (rB *FollowingItemRequestBuilder) Get(ctx context.Context, config *FollowingsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -62,7 +63,7 @@ func (rB *FollowingItemRequestBuilder) Get(ctx context.Context, config *Followin
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +72,7 @@ func (rB *FollowingItemRequestBuilder) Get(ctx context.Context, config *Followin
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel]), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.

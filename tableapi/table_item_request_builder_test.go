@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -23,7 +23,7 @@ func TestTableItemRequestBuilder_Get(t *testing.T) {
 			name: "Successful",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(internal.NewBaseServiceNowItemResponse[*TableRecord](CreateTableRecordFromDiscriminatorValue), nil)
+					Return(core.NewBaseServiceNowItemResponse[*TableRecord](CreateTableRecordFromDiscriminatorValue), nil)
 			},
 			err: nil,
 		},
@@ -138,7 +138,7 @@ func TestTableItemRequestBuilder_Put(t *testing.T) {
 
 				m.On("GetSerializationWriterFactory").Return(serializationWriterFactory)
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(internal.NewBaseServiceNowItemResponse[*TableRecord](CreateTableRecordFromDiscriminatorValue), nil)
+					Return(core.NewBaseServiceNowItemResponse[*TableRecord](CreateTableRecordFromDiscriminatorValue), nil)
 			},
 			err: nil,
 		},
@@ -197,7 +197,7 @@ func TestTableItemRequestBuilder_Patch(t *testing.T) {
 
 				m.On("GetSerializationWriterFactory").Return(serializationWriterFactory)
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(internal.NewBaseServiceNowItemResponse[*TableRecord](CreateTableRecordFromDiscriminatorValue), nil)
+					Return(core.NewBaseServiceNowItemResponse[*TableRecord](CreateTableRecordFromDiscriminatorValue), nil)
 			},
 			err: nil,
 		},

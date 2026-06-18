@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -19,13 +20,13 @@ const (
 
 // CdmEditorRequestBuilder provides operations to manage CDM Editor.
 type CdmEditorRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewCdmEditorRequestBuilderInternal instantiates a new CdmEditorRequestBuilder.
 func NewCdmEditorRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CdmEditorRequestBuilder {
 	return &CdmEditorRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, editorURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, editorURLTemplate, pathParameters),
 	}
 }
 
@@ -41,12 +42,12 @@ func (rB *CdmEditorRequestBuilder) Validation() *ValidationRequestBuilder {
 
 // NodesRequestBuilder handles /v1/nodes endpoint.
 type NodesRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewNodesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *NodesRequestBuilder {
 	return &NodesRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, editorNodesURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, editorNodesURLTemplate, pathParameters),
 	}
 }
 
@@ -103,12 +104,12 @@ func (rB *NodesRequestBuilder) Post(ctx context.Context, body NodeCreateRequest,
 
 // NodeItemRequestBuilder handles /v1/nodes/{id} endpoint.
 type NodeItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewNodeItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *NodeItemRequestBuilder {
 	return &NodeItemRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, editorNodeItemURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, editorNodeItemURLTemplate, pathParameters),
 	}
 }
 
@@ -156,12 +157,12 @@ func (rB *NodeItemRequestBuilder) Delete(ctx context.Context, config *NodeItemRe
 
 // ValidationRequestBuilder handles /v1/validation endpoint.
 type ValidationRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 func NewValidationRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ValidationRequestBuilder {
 	return &ValidationRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, editorValidateURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, editorValidateURLTemplate, pathParameters),
 	}
 }
 

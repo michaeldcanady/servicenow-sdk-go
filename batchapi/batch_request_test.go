@@ -3,7 +3,7 @@ package batchapi
 import (
 	"testing"
 
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
@@ -24,7 +24,7 @@ func TestNewBatchRequestModel(t *testing.T) {
 				assert.IsType(t, &BatchRequestModel{}, parsable)
 
 				assert.NotNil(t, parsable.BackedModel)
-				assert.IsType(t, &internal.BaseModel{}, parsable.BackedModel)
+				assert.IsType(t, &core.BaseModel{}, parsable.BackedModel)
 			},
 		},
 	}

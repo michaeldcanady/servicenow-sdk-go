@@ -3,6 +3,7 @@ package actsubapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -15,18 +16,18 @@ const (
 
 // ActivitiesRequestBuilder provides operations to manage activities.
 type ActivitiesRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewActivitiesRequestBuilderInternal instantiates a new ActivitiesRequestBuilder.
 func NewActivitiesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ActivitiesRequestBuilder {
 	return &ActivitiesRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, activitiesURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, activitiesURLTemplate, pathParameters),
 	}
 }
 
 // Get sends a GET request to retrieve activities.
-func (rB *ActivitiesRequestBuilder) Get(ctx context.Context, config *ActivitiesRequestBuilderGetRequestConfiguration) (*internal.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+func (rB *ActivitiesRequestBuilder) Get(ctx context.Context, config *ActivitiesRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -36,7 +37,7 @@ func (rB *ActivitiesRequestBuilder) Get(ctx context.Context, config *ActivitiesR
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +46,7 @@ func (rB *ActivitiesRequestBuilder) Get(ctx context.Context, config *ActivitiesR
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel]), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.

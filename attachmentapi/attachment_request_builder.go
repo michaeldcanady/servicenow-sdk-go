@@ -5,6 +5,7 @@ import (
 	"errors"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -19,11 +20,11 @@ const (
 
 // AttachmentRequestBuilder provides operations to manage Service-Now attachments.
 type AttachmentRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // newAttachmentRequestBuilderInternal instantiates a new AttachmentRequestBuilder with the provided requestBuilder
-func newAttachmentRequestBuilderInternal(requestBuilder internal.RequestBuilder) *AttachmentRequestBuilder {
+func newAttachmentRequestBuilderInternal(requestBuilder core.RequestBuilder) *AttachmentRequestBuilder {
 	m := &AttachmentRequestBuilder{
 		requestBuilder,
 	}
@@ -36,7 +37,7 @@ func NewAttachmentRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentRequestBuilder {
 	return newAttachmentRequestBuilderInternal(
-		internal.NewBaseRequestBuilder(requestAdapter, attachmentURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, attachmentURLTemplate, pathParameters),
 	)
 }
 
@@ -104,7 +105,7 @@ func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguratio
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAttachmentCollectionResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
@@ -119,7 +120,7 @@ func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguratio
 		return nil, errors.New("res is not *AttachmentCollectionResponse")
 	}
 
-	internal.ParseHeaders(snRes, headerOpt.GetResponseHeaders())
+	core.ParseHeaders(snRes, headerOpt.GetResponseHeaders())
 
 	return snRes, nil
 }
@@ -143,7 +144,7 @@ func (rB *AttachmentRequestBuilder) Head(ctx context.Context, requestConfigurati
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	if err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping); err != nil {
 		return nil, err
 	}

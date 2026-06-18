@@ -8,7 +8,7 @@ import (
 	u "net/url"
 
 	"github.com/google/uuid"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -44,13 +44,13 @@ type RestRequest interface {
 
 // RestRequestModel implementation of RestRequestable
 type RestRequestModel struct {
-	internal.BackedModel
+	core.BackedModel
 }
 
 // NewRestRequest creates a new rest request
 func NewRestRequest() *RestRequestModel {
 	return &RestRequestModel{
-		internal.NewBaseModel(),
+		core.NewBaseModel(),
 	}
 }
 

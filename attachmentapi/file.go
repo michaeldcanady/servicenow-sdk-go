@@ -3,7 +3,7 @@ package attachmentapi
 import (
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -65,16 +65,16 @@ type file interface {
 }
 
 type File struct {
-	internal.BackedModel
+	core.BackedModel
 }
 
 // NewFile creates a new instance of FileModel
 func NewFile() *File {
-	return newFile(internal.NewBaseModel())
+	return newFile(core.NewBaseModel())
 }
 
 // newFile creates a new instance of FileModel with the provided model underlying it
-func newFile(model internal.BackedModel) *File {
+func newFile(model core.BackedModel) *File {
 	return &File{
 		model,
 	}

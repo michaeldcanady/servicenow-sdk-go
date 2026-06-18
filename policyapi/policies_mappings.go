@@ -3,7 +3,7 @@ package policyapi
 import (
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -18,8 +18,8 @@ type PoliciesMappingable interface {
 	SetDocument(*string) error
 	GetDocumentRef() (*Ref, error)
 	SetDocumentRef(*Ref) error
-	GetError() (*internal.MainError, error)
-	SetError(*internal.MainError) error
+	GetError() (*core.MainError, error)
+	SetError(*core.MainError) error
 	GetException() (*string, error)
 	SetException(*string) error
 	GetExceptionAllowed() (*bool, error)
@@ -49,7 +49,7 @@ type PoliciesMappingable interface {
 	GetSysUpdatedOn() (*time.Time, error)
 	SetSysUpdatedOn(*time.Time) error
 	serialization.Parsable
-	internal.BackedModel
+	core.BackedModel
 }
 
 const (
@@ -74,13 +74,13 @@ const (
 )
 
 type PoliciesMapping struct {
-	internal.BackedModel
+	core.BackedModel
 }
 
 // NewPoliciesMapping creates a new instance of PoliciesMappingsInput.
 func NewPoliciesMapping() *PoliciesMapping {
 	return &PoliciesMapping{
-		BackedModel: internal.NewBaseModel(),
+		BackedModel: core.NewBaseModel(),
 	}
 }
 
@@ -95,7 +95,7 @@ func (p *PoliciesMapping) GetFieldDeserializers() map[string]func(serialization.
 		PoliciesMappingsResolvedDescription:      internalSerialization.DeserializeStringFunc()(p.SetDescription),
 		PoliciesMappingsResolvedDocument:         internalSerialization.DeserializeStringFunc()(p.SetDocument),
 		PoliciesMappingsResolvedDocumentRef:      internalSerialization.DeserializeObjectValueFunc[*Ref](CreateRefFromDiscriminatorValue)(p.SetDocumentRef),
-		PoliciesMappingsResolvedError:            internalSerialization.DeserializeObjectValueFunc[*internal.MainError](internal.CreateMainErrorFromDiscriminatorValue)(p.SetError),
+		PoliciesMappingsResolvedError:            internalSerialization.DeserializeObjectValueFunc[*core.MainError](core.CreateMainErrorFromDiscriminatorValue)(p.SetError),
 		PoliciesMappingsResolvedException:        internalSerialization.DeserializeStringFunc()(p.SetException),
 		PoliciesMappingsResolvedExceptionAllowed: internalSerialization.DeserializeBoolFunc()(p.SetExceptionAllowed),
 		PoliciesMappingsResolvedInputStatus:      internalSerialization.DeserializeEnumFunc[InputStatus](ParseInputStatus)(p.SetInputStatus),
@@ -123,7 +123,7 @@ func (p *PoliciesMapping) Serialize(writer serialization.SerializationWriter) er
 		internalSerialization.SerializeStringFunc(PoliciesMappingsResolvedDescription)(p.GetDescription),
 		internalSerialization.SerializeStringFunc(PoliciesMappingsResolvedDocument)(p.GetDocument),
 		internalSerialization.SerializeObjectValueFunc[*Ref](PoliciesMappingsResolvedDocumentRef)(p.GetDocumentRef),
-		internalSerialization.SerializeObjectValueFunc[*internal.MainError](PoliciesMappingsResolvedError)(p.GetError),
+		internalSerialization.SerializeObjectValueFunc[*core.MainError](PoliciesMappingsResolvedError)(p.GetError),
 		internalSerialization.SerializeStringFunc(PoliciesMappingsResolvedException)(p.GetException),
 		internalSerialization.SerializeBoolFunc(PoliciesMappingsResolvedExceptionAllowed)(p.GetExceptionAllowed),
 		internalSerialization.SerializeEnumFunc[InputStatus](PoliciesMappingsResolvedInputStatus)(p.GetInputStatus),
@@ -167,11 +167,11 @@ func (p *PoliciesMapping) SetDocumentRef(val *Ref) error {
 	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedDocumentRef, val)
 }
 
-func (p *PoliciesMapping) GetError() (*internal.MainError, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *internal.MainError](p.GetBackingStore(), PoliciesMappingsResolvedError)
+func (p *PoliciesMapping) GetError() (*core.MainError, error) {
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *core.MainError](p.GetBackingStore(), PoliciesMappingsResolvedError)
 }
 
-func (p *PoliciesMapping) SetError(val *internal.MainError) error {
+func (p *PoliciesMapping) SetError(val *core.MainError) error {
 	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedError, val)
 }
 

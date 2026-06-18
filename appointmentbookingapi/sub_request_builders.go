@@ -3,6 +3,7 @@ package appointmentbookingapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -12,13 +13,13 @@ import (
 
 // AvailabilityRequestBuilder provides operations to manage availability.
 type AvailabilityRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewAvailabilityRequestBuilder instantiates a new AvailabilityRequestBuilder.
 func NewAvailabilityRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AvailabilityRequestBuilder {
 	return &AvailabilityRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/availability", pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/availability", pathParameters),
 	}
 }
 
@@ -33,7 +34,7 @@ func (rB *AvailabilityRequestBuilder) Post(ctx context.Context, body Availabilit
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAvailabilityResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAvailabilityResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -68,13 +69,13 @@ func (rB *AvailabilityRequestBuilder) ToPostRequestInformation(ctx context.Conte
 
 // CalendarRequestBuilder provides operations to manage calendar.
 type CalendarRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewCalendarRequestBuilder instantiates a new CalendarRequestBuilder.
 func NewCalendarRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CalendarRequestBuilder {
 	return &CalendarRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/calendar{?catalog_id,location,opened_for}", pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/calendar{?catalog_id,location,opened_for}", pathParameters),
 	}
 }
 
@@ -89,7 +90,7 @@ func (rB *CalendarRequestBuilder) Get(ctx context.Context, config *CalendarReque
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCalendarResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCalendarResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -119,13 +120,13 @@ func (rB *CalendarRequestBuilder) ToGetRequestInformation(ctx context.Context, c
 
 // ConfigurationRequestBuilder provides operations to manage configuration.
 type ConfigurationRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewConfigurationRequestBuilder instantiates a new ConfigurationRequestBuilder.
 func NewConfigurationRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ConfigurationRequestBuilder {
 	return &ConfigurationRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/configuration{?catalog_id}", pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/configuration{?catalog_id}", pathParameters),
 	}
 }
 
@@ -140,7 +141,7 @@ func (rB *ConfigurationRequestBuilder) Get(ctx context.Context, config *Configur
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateConfigurationResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateConfigurationResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -170,13 +171,13 @@ func (rB *ConfigurationRequestBuilder) ToGetRequestInformation(ctx context.Conte
 
 // ExecuteRuleConditionsRequestBuilder provides operations to manage execute rule conditions.
 type ExecuteRuleConditionsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewExecuteRuleConditionsRequestBuilder instantiates a new ExecuteRuleConditionsRequestBuilder.
 func NewExecuteRuleConditionsRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ExecuteRuleConditionsRequestBuilder {
 	return &ExecuteRuleConditionsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/execute_rule_conditions", pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/execute_rule_conditions", pathParameters),
 	}
 }
 
@@ -191,7 +192,7 @@ func (rB *ExecuteRuleConditionsRequestBuilder) Post(ctx context.Context, body Ex
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateExecuteRuleConditionsResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateExecuteRuleConditionsResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -226,13 +227,13 @@ func (rB *ExecuteRuleConditionsRequestBuilder) ToPostRequestInformation(ctx cont
 
 // UserWindowRequestBuilder provides operations to manage user window.
 type UserWindowRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewUserWindowRequestBuilder instantiates a new UserWindowRequestBuilder.
 func NewUserWindowRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UserWindowRequestBuilder {
 	return &UserWindowRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/userwindow", pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/userwindow", pathParameters),
 	}
 }
 
@@ -247,7 +248,7 @@ func (rB *UserWindowRequestBuilder) Post(ctx context.Context, body any, config *
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAvailabilityResponseFromDiscriminatorValue, internal.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAvailabilityResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}

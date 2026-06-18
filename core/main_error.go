@@ -1,4 +1,4 @@
-package internal
+package core
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -18,7 +18,7 @@ type MainErrorable interface {
 	GetDetail() (*string, error)
 	GetMessage() (*string, error)
 	GetStatus() (*string, error)
-	Model
+	BackedModel
 	serialization.Parsable
 }
 

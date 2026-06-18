@@ -1,7 +1,7 @@
 package cdmeditorapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -25,11 +25,11 @@ type NodeCreateRequest interface {
 }
 
 type NodeCreateRequestModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewNodeCreateRequest() *NodeCreateRequestModel {
-	return &NodeCreateRequestModel{BaseModel: *internal.NewBaseModel()}
+	return &NodeCreateRequestModel{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *NodeCreateRequestModel) Serialize(writer serialization.SerializationWriter) error {
@@ -94,11 +94,11 @@ type NodeUpdateRequest interface {
 }
 
 type NodeUpdateRequestModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewNodeUpdateRequest() *NodeUpdateRequestModel {
-	return &NodeUpdateRequestModel{BaseModel: *internal.NewBaseModel()}
+	return &NodeUpdateRequestModel{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *NodeUpdateRequestModel) Serialize(writer serialization.SerializationWriter) error {

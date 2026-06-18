@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -14,13 +15,13 @@ const accountURLTemplate = "{+baseurl}/api/now/v1/account"
 
 // AccountRequestBuilder provides operations to manage accounts.
 type AccountRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewAccountRequestBuilderInternal instantiates a new AccountRequestBuilder with the provided request parameters.
 func NewAccountRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AccountRequestBuilder {
 	return &AccountRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, accountURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, accountURLTemplate, pathParameters),
 	}
 }
 
@@ -42,7 +43,7 @@ func (rB *AccountRequestBuilder) Get(ctx context.Context, config *AccountRequest
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAccountCollectionResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err

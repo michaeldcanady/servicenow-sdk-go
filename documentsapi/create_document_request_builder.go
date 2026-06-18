@@ -3,6 +3,7 @@ package documentsapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -15,18 +16,18 @@ const (
 
 // CreateDocumentRequestBuilder provides operations to manage the createDocument endpoint.
 type CreateDocumentRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewCreateDocumentRequestBuilderInternal instantiates a new CreateDocumentRequestBuilder.
 func NewCreateDocumentRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CreateDocumentRequestBuilder {
 	return &CreateDocumentRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, createDocumentURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, createDocumentURLTemplate, pathParameters),
 	}
 }
 
 // Post creates or links a document from an attachment, DMS repo or cloud.
-func (rB *CreateDocumentRequestBuilder) Post(ctx context.Context, requestConfiguration *CreateDocumentRequestBuilderPostRequestConfiguration) (*internal.BaseServiceNowItemResponse[Document], error) {
+func (rB *CreateDocumentRequestBuilder) Post(ctx context.Context, requestConfiguration *CreateDocumentRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[Document], error) {
 	if conversion.IsNil(rB) {
 		return nil, nil
 	}
@@ -36,8 +37,8 @@ func (rB *CreateDocumentRequestBuilder) Post(ctx context.Context, requestConfigu
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[Document](CreateDocumentFromDiscriminatorValue), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[Document](CreateDocumentFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +47,7 @@ func (rB *CreateDocumentRequestBuilder) Post(ctx context.Context, requestConfigu
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowItemResponse[Document]), nil
+	return res.(*core.BaseServiceNowItemResponse[Document]), nil
 }
 
 // ToPostRequestInformation ...

@@ -14,6 +14,7 @@ import (
 	"github.com/joho/godotenv"
 	sdk "github.com/michaeldcanady/servicenow-sdk-go"
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -116,7 +117,7 @@ func (c *attachmentTestContext) iRequestTheAttachmentByItsSysID() error {
 }
 
 func (c *attachmentTestContext) theResultShouldHaveTheCorrectSysID() error {
-	response, ok := c.response.(internal.ServiceNowItemResponse[attachmentapi.Attachment])
+	response, ok := c.response.(core.ServiceNowItemResponse[attachmentapi.Attachment])
 	if !ok {
 		return fmt.Errorf("expected a ServiceNowItemResponse[Attachment], but got %T", c.response)
 	}
@@ -205,7 +206,7 @@ func (c *attachmentTestContext) iUploadTheFileFromTheResourcesDirectoryToTheInci
 }
 
 func (c *attachmentTestContext) theCreatedAttachmentShouldHaveAValidSysID() error {
-	response, ok := c.response.(internal.ServiceNowItemResponse[attachmentapi.File])
+	response, ok := c.response.(core.ServiceNowItemResponse[attachmentapi.File])
 	if !ok {
 		return fmt.Errorf("expected a ServiceNowItemResponse[File], but got %T", c.response)
 	}
@@ -221,7 +222,7 @@ func (c *attachmentTestContext) theCreatedAttachmentShouldHaveAValidSysID() erro
 }
 
 func (c *attachmentTestContext) theAttachmentFilenameShouldBe(fileName string) error {
-	response, ok := c.response.(internal.ServiceNowItemResponse[attachmentapi.File])
+	response, ok := c.response.(core.ServiceNowItemResponse[attachmentapi.File])
 	if !ok {
 		return fmt.Errorf("expected a ServiceNowItemResponse[File], but got %T", c.response)
 	}

@@ -1,7 +1,7 @@
 package appointmentbookingapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -43,11 +43,11 @@ type AppointmentRequest interface {
 }
 
 type AppointmentRequestModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewAppointmentRequest() *AppointmentRequestModel {
-	return &AppointmentRequestModel{BaseModel: *internal.NewBaseModel()}
+	return &AppointmentRequestModel{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *AppointmentRequestModel) Serialize(writer serialization.SerializationWriter) error {

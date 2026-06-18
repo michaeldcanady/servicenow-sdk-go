@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -23,13 +24,13 @@ const (
 
 // AppServiceRequestBuilder provides operations to manage ServiceNow Application Services.
 type AppServiceRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewAppServiceRequestBuilderInternal instantiates a new AppServiceRequestBuilder with path parameters.
 func NewAppServiceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AppServiceRequestBuilder {
 	return &AppServiceRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, appServiceURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, appServiceURLTemplate, pathParameters),
 	}
 }
 
@@ -60,13 +61,13 @@ func (rB *AppServiceRequestBuilder) Csdm() *CsdmRequestBuilder {
 
 // CreateRequestBuilder provides operations to create an application service.
 type CreateRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewCreateRequestBuilderInternal instantiates a new CreateRequestBuilder.
 func NewCreateRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CreateRequestBuilder {
 	return &CreateRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, createURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, createURLTemplate, pathParameters),
 	}
 }
 
@@ -80,7 +81,7 @@ func (rB *CreateRequestBuilder) Post(ctx context.Context, body *CreateServiceReq
 	if err != nil {
 		return nil, err
 	}
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCreateServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
@@ -112,13 +113,13 @@ func (rB *CreateRequestBuilder) ToPostRequestInformation(ctx context.Context, bo
 
 // CsdmRequestBuilder provides operations under /api/now/v1/cmdb/csdm/app_service.
 type CsdmRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewCsdmRequestBuilderInternal instantiates a new CsdmRequestBuilder.
 func NewCsdmRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CsdmRequestBuilder {
 	return &CsdmRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, csdmAppServiceURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, csdmAppServiceURLTemplate, pathParameters),
 	}
 }
 
@@ -153,13 +154,13 @@ func (rB *CsdmRequestBuilder) ByID(sysID string) *CsdmAppServiceItemRequestBuild
 
 // FindServiceRequestBuilder provides operations to find an application service.
 type FindServiceRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewFindServiceRequestBuilderInternal instantiates a new FindServiceRequestBuilder.
 func NewFindServiceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *FindServiceRequestBuilder {
 	return &FindServiceRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, findServiceURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, findServiceURLTemplate, pathParameters),
 	}
 }
 
@@ -173,7 +174,7 @@ func (rB *FindServiceRequestBuilder) Get(ctx context.Context, config *FindServic
 	if err != nil {
 		return nil, err
 	}
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateFindServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
@@ -201,13 +202,13 @@ func (rB *FindServiceRequestBuilder) ToGetRequestInformation(ctx context.Context
 
 // RegisterServiceRequestBuilder provides operations to register a CSDM service.
 type RegisterServiceRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewRegisterServiceRequestBuilderInternal instantiates a new RegisterServiceRequestBuilder.
 func NewRegisterServiceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *RegisterServiceRequestBuilder {
 	return &RegisterServiceRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, registerServiceURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, registerServiceURLTemplate, pathParameters),
 	}
 }
 
@@ -221,7 +222,7 @@ func (rB *RegisterServiceRequestBuilder) Post(ctx context.Context, body *Registe
 	if err != nil {
 		return nil, err
 	}
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateRegisterServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
@@ -253,13 +254,13 @@ func (rB *RegisterServiceRequestBuilder) ToPostRequestInformation(ctx context.Co
 
 // CsdmAppServiceItemRequestBuilder provides operations for a specific CSDM application service.
 type CsdmAppServiceItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewCsdmAppServiceItemRequestBuilderInternal instantiates a new CsdmAppServiceItemRequestBuilder.
 func NewCsdmAppServiceItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CsdmAppServiceItemRequestBuilder {
 	return &CsdmAppServiceItemRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, csdmAppServiceItemURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, csdmAppServiceItemURLTemplate, pathParameters),
 	}
 }
 
@@ -283,13 +284,13 @@ func (rB *CsdmAppServiceItemRequestBuilder) ServiceDetails() *ServiceDetailsRequ
 
 // PopulateServiceRequestBuilder provides operations to populate a CSDM service.
 type PopulateServiceRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewPopulateServiceRequestBuilderInternal instantiates a new PopulateServiceRequestBuilder.
 func NewPopulateServiceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *PopulateServiceRequestBuilder {
 	return &PopulateServiceRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, populateServiceURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, populateServiceURLTemplate, pathParameters),
 	}
 }
 
@@ -303,7 +304,7 @@ func (rB *PopulateServiceRequestBuilder) Put(ctx context.Context, body *Populate
 	if err != nil {
 		return nil, err
 	}
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreatePopulateServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
@@ -335,13 +336,13 @@ func (rB *PopulateServiceRequestBuilder) ToPutRequestInformation(ctx context.Con
 
 // ServiceDetailsRequestBuilder provides operations to update details of a CSDM service.
 type ServiceDetailsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewServiceDetailsRequestBuilderInternal instantiates a new ServiceDetailsRequestBuilder.
 func NewServiceDetailsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ServiceDetailsRequestBuilder {
 	return &ServiceDetailsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, serviceDetailsURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, serviceDetailsURLTemplate, pathParameters),
 	}
 }
 
@@ -355,7 +356,7 @@ func (rB *ServiceDetailsRequestBuilder) Put(ctx context.Context, body *ServiceDe
 	if err != nil {
 		return nil, err
 	}
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateServiceDetailsResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err

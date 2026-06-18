@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -17,11 +18,11 @@ const (
 
 // AttachmentUploadRequestBuilder provides operations to manage Service-Now attachments.
 type AttachmentUploadRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // newAttachmentUploadRequestBuilderInternal instantiates a new AttachmentUploadRequestBuilder with the provided requestBuilder
-func newAttachmentUploadRequestBuilderInternal(requestBuilder internal.RequestBuilder) *AttachmentUploadRequestBuilder {
+func newAttachmentUploadRequestBuilderInternal(requestBuilder core.RequestBuilder) *AttachmentUploadRequestBuilder {
 	m := &AttachmentUploadRequestBuilder{
 		requestBuilder,
 	}
@@ -34,7 +35,7 @@ func NewAttachmentUploadRequestBuilderInternal(
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentUploadRequestBuilder {
 	return newAttachmentUploadRequestBuilderInternal(
-		internal.NewBaseRequestBuilder(requestAdapter, attachmentUploadURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, attachmentUploadURLTemplate, pathParameters),
 	)
 }
 
@@ -92,7 +93,7 @@ func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstrac
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateFileFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err

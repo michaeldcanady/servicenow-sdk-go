@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -16,13 +17,13 @@ const (
 
 // ActionRequestBuilder provides operations to manage document actions.
 type ActionRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewActionRequestBuilderInternal instantiates a new ActionRequestBuilder.
 func NewActionRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ActionRequestBuilder {
 	return &ActionRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, actionURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, actionURLTemplate, pathParameters),
 	}
 }
 
@@ -35,13 +36,13 @@ func (rB *ActionRequestBuilder) Document(documentSysID string) *DocumentActionRe
 
 // DocumentActionRequestBuilder ...
 type DocumentActionRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewDocumentActionRequestBuilderInternal ...
 func NewDocumentActionRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *DocumentActionRequestBuilder {
 	return &DocumentActionRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, actionURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, actionURLTemplate, pathParameters),
 	}
 }
 
@@ -54,13 +55,13 @@ func (rB *DocumentActionRequestBuilder) Version(versionSysID string) *VersionAct
 
 // VersionActionRequestBuilder ...
 type VersionActionRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewVersionActionRequestBuilderInternal ...
 func NewVersionActionRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *VersionActionRequestBuilder {
 	return &VersionActionRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, actionURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, actionURLTemplate, pathParameters),
 	}
 }
 
@@ -75,7 +76,7 @@ func (rB *VersionActionRequestBuilder) Patch(ctx context.Context, requestConfigu
 		return err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
+	errorMapping := core.DefaultErrorMapping()
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
 }
 

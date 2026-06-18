@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
@@ -49,7 +49,7 @@ func TestAppointmentRequestBuilder_Post(t *testing.T) {
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	builder := NewAppointmentRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	mockRes := internal.NewBaseServiceNowItemResponse[*AppointmentResultModel](CreateAppointmentResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*AppointmentResultModel](CreateAppointmentResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Post(context.Background(), NewAppointmentRequest(), nil)
@@ -63,7 +63,7 @@ func TestAvailabilityRequestBuilder_Post(t *testing.T) {
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	builder := NewAvailabilityRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	mockRes := internal.NewBaseServiceNowItemResponse[*AvailabilityResultModel](CreateAvailabilityResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*AvailabilityResultModel](CreateAvailabilityResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Post(context.Background(), NewAvailabilityRequest(), nil)
@@ -77,7 +77,7 @@ func TestExecuteRuleConditionsRequestBuilder_Post(t *testing.T) {
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	builder := NewExecuteRuleConditionsRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	mockRes := internal.NewBaseServiceNowItemResponse[*ExecuteRuleConditionsResultModel](CreateExecuteRuleConditionsResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*ExecuteRuleConditionsResultModel](CreateExecuteRuleConditionsResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Post(context.Background(), NewExecuteRuleConditionsRequest(), nil)
@@ -91,7 +91,7 @@ func TestUserWindowRequestBuilder_Post(t *testing.T) {
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	builder := NewUserWindowRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	mockRes := internal.NewBaseServiceNowItemResponse[*AvailabilityResultModel](CreateAvailabilityResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*AvailabilityResultModel](CreateAvailabilityResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Post(context.Background(), NewAvailabilityRequest(), nil)

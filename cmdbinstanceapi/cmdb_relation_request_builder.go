@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -16,25 +17,25 @@ const (
 
 // CmdbRelationRequestBuilder provides operations to manage CI relationships.
 type CmdbRelationRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewCmdbRelationRequestBuilderInternal instantiates a new CmdbRelationRequestBuilder.
 func NewCmdbRelationRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CmdbRelationRequestBuilder {
 	return &CmdbRelationRequestBuilder{
-		internal.NewBaseRequestBuilder(requestAdapter, cmdbRelationURLTemplate, pathParameters),
+		core.NewBaseRequestBuilder(requestAdapter, cmdbRelationURLTemplate, pathParameters),
 	}
 }
 
 // Post creates a Relation for the CI.
-func (rB *CmdbRelationRequestBuilder) Post(ctx context.Context, body CmdbInstance, config *CmdbRelationRequestBuilderPostRequestConfiguration) (*internal.BaseServiceNowItemResponse[CmdbInstance], error) {
+func (rB *CmdbRelationRequestBuilder) Post(ctx context.Context, body CmdbInstance, config *CmdbRelationRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
 	}
 
-	errorMapping := internal.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, internal.ServiceNowItemResponseFromDiscriminatorValue[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue), errorMapping)
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +44,7 @@ func (rB *CmdbRelationRequestBuilder) Post(ctx context.Context, body CmdbInstanc
 		return nil, nil
 	}
 
-	return res.(*internal.BaseServiceNowItemResponse[CmdbInstance]), nil
+	return res.(*core.BaseServiceNowItemResponse[CmdbInstance]), nil
 }
 
 // ToPostRequestInformation converts request configurations to Post request information.

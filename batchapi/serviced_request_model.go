@@ -5,7 +5,7 @@ import (
 	"math"
 	"reflect"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
@@ -27,13 +27,13 @@ const (
 
 // ServicedRequestModel represents Service-Now Batch API response's serviced request.
 type ServicedRequestModel struct {
-	internal.BackedModel
+	core.BackedModel
 }
 
 // NewServicedRequest instantiates a new ServicedRequest.
 func NewServicedRequest() *ServicedRequestModel {
 	return &ServicedRequestModel{
-		internal.NewBaseModel(),
+		core.NewBaseModel(),
 	}
 }
 

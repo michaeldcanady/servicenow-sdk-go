@@ -2,7 +2,7 @@ package batchapi
 
 import (
 	"github.com/google/uuid"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -27,13 +27,13 @@ type BatchRequest interface {
 
 // BatchRequestModel implementation of BatchRequest
 type BatchRequestModel struct {
-	internal.BackedModel
+	core.BackedModel
 }
 
 // NewBatchRequestModel creates a new BatchRequest.
 func NewBatchRequestModel() *BatchRequestModel {
 	request := &BatchRequestModel{
-		internal.NewBaseModel(),
+		core.NewBaseModel(),
 	}
 
 	id := uuid.NewString()

@@ -4,6 +4,7 @@ import (
 	"context"
 	"maps"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -29,13 +30,13 @@ const (
 
 // ApplicationsRequestBuilder provides operations to manage applications.
 type ApplicationsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewApplicationsRequestBuilderInternal instantiates a new ApplicationsRequestBuilder.
 func NewApplicationsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ApplicationsRequestBuilder {
 	return &ApplicationsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, applicationsURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, applicationsURLTemplate, pathParameters),
 	}
 }
 
@@ -66,13 +67,13 @@ func (rB *ApplicationsRequestBuilder) Uploads() *UploadsRequestBuilder {
 
 // DeployablesRequestBuilder provides operations to manage deployables.
 type DeployablesRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewDeployablesRequestBuilderInternal instantiates a new DeployablesRequestBuilder.
 func NewDeployablesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *DeployablesRequestBuilder {
 	return &DeployablesRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, deployablesURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, deployablesURLTemplate, pathParameters),
 	}
 }
 
@@ -125,13 +126,13 @@ func (rB *DeployablesRequestBuilder) Exports() *ExportsRequestBuilder {
 
 // SharedComponentsRequestBuilder provides operations to manage shared components.
 type SharedComponentsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewSharedComponentsRequestBuilderInternal instantiates a new SharedComponentsRequestBuilder.
 func NewSharedComponentsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SharedComponentsRequestBuilder {
 	return &SharedComponentsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, sharedComponentsURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, sharedComponentsURLTemplate, pathParameters),
 	}
 }
 
@@ -179,13 +180,13 @@ func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, body *SharedC
 
 // UploadStatusRequestBuilder provides operations to access upload status.
 type UploadStatusRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewUploadStatusRequestBuilderInternal instantiates a new UploadStatusRequestBuilder.
 func NewUploadStatusRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadStatusRequestBuilder {
 	return &UploadStatusRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadStatusURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, uploadStatusURLTemplate, pathParameters),
 	}
 }
 
@@ -198,13 +199,13 @@ func (rB *UploadStatusRequestBuilder) ByID(uploadId string) *UploadStatusItemReq
 
 // UploadStatusItemRequestBuilder provides operations to access a specific upload status.
 type UploadStatusItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewUploadStatusItemRequestBuilderInternal instantiates a new UploadStatusItemRequestBuilder.
 func NewUploadStatusItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadStatusItemRequestBuilder {
 	return &UploadStatusItemRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadStatusURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, uploadStatusURLTemplate, pathParameters),
 	}
 }
 
@@ -230,13 +231,13 @@ func (rB *UploadStatusItemRequestBuilder) Get(ctx context.Context, config *Uploa
 
 // ExportsRequestBuilder provides operations to manage deployable exports.
 type ExportsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewExportsRequestBuilderInternal instantiates a new ExportsRequestBuilder.
 func NewExportsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ExportsRequestBuilder {
 	return &ExportsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, exportsURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, exportsURLTemplate, pathParameters),
 	}
 }
 
@@ -272,13 +273,13 @@ func (rB *ExportsRequestBuilder) ByID(exportId string) *ExportItemRequestBuilder
 
 // ExportItemRequestBuilder provides operations to manage a specific deployable export.
 type ExportItemRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewExportItemRequestBuilderInternal instantiates a new ExportItemRequestBuilder.
 func NewExportItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ExportItemRequestBuilder {
 	return &ExportItemRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, exportItemURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, exportItemURLTemplate, pathParameters),
 	}
 }
 
@@ -294,13 +295,13 @@ func (rB *ExportItemRequestBuilder) Status() *ExportItemStatusRequestBuilder {
 
 // ExportItemStatusRequestBuilder provides operations to check export status.
 type ExportItemStatusRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewExportItemStatusRequestBuilderInternal instantiates a new ExportItemStatusRequestBuilder.
 func NewExportItemStatusRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ExportItemStatusRequestBuilder {
 	return &ExportItemStatusRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, exportItemStatusURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, exportItemStatusURLTemplate, pathParameters),
 	}
 }
 
@@ -326,13 +327,13 @@ func (rB *ExportItemStatusRequestBuilder) Get(ctx context.Context, config *Expor
 
 // ExportItemContentRequestBuilder provides operations to download export content.
 type ExportItemContentRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewExportItemContentRequestBuilderInternal instantiates a new ExportItemContentRequestBuilder.
 func NewExportItemContentRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ExportItemContentRequestBuilder {
 	return &ExportItemContentRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, exportItemContentURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, exportItemContentURLTemplate, pathParameters),
 	}
 }
 
@@ -361,13 +362,13 @@ func (rB *ExportItemContentRequestBuilder) Get(ctx context.Context, config *Expo
 
 // SharedLibrariesRequestBuilder provides operations to manage shared libraries.
 type SharedLibrariesRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewSharedLibrariesRequestBuilderInternal instantiates a new SharedLibrariesRequestBuilder.
 func NewSharedLibrariesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SharedLibrariesRequestBuilder {
 	return &SharedLibrariesRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/shared_libraries", pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/shared_libraries", pathParameters),
 	}
 }
 
@@ -378,13 +379,13 @@ func (rB *SharedLibrariesRequestBuilder) Components() *SharedLibrariesComponents
 
 // SharedLibrariesComponentsRequestBuilder provides operations to manage shared library components.
 type SharedLibrariesComponentsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewSharedLibrariesComponentsRequestBuilderInternal instantiates a new SharedLibrariesComponentsRequestBuilder.
 func NewSharedLibrariesComponentsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SharedLibrariesComponentsRequestBuilder {
 	return &SharedLibrariesComponentsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/shared_libraries/components", pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/shared_libraries/components", pathParameters),
 	}
 }
 
@@ -395,13 +396,13 @@ func (rB *SharedLibrariesComponentsRequestBuilder) Applications() *SharedLibrari
 
 // SharedLibrariesComponentsApplicationsRequestBuilder provides operations to access shared library component applications.
 type SharedLibrariesComponentsApplicationsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewSharedLibrariesComponentsApplicationsRequestBuilderInternal instantiates a new SharedLibrariesComponentsApplicationsRequestBuilder.
 func NewSharedLibrariesComponentsApplicationsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SharedLibrariesComponentsApplicationsRequestBuilder {
 	return &SharedLibrariesComponentsApplicationsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, sharedLibrariesComponentsApplicationsURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, sharedLibrariesComponentsApplicationsURLTemplate, pathParameters),
 	}
 }
 
@@ -430,13 +431,13 @@ func (rB *SharedLibrariesComponentsApplicationsRequestBuilder) Get(ctx context.C
 
 // UploadsRequestBuilder provides operations to manage uploads.
 type UploadsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewUploadsRequestBuilderInternal instantiates a new UploadsRequestBuilder.
 func NewUploadsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsRequestBuilder {
 	return &UploadsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/uploads", pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/uploads", pathParameters),
 	}
 }
 
@@ -457,13 +458,13 @@ func (rB *UploadsRequestBuilder) Deployables() *UploadsDeployablesRequestBuilder
 
 // UploadsComponentsRequestBuilder provides operations to upload components.
 type UploadsComponentsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewUploadsComponentsRequestBuilderInternal instantiates a new UploadsComponentsRequestBuilder.
 func NewUploadsComponentsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsComponentsRequestBuilder {
 	return &UploadsComponentsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadsComponentsURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, uploadsComponentsURLTemplate, pathParameters),
 	}
 }
 
@@ -498,13 +499,13 @@ func (rB *UploadsComponentsRequestBuilder) Vars() *UploadsComponentsVarsRequestB
 
 // UploadsComponentsVarsRequestBuilder provides operations to upload component variables.
 type UploadsComponentsVarsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewUploadsComponentsVarsRequestBuilderInternal instantiates a new UploadsComponentsVarsRequestBuilder.
 func NewUploadsComponentsVarsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsComponentsVarsRequestBuilder {
 	return &UploadsComponentsVarsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadsComponentsVarsURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, uploadsComponentsVarsURLTemplate, pathParameters),
 	}
 }
 
@@ -534,13 +535,13 @@ func (rB *UploadsComponentsVarsRequestBuilder) Post(ctx context.Context, body *C
 
 // UploadsCollectionsRequestBuilder provides operations to upload collections.
 type UploadsCollectionsRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewUploadsCollectionsRequestBuilderInternal instantiates a new UploadsCollectionsRequestBuilder.
 func NewUploadsCollectionsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsCollectionsRequestBuilder {
 	return &UploadsCollectionsRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadsCollectionsURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, uploadsCollectionsURLTemplate, pathParameters),
 	}
 }
 
@@ -575,13 +576,13 @@ func (rB *UploadsCollectionsRequestBuilder) File() *UploadsCollectionsFileReques
 
 // UploadsCollectionsFileRequestBuilder provides operations to upload collection files.
 type UploadsCollectionsFileRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewUploadsCollectionsFileRequestBuilderInternal instantiates a new UploadsCollectionsFileRequestBuilder.
 func NewUploadsCollectionsFileRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsCollectionsFileRequestBuilder {
 	return &UploadsCollectionsFileRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadsCollectionsFileURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, uploadsCollectionsFileURLTemplate, pathParameters),
 	}
 }
 
@@ -611,13 +612,13 @@ func (rB *UploadsCollectionsFileRequestBuilder) Post(ctx context.Context, media 
 
 // UploadsDeployablesRequestBuilder provides operations to manage deployables uploads.
 type UploadsDeployablesRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewUploadsDeployablesRequestBuilderInternal instantiates a new UploadsDeployablesRequestBuilder.
 func NewUploadsDeployablesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsDeployablesRequestBuilder {
 	return &UploadsDeployablesRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/uploads/deployables", pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_cdm/applications/uploads/deployables", pathParameters),
 	}
 }
 
@@ -628,13 +629,13 @@ func (rB *UploadsDeployablesRequestBuilder) File() *UploadsDeployablesFileReques
 
 // UploadsDeployablesFileRequestBuilder provides operations to upload deployable files.
 type UploadsDeployablesFileRequestBuilder struct {
-	internal.RequestBuilder
+	core.RequestBuilder
 }
 
 // NewUploadsDeployablesFileRequestBuilderInternal instantiates a new UploadsDeployablesFileRequestBuilder.
 func NewUploadsDeployablesFileRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UploadsDeployablesFileRequestBuilder {
 	return &UploadsDeployablesFileRequestBuilder{
-		RequestBuilder: internal.NewBaseRequestBuilder(requestAdapter, uploadsDeployablesFileURLTemplate, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, uploadsDeployablesFileURLTemplate, pathParameters),
 	}
 }
 

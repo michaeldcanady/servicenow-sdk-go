@@ -1,7 +1,7 @@
 package cdmeditorapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
@@ -29,11 +29,11 @@ type NodeResult interface {
 }
 
 type NodeResultModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewNodeResult() *NodeResultModel {
-	return &NodeResultModel{BaseModel: *internal.NewBaseModel()}
+	return &NodeResultModel{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *NodeResultModel) Serialize(writer serialization.SerializationWriter) error {
@@ -116,11 +116,11 @@ type ValidationResult interface {
 }
 
 type ValidationResultModel struct {
-	internal.BaseModel
+	core.BaseModel
 }
 
 func NewValidationResult() *ValidationResultModel {
-	return &ValidationResultModel{BaseModel: *internal.NewBaseModel()}
+	return &ValidationResultModel{BaseModel: *core.NewBaseModel()}
 }
 
 func (m *ValidationResultModel) Serialize(writer serialization.SerializationWriter) error {
@@ -167,13 +167,13 @@ func CreateValidationResultFromDiscriminatorValue(_ serialization.ParseNode) (se
 
 // MessageResult represents a simple string result.
 type MessageResult struct {
-	internal.BaseModel
+	core.BaseModel
 	Message *string
 }
 
 func NewMessageResult(message *string) *MessageResult {
 	return &MessageResult{
-		BaseModel: *internal.NewBaseModel(),
+		BaseModel: *core.NewBaseModel(),
 		Message:   message,
 	}
 }
