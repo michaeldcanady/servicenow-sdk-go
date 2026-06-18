@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -60,27 +61,27 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 	}
 
 	if requestConfiguration.QueryParameters.TableSysID == nil || *requestConfiguration.QueryParameters.TableSysID == "" {
-		return nil, errors.New("requestConfiguration.QueryParameters.TableSysID can't be empty")
+		return nil, snerrors.NewValidationError("requestConfiguration.QueryParameters.TableSysID")
 	}
 
 	if requestConfiguration.QueryParameters.TableName == nil || *requestConfiguration.QueryParameters.TableName == "" {
-		return nil, errors.New("requestConfiguration.QueryParameters.TableName can't be empty")
+		return nil, snerrors.NewValidationError("requestConfiguration.QueryParameters.TableName")
 	}
 
 	if requestConfiguration.QueryParameters.FileName == nil || *requestConfiguration.QueryParameters.FileName == "" {
-		return nil, errors.New("requestConfiguration.QueryParameters.FileName can't be empty")
+		return nil, snerrors.NewValidationError("requestConfiguration.QueryParameters.FileName")
 	}
 
 	if conversion.IsNil(media) {
-		return nil, errors.New("media is nil")
+		return nil, snerrors.NewValidationError("media")
 	}
 
 	if media.contentType == "" {
-		return nil, errors.New("contentType can't be empty")
+		return nil, snerrors.NewValidationError("contentType")
 	}
 
 	if len(media.data) == 0 {
-		return nil, errors.New("data is empty")
+		return nil, snerrors.NewValidationError("data")
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, media, requestConfiguration)
@@ -92,7 +93,7 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 	errorMapping := core.DefaultErrorMapping()
 	requestAdapter := rB.GetRequestAdapter()
 	if conversion.IsNil(requestAdapter) {
-		return nil, errors.New("requestAdapter is nil")
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	resp, err := requestAdapter.Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*File](CreateFileFromDiscriminatorValue), errorMapping)
@@ -101,7 +102,7 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 	}
 
 	if conversion.IsNil(resp) {
-		return nil, errors.New("response is nil")
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := resp.(core.ServiceNowItemResponse[*File])

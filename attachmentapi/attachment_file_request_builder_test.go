@@ -6,8 +6,10 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -330,7 +332,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
-				assert.Equal(t, errors.New("data is empty"), err)
+				assert.Equal(t, snerrors.NewValidationError("data"), err)
 			},
 		},
 		{
@@ -339,7 +341,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
 
 				contentType := ""
-				mockData := []byte{}
+				mockData := []byte("data") // need data to trigger content type check first
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
 						TableSysID: internal.ToPointer("sysId"),
@@ -358,7 +360,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
-				assert.Equal(t, errors.New("contentType can't be empty"), err)
+				assert.Equal(t, snerrors.NewValidationError("contentType"), err)
 			},
 		},
 		{
@@ -366,8 +368,8 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 			test: func(t *testing.T) {
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
 
-				contentType := ""
-				mockData := []byte{}
+				contentType := "text/plain"
+				mockData := []byte("data")
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
 						TableSysID: internal.ToPointer("sysId"),
@@ -385,7 +387,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
-				assert.Equal(t, errors.New("requestConfiguration.QueryParameters.FileName can't be empty"), err)
+				assert.Equal(t, snerrors.NewValidationError("requestConfiguration.QueryParameters.FileName"), err)
 			},
 		},
 		{
@@ -393,8 +395,8 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 			test: func(t *testing.T) {
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
 
-				contentType := ""
-				mockData := []byte{}
+				contentType := "text/plain"
+				mockData := []byte("data")
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
 						TableSysID: internal.ToPointer("sysId"),
@@ -411,7 +413,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
-				assert.Equal(t, errors.New("requestConfiguration.QueryParameters.TableName can't be empty"), err)
+				assert.Equal(t, snerrors.NewValidationError("requestConfiguration.QueryParameters.TableName"), err)
 			},
 		},
 		{
@@ -419,8 +421,8 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 			test: func(t *testing.T) {
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
 
-				contentType := ""
-				mockData := []byte{}
+				contentType := "text/plain"
+				mockData := []byte("data")
 				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
 					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
 						TableSysID: nil,
@@ -437,7 +439,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
 
 				assert.Nil(t, requestInformation)
-				assert.Equal(t, errors.New("requestConfiguration.QueryParameters.TableSysID can't be empty"), err)
+				assert.Equal(t, snerrors.NewValidationError("requestConfiguration.QueryParameters.TableSysID"), err)
 			},
 		},
 		{
