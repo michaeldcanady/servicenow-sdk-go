@@ -9,789 +9,417 @@ import (
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
-
 	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
 func TestNewAttachmentFileRequestBuilderInternal(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name           string
+		pathParameters map[string]string
+		requestAdapter abstractions.RequestAdapter
 	}{
 		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				pathParameters := map[string]string{}
-				requestAdapter := mocking.NewMockRequestAdapter()
-
-				builder := NewAttachmentFileRequestBuilderInternal(pathParameters, requestAdapter)
-
-				assert.IsType(t, &AttachmentFileRequestBuilder{}, builder)
-				assert.IsType(t, &core.BaseRequestBuilder{}, builder.RequestBuilder)
-				assert.Equal(t, pathParameters, builder.GetPathParameters())
-				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
-			},
+			name:           "Valid parameters",
+			pathParameters: map[string]string{"dummy": "value"},
+			requestAdapter: mocking.NewMockRequestAdapter(),
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			builder := NewAttachmentFileRequestBuilderInternal(tt.pathParameters, tt.requestAdapter)
+			assert.NotNil(t, builder)
+			assert.IsType(t, &AttachmentFileRequestBuilder{}, builder)
+			assert.Equal(t, tt.pathParameters, builder.GetPathParameters())
+			assert.Equal(t, tt.requestAdapter, builder.GetRequestAdapter())
+		})
 	}
 }
 
 func TestNewAttachmentFileRequestBuilder(t *testing.T) {
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name           string
+		rawURL         string
+		requestAdapter abstractions.RequestAdapter
+		expectedParams map[string]string
 	}{
 		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				rawURL := ""
-				requestAdapter := mocking.NewMockRequestAdapter()
-
-				urlParams := map[string]string{internal.RawURLKey: rawURL}
-
-				builder := NewAttachmentFileRequestBuilder(rawURL, requestAdapter)
-
-				assert.IsType(t, &AttachmentFileRequestBuilder{}, builder)
-				assert.IsType(t, &core.BaseRequestBuilder{}, builder.RequestBuilder)
-				assert.Equal(t, urlParams, builder.GetPathParameters())
-				assert.Equal(t, requestAdapter, builder.GetRequestAdapter())
-			},
+			name:           "Valid url",
+			rawURL:         "https://example.com",
+			requestAdapter: mocking.NewMockRequestAdapter(),
+			expectedParams: map[string]string{internal.RawURLKey: "https://example.com"},
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			builder := NewAttachmentFileRequestBuilder(tt.rawURL, tt.requestAdapter)
+			assert.NotNil(t, builder)
+			assert.IsType(t, &AttachmentFileRequestBuilder{}, builder)
+			assert.Equal(t, tt.expectedParams, builder.GetPathParameters())
+			assert.Equal(t, tt.requestAdapter, builder.GetRequestAdapter())
+		})
 	}
 }
 
 func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
+	defaultMedia := &Media{data: []byte("test-data"), contentType: "application/json"}
+	defaultParams := &AttachmentFileRequestBuilderPostQueryParameters{
+		TableSysID: internal.ToPointer("sys123"),
+		TableName:  internal.ToPointer("incident"),
+		FileName:   internal.ToPointer("test.txt"),
+	}
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name                 string
+		nilBuilder           bool
+		media                *Media
+		requestConfig        *AttachmentFileRequestBuilderPostRequestConfiguration
+		nilRequestAdapter    bool
+		sendError            error
+		sendResponse         serialization.Parsable
+		serializationErr     error
+		expectedErr          error
+		expectedErrorMessage string
 	}{
 		{
-			name: "Successful",
-			test: func(t *testing.T) {
-				mockPathParameters := map[string]string{}
-				mockPathParametersAny := map[string]any{}
-				mockQueryParameters := map[string]string{"file_name": "fileName", "table_name": "tableName", "table_sys_id": "sysId"}
-				mockQueryParametersAny := map[string]any{"file_name": []interface{}{"fileName"}, "table_name": []interface{}{"tableName"}, "table_sys_id": []interface{}{"sysId"}}
-				mockHeaders := &abstractions.RequestHeaders{}
-				mockHeaders.Add("accept", "application/json")
-				mockHeaders.Add("Content-Type", "application/json")
-				mockContent := []byte("testing")
-				mockURLTemplate := ""
-				mockParsable := core.NewBaseServiceNowItemResponse[*File](CreateFileFromDiscriminatorValue)
-
-				expected := &abstractions.RequestInformation{
-					Method:             abstractions.POST,
-					UrlTemplate:        mockURLTemplate,
-					PathParameters:     mockPathParameters,
-					PathParametersAny:  mockPathParametersAny,
-					QueryParameters:    mockQueryParameters,
-					QueryParametersAny: mockQueryParametersAny,
-					Content:            mockContent,
-					Headers:            mockHeaders,
-				}
-				expected.AddRequestOptions([]abstractions.RequestOption{})
-
-				contentType := "application/json"
-				mockData := mockContent
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				writer := mocking.NewMockSerializationWriter()
-				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
-				writer.On("Close").Return(nil)
-				writer.On("GetSerializedContent").Return(mockData, nil)
-
-				factory := mocking.NewMockSerializationWriterFactory()
-				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
-
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
-				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.AnythingOfType("abstractions.ErrorMappings")).Return(mockParsable, nil)
-
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
-				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
-				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
-
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: internal.ToPointer("sysId"),
-						TableName:  internal.ToPointer("tableName"),
-						FileName:   internal.ToPointer("fileName"),
-					},
-				}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				result, err := builder.Post(context.Background(), media, requestConfiguration)
-
-				assert.Equal(t, mockParsable, result)
-				assert.Nil(t, err)
+			name: "Successful upload",
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: defaultParams,
 			},
+			media:        defaultMedia,
+			sendResponse: core.NewBaseServiceNowItemResponse[*File](CreateFileFromDiscriminatorValue),
 		},
 		{
-			name: "Send error",
-			test: func(t *testing.T) {
-				mockPathParameters := map[string]string{}
-				mockPathParametersAny := map[string]any{}
-				mockQueryParameters := map[string]string{"file_name": "fileName", "table_name": "tableName", "table_sys_id": "sysId"}
-				mockQueryParametersAny := map[string]any{"file_name": []interface{}{"fileName"}, "table_name": []interface{}{"tableName"}, "table_sys_id": []interface{}{"sysId"}}
-				mockHeaders := &abstractions.RequestHeaders{}
-				mockHeaders.Add("accept", "application/json")
-				mockHeaders.Add("Content-Type", "application/json")
-				mockContent := []byte("testing")
-				mockURLTemplate := ""
-
-				expected := &abstractions.RequestInformation{
-					Method:             abstractions.POST,
-					UrlTemplate:        mockURLTemplate,
-					PathParameters:     mockPathParameters,
-					PathParametersAny:  mockPathParametersAny,
-					QueryParameters:    mockQueryParameters,
-					QueryParametersAny: mockQueryParametersAny,
-					Content:            mockContent,
-					Headers:            mockHeaders,
-				}
-				expected.AddRequestOptions([]abstractions.RequestOption{})
-
-				contentType := "application/json"
-				mockData := mockContent
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				writer := mocking.NewMockSerializationWriter()
-				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
-				writer.On("Close").Return(nil)
-				writer.On("GetSerializedContent").Return(mockData, nil)
-
-				factory := mocking.NewMockSerializationWriterFactory()
-				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
-
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
-				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.AnythingOfType("abstractions.ErrorMappings")).Return((*mocking.MockParsable)(nil), errors.New("send error"))
-
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
-				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
-				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
-
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: internal.ToPointer("sysId"),
-						TableName:  internal.ToPointer("tableName"),
-						FileName:   internal.ToPointer("fileName"),
-					},
-				}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				result, err := builder.Post(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, result)
-				assert.Equal(t, errors.New("send error"), err)
-			},
+			name:       "Nil builder",
+			nilBuilder: true,
+			media:      defaultMedia,
 		},
 		{
-			name: "Wrong type",
-			test: func(t *testing.T) {
-				mockPathParameters := map[string]string{}
-				mockPathParametersAny := map[string]any{}
-				mockQueryParameters := map[string]string{"file_name": "fileName", "table_name": "tableName", "table_sys_id": "sysId"}
-				mockQueryParametersAny := map[string]any{"file_name": []interface{}{"fileName"}, "table_name": []interface{}{"tableName"}, "table_sys_id": []interface{}{"sysId"}}
-				mockHeaders := &abstractions.RequestHeaders{}
-				mockHeaders.Add("accept", "application/json")
-				mockHeaders.Add("Content-Type", "application/json")
-				mockContent := []byte("testing")
-				mockURLTemplate := ""
-
-				expected := &abstractions.RequestInformation{
-					Method:             abstractions.POST,
-					UrlTemplate:        mockURLTemplate,
-					PathParameters:     mockPathParameters,
-					PathParametersAny:  mockPathParametersAny,
-					QueryParameters:    mockQueryParameters,
-					QueryParametersAny: mockQueryParametersAny,
-					Content:            mockContent,
-					Headers:            mockHeaders,
-				}
-				expected.AddRequestOptions([]abstractions.RequestOption{})
-
-				contentType := "application/json"
-				mockData := mockContent
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				writer := mocking.NewMockSerializationWriter()
-				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
-				writer.On("Close").Return(nil)
-				writer.On("GetSerializedContent").Return(mockData, nil)
-
-				factory := mocking.NewMockSerializationWriterFactory()
-				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
-
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
-				mockRequestAdapter.On("Send", context.Background(), expected, mock.AnythingOfType("serialization.ParsableFactory"), mock.AnythingOfType("abstractions.ErrorMappings")).Return(mocking.NewMockParsable(), nil)
-
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
-				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
-				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
-
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: internal.ToPointer("sysId"),
-						TableName:  internal.ToPointer("tableName"),
-						FileName:   internal.ToPointer("fileName"),
-					},
-				}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				result, err := builder.Post(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, result)
-				assert.Equal(t, errors.New("resp is not ServiceNowItemResponse[*File]"), err)
-			},
-		},
-		{
-			name: "Nil request adapter",
-			test: func(t *testing.T) {
-				mockPathParameters := map[string]string{}
-				mockHeaders := &abstractions.RequestHeaders{}
-				mockHeaders.Add("accept", "application/json")
-				mockHeaders.Add("Content-Type", "text/plain")
-				mockURLTemplate := ""
-
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetRequestAdapter").Return((*mocking.MockRequestAdapter)(nil))
-				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
-				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
-
-				contentType := "text/plain"
-				mockData := []byte("testing")
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: internal.ToPointer("sysId"),
-						TableName:  internal.ToPointer("tableName"),
-						FileName:   internal.ToPointer("fileName"),
-					},
-				}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				result, err := builder.Post(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, result)
-				assert.Equal(t, errors.New("requestAdapter is nil"), err)
-			},
-		},
-		{
-			name: "Missing data",
-			test: func(t *testing.T) {
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-
-				contentType := "text/plain"
-				mockData := []byte{}
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: internal.ToPointer("sysId"),
-						TableName:  internal.ToPointer("tableName"),
-						FileName:   internal.ToPointer("fileName"),
-					},
-				}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, requestInformation)
-				assert.Equal(t, snerrors.NewValidationError("data"), err)
-			},
-		},
-		{
-			name: "Missing content type",
-			test: func(t *testing.T) {
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-
-				contentType := ""
-				mockData := []byte("data") // need data to trigger content type check first
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: internal.ToPointer("sysId"),
-						TableName:  internal.ToPointer("tableName"),
-						FileName:   internal.ToPointer("fileName"),
-					},
-				}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, requestInformation)
-				assert.Equal(t, snerrors.NewValidationError("contentType"), err)
-			},
-		},
-		{
-			name: "Missing FileName query parameter",
-			test: func(t *testing.T) {
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-
-				contentType := "text/plain"
-				mockData := []byte("data")
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: internal.ToPointer("sysId"),
-						TableName:  internal.ToPointer("tableName"),
-					},
-				}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, requestInformation)
-				assert.Equal(t, snerrors.NewValidationError("requestConfiguration.QueryParameters.FileName"), err)
-			},
-		},
-		{
-			name: "Missing TableName query parameter",
-			test: func(t *testing.T) {
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-
-				contentType := "text/plain"
-				mockData := []byte("data")
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: internal.ToPointer("sysId"),
-					},
-				}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, requestInformation)
-				assert.Equal(t, snerrors.NewValidationError("requestConfiguration.QueryParameters.TableName"), err)
-			},
-		},
-		{
-			name: "Missing TableSysID query parameter",
-			test: func(t *testing.T) {
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-
-				contentType := "text/plain"
-				mockData := []byte("data")
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-					QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
-						TableSysID: nil,
-					},
-				}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, requestInformation)
-				assert.Equal(t, snerrors.NewValidationError("requestConfiguration.QueryParameters.TableSysID"), err)
-			},
+			name:                 "Missing requestConfiguration",
+			requestConfig:        nil,
+			media:                defaultMedia,
+			expectedErrorMessage: "requestConfiguration or requestConfiguration.QueryParameters can't be empty",
 		},
 		{
 			name: "Missing query parameters",
-			test: func(t *testing.T) {
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-
-				contentType := ""
-				mockData := []byte{}
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, requestInformation)
-				assert.Equal(t, errors.New("requestConfiguration or requestConfiguration.QueryParameters can't be empty"), err)
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: nil,
 			},
+			media:                defaultMedia,
+			expectedErrorMessage: "requestConfiguration or requestConfiguration.QueryParameters can't be empty",
 		},
 		{
-			name: "Missing request configuration",
-			test: func(t *testing.T) {
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-
-				contentType := ""
-				mockData := []byte{}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				requestInformation, err := builder.Post(context.Background(), media, nil)
-
-				assert.Nil(t, requestInformation)
-				assert.Equal(t, errors.New("requestConfiguration or requestConfiguration.QueryParameters can't be empty"), err)
+			name: "Missing TableSysID",
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
+					TableName: internal.ToPointer("incident"),
+					FileName:  internal.ToPointer("test.txt"),
+				},
 			},
+			media:       defaultMedia,
+			expectedErr: snerrors.NewValidationError("requestConfiguration.QueryParameters.TableSysID"),
 		},
 		{
-			name: "Nil model",
-			test: func(t *testing.T) {
-				contentType := ""
-				mockData := []byte{}
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{}
-
-				builder := (*AttachmentFileRequestBuilder)(nil)
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				requestInformation, err := builder.Post(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, requestInformation)
-				assert.Nil(t, err)
+			name: "Missing TableName",
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
+					TableSysID: internal.ToPointer("sys123"),
+					FileName:   internal.ToPointer("test.txt"),
+				},
 			},
+			media:       defaultMedia,
+			expectedErr: snerrors.NewValidationError("requestConfiguration.QueryParameters.TableName"),
+		},
+		{
+			name: "Missing FileName",
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
+					TableSysID: internal.ToPointer("sys123"),
+					TableName:  internal.ToPointer("incident"),
+				},
+			},
+			media:       defaultMedia,
+			expectedErr: snerrors.NewValidationError("requestConfiguration.QueryParameters.FileName"),
+		},
+		{
+			name: "Nil media",
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: defaultParams,
+			},
+			media:       nil,
+			expectedErr: snerrors.NewValidationError("media"),
+		},
+		{
+			name: "Empty content type",
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: defaultParams,
+			},
+			media:       &Media{data: []byte("test"), contentType: ""},
+			expectedErr: snerrors.NewValidationError("contentType"),
+		},
+		{
+			name: "Empty media data",
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: defaultParams,
+			},
+			media:       &Media{data: []byte{}, contentType: "application/json"},
+			expectedErr: snerrors.NewValidationError("data"),
+		},
+		{
+			name: "Nil request adapter",
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: defaultParams,
+			},
+			media:             defaultMedia,
+			nilRequestAdapter: true,
+			expectedErr:       errors.New("requestAdapter is nil"),
+		},
+		{
+			name: "Adapter send error",
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: defaultParams,
+			},
+			media:       defaultMedia,
+			sendError:   errors.New("send failed"),
+			expectedErr: errors.New("send failed"),
+		},
+		{
+			name: "Nil response from adapter",
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: defaultParams,
+			},
+			media:        defaultMedia,
+			sendResponse: nil,
+			expectedErr:  snerrors.ErrNilResponse,
+		},
+		{
+			name: "Wrong response type from adapter",
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: defaultParams,
+			},
+			media:        defaultMedia,
+			sendResponse: mocking.NewMockParsable(),
+			expectedErr:  errors.New("resp is not ServiceNowItemResponse[*File]"),
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var builder *AttachmentFileRequestBuilder
+			if !tt.nilBuilder {
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetURLTemplate").Return("")
+				mockInternalRequestBuilder.On("GetPathParameters").Return(map[string]string{})
+
+				if tt.nilRequestAdapter {
+					mockInternalRequestBuilder.On("GetRequestAdapter").Return((*mocking.MockRequestAdapter)(nil))
+				} else {
+					mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+
+					writer := mocking.NewMockSerializationWriter()
+					writer.On("WriteObjectValue", "", tt.media, mock.Anything).Return(nil)
+					writer.On("Close").Return(nil)
+					var data []byte
+					if tt.media != nil {
+						data = tt.media.data
+					}
+					writer.On("GetSerializedContent").Return(data, nil)
+
+					factory := mocking.NewMockSerializationWriterFactory()
+					factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
+					mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
+
+					mockRequestAdapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(tt.sendResponse, tt.sendError)
+				}
+				builder = &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
+			}
+
+			res, err := builder.Post(context.Background(), tt.media, tt.requestConfig)
+
+			if tt.nilBuilder {
+				assert.Nil(t, res)
+				assert.NoError(t, err)
+				return
+			}
+
+			if tt.expectedErr != nil {
+				assert.Error(t, err)
+				assert.Equal(t, tt.expectedErr, err)
+				assert.Nil(t, res)
+			} else if tt.expectedErrorMessage != "" {
+				assert.Error(t, err)
+				assert.Contains(t, err.Error(), tt.expectedErrorMessage)
+				assert.Nil(t, res)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.sendResponse, res)
+			}
+		})
 	}
 }
 
 func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
+	defaultMedia := &Media{data: []byte("I am content"), contentType: "application/json"}
+
 	tests := []struct {
-		name string
-		test func(*testing.T)
+		name                    string
+		nilBuilder              bool
+		nilRequestBuilder       bool
+		media                   *Media
+		requestConfig           *AttachmentFileRequestBuilderPostRequestConfiguration
+		nilRequestAdapter       bool
+		expectedErr             bool
+		expectedHeaders         map[string][]string
+		expectedQueryParameters map[string]any
+		expectedOptionsKeys     []string
 	}{
 		{
-			name: "Successful - minimal",
-			test: func(t *testing.T) {
-				contentType := "application/json"
-				mockData := []byte("I am content")
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				writer := mocking.NewMockSerializationWriter()
-				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
-				writer.On("Close").Return(nil)
-				writer.On("GetSerializedContent").Return(mockData, nil)
-
-				factory := mocking.NewMockSerializationWriterFactory()
-				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
-
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
-
-				mockPathParameters := map[string]string{}
-				mockPathParametersAny := map[string]any{}
-				mockQueryParameters := map[string]string{}
-				mockQueryParametersAny := map[string]any{}
-				mockHeaders := &abstractions.RequestHeaders{}
-				mockHeaders.Add("accept", "application/json")
-				mockHeaders.Add("content-type", "application/json")
-				mockContent := mockData
-				mockURLTemplate := ""
-
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
-				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
-				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
-
-				expected := &abstractions.RequestInformation{
-					Method:             abstractions.POST,
-					UrlTemplate:        mockURLTemplate,
-					PathParameters:     mockPathParameters,
-					PathParametersAny:  mockPathParametersAny,
-					QueryParameters:    mockQueryParameters,
-					QueryParametersAny: mockQueryParametersAny,
-					Content:            mockContent,
-					Headers:            mockHeaders,
-				}
-
-				expected.AddRequestOptions([]abstractions.RequestOption{})
-
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, err)
-				assert.Equal(t, expected, requestInformation)
+			name:          "Successful minimal",
+			media:         defaultMedia,
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{},
+			expectedHeaders: map[string][]string{
+				"accept":       {"application/json"},
+				"content-type": {"application/json"},
 			},
 		},
 		{
-			name: "Successful - with headers",
-			test: func(t *testing.T) {
-				contentType := "application/json"
-				mockData := []byte("I am content")
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				writer := mocking.NewMockSerializationWriter()
-				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
-				writer.On("Close").Return(nil)
-				writer.On("GetSerializedContent").Return(mockData, nil)
-
-				factory := mocking.NewMockSerializationWriterFactory()
-				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
-
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
-
-				mockPathParameters := map[string]string{}
-				mockPathParametersAny := map[string]any{}
-				mockQueryParameters := map[string]string{}
-				mockQueryParametersAny := map[string]any{}
-				mockHeaders := &abstractions.RequestHeaders{}
-				mockHeaders.Add("accept", "application/json")
-				mockHeaders.Add("content-type", "application/json")
-				mockHeaders.Add("test", "test1")
-				mockContent := mockData
-				mockURLTemplate := ""
-
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
-				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
-				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
-
-				expected := &abstractions.RequestInformation{
-					Method:             abstractions.POST,
-					UrlTemplate:        mockURLTemplate,
-					PathParameters:     mockPathParameters,
-					PathParametersAny:  mockPathParametersAny,
-					QueryParameters:    mockQueryParameters,
-					QueryParametersAny: mockQueryParametersAny,
-					Content:            mockContent,
-					Headers:            mockHeaders,
-				}
-
-				expected.AddRequestOptions([]abstractions.RequestOption{})
-
-				headers := &abstractions.RequestHeaders{}
-				headers.Add("test", "test1")
-
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-					Headers: headers,
-				}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, err)
-				assert.Equal(t, expected, requestInformation)
+			name:       "Nil builder",
+			nilBuilder: true,
+			media:      defaultMedia,
+		},
+		{
+			name:              "Nil request builder internally",
+			nilRequestBuilder: true,
+			media:             defaultMedia,
+		},
+		{
+			name:              "Nil request adapter",
+			media:             defaultMedia,
+			requestConfig:     &AttachmentFileRequestBuilderPostRequestConfiguration{},
+			nilRequestAdapter: true,
+			expectedErr:       true,
+		},
+		{
+			name:  "With custom headers",
+			media: defaultMedia,
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				Headers: func() *abstractions.RequestHeaders {
+					h := abstractions.NewRequestHeaders()
+					h.Add("custom-header", "custom-value")
+					return h
+				}(),
+			},
+			expectedHeaders: map[string][]string{
+				"accept":        {"application/json"},
+				"content-type":  {"application/json"},
+				"custom-header": {"custom-value"},
 			},
 		},
 		{
-			name: "Successful - with options",
-			test: func(t *testing.T) {
-				contentType := "application/json"
-				mockData := []byte("I am content")
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				writer := mocking.NewMockSerializationWriter()
-				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
-				writer.On("Close").Return(nil)
-				writer.On("GetSerializedContent").Return(mockData, nil)
-
-				factory := mocking.NewMockSerializationWriterFactory()
-				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
-
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
-
-				mockPathParameters := map[string]string{}
-				mockPathParametersAny := map[string]any{}
-				mockQueryParameters := map[string]string{}
-				mockQueryParametersAny := map[string]any{}
-				mockHeaders := &abstractions.RequestHeaders{}
-				mockHeaders.Add("accept", "application/json")
-				mockHeaders.Add("content-type", "application/json")
-				mockContent := mockData
-				mockURLTemplate := ""
-
-				mockRequestOption := mocking.NewMockRequestOption()
-				mockRequestOption.On("GetKey").Return(abstractions.RequestOptionKey{Key: "key"})
-
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
-				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
-				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
-
-				expected := &abstractions.RequestInformation{
-					Method:             abstractions.POST,
-					UrlTemplate:        mockURLTemplate,
-					PathParameters:     mockPathParameters,
-					PathParametersAny:  mockPathParametersAny,
-					QueryParameters:    mockQueryParameters,
-					QueryParametersAny: mockQueryParametersAny,
-					Content:            mockContent,
-					Headers:            mockHeaders,
-				}
-
-				expected.AddRequestOptions([]abstractions.RequestOption{mockRequestOption})
-
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-					Options: []abstractions.RequestOption{mockRequestOption},
-				}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, err)
-				assert.Equal(t, expected, requestInformation)
+			name:  "With query parameters",
+			media: defaultMedia,
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				QueryParameters: &AttachmentFileRequestBuilderPostQueryParameters{
+					FileName: internal.ToPointer("test.txt"),
+				},
+			},
+			expectedQueryParameters: map[string]any{
+				"file_name": []any{"test.txt"},
 			},
 		},
 		{
-			name: "Successful - with query parameters",
-			test: func(t *testing.T) {
-				contentType := "application/json"
-				mockData := []byte("I am content")
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				writer := mocking.NewMockSerializationWriter()
-				writer.On("WriteObjectValue", "", media, mock.AnythingOfType("[]serialization.Parsable")).Return(nil)
-				writer.On("Close").Return(nil)
-				writer.On("GetSerializedContent").Return(mockData, nil)
-
-				factory := mocking.NewMockSerializationWriterFactory()
-				factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
-
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
-				mockPathParameters := map[string]string{}
-				mockPathParametersAny := map[string]any{}
-				mockQueryParameters := map[string]string{"file_name": "file name"}
-				mockQueryParametersAny := map[string]any{"file_name": []interface{}{"file name"}}
-				mockHeaders := &abstractions.RequestHeaders{}
-				mockHeaders.Add("accept", "application/json")
-				mockHeaders.Add("content-type", "application/json")
-				mockContent := mockData
-				mockURLTemplate := ""
-
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
-				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
-				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
-
-				expected := &abstractions.RequestInformation{
-					Method:             abstractions.POST,
-					UrlTemplate:        mockURLTemplate,
-					PathParameters:     mockPathParameters,
-					PathParametersAny:  mockPathParametersAny,
-					QueryParameters:    mockQueryParameters,
-					QueryParametersAny: mockQueryParametersAny,
-					Content:            mockContent,
-					Headers:            mockHeaders,
-				}
-
-				expected.AddRequestOptions([]abstractions.RequestOption{})
-
-				queryParameters := &AttachmentFileRequestBuilderPostQueryParameters{
-					FileName: internal.ToPointer("file name"),
-				}
-
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{
-					QueryParameters: queryParameters,
-				}
-
-				builder := &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, err)
-				assert.Equal(t, expected, requestInformation)
+			name:  "With request options",
+			media: defaultMedia,
+			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
+				Options: func() []abstractions.RequestOption {
+					opt := mocking.NewMockRequestOption()
+					opt.On("GetKey").Return(abstractions.RequestOptionKey{Key: "key"})
+					return []abstractions.RequestOption{opt}
+				}(),
 			},
-		},
-		{
-			name: "Nil model",
-			test: func(t *testing.T) {
-				contentType := ""
-				mockData := []byte{}
-				requestConfiguration := &AttachmentFileRequestBuilderPostRequestConfiguration{}
-
-				builder := (*AttachmentFileRequestBuilder)(nil)
-
-				media := &Media{
-					data:        mockData,
-					contentType: contentType,
-				}
-
-				requestInformation, err := builder.ToPostRequestInformation(context.Background(), media, requestConfiguration)
-
-				assert.Nil(t, requestInformation)
-				assert.Nil(t, err)
-			},
+			expectedOptionsKeys: []string{"key"},
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, test.test)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var builder *AttachmentFileRequestBuilder
+
+			if !tt.nilBuilder {
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetURLTemplate").Return("")
+				mockInternalRequestBuilder.On("GetPathParameters").Return(map[string]string{})
+
+				if tt.nilRequestAdapter {
+					mockInternalRequestBuilder.On("GetRequestAdapter").Return((*mocking.MockRequestAdapter)(nil))
+				} else {
+					mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+
+					writer := mocking.NewMockSerializationWriter()
+					writer.On("WriteObjectValue", "", tt.media, mock.Anything).Return(nil)
+					writer.On("Close").Return(nil)
+					var data []byte
+					if tt.media != nil {
+						data = tt.media.data
+					}
+					writer.On("GetSerializedContent").Return(data, nil)
+
+					factory := mocking.NewMockSerializationWriterFactory()
+					factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
+					mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
+				}
+
+				if tt.nilRequestBuilder {
+					builder = &AttachmentFileRequestBuilder{nil}
+				} else {
+					builder = &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
+				}
+			}
+
+			reqInfo, err := builder.ToPostRequestInformation(context.Background(), tt.media, tt.requestConfig)
+
+			if tt.nilBuilder || tt.nilRequestBuilder {
+				assert.Nil(t, reqInfo)
+				assert.NoError(t, err)
+				return
+			}
+
+			if tt.expectedErr {
+				assert.Error(t, err)
+				assert.Nil(t, reqInfo)
+			} else {
+				assert.NoError(t, err)
+				assert.NotNil(t, reqInfo)
+				assert.Equal(t, abstractions.POST, reqInfo.Method)
+				assert.Equal(t, tt.media.data, reqInfo.Content)
+
+				// Verify headers
+				if tt.expectedHeaders != nil {
+					for k, v := range tt.expectedHeaders {
+						assert.Equal(t, v, reqInfo.Headers.Get(k))
+					}
+				}
+
+				// Verify query parameters
+				if tt.expectedQueryParameters != nil {
+					assert.Equal(t, tt.expectedQueryParameters, reqInfo.QueryParametersAny)
+				}
+
+				// Verify options
+				if len(tt.expectedOptionsKeys) > 0 {
+					options := reqInfo.GetRequestOptions()
+					assert.Equal(t, len(tt.expectedOptionsKeys), len(options))
+					for i, opt := range options {
+						assert.Equal(t, tt.expectedOptionsKeys[i], opt.GetKey().Key)
+					}
+				}
+			}
+		})
 	}
 }
