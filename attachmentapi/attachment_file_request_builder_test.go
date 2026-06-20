@@ -102,7 +102,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 			name:                 "Missing requestConfiguration",
 			requestConfig:        nil,
 			media:                defaultMedia,
-			expectedErrorMessage: "requestConfiguration or requestConfiguration.QueryParameters can't be empty",
+			expectedErrorMessage: "requestConfiguration is nil",
 		},
 		{
 			name: "Missing query parameters",
@@ -110,7 +110,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				QueryParameters: nil,
 			},
 			media:                defaultMedia,
-			expectedErrorMessage: "requestConfiguration or requestConfiguration.QueryParameters can't be empty",
+			expectedErrorMessage: "requestConfiguration.QueryParameters is nil",
 		},
 		{
 			name: "Missing TableSysID",
@@ -121,7 +121,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				},
 			},
 			media:       defaultMedia,
-			expectedErr: snerrors.NewValidationError("requestConfiguration.QueryParameters.TableSysID"),
+			expectedErr: errors.New("requestConfiguration.QueryParameters.TableSysID is nil or empty"),
 		},
 		{
 			name: "Missing TableName",
@@ -132,7 +132,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				},
 			},
 			media:       defaultMedia,
-			expectedErr: snerrors.NewValidationError("requestConfiguration.QueryParameters.TableName"),
+			expectedErr: errors.New("requestConfiguration.QueryParameters.TableName is nil or empty"),
 		},
 		{
 			name: "Missing FileName",
@@ -143,7 +143,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				},
 			},
 			media:       defaultMedia,
-			expectedErr: snerrors.NewValidationError("requestConfiguration.QueryParameters.FileName"),
+			expectedErr: errors.New("requestConfiguration.QueryParameters.FileName is nil or empty"),
 		},
 		{
 			name: "Nil media",
@@ -151,7 +151,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				QueryParameters: defaultParams,
 			},
 			media:       nil,
-			expectedErr: snerrors.NewValidationError("media"),
+			expectedErr: errors.New("media is nil"),
 		},
 		{
 			name: "Empty content type",
@@ -159,7 +159,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				QueryParameters: defaultParams,
 			},
 			media:       &Media{data: []byte("test"), contentType: ""},
-			expectedErr: snerrors.NewValidationError("contentType"),
+			expectedErr: errors.New("media.contentType is nil or empty"),
 		},
 		{
 			name: "Empty media data",
@@ -167,7 +167,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 				QueryParameters: defaultParams,
 			},
 			media:       &Media{data: []byte{}, contentType: "application/json"},
-			expectedErr: snerrors.NewValidationError("data"),
+			expectedErr: errors.New("media.data is nil or empty"),
 		},
 		{
 			name: "Nil request adapter",
