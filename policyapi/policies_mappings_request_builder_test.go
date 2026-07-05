@@ -268,7 +268,7 @@ func TestPoliciesMappingsRequestBuilder_Post(t *testing.T) {
 				},
 			},
 			wantErr:    true,
-			errMessage: "AppName is required",
+			errMessage: "requestConfiguration.QueryParameters.AppName is required",
 		},
 		{
 			name:           "Missing_DeployableName",
@@ -280,7 +280,7 @@ func TestPoliciesMappingsRequestBuilder_Post(t *testing.T) {
 				},
 			},
 			wantErr:    true,
-			errMessage: "DeployableName is required",
+			errMessage: "requestConfiguration.QueryParameters.DeployableName is required",
 		},
 		{
 			name:           "Missing_PolicyName",
@@ -292,7 +292,7 @@ func TestPoliciesMappingsRequestBuilder_Post(t *testing.T) {
 				},
 			},
 			wantErr:    true,
-			errMessage: "PolicyName is required",
+			errMessage: "requestConfiguration.QueryParameters.PolicyName is required",
 		},
 	}
 
