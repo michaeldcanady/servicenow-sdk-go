@@ -49,6 +49,10 @@ func (rE *RecordElement) SetDisplayValue(value any) error {
 
 // GetValue returns the raw value of the element.
 func (rE *RecordElement) GetValue() (ElementValue, error) {
+	if conversion.IsNil(rE) || conversion.IsNil(rE.BackedModel) {
+		return ElementValue{}, nil
+	}
+
 	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, ElementValue](rE.GetBackingStore(), recordValueKey)
 }
 
