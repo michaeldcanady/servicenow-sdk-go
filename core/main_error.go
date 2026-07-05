@@ -63,6 +63,10 @@ func (exc *MainError) GetFieldDeserializers() map[string]func(serialization.Pars
 
 // GetDetail returns the error details.
 func (exc *MainError) GetDetail() (*string, error) {
+	if conversion.IsNil(exc) || conversion.IsNil(exc.BackedModel) {
+		return nil, nil
+	}
+
 	return internalStore.DefaultBackedModelAccessorFunc[store.BackingStore, *string](exc.GetBackingStore(), detailKey)
 }
 
@@ -73,6 +77,10 @@ func (exc *MainError) SetDetail(detail *string) error {
 
 // GetMessage gets the error message.
 func (exc *MainError) GetMessage() (*string, error) {
+	if conversion.IsNil(exc) || conversion.IsNil(exc.BackedModel) {
+		return nil, nil
+	}
+
 	return internalStore.DefaultBackedModelAccessorFunc[store.BackingStore, *string](exc.GetBackingStore(), messageKey)
 }
 
@@ -83,6 +91,10 @@ func (exc *MainError) SetMessage(message *string) error {
 
 // GetStatus returns the status.
 func (exc *MainError) GetStatus() (*string, error) {
+	if conversion.IsNil(exc) || conversion.IsNil(exc.BackedModel) {
+		return nil, nil
+	}
+
 	return internalStore.DefaultBackedModelAccessorFunc[store.BackingStore, *string](exc.GetBackingStore(), statusKey)
 }
 
