@@ -1,0 +1,96 @@
+name: "Bug Report"
+description: Report something that's broken or behaving unexpectedly in the SDK.
+title: "[Bug]: "
+labels: ["type: bug", "state: new"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Bugs are triaged outside the feature backlog, so please include
+        enough detail (version, code sample, actual vs. expected) for a maintainer to reproduce it quickly.
+
+  - type: input
+    id: sdk-version
+    attributes:
+      label: SDK Version
+      description: Output of `go list -m github.com/michaeldcanady/servicenow-sdk-go` or your go.mod pin.
+      placeholder: v1.11.2
+    validations:
+      required: true
+
+  - type: input
+    id: go-version
+    attributes:
+      label: Go Version
+      placeholder: go1.24.1
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Affected Module / API
+      options:
+        - table-api
+        - attachment-api
+        - batch-api
+        - cdm (applications/policies/changesets/editor)
+        - cmdb
+        - case-api
+        - authentication / credentials
+        - core / request pipeline
+        - other / not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal Reproduction
+      description: A minimal Go code sample that reproduces the issue. Redact any real instance URLs or credentials.
+      render: go
+    validations:
+      required: true
+
+  - type: textarea
+    id: error-output
+    attributes:
+      label: Error Output / Stack Trace (if any)
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Anything else — related issues, ServiceNow instance version/plugin config, etc.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for a duplicate of this bug.
+          required: true
+        - label: I reproduced this on the latest released version.
+          required: true
+        - label: I included a minimal reproduction, not just a description.
+          required: true
