@@ -31,8 +31,16 @@ linters:
       - path: (actsub-api|documents-api|table-api)/.*
         linters:
           - dupl
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
     paths:
-      - docs/snippets/.*\.go
+      - third_party$
+      - builtin$
+      - examples$
+      - docs/assets/snippets/.*\.go$
 formatters:
   enable:
     - gofmt
