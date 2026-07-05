@@ -1,4 +1,4 @@
-//go:build preview.query
+//go:build snippets
 
 package snippets
 

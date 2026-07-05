@@ -8,7 +8,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
@@ -163,7 +163,7 @@ func (rB *AttachmentRequestBuilder) ToHeadRequestInformation(_ context.Context, 
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
@@ -179,7 +179,7 @@ func (rB *AttachmentRequestBuilder) ToGetRequestInformation(_ context.Context, r
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }

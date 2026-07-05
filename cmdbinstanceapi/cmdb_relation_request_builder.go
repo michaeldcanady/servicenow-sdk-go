@@ -7,11 +7,12 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
 const (
+	relSysIDKey             = "rel_sys_id"
 	cmdbRelationURLTemplate = "{+baseurl}/api/now/v1/cmdb/instance/{className}/{sys_id}/relation"
 )
 
@@ -29,6 +30,10 @@ func NewCmdbRelationRequestBuilderInternal(pathParameters map[string]string, req
 
 // Post creates a Relation for the CI.
 func (rB *CmdbRelationRequestBuilder) Post(ctx context.Context, body CmdbInstance, config *CmdbRelationRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
@@ -59,10 +64,10 @@ func (rB *CmdbRelationRequestBuilder) ToPostRequestInformation(ctx context.Conte
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	if !conversion.IsNil(body) {
-		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 		if err != nil {
 			return nil, err
 		}
@@ -74,6 +79,6 @@ func (rB *CmdbRelationRequestBuilder) ToPostRequestInformation(ctx context.Conte
 // ByID provides operations to manage a specific CI relationship.
 func (rB *CmdbRelationRequestBuilder) ByID(relSysID string) *CmdbRelationItemRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["rel_sys_id"] = relSysID
+	pathParameters[relSysIDKey] = relSysID
 	return NewCmdbRelationItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }

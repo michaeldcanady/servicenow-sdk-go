@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
@@ -9,40 +10,63 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewPageIterator(t *testing.T) {
+	reqAdapter := mocking.NewMockRequestAdapter()
+	parsableFactory := mocking.NewMockParsableFactory().Factory
+
+	validRes := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
+	validRes.On("GetBackingStore").Return(mocking.NewMockBackingStore())
+	validRes.On("GetResult").Return([]*mocking.MockParsable{}, nil)
+	validRes.On("GetNextLink").Return(nil, nil)
+	validRes.On("GetPreviousLink").Return(nil, nil)
+	validRes.On("GetFirstLink").Return(nil, nil)
+	validRes.On("GetLastLink").Return(nil, nil)
+
 	tests := []struct {
 		name        string
 		res         ServiceNowCollectionResponse[*mocking.MockParsable]
 		reqAdapter  abstractions.RequestAdapter
 		constructor serialization.ParsableFactory
-		expectedErr bool
+		wantErr     bool
+		errMsg      string
 	}{
 		{
-			name: "Valid initialization",
-			res: func() ServiceNowCollectionResponse[*mocking.MockParsable] {
-				res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
-				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
-				res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
-				res.On("GetNextLink").Return(nil, nil)
-				res.On("GetPreviousLink").Return(nil, nil)
-				res.On("GetFirstLink").Return(nil, nil)
-				res.On("GetLastLink").Return(nil, nil)
-				return res
-			}(),
-			reqAdapter:  mocking.NewMockRequestAdapter(),
-			constructor: mocking.NewMockParsableFactory().Factory,
-			expectedErr: false,
+			name:        "Valid initialization",
+			res:         validRes,
+			reqAdapter:  reqAdapter,
+			constructor: parsableFactory,
+			wantErr:     false,
+		},
+		{
+			name:        "Nil reqAdapter",
+			res:         validRes,
+			reqAdapter:  nil,
+			constructor: parsableFactory,
+			wantErr:     true,
+			errMsg:      "requestAdapter cannot be nil",
+		},
+		{
+			name:        "Nil response",
+			res:         nil,
+			reqAdapter:  reqAdapter,
+			constructor: parsableFactory,
+			wantErr:     true,
+			errMsg:      "response cannot be nil",
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			iterator, err := NewPageIterator(test.res, test.reqAdapter, test.constructor)
-			if test.expectedErr {
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			iterator, err := NewPageIterator(tt.res, tt.reqAdapter, tt.constructor)
+			if tt.wantErr {
 				assert.Error(t, err)
 				assert.Nil(t, iterator)
+				if tt.errMsg != "" {
+					assert.Contains(t, err.Error(), tt.errMsg)
+				}
 			} else {
 				assert.NoError(t, err)
 				assert.NotNil(t, iterator)
@@ -66,8 +90,8 @@ func TestPageIterator_Iterate(t *testing.T) {
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
 			res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
 			res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
 			res.On("GetResult").Return([]*mocking.MockParsable{mocking.NewMockParsable()}, nil)
@@ -79,9 +103,10 @@ func TestPageIterator_Iterate(t *testing.T) {
 			reqAdapter := mocking.NewMockRequestAdapter()
 			constructor := mocking.NewMockParsableFactory().Factory
 
-			iterator, _ := NewPageIterator[*mocking.MockParsable](res, reqAdapter, constructor)
+			iterator, err := NewPageIterator[*mocking.MockParsable](res, reqAdapter, constructor)
+			require.NoError(t, err)
 
-			err := iterator.Iterate(context.Background(), test.reverse, func(item *mocking.MockParsable) bool {
+			err = iterator.Iterate(context.Background(), tt.reverse, func(item *mocking.MockParsable) bool {
 				return true
 			})
 			assert.NoError(t, err)
@@ -91,106 +116,249 @@ func TestPageIterator_Iterate(t *testing.T) {
 
 func TestPageIterator_NextItem(t *testing.T) {
 	tests := []struct {
-		name string
+		name      string
+		mockSetup func(*mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], *mocking.MockRequestAdapter)
+		wantErr   bool
+		errIs     error
 	}{
 		{
 			name: "Standard next item",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
+				res.On("GetResult").Return([]*mocking.MockParsable{mocking.NewMockParsable()}, nil)
+				res.On("GetNextLink").Return(nil, nil)
+				res.On("GetPreviousLink").Return(nil, nil)
+				res.On("GetFirstLink").Return(nil, nil)
+				res.On("GetLastLink").Return(nil, nil)
+			},
+			wantErr: false,
+		},
+		{
+			name: "No more items",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
+				res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
+				res.On("GetNextLink").Return(nil, nil)
+				res.On("GetPreviousLink").Return(nil, nil)
+				res.On("GetFirstLink").Return(nil, nil)
+				res.On("GetLastLink").Return(nil, nil)
+			},
+			wantErr: true,
+			errIs:   ErrNoMoreItems,
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
 			res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
-			res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
-			res.On("GetResult").Return([]*mocking.MockParsable{mocking.NewMockParsable()}, nil)
-			res.On("GetNextLink").Return(nil, nil)
-			res.On("GetPreviousLink").Return(nil, nil)
-			res.On("GetFirstLink").Return(nil, nil)
-			res.On("GetLastLink").Return(nil, nil)
-
 			reqAdapter := mocking.NewMockRequestAdapter()
-			constructor := mocking.NewMockParsableFactory().Factory
+			tt.mockSetup(res, reqAdapter)
 
-			iterator, _ := NewPageIterator[*mocking.MockParsable](res, reqAdapter, constructor)
+			constructor := mocking.NewMockParsableFactory().Factory
+			iterator, err := NewPageIterator[*mocking.MockParsable](res, reqAdapter, constructor)
+			require.NoError(t, err)
 
 			item, err := iterator.NextItem(context.Background())
-			assert.NoError(t, err)
-			assert.NotNil(t, item)
+			if tt.wantErr {
+				assert.Error(t, err)
+				if tt.errIs != nil {
+					assert.ErrorIs(t, err, tt.errIs)
+				}
+			} else {
+				assert.NoError(t, err)
+				assert.NotNil(t, item)
+			}
 		})
 	}
 }
 
-func TestNewPageIterator_Errors(t *testing.T) {
-	reqAdapter := mocking.NewMockRequestAdapter()
+func TestPageIterator_PreviousItem(t *testing.T) {
+	tests := []struct {
+		name      string
+		mockSetup func(*mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], *mocking.MockRequestAdapter)
+		setupIt   func(*PageIterator[*mocking.MockParsable])
+		wantErr   bool
+		errIs     error
+	}{
+		{
+			name: "Standard previous item",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
+				res.On("GetResult").Return([]*mocking.MockParsable{mocking.NewMockParsable()}, nil)
+				res.On("GetNextLink").Return(nil, nil)
+				res.On("GetPreviousLink").Return(nil, nil)
+				res.On("GetFirstLink").Return(nil, nil)
+				res.On("GetLastLink").Return(nil, nil)
+			},
+			setupIt: func(pi *PageIterator[*mocking.MockParsable]) {
+				pi.pauseIndex = 1
+			},
+			wantErr: false,
+		},
+		{
+			name: "No previous items",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
+				res.On("GetResult").Return([]*mocking.MockParsable{mocking.NewMockParsable()}, nil)
+				res.On("GetNextLink").Return(nil, nil)
+				res.On("GetPreviousLink").Return(nil, nil)
+				res.On("GetFirstLink").Return(nil, nil)
+				res.On("GetLastLink").Return(nil, nil)
+			},
+			setupIt: func(pi *PageIterator[*mocking.MockParsable]) {
+				pi.pauseIndex = 0
+			},
+			wantErr: true,
+			errIs:   ErrNoMoreItems,
+		},
+	}
 
-	// Nil reqAdapter
-	iterator, err := NewPageIterator[*mocking.MockParsable](nil, nil, nil)
-	assert.Error(t, err)
-	assert.Nil(t, iterator)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
+			reqAdapter := mocking.NewMockRequestAdapter()
+			tt.mockSetup(res, reqAdapter)
 
-	// Nil response
-	iterator, err = NewPageIterator[*mocking.MockParsable](nil, reqAdapter, nil)
-	assert.Error(t, err)
-	assert.Nil(t, iterator)
+			constructor := mocking.NewMockParsableFactory().Factory
+			iterator, err := NewPageIterator[*mocking.MockParsable](res, reqAdapter, constructor)
+			require.NoError(t, err)
+
+			if tt.setupIt != nil {
+				tt.setupIt(iterator)
+			}
+
+			item, err := iterator.PreviousItem(context.Background())
+			if tt.wantErr {
+				assert.Error(t, err)
+				if tt.errIs != nil {
+					assert.ErrorIs(t, err, tt.errIs)
+				}
+			} else {
+				assert.NoError(t, err)
+				assert.NotNil(t, item)
+			}
+		})
+	}
 }
 
-func TestPageIterator_Navigation_EmptyLinks(t *testing.T) {
-	res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
-	res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
-	res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
-	res.On("GetNextLink").Return(nil, nil)
-	res.On("GetPreviousLink").Return(nil, nil)
-	res.On("GetFirstLink").Return(nil, nil)
-	res.On("GetLastLink").Return(nil, nil)
+func TestPageIterator_Next(t *testing.T) {
+	tests := []struct {
+		name      string
+		mockSetup func(*mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], *mocking.MockRequestAdapter)
+		navFunc   func(context.Context, *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error)
+		wantRes   bool
+	}{
+		{
+			name: "Next with link",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				link := "https://example.com/next"
+				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
+				res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
+				res.On("GetNextLink").Return(&link, nil)
+				res.On("GetPreviousLink").Return(nil, nil)
+				res.On("GetFirstLink").Return(nil, nil)
+				res.On("GetLastLink").Return(nil, nil)
 
-	reqAdapter := mocking.NewMockRequestAdapter()
-	iterator, _ := NewPageIterator[*mocking.MockParsable](res, reqAdapter, nil)
+				req.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(res, nil)
+			},
+			navFunc: func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
+				return pi.Next(ctx)
+			},
+			wantRes: true,
+		},
+		{
+			name: "Next without link",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
+				res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
+				res.On("GetNextLink").Return(nil, nil)
+				res.On("GetPreviousLink").Return(nil, nil)
+				res.On("GetFirstLink").Return(nil, nil)
+				res.On("GetLastLink").Return(nil, nil)
+			},
+			navFunc: func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
+				return pi.Next(ctx)
+			},
+			wantRes: false,
+		},
+		{
+			name: "Previous with link",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				link := "https://example.com/prev"
+				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
+				res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
+				res.On("GetNextLink").Return(nil, nil)
+				res.On("GetPreviousLink").Return(&link, nil)
+				res.On("GetFirstLink").Return(nil, nil)
+				res.On("GetLastLink").Return(nil, nil)
 
-	resp, err := iterator.Next(context.Background())
-	assert.NoError(t, err)
-	assert.Equal(t, PageResult[*mocking.MockParsable]{}, resp)
+				req.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(res, nil)
+			},
+			navFunc: func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
+				return pi.Previous(ctx)
+			},
+			wantRes: true,
+		},
+		{
+			name: "First with link",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				link := "https://example.com/first"
+				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
+				res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
+				res.On("GetNextLink").Return(nil, nil)
+				res.On("GetPreviousLink").Return(nil, nil)
+				res.On("GetFirstLink").Return(&link, nil)
+				res.On("GetLastLink").Return(nil, nil)
 
-	resp, err = iterator.Previous(context.Background())
-	assert.NoError(t, err)
-	assert.Equal(t, PageResult[*mocking.MockParsable]{}, resp)
+				req.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(res, nil)
+			},
+			navFunc: func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
+				return pi.First(ctx)
+			},
+			wantRes: true,
+		},
+		{
+			name: "Last with link",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				link := "https://example.com/last"
+				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
+				res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
+				res.On("GetNextLink").Return(nil, nil)
+				res.On("GetPreviousLink").Return(nil, nil)
+				res.On("GetFirstLink").Return(nil, nil)
+				res.On("GetLastLink").Return(&link, nil)
 
-	resp, err = iterator.First(context.Background())
-	assert.NoError(t, err)
-	assert.Equal(t, PageResult[*mocking.MockParsable]{}, resp)
+				req.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(res, nil)
+			},
+			navFunc: func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
+				return pi.Last(ctx)
+			},
+			wantRes: true,
+		},
+	}
 
-	resp, err = iterator.Last(context.Background())
-	assert.NoError(t, err)
-	assert.Equal(t, PageResult[*mocking.MockParsable]{}, resp)
-}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
+			reqAdapter := &mocking.MockRequestAdapter{}
+			tt.mockSetup(res, reqAdapter)
 
-func TestNewPageIterator_WithOptions(t *testing.T) {
-	res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
-	res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
-	res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
-	res.On("GetNextLink").Return(nil, nil)
-	res.On("GetPreviousLink").Return(nil, nil)
-	res.On("GetFirstLink").Return(nil, nil)
-	res.On("GetLastLink").Return(nil, nil)
+			iterator, err := NewPageIterator[*mocking.MockParsable](res, reqAdapter, mocking.NewMockParsableFactory().Factory)
+			require.NoError(t, err)
 
-	reqAdapter := mocking.NewMockRequestAdapter()
-	headers := abstractions.NewRequestHeaders()
-	headers.Add("test", "header")
-	options := []abstractions.RequestOption{}
-
-	iterator, err := NewPageIterator[*mocking.MockParsable](
-		res,
-		reqAdapter,
-		nil,
-		WithHeaders[*mocking.MockParsable](headers),
-		WithRequestOptions[*mocking.MockParsable](options...),
-	)
-
-	assert.NoError(t, err)
-	assert.NotNil(t, iterator)
-	assert.Equal(t, headers, iterator.headers)
+			resp, err := tt.navFunc(context.Background(), iterator)
+			assert.NoError(t, err)
+			if tt.wantRes {
+				assert.NotEqual(t, PageResult[*mocking.MockParsable]{}, resp)
+			} else {
+				assert.Equal(t, PageResult[*mocking.MockParsable]{}, resp)
+			}
+		})
+	}
 }
 
 func TestPageIterator_Options(t *testing.T) {
+	reqAdapter := mocking.NewMockRequestAdapter()
 	res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
 	res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
 	res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
@@ -199,31 +367,146 @@ func TestPageIterator_Options(t *testing.T) {
 	res.On("GetFirstLink").Return(nil, nil)
 	res.On("GetLastLink").Return(nil, nil)
 
-	reqAdapter := mocking.NewMockRequestAdapter()
-	iterator, _ := NewPageIterator[*mocking.MockParsable](res, reqAdapter, nil)
+	headers := abstractions.NewRequestHeaders()
+	headers.Add("test", "header")
+	options := []abstractions.RequestOption{
+		&mocking.MockRequestOption{},
+	}
 
-	iterator.SetHeaders(abstractions.NewRequestHeaders())
-	iterator.AddRequestOptions([]abstractions.RequestOption{}...)
+	tests := []struct {
+		name string
+		run  func(*testing.T)
+	}{
+		{
+			name: "NewPageIterator with options",
+			run: func(t *testing.T) {
+				iterator, err := NewPageIterator[*mocking.MockParsable](
+					res,
+					reqAdapter,
+					nil,
+					WithHeaders[*mocking.MockParsable](headers),
+					WithRequestOptions[*mocking.MockParsable](options...),
+				)
+				assert.NoError(t, err)
+				assert.NotNil(t, iterator)
+				assert.Equal(t, headers, iterator.headers)
+				assert.Contains(t, iterator.reqOptions, options[0])
+			},
+		},
+		{
+			name: "SetHeaders and AddRequestOptions",
+			run: func(t *testing.T) {
+				iterator, err := NewPageIterator[*mocking.MockParsable](res, reqAdapter, nil)
+				require.NoError(t, err)
+
+				newHeaders := abstractions.NewRequestHeaders()
+				newHeaders.Add("new", "header")
+				iterator.SetHeaders(newHeaders)
+				assert.Equal(t, newHeaders, iterator.headers)
+
+				iterator.AddRequestOptions(options...)
+				assert.Contains(t, iterator.reqOptions, options[0])
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, tt.run)
+	}
 }
 
-func TestPageIterator_Navigation(t *testing.T) {
+func TestPageIterator_Reset(t *testing.T) {
+	reqAdapter := mocking.NewMockRequestAdapter()
+	res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
+	res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
+	res.On("GetResult").Return([]*mocking.MockParsable{mocking.NewMockParsable()}, nil)
+	res.On("GetNextLink").Return(nil, nil)
+	res.On("GetPreviousLink").Return(nil, nil)
+	res.On("GetFirstLink").Return(nil, nil)
+	res.On("GetLastLink").Return(nil, nil)
+
 	tests := []struct {
-		name     string
-		navFunc  func(context.Context, *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error)
-		mockLink string
+		name string
+		run  func(*testing.T, *PageIterator[*mocking.MockParsable])
 	}{
-		{"Next", func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
-			return pi.Next(ctx)
-		}, "next"},
-		{"Previous", func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
-			return pi.Previous(ctx)
-		}, "prev"},
-		{"First", func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
-			return pi.First(ctx)
-		}, "first"},
-		{"Last", func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
-			return pi.Last(ctx)
-		}, "last"},
+		{
+			name: "Reset",
+			run: func(t *testing.T, iterator *PageIterator[*mocking.MockParsable]) {
+				_, _ = iterator.NextItem(context.Background())
+				assert.Equal(t, 1, iterator.pauseIndex)
+
+				iterator.Reset()
+				assert.Equal(t, 0, iterator.pauseIndex)
+			},
+		},
+		{
+			name: "ResetPage",
+			run: func(t *testing.T, iterator *PageIterator[*mocking.MockParsable]) {
+				_, _ = iterator.NextItem(context.Background())
+				assert.Equal(t, 1, iterator.pauseIndex)
+
+				iterator.ResetPage()
+				assert.Equal(t, 0, iterator.pauseIndex)
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			iterator, err := NewPageIterator[*mocking.MockParsable](res, reqAdapter, nil)
+			require.NoError(t, err)
+			tt.run(t, iterator)
+		})
+	}
+}
+
+func TestPageIterator_Navigation_Errors(t *testing.T) {
+	tests := []struct {
+		name      string
+		mockSetup func(*mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], *mocking.MockRequestAdapter)
+		navFunc   func(context.Context, *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error)
+	}{
+		{
+			name: "Send error",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				link := "https://example.com/next"
+				res.On("GetNextLink").Return(&link, nil)
+				req.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, errors.New("send error"))
+			},
+			navFunc: func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
+				return pi.Next(ctx)
+			},
+		},
+		{
+			name: "Wrong response type",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				link := "https://example.com/next"
+				res.On("GetNextLink").Return(&link, nil)
+				// Return a mock that is not ServiceNowCollectionResponse
+				req.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&mocking.MockParsable{}, nil)
+			},
+			navFunc: func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
+				return pi.Next(ctx)
+			},
+		},
+
+		{
+			name: "convertToPage error",
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+				link := "https://example.com/next"
+				res.On("GetNextLink").Return(&link, nil)
+
+				// Return a response that will cause convertToPage to fail
+				badRes := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
+				// Return an empty slice instead of nil to avoid panic in mock
+				badRes.On("GetResult").Return([]*mocking.MockParsable{}, errors.New("get result error"))
+
+				req.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(badRes, nil)
+			},
+			navFunc: func(ctx context.Context, pi *PageIterator[*mocking.MockParsable]) (PageResult[*mocking.MockParsable], error) {
+				return pi.Next(ctx)
+			},
+		},
 	}
 
 	for _, tt := range tests {
@@ -231,85 +514,18 @@ func TestPageIterator_Navigation(t *testing.T) {
 			res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
 			res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
 			res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
-
-			link := "https://example.com/" + tt.mockLink
-			res.On("GetNextLink").Return(&link, nil)
-			res.On("GetPreviousLink").Return(&link, nil)
-			res.On("GetFirstLink").Return(&link, nil)
-			res.On("GetLastLink").Return(&link, nil)
+			res.On("GetPreviousLink").Return(nil, nil)
+			res.On("GetFirstLink").Return(nil, nil)
+			res.On("GetLastLink").Return(nil, nil)
 
 			reqAdapter := &mocking.MockRequestAdapter{}
-			reqAdapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(res, nil)
+			tt.mockSetup(res, reqAdapter)
 
-			iterator, _ := NewPageIterator[*mocking.MockParsable](res, reqAdapter, mocking.NewMockParsableFactory().Factory)
+			iterator, err := NewPageIterator[*mocking.MockParsable](res, reqAdapter, mocking.NewMockParsableFactory().Factory)
+			require.NoError(t, err)
 
-			resp, err := tt.navFunc(context.Background(), iterator)
-			assert.NoError(t, err)
-			assert.NotNil(t, resp)
-		})
-	}
-}
-
-func TestPageIterator_Reset(t *testing.T) {
-	tests := []struct {
-		name string
-	}{
-		{
-			name: "Reset iterator",
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
-			res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
-			res.On("GetResult").Return([]*mocking.MockParsable{mocking.NewMockParsable()}, nil)
-			res.On("GetNextLink").Return(nil, nil)
-			res.On("GetPreviousLink").Return(nil, nil)
-			res.On("GetFirstLink").Return(nil, nil)
-			res.On("GetLastLink").Return(nil, nil)
-
-			reqAdapter := mocking.NewMockRequestAdapter()
-
-			iterator, _ := NewPageIterator[*mocking.MockParsable](res, reqAdapter, nil)
-
-			_, _ = iterator.NextItem(context.Background())
-			assert.Equal(t, 1, iterator.pauseIndex)
-
-			iterator.Reset()
-			assert.Equal(t, 0, iterator.pauseIndex)
-		})
-	}
-}
-
-func TestPageIterator_ResetPage(t *testing.T) {
-	tests := []struct {
-		name string
-	}{
-		{
-			name: "Reset page",
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			res := &mocking.MockServiceNowCollectionResponse[*mocking.MockParsable]{}
-			res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
-			res.On("GetResult").Return([]*mocking.MockParsable{mocking.NewMockParsable()}, nil)
-			res.On("GetNextLink").Return(nil, nil)
-			res.On("GetPreviousLink").Return(nil, nil)
-			res.On("GetFirstLink").Return(nil, nil)
-			res.On("GetLastLink").Return(nil, nil)
-
-			reqAdapter := mocking.NewMockRequestAdapter()
-
-			iterator, _ := NewPageIterator[*mocking.MockParsable](res, reqAdapter, nil)
-
-			_, _ = iterator.NextItem(context.Background())
-			assert.Equal(t, 1, iterator.pauseIndex)
-
-			iterator.ResetPage()
-			assert.Equal(t, 0, iterator.pauseIndex)
+			_, err = tt.navFunc(context.Background(), iterator)
+			assert.Error(t, err)
 		})
 	}
 }

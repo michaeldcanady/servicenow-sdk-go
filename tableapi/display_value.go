@@ -1,5 +1,12 @@
 package tableapi
 
+const (
+	displayValueUnknown = "unknown"
+	displayValueTrue    = "true"
+	displayValueFalse   = "false"
+	displayValueAll     = "all"
+)
+
 // DisplayValue determines the type of data returned, either the actual values from the database or the display values of the fields.
 type DisplayValue int
 
@@ -17,13 +24,13 @@ const (
 // String returns the string representation of the DisplayValue.
 func (e DisplayValue) String() string {
 	str, ok := map[DisplayValue]string{
-		DisplayValueUnknown: "unknown",
-		DisplayValueTrue:    "true",
-		DisplayValueFalse:   "false",
-		DisplayValueAll:     "all",
+		DisplayValueUnknown: displayValueUnknown,
+		DisplayValueTrue:    displayValueTrue,
+		DisplayValueFalse:   displayValueFalse,
+		DisplayValueAll:     displayValueAll,
 	}[e]
 	if !ok {
-		return ViewUnknown.String()
+		return DisplayValueUnknown.String()
 	}
 	return str
 }

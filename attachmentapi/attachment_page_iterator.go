@@ -12,5 +12,5 @@ func NewAttachmentPageIterator(
 	reqAdapter abstractions.RequestAdapter,
 	options ...internal.Option[*core.PageIterator[*Attachment]],
 ) (*core.PageIterator[*Attachment], error) {
-	return core.NewPageIterator[*Attachment](res, reqAdapter, CreateAttachmentFromDiscriminatorValue, options...)
+	return core.NewPageIterator(res, reqAdapter, CreateAttachmentFromDiscriminatorValue, options...)
 }

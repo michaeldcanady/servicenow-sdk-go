@@ -7,7 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -107,8 +107,8 @@ func (rB *DeployablesRequestBuilder) Put(ctx context.Context, body *DeployableUp
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -166,8 +166,8 @@ func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, body *SharedC
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -221,7 +221,7 @@ func (rB *UploadStatusItemRequestBuilder) Get(ctx context.Context, config *Uploa
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -256,7 +256,7 @@ func (rB *ExportsRequestBuilder) Get(ctx context.Context, config *ExportsRequest
 			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateExportsResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -317,7 +317,7 @@ func (rB *ExportItemStatusRequestBuilder) Get(ctx context.Context, config *Expor
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateExportStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -349,7 +349,7 @@ func (rB *ExportItemContentRequestBuilder) Get(ctx context.Context, config *Expo
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationOctetStream)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationOctetStream)
 	res, err := rB.GetRequestAdapter().SendPrimitive(ctx, requestInfo, "[]byte", nil)
 	if err != nil {
 		return nil, err
@@ -421,7 +421,7 @@ func (rB *SharedLibrariesComponentsApplicationsRequestBuilder) Get(ctx context.C
 			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateSharedLibrariesComponentsApplicationsResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -480,8 +480,8 @@ func (rB *UploadsComponentsRequestBuilder) Post(ctx context.Context, body *Compo
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -521,8 +521,8 @@ func (rB *UploadsComponentsVarsRequestBuilder) Post(ctx context.Context, body *C
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -557,8 +557,8 @@ func (rB *UploadsCollectionsRequestBuilder) Post(ctx context.Context, body *Coll
 			kiotaRequestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -601,7 +601,7 @@ func (rB *UploadsCollectionsFileRequestBuilder) Post(ctx context.Context, media 
 			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	kiotaRequestInfo.SetStreamContentAndContentType(media.GetData(), media.GetContentType())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {
@@ -654,7 +654,7 @@ func (rB *UploadsDeployablesFileRequestBuilder) Post(ctx context.Context, media 
 			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	kiotaRequestInfo.SetStreamContentAndContentType(media.GetData(), media.GetContentType())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {

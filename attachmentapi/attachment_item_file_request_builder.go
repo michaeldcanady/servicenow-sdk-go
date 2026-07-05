@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
@@ -16,6 +17,9 @@ import (
 const (
 	// attachmentItemFileURLTemplate the url template for Service-Now's attachment item file endpoint
 	attachmentItemFileURLTemplate = "{+baseurl}/api/now/v1/attachment{/sys_id}/file"
+
+	// attachmentMetadataHeader is the header name where Service-Now returns attachment metadata when requesting the file content
+	attachmentMetadataHeader = "x-attachment-metadata"
 )
 
 // AttachmentItemFileRequestBuilder provides operations to manage Service-Now attachments.
@@ -91,7 +95,7 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 
 	var file serialization.Parsable = NewFileWithContent()
 
-	metadataHeaders := opts.ResponseHeaders.Get("x-attachment-metadata")
+	metadataHeaders := opts.ResponseHeaders.Get(attachmentMetadataHeader)
 	if len(metadataHeaders) > 0 {
 		metadata := metadataHeaders[0]
 
@@ -136,6 +140,6 @@ func (rB *AttachmentItemFileRequestBuilder) ToGetRequestInformation(_ context.Co
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	requestInfo.Headers.TryAdd("Accept", "*/*")
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeAny.String())
 	return kiotaRequestInfo.RequestInformation, nil
 }

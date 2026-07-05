@@ -34,6 +34,6 @@ func NewCmdbInstanceRequestBuilder(rawURL string, requestAdapter abstractions.Re
 // ByClass provides operations to manage a specific CMDB class.
 func (rB *CmdbInstanceRequestBuilder) ByClass(className string) *CmdbClassRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["className"] = className
+	pathParameters[classNameKey] = className
 	return NewCmdbClassRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }

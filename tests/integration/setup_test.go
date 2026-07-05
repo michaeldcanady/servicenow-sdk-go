@@ -98,7 +98,7 @@ func setupGlobalMocks() {
 	fileRegex := regexp.MustCompile(attachBaseURL + `(?:/([a-zA-Z0-9_]+))?/file`)
 	httpmock.RegisterRegexpResponder("GET", fileRegex, func(req *http.Request) (*http.Response, error) {
 		resp := httpmock.NewStringResponse(200, "test content")
-		resp.Header.Set("x-attachment-metadata", `{"sys_id":"mock_attach_id_1","file_name":"test.txt"}`)
+		resp.Header.Set(attachmentMetadataHeader, `{"sys_id":"mock_attach_id_1","file_name":"test.txt"}`)
 		return resp, nil
 	})
 	httpmock.RegisterRegexpResponder("DELETE", attachIdRegex, httpmock.NewStringResponder(204, ""))

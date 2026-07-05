@@ -1,17 +1,16 @@
 #!/bin/bash
-# Run tests and capture JSON output and generate coverage profile
+set -o pipefail
+
+TEST_EXIT_CODE=0
 go test -coverprofile=coverage.out -json -v ./... > test-output.json
-TEST_EXIT_CODE=$?
+echo "exit: $?"
+grep '"Action":"fail"' test-output.json
 
-# Generate the report using the new custom tool
-cat test-output.json | go run scripts/generate_test_report.go > test-summary.md
+cat test-output.json | go run scripts/generate_test_report.go > test-summary.md || true
 
-# Append the sticky comment footer
 echo "" >> test-summary.md
-echo "<!-- Sticky Pull Request Commenttest-failure-summary -->" >> test-summary.md
+echo "<!-- Sticky Pull Request Comment: test-failure-summary -->" >> test-summary.md
 
-# Output to GitHub Actions Job Summary
-cat test-summary.md >> $GITHUB_STEP_SUMMARY
+cat test-summary.md >> "$GITHUB_STEP_SUMMARY"
 
-# Exit with original test exit code
 exit $TEST_EXIT_CODE

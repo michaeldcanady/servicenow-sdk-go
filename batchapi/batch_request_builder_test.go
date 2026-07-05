@@ -5,6 +5,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -367,7 +368,7 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 				result, err := builder.Post(context.Background(), nil, nil)
 
 				assert.Nil(t, result)
-				assert.Equal(t, errors.New("body can't be nil"), err)
+				assert.Equal(t, snerrors.NewValidationError("body"), err)
 			},
 		},
 		{
@@ -609,7 +610,7 @@ func TestBatchRequestBuilder_toPostRequestInformation(t *testing.T) {
 
 				requestInformation, err := builder.toPostRequestInformation(context.Background(), request, nil)
 
-				assert.Equal(t, errors.New("requestAdapter cannot be nil"), err)
+				assert.Equal(t, snerrors.ErrNilRequestAdapter, err)
 				assert.Nil(t, requestInformation)
 			},
 		},

@@ -63,12 +63,12 @@ func (m *AccountCollectionResponseMock) GetFieldDeserializers() map[string]func(
 	return nil
 }
 
+// TODO: should be in test table format
 func TestAccountItemRequestBuilder_Get(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewAccountItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "account_id": "test-id"}, adapter)
 
-	mockResponse := &AccountItemResponseMock{}
-	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockResponse, nil)
+	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&core.BaseServiceNowItemResponse[*AccountModel]{}, nil)
 
 	res, err := builder.Get(context.Background(), nil)
 	assert.NoError(t, err)

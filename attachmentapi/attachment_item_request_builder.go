@@ -8,7 +8,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -40,10 +40,6 @@ func NewAttachmentItemRequestBuilderInternal(
 	)
 }
 
-func (rB *AttachmentItemRequestBuilder) isNil() bool {
-	return conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder)
-}
-
 // NewAttachmentItemRequestBuilder instantiates a new AttachmentItemRequestBuilder with custom parsable for table entries.
 func NewAttachmentItemRequestBuilder(
 	rawURL string,
@@ -56,18 +52,16 @@ func NewAttachmentItemRequestBuilder(
 
 // File provides way to manage Service-Now's Attachment Item File endpoint
 func (rB *AttachmentItemRequestBuilder) File() *AttachmentItemFileRequestBuilder {
-	if rB.isNil() {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
 
-	pathParameters := maps.Clone(rB.GetPathParameters())
-
-	return NewAttachmentItemFileRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+	return NewAttachmentItemFileRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // Get returns an Attachment using the provided arguments
 func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentItemRequestBuilderGetRequestConfiguration) (core.ServiceNowItemResponse[*Attachment], error) {
-	if rB.isNil() {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
@@ -96,7 +90,7 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 
 // Delete removes the attachment item using the provided arguments
 func (rB *AttachmentItemRequestBuilder) Delete(ctx context.Context, requestConfiguration *AttachmentItemRequestBuilderDeleteRequestConfiguration) error {
-	if rB.isNil() {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
 
@@ -111,7 +105,7 @@ func (rB *AttachmentItemRequestBuilder) Delete(ctx context.Context, requestConfi
 
 // ToGetRequestInformation converts request configurations to Post request information.
 func (rB *AttachmentItemRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if rB.isNil() {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
@@ -120,14 +114,14 @@ func (rB *AttachmentItemRequestBuilder) ToGetRequestInformation(_ context.Contex
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 
-	requestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
 
 // ToDeleteRequestInformation converts request configurations to Delete request information.
 func (rB *AttachmentItemRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *AttachmentItemRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if rB.isNil() {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
 
@@ -136,7 +130,7 @@ func (rB *AttachmentItemRequestBuilder) ToDeleteRequestInformation(_ context.Con
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 
-	requestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }

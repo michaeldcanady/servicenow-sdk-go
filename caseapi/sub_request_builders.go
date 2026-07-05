@@ -7,7 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -78,7 +78,7 @@ func (rB *CaseItemRequestBuilder) ToGetRequestInformation(ctx context.Context, c
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
@@ -114,9 +114,9 @@ func (rB *CaseItemRequestBuilder) ToPutRequestInformation(ctx context.Context, b
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +166,7 @@ func (rB *CaseActivitiesRequestBuilder) ToGetRequestInformation(ctx context.Cont
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
@@ -219,7 +219,7 @@ func (rB *CaseFieldValuesRequestBuilder) ToGetRequestInformation(ctx context.Con
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }

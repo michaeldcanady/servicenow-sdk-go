@@ -9,7 +9,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/microsoft/kiota-abstractions-go/store"
@@ -110,7 +110,7 @@ func WithBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) Serv
 // WithHTTPClient creates an option to set the HTTP client used by the requests.
 func WithHTTPClient(client *http.Client) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
-		config.requestAdapterOptions = append(config.requestAdapterOptions, internalHttp.WithClient(client))
+		config.requestAdapterOptions = append(config.requestAdapterOptions, internalhttp.WithClient(client))
 
 		return nil
 	}

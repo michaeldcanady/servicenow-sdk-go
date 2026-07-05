@@ -1,5 +1,12 @@
 package tableapi
 
+const (
+	viewUnknown = "unknown"
+	viewDesktop = "desktop"
+	viewMobile  = "mobile"
+	viewBoth    = "both"
+)
+
 // View specifies the UI view for which to render the data.
 type View int
 
@@ -17,10 +24,10 @@ const (
 // String returns the string representation of the View.
 func (e View) String() string {
 	str, ok := map[View]string{
-		ViewUnknown: "unknown",
-		ViewDesktop: "desktop",
-		ViewMobile:  "mobile",
-		ViewBoth:    "both",
+		ViewUnknown: viewUnknown,
+		ViewDesktop: viewDesktop,
+		ViewMobile:  viewMobile,
+		ViewBoth:    viewBoth,
 	}[e]
 	if !ok {
 		return ViewUnknown.String()

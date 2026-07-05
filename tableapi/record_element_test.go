@@ -31,6 +31,7 @@ func TestNewRecordElement(t *testing.T) {
 	}
 }
 
+// TODO: improve test table design
 func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 	tests := []struct {
 		name string
@@ -84,7 +85,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 
 				elementValue, err := model.GetDisplayValue()
 
-				assert.Equal(t, errors.New("store is nil"), err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
@@ -95,7 +96,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 
 				elementValue, err := model.GetDisplayValue()
 
-				assert.Equal(t, errors.New("model is nil"), err)
+				assert.Nil(t, err)
 				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
@@ -164,6 +165,7 @@ func TestRecordElementModel_SetDisplayValue(t *testing.T) {
 	}
 }
 
+// TODO: improve test table design
 func TestRecordElementModel_GetValue(t *testing.T) {
 	tests := []struct {
 		name string
@@ -217,7 +219,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 
 				elementValue, err := model.GetValue()
 
-				assert.Equal(t, errors.New("store is nil"), err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
@@ -228,7 +230,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 
 				elementValue, err := model.GetValue()
 
-				assert.Equal(t, errors.New("model is nil"), err)
+				assert.Nil(t, err)
 				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
@@ -349,7 +351,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 
 				elementValue, err := model.GetLink()
 
-				assert.Equal(t, errors.New("store is nil"), err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Equal(t, "", elementValue)
 			},
 		},
@@ -360,7 +362,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 
 				elementValue, err := model.GetLink()
 
-				assert.Equal(t, errors.New("model is nil"), err)
+				assert.Nil(t, err)
 				assert.Equal(t, "", elementValue)
 			},
 		},

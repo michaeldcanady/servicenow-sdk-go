@@ -77,7 +77,7 @@ func NewServiceNowServiceClient(opts ...ServiceNowServiceClientOption) (*Service
 
 	baseURL := config.getBaseURL()
 	if strings.TrimSpace(baseURL) == "" {
-		return nil, errors.New("baseURL cannot be empty")
+		return nil, errors.New("baseURL is empty")
 	}
 
 	pathParameters := map[string]string{baseURLParameter: baseURL}

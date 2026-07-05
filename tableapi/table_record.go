@@ -163,8 +163,8 @@ func (tR *TableRecord) SetElement(key string, element *RecordElement) error {
 	if !tR.HasAttribute(key) {
 		tR.keys = append(tR.keys, key)
 	}
-	backingStore := tR.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, key, element)
+
+	return store.DefaultBackedModelMutatorFunc(tR.GetBackingStore(), key, element)
 }
 
 // SetValue assigns a value to the specified key using a RecordElement wrapper.

@@ -6,6 +6,12 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
+const (
+	stateUnknown  = "unknown"
+	stateActive   = "active"
+	stateInactive = "inactive"
+)
+
 type State int64
 
 const (
@@ -16,9 +22,9 @@ const (
 
 func (i State) String() string {
 	str, ok := map[State]string{
-		StateUnknown:  "unknown",
-		StateActive:   "active",
-		StateInactive: "inactive",
+		StateUnknown:  stateUnknown,
+		StateActive:   stateActive,
+		StateInactive: stateInactive,
 	}[i]
 	if !ok {
 		return StateUnknown.String()
@@ -30,11 +36,11 @@ var _ serialization.EnumFactory = ParseState
 
 func ParseState(v string) (interface{}, error) {
 	switch v {
-	case "unknown":
+	case stateUnknown:
 		return StateUnknown, nil
-	case "active":
+	case stateActive:
 		return StateActive, nil
-	case "inactive":
+	case stateInactive:
 		return StateInactive, nil
 	default:
 		return StateUnknown, fmt.Errorf("invalid state: %s", v)
