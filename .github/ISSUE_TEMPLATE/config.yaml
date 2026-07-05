@@ -1,8 +1,0 @@
-# Only Story and Bug are exposed as templates in the public "New Issue" chooser.
-# Epic and Task are maintainer-only planning artifacts — see /.github/maintainer-templates/
-# and CONTRIBUTING.md for how the project's Epic → Story → Task hierarchy works.
-blank_issues_enabled: false
-contact_links:
-  - name: Questions / Usage Help
-    url: https://github.com/[LOGIN]/[REPO]/discussions/new
-    about: Have a "how do I..." question? Ask in Discussions instead of opening an issue.
