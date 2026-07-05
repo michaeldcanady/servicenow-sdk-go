@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	sysIDKey = "sys_id"
+	sysIDKey = "sysId"
 
 	// batchURLTemplate the url template for Service-Now batch API
 	tableURLTemplate = "{+baseurl}/api/now/v1/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"

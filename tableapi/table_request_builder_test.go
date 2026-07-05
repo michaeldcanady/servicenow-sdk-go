@@ -149,6 +149,7 @@ func TestTableRequestBuilder_Post(t *testing.T) {
 	}
 }
 
+// TODO: fix test table design
 func TestTableRequestBuilder_ByID(t *testing.T) {
 	mockAdapter := new(mocking.MockRequestAdapter)
 	builder := NewTableRequestBuilder[*TableRecord](
@@ -159,7 +160,7 @@ func TestTableRequestBuilder_ByID(t *testing.T) {
 
 	itemBuilder := builder.ByID("sysid123")
 	assert.NotNil(t, itemBuilder)
-	assert.Equal(t, "sysid123", itemBuilder.GetPathParameters()["sysId"])
+	assert.Equal(t, "sysid123", itemBuilder.GetPathParameters()[sysIDKey])
 }
 
 func TestTableRequestBuilder_ToRequestInformation(t *testing.T) {
