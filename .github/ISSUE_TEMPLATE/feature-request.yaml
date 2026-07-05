@@ -1,4 +1,4 @@
-name: "✨ Story / Feature Request"
+name: "Feature Request"
 description: Request a new capability or enhancement (e.g. support for a new ServiceNow API, auth method, or SDK ergonomics improvement).
 title: "[Story]: "
 labels: ["type: feature", "state: new"]
