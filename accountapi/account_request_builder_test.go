@@ -63,6 +63,7 @@ func (m *AccountCollectionResponseMock) GetFieldDeserializers() map[string]func(
 	return nil
 }
 
+// TODO: should be in test table format
 func TestAccountItemRequestBuilder_Get(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewAccountItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "account_id": "test-id"}, adapter)

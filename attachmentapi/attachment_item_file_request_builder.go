@@ -140,6 +140,6 @@ func (rB *AttachmentItemFileRequestBuilder) ToGetRequestInformation(_ context.Co
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeAny.String())
 	return kiotaRequestInfo.RequestInformation, nil
 }
