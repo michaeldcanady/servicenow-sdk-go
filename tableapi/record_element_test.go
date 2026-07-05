@@ -351,7 +351,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 
 				elementValue, err := model.GetLink()
 
-				assert.Equal(t, errors.New("store is nil"), err)
+				assert.Equal(t, errors.New("backingStore is nil"), err)
 				assert.Equal(t, "", elementValue)
 			},
 		},
@@ -362,7 +362,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 
 				elementValue, err := model.GetLink()
 
-				assert.Equal(t, errors.New("model is nil"), err)
+				assert.Nil(t, err)
 				assert.Equal(t, "", elementValue)
 			},
 		},

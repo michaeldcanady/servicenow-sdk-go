@@ -73,6 +73,9 @@ func (rE *RecordElement) SetValue(value any) error {
 
 // GetLink returns the reference link of the element, if it is a reference field.
 func (rE *RecordElement) GetLink() (string, error) {
+	if conversion.IsNil(rE) || conversion.IsNil(rE.BackedModel) {
+		return "", nil
+	}
 	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, string](rE.GetBackingStore(), recordLinkKey)
 }
 
