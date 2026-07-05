@@ -1,3 +1,5 @@
+//go:build snippets
+
 package snippets
 
 // [START table_imports]
