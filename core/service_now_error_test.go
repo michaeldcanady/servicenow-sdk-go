@@ -1,6 +1,7 @@
 package core
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -91,15 +92,16 @@ func TestServiceNowError_setError(t *testing.T) {
 	}
 }
 
+// TODO: improve test table design
 func TestServiceNowError_ErrorBranches(t *testing.T) {
 	eWrongType := NewServiceNowError()
-	_ = eWrongType.GetBackingStore().Set(errorKey, 123)
-	if _, err := eWrongType.GetError(); err == nil || err.Error() != "cannot convert '123' to type internal.MainErrorable" {
-		t.Errorf("Expected wrong type error, got %v", err)
-	}
+	assert.Nil(t, eWrongType.GetBackingStore().Set(errorKey, 123))
+	val, err := eWrongType.GetError()
+	assert.Nil(t, val)
+	assert.Equal(t, errors.New("cannot convert '123' to type core.MainErrorable"), err)
 
 	eNilBS := &ServiceNowError{BackedModel: &mockNilBSModel{}}
-	if err := eNilBS.setError(nil); err == nil || err.Error() != "backingStore is nil" {
-		t.Errorf("Expected BS nil error, got %v", err)
-	}
+	val, err = eNilBS.GetError()
+	assert.Nil(t, val)
+	assert.Equal(t, errors.New("backingStore is nil"), err)
 }

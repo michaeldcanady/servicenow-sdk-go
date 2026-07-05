@@ -127,8 +127,7 @@ func (exc *ServiceNowError) GetError() (MainErrorable, error) {
 		return nil, nil
 	}
 
-	backingStore := exc.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, MainErrorable](backingStore, errorKey)
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, MainErrorable](exc.GetBackingStore(), errorKey)
 }
 
 // setError sets the main error
