@@ -31,6 +31,10 @@ const (
 
 // GetDisplayValue returns the display value of the element.
 func (rE *RecordElement) GetDisplayValue() (ElementValue, error) {
+	if conversion.IsNil(rE) || conversion.IsNil(rE.BackedModel) {
+		return ElementValue{}, nil
+	}
+
 	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, ElementValue](rE.GetBackingStore(), recordDisplayValueKey)
 }
 
