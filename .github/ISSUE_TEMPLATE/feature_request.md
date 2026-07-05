@@ -1,56 +1,94 @@
----
-name: 🆕 Feature request
-about: Suggest an idea for this project
-title: "[Feature] "
-labels: ["type: feature"]
-assignees: ''
----
+name: "Feature Request"
+description: Request a new capability or enhancement (e.g. support for a new ServiceNow API, auth method, or SDK ergonomics improvement).
+title: "[Story]: "
+labels: ["type: feature", "state: new"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to request a feature! Please fill this out as completely as you can —
+        the more concrete the "so that" clause, the faster this can be scoped and prioritized.
 
-### Description
+  - type: textarea
+    id: user-story
+    attributes:
+      label: User Story
+      description: State this as "As a <persona>, I want <capability>, so that <outcome>."
+      placeholder: |
+        As a Go developer integrating with ServiceNow's Import Set API,
+        I want to insert records into a staging table,
+        so that I can trigger transform maps without hand-building HTTP calls.
+    validations:
+      required: true
 
-**Describe the feature you would like to request:**
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What can't you do today? What's the workaround, if any?
+    validations:
+      required: true
 
-[Please provide a clear and concise description of the feature you're requesting.]
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution (optional)
+      description: If you have an idea of the API surface, request builder shape, or config style, sketch it here.
+    validations:
+      required: false
 
-### Use Case
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered (optional)
+      description: Other approaches you've tried or considered, and why they fell short.
+    validations:
+      required: false
 
-**What problem would this feature solve?**
+  - type: dropdown
+    id: module
+    attributes:
+      label: Affected Module / API
+      description: Which part of the SDK does this touch?
+      options:
+        - table-api
+        - attachment-api
+        - batch-api
+        - cdm (applications/policies/changesets/editor)
+        - cmdb
+        - case-api
+        - authentication / credentials
+        - core / request pipeline
+        - documentation
+        - CI/CD
+        - other / not sure
+    validations:
+      required: true
 
-[Explain the specific use case or problem that this feature would address.]
+  - type: input
+    id: version
+    attributes:
+      label: Target Version (optional)
+      description: If you have a preference for which SDK version should include this, note it here.
+    validations:
+      required: false
 
-### Proposed Solution
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Links to related issues/PRs, relevant ServiceNow docs, or anything else useful.
+    validations:
+      required: false
 
-**Describe the solution you'd like:**
-
-[Provide details about how you envision this feature being implemented in the Go wrapper.]
-
-### Additional Context
-
-**Any additional context or information:**
-
-[Include any additional information, context, or examples that might help in understanding or implementing the feature.]
-
-### Related Issues
-
-**Are there any existing issues or pull requests related to this feature request?**
-
-[If applicable, link to any existing issues or pull requests that are related to this feature request.]
-
-### Version
-
-**Do you have a specific version in mind for this feature?**
-
-[If you have a preference for which version of the Go wrapper should include this feature, please specify.]
-
-### Checklist
-
-Before submitting this feature request, please make sure you have completed the following:
-
-- [ ] I have searched for similar feature requests in the repository's issue tracker.
-- [ ] I have checked the latest version of the Go SDK to see if this feature already exists.
-- [ ] I have provided a clear and descriptive title for this feature request.
-- [ ] I have provided a detailed description of the feature and its use case.
-- [ ] I have provided any relevant additional context or examples.
-- [ ] I have linked any related issues or pull requests.
-
-Thank you for your contribution!
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for a duplicate of this request.
+          required: true
+        - label: I checked the latest release to confirm this doesn't already exist.
+          required: true
+        - label: I've given this a clear, descriptive title.
+          required: true
