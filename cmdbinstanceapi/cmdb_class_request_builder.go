@@ -7,7 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -29,6 +29,10 @@ func NewCmdbClassRequestBuilderInternal(pathParameters map[string]string, reques
 
 // Get queries records for a CMDB class.
 func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, config *CmdbClassRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[CmdbInstance], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
@@ -49,6 +53,10 @@ func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, config *CmdbClassReq
 
 // Post creates a record with associated relations.
 func (rB *CmdbClassRequestBuilder) Post(ctx context.Context, body CmdbInstance, config *CmdbClassRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
@@ -82,7 +90,7 @@ func (rB *CmdbClassRequestBuilder) ToGetRequestInformation(ctx context.Context, 
 			kiotaRequestInfo.AddQueryParameters(queryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return requestInfo, nil
 }
@@ -99,10 +107,10 @@ func (rB *CmdbClassRequestBuilder) ToPostRequestInformation(ctx context.Context,
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	if !conversion.IsNil(body) {
-		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 		if err != nil {
 			return nil, err
 		}
@@ -114,6 +122,6 @@ func (rB *CmdbClassRequestBuilder) ToPostRequestInformation(ctx context.Context,
 // ByID provides operations to manage a specific CI record.
 func (rB *CmdbClassRequestBuilder) ByID(sysID string) *CmdbItemRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["sys_id"] = sysID
+	pathParameters[sysIDKey] = sysID
 	return NewCmdbItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }

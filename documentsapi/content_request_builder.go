@@ -6,7 +6,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -62,7 +62,7 @@ func (rB *ContentRequestBuilder) ToGetRequestInformation(_ context.Context, requ
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationOctetStream)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationOctetStream)
 
 	return kiotaRequestInfo.RequestInformation, nil
 }

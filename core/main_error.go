@@ -63,60 +63,30 @@ func (exc *MainError) GetFieldDeserializers() map[string]func(serialization.Pars
 
 // GetDetail returns the error details.
 func (exc *MainError) GetDetail() (*string, error) {
-	if conversion.IsNil(exc) {
-		return nil, nil
-	}
-
-	backingStore := exc.GetBackingStore()
-	return internalStore.DefaultBackedModelAccessorFunc[store.BackingStore, *string](backingStore, detailKey)
+	return internalStore.DefaultBackedModelAccessorFunc[store.BackingStore, *string](exc.GetBackingStore(), detailKey)
 }
 
 // SetDetail sets the error details.
 func (exc *MainError) SetDetail(detail *string) error {
-	if conversion.IsNil(exc) {
-		return nil
-	}
-
-	backingStore := exc.GetBackingStore()
-	return internalStore.DefaultBackedModelMutatorFunc(backingStore, detailKey, detail)
+	return internalStore.DefaultBackedModelMutatorFunc(exc.GetBackingStore(), detailKey, detail)
 }
 
 // GetMessage gets the error message.
 func (exc *MainError) GetMessage() (*string, error) {
-	if conversion.IsNil(exc) {
-		return nil, nil
-	}
-
-	backingStore := exc.GetBackingStore()
-	return internalStore.DefaultBackedModelAccessorFunc[store.BackingStore, *string](backingStore, messageKey)
+	return internalStore.DefaultBackedModelAccessorFunc[store.BackingStore, *string](exc.GetBackingStore(), messageKey)
 }
 
 // SetMessage sets the error message.
 func (exc *MainError) SetMessage(message *string) error {
-	if conversion.IsNil(exc) {
-		return nil
-	}
-
-	backingStore := exc.GetBackingStore()
-	return internalStore.DefaultBackedModelMutatorFunc(backingStore, messageKey, message)
+	return internalStore.DefaultBackedModelMutatorFunc(exc.GetBackingStore(), messageKey, message)
 }
 
 // GetStatus returns the status.
 func (exc *MainError) GetStatus() (*string, error) {
-	if conversion.IsNil(exc) {
-		return nil, nil
-	}
-
-	backingStore := exc.GetBackingStore()
-	return internalStore.DefaultBackedModelAccessorFunc[store.BackingStore, *string](backingStore, statusKey)
+	return internalStore.DefaultBackedModelAccessorFunc[store.BackingStore, *string](exc.GetBackingStore(), statusKey)
 }
 
 // SetStatus sets the status.
 func (exc *MainError) SetStatus(status *string) error {
-	if conversion.IsNil(exc) {
-		return nil
-	}
-
-	backingStore := exc.GetBackingStore()
-	return internalStore.DefaultBackedModelMutatorFunc(backingStore, statusKey, status)
+	return internalStore.DefaultBackedModelMutatorFunc(exc.GetBackingStore(), statusKey, status)
 }

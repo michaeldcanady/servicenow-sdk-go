@@ -48,17 +48,25 @@ func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestCon
 		return errors.New("requestConfiguration is nil")
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return errors.New("request adapter is nil")
+	}
+
+	if conversion.IsNil(requestConfiguration.QueryParameters) {
+		return errors.New("requestConfiguration.QueryParameters is nil")
+	}
+
 	queryParameters := requestConfiguration.QueryParameters
 	if queryParameters.AppName == "" {
-		return errors.New("AppName is required")
+		return errors.New("requestConfiguration.QueryParameters.AppName is required")
 	}
 
 	if queryParameters.DeployableName == "" {
-		return errors.New("DeployableName is required")
+		return errors.New("requestConfiguration.QueryParameters.DeployableName is required")
 	}
 
 	if queryParameters.PolicyName == "" {
-		return errors.New("PolicyName is required")
+		return errors.New("requestConfiguration.QueryParameters.PolicyName is required")
 	}
 
 	requestInfo, err := rB.ToDeleteRequestInformation(ctx, requestConfiguration)
@@ -79,17 +87,25 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 		return nil, errors.New("requestConfiguration is nil")
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, errors.New("request adapter is nil")
+	}
+
+	if conversion.IsNil(requestConfiguration.QueryParameters) {
+		return nil, errors.New("requestConfiguration.QueryParameters is nil")
+	}
+
 	queryParameters := requestConfiguration.QueryParameters
 	if queryParameters.AppName == "" {
-		return nil, errors.New("AppName is required")
+		return nil, errors.New("requestConfiguration.QueryParameters.AppName is required")
 	}
 
 	if queryParameters.DeployableName == "" {
-		return nil, errors.New("DeployableName is required")
+		return nil, errors.New("requestConfiguration.QueryParameters.DeployableName is required")
 	}
 
 	if queryParameters.PolicyName == "" {
-		return nil, errors.New("PolicyName is required")
+		return nil, errors.New("requestConfiguration.QueryParameters.PolicyName is required")
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, requestConfiguration)

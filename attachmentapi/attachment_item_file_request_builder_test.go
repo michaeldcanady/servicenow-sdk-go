@@ -134,7 +134,7 @@ func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 							for _, opt := range opts {
 								if typedOpt, ok := opt.(*nethttplibrary.HeadersInspectionOptions); ok {
 									respHeaders := abstractions.NewResponseHeaders()
-									respHeaders.Add("X-Attachment-Metadata", tt.metadataHeaderValue)
+									respHeaders.Add(attachmentMetadataHeader, tt.metadataHeaderValue)
 									typedOpt.ResponseHeaders = respHeaders
 									break
 								}

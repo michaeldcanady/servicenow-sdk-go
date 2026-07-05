@@ -7,7 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -57,199 +57,6 @@ func (rB *AppServiceRequestBuilder) Csdm() *CsdmRequestBuilder {
 	}
 
 	return NewCsdmRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
-}
-
-// CreateRequestBuilder provides operations to create an application service.
-type CreateRequestBuilder struct {
-	core.RequestBuilder
-}
-
-// NewCreateRequestBuilderInternal instantiates a new CreateRequestBuilder.
-func NewCreateRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CreateRequestBuilder {
-	return &CreateRequestBuilder{
-		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, createURLTemplate, pathParameters),
-	}
-}
-
-// Post sends a POST request to create an application service.
-func (rB *CreateRequestBuilder) Post(ctx context.Context, body *CreateServiceRequest, config *CreateRequestConfiguration) (CreateServiceResponse, error) {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
-	}
-
-	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
-	if err != nil {
-		return nil, err
-	}
-	errorMapping := core.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCreateServiceResponseFromDiscriminatorValue, errorMapping)
-	if err != nil {
-		return nil, err
-	}
-	if res == nil {
-		return nil, nil
-	}
-	return res.(CreateServiceResponse), nil
-}
-
-// ToPostRequestInformation creates a RequestInformation object for a POST request.
-func (rB *CreateRequestBuilder) ToPostRequestInformation(ctx context.Context, body *CreateServiceRequest, config *CreateRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
-	}
-
-	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-
-	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
-
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
-	if err != nil {
-		return nil, err
-	}
-	return kiotaRequestInfo.RequestInformation, nil
-}
-
-// CsdmRequestBuilder provides operations under /api/now/v1/cmdb/csdm/app_service.
-type CsdmRequestBuilder struct {
-	core.RequestBuilder
-}
-
-// NewCsdmRequestBuilderInternal instantiates a new CsdmRequestBuilder.
-func NewCsdmRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CsdmRequestBuilder {
-	return &CsdmRequestBuilder{
-		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, csdmAppServiceURLTemplate, pathParameters),
-	}
-}
-
-// FindService returns a FindServiceRequestBuilder.
-func (rB *CsdmRequestBuilder) FindService() *FindServiceRequestBuilder {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil
-	}
-
-	return NewFindServiceRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
-}
-
-// RegisterService returns a RegisterServiceRequestBuilder.
-func (rB *CsdmRequestBuilder) RegisterService() *RegisterServiceRequestBuilder {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil
-	}
-
-	return NewRegisterServiceRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
-}
-
-// ByID returns a CsdmAppServiceItemRequestBuilder.
-func (rB *CsdmRequestBuilder) ByID(sysID string) *CsdmAppServiceItemRequestBuilder {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil
-	}
-
-	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["sys_id"] = sysID
-	return NewCsdmAppServiceItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
-}
-
-// FindServiceRequestBuilder provides operations to find an application service.
-type FindServiceRequestBuilder struct {
-	core.RequestBuilder
-}
-
-// NewFindServiceRequestBuilderInternal instantiates a new FindServiceRequestBuilder.
-func NewFindServiceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *FindServiceRequestBuilder {
-	return &FindServiceRequestBuilder{
-		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, findServiceURLTemplate, pathParameters),
-	}
-}
-
-// Get sends a GET request to find an application service.
-func (rB *FindServiceRequestBuilder) Get(ctx context.Context, config *FindServiceRequestConfiguration) (FindServiceResponse, error) {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
-	}
-
-	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
-	if err != nil {
-		return nil, err
-	}
-	errorMapping := core.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateFindServiceResponseFromDiscriminatorValue, errorMapping)
-	if err != nil {
-		return nil, err
-	}
-	if res == nil {
-		return nil, nil
-	}
-	return res.(FindServiceResponse), nil
-}
-
-// ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *FindServiceRequestBuilder) ToGetRequestInformation(ctx context.Context, config *FindServiceRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
-	}
-
-	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-
-	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
-
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
-	return kiotaRequestInfo.RequestInformation, nil
-}
-
-// RegisterServiceRequestBuilder provides operations to register a CSDM service.
-type RegisterServiceRequestBuilder struct {
-	core.RequestBuilder
-}
-
-// NewRegisterServiceRequestBuilderInternal instantiates a new RegisterServiceRequestBuilder.
-func NewRegisterServiceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *RegisterServiceRequestBuilder {
-	return &RegisterServiceRequestBuilder{
-		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, registerServiceURLTemplate, pathParameters),
-	}
-}
-
-// Post sends a POST request to register a service.
-func (rB *RegisterServiceRequestBuilder) Post(ctx context.Context, body *RegisterServiceRequest, config *RegisterServiceRequestConfiguration) (RegisterServiceResponse, error) {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
-	}
-
-	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
-	if err != nil {
-		return nil, err
-	}
-	errorMapping := core.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateRegisterServiceResponseFromDiscriminatorValue, errorMapping)
-	if err != nil {
-		return nil, err
-	}
-	if res == nil {
-		return nil, nil
-	}
-	return res.(RegisterServiceResponse), nil
-}
-
-// ToPostRequestInformation creates a RequestInformation object for a POST request.
-func (rB *RegisterServiceRequestBuilder) ToPostRequestInformation(ctx context.Context, body *RegisterServiceRequest, config *RegisterServiceRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
-	}
-
-	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-
-	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
-
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
-	if err != nil {
-		return nil, err
-	}
-	return kiotaRequestInfo.RequestInformation, nil
 }
 
 // CsdmAppServiceItemRequestBuilder provides operations for a specific CSDM application service.
@@ -326,8 +133,8 @@ func (rB *PopulateServiceRequestBuilder) ToPutRequestInformation(ctx context.Con
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
 
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -378,8 +185,8 @@ func (rB *ServiceDetailsRequestBuilder) ToPutRequestInformation(ctx context.Cont
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
 
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}

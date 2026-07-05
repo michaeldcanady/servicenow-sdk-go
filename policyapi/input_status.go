@@ -6,6 +6,12 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
+const (
+	inputStatusUnknown = "unknown"
+	inputStatusInvalid = "invalid"
+	inputStatusValid   = "valid"
+)
+
 type InputStatus int64
 
 const (
@@ -16,9 +22,9 @@ const (
 
 func (i InputStatus) String() string {
 	str, ok := map[InputStatus]string{
-		InputStatusUnknown: "unknown",
-		InputStatusInvalid: "invalid",
-		InputStatusValid:   "valid",
+		InputStatusUnknown: inputStatusUnknown,
+		InputStatusInvalid: inputStatusInvalid,
+		InputStatusValid:   inputStatusValid,
 	}[i]
 	if !ok {
 		return InputStatusUnknown.String()
@@ -30,11 +36,11 @@ var _ serialization.EnumFactory = ParseInputStatus
 
 func ParseInputStatus(v string) (interface{}, error) {
 	switch v {
-	case "unknown":
+	case inputStatusUnknown:
 		return InputStatusUnknown, nil
-	case "invalid":
+	case inputStatusInvalid:
 		return InputStatusInvalid, nil
-	case "valid":
+	case inputStatusValid:
 		return InputStatusValid, nil
 	default:
 		return InputStatusUnknown, fmt.Errorf("invalid input status: %s", v)

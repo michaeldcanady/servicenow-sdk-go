@@ -7,7 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -29,6 +29,10 @@ func NewCmdbItemRequestBuilderInternal(pathParameters map[string]string, request
 
 // Get queries attributes and relationship information for a specific record.
 func (rB *CmdbItemRequestBuilder) Get(ctx context.Context, config *CmdbItemRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
@@ -49,6 +53,10 @@ func (rB *CmdbItemRequestBuilder) Get(ctx context.Context, config *CmdbItemReque
 
 // Put replaces a CI record.
 func (rB *CmdbItemRequestBuilder) Put(ctx context.Context, body CmdbInstance, config *CmdbItemRequestBuilderPutRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
@@ -69,6 +77,10 @@ func (rB *CmdbItemRequestBuilder) Put(ctx context.Context, body CmdbInstance, co
 
 // Patch updates a CI record.
 func (rB *CmdbItemRequestBuilder) Patch(ctx context.Context, body CmdbInstance, config *CmdbItemRequestBuilderPatchRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, nil
+	}
+
 	requestInfo, err := rB.ToPatchRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
@@ -99,7 +111,7 @@ func (rB *CmdbItemRequestBuilder) ToGetRequestInformation(ctx context.Context, c
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return requestInfo, nil
 }
@@ -116,10 +128,10 @@ func (rB *CmdbItemRequestBuilder) ToPutRequestInformation(ctx context.Context, b
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	if !conversion.IsNil(body) {
-		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 		if err != nil {
 			return nil, err
 		}
@@ -140,10 +152,10 @@ func (rB *CmdbItemRequestBuilder) ToPatchRequestInformation(ctx context.Context,
 			kiotaRequestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	if !conversion.IsNil(body) {
-		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 		if err != nil {
 			return nil, err
 		}

@@ -27,6 +27,10 @@ func NewCmdbRelationItemRequestBuilderInternal(pathParameters map[string]string,
 
 // Delete deletes a specific Relation for the CI.
 func (rB *CmdbRelationItemRequestBuilder) Delete(ctx context.Context, config *CmdbRelationItemRequestBuilderDeleteRequestConfiguration) error {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	requestInfo, err := rB.ToDeleteRequestInformation(ctx, config)
 	if err != nil {
 		return err

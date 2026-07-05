@@ -27,9 +27,7 @@ func NewCmdbRequestBuilderInternal(pathParameters map[string]string, requestAdap
 
 // NewCmdbRequestBuilder instantiates a new CmdbRequestBuilder with the provided raw URL.
 func NewCmdbRequestBuilder(rawURL string, requestAdapter abstractions.RequestAdapter) *CmdbRequestBuilder {
-	urlParams := make(map[string]string)
-	urlParams[internal.RawURLKey] = rawURL
-	return NewCmdbRequestBuilderInternal(urlParams, requestAdapter)
+	return NewCmdbRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // Instance returns a CmdbInstanceRequestBuilder associated with the CmdbRequestBuilder.

@@ -8,7 +8,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/model"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -69,6 +69,10 @@ func (rB *TableItemRequestBuilder[T]) Get(ctx context.Context, requestConfigurat
 		return nil, nil
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, errors.New("request adapter is nil")
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return nil, err
@@ -98,6 +102,10 @@ func (rB *TableItemRequestBuilder[T]) Delete(ctx context.Context, requestConfigu
 		return nil
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return errors.New("request adapter is nil")
+	}
+
 	requestInfo, err := rB.ToDeleteRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return err
@@ -111,6 +119,10 @@ func (rB *TableItemRequestBuilder[T]) Delete(ctx context.Context, requestConfigu
 func (rB *TableItemRequestBuilder[T]) Put(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPutRequestConfiguration) (core.ServiceNowItemResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, errors.New("request adapter is nil")
 	}
 
 	if conversion.IsNil(body) {
@@ -144,6 +156,10 @@ func (rB *TableItemRequestBuilder[T]) Put(ctx context.Context, body T, requestCo
 func (rB *TableItemRequestBuilder[T]) Patch(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPatchRequestConfiguration) (core.ServiceNowItemResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, errors.New("request adapter is nil")
 	}
 
 	if conversion.IsNil(body) {
@@ -184,7 +200,7 @@ func (rB *TableItemRequestBuilder[T]) ToGetRequestInformation(_ context.Context,
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
@@ -200,7 +216,7 @@ func (rB *TableItemRequestBuilder[T]) ToDeleteRequestInformation(_ context.Conte
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
@@ -216,10 +232,10 @@ func (rB *TableItemRequestBuilder[T]) ToPutRequestInformation(ctx context.Contex
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	if !conversion.IsNil(body) {
-		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body); err != nil {
+		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body); err != nil {
 			return nil, err
 		}
 	}
@@ -238,10 +254,10 @@ func (rB *TableItemRequestBuilder[T]) ToPatchRequestInformation(ctx context.Cont
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	if !conversion.IsNil(body) {
-		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body); err != nil {
+		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body); err != nil {
 			return nil, err
 		}
 	}

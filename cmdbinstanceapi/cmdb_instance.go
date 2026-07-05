@@ -73,33 +73,25 @@ func (m *CmdbInstanceModel) GetSysID() (*string, error) {
 
 // SetSysID ...
 func (m *CmdbInstanceModel) SetSysID(val *string) error {
-	return m.GetBackingStore().Set(sysIDKey, val)
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysIDKey, val)
 }
 
 // GetName ...
 func (m *CmdbInstanceModel) GetName() (*string, error) {
-	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nameKey)
-	if err != nil {
-		return nil, err
-	}
-	return val, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nameKey)
 }
 
 // SetName ...
 func (m *CmdbInstanceModel) SetName(val *string) error {
-	return m.GetBackingStore().Set(nameKey, val)
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nameKey, val)
 }
 
 // GetClassName ...
 func (m *CmdbInstanceModel) GetClassName() (*string, error) {
-	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), classNameKey)
-	if err != nil {
-		return nil, err
-	}
-	return val, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), classNameKey)
 }
 
 // SetClassName ...
 func (m *CmdbInstanceModel) SetClassName(val *string) error {
-	return m.GetBackingStore().Set(classNameKey, val)
+	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), classNameKey, val)
 }

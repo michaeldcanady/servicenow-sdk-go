@@ -8,7 +8,7 @@ import (
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
@@ -83,7 +83,7 @@ func (rB *BatchRequestBuilder) ToHeadRequestInformation(_ context.Context, reque
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return kiotaRequestInfo.RequestInformation, nil
 }
@@ -133,9 +133,9 @@ func (rB *BatchRequestBuilder) toPostRequestInformation(ctx context.Context, bod
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internal.ContentTypeApplicationJSON, body)
+	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}

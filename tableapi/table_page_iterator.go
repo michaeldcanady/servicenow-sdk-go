@@ -15,7 +15,7 @@ func NewTablePageIterator[T model.ServiceNowItem](
 	constructorFunc serialization.ParsableFactory,
 	options ...internal.Option[*core.PageIterator[T]],
 ) (*core.PageIterator[T], error) {
-	return core.NewPageIterator[T](res, reqAdapter, constructorFunc, options...)
+	return core.NewPageIterator(res, reqAdapter, constructorFunc, options...)
 }
 
 // NewDefaultTablePageIterator creates a new TablePageIterator instance for TableRecord.

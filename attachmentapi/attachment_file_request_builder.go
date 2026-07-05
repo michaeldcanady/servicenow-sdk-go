@@ -8,7 +8,7 @@ import (
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -56,32 +56,36 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 		return nil, nil
 	}
 
-	if conversion.IsNil(requestConfiguration) || conversion.IsNil(requestConfiguration.QueryParameters) {
-		return nil, errors.New("requestConfiguration or requestConfiguration.QueryParameters can't be empty")
+	if conversion.IsNil(requestConfiguration) {
+		return nil, errors.New("requestConfiguration is nil")
+	}
+
+	if requestConfiguration.QueryParameters == nil {
+		return nil, errors.New("requestConfiguration.QueryParameters is nil")
 	}
 
 	if requestConfiguration.QueryParameters.TableSysID == nil || *requestConfiguration.QueryParameters.TableSysID == "" {
-		return nil, snerrors.NewValidationError("requestConfiguration.QueryParameters.TableSysID")
+		return nil, errors.New("requestConfiguration.QueryParameters.TableSysID is nil or empty")
 	}
 
 	if requestConfiguration.QueryParameters.TableName == nil || *requestConfiguration.QueryParameters.TableName == "" {
-		return nil, snerrors.NewValidationError("requestConfiguration.QueryParameters.TableName")
+		return nil, errors.New("requestConfiguration.QueryParameters.TableName is nil or empty")
 	}
 
 	if requestConfiguration.QueryParameters.FileName == nil || *requestConfiguration.QueryParameters.FileName == "" {
-		return nil, snerrors.NewValidationError("requestConfiguration.QueryParameters.FileName")
+		return nil, errors.New("requestConfiguration.QueryParameters.FileName is nil or empty")
 	}
 
 	if conversion.IsNil(media) {
-		return nil, snerrors.NewValidationError("media")
+		return nil, errors.New("media is nil")
 	}
 
 	if media.contentType == "" {
-		return nil, snerrors.NewValidationError("contentType")
+		return nil, errors.New("media.contentType is nil or empty")
 	}
 
 	if len(media.data) == 0 {
-		return nil, snerrors.NewValidationError("data")
+		return nil, errors.New("media.data is nil or empty")
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, media, requestConfiguration)
@@ -124,7 +128,7 @@ func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Conte
 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
 
-	kiotaRequestInfo.Headers.TryAdd(internalHttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationJSON)
+	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	requestAdapter := rB.GetRequestAdapter()
 	if conversion.IsNil(requestAdapter) {

@@ -1,4 +1,4 @@
-package accountapi
+package appserviceapi
 
 import (
 	"context"
@@ -10,22 +10,20 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-const accountItemURLTemplate = "{+baseurl}/api/now/v1/account/{account_id}"
-
-// AccountItemRequestBuilder provides operations to manage a single account.
-type AccountItemRequestBuilder struct {
+// FindServiceRequestBuilder provides operations to find an application service.
+type FindServiceRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// NewAccountItemRequestBuilderInternal instantiates a new AccountItemRequestBuilder with the provided request parameters.
-func NewAccountItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AccountItemRequestBuilder {
-	return &AccountItemRequestBuilder{
-		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, accountItemURLTemplate, pathParameters),
+// NewFindServiceRequestBuilderInternal instantiates a new FindServiceRequestBuilder.
+func NewFindServiceRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *FindServiceRequestBuilder {
+	return &FindServiceRequestBuilder{
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, findServiceURLTemplate, pathParameters),
 	}
 }
 
-// Get sends a GET request to retrieve a single account.
-func (rB *AccountItemRequestBuilder) Get(ctx context.Context, config *AccountItemRequestBuilderGetRequestConfiguration) (AccountItemResponse, error) {
+// Get sends a GET request to find an application service.
+func (rB *FindServiceRequestBuilder) Get(ctx context.Context, config *FindServiceRequestConfiguration) (FindServiceResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -34,22 +32,19 @@ func (rB *AccountItemRequestBuilder) Get(ctx context.Context, config *AccountIte
 	if err != nil {
 		return nil, err
 	}
-
 	errorMapping := core.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAccountItemResponseFromDiscriminatorValue, errorMapping)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateFindServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
 	}
-
 	if res == nil {
 		return nil, nil
 	}
-
-	return res.(AccountItemResponse), nil
+	return res.(FindServiceResponse), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *AccountItemRequestBuilder) ToGetRequestInformation(_ context.Context, config *AccountItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *FindServiceRequestBuilder) ToGetRequestInformation(ctx context.Context, config *FindServiceRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -60,6 +55,5 @@ func (rB *AccountItemRequestBuilder) ToGetRequestInformation(_ context.Context, 
 	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
 
 	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-
 	return kiotaRequestInfo.RequestInformation, nil
 }

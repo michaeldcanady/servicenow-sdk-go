@@ -7,7 +7,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -143,7 +143,7 @@ func (sR *ServicedRequestModel) GetBodyAsParsable(constructor serialization.Pars
 		return nil, nil
 	}
 
-	contentType := getHTTPHeader(headers, internalHttp.HTTPHeaderContentType, "")
+	contentType := getHTTPHeader(headers, internalhttp.HTTPHeaderContentType, "")
 
 	return serializeContent[serialization.Parsable](contentType, body, constructor)
 }

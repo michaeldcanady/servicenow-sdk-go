@@ -31,55 +31,21 @@ const (
 
 // GetDisplayValue returns the display value of the element.
 func (rE *RecordElement) GetDisplayValue() (ElementValue, error) {
-	if conversion.IsNil(rE) {
-		return ElementValue{}, errors.New("model is nil")
-	}
-
-	backingStore := rE.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return ElementValue{}, errors.New("store is nil")
-	}
-
-	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, ElementValue](backingStore, recordDisplayValueKey)
-	if err != nil {
-		return ElementValue{}, err
-	}
-
-	return val, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, ElementValue](rE.GetBackingStore(), recordDisplayValueKey)
 }
 
 // SetDisplayValue sets the display value of the element.
 func (rE *RecordElement) SetDisplayValue(value any) error {
-	if conversion.IsNil(rE) {
-		return errors.New("model is nil")
-	}
-
 	val, err := NewElementValue(value)
 	if err != nil {
 		return err
 	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, recordDisplayValueKey, *val)
+	return store.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), recordDisplayValueKey, *val)
 }
 
 // GetValue returns the raw value of the element.
 func (rE *RecordElement) GetValue() (ElementValue, error) {
-	if conversion.IsNil(rE) {
-		return ElementValue{}, errors.New("model is nil")
-	}
-
-	backingStore := rE.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return ElementValue{}, errors.New("store is nil")
-	}
-
-	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, ElementValue](backingStore, recordValueKey)
-	if err != nil {
-		return ElementValue{}, err
-	}
-
-	return val, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, ElementValue](rE.GetBackingStore(), recordValueKey)
 }
 
 // SetValue sets the raw value of the element.
@@ -99,34 +65,14 @@ func (rE *RecordElement) SetValue(value any) error {
 
 // GetLink returns the reference link of the element, if it is a reference field.
 func (rE *RecordElement) GetLink() (string, error) {
-	if conversion.IsNil(rE) {
-		return "", errors.New("model is nil")
-	}
-
-	backingStore := rE.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return "", errors.New("store is nil")
-	}
-
-	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, string](backingStore, recordLinkKey)
-	if err != nil {
-		return "", err
-	}
-
-	return val, nil
+	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, string](rE.GetBackingStore(), recordLinkKey)
 }
 
 // SetLink sets the reference link of the element.
 func (rE *RecordElement) SetLink(link *string) error {
-	if conversion.IsNil(rE) {
-		return errors.New("model is nil")
-	}
-
 	var val string
 	if link != nil {
 		val = *link
 	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, recordLinkKey, val)
+	return store.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), recordLinkKey, val)
 }

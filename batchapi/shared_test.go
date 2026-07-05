@@ -6,7 +6,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -163,11 +163,11 @@ func TestGetHTTPHeader(t *testing.T) {
 			name: "Successful",
 			test: func(t *testing.T) {
 				header := mocking.NewMockBatchHeader()
-				header.On("GetName").Return(internal.ToPointer(internalHttp.HTTPHeaderContentType.String()), nil)
+				header.On("GetName").Return(internal.ToPointer(internalhttp.HTTPHeaderContentType.String()), nil)
 				header.On("GetValue").Return(internal.ToPointer("application/json"), nil)
 				headers := []RestRequestHeader{header}
 				defaultValue := ""
-				value := getHTTPHeader(headers, internalHttp.HTTPHeaderContentType, defaultValue)
+				value := getHTTPHeader(headers, internalhttp.HTTPHeaderContentType, defaultValue)
 				assert.Equal(t, "application/json", value)
 			},
 		},
@@ -176,7 +176,7 @@ func TestGetHTTPHeader(t *testing.T) {
 			test: func(t *testing.T) {
 				headers := []RestRequestHeader{}
 				defaultValue := "default"
-				value := getHTTPHeader(headers, internalHttp.HTTPHeaderContentType, defaultValue)
+				value := getHTTPHeader(headers, internalhttp.HTTPHeaderContentType, defaultValue)
 				assert.Equal(t, defaultValue, value)
 			},
 		},
@@ -188,7 +188,7 @@ func TestGetHTTPHeader(t *testing.T) {
 				header.On("GetValue").Return(internal.ToPointer("application/json"), nil)
 				headers := []RestRequestHeader{header}
 				defaultValue := ""
-				value := getHTTPHeader(headers, internalHttp.HTTPHeaderContentType, defaultValue)
+				value := getHTTPHeader(headers, internalhttp.HTTPHeaderContentType, defaultValue)
 				assert.Equal(t, defaultValue, value)
 			},
 		},

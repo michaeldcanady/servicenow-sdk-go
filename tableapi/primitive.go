@@ -1,5 +1,20 @@
 package tableapi
 
+const (
+	primitiveUnknown  = "unknown"
+	primitiveBool     = "bool"
+	primitiveInt8     = "int8"
+	primitiveInt32    = "int32"
+	primitiveInt64    = "int64"
+	primitiveTime     = "time"
+	primitiveByte     = "byte"
+	primitiveFloat32  = "float32"
+	primitiveFloat64  = "float64"
+	primitiveTimeOnly = "timeonly"
+	primitiveDateOnly = "dateonly"
+	primitiveString   = "string"
+)
+
 // Primitive represents a base type in golang
 type Primitive int64
 
@@ -33,18 +48,18 @@ const (
 // String return string representation
 func (p Primitive) String() string {
 	value, ok := map[Primitive]string{
-		PrimitiveUnknown:  "unknown",
-		PrimitiveBool:     "bool",
-		PrimitiveInt8:     "int8",
-		PrimitiveInt32:    "int32",
-		PrimitiveInt64:    "int64",
-		PrimitiveTime:     "time",
-		PrimitiveByte:     "byte",
-		PrimitiveFloat32:  "float32",
-		PrimitiveFloat64:  "float64",
-		PrimitiveTimeOnly: "timeonly",
-		PrimitiveDateOnly: "dateonly",
-		PrimitiveString:   "string",
+		PrimitiveUnknown:  primitiveUnknown,
+		PrimitiveBool:     primitiveBool,
+		PrimitiveInt8:     primitiveInt8,
+		PrimitiveInt32:    primitiveInt32,
+		PrimitiveInt64:    primitiveInt64,
+		PrimitiveTime:     primitiveTime,
+		PrimitiveByte:     primitiveByte,
+		PrimitiveFloat32:  primitiveFloat32,
+		PrimitiveFloat64:  primitiveFloat64,
+		PrimitiveTimeOnly: primitiveTimeOnly,
+		PrimitiveDateOnly: primitiveDateOnly,
+		PrimitiveString:   primitiveString,
 	}[p]
 
 	if !ok {

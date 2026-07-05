@@ -1,4 +1,4 @@
-package appointmentbookingapi
+package appserviceapi
 
 import (
 	"context"
@@ -10,18 +10,20 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-type AppointmentRequestBuilder struct {
+// CreateRequestBuilder provides operations to create an application service.
+type CreateRequestBuilder struct {
 	core.RequestBuilder
 }
 
-func NewAppointmentRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AppointmentRequestBuilder {
-	return &AppointmentRequestBuilder{
-		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/appointment", pathParameters),
+// NewCreateRequestBuilderInternal instantiates a new CreateRequestBuilder.
+func NewCreateRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CreateRequestBuilder {
+	return &CreateRequestBuilder{
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, createURLTemplate, pathParameters),
 	}
 }
 
-// Post sends a POST request to book or reschedule an appointment.
-func (rB *AppointmentRequestBuilder) Post(ctx context.Context, body AppointmentRequest, config *abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]) (AppointmentResponse, error) {
+// Post sends a POST request to create an application service.
+func (rB *CreateRequestBuilder) Post(ctx context.Context, body *CreateServiceRequest, config *CreateRequestConfiguration) (CreateServiceResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -30,21 +32,19 @@ func (rB *AppointmentRequestBuilder) Post(ctx context.Context, body AppointmentR
 	if err != nil {
 		return nil, err
 	}
-
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAppointmentResponseFromDiscriminatorValue, core.DefaultErrorMapping())
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCreateServiceResponseFromDiscriminatorValue, errorMapping)
 	if err != nil {
 		return nil, err
 	}
-
 	if res == nil {
 		return nil, nil
 	}
-
-	return res.(AppointmentResponse), nil
+	return res.(CreateServiceResponse), nil
 }
 
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
-func (rB *AppointmentRequestBuilder) ToPostRequestInformation(ctx context.Context, body AppointmentRequest, config *abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]) (*abstractions.RequestInformation, error) {
+func (rB *CreateRequestBuilder) ToPostRequestInformation(ctx context.Context, body *CreateServiceRequest, config *CreateRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, nil
 	}
@@ -55,11 +55,9 @@ func (rB *AppointmentRequestBuilder) ToPostRequestInformation(ctx context.Contex
 	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
 
 	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-
 	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
-
 	return kiotaRequestInfo.RequestInformation, nil
 }

@@ -6,7 +6,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/microsoft/kiota-abstractions-go/store"
@@ -20,7 +20,7 @@ type ServiceNowServiceClientConfig struct {
 	middleware             []nethttplibrary.Middleware
 	rawURI                 string
 	backingStoreFactory    store.BackingStoreFactory
-	requestAdapterOptions  []internalHttp.ServiceNowRequestAdapterOption
+	requestAdapterOptions  []internalhttp.ServiceNowRequestAdapterOption
 	logger                 internal.Logger
 }
 
@@ -29,7 +29,7 @@ func newServiceNowClientConfig() *ServiceNowServiceClientConfig {
 	return &ServiceNowServiceClientConfig{
 		middleware:            make([]nethttplibrary.Middleware, 0),
 		backingStoreFactory:   store.BackingStoreFactoryInstance,
-		requestAdapterOptions: make([]internalHttp.ServiceNowRequestAdapterOption, 0),
+		requestAdapterOptions: make([]internalhttp.ServiceNowRequestAdapterOption, 0),
 		logger:                &internal.NoOpLogger{},
 	}
 }
@@ -70,7 +70,7 @@ func (c *ServiceNowServiceClientConfig) getRequestAdapter() (abstractions.Reques
 	var err error
 
 	if conversion.IsNil(requestAdapter) {
-		requestAdapter, err = internalHttp.NewServiceNowRequestAdapter(c.authenticationProvider, c.requestAdapterOptions...)
+		requestAdapter, err = internalhttp.NewServiceNowRequestAdapter(c.authenticationProvider, c.requestAdapterOptions...)
 		if err != nil {
 			return nil, err
 		}
