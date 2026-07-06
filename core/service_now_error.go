@@ -6,7 +6,6 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -123,21 +122,12 @@ func (exc *ServiceNowError) GetFieldDeserializers() map[string]func(serializatio
 
 // GetError returns the main error
 func (exc *ServiceNowError) GetError() (MainErrorable, error) {
-	if conversion.IsNil(exc) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, MainErrorable](exc.GetBackingStore(), errorKey)
+	return store.DefaultBackedModelAccessorFunc[*ServiceNowError, MainErrorable](exc, errorKey)
 }
 
 // setError sets the main error
 func (exc *ServiceNowError) setError(mainError MainErrorable) error {
-	if conversion.IsNil(exc) {
-		return nil
-	}
-
-	backingStore := exc.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, errorKey, mainError)
+	return store.DefaultBackedModelMutatorFunc(exc, errorKey, mainError)
 }
 
 func (exc *ServiceNowError) Error() string {
