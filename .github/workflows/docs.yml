@@ -28,7 +28,7 @@ jobs:
       docs: ${{ steps.filter.outputs.any_changed }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Changed Files
         uses: tj-actions/changed-files@v47.0.6
@@ -49,11 +49,11 @@ jobs:
       - changes-docs
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Restore site cache
         id: site-cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           continue-on-error: true
           path: site
@@ -81,7 +81,7 @@ jobs:
 
       - name: Cache built site
         if: steps.site-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: site
           key: site-${{ github.sha }}
@@ -102,7 +102,7 @@ jobs:
       - changes-docs
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Vale Linter
         uses: errata-ai/vale-action@2.1.2
@@ -125,7 +125,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v6

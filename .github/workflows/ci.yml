@@ -33,7 +33,7 @@ jobs:
       code: ${{ steps.filter.outputs.any_changed }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Changed Files
         uses: tj-actions/changed-files@v47.0.6
@@ -56,7 +56,7 @@ jobs:
       matrix:
         go-version: ["stable", "oldstable"]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
@@ -85,7 +85,7 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
@@ -107,7 +107,7 @@ jobs:
       matrix:
         go-version: ["stable", "oldstable"]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
@@ -136,7 +136,7 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
@@ -169,7 +169,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: runner.os == 'Linux' && matrix.go-version == 'stable'
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v7
         with:
           files: ./${{ env.COVERAGE_FILE }}
           fail_ci_if_error: true
