@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,7 +23,7 @@ func TestDefaultStoreMutatorFunc(t *testing.T) {
 				store := mocking.NewMockBackingStore()
 				store.On("Set", key, value).Return(nil)
 
-				err := DefaultStoreMutatorFunc(store, key, value)
+				err := DefaultStoreMutatorFunc[kiotaStore.BackingStore, string](store, key, value)
 				assert.Nil(t, err)
 				store.AssertExpectations(t)
 			},
@@ -35,7 +36,7 @@ func TestDefaultStoreMutatorFunc(t *testing.T) {
 
 				store := (*mocking.MockBackingStore)(nil)
 
-				err := DefaultStoreMutatorFunc(store, key, value)
+				err := DefaultStoreMutatorFunc[kiotaStore.BackingStore, string](store, key, value)
 				assert.Equal(t, errors.New("store is nil"), err)
 			},
 		},
@@ -47,7 +48,7 @@ func TestDefaultStoreMutatorFunc(t *testing.T) {
 
 				store := mocking.NewMockBackingStore()
 
-				err := DefaultStoreMutatorFunc(store, key, value)
+				err := DefaultStoreMutatorFunc[kiotaStore.BackingStore, string](store, key, value)
 				assert.Equal(t, errors.New("key is empty"), err)
 			},
 		},

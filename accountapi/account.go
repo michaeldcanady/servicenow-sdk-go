@@ -315,314 +315,314 @@ func (m *AccountModel) GetFieldDeserializers() map[string]func(serialization.Par
 
 // Getters and Setters...
 func (m *AccountModel) GetBannerImageLight() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), bannerImageLightKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, bannerImageLightKey)
 }
 func (m *AccountModel) setBannerImageLight(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), bannerImageLightKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, bannerImageLightKey, val)
 }
 func (m *AccountModel) GetCountry() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), countryKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, countryKey)
 }
 func (m *AccountModel) setCountry(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), countryKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, countryKey, val)
 }
 func (m *AccountModel) GetParent() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), parentKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, parentKey)
 }
 func (m *AccountModel) setParent(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), parentKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, parentKey, val)
 }
 func (m *AccountModel) GetNotes() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), notesKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, notesKey)
 }
 func (m *AccountModel) setNotes(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), notesKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, notesKey, val)
 }
 func (m *AccountModel) GetStockSymbol() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), stockSymbolKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, stockSymbolKey)
 }
 func (m *AccountModel) setStockSymbol(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), stockSymbolKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, stockSymbolKey, val)
 }
 func (m *AccountModel) GetDiscount() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), discountKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, discountKey)
 }
 func (m *AccountModel) setDiscount(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), discountKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, discountKey, val)
 }
 func (m *AccountModel) GetActiveEscalation() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), activeEscalationKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, activeEscalationKey)
 }
 func (m *AccountModel) setActiveEscalation(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), activeEscalationKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, activeEscalationKey, val)
 }
 func (m *AccountModel) GetSysUpdatedOn() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysUpdatedOnKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, sysUpdatedOnKey)
 }
 func (m *AccountModel) setSysUpdatedOn(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysUpdatedOnKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, sysUpdatedOnKey, val)
 }
 func (m *AccountModel) GetAppleIcon() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), appleIconKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, appleIconKey)
 }
 func (m *AccountModel) setAppleIcon(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), appleIconKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, appleIconKey, val)
 }
 func (m *AccountModel) GetNumber() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), numberKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, numberKey)
 }
 func (m *AccountModel) setNumber(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), numberKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, numberKey, val)
 }
 func (m *AccountModel) GetSysUpdatedBy() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysUpdatedByKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, sysUpdatedByKey)
 }
 func (m *AccountModel) setSysUpdatedBy(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysUpdatedByKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, sysUpdatedByKey, val)
 }
 func (m *AccountModel) GetFiscalYear() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), fiscalYearKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, fiscalYearKey)
 }
 func (m *AccountModel) setFiscalYear(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), fiscalYearKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, fiscalYearKey, val)
 }
 func (m *AccountModel) GetSysCreatedOn() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysCreatedOnKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, sysCreatedOnKey)
 }
 func (m *AccountModel) setSysCreatedOn(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysCreatedOnKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, sysCreatedOnKey, val)
 }
 func (m *AccountModel) GetContact() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), contactKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, contactKey)
 }
 func (m *AccountModel) setContact(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), contactKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, contactKey, val)
 }
 func (m *AccountModel) GetStockPrice() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), stockPriceKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, stockPriceKey)
 }
 func (m *AccountModel) setStockPrice(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), stockPriceKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, stockPriceKey, val)
 }
 func (m *AccountModel) GetState() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), stateKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, stateKey)
 }
 func (m *AccountModel) setState(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), stateKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, stateKey, val)
 }
 func (m *AccountModel) GetBannerImage() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), bannerImageKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, bannerImageKey)
 }
 func (m *AccountModel) setBannerImage(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), bannerImageKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, bannerImageKey, val)
 }
 func (m *AccountModel) GetSysCreatedBy() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysCreatedByKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, sysCreatedByKey)
 }
 func (m *AccountModel) setSysCreatedBy(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysCreatedByKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, sysCreatedByKey, val)
 }
 func (m *AccountModel) GetLongitude() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), longitudeKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, longitudeKey)
 }
 func (m *AccountModel) setLongitude(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), longitudeKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, longitudeKey, val)
 }
 func (m *AccountModel) GetZip() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), zipKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, zipKey)
 }
 func (m *AccountModel) setZip(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), zipKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, zipKey, val)
 }
 func (m *AccountModel) GetProfits() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), profitsKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, profitsKey)
 }
 func (m *AccountModel) setProfits(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), profitsKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, profitsKey, val)
 }
 func (m *AccountModel) GetPhone() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), phoneKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, phoneKey)
 }
 func (m *AccountModel) setPhone(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), phoneKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, phoneKey, val)
 }
 func (m *AccountModel) GetFaxPhone() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), faxPhoneKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, faxPhoneKey)
 }
 func (m *AccountModel) setFaxPhone(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), faxPhoneKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, faxPhoneKey, val)
 }
 func (m *AccountModel) GetName() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nameKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, nameKey)
 }
 func (m *AccountModel) setName(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nameKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, nameKey, val)
 }
 func (m *AccountModel) GetBannerText() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), bannerTextKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, bannerTextKey)
 }
 func (m *AccountModel) setBannerText(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), bannerTextKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, bannerTextKey, val)
 }
 func (m *AccountModel) GetAccountCode() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), accountCodeKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, accountCodeKey)
 }
 func (m *AccountModel) setAccountCode(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), accountCodeKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, accountCodeKey, val)
 }
 func (m *AccountModel) GetPrimary() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), primaryKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, primaryKey)
 }
 func (m *AccountModel) setPrimary(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), primaryKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, primaryKey, val)
 }
 func (m *AccountModel) GetCity() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), cityKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, cityKey)
 }
 func (m *AccountModel) setCity(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), cityKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, cityKey, val)
 }
 func (m *AccountModel) GetLatitude() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), latitudeKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, latitudeKey)
 }
 func (m *AccountModel) setLatitude(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), latitudeKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, latitudeKey, val)
 }
 func (m *AccountModel) GetSysClassName() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysClassNameKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, sysClassNameKey)
 }
 func (m *AccountModel) setSysClassName(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysClassNameKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, sysClassNameKey, val)
 }
 func (m *AccountModel) GetManufacturer() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), manufacturerKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, manufacturerKey)
 }
 func (m *AccountModel) setManufacturer(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), manufacturerKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, manufacturerKey, val)
 }
 func (m *AccountModel) GetAccountParent() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), accountParentKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, accountParentKey)
 }
 func (m *AccountModel) setAccountParent(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), accountParentKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, accountParentKey, val)
 }
 func (m *AccountModel) GetSysID() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysIDKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, sysIDKey)
 }
 func (m *AccountModel) setSysID(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysIDKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 func (m *AccountModel) GetMarketCap() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), marketCapKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, marketCapKey)
 }
 func (m *AccountModel) setMarketCap(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), marketCapKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, marketCapKey, val)
 }
 func (m *AccountModel) GetNumEmployees() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), numEmployeesKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, numEmployeesKey)
 }
 func (m *AccountModel) setNumEmployees(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), numEmployeesKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, numEmployeesKey, val)
 }
 func (m *AccountModel) GetRankTier() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), rankTierKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, rankTierKey)
 }
 func (m *AccountModel) setRankTier(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), rankTierKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, rankTierKey, val)
 }
 func (m *AccountModel) GetStreet() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), streetKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, streetKey)
 }
 func (m *AccountModel) setStreet(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), streetKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, streetKey, val)
 }
 func (m *AccountModel) GetVendor() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), vendorKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, vendorKey)
 }
 func (m *AccountModel) setVendor(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), vendorKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, vendorKey, val)
 }
 func (m *AccountModel) GetLatLongError() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), latLongErrorKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, latLongErrorKey)
 }
 func (m *AccountModel) setLatLongError(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), latLongErrorKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, latLongErrorKey, val)
 }
 func (m *AccountModel) GetTheme() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), themeKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, themeKey)
 }
 func (m *AccountModel) setTheme(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), themeKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, themeKey, val)
 }
 func (m *AccountModel) GetVendorType() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), vendorTypeKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, vendorTypeKey)
 }
 func (m *AccountModel) setVendorType(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), vendorTypeKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, vendorTypeKey, val)
 }
 func (m *AccountModel) GetWebsite() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), websiteKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, websiteKey)
 }
 func (m *AccountModel) setWebsite(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), websiteKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, websiteKey, val)
 }
 func (m *AccountModel) GetRevenuePerYear() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), revenuePerYearKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, revenuePerYearKey)
 }
 func (m *AccountModel) setRevenuePerYear(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), revenuePerYearKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, revenuePerYearKey, val)
 }
 func (m *AccountModel) GetPubliclyTraded() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), publiclyTradedKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, publiclyTradedKey)
 }
 func (m *AccountModel) setPubliclyTraded(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), publiclyTradedKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, publiclyTradedKey, val)
 }
 func (m *AccountModel) GetSysModCount() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysModCountKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, sysModCountKey)
 }
 func (m *AccountModel) setSysModCount(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysModCountKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, sysModCountKey, val)
 }
 func (m *AccountModel) GetSysTags() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysTagsKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, sysTagsKey)
 }
 func (m *AccountModel) setSysTags(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), sysTagsKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, sysTagsKey, val)
 }
 func (m *AccountModel) GetPartner() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), partnerKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, partnerKey)
 }
 func (m *AccountModel) setPartner(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), partnerKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, partnerKey, val)
 }
 func (m *AccountModel) GetRegistrationCode() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), registrationCodeKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, registrationCodeKey)
 }
 func (m *AccountModel) setRegistrationCode(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), registrationCodeKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, registrationCodeKey, val)
 }
 func (m *AccountModel) GetVendorManager() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), vendorManagerKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, vendorManagerKey)
 }
 func (m *AccountModel) setVendorManager(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), vendorManagerKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, vendorManagerKey, val)
 }
 func (m *AccountModel) GetAccountPath() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), accountPathKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, accountPathKey)
 }
 func (m *AccountModel) setAccountPath(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), accountPathKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, accountPathKey, val)
 }
 func (m *AccountModel) GetPrimaryContact() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), primaryContactKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, primaryContactKey)
 }
 func (m *AccountModel) setPrimaryContact(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), primaryContactKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, primaryContactKey, val)
 }
 func (m *AccountModel) GetCustomer() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), customerKey)
+	return store.DefaultBackedModelAccessorFunc[*AccountModel, *string](m, customerKey)
 }
 func (m *AccountModel) setCustomer(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), customerKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, customerKey, val)
 }
