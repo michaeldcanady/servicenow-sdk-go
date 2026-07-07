@@ -73,54 +73,55 @@ func (m *AvailabilityResultModel) GetFieldDeserializers() map[string]func(serial
 		nextAvailableSlotKey:    internalSerialization.DeserializeAnyFunc()(m.setNextAvailableSlot),
 		noApptAvailableKey:      internalSerialization.DeserializeBoolFunc()(m.setNoApptAvailable),
 		successKey:              internalSerialization.DeserializeBoolFunc()(m.setSuccess),
-		"time_zone":             internalSerialization.DeserializeStringFunc()(m.setTimeZone),
+		timeZoneKey:             internalSerialization.DeserializeStringFunc()(m.setTimeZone),
 		timeZoneDisplayValueKey: internalSerialization.DeserializeStringFunc()(m.setTimeZoneDisplayValue),
 	}
 }
 
 func (m *AvailabilityResultModel) GetAvailability() ([]AvailabilitySlot, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []AvailabilitySlot](m.GetBackingStore(), availabilityKey)
+	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, []AvailabilitySlot](m, availabilityKey)
 }
 func (m *AvailabilityResultModel) setAvailability(val []AvailabilitySlot) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), availabilityKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, availabilityKey, val)
 }
 func (m *AvailabilityResultModel) GetHasMore() (*bool, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), hasMoreKey)
+	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, *bool](m, hasMoreKey)
 }
 func (m *AvailabilityResultModel) setHasMore(val *bool) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), hasMoreKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, hasMoreKey, val)
 }
 func (m *AvailabilityResultModel) GetNextAvailableSlot() (any, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, any](m.GetBackingStore(), nextAvailableSlotKey)
+	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, any](m, nextAvailableSlotKey)
 }
 func (m *AvailabilityResultModel) setNextAvailableSlot(val any) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), nextAvailableSlotKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, nextAvailableSlotKey, val)
 }
 func (m *AvailabilityResultModel) GetNoApptAvailable() (*bool, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), noApptAvailableKey)
+	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, *bool](m, noApptAvailableKey)
 }
 func (m *AvailabilityResultModel) setNoApptAvailable(val *bool) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), noApptAvailableKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, noApptAvailableKey, val)
 }
 func (m *AvailabilityResultModel) GetSuccess() (*bool, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), successKey)
+	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, *bool](m, successKey)
 }
 func (m *AvailabilityResultModel) setSuccess(val *bool) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), successKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, successKey, val)
 }
 func (m *AvailabilityResultModel) GetTimeZone() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), "time_zone")
+	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, *string](m, timeZoneKey)
 }
 func (m *AvailabilityResultModel) setTimeZone(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), "time_zone", val)
+	return store.DefaultBackedModelMutatorFunc(m, timeZoneKey, val)
 }
 func (m *AvailabilityResultModel) GetTimeZoneDisplayValue() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), timeZoneDisplayValueKey)
+	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, *string](m, timeZoneDisplayValueKey)
 }
 func (m *AvailabilityResultModel) setTimeZoneDisplayValue(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), timeZoneDisplayValueKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, timeZoneDisplayValueKey, val)
 }
 
+// TODO: this needs to be fleshed out
 // AvailabilitySlot represents an available slot.
 type AvailabilitySlot interface {
 	serialization.Parsable

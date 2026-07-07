@@ -67,26 +67,26 @@ func (m *AppointmentResultModel) GetFieldDeserializers() map[string]func(seriali
 }
 
 func (m *AppointmentResultModel) GetData() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), dataKey)
+	return store.DefaultBackedModelAccessorFunc[*AppointmentResultModel, *string](m, dataKey)
 }
 func (m *AppointmentResultModel) setData(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), dataKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, dataKey, val)
 }
 func (m *AppointmentResultModel) GetMessage() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), messageKey)
+	return store.DefaultBackedModelAccessorFunc[*AppointmentResultModel, *string](m, messageKey)
 }
 func (m *AppointmentResultModel) setMessage(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), messageKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, messageKey, val)
 }
 func (m *AppointmentResultModel) GetReason() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), reasonKey)
+	return store.DefaultBackedModelAccessorFunc[*AppointmentResultModel, *string](m, reasonKey)
 }
 func (m *AppointmentResultModel) setReason(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), reasonKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, reasonKey, val)
 }
 func (m *AppointmentResultModel) GetSuccess() (*bool, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), successKey)
+	return store.DefaultBackedModelAccessorFunc[*AppointmentResultModel, *bool](m, successKey)
 }
 func (m *AppointmentResultModel) setSuccess(val *bool) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), successKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, successKey, val)
 }

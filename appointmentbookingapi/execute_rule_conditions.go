@@ -39,115 +39,35 @@ func (m *ExecuteRuleConditionsRequestModel) Serialize(writer serialization.Seria
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(catalogIdKey)(m.GetCatalogId),
+		internalSerialization.SerializeStringFunc(catalogIDKey)(m.GetCatalogId),
 		internalSerialization.SerializeAnyFunc(otherInputsKey)(m.GetOtherInputs),
-		internalSerialization.SerializeStringFunc(taskIdKey)(m.GetTaskId),
+		internalSerialization.SerializeStringFunc(taskIDKey)(m.GetTaskId),
 	)
 }
 
 func (m *ExecuteRuleConditionsRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		catalogIdKey:   internalSerialization.DeserializeStringFunc()(m.setCatalogId),
+		catalogIDKey:   internalSerialization.DeserializeStringFunc()(m.setCatalogId),
 		otherInputsKey: internalSerialization.DeserializeAnyFunc()(m.setOtherInputs),
-		taskIdKey:      internalSerialization.DeserializeStringFunc()(m.setTaskId),
+		taskIDKey:      internalSerialization.DeserializeStringFunc()(m.setTaskId),
 	}
 }
 
 func (m *ExecuteRuleConditionsRequestModel) GetCatalogId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), catalogIdKey)
+	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsRequestModel, *string](m, catalogIDKey)
 }
 func (m *ExecuteRuleConditionsRequestModel) setCatalogId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), catalogIdKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, catalogIDKey, val)
 }
 func (m *ExecuteRuleConditionsRequestModel) GetOtherInputs() (any, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, any](m.GetBackingStore(), otherInputsKey)
+	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsRequestModel, any](m, otherInputsKey)
 }
 func (m *ExecuteRuleConditionsRequestModel) setOtherInputs(val any) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), otherInputsKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, otherInputsKey, val)
 }
 func (m *ExecuteRuleConditionsRequestModel) GetTaskId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), taskIdKey)
+	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsRequestModel, *string](m, taskIDKey)
 }
 func (m *ExecuteRuleConditionsRequestModel) setTaskId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), taskIdKey, val)
-}
-
-// ExecuteRuleConditionsResponse represents the response from execute_rule_conditions.
-type ExecuteRuleConditionsResponse = core.ServiceNowItemResponse[*ExecuteRuleConditionsResultModel]
-
-// CreateExecuteRuleConditionsResponseFromDiscriminatorValue is a factory.
-func CreateExecuteRuleConditionsResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return core.NewBaseServiceNowItemResponse[*ExecuteRuleConditionsResultModel](CreateExecuteRuleConditionsResultFromDiscriminatorValue), nil
-}
-
-type ExecuteRuleConditionsResult interface {
-	serialization.Parsable
-	kiotaStore.BackedModel
-
-	GetDedicatedCapacity() (*bool, error)
-	setDedicatedCapacity(*bool) error
-	GetFutureMaxBookableDays() (*string, error)
-	setFutureMaxBookableDays(*string) error
-	GetRuleId() (*string, error)
-	setRuleId(*string) error
-	GetRuleName() (*string, error)
-	setRuleName(*string) error
-}
-
-type ExecuteRuleConditionsResultModel struct {
-	core.BaseModel
-}
-
-func NewExecuteRuleConditionsResult() *ExecuteRuleConditionsResultModel {
-	return &ExecuteRuleConditionsResultModel{BaseModel: *core.NewBaseModel()}
-}
-
-func CreateExecuteRuleConditionsResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewExecuteRuleConditionsResult(), nil
-}
-
-func (m *ExecuteRuleConditionsResultModel) Serialize(writer serialization.SerializationWriter) error {
-	if conversion.IsNil(m) {
-		return nil
-	}
-	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeBoolFunc(dedicatedCapacityKey)(m.GetDedicatedCapacity),
-		internalSerialization.SerializeStringFunc(futureMaxBookableDaysKey)(m.GetFutureMaxBookableDays),
-		internalSerialization.SerializeStringFunc(ruleIdKey)(m.GetRuleId),
-		internalSerialization.SerializeStringFunc(ruleNameKey)(m.GetRuleName),
-	)
-}
-
-func (m *ExecuteRuleConditionsResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	return map[string]func(serialization.ParseNode) error{
-		dedicatedCapacityKey:     internalSerialization.DeserializeBoolFunc()(m.setDedicatedCapacity),
-		futureMaxBookableDaysKey: internalSerialization.DeserializeStringFunc()(m.setFutureMaxBookableDays),
-		ruleIdKey:                internalSerialization.DeserializeStringFunc()(m.setRuleId),
-		ruleNameKey:              internalSerialization.DeserializeStringFunc()(m.setRuleName),
-	}
-}
-
-func (m *ExecuteRuleConditionsResultModel) GetDedicatedCapacity() (*bool, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](m.GetBackingStore(), dedicatedCapacityKey)
-}
-func (m *ExecuteRuleConditionsResultModel) setDedicatedCapacity(val *bool) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), dedicatedCapacityKey, val)
-}
-func (m *ExecuteRuleConditionsResultModel) GetFutureMaxBookableDays() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), futureMaxBookableDaysKey)
-}
-func (m *ExecuteRuleConditionsResultModel) setFutureMaxBookableDays(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), futureMaxBookableDaysKey, val)
-}
-func (m *ExecuteRuleConditionsResultModel) GetRuleId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), ruleIdKey)
-}
-func (m *ExecuteRuleConditionsResultModel) setRuleId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), ruleIdKey, val)
-}
-func (m *ExecuteRuleConditionsResultModel) GetRuleName() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), ruleNameKey)
-}
-func (m *ExecuteRuleConditionsResultModel) setRuleName(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), ruleNameKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, taskIDKey, val)
 }
