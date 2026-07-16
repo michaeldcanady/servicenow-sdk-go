@@ -40,7 +40,6 @@ func (c *attachmentTestContext) iHaveInitializedTheServiceNowClient() error {
 	}
 
 	cred := credentials.NewBasicProvider(
-	cred := credentials.NewBasicProvider(
 		os.Getenv("SN_USERNAME"),
 		os.Getenv("SN_PASSWORD"),
 	)
