@@ -6,7 +6,6 @@ import (
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -63,20 +62,20 @@ func (r *Ref) Serialize(writer serialization.SerializationWriter) error {
 
 // GetLink returns the link.
 func (r *Ref) GetLink() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), refLinkKey)
+	return store.DefaultBackedModelAccessorFunc[*Ref, *string](r, refLinkKey)
 }
 
 // SetLink sets the link.
 func (r *Ref) SetLink(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), refLinkKey, val)
+	return store.DefaultBackedModelMutatorFunc(r, refLinkKey, val)
 }
 
 // GetValue returns the value.
 func (r *Ref) GetValue() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), refValueKey)
+	return store.DefaultBackedModelAccessorFunc[*Ref, *string](r, refValueKey)
 }
 
 // SetValue sets the value.
 func (r *Ref) SetValue(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), refValueKey, val)
+	return store.DefaultBackedModelMutatorFunc(r, refValueKey, val)
 }
