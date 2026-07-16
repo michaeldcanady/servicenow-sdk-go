@@ -4,7 +4,6 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -46,20 +45,10 @@ func (f *FileWithContent) GetFieldDeserializers() map[string]func(serialization.
 
 // GetContent returns contents of file
 func (f *FileWithContent) GetContent() ([]byte, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []byte](backingStore, contentKey)
+	return store.DefaultBackedModelAccessorFunc[*FileWithContent, []byte](f, contentKey)
 }
 
 // SetContent sets the content to the provided value
 func (f *FileWithContent) SetContent(content []byte) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, contentKey, content)
+	return store.DefaultBackedModelMutatorFunc(f, contentKey, content)
 }

@@ -4,11 +4,11 @@ const (
 	// Shared keys
 	activeKey            = "active"
 	activeStringKey      = "active_string"
-	catalogIdKey         = "catalogId"
+	catalogIDKey         = "catalogId"
 	locationKey          = "location"
 	openedForKey         = "openedFor"
 	serviceConfigRuleKey = "service_cofig_rule"
-	taskIdKey            = "taskId"
+	taskIDKey            = "taskId"
 	taskTableKey         = "taskTable"
 
 	// AppointmentRequest specific keys
@@ -95,6 +95,7 @@ const (
 	nextAvailableSlotKey    = "next_available_slot"
 	noApptAvailableKey      = "no_appt_available"
 	timeZoneDisplayValueKey = "time_zone_display_value"
+	timeZoneKey             = "time_zone"
 
 	// CalendarResponse keys
 	rangeEndKey   = "range_end"

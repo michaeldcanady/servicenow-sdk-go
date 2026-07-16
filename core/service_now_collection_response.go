@@ -5,7 +5,6 @@ import (
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -77,58 +76,37 @@ func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[strin
 
 // setResult Sets the result values of the response.
 func (r *BaseServiceNowCollectionResponse[T]) setResult(val []T) error {
-	if conversion.IsNil(r) {
-		return nil
+	anySlice, err := conversion.CastCollection[T, any](val)
+	if err != nil {
+		return err
 	}
 
-	anySlice, _ := conversion.CastCollection[T, any](val)
-
-	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), resultKey, anySlice)
+	return store.DefaultBackedModelMutatorFunc(r, resultKey, anySlice)
 }
 
 // SetNextLink Sets the url to the next page of results.
 func (r *BaseServiceNowCollectionResponse[T]) SetNextLink(val *string) error {
-	if conversion.IsNil(r) {
-		return nil
-	}
-
-	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), nextKey, val)
+	return store.DefaultBackedModelMutatorFunc(r, nextKey, val)
 }
 
 // SetPreviousLink Sets the url to the previous page of results.
 func (r *BaseServiceNowCollectionResponse[T]) SetPreviousLink(val *string) error {
-	if conversion.IsNil(r) {
-		return nil
-	}
-
-	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), previousKey, val)
+	return store.DefaultBackedModelMutatorFunc(r, previousKey, val)
 }
 
 // SetFirstLink Sets the url to the first page of results.
 func (r *BaseServiceNowCollectionResponse[T]) SetFirstLink(val *string) error {
-	if conversion.IsNil(r) {
-		return nil
-	}
-
-	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), firstKey, val)
+	return store.DefaultBackedModelMutatorFunc(r, firstKey, val)
 }
 
 // SetLastLink Sets the url to the last page of results.
 func (r *BaseServiceNowCollectionResponse[T]) SetLastLink(val *string) error {
-	if conversion.IsNil(r) {
-		return nil
-	}
-
-	return store.DefaultBackedModelMutatorFunc(r.GetBackingStore(), lastKey, val)
+	return store.DefaultBackedModelMutatorFunc(r, lastKey, val)
 }
 
 // GetResult Returns the result values of the response.
 func (r *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
-	if conversion.IsNil(r) {
-		return nil, nil
-	}
-
-	unknownSlice, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []any](r.GetBackingStore(), resultKey)
+	unknownSlice, err := store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], []any](r, resultKey)
 	if err != nil {
 		return nil, err
 	}
@@ -138,36 +116,20 @@ func (r *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
 
 // GetNextLink Returns the url to the next page of results.
 func (r *BaseServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
-	if conversion.IsNil(r) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), nextKey)
+	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](r, nextKey)
 }
 
 // GetPreviousLink Returns the url to the previous page of results.
 func (r *BaseServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error) {
-	if conversion.IsNil(r) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), previousKey)
+	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](r, previousKey)
 }
 
 // GetFirstLink Returns the url to the first page of results.
 func (r *BaseServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
-	if conversion.IsNil(r) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), firstKey)
+	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](r, firstKey)
 }
 
 // GetLastLink Returns the url to the last page of results.
 func (r *BaseServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
-	if conversion.IsNil(r) {
-		return nil, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](r.GetBackingStore(), lastKey)
+	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](r, lastKey)
 }

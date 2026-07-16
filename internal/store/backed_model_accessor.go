@@ -9,30 +9,21 @@ import (
 
 // BackedModelAccessorFunc[S,T] defines a generic function signature for retrieving a value from a backing store
 // using a specified key and converting it to a desired type.
-type BackedModelAccessorFunc[S kiotaStore.BackingStore, T any] func(S, string) (T, error)
+type BackedModelAccessorFunc[S kiotaStore.BackedModel, T any] func(S, string) (T, error)
 
 // ModelAccessor represents a function for getting and typing a property for a kiotaStore.backed model.
-type ModelAccessor[S kiotaStore.BackingStore, T any] BackedModelAccessorFunc[S, T]
+type ModelAccessor[S kiotaStore.BackedModel, T any] BackedModelAccessorFunc[S, T]
 
 // DefaultBackedModelAccessorFunc[S, T] is a generic implementation of BackedModelAccessorFunc that retrieves a value
 // from a backing kiotaStore.and attempts to convert it to the specified type.
 // DefaultBackedModelAccessorFunc[S, T] is a generic implementation of BackedModelAccessorFunc that retrieves a value
 // from a backing kiotaStore.and attempts to convert it to the specified type.
-func DefaultBackedModelAccessorFunc[S kiotaStore.BackingStore, T any](backingStore S, key string) (T, error) {
+func DefaultBackedModelAccessorFunc[S kiotaStore.BackedModel, T any](model S, key string) (T, error) {
 	var result T
 
-	if conversion.IsNil(backingStore) {
-		return result, errors.New("backingStore is nil")
+	if conversion.IsNil(model) {
+		return result, errors.New("model is nil")
 	}
 
-	val, err := backingStore.Get(key)
-	if err != nil {
-		return result, err
-	}
-
-	if err := conversion.As2(val, &result, true); err != nil {
-		return result, err
-	}
-
-	return result, nil
+	return DefaultStoreAccessorFunc[kiotaStore.BackingStore, T](model.GetBackingStore(), key)
 }

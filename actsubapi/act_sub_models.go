@@ -1,13 +1,11 @@
 package actsubapi
 
 import (
-	"errors"
-
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -46,201 +44,50 @@ func (m *ActivitySubscriptionModel) Serialize(writer serialization.Serialization
 // GetFieldDeserializers returns the deserialization information for this object.
 func (m *ActivitySubscriptionModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		messageKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetMessage(val)
-			}
-			return nil
-		},
-		streamKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetStream(val)
-			}
-			return nil
-		},
-		userKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetUser(val)
-			}
-			return nil
-		},
-		activitiesKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetCollectionOfObjectValues(CreateActivityFromDiscriminatorValue)
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				res := make([]*Activity, len(val))
-				for i, v := range val {
-					if v != nil {
-						res[i] = v.(*Activity)
-					}
-				}
-				return m.SetActivities(res)
-			}
-			return nil
-		},
-		statusKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetInt64Value()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetStatus(val)
-			}
-			return nil
-		},
+		messageKey:    internalSerialization.DeserializeStringFunc()(m.SetMessage),
+		streamKey:     internalSerialization.DeserializeStringFunc()(m.SetStream),
+		userKey:       internalSerialization.DeserializeStringFunc()(m.SetUser),
+		activitiesKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc[*Activity](CreateActivityFromDiscriminatorValue)(m.SetActivities),
+		statusKey:     internalSerialization.DeserializeInt64Func()(m.SetStatus),
 	}
 }
 
 func (m *ActivitySubscriptionModel) GetMessage() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, messageKey)
-	if err != nil {
-		return nil, err
-	}
-
-	return val, nil
+	return store.DefaultBackedModelAccessorFunc[*ActivitySubscriptionModel, *string](m, messageKey)
 }
 
 func (m *ActivitySubscriptionModel) SetMessage(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, messageKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, messageKey, value)
 }
 
 func (m *ActivitySubscriptionModel) GetStream() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, streamKey)
-	if err != nil {
-		return nil, err
-	}
-
-	return val, nil
+	return store.DefaultBackedModelAccessorFunc[*ActivitySubscriptionModel, *string](m, streamKey)
 }
 
 func (m *ActivitySubscriptionModel) SetStream(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, streamKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, streamKey, value)
 }
 
 func (m *ActivitySubscriptionModel) GetUser() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, userKey)
+	return store.DefaultBackedModelAccessorFunc[*ActivitySubscriptionModel, *string](m, userKey)
 }
 
 func (m *ActivitySubscriptionModel) SetUser(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, userKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, userKey, value)
 }
 
 func (m *ActivitySubscriptionModel) GetActivities() ([]*Activity, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []*Activity](backingStore, activitiesKey)
+	return store.DefaultBackedModelAccessorFunc[*ActivitySubscriptionModel, []*Activity](m, activitiesKey)
 }
 
 func (m *ActivitySubscriptionModel) SetActivities(value []*Activity) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, activitiesKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, activitiesKey, value)
 }
 
 func (m *ActivitySubscriptionModel) GetStatus() (*int64, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int64](backingStore, statusKey)
+	return store.DefaultBackedModelAccessorFunc[*ActivitySubscriptionModel, *int64](m, statusKey)
 }
 
 func (m *ActivitySubscriptionModel) SetStatus(value *int64) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, statusKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, statusKey, value)
 }

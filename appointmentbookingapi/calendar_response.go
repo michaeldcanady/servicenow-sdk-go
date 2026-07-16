@@ -31,6 +31,10 @@ func NewCalendarResponse() *CalendarResponseModel {
 	}
 }
 
+func CreateCalendarResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewCalendarResponse(), nil
+}
+
 func (m *CalendarResponseModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -49,21 +53,17 @@ func (m *CalendarResponseModel) GetFieldDeserializers() map[string]func(serializ
 }
 
 func (m *CalendarResponseModel) GetRangeEnd() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), rangeEndKey)
+	return store.DefaultBackedModelAccessorFunc[*CalendarResponseModel, *string](m, rangeEndKey)
 }
 
 func (m *CalendarResponseModel) setRangeEnd(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), rangeEndKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, rangeEndKey, val)
 }
 
 func (m *CalendarResponseModel) GetRangeStart() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), rangeStartKey)
+	return store.DefaultBackedModelAccessorFunc[*CalendarResponseModel, *string](m, rangeStartKey)
 }
 
 func (m *CalendarResponseModel) setRangeStart(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), rangeStartKey, val)
-}
-
-func CreateCalendarResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewCalendarResponse(), nil
+	return store.DefaultBackedModelMutatorFunc(m, rangeStartKey, val)
 }

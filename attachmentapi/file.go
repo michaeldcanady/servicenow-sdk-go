@@ -91,11 +91,7 @@ func (f *File) Serialize(writer serialization.SerializationWriter) error {
 		return nil
 	}
 
-	return internalSerialization.Serialize(writer, f.getSerializationFields()...)
-}
-
-func (f *File) getSerializationFields() []internalSerialization.WriterFunc {
-	return []internalSerialization.WriterFunc{
+	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeStringFunc(averageImageColorKey)(f.GetAverageImageColor),
 		internalSerialization.SerializeStringToBoolFunc(compressedKey)(f.GetCompressed),
 		internalSerialization.SerializeStringFunc(contentTypeKey)(f.GetContentType),
@@ -116,123 +112,73 @@ func (f *File) getSerializationFields() []internalSerialization.WriterFunc {
 		internalSerialization.SerializeStringFunc(tableNameKey)(f.GetTableName),
 		internalSerialization.SerializeStringFunc(tableSysIDKey)(f.GetTableSysID),
 		internalSerialization.SerializeStringFunc(updatedByNameKey)(f.GetUpdatedByName),
-	}
+	)
 }
 
 // GetAverageImageColor returns, If the attachment is an image, the sum of all colors.
 func (f *File) GetAverageImageColor() (*string, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, averageImageColorKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *string](f, averageImageColorKey)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (f *File) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	deserializers := map[string]func(serialization.ParseNode) error{
+	return map[string]func(serialization.ParseNode) error{
 		averageImageColorKey: internalSerialization.DeserializeStringFunc()(f.SetAverageImageColor),
 		compressedKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToBoolPtr)(f.SetCompressed),
 		contentTypeKey:       internalSerialization.DeserializeStringFunc()(f.SetContentType),
 		createdByNameKey:     internalSerialization.DeserializeStringFunc()(f.SetCreatedByName),
 		downloadLinkKey:      internalSerialization.DeserializeStringFunc()(f.SetDownloadLink),
-	}
-
-	for k, v := range f.getAdditionalFieldDeserializers() {
-		deserializers[k] = v
-	}
-	return deserializers
-}
-
-func (f *File) getAdditionalFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	return map[string]func(serialization.ParseNode) error{
-		fileNameKey:       internalSerialization.DeserializeStringFunc()(f.SetFileName),
-		imageHeightKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageHeight),
-		imageWidthKey:     internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageWidth),
-		sizeBytesKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeBytes),
-		sizeCompressedKey: internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeCompressed),
-		sysCreatedByKey:   internalSerialization.DeserializeStringFunc()(f.SetSysCreatedBy),
-		sysCreatedOnKey:   internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysCreatedOn),
-		sysIDKey:          internalSerialization.DeserializeStringFunc()(f.SetSysID),
-		sysModCountKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSysModCount),
-		sysTagsKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil }))(f.SetSysTags),
-		sysUpdatedByKey:   internalSerialization.DeserializeStringFunc()(f.SetSysUpdatedBy),
-		sysUpdatedOnKey:   internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysUpdatedOn),
-		tableNameKey:      internalSerialization.DeserializeStringFunc()(f.SetTableName),
-		tableSysIDKey:     internalSerialization.DeserializeStringFunc()(f.SetTableSysID),
-		updatedByNameKey:  internalSerialization.DeserializeStringFunc()(f.SetUpdatedByName),
+		fileNameKey:          internalSerialization.DeserializeStringFunc()(f.SetFileName),
+		imageHeightKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageHeight),
+		imageWidthKey:        internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToFloat64Ptr)(f.SetImageWidth),
+		sizeBytesKey:         internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeBytes),
+		sizeCompressedKey:    internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSizeCompressed),
+		sysCreatedByKey:      internalSerialization.DeserializeStringFunc()(f.SetSysCreatedBy),
+		sysCreatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysCreatedOn),
+		sysIDKey:             internalSerialization.DeserializeStringFunc()(f.SetSysID),
+		sysModCountKey:       internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToInt64Ptr)(f.SetSysModCount),
+		sysTagsKey:           internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToPrimitiveSlice(" ", func(s string) (string, error) { return s, nil }))(f.SetSysTags),
+		sysUpdatedByKey:      internalSerialization.DeserializeStringFunc()(f.SetSysUpdatedBy),
+		sysUpdatedOnKey:      internalSerialization.DeserializeMutatedStringFunc(conversion.StringPtrToTimePtr("2006-01-02 15:04:05"))(f.SetSysUpdatedOn),
+		tableNameKey:         internalSerialization.DeserializeStringFunc()(f.SetTableName),
+		tableSysIDKey:        internalSerialization.DeserializeStringFunc()(f.SetTableSysID),
+		updatedByNameKey:     internalSerialization.DeserializeStringFunc()(f.SetUpdatedByName),
 	}
 }
 
 // SetAverageImageColor Sets the sum of all colors.
 func (f *File) SetAverageImageColor(averageImageColor *string) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, averageImageColorKey, averageImageColor)
+	return store.DefaultBackedModelMutatorFunc(f, averageImageColorKey, averageImageColor)
 }
 
 // GetCompressed return flag that indicates whether the attachment file has been compressed.
 func (f *File) GetCompressed() (*bool, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](backingStore, compressedKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *bool](f, compressedKey)
 }
 
 // SetCompressed Sets flag that indicates whether the attachment file has been compressed.
 func (f *File) SetCompressed(compressed *bool) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, compressedKey, compressed)
+	return store.DefaultBackedModelMutatorFunc(f, compressedKey, compressed)
 }
 
 // GetContentType returns content-type of the associated attachment file, such as image or jpeg or application/x-shockwave-flash.
 func (f *File) GetContentType() (*string, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, contentTypeKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *string](f, contentTypeKey)
 }
 
 // SetContentType Sets content-type of the associated attachment file, such as image or jpeg or application/x-shockwave-flash.
 func (f *File) SetContentType(contentType *string) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, contentTypeKey, contentType)
+	return store.DefaultBackedModelMutatorFunc(f, contentTypeKey, contentType)
 }
 
 // GetCreatedByName returns full name of entity that originally created the attachment file.
 func (f *File) GetCreatedByName() (*string, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, createdByNameKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *string](f, createdByNameKey)
 }
 
 // SetCreatedByName Sets full name of entity that originally created the attachment file.
 func (f *File) SetCreatedByName(createdByName *string) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, createdByNameKey, createdByName)
+	return store.DefaultBackedModelMutatorFunc(f, createdByNameKey, createdByName)
 }
 
 // GetCreatedBy returns the entity that originally created the attachment file.
@@ -247,320 +193,160 @@ func (f *File) SetCreatedBy(createdBy *string) error {
 
 // GetDownloadLink returns download URL of the attachment on the ServiceNow instance.
 func (f *File) GetDownloadLink() (*string, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, downloadLinkKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *string](f, downloadLinkKey)
 }
 
 // SetDownloadLink Sets download URL of the attachment on the ServiceNow instance.
 func (f *File) SetDownloadLink(downloadLink *string) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, downloadLinkKey, downloadLink)
+	return store.DefaultBackedModelMutatorFunc(f, downloadLinkKey, downloadLink)
 }
 
 // GetFileName returns the file name of the attachment.
 func (f *File) GetFileName() (*string, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, fileNameKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *string](f, fileNameKey)
 }
 
 // SetFileName Sets the file name of the attachment.
 func (f *File) SetFileName(fileName *string) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, fileNameKey, fileName)
+	return store.DefaultBackedModelMutatorFunc(f, fileNameKey, fileName)
 }
 
 // GetImageHeight returns if an image file, the height of the image.
 func (f *File) GetImageHeight() (*float64, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *float64](backingStore, imageHeightKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *float64](f, imageHeightKey)
 }
 
 // SetImageHeight Sets if an image file, the height of the image.
 func (f *File) SetImageHeight(imageHeight *float64) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, imageHeightKey, imageHeight)
+	return store.DefaultBackedModelMutatorFunc(f, imageHeightKey, imageHeight)
 }
 
 // GetImageWidth returns if an image file, the width of the image.
 func (f *File) GetImageWidth() (*float64, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *float64](backingStore, imageWidthKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *float64](f, imageWidthKey)
 }
 
 // SetImageWidth Sets if an image file, the width of the image.
 func (f *File) SetImageWidth(imageWidth *float64) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, imageWidthKey, imageWidth)
+	return store.DefaultBackedModelMutatorFunc(f, imageWidthKey, imageWidth)
 }
 
 // GetSizeBytes returns size of the attachment.
 func (f *File) GetSizeBytes() (*int64, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int64](backingStore, sizeBytesKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *int64](f, sizeBytesKey)
 }
 
 // SetSizeBytes Sets size of the attachment.
 func (f *File) SetSizeBytes(sizeBytes *int64) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, sizeBytesKey, sizeBytes)
+	return store.DefaultBackedModelMutatorFunc(f, sizeBytesKey, sizeBytes)
 }
 
 // GetSizeCompressed returns size of the compressed attachment file. If the file is not compressed, empty.
 func (f *File) GetSizeCompressed() (*int64, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int64](backingStore, sizeCompressedKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *int64](f, sizeCompressedKey)
 }
 
 // SetSizeCompressed Sets size of the compressed attachment file.
 func (f *File) SetSizeCompressed(sizeCompressed *int64) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, sizeCompressedKey, sizeCompressed)
+	return store.DefaultBackedModelMutatorFunc(f, sizeCompressedKey, sizeCompressed)
 }
 
 // GetSysCreatedBy returns the entity that originally created the attachment file.
 func (f *File) GetSysCreatedBy() (*string, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, sysCreatedByKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *string](f, sysCreatedByKey)
 }
 
 // SetSysCreatedBy Sets the entity that originally created the attachment file.
 func (f *File) SetSysCreatedBy(sysCreatedBy *string) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, sysCreatedByKey, sysCreatedBy)
+	return store.DefaultBackedModelMutatorFunc(f, sysCreatedByKey, sysCreatedBy)
 }
 
 // GetSysCreatedOn returns the date and time that the attachment file was initially saved to the instance.
 func (f *File) GetSysCreatedOn() (*time.Time, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *time.Time](backingStore, sysCreatedOnKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *time.Time](f, sysCreatedOnKey)
 }
 
 // SetSysCreatedOn Sets the date and time that the attachment file was initially saved to the instance.
 func (f *File) SetSysCreatedOn(sysCreatedOn *time.Time) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, sysCreatedOnKey, sysCreatedOn)
+	return store.DefaultBackedModelMutatorFunc(f, sysCreatedOnKey, sysCreatedOn)
 }
 
 // GetSysID returns the sys_id of the attachment file. Read-Only.
 func (f *File) GetSysID() (*string, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, sysIDKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *string](f, sysIDKey)
 }
 
 // SetSysID Sets the sys_id of the attachment file.
 func (f *File) SetSysID(sysID *string) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, sysIDKey, sysID)
+	return store.DefaultBackedModelMutatorFunc(f, sysIDKey, sysID)
 }
 
 // GetSysModCount returns the number of times the attachment file has been modified (uploaded to the instance).
 func (f *File) GetSysModCount() (*int64, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *int64](backingStore, sysModCountKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *int64](f, sysModCountKey)
 }
 
 // SetSysModCount Sets the number of times the attachment file has been modified (uploaded to the instance).
 func (f *File) SetSysModCount(sysModCount *int64) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, sysModCountKey, sysModCount)
+	return store.DefaultBackedModelMutatorFunc(f, sysModCountKey, sysModCount)
 }
 
 // GetSysTags returns any system tags associated with the attachment file.
 func (f *File) GetSysTags() ([]string, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []string](backingStore, sysTagsKey)
+	return store.DefaultBackedModelAccessorFunc[*File, []string](f, sysTagsKey)
 }
 
 // SetSysTags Sets any system tags associated with the attachment file.
 func (f *File) SetSysTags(sysTags []string) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, sysTagsKey, sysTags)
+	return store.DefaultBackedModelMutatorFunc(f, sysTagsKey, sysTags)
 }
 
 // GetSysUpdatedBy returns the entity that last updated the attachment file.
 func (f *File) GetSysUpdatedBy() (*string, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, sysUpdatedByKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *string](f, sysUpdatedByKey)
 }
 
 // SetSysUpdatedBy Sets the entity that last updated the attachment file.
 func (f *File) SetSysUpdatedBy(sysUpdatedBy *string) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, sysUpdatedByKey, sysUpdatedBy)
+	return store.DefaultBackedModelMutatorFunc(f, sysUpdatedByKey, sysUpdatedBy)
 }
 
 // GetSysUpdatedOn returns the date and time that the attachment file was last updated.
 func (f *File) GetSysUpdatedOn() (*time.Time, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *time.Time](backingStore, sysUpdatedOnKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *time.Time](f, sysUpdatedOnKey)
 }
 
 // SetSysUpdatedOn Sets the date and time that the attachment file was last updated.
 func (f *File) SetSysUpdatedOn(sysUpdatedOn *time.Time) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, sysUpdatedOnKey, sysUpdatedOn)
+	return store.DefaultBackedModelMutatorFunc(f, sysUpdatedOnKey, sysUpdatedOn)
 }
 
 // GetTableName returns the name of the table to which the attachment is associated.
 func (f *File) GetTableName() (*string, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, tableNameKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *string](f, tableNameKey)
 }
 
 // SetTableName Sets the name of the table to which the attachment is associated.
 func (f *File) SetTableName(tableName *string) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, tableNameKey, tableName)
+	return store.DefaultBackedModelMutatorFunc(f, tableNameKey, tableName)
 }
 
 // GetTableSysID returns the sys_id of the table associated with the attachment.
 func (f *File) GetTableSysID() (*string, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, tableSysIDKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *string](f, tableSysIDKey)
 }
 
 // SetTableSysID Sets the sys_id of the table associated with the attachment.
 func (f *File) SetTableSysID(tableSysID *string) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, tableSysIDKey, tableSysID)
+	return store.DefaultBackedModelMutatorFunc(f, tableSysIDKey, tableSysID)
 }
 
 // GetUpdatedByName returns the full name of entity that last updated the attachment file.
 func (f *File) GetUpdatedByName() (*string, error) {
-	if conversion.IsNil(f) {
-		return nil, nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, updatedByNameKey)
+	return store.DefaultBackedModelAccessorFunc[*File, *string](f, updatedByNameKey)
 }
 
 // SetUpdatedByName Sets the full name of entity that last updated the attachment file.
 func (f *File) SetUpdatedByName(updatedByName *string) error {
-	if conversion.IsNil(f) {
-		return nil
-	}
-
-	backingStore := f.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, updatedByNameKey, updatedByName)
+	return store.DefaultBackedModelMutatorFunc(f, updatedByNameKey, updatedByName)
 }

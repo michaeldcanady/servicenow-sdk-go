@@ -1,13 +1,11 @@
 package actsubapi
 
 import (
-	"errors"
-
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -44,258 +42,77 @@ func (m *Activity) Serialize(writer serialization.SerializationWriter) error {
 
 func (m *Activity) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		activityTypeIDKey:     m.parseStringField(m.SetActivityTypeID),
-		sourceTableNameKey:    m.parseStringField(m.SetSourceTableName),
-		subObjectTableNameKey: m.parseStringField(m.SetSubObjectTableName),
-		subObjectSysIDKey:     m.parseStringField(m.SetSubObjectSysID),
-		titleKey:              m.parseStringField(m.SetTitle),
-		sysIDKey:              m.parseStringField(m.SetSysIDKey),
-		contentFieldsKey:      m.parseFieldCollectionField(m.SetContentFields),
-		subheaderFieldsKey:    m.parseFieldCollectionField(m.SetSubheaderFields),
-	}
-}
-
-func (m *Activity) parseStringField(setter func(*string) error) func(serialization.ParseNode) error {
-	return func(parseNode serialization.ParseNode) error {
-		val, err := parseNode.GetStringValue()
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			return setter(val)
-		}
-		return nil
-	}
-}
-
-func (m *Activity) parseFieldCollectionField(setter func([]*Field) error) func(serialization.ParseNode) error {
-	return func(parseNode serialization.ParseNode) error {
-		val, err := parseNode.GetCollectionOfObjectValues(CreateFieldFromDiscriminatorValue)
-		if err != nil {
-			return err
-		}
-		if val != nil {
-			res := make([]*Field, len(val))
-			for i, v := range val {
-				if v != nil {
-					res[i] = v.(*Field)
-				}
-			}
-			return setter(res)
-		}
-		return nil
+		activityTypeIDKey:     internalSerialization.DeserializeStringFunc()(m.SetActivityTypeID),
+		sourceTableNameKey:    internalSerialization.DeserializeStringFunc()(m.SetSourceTableName),
+		subObjectTableNameKey: internalSerialization.DeserializeStringFunc()(m.SetSubObjectTableName),
+		subObjectSysIDKey:     internalSerialization.DeserializeStringFunc()(m.SetSubObjectSysID),
+		titleKey:              internalSerialization.DeserializeStringFunc()(m.SetTitle),
+		sysIDKey:              internalSerialization.DeserializeStringFunc()(m.SetSysIDKey),
+		contentFieldsKey:      internalSerialization.DeserializeCollectionOfObjectValuesFunc[*Field](CreateFieldFromDiscriminatorValue)(m.SetContentFields),
+		subheaderFieldsKey:    internalSerialization.DeserializeCollectionOfObjectValuesFunc[*Field](CreateFieldFromDiscriminatorValue)(m.SetSubheaderFields),
 	}
 }
 
 func (m *Activity) GetActivityTypeID() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, activityTypeIDKey)
-	if err != nil {
-		return nil, err
-	}
-
-	return val, nil
+	return store.DefaultBackedModelAccessorFunc[*Activity, *string](m, activityTypeIDKey)
 }
 
 func (m *Activity) SetActivityTypeID(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, activityTypeIDKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, activityTypeIDKey, value)
 }
 
 func (m *Activity) GetSourceTableName() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, sourceTableNameKey)
+	return store.DefaultBackedModelAccessorFunc[*Activity, *string](m, sourceTableNameKey)
 }
 
 func (m *Activity) SetSourceTableName(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, sourceTableNameKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, sourceTableNameKey, value)
 }
 
 func (m *Activity) GetSubObjectTableName() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, subObjectTableNameKey)
+	return store.DefaultBackedModelAccessorFunc[*Activity, *string](m, subObjectTableNameKey)
 }
 
 func (m *Activity) SetSubObjectTableName(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, subObjectTableNameKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, subObjectTableNameKey, value)
 }
 
 func (m *Activity) GetSubObjectSysID() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, subObjectSysIDKey)
+	return store.DefaultBackedModelAccessorFunc[*Activity, *string](m, subObjectSysIDKey)
 }
 
 func (m *Activity) SetSubObjectSysID(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, subObjectSysIDKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, subObjectSysIDKey, value)
 }
 
 func (m *Activity) GetTitle() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, titleKey)
+	return store.DefaultBackedModelAccessorFunc[*Activity, *string](m, titleKey)
 }
 
 func (m *Activity) SetTitle(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, titleKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, titleKey, value)
 }
 
 func (m *Activity) GetSysIDKey() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, sysIDKey)
+	return store.DefaultBackedModelAccessorFunc[*Activity, *string](m, sysIDKey)
 }
 
 func (m *Activity) SetSysIDKey(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, sysIDKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, value)
 }
 
 func (m *Activity) GetContentFields() ([]*Field, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []*Field](backingStore, contentFieldsKey)
+	return store.DefaultBackedModelAccessorFunc[*Activity, []*Field](m, contentFieldsKey)
 }
 
 func (m *Activity) SetContentFields(value []*Field) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, contentFieldsKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, contentFieldsKey, value)
 }
 
 func (m *Activity) GetSubheaderFields() ([]*Field, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []*Field](backingStore, subheaderFieldsKey)
+	return store.DefaultBackedModelAccessorFunc[*Activity, []*Field](m, subheaderFieldsKey)
 }
 
 func (m *Activity) SetSubheaderFields(value []*Field) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(backingStore, subheaderFieldsKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, subheaderFieldsKey, value)
 }

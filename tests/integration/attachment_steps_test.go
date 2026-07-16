@@ -16,12 +16,12 @@ import (
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 )
 
 type attachmentTestContext struct {
-	client        *sdk.ServiceNowClient
+	client        *sdk.ServiceNowServiceClient
+	client        *sdk.ServiceNowServiceClient
 	response      interface{} // Generic response to support either collection or item
 	err           error
 	lastSysID     string
@@ -39,12 +39,21 @@ func (c *attachmentTestContext) iHaveInitializedTheServiceNowClient() error {
 		instance = "mock_instance"
 	}
 
-	cred := credentials.NewUsernamePasswordCredential(
+	cred := credentials.NewBasicProvider(
 		os.Getenv("SN_USERNAME"),
 		os.Getenv("SN_PASSWORD"),
 	)
 
-	client, err := sdk.NewServiceNowClient2WithHTTPClient(cred, instance, getHttpClient())
+	client, err := sdk.NewServiceNowServiceClient(
+		sdk.WithAuthenticationProvider(cred),
+		sdk.WithInstance(instance),
+		sdk.WithHTTPClient(getHttpClient()),
+	)
+	client, err := sdk.NewServiceNowServiceClient(
+		sdk.WithAuthenticationProvider(cred),
+		sdk.WithInstance(instance),
+		sdk.WithHTTPClient(getHttpClient()),
+	)
 	if err != nil {
 		return err
 	}
@@ -61,9 +70,50 @@ func (c *attachmentTestContext) iRequestAllAttachments() error {
 
 func (c *attachmentTestContext) theResponseShouldNotBeAnError() error {
 	if c.err != nil {
-		if snErr, ok := c.err.(*internal.ServiceNowError); ok {
+		if snErr, ok := c.err.(*core.ServiceNowError); ok {
+			mainErr, err := snErr.GetError()
+			if err != nil {
+				return fmt.Errorf("failed to retrieve error details: %w", err)
+			}
+
+			msg, err := mainErr.GetMessage()
+			if err != nil {
+				return fmt.Errorf("failed to retrieve error message: %w", err)
+			}
+
+			detail, err := mainErr.GetDetail()
+			if err != nil {
+				return fmt.Errorf("failed to retrieve error detail: %w", err)
+			}
+
+			status, err := mainErr.GetStatus()
+			if err != nil {
+				return fmt.Errorf("failed to retrieve error status: %w", err)
+			}
+
+		if snErr, ok := c.err.(*core.ServiceNowError); ok {
+			mainErr, err := snErr.GetError()
+			if err != nil {
+				return fmt.Errorf("failed to retrieve error details: %w", err)
+			}
+
+			msg, err := mainErr.GetMessage()
+			if err != nil {
+				return fmt.Errorf("failed to retrieve error message: %w", err)
+			}
+
+			detail, err := mainErr.GetDetail()
+			if err != nil {
+				return fmt.Errorf("failed to retrieve error detail: %w", err)
+			}
+
+			status, err := mainErr.GetStatus()
+			if err != nil {
+				return fmt.Errorf("failed to retrieve error status: %w", err)
+			}
+
 			return fmt.Errorf("expected no error, but got: %v (Message: %s, Detail: %s, Status: %s)",
-				c.err, snErr.Exception.Message, snErr.Exception.Detail, snErr.Status)
+				c.err, msg, *detail, status)
 		}
 		return fmt.Errorf("expected no error, but got: %v", c.err)
 	}
@@ -71,7 +121,8 @@ func (c *attachmentTestContext) theResponseShouldNotBeAnError() error {
 }
 
 func (c *attachmentTestContext) theResultsShouldContainAtLeastRecords(minCount int) error {
-	collection, ok := c.response.(*attachmentapi.AttachmentCollectionResponseModel)
+	collection, ok := c.response.(*attachmentapi.AttachmentCollectionResponse)
+	collection, ok := c.response.(*attachmentapi.AttachmentCollectionResponse)
 	if !ok {
 		return fmt.Errorf("expected a collection response, but got %T", c.response)
 	}
@@ -117,7 +168,8 @@ func (c *attachmentTestContext) iRequestTheAttachmentByItsSysID() error {
 }
 
 func (c *attachmentTestContext) theResultShouldHaveTheCorrectSysID() error {
-	response, ok := c.response.(core.ServiceNowItemResponse[attachmentapi.Attachment])
+	response, ok := c.response.(core.ServiceNowItemResponse[*attachmentapi.Attachment])
+	response, ok := c.response.(core.ServiceNowItemResponse[*attachmentapi.Attachment])
 	if !ok {
 		return fmt.Errorf("expected a ServiceNowItemResponse[Attachment], but got %T", c.response)
 	}
@@ -206,7 +258,8 @@ func (c *attachmentTestContext) iUploadTheFileFromTheResourcesDirectoryToTheInci
 }
 
 func (c *attachmentTestContext) theCreatedAttachmentShouldHaveAValidSysID() error {
-	response, ok := c.response.(core.ServiceNowItemResponse[attachmentapi.File])
+	response, ok := c.response.(core.ServiceNowItemResponse[*attachmentapi.File])
+	response, ok := c.response.(core.ServiceNowItemResponse[*attachmentapi.File])
 	if !ok {
 		return fmt.Errorf("expected a ServiceNowItemResponse[File], but got %T", c.response)
 	}
@@ -222,7 +275,8 @@ func (c *attachmentTestContext) theCreatedAttachmentShouldHaveAValidSysID() erro
 }
 
 func (c *attachmentTestContext) theAttachmentFilenameShouldBe(fileName string) error {
-	response, ok := c.response.(core.ServiceNowItemResponse[attachmentapi.File])
+	response, ok := c.response.(core.ServiceNowItemResponse[*attachmentapi.File])
+	response, ok := c.response.(core.ServiceNowItemResponse[*attachmentapi.File])
 	if !ok {
 		return fmt.Errorf("expected a ServiceNowItemResponse[File], but got %T", c.response)
 	}

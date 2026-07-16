@@ -1,13 +1,11 @@
 package actsubapi
 
 import (
-	"errors"
-
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -42,191 +40,59 @@ func (m *Field) Serialize(writer serialization.SerializationWriter) error {
 
 func (m *Field) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		deepLinkToSubObjectKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetDeepLinkToSubObject(val)
-			}
-			return nil
-		},
-		displayAsTimeAgoKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetDisplayAsTimeAgo(val)
-			}
-			return nil
-		},
-		labelKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetLabel(val)
-			}
-			return nil
-		},
-		showLabelKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetShowLabel(val)
-			}
-			return nil
-		},
-		typeKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetType(val)
-			}
-			return nil
-		},
-		valueKey: func(parseNode serialization.ParseNode) error {
-			val, err := parseNode.GetStringValue()
-			if err != nil {
-				return err
-			}
-			if val != nil {
-				return m.SetValue(val)
-			}
-			return nil
-		},
+		deepLinkToSubObjectKey: internalSerialization.DeserializeStringFunc()(m.SetDeepLinkToSubObject),
+		displayAsTimeAgoKey:    internalSerialization.DeserializeStringFunc()(m.SetDisplayAsTimeAgo),
+		labelKey:               internalSerialization.DeserializeStringFunc()(m.SetLabel),
+		showLabelKey:           internalSerialization.DeserializeStringFunc()(m.SetShowLabel),
+		typeKey:                internalSerialization.DeserializeStringFunc()(m.SetType),
+		valueKey:               internalSerialization.DeserializeStringFunc()(m.SetValue),
 	}
 }
 
 func (m *Field) GetDeepLinkToSubObject() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, deepLinkToSubObjectKey)
+	return store.DefaultBackedModelAccessorFunc[*Field, *string](m, deepLinkToSubObjectKey)
 }
 
 func (m *Field) SetDeepLinkToSubObject(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), deepLinkToSubObjectKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, deepLinkToSubObjectKey, value)
 }
 
 func (m *Field) GetDisplayAsTimeAgo() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, displayAsTimeAgoKey)
+	return store.DefaultBackedModelAccessorFunc[*Field, *string](m, displayAsTimeAgoKey)
 }
 
 func (m *Field) SetDisplayAsTimeAgo(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), displayAsTimeAgoKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, displayAsTimeAgoKey, value)
 }
 
 func (m *Field) GetLabel() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, labelKey)
+	return store.DefaultBackedModelAccessorFunc[*Field, *string](m, labelKey)
 }
 
 func (m *Field) SetLabel(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), labelKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, labelKey, value)
 }
 
 func (m *Field) GetShowLabel() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, showLabelKey)
+	return store.DefaultBackedModelAccessorFunc[*Field, *string](m, showLabelKey)
 }
 
 func (m *Field) SetShowLabel(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), showLabelKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, showLabelKey, value)
 }
 
 func (m *Field) GetType() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, typeKey)
+	return store.DefaultBackedModelAccessorFunc[*Field, *string](m, typeKey)
 }
 
 func (m *Field) SetType(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), typeKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, typeKey, value)
 }
 
 func (m *Field) GetValue() (*string, error) {
-	if conversion.IsNil(m) {
-		return nil, errors.New("model is nil")
-	}
-
-	backingStore := m.GetBackingStore()
-	if conversion.IsNil(backingStore) {
-		return nil, errors.New("store is nil")
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, valueKey)
+	return store.DefaultBackedModelAccessorFunc[*Field, *string](m, valueKey)
 }
 
 func (m *Field) SetValue(value *string) error {
-	if conversion.IsNil(m) {
-		return errors.New("model is nil")
-	}
-
-	return store.DefaultBackedModelMutatorFunc(m.GetBackingStore(), valueKey, value)
+	return store.DefaultBackedModelMutatorFunc(m, valueKey, value)
 }

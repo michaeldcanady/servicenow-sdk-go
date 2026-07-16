@@ -9,7 +9,6 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -74,42 +73,22 @@ func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serial
 
 // GetName returns the name of the header
 func (bH *RestRequestHeaderModel) GetName() (*string, error) {
-	if conversion.IsNil(bH) {
-		return nil, nil
-	}
-
-	backingStore := bH.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, nameKey)
+	return store.DefaultBackedModelAccessorFunc[*RestRequestHeaderModel, *string](bH, nameKey)
 }
 
 // SetName sets name to provided value
 func (bH *RestRequestHeaderModel) SetName(name *string) error {
-	if conversion.IsNil(bH) {
-		return nil
-	}
-
-	backingStore := bH.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, nameKey, name)
+	return store.DefaultBackedModelMutatorFunc(bH, nameKey, name)
 }
 
 // GetValue returns the value of the header
 func (bH *RestRequestHeaderModel) GetValue() (*string, error) {
-	if conversion.IsNil(bH) {
-		return nil, nil
-	}
-
-	backingStore := bH.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, valueKey)
+	return store.DefaultBackedModelAccessorFunc[*RestRequestHeaderModel, *string](bH, valueKey)
 }
 
 // SetValue sets the value to the provided value
 func (bH *RestRequestHeaderModel) SetValue(value *string) error {
-	if conversion.IsNil(bH) {
-		return nil
-	}
-
-	backingStore := bH.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, valueKey, value)
+	return store.DefaultBackedModelMutatorFunc(bH, valueKey, value)
 }
 
 // headers support headers types

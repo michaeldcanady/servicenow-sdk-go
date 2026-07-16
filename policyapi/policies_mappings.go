@@ -8,7 +8,6 @@ import (
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 type PoliciesMappingable interface {
@@ -144,145 +143,145 @@ func (p *PoliciesMapping) Serialize(writer serialization.SerializationWriter) er
 // Getters and Setters
 
 func (p *PoliciesMapping) GetDescription() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](p.GetBackingStore(), PoliciesMappingsResolvedDescription)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *string](p, PoliciesMappingsResolvedDescription)
 }
 
 func (p *PoliciesMapping) SetDescription(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedDescription, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedDescription, val)
 }
 
 func (p *PoliciesMapping) GetDocument() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](p.GetBackingStore(), PoliciesMappingsResolvedDocument)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *string](p, PoliciesMappingsResolvedDocument)
 }
 
 func (p *PoliciesMapping) SetDocument(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedDocument, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedDocument, val)
 }
 
 func (p *PoliciesMapping) GetDocumentRef() (*Ref, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *Ref](p.GetBackingStore(), PoliciesMappingsResolvedDocumentRef)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *Ref](p, PoliciesMappingsResolvedDocumentRef)
 }
 
 func (p *PoliciesMapping) SetDocumentRef(val *Ref) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedDocumentRef, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedDocumentRef, val)
 }
 
 func (p *PoliciesMapping) GetError() (*core.MainError, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *core.MainError](p.GetBackingStore(), PoliciesMappingsResolvedError)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *core.MainError](p, PoliciesMappingsResolvedError)
 }
 
 func (p *PoliciesMapping) SetError(val *core.MainError) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedError, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedError, val)
 }
 
 func (p *PoliciesMapping) GetException() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](p.GetBackingStore(), PoliciesMappingsResolvedException)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *string](p, PoliciesMappingsResolvedException)
 }
 
 func (p *PoliciesMapping) SetException(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedException, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedException, val)
 }
 
 func (p *PoliciesMapping) GetExceptionAllowed() (*bool, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](p.GetBackingStore(), PoliciesMappingsResolvedExceptionAllowed)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *bool](p, PoliciesMappingsResolvedExceptionAllowed)
 }
 
 func (p *PoliciesMapping) SetExceptionAllowed(val *bool) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedExceptionAllowed, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedExceptionAllowed, val)
 }
 
 func (p *PoliciesMapping) GetInputStatus() (*InputStatus, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *InputStatus](p.GetBackingStore(), PoliciesMappingsResolvedInputStatus)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *InputStatus](p, PoliciesMappingsResolvedInputStatus)
 }
 
 func (p *PoliciesMapping) SetInputStatus(val *InputStatus) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedInputStatus, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedInputStatus, val)
 }
 
 func (p *PoliciesMapping) GetLastUpdatedBy() (*Ref, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *Ref](p.GetBackingStore(), PoliciesMappingsResolvedLastUpdatedBy)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *Ref](p, PoliciesMappingsResolvedLastUpdatedBy)
 }
 
 func (p *PoliciesMapping) SetLastUpdatedBy(val *Ref) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedLastUpdatedBy, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedLastUpdatedBy, val)
 }
 
 func (p *PoliciesMapping) GetNumber() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](p.GetBackingStore(), PoliciesMappingsResolvedNumber)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *string](p, PoliciesMappingsResolvedNumber)
 }
 
 func (p *PoliciesMapping) SetNumber(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedNumber, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedNumber, val)
 }
 
 func (p *PoliciesMapping) GetPolicy() (*Ref, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *Ref](p.GetBackingStore(), PoliciesMappingsResolvedPolicy)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *Ref](p, PoliciesMappingsResolvedPolicy)
 }
 
 func (p *PoliciesMapping) SetPolicy(val *Ref) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedPolicy, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedPolicy, val)
 }
 
 func (p *PoliciesMapping) GetReason() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](p.GetBackingStore(), PoliciesMappingsResolvedReason)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *string](p, PoliciesMappingsResolvedReason)
 }
 
 func (p *PoliciesMapping) SetReason(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedReason, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedReason, val)
 }
 
 func (p *PoliciesMapping) GetState() (*State, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *State](p.GetBackingStore(), PoliciesMappingsResolvedState)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *State](p, PoliciesMappingsResolvedState)
 }
 
 func (p *PoliciesMapping) SetState(val *State) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedState, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedState, val)
 }
 
 func (p *PoliciesMapping) GetSysClassName() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](p.GetBackingStore(), PoliciesMappingsResolvedSysClassName)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *string](p, PoliciesMappingsResolvedSysClassName)
 }
 
 func (p *PoliciesMapping) SetSysClassName(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedSysClassName, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedSysClassName, val)
 }
 
 func (p *PoliciesMapping) GetSysCreatedBy() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](p.GetBackingStore(), PoliciesMappingsResolvedSysCreatedBy)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *string](p, PoliciesMappingsResolvedSysCreatedBy)
 }
 
 func (p *PoliciesMapping) SetSysCreatedBy(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedSysCreatedBy, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedSysCreatedBy, val)
 }
 
 func (p *PoliciesMapping) GetSysCreatedOn() (*time.Time, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *time.Time](p.GetBackingStore(), PoliciesMappingsResolvedSysCreatedOn)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *time.Time](p, PoliciesMappingsResolvedSysCreatedOn)
 }
 
 func (p *PoliciesMapping) SetSysCreatedOn(val *time.Time) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedSysCreatedOn, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedSysCreatedOn, val)
 }
 
 func (p *PoliciesMapping) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](p.GetBackingStore(), PoliciesMappingsResolvedSysId)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *string](p, PoliciesMappingsResolvedSysId)
 }
 
 func (p *PoliciesMapping) SetSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedSysId, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedSysId, val)
 }
 
 func (p *PoliciesMapping) GetSysUpdatedBy() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](p.GetBackingStore(), PoliciesMappingsResolvedSysUpdatedBy)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *string](p, PoliciesMappingsResolvedSysUpdatedBy)
 }
 
 func (p *PoliciesMapping) SetSysUpdatedBy(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedSysUpdatedBy, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedSysUpdatedBy, val)
 }
 
 func (p *PoliciesMapping) GetSysUpdatedOn() (*time.Time, error) {
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *time.Time](p.GetBackingStore(), PoliciesMappingsResolvedSysUpdatedOn)
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *time.Time](p, PoliciesMappingsResolvedSysUpdatedOn)
 }
 
 func (p *PoliciesMapping) SetSysUpdatedOn(val *time.Time) error {
-	return store.DefaultBackedModelMutatorFunc(p.GetBackingStore(), PoliciesMappingsResolvedSysUpdatedOn, val)
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedSysUpdatedOn, val)
 }

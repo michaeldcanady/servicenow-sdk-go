@@ -5,7 +5,6 @@ import (
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	internalStore "github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
 const (
@@ -63,42 +62,30 @@ func (exc *MainError) GetFieldDeserializers() map[string]func(serialization.Pars
 
 // GetDetail returns the error details.
 func (exc *MainError) GetDetail() (*string, error) {
-	if conversion.IsNil(exc) || conversion.IsNil(exc.BackedModel) {
-		return nil, nil
-	}
-
-	return internalStore.DefaultBackedModelAccessorFunc[store.BackingStore, *string](exc.GetBackingStore(), detailKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*MainError, *string](exc, detailKey)
 }
 
 // SetDetail sets the error details.
 func (exc *MainError) SetDetail(detail *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(exc.GetBackingStore(), detailKey, detail)
+	return internalStore.DefaultBackedModelMutatorFunc(exc, detailKey, detail)
 }
 
 // GetMessage gets the error message.
 func (exc *MainError) GetMessage() (*string, error) {
-	if conversion.IsNil(exc) || conversion.IsNil(exc.BackedModel) {
-		return nil, nil
-	}
-
-	return internalStore.DefaultBackedModelAccessorFunc[store.BackingStore, *string](exc.GetBackingStore(), messageKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*MainError, *string](exc, messageKey)
 }
 
 // SetMessage sets the error message.
 func (exc *MainError) SetMessage(message *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(exc.GetBackingStore(), messageKey, message)
+	return internalStore.DefaultBackedModelMutatorFunc(exc, messageKey, message)
 }
 
 // GetStatus returns the status.
 func (exc *MainError) GetStatus() (*string, error) {
-	if conversion.IsNil(exc) || conversion.IsNil(exc.BackedModel) {
-		return nil, nil
-	}
-
-	return internalStore.DefaultBackedModelAccessorFunc[store.BackingStore, *string](exc.GetBackingStore(), statusKey)
+	return internalStore.DefaultBackedModelAccessorFunc[*MainError, *string](exc, statusKey)
 }
 
 // SetStatus sets the status.
 func (exc *MainError) SetStatus(status *string) error {
-	return internalStore.DefaultBackedModelMutatorFunc(exc.GetBackingStore(), statusKey, status)
+	return internalStore.DefaultBackedModelMutatorFunc(exc, statusKey, status)
 }

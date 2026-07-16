@@ -186,12 +186,7 @@ func parseHttpMethod(method string) (abstractions.HttpMethod, error) {
 
 // GetBody returns the requests body in bytes.
 func (rE *RestRequestModel) GetBody() ([]byte, error) {
-	if conversion.IsNil(rE) {
-		return nil, nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []byte](backingStore, bodyKey)
+	return store.DefaultBackedModelAccessorFunc[*RestRequestModel, []byte](rE, bodyKey)
 }
 
 // SetBodyFromParsable serializes the provided parsable and sets the output to the request's body.
@@ -245,102 +240,52 @@ func (rE *RestRequestModel) SetBodyFromParsable(contentType string, parsable ser
 
 // SetBody sets the requests body to the provided content.
 func (rE *RestRequestModel) SetBody(body []byte) error {
-	if conversion.IsNil(rE) {
-		return nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, bodyKey, body)
+	return store.DefaultBackedModelMutatorFunc(rE, bodyKey, body)
 }
 
 // GetExcludeResponseHeaders returns if the request will exclude response headers.
 func (rE *RestRequestModel) GetExcludeResponseHeaders() (*bool, error) {
-	if conversion.IsNil(rE) {
-		return nil, nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *bool](backingStore, excludeResponseHeadersKey)
+	return store.DefaultBackedModelAccessorFunc[*RestRequestModel, *bool](rE, excludeResponseHeadersKey)
 }
 
 // SetExcludeResponseHeaders set if to include or exclude response headers.
 func (rE *RestRequestModel) SetExcludeResponseHeaders(excludeResponseHeaders *bool) error {
-	if conversion.IsNil(rE) {
-		return nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, excludeResponseHeadersKey, excludeResponseHeaders)
+	return store.DefaultBackedModelMutatorFunc(rE, excludeResponseHeadersKey, excludeResponseHeaders)
 }
 
 // GetHeaders returns the headers of the request.
 func (rE *RestRequestModel) GetHeaders() ([]RestRequestHeader, error) {
-	if conversion.IsNil(rE) {
-		return nil, nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []RestRequestHeader](backingStore, headersKey)
+	return store.DefaultBackedModelAccessorFunc[*RestRequestModel, []RestRequestHeader](rE, headersKey)
 }
 
 // SetHeaders sets the headers for the request.
 func (rE *RestRequestModel) SetHeaders(headers []RestRequestHeader) error {
-	if conversion.IsNil(rE) {
-		return nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, headersKey, headers)
+	return store.DefaultBackedModelMutatorFunc(rE, headersKey, headers)
 }
 
 // GetID returns the id of the request.
 func (rE *RestRequestModel) GetID() (*string, error) {
-	if conversion.IsNil(rE) {
-		return nil, nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, idKey)
+	return store.DefaultBackedModelAccessorFunc[*RestRequestModel, *string](rE, idKey)
 }
 
 // SetID sets the id of the request.
 func (rE *RestRequestModel) SetID(id *string) error {
-	if conversion.IsNil(rE) {
-		return nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, idKey, id)
+	return store.DefaultBackedModelMutatorFunc(rE, idKey, id)
 }
 
 // GetMethod returns the method of the request
 func (rE *RestRequestModel) GetMethod() (*abstractions.HttpMethod, error) {
-	if conversion.IsNil(rE) {
-		return nil, nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *abstractions.HttpMethod](backingStore, methodKey)
+	return store.DefaultBackedModelAccessorFunc[*RestRequestModel, *abstractions.HttpMethod](rE, methodKey)
 }
 
 // SetMethod sets the method of the request
 func (rE *RestRequestModel) SetMethod(method *abstractions.HttpMethod) error {
-	if conversion.IsNil(rE) {
-		return nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, methodKey, method)
+	return store.DefaultBackedModelMutatorFunc(rE, methodKey, method)
 }
 
 // GetURL returns the relative URL of the request.
 func (rE *RestRequestModel) GetURL() (*string, error) {
-	if conversion.IsNil(rE) {
-		return nil, nil
-	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, urlKey)
+	return store.DefaultBackedModelAccessorFunc[*RestRequestModel, *string](rE, urlKey)
 }
 
 // SetURL sets the URL of the request (if not relative, will be converted).
@@ -367,6 +312,5 @@ func (rE *RestRequestModel) SetURL(url *string) error {
 		return errors.New("invalid URL: path doesn't begin with \"/api\"")
 	}
 
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, urlKey, &relativeURL)
+	return store.DefaultBackedModelMutatorFunc(rE, urlKey, &relativeURL)
 }

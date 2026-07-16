@@ -71,21 +71,10 @@ func (r *BaseServiceNowItemResponse[T]) GetBackingStore() kiotaStore.BackingStor
 
 // GetResult Returns the result value of the response.
 func (bR *BaseServiceNowItemResponse[T]) GetResult() (T, error) {
-	if conversion.IsNil(bR) {
-		var typedVal T
-		return typedVal, nil
-	}
-
-	backingStore := bR.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, T](backingStore, resultKey)
+	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowItemResponse[T], T](bR, resultKey)
 }
 
 // setResult Sets the result value of the response.
 func (bR *BaseServiceNowItemResponse[T]) setResult(result T) error {
-	if conversion.IsNil(bR) {
-		return nil
-	}
-
-	backingStore := bR.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, resultKey, result)
+	return store.DefaultBackedModelMutatorFunc(bR, resultKey, result)
 }

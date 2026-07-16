@@ -110,38 +110,20 @@ func (bR *BatchRequestModel) AddRequest(request RestRequest) error {
 
 // GetBatchRequestID returns the id of the request.
 func (bR *BatchRequestModel) GetBatchRequestID() (*string, error) {
-	if conversion.IsNil(bR) {
-		return nil, nil
-	}
-	backingStore := bR.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](backingStore, batchRequestIDKey)
+	return store.DefaultBackedModelAccessorFunc[*BatchRequestModel, *string](bR, batchRequestIDKey)
 }
 
 // SetBatchRequestID sets the id of the request.
 func (bR *BatchRequestModel) SetBatchRequestID(id *string) error {
-	if conversion.IsNil(bR) {
-		return nil
-	}
-	backingStore := bR.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, batchRequestIDKey, id)
+	return store.DefaultBackedModelMutatorFunc(bR, batchRequestIDKey, id)
 }
 
 // GetRestRequests returns batched requests.
 func (bR *BatchRequestModel) GetRestRequests() ([]RestRequest, error) {
-	if conversion.IsNil(bR) {
-		return nil, nil
-	}
-
-	backingStore := bR.GetBackingStore()
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, []RestRequest](backingStore, restRequestsKey)
+	return store.DefaultBackedModelAccessorFunc[*BatchRequestModel, []RestRequest](bR, restRequestsKey)
 }
 
 // SetRestRequests sets the batched requests.
 func (bR *BatchRequestModel) SetRestRequests(requests []RestRequest) error {
-	if conversion.IsNil(bR) {
-		return nil
-	}
-
-	backingStore := bR.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, restRequestsKey, requests)
+	return store.DefaultBackedModelMutatorFunc(bR, restRequestsKey, requests)
 }

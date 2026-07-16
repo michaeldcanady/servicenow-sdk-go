@@ -64,42 +64,30 @@ func (m *DocumentModel) GetFieldDeserializers() map[string]func(serialization.Pa
 
 // GetSysID ...
 func (m *DocumentModel) GetSysID() (*string, error) {
-	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), sysIDKey)
-	if err != nil {
-		return nil, err
-	}
-	return val, nil
+	return store.DefaultBackedModelAccessorFunc[*DocumentModel, *string](m, sysIDKey)
 }
 
 // SetSysID ...
 func (m *DocumentModel) SetSysID(val *string) error {
-	return m.GetBackingStore().Set(sysIDKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 
 // GetName ...
 func (m *DocumentModel) GetName() (*string, error) {
-	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), nameKey)
-	if err != nil {
-		return nil, err
-	}
-	return val, nil
+	return store.DefaultBackedModelAccessorFunc[*DocumentModel, *string](m, nameKey)
 }
 
 // SetName ...
 func (m *DocumentModel) SetName(val *string) error {
-	return m.GetBackingStore().Set(nameKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, nameKey, val)
 }
 
 // GetType ...
 func (m *DocumentModel) GetType() (*string, error) {
-	val, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, *string](m.GetBackingStore(), typeKey)
-	if err != nil {
-		return nil, err
-	}
-	return val, nil
+	return store.DefaultBackedModelAccessorFunc[*DocumentModel, *string](m, typeKey)
 }
 
 // SetType ...
 func (m *DocumentModel) SetType(val *string) error {
-	return m.GetBackingStore().Set(typeKey, val)
+	return store.DefaultBackedModelMutatorFunc(m, typeKey, val)
 }

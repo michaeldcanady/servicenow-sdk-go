@@ -13,6 +13,10 @@ import (
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
+const (
+	attachmentMetadataHeader = "x-attachment-metadata"
+)
+
 func isOffline() bool {
 	return os.Getenv("SN_OFFLINE") == "true"
 }
