@@ -64,11 +64,7 @@ func (m *CmdbInstanceModel) GetFieldDeserializers() map[string]func(serializatio
 
 // GetSysID ...
 func (m *CmdbInstanceModel) GetSysID() (*string, error) {
-	val, err := store.DefaultBackedModelAccessorFunc[*CmdbInstanceModel, *string](m, sysIDKey)
-	if err != nil {
-		return nil, err
-	}
-	return val, nil
+	return store.DefaultBackedModelAccessorFunc[*CmdbInstanceModel, *string](m, sysIDKey)
 }
 
 // SetSysID ...
