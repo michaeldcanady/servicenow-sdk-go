@@ -1,12 +1,9 @@
 package tableapi
 
 import (
-	"errors"
-
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 // RecordElement represents a single field in a TableRecord.
@@ -35,55 +32,38 @@ func (rE *RecordElement) GetDisplayValue() (ElementValue, error) {
 		return ElementValue{}, nil
 	}
 
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, ElementValue](rE.GetBackingStore(), recordDisplayValueKey)
+	return store.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, recordDisplayValueKey)
+}
+
+func (rE *RecordElement) set(key string, value any) error {
+	val, err := NewElementValue(value)
+	if err != nil {
+		return err
+	}
+	return store.DefaultBackedModelMutatorFunc(rE, key, *val)
 }
 
 // SetDisplayValue sets the display value of the element.
 func (rE *RecordElement) SetDisplayValue(value any) error {
-	val, err := NewElementValue(value)
-	if err != nil {
-		return err
-	}
-	return store.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), recordDisplayValueKey, *val)
+	return rE.set(recordDisplayValueKey, value)
 }
 
 // GetValue returns the raw value of the element.
 func (rE *RecordElement) GetValue() (ElementValue, error) {
-	if conversion.IsNil(rE) || conversion.IsNil(rE.BackedModel) {
-		return ElementValue{}, nil
-	}
-
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, ElementValue](rE.GetBackingStore(), recordValueKey)
+	return store.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, recordValueKey)
 }
 
 // SetValue sets the raw value of the element.
 func (rE *RecordElement) SetValue(value any) error {
-	if conversion.IsNil(rE) {
-		return errors.New("model is nil")
-	}
-
-	val, err := NewElementValue(value)
-	if err != nil {
-		return err
-	}
-
-	backingStore := rE.GetBackingStore()
-	return store.DefaultBackedModelMutatorFunc(backingStore, recordValueKey, *val)
+	return rE.set(recordValueKey, value)
 }
 
 // GetLink returns the reference link of the element, if it is a reference field.
 func (rE *RecordElement) GetLink() (string, error) {
-	if conversion.IsNil(rE) || conversion.IsNil(rE.BackedModel) {
-		return "", nil
-	}
-	return store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, string](rE.GetBackingStore(), recordLinkKey)
+	return store.DefaultBackedModelAccessorFunc[*RecordElement, string](rE, recordLinkKey)
 }
 
 // SetLink sets the reference link of the element.
 func (rE *RecordElement) SetLink(link *string) error {
-	var val string
-	if link != nil {
-		val = *link
-	}
-	return store.DefaultBackedModelMutatorFunc(rE.GetBackingStore(), recordLinkKey, val)
+	return rE.set(recordLinkKey, link)
 }

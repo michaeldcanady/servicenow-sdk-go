@@ -10,7 +10,6 @@ import (
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 var _ serialization.Parsable = (*TableRecord)(nil)
@@ -153,9 +152,7 @@ func NewTableRecord() *TableRecord {
 
 // Get retrieves a RecordElement associated with the specified key.
 func (tR *TableRecord) Get(key string) (*RecordElement, error) {
-	elem, err := store.DefaultBackedModelAccessorFunc[kiotaStore.BackingStore, RecordElement](tR.GetBackingStore(), key)
-
-	return &elem, err
+	return store.DefaultBackedModelAccessorFunc[*TableRecord, *RecordElement](tR, key)
 }
 
 // SetElement assigns a RecordElement to the specified key.
@@ -164,7 +161,7 @@ func (tR *TableRecord) SetElement(key string, element *RecordElement) error {
 		tR.keys = append(tR.keys, key)
 	}
 
-	return store.DefaultBackedModelMutatorFunc(tR.GetBackingStore(), key, element)
+	return store.DefaultBackedModelMutatorFunc(tR, key, element)
 }
 
 // SetValue assigns a value to the specified key using a RecordElement wrapper.
