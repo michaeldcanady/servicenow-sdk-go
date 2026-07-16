@@ -19,7 +19,6 @@ import (
 
 type tableTestContext struct {
 	client       *sdk.ServiceNowServiceClient
-	client       *sdk.ServiceNowServiceClient
 	response     interface{} // Generic response to support either collection or item
 	err          error
 	lastSysID    string
@@ -45,11 +44,6 @@ func (c *tableTestContext) iHaveInitializedTheServiceNowClient() error {
 		os.Getenv("SN_PASSWORD"),
 	)
 
-	client, err := sdk.NewServiceNowServiceClient(
-		sdk.WithAuthenticationProvider(cred),
-		sdk.WithInstance(instance),
-		sdk.WithHTTPClient(getHttpClient()),
-	)
 	client, err := sdk.NewServiceNowServiceClient(
 		sdk.WithAuthenticationProvider(cred),
 		sdk.WithInstance(instance),
@@ -92,29 +86,8 @@ func (c *tableTestContext) theResponseShouldNotBeAnError() error {
 				return fmt.Errorf("failed to retrieve error status: %w", err)
 			}
 
-		if snErr, ok := c.err.(*core.ServiceNowError); ok {
-			mainErr, err := snErr.GetError()
-			if err != nil {
-				return fmt.Errorf("failed to retrieve error details: %w", err)
-			}
-
-			msg, err := mainErr.GetMessage()
-			if err != nil {
-				return fmt.Errorf("failed to retrieve error message: %w", err)
-			}
-
-			detail, err := mainErr.GetDetail()
-			if err != nil {
-				return fmt.Errorf("failed to retrieve error detail: %w", err)
-			}
-
-			status, err := mainErr.GetStatus()
-			if err != nil {
-				return fmt.Errorf("failed to retrieve error status: %w", err)
-			}
-
 			return fmt.Errorf("expected no error, but got: %v (Message: %s, Detail: %s, Status: %s)",
-				c.err, msg, *detail, status)
+				c.err, *msg, *detail, *status)
 		}
 		return fmt.Errorf("expected no error, but got: %v", c.err)
 	}
@@ -393,7 +366,6 @@ func (c *tableTestContext) iUseTheTablePageIteratorToFetchRecords() error {
 		return err
 	}
 
-	iterator, err := tableapi.NewDefaultTablePageIterator(resp, c.client.GetRequestAdapter())
 	iterator, err := tableapi.NewDefaultTablePageIterator(resp, c.client.GetRequestAdapter())
 	if err != nil {
 		return err
