@@ -19,21 +19,21 @@ func NewMedia(contentType string, data []byte) *Media {
 }
 
 // GetContentType returns the content-type of the media
-func (P *Media) GetContentType() string {
-	return P.contentType
+func (m *Media) GetContentType() string {
+	return m.contentType
 }
 
 // GetData returns the data of the media
-func (P *Media) GetData() []byte {
-	return P.data
+func (m *Media) GetData() []byte {
+	return m.data
 }
 
 // Serialize writes the objects properties to the current writer.
-func (P *Media) Serialize(writer serialization.SerializationWriter) error {
-	return writer.WriteByteArrayValue("", P.data)
+func (m *Media) Serialize(writer serialization.SerializationWriter) error {
+	return writer.WriteByteArrayValue("", m.data)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (P *Media) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (m *Media) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return nil
 }

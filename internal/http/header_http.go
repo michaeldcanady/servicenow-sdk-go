@@ -7,11 +7,13 @@ const (
 	HTTPHeaderContentType
 )
 
+var httpHeaderStrings = map[HTTPHeader]string{
+	HTTPHeaderUnknown:     "unknown",
+	HTTPHeaderContentType: "content-type",
+}
+
 func (hH HTTPHeader) String() string {
-	value, ok := map[HTTPHeader]string{
-		HTTPHeaderUnknown:     "unknown",
-		HTTPHeaderContentType: "content-type",
-	}[hH]
+	value, ok := httpHeaderStrings[hH]
 	if !ok {
 		return HTTPHeaderUnknown.String()
 	}

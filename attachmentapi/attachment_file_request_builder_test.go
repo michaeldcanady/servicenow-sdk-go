@@ -176,7 +176,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 			},
 			media:             defaultMedia,
 			nilRequestAdapter: true,
-			expectedErr:       errors.New("requestAdapter is nil"),
+			expectedErr:       snerrors.ErrNilRequestAdapter,
 		},
 		{
 			name: "Adapter send error",

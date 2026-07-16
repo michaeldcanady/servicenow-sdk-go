@@ -300,8 +300,9 @@ func (i *PageIterator[T]) fetchPage(ctx context.Context, pageLink *string) (Serv
 
 	var headerOption *nethttplibrary.HeadersInspectionOptions
 
+	headerOptionKey := (&nethttplibrary.HeadersInspectionOptions{}).GetKey()
 	for _, opt := range i.reqOptions {
-		if opt.GetKey() == ((&nethttplibrary.HeadersInspectionOptions{}).GetKey()) {
+		if opt.GetKey() == headerOptionKey {
 			headerOption = opt.(*nethttplibrary.HeadersInspectionOptions)
 			break
 		}

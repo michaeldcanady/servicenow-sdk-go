@@ -21,14 +21,16 @@ const (
 	DisplayValueAll
 )
 
+var displayValueStrings = map[DisplayValue]string{
+	DisplayValueUnknown: displayValueUnknown,
+	DisplayValueTrue:    displayValueTrue,
+	DisplayValueFalse:   displayValueFalse,
+	DisplayValueAll:     displayValueAll,
+}
+
 // String returns the string representation of the DisplayValue.
 func (e DisplayValue) String() string {
-	str, ok := map[DisplayValue]string{
-		DisplayValueUnknown: displayValueUnknown,
-		DisplayValueTrue:    displayValueTrue,
-		DisplayValueFalse:   displayValueFalse,
-		DisplayValueAll:     displayValueAll,
-	}[e]
+	str, ok := displayValueStrings[e]
 	if !ok {
 		return DisplayValueUnknown.String()
 	}

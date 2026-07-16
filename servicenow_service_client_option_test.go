@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
@@ -66,7 +67,7 @@ func TestWithRequestAdapter(t *testing.T) {
 				option := WithRequestAdapter(nil)
 				config := &ServiceNowServiceClientConfig{}
 				err := option(config)
-				assert.Equal(t, errors.New("requestAdapter is nil"), err)
+				assert.Equal(t, snerrors.ErrNilRequestAdapter, err)
 			},
 		},
 	}

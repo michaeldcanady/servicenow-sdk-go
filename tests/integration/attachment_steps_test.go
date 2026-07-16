@@ -16,6 +16,7 @@ import (
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 )
 
@@ -204,7 +205,7 @@ func (c *attachmentTestContext) iUploadTheFileFromTheResourcesDirectoryToTheInci
 	config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
 		QueryParameters: &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
 			FileName:   &fileName,
-			TableName:  ptr("incident"),
+			TableName:  internal.ToPointer("incident"),
 			TableSysID: &c.incidentSysID,
 		},
 	}
@@ -321,10 +322,6 @@ func (c *attachmentTestContext) theResponseShouldBeA404Error() error {
 		return fmt.Errorf("expected a 404 error, but got no error")
 	}
 	return nil
-}
-
-func ptr[T any](v T) *T {
-	return &v
 }
 
 func InitializeAttachmentScenario(ctx *godog.ScenarioContext) {

@@ -55,12 +55,8 @@ func (rB *VersionsRequestBuilder) ToGetRequestInformation(_ context.Context, req
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
+		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 

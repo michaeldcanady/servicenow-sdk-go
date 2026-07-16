@@ -24,6 +24,10 @@ go.work.sum
 # env file
 *.env
 
+# Claude Code personal/local settings (may contain secrets)
+.claude/settings.local.json
+.claude/.*.redacted
+
 # Editor/IDE
 .vscode/*
 !.vscode/settings.json

@@ -2,11 +2,11 @@ package tableapi
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -77,7 +77,7 @@ func (rB *TableRequestBuilder[T]) Get(ctx context.Context, requestConfiguration 
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
-		return nil, errors.New("request adapter is nil")
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	if conversion.IsNil(requestConfiguration) {
@@ -101,7 +101,7 @@ func (rB *TableRequestBuilder[T]) Get(ctx context.Context, requestConfiguration 
 	}
 
 	if resp == nil {
-		return nil, errors.New("response is nil")
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := resp.(core.ServiceNowCollectionResponse[T])
@@ -121,11 +121,11 @@ func (rB *TableRequestBuilder[T]) Post(ctx context.Context, body T, requestConfi
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
-		return nil, errors.New("request adapter is nil")
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	if conversion.IsNil(body) {
-		return nil, errors.New("body is nil")
+		return nil, snerrors.ErrNilBody
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, requestConfiguration)
@@ -140,7 +140,7 @@ func (rB *TableRequestBuilder[T]) Post(ctx context.Context, body T, requestConfi
 	}
 
 	if resp == nil {
-		return nil, errors.New("response is nil")
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := resp.(core.ServiceNowItemResponse[T])
@@ -165,7 +165,7 @@ func (rB *TableRequestBuilder[T]) Head(ctx context.Context, requestConfiguration
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
-		return nil, errors.New("request adapter is nil")
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	if conversion.IsNil(requestConfiguration) {

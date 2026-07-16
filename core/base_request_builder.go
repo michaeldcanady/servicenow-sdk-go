@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -54,7 +55,7 @@ func (rB *BaseRequestBuilder) SetPathParameters(pathParameters map[string]string
 	}
 
 	if conversion.IsNil(pathParameters) {
-		return errors.New("pathParameters is nil")
+		return snerrors.ErrNilPathParameters
 	}
 
 	rB.PathParameters = pathParameters
@@ -75,7 +76,7 @@ func (rB *BaseRequestBuilder) SetRequestAdapter(requestAdapter abstractions.Requ
 	}
 
 	if conversion.IsNil(requestAdapter) {
-		return errors.New("requestAdapter is nil")
+		return snerrors.ErrNilRequestAdapter
 	}
 
 	rB.RequestAdapter = requestAdapter

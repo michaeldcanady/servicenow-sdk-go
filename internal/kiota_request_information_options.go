@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -15,7 +16,7 @@ type KiotaRequestInformationOption = Option[*KiotaRequestInformation]
 func WithMethod(method abstractions.HttpMethod) KiotaRequestInformationOption {
 	return func(requestInformation *KiotaRequestInformation) error {
 		if conversion.IsNil(requestInformation) {
-			return errors.New("config is nil")
+			return snerrors.ErrNilConfig
 		}
 		requestInformation.Method = method
 		return nil
@@ -26,7 +27,7 @@ func WithMethod(method abstractions.HttpMethod) KiotaRequestInformationOption {
 func WithURLTemplate(template string) KiotaRequestInformationOption {
 	return func(requestInformation *KiotaRequestInformation) error {
 		if conversion.IsNil(requestInformation) {
-			return errors.New("config is nil")
+			return snerrors.ErrNilConfig
 		}
 
 		template = strings.TrimSpace(template)
@@ -42,11 +43,11 @@ func WithURLTemplate(template string) KiotaRequestInformationOption {
 func WithPathParameters(pathParameters map[string]string) KiotaRequestInformationOption {
 	return func(requestInformation *KiotaRequestInformation) error {
 		if conversion.IsNil(requestInformation) {
-			return errors.New("config is nil")
+			return snerrors.ErrNilConfig
 		}
 
 		if pathParameters == nil {
-			return errors.New("pathParameters is nil")
+			return snerrors.ErrNilPathParameters
 		}
 		if len(pathParameters) == 0 {
 			return errors.New("pathParameters is empty")

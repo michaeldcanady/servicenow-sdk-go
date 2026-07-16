@@ -3,6 +3,7 @@ package appointmentbookingapi
 import (
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,21 +16,21 @@ func TestAvailabilityRequestModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"CatalogId", func(v interface{}) error { return model.setCatalogId(v.(*string)) }, func() (interface{}, error) { return model.GetCatalogId() }, ptr("val")},
-		{"EndDate", func(v interface{}) error { return model.setEndDate(v.(*string)) }, func() (interface{}, error) { return model.GetEndDate() }, ptr("val")},
-		{"FetchDaysSlot", func(v interface{}) error { return model.setFetchDaysSlot(v.(*bool)) }, func() (interface{}, error) { return model.GetFetchDaysSlot() }, ptr(true)},
-		{"FullDay", func(v interface{}) error { return model.setFullDay(v.(*bool)) }, func() (interface{}, error) { return model.GetFullDay() }, ptr(true)},
-		{"GetNextAvailableSlot", func(v interface{}) error { return model.setGetNextAvailableSlot(v.(*bool)) }, func() (interface{}, error) { return model.GetGetNextAvailableSlot() }, ptr(true)},
-		{"Limit", func(v interface{}) error { return model.setLimit(v.(*int32)) }, func() (interface{}, error) { return model.GetLimit() }, ptr(int32(10))},
-		{"Location", func(v interface{}) error { return model.setLocation(v.(*string)) }, func() (interface{}, error) { return model.GetLocation() }, ptr("val")},
-		{"OpenedFor", func(v interface{}) error { return model.setOpenedFor(v.(*string)) }, func() (interface{}, error) { return model.GetOpenedFor() }, ptr("val")},
+		{"CatalogId", func(v interface{}) error { return model.setCatalogId(v.(*string)) }, func() (interface{}, error) { return model.GetCatalogId() }, internal.ToPointer("val")},
+		{"EndDate", func(v interface{}) error { return model.setEndDate(v.(*string)) }, func() (interface{}, error) { return model.GetEndDate() }, internal.ToPointer("val")},
+		{"FetchDaysSlot", func(v interface{}) error { return model.setFetchDaysSlot(v.(*bool)) }, func() (interface{}, error) { return model.GetFetchDaysSlot() }, internal.ToPointer(true)},
+		{"FullDay", func(v interface{}) error { return model.setFullDay(v.(*bool)) }, func() (interface{}, error) { return model.GetFullDay() }, internal.ToPointer(true)},
+		{"GetNextAvailableSlot", func(v interface{}) error { return model.setGetNextAvailableSlot(v.(*bool)) }, func() (interface{}, error) { return model.GetGetNextAvailableSlot() }, internal.ToPointer(true)},
+		{"Limit", func(v interface{}) error { return model.setLimit(v.(*int32)) }, func() (interface{}, error) { return model.GetLimit() }, internal.ToPointer(int32(10))},
+		{"Location", func(v interface{}) error { return model.setLocation(v.(*string)) }, func() (interface{}, error) { return model.GetLocation() }, internal.ToPointer("val")},
+		{"OpenedFor", func(v interface{}) error { return model.setOpenedFor(v.(*string)) }, func() (interface{}, error) { return model.GetOpenedFor() }, internal.ToPointer("val")},
 		{"OtherInputs", func(v interface{}) error { return model.setOtherInputs(v) }, func() (interface{}, error) { return model.GetOtherInputs() }, "val"},
-		{"ServiceConfigRule", func(v interface{}) error { return model.setServiceConfigRule(v.(*string)) }, func() (interface{}, error) { return model.GetServiceConfigRule() }, ptr("val")},
-		{"StartDate", func(v interface{}) error { return model.setStartDate(v.(*string)) }, func() (interface{}, error) { return model.GetStartDate() }, ptr("val")},
-		{"TaskId", func(v interface{}) error { return model.setTaskId(v.(*string)) }, func() (interface{}, error) { return model.GetTaskId() }, ptr("val")},
-		{"TaskTable", func(v interface{}) error { return model.setTaskTable(v.(*string)) }, func() (interface{}, error) { return model.GetTaskTable() }, ptr("val")},
-		{"UseReadReplica", func(v interface{}) error { return model.setUseReadReplica(v.(*bool)) }, func() (interface{}, error) { return model.GetUseReadReplica() }, ptr(true)},
-		{"View", func(v interface{}) error { return model.setView(v.(*string)) }, func() (interface{}, error) { return model.GetView() }, ptr("val")},
+		{"ServiceConfigRule", func(v interface{}) error { return model.setServiceConfigRule(v.(*string)) }, func() (interface{}, error) { return model.GetServiceConfigRule() }, internal.ToPointer("val")},
+		{"StartDate", func(v interface{}) error { return model.setStartDate(v.(*string)) }, func() (interface{}, error) { return model.GetStartDate() }, internal.ToPointer("val")},
+		{"TaskId", func(v interface{}) error { return model.setTaskId(v.(*string)) }, func() (interface{}, error) { return model.GetTaskId() }, internal.ToPointer("val")},
+		{"TaskTable", func(v interface{}) error { return model.setTaskTable(v.(*string)) }, func() (interface{}, error) { return model.GetTaskTable() }, internal.ToPointer("val")},
+		{"UseReadReplica", func(v interface{}) error { return model.setUseReadReplica(v.(*bool)) }, func() (interface{}, error) { return model.GetUseReadReplica() }, internal.ToPointer(true)},
+		{"View", func(v interface{}) error { return model.setView(v.(*string)) }, func() (interface{}, error) { return model.GetView() }, internal.ToPointer("val")},
 	}
 
 	for _, tt := range tests {

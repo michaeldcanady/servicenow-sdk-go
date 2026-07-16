@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -78,7 +79,7 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 	errorMapping := core.DefaultErrorMapping()
 	requestAdapter := rB.GetRequestAdapter()
 	if conversion.IsNil(requestAdapter) {
-		return nil, errors.New("requestAdapter is nil")
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	resp, err := rB.GetRequestAdapter().SendPrimitive(ctx, requestInfo, "[]byte", errorMapping)
@@ -133,12 +134,8 @@ func (rB *AttachmentItemFileRequestBuilder) ToGetRequestInformation(_ context.Co
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
+		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeAny.String())
 	return kiotaRequestInfo.RequestInformation, nil

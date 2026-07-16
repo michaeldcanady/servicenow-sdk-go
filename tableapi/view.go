@@ -21,14 +21,16 @@ const (
 	ViewBoth
 )
 
+var viewStrings = map[View]string{
+	ViewUnknown: viewUnknown,
+	ViewDesktop: viewDesktop,
+	ViewMobile:  viewMobile,
+	ViewBoth:    viewBoth,
+}
+
 // String returns the string representation of the View.
 func (e View) String() string {
-	str, ok := map[View]string{
-		ViewUnknown: viewUnknown,
-		ViewDesktop: viewDesktop,
-		ViewMobile:  viewMobile,
-		ViewBoth:    viewBoth,
-	}[e]
+	str, ok := viewStrings[e]
 	if !ok {
 		return ViewUnknown.String()
 	}

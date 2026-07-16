@@ -3,12 +3,9 @@ package cdmapplicationsapi
 import (
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
 )
-
-func ptr[T any](v T) *T {
-	return &v
-}
 
 func TestUploadStatusOutputModel_GettersSetters(t *testing.T) {
 	model := NewUploadStatusOutput()
@@ -19,8 +16,8 @@ func TestUploadStatusOutputModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, ptr("sys-id")},
-		{"Number", func(v interface{}) error { return model.setNumber(v.(*string)) }, func() (interface{}, error) { return model.GetNumber() }, ptr("123")},
+		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, internal.ToPointer("sys-id")},
+		{"Number", func(v interface{}) error { return model.setNumber(v.(*string)) }, func() (interface{}, error) { return model.GetNumber() }, internal.ToPointer("123")},
 	}
 
 	for _, tt := range tests {
@@ -43,8 +40,8 @@ func TestUploadStatusResultModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"Type", func(v interface{}) error { return model.setType(v.(*string)) }, func() (interface{}, error) { return model.GetType() }, ptr("upload")},
-		{"State", func(v interface{}) error { return model.setState(v.(*string)) }, func() (interface{}, error) { return model.GetState() }, ptr("completed")},
+		{"Type", func(v interface{}) error { return model.setType(v.(*string)) }, func() (interface{}, error) { return model.GetType() }, internal.ToPointer("upload")},
+		{"State", func(v interface{}) error { return model.setState(v.(*string)) }, func() (interface{}, error) { return model.GetState() }, internal.ToPointer("completed")},
 		{"Output", func(v interface{}) error { return model.setOutput(v.(*UploadStatusOutput)) }, func() (interface{}, error) { return model.GetOutput() }, NewUploadStatusOutput()},
 	}
 
@@ -68,11 +65,11 @@ func TestExportResultModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, ptr("sys-id")},
-		{"Name", func(v interface{}) error { return model.setName(v.(*string)) }, func() (interface{}, error) { return model.GetName() }, ptr("export-name")},
-		{"State", func(v interface{}) error { return model.setState(v.(*string)) }, func() (interface{}, error) { return model.GetState() }, ptr("active")},
-		{"Status", func(v interface{}) error { return model.setStatus(v.(*string)) }, func() (interface{}, error) { return model.GetStatus() }, ptr("success")},
-		{"Message", func(v interface{}) error { return model.setMessage(v.(*string)) }, func() (interface{}, error) { return model.GetMessage() }, ptr("export successful")},
+		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, internal.ToPointer("sys-id")},
+		{"Name", func(v interface{}) error { return model.setName(v.(*string)) }, func() (interface{}, error) { return model.GetName() }, internal.ToPointer("export-name")},
+		{"State", func(v interface{}) error { return model.setState(v.(*string)) }, func() (interface{}, error) { return model.GetState() }, internal.ToPointer("active")},
+		{"Status", func(v interface{}) error { return model.setStatus(v.(*string)) }, func() (interface{}, error) { return model.GetStatus() }, internal.ToPointer("success")},
+		{"Message", func(v interface{}) error { return model.setMessage(v.(*string)) }, func() (interface{}, error) { return model.GetMessage() }, internal.ToPointer("export successful")},
 	}
 
 	for _, tt := range tests {
@@ -95,10 +92,10 @@ func TestExportStatusResultModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"State", func(v interface{}) error { return model.setState(v.(*string)) }, func() (interface{}, error) { return model.GetState() }, ptr("completed")},
-		{"Status", func(v interface{}) error { return model.setStatus(v.(*string)) }, func() (interface{}, error) { return model.GetStatus() }, ptr("success")},
-		{"Message", func(v interface{}) error { return model.setMessage(v.(*string)) }, func() (interface{}, error) { return model.GetMessage() }, ptr("status message")},
-		{"Progress", func(v interface{}) error { return model.setProgress(v.(*string)) }, func() (interface{}, error) { return model.GetProgress() }, ptr("100")},
+		{"State", func(v interface{}) error { return model.setState(v.(*string)) }, func() (interface{}, error) { return model.GetState() }, internal.ToPointer("completed")},
+		{"Status", func(v interface{}) error { return model.setStatus(v.(*string)) }, func() (interface{}, error) { return model.GetStatus() }, internal.ToPointer("success")},
+		{"Message", func(v interface{}) error { return model.setMessage(v.(*string)) }, func() (interface{}, error) { return model.GetMessage() }, internal.ToPointer("status message")},
+		{"Progress", func(v interface{}) error { return model.setProgress(v.(*string)) }, func() (interface{}, error) { return model.GetProgress() }, internal.ToPointer("100")},
 	}
 
 	for _, tt := range tests {
@@ -133,11 +130,11 @@ func TestSharedLibraryComponentApplicationModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, ptr("sys-id")},
-		{"Name", func(v interface{}) error { return model.setName(v.(*string)) }, func() (interface{}, error) { return model.GetName() }, ptr("app-name")},
-		{"Version", func(v interface{}) error { return model.setVersion(v.(*string)) }, func() (interface{}, error) { return model.GetVersion() }, ptr("1.0.0")},
-		{"Description", func(v interface{}) error { return model.setDescription(v.(*string)) }, func() (interface{}, error) { return model.GetDescription() }, ptr("app-desc")},
-		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, ptr("actual-app-name")},
+		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, internal.ToPointer("sys-id")},
+		{"Name", func(v interface{}) error { return model.setName(v.(*string)) }, func() (interface{}, error) { return model.GetName() }, internal.ToPointer("app-name")},
+		{"Version", func(v interface{}) error { return model.setVersion(v.(*string)) }, func() (interface{}, error) { return model.GetVersion() }, internal.ToPointer("1.0.0")},
+		{"Description", func(v interface{}) error { return model.setDescription(v.(*string)) }, func() (interface{}, error) { return model.GetDescription() }, internal.ToPointer("app-desc")},
+		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, internal.ToPointer("actual-app-name")},
 	}
 
 	for _, tt := range tests {
@@ -160,10 +157,10 @@ func TestComponentUploadRequestModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, ptr("app-name")},
-		{"ComponentName", func(v interface{}) error { return model.setComponentName(v.(*string)) }, func() (interface{}, error) { return model.GetComponentName() }, ptr("comp-name")},
-		{"Data", func(v interface{}) error { return model.setData(v.(*string)) }, func() (interface{}, error) { return model.GetData() }, ptr("base64-data")},
-		{"Format", func(v interface{}) error { return model.setFormat(v.(*string)) }, func() (interface{}, error) { return model.GetFormat() }, ptr("json")},
+		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, internal.ToPointer("app-name")},
+		{"ComponentName", func(v interface{}) error { return model.setComponentName(v.(*string)) }, func() (interface{}, error) { return model.GetComponentName() }, internal.ToPointer("comp-name")},
+		{"Data", func(v interface{}) error { return model.setData(v.(*string)) }, func() (interface{}, error) { return model.GetData() }, internal.ToPointer("base64-data")},
+		{"Format", func(v interface{}) error { return model.setFormat(v.(*string)) }, func() (interface{}, error) { return model.GetFormat() }, internal.ToPointer("json")},
 	}
 
 	for _, tt := range tests {
@@ -192,8 +189,8 @@ func TestComponentVarsUploadRequestModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, ptr("app-name")},
-		{"ComponentName", func(v interface{}) error { return model.setComponentName(v.(*string)) }, func() (interface{}, error) { return model.GetComponentName() }, ptr("comp-name")},
+		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, internal.ToPointer("app-name")},
+		{"ComponentName", func(v interface{}) error { return model.setComponentName(v.(*string)) }, func() (interface{}, error) { return model.GetComponentName() }, internal.ToPointer("comp-name")},
 		{"Vars", func(v interface{}) error { return model.setVars(v) }, func() (interface{}, error) { return model.GetVars() }, "vars"},
 	}
 
@@ -217,10 +214,10 @@ func TestCollectionUploadRequestModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, ptr("app-name")},
-		{"CollectionName", func(v interface{}) error { return model.setCollectionName(v.(*string)) }, func() (interface{}, error) { return model.GetCollectionName() }, ptr("coll-name")},
-		{"Data", func(v interface{}) error { return model.setData(v.(*string)) }, func() (interface{}, error) { return model.GetData() }, ptr("base64-data")},
-		{"Format", func(v interface{}) error { return model.setFormat(v.(*string)) }, func() (interface{}, error) { return model.GetFormat() }, ptr("json")},
+		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, internal.ToPointer("app-name")},
+		{"CollectionName", func(v interface{}) error { return model.setCollectionName(v.(*string)) }, func() (interface{}, error) { return model.GetCollectionName() }, internal.ToPointer("coll-name")},
+		{"Data", func(v interface{}) error { return model.setData(v.(*string)) }, func() (interface{}, error) { return model.GetData() }, internal.ToPointer("base64-data")},
+		{"Format", func(v interface{}) error { return model.setFormat(v.(*string)) }, func() (interface{}, error) { return model.GetFormat() }, internal.ToPointer("json")},
 	}
 
 	for _, tt := range tests {
@@ -243,9 +240,9 @@ func TestDeployableUpdateRequestModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, ptr("app-name")},
-		{"DeployableName", func(v interface{}) error { return model.setDeployableName(v.(*string)) }, func() (interface{}, error) { return model.GetDeployableName() }, ptr("deploy-name")},
-		{"Data", func(v interface{}) error { return model.setData(v.(*string)) }, func() (interface{}, error) { return model.GetData() }, ptr("new-data")},
+		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, internal.ToPointer("app-name")},
+		{"DeployableName", func(v interface{}) error { return model.setDeployableName(v.(*string)) }, func() (interface{}, error) { return model.GetDeployableName() }, internal.ToPointer("deploy-name")},
+		{"Data", func(v interface{}) error { return model.setData(v.(*string)) }, func() (interface{}, error) { return model.GetData() }, internal.ToPointer("new-data")},
 	}
 
 	for _, tt := range tests {
@@ -268,9 +265,9 @@ func TestSharedComponentUpdateRequestModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, ptr("app-name")},
-		{"SharedComponentName", func(v interface{}) error { return model.setSharedComponentName(v.(*string)) }, func() (interface{}, error) { return model.GetSharedComponentName() }, ptr("shared-name")},
-		{"Data", func(v interface{}) error { return model.setData(v.(*string)) }, func() (interface{}, error) { return model.GetData() }, ptr("new-data")},
+		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, internal.ToPointer("app-name")},
+		{"SharedComponentName", func(v interface{}) error { return model.setSharedComponentName(v.(*string)) }, func() (interface{}, error) { return model.GetSharedComponentName() }, internal.ToPointer("shared-name")},
+		{"Data", func(v interface{}) error { return model.setData(v.(*string)) }, func() (interface{}, error) { return model.GetData() }, internal.ToPointer("new-data")},
 	}
 
 	for _, tt := range tests {

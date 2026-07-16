@@ -1,8 +1,7 @@
 package core
 
 import (
-	"errors"
-
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -21,7 +20,7 @@ func convertToPage[T serialization.Parsable](response ServiceNowCollectionRespon
 	var err error
 
 	if response == nil {
-		return page, errors.New("response cannot be nil")
+		return page, snerrors.ErrNilResponse
 	}
 
 	page.Result, err = response.GetResult()

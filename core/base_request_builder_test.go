@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 )
 
@@ -73,7 +74,7 @@ func TestBaseRequestBuilder_SetPathParameters(t *testing.T) {
 		err    error
 	}{
 		{"Ok", rb, params, nil},
-		{"NilParams", rb, nil, errors.New("pathParameters is nil")},
+		{"NilParams", rb, nil, snerrors.ErrNilPathParameters},
 		{"NilRB", nilRB, params, nil},
 	}
 	for _, tt := range tests {
@@ -130,7 +131,7 @@ func TestBaseRequestBuilder_SetRequestAdapter(t *testing.T) {
 		err  error
 	}{
 		{"Ok", rb, ra, nil},
-		{"NilRA", rb, nil, errors.New("requestAdapter is nil")},
+		{"NilRA", rb, nil, snerrors.ErrNilRequestAdapter},
 		{"NilRB", nilRB, ra, nil},
 	}
 	for _, tt := range tests {

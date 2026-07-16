@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strings"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -35,7 +36,7 @@ func WithAuthenticationProvider(authenticationProvider authentication.Authentica
 func WithRequestAdapter(requestAdapter abstractions.RequestAdapter) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
 		if conversion.IsNil(requestAdapter) {
-			return errors.New("requestAdapter is nil")
+			return snerrors.ErrNilRequestAdapter
 		}
 		config.requestAdapter = requestAdapter
 		return nil
@@ -47,7 +48,7 @@ func WithRequestAdapter(requestAdapter abstractions.RequestAdapter) ServiceNowSe
 func WithURL(uri string) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
 		if conversion.IsNil(config) {
-			return errors.New("config is nil")
+			return snerrors.ErrNilConfig
 		}
 		uri = strings.TrimSpace(uri)
 		if uri == "" {
@@ -69,10 +70,10 @@ func WithURL(uri string) ServiceNowServiceClientOption {
 func WithMiddleware(middleware ...nethttplibrary.Middleware) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
 		if conversion.IsNil(config) {
-			return errors.New("config is nil")
+			return snerrors.ErrNilConfig
 		}
 		if len(middleware) == 0 {
-			return errors.New("middleware is empty")
+			return snerrors.ErrEmptyMiddleware
 		}
 
 		config.middleware = append(config.middleware, middleware...)

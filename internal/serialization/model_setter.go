@@ -3,6 +3,7 @@ package serialization
 import (
 	"errors"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
@@ -23,7 +24,7 @@ func SetMutatedValueFromSource[T, S any](source func() (T, error), setter ModelS
 	}
 
 	if mutator == nil {
-		return errors.New("mutator is nil")
+		return snerrors.ErrNilMutator
 	}
 
 	if setter == nil {
@@ -52,7 +53,7 @@ func WriteMutatedValueToSource[T, S any](writer func(S) error, accessor ModelAcc
 	}
 
 	if mutator == nil {
-		return errors.New("mutator is nil")
+		return snerrors.ErrNilMutator
 	}
 
 	if accessor == nil {

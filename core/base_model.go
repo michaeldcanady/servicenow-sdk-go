@@ -1,8 +1,7 @@
 package core
 
 import (
-	"errors"
-
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -34,7 +33,7 @@ func (bM *BaseModel) SetBackingStoreFactory(factory store.BackingStoreFactory) e
 	}
 
 	if conversion.IsNil(factory) {
-		return errors.New("factory is nil")
+		return snerrors.ErrNilFactory
 	}
 
 	bM.backingStoreFactory = factory

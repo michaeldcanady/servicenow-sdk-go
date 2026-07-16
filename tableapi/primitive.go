@@ -45,22 +45,24 @@ const (
 	PrimitiveString
 )
 
+var primitiveStrings = map[Primitive]string{
+	PrimitiveUnknown:  primitiveUnknown,
+	PrimitiveBool:     primitiveBool,
+	PrimitiveInt8:     primitiveInt8,
+	PrimitiveInt32:    primitiveInt32,
+	PrimitiveInt64:    primitiveInt64,
+	PrimitiveTime:     primitiveTime,
+	PrimitiveByte:     primitiveByte,
+	PrimitiveFloat32:  primitiveFloat32,
+	PrimitiveFloat64:  primitiveFloat64,
+	PrimitiveTimeOnly: primitiveTimeOnly,
+	PrimitiveDateOnly: primitiveDateOnly,
+	PrimitiveString:   primitiveString,
+}
+
 // String return string representation
 func (p Primitive) String() string {
-	value, ok := map[Primitive]string{
-		PrimitiveUnknown:  primitiveUnknown,
-		PrimitiveBool:     primitiveBool,
-		PrimitiveInt8:     primitiveInt8,
-		PrimitiveInt32:    primitiveInt32,
-		PrimitiveInt64:    primitiveInt64,
-		PrimitiveTime:     primitiveTime,
-		PrimitiveByte:     primitiveByte,
-		PrimitiveFloat32:  primitiveFloat32,
-		PrimitiveFloat64:  primitiveFloat64,
-		PrimitiveTimeOnly: primitiveTimeOnly,
-		PrimitiveDateOnly: primitiveDateOnly,
-		PrimitiveString:   primitiveString,
-	}[p]
+	value, ok := primitiveStrings[p]
 
 	if !ok {
 		return PrimitiveUnknown.String()

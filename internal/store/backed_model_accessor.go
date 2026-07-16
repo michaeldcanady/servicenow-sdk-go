@@ -1,8 +1,7 @@
 package store
 
 import (
-	"errors"
-
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -22,7 +21,7 @@ func DefaultBackedModelAccessorFunc[S kiotaStore.BackedModel, T any](model S, ke
 	var result T
 
 	if conversion.IsNil(model) {
-		return result, errors.New("model is nil")
+		return result, snerrors.ErrNilModel
 	}
 
 	return DefaultStoreAccessorFunc[kiotaStore.BackingStore, T](model.GetBackingStore(), key)

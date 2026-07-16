@@ -57,11 +57,11 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 	}
 
 	if conversion.IsNil(requestConfiguration) {
-		return nil, errors.New("requestConfiguration is nil")
+		return nil, snerrors.ErrNilRequestConfiguration
 	}
 
 	if requestConfiguration.QueryParameters == nil {
-		return nil, errors.New("requestConfiguration.QueryParameters is nil")
+		return nil, snerrors.ErrNilQueryParameters
 	}
 
 	if requestConfiguration.QueryParameters.TableSysID == nil || *requestConfiguration.QueryParameters.TableSysID == "" {
@@ -132,7 +132,7 @@ func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Conte
 
 	requestAdapter := rB.GetRequestAdapter()
 	if conversion.IsNil(requestAdapter) {
-		return nil, errors.New("requestAdapter is nil")
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	kiotaRequestInfo.SetStreamContentAndContentType(media.GetData(), media.GetContentType())

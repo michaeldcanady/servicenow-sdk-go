@@ -20,12 +20,14 @@ const (
 	InputStatusValid
 )
 
+var inputStatusStrings = map[InputStatus]string{
+	InputStatusUnknown: inputStatusUnknown,
+	InputStatusInvalid: inputStatusInvalid,
+	InputStatusValid:   inputStatusValid,
+}
+
 func (i InputStatus) String() string {
-	str, ok := map[InputStatus]string{
-		InputStatusUnknown: inputStatusUnknown,
-		InputStatusInvalid: inputStatusInvalid,
-		InputStatusValid:   inputStatusValid,
-	}[i]
+	str, ok := inputStatusStrings[i]
 	if !ok {
 		return InputStatusUnknown.String()
 	}

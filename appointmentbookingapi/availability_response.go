@@ -121,10 +121,15 @@ func (m *AvailabilityResultModel) setTimeZoneDisplayValue(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, timeZoneDisplayValueKey, val)
 }
 
-// TODO: this needs to be fleshed out
 // AvailabilitySlot represents an available slot.
+//
+// The ServiceNow schema for this object is not documented, so it is modeled as a
+// pass-through additional-data holder: every field it contains is exposed only
+// through GetAdditionalData/SetAdditionalData, the same mechanism Kiota generates
+// for open/dynamic objects.
 type AvailabilitySlot interface {
 	serialization.Parsable
+	serialization.AdditionalDataHolder
 	kiotaStore.BackedModel
 }
 
@@ -141,18 +146,28 @@ func CreateAvailabilitySlotFromDiscriminatorValue(_ serialization.ParseNode) (se
 }
 
 func (m *AvailabilitySlotModel) Serialize(writer serialization.SerializationWriter) error {
-	val, _ := m.GetBackingStore().Get("additionalData")
-	if val != nil {
-		return writer.WriteAdditionalData(val.(map[string]interface{}))
+	if conversion.IsNil(m) {
+		return nil
 	}
-	return nil
+	return writer.WriteAdditionalData(m.GetAdditionalData())
 }
 
+// GetFieldDeserializers returns no known fields; the underlying kiota-serialization-json-go
+// parse node automatically routes any unrecognized property into AdditionalData for models
+// implementing serialization.AdditionalDataHolder, so no wildcard entry is needed here.
 func (m *AvailabilitySlotModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	return map[string]func(serialization.ParseNode) error{
-		"*": func(n serialization.ParseNode) error {
-			val, _ := n.GetRawValue()
-			return m.GetBackingStore().Set("additionalData", val)
-		},
+	return map[string]func(serialization.ParseNode) error{}
+}
+
+func (m *AvailabilitySlotModel) GetAdditionalData() map[string]interface{} {
+	val, err := store.DefaultBackedModelAccessorFunc[*AvailabilitySlotModel, map[string]interface{}](m, additionalDataKey)
+	if err != nil || val == nil {
+		val = make(map[string]interface{})
+		m.SetAdditionalData(val)
 	}
+	return val
+}
+
+func (m *AvailabilitySlotModel) SetAdditionalData(value map[string]interface{}) {
+	_ = store.DefaultBackedModelMutatorFunc(m, additionalDataKey, value)
 }

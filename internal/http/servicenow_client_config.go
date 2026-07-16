@@ -32,7 +32,6 @@ func getDefaultMiddleware() []nethttplibrary.Middleware {
 	kiotaMiddlewares := nethttplibrary.GetDefaultMiddlewares()
 
 	serviceNowMiddlewares := []nethttplibrary.Middleware{
-		//NewGraphTelemetryHandler(options),
 		nethttplibrary.NewHeadersInspectionHandler(),
 	}
 	graphMiddlewaresLen := len(serviceNowMiddlewares)

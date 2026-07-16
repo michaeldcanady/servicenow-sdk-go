@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -171,7 +172,7 @@ func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 				mockInternal.On("GetPathParameters").Return(mockPathParameters)
 				return mockInternal
 			},
-			expectedErr: errors.New("response is nil"),
+			expectedErr: snerrors.ErrNilResponse,
 		},
 		{
 			name:        "Nil inner model",

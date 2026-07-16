@@ -1,8 +1,7 @@
 package store
 
 import (
-	"errors"
-
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -17,7 +16,7 @@ type BackedModelMutatorFunc[S kiotaStore.BackingStore, T any] func(S, string, T)
 // of a backing kiotaStore.
 func DefaultBackedModelMutatorFunc[S kiotaStore.BackedModel, T any](model S, key string, value T) error {
 	if conversion.IsNil(model) {
-		return errors.New("model is nil")
+		return snerrors.ErrNilModel
 	}
 
 	return DefaultStoreMutatorFunc[kiotaStore.BackingStore, T](model.GetBackingStore(), key, value)

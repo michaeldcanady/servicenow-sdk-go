@@ -6,6 +6,7 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -77,7 +78,7 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 	}
 
 	if conversion.IsNil(res) {
-		return nil, errors.New("response is nil")
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedRes, ok := res.(core.ServiceNowItemResponse[*Attachment])

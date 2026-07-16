@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -41,7 +42,7 @@ func TestTableItemRequestBuilder_Get(t *testing.T) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(nil, nil)
 			},
-			err: errors.New("response is nil"),
+			err: snerrors.ErrNilResponse,
 		},
 	}
 
@@ -147,7 +148,7 @@ func TestTableItemRequestBuilder_Put(t *testing.T) {
 			body: nil,
 			setupMock: func(m *mocking.MockRequestAdapter) {
 			},
-			err: errors.New("body is nil"),
+			err: snerrors.ErrNilBody,
 		},
 	}
 
@@ -206,7 +207,7 @@ func TestTableItemRequestBuilder_Patch(t *testing.T) {
 			body: nil,
 			setupMock: func(m *mocking.MockRequestAdapter) {
 			},
-			err: errors.New("body is nil"),
+			err: snerrors.ErrNilBody,
 		},
 	}
 

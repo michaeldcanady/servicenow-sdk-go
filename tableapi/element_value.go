@@ -179,41 +179,6 @@ func (eV *ElementValue) GetInt64Value() (*int64, error) {
 	return &val, nil
 }
 
-// GetTimeValue returns a Time value from the element.
-//func (eV *ElementValueModel) GetTimeValue() (*time.Time, error) {
-//	if eV.IsNil() {
-//		return nil, nil
-//	}
-//	v, err := eV.GetStringValue()
-//	if err != nil {
-//		return nil, err
-//	}
-//	if v == nil {
-//		return nil, nil
-//	}
-//
-//	parsed, err := time.Parse(time.RFC3339, *v)
-//	return &parsed, err
-//}
-
-// GetTimeOnlyValue returns a Time-only value from the element.
-//func (eV *ElementValueModel) GetTimeOnlyValue() (*serialization.TimeOnly, error) {
-//	if eV.IsNil() {
-//		return nil, nil
-//	}
-//
-//	return nil, errors.New("not implemented")
-//}
-
-// GetDateOnlyValue returns a Date-only value from the element.
-//func (eV *ElementValueModel) GetDateOnlyValue() (*serialization.DateOnly, error) {
-//	if eV.IsNil() {
-//		return nil, nil
-//	}
-//
-//	return nil, errors.New("not implemented")
-//}
-
 // GetEnumValue returns an enum value from the element.
 func (eV *ElementValue) GetEnumValue(parser serialization.EnumFactory) (interface{}, error) {
 	if eV.IsNil() {

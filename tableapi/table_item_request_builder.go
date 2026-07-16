@@ -2,10 +2,10 @@ package tableapi
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -70,7 +70,7 @@ func (rB *TableItemRequestBuilder[T]) Get(ctx context.Context, requestConfigurat
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
-		return nil, errors.New("request adapter is nil")
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
@@ -85,7 +85,7 @@ func (rB *TableItemRequestBuilder[T]) Get(ctx context.Context, requestConfigurat
 	}
 
 	if resp == nil {
-		return nil, errors.New("response is nil")
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := resp.(core.ServiceNowItemResponse[T])
@@ -103,7 +103,7 @@ func (rB *TableItemRequestBuilder[T]) Delete(ctx context.Context, requestConfigu
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
-		return errors.New("request adapter is nil")
+		return snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToDeleteRequestInformation(ctx, requestConfiguration)
@@ -122,11 +122,11 @@ func (rB *TableItemRequestBuilder[T]) Put(ctx context.Context, body T, requestCo
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
-		return nil, errors.New("request adapter is nil")
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	if conversion.IsNil(body) {
-		return nil, errors.New("body is nil")
+		return nil, snerrors.ErrNilBody
 	}
 
 	requestInfo, err := rB.ToPutRequestInformation(ctx, body, requestConfiguration)
@@ -141,7 +141,7 @@ func (rB *TableItemRequestBuilder[T]) Put(ctx context.Context, body T, requestCo
 	}
 
 	if resp == nil {
-		return nil, errors.New("response is nil")
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := resp.(core.ServiceNowItemResponse[T])
@@ -159,11 +159,11 @@ func (rB *TableItemRequestBuilder[T]) Patch(ctx context.Context, body T, request
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
-		return nil, errors.New("request adapter is nil")
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	if conversion.IsNil(body) {
-		return nil, errors.New("body is nil")
+		return nil, snerrors.ErrNilBody
 	}
 
 	requestInfo, err := rB.ToPatchRequestInformation(ctx, body, requestConfiguration)
@@ -178,7 +178,7 @@ func (rB *TableItemRequestBuilder[T]) Patch(ctx context.Context, body T, request
 	}
 
 	if resp == nil {
-		return nil, errors.New("response is nil")
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := resp.(core.ServiceNowItemResponse[T])

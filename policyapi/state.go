@@ -20,12 +20,14 @@ const (
 	StateInactive
 )
 
+var stateStrings = map[State]string{
+	StateUnknown:  stateUnknown,
+	StateActive:   stateActive,
+	StateInactive: stateInactive,
+}
+
 func (i State) String() string {
-	str, ok := map[State]string{
-		StateUnknown:  stateUnknown,
-		StateActive:   stateActive,
-		StateInactive: stateInactive,
-	}[i]
+	str, ok := stateStrings[i]
 	if !ok {
 		return StateUnknown.String()
 	}

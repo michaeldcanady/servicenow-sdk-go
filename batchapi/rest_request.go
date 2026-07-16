@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -125,7 +126,7 @@ func (rE *RestRequestModel) Serialize(writer serialization.SerializationWriter) 
 			if conversion.IsNil(method) {
 				return nil, errors.New("method can't be nil")
 			}
-			strMethod := (*method).String()
+			strMethod := method.String()
 			return &strMethod, nil
 		})(rE.GetMethod),
 		internalSerialization.SerializeStringFunc(urlKey)(rE.GetURL),
@@ -221,8 +222,7 @@ func (rE *RestRequestModel) SetBodyFromParsable(contentType string, parsable ser
 	}
 
 	batchHeader := NewRestRequestHeader()
-	// TODO: add to RequestHeader
-	name := "Content-Type"
+	name := internalhttp.HTTPHeaderContentType.String()
 	if err := batchHeader.SetName(&name); err != nil {
 		return err
 	}

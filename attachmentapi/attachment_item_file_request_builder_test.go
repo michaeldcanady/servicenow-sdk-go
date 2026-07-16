@@ -5,6 +5,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -99,7 +100,7 @@ func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 			name:                 "Nil request adapter",
 			requestConfiguration: &AttachmentItemFileRequestBuilderGetRequestConfiguration{},
 			nilRequestAdapter:    true,
-			expectedErr:          errors.New("requestAdapter is nil"),
+			expectedErr:          snerrors.ErrNilRequestAdapter,
 		},
 		{
 			name:                 "Nil response",

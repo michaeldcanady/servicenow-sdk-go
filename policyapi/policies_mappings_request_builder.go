@@ -7,6 +7,7 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -45,15 +46,15 @@ func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestCon
 	}
 
 	if conversion.IsNil(requestConfiguration) {
-		return errors.New("requestConfiguration is nil")
+		return snerrors.ErrNilRequestConfiguration
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
-		return errors.New("request adapter is nil")
+		return snerrors.ErrNilRequestAdapter
 	}
 
 	if conversion.IsNil(requestConfiguration.QueryParameters) {
-		return errors.New("requestConfiguration.QueryParameters is nil")
+		return snerrors.ErrNilQueryParameters
 	}
 
 	queryParameters := requestConfiguration.QueryParameters
@@ -84,15 +85,15 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 	}
 
 	if conversion.IsNil(requestConfiguration) {
-		return nil, errors.New("requestConfiguration is nil")
+		return nil, snerrors.ErrNilRequestConfiguration
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
-		return nil, errors.New("request adapter is nil")
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	if conversion.IsNil(requestConfiguration.QueryParameters) {
-		return nil, errors.New("requestConfiguration.QueryParameters is nil")
+		return nil, snerrors.ErrNilQueryParameters
 	}
 
 	queryParameters := requestConfiguration.QueryParameters
@@ -120,7 +121,7 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 	}
 
 	if resp == nil {
-		return nil, errors.New("response is nil")
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := resp.(core.ServiceNowItemResponse[*PoliciesMapping])

@@ -1,8 +1,7 @@
 package http
 
 import (
-	"errors"
-
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
@@ -14,10 +13,10 @@ type serviceNowClientOption func(*serviceNowClientConfig) error
 func WithMiddleware(middleware ...nethttplibrary.Middleware) serviceNowClientOption {
 	return func(config *serviceNowClientConfig) error {
 		if len(middleware) == 0 {
-			return errors.New("middleware is empty")
+			return snerrors.ErrEmptyMiddleware
 		}
 		if conversion.IsNil(config) {
-			return errors.New("config is nil")
+			return snerrors.ErrNilConfig
 		}
 		if conversion.IsNil(config.middleware) {
 			config.middleware = []nethttplibrary.Middleware{}

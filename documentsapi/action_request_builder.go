@@ -85,15 +85,10 @@ func (rB *VersionActionRequestBuilder) ToPatchRequestInformation(ctx context.Con
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PATCH, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
+		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
 		if data := requestConfiguration.Data; !conversion.IsNil(data) {
-			err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), data)
-			if err != nil {
+			if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), data); err != nil {
 				return nil, err
 			}
 		}

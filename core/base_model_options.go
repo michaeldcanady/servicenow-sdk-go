@@ -1,8 +1,7 @@
 package core
 
 import (
-	"errors"
-
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/store"
@@ -16,7 +15,7 @@ type backingStoreSettableOption[T BackingStoreFactorySetter] func(T) error
 func WithBackingStoreFactory[T BackingStoreFactorySetter](factory store.BackingStoreFactory) backingStoreSettableOption[T] {
 	return func(config T) error {
 		if conversion.IsNil(config) {
-			return errors.New("config is nil")
+			return snerrors.ErrNilConfig
 		}
 
 		return config.SetBackingStoreFactory(factory)

@@ -1,16 +1,17 @@
 package conversion
 
 import (
-	"errors"
 	"strconv"
 	"strings"
 	"time"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 )
 
 // StringPtrToInt64Ptr Converts string pointer to int64 pointer.
 func StringPtrToInt64Ptr(input *string) (*int64, error) {
 	if input == nil {
-		return nil, errors.New("input is nil")
+		return nil, snerrors.ErrNilInput
 	}
 	if *input == "" {
 		return nil, nil
@@ -26,7 +27,7 @@ func StringPtrToInt64Ptr(input *string) (*int64, error) {
 // StringPtrToFloat64Ptr Converts string pointer to float64 pointer.
 func StringPtrToFloat64Ptr(input *string) (*float64, error) {
 	if input == nil {
-		return nil, errors.New("input is nil")
+		return nil, snerrors.ErrNilInput
 	}
 	if *input == "" {
 		return nil, nil
@@ -41,7 +42,7 @@ func StringPtrToFloat64Ptr(input *string) (*float64, error) {
 // StringPtrToBoolPtr Converts string pointer to bool pointer.
 func StringPtrToBoolPtr(input *string) (*bool, error) {
 	if input == nil {
-		return nil, errors.New("input is nil")
+		return nil, snerrors.ErrNilInput
 	}
 	if *input == "" {
 		return nil, nil
@@ -57,7 +58,7 @@ func StringPtrToBoolPtr(input *string) (*bool, error) {
 func StringPtrToTimePtr(format string) Mutator[*string, *time.Time] {
 	return func(input *string) (*time.Time, error) {
 		if input == nil {
-			return nil, errors.New("input is nil")
+			return nil, snerrors.ErrNilInput
 		}
 		if *input == "" {
 			return nil, nil

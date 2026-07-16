@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
@@ -56,7 +57,7 @@ func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstrac
 	}
 
 	if conversion.IsNil(body) {
-		return nil, errors.New("body is nil")
+		return nil, snerrors.ErrNilBody
 	}
 
 	contentType, err := body.GetPartValue("Content-Type")

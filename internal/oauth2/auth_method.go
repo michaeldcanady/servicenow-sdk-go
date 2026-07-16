@@ -15,14 +15,16 @@ const (
 	AuthMethodNone
 )
 
+var authMethodStrings = map[AuthMethod]string{
+	AuthMethodClientSecretPost:  "client_secret_post",
+	AuthMethodClientSecretBasic: "client_secret_basic",
+	AuthMethodNone:              "none",
+	AuthMethodUnknown:           "unknown",
+}
+
 // String returns the string representation of the AuthMethod.
 func (e AuthMethod) String() string {
-	str, ok := map[AuthMethod]string{
-		AuthMethodClientSecretPost:  "client_secret_post",
-		AuthMethodClientSecretBasic: "client_secret_basic",
-		AuthMethodNone:              "none",
-		AuthMethodUnknown:           "unknown",
-	}[e]
+	str, ok := authMethodStrings[e]
 	if !ok {
 		return AuthMethodUnknown.String()
 	}

@@ -11,13 +11,15 @@ const (
 	RequestHeaderAccept
 )
 
+var requestHeaderStrings = map[RequestHeader]string{
+	RequestHeaderUnknown:       "unknown",
+	RequestHeaderAuthorization: "authorization",
+	RequestHeaderAccept:        "accept",
+}
+
 // String returns string representation of the request header
 func (rH RequestHeader) String() string {
-	stringVal, ok := map[RequestHeader]string{
-		RequestHeaderUnknown:       "unknown",
-		RequestHeaderAuthorization: "authorization",
-		RequestHeaderAccept:        "accept",
-	}[rH]
+	stringVal, ok := requestHeaderStrings[rH]
 	if !ok {
 		return RequestHeaderUnknown.String()
 	}

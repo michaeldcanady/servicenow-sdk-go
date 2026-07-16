@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
@@ -28,7 +29,7 @@ func WithClient(client *http.Client) ServiceNowRequestAdapterOption {
 func WithParseNodeFactory(factory serialization.ParseNodeFactory) ServiceNowRequestAdapterOption {
 	return func(config *serviceNowRequestAdapterConfig) error {
 		if conversion.IsNil(factory) {
-			return errors.New("factory is nil")
+			return snerrors.ErrNilFactory
 		}
 		config.parseNodeFactory = factory
 		return nil
@@ -51,7 +52,7 @@ func WithServiceNowClientOptions(opts ...serviceNowClientOption) ServiceNowReque
 func WithSerializationFactory(factory serialization.SerializationWriterFactory) ServiceNowRequestAdapterOption {
 	return func(config *serviceNowRequestAdapterConfig) error {
 		if conversion.IsNil(factory) {
-			return errors.New("factory is nil")
+			return snerrors.ErrNilFactory
 		}
 		config.serializationWriterFactory = factory
 		return nil

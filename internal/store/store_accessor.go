@@ -1,9 +1,9 @@
 package store
 
 import (
-	"errors"
 	"strings"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
@@ -18,10 +18,10 @@ func DefaultStoreAccessorFunc[S store.BackingStore, T any](store S, key string) 
 	var result T
 
 	if conversion.IsNil(store) {
-		return result, errors.New("store is nil")
+		return result, snerrors.ErrNilStore
 	}
 	if strings.TrimSpace(key) == "" {
-		return result, errors.New("key is empty")
+		return result, snerrors.ErrEmptyKey
 	}
 
 	val, err := store.Get(key)

@@ -46,15 +46,9 @@ func (rB *DeleteRequestBuilder) ToDeleteRequestInformation(_ context.Context, re
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(requestConfiguration) {
-		if headers := requestConfiguration.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
-		}
-		if options := requestConfiguration.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
-		}
-		if queryParams := requestConfiguration.QueryParameters; !conversion.IsNil(queryParams) {
-			kiotaRequestInfo.AddQueryParameters(queryParams)
-		}
+		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
+		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+		kiotaRequestInfo.AddQueryParameters(requestConfiguration.QueryParameters)
 	}
 	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
