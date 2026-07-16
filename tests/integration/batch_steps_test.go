@@ -16,10 +16,11 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
 type batchTestContext struct {
-	client    *sdk.ServiceNowClient
+	client    *sdk.ServiceNowServiceClient
 	response  *batchapi.BatchResponseModel
 	err       error
 	lastSysID string
@@ -36,17 +37,21 @@ func (c *batchTestContext) iHaveInitializedTheServiceNowClient() error {
 		instance = "mock_instance"
 	}
 
-	var cred credentials.Credential
+	var cred authentication.AuthenticationProvider
 	if os.Getenv("SN_USERNAME") != "" {
-		cred = credentials.NewUsernamePasswordCredential(
+		cred = credentials.NewBasicProvider(
 			os.Getenv("SN_USERNAME"),
 			os.Getenv("SN_PASSWORD"),
 		)
 	} else {
-		cred = credentials.NewUsernamePasswordCredential("mock", "mock")
+		cred = credentials.NewBasicProvider("mock", "mock")
 	}
 
-	client, err := sdk.NewServiceNowClient2WithHTTPClient(cred, instance, getHttpClient())
+	client, err := sdk.NewServiceNowServiceClient(
+		sdk.WithAuthenticationProvider(cred),
+		sdk.WithInstance(instance),
+		sdk.WithHTTPClient(getHttpClient()),
+	)
 	if err != nil {
 		return err
 	}
