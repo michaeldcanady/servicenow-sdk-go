@@ -28,10 +28,6 @@ func CreateElementValueFromDiscriminatorValue(_ serialization.ParseNode) (serial
 
 // Serialize writes the objects properties to the current writer.
 func (eV *ElementValue) Serialize(writer serialization.SerializationWriter) error {
-	if conversion.IsNil(eV) {
-		return nil
-	}
-
 	return errors.New("Serialize is not supported")
 }
 
@@ -59,124 +55,59 @@ func (eV *ElementValue) setValue(val any) error {
 	return nil
 }
 
-// GetStringValue returns a String value from the element.
-func (eV *ElementValue) GetStringValue() (*string, error) {
+// getPrimitive converts eV's underlying value to T, returning nil if eV holds no value.
+func getPrimitive[T any](eV *ElementValue, strict bool) (*T, error) {
 	if eV.IsNil() {
 		return nil, nil
 	}
 
-	var val string
+	var val T
 
-	if err := conversion.As2(eV.val, &val, true); err != nil {
+	if err := conversion.As2(eV.val, &val, strict); err != nil {
 		return nil, err
 	}
 
 	return &val, nil
+}
+
+// GetStringValue returns a String value from the element.
+func (eV *ElementValue) GetStringValue() (*string, error) {
+	return getPrimitive[string](eV, true)
 }
 
 // GetBoolValue returns a Bool value from the element.
 func (eV *ElementValue) GetBoolValue() (*bool, error) {
-	if eV.IsNil() {
-		return nil, nil
-	}
-
-	var val bool
-
-	if err := conversion.As2(eV.val, &val, false); err != nil {
-		return nil, err
-	}
-
-	return &val, nil
+	return getPrimitive[bool](eV, false)
 }
 
 // GetInt8Value returns a Int8 value from the element.
 func (eV *ElementValue) GetInt8Value() (*int8, error) {
-	if eV.IsNil() {
-		return nil, nil
-	}
-
-	var val int8
-
-	if err := conversion.As2(eV.val, &val, false); err != nil {
-		return nil, err
-	}
-
-	return &val, nil
+	return getPrimitive[int8](eV, false)
 }
 
 // GetByteValue returns a Byte value from the element.
 func (eV *ElementValue) GetByteValue() (*byte, error) {
-	if eV.IsNil() {
-		return nil, nil
-	}
-
-	var val byte
-
-	if err := conversion.As2(eV.val, &val, false); err != nil {
-		return nil, err
-	}
-
-	return &val, nil
+	return getPrimitive[byte](eV, false)
 }
 
 // GetFloat32Value returns a Float32 value from the element.
 func (eV *ElementValue) GetFloat32Value() (*float32, error) {
-	if eV.IsNil() {
-		return nil, nil
-	}
-
-	var val float32
-
-	if err := conversion.As2(eV.val, &val, false); err != nil {
-		return nil, err
-	}
-
-	return &val, nil
+	return getPrimitive[float32](eV, false)
 }
 
 // GetFloat64Value returns a Float64 value from the element.
 func (eV *ElementValue) GetFloat64Value() (*float64, error) {
-	if eV.IsNil() {
-		return nil, nil
-	}
-
-	var val float64
-
-	if err := conversion.As2(eV.val, &val, false); err != nil {
-		return nil, err
-	}
-
-	return &val, nil
+	return getPrimitive[float64](eV, false)
 }
 
 // GetInt32Value returns a Int32 value from the element.
 func (eV *ElementValue) GetInt32Value() (*int32, error) {
-	if eV.IsNil() {
-		return nil, nil
-	}
-
-	var val int32
-
-	if err := conversion.As2(eV.val, &val, false); err != nil {
-		return nil, err
-	}
-
-	return &val, nil
+	return getPrimitive[int32](eV, false)
 }
 
 // GetInt64Value returns a Int64 value from the element.
 func (eV *ElementValue) GetInt64Value() (*int64, error) {
-	if eV.IsNil() {
-		return nil, nil
-	}
-
-	var val int64
-
-	if err := conversion.As2(eV.val, &val, false); err != nil {
-		return nil, err
-	}
-
-	return &val, nil
+	return getPrimitive[int64](eV, false)
 }
 
 // GetEnumValue returns an enum value from the element.
