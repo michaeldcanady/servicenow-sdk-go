@@ -18,103 +18,69 @@ func DeserializeMutatedStringFunc[T any](mutator conversion.Mutator[*string, T])
 	}
 }
 
-// DeserializeStringFunc returns a deserializer function for a string value.
-func DeserializeStringFunc() DeserializerFunc[*string] {
-	return func(setter ModelSetter[*string]) serialization.NodeParser {
+// deserializePrimitiveFunc returns a deserializer function that reads a value from a
+// ParseNode via get and passes it to the setter.
+func deserializePrimitiveFunc[T any](get func(serialization.ParseNode) (T, error)) DeserializerFunc[T] {
+	return func(setter ModelSetter[T]) serialization.NodeParser {
 		return func(node serialization.ParseNode) error {
-			return SetValueFromSource(node.GetStringValue, setter)
+			return SetValueFromSource(func() (T, error) { return get(node) }, setter)
 		}
 	}
+}
+
+// DeserializeStringFunc returns a deserializer function for a string value.
+func DeserializeStringFunc() DeserializerFunc[*string] {
+	return deserializePrimitiveFunc(func(n serialization.ParseNode) (*string, error) { return n.GetStringValue() })
 }
 
 // DeserializeInt64Func returns a deserializer function for an int64 value.
 func DeserializeInt64Func() DeserializerFunc[*int64] {
-	return func(setter ModelSetter[*int64]) serialization.NodeParser {
-		return func(node serialization.ParseNode) error {
-			return SetValueFromSource(node.GetInt64Value, setter)
-		}
-	}
+	return deserializePrimitiveFunc(func(n serialization.ParseNode) (*int64, error) { return n.GetInt64Value() })
 }
 
 // DeserializeInt32Func returns a deserializer function for an int32 value.
 func DeserializeInt32Func() DeserializerFunc[*int32] {
-	return func(setter ModelSetter[*int32]) serialization.NodeParser {
-		return func(node serialization.ParseNode) error {
-			return SetValueFromSource(node.GetInt32Value, setter)
-		}
-	}
+	return deserializePrimitiveFunc(func(n serialization.ParseNode) (*int32, error) { return n.GetInt32Value() })
 }
 
 // DeserializeBoolFunc returns a deserializer function for a bool value.
 func DeserializeBoolFunc() DeserializerFunc[*bool] {
-	return func(setter ModelSetter[*bool]) serialization.NodeParser {
-		return func(node serialization.ParseNode) error {
-			return SetValueFromSource(node.GetBoolValue, setter)
-		}
-	}
+	return deserializePrimitiveFunc(func(n serialization.ParseNode) (*bool, error) { return n.GetBoolValue() })
 }
 
 // DeserializeFloat64Func returns a deserializer function for a float64 value.
 func DeserializeFloat64Func() DeserializerFunc[*float64] {
-	return func(setter ModelSetter[*float64]) serialization.NodeParser {
-		return func(node serialization.ParseNode) error {
-			return SetValueFromSource(node.GetFloat64Value, setter)
-		}
-	}
+	return deserializePrimitiveFunc(func(n serialization.ParseNode) (*float64, error) { return n.GetFloat64Value() })
 }
 
 // DeserializeFloat32Func returns a deserializer function for a float32 value.
 func DeserializeFloat32Func() DeserializerFunc[*float32] {
-	return func(setter ModelSetter[*float32]) serialization.NodeParser {
-		return func(node serialization.ParseNode) error {
-			return SetValueFromSource(node.GetFloat32Value, setter)
-		}
-	}
+	return deserializePrimitiveFunc(func(n serialization.ParseNode) (*float32, error) { return n.GetFloat32Value() })
 }
 
 // DeserializeTimeFunc returns a deserializer function for a time.Time value.
 func DeserializeTimeFunc() DeserializerFunc[*time.Time] {
-	return func(setter ModelSetter[*time.Time]) serialization.NodeParser {
-		return func(node serialization.ParseNode) error {
-			return SetValueFromSource(node.GetTimeValue, setter)
-		}
-	}
+	return deserializePrimitiveFunc(func(n serialization.ParseNode) (*time.Time, error) { return n.GetTimeValue() })
 }
 
 // DeserializeTimeOnlyFunc returns a deserializer function for a TimeOnly value.
 func DeserializeTimeOnlyFunc() DeserializerFunc[*serialization.TimeOnly] {
-	return func(setter ModelSetter[*serialization.TimeOnly]) serialization.NodeParser {
-		return func(node serialization.ParseNode) error {
-			return SetValueFromSource(node.GetTimeOnlyValue, setter)
-		}
-	}
+	return deserializePrimitiveFunc(func(n serialization.ParseNode) (*serialization.TimeOnly, error) { return n.GetTimeOnlyValue() })
 }
 
 // DeserializeDateOnlyFunc returns a deserializer function for a DateOnly value.
 func DeserializeDateOnlyFunc() DeserializerFunc[*serialization.DateOnly] {
-	return func(setter ModelSetter[*serialization.DateOnly]) serialization.NodeParser {
-		return func(node serialization.ParseNode) error {
-			return SetValueFromSource(node.GetDateOnlyValue, setter)
-		}
-	}
+	return deserializePrimitiveFunc(func(n serialization.ParseNode) (*serialization.DateOnly, error) { return n.GetDateOnlyValue() })
 }
 
 // DeserializeUUIDFunc returns a deserializer function for a UUID value.
 func DeserializeUUIDFunc() DeserializerFunc[*uuid.UUID] {
-	return func(setter ModelSetter[*uuid.UUID]) serialization.NodeParser {
-		return func(node serialization.ParseNode) error {
-			return SetValueFromSource(node.GetUUIDValue, setter)
-		}
-	}
+	return deserializePrimitiveFunc(func(n serialization.ParseNode) (*uuid.UUID, error) { return n.GetUUIDValue() })
 }
 
 // DeserializeByteArrayFunc returns a deserializer function for a byte array value.
 func DeserializeByteArrayFunc() DeserializerFunc[[]byte] {
-	return func(setter ModelSetter[[]byte]) serialization.NodeParser {
-		return func(node serialization.ParseNode) error {
-			return SetValueFromSource(node.GetByteArrayValue, setter)
-		}
-	}
+	return deserializePrimitiveFunc(func(n serialization.ParseNode) ([]byte, error) { return n.GetByteArrayValue() })
 }
 
 // DeserializeMutatedByteArrayFunc returns a deserializer function for a byte array value that is transformed into another type.
@@ -187,11 +153,7 @@ func DeserializeEnumFunc[T any](factory serialization.EnumFactory) DeserializerF
 
 // DeserializeAnyFunc returns a deserializer function for an any value.
 func DeserializeAnyFunc() DeserializerFunc[any] {
-	return func(setter ModelSetter[any]) serialization.NodeParser {
-		return func(node serialization.ParseNode) error {
-			return SetValueFromSource(node.GetRawValue, setter)
-		}
-	}
+	return deserializePrimitiveFunc(func(n serialization.ParseNode) (any, error) { return n.GetRawValue() })
 }
 
 // DeserializeMutatedAnyFunc returns a deserializer function for an any value that is transformed into another type.

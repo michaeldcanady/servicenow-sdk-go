@@ -34,130 +34,82 @@ func SerializeMutatedStringFunc[T any](key string, mutator conversion.Mutator[T,
 	}
 }
 
-// SerializeStringFunc returns a serializer function for a string value.
-func SerializeStringFunc(key string) SerializerFunc[*string] {
-	return func(accessor ModelAccessor[*string]) WriterFunc {
+// serializePrimitiveFunc returns a serializer function that writes a value via write,
+// skipping the write entirely when the value is nil.
+func serializePrimitiveFunc[T any](key string, write func(serialization.SerializationWriter, string, T) error) SerializerFunc[T] {
+	return func(accessor ModelAccessor[T]) WriterFunc {
 		return func(sw serialization.SerializationWriter) error {
-			return WriteValueToSource(func(v *string) error {
-				if v != nil {
-					return sw.WriteStringValue(key, v)
+			return WriteValueToSource(func(v T) error {
+				if conversion.IsNil(v) {
+					return nil
 				}
-				return nil
+				return write(sw, key, v)
 			}, accessor)
 		}
 	}
+}
+
+// SerializeStringFunc returns a serializer function for a string value.
+func SerializeStringFunc(key string) SerializerFunc[*string] {
+	return serializePrimitiveFunc(key, func(sw serialization.SerializationWriter, k string, v *string) error {
+		return sw.WriteStringValue(k, v)
+	})
 }
 
 // SerializeBoolFunc returns a serializer function for a bool value.
 func SerializeBoolFunc(key string) SerializerFunc[*bool] {
-	return func(accessor ModelAccessor[*bool]) WriterFunc {
-		return func(sw serialization.SerializationWriter) error {
-			return WriteValueToSource(func(v *bool) error {
-				if v != nil {
-					return sw.WriteBoolValue(key, v)
-				}
-				return nil
-			}, accessor)
-		}
-	}
+	return serializePrimitiveFunc(key, func(sw serialization.SerializationWriter, k string, v *bool) error {
+		return sw.WriteBoolValue(k, v)
+	})
 }
 
 // SerializeInt64Func returns a serializer function for an int64 value.
 func SerializeInt64Func(key string) SerializerFunc[*int64] {
-	return func(accessor ModelAccessor[*int64]) WriterFunc {
-		return func(sw serialization.SerializationWriter) error {
-			return WriteValueToSource(func(v *int64) error {
-				if v != nil {
-					return sw.WriteInt64Value(key, v)
-				}
-				return nil
-			}, accessor)
-		}
-	}
+	return serializePrimitiveFunc(key, func(sw serialization.SerializationWriter, k string, v *int64) error {
+		return sw.WriteInt64Value(k, v)
+	})
 }
 
 // SerializeInt32Func returns a serializer function for an int32 value.
 func SerializeInt32Func(key string) SerializerFunc[*int32] {
-	return func(accessor ModelAccessor[*int32]) WriterFunc {
-		return func(sw serialization.SerializationWriter) error {
-			return WriteValueToSource(func(v *int32) error {
-				if v != nil {
-					return sw.WriteInt32Value(key, v)
-				}
-				return nil
-			}, accessor)
-		}
-	}
+	return serializePrimitiveFunc(key, func(sw serialization.SerializationWriter, k string, v *int32) error {
+		return sw.WriteInt32Value(k, v)
+	})
 }
 
 // SerializeFloat64Func returns a serializer function for a float64 value.
 func SerializeFloat64Func(key string) SerializerFunc[*float64] {
-	return func(accessor ModelAccessor[*float64]) WriterFunc {
-		return func(sw serialization.SerializationWriter) error {
-			return WriteValueToSource(func(v *float64) error {
-				if v != nil {
-					return sw.WriteFloat64Value(key, v)
-				}
-				return nil
-			}, accessor)
-		}
-	}
+	return serializePrimitiveFunc(key, func(sw serialization.SerializationWriter, k string, v *float64) error {
+		return sw.WriteFloat64Value(k, v)
+	})
 }
 
 // SerializeFloat32Func returns a serializer function for a float32 value.
 func SerializeFloat32Func(key string) SerializerFunc[*float32] {
-	return func(accessor ModelAccessor[*float32]) WriterFunc {
-		return func(sw serialization.SerializationWriter) error {
-			return WriteValueToSource(func(v *float32) error {
-				if v != nil {
-					return sw.WriteFloat32Value(key, v)
-				}
-				return nil
-			}, accessor)
-		}
-	}
+	return serializePrimitiveFunc(key, func(sw serialization.SerializationWriter, k string, v *float32) error {
+		return sw.WriteFloat32Value(k, v)
+	})
 }
 
 // SerializeTimeFunc returns a serializer function for a time.Time value.
 func SerializeTimeFunc(key string) SerializerFunc[*time.Time] {
-	return func(accessor ModelAccessor[*time.Time]) WriterFunc {
-		return func(sw serialization.SerializationWriter) error {
-			return WriteValueToSource(func(v *time.Time) error {
-				if v != nil {
-					return sw.WriteTimeValue(key, v)
-				}
-				return nil
-			}, accessor)
-		}
-	}
+	return serializePrimitiveFunc(key, func(sw serialization.SerializationWriter, k string, v *time.Time) error {
+		return sw.WriteTimeValue(k, v)
+	})
 }
 
 // SerializeObjectValueFunc returns a serializer function for a Parsable object.
 func SerializeObjectValueFunc[T serialization.Parsable](key string) SerializerFunc[T] {
-	return func(accessor ModelAccessor[T]) WriterFunc {
-		return func(sw serialization.SerializationWriter) error {
-			return WriteValueToSource(func(v T) error {
-				if !conversion.IsNil(v) {
-					return sw.WriteObjectValue(key, v)
-				}
-				return nil
-			}, accessor)
-		}
-	}
+	return serializePrimitiveFunc(key, func(sw serialization.SerializationWriter, k string, v T) error {
+		return sw.WriteObjectValue(k, v)
+	})
 }
 
 // SerializeByteArrayFunc returns a serializer function for a byte array value.
 func SerializeByteArrayFunc(key string) SerializerFunc[[]byte] {
-	return func(accessor ModelAccessor[[]byte]) WriterFunc {
-		return func(sw serialization.SerializationWriter) error {
-			return WriteValueToSource(func(v []byte) error {
-				if v != nil {
-					return sw.WriteByteArrayValue(key, v)
-				}
-				return nil
-			}, accessor)
-		}
-	}
+	return serializePrimitiveFunc(key, func(sw serialization.SerializationWriter, k string, v []byte) error {
+		return sw.WriteByteArrayValue(k, v)
+	})
 }
 
 // SerializeCollectionOfObjectValuesFunc returns a serializer function for a collection of Parsable objects.
