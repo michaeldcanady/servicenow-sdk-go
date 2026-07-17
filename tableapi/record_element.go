@@ -2,7 +2,6 @@ package tableapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 )
 
@@ -28,10 +27,6 @@ const (
 
 // GetDisplayValue returns the display value of the element.
 func (rE *RecordElement) GetDisplayValue() (ElementValue, error) {
-	if conversion.IsNil(rE) || conversion.IsNil(rE.BackedModel) {
-		return ElementValue{}, nil
-	}
-
 	return store.DefaultBackedModelAccessorFunc[*RecordElement, ElementValue](rE, recordDisplayValueKey)
 }
 
@@ -59,11 +54,11 @@ func (rE *RecordElement) SetValue(value any) error {
 }
 
 // GetLink returns the reference link of the element, if it is a reference field.
-func (rE *RecordElement) GetLink() (string, error) {
-	return store.DefaultBackedModelAccessorFunc[*RecordElement, string](rE, recordLinkKey)
+func (rE *RecordElement) GetLink() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*RecordElement, *string](rE, recordLinkKey)
 }
 
 // SetLink sets the reference link of the element.
 func (rE *RecordElement) SetLink(link *string) error {
-	return rE.set(recordLinkKey, link)
+	return store.DefaultBackedModelMutatorFunc(rE, recordLinkKey, link)
 }

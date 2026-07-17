@@ -61,7 +61,7 @@ func TestBaseServiceNowItemResponse_GetResult(t *testing.T) {
 		err   bool
 	}{
 		{"Ok", res, false},
-		{"NilM", nilR, false},
+		{"NilM", nilR, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -85,7 +85,7 @@ func TestBaseServiceNowItemResponse_setResult(t *testing.T) {
 		err   bool
 	}{
 		{"Ok", res, me, false},
-		{"NilM", nilR, me, false},
+		{"NilM", nilR, me, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -113,7 +113,7 @@ func TestBaseServiceNowItemResponse_ErrorBranches(t *testing.T) {
 	}
 
 	resNilBS := &BaseServiceNowItemResponse[*MainError]{backingStore: nil, backingStoreFactory: nil}
-	if err := resNilBS.setResult(nil); err == nil || err.Error() != "backingStore is nil" {
+	if err := resNilBS.setResult(nil); err == nil || err.Error() != "store is nil" {
 		t.Errorf("expected store nil error, got %v", err)
 	}
 }

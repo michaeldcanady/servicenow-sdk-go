@@ -233,7 +233,7 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 
 				name, err := header.GetName()
 
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 				assert.Nil(t, name)
 
 				intModel.AssertExpectations(t)
@@ -246,7 +246,7 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 
 				name, err := header.GetName()
 
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 				assert.Nil(t, name)
 			},
 		},
@@ -318,7 +318,7 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 
 				err := header.SetName(input)
 
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -330,7 +330,7 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 
 				err := header.SetName(internal.ToPointer("name"))
 
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 			},
 		},
 	}
@@ -421,7 +421,7 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 
 				value, err := header.GetValue()
 
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 				assert.Nil(t, value)
 
 				intModel.AssertExpectations(t)
@@ -434,7 +434,7 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 
 				value, err := header.GetValue()
 
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 				assert.Nil(t, value)
 			},
 		},
@@ -506,7 +506,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 
 				err := header.SetValue(input)
 
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -518,7 +518,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 
 				err := header.SetValue(internal.ToPointer("value"))
 
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 			},
 		},
 	}

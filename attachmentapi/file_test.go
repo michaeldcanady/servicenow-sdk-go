@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -236,30 +237,30 @@ func TestFileModel_ErrorBranches(t *testing.T) {
 		var nilM *File
 		for _, test := range tests {
 			res, err := test.get(nilM)
-			assert.NoError(t, err)
+			assert.ErrorIs(t, err, snerrors.ErrNilModel)
 			assert.Nil(t, res)
 		}
 
-		assert.Nil(t, nilM.SetAverageImageColor(nil))
-		assert.Nil(t, nilM.SetCompressed(nil))
-		assert.Nil(t, nilM.SetContentType(nil))
-		assert.Nil(t, nilM.SetCreatedByName(nil))
-		assert.Nil(t, nilM.SetDownloadLink(nil))
-		assert.Nil(t, nilM.SetFileName(nil))
-		assert.Nil(t, nilM.SetImageHeight(nil))
-		assert.Nil(t, nilM.SetImageWidth(nil))
-		assert.Nil(t, nilM.SetSizeBytes(nil))
-		assert.Nil(t, nilM.SetSizeCompressed(nil))
-		assert.Nil(t, nilM.SetSysCreatedBy(nil))
-		assert.Nil(t, nilM.SetSysCreatedOn(nil))
-		assert.Nil(t, nilM.SetSysID(nil))
-		assert.Nil(t, nilM.SetSysModCount(nil))
-		assert.Nil(t, nilM.SetSysTags(nil))
-		assert.Nil(t, nilM.SetSysUpdatedBy(nil))
-		assert.Nil(t, nilM.SetSysUpdatedOn(nil))
-		assert.Nil(t, nilM.SetTableName(nil))
-		assert.Nil(t, nilM.SetTableSysID(nil))
-		assert.Nil(t, nilM.SetUpdatedByName(nil))
+		assert.ErrorIs(t, nilM.SetAverageImageColor(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetCompressed(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetContentType(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetCreatedByName(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetDownloadLink(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetFileName(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetImageHeight(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetImageWidth(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetSizeBytes(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetSizeCompressed(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetSysCreatedBy(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetSysCreatedOn(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetSysID(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetSysModCount(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetSysTags(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetSysUpdatedBy(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetSysUpdatedOn(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetTableName(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetTableSysID(nil), snerrors.ErrNilModel)
+		assert.ErrorIs(t, nilM.SetUpdatedByName(nil), snerrors.ErrNilModel)
 	})
 }
 

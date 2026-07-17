@@ -248,7 +248,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 				}
 
 				id, err := resp.GetBody()
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -258,7 +258,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetBody()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -376,7 +376,7 @@ func TestRestRequest_SetBody(t *testing.T) {
 				}
 
 				err := resp.SetBody(input)
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -389,7 +389,7 @@ func TestRestRequest_SetBody(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetBody(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 			},
 		},
 	}
@@ -472,7 +472,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				}
 
 				id, err := resp.GetExcludeResponseHeaders()
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -482,7 +482,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetExcludeResponseHeaders()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -554,7 +554,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 				}
 
 				err := resp.SetExcludeResponseHeaders(input)
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -567,7 +567,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetExcludeResponseHeaders(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 			},
 		},
 	}
@@ -650,7 +650,7 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				}
 
 				id, err := resp.GetHeaders()
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -660,7 +660,7 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetHeaders()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -732,7 +732,7 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 				}
 
 				err := resp.SetHeaders(input)
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -745,7 +745,7 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetHeaders(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 			},
 		},
 	}
@@ -828,7 +828,7 @@ func TestRestRequest_GetID(t *testing.T) {
 				}
 
 				id, err := resp.GetID()
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -838,7 +838,7 @@ func TestRestRequest_GetID(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetID()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -910,7 +910,7 @@ func TestRestRequest_SetID(t *testing.T) {
 				}
 
 				err := resp.SetID(input)
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -923,7 +923,7 @@ func TestRestRequest_SetID(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetID(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 			},
 		},
 	}
@@ -1006,7 +1006,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				}
 
 				id, err := resp.GetMethod()
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -1016,7 +1016,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetMethod()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -1088,7 +1088,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 				}
 
 				err := resp.SetMethod(input)
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -1101,7 +1101,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetMethod(input)
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 			},
 		},
 	}
@@ -1184,7 +1184,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 				}
 
 				id, err := resp.GetURL()
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -1194,7 +1194,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetURL()
-				assert.Nil(t, err)
+				assert.Equal(t, errors.New("model is nil"), err)
 				assert.Nil(t, id)
 			},
 		},
@@ -1283,7 +1283,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 				}
 
 				err := resp.SetURL(input)
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("store is nil"), err)
 
 				intModel.AssertExpectations(t)
 			},
@@ -1296,7 +1296,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetURL(input)
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 	}

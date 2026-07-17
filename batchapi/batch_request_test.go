@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
@@ -213,7 +214,7 @@ func TestBatchRequest_GetBatchRequestID(t *testing.T) {
 			test: func(t *testing.T) {
 				var m *BatchRequestModel
 				res, err := m.GetBatchRequestID()
-				assert.NoError(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, res)
 			},
 		},
@@ -243,7 +244,7 @@ func TestBatchRequest_SetBatchRequestID(t *testing.T) {
 			test: func(t *testing.T) {
 				var m *BatchRequestModel
 				err := m.SetBatchRequestID(nil)
-				assert.NoError(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -274,7 +275,7 @@ func TestBatchRequest_GetRestRequests(t *testing.T) {
 			test: func(t *testing.T) {
 				var m *BatchRequestModel
 				res, err := m.GetRestRequests()
-				assert.NoError(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, res)
 			},
 		},
@@ -304,7 +305,7 @@ func TestBatchRequest_SetRestRequests(t *testing.T) {
 			test: func(t *testing.T) {
 				var m *BatchRequestModel
 				err := m.SetRestRequests(nil)
-				assert.NoError(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
