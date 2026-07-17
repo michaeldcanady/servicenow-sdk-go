@@ -25,6 +25,37 @@ simpler module, `policyapi/` shows a smaller single-resource shape.
 1. **Confirm the API surface** with the user: base path (e.g. `/api/now/v1/table`),
    supported HTTP verbs, path/query parameters, and the response body shape.
 
+   ServiceNow's docs site (`docs.servicenow.com` / `www.servicenow.com/docs`) is a
+   JS-rendered SPA — `WebFetch`/`WebSearch` will only return nav-menu content, never
+   the actual endpoint/param/schema tables. Don't guess a spec from memory and scaffold
+   against it. Instead, discover the real shape from a live instance:
+
+   - Check whether `.env` (or `tests/e2e` env vars: `SN_INSTANCE`, `SN_USERNAME`,
+     `SN_PASSWORD`) is available. **Never `Read` or `cat`/`grep` `.env` directly** —
+     it's permission-blocked by design since it holds credentials. Instead source it
+     inline within a single Bash call so secrets never enter the conversation:
+     ```bash
+     set -a; source .env; set +a
+     curl -s -u "$SN_USERNAME:$SN_PASSWORD" -H "Accept: application/json" \
+       "https://${SN_INSTANCE}.service-now.com/api/now/<path>"
+     ```
+   - Probe the base path and plausible sub-paths/verbs with `curl`. ServiceNow's error
+     responses are informative: `"Requested URI does not represent any resource"` on
+     *every* sub-path guess (not just a wrong one) usually means the owning plugin
+     isn't installed/active on that instance, not that you picked the wrong path.
+     Confirm by checking for the API's backing tables via the Table API
+     (`/api/now/table/<table>?sysparm_limit=1` — `"Invalid table <x>"` means it doesn't
+     exist) or, for custom/scripted APIs, `sys_ws_definition`.
+   - Vary query parameters against a real, populated table (`incident` is always
+     present on a dev instance) to discover accepted `sysparm_*` params and observe
+     the exact response shape (nesting, arrays vs. objects, field naming) directly
+     from a 200 response, rather than assuming it matches another API's shape.
+   - If the target API/plugin isn't installed and can't be activated, **don't
+     scaffold against a guessed schema**. Tell the user, and offer to probe for a
+     different active-but-uncovered API to scaffold as a stand-in (compare against
+     the existing `<name>api/` directories at the repo root to avoid duplicating one
+     that's already covered).
+
 2. **Create the package directory** `<name>api/` at the repo root (sibling to
    `tableapi/`, `policyapi/`).
 
@@ -79,6 +110,19 @@ simpler module, `policyapi/` shows a smaller single-resource shape.
    golangci-lint run ./<name>api/...
    go test ./<name>api/...
    ```
+
+8. **Verify against the live instance, not just unit tests**, when `.env` credentials
+   are available. Unit tests only prove the mock round-trips through your own
+   `Serialize`/`GetFieldDeserializers` — they can't catch a mismatch between your
+   model and what ServiceNow actually sends. Write a throwaway `cmd/<name>check/main.go`
+   that builds a real client (`servicenowsdkgo.NewServiceNowServiceClient` with
+   `credentials.NewBasicProvider` + `WithInstance`) and calls the new builder against a
+   populated table, then print/inspect every field. Run it with the same inline
+   `set -a; source .env; set +a` pattern from step 1. Fix whatever the real response
+   surfaces (e.g. kiota deserializes raw JSON object leaves as `*string`, not `string`
+   — a naive `map[string]any` walk that only handles `string` will silently stringify
+   pointer addresses instead of values), add a regression test for it, then **delete
+   the throwaway `cmd/` directory** before handing back.
 
 ## Notes
 
