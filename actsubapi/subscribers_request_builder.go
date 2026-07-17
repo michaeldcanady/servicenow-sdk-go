@@ -1,13 +1,11 @@
-package actsubapi
+package actsubapi // nolint:dupl // FollowingItemRequestBuilder/SubscriberItemRequestBuilder's nil-guard wrapper methods are inherently near-identical (each depends on which specific outer type is nil, so it can't be extracted into the shared collectionGetRequestBuilder)
 
 import (
 	"context"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -40,7 +38,7 @@ func (rB *SubscribersRequestBuilder) BySubObject(subObject string) *SubscriberIt
 
 // SubscriberItemRequestBuilder provides operations to manage subscribers for a specific object.
 type SubscriberItemRequestBuilder struct {
-	core.RequestBuilder
+	*collectionGetRequestBuilder
 }
 
 const subscriberItemURLTemplate = "{+baseurl}/api/now/v1/actsub/subscribers/{sub_object}"
@@ -48,45 +46,22 @@ const subscriberItemURLTemplate = "{+baseurl}/api/now/v1/actsub/subscribers/{sub
 // NewSubscriberItemRequestBuilderInternal instantiates a new SubscriberItemRequestBuilder.
 func NewSubscriberItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *SubscriberItemRequestBuilder {
 	return &SubscriberItemRequestBuilder{
-		core.NewBaseRequestBuilder(requestAdapter, subscriberItemURLTemplate, pathParameters),
+		newCollectionGetRequestBuilder(pathParameters, requestAdapter, subscriberItemURLTemplate),
 	}
 }
 
 // Get sends a GET request to retrieve subscribers.
 func (rB *SubscriberItemRequestBuilder) Get(ctx context.Context, config *SubscribersRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+	if conversion.IsNil(rB) {
 		return nil, nil
 	}
-
-	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
-	if err != nil {
-		return nil, err
-	}
-
-	if res == nil {
-		return nil, nil
-	}
-
-	return res.(*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel]), nil
+	return rB.collectionGetRequestBuilder.Get(ctx, config)
 }
 
-// ToGetRequestInformation creates a RequestInformation object for a GET request.
+// ToGetRequestInformation creates a RequestInformation object for a GET request to retrieve subscribers.
 func (rB *SubscriberItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *SubscribersRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+	if conversion.IsNil(rB) {
 		return nil, nil
 	}
-
-	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-
-	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
-
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-
-	return requestInfo, nil
+	return rB.collectionGetRequestBuilder.ToGetRequestInformation(ctx, config)
 }

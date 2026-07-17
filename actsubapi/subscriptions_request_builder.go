@@ -201,6 +201,8 @@ type SubscribeRequestBuilder struct {
 	core.RequestBuilder
 }
 
+var _ core.ItemPostRequestBuilder[*ActivitySubscriptionModel, abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*SubscribeRequestBuilder)(nil)
+
 const subscribeURLTemplate = "{+baseurl}/api/now/v1/actsub/subscriptions/{sub_obj_id}/subscribe"
 
 // NewSubscribeRequestBuilderInternal instantiates a new SubscribeRequestBuilder.
@@ -260,6 +262,8 @@ func (rB *SubscribeRequestBuilder) ToPostRequestInformation(ctx context.Context,
 type UnsubscribeRequestBuilder struct {
 	core.RequestBuilder
 }
+
+var _ core.ItemDeleteRequestBuilder[abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*UnsubscribeRequestBuilder)(nil)
 
 const unsubscribeURLTemplate = "{+baseurl}/api/now/v1/actsub/subscriptions/{sub_obj_id}/unsubscribe"
 

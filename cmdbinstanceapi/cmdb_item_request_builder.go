@@ -20,6 +20,9 @@ type CmdbItemRequestBuilder struct {
 	core.RequestBuilder
 }
 
+var _ core.ItemGetRequestBuilder[CmdbInstance, abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*CmdbItemRequestBuilder)(nil)
+var _ core.ItemPatchRequestBuilder[CmdbInstance, abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*CmdbItemRequestBuilder)(nil)
+
 // NewCmdbItemRequestBuilderInternal instantiates a new CmdbItemRequestBuilder.
 func NewCmdbItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CmdbItemRequestBuilder {
 	return &CmdbItemRequestBuilder{

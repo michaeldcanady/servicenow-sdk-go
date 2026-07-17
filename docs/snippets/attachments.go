@@ -168,7 +168,6 @@ func _() {
 	// [END attachment_std_file_create]
 
 	// [START attachment_upload_create]
-	// body := // TODO: how to make multipart body?
 	var body abstractions.MultipartBody
 
 	upload_config := &attachmentapi.AttachmentUploadRequestBuilderPostRequestConfiguration{

@@ -21,6 +21,8 @@ type CmdbRelationRequestBuilder struct {
 	core.RequestBuilder
 }
 
+var _ core.ItemPostRequestBuilder[CmdbInstance, abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*CmdbRelationRequestBuilder)(nil)
+
 // NewCmdbRelationRequestBuilderInternal instantiates a new CmdbRelationRequestBuilder.
 func NewCmdbRelationRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CmdbRelationRequestBuilder {
 	return &CmdbRelationRequestBuilder{

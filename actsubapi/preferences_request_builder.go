@@ -20,6 +20,8 @@ type PreferencesRequestBuilder struct {
 	core.RequestBuilder
 }
 
+var _ core.ItemPostRequestBuilder[*ActivitySubscriptionModel, abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*PreferencesRequestBuilder)(nil)
+
 // NewPreferencesRequestBuilderInternal instantiates a new PreferencesRequestBuilder.
 func NewPreferencesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *PreferencesRequestBuilder {
 	return &PreferencesRequestBuilder{
