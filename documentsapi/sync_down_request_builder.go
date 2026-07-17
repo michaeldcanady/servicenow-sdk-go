@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -25,10 +26,16 @@ func NewSyncDownRequestBuilderInternal(pathParameters map[string]string, request
 
 // Post synchronizes the specified document.
 func (rB *SyncDownRequestBuilder) Post(ctx context.Context, requestConfiguration *SyncDownRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[Document], error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
 	return rB.post(ctx, (*documentPostRequestConfiguration)(requestConfiguration))
 }
 
 // ToPostRequestInformation converts request configurations to Post request information.
 func (rB *SyncDownRequestBuilder) ToPostRequestInformation(ctx context.Context, requestConfiguration *SyncDownRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
 	return rB.toPostRequestInformation(ctx, (*documentPostRequestConfiguration)(requestConfiguration))
 }

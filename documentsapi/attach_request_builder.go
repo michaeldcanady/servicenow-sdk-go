@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -25,10 +26,16 @@ func NewAttachRequestBuilderInternal(pathParameters map[string]string, requestAd
 
 // Post attaches a document using the specified provider.
 func (rB *AttachRequestBuilder) Post(ctx context.Context, requestConfiguration *AttachRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[Document], error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
 	return rB.post(ctx, (*documentPostRequestConfiguration)(requestConfiguration))
 }
 
 // ToPostRequestInformation converts request configurations to Post request information.
 func (rB *AttachRequestBuilder) ToPostRequestInformation(ctx context.Context, requestConfiguration *AttachRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
 	return rB.toPostRequestInformation(ctx, (*documentPostRequestConfiguration)(requestConfiguration))
 }

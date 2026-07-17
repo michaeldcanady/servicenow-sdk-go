@@ -1,6 +1,7 @@
-package actsubapi
+package actsubapi // nolint:dupl // FollowingItemRequestBuilder/SubscriberItemRequestBuilder's nil-guard wrapper methods are inherently near-identical (each depends on which specific outer type is nil, so it can't be extracted into the shared collectionGetRequestBuilder)
 
 import (
+	"context"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -47,4 +48,20 @@ func NewFollowingItemRequestBuilderInternal(pathParameters map[string]string, re
 	return &FollowingItemRequestBuilder{
 		newCollectionGetRequestBuilder(pathParameters, requestAdapter, followingItemURLTemplate),
 	}
+}
+
+// Get sends a GET request to retrieve following.
+func (rB *FollowingItemRequestBuilder) Get(ctx context.Context, config *FollowingsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
+	return rB.collectionGetRequestBuilder.Get(ctx, config)
+}
+
+// ToGetRequestInformation creates a RequestInformation object for a GET request to retrieve following.
+func (rB *FollowingItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *FollowingsRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
+	return rB.collectionGetRequestBuilder.ToGetRequestInformation(ctx, config)
 }

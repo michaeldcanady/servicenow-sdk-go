@@ -1,6 +1,10 @@
 package actsubapi
 
 import (
+	"context"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -18,4 +22,20 @@ func NewContextsRequestBuilderInternal(pathParameters map[string]string, request
 	return &ContextsRequestBuilder{
 		newCollectionGetRequestBuilder(pathParameters, requestAdapter, contextsURLTemplate),
 	}
+}
+
+// Get sends a GET request to retrieve contexts.
+func (rB *ContextsRequestBuilder) Get(ctx context.Context, config *ContextsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
+	return rB.collectionGetRequestBuilder.Get(ctx, config)
+}
+
+// ToGetRequestInformation creates a RequestInformation object for a GET request to retrieve contexts.
+func (rB *ContextsRequestBuilder) ToGetRequestInformation(ctx context.Context, config *ContextsRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
+	return rB.collectionGetRequestBuilder.ToGetRequestInformation(ctx, config)
 }

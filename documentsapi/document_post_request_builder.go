@@ -59,6 +59,10 @@ func (rB *documentPostRequestBuilder) post(ctx context.Context, requestConfigura
 
 // toPostRequestInformation converts request configurations to Post request information.
 func (rB *documentPostRequestBuilder) toPostRequestInformation(ctx context.Context, requestConfiguration *documentPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(requestConfiguration) {

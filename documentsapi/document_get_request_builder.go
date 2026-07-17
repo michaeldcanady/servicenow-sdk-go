@@ -59,6 +59,10 @@ func (rB *documentGetRequestBuilder) get(ctx context.Context, requestConfigurati
 
 // toGetRequestInformation converts request configurations to Get request information.
 func (rB *documentGetRequestBuilder) toGetRequestInformation(_ context.Context, requestConfiguration *documentGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
+
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(requestConfiguration) {

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -25,10 +26,16 @@ func NewVersionStateRequestBuilderInternal(pathParameters map[string]string, req
 
 // Get retrieves the state of the specified document version.
 func (rB *VersionStateRequestBuilder) Get(ctx context.Context, requestConfiguration *VersionStateRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[Document], error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
 	return rB.get(ctx, (*documentGetRequestConfiguration)(requestConfiguration))
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.
 func (rB *VersionStateRequestBuilder) ToGetRequestInformation(ctx context.Context, requestConfiguration *VersionStateRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
 	return rB.toGetRequestInformation(ctx, (*documentGetRequestConfiguration)(requestConfiguration))
 }

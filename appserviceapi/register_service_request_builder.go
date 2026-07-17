@@ -3,6 +3,7 @@ package appserviceapi
 import (
 	"context"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -20,10 +21,16 @@ func NewRegisterServiceRequestBuilderInternal(pathParameters map[string]string, 
 
 // Post sends a POST request to register a service.
 func (rB *RegisterServiceRequestBuilder) Post(ctx context.Context, body *RegisterServiceRequest, config *RegisterServiceRequestConfiguration) (RegisterServiceResponse, error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
 	return rB.post(ctx, body, config)
 }
 
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *RegisterServiceRequestBuilder) ToPostRequestInformation(ctx context.Context, body *RegisterServiceRequest, config *RegisterServiceRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) {
+		return nil, nil
+	}
 	return rB.toPostRequestInformation(ctx, body, config)
 }
