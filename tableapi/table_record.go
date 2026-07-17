@@ -108,7 +108,7 @@ func (tR *TableRecord) GetFieldDeserializers() map[string]func(serialization.Par
 
 	for _, key := range tR.keys {
 		k := key
-		fieldDeserializers[k] = internalSerialization.DeserializeMutatedAnyFunc(recordElementParserFromRaw)(
+		fieldDeserializers[k] = internalSerialization.DeserializeMutatedAnyFunc(recordElementParserFromRaw,
 			func(element *RecordElement) error {
 				return tR.SetElement(k, element)
 			})
@@ -125,7 +125,7 @@ func (tR *TableRecord) Serialize(writer serialization.SerializationWriter) error
 
 	var serializers []internalSerialization.WriterFunc
 	for _, key := range tR.keys {
-		serializers = append(serializers, internalSerialization.SerializeAnyFunc(key)(
+		serializers = append(serializers, internalSerialization.SerializeAnyFunc(key,
 			func() (any, error) {
 				element, err := tR.Get(key)
 				if err != nil {

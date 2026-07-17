@@ -40,15 +40,15 @@ func (m *CalendarResponseModel) Serialize(writer serialization.SerializationWrit
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(rangeEndKey)(m.GetRangeEnd),
-		internalSerialization.SerializeStringFunc(rangeStartKey)(m.GetRangeStart),
+		internalSerialization.SerializeStringFunc(rangeEndKey, m.GetRangeEnd),
+		internalSerialization.SerializeStringFunc(rangeStartKey, m.GetRangeStart),
 	)
 }
 
 func (m *CalendarResponseModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		rangeEndKey:   internalSerialization.DeserializeStringFunc()(m.setRangeEnd),
-		rangeStartKey: internalSerialization.DeserializeStringFunc()(m.setRangeStart),
+		rangeEndKey:   internalSerialization.DeserializeStringFunc(m.setRangeEnd),
+		rangeStartKey: internalSerialization.DeserializeStringFunc(m.setRangeStart),
 	}
 }
 

@@ -47,18 +47,18 @@ func CreateDocumentFromDiscriminatorValue(parseNode serialization.ParseNode) (se
 // Serialize writes the objects properties to the current writer.
 func (m *DocumentModel) Serialize(writer serialization.SerializationWriter) error {
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIDKey)(m.GetSysID),
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(typeKey)(m.GetType),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
+		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
 	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (m *DocumentModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIDKey: internalSerialization.DeserializeStringFunc()(m.SetSysID),
-		nameKey:  internalSerialization.DeserializeStringFunc()(m.SetName),
-		typeKey:  internalSerialization.DeserializeStringFunc()(m.SetType),
+		sysIDKey: internalSerialization.DeserializeStringFunc(m.SetSysID),
+		nameKey:  internalSerialization.DeserializeStringFunc(m.SetName),
+		typeKey:  internalSerialization.DeserializeStringFunc(m.SetType),
 	}
 }
 

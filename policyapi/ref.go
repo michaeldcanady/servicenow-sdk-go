@@ -43,8 +43,8 @@ func CreateRefFromDiscriminatorValue(_ serialization.ParseNode) (serialization.P
 // GetFieldDeserializers returns the deserialization information for this object.
 func (r *Ref) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		refLinkKey:  internalSerialization.DeserializeStringFunc()(r.SetLink),
-		refValueKey: internalSerialization.DeserializeStringFunc()(r.SetValue),
+		refLinkKey:  internalSerialization.DeserializeStringFunc(r.SetLink),
+		refValueKey: internalSerialization.DeserializeStringFunc(r.SetValue),
 	}
 }
 
@@ -55,8 +55,8 @@ func (r *Ref) Serialize(writer serialization.SerializationWriter) error {
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(refLinkKey)(r.GetLink),
-		internalSerialization.SerializeStringFunc(refValueKey)(r.GetValue),
+		internalSerialization.SerializeStringFunc(refLinkKey, r.GetLink),
+		internalSerialization.SerializeStringFunc(refValueKey, r.GetValue),
 	)
 }
 

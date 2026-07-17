@@ -22,23 +22,23 @@ func (m *BasicDetails) Serialize(writer serialization.SerializationWriter) error
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(environmentKey)(m.GetEnvironment),
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(versionKey)(m.GetVersion),
-		internalSerialization.SerializeStringFunc(businessAppKey)(m.GetBusinessApp),
-		internalSerialization.SerializeStringFunc(businessServiceOfferingKey)(m.GetBusinessServiceOffering),
-		internalSerialization.SerializeStringFunc(technicalServiceOfferingKey)(m.GetTechnicalServiceOffering),
+		internalSerialization.SerializeStringFunc(environmentKey, m.GetEnvironment),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
+		internalSerialization.SerializeStringFunc(versionKey, m.GetVersion),
+		internalSerialization.SerializeStringFunc(businessAppKey, m.GetBusinessApp),
+		internalSerialization.SerializeStringFunc(businessServiceOfferingKey, m.GetBusinessServiceOffering),
+		internalSerialization.SerializeStringFunc(technicalServiceOfferingKey, m.GetTechnicalServiceOffering),
 	)
 }
 
 func (m *BasicDetails) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		environmentKey:              internalSerialization.DeserializeStringFunc()(m.setEnvironment),
-		nameKey:                     internalSerialization.DeserializeStringFunc()(m.setName),
-		versionKey:                  internalSerialization.DeserializeStringFunc()(m.setVersion),
-		businessAppKey:              internalSerialization.DeserializeStringFunc()(m.setBusinessApp),
-		businessServiceOfferingKey:  internalSerialization.DeserializeStringFunc()(m.setBusinessServiceOffering),
-		technicalServiceOfferingKey: internalSerialization.DeserializeStringFunc()(m.setTechnicalServiceOffering),
+		environmentKey:              internalSerialization.DeserializeStringFunc(m.setEnvironment),
+		nameKey:                     internalSerialization.DeserializeStringFunc(m.setName),
+		versionKey:                  internalSerialization.DeserializeStringFunc(m.setVersion),
+		businessAppKey:              internalSerialization.DeserializeStringFunc(m.setBusinessApp),
+		businessServiceOfferingKey:  internalSerialization.DeserializeStringFunc(m.setBusinessServiceOffering),
+		technicalServiceOfferingKey: internalSerialization.DeserializeStringFunc(m.setTechnicalServiceOffering),
 	}
 }
 

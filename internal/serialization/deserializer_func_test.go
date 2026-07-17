@@ -41,7 +41,7 @@ func TestDeserializeMutatedStringFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeMutatedStringFunc(tt.mutator)(setter)(node)
+			err := DeserializeMutatedStringFunc(tt.mutator, setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
@@ -85,7 +85,7 @@ func TestDeserializeStringFunc(t *testing.T) {
 				return nil
 			}
 
-			err := DeserializeStringFunc()(setter)(node)
+			err := DeserializeStringFunc(setter)(node)
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
@@ -126,7 +126,7 @@ func TestDeserializeInt64Func(t *testing.T) {
 				return nil
 			}
 
-			err := DeserializeInt64Func()(setter)(node)
+			err := DeserializeInt64Func(setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 			node.AssertExpectations(t)
@@ -161,7 +161,7 @@ func TestDeserializeInt32Func(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeInt32Func()(setter)(node)
+			err := DeserializeInt32Func(setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
@@ -195,7 +195,7 @@ func TestDeserializeBoolFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeBoolFunc()(setter)(node)
+			err := DeserializeBoolFunc(setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
@@ -229,7 +229,7 @@ func TestDeserializeFloat64Func(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeFloat64Func()(setter)(node)
+			err := DeserializeFloat64Func(setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
@@ -263,7 +263,7 @@ func TestDeserializeFloat32Func(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeFloat32Func()(setter)(node)
+			err := DeserializeFloat32Func(setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
@@ -297,7 +297,7 @@ func TestDeserializeByteArrayFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeByteArrayFunc()(setter)(node)
+			err := DeserializeByteArrayFunc(setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
@@ -334,7 +334,7 @@ func TestDeserializeMutatedByteArrayFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeMutatedByteArrayFunc(tt.mutator)(setter)(node)
+			err := DeserializeMutatedByteArrayFunc(tt.mutator, setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
@@ -372,7 +372,7 @@ func TestDeserializeCollectionOfObjectValuesFunc(t *testing.T) {
 				return nil
 			}
 
-			err := DeserializeCollectionOfObjectValuesFunc[serialization.Parsable](nil)(setter)(node)
+			err := DeserializeCollectionOfObjectValuesFunc[serialization.Parsable](nil, setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 			node.AssertExpectations(t)
@@ -418,7 +418,7 @@ func TestDeserializeObjectValueFunc(t *testing.T) {
 				return nil
 			}
 
-			err := DeserializeObjectValueFunc[serialization.Parsable](nil)(setter)(node)
+			err := DeserializeObjectValueFunc[serialization.Parsable](nil, setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 			node.AssertExpectations(t)
@@ -469,7 +469,7 @@ func TestDeserializeEnumFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeEnumFunc[mockEnum](nil)(setter)(node)
+			err := DeserializeEnumFunc[mockEnum](nil, setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
@@ -503,7 +503,7 @@ func TestDeserializeAnyFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeAnyFunc()(setter)(node)
+			err := DeserializeAnyFunc(setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
@@ -540,7 +540,7 @@ func TestDeserializeMutatedAnyFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeMutatedAnyFunc(tt.mutator)(setter)(node)
+			err := DeserializeMutatedAnyFunc(tt.mutator, setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
@@ -574,7 +574,7 @@ func TestDeserializeISODurationFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeISODurationFunc()(setter)(node)
+			err := DeserializeISODurationFunc(setter)(node)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})

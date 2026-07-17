@@ -22,19 +22,19 @@ func (m *RegisterServiceResult) Serialize(writer serialization.SerializationWrit
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
-		internalSerialization.SerializeStringFunc(numberKey)(m.GetNumber),
-		internalSerialization.SerializeStringFunc(statusKey)(m.GetStatus),
-		internalSerialization.SerializeStringFunc(messageKey)(m.GetMessage),
+		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(numberKey, m.GetNumber),
+		internalSerialization.SerializeStringFunc(statusKey, m.GetStatus),
+		internalSerialization.SerializeStringFunc(messageKey, m.GetMessage),
 	)
 }
 
 func (m *RegisterServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:   internalSerialization.DeserializeStringFunc()(m.setSysId),
-		numberKey:  internalSerialization.DeserializeStringFunc()(m.setNumber),
-		statusKey:  internalSerialization.DeserializeStringFunc()(m.setStatus),
-		messageKey: internalSerialization.DeserializeStringFunc()(m.setMessage),
+		sysIdKey:   internalSerialization.DeserializeStringFunc(m.setSysId),
+		numberKey:  internalSerialization.DeserializeStringFunc(m.setNumber),
+		statusKey:  internalSerialization.DeserializeStringFunc(m.setStatus),
+		messageKey: internalSerialization.DeserializeStringFunc(m.setMessage),
 	}
 }
 

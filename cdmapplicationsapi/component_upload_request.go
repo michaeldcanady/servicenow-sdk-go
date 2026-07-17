@@ -22,19 +22,19 @@ func (m *ComponentUploadRequest) Serialize(writer serialization.SerializationWri
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(appNameKey)(m.GetAppName),
-		internalSerialization.SerializeStringFunc(componentNameKey)(m.GetComponentName),
-		internalSerialization.SerializeStringFunc(dataKey)(m.GetData),
-		internalSerialization.SerializeStringFunc(formatKey)(m.GetFormat),
+		internalSerialization.SerializeStringFunc(appNameKey, m.GetAppName),
+		internalSerialization.SerializeStringFunc(componentNameKey, m.GetComponentName),
+		internalSerialization.SerializeStringFunc(dataKey, m.GetData),
+		internalSerialization.SerializeStringFunc(formatKey, m.GetFormat),
 	)
 }
 
 func (m *ComponentUploadRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		appNameKey:       internalSerialization.DeserializeStringFunc()(m.setAppName),
-		componentNameKey: internalSerialization.DeserializeStringFunc()(m.setComponentName),
-		dataKey:          internalSerialization.DeserializeStringFunc()(m.setData),
-		formatKey:        internalSerialization.DeserializeStringFunc()(m.setFormat),
+		appNameKey:       internalSerialization.DeserializeStringFunc(m.setAppName),
+		componentNameKey: internalSerialization.DeserializeStringFunc(m.setComponentName),
+		dataKey:          internalSerialization.DeserializeStringFunc(m.setData),
+		formatKey:        internalSerialization.DeserializeStringFunc(m.setFormat),
 	}
 }
 

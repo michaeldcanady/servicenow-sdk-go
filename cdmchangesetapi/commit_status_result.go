@@ -22,13 +22,13 @@ func (m *CommitStatusResult) Serialize(writer serialization.SerializationWriter)
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(stateKey)(m.GetState),
+		internalSerialization.SerializeStringFunc(stateKey, m.GetState),
 	)
 }
 
 func (m *CommitStatusResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		stateKey: internalSerialization.DeserializeStringFunc()(m.setState),
+		stateKey: internalSerialization.DeserializeStringFunc(m.setState),
 	}
 }
 

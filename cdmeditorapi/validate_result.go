@@ -35,17 +35,17 @@ func (m *ValidationResultModel) Serialize(writer serialization.SerializationWrit
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(statusKey)(m.GetStatus),
-		internalSerialization.SerializeAnyFunc(errorsKey)(m.GetErrors),
-		internalSerialization.SerializeAnyFunc(warningsKey)(m.GetWarnings),
+		internalSerialization.SerializeStringFunc(statusKey, m.GetStatus),
+		internalSerialization.SerializeAnyFunc(errorsKey, m.GetErrors),
+		internalSerialization.SerializeAnyFunc(warningsKey, m.GetWarnings),
 	)
 }
 
 func (m *ValidationResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		statusKey:   internalSerialization.DeserializeStringFunc()(m.setStatus),
-		errorsKey:   internalSerialization.DeserializeAnyFunc()(m.setErrors),
-		warningsKey: internalSerialization.DeserializeAnyFunc()(m.setWarnings),
+		statusKey:   internalSerialization.DeserializeStringFunc(m.setStatus),
+		errorsKey:   internalSerialization.DeserializeAnyFunc(m.setErrors),
+		warningsKey: internalSerialization.DeserializeAnyFunc(m.setWarnings),
 	}
 }
 

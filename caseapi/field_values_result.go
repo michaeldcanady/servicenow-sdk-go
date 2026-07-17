@@ -37,19 +37,19 @@ func (m *FieldValuesResultModel) Serialize(writer serialization.SerializationWri
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(labelKey)(m.GetLabel),
-		internalSerialization.SerializeStringFunc(valueKey)(m.GetValue),
-		internalSerialization.SerializeInt32Func(sequenceKey)(m.GetSequence),
-		internalSerialization.SerializeStringFunc(dependentValueKey)(m.GetDependentValue),
+		internalSerialization.SerializeStringFunc(labelKey, m.GetLabel),
+		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
+		internalSerialization.SerializeInt32Func(sequenceKey, m.GetSequence),
+		internalSerialization.SerializeStringFunc(dependentValueKey, m.GetDependentValue),
 	)
 }
 
 func (m *FieldValuesResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		labelKey:          internalSerialization.DeserializeStringFunc()(m.setLabel),
-		valueKey:          internalSerialization.DeserializeStringFunc()(m.setValue),
-		sequenceKey:       internalSerialization.DeserializeInt32Func()(m.setSequence),
-		dependentValueKey: internalSerialization.DeserializeStringFunc()(m.setDependentValue),
+		labelKey:          internalSerialization.DeserializeStringFunc(m.setLabel),
+		valueKey:          internalSerialization.DeserializeStringFunc(m.setValue),
+		sequenceKey:       internalSerialization.DeserializeInt32Func(m.setSequence),
+		dependentValueKey: internalSerialization.DeserializeStringFunc(m.setDependentValue),
 	}
 }
 

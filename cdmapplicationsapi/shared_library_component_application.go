@@ -22,21 +22,21 @@ func (m *SharedLibraryComponentApplication) Serialize(writer serialization.Seria
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(versionKey)(m.GetVersion),
-		internalSerialization.SerializeStringFunc(descriptionKey)(m.GetDescription),
-		internalSerialization.SerializeStringFunc(appNameKey)(m.GetAppName),
+		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
+		internalSerialization.SerializeStringFunc(versionKey, m.GetVersion),
+		internalSerialization.SerializeStringFunc(descriptionKey, m.GetDescription),
+		internalSerialization.SerializeStringFunc(appNameKey, m.GetAppName),
 	)
 }
 
 func (m *SharedLibraryComponentApplication) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:       internalSerialization.DeserializeStringFunc()(m.setSysId),
-		nameKey:        internalSerialization.DeserializeStringFunc()(m.setName),
-		versionKey:     internalSerialization.DeserializeStringFunc()(m.setVersion),
-		descriptionKey: internalSerialization.DeserializeStringFunc()(m.setDescription),
-		appNameKey:     internalSerialization.DeserializeStringFunc()(m.setAppName),
+		sysIdKey:       internalSerialization.DeserializeStringFunc(m.setSysId),
+		nameKey:        internalSerialization.DeserializeStringFunc(m.setName),
+		versionKey:     internalSerialization.DeserializeStringFunc(m.setVersion),
+		descriptionKey: internalSerialization.DeserializeStringFunc(m.setDescription),
+		appNameKey:     internalSerialization.DeserializeStringFunc(m.setAppName),
 	}
 }
 

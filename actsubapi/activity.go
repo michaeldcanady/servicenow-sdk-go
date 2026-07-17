@@ -42,14 +42,14 @@ func (m *Activity) Serialize(writer serialization.SerializationWriter) error {
 
 func (m *Activity) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		activityTypeIDKey:     internalSerialization.DeserializeStringFunc()(m.SetActivityTypeID),
-		sourceTableNameKey:    internalSerialization.DeserializeStringFunc()(m.SetSourceTableName),
-		subObjectTableNameKey: internalSerialization.DeserializeStringFunc()(m.SetSubObjectTableName),
-		subObjectSysIDKey:     internalSerialization.DeserializeStringFunc()(m.SetSubObjectSysID),
-		titleKey:              internalSerialization.DeserializeStringFunc()(m.SetTitle),
-		sysIDKey:              internalSerialization.DeserializeStringFunc()(m.SetSysIDKey),
-		contentFieldsKey:      internalSerialization.DeserializeCollectionOfObjectValuesFunc[*Field](CreateFieldFromDiscriminatorValue)(m.SetContentFields),
-		subheaderFieldsKey:    internalSerialization.DeserializeCollectionOfObjectValuesFunc[*Field](CreateFieldFromDiscriminatorValue)(m.SetSubheaderFields),
+		activityTypeIDKey:     internalSerialization.DeserializeStringFunc(m.SetActivityTypeID),
+		sourceTableNameKey:    internalSerialization.DeserializeStringFunc(m.SetSourceTableName),
+		subObjectTableNameKey: internalSerialization.DeserializeStringFunc(m.SetSubObjectTableName),
+		subObjectSysIDKey:     internalSerialization.DeserializeStringFunc(m.SetSubObjectSysID),
+		titleKey:              internalSerialization.DeserializeStringFunc(m.SetTitle),
+		sysIDKey:              internalSerialization.DeserializeStringFunc(m.SetSysIDKey),
+		contentFieldsKey:      internalSerialization.DeserializeCollectionOfObjectValuesFunc[*Field](CreateFieldFromDiscriminatorValue, m.SetContentFields),
+		subheaderFieldsKey:    internalSerialization.DeserializeCollectionOfObjectValuesFunc[*Field](CreateFieldFromDiscriminatorValue, m.SetSubheaderFields),
 	}
 }
 

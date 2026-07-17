@@ -41,23 +41,23 @@ func (m *NodeResultModel) Serialize(writer serialization.SerializationWriter) er
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(typeKey)(m.GetType),
-		internalSerialization.SerializeStringFunc(valueKey)(m.GetValue),
-		internalSerialization.SerializeStringFunc(parentKey)(m.GetParent),
-		internalSerialization.SerializeStringFunc(cdmIdKey)(m.GetCdmId),
+		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
+		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
+		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
+		internalSerialization.SerializeStringFunc(parentKey, m.GetParent),
+		internalSerialization.SerializeStringFunc(cdmIdKey, m.GetCdmId),
 	)
 }
 
 func (m *NodeResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:  internalSerialization.DeserializeStringFunc()(m.setSysId),
-		nameKey:   internalSerialization.DeserializeStringFunc()(m.setName),
-		typeKey:   internalSerialization.DeserializeStringFunc()(m.setType),
-		valueKey:  internalSerialization.DeserializeStringFunc()(m.setValue),
-		parentKey: internalSerialization.DeserializeStringFunc()(m.setParent),
-		cdmIdKey:  internalSerialization.DeserializeStringFunc()(m.setCdmId),
+		sysIdKey:  internalSerialization.DeserializeStringFunc(m.setSysId),
+		nameKey:   internalSerialization.DeserializeStringFunc(m.setName),
+		typeKey:   internalSerialization.DeserializeStringFunc(m.setType),
+		valueKey:  internalSerialization.DeserializeStringFunc(m.setValue),
+		parentKey: internalSerialization.DeserializeStringFunc(m.setParent),
+		cdmIdKey:  internalSerialization.DeserializeStringFunc(m.setCdmId),
 	}
 }
 

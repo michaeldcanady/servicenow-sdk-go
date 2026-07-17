@@ -54,8 +54,8 @@ func (bH *RestRequestHeaderModel) Serialize(writer serialization.SerializationWr
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(nameKey)(bH.GetName),
-		internalSerialization.SerializeStringFunc(valueKey)(bH.GetValue),
+		internalSerialization.SerializeStringFunc(nameKey, bH.GetName),
+		internalSerialization.SerializeStringFunc(valueKey, bH.GetValue),
 	)
 }
 
@@ -66,8 +66,8 @@ func (bH *RestRequestHeaderModel) GetFieldDeserializers() map[string]func(serial
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		nameKey:  internalSerialization.DeserializeStringFunc()(bH.SetName),
-		valueKey: internalSerialization.DeserializeStringFunc()(bH.SetValue),
+		nameKey:  internalSerialization.DeserializeStringFunc(bH.SetName),
+		valueKey: internalSerialization.DeserializeStringFunc(bH.SetValue),
 	}
 }
 

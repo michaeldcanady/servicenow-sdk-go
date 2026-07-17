@@ -78,38 +78,38 @@ func (m *ConfigurationResultModel) Serialize(writer serialization.SerializationW
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeBoolFunc(activeKey)(m.GetActive),
-		internalSerialization.SerializeStringFunc(activeStringKey)(m.GetActiveString),
-		internalSerialization.SerializeBoolFunc(advancedCalendarViewPortalKey)(m.GetAdvancedCalendarViewPortal),
-		internalSerialization.SerializeBoolFunc(autoAcceptanceKey)(m.GetAutoAcceptance),
-		internalSerialization.SerializeStringFunc(localeLanguageKey)(m.GetLocaleLanguage),
-		internalSerialization.SerializeObjectValueFunc[ServiceConfig](serviceConfigKey)(m.GetServiceConfig),
-		internalSerialization.SerializeStringFunc(taskTableKey)(m.GetTaskTable),
-		internalSerialization.SerializeAnyFunc(translationsKey)(m.GetTranslations),
-		internalSerialization.SerializeObjectValueFunc[UserDateFormatOptions](userDateFormatOptionsKey)(m.GetUserDateFormatOptions),
-		internalSerialization.SerializeBoolFunc(useRRKey)(m.GetUseRR),
-		internalSerialization.SerializeObjectValueFunc[UserTimeFormat](userTimeFormatKey)(m.GetUserTimeFormat),
-		internalSerialization.SerializeObjectValueFunc[UserTimeFormatOptions](userTimeFormatOptionsKey)(m.GetUserTimeFormatOptions),
-		internalSerialization.SerializeStringFunc(viewScaleKey)(m.GetViewScale),
+		internalSerialization.SerializeBoolFunc(activeKey, m.GetActive),
+		internalSerialization.SerializeStringFunc(activeStringKey, m.GetActiveString),
+		internalSerialization.SerializeBoolFunc(advancedCalendarViewPortalKey, m.GetAdvancedCalendarViewPortal),
+		internalSerialization.SerializeBoolFunc(autoAcceptanceKey, m.GetAutoAcceptance),
+		internalSerialization.SerializeStringFunc(localeLanguageKey, m.GetLocaleLanguage),
+		internalSerialization.SerializeObjectValueFunc[ServiceConfig](serviceConfigKey, m.GetServiceConfig),
+		internalSerialization.SerializeStringFunc(taskTableKey, m.GetTaskTable),
+		internalSerialization.SerializeAnyFunc(translationsKey, m.GetTranslations),
+		internalSerialization.SerializeObjectValueFunc[UserDateFormatOptions](userDateFormatOptionsKey, m.GetUserDateFormatOptions),
+		internalSerialization.SerializeBoolFunc(useRRKey, m.GetUseRR),
+		internalSerialization.SerializeObjectValueFunc[UserTimeFormat](userTimeFormatKey, m.GetUserTimeFormat),
+		internalSerialization.SerializeObjectValueFunc[UserTimeFormatOptions](userTimeFormatOptionsKey, m.GetUserTimeFormatOptions),
+		internalSerialization.SerializeStringFunc(viewScaleKey, m.GetViewScale),
 	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (m *ConfigurationResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		activeKey:                     internalSerialization.DeserializeBoolFunc()(m.setActive),
-		activeStringKey:               internalSerialization.DeserializeStringFunc()(m.setActiveString),
-		advancedCalendarViewPortalKey: internalSerialization.DeserializeBoolFunc()(m.setAdvancedCalendarViewPortal),
-		autoAcceptanceKey:             internalSerialization.DeserializeBoolFunc()(m.setAutoAcceptance),
-		localeLanguageKey:             internalSerialization.DeserializeStringFunc()(m.setLocaleLanguage),
-		serviceConfigKey:              internalSerialization.DeserializeObjectValueFunc[ServiceConfig](CreateServiceConfigFromDiscriminatorValue)(m.setServiceConfig),
-		taskTableKey:                  internalSerialization.DeserializeStringFunc()(m.setTaskTable),
-		translationsKey:               internalSerialization.DeserializeAnyFunc()(m.setTranslations),
-		userDateFormatOptionsKey:      internalSerialization.DeserializeObjectValueFunc[UserDateFormatOptions](CreateUserDateFormatOptionsFromDiscriminatorValue)(m.setUserDateFormatOptions),
-		useRRKey:                      internalSerialization.DeserializeBoolFunc()(m.setUseRR),
-		userTimeFormatKey:             internalSerialization.DeserializeObjectValueFunc[UserTimeFormat](CreateUserTimeFormatFromDiscriminatorValue)(m.setUserTimeFormat),
-		userTimeFormatOptionsKey:      internalSerialization.DeserializeObjectValueFunc[UserTimeFormatOptions](CreateUserTimeFormatOptionsFromDiscriminatorValue)(m.setUserTimeFormatOptions),
-		viewScaleKey:                  internalSerialization.DeserializeStringFunc()(m.setViewScale),
+		activeKey:                     internalSerialization.DeserializeBoolFunc(m.setActive),
+		activeStringKey:               internalSerialization.DeserializeStringFunc(m.setActiveString),
+		advancedCalendarViewPortalKey: internalSerialization.DeserializeBoolFunc(m.setAdvancedCalendarViewPortal),
+		autoAcceptanceKey:             internalSerialization.DeserializeBoolFunc(m.setAutoAcceptance),
+		localeLanguageKey:             internalSerialization.DeserializeStringFunc(m.setLocaleLanguage),
+		serviceConfigKey:              internalSerialization.DeserializeObjectValueFunc[ServiceConfig](CreateServiceConfigFromDiscriminatorValue, m.setServiceConfig),
+		taskTableKey:                  internalSerialization.DeserializeStringFunc(m.setTaskTable),
+		translationsKey:               internalSerialization.DeserializeAnyFunc(m.setTranslations),
+		userDateFormatOptionsKey:      internalSerialization.DeserializeObjectValueFunc[UserDateFormatOptions](CreateUserDateFormatOptionsFromDiscriminatorValue, m.setUserDateFormatOptions),
+		useRRKey:                      internalSerialization.DeserializeBoolFunc(m.setUseRR),
+		userTimeFormatKey:             internalSerialization.DeserializeObjectValueFunc[UserTimeFormat](CreateUserTimeFormatFromDiscriminatorValue, m.setUserTimeFormat),
+		userTimeFormatOptionsKey:      internalSerialization.DeserializeObjectValueFunc[UserTimeFormatOptions](CreateUserTimeFormatOptionsFromDiscriminatorValue, m.setUserTimeFormatOptions),
+		viewScaleKey:                  internalSerialization.DeserializeStringFunc(m.setViewScale),
 	}
 }
 
@@ -226,19 +226,19 @@ func (m *UserDateFormatOptionsModel) Serialize(writer serialization.Serializatio
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(dayKey)(m.GetDay),
-		internalSerialization.SerializeStringFunc(monthKey)(m.GetMonth),
-		internalSerialization.SerializeStringFunc(weekKey)(m.GetWeek),
-		internalSerialization.SerializeStringFunc(weekdayKey)(m.GetWeekday),
+		internalSerialization.SerializeStringFunc(dayKey, m.GetDay),
+		internalSerialization.SerializeStringFunc(monthKey, m.GetMonth),
+		internalSerialization.SerializeStringFunc(weekKey, m.GetWeek),
+		internalSerialization.SerializeStringFunc(weekdayKey, m.GetWeekday),
 	)
 }
 
 func (m *UserDateFormatOptionsModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		dayKey:     internalSerialization.DeserializeStringFunc()(m.setDay),
-		monthKey:   internalSerialization.DeserializeStringFunc()(m.setMonth),
-		weekKey:    internalSerialization.DeserializeStringFunc()(m.setWeek),
-		weekdayKey: internalSerialization.DeserializeStringFunc()(m.setWeekday),
+		dayKey:     internalSerialization.DeserializeStringFunc(m.setDay),
+		monthKey:   internalSerialization.DeserializeStringFunc(m.setMonth),
+		weekKey:    internalSerialization.DeserializeStringFunc(m.setWeek),
+		weekdayKey: internalSerialization.DeserializeStringFunc(m.setWeekday),
 	}
 }
 

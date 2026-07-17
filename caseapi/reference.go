@@ -33,15 +33,15 @@ func (m *ReferenceModel) Serialize(writer serialization.SerializationWriter) err
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(linkKey)(m.GetLink),
-		internalSerialization.SerializeStringFunc(valueKey)(m.GetValue),
+		internalSerialization.SerializeStringFunc(linkKey, m.GetLink),
+		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
 	)
 }
 
 func (m *ReferenceModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		linkKey:  internalSerialization.DeserializeStringFunc()(m.setLink),
-		valueKey: internalSerialization.DeserializeStringFunc()(m.setValue),
+		linkKey:  internalSerialization.DeserializeStringFunc(m.setLink),
+		valueKey: internalSerialization.DeserializeStringFunc(m.setValue),
 	}
 }
 

@@ -22,33 +22,33 @@ func (m *ChangesetResult) Serialize(writer serialization.SerializationWriter) er
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeBoolFunc(autoValidateKey)(m.GetAutoValidate),
-		internalSerialization.SerializeObjectValueFunc[*Reference](cdmApplicationKey)(m.GetCdmApplication),
-		internalSerialization.SerializeStringFunc(committedAtKey)(m.GetCommittedAt),
-		internalSerialization.SerializeObjectValueFunc[*Reference](committedByKey)(m.GetCommittedBy),
-		internalSerialization.SerializeStringFunc(descriptionKey)(m.GetDescription),
-		internalSerialization.SerializeInt64Func(lastConflictDetectionTimeKey)(m.GetLastConflictDetectionTime),
-		internalSerialization.SerializeStringFunc(numberKey)(m.GetNumber),
-		internalSerialization.SerializeStringFunc(publishOptionKey)(m.GetPublishOption),
-		internalSerialization.SerializeStringFunc(stateKey)(m.GetState),
-		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
-		internalSerialization.SerializeStringFunc(titleKey)(m.GetTitle),
+		internalSerialization.SerializeBoolFunc(autoValidateKey, m.GetAutoValidate),
+		internalSerialization.SerializeObjectValueFunc[*Reference](cdmApplicationKey, m.GetCdmApplication),
+		internalSerialization.SerializeStringFunc(committedAtKey, m.GetCommittedAt),
+		internalSerialization.SerializeObjectValueFunc[*Reference](committedByKey, m.GetCommittedBy),
+		internalSerialization.SerializeStringFunc(descriptionKey, m.GetDescription),
+		internalSerialization.SerializeInt64Func(lastConflictDetectionTimeKey, m.GetLastConflictDetectionTime),
+		internalSerialization.SerializeStringFunc(numberKey, m.GetNumber),
+		internalSerialization.SerializeStringFunc(publishOptionKey, m.GetPublishOption),
+		internalSerialization.SerializeStringFunc(stateKey, m.GetState),
+		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(titleKey, m.GetTitle),
 	)
 }
 
 func (m *ChangesetResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		autoValidateKey:              internalSerialization.DeserializeBoolFunc()(m.setAutoValidate),
-		cdmApplicationKey:            internalSerialization.DeserializeObjectValueFunc[*Reference](CreateReferenceFromDiscriminatorValue)(m.setCdmApplication),
-		committedAtKey:               internalSerialization.DeserializeStringFunc()(m.setCommittedAt),
-		committedByKey:               internalSerialization.DeserializeObjectValueFunc[*Reference](CreateReferenceFromDiscriminatorValue)(m.setCommittedBy),
-		descriptionKey:               internalSerialization.DeserializeStringFunc()(m.setDescription),
-		lastConflictDetectionTimeKey: internalSerialization.DeserializeInt64Func()(m.setLastConflictDetectionTime),
-		numberKey:                    internalSerialization.DeserializeStringFunc()(m.setNumber),
-		publishOptionKey:             internalSerialization.DeserializeStringFunc()(m.setPublishOption),
-		stateKey:                     internalSerialization.DeserializeStringFunc()(m.setState),
-		sysIdKey:                     internalSerialization.DeserializeStringFunc()(m.setSysId),
-		titleKey:                     internalSerialization.DeserializeStringFunc()(m.setTitle),
+		autoValidateKey:              internalSerialization.DeserializeBoolFunc(m.setAutoValidate),
+		cdmApplicationKey:            internalSerialization.DeserializeObjectValueFunc[*Reference](CreateReferenceFromDiscriminatorValue, m.setCdmApplication),
+		committedAtKey:               internalSerialization.DeserializeStringFunc(m.setCommittedAt),
+		committedByKey:               internalSerialization.DeserializeObjectValueFunc[*Reference](CreateReferenceFromDiscriminatorValue, m.setCommittedBy),
+		descriptionKey:               internalSerialization.DeserializeStringFunc(m.setDescription),
+		lastConflictDetectionTimeKey: internalSerialization.DeserializeInt64Func(m.setLastConflictDetectionTime),
+		numberKey:                    internalSerialization.DeserializeStringFunc(m.setNumber),
+		publishOptionKey:             internalSerialization.DeserializeStringFunc(m.setPublishOption),
+		stateKey:                     internalSerialization.DeserializeStringFunc(m.setState),
+		sysIdKey:                     internalSerialization.DeserializeStringFunc(m.setSysId),
+		titleKey:                     internalSerialization.DeserializeStringFunc(m.setTitle),
 	}
 }
 

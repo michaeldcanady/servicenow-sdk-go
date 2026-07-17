@@ -55,7 +55,7 @@ func (bR *BatchRequestModel) Serialize(writer serialization.SerializationWriter)
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(batchRequestIDKey)(func() (*string, error) {
+		internalSerialization.SerializeStringFunc(batchRequestIDKey, func() (*string, error) {
 			id, err := bR.GetBatchRequestID()
 			if err != nil {
 				return nil, err
@@ -69,7 +69,7 @@ func (bR *BatchRequestModel) Serialize(writer serialization.SerializationWriter)
 
 			return id, nil
 		}),
-		internalSerialization.SerializeCollectionOfObjectValuesFunc[RestRequest](restRequestsKey)(bR.GetRestRequests),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[RestRequest](restRequestsKey, bR.GetRestRequests),
 	)
 }
 
@@ -80,8 +80,8 @@ func (bR *BatchRequestModel) GetFieldDeserializers() map[string]func(serializati
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		batchRequestIDKey: internalSerialization.DeserializeStringFunc()(bR.SetBatchRequestID),
-		restRequestsKey:   internalSerialization.DeserializeCollectionOfObjectValuesFunc[RestRequest](CreateRestRequestFromDiscriminatorValue)(bR.SetRestRequests),
+		batchRequestIDKey: internalSerialization.DeserializeStringFunc(bR.SetBatchRequestID),
+		restRequestsKey:   internalSerialization.DeserializeCollectionOfObjectValuesFunc[RestRequest](CreateRestRequestFromDiscriminatorValue, bR.SetRestRequests),
 	}
 }
 

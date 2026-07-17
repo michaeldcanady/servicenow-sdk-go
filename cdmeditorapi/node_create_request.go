@@ -37,19 +37,19 @@ func (m *NodeCreateRequestModel) Serialize(writer serialization.SerializationWri
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(typeKey)(m.GetType),
-		internalSerialization.SerializeStringFunc(parentIdKey)(m.GetParentId),
-		internalSerialization.SerializeStringFunc(cdmIdKey)(m.GetCdmId),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
+		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
+		internalSerialization.SerializeStringFunc(parentIdKey, m.GetParentId),
+		internalSerialization.SerializeStringFunc(cdmIdKey, m.GetCdmId),
 	)
 }
 
 func (m *NodeCreateRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		nameKey:     internalSerialization.DeserializeStringFunc()(m.setName),
-		typeKey:     internalSerialization.DeserializeStringFunc()(m.setType),
-		parentIdKey: internalSerialization.DeserializeStringFunc()(m.setParentId),
-		cdmIdKey:    internalSerialization.DeserializeStringFunc()(m.setCdmId),
+		nameKey:     internalSerialization.DeserializeStringFunc(m.setName),
+		typeKey:     internalSerialization.DeserializeStringFunc(m.setType),
+		parentIdKey: internalSerialization.DeserializeStringFunc(m.setParentId),
+		cdmIdKey:    internalSerialization.DeserializeStringFunc(m.setCdmId),
 	}
 }
 

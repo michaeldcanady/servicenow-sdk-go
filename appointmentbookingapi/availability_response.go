@@ -56,25 +56,25 @@ func (m *AvailabilityResultModel) Serialize(writer serialization.SerializationWr
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeCollectionOfObjectValuesFunc[AvailabilitySlot](availabilityKey)(m.GetAvailability),
-		internalSerialization.SerializeBoolFunc(hasMoreKey)(m.GetHasMore),
-		internalSerialization.SerializeAnyFunc(nextAvailableSlotKey)(m.GetNextAvailableSlot),
-		internalSerialization.SerializeBoolFunc(noApptAvailableKey)(m.GetNoApptAvailable),
-		internalSerialization.SerializeBoolFunc(successKey)(m.GetSuccess),
-		internalSerialization.SerializeStringFunc("time_zone")(m.GetTimeZone),
-		internalSerialization.SerializeStringFunc(timeZoneDisplayValueKey)(m.GetTimeZoneDisplayValue),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[AvailabilitySlot](availabilityKey, m.GetAvailability),
+		internalSerialization.SerializeBoolFunc(hasMoreKey, m.GetHasMore),
+		internalSerialization.SerializeAnyFunc(nextAvailableSlotKey, m.GetNextAvailableSlot),
+		internalSerialization.SerializeBoolFunc(noApptAvailableKey, m.GetNoApptAvailable),
+		internalSerialization.SerializeBoolFunc(successKey, m.GetSuccess),
+		internalSerialization.SerializeStringFunc("time_zone", m.GetTimeZone),
+		internalSerialization.SerializeStringFunc(timeZoneDisplayValueKey, m.GetTimeZoneDisplayValue),
 	)
 }
 
 func (m *AvailabilityResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		availabilityKey:         internalSerialization.DeserializeCollectionOfObjectValuesFunc[AvailabilitySlot](CreateAvailabilitySlotFromDiscriminatorValue)(m.setAvailability),
-		hasMoreKey:              internalSerialization.DeserializeBoolFunc()(m.setHasMore),
-		nextAvailableSlotKey:    internalSerialization.DeserializeAnyFunc()(m.setNextAvailableSlot),
-		noApptAvailableKey:      internalSerialization.DeserializeBoolFunc()(m.setNoApptAvailable),
-		successKey:              internalSerialization.DeserializeBoolFunc()(m.setSuccess),
-		timeZoneKey:             internalSerialization.DeserializeStringFunc()(m.setTimeZone),
-		timeZoneDisplayValueKey: internalSerialization.DeserializeStringFunc()(m.setTimeZoneDisplayValue),
+		availabilityKey:         internalSerialization.DeserializeCollectionOfObjectValuesFunc[AvailabilitySlot](CreateAvailabilitySlotFromDiscriminatorValue, m.setAvailability),
+		hasMoreKey:              internalSerialization.DeserializeBoolFunc(m.setHasMore),
+		nextAvailableSlotKey:    internalSerialization.DeserializeAnyFunc(m.setNextAvailableSlot),
+		noApptAvailableKey:      internalSerialization.DeserializeBoolFunc(m.setNoApptAvailable),
+		successKey:              internalSerialization.DeserializeBoolFunc(m.setSuccess),
+		timeZoneKey:             internalSerialization.DeserializeStringFunc(m.setTimeZone),
+		timeZoneDisplayValueKey: internalSerialization.DeserializeStringFunc(m.setTimeZoneDisplayValue),
 	}
 }
 

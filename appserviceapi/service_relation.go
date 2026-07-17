@@ -22,17 +22,17 @@ func (m *ServiceRelation) Serialize(writer serialization.SerializationWriter) er
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(parentKey)(m.GetParent),
-		internalSerialization.SerializeStringFunc(childKey)(m.GetChild),
-		internalSerialization.SerializeStringFunc(typeKey)(m.GetType),
+		internalSerialization.SerializeStringFunc(parentKey, m.GetParent),
+		internalSerialization.SerializeStringFunc(childKey, m.GetChild),
+		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
 	)
 }
 
 func (m *ServiceRelation) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		parentKey: internalSerialization.DeserializeStringFunc()(m.setParent),
-		childKey:  internalSerialization.DeserializeStringFunc()(m.setChild),
-		typeKey:   internalSerialization.DeserializeStringFunc()(m.setType),
+		parentKey: internalSerialization.DeserializeStringFunc(m.setParent),
+		childKey:  internalSerialization.DeserializeStringFunc(m.setChild),
+		typeKey:   internalSerialization.DeserializeStringFunc(m.setType),
 	}
 }
 
