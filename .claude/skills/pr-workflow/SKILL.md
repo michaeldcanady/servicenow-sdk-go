@@ -20,7 +20,8 @@ This repo enforces two things a generic "open a PR" flow would miss:
 - **Branch names in this repo's history** follow `type/short-kebab-description`
   (e.g. `fix/paging-link-headers`, `feat/account-api`,
   `refactor/model-accessor-mutators-use-store`) — mirroring the commit type,
-  not a generic `my-feature` or a ticket number.
+  not a generic `my-feature` or a ticket number. See [[create-branch]] for how
+  this flow handles that step.
 
 ## Step 1 — figure out where things stand
 
@@ -37,20 +38,15 @@ uncommitted changes on `main`.
 
 ## Step 2 — branch (only if needed)
 
-If the current branch is `main`, `release/*`, or otherwise not meant to carry
-this change, create a new branch off the base before committing anything:
+Invoke the `create-branch` skill for this — it already encodes this repo's
+`type/short-kebab-description` naming convention, how to pick `<type>` from
+the diff, and when a new branch is (and isn't) actually needed. Don't
+re-derive branch-naming rules here; that skill is the source of truth for
+them.
 
-```
-git checkout -b <type>/<short-kebab-description>
-```
-
-Pick `<type>` the same way the [[conventional-commit]] skill picks a commit
-type (`feat`, `fix`, `refactor`, `docs`, `perf`, `chore`, `test`) — read the
-diff, don't just echo the user's phrasing. `<short-kebab-description>` should
-be a few words, matching the style of existing branches (check `git branch -a`
-if unsure).
-
-If a suitable feature branch already exists and is checked out, skip this.
+If Step 1 already showed a suitable feature branch checked out, this is a
+no-op — `create-branch` itself checks that and will say so rather than
+creating a redundant branch.
 
 ## Step 3 — commit
 
