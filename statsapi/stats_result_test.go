@@ -31,26 +31,12 @@ func TestStatsResult_StatsGetterAndSetter(t *testing.T) {
 	assert.Equal(t, Stats(stats), res)
 }
 
-func TestStatsResult_GroupbyFieldsGetterAndSetter(t *testing.T) {
-	result := NewStatsResult()
-	fields := []GroupByField{NewGroupByField()}
-
-	err := result.setGroupbyFields(fields)
-	assert.NoError(t, err)
-
-	res, err := result.GetGroupbyFields()
-	assert.NoError(t, err)
-	assert.Equal(t, fields, res)
-}
-
 func TestStatsResult_Serialize(t *testing.T) {
 	writer := mocking.NewMockSerializationWriter()
 	writer.On("WriteObjectValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
-	writer.On("WriteCollectionOfObjectValues", mock.Anything, mock.Anything).Return(nil)
 
 	result := NewStatsResult()
 	_ = result.setStats(NewStats())
-	_ = result.setGroupbyFields([]GroupByField{NewGroupByField()})
 
 	err := result.Serialize(writer)
 	assert.NoError(t, err)
@@ -64,5 +50,4 @@ func TestStatsResult_GetFieldDeserializers(t *testing.T) {
 	result := NewStatsResult()
 	deser := result.GetFieldDeserializers()
 	assert.NotNil(t, deser[statsResultStatsKey])
-	assert.NotNil(t, deser[statsResultGroupByFieldsKey])
 }

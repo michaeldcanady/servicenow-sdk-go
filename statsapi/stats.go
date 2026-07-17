@@ -34,6 +34,9 @@ func mapFromRaw(rawValue any) (map[string]string, error) {
 	result := make(map[string]string, len(typedValue))
 	for key, value := range typedValue {
 		switch typedElem := value.(type) {
+		case nil:
+			// omit rather than stringify a JSON null to the literal "<nil>"
+			continue
 		case string:
 			result[key] = typedElem
 		case *string:
@@ -106,11 +109,27 @@ func (m *StatsModel) Serialize(writer serialization.SerializationWriter) error {
 
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeStringFunc(statsCountKey)(m.GetCount),
-		internalSerialization.SerializeAnyFunc(statsSumKey)(func() (any, error) { return m.GetSum() }),
-		internalSerialization.SerializeAnyFunc(statsAvgKey)(func() (any, error) { return m.GetAvg() }),
-		internalSerialization.SerializeAnyFunc(statsMinKey)(func() (any, error) { return m.GetMin() }),
-		internalSerialization.SerializeAnyFunc(statsMaxKey)(func() (any, error) { return m.GetMax() }),
+		serializeStatsMapFunc(statsSumKey, m.GetSum),
+		serializeStatsMapFunc(statsAvgKey, m.GetAvg),
+		serializeStatsMapFunc(statsMinKey, m.GetMin),
+		serializeStatsMapFunc(statsMaxKey, m.GetMax),
 	)
+}
+
+// serializeStatsMapFunc writes a sum/avg/min/max aggregate map, skipping the key entirely when
+// the map is nil rather than writing an explicit null (matching how SerializeStringFunc skips a
+// nil *string).
+func serializeStatsMapFunc(key string, accessor func() (map[string]string, error)) internalSerialization.WriterFunc {
+	return func(sw serialization.SerializationWriter) error {
+		val, err := accessor()
+		if err != nil {
+			return err
+		}
+		if val == nil {
+			return nil
+		}
+		return sw.WriteAnyValue(key, val)
+	}
 }
 
 // GetCount returns the record count.

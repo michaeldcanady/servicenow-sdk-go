@@ -37,6 +37,11 @@ func TestMapFromRaw(t *testing.T) {
 			expected: map[string]string{"reassignment_count": "56"},
 		},
 		{
+			name:     "null values are omitted, not stringified to \"<nil>\"",
+			input:    map[string]any{"reassignment_count": nil, "escalation": "1"},
+			expected: map[string]string{"escalation": "1"},
+		},
+		{
 			name:    "unsupported type",
 			input:   "not-a-map",
 			wantErr: true,
@@ -137,6 +142,19 @@ func TestStats_Serialize(t *testing.T) {
 	var nilStats *StatsModel
 	err = nilStats.Serialize(writer)
 	assert.NoError(t, err)
+}
+
+func TestStats_Serialize_SkipsNilMaps(t *testing.T) {
+	writer := mocking.NewMockSerializationWriter()
+	writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
+
+	m := NewStats()
+	_ = m.setCount(internal.ToPointer("67"))
+
+	err := m.Serialize(writer)
+	assert.NoError(t, err)
+
+	writer.AssertNotCalled(t, "WriteAnyValue", mock.Anything, mock.Anything)
 }
 
 func TestStats_GetFieldDeserializers(t *testing.T) {

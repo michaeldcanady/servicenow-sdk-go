@@ -10,23 +10,20 @@ import (
 )
 
 const (
-	statsResultStatsKey         = "stats"
-	statsResultGroupByFieldsKey = "groupby_fields"
+	statsResultStatsKey = "stats"
 )
 
-// StatsResult represents a single element of a Stats API ("/api/now/stats/{table}") response.
+// StatsResult represents a Stats API ("/api/now/stats/{table}") response.
 //
-// GroupbyFields is only populated when the request set sysparm_group_by; this SDK models the
-// ungrouped shape (a single StatsResult under "result") — grouped responses return an array of
-// these under "result" instead, which is not yet supported by StatsRequestBuilder.Get.
+// This models the ungrouped shape only (a single StatsResult under "result"). A request that set
+// sysparm_group_by would return an array of results under "result" instead, which
+// StatsRequestBuilder.Get does not support — see statsURLTemplate.
 type StatsResult interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
 	GetStats() (Stats, error)
 	setStats(Stats) error
-	GetGroupbyFields() ([]GroupByField, error)
-	setGroupbyFields([]GroupByField) error
 }
 
 // StatsResultModel is the default implementation of StatsResult.
@@ -51,14 +48,6 @@ func (m *StatsResultModel) GetFieldDeserializers() map[string]func(serialization
 	return map[string]func(serialization.ParseNode) error{
 		statsResultStatsKey: internalSerialization.DeserializeObjectValueFunc[*StatsModel](CreateStatsFromDiscriminatorValue)(
 			func(val *StatsModel) error { return m.setStats(val) }),
-		statsResultGroupByFieldsKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc[*GroupByFieldModel](CreateGroupByFieldFromDiscriminatorValue)(
-			func(val []*GroupByFieldModel) error {
-				fields := make([]GroupByField, len(val))
-				for i, v := range val {
-					fields[i] = v
-				}
-				return m.setGroupbyFields(fields)
-			}),
 	}
 }
 
@@ -70,7 +59,6 @@ func (m *StatsResultModel) Serialize(writer serialization.SerializationWriter) e
 
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeObjectValueFunc[Stats](statsResultStatsKey)(m.GetStats),
-		internalSerialization.SerializeCollectionOfObjectValuesFunc[GroupByField](statsResultGroupByFieldsKey)(m.GetGroupbyFields),
 	)
 }
 
@@ -81,13 +69,4 @@ func (m *StatsResultModel) GetStats() (Stats, error) {
 
 func (m *StatsResultModel) setStats(val Stats) error {
 	return store.DefaultBackedModelMutatorFunc(m, statsResultStatsKey, val)
-}
-
-// GetGroupbyFields returns the grouping dimensions of this result, when sysparm_group_by was requested.
-func (m *StatsResultModel) GetGroupbyFields() ([]GroupByField, error) {
-	return store.DefaultBackedModelAccessorFunc[*StatsResultModel, []GroupByField](m, statsResultGroupByFieldsKey)
-}
-
-func (m *StatsResultModel) setGroupbyFields(val []GroupByField) error {
-	return store.DefaultBackedModelMutatorFunc(m, statsResultGroupByFieldsKey, val)
 }
