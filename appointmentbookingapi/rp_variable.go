@@ -41,17 +41,17 @@ func (m *RPVariableModel) Serialize(writer serialization.SerializationWriter) er
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(displayNameKey)(m.GetDisplayName),
-		internalSerialization.SerializeStringFunc(labelKey)(m.GetLabel),
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
+		internalSerialization.SerializeStringFunc(displayNameKey, m.GetDisplayName),
+		internalSerialization.SerializeStringFunc(labelKey, m.GetLabel),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
 	)
 }
 
 func (m *RPVariableModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		displayNameKey: internalSerialization.DeserializeStringFunc()(m.setDisplayName),
-		labelKey:       internalSerialization.DeserializeStringFunc()(m.setLabel),
-		nameKey:        internalSerialization.DeserializeStringFunc()(m.setName),
+		displayNameKey: internalSerialization.DeserializeStringFunc(m.setDisplayName),
+		labelKey:       internalSerialization.DeserializeStringFunc(m.setLabel),
+		nameKey:        internalSerialization.DeserializeStringFunc(m.setName),
 	}
 }
 

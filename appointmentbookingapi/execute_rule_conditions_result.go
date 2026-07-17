@@ -40,19 +40,19 @@ func (m *ExecuteRuleConditionsResultModel) Serialize(writer serialization.Serial
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeBoolFunc(dedicatedCapacityKey)(m.GetDedicatedCapacity),
-		internalSerialization.SerializeStringFunc(futureMaxBookableDaysKey)(m.GetFutureMaxBookableDays),
-		internalSerialization.SerializeStringFunc(ruleIdKey)(m.GetRuleId),
-		internalSerialization.SerializeStringFunc(ruleNameKey)(m.GetRuleName),
+		internalSerialization.SerializeBoolFunc(dedicatedCapacityKey, m.GetDedicatedCapacity),
+		internalSerialization.SerializeStringFunc(futureMaxBookableDaysKey, m.GetFutureMaxBookableDays),
+		internalSerialization.SerializeStringFunc(ruleIdKey, m.GetRuleId),
+		internalSerialization.SerializeStringFunc(ruleNameKey, m.GetRuleName),
 	)
 }
 
 func (m *ExecuteRuleConditionsResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		dedicatedCapacityKey:     internalSerialization.DeserializeBoolFunc()(m.setDedicatedCapacity),
-		futureMaxBookableDaysKey: internalSerialization.DeserializeStringFunc()(m.setFutureMaxBookableDays),
-		ruleIdKey:                internalSerialization.DeserializeStringFunc()(m.setRuleId),
-		ruleNameKey:              internalSerialization.DeserializeStringFunc()(m.setRuleName),
+		dedicatedCapacityKey:     internalSerialization.DeserializeBoolFunc(m.setDedicatedCapacity),
+		futureMaxBookableDaysKey: internalSerialization.DeserializeStringFunc(m.setFutureMaxBookableDays),
+		ruleIdKey:                internalSerialization.DeserializeStringFunc(m.setRuleId),
+		ruleNameKey:              internalSerialization.DeserializeStringFunc(m.setRuleName),
 	}
 }
 

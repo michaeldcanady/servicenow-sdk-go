@@ -42,14 +42,14 @@ func (bR *BaseServiceNowItemResponse[T]) Serialize(writer serialization.Serializ
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeObjectValueFunc[T](resultKey)(bR.GetResult),
+		internalSerialization.SerializeObjectValueFunc[T](resultKey, bR.GetResult),
 	)
 }
 
 // GetFieldDeserializers Returns the deserialization information for this object.
 func (bR *BaseServiceNowItemResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		resultKey: internalSerialization.DeserializeObjectValueFunc[T](bR.factory)(bR.setResult),
+		resultKey: internalSerialization.DeserializeObjectValueFunc[T](bR.factory, bR.setResult),
 	}
 }
 

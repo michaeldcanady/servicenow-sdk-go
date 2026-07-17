@@ -24,16 +24,16 @@ func (m *UploadStatusOutput) Serialize(writer serialization.SerializationWriter)
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
-		internalSerialization.SerializeStringFunc(numberKey)(m.GetNumber),
+		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(numberKey, m.GetNumber),
 	)
 }
 
 // GetFieldDeserializers the deserialization information for the current model.
 func (m *UploadStatusOutput) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:  internalSerialization.DeserializeStringFunc()(m.setSysId),
-		numberKey: internalSerialization.DeserializeStringFunc()(m.setNumber),
+		sysIdKey:  internalSerialization.DeserializeStringFunc(m.setSysId),
+		numberKey: internalSerialization.DeserializeStringFunc(m.setNumber),
 	}
 }
 

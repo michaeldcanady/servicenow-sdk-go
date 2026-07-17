@@ -22,15 +22,15 @@ func (m *ServiceDetailsResult) Serialize(writer serialization.SerializationWrite
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(statusKey)(m.GetStatus),
-		internalSerialization.SerializeStringFunc(messageKey)(m.GetMessage),
+		internalSerialization.SerializeStringFunc(statusKey, m.GetStatus),
+		internalSerialization.SerializeStringFunc(messageKey, m.GetMessage),
 	)
 }
 
 func (m *ServiceDetailsResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		statusKey:  internalSerialization.DeserializeStringFunc()(m.setStatus),
-		messageKey: internalSerialization.DeserializeStringFunc()(m.setMessage),
+		statusKey:  internalSerialization.DeserializeStringFunc(m.setStatus),
+		messageKey: internalSerialization.DeserializeStringFunc(m.setMessage),
 	}
 }
 

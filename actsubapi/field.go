@@ -40,12 +40,12 @@ func (m *Field) Serialize(writer serialization.SerializationWriter) error {
 
 func (m *Field) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		deepLinkToSubObjectKey: internalSerialization.DeserializeStringFunc()(m.SetDeepLinkToSubObject),
-		displayAsTimeAgoKey:    internalSerialization.DeserializeStringFunc()(m.SetDisplayAsTimeAgo),
-		labelKey:               internalSerialization.DeserializeStringFunc()(m.SetLabel),
-		showLabelKey:           internalSerialization.DeserializeStringFunc()(m.SetShowLabel),
-		typeKey:                internalSerialization.DeserializeStringFunc()(m.SetType),
-		valueKey:               internalSerialization.DeserializeStringFunc()(m.SetValue),
+		deepLinkToSubObjectKey: internalSerialization.DeserializeStringFunc(m.SetDeepLinkToSubObject),
+		displayAsTimeAgoKey:    internalSerialization.DeserializeStringFunc(m.SetDisplayAsTimeAgo),
+		labelKey:               internalSerialization.DeserializeStringFunc(m.SetLabel),
+		showLabelKey:           internalSerialization.DeserializeStringFunc(m.SetShowLabel),
+		typeKey:                internalSerialization.DeserializeStringFunc(m.SetType),
+		valueKey:               internalSerialization.DeserializeStringFunc(m.SetValue),
 	}
 }
 

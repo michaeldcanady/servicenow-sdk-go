@@ -55,22 +55,22 @@ func (bR *BaseServiceNowCollectionResponse[T]) Serialize(writer serialization.Se
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeCollectionOfObjectValuesFunc[T](resultKey)(bR.GetResult),
-		internalSerialization.SerializeStringFunc(nextKey)(bR.GetNextLink),
-		internalSerialization.SerializeStringFunc(previousKey)(bR.GetPreviousLink),
-		internalSerialization.SerializeStringFunc(firstKey)(bR.GetFirstLink),
-		internalSerialization.SerializeStringFunc(lastKey)(bR.GetLastLink),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[T](resultKey, bR.GetResult),
+		internalSerialization.SerializeStringFunc(nextKey, bR.GetNextLink),
+		internalSerialization.SerializeStringFunc(previousKey, bR.GetPreviousLink),
+		internalSerialization.SerializeStringFunc(firstKey, bR.GetFirstLink),
+		internalSerialization.SerializeStringFunc(lastKey, bR.GetLastLink),
 	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object
 func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		resultKey:   internalSerialization.DeserializeCollectionOfObjectValuesFunc[T](bR.factory)(bR.setResult),
-		nextKey:     internalSerialization.DeserializeStringFunc()(bR.SetNextLink),
-		previousKey: internalSerialization.DeserializeStringFunc()(bR.SetPreviousLink),
-		firstKey:    internalSerialization.DeserializeStringFunc()(bR.SetFirstLink),
-		lastKey:     internalSerialization.DeserializeStringFunc()(bR.SetLastLink),
+		resultKey:   internalSerialization.DeserializeCollectionOfObjectValuesFunc[T](bR.factory, bR.setResult),
+		nextKey:     internalSerialization.DeserializeStringFunc(bR.SetNextLink),
+		previousKey: internalSerialization.DeserializeStringFunc(bR.SetPreviousLink),
+		firstKey:    internalSerialization.DeserializeStringFunc(bR.SetFirstLink),
+		lastKey:     internalSerialization.DeserializeStringFunc(bR.SetLastLink),
 	}
 }
 

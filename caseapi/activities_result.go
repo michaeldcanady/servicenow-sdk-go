@@ -41,23 +41,23 @@ func (m *ActivitiesResultModel) Serialize(writer serialization.SerializationWrit
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
-		internalSerialization.SerializeStringFunc(typeKey)(m.GetType),
-		internalSerialization.SerializeStringFunc(valueKey)(m.GetValue),
-		internalSerialization.SerializeStringFunc(userKey)(m.GetUser),
-		internalSerialization.SerializeStringFunc(sysCreatedOnKey)(m.GetSysCreatedOn),
-		internalSerialization.SerializeStringFunc(fieldNameKey)(m.GetFieldName),
+		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
+		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
+		internalSerialization.SerializeStringFunc(userKey, m.GetUser),
+		internalSerialization.SerializeStringFunc(sysCreatedOnKey, m.GetSysCreatedOn),
+		internalSerialization.SerializeStringFunc(fieldNameKey, m.GetFieldName),
 	)
 }
 
 func (m *ActivitiesResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:        internalSerialization.DeserializeStringFunc()(m.setSysId),
-		typeKey:         internalSerialization.DeserializeStringFunc()(m.setType),
-		valueKey:        internalSerialization.DeserializeStringFunc()(m.setValue),
-		userKey:         internalSerialization.DeserializeStringFunc()(m.setUser),
-		sysCreatedOnKey: internalSerialization.DeserializeStringFunc()(m.setSysCreatedOn),
-		fieldNameKey:    internalSerialization.DeserializeStringFunc()(m.setFieldName),
+		sysIdKey:        internalSerialization.DeserializeStringFunc(m.setSysId),
+		typeKey:         internalSerialization.DeserializeStringFunc(m.setType),
+		valueKey:        internalSerialization.DeserializeStringFunc(m.setValue),
+		userKey:         internalSerialization.DeserializeStringFunc(m.setUser),
+		sysCreatedOnKey: internalSerialization.DeserializeStringFunc(m.setSysCreatedOn),
+		fieldNameKey:    internalSerialization.DeserializeStringFunc(m.setFieldName),
 	}
 }
 

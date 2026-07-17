@@ -93,11 +93,11 @@ func CreateStatsFromDiscriminatorValue(_ serialization.ParseNode) (serialization
 // GetFieldDeserializers implements serialization.Parsable.
 func (m *StatsModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		statsCountKey: internalSerialization.DeserializeStringFunc()(m.setCount),
-		statsSumKey:   internalSerialization.DeserializeMutatedAnyFunc(mapFromRaw)(m.setSum),
-		statsAvgKey:   internalSerialization.DeserializeMutatedAnyFunc(mapFromRaw)(m.setAvg),
-		statsMinKey:   internalSerialization.DeserializeMutatedAnyFunc(mapFromRaw)(m.setMin),
-		statsMaxKey:   internalSerialization.DeserializeMutatedAnyFunc(mapFromRaw)(m.setMax),
+		statsCountKey: internalSerialization.DeserializeStringFunc(m.setCount),
+		statsSumKey:   internalSerialization.DeserializeMutatedAnyFunc(mapFromRaw, m.setSum),
+		statsAvgKey:   internalSerialization.DeserializeMutatedAnyFunc(mapFromRaw, m.setAvg),
+		statsMinKey:   internalSerialization.DeserializeMutatedAnyFunc(mapFromRaw, m.setMin),
+		statsMaxKey:   internalSerialization.DeserializeMutatedAnyFunc(mapFromRaw, m.setMax),
 	}
 }
 
@@ -108,7 +108,7 @@ func (m *StatsModel) Serialize(writer serialization.SerializationWriter) error {
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(statsCountKey)(m.GetCount),
+		internalSerialization.SerializeStringFunc(statsCountKey, m.GetCount),
 		serializeStatsMapFunc(statsSumKey, m.GetSum),
 		serializeStatsMapFunc(statsAvgKey, m.GetAvg),
 		serializeStatsMapFunc(statsMinKey, m.GetMin),

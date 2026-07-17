@@ -33,15 +33,15 @@ func (m *NodeUpdateRequestModel) Serialize(writer serialization.SerializationWri
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(valueKey)(m.GetValue),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
+		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
 	)
 }
 
 func (m *NodeUpdateRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		nameKey:  internalSerialization.DeserializeStringFunc()(m.setName),
-		valueKey: internalSerialization.DeserializeStringFunc()(m.setValue),
+		nameKey:  internalSerialization.DeserializeStringFunc(m.setName),
+		valueKey: internalSerialization.DeserializeStringFunc(m.setValue),
 	}
 }
 

@@ -44,11 +44,11 @@ func (m *ActivitySubscriptionModel) Serialize(writer serialization.Serialization
 // GetFieldDeserializers returns the deserialization information for this object.
 func (m *ActivitySubscriptionModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		messageKey:    internalSerialization.DeserializeStringFunc()(m.SetMessage),
-		streamKey:     internalSerialization.DeserializeStringFunc()(m.SetStream),
-		userKey:       internalSerialization.DeserializeStringFunc()(m.SetUser),
-		activitiesKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc[*Activity](CreateActivityFromDiscriminatorValue)(m.SetActivities),
-		statusKey:     internalSerialization.DeserializeInt64Func()(m.SetStatus),
+		messageKey:    internalSerialization.DeserializeStringFunc(m.SetMessage),
+		streamKey:     internalSerialization.DeserializeStringFunc(m.SetStream),
+		userKey:       internalSerialization.DeserializeStringFunc(m.SetUser),
+		activitiesKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc[*Activity](CreateActivityFromDiscriminatorValue, m.SetActivities),
+		statusKey:     internalSerialization.DeserializeInt64Func(m.SetStatus),
 	}
 }
 

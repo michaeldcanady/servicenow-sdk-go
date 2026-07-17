@@ -47,18 +47,18 @@ func CreateCmdbInstanceFromDiscriminatorValue(parseNode serialization.ParseNode)
 // Serialize writes the objects properties to the current writer.
 func (m *CmdbInstanceModel) Serialize(writer serialization.SerializationWriter) error {
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIDKey)(m.GetSysID),
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(classNameKey)(m.GetClassName),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
+		internalSerialization.SerializeStringFunc(classNameKey, m.GetClassName),
 	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (m *CmdbInstanceModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIDKey:     internalSerialization.DeserializeStringFunc()(m.SetSysID),
-		nameKey:      internalSerialization.DeserializeStringFunc()(m.SetName),
-		classNameKey: internalSerialization.DeserializeStringFunc()(m.SetClassName),
+		sysIDKey:     internalSerialization.DeserializeStringFunc(m.SetSysID),
+		nameKey:      internalSerialization.DeserializeStringFunc(m.SetName),
+		classNameKey: internalSerialization.DeserializeStringFunc(m.SetClassName),
 	}
 }
 

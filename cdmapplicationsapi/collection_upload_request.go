@@ -22,19 +22,19 @@ func (m *CollectionUploadRequest) Serialize(writer serialization.SerializationWr
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(appNameKey)(m.GetAppName),
-		internalSerialization.SerializeStringFunc(collectionNameKey)(m.GetCollectionName),
-		internalSerialization.SerializeStringFunc(dataKey)(m.GetData),
-		internalSerialization.SerializeStringFunc(formatKey)(m.GetFormat),
+		internalSerialization.SerializeStringFunc(appNameKey, m.GetAppName),
+		internalSerialization.SerializeStringFunc(collectionNameKey, m.GetCollectionName),
+		internalSerialization.SerializeStringFunc(dataKey, m.GetData),
+		internalSerialization.SerializeStringFunc(formatKey, m.GetFormat),
 	)
 }
 
 func (m *CollectionUploadRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		appNameKey:        internalSerialization.DeserializeStringFunc()(m.setAppName),
-		collectionNameKey: internalSerialization.DeserializeStringFunc()(m.setCollectionName),
-		dataKey:           internalSerialization.DeserializeStringFunc()(m.setData),
-		formatKey:         internalSerialization.DeserializeStringFunc()(m.setFormat),
+		appNameKey:        internalSerialization.DeserializeStringFunc(m.setAppName),
+		collectionNameKey: internalSerialization.DeserializeStringFunc(m.setCollectionName),
+		dataKey:           internalSerialization.DeserializeStringFunc(m.setData),
+		formatKey:         internalSerialization.DeserializeStringFunc(m.setFormat),
 	}
 }
 

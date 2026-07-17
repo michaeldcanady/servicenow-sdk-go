@@ -22,19 +22,19 @@ func (m *ExportStatusResult) Serialize(writer serialization.SerializationWriter)
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(stateKey)(m.GetState),
-		internalSerialization.SerializeStringFunc(statusKey)(m.GetStatus),
-		internalSerialization.SerializeStringFunc(messageKey)(m.GetMessage),
-		internalSerialization.SerializeStringFunc(progressKey)(m.GetProgress),
+		internalSerialization.SerializeStringFunc(stateKey, m.GetState),
+		internalSerialization.SerializeStringFunc(statusKey, m.GetStatus),
+		internalSerialization.SerializeStringFunc(messageKey, m.GetMessage),
+		internalSerialization.SerializeStringFunc(progressKey, m.GetProgress),
 	)
 }
 
 func (m *ExportStatusResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		stateKey:    internalSerialization.DeserializeStringFunc()(m.setState),
-		statusKey:   internalSerialization.DeserializeStringFunc()(m.setStatus),
-		messageKey:  internalSerialization.DeserializeStringFunc()(m.setMessage),
-		progressKey: internalSerialization.DeserializeStringFunc()(m.setProgress),
+		stateKey:    internalSerialization.DeserializeStringFunc(m.setState),
+		statusKey:   internalSerialization.DeserializeStringFunc(m.setStatus),
+		messageKey:  internalSerialization.DeserializeStringFunc(m.setMessage),
+		progressKey: internalSerialization.DeserializeStringFunc(m.setProgress),
 	}
 }
 

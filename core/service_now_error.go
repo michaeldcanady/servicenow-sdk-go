@@ -109,14 +109,14 @@ func (exc *ServiceNowError) Serialize(writer serialization.SerializationWriter) 
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeObjectValueFunc[MainErrorable](errorKey)(exc.GetError),
+		internalSerialization.SerializeObjectValueFunc[MainErrorable](errorKey, exc.GetError),
 	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (exc *ServiceNowError) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		errorKey: internalSerialization.DeserializeObjectValueFunc[MainErrorable](CreateMainErrorFromDiscriminatorValue)(exc.setError),
+		errorKey: internalSerialization.DeserializeObjectValueFunc[MainErrorable](CreateMainErrorFromDiscriminatorValue, exc.setError),
 	}
 }
 

@@ -43,19 +43,19 @@ func (m *FieldMappingModel) Serialize(writer serialization.SerializationWriter) 
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(contactKey)(m.GetContact),
-		internalSerialization.SerializeObjectValueFunc[RPVariable](contactRPVariableKey)(m.GetContactRPVariable),
-		internalSerialization.SerializeStringFunc(locationKey)(m.GetLocation),
-		internalSerialization.SerializeObjectValueFunc[RPVariable](locationRPVariableKey)(m.GetLocationRPVariable),
+		internalSerialization.SerializeStringFunc(contactKey, m.GetContact),
+		internalSerialization.SerializeObjectValueFunc[RPVariable](contactRPVariableKey, m.GetContactRPVariable),
+		internalSerialization.SerializeStringFunc(locationKey, m.GetLocation),
+		internalSerialization.SerializeObjectValueFunc[RPVariable](locationRPVariableKey, m.GetLocationRPVariable),
 	)
 }
 
 func (m *FieldMappingModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		contactKey:            internalSerialization.DeserializeStringFunc()(m.setContact),
-		contactRPVariableKey:  internalSerialization.DeserializeObjectValueFunc[RPVariable](CreateRPVariableFromDiscriminatorValue)(m.setContactRPVariable),
-		locationKey:           internalSerialization.DeserializeStringFunc()(m.setLocation),
-		locationRPVariableKey: internalSerialization.DeserializeObjectValueFunc[RPVariable](CreateRPVariableFromDiscriminatorValue)(m.setLocationRPVariable),
+		contactKey:            internalSerialization.DeserializeStringFunc(m.setContact),
+		contactRPVariableKey:  internalSerialization.DeserializeObjectValueFunc[RPVariable](CreateRPVariableFromDiscriminatorValue, m.setContactRPVariable),
+		locationKey:           internalSerialization.DeserializeStringFunc(m.setLocation),
+		locationRPVariableKey: internalSerialization.DeserializeObjectValueFunc[RPVariable](CreateRPVariableFromDiscriminatorValue, m.setLocationRPVariable),
 	}
 }
 

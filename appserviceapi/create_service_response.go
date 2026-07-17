@@ -31,21 +31,21 @@ func (m *FindServiceResult) Serialize(writer serialization.SerializationWriter) 
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(numberKey)(m.GetNumber),
-		internalSerialization.SerializeStringFunc(environmentKey)(m.GetEnvironment),
-		internalSerialization.SerializeStringFunc(versionKey)(m.GetVersion),
+		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
+		internalSerialization.SerializeStringFunc(numberKey, m.GetNumber),
+		internalSerialization.SerializeStringFunc(environmentKey, m.GetEnvironment),
+		internalSerialization.SerializeStringFunc(versionKey, m.GetVersion),
 	)
 }
 
 func (m *FindServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:       internalSerialization.DeserializeStringFunc()(m.setSysId),
-		nameKey:        internalSerialization.DeserializeStringFunc()(m.setName),
-		numberKey:      internalSerialization.DeserializeStringFunc()(m.setNumber),
-		environmentKey: internalSerialization.DeserializeStringFunc()(m.setEnvironment),
-		versionKey:     internalSerialization.DeserializeStringFunc()(m.setVersion),
+		sysIdKey:       internalSerialization.DeserializeStringFunc(m.setSysId),
+		nameKey:        internalSerialization.DeserializeStringFunc(m.setName),
+		numberKey:      internalSerialization.DeserializeStringFunc(m.setNumber),
+		environmentKey: internalSerialization.DeserializeStringFunc(m.setEnvironment),
+		versionKey:     internalSerialization.DeserializeStringFunc(m.setVersion),
 	}
 }
 

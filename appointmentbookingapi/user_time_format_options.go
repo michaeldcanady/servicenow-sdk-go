@@ -41,17 +41,17 @@ func (m *UserTimeFormatOptionsModel) Serialize(writer serialization.Serializatio
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(hourKey)(m.GetHour),
-		internalSerialization.SerializeStringFunc(hourCycleKey)(m.GetHourCycle),
-		internalSerialization.SerializeStringFunc(minuteKey)(m.GetMinute),
+		internalSerialization.SerializeStringFunc(hourKey, m.GetHour),
+		internalSerialization.SerializeStringFunc(hourCycleKey, m.GetHourCycle),
+		internalSerialization.SerializeStringFunc(minuteKey, m.GetMinute),
 	)
 }
 
 func (m *UserTimeFormatOptionsModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		hourKey:      internalSerialization.DeserializeStringFunc()(m.setHour),
-		hourCycleKey: internalSerialization.DeserializeStringFunc()(m.setHourCycle),
-		minuteKey:    internalSerialization.DeserializeStringFunc()(m.setMinute),
+		hourKey:      internalSerialization.DeserializeStringFunc(m.setHour),
+		hourCycleKey: internalSerialization.DeserializeStringFunc(m.setHourCycle),
+		minuteKey:    internalSerialization.DeserializeStringFunc(m.setMinute),
 	}
 }
 

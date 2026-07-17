@@ -22,15 +22,15 @@ func (m *CreateServiceRequest) Serialize(writer serialization.SerializationWrite
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(commentsKey)(m.GetComments),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
+		internalSerialization.SerializeStringFunc(commentsKey, m.GetComments),
 	)
 }
 
 func (m *CreateServiceRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		nameKey:     internalSerialization.DeserializeStringFunc()(m.setName),
-		commentsKey: internalSerialization.DeserializeStringFunc()(m.setComments),
+		nameKey:     internalSerialization.DeserializeStringFunc(m.setName),
+		commentsKey: internalSerialization.DeserializeStringFunc(m.setComments),
 	}
 }
 
@@ -68,17 +68,17 @@ func (m *CreateServiceResult) Serialize(writer serialization.SerializationWriter
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(commentsKey)(m.GetComments),
+		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
+		internalSerialization.SerializeStringFunc(commentsKey, m.GetComments),
 	)
 }
 
 func (m *CreateServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:    internalSerialization.DeserializeStringFunc()(m.setSysId),
-		nameKey:     internalSerialization.DeserializeStringFunc()(m.setName),
-		commentsKey: internalSerialization.DeserializeStringFunc()(m.setComments),
+		sysIdKey:    internalSerialization.DeserializeStringFunc(m.setSysId),
+		nameKey:     internalSerialization.DeserializeStringFunc(m.setName),
+		commentsKey: internalSerialization.DeserializeStringFunc(m.setComments),
 	}
 }
 

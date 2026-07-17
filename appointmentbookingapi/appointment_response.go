@@ -50,19 +50,19 @@ func (m *AppointmentResultModel) Serialize(writer serialization.SerializationWri
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(dataKey)(m.GetData),
-		internalSerialization.SerializeStringFunc(messageKey)(m.GetMessage),
-		internalSerialization.SerializeStringFunc(reasonKey)(m.GetReason),
-		internalSerialization.SerializeBoolFunc(successKey)(m.GetSuccess),
+		internalSerialization.SerializeStringFunc(dataKey, m.GetData),
+		internalSerialization.SerializeStringFunc(messageKey, m.GetMessage),
+		internalSerialization.SerializeStringFunc(reasonKey, m.GetReason),
+		internalSerialization.SerializeBoolFunc(successKey, m.GetSuccess),
 	)
 }
 
 func (m *AppointmentResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		dataKey:    internalSerialization.DeserializeStringFunc()(m.setData),
-		messageKey: internalSerialization.DeserializeStringFunc()(m.setMessage),
-		reasonKey:  internalSerialization.DeserializeStringFunc()(m.setReason),
-		successKey: internalSerialization.DeserializeBoolFunc()(m.setSuccess),
+		dataKey:    internalSerialization.DeserializeStringFunc(m.setData),
+		messageKey: internalSerialization.DeserializeStringFunc(m.setMessage),
+		reasonKey:  internalSerialization.DeserializeStringFunc(m.setReason),
+		successKey: internalSerialization.DeserializeBoolFunc(m.setSuccess),
 	}
 }
 

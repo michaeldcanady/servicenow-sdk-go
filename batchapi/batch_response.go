@@ -54,9 +54,9 @@ func (bR *BatchResponseModel) Serialize(writer serialization.SerializationWriter
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(batchRequestIDKey)(bR.GetBatchRequestID),
-		internalSerialization.SerializeCollectionOfObjectValuesFunc[ServicedRequest](servicedRequestsKey)(bR.GetServicedRequests),
-		internalSerialization.SerializeCollectionOfStringValuesFunc(unservicedRequestsKey)(bR.GetUnservicedRequests),
+		internalSerialization.SerializeStringFunc(batchRequestIDKey, bR.GetBatchRequestID),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[ServicedRequest](servicedRequestsKey, bR.GetServicedRequests),
+		internalSerialization.SerializeCollectionOfStringValuesFunc(unservicedRequestsKey, bR.GetUnservicedRequests),
 	)
 }
 
@@ -67,7 +67,7 @@ func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serializat
 	}
 
 	return map[string]func(serialization.ParseNode) error{
-		batchRequestIDKey: internalSerialization.DeserializeStringFunc()(bR.setBatchRequestID),
+		batchRequestIDKey: internalSerialization.DeserializeStringFunc(bR.setBatchRequestID),
 		servicedRequestsKey: func(pn serialization.ParseNode) error {
 			val, err := pn.GetCollectionOfObjectValues(CreateServicedRequestFromDiscriminatorValue)
 			if err != nil {

@@ -46,7 +46,7 @@ func CreateStatsResultFromDiscriminatorValue(_ serialization.ParseNode) (seriali
 // GetFieldDeserializers implements serialization.Parsable.
 func (m *StatsResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		statsResultStatsKey: internalSerialization.DeserializeObjectValueFunc[*StatsModel](CreateStatsFromDiscriminatorValue)(
+		statsResultStatsKey: internalSerialization.DeserializeObjectValueFunc[*StatsModel](CreateStatsFromDiscriminatorValue,
 			func(val *StatsModel) error { return m.setStats(val) }),
 	}
 }
@@ -58,7 +58,7 @@ func (m *StatsResultModel) Serialize(writer serialization.SerializationWriter) e
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeObjectValueFunc[Stats](statsResultStatsKey)(m.GetStats),
+		internalSerialization.SerializeObjectValueFunc[Stats](statsResultStatsKey, m.GetStats),
 	)
 }
 

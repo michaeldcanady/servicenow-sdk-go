@@ -24,18 +24,18 @@ func (m *UploadStatusResult) Serialize(writer serialization.SerializationWriter)
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(typeKey)(m.GetType),
-		internalSerialization.SerializeStringFunc(stateKey)(m.GetState),
-		internalSerialization.SerializeObjectValueFunc[*UploadStatusOutput](outputKey)(m.GetOutput),
+		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
+		internalSerialization.SerializeStringFunc(stateKey, m.GetState),
+		internalSerialization.SerializeObjectValueFunc[*UploadStatusOutput](outputKey, m.GetOutput),
 	)
 }
 
 // GetFieldDeserializers the deserialization information for the current model.
 func (m *UploadStatusResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		typeKey:   internalSerialization.DeserializeStringFunc()(m.setType),
-		stateKey:  internalSerialization.DeserializeStringFunc()(m.setState),
-		outputKey: internalSerialization.DeserializeObjectValueFunc[*UploadStatusOutput](CreateUploadStatusOutputFromDiscriminatorValue)(m.setOutput),
+		typeKey:   internalSerialization.DeserializeStringFunc(m.setType),
+		stateKey:  internalSerialization.DeserializeStringFunc(m.setState),
+		outputKey: internalSerialization.DeserializeObjectValueFunc[*UploadStatusOutput](CreateUploadStatusOutputFromDiscriminatorValue, m.setOutput),
 	}
 }
 

@@ -22,15 +22,15 @@ func (m *Reference) Serialize(writer serialization.SerializationWriter) error {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(linkKey)(m.GetLink),
-		internalSerialization.SerializeStringFunc(valueKey)(m.GetValue),
+		internalSerialization.SerializeStringFunc(linkKey, m.GetLink),
+		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
 	)
 }
 
 func (m *Reference) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		linkKey:  internalSerialization.DeserializeStringFunc()(m.setLink),
-		valueKey: internalSerialization.DeserializeStringFunc()(m.setValue),
+		linkKey:  internalSerialization.DeserializeStringFunc(m.setLink),
+		valueKey: internalSerialization.DeserializeStringFunc(m.setValue),
 	}
 }
 

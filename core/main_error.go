@@ -45,18 +45,18 @@ func (exc *MainError) Serialize(writer serialization.SerializationWriter) error 
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(detailKey)(exc.GetDetail),
-		internalSerialization.SerializeStringFunc(messageKey)(exc.GetMessage),
-		internalSerialization.SerializeStringFunc(statusKey)(exc.GetStatus),
+		internalSerialization.SerializeStringFunc(detailKey, exc.GetDetail),
+		internalSerialization.SerializeStringFunc(messageKey, exc.GetMessage),
+		internalSerialization.SerializeStringFunc(statusKey, exc.GetStatus),
 	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (exc *MainError) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		detailKey:  internalSerialization.DeserializeStringFunc()(exc.SetDetail),
-		messageKey: internalSerialization.DeserializeStringFunc()(exc.SetMessage),
-		statusKey:  internalSerialization.DeserializeStringFunc()(exc.SetStatus),
+		detailKey:  internalSerialization.DeserializeStringFunc(exc.SetDetail),
+		messageKey: internalSerialization.DeserializeStringFunc(exc.SetMessage),
+		statusKey:  internalSerialization.DeserializeStringFunc(exc.SetStatus),
 	}
 }
 

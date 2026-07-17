@@ -54,14 +54,14 @@ func (sR *ServicedRequestModel) Serialize(writer serialization.SerializationWrit
 			}
 			encodedBody := base64.StdEncoding.EncodeToString(body)
 			return &encodedBody, nil
-		})(sR.GetBody),
-		internalSerialization.SerializeStringFunc(errorMessageKey)(sR.GetErrorMessage),
-		internalSerialization.SerializeISODurationFunc(executionTimeKey)(sR.GetExecutionTime),
-		internalSerialization.SerializeCollectionOfObjectValuesFunc[RestRequestHeader](headersKey)(sR.GetHeaders),
-		internalSerialization.SerializeStringFunc(idKey)(sR.GetID),
-		internalSerialization.SerializeStringFunc(redirectURLKey)(sR.GetRedirectURL),
-		internalSerialization.SerializeInt64Func(statusCodeKey)(sR.GetStatusCode),
-		internalSerialization.SerializeStringFunc(statusTextKey)(sR.GetStatusText),
+		}, sR.GetBody),
+		internalSerialization.SerializeStringFunc(errorMessageKey, sR.GetErrorMessage),
+		internalSerialization.SerializeISODurationFunc(executionTimeKey, sR.GetExecutionTime),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[RestRequestHeader](headersKey, sR.GetHeaders),
+		internalSerialization.SerializeStringFunc(idKey, sR.GetID),
+		internalSerialization.SerializeStringFunc(redirectURLKey, sR.GetRedirectURL),
+		internalSerialization.SerializeInt64Func(statusCodeKey, sR.GetStatusCode),
+		internalSerialization.SerializeStringFunc(statusTextKey, sR.GetStatusText),
 	)
 }
 
@@ -77,8 +77,8 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 				return nil, nil
 			}
 			return base64.StdEncoding.DecodeString(*s)
-		})(sR.setBody),
-		errorMessageKey: internalSerialization.DeserializeStringFunc()(sR.setErrorMessage),
+		}, sR.setBody),
+		errorMessageKey: internalSerialization.DeserializeStringFunc(sR.setErrorMessage),
 		executionTimeKey: func(pn serialization.ParseNode) error {
 			// ServiceNow returns execution_time as a number (milliseconds)
 			// GetISODurationValue fails if it's a number in the JSON tree.
@@ -97,9 +97,9 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 
 			return sR.setExecutionTime(duration)
 		},
-		headersKey:     internalSerialization.DeserializeCollectionOfObjectValuesFunc[RestRequestHeader](CreateRestRequestHeaderFromDiscriminatorValue)(sR.setHeaders),
-		idKey:          internalSerialization.DeserializeStringFunc()(sR.setID),
-		redirectURLKey: internalSerialization.DeserializeStringFunc()(sR.setRedirectURL),
+		headersKey:     internalSerialization.DeserializeCollectionOfObjectValuesFunc[RestRequestHeader](CreateRestRequestHeaderFromDiscriminatorValue, sR.setHeaders),
+		idKey:          internalSerialization.DeserializeStringFunc(sR.setID),
+		redirectURLKey: internalSerialization.DeserializeStringFunc(sR.setRedirectURL),
 		statusCodeKey: func(pn serialization.ParseNode) error {
 			// ServiceNow sometimes returns status_code as a number that gets parsed as float64
 			// GetInt64Value fails if it's a float64 in the JSON tree.
@@ -115,7 +115,7 @@ func (sR *ServicedRequestModel) GetFieldDeserializers() map[string]func(serializ
 
 			return nil
 		},
-		statusTextKey: internalSerialization.DeserializeStringFunc()(sR.setStatusText),
+		statusTextKey: internalSerialization.DeserializeStringFunc(sR.setStatusText),
 	}
 }
 

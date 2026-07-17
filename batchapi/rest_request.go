@@ -105,10 +105,10 @@ func (rE *RestRequestModel) Serialize(writer serialization.SerializationWriter) 
 		internalSerialization.SerializeMutatedStringFunc(bodyKey, func(body []byte) (*string, error) {
 			encodedBody := base64.StdEncoding.EncodeToString(body)
 			return &encodedBody, nil
-		})(rE.GetBody),
-		internalSerialization.SerializeBoolFunc(excludeResponseHeadersKey)(rE.GetExcludeResponseHeaders),
-		internalSerialization.SerializeCollectionOfObjectValuesFunc[RestRequestHeader](headersKey)(rE.GetHeaders),
-		internalSerialization.SerializeStringFunc(idKey)(func() (*string, error) {
+		}, rE.GetBody),
+		internalSerialization.SerializeBoolFunc(excludeResponseHeadersKey, rE.GetExcludeResponseHeaders),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[RestRequestHeader](headersKey, rE.GetHeaders),
+		internalSerialization.SerializeStringFunc(idKey, func() (*string, error) {
 			id, err := rE.GetID()
 			if err != nil {
 				return nil, err
@@ -128,8 +128,8 @@ func (rE *RestRequestModel) Serialize(writer serialization.SerializationWriter) 
 			}
 			strMethod := method.String()
 			return &strMethod, nil
-		})(rE.GetMethod),
-		internalSerialization.SerializeStringFunc(urlKey)(rE.GetURL),
+		}, rE.GetMethod),
+		internalSerialization.SerializeStringFunc(urlKey, rE.GetURL),
 	)
 }
 
@@ -145,18 +145,18 @@ func (rE *RestRequestModel) GetFieldDeserializers() map[string]func(serializatio
 				return nil, nil
 			}
 			return base64.StdEncoding.DecodeString(*s)
-		})(rE.SetBody),
-		excludeResponseHeadersKey: internalSerialization.DeserializeBoolFunc()(rE.SetExcludeResponseHeaders),
-		headersKey:                internalSerialization.DeserializeCollectionOfObjectValuesFunc[RestRequestHeader](CreateRestRequestHeaderFromDiscriminatorValue)(rE.SetHeaders),
-		idKey:                     internalSerialization.DeserializeStringFunc()(rE.SetID),
+		}, rE.SetBody),
+		excludeResponseHeadersKey: internalSerialization.DeserializeBoolFunc(rE.SetExcludeResponseHeaders),
+		headersKey:                internalSerialization.DeserializeCollectionOfObjectValuesFunc[RestRequestHeader](CreateRestRequestHeaderFromDiscriminatorValue, rE.SetHeaders),
+		idKey:                     internalSerialization.DeserializeStringFunc(rE.SetID),
 		methodKey: internalSerialization.DeserializeMutatedStringFunc(func(s *string) (*abstractions.HttpMethod, error) {
 			if s == nil {
 				return nil, nil
 			}
 			m, err := parseHttpMethod(*s)
 			return &m, err
-		})(rE.SetMethod),
-		urlKey: internalSerialization.DeserializeStringFunc()(rE.SetURL),
+		}, rE.SetMethod),
+		urlKey: internalSerialization.DeserializeStringFunc(rE.SetURL),
 	}
 }
 

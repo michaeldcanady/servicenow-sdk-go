@@ -39,17 +39,17 @@ func (m *ExecuteRuleConditionsRequestModel) Serialize(writer serialization.Seria
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(catalogIDKey)(m.GetCatalogId),
-		internalSerialization.SerializeAnyFunc(otherInputsKey)(m.GetOtherInputs),
-		internalSerialization.SerializeStringFunc(taskIDKey)(m.GetTaskId),
+		internalSerialization.SerializeStringFunc(catalogIDKey, m.GetCatalogId),
+		internalSerialization.SerializeAnyFunc(otherInputsKey, m.GetOtherInputs),
+		internalSerialization.SerializeStringFunc(taskIDKey, m.GetTaskId),
 	)
 }
 
 func (m *ExecuteRuleConditionsRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		catalogIDKey:   internalSerialization.DeserializeStringFunc()(m.setCatalogId),
-		otherInputsKey: internalSerialization.DeserializeAnyFunc()(m.setOtherInputs),
-		taskIDKey:      internalSerialization.DeserializeStringFunc()(m.setTaskId),
+		catalogIDKey:   internalSerialization.DeserializeStringFunc(m.setCatalogId),
+		otherInputsKey: internalSerialization.DeserializeAnyFunc(m.setOtherInputs),
+		taskIDKey:      internalSerialization.DeserializeStringFunc(m.setTaskId),
 	}
 }
 

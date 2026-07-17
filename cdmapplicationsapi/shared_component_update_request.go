@@ -22,17 +22,17 @@ func (m *SharedComponentUpdateRequest) Serialize(writer serialization.Serializat
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(appNameKey)(m.GetAppName),
-		internalSerialization.SerializeStringFunc(sharedComponentNameKey)(m.GetSharedComponentName),
-		internalSerialization.SerializeStringFunc(dataKey)(m.GetData),
+		internalSerialization.SerializeStringFunc(appNameKey, m.GetAppName),
+		internalSerialization.SerializeStringFunc(sharedComponentNameKey, m.GetSharedComponentName),
+		internalSerialization.SerializeStringFunc(dataKey, m.GetData),
 	)
 }
 
 func (m *SharedComponentUpdateRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		appNameKey:             internalSerialization.DeserializeStringFunc()(m.setAppName),
-		sharedComponentNameKey: internalSerialization.DeserializeStringFunc()(m.setSharedComponentName),
-		dataKey:                internalSerialization.DeserializeStringFunc()(m.setData),
+		appNameKey:             internalSerialization.DeserializeStringFunc(m.setAppName),
+		sharedComponentNameKey: internalSerialization.DeserializeStringFunc(m.setSharedComponentName),
+		dataKey:                internalSerialization.DeserializeStringFunc(m.setData),
 	}
 }
 

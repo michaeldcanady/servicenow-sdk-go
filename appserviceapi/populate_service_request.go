@@ -22,13 +22,13 @@ func (m *PopulateServiceRequest) Serialize(writer serialization.SerializationWri
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeCollectionOfObjectValuesFunc[*ServiceRelation](serviceRelationsKey)(m.GetServiceRelations),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[*ServiceRelation](serviceRelationsKey, m.GetServiceRelations),
 	)
 }
 
 func (m *PopulateServiceRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		serviceRelationsKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc[*ServiceRelation](CreateServiceRelationFromDiscriminatorValue)(m.setServiceRelations),
+		serviceRelationsKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc[*ServiceRelation](CreateServiceRelationFromDiscriminatorValue, m.setServiceRelations),
 	}
 }
 
@@ -58,15 +58,15 @@ func (m *PopulateServiceResult) Serialize(writer serialization.SerializationWrit
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(statusKey)(m.GetStatus),
-		internalSerialization.SerializeStringFunc(messageKey)(m.GetMessage),
+		internalSerialization.SerializeStringFunc(statusKey, m.GetStatus),
+		internalSerialization.SerializeStringFunc(messageKey, m.GetMessage),
 	)
 }
 
 func (m *PopulateServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		statusKey:  internalSerialization.DeserializeStringFunc()(m.setStatus),
-		messageKey: internalSerialization.DeserializeStringFunc()(m.setMessage),
+		statusKey:  internalSerialization.DeserializeStringFunc(m.setStatus),
+		messageKey: internalSerialization.DeserializeStringFunc(m.setMessage),
 	}
 }
 

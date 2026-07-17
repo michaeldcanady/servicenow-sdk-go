@@ -22,17 +22,17 @@ func (m *DeployableUpdateRequest) Serialize(writer serialization.SerializationWr
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(appNameKey)(m.GetAppName),
-		internalSerialization.SerializeStringFunc(deployableNameKey)(m.GetDeployableName),
-		internalSerialization.SerializeStringFunc(dataKey)(m.GetData),
+		internalSerialization.SerializeStringFunc(appNameKey, m.GetAppName),
+		internalSerialization.SerializeStringFunc(deployableNameKey, m.GetDeployableName),
+		internalSerialization.SerializeStringFunc(dataKey, m.GetData),
 	)
 }
 
 func (m *DeployableUpdateRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		appNameKey:        internalSerialization.DeserializeStringFunc()(m.setAppName),
-		deployableNameKey: internalSerialization.DeserializeStringFunc()(m.setDeployableName),
-		dataKey:           internalSerialization.DeserializeStringFunc()(m.setData),
+		appNameKey:        internalSerialization.DeserializeStringFunc(m.setAppName),
+		deployableNameKey: internalSerialization.DeserializeStringFunc(m.setDeployableName),
+		dataKey:           internalSerialization.DeserializeStringFunc(m.setData),
 	}
 }
 

@@ -22,21 +22,21 @@ func (m *ExportResult) Serialize(writer serialization.SerializationWriter) error
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey)(m.GetSysId),
-		internalSerialization.SerializeStringFunc(nameKey)(m.GetName),
-		internalSerialization.SerializeStringFunc(stateKey)(m.GetState),
-		internalSerialization.SerializeStringFunc(statusKey)(m.GetStatus),
-		internalSerialization.SerializeStringFunc(messageKey)(m.GetMessage),
+		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
+		internalSerialization.SerializeStringFunc(stateKey, m.GetState),
+		internalSerialization.SerializeStringFunc(statusKey, m.GetStatus),
+		internalSerialization.SerializeStringFunc(messageKey, m.GetMessage),
 	)
 }
 
 func (m *ExportResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:   internalSerialization.DeserializeStringFunc()(m.setSysId),
-		nameKey:    internalSerialization.DeserializeStringFunc()(m.setName),
-		stateKey:   internalSerialization.DeserializeStringFunc()(m.setState),
-		statusKey:  internalSerialization.DeserializeStringFunc()(m.setStatus),
-		messageKey: internalSerialization.DeserializeStringFunc()(m.setMessage),
+		sysIdKey:   internalSerialization.DeserializeStringFunc(m.setSysId),
+		nameKey:    internalSerialization.DeserializeStringFunc(m.setName),
+		stateKey:   internalSerialization.DeserializeStringFunc(m.setState),
+		statusKey:  internalSerialization.DeserializeStringFunc(m.setStatus),
+		messageKey: internalSerialization.DeserializeStringFunc(m.setMessage),
 	}
 }
 

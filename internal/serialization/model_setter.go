@@ -14,10 +14,6 @@ type ModelAccessor[T any] func() (T, error)
 
 type WriterFunc func(serialization.SerializationWriter) error
 
-type SerializerFunc[T any] func(accessor ModelAccessor[T]) WriterFunc
-
-type DeserializerFunc[T any] func(setter ModelSetter[T]) serialization.NodeParser
-
 // pipeMutatedValue reads a T from get, converts it to S via mutator, and passes it to put.
 // It's the shared shape behind both SetMutatedValueFromSource (node -> model) and
 // WriteMutatedValueToSource (model -> writer): a get/mutate/put pipeline that only differs

@@ -22,29 +22,29 @@ func (m *ChangesetActivityResult) Serialize(writer serialization.SerializationWr
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeObjectValueFunc[*Reference](changesetIdKey)(m.GetChangesetId),
-		internalSerialization.SerializeBoolFunc(conflictKey)(m.GetConflict),
-		internalSerialization.SerializeStringFunc(namePathKey)(m.GetNamePath),
-		internalSerialization.SerializeStringFunc(newNameKey)(m.GetNewName),
-		internalSerialization.SerializeStringFunc(oldNameKey)(m.GetOldName),
-		internalSerialization.SerializeStringFunc(newValueKey)(m.GetNewValue),
-		internalSerialization.SerializeStringFunc(oldValueKey)(m.GetOldValue),
-		internalSerialization.SerializeStringFunc(typeKey)(m.GetType),
-		internalSerialization.SerializeBoolFunc(secureKey)(m.GetSecure),
+		internalSerialization.SerializeObjectValueFunc[*Reference](changesetIdKey, m.GetChangesetId),
+		internalSerialization.SerializeBoolFunc(conflictKey, m.GetConflict),
+		internalSerialization.SerializeStringFunc(namePathKey, m.GetNamePath),
+		internalSerialization.SerializeStringFunc(newNameKey, m.GetNewName),
+		internalSerialization.SerializeStringFunc(oldNameKey, m.GetOldName),
+		internalSerialization.SerializeStringFunc(newValueKey, m.GetNewValue),
+		internalSerialization.SerializeStringFunc(oldValueKey, m.GetOldValue),
+		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
+		internalSerialization.SerializeBoolFunc(secureKey, m.GetSecure),
 	)
 }
 
 func (m *ChangesetActivityResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		changesetIdKey: internalSerialization.DeserializeObjectValueFunc[*Reference](CreateReferenceFromDiscriminatorValue)(m.setChangesetId),
-		conflictKey:    internalSerialization.DeserializeBoolFunc()(m.setConflict),
-		namePathKey:    internalSerialization.DeserializeStringFunc()(m.setNamePath),
-		newNameKey:     internalSerialization.DeserializeStringFunc()(m.setNewName),
-		oldNameKey:     internalSerialization.DeserializeStringFunc()(m.setOldName),
-		newValueKey:    internalSerialization.DeserializeStringFunc()(m.setNewValue),
-		oldValueKey:    internalSerialization.DeserializeStringFunc()(m.setOldValue),
-		typeKey:        internalSerialization.DeserializeStringFunc()(m.setType),
-		secureKey:      internalSerialization.DeserializeBoolFunc()(m.setSecure),
+		changesetIdKey: internalSerialization.DeserializeObjectValueFunc[*Reference](CreateReferenceFromDiscriminatorValue, m.setChangesetId),
+		conflictKey:    internalSerialization.DeserializeBoolFunc(m.setConflict),
+		namePathKey:    internalSerialization.DeserializeStringFunc(m.setNamePath),
+		newNameKey:     internalSerialization.DeserializeStringFunc(m.setNewName),
+		oldNameKey:     internalSerialization.DeserializeStringFunc(m.setOldName),
+		newValueKey:    internalSerialization.DeserializeStringFunc(m.setNewValue),
+		oldValueKey:    internalSerialization.DeserializeStringFunc(m.setOldValue),
+		typeKey:        internalSerialization.DeserializeStringFunc(m.setType),
+		secureKey:      internalSerialization.DeserializeBoolFunc(m.setSecure),
 	}
 }
 

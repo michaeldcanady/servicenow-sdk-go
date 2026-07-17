@@ -39,15 +39,15 @@ func (m *UserTimeFormatModel) Serialize(writer serialization.SerializationWriter
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(typeKey)(m.GetType),
-		internalSerialization.SerializeStringFunc(valueKey)(m.GetValue),
+		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
+		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
 	)
 }
 
 func (m *UserTimeFormatModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		typeKey:  internalSerialization.DeserializeStringFunc()(m.setType),
-		valueKey: internalSerialization.DeserializeStringFunc()(m.setValue),
+		typeKey:  internalSerialization.DeserializeStringFunc(m.setType),
+		valueKey: internalSerialization.DeserializeStringFunc(m.setValue),
 	}
 }
 
