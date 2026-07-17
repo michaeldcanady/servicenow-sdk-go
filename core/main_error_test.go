@@ -81,7 +81,7 @@ func TestMainError_Accessors(t *testing.T) {
 			setter:   func(m *MainError, v *string) error { return m.SetDetail(v) },
 			getter:   func(m *MainError) (*string, error) { return m.GetDetail() },
 			expected: nil,
-			wantErr:  false,
+			wantErr:  true,
 		},
 		{
 			name:     "Message Success",
@@ -97,7 +97,7 @@ func TestMainError_Accessors(t *testing.T) {
 			setter:   func(m *MainError, v *string) error { return m.SetMessage(v) },
 			getter:   func(m *MainError) (*string, error) { return m.GetMessage() },
 			expected: nil,
-			wantErr:  false,
+			wantErr:  true,
 		},
 		{
 			name:     "Status Success",
@@ -113,7 +113,7 @@ func TestMainError_Accessors(t *testing.T) {
 			setter:   func(m *MainError, v *string) error { return m.SetStatus(v) },
 			getter:   func(m *MainError) (*string, error) { return m.GetStatus() },
 			expected: nil,
-			wantErr:  false,
+			wantErr:  true,
 		},
 	}
 
@@ -142,12 +142,12 @@ func TestMainError_ErrorBranches(t *testing.T) {
 		fn      func() error
 		wantErr string
 	}{
-		{"GetDetail Nil BS", func() error { _, err := mNilBS.GetDetail(); return err }, "backingStore is nil"},
-		{"setDetail Nil BS", func() error { return mNilBS.SetDetail(nil) }, "backingStore is nil"},
-		{"GetMessage Nil BS", func() error { _, err := mNilBS.GetMessage(); return err }, "backingStore is nil"},
-		{"setMessage Nil BS", func() error { return mNilBS.SetMessage(nil) }, "backingStore is nil"},
-		{"GetStatus Nil BS", func() error { _, err := mNilBS.GetStatus(); return err }, "backingStore is nil"},
-		{"setStatus Nil BS", func() error { return mNilBS.SetStatus(nil) }, "backingStore is nil"},
+		{"GetDetail Nil BS", func() error { _, err := mNilBS.GetDetail(); return err }, "store is nil"},
+		{"setDetail Nil BS", func() error { return mNilBS.SetDetail(nil) }, "store is nil"},
+		{"GetMessage Nil BS", func() error { _, err := mNilBS.GetMessage(); return err }, "store is nil"},
+		{"setMessage Nil BS", func() error { return mNilBS.SetMessage(nil) }, "store is nil"},
+		{"GetStatus Nil BS", func() error { _, err := mNilBS.GetStatus(); return err }, "store is nil"},
+		{"setStatus Nil BS", func() error { return mNilBS.SetStatus(nil) }, "store is nil"},
 	}
 
 	for _, tt := range tests {

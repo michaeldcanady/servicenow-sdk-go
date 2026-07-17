@@ -48,7 +48,7 @@ func TestFileWithContentModel_GetContent(t *testing.T) {
 		err      bool
 	}{
 		{"Ok", m, data, false},
-		{"NilM", nilM, nil, false},
+		{"NilM", nilM, nil, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -74,7 +74,7 @@ func TestFileWithContentModel_SetContent(t *testing.T) {
 		err   bool
 	}{
 		{"Ok", m, false},
-		{"NilM", nilM, false},
+		{"NilM", nilM, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -94,10 +94,10 @@ func TestFileWithContentModel_ErrorBranches(t *testing.T) {
 	}
 
 	mNilBS := &FileWithContent{file: &mockNilBSFile{}}
-	if _, err := mNilBS.GetContent(); err == nil || err.Error() != "backingStore is nil" {
+	if _, err := mNilBS.GetContent(); err == nil || err.Error() != "store is nil" {
 		t.Errorf("expected BS nil error in Get, got %v", err)
 	}
-	if err := mNilBS.SetContent(nil); err == nil || err.Error() != "backingStore is nil" {
+	if err := mNilBS.SetContent(nil); err == nil || err.Error() != "store is nil" {
 		t.Errorf("expected BS nil error in Set, got %v", err)
 	}
 }

@@ -53,7 +53,7 @@ func TestServiceNowError_GetError(t *testing.T) {
 		err      bool
 	}{
 		{"Ok", e, me, false},
-		{"NilE", nilE, nil, false},
+		{"NilE", nilE, nil, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -80,7 +80,7 @@ func TestServiceNowError_setError(t *testing.T) {
 		err   bool
 	}{
 		{"Ok", e, me, false},
-		{"NilE", nilE, me, false},
+		{"NilE", nilE, me, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -103,5 +103,5 @@ func TestServiceNowError_ErrorBranches(t *testing.T) {
 	eNilBS := &ServiceNowError{BackedModel: &mockNilBSModel{}}
 	val, err = eNilBS.GetError()
 	assert.Nil(t, val)
-	assert.Equal(t, errors.New("backingStore is nil"), err)
+	assert.Equal(t, errors.New("store is nil"), err)
 }
