@@ -3,6 +3,7 @@ package policyapi
 import (
 	"fmt"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
@@ -27,11 +28,7 @@ var stateStrings = map[State]string{
 }
 
 func (i State) String() string {
-	str, ok := stateStrings[i]
-	if !ok {
-		return StateUnknown.String()
-	}
-	return str
+	return conversion.EnumString(stateStrings, i, stateUnknown)
 }
 
 var _ serialization.EnumFactory = ParseState

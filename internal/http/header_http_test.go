@@ -20,7 +20,7 @@ func TestHTTPHeader(t *testing.T) {
 		{
 			name: "HTTPHeaderContentType",
 			test: func(t *testing.T) {
-				assert.Equal(t, "content-type", HTTPHeaderContentType.String())
+				assert.Equal(t, "Content-Type", HTTPHeaderContentType.String())
 			},
 		},
 		{

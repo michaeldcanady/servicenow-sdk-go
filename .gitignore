@@ -27,6 +27,7 @@ go.work.sum
 # Claude Code personal/local settings (may contain secrets)
 .claude/settings.local.json
 .claude/.*.redacted
+.claude/hooks/__pycache__/
 
 # Editor/IDE
 .vscode/*

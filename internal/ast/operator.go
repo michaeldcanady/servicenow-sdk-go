@@ -1,5 +1,7 @@
 package ast
 
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+
 //https://www.servicenow.com/docs/bundle/vancouver-platform-user-interface/page/use/common-ui-elements/reference/r_OpAvailableFiltersQueries.html
 
 // Operators for conditions
@@ -106,9 +108,5 @@ var operatorStrings = map[Operator]string{
 }
 
 func (o Operator) String() string {
-	str, ok := operatorStrings[o]
-	if !ok {
-		return OperatorUnknown.String()
-	}
-	return str
+	return conversion.EnumString(operatorStrings, o, operatorStrings[OperatorUnknown])
 }

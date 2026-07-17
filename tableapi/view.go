@@ -1,5 +1,7 @@
 package tableapi
 
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+
 const (
 	viewUnknown = "unknown"
 	viewDesktop = "desktop"
@@ -30,9 +32,5 @@ var viewStrings = map[View]string{
 
 // String returns the string representation of the View.
 func (e View) String() string {
-	str, ok := viewStrings[e]
-	if !ok {
-		return ViewUnknown.String()
-	}
-	return str
+	return conversion.EnumString(viewStrings, e, viewUnknown)
 }

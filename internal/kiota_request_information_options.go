@@ -50,7 +50,7 @@ func WithPathParameters(pathParameters map[string]string) KiotaRequestInformatio
 			return snerrors.ErrNilPathParameters
 		}
 		if len(pathParameters) == 0 {
-			return errors.New("pathParameters is empty")
+			return snerrors.ErrEmptyPathParameters
 		}
 		requestInformation.PathParameters = pathParameters
 		return nil

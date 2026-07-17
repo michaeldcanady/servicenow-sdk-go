@@ -130,3 +130,31 @@ func TestCreateAvailabilitySlotFromDiscriminatorValue(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
+
+func TestAvailabilitySlotModel_GetAdditionalData_Empty(t *testing.T) {
+	model := NewAvailabilitySlot()
+
+	got := model.GetAdditionalData()
+
+	assert.Equal(t, map[string]interface{}{}, got)
+}
+
+func TestAvailabilitySlotModel_GetSetAdditionalData(t *testing.T) {
+	model := NewAvailabilitySlot()
+	want := map[string]interface{}{"start": "09:00", "end": "10:00"}
+
+	model.SetAdditionalData(want)
+	got := model.GetAdditionalData()
+
+	assert.Equal(t, want, got)
+}
+
+func TestAvailabilitySlotModel_GetAdditionalData_DoesNotWriteBackOnEmptyRead(t *testing.T) {
+	model := NewAvailabilitySlot()
+
+	_ = model.GetAdditionalData()
+	val, err := model.GetBackingStore().Get(additionalDataKey)
+
+	assert.NoError(t, err)
+	assert.Nil(t, val)
+}

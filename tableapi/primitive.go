@@ -1,5 +1,7 @@
 package tableapi
 
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+
 const (
 	primitiveUnknown  = "unknown"
 	primitiveBool     = "bool"
@@ -62,11 +64,5 @@ var primitiveStrings = map[Primitive]string{
 
 // String return string representation
 func (p Primitive) String() string {
-	value, ok := primitiveStrings[p]
-
-	if !ok {
-		return PrimitiveUnknown.String()
-	}
-
-	return value
+	return conversion.EnumString(primitiveStrings, p, primitiveUnknown)
 }

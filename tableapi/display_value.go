@@ -1,5 +1,7 @@
 package tableapi
 
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+
 const (
 	displayValueUnknown = "unknown"
 	displayValueTrue    = "true"
@@ -30,9 +32,5 @@ var displayValueStrings = map[DisplayValue]string{
 
 // String returns the string representation of the DisplayValue.
 func (e DisplayValue) String() string {
-	str, ok := displayValueStrings[e]
-	if !ok {
-		return DisplayValueUnknown.String()
-	}
-	return str
+	return conversion.EnumString(displayValueStrings, e, displayValueUnknown)
 }

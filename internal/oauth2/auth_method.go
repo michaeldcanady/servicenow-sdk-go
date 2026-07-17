@@ -1,6 +1,8 @@
 // Package oauth2 provides a spec-compliant OAuth2 client for various grant types.
 package oauth2
 
+import "github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+
 // AuthMethod represents the method used by the client to authenticate with the authorization server.
 type AuthMethod int
 
@@ -24,9 +26,5 @@ var authMethodStrings = map[AuthMethod]string{
 
 // String returns the string representation of the AuthMethod.
 func (e AuthMethod) String() string {
-	str, ok := authMethodStrings[e]
-	if !ok {
-		return AuthMethodUnknown.String()
-	}
-	return str
+	return conversion.EnumString(authMethodStrings, e, authMethodStrings[AuthMethodUnknown])
 }

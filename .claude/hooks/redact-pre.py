@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
 import json, os, re, sys
 
-SECRET_PATTERNS = [
-    re.compile(r'(?i)\b[A-Z0-9]{20,}[_-]?[A-Z0-9]{10,}\b'),          # generic long tokens
-    re.compile(r'(?i)\b(?:api|secret|token|key|passwd|password)\s*[:=]\s*["\']?([^\s"\']+)'),
-    re.compile(r'(?i)sk-[a-z0-9]{20,}'),                              # common key prefix
-]
-
-REDACT = "★★★REDACTED★★★"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from redact_common import redact_text  # noqa: E402
 
 # Filenames whose content is never shown to Claude unredacted.
 SECRET_BEARING_FILENAMES = {
@@ -15,12 +10,6 @@ SECRET_BEARING_FILENAMES = {
 }
 
 REDACTED_MIRROR_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # .claude/
-
-
-def redact_text(s: str) -> str:
-    for pat in SECRET_PATTERNS:
-        s = pat.sub(REDACT, s)
-    return s
 
 
 def make_redacted_copy(src_path: str) -> str:

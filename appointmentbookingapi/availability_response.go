@@ -162,8 +162,7 @@ func (m *AvailabilitySlotModel) GetFieldDeserializers() map[string]func(serializ
 func (m *AvailabilitySlotModel) GetAdditionalData() map[string]interface{} {
 	val, err := store.DefaultBackedModelAccessorFunc[*AvailabilitySlotModel, map[string]interface{}](m, additionalDataKey)
 	if err != nil || val == nil {
-		val = make(map[string]interface{})
-		m.SetAdditionalData(val)
+		return make(map[string]interface{})
 	}
 	return val
 }

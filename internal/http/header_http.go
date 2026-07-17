@@ -9,7 +9,7 @@ const (
 
 var httpHeaderStrings = map[HTTPHeader]string{
 	HTTPHeaderUnknown:     "unknown",
-	HTTPHeaderContentType: "content-type",
+	HTTPHeaderContentType: "Content-Type",
 }
 
 func (hH HTTPHeader) String() string {

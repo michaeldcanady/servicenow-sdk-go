@@ -15,6 +15,7 @@ var (
 	ErrNilFactory              = errors.New("factory is nil")
 	ErrNilStore                = errors.New("store is nil")
 	ErrNilPathParameters       = errors.New("pathParameters is nil")
+	ErrEmptyPathParameters     = errors.New("pathParameters is empty")
 	ErrNilMutator              = errors.New("mutator is nil")
 	ErrNilModel                = errors.New("model is nil")
 	ErrEmptyMiddleware         = errors.New("middleware is empty")
