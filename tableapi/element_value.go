@@ -28,6 +28,10 @@ func CreateElementValueFromDiscriminatorValue(_ serialization.ParseNode) (serial
 
 // Serialize writes the objects properties to the current writer.
 func (eV *ElementValue) Serialize(writer serialization.SerializationWriter) error {
+	if conversion.IsNil(eV) {
+		return nil
+	}
+
 	return errors.New("Serialize is not supported")
 }
 
