@@ -64,20 +64,95 @@ func TestNewAttachmentItemFileRequestBuilder(t *testing.T) {
 	}
 }
 
+type attachmentItemFileGetTestCase struct {
+	name                 string
+	nilBuilder           bool
+	requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration
+	nilRequestAdapter    bool
+	sendError            error
+	sendResponse         any
+	metadataHeaderValue  string
+	expectedErr          error
+	expectedErrorMessage string
+}
+
+// newAttachmentItemFileGetTestBuilder builds the *AttachmentItemFileRequestBuilder
+// described by tt, wiring up the mock request adapter's SendPrimitive call - including
+// injecting tt.metadataHeaderValue as a response header when present - needed for a Get call.
+func newAttachmentItemFileGetTestBuilder(tt attachmentItemFileGetTestCase) *AttachmentItemFileRequestBuilder {
+	if tt.nilBuilder {
+		return nil
+	}
+
+	mockRequestAdapter := mocking.NewMockRequestAdapter()
+	mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+	mockInternalRequestBuilder.On("GetURLTemplate").Return("")
+	mockInternalRequestBuilder.On("GetPathParameters").Return(map[string]string{})
+
+	if tt.nilRequestAdapter {
+		mockInternalRequestBuilder.On("GetRequestAdapter").Return((*mocking.MockRequestAdapter)(nil))
+		return &AttachmentItemFileRequestBuilder{mockInternalRequestBuilder}
+	}
+
+	mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+	mockRequestAdapter.On("SendPrimitive", mock.Anything, mock.Anything, "[]byte", mock.Anything).Return(tt.sendResponse, tt.sendError).Run(func(args mock.Arguments) {
+		if tt.metadataHeaderValue == "" {
+			return
+		}
+		requestInformation := args.Get(1).(*abstractions.RequestInformation)
+		for _, opt := range requestInformation.GetRequestOptions() {
+			typedOpt, ok := opt.(*nethttplibrary.HeadersInspectionOptions)
+			if !ok {
+				continue
+			}
+			respHeaders := abstractions.NewResponseHeaders()
+			respHeaders.Add(attachmentMetadataHeader, tt.metadataHeaderValue)
+			typedOpt.ResponseHeaders = respHeaders
+			break
+		}
+	})
+
+	return &AttachmentItemFileRequestBuilder{mockInternalRequestBuilder}
+}
+
+// assertAttachmentItemFileGetResult verifies the Get result described by tt.
+func assertAttachmentItemFileGetResult(t *testing.T, tt attachmentItemFileGetTestCase, mockContent []byte, result *FileWithContent, err error) {
+	t.Helper()
+
+	if tt.nilBuilder {
+		assert.Nil(t, result)
+		assert.NoError(t, err)
+		return
+	}
+
+	if tt.expectedErr != nil {
+		assert.Error(t, err)
+		assert.Equal(t, tt.expectedErr, err)
+		assert.Nil(t, result)
+		return
+	}
+
+	if tt.expectedErrorMessage != "" {
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), tt.expectedErrorMessage)
+		assert.Nil(t, result)
+		return
+	}
+
+	assert.NoError(t, err)
+	if tt.sendResponse == nil {
+		assert.Nil(t, result)
+		return
+	}
+	assert.NotNil(t, result)
+	content, _ := result.GetContent()
+	assert.Equal(t, mockContent, content)
+}
+
 func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 	mockContent := []byte("testing-content")
 
-	tests := []struct {
-		name                 string
-		nilBuilder           bool
-		requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration
-		nilRequestAdapter    bool
-		sendError            error
-		sendResponse         any
-		metadataHeaderValue  string
-		expectedErr          error
-		expectedErrorMessage string
-	}{
+	tests := []attachmentItemFileGetTestCase{
 		{
 			name:                 "Successful with metadata",
 			requestConfiguration: &AttachmentItemFileRequestBuilderGetRequestConfiguration{},
@@ -116,76 +191,78 @@ func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var builder *AttachmentItemFileRequestBuilder
-			if !tt.nilBuilder {
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetURLTemplate").Return("")
-				mockInternalRequestBuilder.On("GetPathParameters").Return(map[string]string{})
-
-				if tt.nilRequestAdapter {
-					mockInternalRequestBuilder.On("GetRequestAdapter").Return((*mocking.MockRequestAdapter)(nil))
-				} else {
-					mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
-
-					mockRequestAdapter.On("SendPrimitive", mock.Anything, mock.Anything, "[]byte", mock.Anything).Return(tt.sendResponse, tt.sendError).Run(func(args mock.Arguments) {
-						if tt.metadataHeaderValue != "" {
-							requestInformation := args.Get(1).(*abstractions.RequestInformation)
-							opts := requestInformation.GetRequestOptions()
-							for _, opt := range opts {
-								if typedOpt, ok := opt.(*nethttplibrary.HeadersInspectionOptions); ok {
-									respHeaders := abstractions.NewResponseHeaders()
-									respHeaders.Add(attachmentMetadataHeader, tt.metadataHeaderValue)
-									typedOpt.ResponseHeaders = respHeaders
-									break
-								}
-							}
-						}
-					})
-				}
-				builder = &AttachmentItemFileRequestBuilder{mockInternalRequestBuilder}
-			}
-
+			builder := newAttachmentItemFileGetTestBuilder(tt)
 			result, err := builder.Get(context.Background(), tt.requestConfiguration)
-
-			if tt.nilBuilder {
-				assert.Nil(t, result)
-				assert.NoError(t, err)
-				return
-			}
-
-			if tt.expectedErr != nil {
-				assert.Error(t, err)
-				assert.Equal(t, tt.expectedErr, err)
-				assert.Nil(t, result)
-			} else if tt.expectedErrorMessage != "" {
-				assert.Error(t, err)
-				assert.Contains(t, err.Error(), tt.expectedErrorMessage)
-				assert.Nil(t, result)
-			} else {
-				assert.NoError(t, err)
-				if tt.sendResponse != nil {
-					assert.NotNil(t, result)
-					content, _ := result.GetContent()
-					assert.Equal(t, mockContent, content)
-				} else {
-					assert.Nil(t, result)
-				}
-			}
+			assertAttachmentItemFileGetResult(t, tt, mockContent, result, err)
 		})
 	}
 }
 
+type attachmentItemFileToGetRequestInfoTestCase struct {
+	name                 string
+	nilBuilder           bool
+	nilRequestBuilder    bool
+	requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration
+	expectedErr          bool
+	expectedHeaders      map[string][]string
+	expectedOptionsKeys  []string
+}
+
+// newAttachmentItemFileToGetRequestInfoTestBuilder builds the
+// *AttachmentItemFileRequestBuilder (or nil variants) described by tt.
+func newAttachmentItemFileToGetRequestInfoTestBuilder(tt attachmentItemFileToGetRequestInfoTestCase) *AttachmentItemFileRequestBuilder {
+	if tt.nilBuilder {
+		return nil
+	}
+
+	mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+	mockInternalRequestBuilder.On("GetURLTemplate").Return("")
+	mockInternalRequestBuilder.On("GetPathParameters").Return(map[string]string{})
+
+	if tt.nilRequestBuilder {
+		return &AttachmentItemFileRequestBuilder{nil}
+	}
+	return &AttachmentItemFileRequestBuilder{mockInternalRequestBuilder}
+}
+
+// assertAttachmentItemFileToGetRequestInformation verifies the ToGetRequestInformation
+// result described by tt.
+func assertAttachmentItemFileToGetRequestInformation(t *testing.T, tt attachmentItemFileToGetRequestInfoTestCase, reqInfo *abstractions.RequestInformation, err error) {
+	t.Helper()
+
+	if tt.nilBuilder || tt.nilRequestBuilder {
+		assert.Nil(t, reqInfo)
+		assert.NoError(t, err)
+		return
+	}
+
+	if tt.expectedErr {
+		assert.Error(t, err)
+		assert.Nil(t, reqInfo)
+		return
+	}
+
+	assert.NoError(t, err)
+	assert.NotNil(t, reqInfo)
+	assert.Equal(t, abstractions.GET, reqInfo.Method)
+
+	if tt.expectedHeaders != nil {
+		for k, v := range tt.expectedHeaders {
+			assert.Equal(t, v, reqInfo.Headers.Get(k))
+		}
+	}
+
+	if len(tt.expectedOptionsKeys) > 0 {
+		options := reqInfo.GetRequestOptions()
+		assert.Equal(t, len(tt.expectedOptionsKeys), len(options))
+		for i, opt := range options {
+			assert.Equal(t, tt.expectedOptionsKeys[i], opt.GetKey().Key)
+		}
+	}
+}
+
 func TestAttachmentItemFileRequestBuilder_ToGetRequestInformation(t *testing.T) {
-	tests := []struct {
-		name                 string
-		nilBuilder           bool
-		nilRequestBuilder    bool
-		requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration
-		expectedErr          bool
-		expectedHeaders      map[string][]string
-		expectedOptionsKeys  []string
-	}{
+	tests := []attachmentItemFileToGetRequestInfoTestCase{
 		{
 			name:                 "Successful minimal",
 			requestConfiguration: &AttachmentItemFileRequestBuilderGetRequestConfiguration{},
@@ -233,52 +310,9 @@ func TestAttachmentItemFileRequestBuilder_ToGetRequestInformation(t *testing.T) 
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var builder *AttachmentItemFileRequestBuilder
-
-			if !tt.nilBuilder {
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetURLTemplate").Return("")
-				mockInternalRequestBuilder.On("GetPathParameters").Return(map[string]string{})
-
-				if tt.nilRequestBuilder {
-					builder = &AttachmentItemFileRequestBuilder{nil}
-				} else {
-					builder = &AttachmentItemFileRequestBuilder{mockInternalRequestBuilder}
-				}
-			}
-
+			builder := newAttachmentItemFileToGetRequestInfoTestBuilder(tt)
 			reqInfo, err := builder.ToGetRequestInformation(context.Background(), tt.requestConfiguration)
-
-			if tt.nilBuilder || tt.nilRequestBuilder {
-				assert.Nil(t, reqInfo)
-				assert.NoError(t, err)
-				return
-			}
-
-			if tt.expectedErr {
-				assert.Error(t, err)
-				assert.Nil(t, reqInfo)
-			} else {
-				assert.NoError(t, err)
-				assert.NotNil(t, reqInfo)
-				assert.Equal(t, abstractions.GET, reqInfo.Method)
-
-				// Verify headers
-				if tt.expectedHeaders != nil {
-					for k, v := range tt.expectedHeaders {
-						assert.Equal(t, v, reqInfo.Headers.Get(k))
-					}
-				}
-
-				// Verify options
-				if len(tt.expectedOptionsKeys) > 0 {
-					options := reqInfo.GetRequestOptions()
-					assert.Equal(t, len(tt.expectedOptionsKeys), len(options))
-					for i, opt := range options {
-						assert.Equal(t, tt.expectedOptionsKeys[i], opt.GetKey().Key)
-					}
-				}
-			}
+			assertAttachmentItemFileToGetRequestInformation(t, tt, reqInfo, err)
 		})
 	}
 }

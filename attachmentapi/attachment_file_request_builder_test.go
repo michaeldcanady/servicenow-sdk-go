@@ -263,21 +263,102 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 	}
 }
 
+type attachmentFilePostToRequestInfoTestCase struct {
+	name                    string
+	nilBuilder              bool
+	nilRequestBuilder       bool
+	media                   *Media
+	requestConfig           *AttachmentFileRequestBuilderPostRequestConfiguration
+	nilRequestAdapter       bool
+	expectedErr             bool
+	expectedHeaders         map[string][]string
+	expectedQueryParameters map[string]any
+	expectedOptionsKeys     []string
+}
+
+// newAttachmentFilePostTestBuilder builds the *AttachmentFileRequestBuilder (or nil
+// variants) described by tt, wiring up the mock request adapter/writer chain needed
+// for a successful ToPostRequestInformation call.
+func newAttachmentFilePostTestBuilder(tt attachmentFilePostToRequestInfoTestCase) *AttachmentFileRequestBuilder {
+	if tt.nilBuilder {
+		return nil
+	}
+
+	mockRequestAdapter := mocking.NewMockRequestAdapter()
+	mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+	mockInternalRequestBuilder.On("GetURLTemplate").Return("")
+	mockInternalRequestBuilder.On("GetPathParameters").Return(map[string]string{})
+
+	if tt.nilRequestAdapter {
+		mockInternalRequestBuilder.On("GetRequestAdapter").Return((*mocking.MockRequestAdapter)(nil))
+	} else {
+		mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+
+		writer := mocking.NewMockSerializationWriter()
+		writer.On("WriteObjectValue", "", tt.media, mock.Anything).Return(nil)
+		writer.On("Close").Return(nil)
+		var data []byte
+		if tt.media != nil {
+			data = tt.media.data
+		}
+		writer.On("GetSerializedContent").Return(data, nil)
+
+		factory := mocking.NewMockSerializationWriterFactory()
+		factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
+		mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
+	}
+
+	if tt.nilRequestBuilder {
+		return &AttachmentFileRequestBuilder{nil}
+	}
+	return &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
+}
+
+// assertAttachmentFilePostRequestInformation verifies the ToPostRequestInformation
+// result described by tt.
+func assertAttachmentFilePostRequestInformation(t *testing.T, tt attachmentFilePostToRequestInfoTestCase, reqInfo *abstractions.RequestInformation, err error) {
+	t.Helper()
+
+	if tt.nilBuilder || tt.nilRequestBuilder {
+		assert.Nil(t, reqInfo)
+		assert.NoError(t, err)
+		return
+	}
+
+	if tt.expectedErr {
+		assert.Error(t, err)
+		assert.Nil(t, reqInfo)
+		return
+	}
+
+	assert.NoError(t, err)
+	assert.NotNil(t, reqInfo)
+	assert.Equal(t, abstractions.POST, reqInfo.Method)
+	assert.Equal(t, tt.media.data, reqInfo.Content)
+
+	if tt.expectedHeaders != nil {
+		for k, v := range tt.expectedHeaders {
+			assert.Equal(t, v, reqInfo.Headers.Get(k))
+		}
+	}
+
+	if tt.expectedQueryParameters != nil {
+		assert.Equal(t, tt.expectedQueryParameters, reqInfo.QueryParametersAny)
+	}
+
+	if len(tt.expectedOptionsKeys) > 0 {
+		options := reqInfo.GetRequestOptions()
+		assert.Equal(t, len(tt.expectedOptionsKeys), len(options))
+		for i, opt := range options {
+			assert.Equal(t, tt.expectedOptionsKeys[i], opt.GetKey().Key)
+		}
+	}
+}
+
 func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	defaultMedia := &Media{data: []byte("I am content"), contentType: "application/json"}
 
-	tests := []struct {
-		name                    string
-		nilBuilder              bool
-		nilRequestBuilder       bool
-		media                   *Media
-		requestConfig           *AttachmentFileRequestBuilderPostRequestConfiguration
-		nilRequestAdapter       bool
-		expectedErr             bool
-		expectedHeaders         map[string][]string
-		expectedQueryParameters map[string]any
-		expectedOptionsKeys     []string
-	}{
+	tests := []attachmentFilePostToRequestInfoTestCase{
 		{
 			name:          "Successful minimal",
 			media:         defaultMedia,
@@ -348,78 +429,9 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var builder *AttachmentFileRequestBuilder
-
-			if !tt.nilBuilder {
-				mockRequestAdapter := mocking.NewMockRequestAdapter()
-				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
-				mockInternalRequestBuilder.On("GetURLTemplate").Return("")
-				mockInternalRequestBuilder.On("GetPathParameters").Return(map[string]string{})
-
-				if tt.nilRequestAdapter {
-					mockInternalRequestBuilder.On("GetRequestAdapter").Return((*mocking.MockRequestAdapter)(nil))
-				} else {
-					mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
-
-					writer := mocking.NewMockSerializationWriter()
-					writer.On("WriteObjectValue", "", tt.media, mock.Anything).Return(nil)
-					writer.On("Close").Return(nil)
-					var data []byte
-					if tt.media != nil {
-						data = tt.media.data
-					}
-					writer.On("GetSerializedContent").Return(data, nil)
-
-					factory := mocking.NewMockSerializationWriterFactory()
-					factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
-					mockRequestAdapter.On("GetSerializationWriterFactory").Return(factory, nil)
-				}
-
-				if tt.nilRequestBuilder {
-					builder = &AttachmentFileRequestBuilder{nil}
-				} else {
-					builder = &AttachmentFileRequestBuilder{mockInternalRequestBuilder}
-				}
-			}
-
+			builder := newAttachmentFilePostTestBuilder(tt)
 			reqInfo, err := builder.ToPostRequestInformation(context.Background(), tt.media, tt.requestConfig)
-
-			if tt.nilBuilder || tt.nilRequestBuilder {
-				assert.Nil(t, reqInfo)
-				assert.NoError(t, err)
-				return
-			}
-
-			if tt.expectedErr {
-				assert.Error(t, err)
-				assert.Nil(t, reqInfo)
-			} else {
-				assert.NoError(t, err)
-				assert.NotNil(t, reqInfo)
-				assert.Equal(t, abstractions.POST, reqInfo.Method)
-				assert.Equal(t, tt.media.data, reqInfo.Content)
-
-				// Verify headers
-				if tt.expectedHeaders != nil {
-					for k, v := range tt.expectedHeaders {
-						assert.Equal(t, v, reqInfo.Headers.Get(k))
-					}
-				}
-
-				// Verify query parameters
-				if tt.expectedQueryParameters != nil {
-					assert.Equal(t, tt.expectedQueryParameters, reqInfo.QueryParametersAny)
-				}
-
-				// Verify options
-				if len(tt.expectedOptionsKeys) > 0 {
-					options := reqInfo.GetRequestOptions()
-					assert.Equal(t, len(tt.expectedOptionsKeys), len(options))
-					for i, opt := range options {
-						assert.Equal(t, tt.expectedOptionsKeys[i], opt.GetKey().Key)
-					}
-				}
-			}
+			assertAttachmentFilePostRequestInformation(t, tt, reqInfo, err)
 		})
 	}
 }
