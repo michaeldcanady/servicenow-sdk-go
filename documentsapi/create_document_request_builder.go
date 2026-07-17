@@ -4,9 +4,6 @@ import (
 	"context"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -16,54 +13,22 @@ const (
 
 // CreateDocumentRequestBuilder provides operations to manage the createDocument endpoint.
 type CreateDocumentRequestBuilder struct {
-	core.RequestBuilder
+	*documentPostRequestBuilder
 }
 
 // NewCreateDocumentRequestBuilderInternal instantiates a new CreateDocumentRequestBuilder.
 func NewCreateDocumentRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CreateDocumentRequestBuilder {
 	return &CreateDocumentRequestBuilder{
-		core.NewBaseRequestBuilder(requestAdapter, createDocumentURLTemplate, pathParameters),
+		newDocumentPostRequestBuilder(requestAdapter, createDocumentURLTemplate, pathParameters),
 	}
 }
 
 // Post creates or links a document from an attachment, DMS repo or cloud.
 func (rB *CreateDocumentRequestBuilder) Post(ctx context.Context, requestConfiguration *CreateDocumentRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[Document], error) {
-	if conversion.IsNil(rB) {
-		return nil, nil
-	}
-
-	requestInfo, err := rB.ToPostRequestInformation(ctx, requestConfiguration)
-	if err != nil {
-		return nil, err
-	}
-
-	errorMapping := core.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[Document](CreateDocumentFromDiscriminatorValue), errorMapping)
-	if err != nil {
-		return nil, err
-	}
-
-	if conversion.IsNil(res) {
-		return nil, nil
-	}
-
-	return res.(*core.BaseServiceNowItemResponse[Document]), nil
+	return rB.post(ctx, (*documentPostRequestConfiguration)(requestConfiguration))
 }
 
-// ToPostRequestInformation ...
+// ToPostRequestInformation converts request configurations to Post request information.
 func (rB *CreateDocumentRequestBuilder) ToPostRequestInformation(ctx context.Context, requestConfiguration *CreateDocumentRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
-	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	if !conversion.IsNil(requestConfiguration) {
-		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
-		if data := requestConfiguration.Data; !conversion.IsNil(data) {
-			if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), data); err != nil {
-				return nil, err
-			}
-		}
-	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-
-	return kiotaRequestInfo.RequestInformation, nil
+	return rB.toPostRequestInformation(ctx, (*documentPostRequestConfiguration)(requestConfiguration))
 }

@@ -1,4 +1,4 @@
-package cdmapplicationsapi
+package cdmapplicationsapi // nolint:dupl // shares field-count shape with ComponentUploadRequest/ExportStatusResult by coincidence, not copy-paste; distinct API concept, not worth sacrificing named accessors for
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
