@@ -5,7 +5,9 @@ valuable feedback, the SDK includes features currently in
 preview. These features are under active development and may undergo
 significant changes.
 
-> **Note:** This is a preview feature currently under active development.
+:::note
+This is a preview feature currently under active development.
+:::
 
 ## Understand preview features
 

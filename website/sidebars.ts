@@ -33,6 +33,8 @@ const sidebars: SidebarsConfig = {
     },
     'user-guide/batch',
     'user-guide/pagination',
+    'user-guide/error-handling',
+    'user-guide/configuration',
     'user-guide/preview-features',
     'user-guide/query-builder',
   ],

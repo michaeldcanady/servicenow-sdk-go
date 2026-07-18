@@ -6,6 +6,17 @@ different security requirements and deployment environments.
 
 ## Choose an authentication method
 
+Pick the flow that matches how your application runs:
+
+| Your situation | Use | Why |
+| -------------- | --- | --- |
+| Server-to-server integration, no user present | [Client Credentials](./client-credentials.md) | The app authenticates as itself with a client ID and secret. |
+| Server-to-server with key-based trust | [JWT Token](./jwt-token.md) | Signed assertions instead of a shared secret; best for non-interactive services with strict credential policies. |
+| A user signs in interactively, and the app can keep a secret (server-side service, desktop app) | [Authorization Code — Private](./auth-code-private.md) | Standard OAuth2 with a confidential client. |
+| A user signs in interactively, and the app cannot keep a secret (CLI tool, SPA) | [Authorization Code — Public](./auth-code-public.md) | Same flow secured with PKCE instead of a secret. |
+| Legacy or tightly controlled environment where interactive login is impossible | [ROPC](./ropc.md) | Exchanges a username/password for OAuth tokens; use only when the flows above are unavailable. |
+| Local development, testing, quick scripts | [Basic](./basic.md) | Simplest to set up; avoid for production integrations. |
+
 ServiceNow provides multiple OAuth and non‑OAuth authentication models.  
 The SDK currently supports:
 

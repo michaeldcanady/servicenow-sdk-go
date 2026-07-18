@@ -1,6 +1,7 @@
 import React from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import {extractRegion} from './region';
+import {substitutePlaceholders, usePlaceholderValues} from './placeholders';
 
 // Renders one named region of an imported Go snippet file as a code block.
 //
@@ -18,9 +19,10 @@ export default function GoSnippet({
   language?: string;
   title?: string;
 }): React.ReactElement {
+  const values = usePlaceholderValues();
   return (
     <CodeBlock language={language} title={title}>
-      {extractRegion(src, region)}
+      {substitutePlaceholders(extractRegion(src, region), values)}
     </CodeBlock>
   );
 }

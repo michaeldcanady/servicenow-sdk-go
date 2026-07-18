@@ -14,5 +14,9 @@ Task-oriented guides for the SDK's core features. If you're new, start with
   HTTP call.
 - **[Pagination](pagination.mdx):** Iterate over large result sets with page
   iterators.
+- **[Handling Errors](error-handling.md):** Match API and usage errors with
+  `errors.As`/`errors.Is`.
+- **[Configuring the Client](configuration.md):** Middleware, retries,
+  logging, and transport options.
 - **[Querying](query-builder.mdx):** Build encoded queries fluently
   (preview feature).

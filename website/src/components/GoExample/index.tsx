@@ -1,6 +1,7 @@
 import React from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import {extractRegion} from '../GoSnippet/region';
+import {substitutePlaceholders, usePlaceholderValues} from '../GoSnippet/placeholders';
 
 // Assembles a full example program from snippet regions. The template is a
 // plain string where "{{fileKey:region_name}}" placeholders are replaced by
@@ -31,6 +32,7 @@ export default function GoExample({
   language?: string;
   title?: string;
 }): React.ReactElement {
+  const values = usePlaceholderValues();
   const rendered = template
     .split('\n')
     .map((line) => {
@@ -47,7 +49,7 @@ export default function GoExample({
     .join('\n');
   return (
     <CodeBlock language={language} title={title}>
-      {rendered}
+      {substitutePlaceholders(rendered, values)}
     </CodeBlock>
   );
 }
