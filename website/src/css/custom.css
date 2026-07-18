@@ -1,0 +1,29 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* Teal palette, matching the previous Material for MkDocs theme. */
+:root {
+  --ifm-color-primary: #00897b;
+  --ifm-color-primary-dark: #007b6f;
+  --ifm-color-primary-darker: #007468;
+  --ifm-color-primary-darkest: #006056;
+  --ifm-color-primary-light: #009787;
+  --ifm-color-primary-lighter: #009e8e;
+  --ifm-color-primary-lightest: #00b2a0;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #4db6ac;
+  --ifm-color-primary-dark: #3fadA2;
+  --ifm-color-primary-darker: #38a599;
+  --ifm-color-primary-darkest: #2e877e;
+  --ifm-color-primary-light: #5cbdb4;
+  --ifm-color-primary-lighter: #66c1b8;
+  --ifm-color-primary-lightest: #83ccc5;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}

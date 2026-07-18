@@ -47,8 +47,10 @@ go.work.sum
 # Cache directory
 .cache/
 
-# Documentation site
-site/
+# Documentation site (Docusaurus)
+website/node_modules/
+website/build/
+website/.docusaurus/
 
 # Vale styles
 .github/styles/*

@@ -6,17 +6,15 @@ on:
     branches:
       - main
     paths:
-      - "docs/**"
-      - "mkdocs.yml"
+      - "website/**"
       - ".github/workflows/docs.yml"
   pull_request:
     paths:
-      - "docs/**"
-      - "mkdocs.yml"
+      - "website/**"
       - ".github/workflows/docs.yml"
 
 env:
-  PYTHON_VERSION: "3.x"
+  NODE_VERSION: "20"
 
 jobs:
   changes-docs:
@@ -35,12 +33,11 @@ jobs:
         id: filter
         with:
           files: |
-            docs/**
-            mkdocs.yml
+            website/**
             .github/workflows/docs.yml
 
   build:
-    name: build-md
+    name: build-site
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -51,25 +48,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: website/package-lock.json
 
-      - name: Install system dependencies
-        run: sudo apt-get install -y pngquant
-
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
+      - name: Install dependencies
+        working-directory: website
+        run: npm ci
 
       - name: Build docs
-        run: mkdocs build --strict
+        working-directory: website
+        run: npm run build
 
       - name: Upload site artifact
         uses: actions/upload-artifact@v7
         with:
           name: site
-          path: site
+          path: website/build
 
   lint:
     name: lint-md
@@ -87,7 +85,7 @@ jobs:
         uses: errata-ai/vale-action@2.1.2
         with:
           fail_on_error: true
-          files: docs
+          files: website/docs
           filter_mode: nofilter
           reporter: local
           level: error
@@ -97,8 +95,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pages: write
-      id-token: write
     needs:
       - build
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -106,21 +102,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: website/package-lock.json
 
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
+      - name: Install dependencies
+        working-directory: website
+        run: npm ci
 
-      - name: Install system dependencies
-        run: sudo apt-get install -y pngquant
+      - name: Build docs
+        working-directory: website
+        run: npm run build
 
       - name: Deploy to GitHub Pages
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mkdocs gh-deploy --force --config-file mkdocs.yml
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: website/build
 
   report-failure:
     name: Report Docs Failure
@@ -137,5 +138,5 @@ jobs:
           message: |
             ### ❌ Documentation CI/CD Failed
             One or more jobs in the Documentation pipeline failed.
-            
+
             Please check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.

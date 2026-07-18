@@ -1,0 +1,65 @@
+# Get attachment
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import GoExample from '@site/src/components/GoExample';
+import attachmentsGo from '@site/snippets/attachments.go';
+import authGo from '@site/snippets/auth.go';
+
+## Overview
+
+Retrieve specific attachment metadata using the sys id.
+
+## Path parameters
+
+| Name      | Description                                                                                                                       |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `baseurl` | The absolute base URI for the request (this is the same for all requests) including: the schema, the domain, and a path fragment. |
+| `sysId`   | The sys id of the attachment.                                                                                                     |
+
+## Optional query parameters
+
+N/A
+
+## Required query parameters
+
+N/A
+
+## Examples
+
+<Tabs groupId="modality">
+<TabItem value="fluent" label="Fluent">
+
+<GoExample language="go" files={{ attachmentsGo: attachmentsGo, authGo: authGo }} template={`package main
+
+{{attachmentsGo:attachment_imports}}
+
+func main() {
+    // Step 1: Create credentials
+    {{authGo:auth_basic}}
+
+    // Step 2: Initialize client
+    {{authGo:client_init}}
+
+    {{attachmentsGo:attachment_get_item}}
+}`} />
+
+</TabItem>
+<TabItem value="standard" label="Standard">
+
+<GoExample language="go" files={{ attachmentsGo: attachmentsGo, authGo: authGo }} template={`package main
+
+{{attachmentsGo:attachment_imports}}
+
+func main() {
+    // Step 1: Create credentials
+    {{authGo:auth_basic}}
+
+    // Step 2: Initialize client
+    {{authGo:client_init}}
+
+    {{attachmentsGo:attachment_std_get_item}}
+}`} />
+
+</TabItem>
+</Tabs>

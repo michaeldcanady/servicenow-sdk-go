@@ -1,0 +1,68 @@
+# List attachments
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import GoExample from '@site/src/components/GoExample';
+import attachmentsGo from '@site/snippets/attachments.go';
+import authGo from '@site/snippets/auth.go';
+
+## Overview
+
+Returns the metadata for multiple attachments.
+
+## Path parameters
+
+| Name      | Description                                                                                                                       |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `baseurl` | The absolute base URI for the request (this is the same for all requests) including: the schema, the domain, and a path fragment. |
+
+## Optional query parameters
+
+| Name            | Type     | Possible values | Description                                                  |
+| --------------- | -------- | --------------- | ------------------------------------------------------------ |
+| `SysParmLimit`  | `int`    | N/A             | Maximum number of records to return.                         |
+| `SysParmOffset` | `int`    | N/A             | Starting record index for which to begin retrieving records. |
+| `SysParmQuery`  | `string` | N/A             | Encoded query used to filter the result set.                 |
+
+## Required query parameters
+
+N/A
+
+## Examples
+
+<Tabs groupId="modality">
+<TabItem value="fluent" label="Fluent">
+
+<GoExample language="go" files={{ attachmentsGo: attachmentsGo, authGo: authGo }} template={`package main
+
+{{attachmentsGo:attachment_imports}}
+
+func main() {
+    // Step 1: Create credentials
+    {{authGo:auth_basic}}
+
+    // Step 2: Initialize client
+    {{authGo:client_init}}
+
+    {{attachmentsGo:attachment_list}}
+}`} />
+
+</TabItem>
+<TabItem value="standard" label="Standard">
+
+<GoExample language="go" files={{ attachmentsGo: attachmentsGo, authGo: authGo }} template={`package main
+
+{{attachmentsGo:attachment_imports}}
+
+func main() {
+    // Step 1: Create credentials
+    {{authGo:auth_basic}}
+
+    // Step 2: Initialize client
+    {{authGo:client_init}}
+
+    {{attachmentsGo:attachment_std_list}}
+}`} />
+
+</TabItem>
+</Tabs>

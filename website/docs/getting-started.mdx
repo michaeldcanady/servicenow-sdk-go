@@ -1,0 +1,59 @@
+# Getting started
+
+import GoExample from '@site/src/components/GoExample';
+import authGo from '@site/snippets/auth.go';
+
+Welcome to the ServiceNow SDK for Go! This guide helps you set up the SDK and
+make your first successful API call in just a few minutes.
+
+## Prerequisites
+
+Before you begin, make sure your development environment meets these
+requirements:
+
+- **Go:** Version 1.23 or higher installed.
+- **ServiceNow Instance:** Access to a ServiceNow instance (a
+  [Personal Developer Instance](https://developer.servicenow.com/) works).
+
+## Install the SDK
+
+Add the SDK to your existing Go module using the `go get` command:
+
+```bash
+go get github.com/michaeldcanady/servicenow-sdk-go
+```
+
+## Initialize the client
+
+To interact with ServiceNow, you must first configure your credentials and
+initialize a client. The following example demonstrates a basic setup using
+username and password authentication.
+
+<GoExample language="go" files={{ authGo: authGo }} template={`{{authGo:auth_imports}}
+
+func main() {
+    // 1. Configure your credentials
+    {{authGo:auth_basic_admin}}
+
+    // 2. Initialize the client for your instance
+    {{authGo:client_init_panic}}
+}`} />
+
+## Make your first request
+
+Once you initialize your client, you can perform operations like retrieving
+records from a table. See the [Table Operations](user-guide/tables.mdx) guide
+for more details.
+
+## Next steps
+
+Now that you have the basic setup, explore these topics to dive deeper:
+
+- **[Authentication Guide](user-guide/authentication/index.md):** Learn about OAuth2
+  and alternative credential types.
+- **[Table Operations](user-guide/tables.mdx):** Master CRUD operations for
+  ServiceNow records.
+- **[Attachments](user-guide/attachments/index.mdx):** Manage files associated with
+  your records.
+- **[API Reference](apis/index.md):** Consult the detailed documentation for
+  specific API modules.

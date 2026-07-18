@@ -1,0 +1,54 @@
+# Attachments
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import attachmentsGo from '@site/snippets/attachments.go';
+
+The Attachment API lets you manage files associated with records in ServiceNow.
+You can list, retrieve, upload, and delete attachments using the SDK.
+
+The pages in this section walk through complete, real-world tasks:
+
+- **[Upload from disk](upload-from-disk.md):** Attach a local file to a record.
+- **[Download record attachments](download-record-attachments.md):** Save every
+  attachment on a record locally.
+- **[Find the most recent attachment](most-recent-attachment.md):** Sort and
+  select the newest file.
+- **[Delete aging attachments](delete-aging-attachments.md):** Enforce
+  retention policies.
+
+The sections below cover each basic operation.
+
+## List attachments
+
+You can retrieve a list of all attachments or filter them based on criteria
+such as the table name or table `sys_id`.
+
+<GoSnippet src={attachmentsGo} region="attachment_list_guide" />
+
+## Upload attachments
+
+To upload a file and associate it with a specific record, use the `File`
+resource's `Post` method. You must provide the table name, the record's
+`sys_id`, and the file name in the query parameters.
+
+<GoSnippet src={attachmentsGo} region="attachment_create_guide" />
+
+## Download attachments
+
+To download the content of an attachment, use the `ByID` and `File` resources
+to call the `Get` method.
+
+<GoSnippet src={attachmentsGo} region="attachment_download_guide" />
+
+## Delete attachments
+
+To delete an attachment, use the `ByID` resource and call the `Delete` method.
+
+<GoSnippet src={attachmentsGo} region="attachment_delete" />
+
+## Next steps
+
+- **[Batch API](../batch.mdx):** Learn how to perform multiple operations,
+  including attachment management, in a single request.
+- **[Table Operations](../tables.mdx):** Learn more about managing the records
+  these attachments belong to.

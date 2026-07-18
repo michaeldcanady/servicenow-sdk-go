@@ -1,0 +1,76 @@
+# Create table record
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import GoExample from '@site/src/components/GoExample';
+import tablesGo from '@site/snippets/tables.go';
+import authGo from '@site/snippets/auth.go';
+
+## Overview
+
+Creates a single record in the specified table.
+
+> **Note:** This endpoint doesn't support bulk insertion.
+
+## Path parameters
+
+| Name      | Description                                                                                                                       |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `baseurl` | The absolute base URI for the request (this is the same for all requests) including: the schema, the domain, and a path fragment. |
+| `table`   | The table name of for the operation.                                                                                              |
+
+## Optional query parameters
+
+{/* vale Vale.Spelling = NO */}
+
+| Name                   | Type                     | Possible values                                                  | Description                                                                                                           |
+| ---------------------- | ------------------------ | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `DisplayValue`         | `tableapi.DisplayValue` | `DisplayValueTrue`, `DisplayValueFalse`, or `DisplayValueAll` | Determines the type of data returned, either the actual values from the database or the display values of the fields. |
+| `ExcludeReferenceLink` | `bool`                   | N/A                                                              | Flag that indicates whether to exclude Table API links for reference fields.                                          |
+| `Fields`               | `[]string `              | N/A                                                              | List of fields to include in the response.                                                                            |
+| `InputDisplayValue`    | `bool`                   | N/A                                                              | Flag that indicates whether to set field values using the display value or the actual value.                          |
+| `View`                 | `tableapi.View`         | `ViewDesktop`, `ViewMobile`, or `ViewBoth`                    | UI view for which to render the data.                                                                                 |
+
+{/* vale Vale.Spelling = YES */}
+
+## Required query parameters
+
+N/A
+
+## Examples
+
+<Tabs groupId="modality">
+<TabItem value="fluent" label="Fluent">
+
+<GoExample language="go" files={{ tablesGo: tablesGo, authGo: authGo }} template={`package main
+
+{{tablesGo:table_imports}}
+
+func main() {
+    // Step 1: Create credentials
+    {{authGo:auth_basic}}
+
+    // Step 2: Initialize client
+    {{authGo:client_init}}
+    {{tablesGo:table_create_fluent}}
+}`} />
+
+</TabItem>
+<TabItem value="standard" label="Standard">
+
+<GoExample language="go" files={{ tablesGo: tablesGo, authGo: authGo }} template={`package main
+
+{{tablesGo:table_imports}}
+
+func main() {
+    // Step 1: Create credentials
+    {{authGo:auth_basic}}
+
+    // Step 2: Initialize client
+    {{authGo:client_init}}
+    {{tablesGo:table_collection_standard_setup}}
+    {{tablesGo:table_create_standard}}
+}`} />
+
+</TabItem>
+</Tabs>
