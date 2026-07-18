@@ -56,7 +56,7 @@ jobs:
             ```
 
       - uses: marocchino/sticky-pull-request-comment@v2
-        if: !cancelled() && steps.lint_title.outputs.error_message == ''
+        if: ${{ !cancelled() && steps.lint_title.outputs.error_message == '' }}
         with:
           header: pr-title-lint-error
           delete: true
