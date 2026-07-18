@@ -1,4 +1,4 @@
-package statsapi
+package aggregationapi
 
 // StatsRequestBuilderGetQueryParameters represents the query parameters for a Stats API GET request.
 type StatsRequestBuilderGetQueryParameters struct {

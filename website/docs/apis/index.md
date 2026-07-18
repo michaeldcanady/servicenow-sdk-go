@@ -11,7 +11,7 @@ Whether you're automating incident management, synchronizing user records, or ha
 - [**Table API**](tables/index.mdx): Create, read, update, and delete (CRUD) operations for ServiceNow tables.
 - [**Attachment API**](attachment/index.mdx): Manage files and raw file content attached to records.
 - [**Batch API**](batch/index.mdx): Group multiple requests into a single efficient call.
-- [**Aggregation API**](stats/index.mdx): Aggregate statistics (count, sum, avg, min, max) over table records.
+- [**Aggregation API**](aggregation/index.mdx): Aggregate statistics (count, sum, avg, min, max) over table records.
 - [**Documents API**](documents/index.mdx): Document Management — create, explore, version, and stream documents.
 - [**Activity Subscriptions API**](activity-subscriptions/index.mdx): Follow objects and manage activity-stream subscriptions.
 

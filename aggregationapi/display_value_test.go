@@ -1,4 +1,4 @@
-package statsapi
+package aggregationapi
 
 import (
 	"testing"
