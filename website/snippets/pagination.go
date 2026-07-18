@@ -16,7 +16,6 @@ func _() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 
-	// [START pagination_table_basic]
 	// 1. Execute a list request
 	listResponse, err := client.Now().Table("incident").Get(ctx, nil)
 	if err != nil {
@@ -40,7 +39,6 @@ func _() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// [END pagination_table_basic]
 
 	// [START pagination_reverse]
 	err = iterator.Iterate(ctx, true, func(record *tableapi.TableRecord) bool {

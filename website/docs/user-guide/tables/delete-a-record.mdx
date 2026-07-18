@@ -34,7 +34,7 @@ func main() {
 - `Delete` returns only an `error` — no response body. `nil` means the
   record is gone.
 - Deleting an already-deleted record returns `core.NotFoundError`; decide
-  whether that's a failure for your workflow or an "already done".
+  whether that's a failure for your workflow or an "already done."
 - Prefer deactivating (`active=false` via
   [update](update-a-record.mdx)) when other records may reference this one.
 

@@ -2,7 +2,6 @@
 
 package snippets
 
-// [START errors_imports]
 import (
 	"context"
 	"errors"
@@ -12,8 +11,6 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 )
-
-// [END errors_imports]
 
 func errorsGuideStatus() error {
 	var client *servicenowsdkgo.ServiceNowServiceClient

@@ -33,15 +33,15 @@ similar-but-different wording ("can't be nil" vs "is nil"). Two consequences:
 
 ## What to do in new code
 
-There are **three** sentinel locations that look similar but aren't
+**Three** sentinel locations look similar but aren't
 interchangeable:
 
 1. Root package `errors.go` — a couple of client-configuration sentinels only.
 2. **`errors/errors.go` (`snerrors`)** — the shared, cross-package sentinels
    (`ErrNilRequestBuilder`, `ErrNilRequestAdapter`, `ErrNilResponse`,
-   `ErrNilConfig`, `ErrNilBody`, ...). **Check here first**; almost every
+   `ErrNilConfig`, `ErrNilBody`, …). **Check here first**; almost every
    nil-guard belongs to one of these.
-3. Some packages (e.g. `tableapi/errors.go`) keep package-local sentinels for
+3. Some packages (for example, `tableapi/errors.go`) keep package-local sentinels for
    conditions specific to that module.
 
 Reuse an existing sentinel *by identity*, not by matching text — duplicating

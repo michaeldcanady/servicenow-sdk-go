@@ -8,7 +8,7 @@ description: >-
 # Development setup
 
 Goal: from clone to a green build in under ten minutes, with the same
-toolchain CI uses. There are two paths — the dev container gives you
+toolchain CI uses. You have two paths — the dev container gives you
 everything preconfigured in one click; the local path is for people who
 prefer their own environment.
 

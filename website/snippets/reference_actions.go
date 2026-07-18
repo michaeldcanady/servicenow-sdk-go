@@ -16,7 +16,7 @@ import (
 	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/cmdbinstanceapi"
 )
 
-func ref_list_accounts() {
+func refListAccounts() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_accounts]
@@ -28,7 +28,7 @@ func ref_list_accounts() {
 	_ = response
 }
 
-func ref_get_account() {
+func refGetAccount() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_account]
@@ -40,7 +40,7 @@ func ref_get_account() {
 	_ = response
 }
 
-func ref_get_aggregates() {
+func refGetAggregates() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_aggregates]
@@ -52,7 +52,7 @@ func ref_get_aggregates() {
 	_ = response
 }
 
-func ref_list_activities() {
+func refListActivities() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_activities]
@@ -64,7 +64,7 @@ func ref_list_activities() {
 	_ = response
 }
 
-func ref_list_contexts() {
+func refListContexts() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_contexts]
@@ -76,7 +76,7 @@ func ref_list_contexts() {
 	_ = response
 }
 
-func ref_list_subscription_objects() {
+func refListSubscriptionObjects() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_subscription_objects]
@@ -88,7 +88,7 @@ func ref_list_subscription_objects() {
 	_ = response
 }
 
-func ref_get_facet_instances() {
+func refGetFacetInstances() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_facet_instances]
@@ -100,7 +100,7 @@ func ref_get_facet_instances() {
 	_ = response
 }
 
-func ref_get_followings() {
+func refGetFollowings() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_followings]
@@ -112,7 +112,7 @@ func ref_get_followings() {
 	_ = response
 }
 
-func ref_get_preference() {
+func refGetPreference() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_preference]
@@ -124,7 +124,7 @@ func ref_get_preference() {
 	_ = response
 }
 
-func ref_create_preference() {
+func refCreatePreference() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_create_preference]
@@ -138,7 +138,7 @@ func ref_create_preference() {
 	_ = response
 }
 
-func ref_get_subscription() {
+func refGetSubscription() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_subscription]
@@ -150,7 +150,7 @@ func ref_get_subscription() {
 	_ = response
 }
 
-func ref_check_subscription() {
+func refCheckSubscription() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_check_subscription]
@@ -162,7 +162,7 @@ func ref_check_subscription() {
 	_ = response
 }
 
-func ref_subscribe() {
+func refSubscribe() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_subscribe]
@@ -176,7 +176,7 @@ func ref_subscribe() {
 	_ = response
 }
 
-func ref_unsubscribe() {
+func refUnsubscribe() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_unsubscribe]
@@ -186,7 +186,7 @@ func ref_unsubscribe() {
 	// [END ref_unsubscribe]
 }
 
-func ref_get_subscribers() {
+func refGetSubscribers() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_subscribers]
@@ -198,7 +198,7 @@ func ref_get_subscribers() {
 	_ = response
 }
 
-func ref_get_user_stream() {
+func refGetUserStream() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_user_stream]
@@ -210,7 +210,7 @@ func ref_get_user_stream() {
 	_ = response
 }
 
-func ref_update_user_stream() {
+func refUpdateUserStream() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_update_user_stream]
@@ -224,7 +224,7 @@ func ref_update_user_stream() {
 	_ = response
 }
 
-func ref_check_availability() {
+func refCheckAvailability() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_check_availability]
@@ -238,7 +238,7 @@ func ref_check_availability() {
 	_ = response
 }
 
-func ref_book_appointment() {
+func refBookAppointment() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_book_appointment]
@@ -252,7 +252,7 @@ func ref_book_appointment() {
 	_ = response
 }
 
-func ref_get_calendar() {
+func refGetCalendar() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_calendar]
@@ -264,7 +264,7 @@ func ref_get_calendar() {
 	_ = response
 }
 
-func ref_get_configuration() {
+func refGetConfiguration() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_configuration]
@@ -276,7 +276,7 @@ func ref_get_configuration() {
 	_ = response
 }
 
-func ref_execute_rule_conditions() {
+func refExecuteRuleConditions() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_execute_rule_conditions]
@@ -290,7 +290,7 @@ func ref_execute_rule_conditions() {
 	_ = response
 }
 
-func ref_request_user_window() {
+func refRequestUserWindow() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_request_user_window]
@@ -304,7 +304,7 @@ func ref_request_user_window() {
 	_ = response
 }
 
-func ref_create_application_service() {
+func refCreateApplicationService() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_create_application_service]
@@ -318,7 +318,7 @@ func ref_create_application_service() {
 	_ = response
 }
 
-func ref_find_service() {
+func refFindService() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_find_service]
@@ -330,7 +330,7 @@ func ref_find_service() {
 	_ = response
 }
 
-func ref_register_service() {
+func refRegisterService() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_register_service]
@@ -344,7 +344,7 @@ func ref_register_service() {
 	_ = response
 }
 
-func ref_populate_service() {
+func refPopulateService() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_populate_service]
@@ -358,7 +358,7 @@ func ref_populate_service() {
 	_ = response
 }
 
-func ref_update_service_details() {
+func refUpdateServiceDetails() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_update_service_details]
@@ -372,7 +372,7 @@ func ref_update_service_details() {
 	_ = response
 }
 
-func ref_list_cases() {
+func refListCases() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_cases]
@@ -384,7 +384,7 @@ func ref_list_cases() {
 	_ = response
 }
 
-func ref_create_case() {
+func refCreateCase() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_create_case]
@@ -398,7 +398,7 @@ func ref_create_case() {
 	_ = response
 }
 
-func ref_get_case() {
+func refGetCase() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_case]
@@ -410,7 +410,7 @@ func ref_get_case() {
 	_ = response
 }
 
-func ref_update_case() {
+func refUpdateCase() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_update_case]
@@ -424,7 +424,7 @@ func ref_update_case() {
 	_ = response
 }
 
-func ref_list_case_activities() {
+func refListCaseActivities() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_case_activities]
@@ -436,7 +436,7 @@ func ref_list_case_activities() {
 	_ = response
 }
 
-func ref_get_case_field_values() {
+func refGetCaseFieldValues() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_case_field_values]
@@ -448,7 +448,7 @@ func ref_get_case_field_values() {
 	_ = response
 }
 
-func ref_list_configuration_items() {
+func refListConfigurationItems() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_configuration_items]
@@ -460,7 +460,7 @@ func ref_list_configuration_items() {
 	_ = response
 }
 
-func ref_create_configuration_item() {
+func refCreateConfigurationItem() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_create_configuration_item]
@@ -474,7 +474,7 @@ func ref_create_configuration_item() {
 	_ = response
 }
 
-func ref_get_configuration_item() {
+func refGetConfigurationItem() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_configuration_item]
@@ -486,7 +486,7 @@ func ref_get_configuration_item() {
 	_ = response
 }
 
-func ref_update_configuration_item() {
+func refUpdateConfigurationItem() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_update_configuration_item]
@@ -500,7 +500,7 @@ func ref_update_configuration_item() {
 	_ = response
 }
 
-func ref_patch_configuration_item() {
+func refPatchConfigurationItem() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_patch_configuration_item]
@@ -514,7 +514,7 @@ func ref_patch_configuration_item() {
 	_ = response
 }
 
-func ref_create_relation() {
+func refCreateRelation() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_create_relation]
@@ -528,7 +528,7 @@ func ref_create_relation() {
 	_ = response
 }
 
-func ref_delete_relation() {
+func refDeleteRelation() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_delete_relation]
@@ -538,7 +538,7 @@ func ref_delete_relation() {
 	// [END ref_delete_relation]
 }
 
-func ref_explore_documents() {
+func refExploreDocuments() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_explore_documents]
@@ -550,7 +550,7 @@ func ref_explore_documents() {
 	_ = response
 }
 
-func ref_create_document() {
+func refCreateDocument() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_create_document]
@@ -562,7 +562,7 @@ func ref_create_document() {
 	_ = response
 }
 
-func ref_create_or_link_document() {
+func refCreateOrLinkDocument() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_create_or_link_document]
@@ -574,7 +574,7 @@ func ref_create_or_link_document() {
 	_ = response
 }
 
-func ref_delete_document() {
+func refDeleteDocument() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_delete_document]
@@ -584,7 +584,7 @@ func ref_delete_document() {
 	// [END ref_delete_document]
 }
 
-func ref_get_document_content() {
+func refGetDocumentContent() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_document_content]
@@ -596,7 +596,7 @@ func ref_get_document_content() {
 	_ = response
 }
 
-func ref_list_document_versions() {
+func refListDocumentVersions() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_document_versions]
@@ -608,7 +608,7 @@ func ref_list_document_versions() {
 	_ = response
 }
 
-func ref_get_version_state() {
+func refGetVersionState() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_version_state]
@@ -620,7 +620,7 @@ func ref_get_version_state() {
 	_ = response
 }
 
-func ref_sync_down_document() {
+func refSyncDownDocument() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_sync_down_document]
@@ -632,7 +632,7 @@ func ref_sync_down_document() {
 	_ = response
 }
 
-func ref_attach_document() {
+func refAttachDocument() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_attach_document]
@@ -644,7 +644,7 @@ func ref_attach_document() {
 	_ = response
 }
 
-func ref_execute_version_action() {
+func refExecuteVersionAction() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_execute_version_action]
@@ -654,7 +654,7 @@ func ref_execute_version_action() {
 	// [END ref_execute_version_action]
 }
 
-func ref_update_deployables() {
+func refUpdateDeployables() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_update_deployables]
@@ -668,7 +668,7 @@ func ref_update_deployables() {
 	_ = response
 }
 
-func ref_delete_deployables() {
+func refDeleteDeployables() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_delete_deployables]
@@ -678,7 +678,7 @@ func ref_delete_deployables() {
 	// [END ref_delete_deployables]
 }
 
-func ref_list_exports() {
+func refListExports() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_exports]
@@ -690,7 +690,7 @@ func ref_list_exports() {
 	_ = response
 }
 
-func ref_get_export_status() {
+func refGetExportStatus() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_export_status]
@@ -702,7 +702,7 @@ func ref_get_export_status() {
 	_ = response
 }
 
-func ref_get_export_content() {
+func refGetExportContent() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_export_content]
@@ -714,7 +714,7 @@ func ref_get_export_content() {
 	_ = response
 }
 
-func ref_update_shared_components() {
+func refUpdateSharedComponents() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_update_shared_components]
@@ -728,7 +728,7 @@ func ref_update_shared_components() {
 	_ = response
 }
 
-func ref_delete_shared_components() {
+func refDeleteSharedComponents() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_delete_shared_components]
@@ -738,7 +738,7 @@ func ref_delete_shared_components() {
 	// [END ref_delete_shared_components]
 }
 
-func ref_list_shared_library_applications() {
+func refListSharedLibraryApplications() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_shared_library_applications]
@@ -750,7 +750,7 @@ func ref_list_shared_library_applications() {
 	_ = response
 }
 
-func ref_upload_components() {
+func refUploadComponents() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_upload_components]
@@ -764,7 +764,7 @@ func ref_upload_components() {
 	_ = response
 }
 
-func ref_upload_component_vars() {
+func refUploadComponentVars() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_upload_component_vars]
@@ -778,7 +778,7 @@ func ref_upload_component_vars() {
 	_ = response
 }
 
-func ref_upload_collections() {
+func refUploadCollections() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_upload_collections]
@@ -792,7 +792,7 @@ func ref_upload_collections() {
 	_ = response
 }
 
-func ref_upload_collection_file() {
+func refUploadCollectionFile() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_upload_collection_file]
@@ -806,7 +806,7 @@ func ref_upload_collection_file() {
 	_ = response
 }
 
-func ref_upload_deployable_file() {
+func refUploadDeployableFile() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_upload_deployable_file]
@@ -820,7 +820,7 @@ func ref_upload_deployable_file() {
 	_ = response
 }
 
-func ref_get_upload_status() {
+func refGetUploadStatus() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_upload_status]
@@ -832,7 +832,7 @@ func ref_get_upload_status() {
 	_ = response
 }
 
-func ref_list_changesets() {
+func refListChangesets() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_changesets]
@@ -844,7 +844,7 @@ func ref_list_changesets() {
 	_ = response
 }
 
-func ref_delete_changesets() {
+func refDeleteChangesets() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_delete_changesets]
@@ -854,7 +854,7 @@ func ref_delete_changesets() {
 	// [END ref_delete_changesets]
 }
 
-func ref_get_changeset_activity() {
+func refGetChangesetActivity() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_changeset_activity]
@@ -866,7 +866,7 @@ func ref_get_changeset_activity() {
 	_ = response
 }
 
-func ref_get_commit_status() {
+func refGetCommitStatus() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_commit_status]
@@ -878,7 +878,7 @@ func ref_get_commit_status() {
 	_ = response
 }
 
-func ref_list_impacted_deployables() {
+func refListImpactedDeployables() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_impacted_deployables]
@@ -890,7 +890,7 @@ func ref_list_impacted_deployables() {
 	_ = response
 }
 
-func ref_list_impacted_shared_components() {
+func refListImpactedSharedComponents() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_impacted_shared_components]
@@ -902,7 +902,7 @@ func ref_list_impacted_shared_components() {
 	_ = response
 }
 
-func ref_get_changeset_impacted_deployables() {
+func refGetChangesetImpactedDeployables() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_changeset_impacted_deployables]
@@ -914,7 +914,7 @@ func ref_get_changeset_impacted_deployables() {
 	_ = response
 }
 
-func ref_list_nodes() {
+func refListNodes() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_list_nodes]
@@ -926,7 +926,7 @@ func ref_list_nodes() {
 	_ = response
 }
 
-func ref_create_node() {
+func refCreateNode() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_create_node]
@@ -940,7 +940,7 @@ func ref_create_node() {
 	_ = response
 }
 
-func ref_update_node() {
+func refUpdateNode() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_update_node]
@@ -954,7 +954,7 @@ func ref_update_node() {
 	_ = response
 }
 
-func ref_delete_node() {
+func refDeleteNode() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_delete_node]
@@ -966,7 +966,7 @@ func ref_delete_node() {
 	_ = response
 }
 
-func ref_validate_configuration() {
+func refValidateConfiguration() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_validate_configuration]
@@ -978,7 +978,7 @@ func ref_validate_configuration() {
 	_ = response
 }
 
-func ref_create_policy_mapping() {
+func refCreatePolicyMapping() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_create_policy_mapping]
@@ -990,7 +990,7 @@ func ref_create_policy_mapping() {
 	_ = response
 }
 
-func ref_delete_policy_mapping() {
+func refDeletePolicyMapping() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_delete_policy_mapping]
@@ -1001,83 +1001,83 @@ func ref_delete_policy_mapping() {
 }
 
 func _() {
-	ref_list_accounts()
-	ref_get_account()
-	ref_get_aggregates()
-	ref_list_activities()
-	ref_list_contexts()
-	ref_list_subscription_objects()
-	ref_get_facet_instances()
-	ref_get_followings()
-	ref_get_preference()
-	ref_create_preference()
-	ref_get_subscription()
-	ref_check_subscription()
-	ref_subscribe()
-	ref_unsubscribe()
-	ref_get_subscribers()
-	ref_get_user_stream()
-	ref_update_user_stream()
-	ref_check_availability()
-	ref_book_appointment()
-	ref_get_calendar()
-	ref_get_configuration()
-	ref_execute_rule_conditions()
-	ref_request_user_window()
-	ref_create_application_service()
-	ref_find_service()
-	ref_register_service()
-	ref_populate_service()
-	ref_update_service_details()
-	ref_list_cases()
-	ref_create_case()
-	ref_get_case()
-	ref_update_case()
-	ref_list_case_activities()
-	ref_get_case_field_values()
-	ref_list_configuration_items()
-	ref_create_configuration_item()
-	ref_get_configuration_item()
-	ref_update_configuration_item()
-	ref_patch_configuration_item()
-	ref_create_relation()
-	ref_delete_relation()
-	ref_explore_documents()
-	ref_create_document()
-	ref_create_or_link_document()
-	ref_delete_document()
-	ref_get_document_content()
-	ref_list_document_versions()
-	ref_get_version_state()
-	ref_sync_down_document()
-	ref_attach_document()
-	ref_execute_version_action()
-	ref_update_deployables()
-	ref_delete_deployables()
-	ref_list_exports()
-	ref_get_export_status()
-	ref_get_export_content()
-	ref_update_shared_components()
-	ref_delete_shared_components()
-	ref_list_shared_library_applications()
-	ref_upload_components()
-	ref_upload_component_vars()
-	ref_upload_collections()
-	ref_upload_collection_file()
-	ref_upload_deployable_file()
-	ref_get_upload_status()
-	ref_list_changesets()
-	ref_delete_changesets()
-	ref_get_changeset_activity()
-	ref_get_commit_status()
-	ref_list_impacted_deployables()
-	ref_list_impacted_shared_components()
-	ref_get_changeset_impacted_deployables()
-	ref_list_nodes()
-	ref_create_node()
-	ref_update_node()
-	ref_delete_node()
-	ref_validate_configuration()
-	ref_create_policy_mapping()
-	ref_delete_policy_mapping()
+	refListAccounts()
+	refGetAccount()
+	refGetAggregates()
+	refListActivities()
+	refListContexts()
+	refListSubscriptionObjects()
+	refGetFacetInstances()
+	refGetFollowings()
+	refGetPreference()
+	refCreatePreference()
+	refGetSubscription()
+	refCheckSubscription()
+	refSubscribe()
+	refUnsubscribe()
+	refGetSubscribers()
+	refGetUserStream()
+	refUpdateUserStream()
+	refCheckAvailability()
+	refBookAppointment()
+	refGetCalendar()
+	refGetConfiguration()
+	refExecuteRuleConditions()
+	refRequestUserWindow()
+	refCreateApplicationService()
+	refFindService()
+	refRegisterService()
+	refPopulateService()
+	refUpdateServiceDetails()
+	refListCases()
+	refCreateCase()
+	refGetCase()
+	refUpdateCase()
+	refListCaseActivities()
+	refGetCaseFieldValues()
+	refListConfigurationItems()
+	refCreateConfigurationItem()
+	refGetConfigurationItem()
+	refUpdateConfigurationItem()
+	refPatchConfigurationItem()
+	refCreateRelation()
+	refDeleteRelation()
+	refExploreDocuments()
+	refCreateDocument()
+	refCreateOrLinkDocument()
+	refDeleteDocument()
+	refGetDocumentContent()
+	refListDocumentVersions()
+	refGetVersionState()
+	refSyncDownDocument()
+	refAttachDocument()
+	refExecuteVersionAction()
+	refUpdateDeployables()
+	refDeleteDeployables()
+	refListExports()
+	refGetExportStatus()
+	refGetExportContent()
+	refUpdateSharedComponents()
+	refDeleteSharedComponents()
+	refListSharedLibraryApplications()
+	refUploadComponents()
+	refUploadComponentVars()
+	refUploadCollections()
+	refUploadCollectionFile()
+	refUploadDeployableFile()
+	refGetUploadStatus()
+	refListChangesets()
+	refDeleteChangesets()
+	refGetChangesetActivity()
+	refGetCommitStatus()
+	refListImpactedDeployables()
+	refListImpactedSharedComponents()
+	refGetChangesetImpactedDeployables()
+	refListNodes()
+	refCreateNode()
+	refUpdateNode()
+	refDeleteNode()
+	refValidateConfiguration()
+	refCreatePolicyMapping()
+	refDeletePolicyMapping()
 }

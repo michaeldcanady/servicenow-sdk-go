@@ -12,7 +12,7 @@ description: >-
 
 ## The decision
 
-Models are not plain structs. Every model embeds `core.BaseModel` and stores
+Models aren't plain structs. Every model embeds `core.BaseModel` and stores
 its data in a Kiota `BackingStore` — a key/value store with change tracking —
 rather than in struct fields. Accessors are generated from the helpers in
 `internal/store` (`DefaultBackedModelAccessorFunc` /

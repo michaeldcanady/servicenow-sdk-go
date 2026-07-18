@@ -9,7 +9,7 @@ description: >-
 
 Every codebase has load-bearing decisions that look arbitrary until someone
 explains them. This section is those explanations — short, plain-language
-tellings of the three decisions the whole SDK rests on. Each page states the
+accounts of the three decisions the whole SDK rests on. Each page states the
 decision, the reasons, and what it means for the code you write; each links
 to its **Architecture Decision Record (ADR)** in `docs/adr/`, which is the
 primary source when you want the deeper technical why and how, the

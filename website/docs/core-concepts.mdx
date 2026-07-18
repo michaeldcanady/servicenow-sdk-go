@@ -55,7 +55,7 @@ Deadlines and cancellation on the context propagate to the HTTP call:
 <GoSnippet language="go" src={conceptsGo} region="concepts_context" />
 
 Each verb on each resource has its **own** configuration and query-parameter
-types — `TableRequestBuilderGetRequestConfiguration` is not interchangeable
+types — `TableRequestBuilderGetRequestConfiguration` isn't interchangeable
 with the `Post` variant. This is deliberate: the type tells you exactly which
 parameters that verb supports, so an option that doesn't exist can't compile.
 
@@ -79,12 +79,12 @@ pagination links used by the [page iterator](user-guide/pagination.mdx).
 
 ## 4. Backed models and the pointer-getter pattern
 
-Models are not plain structs. Each model wraps a *backing store* — a key/value
+Models aren't plain structs. Each model wraps a *backing store* — a key/value
 map tracking which fields the instance actually sent and which you changed.
 That design is why the accessors look the way they do:
 
 - **Getters return `(value, error)`** — the store distinguishes "field absent"
-  from "field empty", and reports it instead of silently zeroing.
+  from "field empty," and reports it instead of silently zeroing.
 - **Values come back as pointers** — `nil` means the instance sent no value,
   which is different from `""` or `0`.
 

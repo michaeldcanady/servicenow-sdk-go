@@ -2,7 +2,6 @@
 
 package snippets
 
-// [START query_basic_imports]
 import (
 	"context"
 	"fmt"
@@ -12,8 +11,6 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/query"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
 )
-
-// [END query_basic_imports]
 
 func _() {
 	var client *servicenowsdkgo.ServiceNowServiceClient

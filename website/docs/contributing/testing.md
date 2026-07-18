@@ -35,7 +35,7 @@ you've modeled a new response shape — unit tests only prove your mocks
 round-trip through your *own* serializer, and the real instance is the only
 authority on what ServiceNow sends.
 
-## Unit tests: the idiom
+## Unit tests: The idiom
 
 Unit tests are **table-driven with `testify`**, and HTTP is stubbed with
 `httpmock` (plus the `testify/mock`-based doubles in `internal/mocking`).

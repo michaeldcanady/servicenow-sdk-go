@@ -47,7 +47,7 @@ func _() {
 	postConfig := &batchapi.BatchRequestBuilderPostRequestConfiguration{}
 
 	// Step 5: Execute request
-	batch_response, err := client.Now().Batch().Post(context.Background(), body, postConfig)
+	batchResponse, err := client.Now().Batch().Post(context.Background(), body, postConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,7 +55,7 @@ func _() {
 
 	// [START batch_std_create]
 	// Step 3: Define raw URL
-	rawURL := "https://xSDK_SN_URLx/api/now/v1/batch"
+	rawURL := "xSDK_SN_URLx/api/now/v1/batch"
 
 	// Step 4. Build requests, using ToXXXRequestInformation method
 	body, err = batchRequests(true, requests...)
@@ -76,6 +76,6 @@ func _() {
 	}
 	// [END batch_std_create]
 
-	_ = batch_response
+	_ = batchResponse
 	_ = resp
 }

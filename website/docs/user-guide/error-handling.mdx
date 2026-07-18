@@ -43,7 +43,7 @@ through `GetError()`:
 <GoSnippet language="go" src={errorsGo} region="errors_details" />
 
 The getters return `*string`; check for `nil` before dereferencing — the
-platform does not populate every field for every failure.
+platform doesn't populate every field for every failure.
 
 ## Usage errors (sentinels)
 
@@ -64,7 +64,7 @@ Commonly encountered sentinels:
 - `ErrNilContext` — a nil `context.Context` was passed.
 
 Compare sentinels by identity (`errors.Is`), never by matching the message
-string — wording is not part of the compatibility contract.
+string — wording isn't part of the compatibility contract.
 
 ## Retries and 429
 

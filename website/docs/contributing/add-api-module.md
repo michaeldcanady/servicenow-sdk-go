@@ -24,7 +24,7 @@ Two reference implementations to keep open while you work:
 Don't scaffold from memory or from marketing docs. Confirm, against a live
 instance (a free [PDI](https://developer.servicenow.com/) works):
 
-- the base path (e.g. `/api/now/documents`) and which sub-paths exist,
+- the base path (for example, `/api/now/documents`) and which sub-paths exist,
 - which HTTP verbs each path accepts,
 - which query parameters are honored,
 - the exact response shape from a real 200 response — nesting, arrays vs.

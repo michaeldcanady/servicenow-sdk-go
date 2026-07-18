@@ -49,12 +49,18 @@ syntax — print it to see exactly what will be sent:
 
 <GoSnippet language="go" src={queryGo} region="query_basic" />
 
+### Plug the query into a table request
+
+Pass the rendered string as the `Query` query parameter of a list request:
+
+<GoSnippet language="go" src={queryGo} region="query_table_api" />
+
 ### Field types and operators
 
 Conditions start from a typed field constructor — `query.String`,
 `query.Number`, `query.Boolean`, `query.Date`/`query.DateTime` — each
 exposing the operators valid for that type (`Is`, `Contains`, `IsOneOf`,
-`Before`, ...). Combine conditions with `.And(...)`/`.Or(...)` or the
+`Before`, …). Combine conditions with `.And(...)`/`.Or(...)` or the
 top-level `query.And(...)`/`query.Or(...)`.
 
 ## Tips

@@ -28,7 +28,7 @@ pre-release previews.
 | --- | --- |
 | `NewServiceNowClient(cred, url)` / `NewServiceNowClient2(cred, url)` | `NewServiceNowServiceClient(opts...)` |
 | `credentials.NewUsernamePasswordCredential(u, p)` | `credentials.NewBasicProvider(u, p)` |
-| `credentials.NewTokenCredential(...)` | OAuth2 providers: `NewROPCProvider`, `NewClientCredentialsProvider`, `NewPrivateAuthorizationCodeProvider`, ... |
+| `credentials.NewTokenCredential(...)` | OAuth2 providers: `NewROPCProvider`, `NewClientCredentialsProvider`, `NewPrivateAuthorizationCodeProvider`, … |
 | `client.RequestAdapter` (field) | `client.GetRequestAdapter()` (method) |
 | `client.Now()` / `client.Now2()` | `client.Now()` |
 | `.Table(name)` / `.TableV2(name)` / `.Table2(name)` | `.Table(name)` |
@@ -36,7 +36,7 @@ pre-release previews.
 | `.Get2(ctx, params)`, `.Post4(ctx, data, params)` | `.Get(ctx, config)`, `.Post(ctx, data, config)` |
 | `import ".../table-api"`, `".../attachment-api"`, `".../batch-api"` | `import ".../tableapi"`, `".../attachmentapi"`, `".../batchapi"` |
 | `query2` package | `query` package |
-| `TableRequestBuilder2`, `TableItemRequestBuilder2GetRequestConfiguration`, ... | Same name without the `2` |
+| `TableRequestBuilder2`, `TableItemRequestBuilder2GetRequestConfiguration`, … | Same name without the `2` |
 | `TableEntry` (a `map[string]interface{}`) | `TableRecord` (backed model) |
 | `entry.Value("field")` → `*TableValue` | `record.Get("field")` → `(*RecordElement, error)` |
 | `entry.Set("field", v)` | `record.SetValue("field", v)` (returns `error`) |
@@ -58,7 +58,7 @@ client, err := servicenowsdkgo.NewServiceNowClient2(cred, "https://instance.serv
 
 `WithURL` takes the full base URL; `WithInstance` takes just the instance
 name. See [Configuration](configuration.mdx) for the other options
-(`WithHTTPClient`, `WithMiddleware`, `WithRequestAdapter`, ...).
+(`WithHTTPClient`, `WithMiddleware`, `WithRequestAdapter`, …).
 
 If you implemented v1's `Credential` interface (`GetAuthentication() (string,
 error)`) yourself, implement Kiota's
@@ -80,7 +80,7 @@ response, err := client.Now2().TableV2("incident").ById(sysID).Get(ctx, config)
 The same applies to every type name: drop the `2`
 (`TableRequestBuilder2` → `TableRequestBuilder`,
 `TableItemRequestBuilder2GetRequestConfiguration` →
-`TableItemRequestBuilderGetRequestConfiguration`, and so on). Verb-specific
+`TableItemRequestBuilderGetRequestConfiguration`, and the rest). Verb-specific
 methods like `Get2`, `Get3`, and `Post4` are gone; each builder has exactly
 one `Get`/`Post`/`Put`/`Delete`.
 
@@ -138,7 +138,7 @@ if err := record.SetValue("short_description", "example"); err != nil {
 }
 ```
 
-## Responses: fields → `GetResult()`
+## Responses: Fields → `GetResult()`
 
 v1 responses exposed results as struct fields; v2 responses are envelopes
 whose accessors can fail (deserialization is lazy):

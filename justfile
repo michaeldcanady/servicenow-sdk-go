@@ -26,6 +26,11 @@ lint:
 fmt:
 	gofmt -s -w .
 
+# Vet doc code snippets and check region markers against the pages
+check-docs:
+	go vet -tags snippets ./website/snippets/
+	./scripts/check-snippet-regions.sh
+
 # Clean up local build artifacts
 clean-docs:
 	rm -rf website/build website/.docusaurus

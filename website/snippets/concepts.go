@@ -2,7 +2,6 @@
 
 package snippets
 
-// [START concepts_imports]
 import (
 	"context"
 	"fmt"
@@ -12,8 +11,6 @@ import (
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
 )
-
-// [END concepts_imports]
 
 func _() {
 	conceptsChaining()
@@ -44,7 +41,7 @@ func conceptsChaining() {
 
 	// [START concepts_standard]
 	// Standard modality: construct the request builder yourself from a raw URL.
-	rawURL := "https://xSDK_SN_URLx/api/now/v1/table/xSDK_SN_TABLEx"
+	rawURL := "xSDK_SN_URLx/api/now/v1/table/xSDK_SN_TABLEx"
 	requestBuilder := tableapi.NewDefaultTableItemRequestBuilder(rawURL, client.GetRequestAdapter())
 
 	stdRecord, err := requestBuilder.Get(context.Background(), nil)

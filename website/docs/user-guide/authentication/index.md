@@ -13,7 +13,7 @@ Pick the flow that matches how your application runs:
 | Server-to-server integration, no user present | [Client Credentials](./client-credentials.mdx) | The app authenticates as itself with a client ID and secret. |
 | Server-to-server with key-based trust | [JWT Token](./jwt-token.mdx) | Signed assertions instead of a shared secret; best for non-interactive services with strict credential policies. |
 | A user signs in interactively, and the app can keep a secret (server-side service, desktop app) | [Authorization Code — Private](./auth-code-private.mdx) | Standard OAuth2 with a confidential client. |
-| A user signs in interactively, and the app cannot keep a secret (CLI tool, SPA) | [Authorization Code — Public](./auth-code-public.mdx) | Same flow secured with PKCE instead of a secret. |
+| A user signs in interactively, and the app can't keep a secret (CLI tool, SPA) | [Authorization Code — Public](./auth-code-public.mdx) | Same flow secured with PKCE instead of a secret. |
 | Legacy or tightly controlled environment where interactive login is impossible | [ROPC](./ropc.mdx) | Exchanges a username/password for OAuth tokens; use only when the flows above are unavailable. |
 | Local development, testing, quick scripts | [Basic](./basic.mdx) | Simplest to set up; avoid for production integrations. |
 

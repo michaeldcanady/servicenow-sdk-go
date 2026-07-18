@@ -17,7 +17,7 @@ serialization registries, retry middleware — and this repo hand-writes the
 ServiceNow-specific surface on top, deliberately mimicking the conventions of
 Kiota-*generated* SDKs like msgraph-sdk-go
 ([why?](design-hand-written-kiota.md)). Keep that in mind throughout: whenever
-a component seems to exist "just because", the answer is usually "because
+a component seems to exist "just because," the answer is usually "because
 that's how Kiota SDKs work, and familiarity is the feature."
 
 ## The life of a request
@@ -82,9 +82,9 @@ URLs and models.
 
 ## Where things live
 
-| Path | What it is | When you touch it |
+| Path | Purpose | When you touch it |
 | ---- | ---------- | ----------------- |
-| `*api/` (e.g. `tableapi/`) | One package per ServiceNow API; request builders, models, per-verb configurations | Adding or changing an API surface — see the [playbook](add-api-module.md) |
+| `*api/` (for example, `tableapi/`) | One package per ServiceNow API; request builders, models, per-verb configurations | Adding or changing an API surface — see the [playbook](add-api-module.md) |
 | `core/` | The shared skeleton: `BaseRequestBuilder`, `BaseModel`, response envelopes, error mapping, page iterator | Rarely — changes here ripple through every module |
 | `internal/` | Implementation helpers (nil-checks, store accessors, serialization generators, query AST) — never imported by consumers | When a pattern repeats across modules and deserves a helper |
 | `credentials/` | Authentication providers (Basic + the OAuth2 flows) | Auth features and fixes |
@@ -97,7 +97,7 @@ Two rules of thumb fall out of this layout:
 
 - **Compose, don't reinvent.** If you're writing a nil-check, a property
   accessor, or serialization plumbing inside a module, stop — `internal/`
-  almost certainly has the helper, and using it is what keeps modules
+  almost certainly has the helper, and using it keeps modules
   identical.
 - **`tableapi/` is the reference implementation.** Fullest verb coverage,
   paging, generics. When you're unsure what a new file should look like, look

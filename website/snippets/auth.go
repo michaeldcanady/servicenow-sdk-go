@@ -14,13 +14,6 @@ import (
 
 import "github.com/microsoft/kiota-abstractions-go/authentication"
 
-// [START auth_interface]
-type Credential interface {
-	GetAuthentication() (string, error)
-}
-
-// [END auth_interface]
-
 func _() {
 	// [START auth_basic_admin]
 	credAdmin := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
@@ -40,7 +33,6 @@ func _() {
 	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
 	// [END auth_basic]
 
-	// [START auth_token]
 	// You'll need your Client ID.
 	credToken, err := credentials.NewPublicAuthorizationCodeProvider(
 		"your-client-id",
@@ -48,7 +40,6 @@ func _() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// [END auth_token]
 
 	// [START client_init]
 	client, err := servicenowsdkgo.NewServiceNowServiceClient(

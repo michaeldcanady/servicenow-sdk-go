@@ -18,7 +18,7 @@ transport, and logging.
 
 | Value           | Description                                                                               |
 | --------------- | ----------------------------------------------------------------------------------------- |
-| Instance or URL | `WithInstance("{instance}")`, or `WithURL(...)` for a full base URL (e.g. behind a proxy) |
+| Instance or URL | `WithInstance("{instance}")`, or `WithURL(...)` for a full base URL (for example, behind a proxy) |
 | Credentials     | Any provider from the [Authentication guide](authentication/index.md)                     |
 
 ## Example
@@ -61,6 +61,15 @@ To control transport-level settings (timeouts, TLS, proxies), supply your own
 `*http.Client`:
 
 <GoSnippet language="go" src={configGo} region="config_http_client" />
+
+### Custom logger
+
+Route the SDK's diagnostic output through your own logger — anything with a
+`Log(message string, args ...interface{})` method:
+
+<GoSnippet language="go" src={configGo} region="config_std_logger" />
+
+<GoSnippet language="go" src={configGo} region="config_logger" />
 
 ### Advanced options
 
