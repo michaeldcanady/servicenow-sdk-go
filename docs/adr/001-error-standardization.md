@@ -4,7 +4,7 @@
 Proposed
 
 ## Context
-The ServiceNow SDK for Go has inconsistent error handling patterns, including varying message phrasing ("can't be nil" vs "is nil") and hardcoded error messages scattered throughout the codebase. This hinders maintainability and compromises the developer experience for v2.0.
+The ServiceNow SDK for Go has inconsistent error handling patterns, including varying message phrasing ("can't be nil" vs "is nil") and hard-coded error messages scattered throughout the codebase. This hinders maintainability and compromises the developer experience for v2.0.
 
 ## Decision
 We will standardize error handling with the following principles:
@@ -13,7 +13,7 @@ We will standardize error handling with the following principles:
    - Use `"[parameter] cannot be nil"` for nil checks.
    - Use `"[parameter] is required"` for missing inputs.
    - Avoid contractions (use `cannot`, not `can't`).
-3. **Behavioral Consistency**: Centralize validation logic (e.g., parameter nil checks) within the `errors` package where feasible, and apply consistent validation across all constructors and API methods.
+3. **Behavioral Consistency**: Centralize validation logic (for example, parameter nil checks) within the `errors` package where feasible, and apply consistent validation across all constructors and API methods.
 
 ## Consequences
 - **Pros**: Improved code consistency, easier maintenance, and a cleaner, more professional developer experience.
