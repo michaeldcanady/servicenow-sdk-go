@@ -380,7 +380,7 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 
 				requestInformation, err := builder.Post(context.Background(), request, nil)
 
-				assert.Nil(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, requestInformation)
 			},
 		},
@@ -393,7 +393,7 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 
 				requestInformation, err := builder.Post(context.Background(), request, nil)
 
-				assert.Nil(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, requestInformation)
 			},
 		},
@@ -623,7 +623,7 @@ func TestBatchRequestBuilder_toPostRequestInformation(t *testing.T) {
 
 				requestInformation, err := builder.toPostRequestInformation(context.Background(), request, nil)
 
-				assert.Nil(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, requestInformation)
 			},
 		},
@@ -636,7 +636,7 @@ func TestBatchRequestBuilder_toPostRequestInformation(t *testing.T) {
 
 				requestInformation, err := builder.toPostRequestInformation(context.Background(), request, nil)
 
-				assert.Nil(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, requestInformation)
 			},
 		},

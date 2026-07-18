@@ -51,7 +51,7 @@ func (rB *BaseRequestBuilder) GetPathParameters() map[string]string {
 
 func (rB *BaseRequestBuilder) SetPathParameters(pathParameters map[string]string) error {
 	if conversion.IsNil(rB) {
-		return nil
+		return snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(pathParameters) {
@@ -72,7 +72,7 @@ func (rB *BaseRequestBuilder) GetRequestAdapter() abstractions.RequestAdapter {
 
 func (rB *BaseRequestBuilder) SetRequestAdapter(requestAdapter abstractions.RequestAdapter) error {
 	if conversion.IsNil(rB) {
-		return nil
+		return snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(requestAdapter) {
@@ -93,7 +93,7 @@ func (rB *BaseRequestBuilder) GetURLTemplate() string {
 
 func (rB *BaseRequestBuilder) SetURLTemplate(urlTemplate string) error {
 	if conversion.IsNil(rB) {
-		return nil
+		return snerrors.ErrNilRequestBuilder
 	}
 
 	urlTemplate = strings.TrimSpace(urlTemplate)

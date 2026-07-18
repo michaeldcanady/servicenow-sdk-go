@@ -2,6 +2,7 @@ package documentsapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -29,7 +30,7 @@ func NewDeleteRequestBuilderInternal(pathParameters map[string]string, requestAd
 // Delete removes a document.
 func (rB *DeleteRequestBuilder) Delete(ctx context.Context, requestConfiguration *DeleteRequestBuilderDeleteRequestConfiguration) error {
 	if conversion.IsNil(rB) {
-		return nil
+		return snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToDeleteRequestInformation(ctx, requestConfiguration)

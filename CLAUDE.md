@@ -104,7 +104,7 @@ package follows:
 - **One method per HTTP verb** (`Get`/`Post`/`Patch`/`Put`/`Delete`), each starting with:
   ```go
   if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-      return nil, nil
+      return nil, snerrors.ErrNilRequestBuilder
   }
   if conversion.IsNil(rB.GetRequestAdapter()) {
       return nil, snerrors.ErrNilRequestAdapter   // see error-sentinel note below

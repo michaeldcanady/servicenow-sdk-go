@@ -2,6 +2,7 @@ package actsubapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -66,7 +67,7 @@ func NewSubscriptionItemRequestBuilderInternal(pathParameters map[string]string,
 // Get sends a GET request to retrieve a specific subscription.
 func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *SubscriptionsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
@@ -89,7 +90,7 @@ func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *Subsc
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *SubscriptionItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *SubscriptionsRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -160,7 +161,7 @@ func NewIsSubscribedRequestBuilderInternal(pathParameters map[string]string, req
 // Get sends a GET request to check if the current user is subscribed.
 func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscribedRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
@@ -183,7 +184,7 @@ func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscri
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *IsSubscribedRequestBuilder) ToGetRequestInformation(ctx context.Context, config *IsSubscribedRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -215,7 +216,7 @@ func NewSubscribeRequestBuilderInternal(pathParameters map[string]string, reques
 // Post sends a POST request to subscribe to an object.
 func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubscriptionModel, config *SubscribeRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
@@ -238,7 +239,7 @@ func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubsc
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *SubscribeRequestBuilder) ToPostRequestInformation(ctx context.Context, body *ActivitySubscriptionModel, config *SubscribeRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -277,7 +278,7 @@ func NewUnsubscribeRequestBuilderInternal(pathParameters map[string]string, requ
 // Delete sends a DELETE request to unsubscribe from an object.
 func (rB *UnsubscribeRequestBuilder) Delete(ctx context.Context, config *UnsubscribeRequestBuilderDeleteRequestConfiguration) error {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil
+		return snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToDeleteRequestInformation(ctx, config)
@@ -296,7 +297,7 @@ func (rB *UnsubscribeRequestBuilder) Delete(ctx context.Context, config *Unsubsc
 // ToDeleteRequestInformation creates a RequestInformation object for a DELETE request.
 func (rB *UnsubscribeRequestBuilder) ToDeleteRequestInformation(ctx context.Context, config *UnsubscribeRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())

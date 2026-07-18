@@ -2,6 +2,7 @@ package cmdbinstanceapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -33,7 +34,7 @@ func NewCmdbItemRequestBuilderInternal(pathParameters map[string]string, request
 // Get queries attributes and relationship information for a specific record.
 func (rB *CmdbItemRequestBuilder) Get(ctx context.Context, config *CmdbItemRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
@@ -57,7 +58,7 @@ func (rB *CmdbItemRequestBuilder) Get(ctx context.Context, config *CmdbItemReque
 // Put replaces a CI record.
 func (rB *CmdbItemRequestBuilder) Put(ctx context.Context, body CmdbInstance, config *CmdbItemRequestBuilderPutRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)
@@ -81,7 +82,7 @@ func (rB *CmdbItemRequestBuilder) Put(ctx context.Context, body CmdbInstance, co
 // Patch updates a CI record.
 func (rB *CmdbItemRequestBuilder) Patch(ctx context.Context, body CmdbInstance, config *CmdbItemRequestBuilderPatchRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToPatchRequestInformation(ctx, body, config)

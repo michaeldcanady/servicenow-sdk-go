@@ -121,7 +121,7 @@ func assertAttachmentItemFileGetResult(t *testing.T, tt attachmentItemFileGetTes
 
 	if tt.nilBuilder {
 		assert.Nil(t, result)
-		assert.NoError(t, err)
+		assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		return
 	}
 
@@ -232,7 +232,7 @@ func assertAttachmentItemFileToGetRequestInformation(t *testing.T, tt attachment
 
 	if tt.nilBuilder || tt.nilRequestBuilder {
 		assert.Nil(t, reqInfo)
-		assert.NoError(t, err)
+		assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		return
 	}
 

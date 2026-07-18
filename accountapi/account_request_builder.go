@@ -2,6 +2,7 @@ package accountapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -35,7 +36,7 @@ func (rB *AccountRequestBuilder) ByID(accountID string) *AccountItemRequestBuild
 // Get sends a GET request to retrieve a list of accounts.
 func (rB *AccountRequestBuilder) Get(ctx context.Context, config *AccountRequestBuilderGetRequestConfiguration) (AccountCollectionResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
@@ -59,7 +60,7 @@ func (rB *AccountRequestBuilder) Get(ctx context.Context, config *AccountRequest
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *AccountRequestBuilder) ToGetRequestInformation(_ context.Context, config *AccountRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())

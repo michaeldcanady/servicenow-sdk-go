@@ -3,6 +3,7 @@ package appserviceapi
 import (
 	"context"
 	"errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -79,7 +80,7 @@ func TestServicePostRequestBuilder_Post(t *testing.T) {
 
 			switch {
 			case tt.nilBuilder, tt.nilInner:
-				assert.NoError(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, resp)
 			case tt.expectedErr != nil:
 				assert.EqualError(t, err, tt.expectedErr.Error())
@@ -107,14 +108,14 @@ func TestServicePostRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	t.Run("Nil builder", func(t *testing.T) {
 		var builder *servicePostRequestBuilder[*CreateServiceRequest, CreateServiceResponse]
 		reqInfo, err := builder.toPostRequestInformation(context.Background(), NewCreateServiceRequest(), nil)
-		assert.NoError(t, err)
+		assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		assert.Nil(t, reqInfo)
 	})
 
 	t.Run("Nil inner request builder", func(t *testing.T) {
 		builder := &servicePostRequestBuilder[*CreateServiceRequest, CreateServiceResponse]{}
 		reqInfo, err := builder.toPostRequestInformation(context.Background(), NewCreateServiceRequest(), nil)
-		assert.NoError(t, err)
+		assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		assert.Nil(t, reqInfo)
 	})
 }

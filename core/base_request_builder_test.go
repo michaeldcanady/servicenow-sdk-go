@@ -75,7 +75,7 @@ func TestBaseRequestBuilder_SetPathParameters(t *testing.T) {
 	}{
 		{"Ok", rb, params, nil},
 		{"NilParams", rb, nil, snerrors.ErrNilPathParameters},
-		{"NilRB", nilRB, params, nil},
+		{"NilRB", nilRB, params, snerrors.ErrNilRequestBuilder},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -132,7 +132,7 @@ func TestBaseRequestBuilder_SetRequestAdapter(t *testing.T) {
 	}{
 		{"Ok", rb, ra, nil},
 		{"NilRA", rb, nil, snerrors.ErrNilRequestAdapter},
-		{"NilRB", nilRB, ra, nil},
+		{"NilRB", nilRB, ra, snerrors.ErrNilRequestBuilder},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -184,7 +184,7 @@ func TestBaseRequestBuilder_SetURLTemplate(t *testing.T) {
 	}{
 		{"Ok", rb, "t", nil},
 		{"Empty", rb, "", errors.New("urlTemplate is empty")},
-		{"NilRB", nilRB, "t", nil},
+		{"NilRB", nilRB, "t", snerrors.ErrNilRequestBuilder},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

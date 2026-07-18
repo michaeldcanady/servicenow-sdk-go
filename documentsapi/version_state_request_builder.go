@@ -2,6 +2,7 @@ package documentsapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -27,7 +28,7 @@ func NewVersionStateRequestBuilderInternal(pathParameters map[string]string, req
 // Get retrieves the state of the specified document version.
 func (rB *VersionStateRequestBuilder) Get(ctx context.Context, requestConfiguration *VersionStateRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[Document], error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	return rB.get(ctx, (*documentGetRequestConfiguration)(requestConfiguration))
 }
@@ -35,7 +36,7 @@ func (rB *VersionStateRequestBuilder) Get(ctx context.Context, requestConfigurat
 // ToGetRequestInformation converts request configurations to Get request information.
 func (rB *VersionStateRequestBuilder) ToGetRequestInformation(ctx context.Context, requestConfiguration *VersionStateRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	return rB.toGetRequestInformation(ctx, (*documentGetRequestConfiguration)(requestConfiguration))
 }

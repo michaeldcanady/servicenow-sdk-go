@@ -243,7 +243,7 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 			if tt.nilBuilder {
 				assert.Nil(t, res)
-				assert.NoError(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				return
 			}
 
@@ -321,7 +321,7 @@ func assertAttachmentFilePostRequestInformation(t *testing.T, tt attachmentFileP
 
 	if tt.nilBuilder || tt.nilRequestBuilder {
 		assert.Nil(t, reqInfo)
-		assert.NoError(t, err)
+		assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		return
 	}
 

@@ -50,7 +50,7 @@ func NewStatsRequestBuilder(
 // Get sends an HTTP GET request and returns the aggregate statistics for the table.
 func (rB *StatsRequestBuilder) Get(ctx context.Context, requestConfiguration *StatsRequestBuilderGetRequestConfiguration) (core.ServiceNowItemResponse[*StatsResultModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
@@ -87,7 +87,7 @@ func (rB *StatsRequestBuilder) Get(ctx context.Context, requestConfiguration *St
 // ToGetRequestInformation converts provided parameters into request information
 func (rB *StatsRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *StatsRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())

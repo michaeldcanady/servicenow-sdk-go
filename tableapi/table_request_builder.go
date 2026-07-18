@@ -73,7 +73,7 @@ func NewTableRequestBuilder[T model.ServiceNowItem](
 // Get sends an HTTP GET request and returns a collection of table records.
 func (rB *TableRequestBuilder[T]) Get(ctx context.Context, requestConfiguration *TableRequestBuilderGetRequestConfiguration) (core.ServiceNowCollectionResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
@@ -117,7 +117,7 @@ func (rB *TableRequestBuilder[T]) Get(ctx context.Context, requestConfiguration 
 // Post sends an HTTP POST request to create a new table record and returns the created record.
 func (rB *TableRequestBuilder[T]) Post(ctx context.Context, body T, requestConfiguration *TableRequestBuilderPostRequestConfiguration) (core.ServiceNowItemResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
@@ -161,7 +161,7 @@ func (rB *TableRequestBuilder[T]) ByID(sysId string) *TableItemRequestBuilder[T]
 // Head sends an HTTP HEAD request and returns the response headers.
 func (rB *TableRequestBuilder[T]) Head(ctx context.Context, requestConfiguration *TableRequestBuilderGetRequestConfiguration) (*abstractions.ResponseHeaders, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
@@ -192,7 +192,7 @@ func (rB *TableRequestBuilder[T]) Head(ctx context.Context, requestConfiguration
 // ToGetRequestInformation converts provided parameters into request information
 func (rB *TableRequestBuilder[T]) ToGetRequestInformation(_ context.Context, requestConfiguration *TableRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -208,7 +208,7 @@ func (rB *TableRequestBuilder[T]) ToGetRequestInformation(_ context.Context, req
 // ToPostRequestInformation converts provided parameters into request information
 func (rB *TableRequestBuilder[T]) ToPostRequestInformation(ctx context.Context, body T, requestConfiguration *TableRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -230,7 +230,7 @@ func (rB *TableRequestBuilder[T]) ToPostRequestInformation(ctx context.Context, 
 // ToHeadRequestInformation converts provided parameters into request information
 func (rB *TableRequestBuilder[T]) ToHeadRequestInformation(_ context.Context, requestConfiguration *TableRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.HEAD, rB.GetURLTemplate(), rB.GetPathParameters())

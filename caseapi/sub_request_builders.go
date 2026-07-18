@@ -2,6 +2,7 @@ package caseapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -50,7 +51,7 @@ func (rB *CaseItemRequestBuilder) FieldValues(fieldName string) *CaseFieldValues
 // Get sends a GET request to retrieve a single case.
 func (rB *CaseItemRequestBuilder) Get(ctx context.Context, config *CaseItemRequestBuilderGetRequestConfiguration) (CaseItemResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
@@ -72,7 +73,7 @@ func (rB *CaseItemRequestBuilder) Get(ctx context.Context, config *CaseItemReque
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *CaseItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CaseItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
@@ -86,7 +87,7 @@ func (rB *CaseItemRequestBuilder) ToGetRequestInformation(ctx context.Context, c
 // Put sends a PUT request to update an existing case.
 func (rB *CaseItemRequestBuilder) Put(ctx context.Context, body CaseResult, config *CaseItemRequestBuilderPutRequestConfiguration) (CaseItemResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)
 	if err != nil {
@@ -108,7 +109,7 @@ func (rB *CaseItemRequestBuilder) Put(ctx context.Context, body CaseResult, conf
 // ToPutRequestInformation creates a RequestInformation object for a PUT request.
 func (rB *CaseItemRequestBuilder) ToPutRequestInformation(ctx context.Context, body CaseResult, config *CaseItemRequestBuilderPutRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
@@ -138,7 +139,7 @@ func NewCaseActivitiesRequestBuilderInternal(pathParameters map[string]string, r
 // Get sends a GET request to retrieve case activities.
 func (rB *CaseActivitiesRequestBuilder) Get(ctx context.Context, config *CaseActivitiesRequestBuilderGetRequestConfiguration) (ActivitiesResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
@@ -160,7 +161,7 @@ func (rB *CaseActivitiesRequestBuilder) Get(ctx context.Context, config *CaseAct
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *CaseActivitiesRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CaseActivitiesRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
@@ -191,7 +192,7 @@ func NewItemFieldValuesRequestBuilderInternal(pathParameters map[string]string, 
 // Get sends a GET request to retrieve field values.
 func (rB *CaseFieldValuesRequestBuilder) Get(ctx context.Context, config *CaseFieldValuesRequestBuilderGetRequestConfiguration) (FieldValuesResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
@@ -213,7 +214,7 @@ func (rB *CaseFieldValuesRequestBuilder) Get(ctx context.Context, config *CaseFi
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *CaseFieldValuesRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CaseFieldValuesRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
