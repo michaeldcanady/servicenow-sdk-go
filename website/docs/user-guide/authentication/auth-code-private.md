@@ -27,7 +27,7 @@ Your administrator must provide:
 
 ```mermaid
 flowchart TD
-    A[App Code] --> B[NewAuthorizationCodeAuthenticationProvider]
+    A[App Code] --> B[NewPrivateAuthorizationCodeProvider]
     B --> C{clientSecret provided?}
     C -->|Yes| D[newConfidentialClient]
     D --> E[AuthorizationCodeCredential]
@@ -56,35 +56,33 @@ flowchart TD
 
 ## Initialize the SDK
 
-```golang
+```go
 import (
     "log"
 
-    credentials "github.com/michaeldcanady/service-now-sdk/credentials"
-    servicenow "github.com/michaeldcanady/service-now-sdk"
+    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
 )
 
 func main() {
-    authority := credentials.NewInstanceAuthority("{instance}")
-
-    cred, err := credentials.NewAuthorizationCodeAuthenticationProvider(
-        clientID,
-        clientSecret,
-        authority,
-        []string{string(authority)},
+    cred, err := credentials.NewPrivateAuthorizationCodeProvider(
+        "{clientID}",
+        "{clientSecret}",
+        credentials.WithInstance("{instance}"),
     )
     if err != nil {
         log.Fatal(err)
     }
 
-    clientOpts := []credentials.ServiceNowServiceClientOption{
-        servicenow.WithAuthenticationProvider(cred),
-        servicenow.WithInstance("{instance}"),
-    }
-
-    client, err := servicenow.NewServiceNowServiceClient(clientOpts...)
+    client, err := servicenowsdkgo.NewServiceNowServiceClient(
+        servicenowsdkgo.WithAuthenticationProvider(cred),
+        servicenowsdkgo.WithInstance("{instance}"),
+    )
     if err != nil {
         log.Fatal(err)
     }
+
+    // Client is now authenticated and ready to use
+    _ = client
 }
 ```

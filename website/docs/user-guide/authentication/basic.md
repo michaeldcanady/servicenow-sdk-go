@@ -35,27 +35,26 @@ flowchart TD
 
 ## Initialize the SDK
 
-```golang
+```go
 import (
     "log"
 
-    credentials "github.com/michaeldcanady/service-now-sdk/credentials"
-    servicenow "github.com/michaeldcanady/service-now-sdk"
+    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
 )
 
 func main() {
-    clientOpts := []credentials.ServiceNowServiceClientOption{
-        servicenow.WithAuthenticationProvider(
-            credentials.NewBasicAuthenticationProvider(username, password),
-        ),
-        servicenow.WithInstance("{instance}"),
-    }
+    cred := credentials.NewBasicProvider("{username}", "{password}")
 
-    client, err := servicenow.NewServiceNowServiceClient(clientOpts...)
+    client, err := servicenowsdkgo.NewServiceNowServiceClient(
+        servicenowsdkgo.WithAuthenticationProvider(cred),
+        servicenowsdkgo.WithInstance("{instance}"),
+    )
     if err != nil {
         log.Fatal(err)
     }
 
     // Client is now authenticated and ready to use
+    _ = client
 }
 ```

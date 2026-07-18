@@ -28,16 +28,16 @@ import (
     "log"
     "os"
 
-    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+    servicenow "github.com/michaeldcanady/servicenow-sdk-go"
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
     "github.com/michaeldcanady/servicenow-sdk-go/credentials"
 )
 
 func main() {
     // Step 1: Authenticate with your ServiceNow instance
-    cred := credentials.NewBasicAuthenticationProvider(username, password)
+    cred := credentials.NewBasicProvider("{username}", "{password}")
 
-    clientOpts := []credentials.ServiceNowServiceClientOption{
+    clientOpts := []servicenow.ServiceNowServiceClientOption{
         servicenow.WithAuthenticationProvider(cred),
         servicenow.WithInstance("{instance}"),
     }
@@ -82,10 +82,14 @@ func main() {
         log.Fatal(err)
     }
 
-    sysID, err := attachment.GetSysID()
+    uploaded, err := resp.GetResult()
     if err != nil {
-        log.Printf("unable to retrieve attachment sys_id: %v", err)
-        continue
+        log.Fatalf("unable to retrieve uploaded attachment: %v", err)
+    }
+
+    sysID, err := uploaded.GetSysID()
+    if err != nil {
+        log.Fatalf("unable to retrieve attachment sys_id: %v", err)
     }
 
     fmt.Printf("Uploaded attachment with sys_id: %s\n", *sysID)

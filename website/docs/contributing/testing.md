@@ -22,18 +22,24 @@ go test ./...
 
 ### Integration tests
 
-Integration tests verify the SDK's behavior with a real ServiceNow instance.
-They're located in the `integration/` directory. These tests are essential for
-validating that the SDK correctly handles actual API responses.
+Integration tests verify end-to-end request/response behavior using Gherkin
+feature files and mocked HTTP responses (`godog` + `httpmock`) — no live
+ServiceNow instance is required. They live in `tests/integration/` behind the
+`integration` build tag:
 
-To run integration tests:
+```bash
+go test -tags integration ./tests/integration/...
+```
 
-1.  **Configure environment variables** in a `.env` file as described in the
-    [setup guide](setup.md).
-2.  **Execute the tests:**
-    ```bash
-    go test -v ./integration/...
-    ```
+### E2E tests
+
+E2E tests (`tests/e2e/`, behind the `e2e` build tag) hit a real ServiceNow
+instance using credentials from a `.env` file as described in the
+[setup guide](setup.md). Run them manually:
+
+```bash
+go test -tags e2e ./tests/e2e/...
+```
 
 ## Mocking HTTP requests
 

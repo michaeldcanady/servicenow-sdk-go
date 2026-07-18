@@ -26,14 +26,14 @@ import (
     "time"
 
     servicenow "github.com/michaeldcanady/servicenow-sdk-go"
-    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
     "github.com/michaeldcanady/servicenow-sdk-go/credentials"
-    "github.com/michaeldcanady/servicenow-sdk-go/query2"
+    "github.com/michaeldcanady/servicenow-sdk-go/query"
 )
 
 func main() {
     // Step 1: Authenticate with your ServiceNow instance
-    cred := credentials.NewBasicAuthenticationProvider("{username}", "{password}")
+    cred := credentials.NewBasicProvider("{username}", "{password}")
 
     clientOpts := []servicenow.ServiceNowServiceClientOption{
         servicenow.WithAuthenticationProvider(cred),
@@ -51,13 +51,15 @@ func main() {
     cutoff := time.Now().AddDate(0, 0, -retentionDays)
 
     // Step 4: List attachments for a specific record
+    encodedQuery := query.And(
+        query.String("table_sys_id").Is("{table entry's sys_id}"),
+        query.String("table_name").Is("{name of table}"),
+        query.Date("sys_created_on").Before(query.NewDateTimeValue(cutoff)),
+    ).String()
+
     config := &attachmentapi.AttachmentRequestBuilderGetRequestConfiguration{
         QueryParameters: &attachmentapi.AttachmentRequestBuilderGetQueryParameters{
-            SysparmQuery: query.And(
-                query.String("table_sys_id").Is("{table entry's sys_id}"),
-                query.String("table_name").Is("{name of table}"),
-                query.Date("sys_created_on").Before(query.NewDateTimeValue(cutoff))
-            ).String(),
+            SysparmQuery: &encodedQuery,
         },
     }
 

@@ -30,13 +30,13 @@ import (
     "log"
 
     servicenow "github.com/michaeldcanady/servicenow-sdk-go"
-    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
     "github.com/michaeldcanady/servicenow-sdk-go/credentials"
 )
 
 func main() {
     // Step 1: Authenticate with your ServiceNow instance
-    cred := credentials.NewBasicAuthenticationProvider("{username}", "{password}")
+    cred := credentials.NewBasicProvider("{username}", "{password}")
 
     clientOpts := []servicenow.ServiceNowServiceClientOption{
         servicenow.WithAuthenticationProvider(cred),
@@ -50,10 +50,13 @@ func main() {
     }
 
     // Step 3: List attachments (filter using query params as needed)
+    limit := 1
+    encodedQuery := "ORDERBYDESCsys_created_on"
+
     config := &attachmentapi.AttachmentRequestBuilderGetRequestConfiguration{
         QueryParameters: &attachmentapi.AttachmentRequestBuilderGetQueryParameters{
-            SysparmLimit: 1,
-            SysparmQuery: "ORDERBYDESCsys_created_on",
+            SysparmLimit: &limit,
+            SysparmQuery: &encodedQuery,
         },
     }
 

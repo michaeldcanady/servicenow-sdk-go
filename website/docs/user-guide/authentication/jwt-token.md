@@ -30,7 +30,7 @@ Your application must also provide:
 
 ```mermaid
 flowchart TD
-    A[App Code] --> B[NewJWTAuthenticationProvider]
+    A[App Code] --> B[NewJWTProvider]
     B --> C[newConfidentialClient]
     C --> D[NewJWTCredential]
 
@@ -53,42 +53,38 @@ flowchart TD
 
 ## Initialize the SDK
 
-```golang
+```go
 import (
     "log"
 
-    credentials "github.com/michaeldcanady/service-now-sdk/credentials"
-    servicenow "github.com/michaeldcanady/service-now-sdk"
+    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
 )
 
 func main() {
-    authority := credentials.NewInstanceAuthority("{instance}")
-
-    // tokenProvider must generate signed JWT assertions
-    // this is a user provided provider and needs to match kiota's authentication.AccessTokenProvider
+    // tokenProvider must generate signed JWT assertions; it is user-provided
+    // and must satisfy kiota's authentication.AccessTokenProvider.
     tokenProvider := myJWTAssertionProvider()
 
-    cred, err := credentials.NewJWTAuthenticationProvider(
-        clientID,
-        clientSecret,
+    cred, err := credentials.NewJWTProvider(
+        "{clientID}",
+        "{clientSecret}",
         tokenProvider,
-        authority,
-        []string{string(authority)},
+        credentials.WithInstance("{instance}"),
     )
     if err != nil {
         log.Fatal(err)
     }
 
-    clientOpts := []credentials.ServiceNowServiceClientOption{
-        servicenow.WithAuthenticationProvider(cred),
-        servicenow.WithInstance("{instance}"),
-    }
-
-    client, err := servicenow.NewServiceNowServiceClient(clientOpts...)
+    client, err := servicenowsdkgo.NewServiceNowServiceClient(
+        servicenowsdkgo.WithAuthenticationProvider(cred),
+        servicenowsdkgo.WithInstance("{instance}"),
+    )
     if err != nil {
         log.Fatal(err)
     }
 
     // Client is now authenticated and ready to use
+    _ = client
 }
 ```

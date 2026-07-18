@@ -36,7 +36,7 @@ tools (Go, linters, and extensions).
 If you prefer to manage your own environment, make sure you meet these
 additional requirements:
 
-- **Go:** Version 1.23 or higher.
+- **Go:** Version 1.25 or higher.
 - **golangci-lint:** For running code quality checks.
 - **just:** (Optional) A command runner used for some development tasks.
 
