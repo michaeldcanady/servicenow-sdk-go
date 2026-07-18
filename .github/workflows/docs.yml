@@ -181,6 +181,20 @@ jobs:
           umbrella-dir: pr-preview
           action: auto
 
+  remove-report-failure:
+    name: Remove Docs Failure Comment
+    if: success() && github.event_name == 'pull_request'
+    needs: [build, lint, deploy-preview]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Remove Failure Summary
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: docs-failure-summary
+          delete: true
+
   report-failure:
     name: Report Docs Failure
     if: failure() && github.event_name == 'pull_request'
