@@ -1,0 +1,23 @@
+# CMDB Instance API overview
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import modulesGo from '@site/snippets/modules.go';
+
+
+The CMDB Instance API performs CRUD operations on configuration items (CIs)
+by CMDB class, and manages relationships between CIs.
+
+## Basic usage
+
+Access it through the CMDB namespace:
+
+<GoSnippet language="go" src={modulesGo} region="module_cmdb_instance" />
+
+## Available operations
+
+- **Query class instances** — `ByClass(className).Get(ctx, config)`.
+- **Create instance** — `ByClass(className).Post(ctx, body, config)`.
+- **Get instance** — `ByClass(className).ByID(sysID).Get(ctx, config)`.
+- **Replace / update instance** — `...ByID(sysID).Put(ctx, body, config)` and `...Patch(ctx, body, config)`.
+- **Create relation** — `...ByID(sysID).Relation().Post(ctx, body, config)`.
+- **Delete relation** — `...Relation().ByID(relSysID).Delete(ctx, config)`.

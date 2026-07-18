@@ -1,42 +1,55 @@
-# Batch API
+# Batch multiple requests
 
 import GoSnippet from '@site/src/components/GoSnippet';
+import GoExample from '@site/src/components/GoExample';
 import batchGo from '@site/snippets/batch.go';
+import bgGo from '@site/snippets/batch_guide.go';
 
-The Batch API lets you combine multiple REST API requests into a single HTTP
-request. This is highly efficient for performing multiple operations while
-minimizing network overhead and latency.
+Combine several REST requests into a single HTTP call and read back the
+per-request results.
 
-## Understand batch requests
+## When to use this pattern
 
-A batch request consists of multiple individual sub-requests. ServiceNow
-executes each sub-request and returns the results in a single combined response.
+- You're making several independent requests in one logical operation (for
+  example, creating an incident and updating a user) and want them to travel
+  in a single round-trip
+- You're reducing latency for many small operations
+- If you're fetching many *pages* of one collection, use
+  [Pagination](pagination.mdx) instead; if the requests depend on each
+  other's results, send them sequentially
 
-### Key benefits
+## Required values
 
-- **Reduced Latency:** Fewer round-trips between your application and
-  ServiceNow.
-- **Improved Performance:** Faster execution of multiple related tasks.
-- **Efficiency:** Better utilization of network resources.
+| Value        | Description                                                       |
+| ------------ | ----------------------------------------------------------------- |
+| The requests | Built with any builder's `ToXRequestInformation` method, unsent   |
 
-## Create a batch request
+## Example
 
-To create a batch request, you first need to define the individual requests
-using the SDK's request builders and then combine them into a
-`BatchRequestModel`.
+The example uses a small helper, `batchRequests`, that wraps
+`RequestInformation` objects into a `BatchRequestModel`:
 
-<GoSnippet language="go" src={batchGo} region="batch_create" />
+<GoExample language="go" files={{ bgGo: bgGo, batchGo: batchGo }} template={`package main
 
-### Batch helper
+{{bgGo:bg_imports}}
 
-Combining multiple requests can involve repetitive code. You can use a helper
-function to streamline the process of adding requests to your batch model.
+{{batchGo:batch_helper}}
 
-<GoSnippet language="go" src={batchGo} region="batch_helper" />
+func main() {
+    {{bgGo:bg_main}}
+}`} />
+
+## Tips
+
+- ServiceNow executes the sub-requests independently — a batch is **not** a
+  transaction. Check `GetUnservicedRequests()` for the ones that didn't run.
+- Each serviced request carries its own status code and body; a `200` on the
+  batch only means the batch itself was processed.
+- Any API's requests can be mixed in one batch: table, attachment, and so on.
 
 ## Next steps
 
-- **[Table Operations](tables.mdx):** Learn about the types of table requests
-  you can batch.
-- **[Attachments](attachments/index.mdx):** Learn about managing attachments, which
-  can also be part of a batch request.
+- **[Table operations](tables/index.mdx):** The requests you'll batch most
+  often.
+- **[Batch API reference](../apis/batch/index.mdx):** All parameters, in both
+  modalities.

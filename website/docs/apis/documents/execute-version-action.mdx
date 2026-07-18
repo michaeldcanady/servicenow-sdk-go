@@ -1,0 +1,36 @@
+# Execute version action
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Run an action (for example check-out/check-in) against a document version.
+
+## HTTP request
+
+```http
+PATCH /api/now/v1/documents/action/{action}/document/{documentSysId}/version/{versionSysId}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `action` | Action |
+| `documentSysId` | Documentsysid |
+| `versionSysId` | Versionsysid |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+No response body — a `nil` error means the action ran.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_execute_version_action" />

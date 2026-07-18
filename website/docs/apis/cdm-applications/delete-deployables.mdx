@@ -1,0 +1,35 @@
+# Delete deployables
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Delete a deployable's configuration data.
+
+## HTTP request
+
+```http
+DELETE /api/sn_cdm/applications/deployables
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `appName` | Optional — set via the verb's `QueryParameters` type. |
+| `name` | Optional — set via the verb's `QueryParameters` type. |
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+No response body — a `nil` error means the delete was accepted.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_delete_deployables" />

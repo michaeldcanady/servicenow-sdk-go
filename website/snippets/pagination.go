@@ -42,6 +42,16 @@ func _() {
 	}
 	// [END pagination_table_basic]
 
+	// [START pagination_reverse]
+	err = iterator.Iterate(ctx, true, func(record *tableapi.TableRecord) bool {
+		// Process records in reverse order
+		return true
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END pagination_reverse]
+
 	// [START pagination_table_manual]
 	// Fetch the next page of results manually
 	nextPage, err := iterator.Next(ctx)

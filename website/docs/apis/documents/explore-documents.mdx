@@ -1,0 +1,39 @@
+# Explore documents
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Search documents and folders with filters, sorting, and pagination.
+
+## HTTP request
+
+```http
+GET /api/now/v1/documents/explore
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `page` | Optional — set via the verb's `QueryParameters` type. |
+| `limit` | Optional — set via the verb's `QueryParameters` type. |
+| `query` | Optional — set via the verb's `QueryParameters` type. |
+| `table_name` | Optional — set via the verb's `QueryParameters` type. |
+| `folder_sys_id` | Optional — set via the verb's `QueryParameters` type. |
+| `record_sys_id` | Optional — set via the verb's `QueryParameters` type. |
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+A collection envelope of `Document`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_explore_documents" />

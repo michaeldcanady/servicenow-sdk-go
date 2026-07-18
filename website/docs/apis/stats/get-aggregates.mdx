@@ -1,0 +1,37 @@
+# Get aggregates
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Compute count, sum, average, minimum, and/or maximum over the records of a table without returning the records.
+
+## HTTP request
+
+```http
+GET /api/now/stats/{table}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `table` | Table |
+
+## Query parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `sysparm_count` | Optional — set via the verb's `QueryParameters` type. |
+| `sysparm_sum_fields` | Optional — set via the verb's `QueryParameters` type. |
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+`core.ServiceNowItemResponse[*StatsResultModel]` — unwrap with `GetResult()` then `GetStats()`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_get_aggregates" />

@@ -1,0 +1,34 @@
+# Get notification preference
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve a notification preference by profile ID.
+
+## HTTP request
+
+```http
+GET /api/now/v1/actsub/preferences/{profileId}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `profileId` | Profileid |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+An item envelope of `*ActivitySubscriptionModel`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_get_preference" />

@@ -1,0 +1,47 @@
+# Basic authentication
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import authGo from '@site/snippets/auth.go';
+
+
+Basic Authentication uses a ServiceNow username and password to authenticate
+API calls. it's simple to configure, but use it primarily for
+development, testing, or controlled system‑to‑system integrations.
+
+## Objective
+
+Configure and use Basic Authentication with the Service‑Now SDK using values
+provided by your ServiceNow administrator.
+
+## Required values
+
+Your administrator must provide:
+
+| Value           | Description                 |
+| --------------- | --------------------------- |
+| Service‑Now URL | Base URL of the instance    |
+| Username        | Integration user’s username |
+| Password        | Integration user’s password |
+
+## SDK flow
+
+```mermaid
+flowchart TD
+    A([App code]):::app --> B(BasicAuthenticationProvider):::sdk
+    B --> C{Credentials<br/>valid?}:::decision
+    C -- no --> E(Error returned):::error
+    C -- yes --> D(Base64-encode<br/>username:password):::sdk
+    D --> G(Set Authorization header<br/>on the request):::sdk
+    G --> H[[Kiota request adapter]]:::sdk
+    H --> S[[ServiceNow instance]]:::external
+
+    classDef app fill:#c7d2fe,stroke:#4f46e5,color:#1e1b4b
+    classDef sdk fill:#e2e8f0,stroke:#64748b,color:#0f172a
+    classDef decision fill:#fde68a,stroke:#d97706,color:#78350f
+    classDef error fill:#fecaca,stroke:#dc2626,color:#7f1d1d
+    classDef external fill:#bae6fd,stroke:#0284c7,color:#0c4a6e
+```
+
+## Initialize the SDK
+
+<GoSnippet language="go" src={authGo} region="auth_basic_full" />

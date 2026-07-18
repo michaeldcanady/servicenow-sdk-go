@@ -1,0 +1,88 @@
+# Configure the client
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import GoExample from '@site/src/components/GoExample';
+import configGo from '@site/snippets/config.go';
+
+Compose a client from functional options: target instance, HTTP pipeline,
+transport, and logging.
+
+## When to use this pattern
+
+- You're going beyond the two-option default (`WithAuthenticationProvider` +
+  `WithInstance`) — adding middleware, timeouts, or logging
+- You need request/response visibility for debugging or metrics
+- You're running behind a proxy or with custom TLS and need transport control
+
+## Required values
+
+| Value           | Description                                                                               |
+| --------------- | ----------------------------------------------------------------------------------------- |
+| Instance or URL | `WithInstance("{instance}")`, or `WithURL(...)` for a full base URL (e.g. behind a proxy) |
+| Credentials     | Any provider from the [Authentication guide](authentication/index.md)                     |
+
+## Example
+
+A client with the default pipeline *plus* a logging middleware, a 30-second
+transport timeout, and an SDK diagnostics logger:
+
+<GoExample language="go" files={{ configGo: configGo }} template={`package main
+
+{{configGo:config_imports}}
+
+{{configGo:config_logging_middleware}}
+
+{{configGo:config_std_logger}}
+
+func main() {
+    {{configGo:config_full}}
+}`} />
+
+## Variations
+
+### Instance vs. URL
+
+<GoSnippet language="go" src={configGo} region="config_target" />
+
+### Middleware only
+
+<GoSnippet language="go" src={configGo} region="config_middleware" />
+
+:::warning
+Supplying `WithMiddleware` **replaces** the default chain rather than
+appending to it. If you still want retries, redirects, and compression,
+start from `nethttplibrary.GetDefaultMiddlewares()` and append your own
+handlers, as shown above.
+:::
+
+### Transport only
+
+To control transport-level settings (timeouts, TLS, proxies), supply your own
+`*http.Client`:
+
+<GoSnippet language="go" src={configGo} region="config_http_client" />
+
+### Advanced options
+
+- **`WithRequestAdapter`** — supply a fully custom Kiota
+  `abstractions.RequestAdapter`, taking over serialization and transport
+  entirely. The other pipeline options are ignored when you provide one.
+- **`WithBackingStoreFactory`** — replace the backing store implementation
+  used by models, for example to add change tracking.
+
+## Tips
+
+- Out of the box the client already retries transient failures with backoff
+  (including 429s honoring `Retry-After`), follows redirects, and handles
+  compression — you don't need any options for that.
+- For request/response logging, prefer a middleware over `WithLogger` — the
+  middleware sees the actual HTTP traffic; the logger only carries the SDK's
+  internal diagnostics.
+- A middleware is any type implementing `Intercept(pipeline, index, req)`;
+  the example's `myLoggingMiddleware` is the minimal shape.
+
+## Next steps
+
+- **[Authentication](authentication/index.md):** Credential flow options.
+- **[Handling errors](error-handling.mdx):** What comes back when a request
+  fails, retries included.

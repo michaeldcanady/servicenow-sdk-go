@@ -1,0 +1,35 @@
+# Check activity subscriptions
+
+import GoExample from '@site/src/components/GoExample';
+import asgGo from '@site/snippets/actsub_guide.go';
+
+List activity-stream activities and check whether the current user is subscribed to an object.
+
+## When to use this pattern
+
+- You're building notification or follow/unfollow features on top of ServiceNow's activity streams
+- You need to know what the integration user is already subscribed to
+
+## Required values
+
+| Value | Description |
+| ----- | ----------- |
+| Object ID | The sys_id of the object whose subscription state you're checking |
+
+## Example
+
+<GoExample language="go" files={{ asgGo: asgGo }} template={`package main
+
+{{asgGo:asg_imports}}
+
+func main() {
+    {{asgGo:asg_main}}
+}`} />
+
+## Tips
+
+- The subscription builders also expose `Subscribe()`/`Unsubscribe()` operations — see the reference for the full tree.
+
+## Next steps
+
+- **[Activity Subscriptions API reference](../../../apis/activity-subscriptions/index.mdx)**

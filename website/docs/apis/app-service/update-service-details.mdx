@@ -1,0 +1,34 @@
+# Update service details
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Update an application service's details.
+
+## HTTP request
+
+```http
+PUT /api/now/v1/cmdb/csdm/app_service/{sys_id}/service_details
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `sys_id` | Sys_id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Supply a `appserviceapi.ServiceDetailsRequest`.
+
+## Response
+
+`ServiceDetailsResponse`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_update_service_details" />

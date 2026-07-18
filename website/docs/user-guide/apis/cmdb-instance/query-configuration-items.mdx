@@ -1,0 +1,37 @@
+# Query CMDB configuration items
+
+import GoExample from '@site/src/components/GoExample';
+import cigGo from '@site/snippets/cmdb_guide.go';
+
+Read the configuration items of a CMDB class and their fields.
+
+## When to use this pattern
+
+- You're exporting or reconciling CI data with an external system
+- You're querying by CMDB class (`cmdb_ci_linux_server`, `cmdb_ci_appl`, ...) rather than a plain table
+- For non-CMDB tables, use [List and query records](../../tables/list-and-query-records.mdx)
+
+## Required values
+
+| Value | Description |
+| ----- | ----------- |
+| CMDB class | The CI class to query (for example, `cmdb_ci_linux_server`) |
+
+## Example
+
+<GoExample language="go" files={{ cigGo: cigGo }} template={`package main
+
+{{cigGo:cig_imports}}
+
+func main() {
+    {{cigGo:cig_main}}
+}`} />
+
+## Tips
+
+- `ByClass(...).ByID(sysID)` gets a single CI; `Patch` updates one.
+- CI models expose `GetName`, `GetClassName`, and `GetSysID`; other attributes depend on the class.
+
+## Next steps
+
+- **[CMDB Instance API reference](../../../apis/cmdb-instance/index.mdx)**

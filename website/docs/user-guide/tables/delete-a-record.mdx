@@ -1,0 +1,44 @@
+# Delete a record
+
+import GoExample from '@site/src/components/GoExample';
+import deleteGo from '@site/snippets/tables_delete.go';
+
+Permanently remove a record by its `sys_id`.
+
+## When to use this pattern
+
+- You're cleaning up test or imported data
+- You're implementing retention rules for records your integration owns
+- You're sure you want a hard delete — deletion is permanent, and cascade
+  rules on the table may delete related records too
+
+## Required values
+
+| Value         | Description                                  |
+| ------------- | -------------------------------------------- |
+| Table name    | The record's table (for example, `incident`) |
+| Record sys_id | The record to delete                         |
+
+## Example
+
+<GoExample language="go" files={{ deleteGo: deleteGo }} template={`package main
+
+{{deleteGo:tgd_imports}}
+
+func main() {
+    {{deleteGo:tgd_main}}
+}`} />
+
+## Tips
+
+- `Delete` returns only an `error` — no response body. `nil` means the
+  record is gone.
+- Deleting an already-deleted record returns `core.NotFoundError`; decide
+  whether that's a failure for your workflow or an "already done".
+- Prefer deactivating (`active=false` via
+  [update](update-a-record.mdx)) when other records may reference this one.
+
+## Next steps
+
+- **[Delete aging attachments](../attachments/delete-aging-attachments.mdx):**
+  The same retention pattern, applied to files.

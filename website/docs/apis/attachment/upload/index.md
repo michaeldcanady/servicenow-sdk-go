@@ -2,7 +2,7 @@
 
 The Attachment Upload API provides a specialized endpoint for uploading files using `multipart/form-data`. This is often used when you need to send multiple parts or when the client environment specifically supports multipart uploads.
 
-For most standard file uploads, the [File API](../file/index.md) is simpler to use.
+For most standard file uploads, the [File API](../file/index.mdx) is simpler to use.
 
 Commonly used for:
 - Uploading files from web forms or other multipart-compatible sources.

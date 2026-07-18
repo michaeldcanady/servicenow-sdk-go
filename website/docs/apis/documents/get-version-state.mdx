@@ -1,0 +1,34 @@
+# Get version state
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve the state of a document version.
+
+## HTTP request
+
+```http
+GET /api/now/v1/documents/versionstate/{version_sys_id}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `version_sys_id` | Version sys_id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+An item envelope of `Document`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_get_version_state" />

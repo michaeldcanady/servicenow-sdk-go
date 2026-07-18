@@ -1,79 +1,83 @@
-# Pagination
+# Iterate over every record
 
 import GoSnippet from '@site/src/components/GoSnippet';
+import GoExample from '@site/src/components/GoExample';
 import paginationGo from '@site/snippets/pagination.go';
+import pggGo from '@site/snippets/pagination_guide.go';
 
-When working with large datasets in ServiceNow, responses are often split into
-multiple pages. The SDK provides specialized iterators to help you traverse
-these results efficiently.
+Walk a result set that spans multiple pages, letting the SDK follow the
+pagination links for you.
 
-## Understand pagination
+## When to use this pattern
 
-ServiceNow uses limit and offset parameters or link headers to manage
-pagination. The SDK abstracts this complexity by providing an iterator that
-can automatically fetch subsequent pages as you process records.
+- A query can match more records than one response returns, and you need all
+  of them
+- You're streaming records through a process one at a time rather than
+  loading the whole set into memory
+- You'd otherwise be hand-assembling `offset`/`limit` loops — the iterator
+  works on the [response envelope](../core-concepts.mdx#3-response-envelopes)
+  and follows its links instead
 
-The SDK provides specialized iterators for common APIs:
+## Required values
 
-- `TablePageIterator`: For table record collections.
-- `AttachmentPageIterator`: For attachment collections.
+| Value          | Description                                          |
+| -------------- | ---------------------------------------------------- |
+| Table name     | The table to read (for example, `incident`)          |
+| A first page   | Any list response — its links seed the iterator      |
 
-## Use the page iterator
+## Example
 
-### Basic iteration
+<GoExample language="go" files={{ pggGo: pggGo }} template={`package main
 
-To iterate over multiple pages of records, use the `NewDefaultTablePageIterator`
-(for standard table records) or `NewTablePageIterator` (for custom types).
+{{pggGo:pgg_imports}}
 
-<GoSnippet language="go" src={paginationGo} region="pagination_table_basic" />
+func main() {
+    {{pggGo:pgg_main}}
+}`} />
+
+## Variations
 
 ### Iterate item-by-item
 
-If you need more control than a callback, you can use `NextItem` and `HasNext`
-to pull items one at a time.
+Fetch pages lazily while presenting a record-at-a-time interface:
 
 <GoSnippet language="go" src={paginationGo} region="pagination_item_by_item" />
 
-### Attachment iteration
+### Iterate attachments
 
-Iterating over attachments is similar, using the `AttachmentPageIterator`.
+The Attachment API has its own iterator with the same shape:
 
 <GoSnippet language="go" src={paginationGo} region="pagination_attachment" />
 
-### Reverse iteration
+### Iterate in reverse
 
-You can iterate backwards through pages by passing `true` to the `reverse`
-parameter of the `Iterate` method. This uses the `previous` link headers
-provided by the ServiceNow API.
+Pass `true` to walk the result set backwards:
 
-```go
-err = iterator.Iterate(ctx, true, func(record *tableapi.TableRecord) bool {
-    // Process records in reverse order
-    return true
-})
-```
+<GoSnippet language="go" src={paginationGo} region="pagination_reverse" />
 
-## Advanced features
+### Navigate pages manually
 
-### Manual page navigation
-
-You can navigate between pages manually using methods like `Next()`,
-`Previous()`, `First()`, and `Last()`.
+Fetch the next page yourself when you need page-level control:
 
 <GoSnippet language="go" src={paginationGo} region="pagination_table_manual" />
 
-### State management
-
-The iterator maintains state, allowing you to reset or restart iteration.
+### Manage iteration state
 
 <GoSnippet language="go" src={paginationGo} region="pagination_state_management" />
 
 - `Reset()`: Returns the iterator to the first page and first item.
 - `ResetPage()`: Restarts iteration of the current page.
 
+## Tips
+
+- Return `false` from the callback to stop early — already-fetched pages
+  aren't refetched on a later `Iterate`.
+- Combine with a [query](query-builder.mdx) so you page through only the
+  records you actually need.
+
 ## Next steps
 
-- **[Table Operations](tables.mdx):** Learn more about the initial requests
-  that produce paginated results.
-- **[Querying](query-builder.mdx):** Learn how to use queries to limit the number
-  of records returned.
+- **[List and query records](tables/list-and-query-records.mdx):** The
+  requests that produce paginated results.
+- **[Query builder](query-builder.mdx):** Shrink the result set before you
+  page through it.

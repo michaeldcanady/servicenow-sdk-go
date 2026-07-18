@@ -1,0 +1,38 @@
+# List configuration items
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve the CIs of a CMDB class.
+
+## HTTP request
+
+```http
+GET /api/now/v1/cmdb/instance/{className}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `className` | Classname |
+
+## Query parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `sysparm_query` | Optional — set via the verb's `QueryParameters` type. |
+| `sysparm_limit` | Optional — set via the verb's `QueryParameters` type. |
+| `sysparm_offset` | Optional — set via the verb's `QueryParameters` type. |
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+A collection envelope of `CmdbInstance`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_list_configuration_items" />

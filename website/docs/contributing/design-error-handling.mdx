@@ -1,0 +1,53 @@
+---
+title: Why sentinel errors everywhere?
+description: >-
+  Shared sentinel errors and one status-code mapping replaced hundreds of
+  ad-hoc errors.New calls — restoring errors.Is for every consumer.
+---
+
+# Why sentinel errors everywhere?
+
+*Primary source: [ADR 001 — Standardizing Error Handling and Messaging](https://github.com/michaeldcanady/servicenow-sdk-go/blob/main/docs/adr/001-error-standardization.md).*
+
+## The decision
+
+All SDK-side failures return **shared sentinel errors** from the central
+`errors` package (imported as `snerrors`); all API-side failures return
+**typed `core.ServiceNowError` values** produced by the shared status-code
+mapping. No call site creates its own `errors.New` for a condition a sentinel
+already covers.
+
+Message phrasing is standardized: `"[parameter] cannot be nil"` for nil
+checks, `"[parameter] is required"` for missing inputs, no contractions.
+
+## Why
+
+v1 accumulated hundreds of ad-hoc `errors.New("...")` calls with
+similar-but-different wording ("can't be nil" vs "is nil"). Two consequences:
+
+- **`errors.Is` didn't work.** Two call sites returning the same *message*
+  as different error *values* can't be matched programmatically; consumers
+  fell back to string comparison.
+- Some nil-guards returned `nil, nil` instead of an error, silently
+  propagating nil into caller code.
+
+## What to do in new code
+
+There are **three** sentinel locations that look similar but aren't
+interchangeable:
+
+1. Root package `errors.go` — a couple of client-configuration sentinels only.
+2. **`errors/errors.go` (`snerrors`)** — the shared, cross-package sentinels
+   (`ErrNilRequestBuilder`, `ErrNilRequestAdapter`, `ErrNilResponse`,
+   `ErrNilConfig`, `ErrNilBody`, ...). **Check here first**; almost every
+   nil-guard belongs to one of these.
+3. Some packages (e.g. `tableapi/errors.go`) keep package-local sentinels for
+   conditions specific to that module.
+
+Reuse an existing sentinel *by identity*, not by matching text — duplicating
+the message as a fresh `errors.New` recreates exactly the bug this ADR fixed.
+For HTTP error mapping, always pass `core.DefaultErrorMapping()`; per-module
+mappings register through `internal.GetErrorRegistryInstance()`.
+
+The user-facing contract this produces is documented in the
+[Error handling guide](../user-guide/error-handling.mdx).

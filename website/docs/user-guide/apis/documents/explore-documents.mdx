@@ -1,0 +1,36 @@
+# Explore documents and versions
+
+import GoExample from '@site/src/components/GoExample';
+import dgGo from '@site/snippets/documents_guide.go';
+
+Search the Document Management workspace and list a document's versions.
+
+## When to use this pattern
+
+- You're integrating with ServiceNow Document Management (not record attachments — that's the [Attachment API](../../attachments/index.mdx))
+- You need to find documents and folders, or audit a document's version history
+
+## Required values
+
+| Value | Description |
+| ----- | ----------- |
+| Document sys_id | For version operations: the document to inspect |
+
+## Example
+
+<GoExample language="go" files={{ dgGo: dgGo }} template={`package main
+
+{{dgGo:dg_imports}}
+
+func main() {
+    {{dgGo:dg_main}}
+}`} />
+
+## Tips
+
+- `Explore()` supports filters, sorting, and pagination through its query parameters.
+- To download content, chain `Content(documentSysID).Get(...)` the same way as `Versions`.
+
+## Next steps
+
+- **[Documents API reference](../../../apis/documents/index.mdx)**

@@ -1,0 +1,36 @@
+# Track CDM changesets
+
+import GoExample from '@site/src/components/GoExample';
+import ccgGo from '@site/snippets/cdm_changesets_guide.go';
+
+List configuration-data changesets and check the status of a commit.
+
+## When to use this pattern
+
+- You're automating a CDM promotion pipeline and need to gate on commit status
+- You're auditing which changesets touched a deployable
+
+## Required values
+
+| Value | Description |
+| ----- | ----------- |
+| Commit ID | For status checks: the commit you're waiting on |
+
+## Example
+
+<GoExample language="go" files={{ ccgGo: ccgGo }} template={`package main
+
+{{ccgGo:ccg_imports}}
+
+func main() {
+    {{ccgGo:ccg_main}}
+}`} />
+
+## Tips
+
+- `ByID(changesetSysID).ImpactedDeployables()` shows what a changeset affects before you commit it.
+
+## Next steps
+
+- **[CDM Changesets API reference](../../../apis/cdm-changesets/index.mdx)**
+- **[Edit CDM nodes](../cdm-editor/edit-and-validate.mdx)**

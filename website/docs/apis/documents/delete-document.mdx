@@ -1,0 +1,36 @@
+# Delete document
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Delete a document identified by the query parameters.
+
+## HTTP request
+
+```http
+DELETE /api/now/v1/documents/delete
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `doc_sys_id` | Optional — set via the verb's `QueryParameters` type. |
+| `record_sys_id` | Optional — set via the verb's `QueryParameters` type. |
+| `table_name` | Optional — set via the verb's `QueryParameters` type. |
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+No response body — a `nil` error means the document was deleted.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_delete_document" />

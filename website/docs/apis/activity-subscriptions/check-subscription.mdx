@@ -1,0 +1,34 @@
+# Check subscription state
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Check whether the current user is subscribed to an object.
+
+## HTTP request
+
+```http
+GET /api/now/v1/actsub/subscriptions/{sub_obj_id}/isSubscribed
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `sub_obj_id` | Sub obj id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+An item envelope of `*ActivitySubscriptionModel`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_check_subscription" />

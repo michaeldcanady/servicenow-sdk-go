@@ -1,0 +1,32 @@
+# Create node
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Create a configuration data node.
+
+## HTTP request
+
+```http
+POST /api/sn_cdm/editor/v1/nodes
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+None.
+
+## Request body
+
+Supply a `cdmeditorapi.NodeCreateRequest`.
+
+## Response
+
+`NodeResponse` — the created node.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_create_node" />

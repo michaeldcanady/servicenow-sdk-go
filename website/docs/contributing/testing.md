@@ -1,86 +1,110 @@
+---
+title: Testing guide
+description: >-
+  The three test rings — unit, integration, e2e — when each earns its keep,
+  and the table-driven idiom reviewers expect.
+---
+
 # Testing guide
 
-The SDK maintains high standards for code quality by requiring comprehensive tests for
-every new feature and bug fix. This guide explains how to write and run tests
-within the SDK.
+Tests are how a review trusts your change without re-deriving it. The rule
+here is simple and non-negotiable: **every exported type and method ships
+with tests, in the same PR.** This page shows the three rings of the test
+suite, when each one earns its keep, and the idioms the codebase expects.
 
-## Test categories
+## The three rings
 
-The SDK uses two main categories of tests: unit tests and integration tests.
+Think of the suite as three rings around the code, each answering a different
+question:
 
-### Unit tests
-
-Unit tests verify individual components in isolation. They're located in the
-same directory as the code they test and use the `_test.go` suffix. These tests
-must be fast and not require external network access.
-
-To run all unit tests:
-
-```bash
-go test ./...
-```
-
-### Integration tests
-
-Integration tests verify end-to-end request/response behavior using Gherkin
-feature files and mocked HTTP responses (`godog` + `httpmock`) — no live
-ServiceNow instance is required. They live in `tests/integration/` behind the
-`integration` build tag:
+| Ring | Question it answers | Needs an instance? | Runs in CI? |
+| ---- | ------------------- | ------------------ | ----------- |
+| **Unit** (`*_test.go`, co-located) | Does this component do what it claims, including when things go wrong? | No | Always |
+| **Integration** (`tests/integration/`, `-tags integration`) | Do builders, serialization, and error mapping agree end-to-end? | No — HTTP is mocked | Always |
+| **E2E** (`tests/e2e/`, `-tags e2e`) | Does the SDK's model match what ServiceNow *actually* sends? | Yes — real credentials | Manual |
 
 ```bash
-go test -tags integration ./tests/integration/...
+go test ./...                                      # unit — fast, no network
+go test -tags integration ./tests/integration/...  # godog BDD over httpmock
+go test -tags e2e ./tests/e2e/...                  # live instance from .env
 ```
 
-### E2E tests
+Most changes only need the first ring. Add integration coverage when you've
+built new request/response plumbing worth exercising end-to-end; run e2e when
+you've modeled a new response shape — unit tests only prove your mocks
+round-trip through your *own* serializer, and the real instance is the only
+authority on what ServiceNow sends.
 
-E2E tests (`tests/e2e/`, behind the `e2e` build tag) hit a real ServiceNow
-instance using credentials from a `.env` file as described in the
-[setup guide](setup.md). Run them manually:
+## Unit tests: the idiom
 
-```bash
-go test -tags e2e ./tests/e2e/...
-```
-
-## Mocking HTTP requests
-
-The project uses the `httpmock` library to simulate ServiceNow API responses in
-unit tests. This lets you verify request construction and response parsing
-without a live instance.
+Unit tests are **table-driven with `testify`**, and HTTP is stubbed with
+`httpmock` (plus the `testify/mock`-based doubles in `internal/mocking`).
+The canonical shape, matching what you'll find throughout the repo:
 
 ```go
-func TestExample(t *testing.T) {
-    httpmock.Activate()
-    defer httpmock.DeactivateAndReset()
+func TestTableItemRequestBuilder_Get(t *testing.T) {
+    tests := []struct {
+        name     string
+        status   int
+        body     string
+        expected string
+        wantErr  error
+    }{
+        {name: "success", status: 200, body: `{"result": {"number": {"value": "INC0010001"}}}`, expected: "INC0010001"},
+        {name: "not found", status: 404, body: `{"error": {"message": "No Record found"}}`, wantErr: &core.NotFoundError{}},
+    }
 
-    // Register a mock responder
-    httpmock.RegisterResponder("GET", "https://instance.service-now.com/api/now/table/incident",
-        httpmock.NewStringResponder(200, `{"result": []}`))
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            httpmock.Activate()
+            defer httpmock.DeactivateAndReset()
+            httpmock.RegisterResponder("GET",
+                "https://instance.service-now.com/api/now/table/incident/abc123",
+                httpmock.NewStringResponder(tt.status, tt.body))
 
-    // Execute your test logic...
+            // ... execute the builder and assert with require/assert ...
+        })
+    }
 }
 ```
 
-## Writing effective tests
+What reviewers look for in that table:
 
-When contributing tests, follow these best practices:
+- **The failure rows exist.** A mapped API error (401, 404), the nil-guard
+  sentinels (`snerrors.ErrNilRequestBuilder` when called on a nil builder),
+  and the success path — not just the success path.
+- **Data looks like ServiceNow.** `INC0010001`, not `"foo"` — realistic data
+  catches realistic bugs (field naming, value nesting).
+- **The request is asserted, not just the response.** Verify headers, query
+  parameters, and body reached the responder as intended.
+- **Bug fixes carry their reproduction.** The test that fails before your fix
+  and passes after is the regression guard.
 
-- **Test for success and failure:** Make sure you test both happy paths and
-  many error conditions, for example, 401 Unauthorized, 404 Not Found.
-- **Use meaningful data:** Avoid using "foo" or "bar." Use data that resembles
-  real ServiceNow records, for example, "INC0010001."
-- **Verify request details:** In unit tests, check that the correct headers,
-  query parameters, and body reach the server.
-- **Check for regressions:** If you're fixing a bug, add a test case that
-  reproduces the bug to make sure it doesn't return.
+## Integration tests: Gherkin over mocks
 
-## Coverage reporting
+The integration ring describes behavior in `.feature` files under
+`tests/integration/features/`, with step definitions binding them to the SDK
+via `godog`, against `httpmock` responders — readable specs, no live
+instance. New steps follow the pattern in the existing
+`*_steps_test.go` files, build-tagged `//go:build integration`.
 
-The project uses Codecov to track test coverage. You can generate a local coverage report
-using the standard Go tools:
+## Coverage
+
+Codecov tracks coverage on every PR. Locally:
 
 ```bash
-go test -coverprofile=coverage.out ./...
-go tool cover -html=coverage.out
+./scripts/test.sh --report     # unit tests + HTML report (coverage.html)
+# or the raw tools:
+go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out
 ```
 
-Aim to maintain or increase the current coverage level with your contributions.
+Coverage is a floor, not a target — hold the line or raise it, but reviewers
+care more about the failure rows in your tables than the percentage.
+
+## Next steps
+
+- Adding a whole module? The [playbook](add-api-module.md) includes the
+  test expectations per file, and its "verify against a live instance" step
+  is exactly the e2e discipline described above.
+- Not sure which sentinel an error path should return? See
+  [error-handling design](design-error-handling.mdx).

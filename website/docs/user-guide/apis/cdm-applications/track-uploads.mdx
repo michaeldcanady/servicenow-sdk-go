@@ -1,0 +1,37 @@
+# Track CDM uploads and exports
+
+import GoExample from '@site/src/components/GoExample';
+import cagGo from '@site/snippets/cdm_applications_guide.go';
+
+Check the status of a configuration-data upload and list a deployable's exports.
+
+## When to use this pattern
+
+- You've pushed component or collection configuration through `Uploads()` and need to poll the result
+- You're exporting a deployable's configuration for promotion between instances
+
+## Required values
+
+| Value | Description |
+| ----- | ----------- |
+| Upload ID | Returned when you submit an upload; used to poll its status |
+
+## Example
+
+<GoExample language="go" files={{ cagGo: cagGo }} template={`package main
+
+{{cagGo:cag_imports}}
+
+func main() {
+    {{cagGo:cag_main}}
+}`} />
+
+## Tips
+
+- Uploads are asynchronous — always poll `UploadStatus()` rather than assuming success.
+- Exports follow the same pattern: request via `Exports()`, fetch content by ID.
+
+## Next steps
+
+- **[CDM Applications API reference](../../../apis/cdm-applications/index.mdx)**
+- **[Track changesets](../cdm-changesets/track-changesets.mdx)**

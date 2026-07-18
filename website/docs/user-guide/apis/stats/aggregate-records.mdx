@@ -1,0 +1,40 @@
+# Aggregate records
+
+import GoExample from '@site/src/components/GoExample';
+import sgGo from '@site/snippets/stats_guide.go';
+
+Compute counts, sums, and other aggregates over a table's records without transferring the records themselves.
+
+## When to use this pattern
+
+- You need a count, sum, average, minimum, or maximum over matching records
+- You'd otherwise fetch pages of records just to count them
+- You need the records too — then use [List and query records](../../tables/list-and-query-records.mdx) instead
+
+## Required values
+
+| Value | Description |
+| ----- | ----------- |
+| Table name | The table to aggregate over (for example, `incident`) |
+| Aggregates | Which of `Count`, `SumFields`, `AvgFields`, `MinFields`, `MaxFields` you want |
+| Encoded query | Optional filter selecting the records that feed the aggregate |
+
+## Example
+
+<GoExample language="go" files={{ sgGo: sgGo }} template={`package main
+
+{{sgGo:sg_imports}}
+
+func main() {
+    {{sgGo:sg_main}}
+}`} />
+
+## Tips
+
+- Aggregate values come back as strings, exactly as ServiceNow returns them.
+- The module currently supports the ungrouped shape only — one aggregate result per request (`sysparm_group_by` isn't modeled yet).
+
+## Next steps
+
+- **[Aggregation API reference](../../../apis/stats/index.mdx)**
+- **[Build a query](../../query-builder.mdx)**

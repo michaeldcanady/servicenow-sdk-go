@@ -1,0 +1,36 @@
+# Execute rule conditions
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Evaluate appointment rule conditions.
+
+:::warning
+The request-body model for this operation currently has no exported setters, so the body cannot be populated from outside the SDK — see [issue #488](https://github.com/michaeldcanady/servicenow-sdk-go/issues/488). The signature below is documented for completeness.
+:::
+
+## HTTP request
+
+```http
+POST /api/sn_apptmnt_booking/v1/appointment/execute_rule_conditions
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+None.
+
+## Request body
+
+Supply a `appointmentbookingapi.ExecuteRuleConditionsRequest`.
+
+## Response
+
+`ExecuteRuleConditionsResponse`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_execute_rule_conditions" />
