@@ -2,6 +2,7 @@ package appserviceapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -104,7 +105,7 @@ func NewPopulateServiceRequestBuilderInternal(pathParameters map[string]string, 
 // Put sends a PUT request to populate a service.
 func (rB *PopulateServiceRequestBuilder) Put(ctx context.Context, body *PopulateServiceRequest, config *PopulateServiceRequestConfiguration) (PopulateServiceResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)
@@ -125,7 +126,7 @@ func (rB *PopulateServiceRequestBuilder) Put(ctx context.Context, body *Populate
 // ToPutRequestInformation creates a RequestInformation object for a PUT request.
 func (rB *PopulateServiceRequestBuilder) ToPutRequestInformation(ctx context.Context, body *PopulateServiceRequest, config *PopulateServiceRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -156,7 +157,7 @@ func NewServiceDetailsRequestBuilderInternal(pathParameters map[string]string, r
 // Put sends a PUT request to update service details.
 func (rB *ServiceDetailsRequestBuilder) Put(ctx context.Context, body *ServiceDetailsRequest, config *ServiceDetailsRequestConfiguration) (ServiceDetailsResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)
@@ -177,7 +178,7 @@ func (rB *ServiceDetailsRequestBuilder) Put(ctx context.Context, body *ServiceDe
 // ToPutRequestInformation creates a RequestInformation object for a PUT request.
 func (rB *ServiceDetailsRequestBuilder) ToPutRequestInformation(ctx context.Context, body *ServiceDetailsRequest, config *ServiceDetailsRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())

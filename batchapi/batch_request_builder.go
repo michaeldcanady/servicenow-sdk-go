@@ -47,7 +47,7 @@ func NewBatchRequestBuilder(
 // Head sends an HTTP HEAD request and returns the response headers.
 func (rB *BatchRequestBuilder) Head(ctx context.Context, requestConfiguration *BatchRequestBuilderGetRequestConfiguration) (*abstractions.ResponseHeaders, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(requestConfiguration) {
@@ -75,7 +75,7 @@ func (rB *BatchRequestBuilder) Head(ctx context.Context, requestConfiguration *B
 // ToHeadRequestInformation converts provided parameters into request information
 func (rB *BatchRequestBuilder) ToHeadRequestInformation(_ context.Context, requestConfiguration *BatchRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.HEAD, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -91,7 +91,7 @@ func (rB *BatchRequestBuilder) ToHeadRequestInformation(_ context.Context, reque
 // Post produces a batch response using the specified parameters
 func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requestConfiguration *BatchRequestBuilderPostRequestConfiguration) (*BatchResponseModel, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(body) {
@@ -125,7 +125,7 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 // toPostRequestInformation converts provided parameters into request information
 func (rB *BatchRequestBuilder) toPostRequestInformation(ctx context.Context, body BatchRequest, requestConfiguration *BatchRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())

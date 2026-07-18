@@ -2,6 +2,7 @@ package appserviceapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -33,7 +34,7 @@ func (rB *servicePostRequestBuilder[TBody, TResponse]) post(ctx context.Context,
 	var zero TResponse
 
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return zero, nil
+		return zero, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.toPostRequestInformation(ctx, body, config)
@@ -54,7 +55,7 @@ func (rB *servicePostRequestBuilder[TBody, TResponse]) post(ctx context.Context,
 // toPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *servicePostRequestBuilder[TBody, TResponse]) toPostRequestInformation(ctx context.Context, body TBody, config *abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())

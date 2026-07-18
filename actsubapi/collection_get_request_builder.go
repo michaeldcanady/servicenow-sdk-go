@@ -2,6 +2,7 @@ package actsubapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -30,7 +31,7 @@ func newCollectionGetRequestBuilder(pathParameters map[string]string, requestAda
 // Get sends a GET request to retrieve the collection.
 func (rB *collectionGetRequestBuilder) Get(ctx context.Context, config *abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
@@ -53,7 +54,7 @@ func (rB *collectionGetRequestBuilder) Get(ctx context.Context, config *abstract
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *collectionGetRequestBuilder) ToGetRequestInformation(ctx context.Context, config *abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())

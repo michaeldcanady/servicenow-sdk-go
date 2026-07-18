@@ -3,6 +3,7 @@ package attachmentapi
 import (
 	"context"
 	"errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -88,7 +89,7 @@ func (rB *AttachmentRequestBuilder) Upload() *AttachmentUploadRequestBuilder {
 // Get returns AttachmentCollectionResponse using provided arguments
 func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*AttachmentCollectionResponse, error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(requestConfiguration) {
@@ -128,7 +129,7 @@ func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguratio
 // Head sends an HTTP HEAD request and returns the response headers.
 func (rB *AttachmentRequestBuilder) Head(ctx context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*abstractions.ResponseHeaders, error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(requestConfiguration) {
@@ -155,7 +156,7 @@ func (rB *AttachmentRequestBuilder) Head(ctx context.Context, requestConfigurati
 // ToHeadRequestInformation converts request configurations to Head request information.
 func (rB *AttachmentRequestBuilder) ToHeadRequestInformation(_ context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.HEAD, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -171,7 +172,7 @@ func (rB *AttachmentRequestBuilder) ToHeadRequestInformation(_ context.Context, 
 // ToGetRequestInformation converts request configurations to Get request information.
 func (rB *AttachmentRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())

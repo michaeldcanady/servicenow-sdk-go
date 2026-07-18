@@ -2,6 +2,7 @@ package actsubapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -32,7 +33,7 @@ func NewPreferencesRequestBuilderInternal(pathParameters map[string]string, requ
 // Post sends a POST request to create preferences.
 func (rB *PreferencesRequestBuilder) Post(ctx context.Context, body *ActivitySubscriptionModel, config *PreferencesRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
@@ -55,7 +56,7 @@ func (rB *PreferencesRequestBuilder) Post(ctx context.Context, body *ActivitySub
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *PreferencesRequestBuilder) ToPostRequestInformation(ctx context.Context, body *ActivitySubscriptionModel, config *PreferencesRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -103,7 +104,7 @@ func NewPreferenceItemRequestBuilderInternal(pathParameters map[string]string, r
 // Get sends a GET request to retrieve preferences.
 func (rB *PreferenceItemRequestBuilder) Get(ctx context.Context, config *PreferencesRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
@@ -126,7 +127,7 @@ func (rB *PreferenceItemRequestBuilder) Get(ctx context.Context, config *Prefere
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *PreferenceItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *PreferencesRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())

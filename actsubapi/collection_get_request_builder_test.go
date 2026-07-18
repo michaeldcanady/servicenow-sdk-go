@@ -2,6 +2,7 @@ package actsubapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -65,7 +66,7 @@ func TestCollectionGetRequestBuilder_Get(t *testing.T) {
 
 			switch {
 			case tc.nilBuilder, tc.nilInner:
-				assert.NoError(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, resp)
 			case tc.expectErr:
 				assert.Error(t, err)
@@ -110,7 +111,7 @@ func TestCollectionGetRequestBuilder_ToGetRequestInformation(t *testing.T) {
 			reqInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
 
 			if tt.nilBuilder || tt.nilInner {
-				assert.NoError(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, reqInfo)
 				return
 			}

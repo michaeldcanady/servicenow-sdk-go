@@ -2,6 +2,7 @@ package appserviceapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -22,7 +23,7 @@ func NewCreateRequestBuilderInternal(pathParameters map[string]string, requestAd
 // Post sends a POST request to create an application service.
 func (rB *CreateRequestBuilder) Post(ctx context.Context, body *CreateServiceRequest, config *CreateRequestConfiguration) (CreateServiceResponse, error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	return rB.post(ctx, body, config)
 }
@@ -30,7 +31,7 @@ func (rB *CreateRequestBuilder) Post(ctx context.Context, body *CreateServiceReq
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *CreateRequestBuilder) ToPostRequestInformation(ctx context.Context, body *CreateServiceRequest, config *CreateRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	return rB.toPostRequestInformation(ctx, body, config)
 }

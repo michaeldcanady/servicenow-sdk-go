@@ -53,7 +53,7 @@ func NewAttachmentFileRequestBuilder(
 // Post uploads provided content to Service-Now using provided parameters
 func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (core.ServiceNowItemResponse[*File], error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(requestConfiguration) {
@@ -120,7 +120,7 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 // ToPostRequestInformation converts request configurations to Post request information.
 func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())

@@ -3,6 +3,7 @@ package documentsapi
 import (
 	"context"
 	"errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -60,7 +61,7 @@ func TestDocumentPostRequestBuilder_Post(t *testing.T) {
 			resp, err := builder.post(context.Background(), &documentPostRequestConfiguration{})
 
 			if tt.nilBuilder {
-				assert.NoError(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, resp)
 				return
 			}
@@ -158,7 +159,7 @@ func TestDocumentPostRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	t.Run("Nil builder", func(t *testing.T) {
 		var builder *documentPostRequestBuilder
 		reqInfo, err := builder.toPostRequestInformation(context.Background(), nil)
-		assert.NoError(t, err)
+		assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		assert.Nil(t, reqInfo)
 	})
 }

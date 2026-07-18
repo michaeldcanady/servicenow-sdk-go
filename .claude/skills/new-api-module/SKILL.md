@@ -77,10 +77,10 @@ simpler module, `policyapi/` shows a smaller single-resource shape.
    - Every method starts with the nil-guard pattern:
      ```go
      if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-         return nil, nil
+         return nil, snerrors.ErrNilRequestBuilder
      }
      if conversion.IsNil(rB.GetRequestAdapter()) {
-         return nil, errors.New("request adapter is nil")
+         return nil, snerrors.ErrNilRequestAdapter
      }
      ```
    - Use `internal/conversion`, `internal/http`, `internal/model` helpers rather

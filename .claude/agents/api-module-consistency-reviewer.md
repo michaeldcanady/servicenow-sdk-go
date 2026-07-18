@@ -19,10 +19,10 @@ should follow the same shape:
   standard nil-guard:
   ```go
   if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-      return nil, nil
+      return nil, snerrors.ErrNilRequestBuilder
   }
   if conversion.IsNil(rB.GetRequestAdapter()) {
-      return nil, errors.New("request adapter is nil")
+      return nil, snerrors.ErrNilRequestAdapter
   }
   ```
 - **Constructors** follow the triad: `New<X>RequestBuilderInternal` (takes

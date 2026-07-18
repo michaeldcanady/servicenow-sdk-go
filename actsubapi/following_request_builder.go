@@ -2,6 +2,7 @@ package actsubapi // nolint:dupl // FollowingItemRequestBuilder/SubscriberItemRe
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -53,7 +54,7 @@ func NewFollowingItemRequestBuilderInternal(pathParameters map[string]string, re
 // Get sends a GET request to retrieve following.
 func (rB *FollowingItemRequestBuilder) Get(ctx context.Context, config *FollowingsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	return rB.collectionGetRequestBuilder.Get(ctx, config)
 }
@@ -61,7 +62,7 @@ func (rB *FollowingItemRequestBuilder) Get(ctx context.Context, config *Followin
 // ToGetRequestInformation creates a RequestInformation object for a GET request to retrieve following.
 func (rB *FollowingItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *FollowingsRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	return rB.collectionGetRequestBuilder.ToGetRequestInformation(ctx, config)
 }

@@ -2,6 +2,7 @@ package policyapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -99,9 +100,10 @@ func TestPoliciesMappingsRequestBuilder_Delete(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "Nil_RequestBuilder",
-			nilRB:   true,
-			wantErr: false,
+			name:       "Nil_RequestBuilder",
+			nilRB:      true,
+			wantErr:    true,
+			errMessage: "request builder is nil",
 		},
 		{
 			name:           "Nil_Configuration",
@@ -210,7 +212,7 @@ func TestPoliciesMappingsRequestBuilder_ToDeleteRequestInformation(t *testing.T)
 
 			if tt.nilRB {
 				assert.Nil(t, requestInfo)
-				assert.NoError(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			} else {
 				assert.NotNil(t, requestInfo)
 				assert.NoError(t, err)
@@ -247,9 +249,10 @@ func TestPoliciesMappingsRequestBuilder_Post(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "Nil_RequestBuilder",
-			nilRB:   true,
-			wantErr: false,
+			name:       "Nil_RequestBuilder",
+			nilRB:      true,
+			wantErr:    true,
+			errMessage: "request builder is nil",
 		},
 		{
 			name:           "Nil_Configuration",
@@ -362,7 +365,7 @@ func TestPoliciesMappingsRequestBuilder_ToPostRequestInformation(t *testing.T) {
 
 			if tt.nilRB {
 				assert.Nil(t, requestInfo)
-				assert.NoError(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			} else {
 				assert.NotNil(t, requestInfo)
 				assert.NoError(t, err)

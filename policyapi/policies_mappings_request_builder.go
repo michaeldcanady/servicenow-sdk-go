@@ -42,7 +42,7 @@ func (rB *PoliciesMappingsRequestBuilder) Inputs() *PoliciesMappingsInputsReques
 
 func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) error {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil
+		return snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(requestConfiguration) {
@@ -81,7 +81,7 @@ func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestCon
 
 func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (core.ServiceNowItemResponse[*PoliciesMapping], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(requestConfiguration) {
@@ -134,7 +134,7 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 
 func (rB *PoliciesMappingsRequestBuilder) ToPostRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -148,7 +148,7 @@ func (rB *PoliciesMappingsRequestBuilder) ToPostRequestInformation(_ context.Con
 
 func (rB *PoliciesMappingsRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())

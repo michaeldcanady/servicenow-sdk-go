@@ -177,12 +177,12 @@ func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 		{
 			name:        "Nil inner model",
 			setupMocks:  func() *mocking.MockRequestBuilder { return &mocking.MockRequestBuilder{} }, // Mocking is not used here but to satisfy interface
-			expectedErr: nil,
+			expectedErr: snerrors.ErrNilRequestBuilder,
 		},
 		{
 			name:         "Nil model",
 			isNilBuilder: true,
-			expectedErr:  nil,
+			expectedErr:  snerrors.ErrNilRequestBuilder,
 		},
 	}
 
@@ -250,12 +250,12 @@ func TestAttachmentItemRequestBuilder_Delete(t *testing.T) {
 		{
 			name:        "Nil inner model",
 			setupMocks:  func() *mocking.MockRequestBuilder { return &mocking.MockRequestBuilder{} },
-			expectedErr: nil,
+			expectedErr: snerrors.ErrNilRequestBuilder,
 		},
 		{
 			name:         "Nil model",
 			isNilBuilder: true,
-			expectedErr:  nil,
+			expectedErr:  snerrors.ErrNilRequestBuilder,
 		},
 	}
 

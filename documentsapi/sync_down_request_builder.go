@@ -2,6 +2,7 @@ package documentsapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -27,7 +28,7 @@ func NewSyncDownRequestBuilderInternal(pathParameters map[string]string, request
 // Post synchronizes the specified document.
 func (rB *SyncDownRequestBuilder) Post(ctx context.Context, requestConfiguration *SyncDownRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[Document], error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	return rB.post(ctx, (*documentPostRequestConfiguration)(requestConfiguration))
 }
@@ -35,7 +36,7 @@ func (rB *SyncDownRequestBuilder) Post(ctx context.Context, requestConfiguration
 // ToPostRequestInformation converts request configurations to Post request information.
 func (rB *SyncDownRequestBuilder) ToPostRequestInformation(ctx context.Context, requestConfiguration *SyncDownRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 	return rB.toPostRequestInformation(ctx, (*documentPostRequestConfiguration)(requestConfiguration))
 }

@@ -5,6 +5,7 @@ import "errors"
 // Standard sentinel errors for consistent error handling.
 var (
 	ErrNilRequestAdapter       = errors.New("requestAdapter cannot be nil")
+	ErrNilRequestBuilder       = errors.New("request builder is nil")
 	ErrNilResponse             = errors.New("response cannot be nil")
 	ErrNilContext              = errors.New("context cannot be nil")
 	ErrNilConfig               = errors.New("config is nil")

@@ -2,6 +2,7 @@ package appointmentbookingapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -26,7 +27,7 @@ func NewAvailabilityRequestBuilder(pathParameters map[string]string, requestAdap
 // Post sends a POST request to get availability.
 func (rB *AvailabilityRequestBuilder) Post(ctx context.Context, body AvailabilityRequest, config *AvailabilityRequestBuilderPostRequestConfiguration) (AvailabilityResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
@@ -49,7 +50,7 @@ func (rB *AvailabilityRequestBuilder) Post(ctx context.Context, body Availabilit
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *AvailabilityRequestBuilder) ToPostRequestInformation(ctx context.Context, body AvailabilityRequest, config *AvailabilityRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -82,7 +83,7 @@ func NewCalendarRequestBuilder(pathParameters map[string]string, requestAdapter 
 // Get sends a GET request to retrieve calendar.
 func (rB *CalendarRequestBuilder) Get(ctx context.Context, config *CalendarRequestBuilderGetRequestConfiguration) (CalendarResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
@@ -105,7 +106,7 @@ func (rB *CalendarRequestBuilder) Get(ctx context.Context, config *CalendarReque
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *CalendarRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CalendarRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -133,7 +134,7 @@ func NewConfigurationRequestBuilder(pathParameters map[string]string, requestAda
 // Get sends a GET request to retrieve configuration.
 func (rB *ConfigurationRequestBuilder) Get(ctx context.Context, config *ConfigurationRequestBuilderGetRequestConfiguration) (ConfigurationResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
@@ -156,7 +157,7 @@ func (rB *ConfigurationRequestBuilder) Get(ctx context.Context, config *Configur
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
 func (rB *ConfigurationRequestBuilder) ToGetRequestInformation(ctx context.Context, config *ConfigurationRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -184,7 +185,7 @@ func NewExecuteRuleConditionsRequestBuilder(pathParameters map[string]string, re
 // Post sends a POST request to execute rule conditions.
 func (rB *ExecuteRuleConditionsRequestBuilder) Post(ctx context.Context, body ExecuteRuleConditionsRequest, config *ExecuteRuleConditionsRequestBuilderPostRequestConfiguration) (ExecuteRuleConditionsResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
@@ -207,7 +208,7 @@ func (rB *ExecuteRuleConditionsRequestBuilder) Post(ctx context.Context, body Ex
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *ExecuteRuleConditionsRequestBuilder) ToPostRequestInformation(ctx context.Context, body ExecuteRuleConditionsRequest, config *ExecuteRuleConditionsRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -240,7 +241,7 @@ func NewUserWindowRequestBuilder(pathParameters map[string]string, requestAdapte
 // Post sends a POST request to get user window.
 func (rB *UserWindowRequestBuilder) Post(ctx context.Context, body any, config *UserWindowRequestBuilderPostRequestConfiguration) (AvailabilityResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
@@ -263,7 +264,7 @@ func (rB *UserWindowRequestBuilder) Post(ctx context.Context, body any, config *
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
 func (rB *UserWindowRequestBuilder) ToPostRequestInformation(ctx context.Context, body any, config *UserWindowRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())

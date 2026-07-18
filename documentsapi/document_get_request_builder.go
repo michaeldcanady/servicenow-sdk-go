@@ -2,6 +2,7 @@ package documentsapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -36,7 +37,7 @@ func newDocumentGetRequestBuilder(requestAdapter abstractions.RequestAdapter, ur
 // get retrieves a Document.
 func (rB *documentGetRequestBuilder) get(ctx context.Context, requestConfiguration *documentGetRequestConfiguration) (*core.BaseServiceNowItemResponse[Document], error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.toGetRequestInformation(ctx, requestConfiguration)
@@ -60,7 +61,7 @@ func (rB *documentGetRequestBuilder) get(ctx context.Context, requestConfigurati
 // toGetRequestInformation converts request configurations to Get request information.
 func (rB *documentGetRequestBuilder) toGetRequestInformation(_ context.Context, requestConfiguration *documentGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())

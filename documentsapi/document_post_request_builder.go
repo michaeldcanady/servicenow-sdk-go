@@ -2,6 +2,7 @@ package documentsapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -36,7 +37,7 @@ func newDocumentPostRequestBuilder(requestAdapter abstractions.RequestAdapter, u
 // post sends a POST request to create or link a document.
 func (rB *documentPostRequestBuilder) post(ctx context.Context, requestConfiguration *documentPostRequestConfiguration) (*core.BaseServiceNowItemResponse[Document], error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.toPostRequestInformation(ctx, requestConfiguration)
@@ -60,7 +61,7 @@ func (rB *documentPostRequestBuilder) post(ctx context.Context, requestConfigura
 // toPostRequestInformation converts request configurations to Post request information.
 func (rB *documentPostRequestBuilder) toPostRequestInformation(ctx context.Context, requestConfiguration *documentPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())

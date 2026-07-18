@@ -32,7 +32,7 @@ func TestStatsRequestBuilder_Get(t *testing.T) {
 			name:      "nil builder",
 			builder:   nil,
 			setupMock: func(m *mocking.MockRequestAdapter) {},
-			err:       nil,
+			err:       snerrors.ErrNilRequestBuilder,
 		},
 		{
 			name:      "nil request adapter",
@@ -107,6 +107,6 @@ func TestStatsRequestBuilder_ToGetRequestInformation_NilBuilder(t *testing.T) {
 
 	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
 
-	require.NoError(t, err)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 	assert.Nil(t, requestInfo)
 }

@@ -66,7 +66,7 @@ func NewTableItemRequestBuilder[T model.ServiceNowItem](
 // Get sends an HTTP GET request and returns the single table record.
 func (rB *TableItemRequestBuilder[T]) Get(ctx context.Context, requestConfiguration *TableItemRequestBuilderGetRequestConfiguration) (core.ServiceNowItemResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
@@ -99,7 +99,7 @@ func (rB *TableItemRequestBuilder[T]) Get(ctx context.Context, requestConfigurat
 // Delete sends an HTTP DELETE request to remove the single table record.
 func (rB *TableItemRequestBuilder[T]) Delete(ctx context.Context, requestConfiguration *TableItemRequestBuilderDeleteRequestConfiguration) error {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil
+		return snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
@@ -118,7 +118,7 @@ func (rB *TableItemRequestBuilder[T]) Delete(ctx context.Context, requestConfigu
 // Put updates a table item using an HTTP PUT request, replacing the entire record.
 func (rB *TableItemRequestBuilder[T]) Put(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPutRequestConfiguration) (core.ServiceNowItemResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
@@ -155,7 +155,7 @@ func (rB *TableItemRequestBuilder[T]) Put(ctx context.Context, body T, requestCo
 // Patch updates a table item using an HTTP PATCH request, applying partial updates.
 func (rB *TableItemRequestBuilder[T]) Patch(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPatchRequestConfiguration) (core.ServiceNowItemResponse[T], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	if conversion.IsNil(rB.GetRequestAdapter()) {
@@ -192,7 +192,7 @@ func (rB *TableItemRequestBuilder[T]) Patch(ctx context.Context, body T, request
 // ToGetRequestInformation converts provided parameters into request information
 func (rB *TableItemRequestBuilder[T]) ToGetRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -208,7 +208,7 @@ func (rB *TableItemRequestBuilder[T]) ToGetRequestInformation(_ context.Context,
 // ToDeleteRequestInformation converts provided parameters into request information
 func (rB *TableItemRequestBuilder[T]) ToDeleteRequestInformation(_ context.Context, requestConfiguration *TableItemRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -224,7 +224,7 @@ func (rB *TableItemRequestBuilder[T]) ToDeleteRequestInformation(_ context.Conte
 // ToPutRequestInformation converts provided parameters into request information
 func (rB *TableItemRequestBuilder[T]) ToPutRequestInformation(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPutRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -246,7 +246,7 @@ func (rB *TableItemRequestBuilder[T]) ToPutRequestInformation(ctx context.Contex
 // ToPatchRequestInformation converts provided parameters into request information
 func (rB *TableItemRequestBuilder[T]) ToPatchRequestInformation(ctx context.Context, body T, requestConfiguration *TableItemRequestBuilderPatchRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PATCH, rB.GetURLTemplate(), rB.GetPathParameters())

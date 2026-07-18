@@ -3,6 +3,7 @@ package attachmentapi
 import (
 	"context"
 	"errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -294,7 +295,7 @@ func TestAttachmentUploadRequestBuilder_ToPostRequestInformation(t *testing.T) {
 
 			if tt.isNilBuilder {
 				assert.Nil(t, info)
-				assert.Nil(t, err)
+				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			} else {
 				assert.NoError(t, err)
 				assert.Equal(t, tt.expectedMethod, info.Method)

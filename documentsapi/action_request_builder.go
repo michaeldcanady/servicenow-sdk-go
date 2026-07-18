@@ -2,6 +2,7 @@ package documentsapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -68,7 +69,7 @@ func NewVersionActionRequestBuilderInternal(pathParameters map[string]string, re
 // Patch executes the specified action on the document version.
 func (rB *VersionActionRequestBuilder) Patch(ctx context.Context, requestConfiguration *VersionActionRequestBuilderPatchRequestConfiguration) error {
 	if conversion.IsNil(rB) {
-		return nil
+		return snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToPatchRequestInformation(ctx, requestConfiguration)

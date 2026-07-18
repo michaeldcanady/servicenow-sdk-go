@@ -2,6 +2,7 @@ package documentsapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -29,7 +30,7 @@ func NewContentRequestBuilderInternal(pathParameters map[string]string, requestA
 // Get fetches and streams the default version attachment for the document.
 func (rB *ContentRequestBuilder) Get(ctx context.Context, requestConfiguration *ContentRequestBuilderGetRequestConfiguration) ([]byte, error) {
 	if conversion.IsNil(rB) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)

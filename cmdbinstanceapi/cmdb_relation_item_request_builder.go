@@ -2,6 +2,7 @@ package cmdbinstanceapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -28,7 +29,7 @@ func NewCmdbRelationItemRequestBuilderInternal(pathParameters map[string]string,
 // Delete deletes a specific Relation for the CI.
 func (rB *CmdbRelationItemRequestBuilder) Delete(ctx context.Context, config *CmdbRelationItemRequestBuilderDeleteRequestConfiguration) error {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil
+		return snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToDeleteRequestInformation(ctx, config)

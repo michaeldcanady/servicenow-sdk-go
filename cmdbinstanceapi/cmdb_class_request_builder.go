@@ -2,6 +2,7 @@ package cmdbinstanceapi
 
 import (
 	"context"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -32,7 +33,7 @@ func NewCmdbClassRequestBuilderInternal(pathParameters map[string]string, reques
 // Get queries records for a CMDB class.
 func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, config *CmdbClassRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[CmdbInstance], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
@@ -56,7 +57,7 @@ func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, config *CmdbClassReq
 // Post creates a record with associated relations.
 func (rB *CmdbClassRequestBuilder) Post(ctx context.Context, body CmdbInstance, config *CmdbClassRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, nil
+		return nil, snerrors.ErrNilRequestBuilder
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
