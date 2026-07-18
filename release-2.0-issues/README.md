@@ -5,6 +5,13 @@ Senior DevOps) of the `release/2.0` branch, conducted 2026-07-17. Current state 
 review time: branch is 90 commits ahead of `main`, `go build ./...` clean,
 `go test ./...` passing locally, version at 1.12.0.
 
+## Status (2026-07-18)
+
+Fix PRs are open against `release/2.0`:
+#481 (001), #482+part of 002 (009), #483 (010), #484 (006), #485 (007), #486 (013), #487 (004 + part of 005).
+Issue 012's go-directive item is blocked by kiota-http-go's own `go 1.25.0` floor (see the issue file).
+Still open: 002/003 (release-day runbooks), 005 (remaining sentinel consolidation), 008, 011 (decision), 012 (test-module split), 014.
+
 ## Release blockers (P0)
 
 | # | Issue | Owner role |
