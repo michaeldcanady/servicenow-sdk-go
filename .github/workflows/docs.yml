@@ -11,6 +11,8 @@ on:
       - "scripts/check-snippet-regions.sh"
       - ".github/workflows/docs.yml"
   pull_request:
+    # `closed` is needed so the PR preview gets cleaned up on merge/close.
+    types: [opened, reopened, synchronize, closed]
     paths:
       - "website/**"
       - ".vale.ini"
@@ -25,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'release-please--'))
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed' && !startsWith(github.head_ref, 'release-please--'))
     outputs:
       docs: ${{ steps.filter.outputs.any_changed }}
     steps:
@@ -126,15 +128,63 @@ jobs:
           path: website/build
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: JamesIves/github-pages-deploy-action@v4.8.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: website/build
+          branch: gh-pages
+          folder: website/build
+          clean: true
+          # Keep live PR previews (deploy-preview job) intact on prod deploys.
+          clean-exclude: pr-preview/
+
+  deploy-preview:
+    name: deploy-preview
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    # Fork PRs get a read-only token, so previews are same-repo only. Runs on
+    # `closed` too (without the build steps) so the preview gets removed.
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      !startsWith(github.head_ref, 'release-please--')
+    concurrency: docs-preview-${{ github.ref }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        if: github.event.action != 'closed'
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install dependencies
+        if: github.event.action != 'closed'
+        working-directory: website
+        run: npm ci
+
+      - name: Build docs for preview path
+        if: github.event.action != 'closed'
+        working-directory: website
+        env:
+          DOCS_BASE_URL: /servicenow-sdk-go/pr-preview/pr-${{ github.event.number }}/
+        run: npm run build
+
+      - name: Deploy preview
+        uses: rossjrw/pr-preview-action@v1.8.1
+        with:
+          source-dir: website/build
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
 
   report-failure:
     name: Report Docs Failure
     if: failure() && github.event_name == 'pull_request'
-    needs: [build, lint]
+    needs: [build, lint, deploy-preview]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write

@@ -14,7 +14,9 @@ const config: Config = {
   },
 
   url: 'https://michaeldcanady.github.io',
-  baseUrl: '/servicenow-sdk-go/',
+  // Overridden by CI for PR previews, which deploy under
+  // /servicenow-sdk-go/pr-preview/pr-<N>/ (see .github/workflows/docs.yml).
+  baseUrl: process.env.DOCS_BASE_URL ?? '/servicenow-sdk-go/',
 
   organizationName: 'michaeldcanady',
   projectName: 'servicenow-sdk-go',
