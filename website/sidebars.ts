@@ -78,6 +78,29 @@ const sidebars: SidebarsConfig = {
       link: {type: 'doc', id: 'apis/batch/index'},
       items: ['apis/batch/create'],
     },
+    'apis/stats/index',
+    'apis/documents/index',
+    'apis/activity-subscriptions/index',
+    {
+      type: 'category',
+      label: 'CMDB & CSDM',
+      items: ['apis/cmdb-instance/index', 'apis/app-service/index'],
+    },
+    {
+      type: 'category',
+      label: 'Customer Service',
+      items: ['apis/case/index', 'apis/account/index', 'apis/appointment-booking/index'],
+    },
+    {
+      type: 'category',
+      label: 'Configuration Data Management',
+      items: [
+        'apis/cdm-applications/index',
+        'apis/cdm-changesets/index',
+        'apis/cdm-editor/index',
+        'apis/policy/index',
+      ],
+    },
   ],
   contributing: [
     'contributing/index',

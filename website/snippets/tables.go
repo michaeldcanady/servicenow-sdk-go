@@ -34,7 +34,7 @@ func tableBasicSetup() {
 	rawURL := "https://xSDK_SN_URLx/api/now/v1/table/xSDK_SN_TABLEx"
 
 	// Step 4: Build request
-	requestBuilder = tableapi.NewDefaultTableItemRequestBuilder(rawURL, client.RequestAdapter)
+	requestBuilder = tableapi.NewDefaultTableItemRequestBuilder(rawURL, client.GetRequestAdapter())
 	// [END table_standard_setup]
 
 	// [START table_collection_standard_setup]
@@ -42,7 +42,7 @@ func tableBasicSetup() {
 	rawURL = "https://xSDK_SN_URLx/api/now/v1/table/xSDK_SN_TABLEx"
 
 	// Step 4: Build request
-	collectionRequestBuilder = tableapi.NewDefaultTableRequestBuilder(rawURL, client.RequestAdapter)
+	collectionRequestBuilder = tableapi.NewDefaultTableRequestBuilder(rawURL, client.GetRequestAdapter())
 	// [END table_collection_standard_setup]
 	_ = requestBuilder
 	_ = collectionRequestBuilder

@@ -2,6 +2,7 @@
 
 package snippets
 
+// [START quickstart_imports]
 import (
 	"context"
 	"fmt"
@@ -10,6 +11,8 @@ import (
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 )
+
+// [END quickstart_imports]
 
 func _() {
 	// [START quickstart]

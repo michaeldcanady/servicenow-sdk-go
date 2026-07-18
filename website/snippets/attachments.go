@@ -44,7 +44,7 @@ func _() {
 	}
 
 	// Step 5: Build request
-	get_item_builder := attachmentapi.NewAttachmentItemRequestBuilder(get_item_rawURL, client.RequestAdapter)
+	get_item_builder := attachmentapi.NewAttachmentItemRequestBuilder(get_item_rawURL, client.GetRequestAdapter())
 
 	get_item_std_response, err := get_item_builder.Get(context.Background(), get_item_std_config)
 	if err != nil {
@@ -73,7 +73,7 @@ func _() {
 	}
 
 	// Step 5: Build request
-	list_builder := attachmentapi.NewAttachmentRequestBuilder(list_rawURL, client.RequestAdapter)
+	list_builder := attachmentapi.NewAttachmentRequestBuilder(list_rawURL, client.GetRequestAdapter())
 
 	list_std_response, err := list_builder.Get(context.Background(), list_std_config)
 	if err != nil {
@@ -103,7 +103,7 @@ func _() {
 	}
 
 	// Step 5: Build request
-	collectionRequestBuilder := attachmentapi.NewAttachmentItemRequestBuilder(rawURL, client.RequestAdapter)
+	collectionRequestBuilder := attachmentapi.NewAttachmentItemRequestBuilder(rawURL, client.GetRequestAdapter())
 
 	if err := collectionRequestBuilder.Delete(context.Background(), deleteConfig); err != nil {
 		log.Fatal(err)
@@ -159,7 +159,7 @@ func _() {
 	}
 
 	// Step 6: Build request
-	file_create_builder := attachmentapi.NewAttachmentFileRequestBuilder(file_create_rawURL, client.RequestAdapter)
+	file_create_builder := attachmentapi.NewAttachmentFileRequestBuilder(file_create_rawURL, client.GetRequestAdapter())
 
 	file_create_std_response, err := file_create_builder.Post(context.Background(), file_create_media, file_create_std_config)
 	if err != nil {
@@ -193,7 +193,7 @@ func _() {
 	}
 
 	// Step 6: Build request
-	upload_builder := attachmentapi.NewAttachmentUploadRequestBuilder(upload_rawURL, client.RequestAdapter)
+	upload_builder := attachmentapi.NewAttachmentUploadRequestBuilder(upload_rawURL, client.GetRequestAdapter())
 
 	upload_std_response, err := upload_builder.Post(context.Background(), upload_std_body, upload_std_config)
 	if err != nil {
@@ -222,7 +222,7 @@ func _() {
 	}
 
 	// Step 5: Build request
-	file_get_builder := attachmentapi.NewAttachmentItemFileRequestBuilder(file_get_rawURL, client.RequestAdapter)
+	file_get_builder := attachmentapi.NewAttachmentItemFileRequestBuilder(file_get_rawURL, client.GetRequestAdapter())
 
 	file_get_std_response, err := file_get_builder.Get(context.Background(), file_get_std_config)
 	if err != nil {

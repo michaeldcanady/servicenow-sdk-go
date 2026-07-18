@@ -67,7 +67,7 @@ func _() {
 	postConfig = &batchapi.BatchRequestBuilderPostRequestConfiguration{}
 
 	// Step 6: Build request
-	requestBuilder := batchapi.NewBatchRequestBuilder(rawURL, client.RequestAdapter)
+	requestBuilder := batchapi.NewBatchRequestBuilder(rawURL, client.GetRequestAdapter())
 
 	// Step 7: Execute request
 	resp, err := requestBuilder.Post(context.Background(), body, postConfig)

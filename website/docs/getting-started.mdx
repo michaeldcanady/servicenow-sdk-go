@@ -2,6 +2,7 @@
 
 import GoExample from '@site/src/components/GoExample';
 import authGo from '@site/snippets/auth.go';
+import quickstartGo from '@site/snippets/quickstart.go';
 
 Welcome to the ServiceNow SDK for Go! This guide helps you set up the SDK and
 make your first successful API call in just a few minutes.
@@ -41,9 +42,20 @@ func main() {
 
 ## Make your first request
 
-Once you initialize your client, you can perform operations like retrieving
-records from a table. See the [Table Operations](user-guide/tables.mdx) guide
-for more details.
+Here is the complete program: it authenticates, lists records from a table,
+and prints each record's `number` field. Save it as `main.go`, replace the
+placeholder values, and run `go run main.go`.
+
+<GoExample language="go" files={{ quickstartGo: quickstartGo }} template={`package main
+
+{{quickstartGo:quickstart_imports}}
+
+func main() {
+    {{quickstartGo:quickstart}}
+}`} />
+
+See the [Table Operations](user-guide/tables.mdx) guide for more on what you
+can do with the response.
 
 ## Next steps
 

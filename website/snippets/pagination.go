@@ -24,7 +24,7 @@ func _() {
 	}
 
 	// 2. Create the iterator
-	iterator, err := tableapi.NewDefaultTablePageIterator(listResponse, client.RequestAdapter)
+	iterator, err := tableapi.NewDefaultTablePageIterator(listResponse, client.GetRequestAdapter())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,7 +64,7 @@ func _() {
 	}
 
 	// 2. Create the iterator
-	attachmentIterator, err := attachmentapi.NewAttachmentPageIterator(attachmentResponse, client.RequestAdapter)
+	attachmentIterator, err := attachmentapi.NewAttachmentPageIterator(attachmentResponse, client.GetRequestAdapter())
 	if err != nil {
 		log.Fatal(err)
 	}

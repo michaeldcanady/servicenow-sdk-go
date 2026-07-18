@@ -48,6 +48,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+
+      - name: Vet Go snippets
+        run: go vet -tags snippets ./website/snippets/
+
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
