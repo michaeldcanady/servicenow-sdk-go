@@ -117,7 +117,7 @@ jobs:
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
-          version: v2.8.0
+          version: v2.12.2
           skip-cache: false
           args: --timeout=5m
 
@@ -195,6 +195,9 @@ jobs:
       - name: Run integration tests
         env:
           SN_OFFLINE: "true"
+          SN_INSTANCE: mock_instance
+          SN_USERNAME: mock_user
+          SN_PASSWORD: mock_password
         run: go test -tags integration ./tests/integration/...
 
   tag-gated-test-go:
