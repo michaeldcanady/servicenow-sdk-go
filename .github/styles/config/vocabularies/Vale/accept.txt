@@ -198,3 +198,8 @@ CIs?('s)?
 (?i)ungrouped
 (?i)unsuffixed
 (?i)walkthroughs?
+(?i)sdks
+(?i)deserializ(e[sd]?|es|ing)
+Godog
+(?i)mockable
+(?i)preconfigured

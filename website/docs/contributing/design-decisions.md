@@ -35,7 +35,7 @@ these pages:
    consequences, alternatives considered. The ADR is the primary source and
    the artifact reviewers evaluate.
 2. **Add (or update) the readable summary here** — a short page in the shape
-   of the three above: the decision, the why, and "what to do in new code",
+   of the three above: the decision, the why, and "what to do in new code,"
    linking back to the ADR.
 
 If you're not sure a change rises to ADR level, open an issue and ask —
