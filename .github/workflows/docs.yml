@@ -6,24 +6,28 @@ on:
     branches:
       - main
     paths:
-      - "docs/**"
-      - "mkdocs.yml"
+      - "website/**"
+      - ".vale.ini"
+      - "scripts/check-snippet-regions.sh"
       - ".github/workflows/docs.yml"
   pull_request:
+    # `closed` is needed so the PR preview gets cleaned up on merge/close.
+    types: [opened, reopened, synchronize, closed]
     paths:
-      - "docs/**"
-      - "mkdocs.yml"
+      - "website/**"
+      - ".vale.ini"
+      - "scripts/check-snippet-regions.sh"
       - ".github/workflows/docs.yml"
 
 env:
-  PYTHON_VERSION: "3.x"
+  NODE_VERSION: "20"
 
 jobs:
   changes-docs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'release-please--'))
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed' && !startsWith(github.head_ref, 'release-please--'))
     outputs:
       docs: ${{ steps.filter.outputs.any_changed }}
     steps:
@@ -35,12 +39,13 @@ jobs:
         id: filter
         with:
           files: |
-            docs/**
-            mkdocs.yml
+            website/**
+            .vale.ini
+            scripts/check-snippet-regions.sh
             .github/workflows/docs.yml
 
   build:
-    name: build-md
+    name: build-site
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -51,25 +56,37 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Set up Go
+        uses: actions/setup-go@v6
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          go-version-file: go.mod
 
-      - name: Install system dependencies
-        run: sudo apt-get install -y pngquant
+      - name: Vet Go snippets
+        run: go vet -tags snippets ./website/snippets/
 
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
+      - name: Check snippet regions
+        run: ./scripts/check-snippet-regions.sh
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install dependencies
+        working-directory: website
+        run: npm ci
 
       - name: Build docs
-        run: mkdocs build --strict
+        working-directory: website
+        run: npm run build
 
       - name: Upload site artifact
         uses: actions/upload-artifact@v7
         with:
           name: site
-          path: site
+          path: website/build
 
   lint:
     name: lint-md
@@ -87,7 +104,7 @@ jobs:
         uses: errata-ai/vale-action@2.1.2
         with:
           fail_on_error: true
-          files: docs
+          files: website/docs
           filter_mode: nofilter
           reporter: local
           level: error
@@ -97,8 +114,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pages: write
-      id-token: write
     needs:
       - build
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -106,26 +121,84 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Download site artifact
+        uses: actions/download-artifact@v7
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
-
-      - name: Install system dependencies
-        run: sudo apt-get install -y pngquant
+          name: site
+          path: website/build
 
       - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.8.0
+        with:
+          branch: gh-pages
+          folder: website/build
+          clean: true
+          # Keep live PR previews (deploy-preview job) intact on prod deploys.
+          clean-exclude: pr-preview/
+
+  deploy-preview:
+    name: deploy-preview
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    # Fork PRs get a read-only token, so previews are same-repo only. Runs on
+    # `closed` too (without the build steps) so the preview gets removed.
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      !startsWith(github.head_ref, 'release-please--')
+    concurrency: docs-preview-${{ github.ref }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        if: github.event.action != 'closed'
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install dependencies
+        if: github.event.action != 'closed'
+        working-directory: website
+        run: npm ci
+
+      - name: Build docs for preview path
+        if: github.event.action != 'closed'
+        working-directory: website
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mkdocs gh-deploy --force --config-file mkdocs.yml
+          DOCS_BASE_URL: /servicenow-sdk-go/pr-preview/pr-${{ github.event.number }}/
+        run: npm run build
+
+      - name: Deploy preview
+        uses: rossjrw/pr-preview-action@v1.8.1
+        with:
+          source-dir: website/build
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
+
+  remove-report-failure:
+    name: Remove Docs Failure Comment
+    if: success() && github.event_name == 'pull_request'
+    needs: [build, lint, deploy-preview]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Remove Failure Summary
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: docs-failure-summary
+          delete: true
 
   report-failure:
     name: Report Docs Failure
-    if: failure()
-    needs: [build, lint]
+    if: failure() && github.event_name == 'pull_request'
+    needs: [build, lint, deploy-preview]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -137,5 +210,5 @@ jobs:
           message: |
             ### ❌ Documentation CI/CD Failed
             One or more jobs in the Documentation pipeline failed.
-            
+
             Please check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.

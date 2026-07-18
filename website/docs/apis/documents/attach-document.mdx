@@ -1,0 +1,34 @@
+# Attach document
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Attach content from a provider to a document.
+
+## HTTP request
+
+```http
+POST /api/now/v1/documents/{provider_id}/attach
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `provider_id` | Provider id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Parameters for this operation are carried in the request configuration; don't supply a body model.
+
+## Response
+
+An item envelope of `Document`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_attach_document" />

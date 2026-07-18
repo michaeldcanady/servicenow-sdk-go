@@ -1,0 +1,35 @@
+# Get changeset activity
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve a changeset's activity.
+
+## HTTP request
+
+```http
+GET /api/sn_cdm/changesets/activity
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `changesetNumber` | Optional — set via the verb's `QueryParameters` type. |
+| `returnFields` | Optional — set via the verb's `QueryParameters` type. |
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+`ChangesetActivityResponse`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_get_changeset_activity" />

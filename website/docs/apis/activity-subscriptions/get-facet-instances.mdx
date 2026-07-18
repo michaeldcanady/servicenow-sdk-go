@@ -1,0 +1,35 @@
+# Get facet instances
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve facet instances for an activity context.
+
+## HTTP request
+
+```http
+GET /api/now/v1/actsub/facets/{activity_context}/{context_instance}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `activity_context` | Activity context |
+| `context_instance` | Context instance |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+A collection envelope of `*ActivitySubscriptionModel`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_get_facet_instances" />

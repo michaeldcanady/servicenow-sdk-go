@@ -1,0 +1,22 @@
+# CDM Editor API overview
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import modulesGo from '@site/snippets/modules.go';
+
+
+The CDM Editor API edits Configuration Data Management data nodes and
+validates configuration data.
+
+## Basic usage
+
+Access it through the `Cdm()` namespace:
+
+<GoSnippet language="go" src={modulesGo} region="module_cdm_editor" />
+
+## Available operations
+
+- **List nodes** — `Nodes().Get(ctx, config)`.
+- **Create node** — `Nodes().Post(ctx, body, config)`.
+- **Update node** — `Nodes().ByID(id).Put(ctx, body, config)`.
+- **Delete node** — `Nodes().ByID(id).Delete(ctx, config)`.
+- **Validate** — `Validation().Get(ctx, config)`.

@@ -1,0 +1,37 @@
+# List and read CSM cases
+
+import GoExample from '@site/src/components/GoExample';
+import csgGo from '@site/snippets/case_guide.go';
+
+List Customer Service Management cases and read their fields.
+
+## When to use this pattern
+
+- You're syncing CSM cases into an external ticketing or reporting system
+- You're building customer-facing status views on top of ServiceNow cases
+
+## Required values
+
+| Value | Description |
+| ----- | ----------- |
+| Case filters | Optional query parameters narrowing which cases you get |
+
+## Example
+
+<GoExample language="go" files={{ csgGo: csgGo }} template={`package main
+
+{{csgGo:csg_imports}}
+
+func main() {
+    {{csgGo:csg_main}}
+}`} />
+
+## Tips
+
+- Case models are typed — `GetNumber()`, `GetShortDescription()`, `GetState()`, `GetPriority()` — no generic field unwrapping needed.
+- `Post` creates a case; `ByID(...).Put` updates one.
+
+## Next steps
+
+- **[Case API reference](../../../apis/case/index.mdx)**
+- **[Read customer accounts](../account/read-accounts.mdx)**

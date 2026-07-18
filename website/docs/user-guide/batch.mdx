@@ -1,0 +1,55 @@
+# Batch multiple requests
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import GoExample from '@site/src/components/GoExample';
+import batchGo from '@site/snippets/batch.go';
+import bgGo from '@site/snippets/batch_guide.go';
+
+Combine several REST requests into a single HTTP call and read back the
+per-request results.
+
+## When to use this pattern
+
+- You're making several independent requests in one logical operation (for
+  example, creating an incident and updating a user) and want them to travel
+  in a single round-trip
+- You're reducing latency for many small operations
+- If you're fetching many *pages* of one collection, use
+  [Pagination](pagination.mdx) instead; if the requests depend on each
+  other's results, send them sequentially
+
+## Required values
+
+| Value        | Description                                                       |
+| ------------ | ----------------------------------------------------------------- |
+| The requests | Built with any builder's `ToXRequestInformation` method, unsent   |
+
+## Example
+
+The example uses a small helper, `batchRequests`, that wraps
+`RequestInformation` objects into a `BatchRequestModel`:
+
+<GoExample language="go" files={{ bgGo: bgGo, batchGo: batchGo }} template={`package main
+
+{{bgGo:bg_imports}}
+
+{{batchGo:batch_helper}}
+
+func main() {
+    {{bgGo:bg_main}}
+}`} />
+
+## Tips
+
+- ServiceNow executes the sub-requests independently — a batch is **not** a
+  transaction. Check `GetUnservicedRequests()` for the ones that didn't run.
+- Each serviced request carries its own status code and body; a `200` on the
+  batch only means the batch itself was processed.
+- Any API's requests can be mixed in one batch: table, attachment, and the rest.
+
+## Next steps
+
+- **[Table operations](tables/index.mdx):** The requests you'll batch most
+  often.
+- **[Batch API reference](../apis/batch/index.mdx):** All parameters, in both
+  modalities.

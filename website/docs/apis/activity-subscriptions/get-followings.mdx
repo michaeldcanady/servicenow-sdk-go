@@ -1,0 +1,34 @@
+# Get followings
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve what a follower is following.
+
+## HTTP request
+
+```http
+GET /api/now/v1/actsub/followings/{follower}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `follower` | Follower |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+A collection envelope of `*ActivitySubscriptionModel`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_get_followings" />

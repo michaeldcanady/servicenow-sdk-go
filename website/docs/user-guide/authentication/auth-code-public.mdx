@@ -1,0 +1,65 @@
+# Authorization code (public)
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import authGo from '@site/snippets/auth.go';
+
+
+The Authorization Code (public) flow works for applications that
+authenticate users interactively but can't securely store a client secret
+(for example, SPAs, mobile apps, CLI tools).
+
+## Objective
+
+Configure and use the Authorization Code (public) OAuth flow with the
+Service‑Now SDK using values provided by your ServiceNow administrator.
+
+## Required values
+
+Your administrator must provide:
+
+| Value             | Description                                          |
+| ----------------- | ---------------------------------------------------- |
+| Service‑Now URL   | Base URL of the instance                             |
+| Client ID         | From a ServiceNow OAuth application registry entry   |
+| Redirect URL      | Must match the redirect URL configured in ServiceNow |
+| Authorization URL | OAuth authorization endpoint                         |
+| Token URL         | OAuth token endpoint                                 |
+
+## SDK flow
+
+```mermaid
+flowchart TD
+    A([App code]):::app --> B(NewPublicAuthorizationCodeProvider<br/>client ID only — no secret):::sdk
+    B --> C(Public client<br/>secured with PKCE S256):::sdk
+
+    subgraph acquire ["Getting the first token (interactive)"]
+        H(Start local redirect listener<br/>on port 5001):::sdk --> J[[Browser opens the authorization URL<br/>with the PKCE challenge]]:::external
+        J --> K[[User signs in<br/>and approves]]:::external
+        K --> L(Redirect delivers the<br/>authorization code):::sdk
+        L --> M(Exchange code for tokens<br/>with the PKCE verifier):::sdk
+        M --> N(Access token<br/>+ refresh token):::token
+        N --> O(Token cache):::token
+    end
+    C --> H
+
+    subgraph request ["On every request"]
+        P{Token<br/>expired?}:::decision
+        P -- yes --> Q(Refresh-token grant<br/>no user interaction):::sdk
+        P -- no --> R[[Kiota request adapter]]:::sdk
+    end
+    O --> P
+    Q --> O
+    R --> S[[ServiceNow instance]]:::external
+
+    classDef app fill:#c7d2fe,stroke:#4f46e5,color:#1e1b4b
+    classDef sdk fill:#e2e8f0,stroke:#64748b,color:#0f172a
+    classDef decision fill:#fde68a,stroke:#d97706,color:#78350f
+    classDef token fill:#bbf7d0,stroke:#16a34a,color:#14532d
+    classDef external fill:#bae6fd,stroke:#0284c7,color:#0c4a6e
+    style acquire fill:transparent,stroke:#94a3b8,stroke-dasharray:4 4
+    style request fill:transparent,stroke:#94a3b8,stroke-dasharray:4 4
+```
+
+## Initialize the SDK
+
+<GoSnippet language="go" src={authGo} region="auth_code_public" />

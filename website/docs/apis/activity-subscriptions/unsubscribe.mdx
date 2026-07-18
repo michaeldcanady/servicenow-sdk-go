@@ -1,0 +1,34 @@
+# Unsubscribe from object
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Remove the current user's subscription to an object.
+
+## HTTP request
+
+```http
+DELETE /api/now/v1/actsub/subscriptions/{sub_obj_id}/unsubscribe
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `sub_obj_id` | Sub obj id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+No response body — a `nil` error means the subscription was removed.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_unsubscribe" />

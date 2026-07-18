@@ -1,0 +1,34 @@
+# Sync down document
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Trigger a sync-down of a document to the caller.
+
+## HTTP request
+
+```http
+POST /api/now/v1/documents/{documentSysId}/syncDown
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `documentSysId` | Document sys_id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Parameters for this operation are carried in the request configuration; don't supply a body model.
+
+## Response
+
+An item envelope of `Document`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_sync_down_document" />

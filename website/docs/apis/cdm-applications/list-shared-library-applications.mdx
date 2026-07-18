@@ -1,0 +1,36 @@
+# List shared-library applications
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve the applications consuming a shared-library component.
+
+## HTTP request
+
+```http
+GET /api/sn_cdm/applications/shared_libraries/components/applications
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `appName` | Optional — set via the verb's `QueryParameters` type. |
+| `sharedComponentName` | Optional — set via the verb's `QueryParameters` type. |
+| `name` | Optional — set via the verb's `QueryParameters` type. |
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+`SharedLibrariesComponentsApplicationsResponse`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_list_shared_library_applications" />

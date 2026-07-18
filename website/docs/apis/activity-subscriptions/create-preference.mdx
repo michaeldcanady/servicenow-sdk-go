@@ -1,0 +1,32 @@
+# Create notification preference
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Create a notification preference.
+
+## HTTP request
+
+```http
+POST /api/now/v1/actsub/preferences
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+None.
+
+## Request body
+
+Supply a `actsubapi.ActivitySubscriptionModel`.
+
+## Response
+
+An item envelope of `*ActivitySubscriptionModel`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_create_preference" />

@@ -1,11 +1,6 @@
-# Variables
-export DOC_IMAGE := "sdk-docs"
-export DOC_PORT := "8000"
-export DOC_PATH := "."
-
-# Build the docs container image
-build-docs:
-    podman build -f doc.dockerfile -t {{DOC_IMAGE}}
+# Install docs site dependencies
+setup-docs:
+	cd website && npm ci
 
 # Build the project
 build:
@@ -16,12 +11,12 @@ test:
 	go test -v ./...
 
 # Serve docs locally with live reload
-serve-docs: build-docs
-    podman run --rm -p {{DOC_PORT}}:8000 {{DOC_IMAGE}}
+serve-docs:
+	cd website && npm start
 
 # Build static site output (without serving)
-generate-docs: build-docs
-    podman run --rm {{DOC_IMAGE}} build --clean
+generate-docs:
+	cd website && npm run build
 
 # Run golangci-lint on the project
 lint:
@@ -31,6 +26,11 @@ lint:
 fmt:
 	gofmt -s -w .
 
+# Vet doc code snippets and check region markers against the pages
+check-docs:
+	go vet -tags snippets ./website/snippets/
+	./scripts/check-snippet-regions.sh
+
 # Clean up local build artifacts
 clean-docs:
-	rm -rf site
+	rm -rf website/build website/.docusaurus

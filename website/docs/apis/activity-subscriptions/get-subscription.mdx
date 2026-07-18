@@ -1,0 +1,34 @@
+# Get subscription
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve a subscription by subscriber ID.
+
+## HTTP request
+
+```http
+GET /api/now/v1/actsub/subscriptions/{subscriber_id}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `subscriber_id` | Subscriber id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+An item envelope of `*ActivitySubscriptionModel`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_get_subscription" />

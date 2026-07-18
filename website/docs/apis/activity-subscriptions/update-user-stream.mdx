@@ -1,0 +1,34 @@
+# Update user stream
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Update a user's activity stream settings.
+
+## HTTP request
+
+```http
+PUT /api/now/v1/actsub/userstream/{profileId}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `profileId` | Profile ID |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Supply a `actsubapi.ActivitySubscriptionModel`.
+
+## Response
+
+An item envelope of `*ActivitySubscriptionModel`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_update_user_stream" />

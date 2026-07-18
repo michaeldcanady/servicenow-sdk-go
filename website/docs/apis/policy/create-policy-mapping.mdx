@@ -1,0 +1,32 @@
+# Create policy mapping
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Create a policy input mapping; parameters go in the request configuration.
+
+## HTTP request
+
+```http
+POST /api/sn_cdm/v1/policies/mappings
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+None.
+
+## Request body
+
+Parameters for this operation are carried in the request configuration; don't supply a body model.
+
+## Response
+
+`core.ServiceNowItemResponse[*PoliciesMapping]`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_create_policy_mapping" />

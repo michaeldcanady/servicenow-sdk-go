@@ -1,0 +1,29 @@
+# Table operations
+
+The Table API is how you work with records in any ServiceNow table — the
+bread and butter of most integrations. Each guide below walks one task from
+credentials to a runnable program.
+
+All of them use the **fluent** modality; every operation is also available in
+the **standard** modality — see
+[Core Concepts](../../core-concepts.mdx#fluent-vs-standard) for the
+difference and when to prefer each.
+
+## Task guides
+
+- **[Create a record](create-a-record.mdx):** Insert a new record and read
+  back its `sys_id`.
+- **[List and query records](list-and-query-records.mdx):** Filter
+  server-side with an encoded query and read fields from the results.
+- **[Update a record](update-a-record.mdx):** Change specific fields without
+  touching the rest of the record.
+- **[Delete a record](delete-a-record.mdx):** Remove a record by `sys_id`.
+
+## Related
+
+- **[Query builder](../query-builder.mdx):** Compose encoded queries from
+  typed conditions instead of writing them by hand.
+- **[Pagination](../pagination.mdx):** Iterate past the first page of a list
+  response.
+- **[Table API reference](../../apis/tables/index.mdx):** Every verb with all
+  parameters, in both modalities.

@@ -1,0 +1,22 @@
+# Application Service API overview
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import modulesGo from '@site/snippets/modules.go';
+
+
+The Application Service API manages CSDM application services: register or
+create services and query service details from the CMDB.
+
+## Basic usage
+
+Access it through the CMDB namespace:
+
+<GoSnippet language="go" src={modulesGo} region="module_app_service" />
+
+## Available operations
+
+- **Create service** — `AppService().Create().Post(ctx, body, config)`.
+- **Register service** — `Csdm().RegisterService().Post(ctx, body, config)`.
+- **Find service** — `Csdm().FindService().Get(ctx, config)`.
+- **Service details** — `Csdm().ByID(sysID).ServiceDetails()` reads details for a service.
+- **Populate service** — `Csdm().ByID(sysID).PopulateService()` populates a service's mapping.

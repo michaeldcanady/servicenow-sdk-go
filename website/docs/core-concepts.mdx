@@ -1,0 +1,129 @@
+# Core concepts
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import conceptsGo from '@site/snippets/concepts.go';
+
+This page explains how the SDK *thinks* — the handful of rules behind every
+request and response. The [Getting Started](getting-started.mdx) guide gets you
+to a first successful call by imitation; after this page, you should be able to
+predict what any method returns without checking the docs.
+
+The five rules:
+
+1. **You build URLs by chaining methods.** Nothing is sent until you call a
+   verb.
+2. **Every verb takes a `context.Context` and a per-verb configuration.**
+   `nil` configuration is always valid.
+3. **Responses are envelopes.** Your data is behind `GetResult()`.
+4. **Models are backed, not plain structs.** Getters return `(value, error)`,
+   and values come back as pointers.
+5. **Errors are typed.** API failures arrive as `*core.ServiceNowError`, SDK
+   misuse as sentinel errors.
+
+## 1. Builders and chaining
+
+The client is the root of a tree of *request builders*. Each chained call
+clones the parent's URL parameters and narrows the path; the request only
+executes when you call a verb method (`Get`, `Post`, `Put`, `Delete`):
+
+<GoSnippet language="go" src={conceptsGo} region="concepts_chaining" />
+
+Because intermediate builders are just values, you can hold onto one and reuse
+it — `client.Now().Table("incident")` is a valid thing to store in a variable
+and call `Get` on twice.
+
+### Fluent vs. standard
+
+Everything above is the **fluent** modality — the recommended path. Every
+reference page also shows a **standard** modality, where you construct the
+request builder yourself from a raw URL:
+
+<GoSnippet language="go" src={conceptsGo} region="concepts_standard" />
+
+Use standard only when the URL is dynamic (for example, following a link
+returned by another API) or the resource isn't reachable through the fluent
+chain. The two modalities hit identical endpoints and return identical types —
+they differ only in who builds the URL.
+
+## 2. Context and request configuration
+
+Every verb method has the same shape: a `context.Context` first, an optional
+per-verb `RequestConfiguration` last (plus a body parameter for `Post`/`Put`).
+
+Deadlines and cancellation on the context propagate to the HTTP call:
+
+<GoSnippet language="go" src={conceptsGo} region="concepts_context" />
+
+Each verb on each resource has its **own** configuration and query-parameter
+types — `TableRequestBuilderGetRequestConfiguration` isn't interchangeable
+with the `Post` variant. This is deliberate: the type tells you exactly which
+parameters that verb supports, so an option that doesn't exist can't compile.
+
+<GoSnippet language="go" src={conceptsGo} region="concepts_configuration" />
+
+Passing `nil` instead of a configuration is always valid and means "no
+options."
+
+## 3. Response envelopes
+
+Verb methods don't return your record directly — they return an envelope
+mirroring ServiceNow's REST responses, which wrap everything in a `result`
+key. Collection endpoints return a collection envelope (`GetResult()` →
+slice); item endpoints return an item envelope (`GetResult()` → one model):
+
+<GoSnippet language="go" src={conceptsGo} region="concepts_envelope" />
+
+If you're wondering "why does everything need `GetResult()`?" — that's the
+envelope. The envelope is also where response-level extras live, such as the
+pagination links used by the [page iterator](user-guide/pagination.mdx).
+
+## 4. Backed models and the pointer-getter pattern
+
+Models aren't plain structs. Each model wraps a *backing store* — a key/value
+map tracking which fields the instance actually sent and which you changed.
+That design is why the accessors look the way they do:
+
+- **Getters return `(value, error)`** — the store distinguishes "field absent"
+  from "field empty," and reports it instead of silently zeroing.
+- **Values come back as pointers** — `nil` means the instance sent no value,
+  which is different from `""` or `0`.
+
+Reading a field from a table record is therefore a three-step unwrap:
+
+<GoSnippet language="go" src={conceptsGo} region="concepts_backed_read" />
+
+The middle step exists because a ServiceNow field is more than a value: a
+`RecordElement` carries the raw value (`GetValue()`), the human-readable
+display value (`GetDisplayValue()`), and, for reference fields, a link to the
+referenced record (`GetLink()`).
+
+Writing goes through setters for the same reason — the store records the
+change so only fields you set are serialized into the request:
+
+<GoSnippet language="go" src={conceptsGo} region="concepts_backed_write" />
+
+## 5. Typed errors
+
+Two kinds of errors come out of a verb method:
+
+- **API errors** — the instance answered with a failure status. These are
+  `*core.ServiceNowError` values carrying the instance's own error message and
+  detail; unwrap them with `errors.As`.
+- **Sentinel errors** — the SDK refused to send at all (nil client, nil
+  request adapter, nil body). These are shared sentinels like
+  `snerrors.ErrNilRequestBuilder`; match them with `errors.Is`.
+
+The [Error handling guide](user-guide/error-handling.mdx) covers both in
+detail, with the full status-code mapping.
+
+## Where to go next
+
+- **[Table operations](user-guide/tables/index.mdx)** — the concepts above, applied
+  to real CRUD tasks.
+- **[Query builder](user-guide/query-builder.mdx)** — compose
+  `sysparm_query` strings from typed conditions instead of writing encoded
+  queries by hand.
+- **[Pagination](user-guide/pagination.mdx)** — iterate past the first page of
+  a collection response.
+- **[API Reference](apis/index.md)** — every module, every verb, in the
+  fluent and standard modalities.

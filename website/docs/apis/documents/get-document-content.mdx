@@ -1,0 +1,34 @@
+# Get document content
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Download a document's raw content.
+
+## HTTP request
+
+```http
+GET /api/now/v1/documents/{document_sys_id}/content
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `document_sys_id` | Document sys_id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+`[]byte` — the raw file content, not an envelope.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_get_document_content" />

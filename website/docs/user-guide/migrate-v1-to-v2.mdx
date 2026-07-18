@@ -1,0 +1,180 @@
+# Migrating from v1 to v2
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import GoExample from '@site/src/components/GoExample';
+import authGo from '@site/snippets/auth.go';
+import tablesGo from '@site/snippets/tables.go';
+
+Version 2.0 finishes the transition that v1.8–v1.9 started: the interim
+`2`-suffixed types and `V2` methods become the *only* API, the deprecated
+v1 surface is removed, and models move to backing-store-backed accessors.
+This guide maps every v1 construct to its v2 replacement.
+
+If your code compiled against v1.9 **without deprecation warnings**, you are
+already using the v2 shapes — your migration is mostly renames. If you're
+coming from an older v1 style (`NewServiceNowClient`, `TableEntry`,
+`response.Result`), work through each section below.
+
+:::note
+v2 is a new major version of the Go module. Once 2.0 is released, install it
+with the `/v2` module path suffix and update your import paths accordingly.
+The examples below use the unsuffixed path, which is correct for the
+pre-release previews.
+:::
+
+## Quick reference
+
+| v1 | v2 |
+| --- | --- |
+| `NewServiceNowClient(cred, url)` / `NewServiceNowClient2(cred, url)` | `NewServiceNowServiceClient(opts...)` |
+| `credentials.NewUsernamePasswordCredential(u, p)` | `credentials.NewBasicProvider(u, p)` |
+| `credentials.NewTokenCredential(...)` | OAuth2 providers: `NewROPCProvider`, `NewClientCredentialsProvider`, `NewPrivateAuthorizationCodeProvider`, … |
+| `client.RequestAdapter` (field) | `client.GetRequestAdapter()` (method) |
+| `client.Now()` / `client.Now2()` | `client.Now()` |
+| `.Table(name)` / `.TableV2(name)` / `.Table2(name)` | `.Table(name)` |
+| `.ById(id)` / `.ByID2(id)` | `.ByID(id)` |
+| `.Get2(ctx, params)`, `.Post4(ctx, data, params)` | `.Get(ctx, config)`, `.Post(ctx, data, config)` |
+| `import ".../table-api"`, `".../attachment-api"`, `".../batch-api"` | `import ".../tableapi"`, `".../attachmentapi"`, `".../batchapi"` |
+| `query2` package | `query` package |
+| `TableRequestBuilder2`, `TableItemRequestBuilder2GetRequestConfiguration`, … | Same name without the `2` |
+| `TableEntry` (a `map[string]interface{}`) | `TableRecord` (backed model) |
+| `entry.Value("field")` → `*TableValue` | `record.Get("field")` → `(*RecordElement, error)` |
+| `entry.Set("field", v)` | `record.SetValue("field", v)` (returns `error`) |
+| `response.Result` (field) | `response.GetResult()` (method, returns `error`) |
+
+## Client construction
+
+The v1 client took a credential and URL positionally. The v2 client is
+option-based, and credentials became Kiota `AuthenticationProvider`s:
+
+```go title="v1"
+cred := credentials.NewUsernamePasswordCredential("username", "password")
+client, err := servicenowsdkgo.NewServiceNowClient2(cred, "https://instance.service-now.com")
+```
+
+<GoExample language="go" title="v2" files={{ authGo: authGo }} template={`{{authGo:auth_basic_admin}}
+
+{{authGo:client_init_panic}}`} />
+
+`WithURL` takes the full base URL; `WithInstance` takes just the instance
+name. See [Configuration](configuration.mdx) for the other options
+(`WithHTTPClient`, `WithMiddleware`, `WithRequestAdapter`, …).
+
+If you implemented v1's `Credential` interface (`GetAuthentication() (string,
+error)`) yourself, implement Kiota's
+`authentication.AuthenticationProvider` instead — see
+[Authentication](authentication/index.md) for the built-in providers before
+writing your own.
+
+## Fluent chain renames
+
+The interim `2`/`V2` names collapse back to the plain names, now referring to
+the new implementations:
+
+```go title="v1"
+response, err := client.Now2().TableV2("incident").ById(sysID).Get(ctx, config)
+```
+
+<GoSnippet language="go" title="v2" src={tablesGo} region="table_get_fluent" />
+
+The same applies to every type name: drop the `2`
+(`TableRequestBuilder2` → `TableRequestBuilder`,
+`TableItemRequestBuilder2GetRequestConfiguration` →
+`TableItemRequestBuilderGetRequestConfiguration`, and the rest). Verb-specific
+methods like `Get2`, `Get3`, and `Post4` are gone; each builder has exactly
+one `Get`/`Post`/`Put`/`Delete`.
+
+Import paths lose their hyphens:
+
+```go title="v1"
+import (
+    tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+    batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
+)
+```
+
+```go title="v2"
+import (
+    tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
+    attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
+    batchapi "github.com/michaeldcanady/servicenow-sdk-go/batchapi"
+)
+```
+
+If you used the experimental `query2` package, it's now simply
+[`query`](query-builder.mdx).
+
+## Models: `TableEntry` → `TableRecord`
+
+This is the largest behavioral change. v1's `TableEntry` was a raw map; v2's
+`TableRecord` is a backed model whose accessors return errors and pointer
+values ([why?](../core-concepts.mdx#4-backed-models-and-the-pointer-getter-pattern)).
+
+**Reading:**
+
+```go title="v1"
+value := entry.Value("number") // nil if absent
+str, err := value.ToString()
+```
+
+```go title="v2"
+element, err := record.Get("number")     // error if absent
+value, err := element.GetValue()          // raw value (vs. GetDisplayValue/GetLink)
+str, err := value.GetStringValue()        // *string; nil means no value sent
+```
+
+**Writing:**
+
+```go title="v1"
+entry := tableapi.NewTableEntry()
+entry.Set("short_description", "example")
+```
+
+```go title="v2"
+record := tableapi.NewTableRecord()
+if err := record.SetValue("short_description", "example"); err != nil {
+    log.Fatal(err)
+}
+```
+
+## Responses: Fields → `GetResult()`
+
+v1 responses exposed results as struct fields; v2 responses are envelopes
+whose accessors can fail (deserialization is lazy):
+
+```go title="v1"
+response, _ := client.Now().Table("incident").Get(ctx, nil)
+for _, entry := range response.Result {
+    // ...
+}
+```
+
+<GoSnippet language="go" title="v2" src={tablesGo} region="table_list_guide" />
+
+## Error handling
+
+- v1 methods sometimes returned `nil, nil` when called on a nil builder; v2
+  nil-guards always return a sentinel error (`snerrors.ErrNilRequestBuilder`
+  and friends). Code that relied on silently getting `nil` back will now see
+  an error — which is almost certainly what you wanted.
+- API failures are now typed: match `*core.ServiceNowError` (or a specific
+  subtype like `*core.NotFoundError`) with `errors.As`. See
+  [Error handling](error-handling.mdx).
+
+## Migration checklist
+
+1. Update the module and fix import paths (`table-api` → `tableapi`, etc.).
+2. Replace client construction with `NewServiceNowServiceClient` + options.
+3. Replace credentials with the matching provider
+   (`NewBasicProvider` or an OAuth2 provider).
+4. Rename chain methods (`Now2`→`Now`, `TableV2`→`Table`, `ById`→`ByID`) and
+   strip `2` suffixes from types.
+5. Convert `TableEntry` code to `TableRecord` accessors — this is where the
+   compiler will do most of the finding for you.
+6. Replace `.Result` field access with `GetResult()` and handle the error.
+7. Re-check error handling: add `errors.Is`/`errors.As` where you previously
+   compared strings or ignored `nil, nil`.
+
+If something doesn't map cleanly, [open an issue](https://github.com/michaeldcanady/servicenow-sdk-go/issues) —
+gaps in this guide are release blockers for us.

@@ -1,0 +1,32 @@
+# Create or link document
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Create a document or link an existing record as a document.
+
+## HTTP request
+
+```http
+POST /api/now/v1/documents/createDocument
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+None.
+
+## Request body
+
+Parameters for this operation are carried in the request configuration; don't supply a body model.
+
+## Response
+
+An item envelope of `Document`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_create_or_link_document" />

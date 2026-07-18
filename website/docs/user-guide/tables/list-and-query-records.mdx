@@ -1,0 +1,47 @@
+# List and query records
+
+import GoExample from '@site/src/components/GoExample';
+import queryGo from '@site/snippets/tables_query.go';
+
+Fetch the records matching a filter and read fields from each result.
+
+## When to use this pattern
+
+- You're pulling a working set of records into another system (open
+  incidents, pending approvals, recent changes)
+- You need server-side filtering so you only transfer the records you care
+  about
+- You're reading field values out of the results, not just counting them
+  (for counts and aggregates, use the [Aggregation API](../../apis/stats/index.mdx))
+
+## Required values
+
+| Value         | Description                                                |
+| ------------- | ---------------------------------------------------------- |
+| Table name    | The table to read (for example, `incident`)                |
+| Encoded query | The server-side filter (for example, `active=true^priority=1`) |
+
+## Example
+
+<GoExample language="go" files={{ queryGo: queryGo }} template={`package main
+
+{{queryGo:tgq_imports}}
+
+func main() {
+    {{queryGo:tgq_main}}
+}`} />
+
+## Tips
+
+- Compose non-trivial filters with the [query builder](../query-builder.mdx)
+  instead of concatenating encoded-query strings.
+- Reading a field is a three-step unwrap (`Get` → `GetValue` →
+  `GetStringValue`) — [Core Concepts](../../core-concepts.mdx#4-backed-models-and-the-pointer-getter-pattern)
+  explains why.
+- `Limit` caps one page, not the result set — iterate with
+  [pagination](../pagination.mdx) when the match count can exceed it.
+
+## Next steps
+
+- **[Pagination](../pagination.mdx):** Walk every page of a large result set.
+- **[Update a record](update-a-record.mdx):** Act on the records you found.
