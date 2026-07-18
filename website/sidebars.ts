@@ -50,7 +50,7 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {type: 'category', label: 'Batch', items: ['user-guide/batch']},
-        {type: 'category', label: 'Aggregation', items: ['user-guide/apis/stats/aggregate-records']},
+        {type: 'category', label: 'Aggregation', items: ['user-guide/apis/aggregation/aggregate-records']},
         {type: 'category', label: 'Documents', items: ['user-guide/apis/documents/explore-documents']},
         {
           type: 'category',
@@ -134,8 +134,8 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Aggregation API',
-      link: {type: 'doc', id: 'apis/stats/index'},
-      items: ['apis/stats/get-aggregates'],
+      link: {type: 'doc', id: 'apis/aggregation/index'},
+      items: ['apis/aggregation/get-aggregates'],
     },
     {
       type: 'category',

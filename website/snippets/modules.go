@@ -7,6 +7,7 @@ import (
 	"log"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	aggregationapi "github.com/michaeldcanady/servicenow-sdk-go/aggregationapi"
 	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/appointmentbookingapi"
 	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/appserviceapi"
 	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batchapi"
@@ -14,7 +15,6 @@ import (
 	cdmapplicationsapi "github.com/michaeldcanady/servicenow-sdk-go/cdmapplicationsapi"
 	cdmeditorapi "github.com/michaeldcanady/servicenow-sdk-go/cdmeditorapi"
 	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/cmdbinstanceapi"
-	statsapi "github.com/michaeldcanady/servicenow-sdk-go/statsapi"
 )
 
 func _() {
@@ -393,8 +393,8 @@ func moduleStats() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 
 	// [START module_stats]
-	config := &statsapi.StatsRequestBuilderGetRequestConfiguration{
-		QueryParameters: &statsapi.StatsRequestBuilderGetQueryParameters{
+	config := &aggregationapi.StatsRequestBuilderGetRequestConfiguration{
+		QueryParameters: &aggregationapi.StatsRequestBuilderGetQueryParameters{
 			Count:     true,
 			SumFields: []string{"reassignment_count"},
 			Query:     "active=true",

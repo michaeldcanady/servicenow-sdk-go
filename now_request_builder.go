@@ -5,13 +5,13 @@ import (
 
 	accountapi "github.com/michaeldcanady/servicenow-sdk-go/accountapi"
 	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/actsubapi"
+	aggregationapi "github.com/michaeldcanady/servicenow-sdk-go/aggregationapi"
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
 	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batchapi"
 	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/cmdbinstanceapi"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	documentsapi "github.com/michaeldcanady/servicenow-sdk-go/documentsapi"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
-	statsapi "github.com/michaeldcanady/servicenow-sdk-go/statsapi"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -42,10 +42,10 @@ func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuild
 }
 
 // Stats returns a StatsRequestBuilder for the specified table.
-func (rB *NowRequestBuilder) Stats(tableName string) *statsapi.StatsRequestBuilder {
+func (rB *NowRequestBuilder) Stats(tableName string) *aggregationapi.StatsRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["table"] = tableName
-	return statsapi.NewStatsRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+	return aggregationapi.NewStatsRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
 func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilder {

@@ -5,7 +5,8 @@ import modulesGo from '@site/snippets/modules.go';
 
 :::info
 ServiceNow's official name for this API is the **Aggregate API**; the SDK
-module is named `statsapi` after the `/api/now/stats` endpoint it wraps.
+module is named `aggregationapi`. The underlying endpoint is `/api/now/stats`,
+which is why the fluent accessor is `Now().Stats(...)`.
 :::
 
 

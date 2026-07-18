@@ -1,4 +1,4 @@
-package statsapi
+package aggregationapi
 
 import (
 	"context"
@@ -62,7 +62,7 @@ func TestStatsRequestBuilder_Get(t *testing.T) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(mocking.NewMockParsable(), nil)
 			},
-			err: errors.New("resp is not *core.ServiceNowItemResponse[*github.com/michaeldcanady/servicenow-sdk-go/statsapi.StatsResultModel]"),
+			err: errors.New("resp is not *core.ServiceNowItemResponse[*github.com/michaeldcanady/servicenow-sdk-go/aggregationapi.StatsResultModel]"),
 		},
 	}
 

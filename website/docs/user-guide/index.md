@@ -18,7 +18,7 @@ Task-oriented guides for the SDK's core features. If you're new, start with
 - **[Pagination](pagination.mdx):** Iterate over large result sets with page
   iterators.
 - **More APIs:** Task guides for every other supported module — from
-  [aggregate stats](apis/stats/aggregate-records.mdx) and
+  [aggregate stats](apis/aggregation/aggregate-records.mdx) and
   [CMDB queries](apis/cmdb-instance/query-configuration-items.mdx) to
   [CSM cases](apis/case/read-cases.mdx) and the
   [CDM workflow](apis/cdm-changesets/track-changesets.mdx).

@@ -19,19 +19,19 @@ import (
 	"context"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	"github.com/michaeldcanady/servicenow-sdk-go/statsapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/aggregationapi"
 )
 
 func main() {
 	// Implement credential and client.
 	var client *servicenowsdkgo.ServiceNowServiceClient
 
-	requestConfiguration := &statsapi.StatsRequestBuilderGetRequestConfiguration{
-		QueryParameters: &statsapi.StatsRequestBuilderGetQueryParameters{
+	requestConfiguration := &aggregationapi.StatsRequestBuilderGetRequestConfiguration{
+		QueryParameters: &aggregationapi.StatsRequestBuilderGetQueryParameters{
 			Count:        true,
 			SumFields:    []string{"reassignment_count"},
 			Query:        "active=true",
-			DisplayValue: statsapi.DisplayValueAll,
+			DisplayValue: aggregationapi.DisplayValueAll,
 		},
 	}
 

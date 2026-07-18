@@ -9,8 +9,8 @@ import (
 	"log"
 
 	servicenow "github.com/michaeldcanady/servicenow-sdk-go"
+	aggregationapi "github.com/michaeldcanady/servicenow-sdk-go/aggregationapi"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
-	statsapi "github.com/michaeldcanady/servicenow-sdk-go/statsapi"
 )
 
 // [END sg_imports]
@@ -29,8 +29,8 @@ func _() {
 	}
 
 	// Step 2: Choose the aggregates and the records they run over
-	config := &statsapi.StatsRequestBuilderGetRequestConfiguration{
-		QueryParameters: &statsapi.StatsRequestBuilderGetQueryParameters{
+	config := &aggregationapi.StatsRequestBuilderGetRequestConfiguration{
+		QueryParameters: &aggregationapi.StatsRequestBuilderGetQueryParameters{
 			Count:     true,
 			SumFields: []string{"reassignment_count"},
 			Query:     "active=true",

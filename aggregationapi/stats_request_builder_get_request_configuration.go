@@ -1,4 +1,4 @@
-package statsapi
+package aggregationapi
 
 import abstractions "github.com/microsoft/kiota-abstractions-go"
 
