@@ -28,9 +28,6 @@ linters:
           - gosec
           - typecheck
         path: _test\.go
-      - path: (actsub-api|documents-api|table-api)/.*
-        linters:
-          - dupl
     presets:
       - comments
       - common-false-positives
