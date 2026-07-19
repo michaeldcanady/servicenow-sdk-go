@@ -15,9 +15,9 @@ type UserTimeFormat interface {
 	kiotaStore.BackedModel
 
 	GetType() (*string, error)
-	setType(*string) error
+	SetType(*string) error
 	GetValue() (*string, error)
-	setValue(*string) error
+	SetValue(*string) error
 }
 
 type UserTimeFormatModel struct {
@@ -46,20 +46,20 @@ func (m *UserTimeFormatModel) Serialize(writer serialization.SerializationWriter
 
 func (m *UserTimeFormatModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		typeKey:  internalSerialization.DeserializeStringFunc(m.setType),
-		valueKey: internalSerialization.DeserializeStringFunc(m.setValue),
+		typeKey:  internalSerialization.DeserializeStringFunc(m.SetType),
+		valueKey: internalSerialization.DeserializeStringFunc(m.SetValue),
 	}
 }
 
 func (m *UserTimeFormatModel) GetType() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatModel, *string](m, typeKey)
 }
-func (m *UserTimeFormatModel) setType(val *string) error {
+func (m *UserTimeFormatModel) SetType(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, typeKey, val)
 }
 func (m *UserTimeFormatModel) GetValue() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatModel, *string](m, valueKey)
 }
-func (m *UserTimeFormatModel) setValue(val *string) error {
+func (m *UserTimeFormatModel) SetValue(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, valueKey, val)
 }

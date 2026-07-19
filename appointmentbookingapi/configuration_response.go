@@ -11,57 +11,24 @@ import (
 )
 
 // ConfigurationResponse represents the configuration response.
-type ConfigurationResponse = core.ServiceNowItemResponse[*ConfigurationResultModel]
+type ConfigurationResponse = core.ServiceNowItemResponse[*ConfigurationResult]
 
 // CreateConfigurationResponseFromDiscriminatorValue is a factory for creating a ConfigurationResponse.
 func CreateConfigurationResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return core.NewBaseServiceNowItemResponse[*ConfigurationResultModel](CreateConfigurationResultFromDiscriminatorValue), nil
+	return core.NewBaseServiceNowItemResponse[*ConfigurationResult](CreateConfigurationResultFromDiscriminatorValue), nil
 }
 
 // ConfigurationResponseModel is the implementation of ConfigurationResponse.
-type ConfigurationResponseModel = core.BaseServiceNowItemResponse[*ConfigurationResultModel]
+type ConfigurationResponseModel = core.BaseServiceNowItemResponse[*ConfigurationResult]
 
 // ConfigurationResult represents the result object in configuration response.
-type ConfigurationResult interface {
-	serialization.Parsable
-	kiotaStore.BackedModel
-
-	GetActive() (*bool, error)
-	setActive(*bool) error
-	GetActiveString() (*string, error)
-	setActiveString(*string) error
-	GetAdvancedCalendarViewPortal() (*bool, error)
-	setAdvancedCalendarViewPortal(*bool) error
-	GetAutoAcceptance() (*bool, error)
-	setAutoAcceptance(*bool) error
-	GetLocaleLanguage() (*string, error)
-	setLocaleLanguage(*string) error
-	GetServiceConfig() (ServiceConfig, error)
-	setServiceConfig(ServiceConfig) error
-	GetTaskTable() (*string, error)
-	setTaskTable(*string) error
-	GetTranslations() (map[string]interface{}, error)
-	setTranslations(map[string]interface{}) error
-	GetUserDateFormatOptions() (UserDateFormatOptions, error)
-	setUserDateFormatOptions(UserDateFormatOptions) error
-	GetUseRR() (*bool, error)
-	setUseRR(*bool) error
-	GetUserTimeFormat() (UserTimeFormat, error)
-	setUserTimeFormat(UserTimeFormat) error
-	GetUserTimeFormatOptions() (UserTimeFormatOptions, error)
-	setUserTimeFormatOptions(UserTimeFormatOptions) error
-	GetViewScale() (*string, error)
-	setViewScale(*string) error
-}
-
-// ConfigurationResultModel implementation of ConfigurationResult
-type ConfigurationResultModel struct {
+type ConfigurationResult struct {
 	core.BaseModel
 }
 
 // NewConfigurationResult creates a new instance of ConfigurationResultModel
-func NewConfigurationResult() *ConfigurationResultModel {
-	return &ConfigurationResultModel{
+func NewConfigurationResult() *ConfigurationResult {
+	return &ConfigurationResult{
 		BaseModel: *core.NewBaseModel(),
 	}
 }
@@ -72,7 +39,7 @@ func CreateConfigurationResultFromDiscriminatorValue(_ serialization.ParseNode) 
 }
 
 // Serialize writes the objects properties to the current writer.
-func (m *ConfigurationResultModel) Serialize(writer serialization.SerializationWriter) error {
+func (m *ConfigurationResult) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
 	}
@@ -83,112 +50,112 @@ func (m *ConfigurationResultModel) Serialize(writer serialization.SerializationW
 		internalSerialization.SerializeBoolFunc(advancedCalendarViewPortalKey, m.GetAdvancedCalendarViewPortal),
 		internalSerialization.SerializeBoolFunc(autoAcceptanceKey, m.GetAutoAcceptance),
 		internalSerialization.SerializeStringFunc(localeLanguageKey, m.GetLocaleLanguage),
-		internalSerialization.SerializeObjectValueFunc[ServiceConfig](serviceConfigKey, m.GetServiceConfig),
+		internalSerialization.SerializeObjectValueFunc(serviceConfigKey, m.GetServiceConfig),
 		internalSerialization.SerializeStringFunc(taskTableKey, m.GetTaskTable),
 		internalSerialization.SerializeAnyFunc(translationsKey, m.GetTranslations),
-		internalSerialization.SerializeObjectValueFunc[UserDateFormatOptions](userDateFormatOptionsKey, m.GetUserDateFormatOptions),
+		internalSerialization.SerializeObjectValueFunc(userDateFormatOptionsKey, m.GetUserDateFormatOptions),
 		internalSerialization.SerializeBoolFunc(useRRKey, m.GetUseRR),
-		internalSerialization.SerializeObjectValueFunc[UserTimeFormat](userTimeFormatKey, m.GetUserTimeFormat),
-		internalSerialization.SerializeObjectValueFunc[UserTimeFormatOptions](userTimeFormatOptionsKey, m.GetUserTimeFormatOptions),
+		internalSerialization.SerializeObjectValueFunc(userTimeFormatKey, m.GetUserTimeFormat),
+		internalSerialization.SerializeObjectValueFunc(userTimeFormatOptionsKey, m.GetUserTimeFormatOptions),
 		internalSerialization.SerializeStringFunc(viewScaleKey, m.GetViewScale),
 	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (m *ConfigurationResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (m *ConfigurationResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		activeKey:                     internalSerialization.DeserializeBoolFunc(m.setActive),
-		activeStringKey:               internalSerialization.DeserializeStringFunc(m.setActiveString),
-		advancedCalendarViewPortalKey: internalSerialization.DeserializeBoolFunc(m.setAdvancedCalendarViewPortal),
-		autoAcceptanceKey:             internalSerialization.DeserializeBoolFunc(m.setAutoAcceptance),
-		localeLanguageKey:             internalSerialization.DeserializeStringFunc(m.setLocaleLanguage),
-		serviceConfigKey:              internalSerialization.DeserializeObjectValueFunc[ServiceConfig](CreateServiceConfigFromDiscriminatorValue, m.setServiceConfig),
-		taskTableKey:                  internalSerialization.DeserializeStringFunc(m.setTaskTable),
-		translationsKey:               internalSerialization.DeserializeAnyFunc(m.setTranslations),
-		userDateFormatOptionsKey:      internalSerialization.DeserializeObjectValueFunc[UserDateFormatOptions](CreateUserDateFormatOptionsFromDiscriminatorValue, m.setUserDateFormatOptions),
-		useRRKey:                      internalSerialization.DeserializeBoolFunc(m.setUseRR),
-		userTimeFormatKey:             internalSerialization.DeserializeObjectValueFunc[UserTimeFormat](CreateUserTimeFormatFromDiscriminatorValue, m.setUserTimeFormat),
-		userTimeFormatOptionsKey:      internalSerialization.DeserializeObjectValueFunc[UserTimeFormatOptions](CreateUserTimeFormatOptionsFromDiscriminatorValue, m.setUserTimeFormatOptions),
-		viewScaleKey:                  internalSerialization.DeserializeStringFunc(m.setViewScale),
+		activeKey:                     internalSerialization.DeserializeBoolFunc(m.SetActive),
+		activeStringKey:               internalSerialization.DeserializeStringFunc(m.SetActiveString),
+		advancedCalendarViewPortalKey: internalSerialization.DeserializeBoolFunc(m.SetAdvancedCalendarViewPortal),
+		autoAcceptanceKey:             internalSerialization.DeserializeBoolFunc(m.SetAutoAcceptance),
+		localeLanguageKey:             internalSerialization.DeserializeStringFunc(m.SetLocaleLanguage),
+		serviceConfigKey:              internalSerialization.DeserializeObjectValueFunc(CreateServiceConfigFromDiscriminatorValue, m.SetServiceConfig),
+		taskTableKey:                  internalSerialization.DeserializeStringFunc(m.SetTaskTable),
+		translationsKey:               internalSerialization.DeserializeAnyFunc(m.SetTranslations),
+		userDateFormatOptionsKey:      internalSerialization.DeserializeObjectValueFunc(CreateUserDateFormatOptionsFromDiscriminatorValue, m.SetUserDateFormatOptions),
+		useRRKey:                      internalSerialization.DeserializeBoolFunc(m.SetUseRR),
+		userTimeFormatKey:             internalSerialization.DeserializeObjectValueFunc(CreateUserTimeFormatFromDiscriminatorValue, m.SetUserTimeFormat),
+		userTimeFormatOptionsKey:      internalSerialization.DeserializeObjectValueFunc(CreateUserTimeFormatOptionsFromDiscriminatorValue, m.SetUserTimeFormatOptions),
+		viewScaleKey:                  internalSerialization.DeserializeStringFunc(m.SetViewScale),
 	}
 }
 
-func (m *ConfigurationResultModel) GetActive() (*bool, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, *bool](m, activeKey)
+func (m *ConfigurationResult) GetActive() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *bool](m, activeKey)
 }
-func (m *ConfigurationResultModel) setActive(val *bool) error {
+func (m *ConfigurationResult) SetActive(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, activeKey, val)
 }
-func (m *ConfigurationResultModel) GetActiveString() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, *string](m, activeStringKey)
+func (m *ConfigurationResult) GetActiveString() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *string](m, activeStringKey)
 }
-func (m *ConfigurationResultModel) setActiveString(val *string) error {
+func (m *ConfigurationResult) SetActiveString(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, activeStringKey, val)
 }
-func (m *ConfigurationResultModel) GetAdvancedCalendarViewPortal() (*bool, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, *bool](m, advancedCalendarViewPortalKey)
+func (m *ConfigurationResult) GetAdvancedCalendarViewPortal() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *bool](m, advancedCalendarViewPortalKey)
 }
-func (m *ConfigurationResultModel) setAdvancedCalendarViewPortal(val *bool) error {
+func (m *ConfigurationResult) SetAdvancedCalendarViewPortal(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, advancedCalendarViewPortalKey, val)
 }
-func (m *ConfigurationResultModel) GetAutoAcceptance() (*bool, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, *bool](m, autoAcceptanceKey)
+func (m *ConfigurationResult) GetAutoAcceptance() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *bool](m, autoAcceptanceKey)
 }
-func (m *ConfigurationResultModel) setAutoAcceptance(val *bool) error {
+func (m *ConfigurationResult) SetAutoAcceptance(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, autoAcceptanceKey, val)
 }
-func (m *ConfigurationResultModel) GetLocaleLanguage() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, *string](m, localeLanguageKey)
+func (m *ConfigurationResult) GetLocaleLanguage() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *string](m, localeLanguageKey)
 }
-func (m *ConfigurationResultModel) setLocaleLanguage(val *string) error {
+func (m *ConfigurationResult) SetLocaleLanguage(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, localeLanguageKey, val)
 }
-func (m *ConfigurationResultModel) GetServiceConfig() (ServiceConfig, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, ServiceConfig](m, serviceConfigKey)
+func (m *ConfigurationResult) GetServiceConfig() (ServiceConfig, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, ServiceConfig](m, serviceConfigKey)
 }
-func (m *ConfigurationResultModel) setServiceConfig(val ServiceConfig) error {
+func (m *ConfigurationResult) SetServiceConfig(val ServiceConfig) error {
 	return store.DefaultBackedModelMutatorFunc(m, serviceConfigKey, val)
 }
-func (m *ConfigurationResultModel) GetTaskTable() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, *string](m, taskTableKey)
+func (m *ConfigurationResult) GetTaskTable() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *string](m, taskTableKey)
 }
-func (m *ConfigurationResultModel) setTaskTable(val *string) error {
+func (m *ConfigurationResult) SetTaskTable(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, taskTableKey, val)
 }
-func (m *ConfigurationResultModel) GetTranslations() (any, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, any](m, translationsKey)
+func (m *ConfigurationResult) GetTranslations() (any, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, any](m, translationsKey)
 }
-func (m *ConfigurationResultModel) setTranslations(val any) error {
+func (m *ConfigurationResult) SetTranslations(val any) error {
 	return store.DefaultBackedModelMutatorFunc(m, translationsKey, val)
 }
-func (m *ConfigurationResultModel) GetUserDateFormatOptions() (UserDateFormatOptions, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, UserDateFormatOptions](m, userDateFormatOptionsKey)
+func (m *ConfigurationResult) GetUserDateFormatOptions() (UserDateFormatOptions, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, UserDateFormatOptions](m, userDateFormatOptionsKey)
 }
-func (m *ConfigurationResultModel) setUserDateFormatOptions(val UserDateFormatOptions) error {
+func (m *ConfigurationResult) SetUserDateFormatOptions(val UserDateFormatOptions) error {
 	return store.DefaultBackedModelMutatorFunc(m, userDateFormatOptionsKey, val)
 }
-func (m *ConfigurationResultModel) GetUseRR() (*bool, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, *bool](m, useRRKey)
+func (m *ConfigurationResult) GetUseRR() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *bool](m, useRRKey)
 }
-func (m *ConfigurationResultModel) setUseRR(val *bool) error {
+func (m *ConfigurationResult) SetUseRR(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, useRRKey, val)
 }
-func (m *ConfigurationResultModel) GetUserTimeFormat() (UserTimeFormat, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, UserTimeFormat](m, userTimeFormatKey)
+func (m *ConfigurationResult) GetUserTimeFormat() (UserTimeFormat, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, UserTimeFormat](m, userTimeFormatKey)
 }
-func (m *ConfigurationResultModel) setUserTimeFormat(val UserTimeFormat) error {
+func (m *ConfigurationResult) SetUserTimeFormat(val UserTimeFormat) error {
 	return store.DefaultBackedModelMutatorFunc(m, userTimeFormatKey, val)
 }
-func (m *ConfigurationResultModel) GetUserTimeFormatOptions() (UserTimeFormatOptions, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, UserTimeFormatOptions](m, userTimeFormatOptionsKey)
+func (m *ConfigurationResult) GetUserTimeFormatOptions() (UserTimeFormatOptions, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, UserTimeFormatOptions](m, userTimeFormatOptionsKey)
 }
-func (m *ConfigurationResultModel) setUserTimeFormatOptions(val UserTimeFormatOptions) error {
+func (m *ConfigurationResult) SetUserTimeFormatOptions(val UserTimeFormatOptions) error {
 	return store.DefaultBackedModelMutatorFunc(m, userTimeFormatOptionsKey, val)
 }
-func (m *ConfigurationResultModel) GetViewScale() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResultModel, *string](m, viewScaleKey)
+func (m *ConfigurationResult) GetViewScale() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *string](m, viewScaleKey)
 }
-func (m *ConfigurationResultModel) setViewScale(val *string) error {
+func (m *ConfigurationResult) SetViewScale(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, viewScaleKey, val)
 }
 
@@ -198,13 +165,13 @@ type UserDateFormatOptions interface {
 	kiotaStore.BackedModel
 
 	GetDay() (*string, error)
-	setDay(*string) error
+	SetDay(*string) error
 	GetMonth() (*string, error)
-	setMonth(*string) error
+	SetMonth(*string) error
 	GetWeek() (*string, error)
-	setWeek(*string) error
+	SetWeek(*string) error
 	GetWeekday() (*string, error)
-	setWeekday(*string) error
+	SetWeekday(*string) error
 }
 
 type UserDateFormatOptionsModel struct {
@@ -235,34 +202,34 @@ func (m *UserDateFormatOptionsModel) Serialize(writer serialization.Serializatio
 
 func (m *UserDateFormatOptionsModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		dayKey:     internalSerialization.DeserializeStringFunc(m.setDay),
-		monthKey:   internalSerialization.DeserializeStringFunc(m.setMonth),
-		weekKey:    internalSerialization.DeserializeStringFunc(m.setWeek),
-		weekdayKey: internalSerialization.DeserializeStringFunc(m.setWeekday),
+		dayKey:     internalSerialization.DeserializeStringFunc(m.SetDay),
+		monthKey:   internalSerialization.DeserializeStringFunc(m.SetMonth),
+		weekKey:    internalSerialization.DeserializeStringFunc(m.SetWeek),
+		weekdayKey: internalSerialization.DeserializeStringFunc(m.SetWeekday),
 	}
 }
 
 func (m *UserDateFormatOptionsModel) GetDay() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, dayKey)
 }
-func (m *UserDateFormatOptionsModel) setDay(val *string) error {
+func (m *UserDateFormatOptionsModel) SetDay(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, dayKey, val)
 }
 func (m *UserDateFormatOptionsModel) GetMonth() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, monthKey)
 }
-func (m *UserDateFormatOptionsModel) setMonth(val *string) error {
+func (m *UserDateFormatOptionsModel) SetMonth(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, monthKey, val)
 }
 func (m *UserDateFormatOptionsModel) GetWeek() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, weekKey)
 }
-func (m *UserDateFormatOptionsModel) setWeek(val *string) error {
+func (m *UserDateFormatOptionsModel) SetWeek(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, weekKey, val)
 }
 func (m *UserDateFormatOptionsModel) GetWeekday() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, weekdayKey)
 }
-func (m *UserDateFormatOptionsModel) setWeekday(val *string) error {
+func (m *UserDateFormatOptionsModel) SetWeekday(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, weekdayKey, val)
 }

@@ -16,10 +16,10 @@ func TestAppointmentResultModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"Data", func(v interface{}) error { return model.setData(v.(*string)) }, func() (interface{}, error) { return model.GetData() }, internal.ToPointer("val")},
-		{"Message", func(v interface{}) error { return model.setMessage(v.(*string)) }, func() (interface{}, error) { return model.GetMessage() }, internal.ToPointer("val")},
-		{"Reason", func(v interface{}) error { return model.setReason(v.(*string)) }, func() (interface{}, error) { return model.GetReason() }, internal.ToPointer("val")},
-		{"Success", func(v interface{}) error { return model.setSuccess(v.(*bool)) }, func() (interface{}, error) { return model.GetSuccess() }, internal.ToPointer(true)},
+		{"Data", func(v interface{}) error { return model.SetData(v.(*string)) }, func() (interface{}, error) { return model.GetData() }, internal.ToPointer("val")},
+		{"Message", func(v interface{}) error { return model.SetMessage(v.(*string)) }, func() (interface{}, error) { return model.GetMessage() }, internal.ToPointer("val")},
+		{"Reason", func(v interface{}) error { return model.SetReason(v.(*string)) }, func() (interface{}, error) { return model.GetReason() }, internal.ToPointer("val")},
+		{"Success", func(v interface{}) error { return model.SetSuccess(v.(*bool)) }, func() (interface{}, error) { return model.GetSuccess() }, internal.ToPointer(true)},
 	}
 
 	for _, tt := range tests {
@@ -48,9 +48,9 @@ func TestExecuteRuleConditionsRequestModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"CatalogId", func(v interface{}) error { return model.setCatalogId(v.(*string)) }, func() (interface{}, error) { return model.GetCatalogId() }, internal.ToPointer("val")},
-		{"OtherInputs", func(v interface{}) error { return model.setOtherInputs(v) }, func() (interface{}, error) { return model.GetOtherInputs() }, "val"},
-		{"TaskId", func(v interface{}) error { return model.setTaskId(v.(*string)) }, func() (interface{}, error) { return model.GetTaskId() }, internal.ToPointer("val")},
+		{"CatalogId", func(v interface{}) error { return model.SetCatalogId(v.(*string)) }, func() (interface{}, error) { return model.GetCatalogId() }, internal.ToPointer("val")},
+		{"OtherInputs", func(v interface{}) error { return model.SetOtherInputs(v) }, func() (interface{}, error) { return model.GetOtherInputs() }, "val"},
+		{"TaskId", func(v interface{}) error { return model.SetTaskId(v.(*string)) }, func() (interface{}, error) { return model.GetTaskId() }, internal.ToPointer("val")},
 	}
 
 	for _, tt := range tests {
@@ -73,10 +73,10 @@ func TestExecuteRuleConditionsResultModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"DedicatedCapacity", func(v interface{}) error { return model.setDedicatedCapacity(v.(*bool)) }, func() (interface{}, error) { return model.GetDedicatedCapacity() }, internal.ToPointer(true)},
-		{"FutureMaxBookableDays", func(v interface{}) error { return model.setFutureMaxBookableDays(v.(*string)) }, func() (interface{}, error) { return model.GetFutureMaxBookableDays() }, internal.ToPointer("val")},
-		{"RuleId", func(v interface{}) error { return model.setRuleId(v.(*string)) }, func() (interface{}, error) { return model.GetRuleId() }, internal.ToPointer("val")},
-		{"RuleName", func(v interface{}) error { return model.setRuleName(v.(*string)) }, func() (interface{}, error) { return model.GetRuleName() }, internal.ToPointer("val")},
+		{"DedicatedCapacity", func(v interface{}) error { return model.SetDedicatedCapacity(v.(*bool)) }, func() (interface{}, error) { return model.GetDedicatedCapacity() }, internal.ToPointer(true)},
+		{"FutureMaxBookableDays", func(v interface{}) error { return model.SetFutureMaxBookableDays(v.(*string)) }, func() (interface{}, error) { return model.GetFutureMaxBookableDays() }, internal.ToPointer("val")},
+		{"RuleId", func(v interface{}) error { return model.SetRuleId(v.(*string)) }, func() (interface{}, error) { return model.GetRuleId() }, internal.ToPointer("val")},
+		{"RuleName", func(v interface{}) error { return model.SetRuleName(v.(*string)) }, func() (interface{}, error) { return model.GetRuleName() }, internal.ToPointer("val")},
 	}
 
 	for _, tt := range tests {
@@ -99,13 +99,13 @@ func TestAvailabilityResultModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"Availability", func(v interface{}) error { return model.setAvailability(v.([]AvailabilitySlot)) }, func() (interface{}, error) { return model.GetAvailability() }, []AvailabilitySlot{NewAvailabilitySlot()}},
-		{"HasMore", func(v interface{}) error { return model.setHasMore(v.(*bool)) }, func() (interface{}, error) { return model.GetHasMore() }, internal.ToPointer(true)},
-		{"NextAvailableSlot", func(v interface{}) error { return model.setNextAvailableSlot(v) }, func() (interface{}, error) { return model.GetNextAvailableSlot() }, "val"},
-		{"NoApptAvailable", func(v interface{}) error { return model.setNoApptAvailable(v.(*bool)) }, func() (interface{}, error) { return model.GetNoApptAvailable() }, internal.ToPointer(true)},
-		{"Success", func(v interface{}) error { return model.setSuccess(v.(*bool)) }, func() (interface{}, error) { return model.GetSuccess() }, internal.ToPointer(true)},
-		{"TimeZone", func(v interface{}) error { return model.setTimeZone(v.(*string)) }, func() (interface{}, error) { return model.GetTimeZone() }, internal.ToPointer("val")},
-		{"TimeZoneDisplayValue", func(v interface{}) error { return model.setTimeZoneDisplayValue(v.(*string)) }, func() (interface{}, error) { return model.GetTimeZoneDisplayValue() }, internal.ToPointer("val")},
+		{"Availability", func(v interface{}) error { return model.SetAvailability(v.([]AvailabilitySlot)) }, func() (interface{}, error) { return model.GetAvailability() }, []AvailabilitySlot{NewAvailabilitySlot()}},
+		{"HasMore", func(v interface{}) error { return model.SetHasMore(v.(*bool)) }, func() (interface{}, error) { return model.GetHasMore() }, internal.ToPointer(true)},
+		{"NextAvailableSlot", func(v interface{}) error { return model.SetNextAvailableSlot(v) }, func() (interface{}, error) { return model.GetNextAvailableSlot() }, "val"},
+		{"NoApptAvailable", func(v interface{}) error { return model.SetNoApptAvailable(v.(*bool)) }, func() (interface{}, error) { return model.GetNoApptAvailable() }, internal.ToPointer(true)},
+		{"Success", func(v interface{}) error { return model.SetSuccess(v.(*bool)) }, func() (interface{}, error) { return model.GetSuccess() }, internal.ToPointer(true)},
+		{"TimeZone", func(v interface{}) error { return model.SetTimeZone(v.(*string)) }, func() (interface{}, error) { return model.GetTimeZone() }, internal.ToPointer("val")},
+		{"TimeZoneDisplayValue", func(v interface{}) error { return model.SetTimeZoneDisplayValue(v.(*string)) }, func() (interface{}, error) { return model.GetTimeZoneDisplayValue() }, internal.ToPointer("val")},
 	}
 
 	for _, tt := range tests {

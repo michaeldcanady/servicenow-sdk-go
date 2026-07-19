@@ -15,11 +15,11 @@ type RPVariable interface {
 	kiotaStore.BackedModel
 
 	GetDisplayName() (*string, error)
-	setDisplayName(*string) error
+	SetDisplayName(*string) error
 	GetLabel() (*string, error)
-	setLabel(*string) error
+	SetLabel(*string) error
 	GetName() (*string, error)
-	setName(*string) error
+	SetName(*string) error
 }
 
 type RPVariableModel struct {
@@ -49,27 +49,27 @@ func (m *RPVariableModel) Serialize(writer serialization.SerializationWriter) er
 
 func (m *RPVariableModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		displayNameKey: internalSerialization.DeserializeStringFunc(m.setDisplayName),
-		labelKey:       internalSerialization.DeserializeStringFunc(m.setLabel),
-		nameKey:        internalSerialization.DeserializeStringFunc(m.setName),
+		displayNameKey: internalSerialization.DeserializeStringFunc(m.SetDisplayName),
+		labelKey:       internalSerialization.DeserializeStringFunc(m.SetLabel),
+		nameKey:        internalSerialization.DeserializeStringFunc(m.SetName),
 	}
 }
 
 func (m *RPVariableModel) GetDisplayName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*RPVariableModel, *string](m, displayNameKey)
 }
-func (m *RPVariableModel) setDisplayName(val *string) error {
+func (m *RPVariableModel) SetDisplayName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, displayNameKey, val)
 }
 func (m *RPVariableModel) GetLabel() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*RPVariableModel, *string](m, labelKey)
 }
-func (m *RPVariableModel) setLabel(val *string) error {
+func (m *RPVariableModel) SetLabel(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, labelKey, val)
 }
 func (m *RPVariableModel) GetName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*RPVariableModel, *string](m, nameKey)
 }
-func (m *RPVariableModel) setName(val *string) error {
+func (m *RPVariableModel) SetName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, nameKey, val)
 }

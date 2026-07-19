@@ -15,13 +15,13 @@ type FieldMapping interface {
 	kiotaStore.BackedModel
 
 	GetContact() (*string, error)
-	setContact(*string) error
+	SetContact(*string) error
 	GetContactRPVariable() (RPVariable, error)
-	setContactRPVariable(RPVariable) error
+	SetContactRPVariable(RPVariable) error
 	GetLocation() (*string, error)
-	setLocation(*string) error
+	SetLocation(*string) error
 	GetLocationRPVariable() (RPVariable, error)
-	setLocationRPVariable(RPVariable) error
+	SetLocationRPVariable(RPVariable) error
 }
 
 type FieldMappingModel struct {
@@ -52,34 +52,34 @@ func (m *FieldMappingModel) Serialize(writer serialization.SerializationWriter) 
 
 func (m *FieldMappingModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		contactKey:            internalSerialization.DeserializeStringFunc(m.setContact),
-		contactRPVariableKey:  internalSerialization.DeserializeObjectValueFunc[RPVariable](CreateRPVariableFromDiscriminatorValue, m.setContactRPVariable),
-		locationKey:           internalSerialization.DeserializeStringFunc(m.setLocation),
-		locationRPVariableKey: internalSerialization.DeserializeObjectValueFunc[RPVariable](CreateRPVariableFromDiscriminatorValue, m.setLocationRPVariable),
+		contactKey:            internalSerialization.DeserializeStringFunc(m.SetContact),
+		contactRPVariableKey:  internalSerialization.DeserializeObjectValueFunc[RPVariable](CreateRPVariableFromDiscriminatorValue, m.SetContactRPVariable),
+		locationKey:           internalSerialization.DeserializeStringFunc(m.SetLocation),
+		locationRPVariableKey: internalSerialization.DeserializeObjectValueFunc[RPVariable](CreateRPVariableFromDiscriminatorValue, m.SetLocationRPVariable),
 	}
 }
 
 func (m *FieldMappingModel) GetContact() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*FieldMappingModel, *string](m, contactKey)
 }
-func (m *FieldMappingModel) setContact(val *string) error {
+func (m *FieldMappingModel) SetContact(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, contactKey, val)
 }
 func (m *FieldMappingModel) GetContactRPVariable() (RPVariable, error) {
 	return store.DefaultBackedModelAccessorFunc[*FieldMappingModel, RPVariable](m, contactRPVariableKey)
 }
-func (m *FieldMappingModel) setContactRPVariable(val RPVariable) error {
+func (m *FieldMappingModel) SetContactRPVariable(val RPVariable) error {
 	return store.DefaultBackedModelMutatorFunc(m, contactRPVariableKey, val)
 }
 func (m *FieldMappingModel) GetLocation() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*FieldMappingModel, *string](m, locationKey)
 }
-func (m *FieldMappingModel) setLocation(val *string) error {
+func (m *FieldMappingModel) SetLocation(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, locationKey, val)
 }
 func (m *FieldMappingModel) GetLocationRPVariable() (RPVariable, error) {
 	return store.DefaultBackedModelAccessorFunc[*FieldMappingModel, RPVariable](m, locationRPVariableKey)
 }
-func (m *FieldMappingModel) setLocationRPVariable(val RPVariable) error {
+func (m *FieldMappingModel) SetLocationRPVariable(val RPVariable) error {
 	return store.DefaultBackedModelMutatorFunc(m, locationRPVariableKey, val)
 }

@@ -15,11 +15,11 @@ type UserTimeFormatOptions interface {
 	kiotaStore.BackedModel
 
 	GetHour() (*string, error)
-	setHour(*string) error
+	SetHour(*string) error
 	GetHourCycle() (*string, error)
-	setHourCycle(*string) error
+	SetHourCycle(*string) error
 	GetMinute() (*string, error)
-	setMinute(*string) error
+	SetMinute(*string) error
 }
 
 type UserTimeFormatOptionsModel struct {
@@ -49,27 +49,27 @@ func (m *UserTimeFormatOptionsModel) Serialize(writer serialization.Serializatio
 
 func (m *UserTimeFormatOptionsModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		hourKey:      internalSerialization.DeserializeStringFunc(m.setHour),
-		hourCycleKey: internalSerialization.DeserializeStringFunc(m.setHourCycle),
-		minuteKey:    internalSerialization.DeserializeStringFunc(m.setMinute),
+		hourKey:      internalSerialization.DeserializeStringFunc(m.SetHour),
+		hourCycleKey: internalSerialization.DeserializeStringFunc(m.SetHourCycle),
+		minuteKey:    internalSerialization.DeserializeStringFunc(m.SetMinute),
 	}
 }
 
 func (m *UserTimeFormatOptionsModel) GetHour() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatOptionsModel, *string](m, hourKey)
 }
-func (m *UserTimeFormatOptionsModel) setHour(val *string) error {
+func (m *UserTimeFormatOptionsModel) SetHour(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, hourKey, val)
 }
 func (m *UserTimeFormatOptionsModel) GetHourCycle() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatOptionsModel, *string](m, hourCycleKey)
 }
-func (m *UserTimeFormatOptionsModel) setHourCycle(val *string) error {
+func (m *UserTimeFormatOptionsModel) SetHourCycle(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, hourCycleKey, val)
 }
 func (m *UserTimeFormatOptionsModel) GetMinute() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatOptionsModel, *string](m, minuteKey)
 }
-func (m *UserTimeFormatOptionsModel) setMinute(val *string) error {
+func (m *UserTimeFormatOptionsModel) SetMinute(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, minuteKey, val)
 }

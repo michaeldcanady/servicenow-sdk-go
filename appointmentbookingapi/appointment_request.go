@@ -15,31 +15,31 @@ type AppointmentRequest interface {
 	kiotaStore.BackedModel
 
 	GetActualEndDate() (*string, error)
-	setActualEndDate(*string) error
+	SetActualEndDate(*string) error
 	GetActualStartDate() (*string, error)
-	setActualStartDate(*string) error
+	SetActualStartDate(*string) error
 	GetCatalogId() (*string, error)
-	setCatalogId(*string) error
+	SetCatalogId(*string) error
 	GetEndDateUTC() (*string, error)
-	setEndDateUTC(*string) error
+	SetEndDateUTC(*string) error
 	GetLocation() (*string, error)
-	setLocation(*string) error
+	SetLocation(*string) error
 	GetOpenedFor() (*string, error)
-	setOpenedFor(*string) error
+	SetOpenedFor(*string) error
 	GetReschedule() (*bool, error)
-	setReschedule(*bool) error
+	SetReschedule(*bool) error
 	GetServiceConfigRule() (*string, error)
-	setServiceConfigRule(*string) error
+	SetServiceConfigRule(*string) error
 	GetStartDateUTC() (*string, error)
-	setStartDateUTC(*string) error
+	SetStartDateUTC(*string) error
 	GetTaskId() (*string, error)
-	setTaskId(*string) error
+	SetTaskId(*string) error
 	GetTaskTable() (*string, error)
-	setTaskTable(*string) error
+	SetTaskTable(*string) error
 	GetTimezone() (*string, error)
-	setTimezone(*string) error
+	SetTimezone(*string) error
 	GetValidateRequest() (*bool, error)
-	setValidateRequest(*bool) error
+	SetValidateRequest(*bool) error
 }
 
 type AppointmentRequestModel struct {
@@ -77,97 +77,97 @@ func (m *AppointmentRequestModel) Serialize(writer serialization.SerializationWr
 
 func (m *AppointmentRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		actualEndDateKey:     internalSerialization.DeserializeStringFunc(m.setActualEndDate),
-		actualStartDateKey:   internalSerialization.DeserializeStringFunc(m.setActualStartDate),
-		catalogIDKey:         internalSerialization.DeserializeStringFunc(m.setCatalogId),
-		endDateUTCKey:        internalSerialization.DeserializeStringFunc(m.setEndDateUTC),
-		locationKey:          internalSerialization.DeserializeStringFunc(m.setLocation),
-		openedForKey:         internalSerialization.DeserializeStringFunc(m.setOpenedFor),
-		rescheduleKey:        internalSerialization.DeserializeBoolFunc(m.setReschedule),
-		serviceConfigRuleKey: internalSerialization.DeserializeStringFunc(m.setServiceConfigRule),
-		startDateUTCKey:      internalSerialization.DeserializeStringFunc(m.setStartDateUTC),
-		taskIDKey:            internalSerialization.DeserializeStringFunc(m.setTaskId),
-		taskTableKey:         internalSerialization.DeserializeStringFunc(m.setTaskTable),
-		timezoneKey:          internalSerialization.DeserializeStringFunc(m.setTimezone),
-		validateRequestKey:   internalSerialization.DeserializeBoolFunc(m.setValidateRequest),
+		actualEndDateKey:     internalSerialization.DeserializeStringFunc(m.SetActualEndDate),
+		actualStartDateKey:   internalSerialization.DeserializeStringFunc(m.SetActualStartDate),
+		catalogIDKey:         internalSerialization.DeserializeStringFunc(m.SetCatalogId),
+		endDateUTCKey:        internalSerialization.DeserializeStringFunc(m.SetEndDateUTC),
+		locationKey:          internalSerialization.DeserializeStringFunc(m.SetLocation),
+		openedForKey:         internalSerialization.DeserializeStringFunc(m.SetOpenedFor),
+		rescheduleKey:        internalSerialization.DeserializeBoolFunc(m.SetReschedule),
+		serviceConfigRuleKey: internalSerialization.DeserializeStringFunc(m.SetServiceConfigRule),
+		startDateUTCKey:      internalSerialization.DeserializeStringFunc(m.SetStartDateUTC),
+		taskIDKey:            internalSerialization.DeserializeStringFunc(m.SetTaskId),
+		taskTableKey:         internalSerialization.DeserializeStringFunc(m.SetTaskTable),
+		timezoneKey:          internalSerialization.DeserializeStringFunc(m.SetTimezone),
+		validateRequestKey:   internalSerialization.DeserializeBoolFunc(m.SetValidateRequest),
 	}
 }
 
 func (m *AppointmentRequestModel) GetActualEndDate() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *string](m, actualEndDateKey)
 }
-func (m *AppointmentRequestModel) setActualEndDate(val *string) error {
+func (m *AppointmentRequestModel) SetActualEndDate(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, actualEndDateKey, val)
 }
 func (m *AppointmentRequestModel) GetActualStartDate() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *string](m, actualStartDateKey)
 }
-func (m *AppointmentRequestModel) setActualStartDate(val *string) error {
+func (m *AppointmentRequestModel) SetActualStartDate(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, actualStartDateKey, val)
 }
 func (m *AppointmentRequestModel) GetCatalogId() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *string](m, catalogIDKey)
 }
-func (m *AppointmentRequestModel) setCatalogId(val *string) error {
+func (m *AppointmentRequestModel) SetCatalogId(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, catalogIDKey, val)
 }
 func (m *AppointmentRequestModel) GetEndDateUTC() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *string](m, endDateUTCKey)
 }
-func (m *AppointmentRequestModel) setEndDateUTC(val *string) error {
+func (m *AppointmentRequestModel) SetEndDateUTC(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, endDateUTCKey, val)
 }
 func (m *AppointmentRequestModel) GetLocation() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *string](m, locationKey)
 }
-func (m *AppointmentRequestModel) setLocation(val *string) error {
+func (m *AppointmentRequestModel) SetLocation(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, locationKey, val)
 }
 func (m *AppointmentRequestModel) GetOpenedFor() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *string](m, openedForKey)
 }
-func (m *AppointmentRequestModel) setOpenedFor(val *string) error {
+func (m *AppointmentRequestModel) SetOpenedFor(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, openedForKey, val)
 }
 func (m *AppointmentRequestModel) GetReschedule() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *bool](m, rescheduleKey)
 }
-func (m *AppointmentRequestModel) setReschedule(val *bool) error {
+func (m *AppointmentRequestModel) SetReschedule(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, rescheduleKey, val)
 }
 func (m *AppointmentRequestModel) GetServiceConfigRule() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *string](m, serviceConfigRuleKey)
 }
-func (m *AppointmentRequestModel) setServiceConfigRule(val *string) error {
+func (m *AppointmentRequestModel) SetServiceConfigRule(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, serviceConfigRuleKey, val)
 }
 func (m *AppointmentRequestModel) GetStartDateUTC() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *string](m, startDateUTCKey)
 }
-func (m *AppointmentRequestModel) setStartDateUTC(val *string) error {
+func (m *AppointmentRequestModel) SetStartDateUTC(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, startDateUTCKey, val)
 }
 func (m *AppointmentRequestModel) GetTaskId() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *string](m, taskIDKey)
 }
-func (m *AppointmentRequestModel) setTaskId(val *string) error {
+func (m *AppointmentRequestModel) SetTaskId(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, taskIDKey, val)
 }
 func (m *AppointmentRequestModel) GetTaskTable() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *string](m, taskTableKey)
 }
-func (m *AppointmentRequestModel) setTaskTable(val *string) error {
+func (m *AppointmentRequestModel) SetTaskTable(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, taskTableKey, val)
 }
 func (m *AppointmentRequestModel) GetTimezone() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *string](m, timezoneKey)
 }
-func (m *AppointmentRequestModel) setTimezone(val *string) error {
+func (m *AppointmentRequestModel) SetTimezone(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, timezoneKey, val)
 }
 func (m *AppointmentRequestModel) GetValidateRequest() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentRequestModel, *bool](m, validateRequestKey)
 }
-func (m *AppointmentRequestModel) setValidateRequest(val *bool) error {
+func (m *AppointmentRequestModel) SetValidateRequest(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, validateRequestKey, val)
 }

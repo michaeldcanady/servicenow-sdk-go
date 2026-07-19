@@ -15,11 +15,11 @@ type ExecuteRuleConditionsRequest interface {
 	kiotaStore.BackedModel
 
 	GetCatalogId() (*string, error)
-	setCatalogId(*string) error
+	SetCatalogId(*string) error
 	GetOtherInputs() (any, error)
-	setOtherInputs(any) error
+	SetOtherInputs(any) error
 	GetTaskId() (*string, error)
-	setTaskId(*string) error
+	SetTaskId(*string) error
 }
 
 type ExecuteRuleConditionsRequestModel struct {
@@ -47,27 +47,27 @@ func (m *ExecuteRuleConditionsRequestModel) Serialize(writer serialization.Seria
 
 func (m *ExecuteRuleConditionsRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		catalogIDKey:   internalSerialization.DeserializeStringFunc(m.setCatalogId),
-		otherInputsKey: internalSerialization.DeserializeAnyFunc(m.setOtherInputs),
-		taskIDKey:      internalSerialization.DeserializeStringFunc(m.setTaskId),
+		catalogIDKey:   internalSerialization.DeserializeStringFunc(m.SetCatalogId),
+		otherInputsKey: internalSerialization.DeserializeAnyFunc(m.SetOtherInputs),
+		taskIDKey:      internalSerialization.DeserializeStringFunc(m.SetTaskId),
 	}
 }
 
 func (m *ExecuteRuleConditionsRequestModel) GetCatalogId() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsRequestModel, *string](m, catalogIDKey)
 }
-func (m *ExecuteRuleConditionsRequestModel) setCatalogId(val *string) error {
+func (m *ExecuteRuleConditionsRequestModel) SetCatalogId(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, catalogIDKey, val)
 }
 func (m *ExecuteRuleConditionsRequestModel) GetOtherInputs() (any, error) {
 	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsRequestModel, any](m, otherInputsKey)
 }
-func (m *ExecuteRuleConditionsRequestModel) setOtherInputs(val any) error {
+func (m *ExecuteRuleConditionsRequestModel) SetOtherInputs(val any) error {
 	return store.DefaultBackedModelMutatorFunc(m, otherInputsKey, val)
 }
 func (m *ExecuteRuleConditionsRequestModel) GetTaskId() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsRequestModel, *string](m, taskIDKey)
 }
-func (m *ExecuteRuleConditionsRequestModel) setTaskId(val *string) error {
+func (m *ExecuteRuleConditionsRequestModel) SetTaskId(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, taskIDKey, val)
 }
