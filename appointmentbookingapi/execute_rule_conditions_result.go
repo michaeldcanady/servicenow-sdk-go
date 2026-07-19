@@ -6,36 +6,21 @@ import (
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
-type ExecuteRuleConditionsResult interface {
-	serialization.Parsable
-	kiotaStore.BackedModel
-
-	GetDedicatedCapacity() (*bool, error)
-	setDedicatedCapacity(*bool) error
-	GetFutureMaxBookableDays() (*string, error)
-	setFutureMaxBookableDays(*string) error
-	GetRuleId() (*string, error)
-	setRuleId(*string) error
-	GetRuleName() (*string, error)
-	setRuleName(*string) error
-}
-
-type ExecuteRuleConditionsResultModel struct {
+type ExecuteRuleConditionsResult struct {
 	core.BaseModel
 }
 
-func NewExecuteRuleConditionsResult() *ExecuteRuleConditionsResultModel {
-	return &ExecuteRuleConditionsResultModel{BaseModel: *core.NewBaseModel()}
+func NewExecuteRuleConditionsResult() *ExecuteRuleConditionsResult {
+	return &ExecuteRuleConditionsResult{BaseModel: *core.NewBaseModel()}
 }
 
 func CreateExecuteRuleConditionsResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewExecuteRuleConditionsResult(), nil
 }
 
-func (m *ExecuteRuleConditionsResultModel) Serialize(writer serialization.SerializationWriter) error {
+func (m *ExecuteRuleConditionsResult) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
 	}
@@ -47,36 +32,36 @@ func (m *ExecuteRuleConditionsResultModel) Serialize(writer serialization.Serial
 	)
 }
 
-func (m *ExecuteRuleConditionsResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (m *ExecuteRuleConditionsResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		dedicatedCapacityKey:     internalSerialization.DeserializeBoolFunc(m.setDedicatedCapacity),
-		futureMaxBookableDaysKey: internalSerialization.DeserializeStringFunc(m.setFutureMaxBookableDays),
-		ruleIdKey:                internalSerialization.DeserializeStringFunc(m.setRuleId),
-		ruleNameKey:              internalSerialization.DeserializeStringFunc(m.setRuleName),
+		dedicatedCapacityKey:     internalSerialization.DeserializeBoolFunc(m.SetDedicatedCapacity),
+		futureMaxBookableDaysKey: internalSerialization.DeserializeStringFunc(m.SetFutureMaxBookableDays),
+		ruleIdKey:                internalSerialization.DeserializeStringFunc(m.SetRuleId),
+		ruleNameKey:              internalSerialization.DeserializeStringFunc(m.SetRuleName),
 	}
 }
 
-func (m *ExecuteRuleConditionsResultModel) GetDedicatedCapacity() (*bool, error) {
-	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsResultModel, *bool](m, dedicatedCapacityKey)
+func (m *ExecuteRuleConditionsResult) GetDedicatedCapacity() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsResult, *bool](m, dedicatedCapacityKey)
 }
-func (m *ExecuteRuleConditionsResultModel) setDedicatedCapacity(val *bool) error {
+func (m *ExecuteRuleConditionsResult) SetDedicatedCapacity(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, dedicatedCapacityKey, val)
 }
-func (m *ExecuteRuleConditionsResultModel) GetFutureMaxBookableDays() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsResultModel, *string](m, futureMaxBookableDaysKey)
+func (m *ExecuteRuleConditionsResult) GetFutureMaxBookableDays() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsResult, *string](m, futureMaxBookableDaysKey)
 }
-func (m *ExecuteRuleConditionsResultModel) setFutureMaxBookableDays(val *string) error {
+func (m *ExecuteRuleConditionsResult) SetFutureMaxBookableDays(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, futureMaxBookableDaysKey, val)
 }
-func (m *ExecuteRuleConditionsResultModel) GetRuleId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsResultModel, *string](m, ruleIdKey)
+func (m *ExecuteRuleConditionsResult) GetRuleId() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsResult, *string](m, ruleIdKey)
 }
-func (m *ExecuteRuleConditionsResultModel) setRuleId(val *string) error {
+func (m *ExecuteRuleConditionsResult) SetRuleId(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, ruleIdKey, val)
 }
-func (m *ExecuteRuleConditionsResultModel) GetRuleName() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsResultModel, *string](m, ruleNameKey)
+func (m *ExecuteRuleConditionsResult) GetRuleName() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsResult, *string](m, ruleNameKey)
 }
-func (m *ExecuteRuleConditionsResultModel) setRuleName(val *string) error {
+func (m *ExecuteRuleConditionsResult) SetRuleName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, ruleNameKey, val)
 }

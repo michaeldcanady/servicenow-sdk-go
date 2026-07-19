@@ -24,13 +24,13 @@ type AppointmentResult interface {
 	kiotaStore.BackedModel
 
 	GetData() (*string, error)
-	setData(*string) error
+	SetData(*string) error
 	GetMessage() (*string, error)
-	setMessage(*string) error
+	SetMessage(*string) error
 	GetReason() (*string, error)
-	setReason(*string) error
+	SetReason(*string) error
 	GetSuccess() (*bool, error)
-	setSuccess(*bool) error
+	SetSuccess(*bool) error
 }
 
 type AppointmentResultModel struct {
@@ -59,34 +59,34 @@ func (m *AppointmentResultModel) Serialize(writer serialization.SerializationWri
 
 func (m *AppointmentResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		dataKey:    internalSerialization.DeserializeStringFunc(m.setData),
-		messageKey: internalSerialization.DeserializeStringFunc(m.setMessage),
-		reasonKey:  internalSerialization.DeserializeStringFunc(m.setReason),
-		successKey: internalSerialization.DeserializeBoolFunc(m.setSuccess),
+		dataKey:    internalSerialization.DeserializeStringFunc(m.SetData),
+		messageKey: internalSerialization.DeserializeStringFunc(m.SetMessage),
+		reasonKey:  internalSerialization.DeserializeStringFunc(m.SetReason),
+		successKey: internalSerialization.DeserializeBoolFunc(m.SetSuccess),
 	}
 }
 
 func (m *AppointmentResultModel) GetData() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentResultModel, *string](m, dataKey)
 }
-func (m *AppointmentResultModel) setData(val *string) error {
+func (m *AppointmentResultModel) SetData(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, dataKey, val)
 }
 func (m *AppointmentResultModel) GetMessage() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentResultModel, *string](m, messageKey)
 }
-func (m *AppointmentResultModel) setMessage(val *string) error {
+func (m *AppointmentResultModel) SetMessage(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, messageKey, val)
 }
 func (m *AppointmentResultModel) GetReason() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentResultModel, *string](m, reasonKey)
 }
-func (m *AppointmentResultModel) setReason(val *string) error {
+func (m *AppointmentResultModel) SetReason(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, reasonKey, val)
 }
 func (m *AppointmentResultModel) GetSuccess() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*AppointmentResultModel, *bool](m, successKey)
 }
-func (m *AppointmentResultModel) setSuccess(val *bool) error {
+func (m *AppointmentResultModel) SetSuccess(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, successKey, val)
 }

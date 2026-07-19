@@ -2,6 +2,7 @@ package appointmentbookingapi
 
 import (
 	"context"
+
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -81,7 +82,7 @@ func NewCalendarRequestBuilder(pathParameters map[string]string, requestAdapter 
 }
 
 // Get sends a GET request to retrieve calendar.
-func (rB *CalendarRequestBuilder) Get(ctx context.Context, config *CalendarRequestBuilderGetRequestConfiguration) (CalendarResponse, error) {
+func (rB *CalendarRequestBuilder) Get(ctx context.Context, config *CalendarRequestBuilderGetRequestConfiguration) (*CalendarResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -100,7 +101,7 @@ func (rB *CalendarRequestBuilder) Get(ctx context.Context, config *CalendarReque
 		return nil, nil
 	}
 
-	return res.(CalendarResponse), nil
+	return res.(*CalendarResponse), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.

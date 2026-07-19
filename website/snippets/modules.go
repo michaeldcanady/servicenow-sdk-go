@@ -82,19 +82,32 @@ func moduleActSub() {
 
 func moduleAppointmentBooking() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
-	var availabilityRequest *appointmentbookingapi.AvailabilityRequestModel
-	var appointmentRequest *appointmentbookingapi.AppointmentRequestModel
+	var catalogID, startDate, endDate string
 
 	// [START module_appointment_booking]
 	booking := client.AppointmentBooking()
 
 	// Check availability
+	availabilityRequest := appointmentbookingapi.NewAvailabilityRequest()
+	if err := availabilityRequest.SetCatalogId(&catalogID); err != nil {
+		log.Fatal(err)
+	}
+	if err := availabilityRequest.SetStartDate(&startDate); err != nil {
+		log.Fatal(err)
+	}
+	if err := availabilityRequest.SetEndDate(&endDate); err != nil {
+		log.Fatal(err)
+	}
 	availability, err := booking.Availability().Post(context.Background(), availabilityRequest, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Book an appointment
+	appointmentRequest := appointmentbookingapi.NewAppointmentRequest()
+	if err := appointmentRequest.SetCatalogId(&catalogID); err != nil {
+		log.Fatal(err)
+	}
 	appointment, err := booking.Appointment().Post(context.Background(), appointmentRequest, nil)
 	if err != nil {
 		log.Fatal(err)

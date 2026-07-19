@@ -15,35 +15,35 @@ type ServiceConfig interface {
 	kiotaStore.BackedModel
 
 	GetActive() (*bool, error)
-	setActive(*bool) error
+	SetActive(*bool) error
 	GetActiveString() (*string, error)
-	setActiveString(*string) error
+	SetActiveString(*string) error
 	GetAppointmentBookingConfig() (*string, error)
-	setAppointmentBookingConfig(*string) error
+	SetAppointmentBookingConfig(*string) error
 	GetAppointmentDuration() (*string, error)
-	setAppointmentDuration(*string) error
+	SetAppointmentDuration(*string) error
 	GetAppointmentsPerBookableSlot() (*string, error)
-	setAppointmentsPerBookableSlot(*string) error
+	SetAppointmentsPerBookableSlot(*string) error
 	GetBookableDays() (*string, error)
-	setBookableDays(*string) error
+	SetBookableDays(*string) error
 	GetCancelByTime() (*string, error)
-	setCancelByTime(*string) error
+	SetCancelByTime(*string) error
 	GetDefaultTimezone() (*string, error)
-	setDefaultTimezone(*string) error
+	SetDefaultTimezone(*string) error
 	GetEnableAdvancedConfig() (*bool, error)
-	setEnableAdvancedConfig(*bool) error
+	SetEnableAdvancedConfig(*bool) error
 	GetFieldMapping() (FieldMapping, error)
-	setFieldMapping(FieldMapping) error
+	SetFieldMapping(FieldMapping) error
 	GetFutureBookableMaxDays() (*string, error)
-	setFutureBookableMaxDays(*string) error
+	SetFutureBookableMaxDays(*string) error
 	GetLeadTime() (*string, error)
-	setLeadTime(*string) error
+	SetLeadTime(*string) error
 	GetMandatory() (*string, error)
-	setMandatory(*string) error
+	SetMandatory(*string) error
 	GetUseSlotEndTimeAs() (*string, error)
-	setUseSlotEndTimeAs(*string) error
+	SetUseSlotEndTimeAs(*string) error
 	GetWorkDuration() (*string, error)
-	setWorkDuration(*string) error
+	SetWorkDuration(*string) error
 }
 
 type ServiceConfigModel struct {
@@ -85,111 +85,111 @@ func (m *ServiceConfigModel) Serialize(writer serialization.SerializationWriter)
 
 func (m *ServiceConfigModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		activeKey:                      internalSerialization.DeserializeBoolFunc(m.setActive),
-		activeStringKey:                internalSerialization.DeserializeStringFunc(m.setActiveString),
-		appointmentBookingConfigKey:    internalSerialization.DeserializeStringFunc(m.setAppointmentBookingConfig),
-		appointmentDurationKey:         internalSerialization.DeserializeStringFunc(m.setAppointmentDuration),
-		appointmentsPerBookableSlotKey: internalSerialization.DeserializeStringFunc(m.setAppointmentsPerBookableSlot),
-		bookableDaysKey:                internalSerialization.DeserializeStringFunc(m.setBookableDays),
-		cancelByTimeKey:                internalSerialization.DeserializeStringFunc(m.setCancelByTime),
-		defaultTimezoneKey:             internalSerialization.DeserializeStringFunc(m.setDefaultTimezone),
-		enableAdvancedConfigKey:        internalSerialization.DeserializeBoolFunc(m.setEnableAdvancedConfig),
-		fieldMappingKey:                internalSerialization.DeserializeObjectValueFunc[FieldMapping](CreateFieldMappingFromDiscriminatorValue, m.setFieldMapping),
-		futureBookableMaxDaysKey:       internalSerialization.DeserializeStringFunc(m.setFutureBookableMaxDays),
-		leadTimeKey:                    internalSerialization.DeserializeStringFunc(m.setLeadTime),
-		mandatoryKey:                   internalSerialization.DeserializeStringFunc(m.setMandatory),
-		useSlotEndTimeAsKey:            internalSerialization.DeserializeStringFunc(m.setUseSlotEndTimeAs),
-		workDurationKey:                internalSerialization.DeserializeStringFunc(m.setWorkDuration),
+		activeKey:                      internalSerialization.DeserializeBoolFunc(m.SetActive),
+		activeStringKey:                internalSerialization.DeserializeStringFunc(m.SetActiveString),
+		appointmentBookingConfigKey:    internalSerialization.DeserializeStringFunc(m.SetAppointmentBookingConfig),
+		appointmentDurationKey:         internalSerialization.DeserializeStringFunc(m.SetAppointmentDuration),
+		appointmentsPerBookableSlotKey: internalSerialization.DeserializeStringFunc(m.SetAppointmentsPerBookableSlot),
+		bookableDaysKey:                internalSerialization.DeserializeStringFunc(m.SetBookableDays),
+		cancelByTimeKey:                internalSerialization.DeserializeStringFunc(m.SetCancelByTime),
+		defaultTimezoneKey:             internalSerialization.DeserializeStringFunc(m.SetDefaultTimezone),
+		enableAdvancedConfigKey:        internalSerialization.DeserializeBoolFunc(m.SetEnableAdvancedConfig),
+		fieldMappingKey:                internalSerialization.DeserializeObjectValueFunc(CreateFieldMappingFromDiscriminatorValue, m.SetFieldMapping),
+		futureBookableMaxDaysKey:       internalSerialization.DeserializeStringFunc(m.SetFutureBookableMaxDays),
+		leadTimeKey:                    internalSerialization.DeserializeStringFunc(m.SetLeadTime),
+		mandatoryKey:                   internalSerialization.DeserializeStringFunc(m.SetMandatory),
+		useSlotEndTimeAsKey:            internalSerialization.DeserializeStringFunc(m.SetUseSlotEndTimeAs),
+		workDurationKey:                internalSerialization.DeserializeStringFunc(m.SetWorkDuration),
 	}
 }
 
 func (m *ServiceConfigModel) GetActive() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *bool](m, activeKey)
 }
-func (m *ServiceConfigModel) setActive(val *bool) error {
+func (m *ServiceConfigModel) SetActive(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, activeKey, val)
 }
 func (m *ServiceConfigModel) GetActiveString() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, activeStringKey)
 }
-func (m *ServiceConfigModel) setActiveString(val *string) error {
+func (m *ServiceConfigModel) SetActiveString(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, activeStringKey, val)
 }
 func (m *ServiceConfigModel) GetAppointmentBookingConfig() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, appointmentBookingConfigKey)
 }
-func (m *ServiceConfigModel) setAppointmentBookingConfig(val *string) error {
+func (m *ServiceConfigModel) SetAppointmentBookingConfig(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, appointmentBookingConfigKey, val)
 }
 func (m *ServiceConfigModel) GetAppointmentDuration() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, appointmentDurationKey)
 }
-func (m *ServiceConfigModel) setAppointmentDuration(val *string) error {
+func (m *ServiceConfigModel) SetAppointmentDuration(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, appointmentDurationKey, val)
 }
 func (m *ServiceConfigModel) GetAppointmentsPerBookableSlot() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, appointmentsPerBookableSlotKey)
 }
-func (m *ServiceConfigModel) setAppointmentsPerBookableSlot(val *string) error {
+func (m *ServiceConfigModel) SetAppointmentsPerBookableSlot(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, appointmentsPerBookableSlotKey, val)
 }
 func (m *ServiceConfigModel) GetBookableDays() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, bookableDaysKey)
 }
-func (m *ServiceConfigModel) setBookableDays(val *string) error {
+func (m *ServiceConfigModel) SetBookableDays(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, bookableDaysKey, val)
 }
 func (m *ServiceConfigModel) GetCancelByTime() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, cancelByTimeKey)
 }
-func (m *ServiceConfigModel) setCancelByTime(val *string) error {
+func (m *ServiceConfigModel) SetCancelByTime(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, cancelByTimeKey, val)
 }
 func (m *ServiceConfigModel) GetDefaultTimezone() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, defaultTimezoneKey)
 }
-func (m *ServiceConfigModel) setDefaultTimezone(val *string) error {
+func (m *ServiceConfigModel) SetDefaultTimezone(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, defaultTimezoneKey, val)
 }
 func (m *ServiceConfigModel) GetEnableAdvancedConfig() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *bool](m, enableAdvancedConfigKey)
 }
-func (m *ServiceConfigModel) setEnableAdvancedConfig(val *bool) error {
+func (m *ServiceConfigModel) SetEnableAdvancedConfig(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, enableAdvancedConfigKey, val)
 }
 func (m *ServiceConfigModel) GetFieldMapping() (FieldMapping, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, FieldMapping](m, fieldMappingKey)
 }
-func (m *ServiceConfigModel) setFieldMapping(val FieldMapping) error {
+func (m *ServiceConfigModel) SetFieldMapping(val FieldMapping) error {
 	return store.DefaultBackedModelMutatorFunc(m, fieldMappingKey, val)
 }
 func (m *ServiceConfigModel) GetFutureBookableMaxDays() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, futureBookableMaxDaysKey)
 }
-func (m *ServiceConfigModel) setFutureBookableMaxDays(val *string) error {
+func (m *ServiceConfigModel) SetFutureBookableMaxDays(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, futureBookableMaxDaysKey, val)
 }
 func (m *ServiceConfigModel) GetLeadTime() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, leadTimeKey)
 }
-func (m *ServiceConfigModel) setLeadTime(val *string) error {
+func (m *ServiceConfigModel) SetLeadTime(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, leadTimeKey, val)
 }
 func (m *ServiceConfigModel) GetMandatory() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, mandatoryKey)
 }
-func (m *ServiceConfigModel) setMandatory(val *string) error {
+func (m *ServiceConfigModel) SetMandatory(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, mandatoryKey, val)
 }
 func (m *ServiceConfigModel) GetUseSlotEndTimeAs() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, useSlotEndTimeAsKey)
 }
-func (m *ServiceConfigModel) setUseSlotEndTimeAs(val *string) error {
+func (m *ServiceConfigModel) SetUseSlotEndTimeAs(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, useSlotEndTimeAsKey, val)
 }
 func (m *ServiceConfigModel) GetWorkDuration() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, workDurationKey)
 }
-func (m *ServiceConfigModel) setWorkDuration(val *string) error {
+func (m *ServiceConfigModel) SetWorkDuration(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, workDurationKey, val)
 }

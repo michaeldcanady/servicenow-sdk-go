@@ -77,7 +77,7 @@ func TestExecuteRuleConditionsRequestBuilder_Post(t *testing.T) {
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	builder := NewExecuteRuleConditionsRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	mockRes := core.NewBaseServiceNowItemResponse[*ExecuteRuleConditionsResultModel](CreateExecuteRuleConditionsResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*ExecuteRuleConditionsResult](CreateExecuteRuleConditionsResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
 	resp, err := builder.Post(context.Background(), NewExecuteRuleConditionsRequest(), nil)

@@ -7,26 +7,15 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
-// CalendarResponse represents the calendar response.
-type CalendarResponse interface {
-	serialization.Parsable
-	kiotaStore.BackedModel
-	GetRangeEnd() (*string, error)
-	setRangeEnd(*string) error
-	GetRangeStart() (*string, error)
-	setRangeStart(*string) error
-}
-
-// CalendarResponseModel implementation of CalendarResponse
-type CalendarResponseModel struct {
+// CalendarResponse implementation of CalendarResponse
+type CalendarResponse struct {
 	core.BaseModel
 }
 
-func NewCalendarResponse() *CalendarResponseModel {
-	return &CalendarResponseModel{
+func NewCalendarResponse() *CalendarResponse {
+	return &CalendarResponse{
 		BaseModel: *core.NewBaseModel(),
 	}
 }
@@ -35,7 +24,7 @@ func CreateCalendarResponseFromDiscriminatorValue(_ serialization.ParseNode) (se
 	return NewCalendarResponse(), nil
 }
 
-func (m *CalendarResponseModel) Serialize(writer serialization.SerializationWriter) error {
+func (m *CalendarResponse) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
 	}
@@ -45,25 +34,25 @@ func (m *CalendarResponseModel) Serialize(writer serialization.SerializationWrit
 	)
 }
 
-func (m *CalendarResponseModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (m *CalendarResponse) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		rangeEndKey:   internalSerialization.DeserializeStringFunc(m.setRangeEnd),
-		rangeStartKey: internalSerialization.DeserializeStringFunc(m.setRangeStart),
+		rangeEndKey:   internalSerialization.DeserializeStringFunc(m.SetRangeEnd),
+		rangeStartKey: internalSerialization.DeserializeStringFunc(m.SetRangeStart),
 	}
 }
 
-func (m *CalendarResponseModel) GetRangeEnd() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*CalendarResponseModel, *string](m, rangeEndKey)
+func (m *CalendarResponse) GetRangeEnd() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*CalendarResponse, *string](m, rangeEndKey)
 }
 
-func (m *CalendarResponseModel) setRangeEnd(val *string) error {
+func (m *CalendarResponse) SetRangeEnd(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, rangeEndKey, val)
 }
 
-func (m *CalendarResponseModel) GetRangeStart() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*CalendarResponseModel, *string](m, rangeStartKey)
+func (m *CalendarResponse) GetRangeStart() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*CalendarResponse, *string](m, rangeStartKey)
 }
 
-func (m *CalendarResponseModel) setRangeStart(val *string) error {
+func (m *CalendarResponse) SetRangeStart(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, rangeStartKey, val)
 }

@@ -15,35 +15,35 @@ type AvailabilityRequest interface {
 	kiotaStore.BackedModel
 
 	GetCatalogId() (*string, error)
-	setCatalogId(*string) error
+	SetCatalogId(*string) error
 	GetEndDate() (*string, error)
-	setEndDate(*string) error
+	SetEndDate(*string) error
 	GetFetchDaysSlot() (*bool, error)
-	setFetchDaysSlot(*bool) error
+	SetFetchDaysSlot(*bool) error
 	GetFullDay() (*bool, error)
-	setFullDay(*bool) error
+	SetFullDay(*bool) error
 	GetGetNextAvailableSlot() (*bool, error)
-	setGetNextAvailableSlot(*bool) error
+	SetGetNextAvailableSlot(*bool) error
 	GetLimit() (*int32, error)
-	setLimit(*int32) error
+	SetLimit(*int32) error
 	GetLocation() (*string, error)
-	setLocation(*string) error
+	SetLocation(*string) error
 	GetOpenedFor() (*string, error)
-	setOpenedFor(*string) error
+	SetOpenedFor(*string) error
 	GetOtherInputs() (any, error)
-	setOtherInputs(any) error
+	SetOtherInputs(any) error
 	GetServiceConfigRule() (*string, error)
-	setServiceConfigRule(*string) error
+	SetServiceConfigRule(*string) error
 	GetStartDate() (*string, error)
-	setStartDate(*string) error
+	SetStartDate(*string) error
 	GetTaskId() (*string, error)
-	setTaskId(*string) error
+	SetTaskId(*string) error
 	GetTaskTable() (*string, error)
-	setTaskTable(*string) error
+	SetTaskTable(*string) error
 	GetUseReadReplica() (*bool, error)
-	setUseReadReplica(*bool) error
+	SetUseReadReplica(*bool) error
 	GetView() (*string, error)
-	setView(*string) error
+	SetView(*string) error
 }
 
 type AvailabilityRequestModel struct {
@@ -83,111 +83,111 @@ func (m *AvailabilityRequestModel) Serialize(writer serialization.SerializationW
 
 func (m *AvailabilityRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		catalogIDKey:            internalSerialization.DeserializeStringFunc(m.setCatalogId),
-		endDateKey:              internalSerialization.DeserializeStringFunc(m.setEndDate),
-		fetchDaysSlotKey:        internalSerialization.DeserializeBoolFunc(m.setFetchDaysSlot),
-		fullDayKey:              internalSerialization.DeserializeBoolFunc(m.setFullDay),
-		getNextAvailableSlotKey: internalSerialization.DeserializeBoolFunc(m.setGetNextAvailableSlot),
-		limitKey:                internalSerialization.DeserializeInt32Func(m.setLimit),
-		locationKey:             internalSerialization.DeserializeStringFunc(m.setLocation),
-		openedForKey:            internalSerialization.DeserializeStringFunc(m.setOpenedFor),
-		otherInputsKey:          internalSerialization.DeserializeAnyFunc(m.setOtherInputs),
-		serviceConfigRuleKey:    internalSerialization.DeserializeStringFunc(m.setServiceConfigRule),
-		startDateKey:            internalSerialization.DeserializeStringFunc(m.setStartDate),
-		taskIDKey:               internalSerialization.DeserializeStringFunc(m.setTaskId),
-		taskTableKey:            internalSerialization.DeserializeStringFunc(m.setTaskTable),
-		useReadReplicaKey:       internalSerialization.DeserializeBoolFunc(m.setUseReadReplica),
-		viewKey:                 internalSerialization.DeserializeStringFunc(m.setView),
+		catalogIDKey:            internalSerialization.DeserializeStringFunc(m.SetCatalogId),
+		endDateKey:              internalSerialization.DeserializeStringFunc(m.SetEndDate),
+		fetchDaysSlotKey:        internalSerialization.DeserializeBoolFunc(m.SetFetchDaysSlot),
+		fullDayKey:              internalSerialization.DeserializeBoolFunc(m.SetFullDay),
+		getNextAvailableSlotKey: internalSerialization.DeserializeBoolFunc(m.SetGetNextAvailableSlot),
+		limitKey:                internalSerialization.DeserializeInt32Func(m.SetLimit),
+		locationKey:             internalSerialization.DeserializeStringFunc(m.SetLocation),
+		openedForKey:            internalSerialization.DeserializeStringFunc(m.SetOpenedFor),
+		otherInputsKey:          internalSerialization.DeserializeAnyFunc(m.SetOtherInputs),
+		serviceConfigRuleKey:    internalSerialization.DeserializeStringFunc(m.SetServiceConfigRule),
+		startDateKey:            internalSerialization.DeserializeStringFunc(m.SetStartDate),
+		taskIDKey:               internalSerialization.DeserializeStringFunc(m.SetTaskId),
+		taskTableKey:            internalSerialization.DeserializeStringFunc(m.SetTaskTable),
+		useReadReplicaKey:       internalSerialization.DeserializeBoolFunc(m.SetUseReadReplica),
+		viewKey:                 internalSerialization.DeserializeStringFunc(m.SetView),
 	}
 }
 
 func (m *AvailabilityRequestModel) GetCatalogId() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *string](m, catalogIDKey)
 }
-func (m *AvailabilityRequestModel) setCatalogId(val *string) error {
+func (m *AvailabilityRequestModel) SetCatalogId(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, catalogIDKey, val)
 }
 func (m *AvailabilityRequestModel) GetEndDate() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *string](m, endDateKey)
 }
-func (m *AvailabilityRequestModel) setEndDate(val *string) error {
+func (m *AvailabilityRequestModel) SetEndDate(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, endDateKey, val)
 }
 func (m *AvailabilityRequestModel) GetFetchDaysSlot() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *bool](m, fetchDaysSlotKey)
 }
-func (m *AvailabilityRequestModel) setFetchDaysSlot(val *bool) error {
+func (m *AvailabilityRequestModel) SetFetchDaysSlot(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, fetchDaysSlotKey, val)
 }
 func (m *AvailabilityRequestModel) GetFullDay() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *bool](m, fullDayKey)
 }
-func (m *AvailabilityRequestModel) setFullDay(val *bool) error {
+func (m *AvailabilityRequestModel) SetFullDay(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, fullDayKey, val)
 }
 func (m *AvailabilityRequestModel) GetGetNextAvailableSlot() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *bool](m, getNextAvailableSlotKey)
 }
-func (m *AvailabilityRequestModel) setGetNextAvailableSlot(val *bool) error {
+func (m *AvailabilityRequestModel) SetGetNextAvailableSlot(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, getNextAvailableSlotKey, val)
 }
 func (m *AvailabilityRequestModel) GetLimit() (*int32, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *int32](m, limitKey)
 }
-func (m *AvailabilityRequestModel) setLimit(val *int32) error {
+func (m *AvailabilityRequestModel) SetLimit(val *int32) error {
 	return store.DefaultBackedModelMutatorFunc(m, limitKey, val)
 }
 func (m *AvailabilityRequestModel) GetLocation() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *string](m, locationKey)
 }
-func (m *AvailabilityRequestModel) setLocation(val *string) error {
+func (m *AvailabilityRequestModel) SetLocation(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, locationKey, val)
 }
 func (m *AvailabilityRequestModel) GetOpenedFor() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *string](m, openedForKey)
 }
-func (m *AvailabilityRequestModel) setOpenedFor(val *string) error {
+func (m *AvailabilityRequestModel) SetOpenedFor(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, openedForKey, val)
 }
 func (m *AvailabilityRequestModel) GetOtherInputs() (any, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, any](m, otherInputsKey)
 }
-func (m *AvailabilityRequestModel) setOtherInputs(val any) error {
+func (m *AvailabilityRequestModel) SetOtherInputs(val any) error {
 	return store.DefaultBackedModelMutatorFunc(m, otherInputsKey, val)
 }
 func (m *AvailabilityRequestModel) GetServiceConfigRule() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *string](m, serviceConfigRuleKey)
 }
-func (m *AvailabilityRequestModel) setServiceConfigRule(val *string) error {
+func (m *AvailabilityRequestModel) SetServiceConfigRule(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, serviceConfigRuleKey, val)
 }
 func (m *AvailabilityRequestModel) GetStartDate() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *string](m, startDateKey)
 }
-func (m *AvailabilityRequestModel) setStartDate(val *string) error {
+func (m *AvailabilityRequestModel) SetStartDate(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, startDateKey, val)
 }
 func (m *AvailabilityRequestModel) GetTaskId() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *string](m, taskIDKey)
 }
-func (m *AvailabilityRequestModel) setTaskId(val *string) error {
+func (m *AvailabilityRequestModel) SetTaskId(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, taskIDKey, val)
 }
 func (m *AvailabilityRequestModel) GetTaskTable() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *string](m, taskTableKey)
 }
-func (m *AvailabilityRequestModel) setTaskTable(val *string) error {
+func (m *AvailabilityRequestModel) SetTaskTable(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, taskTableKey, val)
 }
 func (m *AvailabilityRequestModel) GetUseReadReplica() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *bool](m, useReadReplicaKey)
 }
-func (m *AvailabilityRequestModel) setUseReadReplica(val *bool) error {
+func (m *AvailabilityRequestModel) SetUseReadReplica(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, useReadReplicaKey, val)
 }
 func (m *AvailabilityRequestModel) GetView() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *string](m, viewKey)
 }
-func (m *AvailabilityRequestModel) setView(val *string) error {
+func (m *AvailabilityRequestModel) SetView(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, viewKey, val)
 }
