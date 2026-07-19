@@ -389,9 +389,6 @@ func modulePolicy() {
 		log.Fatal(err)
 	}
 
-	// Resolve policy inputs
-	resolved := mappings.Inputs().Resolved()
-
 	// Delete a mapping
 	err = mappings.Delete(context.Background(), nil)
 	if err != nil {
@@ -399,7 +396,6 @@ func modulePolicy() {
 	}
 	// [END module_policy]
 	_ = created
-	_ = resolved
 }
 
 func moduleStats() {

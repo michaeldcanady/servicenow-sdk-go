@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
@@ -30,14 +29,6 @@ func NewPoliciesMappingsRequestBuilderInternal(
 	return &PoliciesMappingsRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, policiesMappingsURLTemplate, pathParameters),
 	}
-}
-
-func (rB *PoliciesMappingsRequestBuilder) Inputs() *PoliciesMappingsInputsRequestBuilder {
-	if conversion.IsNil(rB) {
-		return nil
-	}
-
-	return NewPoliciesMappingsInputsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) error {
