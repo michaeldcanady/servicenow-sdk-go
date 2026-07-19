@@ -366,7 +366,7 @@ func (c *tableTestContext) iUseTheTablePageIteratorToFetchRecords() error {
 		return err
 	}
 
-	iterator, err := tableapi.NewDefaultTablePageIterator(resp, c.client.GetRequestAdapter())
+	iterator, err := core.NewPageIterator(resp, c.client.GetRequestAdapter(), tableapi.CreateTableRecordFromDiscriminatorValue)
 	if err != nil {
 		return err
 	}

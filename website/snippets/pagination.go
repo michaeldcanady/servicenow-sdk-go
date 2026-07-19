@@ -9,6 +9,7 @@ import (
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
 )
 
@@ -23,7 +24,7 @@ func _() {
 	}
 
 	// 2. Create the iterator
-	iterator, err := tableapi.NewDefaultTablePageIterator(listResponse, client.GetRequestAdapter())
+	iterator, err := core.NewPageIterator(listResponse, client.GetRequestAdapter(), tableapi.CreateTableRecordFromDiscriminatorValue)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -72,7 +73,7 @@ func _() {
 	}
 
 	// 2. Create the iterator
-	attachmentIterator, err := attachmentapi.NewAttachmentPageIterator(attachmentResponse, client.GetRequestAdapter())
+	attachmentIterator, err := core.NewPageIterator(attachmentResponse, client.GetRequestAdapter(), attachmentapi.CreateAttachmentFromDiscriminatorValue)
 	if err != nil {
 		log.Fatal(err)
 	}

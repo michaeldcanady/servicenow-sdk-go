@@ -9,6 +9,7 @@ import (
 	"log"
 
 	servicenow "github.com/michaeldcanady/servicenow-sdk-go"
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
 	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
 )
@@ -36,7 +37,7 @@ func _() {
 	}
 
 	// Step 3: Create an iterator from the response
-	iterator, err := tableapi.NewDefaultTablePageIterator(response, client.GetRequestAdapter())
+	iterator, err := core.NewPageIterator(response, client.GetRequestAdapter(), tableapi.CreateTableRecordFromDiscriminatorValue)
 	if err != nil {
 		log.Fatal(err)
 	}
