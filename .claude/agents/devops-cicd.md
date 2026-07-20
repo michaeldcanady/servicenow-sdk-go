@@ -103,3 +103,15 @@ runs on Go source changes. After editing a workflow file, there is no local
 GitHub Actions runner in this repo (no `act` config) — validate by reading
 the YAML carefully and cross-checking `needs`/`if`/`outputs` wiring by hand;
 do not claim you "tested" a workflow change you only read.
+
+## Committing your changes
+
+When you edit or add a file (a workflow, `scripts/*.sh`, labeler config),
+commit it before reporting the work done — don't leave it sitting
+uncommitted for the coordinating session to discover later. Stage only the
+file(s) you actually touched (never `git add -A`/`.` — this repo's other
+guidance is explicit that broad adds risk sweeping in unrelated in-progress
+work), write a Conventional Commit message (`ci:` for workflow/script
+changes, matching this repo's `pr.yml` type list), and include the standard
+`Co-Authored-By: Claude <noreply@anthropic.com>` trailer. This is a plain
+local commit, not a push or a PR — those remain separate, explicit asks.
