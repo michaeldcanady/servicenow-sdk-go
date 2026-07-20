@@ -7,17 +7,25 @@ description: >
   or writing it fully from scratch (ADR 003), storing model properties in a
   Kiota BackingStore instead of plain struct fields so "absent" and "zero"
   stay distinguishable (ADR 002), and standardizing error sentinels/messaging
-  across the three separate error-sentinel locations (ADR 001). Consult this
-  BEFORE proposing or making changes to the request-builder/model
-  architecture, error handling conventions, or anything that would make this
-  SDK diverge from Kiota-generated SDK conventions (e.g. msgraph-sdk-go) --
-  these are not accidents or defaults, they were chosen over real
-  alternatives for stated reasons, and changing them without knowing why
-  risks silently undoing a considered trade-off. Also consult it before
-  answering any "why does this repo do X" / "why not just do Y instead"
-  question. Use it proactively even when not asked explicitly -- e.g. before
-  suggesting plain-struct models, a generated-from-OpenAPI client, or a
-  bespoke error type instead of the shared sentinels.
+  across the three separate error-sentinel locations (ADR 001). Also covers
+  the v2.0-era conventions: pointer-typed query parameters wired through
+  vanilla Kiota request-configuration (ADR 004), one generic core.PageIterator
+  instead of per-module wrappers (ADR 005), nil-receiver guards returning a
+  shared sentinel error instead of (nil, nil) (ADR 006), never scaffolding a
+  builder chain ahead of an implemented operation (ADR 007), and package/
+  symbol/URL names as independent naming axes (ADR 008). Consult this BEFORE
+  proposing or making changes to the request-builder/model architecture,
+  error handling conventions, pagination, nil-guard behavior, module naming,
+  or anything that would make this SDK diverge from Kiota-generated SDK
+  conventions (e.g. msgraph-sdk-go) -- these are not accidents or defaults,
+  they were chosen over real alternatives for stated reasons, and changing
+  them without knowing why risks silently undoing a considered trade-off.
+  Also consult it before answering any "why does this repo do X" / "why not
+  just do Y instead" question. Use it proactively even when not asked
+  explicitly -- e.g. before suggesting plain-struct models, a
+  generated-from-OpenAPI client, a per-module page-iterator wrapper, a bare
+  (nil, nil) nil-guard return, or a bespoke error type instead of the shared
+  sentinels.
 ---
 
 # Design decisions
@@ -31,8 +39,8 @@ top-level docs turns them into a decision log nobody can navigate, and
 duplicating the same reasoning in two places means it drifts out of sync the
 first time only one copy gets updated.
 
-There is no index file or template in `docs/adr/` yet — it's three files,
-numbered `001-`, `002-`, `003-` (three digits, not four). Read them directly:
+There is no index file or template in `docs/adr/` yet — it's eight files,
+numbered `001-` through `008-` (three digits, not four). Read them directly:
 
 1. [`001-error-standardization.md`](../../../docs/adr/001-error-standardization.md)
    — centralizes sentinel errors and message phrasing in the `/errors`
@@ -60,6 +68,31 @@ numbered `001-`, `002-`, `003-` (three digits, not four). Read them directly:
    this SDK looks hand-rolled and slightly different from upstream Kiota
    conventions — the divergence is either a considered ADR-003 trade-off or
    drift worth fixing, not a free design choice.
+4. [`004-vanilla-kiota-request-configuration.md`](../../../docs/adr/004-vanilla-kiota-request-configuration.md)
+   — every `*QueryParameters` struct uses pointer fields with
+   `uriparametername` tags through `abstractions.ConfigureRequestInformation`,
+   replacing a bespoke go-querystring wrapper, to match msgraph-sdk-go and let
+   "unset" and "zero" stay distinguishable. Sharp edge: new integer query
+   params must be `*int32`, not `*int` — the native encoder silently drops a
+   bare `*int`.
+5. [`005-generic-page-iterator-only.md`](../../../docs/adr/005-generic-page-iterator-only.md)
+   — `core.NewPageIterator[T]` is the one documented pagination pattern;
+   per-module wrapper constructors (the old `tableapi`/`attachmentapi` ones)
+   were removed and shouldn't be re-added for new modules, even for symmetry.
+6. [`006-nil-receiver-sentinel-error.md`](../../../docs/adr/006-nil-receiver-sentinel-error.md)
+   — nil-receiver guards on verb methods return `snerrors.ErrNilRequestBuilder`,
+   never a bare `(nil, nil)`/`nil`, so a nil builder fails loud at the call
+   site instead of silently succeeding. Enforced by the
+   `api-module-consistency-reviewer` agent and `new-api-module` skill.
+7. [`007-no-speculative-builder-chains.md`](../../../docs/adr/007-no-speculative-builder-chains.md)
+   — don't add a request-builder accessor for a URL segment until the
+   operation(s) behind it are actually implemented; a navigable chain with no
+   working verb method is worse than not having the chain at all.
+8. [`008-package-symbol-url-naming-independence.md`](../../../docs/adr/008-package-symbol-url-naming-independence.md)
+   — package names, exported symbol names, and accessor/URL-segment names are
+   independent naming axes (see `aggregationapi` package vs. `Stats*` types vs.
+   `Now().Stats()`); an inconsistency in one doesn't mean the other two need to
+   change too.
 
 Before touching an area covered by an ADR, or answering a "why"/"should we
 change this" question:
