@@ -2,11 +2,11 @@ package cmdbinstanceapi
 
 import (
 	"context"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -81,19 +81,18 @@ func (rB *CmdbClassRequestBuilder) Post(ctx context.Context, body CmdbInstance, 
 // ToGetRequestInformation converts request configurations to Get request information.
 func (rB *CmdbClassRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CmdbClassRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
+			requestInfo.Headers.AddAll(headers)
 		}
 		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
+			requestInfo.AddRequestOptions(options)
 		}
 		if queryParameters := config.QueryParameters; !conversion.IsNil(queryParameters) {
-			kiotaRequestInfo.AddQueryParameters(queryParameters)
+			requestInfo.AddQueryParameters(*queryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	return requestInfo, nil
 }
@@ -101,19 +100,18 @@ func (rB *CmdbClassRequestBuilder) ToGetRequestInformation(ctx context.Context, 
 // ToPostRequestInformation converts request configurations to Post request information.
 func (rB *CmdbClassRequestBuilder) ToPostRequestInformation(ctx context.Context, body CmdbInstance, config *CmdbClassRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
+			requestInfo.Headers.AddAll(headers)
 		}
 		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
+			requestInfo.AddRequestOptions(options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	if !conversion.IsNil(body) {
-		err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
+		err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 		if err != nil {
 			return nil, err
 		}

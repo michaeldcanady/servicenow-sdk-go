@@ -6,32 +6,32 @@ import (
 
 // ChangesetsRequestBuilderGetQueryParameters represents query parameters for GET /changesets.
 type ChangesetsRequestBuilderGetQueryParameters struct {
-	AppName *string `url:"appName,omitempty"`
-	Number  *string `url:"number,omitempty"`
-	State   *string `url:"state,omitempty"`
+	AppName *string `uriparametername:"appName"`
+	Number  *string `uriparametername:"number"`
+	State   *string `uriparametername:"state"`
 }
 
 // ChangesetsRequestBuilderDeleteQueryParameters represents query parameters for DELETE /changesets.
 type ChangesetsRequestBuilderDeleteQueryParameters struct {
-	ChangesetNumber *string `url:"changesetNumber,omitempty"`
+	ChangesetNumber *string `uriparametername:"changesetNumber"`
 }
 
 // ChangesetActivityRequestBuilderGetQueryParameters represents query parameters for GET /changesets/activity.
 type ChangesetActivityRequestBuilderGetQueryParameters struct {
-	ChangesetNumber *string  `url:"changesetNumber,omitempty"`
-	ReturnFields    []string `url:"returnFields,omitempty"`
+	ChangesetNumber *string  `uriparametername:"changesetNumber"`
+	ReturnFields    []string `uriparametername:"returnFields"`
 }
 
 // ImpactedSharedComponentsRequestBuilderGetQueryParameters represents query parameters for GET /changesets/impacted-shared-components.
 type ImpactedSharedComponentsRequestBuilderGetQueryParameters struct {
-	ChangesetNumber *string  `url:"changesetNumber,omitempty"`
-	ReturnFields    []string `url:"returnFields,omitempty"`
+	ChangesetNumber *string  `uriparametername:"changesetNumber"`
+	ReturnFields    []string `uriparametername:"returnFields"`
 }
 
 // ImpactedDeployablesRequestBuilderGetQueryParameters represents query parameters for GET /changesets/impacted-deployables.
 type ImpactedDeployablesRequestBuilderGetQueryParameters struct {
-	ChangesetNumber *string  `url:"changesetNumber,omitempty"`
-	ReturnFields    []string `url:"returnFields,omitempty"`
+	ChangesetNumber *string  `uriparametername:"changesetNumber"`
+	ReturnFields    []string `uriparametername:"returnFields"`
 }
 
 // Request Configurations

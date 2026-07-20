@@ -3,8 +3,9 @@ package attachmentapi
 import (
 	"context"
 	"errors"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -160,13 +161,11 @@ func (rB *AttachmentRequestBuilder) ToHeadRequestInformation(_ context.Context, 
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.HEAD, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
 
-	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.
@@ -176,11 +175,9 @@ func (rB *AttachmentRequestBuilder) ToGetRequestInformation(_ context.Context, r
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
 
-	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }

@@ -2,10 +2,10 @@ package appserviceapi
 
 import (
 	"context"
+
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -59,14 +59,12 @@ func (rB *servicePostRequestBuilder[TBody, TResponse]) toPostRequestInformation(
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	abstractions.ConfigureRequestInformation(requestInfo, config)
 
-	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
-
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }

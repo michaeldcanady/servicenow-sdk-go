@@ -196,13 +196,11 @@ func (rB *TableItemRequestBuilder[T]) ToGetRequestInformation(_ context.Context,
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
 
-	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }
 
 // ToDeleteRequestInformation converts provided parameters into request information
@@ -212,13 +210,11 @@ func (rB *TableItemRequestBuilder[T]) ToDeleteRequestInformation(_ context.Conte
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
 
-	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }
 
 // ToPutRequestInformation converts provided parameters into request information
@@ -228,19 +224,17 @@ func (rB *TableItemRequestBuilder[T]) ToPutRequestInformation(ctx context.Contex
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
 
-	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
-
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	if !conversion.IsNil(body) {
-		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body); err != nil {
+		if err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body); err != nil {
 			return nil, err
 		}
 	}
 
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }
 
 // ToPatchRequestInformation converts provided parameters into request information
@@ -250,17 +244,15 @@ func (rB *TableItemRequestBuilder[T]) ToPatchRequestInformation(ctx context.Cont
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PATCH, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
 
-	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
-
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	if !conversion.IsNil(body) {
-		if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body); err != nil {
+		if err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body); err != nil {
 			return nil, err
 		}
 	}
 
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }

@@ -6,14 +6,14 @@ import (
 
 // NodesRequestBuilderGetQueryParameters represents query parameters for GET /nodes.
 type NodesRequestBuilderGetQueryParameters struct {
-	SysId    *string `url:"sys_id,omitempty"`
-	ParentId *string `url:"parent_id,omitempty"`
-	Type     *string `url:"type,omitempty"`
+	SysId    *string `uriparametername:"sys_id"`
+	ParentId *string `uriparametername:"parent_id"`
+	Type     *string `uriparametername:"type"`
 }
 
 // ValidationRequestBuilderGetQueryParameters represents query parameters for GET /validation.
 type ValidationRequestBuilderGetQueryParameters struct {
-	CdmId *string `url:"cdm_id,omitempty"`
+	CdmId *string `uriparametername:"cdm_id"`
 }
 
 // Request Configurations

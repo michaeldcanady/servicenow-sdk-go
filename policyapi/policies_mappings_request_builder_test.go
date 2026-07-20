@@ -2,8 +2,10 @@ package policyapi
 
 import (
 	"context"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"testing"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
@@ -50,9 +52,9 @@ func TestPoliciesMappingsRequestBuilder_Delete(t *testing.T) {
 			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
 			config: &PoliciesMappingsRequestBuilderDeleteRequestConfiguration{
 				QueryParameters: &PolicyMappingsRequestBuilderDeleteQueryParameters{
-					AppName:        "app",
-					DeployableName: "deployable",
-					PolicyName:     "policy",
+					AppName:        internal.ToPointer("app"),
+					DeployableName: internal.ToPointer("deployable"),
+					PolicyName:     internal.ToPointer("policy"),
 				},
 			},
 			setup: func(adapter *mocking.MockRequestAdapter) {
@@ -78,8 +80,8 @@ func TestPoliciesMappingsRequestBuilder_Delete(t *testing.T) {
 			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
 			config: &PoliciesMappingsRequestBuilderDeleteRequestConfiguration{
 				QueryParameters: &PolicyMappingsRequestBuilderDeleteQueryParameters{
-					DeployableName: "deployable",
-					PolicyName:     "policy",
+					DeployableName: internal.ToPointer("deployable"),
+					PolicyName:     internal.ToPointer("policy"),
 				},
 			},
 			wantErr:    true,
@@ -90,8 +92,8 @@ func TestPoliciesMappingsRequestBuilder_Delete(t *testing.T) {
 			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
 			config: &PoliciesMappingsRequestBuilderDeleteRequestConfiguration{
 				QueryParameters: &PolicyMappingsRequestBuilderDeleteQueryParameters{
-					AppName:    "app",
-					PolicyName: "policy",
+					AppName:    internal.ToPointer("app"),
+					PolicyName: internal.ToPointer("policy"),
 				},
 			},
 			wantErr:    true,
@@ -102,8 +104,8 @@ func TestPoliciesMappingsRequestBuilder_Delete(t *testing.T) {
 			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
 			config: &PoliciesMappingsRequestBuilderDeleteRequestConfiguration{
 				QueryParameters: &PolicyMappingsRequestBuilderDeleteQueryParameters{
-					AppName:        "app",
-					DeployableName: "deployable",
+					AppName:        internal.ToPointer("app"),
+					DeployableName: internal.ToPointer("deployable"),
 				},
 			},
 			wantErr:    true,
@@ -148,9 +150,9 @@ func TestPoliciesMappingsRequestBuilder_ToDeleteRequestInformation(t *testing.T)
 			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
 			config: &PoliciesMappingsRequestBuilderDeleteRequestConfiguration{
 				QueryParameters: &PolicyMappingsRequestBuilderDeleteQueryParameters{
-					AppName:        "app",
-					DeployableName: "deployable",
-					PolicyName:     "policy",
+					AppName:        internal.ToPointer("app"),
+					DeployableName: internal.ToPointer("deployable"),
+					PolicyName:     internal.ToPointer("policy"),
 				},
 			},
 		},
@@ -199,9 +201,9 @@ func TestPoliciesMappingsRequestBuilder_Post(t *testing.T) {
 			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
 			config: &PoliciesMappingsRequestBuilderPostRequestConfiguration{
 				QueryParameters: &PoliciesMappingsRequestBuilderPostQueryParameters{
-					AppName:        "app",
-					DeployableName: "deployable",
-					PolicyName:     "policy",
+					AppName:        internal.ToPointer("app"),
+					DeployableName: internal.ToPointer("deployable"),
+					PolicyName:     internal.ToPointer("policy"),
 				},
 			},
 			setup: func(adapter *mocking.MockRequestAdapter) {
@@ -227,8 +229,8 @@ func TestPoliciesMappingsRequestBuilder_Post(t *testing.T) {
 			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
 			config: &PoliciesMappingsRequestBuilderPostRequestConfiguration{
 				QueryParameters: &PoliciesMappingsRequestBuilderPostQueryParameters{
-					DeployableName: "deployable",
-					PolicyName:     "policy",
+					DeployableName: internal.ToPointer("deployable"),
+					PolicyName:     internal.ToPointer("policy"),
 				},
 			},
 			wantErr:    true,
@@ -239,8 +241,8 @@ func TestPoliciesMappingsRequestBuilder_Post(t *testing.T) {
 			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
 			config: &PoliciesMappingsRequestBuilderPostRequestConfiguration{
 				QueryParameters: &PoliciesMappingsRequestBuilderPostQueryParameters{
-					AppName:    "app",
-					PolicyName: "policy",
+					AppName:    internal.ToPointer("app"),
+					PolicyName: internal.ToPointer("policy"),
 				},
 			},
 			wantErr:    true,
@@ -251,8 +253,8 @@ func TestPoliciesMappingsRequestBuilder_Post(t *testing.T) {
 			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
 			config: &PoliciesMappingsRequestBuilderPostRequestConfiguration{
 				QueryParameters: &PoliciesMappingsRequestBuilderPostQueryParameters{
-					AppName:        "app",
-					DeployableName: "deployable",
+					AppName:        internal.ToPointer("app"),
+					DeployableName: internal.ToPointer("deployable"),
 				},
 			},
 			wantErr:    true,
@@ -301,9 +303,9 @@ func TestPoliciesMappingsRequestBuilder_ToPostRequestInformation(t *testing.T) {
 			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
 			config: &PoliciesMappingsRequestBuilderPostRequestConfiguration{
 				QueryParameters: &PoliciesMappingsRequestBuilderPostQueryParameters{
-					AppName:        "app",
-					DeployableName: "deployable",
-					PolicyName:     "policy",
+					AppName:        internal.ToPointer("app"),
+					DeployableName: internal.ToPointer("deployable"),
+					PolicyName:     internal.ToPointer("policy"),
 				},
 			},
 		},

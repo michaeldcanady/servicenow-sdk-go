@@ -2,8 +2,9 @@ package appserviceapi
 
 import (
 	"context"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -130,16 +131,14 @@ func (rB *PopulateServiceRequestBuilder) ToPutRequestInformation(ctx context.Con
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	abstractions.ConfigureRequestInformation(requestInfo, config)
 
-	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
-
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }
 
 // ServiceDetailsRequestBuilder provides operations to update details of a CSDM service.
@@ -182,14 +181,12 @@ func (rB *ServiceDetailsRequestBuilder) ToPutRequestInformation(ctx context.Cont
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	abstractions.ConfigureRequestInformation(requestInfo, config)
 
-	internal.ConfigureRequestInformation(kiotaRequestInfo, config)
-
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }

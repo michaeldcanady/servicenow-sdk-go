@@ -91,11 +91,9 @@ func (rB *StatsRequestBuilder) ToGetRequestInformation(_ context.Context, reques
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
 
-	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }

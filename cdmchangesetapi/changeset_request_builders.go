@@ -5,7 +5,6 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -60,19 +59,18 @@ func (rB *ChangesetsRequestBuilder) ByID(id string) *ChangesetItemRequestBuilder
 
 func (rB *ChangesetsRequestBuilder) Get(ctx context.Context, config *ChangesetsRequestBuilderGetRequestConfiguration) (ChangesetsResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
-			kiotaRequestInfo.Headers.AddAll(config.Headers)
+			requestInfo.Headers.AddAll(config.Headers)
 		}
 		if config.Options != nil {
-			kiotaRequestInfo.AddRequestOptions(config.Options)
+			requestInfo.AddRequestOptions(config.Options)
 		}
 		if config.QueryParameters != nil {
-			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+			requestInfo.AddQueryParameters(*config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateChangesetsResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -82,16 +80,15 @@ func (rB *ChangesetsRequestBuilder) Get(ctx context.Context, config *ChangesetsR
 
 func (rB *ChangesetsRequestBuilder) Delete(ctx context.Context, config *ChangesetsRequestBuilderDeleteRequestConfiguration) error {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
-			kiotaRequestInfo.Headers.AddAll(config.Headers)
+			requestInfo.Headers.AddAll(config.Headers)
 		}
 		if config.Options != nil {
-			kiotaRequestInfo.AddRequestOptions(config.Options)
+			requestInfo.AddRequestOptions(config.Options)
 		}
 		if config.QueryParameters != nil {
-			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+			requestInfo.AddQueryParameters(*config.QueryParameters)
 		}
 	}
 	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, nil)
@@ -110,19 +107,18 @@ func NewChangesetActivityRequestBuilderInternal(pathParameters map[string]string
 
 func (rB *ChangesetActivityRequestBuilder) Get(ctx context.Context, config *ChangesetActivityRequestBuilderGetRequestConfiguration) (ChangesetActivityResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
-			kiotaRequestInfo.Headers.AddAll(config.Headers)
+			requestInfo.Headers.AddAll(config.Headers)
 		}
 		if config.Options != nil {
-			kiotaRequestInfo.AddRequestOptions(config.Options)
+			requestInfo.AddRequestOptions(config.Options)
 		}
 		if config.QueryParameters != nil {
-			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+			requestInfo.AddQueryParameters(*config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateChangesetActivityResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -160,16 +156,15 @@ func NewCommitStatusItemRequestBuilderInternal(pathParameters map[string]string,
 
 func (rB *CommitStatusItemRequestBuilder) Get(ctx context.Context, config *CommitStatusRequestBuilderGetRequestConfiguration) (CommitStatusResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
-			kiotaRequestInfo.Headers.AddAll(config.Headers)
+			requestInfo.Headers.AddAll(config.Headers)
 		}
 		if config.Options != nil {
-			kiotaRequestInfo.AddRequestOptions(config.Options)
+			requestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCommitStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -190,19 +185,18 @@ func NewImpactedSharedComponentsRequestBuilderInternal(pathParameters map[string
 
 func (rB *ImpactedSharedComponentsRequestBuilder) Get(ctx context.Context, config *ImpactedSharedComponentsRequestBuilderGetRequestConfiguration) (ImpactedSharedComponentsResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
-			kiotaRequestInfo.Headers.AddAll(config.Headers)
+			requestInfo.Headers.AddAll(config.Headers)
 		}
 		if config.Options != nil {
-			kiotaRequestInfo.AddRequestOptions(config.Options)
+			requestInfo.AddRequestOptions(config.Options)
 		}
 		if config.QueryParameters != nil {
-			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+			requestInfo.AddQueryParameters(*config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedSharedComponentsResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -223,19 +217,18 @@ func NewImpactedDeployablesRequestBuilderInternal(pathParameters map[string]stri
 
 func (rB *ImpactedDeployablesRequestBuilder) Get(ctx context.Context, config *ImpactedDeployablesRequestBuilderGetRequestConfiguration) (ImpactedDeployablesResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
-			kiotaRequestInfo.Headers.AddAll(config.Headers)
+			requestInfo.Headers.AddAll(config.Headers)
 		}
 		if config.Options != nil {
-			kiotaRequestInfo.AddRequestOptions(config.Options)
+			requestInfo.AddRequestOptions(config.Options)
 		}
 		if config.QueryParameters != nil {
-			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+			requestInfo.AddQueryParameters(*config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedDeployablesResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -272,16 +265,15 @@ func NewImpactedDeployablesBySysIdRequestBuilderInternal(pathParameters map[stri
 
 func (rB *ImpactedDeployablesBySysIdRequestBuilder) Get(ctx context.Context, config *ImpactedDeployablesBySysIdRequestBuilderGetRequestConfiguration) (ImpactedDeployablesBySysIdResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
-			kiotaRequestInfo.Headers.AddAll(config.Headers)
+			requestInfo.Headers.AddAll(config.Headers)
 		}
 		if config.Options != nil {
-			kiotaRequestInfo.AddRequestOptions(config.Options)
+			requestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedDeployablesBySysIdResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err

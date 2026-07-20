@@ -2,10 +2,10 @@ package documentsapi
 
 import (
 	"context"
+
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -65,17 +65,16 @@ func (rB *documentPostRequestBuilder) toPostRequestInformation(ctx context.Conte
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(requestConfiguration) {
-		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+		requestInfo.Headers.AddAll(requestConfiguration.Headers)
+		requestInfo.AddRequestOptions(requestConfiguration.Options)
 		if data := requestConfiguration.Data; !conversion.IsNil(data) {
-			if err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), data); err != nil {
+			if err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), data); err != nil {
 				return nil, err
 			}
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }

@@ -2,10 +2,10 @@ package documentsapi
 
 import (
 	"context"
+
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -54,13 +54,14 @@ func (rB *ExploreRequestBuilder) Get(ctx context.Context, requestConfiguration *
 // ToGetRequestInformation converts request configurations to Get request information.
 func (rB *ExploreRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *ExploreRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(requestConfiguration) {
-		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
-		kiotaRequestInfo.AddQueryParameters(requestConfiguration.QueryParameters)
+		requestInfo.Headers.AddAll(requestConfiguration.Headers)
+		requestInfo.AddRequestOptions(requestConfiguration.Options)
+		if requestConfiguration.QueryParameters != nil {
+			requestInfo.AddQueryParameters(*requestConfiguration.QueryParameters)
+		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }

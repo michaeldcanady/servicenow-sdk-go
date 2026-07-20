@@ -2,10 +2,10 @@ package cmdbinstanceapi
 
 import (
 	"context"
+
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -49,13 +49,12 @@ func (rB *CmdbRelationItemRequestBuilder) Delete(ctx context.Context, config *Cm
 // ToDeleteRequestInformation converts request configurations to Delete request information.
 func (rB *CmdbRelationItemRequestBuilder) ToDeleteRequestInformation(ctx context.Context, config *CmdbRelationItemRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if headers := config.Headers; !conversion.IsNil(headers) {
-			kiotaRequestInfo.Headers.AddAll(headers)
+			requestInfo.Headers.AddAll(headers)
 		}
 		if options := config.Options; !conversion.IsNil(options) {
-			kiotaRequestInfo.AddRequestOptions(options)
+			requestInfo.AddRequestOptions(options)
 		}
 	}
 

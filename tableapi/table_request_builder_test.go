@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -175,14 +176,14 @@ func TestTableRequestBuilder_ToRequestInformation(t *testing.T) {
 	t.Run("ToGetRequestInformation", func(t *testing.T) {
 		config := &TableRequestBuilderGetRequestConfiguration{
 			QueryParameters: &TableRequestBuilderGetQueryParameters{
-				Limit: 10,
+				Limit: internal.ToPointer(int32(10)),
 			},
 		}
 		requestInfo, err := builder.ToGetRequestInformation(context.Background(), config)
 		require.NoError(t, err)
 		assert.Equal(t, abstractions.GET, requestInfo.Method)
-		// We can't easily check URI as it depends on internal Kiota logic,
-		// but we can check if it was added to QueryParameters if it was a KiotaRequestInformation
+		// This builder is constructed via the raw-URL test shortcut, so GetUri()
+		// short-circuits template/query expansion here.
 	})
 
 	t.Run("ToPostRequestInformation", func(t *testing.T) {

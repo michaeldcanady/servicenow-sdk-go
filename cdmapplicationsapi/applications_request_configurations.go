@@ -6,36 +6,36 @@ import (
 
 // DeployablesRequestBuilderDeleteQueryParameters represents query parameters for DELETE /applications/deployables.
 type DeployablesRequestBuilderDeleteQueryParameters struct {
-	AppName *string `url:"appName,omitempty"`
-	Name    *string `url:"name,omitempty"`
+	AppName *string `uriparametername:"appName"`
+	Name    *string `uriparametername:"name"`
 }
 
 // SharedComponentsRequestBuilderDeleteQueryParameters represents query parameters for DELETE /applications/shared_components.
 type SharedComponentsRequestBuilderDeleteQueryParameters struct {
-	AppName             *string `url:"appName,omitempty"`
-	SharedComponentName *string `url:"sharedComponentName,omitempty"`
-	Name                *string `url:"name,omitempty"` // Support name too just in case
+	AppName             *string `uriparametername:"appName"`
+	SharedComponentName *string `uriparametername:"sharedComponentName"`
+	Name                *string `uriparametername:"name"` // Support name too just in case
 }
 
 type ExportsRequestBuilderGetQueryParameters struct {
-	AppName        *string `url:"appName,omitempty"`
-	DeployableName *string `url:"deployableName,omitempty"`
+	AppName        *string `uriparametername:"appName"`
+	DeployableName *string `uriparametername:"deployableName"`
 }
 
 type SharedLibrariesComponentsApplicationsRequestBuilderGetQueryParameters struct {
-	AppName             *string `url:"appName,omitempty"`
-	SharedComponentName *string `url:"sharedComponentName,omitempty"`
-	Name                *string `url:"name,omitempty"`
+	AppName             *string `uriparametername:"appName"`
+	SharedComponentName *string `uriparametername:"sharedComponentName"`
+	Name                *string `uriparametername:"name"`
 }
 
 type UploadsCollectionsFileRequestBuilderPostQueryParameters struct {
-	AppName        *string `url:"appName,omitempty"`
-	CollectionName *string `url:"collectionName,omitempty"`
+	AppName        *string `uriparametername:"appName"`
+	CollectionName *string `uriparametername:"collectionName"`
 }
 
 type UploadsDeployablesFileRequestBuilderPostQueryParameters struct {
-	AppName        *string `url:"appName,omitempty"`
-	DeployableName *string `url:"deployableName,omitempty"`
+	AppName        *string `uriparametername:"appName"`
+	DeployableName *string `uriparametername:"deployableName"`
 }
 
 // Request Configurations

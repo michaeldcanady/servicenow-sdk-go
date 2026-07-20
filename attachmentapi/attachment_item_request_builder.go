@@ -111,13 +111,11 @@ func (rB *AttachmentItemRequestBuilder) ToGetRequestInformation(_ context.Contex
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-
-	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
 
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }
 
 // ToDeleteRequestInformation converts request configurations to Delete request information.
@@ -127,11 +125,9 @@ func (rB *AttachmentItemRequestBuilder) ToDeleteRequestInformation(_ context.Con
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-
-	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+	abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
 
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }

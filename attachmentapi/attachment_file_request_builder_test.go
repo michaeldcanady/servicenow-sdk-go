@@ -272,7 +272,7 @@ type attachmentFilePostToRequestInfoTestCase struct {
 	nilRequestAdapter       bool
 	expectedErr             bool
 	expectedHeaders         map[string][]string
-	expectedQueryParameters map[string]any
+	expectedQueryParameters map[string]string
 	expectedOptionsKeys     []string
 }
 
@@ -343,7 +343,7 @@ func assertAttachmentFilePostRequestInformation(t *testing.T, tt attachmentFileP
 	}
 
 	if tt.expectedQueryParameters != nil {
-		assert.Equal(t, tt.expectedQueryParameters, reqInfo.QueryParametersAny)
+		assert.Equal(t, tt.expectedQueryParameters, reqInfo.QueryParameters)
 	}
 
 	if len(tt.expectedOptionsKeys) > 0 {
@@ -409,8 +409,8 @@ func TestAttachmentFileRequestBuilder_ToPostRequestInformation(t *testing.T) {
 					FileName: internal.ToPointer("test.txt"),
 				},
 			},
-			expectedQueryParameters: map[string]any{
-				"file_name": []any{"test.txt"},
+			expectedQueryParameters: map[string]string{
+				"file_name": "test.txt",
 			},
 		},
 		{
