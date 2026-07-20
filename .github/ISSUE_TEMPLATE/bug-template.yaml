@@ -30,15 +30,26 @@ body:
     id: module
     attributes:
       label: Affected Module / API
+      description: >
+        Used to auto-apply a `module: *` label so contributors can filter issues by area they know.
+        Pick the closest match — see the package list in the repo root if you're not sure which
+        package this maps to.
       options:
         - table-api
         - attachment-api
         - batch-api
-        - cdm (applications/policies/changesets/editor)
-        - cmdb
         - case-api
+        - cdm (applications/changesets/editor)
+        - cmdb (cmdb-instance-api)
+        - documents-api
+        - account-api
+        - actsub-api (activity subscription)
+        - aggregation-api (stats)
+        - appointment-booking-api
+        - app-service-api
         - authentication / credentials
         - core / request pipeline
+        - all / cross-cutting
         - other / not sure
     validations:
       required: true
@@ -75,6 +86,21 @@ body:
     validations:
       required: false
 
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Estimated Difficulty (maintainer use)
+      description: >
+        Leave as "not triaged yet" if you're filing this — a maintainer sets this during triage so
+        contributors browsing issues can self-select work matching their skill level/available time.
+      options:
+        - not triaged yet
+        - good first issue (single module, no design decisions)
+        - intermediate (touches one module, some design judgment)
+        - advanced (cross-cutting or requires design discussion)
+    validations:
+      required: false
+
   - type: textarea
     id: additional-context
     attributes:
@@ -88,7 +114,7 @@ body:
     attributes:
       label: Before submitting
       options:
-        - label: I searched existing issues for a duplicate of this bug.
+        - label: I searched existing issues (including closed ones) for a duplicate of this bug.
           required: true
         - label: I reproduced this on the latest released version.
           required: true
