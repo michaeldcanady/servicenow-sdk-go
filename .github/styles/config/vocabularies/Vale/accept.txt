@@ -177,6 +177,7 @@ sys_id
 (?i)accessors?
 ADRs?
 (?i)backoff
+(?i)backport(s|ed|ing)?
 (?i)changesets?('s)?
 CIs?('s)?
 (?i)deployables?('s)?
