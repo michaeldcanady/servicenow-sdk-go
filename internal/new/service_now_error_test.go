@@ -103,3 +103,40 @@ func TestServicenowError_ErrorBranches(t *testing.T) {
 		t.Errorf("Expected BS nil error, got %v", err)
 	}
 }
+
+func TestServicenowError_Error(t *testing.T) {
+	msg := "boom"
+	detail := "extra"
+
+	withMessage := NewMainError()
+	_ = withMessage.SetMessage(&msg)
+
+	withDetail := NewMainError()
+	_ = withDetail.SetDetail(&detail)
+
+	newErr := func(main MainErrorable) *ServicenowError {
+		e := NewServicenowError()
+		if main != nil {
+			_ = e.setError(main)
+		}
+		return e
+	}
+
+	tests := []struct {
+		name     string
+		model    *ServicenowError
+		expected string
+	}{
+		{"message set", newErr(withMessage), msg},
+		{"only detail set", newErr(withDetail), detail},
+		{"error key absent", newErr(nil), "unknown service-now error"},
+		{"message and detail absent", newErr(NewMainError()), "unknown service-now error"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.model.Error(); got != tt.expected {
+				t.Errorf("got %q, expected %q", got, tt.expected)
+			}
+		})
+	}
+}
