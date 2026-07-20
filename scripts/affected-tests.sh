@@ -7,7 +7,10 @@
 # Usage:
 #   scripts/affected-tests.sh [base-ref] [--run]
 #
-#   base-ref   Ref to diff against (default: origin/main). Use HEAD~1 for the last commit.
+#   base-ref   Ref to diff against (default: the remote's default branch, e.g.
+#              origin/main — resolved dynamically via `origin/HEAD`, not hardcoded,
+#              so this still works if the default branch is ever renamed). Use
+#              HEAD~1 for the last commit.
 #   --run      Instead of just printing the affected package list, run `go test` on it.
 #
 # How it works:
@@ -24,7 +27,7 @@
 
 set -euo pipefail
 
-BASE_REF="origin/main"
+BASE_REF=""
 DO_RUN=false
 
 for arg in "$@"; do
@@ -33,6 +36,13 @@ for arg in "$@"; do
     *) BASE_REF="$arg" ;;
   esac
 done
+
+if [ -z "$BASE_REF" ]; then
+  # Resolve the remote's actual default branch instead of assuming "main" -
+  # falls back to "origin/main" only if origin/HEAD was never set locally
+  # (e.g. a fresh shallow clone with no `git remote set-head` run).
+  BASE_REF=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null || echo "origin/main")
+fi
 
 echo "Diffing against ${BASE_REF}..." >&2
 
