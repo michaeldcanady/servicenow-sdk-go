@@ -29,11 +29,13 @@ func _() {
 	}
 
 	// Step 2: Choose the aggregates and the records they run over
+	wantCount := true
+	statsQuery := "active=true"
 	config := &aggregationapi.StatsRequestBuilderGetRequestConfiguration{
 		QueryParameters: &aggregationapi.StatsRequestBuilderGetQueryParameters{
-			Count:     true,
+			Count:     &wantCount,
 			SumFields: []string{"reassignment_count"},
-			Query:     "active=true",
+			Query:     &statsQuery,
 		},
 	}
 

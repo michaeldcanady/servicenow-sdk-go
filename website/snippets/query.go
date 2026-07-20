@@ -30,7 +30,7 @@ func _() {
 			IsOneOf("1", "2")).String()
 
 	params := &tableapi.TableRequestBuilderGetQueryParameters{
-		Query: q2,
+		Query: &q2,
 	}
 
 	config := &tableapi.TableRequestBuilderGetRequestConfiguration{

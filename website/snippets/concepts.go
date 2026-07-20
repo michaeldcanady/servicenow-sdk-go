@@ -58,10 +58,12 @@ func conceptsConfiguration() {
 	// [START concepts_configuration]
 	// Every verb has its own RequestConfiguration and QueryParameters types.
 	// Pass nil when you have nothing to configure.
+	query := "active=true^priority=1"
+	limit := int32(10)
 	config := &tableapi.TableRequestBuilderGetRequestConfiguration{
 		QueryParameters: &tableapi.TableRequestBuilderGetQueryParameters{
-			Query: "active=true^priority=1",
-			Limit: 10,
+			Query: &query,
+			Limit: &limit,
 		},
 	}
 

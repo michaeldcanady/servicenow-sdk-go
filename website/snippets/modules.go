@@ -402,11 +402,13 @@ func moduleStats() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 
 	// [START module_stats]
+	wantCount := true
+	statsQuery := "active=true"
 	config := &aggregationapi.StatsRequestBuilderGetRequestConfiguration{
 		QueryParameters: &aggregationapi.StatsRequestBuilderGetQueryParameters{
-			Count:     true,
+			Count:     &wantCount,
 			SumFields: []string{"reassignment_count"},
-			Query:     "active=true",
+			Query:     &statsQuery,
 		},
 	}
 

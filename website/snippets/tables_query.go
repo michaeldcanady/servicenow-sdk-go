@@ -29,10 +29,12 @@ func _() {
 	}
 
 	// Step 2: Configure the query — an encoded query filters server-side
+	tableQuery := "active=true^priority=1"
+	limit := int32(10)
 	config := &tableapi.TableRequestBuilderGetRequestConfiguration{
 		QueryParameters: &tableapi.TableRequestBuilderGetQueryParameters{
-			Query: "active=true^priority=1",
-			Limit: 10,
+			Query: &tableQuery,
+			Limit: &limit,
 		},
 	}
 
