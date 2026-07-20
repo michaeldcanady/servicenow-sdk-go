@@ -7,10 +7,14 @@
 # Usage:
 #   scripts/affected-tests.sh [base-ref] [--run]
 #
-#   base-ref   Ref to diff against (default: the remote's default branch, e.g.
-#              origin/main — resolved dynamically via `origin/HEAD`, not hardcoded,
-#              so this still works if the default branch is ever renamed). Use
-#              HEAD~1 for the last commit.
+#   base-ref   Ref to diff against. Resolved in this order if omitted:
+#                1. $GITHUB_BASE_REF (set by GitHub Actions on pull_request
+#                   events to the actual PR base branch, e.g. "main" or a
+#                   release branch) - CI must fetch that ref too, since
+#                   actions/checkout defaults to fetch-depth: 1.
+#                2. origin/HEAD, if resolvable (local dev clones).
+#                3. origin/main as a last-resort fallback.
+#              Use HEAD~1 for the last commit.
 #   --run      Instead of just printing the affected package list, run `go test` on it.
 #
 # How it works:
@@ -38,10 +42,15 @@ for arg in "$@"; do
 done
 
 if [ -z "$BASE_REF" ]; then
-  # Resolve the remote's actual default branch instead of assuming "main" -
-  # falls back to "origin/main" only if origin/HEAD was never set locally
-  # (e.g. a fresh shallow clone with no `git remote set-head` run).
-  BASE_REF=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null || echo "origin/main")
+  if [ -n "${GITHUB_BASE_REF:-}" ]; then
+    # Set by GitHub Actions on pull_request events to the PR's actual base
+    # branch - this is the only correct source in CI, since the PR base
+    # isn't necessarily the repo's default branch (e.g. a PR into a release
+    # branch), and a shallow checkout has no usable origin/HEAD anyway.
+    BASE_REF="origin/${GITHUB_BASE_REF}"
+  else
+    BASE_REF=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null || echo "origin/main")
+  fi
 fi
 
 echo "Diffing against ${BASE_REF}..." >&2
