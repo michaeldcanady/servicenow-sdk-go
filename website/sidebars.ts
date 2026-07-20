@@ -9,6 +9,7 @@ const sidebars: SidebarsConfig = {
     'getting-started',
     'core-concepts',
     'user-guide/migrate-v1-to-v2',
+    'user-guide/support-policy',
     'user-guide/configuration',
     {
       type: 'category',

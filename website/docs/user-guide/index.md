@@ -6,6 +6,8 @@ Task-oriented guides for the SDK's core features. If you're new, start with
 
 - **[Migrating from v1 to v2](migrate-v1-to-v2.mdx):** Coming from a 1.x
   release? Map every v1 construct to its v2 replacement.
+- **[Support Policy](support-policy.md):** Which Go versions and SDK
+  versions are supported, and for how long.
 - **[Authentication](authentication/index.md):** Choose and configure a
   credential flow — Basic, OAuth2 authorization code, client credentials,
   JWT bearer, or ROPC.
