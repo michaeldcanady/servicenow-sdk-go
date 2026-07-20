@@ -124,18 +124,16 @@ func (rB *AttachmentFileRequestBuilder) ToPostRequestInformation(_ context.Conte
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
+	abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
 
-	internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
-
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
 	requestAdapter := rB.GetRequestAdapter()
 	if conversion.IsNil(requestAdapter) {
 		return nil, snerrors.ErrNilRequestAdapter
 	}
 
-	kiotaRequestInfo.SetStreamContentAndContentType(media.GetData(), media.GetContentType())
+	requestInfo.SetStreamContentAndContentType(media.GetData(), media.GetContentType())
 
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }

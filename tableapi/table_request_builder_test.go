@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -175,14 +176,14 @@ func TestTableRequestBuilder_ToRequestInformation(t *testing.T) {
 	t.Run("ToGetRequestInformation", func(t *testing.T) {
 		config := &TableRequestBuilderGetRequestConfiguration{
 			QueryParameters: &TableRequestBuilderGetQueryParameters{
-				Limit: 10,
+				Limit: internal.ToPointer(int32(10)),
 			},
 		}
 		requestInfo, err := builder.ToGetRequestInformation(context.Background(), config)
 		require.NoError(t, err)
 		assert.Equal(t, abstractions.GET, requestInfo.Method)
-		// We can't easily check URI as it depends on internal Kiota logic,
-		// but we can check if it was added to QueryParameters if it was a KiotaRequestInformation
+		// This builder is constructed via the raw-URL test shortcut, so GetUri()
+		// short-circuits template/query expansion here.
 	})
 
 	t.Run("ToPostRequestInformation", func(t *testing.T) {
@@ -206,4 +207,39 @@ func TestTableRequestBuilder_ToRequestInformation(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, abstractions.HEAD, requestInfo.Method)
 	})
+}
+
+// TestTableRequestBuilder_ToGetRequestInformation_QueryEncoding builds the
+// request through a "baseurl"-based path-parameter builder (the shape the
+// real client uses) instead of the raw-URL test shortcut, so GetUri()
+// actually expands the URL template and query parameters. This locks in that
+// the pointer-typed, uriparametername-tagged QueryParameters fields encode
+// correctly end-to-end via abstractions.ConfigureRequestInformation.
+func TestTableRequestBuilder_ToGetRequestInformation_QueryEncoding(t *testing.T) {
+	mockAdapter := new(mocking.MockRequestAdapter)
+	builder := NewDefaultTableRequestBuilderInternal(
+		map[string]string{"baseurl": "https://example.com", "table": "incident"},
+		mockAdapter,
+	)
+
+	displayValue := DisplayValueTrue
+	config := &TableRequestBuilderGetRequestConfiguration{
+		QueryParameters: &TableRequestBuilderGetQueryParameters{
+			Query:        internal.ToPointer("active=true"),
+			Limit:        internal.ToPointer(int32(10)),
+			Fields:       []string{"sys_id", "number"},
+			DisplayValue: &displayValue,
+		},
+	}
+
+	requestInfo, err := builder.ToGetRequestInformation(context.Background(), config)
+	require.NoError(t, err)
+
+	uri, err := requestInfo.GetUri()
+	require.NoError(t, err)
+	assert.Equal(
+		t,
+		"https://example.com/api/now/v1/table/incident?sysparm_display_value=true&sysparm_fields=sys_id,number&sysparm_limit=10&sysparm_query=active%3Dtrue",
+		uri.String(),
+	)
 }

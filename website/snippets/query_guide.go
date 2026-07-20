@@ -37,7 +37,7 @@ func _() {
 	// Step 3: Use it in the request configuration
 	config := &tableapi.TableRequestBuilderGetRequestConfiguration{
 		QueryParameters: &tableapi.TableRequestBuilderGetQueryParameters{
-			Query: q,
+			Query: &q,
 		},
 	}
 

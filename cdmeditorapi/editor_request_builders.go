@@ -5,7 +5,6 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -59,19 +58,18 @@ func (rB *NodesRequestBuilder) ByID(id string) *NodeItemRequestBuilder {
 
 func (rB *NodesRequestBuilder) Get(ctx context.Context, config *NodesRequestBuilderGetRequestConfiguration) (NodesResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
-			kiotaRequestInfo.Headers.AddAll(config.Headers)
+			requestInfo.Headers.AddAll(config.Headers)
 		}
 		if config.Options != nil {
-			kiotaRequestInfo.AddRequestOptions(config.Options)
+			requestInfo.AddRequestOptions(config.Options)
 		}
 		if config.QueryParameters != nil {
-			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+			requestInfo.AddQueryParameters(*config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateNodesResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -81,17 +79,16 @@ func (rB *NodesRequestBuilder) Get(ctx context.Context, config *NodesRequestBuil
 
 func (rB *NodesRequestBuilder) Post(ctx context.Context, body NodeCreateRequest, config *NodesRequestBuilderPostRequestConfiguration) (NodeResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
-			kiotaRequestInfo.Headers.AddAll(config.Headers)
+			requestInfo.Headers.AddAll(config.Headers)
 		}
 		if config.Options != nil {
-			kiotaRequestInfo.AddRequestOptions(config.Options)
+			requestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -115,17 +112,16 @@ func NewNodeItemRequestBuilderInternal(pathParameters map[string]string, request
 
 func (rB *NodeItemRequestBuilder) Put(ctx context.Context, body NodeUpdateRequest, config *NodeItemRequestBuilderPutRequestConfiguration) (NodeResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
-			kiotaRequestInfo.Headers.AddAll(config.Headers)
+			requestInfo.Headers.AddAll(config.Headers)
 		}
 		if config.Options != nil {
-			kiotaRequestInfo.AddRequestOptions(config.Options)
+			requestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	err := kiotaRequestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -138,16 +134,15 @@ func (rB *NodeItemRequestBuilder) Put(ctx context.Context, body NodeUpdateReques
 
 func (rB *NodeItemRequestBuilder) Delete(ctx context.Context, config *NodeItemRequestBuilderDeleteRequestConfiguration) (NodeDeleteResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
-			kiotaRequestInfo.Headers.AddAll(config.Headers)
+			requestInfo.Headers.AddAll(config.Headers)
 		}
 		if config.Options != nil {
-			kiotaRequestInfo.AddRequestOptions(config.Options)
+			requestInfo.AddRequestOptions(config.Options)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateNodeDeleteResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
@@ -168,19 +163,18 @@ func NewValidationRequestBuilderInternal(pathParameters map[string]string, reque
 
 func (rB *ValidationRequestBuilder) Get(ctx context.Context, config *ValidationRequestBuilderGetRequestConfiguration) (ValidationResponse, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
-			kiotaRequestInfo.Headers.AddAll(config.Headers)
+			requestInfo.Headers.AddAll(config.Headers)
 		}
 		if config.Options != nil {
-			kiotaRequestInfo.AddRequestOptions(config.Options)
+			requestInfo.AddRequestOptions(config.Options)
 		}
 		if config.QueryParameters != nil {
-			kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+			requestInfo.AddQueryParameters(*config.QueryParameters)
 		}
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateValidationResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err

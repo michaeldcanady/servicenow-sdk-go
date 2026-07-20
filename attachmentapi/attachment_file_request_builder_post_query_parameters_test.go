@@ -3,8 +3,8 @@ package attachmentapi
 import (
 	"testing"
 
-	"github.com/google/go-querystring/query"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,17 +12,17 @@ func TestAttachmentFileRequestBuilderPostQueryParameters(t *testing.T) {
 	tests := []struct {
 		name     string
 		params   *AttachmentFileRequestBuilderPostQueryParameters
-		expected map[string][]string
+		expected map[string]string
 	}{
 		{
 			name:     "nil parameters",
 			params:   nil,
-			expected: map[string][]string{},
+			expected: map[string]string{},
 		},
 		{
 			name:     "empty parameters",
 			params:   &AttachmentFileRequestBuilderPostQueryParameters{},
-			expected: map[string][]string{},
+			expected: map[string]string{},
 		},
 		{
 			name: "all parameters set",
@@ -32,11 +32,11 @@ func TestAttachmentFileRequestBuilderPostQueryParameters(t *testing.T) {
 				TableName:         internal.ToPointer("incident"),
 				TableSysID:        internal.ToPointer("sys123"),
 			},
-			expected: map[string][]string{
-				"encryption_context": {"ctx123"},
-				"file_name":          {"test.txt"},
-				"table_name":         {"incident"},
-				"table_sys_id":       {"sys123"},
+			expected: map[string]string{
+				"encryption_context": "ctx123",
+				"file_name":          "test.txt",
+				"table_name":         "incident",
+				"table_sys_id":       "sys123",
 			},
 		},
 		{
@@ -45,29 +45,23 @@ func TestAttachmentFileRequestBuilderPostQueryParameters(t *testing.T) {
 				FileName:   internal.ToPointer("test.txt"),
 				TableSysID: internal.ToPointer("sys123"),
 			},
-			expected: map[string][]string{
-				"file_name":    {"test.txt"},
-				"table_sys_id": {"sys123"},
+			expected: map[string]string{
+				"file_name":    "test.txt",
+				"table_sys_id": "sys123",
 			},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			requestInfo := abstractions.NewRequestInformation()
 			if tt.params == nil {
-				values, err := query.Values(tt.params)
-				assert.NoError(t, err)
-				assert.Empty(t, values)
-				return
+				requestInfo.AddQueryParameters(nil)
+			} else {
+				requestInfo.AddQueryParameters(*tt.params)
 			}
 
-			values, err := query.Values(tt.params)
-			assert.NoError(t, err)
-
-			assert.Equal(t, len(tt.expected), len(values))
-			for k, expectedVal := range tt.expected {
-				assert.Equal(t, expectedVal, values[k])
-			}
+			assert.Equal(t, tt.expected, requestInfo.QueryParameters)
 		})
 	}
 }

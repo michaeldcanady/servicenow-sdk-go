@@ -2,6 +2,7 @@ package documentsapi
 
 import (
 	"context"
+
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -54,12 +55,11 @@ func (rB *ContentRequestBuilder) Get(ctx context.Context, requestConfiguration *
 // ToGetRequestInformation converts request configurations to Get request information.
 func (rB *ContentRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *ContentRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(requestConfiguration) {
-		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+		requestInfo.Headers.AddAll(requestConfiguration.Headers)
+		requestInfo.AddRequestOptions(requestConfiguration.Options)
 	}
-	kiotaRequestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationOctetStream)
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationOctetStream)
 
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }

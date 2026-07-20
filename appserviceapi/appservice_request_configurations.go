@@ -10,9 +10,9 @@ type CreateRequestConfiguration = abstractions.RequestConfiguration[abstractions
 // FindServiceQueryParameters represents the query parameters for a find_service request.
 type FindServiceQueryParameters struct {
 	// Name of the application service (required if number is not provided)
-	Name *string `url:"name,omitempty"`
+	Name *string `uriparametername:"name"`
 	// Number of the application service (required if name is not provided)
-	Number *string `url:"number,omitempty"`
+	Number *string `uriparametername:"number"`
 }
 
 // FindServiceRequestConfiguration represents the configuration for a find_service request.

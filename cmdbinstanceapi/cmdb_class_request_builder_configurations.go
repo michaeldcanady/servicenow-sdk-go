@@ -6,9 +6,9 @@ import (
 
 // CmdbClassRequestBuilderGetQueryParameters ...
 type CmdbClassRequestBuilderGetQueryParameters struct {
-	Query  *string `url:"sysparm_query,omitempty"`
-	Limit  *int    `url:"sysparm_limit,omitempty"`
-	Offset *int    `url:"sysparm_offset,omitempty"`
+	Query  *string `uriparametername:"sysparm_query"`
+	Limit  *int32  `uriparametername:"sysparm_limit"`
+	Offset *int32  `uriparametername:"sysparm_offset"`
 }
 
 // CmdbClassRequestBuilderGetRequestConfiguration ...

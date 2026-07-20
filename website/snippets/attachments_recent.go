@@ -32,7 +32,7 @@ func _() {
 	}
 
 	// Step 3: List attachments (filter using query params as needed)
-	limit := 1
+	limit := int32(1)
 	encodedQuery := "ORDERBYDESCsys_created_on"
 
 	config := &attachmentapi.AttachmentRequestBuilderGetRequestConfiguration{

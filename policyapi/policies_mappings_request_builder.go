@@ -7,7 +7,6 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -49,15 +48,15 @@ func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestCon
 	}
 
 	queryParameters := requestConfiguration.QueryParameters
-	if queryParameters.AppName == "" {
+	if queryParameters.AppName == nil || *queryParameters.AppName == "" {
 		return errors.New("requestConfiguration.QueryParameters.AppName is required")
 	}
 
-	if queryParameters.DeployableName == "" {
+	if queryParameters.DeployableName == nil || *queryParameters.DeployableName == "" {
 		return errors.New("requestConfiguration.QueryParameters.DeployableName is required")
 	}
 
-	if queryParameters.PolicyName == "" {
+	if queryParameters.PolicyName == nil || *queryParameters.PolicyName == "" {
 		return errors.New("requestConfiguration.QueryParameters.PolicyName is required")
 	}
 
@@ -88,15 +87,15 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 	}
 
 	queryParameters := requestConfiguration.QueryParameters
-	if queryParameters.AppName == "" {
+	if queryParameters.AppName == nil || *queryParameters.AppName == "" {
 		return nil, errors.New("requestConfiguration.QueryParameters.AppName is required")
 	}
 
-	if queryParameters.DeployableName == "" {
+	if queryParameters.DeployableName == nil || *queryParameters.DeployableName == "" {
 		return nil, errors.New("requestConfiguration.QueryParameters.DeployableName is required")
 	}
 
-	if queryParameters.PolicyName == "" {
+	if queryParameters.PolicyName == nil || *queryParameters.PolicyName == "" {
 		return nil, errors.New("requestConfiguration.QueryParameters.PolicyName is required")
 	}
 
@@ -129,12 +128,11 @@ func (rB *PoliciesMappingsRequestBuilder) ToPostRequestInformation(_ context.Con
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(requestConfiguration) {
-		internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+		abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
 	}
 
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }
 
 func (rB *PoliciesMappingsRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
@@ -143,10 +141,9 @@ func (rB *PoliciesMappingsRequestBuilder) ToDeleteRequestInformation(_ context.C
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(requestConfiguration) {
-		internal.ConfigureRequestInformation(kiotaRequestInfo, requestConfiguration)
+		abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
 	}
 
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }

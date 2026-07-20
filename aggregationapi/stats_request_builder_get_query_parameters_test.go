@@ -3,55 +3,64 @@ package aggregationapi
 import (
 	"testing"
 
-	"github.com/google/go-querystring/query"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestStatsRequestBuilderGetQueryParameters_Encoding(t *testing.T) {
 	tests := []struct {
 		name     string
 		params   StatsRequestBuilderGetQueryParameters
-		expected string
+		expected map[string]any
 	}{
 		{
 			name:     "zero value omits everything",
 			params:   StatsRequestBuilderGetQueryParameters{},
-			expected: "",
+			expected: map[string]any{},
 		},
 		{
 			name: "count only",
 			params: StatsRequestBuilderGetQueryParameters{
-				Count: true,
+				Count: internal.ToPointer(true),
 			},
-			expected: "sysparm_count=true",
+			expected: map[string]any{"sysparm_count": "true"},
 		},
 		{
 			name: "list fields are comma-joined into a single value",
 			params: StatsRequestBuilderGetQueryParameters{
 				SumFields: []string{"reassignment_count", "escalation"},
 			},
-			expected: "sysparm_sum_fields=reassignment_count%2Cescalation",
+			expected: map[string]any{"sysparm_sum_fields": "reassignment_count,escalation"},
 		},
 		{
 			name: "display value enum encodes its string form",
 			params: StatsRequestBuilderGetQueryParameters{
-				DisplayValue: DisplayValueAll,
+				DisplayValue: internal.ToPointer(DisplayValueAll),
 			},
-			expected: "sysparm_display_value=all",
+			expected: map[string]any{"sysparm_display_value": "all"},
 		},
 		{
 			name:     "unset display value is omitted, not sent as \"unknown\"",
-			params:   StatsRequestBuilderGetQueryParameters{DisplayValue: DisplayValueUnknown},
-			expected: "",
+			params:   StatsRequestBuilderGetQueryParameters{},
+			expected: map[string]any{},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			values, err := query.Values(tt.params)
-			require.NoError(t, err)
-			assert.Equal(t, tt.expected, values.Encode())
+			requestInfo := abstractions.NewRequestInformation()
+			requestInfo.AddQueryParameters(tt.params)
+
+			got := map[string]any{}
+			for k, v := range requestInfo.QueryParametersAny {
+				got[k] = v
+			}
+			for k, v := range requestInfo.QueryParameters {
+				got[k] = v
+			}
+
+			assert.Equal(t, tt.expected, got)
 		})
 	}
 }

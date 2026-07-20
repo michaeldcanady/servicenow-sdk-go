@@ -263,10 +263,11 @@ func (c *tableTestContext) theResponseShouldBeA404Error() error {
 }
 
 func (c *tableTestContext) iRequestIncidentsWithQueryAndLimit(query string, limit int) error {
+	limit32 := int32(limit)
 	config := &tableapi.TableRequestBuilderGetRequestConfiguration{
 		QueryParameters: &tableapi.TableRequestBuilderGetQueryParameters{
-			Query: query,
-			Limit: limit,
+			Query: &query,
+			Limit: &limit32,
 		},
 	}
 	resp, err := c.client.Now().Table("incident").Get(context.Background(), config)
@@ -308,9 +309,10 @@ func (c *tableTestContext) eachRecordShouldHaveSetTo(field, value string) error 
 }
 
 func (c *tableTestContext) iRequestIncidentsSortedByDescending(field string) error {
+	sortQuery := "ORDERBYDESC" + field
 	config := &tableapi.TableRequestBuilderGetRequestConfiguration{
 		QueryParameters: &tableapi.TableRequestBuilderGetQueryParameters{
-			Query: "ORDERBYDESC" + field,
+			Query: &sortQuery,
 		},
 	}
 	resp, err := c.client.Now().Table("incident").Get(context.Background(), config)
@@ -355,9 +357,10 @@ func (c *tableTestContext) iSetTheFieldsTo(fields []string) error {
 }
 
 func (c *tableTestContext) iUseTheTablePageIteratorToFetchRecords() error {
+	pageSize := int32(c.pageSize)
 	config := &tableapi.TableRequestBuilderGetRequestConfiguration{
 		QueryParameters: &tableapi.TableRequestBuilderGetQueryParameters{
-			Limit:  c.pageSize,
+			Limit:  &pageSize,
 			Fields: c.fields,
 		},
 	}

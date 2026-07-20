@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
@@ -33,8 +32,7 @@ func TestNodesRequestBuilder_Get(t *testing.T) {
 			},
 		}
 		requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
-		kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-		kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+		requestInfo.AddQueryParameters(*config.QueryParameters)
 
 		uri, _ := requestInfo.GetUri()
 		assert.Equal(t, "https://example.service-now.com/api/sn_cdm/editor/v1/nodes?sys_id=123", uri.String())
@@ -118,8 +116,7 @@ func TestValidationRequestBuilder_Get(t *testing.T) {
 			},
 		}
 		requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
-		kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-		kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+		requestInfo.AddQueryParameters(*config.QueryParameters)
 
 		uri, _ := requestInfo.GetUri()
 		assert.Equal(t, "https://example.service-now.com/api/sn_cdm/editor/v1/validation?cdm_id=cdm456", uri.String())

@@ -332,9 +332,11 @@ func tableGuideSnippets() {
 		log.Fatal(err)
 	}
 
+	tableQuery := "priority=1^active=true"
+	limit := int32(10)
 	params := &tableapi.TableRequestBuilderGetQueryParameters{
-		Query: "priority=1^active=true",
-		Limit: 10,
+		Query: &tableQuery,
+		Limit: &limit,
 	}
 
 	config := &tableapi.TableRequestBuilderGetRequestConfiguration{

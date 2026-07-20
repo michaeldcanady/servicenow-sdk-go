@@ -3,7 +3,6 @@ package cdmchangesetapi
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -21,8 +20,7 @@ func TestChangesetsRequestBuilder_Get(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+	requestInfo.AddQueryParameters(*config.QueryParameters)
 
 	uri, _ := requestInfo.GetUri()
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/changesets?appName=test_app", uri.String())
@@ -40,8 +38,7 @@ func TestChangesetActivityRequestBuilder_Get(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+	requestInfo.AddQueryParameters(*config.QueryParameters)
 
 	uri, _ := requestInfo.GetUri()
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/changesets/activity?changesetNumber=Chset-1", uri.String())
@@ -72,8 +69,7 @@ func TestChangesetsRequestBuilder_ImpactedSharedComponents(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.ImpactedSharedComponents().GetURLTemplate(), builder.ImpactedSharedComponents().GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+	requestInfo.AddQueryParameters(*config.QueryParameters)
 
 	uri, _ := requestInfo.GetUri()
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/changesets/impacted-shared-components?changesetNumber=Chset-10", uri.String())
@@ -91,8 +87,7 @@ func TestChangesetsRequestBuilder_ImpactedDeployables(t *testing.T) {
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.ImpactedDeployables().GetURLTemplate(), builder.ImpactedDeployables().GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
-	kiotaRequestInfo.AddQueryParameters(config.QueryParameters)
+	requestInfo.AddQueryParameters(*config.QueryParameters)
 
 	uri, _ := requestInfo.GetUri()
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/changesets/impacted-deployables?changesetNumber=Chset-10", uri.String())

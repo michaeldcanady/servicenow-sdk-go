@@ -132,11 +132,10 @@ func (rB *AttachmentItemFileRequestBuilder) ToGetRequestInformation(_ context.Co
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
-	kiotaRequestInfo := &internal.KiotaRequestInformation{RequestInformation: requestInfo}
 	if !conversion.IsNil(requestConfiguration) {
-		kiotaRequestInfo.Headers.AddAll(requestConfiguration.Headers)
-		kiotaRequestInfo.AddRequestOptions(requestConfiguration.Options)
+		requestInfo.Headers.AddAll(requestConfiguration.Headers)
+		requestInfo.AddRequestOptions(requestConfiguration.Options)
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeAny.String())
-	return kiotaRequestInfo.RequestInformation, nil
+	return requestInfo, nil
 }

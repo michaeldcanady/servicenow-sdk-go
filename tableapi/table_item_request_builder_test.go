@@ -7,6 +7,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -249,7 +250,7 @@ func TestTableItemRequestBuilder_ToRequestInformation(t *testing.T) {
 	t.Run("ToGetRequestInformation", func(t *testing.T) {
 		config := &TableItemRequestBuilderGetRequestConfiguration{
 			QueryParameters: &TableItemRequestBuilderGetQueryParameters{
-				DisplayValue: DisplayValueAll,
+				DisplayValue: internal.ToPointer(DisplayValueAll),
 			},
 		}
 		requestInfo, err := builder.ToGetRequestInformation(context.Background(), config)
