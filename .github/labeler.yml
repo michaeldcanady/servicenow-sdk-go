@@ -1,0 +1,94 @@
+# Path-based PR labeling config for actions/labeler.
+#
+# The "module: *" labels intentionally mirror the "Affected Module / API" dropdown in
+# .github/ISSUE_TEMPLATE/bug-template.yaml, so issues and PRs use the same vocabulary.
+
+"module: table-api":
+  - changed-files:
+      - any-glob-to-any-file: "tableapi/**"
+
+"module: attachment-api":
+  - changed-files:
+      - any-glob-to-any-file: "attachmentapi/**"
+
+"module: batch-api":
+  - changed-files:
+      - any-glob-to-any-file: "batchapi/**"
+
+"module: case-api":
+  - changed-files:
+      - any-glob-to-any-file: "caseapi/**"
+
+"module: cdm":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "cdmapplicationsapi/**"
+          - "cdmchangesetapi/**"
+          - "cdmeditorapi/**"
+
+"module: cmdb":
+  - changed-files:
+      - any-glob-to-any-file: "cmdbinstanceapi/**"
+
+"module: documents-api":
+  - changed-files:
+      - any-glob-to-any-file: "documentsapi/**"
+
+"module: account-api":
+  - changed-files:
+      - any-glob-to-any-file: "accountapi/**"
+
+"module: actsub-api":
+  - changed-files:
+      - any-glob-to-any-file: "actsubapi/**"
+
+"module: aggregation-api":
+  - changed-files:
+      - any-glob-to-any-file: "aggregationapi/**"
+
+"module: appointment-booking-api":
+  - changed-files:
+      - any-glob-to-any-file: "appointmentbookingapi/**"
+
+"module: app-service-api":
+  - changed-files:
+      - any-glob-to-any-file: "appserviceapi/**"
+
+"module: policy-api":
+  - changed-files:
+      - any-glob-to-any-file: "policyapi/**"
+
+"module: credentials":
+  - changed-files:
+      - any-glob-to-any-file: "credentials/**"
+
+"module: core":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "core/**"
+          - "internal/**"
+          - "errors/**"
+          - "query/**"
+
+"type: documentation":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "website/**"
+          - "docs/**"
+          - "**/*.md"
+
+"type: devops":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/scripts/**"
+          - ".github/dependabot.yml"
+          - ".github/labeler.yml"
+          - "justfile"
+          - "scripts/**"
+
+"tests":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tests/integration/**"
+          - "tests/e2e/**"

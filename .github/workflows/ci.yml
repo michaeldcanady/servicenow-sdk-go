@@ -108,6 +108,7 @@ jobs:
     permissions:
       contents: read
     strategy:
+      fail-fast: false
       matrix:
         go-version: ["stable", "oldstable"]
     steps:
