@@ -23,4 +23,3 @@ const (
 	valueKey                    = "value"
 	numberKey                   = "number"
 )
-
