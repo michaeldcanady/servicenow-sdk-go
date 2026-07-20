@@ -62,3 +62,5 @@ website/.docusaurus/
 !.gemini/tmp/.gitkeep
 spec/**
 !.gitkeep
+website/.docusaurus/**
+website/node_modules/**
