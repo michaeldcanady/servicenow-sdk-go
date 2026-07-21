@@ -110,8 +110,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
 
       - name: Vale Linter
         uses: errata-ai/vale-action@2.1.2
