@@ -23,6 +23,9 @@ concurrency:
 
 env:
   COVERAGE_FILE: coverage.out
+  # Single source of truth for the golangci-lint version so both matrix legs
+  # (stable/oldstable) in lint-go always resolve the exact same binary.
+  GOLANGCI_LINT_VERSION: v2.12.2
 
 permissions: {}
 
@@ -116,10 +119,11 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
+          cache: true
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
-          version: v2.12.2
+          version: ${{ env.GOLANGCI_LINT_VERSION }}
           skip-cache: false
           args: --timeout=5m
 
