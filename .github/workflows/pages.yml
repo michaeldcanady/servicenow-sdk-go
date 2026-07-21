@@ -23,6 +23,7 @@ env:
 jobs:
   changes-docs:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'release-please--'))
@@ -46,6 +47,7 @@ jobs:
   build:
     name: build-md
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
     if: ${{ needs.changes-docs.outputs.docs == 'true' }}
@@ -99,6 +101,7 @@ jobs:
   lint:
     name: lint-md
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
     if: ${{ needs.changes-docs.outputs.docs == 'true' }}
@@ -117,6 +120,7 @@ jobs:
   deploy:
     name: deploy-docs
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: write
       pages: write
