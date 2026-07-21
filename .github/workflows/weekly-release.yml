@@ -14,12 +14,13 @@ jobs:
   detect-changes:
     name: Detect Changes
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
     outputs:
       should_release: ${{ steps.diff.outputs.any_changed }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # Needed to fetch all tags
 
@@ -37,6 +38,7 @@ jobs:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.should_release == 'true' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Create preview release
         uses: googleapis/release-please-action@v5

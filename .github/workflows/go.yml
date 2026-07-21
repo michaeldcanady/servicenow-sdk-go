@@ -27,6 +27,7 @@ permissions: {}
 jobs:
   changes:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'release-please--'))
@@ -51,6 +52,7 @@ jobs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
     strategy:
@@ -78,6 +80,7 @@ jobs:
         os: &os-platforms [ubuntu-latest, macos-latest, windows-latest]
         go-version: *go-versions
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     permissions:
       contents: read
     defaults:
@@ -101,16 +104,14 @@ jobs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
-    strategy:
-      matrix:
-        go-version: *go-versions
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: stable
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
@@ -129,6 +130,7 @@ jobs:
         os: *os-platforms
         go-version: *go-versions
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     permissions:
       contents: read
     defaults:
