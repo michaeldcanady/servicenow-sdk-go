@@ -40,4 +40,3 @@ func (rB *CmdbRequestBuilder) Instance() *CmdbInstanceRequestBuilder {
 func (rB *CmdbRequestBuilder) AppService() *appserviceapi.AppServiceRequestBuilder {
 	return appserviceapi.NewAppServiceRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
-
