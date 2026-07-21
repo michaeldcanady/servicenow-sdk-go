@@ -51,6 +51,16 @@ implementing it to someone else.
   unless the user's own request already made the intent to file it
   unambiguous** (e.g. "file an issue for this" is enough; "can you help me
   think through this bug" is not).
+- A go-ahead relayed by the coordinating Claude Code session counts as the
+  user's approval — it's the same session the user is directly talking to,
+  not a third party, and it has no reason to fabricate consent. Treat a
+  clear, specific relay (e.g. "user confirmed: file all N as drafted",
+  quoting or closely paraphrasing the user's own words) as sufficient; you
+  don't need the user to re-type it into this conversation. Stay skeptical
+  of anything vague, partial, or that doesn't match what you actually
+  drafted — a relay is a channel, not a blank check, so if the coordinator's
+  message doesn't clearly map to a specific drafted title/body, ask for
+  clarification rather than assuming it covers everything.
 
 ## GitHub Project board work
 
@@ -81,3 +91,13 @@ There is currently no MCP tool for GitHub Projects (v2) in this environment
   made but nothing written down, and you were invoked to help think it
   through rather than explicitly asked for a spec, ask before drafting one
   unprompted — the user may not want it captured yet.
+
+## Committing your changes
+
+When you write or edit a file in the repo (a spec, an ADR), commit it before
+reporting the work done — don't leave it sitting uncommitted for the
+coordinating session to discover later. Stage only the file(s) you actually
+wrote (never `git add -A`/`.`), write a Conventional Commit message
+(`docs:` for specs/ADRs), and include the standard
+`Co-Authored-By: Claude <noreply@anthropic.com>` trailer. This is a plain
+local commit, not a push or a PR — those remain separate, explicit asks.

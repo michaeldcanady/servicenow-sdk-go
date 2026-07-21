@@ -7,7 +7,8 @@ body:
     attributes:
       value: |
         Thanks for taking the time to request a feature! Please fill this out as completely as you can —
-        the more concrete the "so that" clause, the faster this can be scoped and prioritized.
+        the more concrete the "so that" clause and acceptance criteria, the faster this can be scoped,
+        prioritized, and picked up by a contributor.
 
   - type: textarea
     id: user-story
@@ -30,6 +31,20 @@ body:
       required: true
 
   - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: >
+        What has to be true for this to be considered done? A short checklist helps a contributor
+        scope the work and know when they're finished, without waiting on back-and-forth.
+      placeholder: |
+        - [ ] `<X>RequestBuilder` supports `Get`/`Post`/... following the existing constructor triad
+        - [ ] Unit tests cover happy path + at least one error case
+        - [ ] Package Readme.md documents the endpoint
+    validations:
+      required: false
+
+  - type: textarea
     id: proposed-solution
     attributes:
       label: Proposed Solution (optional)
@@ -49,22 +64,48 @@ body:
     id: module
     attributes:
       label: Affected Module / API
-      description: Which part of the SDK does this touch?
+      description: >
+        Used to auto-apply a `module: *` label so contributors can filter issues by area they know.
+        Pick the closest match — see the package list in the repo root if you're not sure which
+        package this maps to.
       options:
         - table-api
         - attachment-api
         - batch-api
-        - cdm (applications/policies/changesets/editor)
-        - cmdb
         - case-api
+        - cdm (applications/changesets/editor)
+        - cmdb (cmdb-instance-api)
+        - documents-api
+        - account-api
+        - actsub-api (activity subscription)
+        - aggregation-api (stats)
+        - appointment-booking-api
+        - app-service-api
         - authentication / credentials
         - core / request pipeline
+        - all / cross-cutting
         - documentation
         - CI
         - GitHub
+        - new module (doesn't exist yet)
         - other / not sure
     validations:
       required: true
+
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Estimated Difficulty (maintainer use)
+      description: >
+        Leave as "not triaged yet" if you're filing this — a maintainer sets this during triage so
+        contributors browsing issues can self-select work matching their skill level/available time.
+      options:
+        - not triaged yet
+        - good first issue (single module, no design decisions)
+        - intermediate (touches one module, some design judgment)
+        - advanced (cross-cutting or requires design discussion)
+    validations:
+      required: false
 
   - type: input
     id: version
@@ -87,7 +128,7 @@ body:
     attributes:
       label: Before submitting
       options:
-        - label: I searched existing issues for a duplicate of this request.
+        - label: I searched existing issues (including closed ones) for a duplicate of this request.
           required: true
         - label: I checked the latest release to confirm this doesn't already exist.
           required: true

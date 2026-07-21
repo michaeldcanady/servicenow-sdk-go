@@ -44,6 +44,11 @@ go.work.sum
 
 .test/
 .local/
+
+# python
+
+__pycache__/
+
 # Cache directory
 .cache/
 
