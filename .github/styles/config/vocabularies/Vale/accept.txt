@@ -121,6 +121,7 @@ CRUD
 (?i)configs
 (?i)configuration
 (?i)configurations
+(?i)rulesets?
 (?i)option
 (?i)options
 (?i)credential
