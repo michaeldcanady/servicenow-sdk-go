@@ -126,6 +126,11 @@ contract in brief:
 - **Commits and PR titles:** [Conventional Commits](https://www.conventionalcommits.org/)
   (`feat(scope): …`, `fix: …`, `BREAKING CHANGE:` footer for majors). CI
   lints the PR title; it becomes the squash commit.
+- **CI/workflow changes are always `chore`** — anything touching
+  `.github/workflows/`, `scripts/` CI helpers, or other pipeline plumbing
+  is `chore:`, never `fix:`/`feat:`, even if it fixes a broken run. These
+  changes don't affect the published SDK, so they must not surface in
+  `CHANGELOG.md` as a fix or feature.
 - **Never edit `VERSION` or `CHANGELOG.md`** — `release-please` generates
   both from commit messages.
 - **Local gate before review:** `gofmt -s -w .`, `golangci-lint run ./...`,
