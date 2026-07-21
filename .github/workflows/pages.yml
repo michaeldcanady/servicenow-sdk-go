@@ -104,7 +104,6 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-      pull-requests: read
     if: ${{ needs.changes-docs.outputs.docs == 'true' }}
     needs:
       - changes-docs
