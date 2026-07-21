@@ -9,11 +9,15 @@ on:
       - "**.go"
       - "!docs/snippets/**"
       - ".github/workflows/go.yml"
+      - ".github/actions/detect-changes/**"
+      - ".github/actions/setup-go-env/**"
   pull_request:
     paths:
       - "**.go"
       - "!docs/snippets/**"
       - ".github/workflows/go.yml"
+      - ".github/actions/detect-changes/**"
+      - ".github/actions/setup-go-env/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -44,14 +48,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Changed Files
-        uses: tj-actions/changed-files@v47.0.6
+      - name: Detect changed files
         id: filter
+        uses: ./.github/actions/detect-changes
         with:
+          checkout: "false"
           files: |
             **.go
             !docs/snippets/**
             .github/workflows/go.yml
+            .github/actions/detect-changes/**
+            .github/actions/setup-go-env/**
 
   check-go:
     name: Check Go Modules
@@ -67,8 +74,10 @@ jobs:
         go-version: &go-versions ["stable", "oldstable"]
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - name: Set up Go
+        uses: ./.github/actions/setup-go-env
         with:
+          checkout: "false"
           go-version: ${{ matrix.go-version }}
       - run: go mod download
       - run: go mod verify
@@ -95,10 +104,12 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - name: Set up Go
+        uses: ./.github/actions/setup-go-env
         with:
+          checkout: "false"
           go-version: ${{ matrix.go-version }}
-          cache: false
+          cache: "false"
       - run: go mod download
       - name: Build Go Code
         run: |
@@ -116,8 +127,10 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - name: Set up Go
+        uses: ./.github/actions/setup-go-env
         with:
+          checkout: "false"
           go-version: stable
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
@@ -145,10 +158,12 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - name: Set up Go
+        uses: ./.github/actions/setup-go-env
         with:
+          checkout: "false"
           go-version: ${{ matrix.go-version }}
-          cache: false
+          cache: "false"
       - name: Run tests
         run: |
           PACKAGES=$(go list ./... | grep -v "/docs")

@@ -37,8 +37,9 @@ jobs:
       - name: Check for changes since latest tag
         id: diff
         if: ${{ steps.latest_tag.outputs.tag != '' }}
-        uses: tj-actions/changed-files@v47.0.6
+        uses: ./.github/actions/detect-changes
         with:
+          checkout: "false"
           base_sha: ${{ steps.latest_tag.outputs.tag }}
 
       - name: Determine whether to release
