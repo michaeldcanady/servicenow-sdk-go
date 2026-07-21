@@ -1,0 +1,41 @@
+name: "Detect Changes"
+description: "Checks out the repository (optional) and reports whether any files matching the given patterns changed, for gating downstream jobs."
+
+inputs:
+  files:
+    description: "Newline-separated list of file/glob patterns to watch. If omitted, all changed files are considered."
+    required: false
+    default: ""
+  base_sha:
+    description: "Base SHA/ref to diff against, passed through to tj-actions/changed-files. If omitted, the action's default base-ref detection is used."
+    required: false
+    default: ""
+  fetch-depth:
+    description: "Depth passed to actions/checkout. Use 0 for full history (e.g. when diffing against tags)."
+    required: false
+    default: "1"
+  checkout:
+    description: "Whether to check out the repository before diffing. Set to 'false' if the caller has already checked out the ref it wants diffed."
+    required: false
+    default: "true"
+
+outputs:
+  any_changed:
+    description: "'true' if any file matching the given patterns changed."
+    value: ${{ steps.filter.outputs.any_changed }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      if: inputs.checkout == 'true'
+      uses: actions/checkout@v7
+      with:
+        fetch-depth: ${{ inputs.fetch-depth }}
+
+    - name: Changed Files
+      id: filter
+      uses: tj-actions/changed-files@v47.0.6
+      with:
+        files: ${{ inputs.files }}
+        base_sha: ${{ inputs.base_sha }}

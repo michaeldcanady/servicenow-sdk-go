@@ -19,7 +19,7 @@ jobs:
     outputs:
       should_release: ${{ steps.diff.outputs.any_changed }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # Needed to fetch all tags
 
@@ -29,8 +29,9 @@ jobs:
 
       - name: Check for changes since latest tag
         id: diff
-        uses: tj-actions/changed-files@v47.0.6
+        uses: ./.github/actions/detect-changes
         with:
+          checkout: "false"
           base_sha: ${{ steps.latest_tag.outputs.tag }}
 
   release-please:

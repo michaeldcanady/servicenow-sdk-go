@@ -9,11 +9,13 @@ on:
       - "docs/**"
       - "mkdocs.yml"
       - ".github/workflows/pages.yml"
+      - ".github/actions/detect-changes/**"
   pull_request:
     paths:
       - "docs/**"
       - "mkdocs.yml"
       - ".github/workflows/pages.yml"
+      - ".github/actions/detect-changes/**"
 
 env:
   PYTHON_VERSION: "3.x"
@@ -30,14 +32,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Changed Files
-        uses: tj-actions/changed-files@v47.0.6
+      - name: Detect changed files
         id: filter
+        uses: ./.github/actions/detect-changes
         with:
+          checkout: "false"
           files: |
             docs/**
             mkdocs.yml
             .github/workflows/pages.yml
+            .github/actions/detect-changes/**
 
   build:
     name: build-md
