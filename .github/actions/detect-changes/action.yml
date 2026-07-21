@@ -35,7 +35,7 @@ runs:
 
     - name: Changed Files
       id: filter
-      uses: tj-actions/changed-files@v47.0.6
+      uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
       with:
         files: ${{ inputs.files }}
         base_sha: ${{ inputs.base_sha }}
