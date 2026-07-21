@@ -5,6 +5,7 @@
 (?i)devcontainers
 sys_id
 (?i)Kiota
+Parsable
 GitHub
 (?i)golang
 sys
@@ -121,6 +122,7 @@ CRUD
 (?i)configs
 (?i)configuration
 (?i)configurations
+(?i)rulesets?
 (?i)option
 (?i)options
 (?i)credential

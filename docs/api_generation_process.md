@@ -22,7 +22,7 @@ A sub-agent tasked with the actual code generation based on the blueprint provid
 ### Phase 1: Research & Mapping (Inquiry)
 1. **Spec Ingestion**: Read the OpenAPI spec from `spec/`.
 2. **Analysis**: Use `openapi-architect` to identify URL hierarchies, query parameters, and data models.
-3. **Consistency Check**: Verify mappings against existing modules (e.g., `attachment-api/`).
+3. **Consistency Check**: Verify mappings against existing modules (for example, `attachment-api/`).
 4. **Output**: A **Technical Blueprint** (Markdown) describing the proposed package structure, RequestBuilders, and Parsable models.
 
 ### Phase 2: Strategy & Approval (Directives)
