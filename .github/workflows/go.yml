@@ -9,11 +9,15 @@ on:
       - "**.go"
       - "!docs/snippets/**"
       - ".github/workflows/go.yml"
+      - ".github/actions/detect-changes/**"
+      - ".github/actions/setup-go-env/**"
   pull_request:
     paths:
       - "**.go"
       - "!docs/snippets/**"
       - ".github/workflows/go.yml"
+      - ".github/actions/detect-changes/**"
+      - ".github/actions/setup-go-env/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -27,23 +31,34 @@ permissions: {}
 jobs:
   changes:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'release-please--'))
+    # NOTE: release-please PRs are intentionally NOT excluded here by branch
+    # name. They go through the same tj-actions/changed-files filter as any
+    # other PR, so today's release-please PRs (CHANGELOG.md/VERSION only)
+    # naturally skip downstream jobs via `code == 'false'`, but a future
+    # release-please PR that also carries a go.mod change (e.g. the /v2
+    # module-path bump) still gets full CI. Do not reintroduce a
+    # branch-name-based skip here — see #523.
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     outputs:
       code: ${{ steps.filter.outputs.any_changed }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Changed Files
-        uses: tj-actions/changed-files@v47.0.6
+      - name: Detect changed files
         id: filter
+        uses: ./.github/actions/detect-changes
         with:
+          checkout: "false"
           files: |
             **.go
             !docs/snippets/**
             .github/workflows/go.yml
+            .github/actions/detect-changes/**
+            .github/actions/setup-go-env/**
 
   check-go:
     name: Check Go Modules
@@ -51,6 +66,7 @@ jobs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
     strategy:
@@ -58,8 +74,10 @@ jobs:
         go-version: &go-versions ["stable", "oldstable"]
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - name: Set up Go
+        uses: ./.github/actions/setup-go-env
         with:
+          checkout: "false"
           go-version: ${{ matrix.go-version }}
       - run: go mod download
       - run: go mod verify
@@ -78,6 +96,7 @@ jobs:
         os: &os-platforms [ubuntu-latest, macos-latest, windows-latest]
         go-version: *go-versions
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     permissions:
       contents: read
     defaults:
@@ -85,10 +104,12 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - name: Set up Go
+        uses: ./.github/actions/setup-go-env
         with:
+          checkout: "false"
           go-version: ${{ matrix.go-version }}
-          cache: false
+          cache: "false"
       - run: go mod download
       - name: Build Go Code
         run: |
@@ -101,16 +122,16 @@ jobs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
-    strategy:
-      matrix:
-        go-version: *go-versions
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - name: Set up Go
+        uses: ./.github/actions/setup-go-env
         with:
-          go-version: ${{ matrix.go-version }}
+          checkout: "false"
+          go-version: stable
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
@@ -129,6 +150,7 @@ jobs:
         os: *os-platforms
         go-version: *go-versions
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     permissions:
       contents: read
     defaults:
@@ -136,10 +158,12 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - name: Set up Go
+        uses: ./.github/actions/setup-go-env
         with:
+          checkout: "false"
           go-version: ${{ matrix.go-version }}
-          cache: false
+          cache: "false"
       - name: Run tests
         run: |
           PACKAGES=$(go list ./... | grep -v "/docs")

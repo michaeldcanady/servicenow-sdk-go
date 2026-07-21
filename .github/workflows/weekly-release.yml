@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: "0 3 * * 1" # Weekly preview release (every Monday at 3 AM UTC)
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
 permissions:
   contents: write
   issues: write
@@ -14,29 +17,46 @@ jobs:
   detect-changes:
     name: Detect Changes
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
     outputs:
-      should_release: ${{ steps.diff.outputs.any_changed }}
+      should_release: ${{ steps.determine.outputs.should_release }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # Needed to fetch all tags
 
       - name: Get latest tag
         id: latest_tag
-        run: echo "tag=$(git describe --tags --abbrev=0 || echo "")" >> $GITHUB_OUTPUT
+        run: echo "tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")" >> $GITHUB_OUTPUT
 
+      # Only runs when a prior tag exists. On a first run (no tags yet) there's
+      # nothing to diff against, so this step is skipped rather than relying on
+      # tj-actions/changed-files' undocumented behavior for an empty base_sha.
       - name: Check for changes since latest tag
         id: diff
-        uses: tj-actions/changed-files@v47.0.6
+        if: ${{ steps.latest_tag.outputs.tag != '' }}
+        uses: ./.github/actions/detect-changes
         with:
+          checkout: "false"
           base_sha: ${{ steps.latest_tag.outputs.tag }}
+
+      - name: Determine whether to release
+        id: determine
+        run: |
+          if [ -z "${{ steps.latest_tag.outputs.tag }}" ]; then
+            echo "No prior tag found; defaulting should_release=true for first run."
+            echo "should_release=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_release=${{ steps.diff.outputs.any_changed }}" >> "$GITHUB_OUTPUT"
+          fi
 
   release-please:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.should_release == 'true' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Create preview release
         uses: googleapis/release-please-action@v5
