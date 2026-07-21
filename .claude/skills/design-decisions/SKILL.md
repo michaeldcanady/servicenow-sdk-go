@@ -12,8 +12,10 @@ description: >
   vanilla Kiota request-configuration (ADR 004), one generic core.PageIterator
   instead of per-module wrappers (ADR 005), nil-receiver guards returning a
   shared sentinel error instead of (nil, nil) (ADR 006), never scaffolding a
-  builder chain ahead of an implemented operation (ADR 007), and package/
-  symbol/URL names as independent naming axes (ADR 008). Consult this BEFORE
+  builder chain ahead of an implemented operation (ADR 007), package/
+  symbol/URL names as independent naming axes (ADR 008), and keeping the
+  RequestBuilder/RequestInformation names despite their imprecise roles, for
+  Kiota/msgraph parity (ADR 009). Consult this BEFORE
   proposing or making changes to the request-builder/model architecture,
   error handling conventions, pagination, nil-guard behavior, module naming,
   or anything that would make this SDK diverge from Kiota-generated SDK
@@ -39,8 +41,8 @@ top-level docs turns them into a decision log nobody can navigate, and
 duplicating the same reasoning in two places means it drifts out of sync the
 first time only one copy gets updated.
 
-There is no index file or template in `docs/adr/` yet — it's eight files,
-numbered `001-` through `008-` (three digits, not four). Read them directly:
+There is no index file or template in `docs/adr/` yet — it's nine files,
+numbered `001-` through `009-` (three digits, not four). Read them directly:
 
 1. [`001-error-standardization.md`](../../../docs/adr/001-error-standardization.md)
    — centralizes sentinel errors and message phrasing in the `/errors`
@@ -93,6 +95,13 @@ numbered `001-` through `008-` (three digits, not four). Read them directly:
    independent naming axes (see `aggregationapi` package vs. `Stats*` types vs.
    `Now().Stats()`); an inconsistency in one doesn't mean the other two need to
    change too.
+9. [`009-requestbuilder-requestinformation-naming.md`](../../../docs/adr/009-requestbuilder-requestinformation-naming.md)
+   — keeps `RequestBuilder`/`RequestInformation` named as-is despite the
+   names being technically imprecise (`RequestBuilder` is really a facade,
+   `RequestInformation` is the actual builder), because they mirror
+   `kiota-abstractions-go`/msgraph-sdk-go conventions. Settled through v3 —
+   don't revisit without a new major-version boundary and a concrete
+   consumer-facing reason.
 
 Before touching an area covered by an ADR, or answering a "why"/"should we
 change this" question:
