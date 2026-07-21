@@ -116,6 +116,7 @@ jobs:
         with:
           fail_on_error: true
           files: docs
+          vale_flags: --minAlertLevel=error
 
   deploy:
     name: deploy-docs
