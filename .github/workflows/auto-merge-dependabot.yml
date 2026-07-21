@@ -8,6 +8,7 @@ on:
 jobs:
   dependabot-merge:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       pull-requests: write
       contents: write
