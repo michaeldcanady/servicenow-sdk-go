@@ -25,6 +25,9 @@ concurrency:
 
 env:
   COVERAGE_FILE: coverage.out
+  # Pin golangci-lint instead of tracking `latest`, so a new golangci-lint
+  # release can't break CI unexpectedly; bump this deliberately.
+  GOLANGCI_LINT_VERSION: v2.12.2
 
 permissions: {}
 
@@ -135,7 +138,7 @@ jobs:
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
-          version: latest
+          version: ${{ env.GOLANGCI_LINT_VERSION }}
           skip-cache: false
           args: --timeout=5m
 
