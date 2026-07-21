@@ -5,6 +5,7 @@
 (?i)devcontainers
 sys_id
 (?i)Kiota
+Parsable
 GitHub
 (?i)golang
 sys
