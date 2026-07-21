@@ -7,6 +7,7 @@
 ![GitHub](https://img.shields.io/github/license/michaeldcanady/servicenow-sdk-go?style=plastic)
 [![Maintainability](https://qlty.sh/badges/e778f295-dfb1-4637-a15e-f179549fcae4/maintainability.svg)](https://qlty.sh/gh/michaeldcanady/projects/servicenow-sdk-go)
 [![codecov](https://codecov.io/gh/michaeldcanady/servicenow-sdk-go/graph/badge.svg?token=MJPM1UAI78)](https://codecov.io/gh/michaeldcanady/servicenow-sdk-go)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/michaeldcanady/servicenow-sdk-go/badge)](https://scorecard.dev/viewer/?uri=github.com/michaeldcanady/servicenow-sdk-go)
 
 A Service-Now API client enabling Go programs to interact with Service-Now in a simple and uniform way
 

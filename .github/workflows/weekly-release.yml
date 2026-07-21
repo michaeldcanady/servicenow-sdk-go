@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: "0 3 * * 1" # Weekly preview release (every Monday at 3 AM UTC)
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
 permissions:
   contents: write
   issues: write
@@ -17,7 +20,7 @@ jobs:
     permissions:
       contents: read
     outputs:
-      should_release: ${{ steps.diff.outputs.any_changed }}
+      should_release: ${{ steps.determine.outputs.should_release }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -25,13 +28,27 @@ jobs:
 
       - name: Get latest tag
         id: latest_tag
-        run: echo "tag=$(git describe --tags --abbrev=0 || echo "")" >> $GITHUB_OUTPUT
+        run: echo "tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")" >> $GITHUB_OUTPUT
 
+      # Only runs when a prior tag exists. On a first run (no tags yet) there's
+      # nothing to diff against, so this step is skipped rather than relying on
+      # tj-actions/changed-files' undocumented behavior for an empty base_sha.
       - name: Check for changes since latest tag
         id: diff
+        if: ${{ steps.latest_tag.outputs.tag != '' }}
         uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
         with:
           base_sha: ${{ steps.latest_tag.outputs.tag }}
+
+      - name: Determine whether to release
+        id: determine
+        run: |
+          if [ -z "${{ steps.latest_tag.outputs.tag }}" ]; then
+            echo "No prior tag found; defaulting should_release=true for first run."
+            echo "should_release=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_release=${{ steps.diff.outputs.any_changed }}" >> "$GITHUB_OUTPUT"
+          fi
 
   release-please:
     needs: detect-changes
