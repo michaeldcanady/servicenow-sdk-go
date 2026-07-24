@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.12.1](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v1.12.0...v1.12.1) (2026-07-24)
+
+
+### Bug Fixes
+
+* **ci:** register release-please cron workflows on main ([#518](https://github.com/michaeldcanady/servicenow-sdk-go/issues/518)) ([be63b80](https://github.com/michaeldcanady/servicenow-sdk-go/commit/be63b80c5f9011365405528e70a1e8818912b950))
+* **ci:** resolve gofmt and gocognit lint failures on main ([#528](https://github.com/michaeldcanady/servicenow-sdk-go/issues/528)) ([0ae636d](https://github.com/michaeldcanady/servicenow-sdk-go/commit/0ae636d9daa58a1f6a1b56854097b2a34f08114f))
+* guard ServicenowError.Error against nil main error and detail ([#516](https://github.com/michaeldcanady/servicenow-sdk-go/issues/516)) ([dbd64d0](https://github.com/michaeldcanady/servicenow-sdk-go/commit/dbd64d022178329af5385a18d0660208f3c7e93a))
+
 ## [1.12.0](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v1.11.1...v1.12.0) (2026-06-15)
 
 
