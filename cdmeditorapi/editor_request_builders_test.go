@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
@@ -131,4 +132,54 @@ func TestValidationRequestBuilder_Get(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, mockRes, resp)
 	})
+}
+
+func TestNodesRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*NodesRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+
+			postResp, err := builder.Post(context.Background(), nil, nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, postResp)
+		})
+	}
+}
+
+func TestNodeItemRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*NodeItemRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			putResp, err := builder.Put(context.Background(), nil, nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, putResp)
+
+			delResp, err := builder.Delete(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, delResp)
+		})
+	}
+}
+
+func TestValidationRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*ValidationRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
 }

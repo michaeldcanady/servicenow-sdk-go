@@ -5,6 +5,7 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -57,6 +58,9 @@ func (rB *NodesRequestBuilder) ByID(id string) *NodeItemRequestBuilder {
 }
 
 func (rB *NodesRequestBuilder) Get(ctx context.Context, config *NodesRequestBuilderGetRequestConfiguration) (NodesResponse, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -78,6 +82,9 @@ func (rB *NodesRequestBuilder) Get(ctx context.Context, config *NodesRequestBuil
 }
 
 func (rB *NodesRequestBuilder) Post(ctx context.Context, body NodeCreateRequest, config *NodesRequestBuilderPostRequestConfiguration) (NodeResponse, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -111,6 +118,9 @@ func NewNodeItemRequestBuilderInternal(pathParameters map[string]string, request
 }
 
 func (rB *NodeItemRequestBuilder) Put(ctx context.Context, body NodeUpdateRequest, config *NodeItemRequestBuilderPutRequestConfiguration) (NodeResponse, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -133,6 +143,9 @@ func (rB *NodeItemRequestBuilder) Put(ctx context.Context, body NodeUpdateReques
 }
 
 func (rB *NodeItemRequestBuilder) Delete(ctx context.Context, config *NodeItemRequestBuilderDeleteRequestConfiguration) (NodeDeleteResponse, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -162,6 +175,9 @@ func NewValidationRequestBuilderInternal(pathParameters map[string]string, reque
 }
 
 func (rB *ValidationRequestBuilder) Get(ctx context.Context, config *ValidationRequestBuilderGetRequestConfiguration) (ValidationResponse, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
