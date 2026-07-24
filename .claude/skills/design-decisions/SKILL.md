@@ -15,7 +15,9 @@ description: >
   builder chain ahead of an implemented operation (ADR 007), package/
   symbol/URL names as independent naming axes (ADR 008), and keeping the
   RequestBuilder/RequestInformation names despite their imprecise roles, for
-  Kiota/msgraph parity (ADR 009). Consult this BEFORE
+  Kiota/msgraph parity (ADR 009), and staying at the michaeldcanady GitHub
+  org/module path for the v2 lifecycle instead of migrating to a NerdIT-Tech
+  org (ADR 010). Consult this BEFORE
   proposing or making changes to the request-builder/model architecture,
   error handling conventions, pagination, nil-guard behavior, module naming,
   or anything that would make this SDK diverge from Kiota-generated SDK
@@ -41,8 +43,8 @@ top-level docs turns them into a decision log nobody can navigate, and
 duplicating the same reasoning in two places means it drifts out of sync the
 first time only one copy gets updated.
 
-There is no index file or template in `docs/adr/` yet — it's nine files,
-numbered `001-` through `009-` (three digits, not four). Read them directly:
+There is no index file or template in `docs/adr/` yet — it's ten files,
+numbered `001-` through `010-` (three digits, not four). Read them directly:
 
 1. [`001-error-standardization.md`](../../../docs/adr/001-error-standardization.md)
    — centralizes sentinel errors and message phrasing in the `/errors`
@@ -102,6 +104,12 @@ numbered `001-` through `009-` (three digits, not four). Read them directly:
    `kiota-abstractions-go`/msgraph-sdk-go conventions. Settled through v3 —
    don't revisit without a new major-version boundary and a concrete
    consumer-facing reason.
+10. [`010-no-nerdit-tech-migration.md`](../../../docs/adr/010-no-nerdit-tech-migration.md)
+    — declines a proposed GitHub org migration to NerdIT-Tech at v2; the
+    module path stays `github.com/michaeldcanady/servicenow-sdk-go` (only
+    the `/v2` semver suffix changes). Settled through v3 — don't revisit
+    without a new major-version boundary and a concrete, non-speculative
+    reason to move.
 
 Before touching an area covered by an ADR, or answering a "why"/"should we
 change this" question:

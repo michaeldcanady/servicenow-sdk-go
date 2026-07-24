@@ -35,3 +35,4 @@ Execute immediately before the release merge (issue 002), as one commit:
 ## Cross-references
 
 - Depends on / sequenced with: issue 002 (release path).
+- Org/owner segment (`michaeldcanady`) stays fixed for v2 — see [[010-no-nerdit-tech-migration]] (#493, decided 2026-07-24). This runbook only changes the `/v2` semver suffix, never the owner.
