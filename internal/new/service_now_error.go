@@ -68,10 +68,16 @@ func (exc *ServicenowError) setError(mainError MainErrorable) error {
 
 func (exc *ServicenowError) Error() string {
 	mainErr, _ := exc.GetError()
+	if IsNil(mainErr) {
+		return "unknown service-now error"
+	}
 	msg, _ := mainErr.GetMessage()
 	if msg != nil {
 		return *msg
 	}
 	details, _ := mainErr.GetDetail()
-	return *details
+	if details != nil {
+		return *details
+	}
+	return "unknown service-now error"
 }
