@@ -1,8 +1,10 @@
 package cdmapplicationsapi
 
 import (
+	"context"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -270,4 +272,178 @@ func TestUploadsDeployablesFileRequestBuilder_Post(t *testing.T) {
 	uri, err := requestInfo.GetUri()
 	assert.Nil(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/uploads/deployables/file?appName=test_app&deployableName=test_dep", uri.String())
+}
+
+func TestDeployablesRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*DeployablesRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			err := builder.Delete(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+
+			resp, err := builder.Put(context.Background(), nil, nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestSharedComponentsRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*SharedComponentsRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			err := builder.Delete(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+
+			resp, err := builder.Put(context.Background(), nil, nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestUploadStatusItemRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*UploadStatusItemRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestExportsRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*ExportsRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestExportItemStatusRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*ExportItemStatusRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestExportItemContentRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*ExportItemContentRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestSharedLibrariesComponentsApplicationsRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*SharedLibrariesComponentsApplicationsRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestUploadsComponentsRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*UploadsComponentsRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Post(context.Background(), nil, nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestUploadsComponentsVarsRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*UploadsComponentsVarsRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Post(context.Background(), nil, nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestUploadsCollectionsRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*UploadsCollectionsRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Post(context.Background(), nil, nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestUploadsCollectionsFileRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*UploadsCollectionsFileRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Post(context.Background(), nil, nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestUploadsDeployablesFileRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*UploadsDeployablesFileRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Post(context.Background(), nil, nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
 }

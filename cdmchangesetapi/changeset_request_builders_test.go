@@ -1,8 +1,10 @@
 package cdmchangesetapi
 
 import (
+	"context"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -104,4 +106,91 @@ func TestChangesetItemRequestBuilder_ImpactedDeployables(t *testing.T) {
 
 	uri, _ := requestInfo.GetUri()
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/changesets/sys123/impacted-deployables", uri.String())
+}
+
+func TestChangesetsRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*ChangesetsRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+
+			err = builder.Delete(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+		})
+	}
+}
+
+func TestChangesetActivityRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*ChangesetActivityRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestCommitStatusItemRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*CommitStatusItemRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestImpactedSharedComponentsRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*ImpactedSharedComponentsRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestImpactedDeployablesRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*ImpactedDeployablesRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestImpactedDeployablesBySysIdRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*ImpactedDeployablesBySysIdRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+		})
+	}
 }
