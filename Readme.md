@@ -62,3 +62,7 @@ func main() {
 ## Contributing
 
 Contributions are welcome: Start with the [Contributor Guide](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/)
+
+## License
+
+[MIT](./LICENSE)
