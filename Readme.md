@@ -58,3 +58,12 @@ func main() {
     }
 }
 ```
+
+## Contributing
+
+Contributions are welcome: Start with the [Contributor Guide](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/)
+
+Good places to start:
+- Browse [open issues](https://github.com/michaeldcanady/servicenow-sdk-go/issues) labeled `good first issue`
+- Add support for a `✖️` API from the coverage matrix above
+- Improve docs or add a usage example
