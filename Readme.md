@@ -14,7 +14,7 @@ A type-safe, idiomatic Go client for the ServiceNow REST APIs.
 
 ## Install
 ```bash
-go get github.com/michaeldcanady/servicenow-sdk-go@release/2.0
+go get github.com/michaeldcanady/servicenow-sdk-go/v2@latest
 ```
 > Requires **Go 1.25+**
 
@@ -28,8 +28,8 @@ import (
     "fmt"
     "log"
 
-    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
+    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+    "github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
 )
 
 func main() {
