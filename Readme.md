@@ -11,8 +11,9 @@ A type-safe, idiomatic Go client for the ServiceNow REST APIs.
 ![GitHub](https://img.shields.io/github/license/michaeldcanady/servicenow-sdk-go?style=plastic)
 [![Maintainability](https://qlty.sh/badges/e778f295-dfb1-4637-a15e-f179549fcae4/maintainability.svg)](https://qlty.sh/gh/michaeldcanady/projects/servicenow-sdk-go)
 [![codecov](https://codecov.io/gh/michaeldcanady/servicenow-sdk-go/graph/badge.svg?token=MJPM1UAI78)](https://codecov.io/gh/michaeldcanady/servicenow-sdk-go)
----
+
 ## Install
 ```bash
 go get github.com/michaeldcanady/servicenow-sdk-go@release/2.0
 ```
+> Requires **Go 1.25+**
