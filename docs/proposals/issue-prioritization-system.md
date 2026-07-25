@@ -44,13 +44,11 @@ it).
   not built.
 - Not changing the existing `type:`, `module:`, or `state:` label taxonomies.
   They're orthogonal to priority and already work.
-- Not implementing anything against the GitHub Project board. This repo's
-  `gh` token is currently missing the `project` scope (`gh project list`
-  fails with "your authentication token is missing required scopes
-  [read:project]"), so this spec's board-wiring section is a design for the
-  maintainer to apply by hand (or after running
-  `gh auth refresh -s project`) — not something this session could verify or
-  execute even if it were in scope.
+- Not implementing anything against the GitHub Project board. The `project`
+  scope was verified and the board's real fields/views were inspected while
+  writing this draft (see "Current state" and "Mapping onto GitHub-native
+  constructs" below), but no field/view/label was created or edited — this
+  spec is still a design for the maintainer to apply by hand.
 
 ## Current state (as found 2026-07-25)
 
@@ -76,10 +74,34 @@ it).
   (`list_issue_fields` returned empty) and **no GitHub Issue Types**
   configured (the issue-types endpoint 404s) — priority-relevant data today
   lives entirely in labels, not in typed fields.
-- **Project board state is unknown** — the `gh` token lacks the `project`
-  scope needed to even read board fields/views, let alone write them. This
-  is a hard blocker for the board-wiring half of this spec until the
-  maintainer runs `gh auth refresh -s project`.
+- **Project board state, verified 2026-07-25** (`gh project field-list 7
+  --owner michaeldcanady`, `gh api graphql` for views; project #7, "ServiceNow
+  SDK for Go," a private *user*-owned board, 41 items):
+  - A **`Priority` single-select field already exists** with options `low` /
+    `med` / `high` / `urgent` — i.e. the four label tiers this spec's rubric
+    outputs are *already* mirrored as a board field, not something this spec
+    needs to create. (This predates the spec being written; it just wasn't
+    visible without the `project` scope.)
+  - No `Priority score`-equivalent numeric field exists — the board has
+    nothing today that expresses within-tier ordering.
+  - No field named `Effort` exists, but a **`Size` single-select** field does
+    (`XS` / `S` / `M` / `L` / `XL`), plus a separate plain **`Estimate`**
+    field (untyped options, i.e. a number/text field, currently unused on any
+    item in the sample pulled) and a **`Sprint`** iteration field. These are
+    pre-existing sprint-planning scaffolding, not something this spec put
+    there.
+  - A **`Release`** single-select field already exists with options
+    `No release` / `1.8.0` / `2.0.0`, separate from the native `Milestone`
+    field this spec's Current-state section already described.
+  - Existing views: `Backlog`, `Current sprint`, `My items`, `Needs Sprint`,
+    `Needs Estimate`, `Sprints`, `Roadmap` — all sprint/estimation-flavored,
+    none of them a triage or priority-sorted view.
+  - `Status` (single-select) already includes a `Needs Triage` option,
+    alongside workflow states (`Backlog - Ready`, `In progress`, `In review`,
+    `Done`, `Backlog - Not Ready`, `Won't do`) and, oddly, two options that
+    look copy-pasted from `Release` (`No release`, `Release 1.8.0`) — noted
+    here as a pre-existing oddity on the board, not something this spec
+    introduces or is scoped to clean up.
 
 ## Design
 
@@ -216,38 +238,77 @@ are visible directly on the issue (in notifications, in `gh issue list`, in
 search) without opening the board; a Project single-select field is
 board-only. Since `priority: *` labels already exist (bar `medium`, added by
 this spec) and are presumably referenced elsewhere (searches, muscle
-memory), the rubric's output stays a label. **Do** add two Project v2 custom
-fields that the label can't provide:
+memory), the rubric's output stays a label. The original draft of this
+section (written before the `project` scope was available) proposed adding
+two brand-new Project v2 fields, `Priority score` and `Effort`, to carry
+what the label alone can't. Now that the board itself has been inspected,
+one of those two turns out to already partially exist under a different
+name, and a third field (`Priority`) turns out to already duplicate the
+label — see the reconciliation immediately below for what's actually built.
 
-1. **`Priority score` (Number field)** — the raw 2–6 sum from the rubric.
-   Lets the board sort *within* a tier instead of only grouping by it —
-   three `priority: high` issues aren't equally urgent, and today there's no
-   way to express that ordering anywhere.
-2. **`Effort` (Single select: S / M / L, mirroring the 1/2/3 scale)** — kept
-   separate from score per the "effort is a tie-breaker, not an input"
-   design decision above. Having it as its own sortable field is what makes
-   "cheap high-priority issues first" an actual board view instead of a
-   mental note.
+**Reconciled against the actual board (verified 2026-07-25, project #7 —
+see "Current state"):** the plan above was written before the board could be
+read; two of the three pieces already exist under names this spec didn't
+anticipate, so the design changes as follows rather than adding net-new
+fields on top of them:
 
-Do **not** add a Project-only `Priority` single-select duplicating the
-label — GitHub Projects v2 can already group/filter by an issue's labels
-directly, so a mirrored field would just be a second place the same value
-has to be kept in sync, with no view it unlocks that grouping-by-label
-doesn't already give.
+- **`Priority` single-select (`low`/`med`/`high`/`urgent`) already exists on
+  the board.** This is exactly the mirrored field the original draft argued
+  *against* adding — it just predates this spec. Given it's already there
+  (and, per `item-list`, already used on at least some items), reversing course
+  and deleting it isn't worth the churn; instead, **the rubric's tier is the
+  source of truth and this field is kept in sync with the `priority:` label**
+  whenever the label is set. This does mean the "don't add a duplicate field"
+  argument from the earlier draft is now moot — the duplication already
+  existed independent of this spec — but the sync obligation is worth calling
+  out explicitly so label and field don't drift.
+- **`Priority score` (Number field) still needs to be created** — nothing on
+  the board today expresses the raw 2–6 sum, so this part of the original
+  design is unchanged.
+- **`Effort` does not need to be created as a new field — reuse the existing
+  `Size` single-select instead.** The board already has `Size`
+  (`XS`/`S`/`M`/`L`/`XL`), which is finer-grained than the rubric's 1–3
+  Effort scale but already exists and is presumably referenced by the
+  pre-existing sprint views (`Needs Estimate`, `Sprints`). Adding a second,
+  narrower `Effort` field alongside it would just be two fields answering
+  "how big is this," one of which the rubric would ignore — the same
+  field-proliferation problem the original draft was trying to avoid by
+  *not* duplicating `Priority`. Map the rubric's Effort scale onto `Size` as
+  1→`S`, 2→`M`, 3→`L`, and leave `XS`/`XL` available for cases finer than the
+  rubric bothers to distinguish (a genuinely trivial fix vs. a genuinely
+  sprawling one) rather than trying to force every issue into exactly three
+  buckets. The separate `Estimate` and `Sprint` fields are sprint-planning
+  scaffolding this repo doesn't currently use (no sprints per this spec's
+  Non-goals) and are left untouched.
 
-**Views to add:**
+**Views to add** (none of the three below overlap with the board's existing
+views — `Backlog`, `Current sprint`, `My items`, `Needs Sprint`,
+`Needs Estimate`, `Sprints`, `Roadmap` are all sprint/estimation-flavored,
+not triage- or priority-flavored, so they're additive, not a replacement):
 
 - **"Triage" view** — filtered to `state: new`, grouped by nothing, sorted
   by `Priority score` descending. This is the "what needs a look" queue.
-- **"Priority board" view** — grouped by the `priority:` label, sorted by
+  (Note: `Status` already has a `Needs Triage` option that reads as a
+  candidate alternative filter — using `state: new` instead keeps this
+  spec's view aligned with the label taxonomy it's already built around,
+  rather than introducing a second axis. Reconciling `Status`'s
+  `Needs Triage` against the `state:` labels is a pre-existing overlap this
+  spec doesn't resolve; flagged as a follow-up, not solved here.)
+- **"Priority board" view** — grouped by the `Priority` field (the
+  already-existing single-select, kept in sync per above), sorted by
   `Priority score` within each group. This is the steady-state working view.
-- **"v2.0.0 board" view** — filtered to the `v2.0.0` milestone, sorted by
-  `Priority score`. Milestone-scoped work has its own working set distinct
-  from the general backlog.
+- **"v2.0.0 board" view** — filtered to the `v2.0.0` **milestone** (the
+  native GitHub field), not the board's `Release` single-select. `Release`
+  already exists with a `2.0.0` option, but nothing in the sample pulled
+  shows it populated, and this spec's rubric logic already keys off milestone
+  membership (see "Applying it to this repo's context") — introducing
+  `Release` as a second, currently-unpopulated proxy for the same thing would
+  be one more field to keep in sync for no added benefit. Sorted by
+  `Priority score`.
 
-(All three are designs to apply once `project` scope is granted — see
-Non-goals. Exact field/view creation commands aren't included here since
-they're unverified against this repo's actual project number/layout.)
+All three views and the `Priority score` field are still to be created by
+hand — this spec only verified they don't already exist and don't collide
+with what's there; it doesn't create them.
 
 ### Automation — flagged, not built
 
@@ -329,16 +390,22 @@ the bottleneck — there's no evidence of that yet.
 
 ## Open questions
 
-1. **Project board number/layout** — this spec can't confirm the current
-   project's fields or views exist because `gh`'s token lacks the `project`
-   scope. Needs `gh auth refresh -s project` (or `read:project` for a
-   read-only check first) before the board-wiring section can be executed
-   or even verified against reality.
+1. **`Status`'s `Needs Triage` option vs. the `state:` label taxonomy** — the
+   board's `Status` field already has a `Needs Triage` option that overlaps in
+   meaning with `state: new`. This spec's "Triage" view filters on the label,
+   not `Status`, to stay consistent with the label-first design, but that
+   means two fields can independently claim an issue is or isn't in triage.
+   Whether to eventually retire one in favor of the other (or explicitly
+   define which is authoritative) isn't resolved here.
 
 Resolved since the previous draft (see commit history for this file):
 whether to add a `priority: medium` tier (yes — see Design), how
 `v2.0.0` milestone membership interacts with score (floors at `high`, does
 not force `urgent` — see "Applying it to this repo's context," flagged
-there as a judgment call the maintainer can override), and what triggers
+there as a judgment call the maintainer can override), what triggers
 re-scoring (opportunistic, on touch — see "Applying it to this repo's
-context").
+context"), and the Project board's actual fields/views now that the
+`project` scope was granted (verified 2026-07-25 — the board already has a
+`Priority` field to keep in sync, no existing `Effort`/`Priority score`
+field, and `Size` should be reused instead of adding a new `Effort` field —
+see "Current state" and "Mapping onto GitHub-native constructs").
