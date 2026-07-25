@@ -27,9 +27,11 @@ it).
 - A repeatable scoring rubric a single small-team maintainer can apply to an
   issue in under a minute, without needing a second reviewer to agree on the
   number.
-- The rubric's *output* is the priority tiers that already exist as labels
-  (`priority: low` / `high` / `urgent`) plus data the Project board can group
-  and sort by — not a parallel taxonomy that competes with the labels.
+- The rubric's *output* is the priority tiers that already exist (or will
+  exist, once `priority: medium` is added — see Design) as labels
+  (`priority: low` / `medium` / `high` / `urgent`) plus data the Project
+  board can group and sort by — not a parallel taxonomy that competes with
+  the labels.
 - A plan for retroactively scoring the current open backlog (including
   #555–#568) once, rather than leaving old issues permanently un-scored.
 
@@ -53,8 +55,9 @@ it).
 ## Current state (as found 2026-07-25)
 
 - **Labels already exist for priority**: `priority: low`, `priority: high`,
-  `priority: urgent` (3 tiers, no `medium`). Nothing defines what separates
-  them today.
+  `priority: urgent` (3 tiers). `priority: medium` does **not** exist yet —
+  this spec adds it (see Design and Adoption plan below); it needs to be created
+  before or during the retroactive scoring pass, not as a separate step.
 - **`state:` labels** track triage/workflow status independently:
   `state: new`, `state: reviewed`, `state: in progress`, `state: blocked`.
 - **`type:` labels** classify the kind of work: `type: bug`,
@@ -63,10 +66,12 @@ it).
 - **`module:` labels** scope an issue to an API package (`module: table-api`,
   `module: core`, `module: cdm`, ~15 more) — useful for grouping but not a
   priority signal by itself.
-- **One open milestone**: `v2.0.0` (#13, 3 open / 7 closed issues), described
-  as "everything that must be decided or done before tagging v2.0.0."
-  Milestone membership is itself a strong, already-modeled priority signal
-  this rubric should lean on rather than duplicate.
+- **One open milestone**: `v2.0.0` (#13, 3 open / 7 closed issues, ~14 issues
+  total once #555–#568 are accounted for), described as "everything that must
+  be decided or done before tagging v2.0.0." Milestone membership is itself a
+  strong, already-modeled priority signal this rubric should lean on rather
+  than duplicate — see "Applying it to this repo's context" for how it
+  interacts with the score.
 - **No custom issue fields** configured at the repo or org level
   (`list_issue_fields` returned empty) and **no GitHub Issue Types**
   configured (the issue-types endpoint 404s) — priority-relevant data today
@@ -114,28 +119,65 @@ folding effort into the same number as impact/risk lets a low-value
 "quick win" outscore a real problem just because it's cheap, which inverts
 the point of prioritizing. Instead:
 
-- **Score 5–6** (both dimensions high) → `priority: urgent`
-- **Score 3–4** → `priority: high`
-- **Score 2** → `priority: low`
+- **Score 6** (Impact 3 + Risk 3 — both dimensions maxed) →
+  `priority: urgent`
+- **Score 5** (one dimension maxed, the other at 2) → `priority: high`
+- **Score 4** (both dimensions at 2, or a 3+1 split) → `priority: medium`
+- **Score 2–3** (both dimensions minimal, or only one mildly elevated) →
+  `priority: low`
 - Effort is used only to order issues *within* the same tier (cheaper first)
   and to flag when a high-impact/high-risk issue is also high-effort — that
   combination is worth calling out explicitly during triage (for example,
   via a triage comment) rather than silently encoding it in the label.
 
-This maps onto the **existing 3-tier label set with no changes** — deriving
-a 2-dimension sum that lands on exactly 3 buckets was chosen specifically so
-this rubric slots under labels that already exist rather than asking the
-maintainer to also relabel every open issue's tier definitions. See "Open
-questions" for why a `priority: medium` tier was considered and set aside
-for now rather than added.
+**Four tiers, derived by re-splitting the existing 2–6 range, not by
+widening a dimension's scale.** The rubric's dimensions stay 1–3 exactly as
+before — only the label mapping changes. Widening Impact or Risk-of-delay to
+a 1–4 scale was considered and rejected: it would let a single dimension
+independently exceed the other by more, which starts to matter for a
+2-dimension additive sum in ways that would need the scoring guidance
+itself to be rewritten (what does "Impact = 4" mean that "Impact = 3"
+didn't?). Re-splitting the existing sum avoids that: the old 3-tier mapping
+was `{5,6}→urgent`, `{3,4}→high`, `{2}→low`. The new 4-tier mapping peels the
+top value off the old `urgent` band (6 stays `urgent`, 5 becomes its own
+`high` tier) and relabels the old `high` band (3–4) as the new `medium`,
+folding score 3 into `low` instead — because a score of 3 means at most one
+dimension is even at "2," which reads closer to "mostly unremarkable" than
+"medium." This keeps the bands roughly balanced against how many
+Impact/Risk combinations produce each score (score 4 is reachable by three
+different combinations, 3 and 5 by two each, 2 and 6 by exactly one), so no
+single tier silently absorbs most of the backlog the way the old 2-value
+`high` band risked doing.
+
+This does mean the `priority: medium` label needs to be **created** in the
+repo — it doesn't exist today (see "Current state"). Creating it folds into
+the retroactive scoring pass in the Adoption plan below rather than being a
+separate prerequisite step.
 
 ### Applying it to this repo's context
 
-- **Milestone membership is a shortcut, not bypassed by the rubric.**
-  Anything already in `v2.0.0` scores Risk-of-delay = 3 by definition (per
-  the milestone's own description: "breaking changes are free here and
-  expensive forever after"). The rubric doesn't re-litigate that; it exists
-  for the *rest* of the backlog that isn't in that milestone.
+- **Milestone membership floors the tier at `high`; it doesn't force
+  `urgent`.** Membership in `v2.0.0` still sets Risk-of-delay = 3 by
+  definition (per the milestone's own description: "breaking changes are
+  free here and expensive forever after"). Left purely to the score, an
+  Impact-1 + Risk-3 milestone issue would land at score 4 (`medium`) under
+  the new mapping — so this spec adds an explicit floor: **any issue in the
+  `v2.0.0` milestone is set no lower than `priority: high`, regardless of
+  what the raw score computes to**, while Impact still lets a milestone
+  issue score `urgent` (Impact 3 + Risk 3 = 6) or stay at `high` (Impact 1
+  or 2 + Risk 3 = 4 or 5, floored up to `high` if the raw score would say
+  `medium`). Forcing every milestone issue straight to `urgent` was
+  considered and rejected: with ~14 issues in `v2.0.0`, that would make
+  every one of them indistinguishable at the top tier, which defeats the
+  actual purpose of having a priority system at all — a board where triage
+  can tell what to work on *next*, not just what's "in the release."
+  Flooring at `high` instead still lets Impact differentiate a
+  release-blocking correctness bug from a milestone-scoped documentation
+  cleanup, while guaranteeing milestone work is never buried under
+  non-milestone `low`/`medium` noise. **This is a judgment call, not a
+  derived fact — flag it to the maintainer as something they can override**
+  if in practice the milestone turns out to need its own `urgent`-only
+  subset later.
 - **Effort = 3 correlates with, but isn't identical to, "needs an ADR."**
   An Effort-3 issue that also touches a cross-cutting convention (see
   CLAUDE.md's ADR-trigger list) should get routed to a spec/ADR before
@@ -147,20 +189,40 @@ for now rather than added.
   differ; that's cut entirely here, which is exactly why this rubric can
   stay to three dimensions instead of the five-plus a multi-scorer process
   usually needs.
+- **Re-scoring is opportunistic, triggered by an issue being touched, not
+  scheduled.** No new automated or calendar-driven re-triage process is
+  introduced (per the decision to start fully manual — see Automation).
+  Instead, a score/tier gets revisited whenever an issue is *already* being
+  interacted with, so re-scoring rides along with work the maintainer is
+  doing anyway rather than adding a new recurring chore:
+  - the issue receives a new comment, is re-labeled, or is referenced from a
+    PR — any of these is a natural moment to glance at whether the existing
+    score/tier still holds;
+  - the Effort estimate turns out to be off by 2+ tiers once real work
+    starts (for example, scored Effort = 1 but it's turned into a
+    multi-package change) — this is the one case worth explicitly flagging
+    rather than leaving to "notice it eventually," since a wrong Effort
+    estimate is exactly the kind of thing that should also prompt a second
+    look at whether Impact/Risk were assessed correctly too;
+  - an issue is reopened after being closed as won't-fix or duplicate —
+    always re-score on reopen rather than restoring the stale label, since
+    the circumstances that led to reopening usually mean *something* about
+    the original assessment no longer holds.
 
 ### Mapping onto GitHub-native constructs
 
 **Keep priority as a label, don't move it to a Project-only field.** Labels
 are visible directly on the issue (in notifications, in `gh issue list`, in
 search) without opening the board; a Project single-select field is
-board-only. Since `priority: *` labels already exist and are presumably
-referenced elsewhere (searches, muscle memory), the rubric's output stays a
-label. **Do** add two Project v2 custom fields that the label can't provide:
+board-only. Since `priority: *` labels already exist (bar `medium`, added by
+this spec) and are presumably referenced elsewhere (searches, muscle
+memory), the rubric's output stays a label. **Do** add two Project v2 custom
+fields that the label can't provide:
 
 1. **`Priority score` (Number field)** — the raw 2–6 sum from the rubric.
-   Lets the board sort *within* a `priority: high` tier instead of only
-   grouping by it — three `priority: high` issues aren't equally urgent, and
-   today there's no way to express that ordering anywhere.
+   Lets the board sort *within* a tier instead of only grouping by it —
+   three `priority: high` issues aren't equally urgent, and today there's no
+   way to express that ordering anywhere.
 2. **`Effort` (Single select: S / M / L, mirroring the 1/2/3 scale)** — kept
    separate from score per the "effort is a tie-breaker, not an input"
    design decision above. Having it as its own sortable field is what makes
@@ -204,25 +266,32 @@ Two automation options exist for later, deliberately not pursued now:
    files the issue.
 
 Recommendation: start fully manual (maintainer sets the label + two Project
-fields during triage, using the rubric as a 30-second mental checklist).
-Revisit automation only if triage volume grows enough that manual scoring
-becomes the bottleneck — there's no evidence of that yet.
+fields during triage, using the rubric as a 30-second mental checklist, and
+re-scoring opportunistically per the trigger list above). Revisit
+automation only if triage volume grows enough that manual scoring becomes
+the bottleneck — there's no evidence of that yet.
 
 ### Adoption plan
 
-1. **Retroactive pass over #555–#568** (the just-migrated release-2.0
+1. **Create the `priority: medium` label** as the first step of the
+   retroactive pass below — it doesn't exist in the repo yet (see "Current
+   state"), and there's no reason to make it a separate roll-out step ahead
+   of the scoring pass that will immediately start applying it.
+2. **Retroactive pass over #555–#568** (the just-migrated release-2.0
    issues) plus any other currently-open, unlabeled-for-priority issues —
    scored once, in one sitting, since they're already added to the
-   milestone and context-fresh from today's migration.
-2. **Prospective**: every newly filed issue gets a priority label + (once
+   milestone and context-fresh from today's migration. Apply the
+   milestone-floor rule (see "Applying it to this repo's context") to the
+   `v2.0.0` subset during this same pass.
+3. **Prospective**: every newly filed issue gets a priority label + (once
    the Project fields exist) score/effort fields set during the same triage
    pass that currently applies `state: new` → `state: reviewed`. No new
    issue-template field is added (see Automation) — this is a triage-time
    action, not a filing-time requirement.
-3. Document the rubric itself (dimensions, scale, bucket thresholds) in
-   `CONTRIBUTING.md` or a new `docs/TRIAGE.md` once this spec is approved —
-   out of scope for this document, which is the design, not the
-   contributor-facing writeup.
+4. Document the rubric itself (dimensions, scale, bucket thresholds,
+   milestone-floor rule, and re-scoring triggers) in `CONTRIBUTING.md` or a
+   new `docs/TRIAGE.md` once this spec is approved — out of scope for this
+   document, which is the design, not the contributor-facing writeup.
 
 ## Alternatives considered
 
@@ -242,27 +311,34 @@ becomes the bottleneck — there's no evidence of that yet.
 - **Automate scoring from day one via issue-template fields** — rejected for
   now (see Automation section); adds a second taxonomy and shifts judgment
   onto reporters before there's evidence manual triage is a bottleneck.
+- **Widening Impact and/or Risk-of-delay to a 1–4 scale to make room for a
+  4th tier** — rejected in favor of re-splitting the existing 2–6 sum (see
+  Design); widening a dimension changes what the rubric's own scoring
+  guidance means per level and would need to be rewritten, whereas
+  re-splitting only touches the label-mapping boundaries.
+- **Forcing `priority: urgent` on every `v2.0.0`-milestone issue** —
+  rejected (see "Applying it to this repo's context"); flattens ~14 issues
+  into one indistinguishable tier, defeating the point of having tiers at
+  all. Flooring at `high` instead was chosen so Impact can still
+  differentiate within the milestone.
+- **A scheduled/calendar-driven re-triage pass (for example, weekly)** — rejected in
+  favor of an opportunistic, touch-triggered re-score; a single maintainer
+  doesn't have the volume to justify a recurring ceremony, and tying
+  re-scoring to actions already happening (comments, re-labels, PR
+  references, reopens) means it costs nothing extra to remember.
 
 ## Open questions
 
-1. **Should a `priority: medium` label be added?** Three tiers is coarse —
-   the current design forces every Score-3-or-4 issue into a single `high`
-   bucket, which may end up being most of the backlog in practice. Left
-   open rather than decided unilaterally, since it changes an existing label
-   taxonomy other tooling/searches may already depend on. Recommend
-   revisiting after the retroactive scoring pass described above shows
-   whether `priority: high` is overloaded.
-2. **Project board number/layout** — this spec can't confirm the current
+1. **Project board number/layout** — this spec can't confirm the current
    project's fields or views exist because `gh`'s token lacks the `project`
    scope. Needs `gh auth refresh -s project` (or `read:project` for a
    read-only check first) before the board-wiring section can be executed
    or even verified against reality.
-3. **Does `v2.0.0` milestone membership override or just floor the score?**
-   This spec treats milestone membership as "Risk-of-delay = 3 by
-   definition," which floors an issue at `priority: high` minimum
-   (Score ≥ 4 once Risk=3, since Impact ≥ 1). Confirm that's the intended
-   effect rather than milestone-linked issues always landing at `urgent`
-   regardless of Impact.
-4. **Who re-scores an issue if its Effort estimate turns out wrong after
-   work starts?** No re-triage trigger is defined — worth deciding whether
-   moving to `state: in progress` should prompt a score sanity-check.
+
+Resolved since the previous draft (see commit history for this file):
+whether to add a `priority: medium` tier (yes — see Design), how
+`v2.0.0` milestone membership interacts with score (floors at `high`, does
+not force `urgent` — see "Applying it to this repo's context," flagged
+there as a judgment call the maintainer can override), and what triggers
+re-scoring (opportunistic, on touch — see "Applying it to this repo's
+context").
