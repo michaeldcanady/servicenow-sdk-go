@@ -17,3 +17,44 @@ A type-safe, idiomatic Go client for the ServiceNow REST APIs.
 go get github.com/michaeldcanady/servicenow-sdk-go@release/2.0
 ```
 > Requires **Go 1.25+**
+
+## Quickstart
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+
+    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+    "github.com/michaeldcanady/servicenow-sdk-go/credentials"
+)
+
+func main() {
+    authProvider := credentials.NewBasicProvider("username", "password")
+
+    client, err := servicenowsdkgo.NewServiceNowServiceClient(
+        servicenowsdkgo.WithInstance("your-instance"),
+        servicenowsdkgo.WithAuthenticationProvider(authProvider),
+    )
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    resp, err := client.Now().Table("incident").Get(context.Background(), nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    records, err := resp.GetResult()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    for _, record := range records {
+        fmt.Println(record)
+    }
+}
+```
