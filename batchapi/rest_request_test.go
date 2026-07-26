@@ -12,6 +12,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewRestRequest(t *testing.T) {
@@ -50,7 +51,7 @@ func TestCreateRestRequestFromDiscriminatorValue(t *testing.T) {
 
 				parsable, err := CreateRestRequestFromDiscriminatorValue(parseNode)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, parsable)
 				assert.IsType(t, &RestRequestModel{}, parsable)
 			},
@@ -83,10 +84,10 @@ func TestCreateRestRequestFromRequestInformation(t *testing.T) {
 
 			res, err := CreateRestRequestFromRequestInformation(requestInfo, test.excludeResponseHeaders)
 			if test.expectedErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Nil(t, res)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, res)
 			}
 		})
@@ -113,7 +114,7 @@ func TestRestRequest_Serialize(t *testing.T) {
 		},
 		{
 			name: "Nil Model",
-			setup: func(m *RestRequestModel) {
+			setup: func(_ *RestRequestModel) {
 				// handled by test loop
 			},
 			expectedErr: false,
@@ -195,7 +196,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 				}
 
 				id, err := resp.GetBody()
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 			},
 		},
@@ -277,7 +278,7 @@ func TestRestRequest_SetBodyFromParsable(t *testing.T) {
 	}{
 		{
 			name: "Successful",
-			setup: func(m *RestRequestModel) {
+			setup: func(_ *RestRequestModel) {
 				// We need a registered serialization writer
 				serialization.DefaultSerializationWriterFactoryInstance.ContentTypeAssociatedFactories["application/json"] = mocking.NewMockSerializationWriterFactory()
 			},
@@ -285,7 +286,7 @@ func TestRestRequest_SetBodyFromParsable(t *testing.T) {
 		},
 		{
 			name: "Registry Error",
-			setup: func(m *RestRequestModel) {
+			setup: func(_ *RestRequestModel) {
 				delete(serialization.DefaultSerializationWriterFactoryInstance.ContentTypeAssociatedFactories, "application/json")
 			},
 			expectedErr: true,
@@ -335,7 +336,7 @@ func TestRestRequest_SetBody(t *testing.T) {
 				}
 
 				err := resp.SetBody(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -419,7 +420,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				}
 
 				id, err := resp.GetExcludeResponseHeaders()
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 			},
 		},
@@ -513,7 +514,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 				}
 
 				err := resp.SetExcludeResponseHeaders(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -597,7 +598,7 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				}
 
 				id, err := resp.GetHeaders()
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 			},
 		},
@@ -691,7 +692,7 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 				}
 
 				err := resp.SetHeaders(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -775,7 +776,7 @@ func TestRestRequest_GetID(t *testing.T) {
 				}
 
 				id, err := resp.GetID()
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 			},
 		},
@@ -869,7 +870,7 @@ func TestRestRequest_SetID(t *testing.T) {
 				}
 
 				err := resp.SetID(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -953,7 +954,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				}
 
 				id, err := resp.GetMethod()
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 			},
 		},
@@ -1047,7 +1048,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 				}
 
 				err := resp.SetMethod(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -1131,7 +1132,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 				}
 
 				id, err := resp.GetURL()
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 			},
 		},
@@ -1225,7 +1226,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 				}
 
 				err := resp.SetURL(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)

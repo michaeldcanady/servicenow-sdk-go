@@ -1,4 +1,4 @@
-package http
+package internalhttp
 
 import (
 	"errors"
@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestWithMiddleware(t *testing.T) {
@@ -22,7 +23,7 @@ func TestWithMiddleware(t *testing.T) {
 
 				option := WithMiddleware(middleware)
 				err := option(config)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &serviceNowClientConfig{
 					middleware: []nethttplibrary.Middleware{middleware},
 				}, config)

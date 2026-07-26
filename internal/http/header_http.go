@@ -1,4 +1,4 @@
-package http
+package internalhttp
 
 type HTTPHeader int64
 

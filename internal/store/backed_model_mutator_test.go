@@ -6,6 +6,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDefaultBackedModelMutatorFunc(t *testing.T) {
@@ -26,7 +27,7 @@ func TestDefaultBackedModelMutatorFunc(t *testing.T) {
 				model.On("GetBackingStore").Return(store)
 
 				err := DefaultBackedModelMutatorFunc(model, key, value)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				model.AssertExpectations(t)
 				store.AssertExpectations(t)
 			},

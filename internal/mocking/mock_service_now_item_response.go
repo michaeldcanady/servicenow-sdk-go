@@ -16,19 +16,19 @@ func (m *MockServiceNowItemResponse[T]) GetResult() (T, error) {
 }
 
 // Serialize writes the objects properties to the current writer.
-func (mP *MockServiceNowItemResponse[T]) Serialize(writer serialization.SerializationWriter) error {
-	args := mP.Called(writer)
+func (m *MockServiceNowItemResponse[T]) Serialize(writer serialization.SerializationWriter) error {
+	args := m.Called(writer)
 	return args.Error(0)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (mP *MockServiceNowItemResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	args := mP.Called()
+func (m *MockServiceNowItemResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	args := m.Called()
 	return args.Get(0).(map[string]func(serialization.ParseNode) error)
 }
 
 // GetBackingStore returns the BackingStore of the model.
-func (mM *MockServiceNowItemResponse[T]) GetBackingStore() (store.BackingStore, error) {
-	args := mM.Called()
+func (m *MockServiceNowItemResponse[T]) GetBackingStore() (store.BackingStore, error) {
+	args := m.Called()
 	return args.Get(0).(store.BackingStore), args.Error(1)
 }

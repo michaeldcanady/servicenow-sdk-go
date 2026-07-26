@@ -9,6 +9,7 @@ import (
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCaseRequestBuilder_ToGetRequestInformation(t *testing.T) {
@@ -17,7 +18,7 @@ func TestCaseRequestBuilder_ToGetRequestInformation(t *testing.T) {
 
 	t.Run("Search Cases", func(t *testing.T) {
 		requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.NotNil(t, requestInfo)
 		assert.Equal(t, caseURLTemplate, requestInfo.UrlTemplate)
 	})
@@ -25,7 +26,7 @@ func TestCaseRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	t.Run("Get Case By ID", func(t *testing.T) {
 		itemBuilder := builder.ByID("test-id")
 		requestInfo, err := itemBuilder.ToGetRequestInformation(context.Background(), nil)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.NotNil(t, requestInfo)
 		assert.Equal(t, caseItemURLTemplate, requestInfo.UrlTemplate)
 		assert.Equal(t, "test-id", requestInfo.PathParameters["id"])
@@ -41,7 +42,7 @@ func TestCaseRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -55,7 +56,7 @@ func TestCaseRequestBuilder_Post(t *testing.T) {
 
 	resp, err := builder.Post(context.Background(), NewCaseResult(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -68,7 +69,7 @@ func TestCaseItemRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -82,7 +83,7 @@ func TestCaseItemRequestBuilder_Put(t *testing.T) {
 
 	resp, err := builder.Put(context.Background(), NewCaseResult(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -95,7 +96,7 @@ func TestCaseActivitiesRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -108,7 +109,7 @@ func TestCaseFieldValuesRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 

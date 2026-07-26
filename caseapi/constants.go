@@ -2,7 +2,7 @@ package caseapi
 
 const (
 	// CaseResult keys
-	sysIdKey            = "sys_id"
+	sysIDKey            = "sys_id"
 	numberKey           = "number"
 	shortDescriptionKey = "short_description"
 	descriptionKey      = "description"

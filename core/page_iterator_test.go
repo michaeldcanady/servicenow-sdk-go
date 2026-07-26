@@ -62,13 +62,13 @@ func TestNewPageIterator(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			iterator, err := NewPageIterator(tt.res, tt.reqAdapter, tt.constructor)
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Nil(t, iterator)
 				if tt.errMsg != "" {
 					assert.Contains(t, err.Error(), tt.errMsg)
 				}
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, iterator)
 			}
 		})
@@ -106,7 +106,7 @@ func TestPageIterator_Iterate(t *testing.T) {
 			iterator, err := NewPageIterator[*mocking.MockParsable](res, reqAdapter, constructor)
 			require.NoError(t, err)
 
-			err = iterator.Iterate(context.Background(), tt.reverse, func(item *mocking.MockParsable) bool {
+			err = iterator.Iterate(context.Background(), tt.reverse, func(_ *mocking.MockParsable) bool {
 				return true
 			})
 			assert.NoError(t, err)
@@ -123,7 +123,7 @@ func TestPageIterator_NextItem(t *testing.T) {
 	}{
 		{
 			name: "Standard next item",
-			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], _ *mocking.MockRequestAdapter) {
 				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
 				res.On("GetResult").Return([]*mocking.MockParsable{mocking.NewMockParsable()}, nil)
 				res.On("GetNextLink").Return(nil, nil)
@@ -135,7 +135,7 @@ func TestPageIterator_NextItem(t *testing.T) {
 		},
 		{
 			name: "No more items",
-			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], _ *mocking.MockRequestAdapter) {
 				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
 				res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
 				res.On("GetNextLink").Return(nil, nil)
@@ -160,12 +160,12 @@ func TestPageIterator_NextItem(t *testing.T) {
 
 			item, err := iterator.NextItem(context.Background())
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				if tt.errIs != nil {
-					assert.ErrorIs(t, err, tt.errIs)
+					require.ErrorIs(t, err, tt.errIs)
 				}
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, item)
 			}
 		})
@@ -182,7 +182,7 @@ func TestPageIterator_PreviousItem(t *testing.T) {
 	}{
 		{
 			name: "Standard previous item",
-			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], _ *mocking.MockRequestAdapter) {
 				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
 				res.On("GetResult").Return([]*mocking.MockParsable{mocking.NewMockParsable()}, nil)
 				res.On("GetNextLink").Return(nil, nil)
@@ -197,7 +197,7 @@ func TestPageIterator_PreviousItem(t *testing.T) {
 		},
 		{
 			name: "No previous items",
-			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], _ *mocking.MockRequestAdapter) {
 				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
 				res.On("GetResult").Return([]*mocking.MockParsable{mocking.NewMockParsable()}, nil)
 				res.On("GetNextLink").Return(nil, nil)
@@ -229,12 +229,12 @@ func TestPageIterator_PreviousItem(t *testing.T) {
 
 			item, err := iterator.PreviousItem(context.Background())
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				if tt.errIs != nil {
-					assert.ErrorIs(t, err, tt.errIs)
+					require.ErrorIs(t, err, tt.errIs)
 				}
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, item)
 			}
 		})
@@ -268,7 +268,7 @@ func TestPageIterator_Next(t *testing.T) {
 		},
 		{
 			name: "Next without link",
-			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], req *mocking.MockRequestAdapter) {
+			mockSetup: func(res *mocking.MockServiceNowCollectionResponse[*mocking.MockParsable], _ *mocking.MockRequestAdapter) {
 				res.On("GetBackingStore").Return(mocking.NewMockBackingStore())
 				res.On("GetResult").Return([]*mocking.MockParsable{}, nil)
 				res.On("GetNextLink").Return(nil, nil)
@@ -347,7 +347,7 @@ func TestPageIterator_Next(t *testing.T) {
 			require.NoError(t, err)
 
 			resp, err := tt.navFunc(context.Background(), iterator)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			if tt.wantRes {
 				assert.NotEqual(t, PageResult[*mocking.MockParsable]{}, resp)
 			} else {
@@ -387,7 +387,7 @@ func TestPageIterator_Options(t *testing.T) {
 					WithHeaders[*mocking.MockParsable](headers),
 					WithRequestOptions[*mocking.MockParsable](options...),
 				)
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, iterator)
 				assert.Equal(t, headers, iterator.headers)
 				assert.Contains(t, iterator.reqOptions, options[0])

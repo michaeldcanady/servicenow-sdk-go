@@ -5,6 +5,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAppointmentResultModel_GettersSetters(t *testing.T) {
@@ -25,9 +26,9 @@ func TestAppointmentResultModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -35,7 +36,7 @@ func TestAppointmentResultModel_GettersSetters(t *testing.T) {
 
 func TestCreateAppointmentResponseFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateAppointmentResponseFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
@@ -48,17 +49,17 @@ func TestExecuteRuleConditionsRequestModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"CatalogId", func(v interface{}) error { return model.SetCatalogId(v.(*string)) }, func() (interface{}, error) { return model.GetCatalogId() }, internal.ToPointer("val")},
+		{"CatalogId", func(v interface{}) error { return model.SetCatalogID(v.(*string)) }, func() (interface{}, error) { return model.GetCatalogID() }, internal.ToPointer("val")},
 		{"OtherInputs", func(v interface{}) error { return model.SetOtherInputs(v) }, func() (interface{}, error) { return model.GetOtherInputs() }, "val"},
-		{"TaskId", func(v interface{}) error { return model.SetTaskId(v.(*string)) }, func() (interface{}, error) { return model.GetTaskId() }, internal.ToPointer("val")},
+		{"TaskId", func(v interface{}) error { return model.SetTaskID(v.(*string)) }, func() (interface{}, error) { return model.GetTaskID() }, internal.ToPointer("val")},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -75,16 +76,16 @@ func TestExecuteRuleConditionsResultModel_GettersSetters(t *testing.T) {
 	}{
 		{"DedicatedCapacity", func(v interface{}) error { return model.SetDedicatedCapacity(v.(*bool)) }, func() (interface{}, error) { return model.GetDedicatedCapacity() }, internal.ToPointer(true)},
 		{"FutureMaxBookableDays", func(v interface{}) error { return model.SetFutureMaxBookableDays(v.(*string)) }, func() (interface{}, error) { return model.GetFutureMaxBookableDays() }, internal.ToPointer("val")},
-		{"RuleId", func(v interface{}) error { return model.SetRuleId(v.(*string)) }, func() (interface{}, error) { return model.GetRuleId() }, internal.ToPointer("val")},
+		{"RuleId", func(v interface{}) error { return model.SetRuleID(v.(*string)) }, func() (interface{}, error) { return model.GetRuleID() }, internal.ToPointer("val")},
 		{"RuleName", func(v interface{}) error { return model.SetRuleName(v.(*string)) }, func() (interface{}, error) { return model.GetRuleName() }, internal.ToPointer("val")},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -111,9 +112,9 @@ func TestAvailabilityResultModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -121,13 +122,13 @@ func TestAvailabilityResultModel_GettersSetters(t *testing.T) {
 
 func TestCreateAvailabilityResponseFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateAvailabilityResponseFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
 func TestCreateAvailabilitySlotFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateAvailabilitySlotFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
@@ -155,6 +156,6 @@ func TestAvailabilitySlotModel_GetAdditionalData_DoesNotWriteBackOnEmptyRead(t *
 	_ = model.GetAdditionalData()
 	val, err := model.GetBackingStore().Get(additionalDataKey)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Nil(t, val)
 }

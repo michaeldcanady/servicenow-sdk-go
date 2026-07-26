@@ -16,6 +16,7 @@ on:
       - "!docs/snippets/**"
       - "tests/integration/features/**"
       - ".github/workflows/ci.yml"
+      - ".golangci.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}

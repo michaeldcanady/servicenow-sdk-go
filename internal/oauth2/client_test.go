@@ -81,8 +81,8 @@ func TestClient_ExchangeClientCredentials(t *testing.T) {
 				}
 				_, err := client.ExchangeClientCredentials(context.Background(), nil)
 				require.Error(t, err)
-				_, ok := err.(*TokenError)
-				require.True(t, ok)
+				var tokenErr *TokenError
+				require.ErrorAs(t, err, &tokenErr)
 
 				mockClient.AssertExpectations(t)
 			},

@@ -6,8 +6,8 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewBaseServiceNowItemResponse(t *testing.T) {
@@ -20,7 +20,7 @@ func TestNewBaseServiceNowItemResponse(t *testing.T) {
 func TestBaseServiceNowItemResponse_Serialize(t *testing.T) {
 	res := NewBaseServiceNowItemResponse[serialization.Parsable](nil)
 	err := res.Serialize(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	var nilR *BaseServiceNowItemResponse[serialization.Parsable]
 	if err := nilR.Serialize(nil); err != nil {

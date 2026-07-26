@@ -107,6 +107,6 @@ const (
 	// ExecuteRuleConditionsResult keys
 	dedicatedCapacityKey     = "dedicatedCapacity"
 	futureMaxBookableDaysKey = "futureMaxBookableDays"
-	ruleIdKey                = "ruleId"
+	ruleIDKey                = "ruleId"
 	ruleNameKey              = "ruleName"
 )

@@ -11,6 +11,7 @@ import (
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCdmEditorRequestBuilder_Hierarchy(t *testing.T) {
@@ -26,10 +27,10 @@ func TestNodesRequestBuilder_Get(t *testing.T) {
 	builder := NewNodesRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
 
 	t.Run("URI Construction", func(t *testing.T) {
-		sysId := "123"
+		sysID := "123"
 		config := &NodesRequestBuilderGetRequestConfiguration{
 			QueryParameters: &NodesRequestBuilderGetQueryParameters{
-				SysId: &sysId,
+				SysID: &sysID,
 			},
 		}
 		requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
@@ -45,7 +46,7 @@ func TestNodesRequestBuilder_Get(t *testing.T) {
 
 		resp, err := builder.Get(context.Background(), nil)
 
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, mockRes, resp)
 	})
 }
@@ -60,7 +61,7 @@ func TestNodesRequestBuilder_Post(t *testing.T) {
 
 	resp, err := builder.Post(context.Background(), NewNodeCreateRequest(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -84,7 +85,7 @@ func TestNodeItemRequestBuilder_Put(t *testing.T) {
 
 		resp, err := builder.Put(context.Background(), NewNodeUpdateRequest(), nil)
 
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, mockRes, resp)
 	})
 }
@@ -101,7 +102,7 @@ func TestNodeItemRequestBuilder_Delete(t *testing.T) {
 
 	resp, err := builder.Delete(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -110,10 +111,10 @@ func TestValidationRequestBuilder_Get(t *testing.T) {
 	builder := NewValidationRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
 
 	t.Run("URI Construction", func(t *testing.T) {
-		cdmId := "cdm456"
+		cdmID := "cdm456"
 		config := &ValidationRequestBuilderGetRequestConfiguration{
 			QueryParameters: &ValidationRequestBuilderGetQueryParameters{
-				CdmId: &cdmId,
+				CdmID: &cdmID,
 			},
 		}
 		requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
@@ -129,7 +130,7 @@ func TestValidationRequestBuilder_Get(t *testing.T) {
 
 		resp, err := builder.Get(context.Background(), nil)
 
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, mockRes, resp)
 	})
 }
@@ -142,11 +143,11 @@ func TestNodesRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 
 			postResp, err := builder.Post(context.Background(), nil, nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, postResp)
 		})
 	}
@@ -160,11 +161,11 @@ func TestNodeItemRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			putResp, err := builder.Put(context.Background(), nil, nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, putResp)
 
 			delResp, err := builder.Delete(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, delResp)
 		})
 	}
@@ -178,7 +179,7 @@ func TestValidationRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}

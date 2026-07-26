@@ -8,6 +8,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestApplicationsRequestBuilder_Deployables(t *testing.T) {
@@ -54,7 +55,7 @@ func TestDeployablesRequestBuilder_Delete(t *testing.T) {
 	requestInfo.AddQueryParameters(*config.QueryParameters)
 
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/deployables?appName=test_app&name=Dep-1", uri.String())
 }
 
@@ -75,7 +76,7 @@ func TestSharedComponentsRequestBuilder_Delete(t *testing.T) {
 	requestInfo.AddQueryParameters(*config.QueryParameters)
 
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/shared_components?appName=test_app&sharedComponentName=Comp-1", uri.String())
 }
 
@@ -91,7 +92,7 @@ func TestUploadStatusItemRequestBuilder_Get(t *testing.T) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, itemBuilder.GetURLTemplate(), itemBuilder.GetPathParameters())
 
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/upload-status/upload123", uri.String())
 }
 
@@ -119,7 +120,7 @@ func TestDeployablesRequestBuilder_Put(t *testing.T) {
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, builder.GetURLTemplate(), builder.GetPathParameters())
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/deployables", uri.String())
 }
 
@@ -129,7 +130,7 @@ func TestSharedComponentsRequestBuilder_Put(t *testing.T) {
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, builder.GetURLTemplate(), builder.GetPathParameters())
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/shared_components", uri.String())
 }
 
@@ -150,7 +151,7 @@ func TestExportsRequestBuilder_Get(t *testing.T) {
 	requestInfo.AddQueryParameters(*config.QueryParameters)
 
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/deployables/exports?appName=test_app&deployableName=test_dep", uri.String())
 }
 
@@ -162,14 +163,14 @@ func TestExportItemRequestBuilder(t *testing.T) {
 	assert.NotNil(t, statusBuilder)
 	requestInfoStatus := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, statusBuilder.GetURLTemplate(), statusBuilder.GetPathParameters())
 	uriStatus, err := requestInfoStatus.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/deployables/exports/exp-123/status", uriStatus.String())
 
 	contentBuilder := builder.Content()
 	assert.NotNil(t, contentBuilder)
 	requestInfoContent := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, contentBuilder.GetURLTemplate(), contentBuilder.GetPathParameters())
 	uriContent, err := requestInfoContent.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/deployables/exports/exp-123/content", uriContent.String())
 }
 
@@ -193,7 +194,7 @@ func TestSharedLibrariesComponentsApplicationsRequestBuilder_Get(t *testing.T) {
 	requestInfo.AddQueryParameters(*config.QueryParameters)
 
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/shared_libraries/components/applications?appName=test_app&sharedComponentName=shared_comp&name=name", uri.String())
 }
 
@@ -204,7 +205,7 @@ func TestUploadsComponentsRequestBuilder_Post(t *testing.T) {
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, builder.GetURLTemplate(), builder.GetPathParameters())
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/uploads/components", uri.String())
 }
 
@@ -215,7 +216,7 @@ func TestUploadsComponentsVarsRequestBuilder_Post(t *testing.T) {
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, builder.GetURLTemplate(), builder.GetPathParameters())
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/uploads/components/vars", uri.String())
 }
 
@@ -226,7 +227,7 @@ func TestUploadsCollectionsRequestBuilder_Post(t *testing.T) {
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, builder.GetURLTemplate(), builder.GetPathParameters())
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/uploads/collections", uri.String())
 }
 
@@ -248,7 +249,7 @@ func TestUploadsCollectionsFileRequestBuilder_Post(t *testing.T) {
 	requestInfo.AddQueryParameters(*config.QueryParameters)
 
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/uploads/collections/file?appName=test_app&collectionName=test_coll", uri.String())
 }
 
@@ -270,7 +271,7 @@ func TestUploadsDeployablesFileRequestBuilder_Post(t *testing.T) {
 	requestInfo.AddQueryParameters(*config.QueryParameters)
 
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/applications/uploads/deployables/file?appName=test_app&deployableName=test_dep", uri.String())
 }
 
@@ -282,10 +283,10 @@ func TestDeployablesRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			err := builder.Delete(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 
 			resp, err := builder.Put(context.Background(), nil, nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -299,10 +300,10 @@ func TestSharedComponentsRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			err := builder.Delete(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 
 			resp, err := builder.Put(context.Background(), nil, nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -316,7 +317,7 @@ func TestUploadStatusItemRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -330,7 +331,7 @@ func TestExportsRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -344,7 +345,7 @@ func TestExportItemStatusRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -358,7 +359,7 @@ func TestExportItemContentRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -372,7 +373,7 @@ func TestSharedLibrariesComponentsApplicationsRequestBuilder_NilReceiverGuards(t
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -386,7 +387,7 @@ func TestUploadsComponentsRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Post(context.Background(), nil, nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -400,7 +401,7 @@ func TestUploadsComponentsVarsRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Post(context.Background(), nil, nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -414,7 +415,7 @@ func TestUploadsCollectionsRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Post(context.Background(), nil, nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -428,7 +429,7 @@ func TestUploadsCollectionsFileRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Post(context.Background(), nil, nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -442,7 +443,7 @@ func TestUploadsDeployablesFileRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Post(context.Background(), nil, nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}

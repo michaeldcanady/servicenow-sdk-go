@@ -33,7 +33,7 @@ func CreateActivityFromDiscriminatorValue(_ serialization.ParseNode) (serializat
 	return NewActivity(), nil
 }
 
-func (m *Activity) Serialize(writer serialization.SerializationWriter) error {
+func (m *Activity) Serialize(_ serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
 	}

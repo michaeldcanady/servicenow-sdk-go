@@ -14,8 +14,8 @@ type CaseResult interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
-	GetSysId() (*string, error)
-	setSysId(*string) error
+	GetSysID() (*string, error)
+	setSysID(*string) error
 	GetNumber() (*string, error)
 	setNumber(*string) error
 	GetShortDescription() (*string, error)
@@ -55,7 +55,7 @@ func (m *CaseResultModel) Serialize(writer serialization.SerializationWriter) er
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
 		internalSerialization.SerializeStringFunc(numberKey, m.GetNumber),
 		internalSerialization.SerializeStringFunc(shortDescriptionKey, m.GetShortDescription),
 		internalSerialization.SerializeStringFunc(descriptionKey, m.GetDescription),
@@ -73,7 +73,7 @@ func (m *CaseResultModel) Serialize(writer serialization.SerializationWriter) er
 
 func (m *CaseResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:            internalSerialization.DeserializeStringFunc(m.setSysId),
+		sysIDKey:            internalSerialization.DeserializeStringFunc(m.setSysID),
 		numberKey:           internalSerialization.DeserializeStringFunc(m.setNumber),
 		shortDescriptionKey: internalSerialization.DeserializeStringFunc(m.setShortDescription),
 		descriptionKey:      internalSerialization.DeserializeStringFunc(m.setDescription),
@@ -89,11 +89,11 @@ func (m *CaseResultModel) GetFieldDeserializers() map[string]func(serialization.
 	}
 }
 
-func (m *CaseResultModel) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, *string](m, sysIdKey)
+func (m *CaseResultModel) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, *string](m, sysIDKey)
 }
-func (m *CaseResultModel) setSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, sysIdKey, val)
+func (m *CaseResultModel) setSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 func (m *CaseResultModel) GetNumber() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, *string](m, numberKey)

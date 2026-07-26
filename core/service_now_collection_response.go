@@ -75,38 +75,38 @@ func (bR *BaseServiceNowCollectionResponse[T]) GetFieldDeserializers() map[strin
 }
 
 // setResult Sets the result values of the response.
-func (r *BaseServiceNowCollectionResponse[T]) setResult(val []T) error {
+func (bR *BaseServiceNowCollectionResponse[T]) setResult(val []T) error {
 	anySlice, err := conversion.CastCollection[T, any](val)
 	if err != nil {
 		return err
 	}
 
-	return store.DefaultBackedModelMutatorFunc(r, resultKey, anySlice)
+	return store.DefaultBackedModelMutatorFunc(bR, resultKey, anySlice)
 }
 
 // SetNextLink Sets the url to the next page of results.
-func (r *BaseServiceNowCollectionResponse[T]) SetNextLink(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(r, nextKey, val)
+func (bR *BaseServiceNowCollectionResponse[T]) SetNextLink(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(bR, nextKey, val)
 }
 
 // SetPreviousLink Sets the url to the previous page of results.
-func (r *BaseServiceNowCollectionResponse[T]) SetPreviousLink(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(r, previousKey, val)
+func (bR *BaseServiceNowCollectionResponse[T]) SetPreviousLink(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(bR, previousKey, val)
 }
 
 // SetFirstLink Sets the url to the first page of results.
-func (r *BaseServiceNowCollectionResponse[T]) SetFirstLink(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(r, firstKey, val)
+func (bR *BaseServiceNowCollectionResponse[T]) SetFirstLink(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(bR, firstKey, val)
 }
 
 // SetLastLink Sets the url to the last page of results.
-func (r *BaseServiceNowCollectionResponse[T]) SetLastLink(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(r, lastKey, val)
+func (bR *BaseServiceNowCollectionResponse[T]) SetLastLink(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(bR, lastKey, val)
 }
 
 // GetResult Returns the result values of the response.
-func (r *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
-	unknownSlice, err := store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], []any](r, resultKey)
+func (bR *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
+	unknownSlice, err := store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], []any](bR, resultKey)
 	if err != nil {
 		return nil, err
 	}
@@ -115,21 +115,21 @@ func (r *BaseServiceNowCollectionResponse[T]) GetResult() ([]T, error) {
 }
 
 // GetNextLink Returns the url to the next page of results.
-func (r *BaseServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](r, nextKey)
+func (bR *BaseServiceNowCollectionResponse[T]) GetNextLink() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](bR, nextKey)
 }
 
 // GetPreviousLink Returns the url to the previous page of results.
-func (r *BaseServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](r, previousKey)
+func (bR *BaseServiceNowCollectionResponse[T]) GetPreviousLink() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](bR, previousKey)
 }
 
 // GetFirstLink Returns the url to the first page of results.
-func (r *BaseServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](r, firstKey)
+func (bR *BaseServiceNowCollectionResponse[T]) GetFirstLink() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](bR, firstKey)
 }
 
 // GetLastLink Returns the url to the last page of results.
-func (r *BaseServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](r, lastKey)
+func (bR *BaseServiceNowCollectionResponse[T]) GetLastLink() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*BaseServiceNowCollectionResponse[T], *string](bR, lastKey)
 }

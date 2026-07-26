@@ -6,6 +6,7 @@ import (
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/stretchr/testify/require"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
@@ -129,7 +130,7 @@ func TestPoliciesMappingsRequestBuilder_Delete(t *testing.T) {
 			err := rB.Delete(context.Background(), tt.config)
 
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Equal(t, tt.errMessage, err.Error())
 			} else {
 				assert.NoError(t, err)
@@ -178,7 +179,7 @@ func TestPoliciesMappingsRequestBuilder_ToDeleteRequestInformation(t *testing.T)
 				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			} else {
 				assert.NotNil(t, requestInfo)
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, tt.pathParameters, requestInfo.PathParameters)
 				assert.Equal(t, policiesMappingsURLTemplate, requestInfo.UrlTemplate)
 			}
@@ -278,7 +279,7 @@ func TestPoliciesMappingsRequestBuilder_Post(t *testing.T) {
 			resp, err := rB.Post(context.Background(), tt.config)
 
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Equal(t, tt.errMessage, err.Error())
 				assert.Nil(t, resp)
 			} else {
@@ -331,7 +332,7 @@ func TestPoliciesMappingsRequestBuilder_ToPostRequestInformation(t *testing.T) {
 				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			} else {
 				assert.NotNil(t, requestInfo)
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, tt.pathParameters, requestInfo.PathParameters)
 				assert.Equal(t, policiesMappingsURLTemplate, requestInfo.UrlTemplate)
 			}

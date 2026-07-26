@@ -54,19 +54,19 @@ func (bR *BaseServiceNowItemResponse[T]) GetFieldDeserializers() map[string]func
 }
 
 // GetBackingStore Returns the backing store, if store is nil it instantiates a new store.
-func (r *BaseServiceNowItemResponse[T]) GetBackingStore() kiotaStore.BackingStore {
-	if conversion.IsNil(r) {
+func (bR *BaseServiceNowItemResponse[T]) GetBackingStore() kiotaStore.BackingStore {
+	if conversion.IsNil(bR) {
 		return nil
 	}
 
-	if conversion.IsNil(r.backingStore) {
-		if conversion.IsNil(r.backingStoreFactory) {
+	if conversion.IsNil(bR.backingStore) {
+		if conversion.IsNil(bR.backingStoreFactory) {
 			return nil
 		}
-		r.backingStore = r.backingStoreFactory()
+		bR.backingStore = bR.backingStoreFactory()
 	}
 
-	return r.backingStore
+	return bR.backingStore
 }
 
 // GetResult Returns the result value of the response.

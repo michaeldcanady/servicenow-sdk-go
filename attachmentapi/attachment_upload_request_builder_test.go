@@ -3,8 +3,10 @@ package attachmentapi
 import (
 	"context"
 	"errors"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"testing"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/stretchr/testify/require"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -98,12 +100,12 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 		},
 		{
 			name:        "Missing Content-Type",
-			setup:       func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {},
+			setup:       func(_ *mocking.MockRequestAdapter, _ abstractions.MultipartBody) {},
 			expectedErr: true,
 		},
 		{
 			name: "Missing table_name",
-			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+			setup: func(_ *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
 				s := "test"
 				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
 			},
@@ -111,7 +113,7 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 		},
 		{
 			name: "Missing table_sys_id",
-			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+			setup: func(_ *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
 				s := "test"
 				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
 				_ = body.AddOrReplacePart("table_name", "text/plain", &s)
@@ -120,7 +122,7 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 		},
 		{
 			name: "Missing uploadFile",
-			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+			setup: func(_ *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
 				s := "test"
 				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
 				_ = body.AddOrReplacePart("table_name", "text/plain", &s)
@@ -207,7 +209,7 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 			res, err := rb.Post(context.Background(), body, nil)
 
 			if tt.expectedErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Nil(t, res)
 			} else {
 				assert.NoError(t, err)
@@ -297,7 +299,7 @@ func TestAttachmentUploadRequestBuilder_ToPostRequestInformation(t *testing.T) {
 				assert.Nil(t, info)
 				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, tt.expectedMethod, info.Method)
 				if tt.requestConfiguration.Headers != nil {
 					val := info.Headers.Get("test")

@@ -35,10 +35,11 @@ const (
 
 // NewServer starts a new local HTTP server on the specified port (or a random one if port is 0).
 func NewServer(state string, port int) (*Server, error) {
-	listener, err := net.Listen(tcpNetwork, fmt.Sprintf("%s:%d", localhost, port))
+	var listenConfig net.ListenConfig
+	listener, err := listenConfig.Listen(context.Background(), tcpNetwork, fmt.Sprintf("%s:%d", localhost, port))
 	if err != nil && port != 0 {
 		// Fallback to random port if specific port is taken
-		listener, err = net.Listen(tcpNetwork, fmt.Sprintf("%s:0", localhost))
+		listener, err = listenConfig.Listen(context.Background(), tcpNetwork, fmt.Sprintf("%s:0", localhost))
 	}
 	if err != nil {
 		return nil, fmt.Errorf("failed to start local server: %w", err)

@@ -9,6 +9,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewPoliciesMapping(t *testing.T) {
@@ -21,7 +22,7 @@ func TestCreatePoliciesMappingsInputFromDiscriminatorValue(t *testing.T) {
 	parseNode := mocking.NewMockParseNode()
 	parsable, err := CreatePoliciesMappingsInputFromDiscriminatorValue(parseNode)
 	assert.NotNil(t, parsable)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestPoliciesMappingsInput_Getters(t *testing.T) {
@@ -47,7 +48,7 @@ func TestPoliciesMappingsInput_Getters(t *testing.T) {
 		{"GetSysClassName", PoliciesMappingsResolvedSysClassName, internal.ToPointer("class"), func(p *PoliciesMapping) (interface{}, error) { return p.GetSysClassName() }},
 		{"GetSysCreatedBy", PoliciesMappingsResolvedSysCreatedBy, internal.ToPointer("user"), func(p *PoliciesMapping) (interface{}, error) { return p.GetSysCreatedBy() }},
 		{"GetSysCreatedOn", PoliciesMappingsResolvedSysCreatedOn, &now, func(p *PoliciesMapping) (interface{}, error) { return p.GetSysCreatedOn() }},
-		{"GetSysId", PoliciesMappingsResolvedSysId, internal.ToPointer("id"), func(p *PoliciesMapping) (interface{}, error) { return p.GetSysId() }},
+		{"GetSysID", PoliciesMappingsResolvedSysID, internal.ToPointer("id"), func(p *PoliciesMapping) (interface{}, error) { return p.GetSysID() }},
 		{"GetSysUpdatedBy", PoliciesMappingsResolvedSysUpdatedBy, internal.ToPointer("user2"), func(p *PoliciesMapping) (interface{}, error) { return p.GetSysUpdatedBy() }},
 		{"GetSysUpdatedOn", PoliciesMappingsResolvedSysUpdatedOn, &now, func(p *PoliciesMapping) (interface{}, error) { return p.GetSysUpdatedOn() }},
 	}
@@ -64,7 +65,7 @@ func TestPoliciesMappingsInput_Getters(t *testing.T) {
 
 			res, err := tt.call(p)
 
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, res)
 			mockStore.AssertExpectations(t)
 		})
@@ -94,7 +95,7 @@ func TestPoliciesMappingsInput_Setters(t *testing.T) {
 		{"SetSysClassName", PoliciesMappingsResolvedSysClassName, internal.ToPointer("class"), func(p *PoliciesMapping) error { return p.SetSysClassName(internal.ToPointer("class")) }},
 		{"SetSysCreatedBy", PoliciesMappingsResolvedSysCreatedBy, internal.ToPointer("user"), func(p *PoliciesMapping) error { return p.SetSysCreatedBy(internal.ToPointer("user")) }},
 		{"SetSysCreatedOn", PoliciesMappingsResolvedSysCreatedOn, &now, func(p *PoliciesMapping) error { return p.SetSysCreatedOn(&now) }},
-		{"SetSysId", PoliciesMappingsResolvedSysId, internal.ToPointer("id"), func(p *PoliciesMapping) error { return p.SetSysId(internal.ToPointer("id")) }},
+		{"SetSysID", PoliciesMappingsResolvedSysID, internal.ToPointer("id"), func(p *PoliciesMapping) error { return p.SetSysID(internal.ToPointer("id")) }},
 		{"SetSysUpdatedBy", PoliciesMappingsResolvedSysUpdatedBy, internal.ToPointer("user2"), func(p *PoliciesMapping) error { return p.SetSysUpdatedBy(internal.ToPointer("user2")) }},
 		{"SetSysUpdatedOn", PoliciesMappingsResolvedSysUpdatedOn, &now, func(p *PoliciesMapping) error { return p.SetSysUpdatedOn(&now) }},
 	}
@@ -111,7 +112,7 @@ func TestPoliciesMappingsInput_Setters(t *testing.T) {
 
 			err := tt.call(p)
 
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			mockStore.AssertExpectations(t)
 		})
 	}
@@ -137,17 +138,17 @@ func TestPoliciesMappingsInput_Serialize(t *testing.T) {
 	writer.On("WriteObjectValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
 
 	err := p.Serialize(writer)
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	writer.AssertExpectations(t)
 
 	var nilP *PoliciesMapping
 	err = nilP.Serialize(writer)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestPoliciesMappingsInput_GetFieldDeserializers(t *testing.T) {
 	p := NewPoliciesMapping()
 	deser := p.GetFieldDeserializers()
 	assert.NotNil(t, deser)
-	assert.Equal(t, 18, len(deser))
+	assert.Len(t, deser, 18)
 }

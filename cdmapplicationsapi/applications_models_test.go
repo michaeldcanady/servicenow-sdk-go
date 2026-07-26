@@ -5,6 +5,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestUploadStatusOutputModel_GettersSetters(t *testing.T) {
@@ -16,16 +17,16 @@ func TestUploadStatusOutputModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, internal.ToPointer("sys-id")},
+		{"SysID", func(v interface{}) error { return model.setSysID(v.(*string)) }, func() (interface{}, error) { return model.GetSysID() }, internal.ToPointer("sys-id")},
 		{"Number", func(v interface{}) error { return model.setNumber(v.(*string)) }, func() (interface{}, error) { return model.GetNumber() }, internal.ToPointer("123")},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -48,9 +49,9 @@ func TestUploadStatusResultModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -65,7 +66,7 @@ func TestExportResultModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, internal.ToPointer("sys-id")},
+		{"SysID", func(v interface{}) error { return model.setSysID(v.(*string)) }, func() (interface{}, error) { return model.GetSysID() }, internal.ToPointer("sys-id")},
 		{"Name", func(v interface{}) error { return model.setName(v.(*string)) }, func() (interface{}, error) { return model.GetName() }, internal.ToPointer("export-name")},
 		{"State", func(v interface{}) error { return model.setState(v.(*string)) }, func() (interface{}, error) { return model.GetState() }, internal.ToPointer("active")},
 		{"Status", func(v interface{}) error { return model.setStatus(v.(*string)) }, func() (interface{}, error) { return model.GetStatus() }, internal.ToPointer("success")},
@@ -75,9 +76,9 @@ func TestExportResultModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -101,9 +102,9 @@ func TestExportStatusResultModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -111,13 +112,13 @@ func TestExportStatusResultModel_GettersSetters(t *testing.T) {
 
 func TestCreateUploadStatusResultFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateUploadStatusResultFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
 func TestCreateExportResultFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateExportResultFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
@@ -130,7 +131,7 @@ func TestSharedLibraryComponentApplicationModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, internal.ToPointer("sys-id")},
+		{"SysID", func(v interface{}) error { return model.setSysID(v.(*string)) }, func() (interface{}, error) { return model.GetSysID() }, internal.ToPointer("sys-id")},
 		{"Name", func(v interface{}) error { return model.setName(v.(*string)) }, func() (interface{}, error) { return model.GetName() }, internal.ToPointer("app-name")},
 		{"Version", func(v interface{}) error { return model.setVersion(v.(*string)) }, func() (interface{}, error) { return model.GetVersion() }, internal.ToPointer("1.0.0")},
 		{"Description", func(v interface{}) error { return model.setDescription(v.(*string)) }, func() (interface{}, error) { return model.GetDescription() }, internal.ToPointer("app-desc")},
@@ -140,9 +141,9 @@ func TestSharedLibraryComponentApplicationModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -166,9 +167,9 @@ func TestComponentUploadRequestModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -176,7 +177,7 @@ func TestComponentUploadRequestModel_GettersSetters(t *testing.T) {
 
 func TestCreateSharedLibraryComponentApplicationFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateSharedLibraryComponentApplicationFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
@@ -197,9 +198,9 @@ func TestComponentVarsUploadRequestModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -223,9 +224,9 @@ func TestCollectionUploadRequestModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -248,9 +249,9 @@ func TestDeployableUpdateRequestModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -273,9 +274,9 @@ func TestSharedComponentUpdateRequestModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -283,30 +284,30 @@ func TestSharedComponentUpdateRequestModel_GettersSetters(t *testing.T) {
 
 func TestCreateExportStatusResultFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateExportStatusResultFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
 func TestCreateComponentVarsUploadRequestFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateComponentVarsUploadRequestFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
 func TestCreateCollectionUploadRequestFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateCollectionUploadRequestFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
 func TestCreateDeployableUpdateRequestFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateDeployableUpdateRequestFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
 func TestCreateSharedComponentUpdateRequestFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateSharedComponentUpdateRequestFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }

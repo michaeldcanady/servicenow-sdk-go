@@ -40,7 +40,7 @@ func NewDocument() *DocumentModel {
 }
 
 // CreateDocumentFromDiscriminatorValue creates a new instance of Document.
-func CreateDocumentFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+func CreateDocumentFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewDocument(), nil
 }
 

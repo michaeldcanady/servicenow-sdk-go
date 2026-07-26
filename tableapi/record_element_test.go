@@ -8,6 +8,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewRecordElement(t *testing.T) {
@@ -52,7 +53,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 
 				elementValue, err := model.GetDisplayValue()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, elementValue)
 				assert.IsType(t, ElementValue{}, elementValue)
 				assert.Equal(t, interface{}(internal.ToPointer("")), elementValue.val)
@@ -125,7 +126,7 @@ func TestRecordElementModel_SetDisplayValue(t *testing.T) {
 
 				err := record.SetDisplayValue("displayValue")
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				backingStore.AssertExpectations(t)
 				innerModel.AssertExpectations(t)
 			},
@@ -186,7 +187,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 
 				elementValue, err := model.GetValue()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, elementValue)
 				assert.IsType(t, ElementValue{}, elementValue)
 				assert.Equal(t, interface{}(internal.ToPointer("")), elementValue.val)
@@ -259,7 +260,7 @@ func TestRecordElementModel_SetValue(t *testing.T) {
 
 				err := record.SetValue("value")
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				backingStore.AssertExpectations(t)
 				innerModel.AssertExpectations(t)
 			},
@@ -319,7 +320,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 
 				elementValue, err := model.GetLink()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, elementValue)
 				assert.Equal(t, value, elementValue)
 			},
@@ -393,7 +394,7 @@ func TestRecordElementModel_SetLink(t *testing.T) {
 
 				err := record.SetLink(link)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				backingStore.AssertExpectations(t)
 				innerModel.AssertExpectations(t)
 			},

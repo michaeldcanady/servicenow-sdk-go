@@ -5,6 +5,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestReferenceModel_GettersSetters(t *testing.T) {
@@ -23,9 +24,9 @@ func TestReferenceModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -40,7 +41,7 @@ func TestCaseResultModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, internal.ToPointer("sys-id")},
+		{"SysID", func(v interface{}) error { return model.setSysID(v.(*string)) }, func() (interface{}, error) { return model.GetSysID() }, internal.ToPointer("sys-id")},
 		{"Number", func(v interface{}) error { return model.setNumber(v.(*string)) }, func() (interface{}, error) { return model.GetNumber() }, internal.ToPointer("CASE001")},
 		{"ShortDescription", func(v interface{}) error { return model.setShortDescription(v.(*string)) }, func() (interface{}, error) { return model.GetShortDescription() }, internal.ToPointer("Short desc")},
 		{"Description", func(v interface{}) error { return model.setDescription(v.(*string)) }, func() (interface{}, error) { return model.GetDescription() }, internal.ToPointer("Full desc")},
@@ -58,9 +59,9 @@ func TestCaseResultModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -75,7 +76,7 @@ func TestActivitiesResultModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, internal.ToPointer("sys-id")},
+		{"SysID", func(v interface{}) error { return model.setSysID(v.(*string)) }, func() (interface{}, error) { return model.GetSysID() }, internal.ToPointer("sys-id")},
 		{"Type", func(v interface{}) error { return model.setType(v.(*string)) }, func() (interface{}, error) { return model.GetType() }, internal.ToPointer("work_notes")},
 		{"Value", func(v interface{}) error { return model.setValue(v.(*string)) }, func() (interface{}, error) { return model.GetValue() }, internal.ToPointer("test value")},
 		{"User", func(v interface{}) error { return model.setUser(v.(*string)) }, func() (interface{}, error) { return model.GetUser() }, internal.ToPointer("admin")},
@@ -86,9 +87,9 @@ func TestActivitiesResultModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -112,9 +113,9 @@ func TestFieldValuesResultModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -122,24 +123,24 @@ func TestFieldValuesResultModel_GettersSetters(t *testing.T) {
 
 func TestCreateReferenceFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateReferenceFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
 func TestCreateCaseResultFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateCaseResultFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
 func TestCreateActivitiesResultFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateActivitiesResultFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
 func TestCreateFieldValuesResultFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateFieldValuesResultFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }

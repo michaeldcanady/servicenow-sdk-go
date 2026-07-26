@@ -104,7 +104,7 @@ func (rB *CmdbItemRequestBuilder) Patch(ctx context.Context, body CmdbInstance, 
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.
-func (rB *CmdbItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CmdbItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *CmdbItemRequestBuilder) ToGetRequestInformation(_ context.Context, config *CmdbItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if headers := config.Headers; !conversion.IsNil(headers) {

@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDefaultStoreMutatorFunc(t *testing.T) {
@@ -24,7 +25,7 @@ func TestDefaultStoreMutatorFunc(t *testing.T) {
 				store.On("Set", key, value).Return(nil)
 
 				err := DefaultStoreMutatorFunc[kiotaStore.BackingStore, string](store, key, value)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				store.AssertExpectations(t)
 			},
 		},

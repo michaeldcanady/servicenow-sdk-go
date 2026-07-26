@@ -9,10 +9,10 @@ import (
 
 type ModelOption = internal.Option[Model]
 
-type backingStoreSettableOption[T BackingStoreFactorySetter] func(T) error
+type BackingStoreSettableOption[T BackingStoreFactorySetter] func(T) error
 
 // WithBackingStoreFactory
-func WithBackingStoreFactory[T BackingStoreFactorySetter](factory store.BackingStoreFactory) backingStoreSettableOption[T] {
+func WithBackingStoreFactory[T BackingStoreFactorySetter](factory store.BackingStoreFactory) BackingStoreSettableOption[T] {
 	return func(config T) error {
 		if conversion.IsNil(config) {
 			return snerrors.ErrNilConfig

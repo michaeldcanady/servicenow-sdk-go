@@ -43,10 +43,10 @@ func TestSubscriptionsRequestBuilder_Hierarchy(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewActSubRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	sub := builder.Subscriptions().BySubscriberId("sub1")
+	sub := builder.Subscriptions().BySubscriberID("sub1")
 	assert.Equal(t, "sub1", sub.GetPathParameters()["subscriber_id"])
 
-	obj := builder.Subscriptions().ByObjectId("obj1")
+	obj := builder.Subscriptions().ByObjectID("obj1")
 	assert.Equal(t, "obj1", obj.GetPathParameters()["sub_obj_id"])
 
 	assert.NotNil(t, obj.IsSubscribed())
@@ -58,6 +58,6 @@ func TestUserStreamRequestBuilder_Hierarchy(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewActSubRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	stream := builder.UserStream().ByProfileId("prof1")
+	stream := builder.UserStream().ByProfileID("prof1")
 	assert.Equal(t, "prof1", stream.GetPathParameters()["profileId"])
 }

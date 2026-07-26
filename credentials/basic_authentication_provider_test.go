@@ -8,6 +8,7 @@ import (
 
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestBasicAuthenticationProvider_AuthenticateRequest(t *testing.T) {
@@ -64,7 +65,7 @@ func TestBasicAuthenticationProvider_AuthenticateRequest(t *testing.T) {
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				authHeader := request.Headers.Get("Authorization")
 				assert.Equal(t, tt.expectedHeader, authHeader[0])
 			}
@@ -76,6 +77,6 @@ func TestBasicAuthenticationProvider_AuthenticateRequest_NilProvider(t *testing.
 	var provider *BasicAuthenticationProvider
 	request := abstractions.NewRequestInformation()
 	err := provider.AuthenticateRequest(context.Background(), request, nil)
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Equal(t, "provider is nil", err.Error())
 }

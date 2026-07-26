@@ -42,21 +42,21 @@ func (bS *MockBackingStore) EnumerateKeysForValuesChangedToNil() []string {
 }
 
 // Subscribe registers a listener to any data change happening.
-// returns a subscriptionId which can be used to reference the current subscription
+// returns a subscriptionID which can be used to reference the current subscription
 func (bS *MockBackingStore) Subscribe(callback store.BackingStoreSubscriber) string {
 	args := bS.Called(callback)
 	return args.String(0)
 }
 
 // SubscribeWithId registers a listener to any data change happening and assigns the given id
-func (bS *MockBackingStore) SubscribeWithId(callback store.BackingStoreSubscriber, subscriptionId string) error { // nolint: stylecheck // needs to match interface
-	args := bS.Called(callback, subscriptionId)
+func (bS *MockBackingStore) SubscribeWithId(callback store.BackingStoreSubscriber, subscriptionID string) error {
+	args := bS.Called(callback, subscriptionID)
 	return args.Error(0)
 }
 
 // Unsubscribe Removes a subscription from the store based on its subscription id.
-func (bS *MockBackingStore) Unsubscribe(subscriptionId string) error { // nolint: stylecheck // needs to match interface
-	args := bS.Called(subscriptionId)
+func (bS *MockBackingStore) Unsubscribe(subscriptionID string) error {
+	args := bS.Called(subscriptionID)
 	return args.Error(0)
 }
 

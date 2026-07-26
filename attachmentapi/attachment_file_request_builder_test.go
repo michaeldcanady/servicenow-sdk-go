@@ -13,6 +13,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewAttachmentFileRequestBuilderInternal(t *testing.T) {
@@ -248,15 +249,15 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 			}
 
 			if tt.expectedErr != nil {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Equal(t, tt.expectedErr, err)
 				assert.Nil(t, res)
 			} else if tt.expectedErrorMessage != "" {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Contains(t, err.Error(), tt.expectedErrorMessage)
 				assert.Nil(t, res)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, tt.sendResponse, res)
 			}
 		})
@@ -326,12 +327,12 @@ func assertAttachmentFilePostRequestInformation(t *testing.T, tt attachmentFileP
 	}
 
 	if tt.expectedErr {
-		assert.Error(t, err)
+		require.Error(t, err)
 		assert.Nil(t, reqInfo)
 		return
 	}
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, reqInfo)
 	assert.Equal(t, abstractions.POST, reqInfo.Method)
 	assert.Equal(t, tt.media.data, reqInfo.Content)
@@ -348,7 +349,7 @@ func assertAttachmentFilePostRequestInformation(t *testing.T, tt attachmentFileP
 
 	if len(tt.expectedOptionsKeys) > 0 {
 		options := reqInfo.GetRequestOptions()
-		assert.Equal(t, len(tt.expectedOptionsKeys), len(options))
+		assert.Len(t, options, len(tt.expectedOptionsKeys))
 		for i, opt := range options {
 			assert.Equal(t, tt.expectedOptionsKeys[i], opt.GetKey().Key)
 		}

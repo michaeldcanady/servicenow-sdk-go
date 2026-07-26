@@ -82,7 +82,7 @@ func TestTableRequestBuilder_Post(t *testing.T) {
 		{
 			name:      "nil body returns error",
 			body:      nil,
-			setupMock: func(m *mocking.MockRequestAdapter) {},
+			setupMock: func(_ *mocking.MockRequestAdapter) {},
 			expectErr: true,
 			err:       snerrors.ErrNilBody,
 		},

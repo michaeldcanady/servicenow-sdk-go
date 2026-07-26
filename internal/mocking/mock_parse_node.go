@@ -131,7 +131,7 @@ func (mPN *MockParseNode) GetUUIDValue() (*uuid.UUID, error) {
 }
 
 // GetEnumValue returns a Enum value from the nodes.
-func (mPN *MockParseNode) GetEnumValue(parser serialization.EnumFactory) (interface{}, error) {
+func (mPN *MockParseNode) GetEnumValue(_ serialization.EnumFactory) (interface{}, error) {
 	args := mPN.Called()
 	return args.Get(0), args.Error(1)
 }

@@ -7,6 +7,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewAttachment(t *testing.T) {
@@ -50,7 +51,7 @@ func TestAttachmentModel_GetFieldDeserializers(t *testing.T) {
 func TestAttachmentModel_Serialize(t *testing.T) {
 	m := NewAttachment()
 	err := m.Serialize(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	var nilM *Attachment
 	err = nilM.Serialize(nil)
@@ -93,7 +94,7 @@ func TestAttachment_SetTableSysID(t *testing.T) {
 		{"NilM", nil, &s},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			_ = tt.model.setTableSysID(tt.val)
 		})
 	}
@@ -101,7 +102,7 @@ func TestAttachment_SetTableSysID(t *testing.T) {
 
 func TestCreateAttachmentFromDiscriminatorValue(t *testing.T) {
 	res, err := CreateAttachmentFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, res)
 }
 

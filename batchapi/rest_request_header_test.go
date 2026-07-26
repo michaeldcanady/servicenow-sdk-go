@@ -7,6 +7,7 @@ import (
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewRestRequestHeader(t *testing.T) {
@@ -40,7 +41,7 @@ func TestRestRequestHeader_Serialize(t *testing.T) {
 
 				err := header.Serialize(writer)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				writer.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -107,7 +108,7 @@ func TestRestRequestHeader_Serialize(t *testing.T) {
 
 				err := header.Serialize(mocking.NewMockSerializationWriter())
 
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 	}
@@ -172,7 +173,7 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 
 				name, err := header.GetName()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, expName, name)
 
 				backingStore.AssertExpectations(t)
@@ -277,7 +278,7 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 
 				err := header.SetName(input)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -360,7 +361,7 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 
 				value, err := header.GetValue()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, expValue, value)
 
 				backingStore.AssertExpectations(t)
@@ -465,7 +466,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 
 				err := header.SetValue(input)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)

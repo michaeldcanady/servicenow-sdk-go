@@ -6,6 +6,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestApplyOptions(t *testing.T) {
@@ -25,7 +26,7 @@ func TestApplyOptions(t *testing.T) {
 
 				err := ApplyOptions(config, option.Option)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				option.AssertExpectations(t)
 			},
 		},
@@ -55,7 +56,7 @@ func TestApplyOptions(t *testing.T) {
 				option := mocking.NewMockOption[*configType]()
 
 				err := ApplyOptions(config)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				option.AssertExpectations(t)
 			},
 		},
@@ -69,7 +70,7 @@ func TestApplyOptions(t *testing.T) {
 				option := mocking.NewMockOption[*configType]()
 
 				err := ApplyOptions(config, option.Option)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				option.AssertExpectations(t)
 			},
 		},

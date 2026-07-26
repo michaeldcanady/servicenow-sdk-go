@@ -6,6 +6,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAccountSerialization(t *testing.T) {
@@ -22,10 +23,10 @@ func TestAccountSerialization(t *testing.T) {
 			account := NewAccount()
 			name := tt.val
 			err := account.setName(&name)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			retrievedName, err := account.GetName()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, &name, retrievedName)
 		})
 	}
@@ -97,9 +98,9 @@ func TestAccountGettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(&val)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, &val, got)
 		})
 	}
@@ -133,7 +134,7 @@ func TestAccountModel_Serialize(t *testing.T) {
 func TestCreateAccountFromDiscriminatorValue(t *testing.T) {
 	t.Run("SuccessfulCreation", func(t *testing.T) {
 		instance, err := CreateAccountFromDiscriminatorValue(nil)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.NotNil(t, instance)
 		assert.IsType(t, &AccountModel{}, instance)
 	})

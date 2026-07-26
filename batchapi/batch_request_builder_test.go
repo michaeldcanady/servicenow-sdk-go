@@ -11,6 +11,7 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewBatchRequestBuilderInternal(t *testing.T) {
@@ -118,7 +119,7 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 				result, err := builder.Post(context.Background(), request, nil)
 
 				assert.Equal(t, mockContent, result)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				mockRequestAdapter.AssertExpectations(t)
 				mockInternalRequestBuilder.AssertExpectations(t)
 				mockWriter.AssertExpectations(t)
@@ -278,7 +279,7 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 				result, err := builder.Post(context.Background(), request, nil)
 
 				assert.Nil(t, result)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				mockRequestAdapter.AssertExpectations(t)
 				mockInternalRequestBuilder.AssertExpectations(t)
 				mockWriter.AssertExpectations(t)
@@ -380,7 +381,7 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 
 				requestInformation, err := builder.Post(context.Background(), request, nil)
 
-				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, requestInformation)
 			},
 		},
@@ -393,7 +394,7 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 
 				requestInformation, err := builder.Post(context.Background(), request, nil)
 
-				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, requestInformation)
 			},
 		},
@@ -459,7 +460,7 @@ func TestBatchRequestBuilder_toPostRequestInformation(t *testing.T) {
 
 				requestInformation, err := builder.toPostRequestInformation(context.Background(), request, nil)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, expected, requestInformation)
 				writer.AssertExpectations(t)
 			},
@@ -522,7 +523,7 @@ func TestBatchRequestBuilder_toPostRequestInformation(t *testing.T) {
 
 				requestInformation, err := builder.toPostRequestInformation(context.Background(), request, config)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, expected, requestInformation)
 				writer.AssertExpectations(t)
 			},
@@ -585,7 +586,7 @@ func TestBatchRequestBuilder_toPostRequestInformation(t *testing.T) {
 
 				requestInformation, err := builder.toPostRequestInformation(context.Background(), request, config)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, expected, requestInformation)
 				writer.AssertExpectations(t)
 			},
@@ -623,7 +624,7 @@ func TestBatchRequestBuilder_toPostRequestInformation(t *testing.T) {
 
 				requestInformation, err := builder.toPostRequestInformation(context.Background(), request, nil)
 
-				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, requestInformation)
 			},
 		},
@@ -636,7 +637,7 @@ func TestBatchRequestBuilder_toPostRequestInformation(t *testing.T) {
 
 				requestInformation, err := builder.toPostRequestInformation(context.Background(), request, nil)
 
-				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, requestInformation)
 			},
 		},

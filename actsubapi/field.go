@@ -31,7 +31,7 @@ func CreateFieldFromDiscriminatorValue(_ serialization.ParseNode) (serialization
 	return NewField(), nil
 }
 
-func (m *Field) Serialize(writer serialization.SerializationWriter) error {
+func (m *Field) Serialize(_ serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
 	}

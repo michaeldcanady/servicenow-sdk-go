@@ -32,8 +32,8 @@ func _() {
 	// 3. Iterate over all records across all pages
 	err = iterator.Iterate(ctx, false, func(record *tableapi.TableRecord) bool {
 		// Process the record
-		sysId, _ := record.GetSysID()
-		fmt.Printf("Incident ID: %s\n", *sysId)
+		sysID, _ := record.GetSysID()
+		fmt.Printf("Incident ID: %s\n", *sysID)
 		return true // Continue to the next record
 	})
 

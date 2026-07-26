@@ -102,7 +102,7 @@ func (rB *CalendarRequestBuilder) Get(ctx context.Context, config *CalendarReque
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *CalendarRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CalendarRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *CalendarRequestBuilder) ToGetRequestInformation(_ context.Context, config *CalendarRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -151,7 +151,7 @@ func (rB *ConfigurationRequestBuilder) Get(ctx context.Context, config *Configur
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *ConfigurationRequestBuilder) ToGetRequestInformation(ctx context.Context, config *ConfigurationRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *ConfigurationRequestBuilder) ToGetRequestInformation(_ context.Context, config *ConfigurationRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}

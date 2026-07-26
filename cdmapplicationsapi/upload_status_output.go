@@ -24,7 +24,7 @@ func (m *UploadStatusOutput) Serialize(writer serialization.SerializationWriter)
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
 		internalSerialization.SerializeStringFunc(numberKey, m.GetNumber),
 	)
 }
@@ -32,19 +32,19 @@ func (m *UploadStatusOutput) Serialize(writer serialization.SerializationWriter)
 // GetFieldDeserializers the deserialization information for the current model.
 func (m *UploadStatusOutput) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:  internalSerialization.DeserializeStringFunc(m.setSysId),
+		sysIDKey:  internalSerialization.DeserializeStringFunc(m.setSysID),
 		numberKey: internalSerialization.DeserializeStringFunc(m.setNumber),
 	}
 }
 
-// GetSysId gets the sys_id property value.
-func (m *UploadStatusOutput) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*UploadStatusOutput, *string](m, sysIdKey)
+// GetSysID gets the sys_id property value.
+func (m *UploadStatusOutput) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*UploadStatusOutput, *string](m, sysIDKey)
 }
 
-// setSysId sets the sys_id property value.
-func (m *UploadStatusOutput) setSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, sysIdKey, val)
+// setSysID sets the sys_id property value.
+func (m *UploadStatusOutput) setSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 
 // GetNumber gets the number property value.

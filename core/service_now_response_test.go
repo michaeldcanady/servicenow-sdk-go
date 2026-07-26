@@ -5,6 +5,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestServiceNowCollectionResponseFromDiscriminatorValue(t *testing.T) {
@@ -25,7 +26,7 @@ func TestServiceNowCollectionResponseFromDiscriminatorValue(t *testing.T) {
 			factory := ServiceNowCollectionResponseFromDiscriminatorValue[*mocking.MockParsable](parsableFactory)
 			parsable, err := factory(parseNode)
 
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.IsType(t, &BaseServiceNowCollectionResponse[*mocking.MockParsable]{}, parsable)
 		})
 	}
@@ -49,7 +50,7 @@ func TestServiceNowItemResponseFromDiscriminatorValue(t *testing.T) {
 			factory := ServiceNowItemResponseFromDiscriminatorValue[*mocking.MockParsable](parsableFactory)
 			parsable, err := factory(parseNode)
 
-			assert.Nil(t, err)
+			require.NoError(t, err)
 			assert.IsType(t, &BaseServiceNowItemResponse[*mocking.MockParsable]{}, parsable)
 		})
 	}

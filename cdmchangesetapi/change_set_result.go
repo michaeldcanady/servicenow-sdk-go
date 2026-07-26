@@ -31,7 +31,7 @@ func (m *ChangesetResult) Serialize(writer serialization.SerializationWriter) er
 		internalSerialization.SerializeStringFunc(numberKey, m.GetNumber),
 		internalSerialization.SerializeStringFunc(publishOptionKey, m.GetPublishOption),
 		internalSerialization.SerializeStringFunc(stateKey, m.GetState),
-		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
 		internalSerialization.SerializeStringFunc(titleKey, m.GetTitle),
 	)
 }
@@ -47,7 +47,7 @@ func (m *ChangesetResult) GetFieldDeserializers() map[string]func(serialization.
 		numberKey:                    internalSerialization.DeserializeStringFunc(m.setNumber),
 		publishOptionKey:             internalSerialization.DeserializeStringFunc(m.setPublishOption),
 		stateKey:                     internalSerialization.DeserializeStringFunc(m.setState),
-		sysIdKey:                     internalSerialization.DeserializeStringFunc(m.setSysId),
+		sysIDKey:                     internalSerialization.DeserializeStringFunc(m.setSysID),
 		titleKey:                     internalSerialization.DeserializeStringFunc(m.setTitle),
 	}
 }
@@ -106,11 +106,11 @@ func (m *ChangesetResult) GetState() (*string, error) {
 func (m *ChangesetResult) setState(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, stateKey, val)
 }
-func (m *ChangesetResult) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *string](m, sysIdKey)
+func (m *ChangesetResult) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *string](m, sysIDKey)
 }
-func (m *ChangesetResult) setSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, sysIdKey, val)
+func (m *ChangesetResult) setSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 func (m *ChangesetResult) GetTitle() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *string](m, titleKey)

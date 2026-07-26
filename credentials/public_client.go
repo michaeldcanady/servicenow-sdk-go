@@ -16,7 +16,7 @@ type publicClient struct {
 // newPublicClient creates a new publicClient.
 func newPublicClient(clientID string, authority Authority, options ...clientOption) (*publicClient, error) {
 	if clientID == "" {
-		return nil, EmptyClientID
+		return nil, ErrEmptyClientID
 	}
 
 	opts := defaultOptions()

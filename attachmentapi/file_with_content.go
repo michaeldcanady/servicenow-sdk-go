@@ -30,7 +30,7 @@ func NewFileWithContent() *FileWithContent {
 }
 
 // CreateFileWithContentFromDiscriminatorValue is a parsable factory for creating a FileWithContent
-func CreateFileWithContentFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+func CreateFileWithContentFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewFileWithContent(), nil
 }
 

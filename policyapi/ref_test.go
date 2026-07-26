@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewRef(t *testing.T) {
@@ -16,7 +17,7 @@ func TestNewRef(t *testing.T) {
 
 func TestCreateRefFromDiscriminatorValue(t *testing.T) {
 	ref, err := CreateRefFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, ref)
 }
 
@@ -51,10 +52,10 @@ func TestRef_GettersAndSetters(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			r := NewRef()
 			err := tt.setter(r, tt.val)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			res, err := tt.getter(r)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.expected, res)
 		})
 	}
@@ -69,7 +70,7 @@ func TestRef_Serialize(t *testing.T) {
 	_ = ref.SetValue(internal.ToPointer("value"))
 
 	err := ref.Serialize(writer)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	var nilRef *Ref
 	err = nilRef.Serialize(writer)

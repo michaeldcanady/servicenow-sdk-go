@@ -40,7 +40,7 @@ func NewCmdbInstance() *CmdbInstanceModel {
 }
 
 // CreateCmdbInstanceFromDiscriminatorValue creates a new instance of CmdbInstance.
-func CreateCmdbInstanceFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+func CreateCmdbInstanceFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewCmdbInstance(), nil
 }
 

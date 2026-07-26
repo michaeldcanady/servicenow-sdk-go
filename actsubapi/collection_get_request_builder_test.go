@@ -2,14 +2,16 @@ package actsubapi
 
 import (
 	"context"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"testing"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCollectionGetRequestBuilder_Get(t *testing.T) {
@@ -66,13 +68,13 @@ func TestCollectionGetRequestBuilder_Get(t *testing.T) {
 
 			switch {
 			case tc.nilBuilder, tc.nilInner:
-				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, resp)
 			case tc.expectErr:
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Nil(t, resp)
 			default:
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				if tc.mockRes != nil {
 					assert.Equal(t, tc.mockRes, resp)
 				} else {
@@ -111,12 +113,12 @@ func TestCollectionGetRequestBuilder_ToGetRequestInformation(t *testing.T) {
 			reqInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
 
 			if tt.nilBuilder || tt.nilInner {
-				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, reqInfo)
 				return
 			}
 
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.NotNil(t, reqInfo)
 			assert.Equal(t, abstractions.GET, reqInfo.Method)
 			assert.Equal(t, activitiesURLTemplate, reqInfo.UrlTemplate)

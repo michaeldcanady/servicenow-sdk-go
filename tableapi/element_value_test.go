@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewElementValue(t *testing.T) {
@@ -21,7 +22,7 @@ func TestNewElementValue(t *testing.T) {
 
 				elementValue, err := NewElementValue(val)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, elementValue)
 				assert.IsType(t, &ElementValue{}, elementValue)
 				assert.Equal(t, val, elementValue.val)
@@ -46,7 +47,7 @@ func TestCreateElementValueFromDiscriminatorValue(t *testing.T) {
 
 				elementVal, err := CreateElementValueFromDiscriminatorValue(parseNode)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, elementVal)
 				assert.IsType(t, &ElementValue{}, elementVal)
 				assert.Nil(t, (elementVal.(*ElementValue)).val)
@@ -84,7 +85,7 @@ func TestElementValueModel_Serialize(t *testing.T) {
 				value := (*ElementValue)(nil)
 				err := value.Serialize(writer)
 
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 	}
@@ -105,7 +106,7 @@ func TestElementValueModel_GetFieldDeserializers(t *testing.T) {
 				model := &ElementValue{}
 				serializers := model.GetFieldDeserializers()
 
-				assert.Len(t, serializers, 0)
+				assert.Empty(t, serializers)
 			},
 		},
 	}
@@ -157,7 +158,7 @@ func TestElementValueModel_setValue(t *testing.T) {
 
 				err := model.setValue(value)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, model.val)
 			},
 		},
@@ -170,7 +171,7 @@ func TestElementValueModel_setValue(t *testing.T) {
 
 				err := model.setValue(value)
 
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 		{
@@ -206,7 +207,7 @@ func TestElementValueModel_GetStringValue(t *testing.T) {
 
 				ret, err := model.GetStringValue()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &value, ret)
 			},
 		},
@@ -230,7 +231,7 @@ func TestElementValueModel_GetStringValue(t *testing.T) {
 
 				ret, err := model.GetStringValue()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Nil(t, ret)
 			},
 		},
@@ -255,7 +256,7 @@ func TestElementValueModel_GetBoolValue(t *testing.T) {
 
 				ret, err := model.GetBoolValue()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, ret)
 			},
 		},
@@ -279,7 +280,7 @@ func TestElementValueModel_GetBoolValue(t *testing.T) {
 
 				ret, err := model.GetBoolValue()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Nil(t, ret)
 			},
 		},
@@ -304,7 +305,7 @@ func TestElementValueModel_GetInt8Value(t *testing.T) {
 
 				ret, err := model.GetInt8Value()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, ret)
 			},
 		},
@@ -328,7 +329,7 @@ func TestElementValueModel_GetInt8Value(t *testing.T) {
 
 				ret, err := model.GetInt8Value()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Nil(t, ret)
 			},
 		},
@@ -353,7 +354,7 @@ func TestElementValueModel_GetByteValue(t *testing.T) {
 
 				ret, err := model.GetByteValue()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, ret)
 			},
 		},
@@ -377,7 +378,7 @@ func TestElementValueModel_GetByteValue(t *testing.T) {
 
 				ret, err := model.GetByteValue()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Nil(t, ret)
 			},
 		},
@@ -402,7 +403,7 @@ func TestElementValueModel_GetFloat32Value(t *testing.T) {
 
 				ret, err := model.GetFloat32Value()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, ret)
 			},
 		},
@@ -426,7 +427,7 @@ func TestElementValueModel_GetFloat32Value(t *testing.T) {
 
 				ret, err := model.GetFloat32Value()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Nil(t, ret)
 			},
 		},
@@ -451,7 +452,7 @@ func TestElementValueModel_GetFloat64Value(t *testing.T) {
 
 				ret, err := model.GetFloat64Value()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, ret)
 			},
 		},
@@ -475,7 +476,7 @@ func TestElementValueModel_GetFloat64Value(t *testing.T) {
 
 				ret, err := model.GetFloat64Value()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Nil(t, ret)
 			},
 		},
@@ -500,7 +501,7 @@ func TestElementValueModel_GetInt32Value(t *testing.T) {
 
 				ret, err := model.GetInt32Value()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, ret)
 			},
 		},
@@ -524,7 +525,7 @@ func TestElementValueModel_GetInt32Value(t *testing.T) {
 
 				ret, err := model.GetInt32Value()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Nil(t, ret)
 			},
 		},
@@ -549,7 +550,7 @@ func TestElementValueModel_GetInt64Value(t *testing.T) {
 
 				ret, err := model.GetInt64Value()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, ret)
 			},
 		},
@@ -573,7 +574,7 @@ func TestElementValueModel_GetInt64Value(t *testing.T) {
 
 				ret, err := model.GetInt64Value()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Nil(t, ret)
 			},
 		},
@@ -598,7 +599,7 @@ func TestElementValueModel_GetEnumValue(t *testing.T) {
 				model := &ElementValue{val: "value"}
 				enum, err := model.GetEnumValue(strct.Factory)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, 0, enum)
 			},
 		},
@@ -632,7 +633,7 @@ func TestElementValueModel_GetEnumValue(t *testing.T) {
 				model := &ElementValue{val: ""}
 				enum, err := model.GetEnumValue(strct.Factory)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Nil(t, enum)
 			},
 		},
@@ -644,7 +645,7 @@ func TestElementValueModel_GetEnumValue(t *testing.T) {
 				model := (*ElementValue)(nil)
 				enum, err := model.GetEnumValue(strct.Factory)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Nil(t, enum)
 			},
 		},
@@ -666,11 +667,11 @@ func TestElementValueModel_GetCollectionOfPrimitiveValues(t *testing.T) {
 				value := []interface{}{internal.ToPointer(true), internal.ToPointer(false), internal.ToPointer(true)}
 
 				model, err := NewElementValue(value)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				ret, err := model.GetCollectionOfPrimitiveValues(PrimitiveBool)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, ret)
 			},
 		},
@@ -678,10 +679,10 @@ func TestElementValueModel_GetCollectionOfPrimitiveValues(t *testing.T) {
 			name: "Unsupported Type",
 			test: func(t *testing.T) {
 				model, err := NewElementValue("not a collection")
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				result, err := model.GetCollectionOfPrimitiveValues(PrimitiveString)
-				assert.NotNil(t, err)
+				require.Error(t, err)
 				assert.Nil(t, result)
 			},
 		},
@@ -705,7 +706,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 
 				val, err := model.getPrimitiveValue(PrimitiveBool)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, val)
 			},
 		},
@@ -717,7 +718,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 
 				val, err := model.getPrimitiveValue(PrimitiveByte)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, val)
 			},
 		},
@@ -729,7 +730,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 
 				val, err := model.getPrimitiveValue(PrimitiveFloat32)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, val)
 			},
 		},
@@ -741,7 +742,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 
 				val, err := model.getPrimitiveValue(PrimitiveFloat64)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, val)
 			},
 		},
@@ -753,7 +754,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 
 				val, err := model.getPrimitiveValue(PrimitiveInt32)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, val)
 			},
 		},
@@ -765,7 +766,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 
 				val, err := model.getPrimitiveValue(PrimitiveInt64)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, val)
 			},
 		},
@@ -777,7 +778,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 
 				val, err := model.getPrimitiveValue(PrimitiveInt8)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, val)
 			},
 		},
@@ -789,7 +790,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 
 				val, err := model.getPrimitiveValue(PrimitiveString)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &value, val)
 			},
 		},
@@ -800,7 +801,7 @@ func TestElementValueModel_getPrimitiveValue(t *testing.T) {
 
 				ret, err := model.getPrimitiveValue(PrimitiveDateOnly)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Nil(t, ret)
 			},
 		},
@@ -825,7 +826,7 @@ func TestElementValueModel_GetRawValue(t *testing.T) {
 
 				ret, err := model.GetRawValue()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, ret)
 			},
 		},
@@ -836,7 +837,7 @@ func TestElementValueModel_GetRawValue(t *testing.T) {
 
 				ret, err := model.GetRawValue()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Nil(t, ret)
 			},
 		},

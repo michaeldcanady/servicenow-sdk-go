@@ -14,8 +14,8 @@ type NodeResult interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
-	GetSysId() (*string, error)
-	setSysId(*string) error
+	GetSysID() (*string, error)
+	setSysID(*string) error
 	GetName() (*string, error)
 	setName(*string) error
 	GetType() (*string, error)
@@ -24,8 +24,8 @@ type NodeResult interface {
 	setValue(*string) error
 	GetParent() (*string, error)
 	setParent(*string) error
-	GetCdmId() (*string, error)
-	setCdmId(*string) error
+	GetCdmID() (*string, error)
+	setCdmID(*string) error
 }
 
 type NodeResultModel struct {
@@ -41,31 +41,31 @@ func (m *NodeResultModel) Serialize(writer serialization.SerializationWriter) er
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
 		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
 		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
 		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
 		internalSerialization.SerializeStringFunc(parentKey, m.GetParent),
-		internalSerialization.SerializeStringFunc(cdmIdKey, m.GetCdmId),
+		internalSerialization.SerializeStringFunc(cdmIDKey, m.GetCdmID),
 	)
 }
 
 func (m *NodeResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:  internalSerialization.DeserializeStringFunc(m.setSysId),
+		sysIDKey:  internalSerialization.DeserializeStringFunc(m.setSysID),
 		nameKey:   internalSerialization.DeserializeStringFunc(m.setName),
 		typeKey:   internalSerialization.DeserializeStringFunc(m.setType),
 		valueKey:  internalSerialization.DeserializeStringFunc(m.setValue),
 		parentKey: internalSerialization.DeserializeStringFunc(m.setParent),
-		cdmIdKey:  internalSerialization.DeserializeStringFunc(m.setCdmId),
+		cdmIDKey:  internalSerialization.DeserializeStringFunc(m.setCdmID),
 	}
 }
 
-func (m *NodeResultModel) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*NodeResultModel, *string](m, sysIdKey)
+func (m *NodeResultModel) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*NodeResultModel, *string](m, sysIDKey)
 }
-func (m *NodeResultModel) setSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, sysIdKey, val)
+func (m *NodeResultModel) setSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 func (m *NodeResultModel) GetName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*NodeResultModel, *string](m, nameKey)
@@ -91,11 +91,11 @@ func (m *NodeResultModel) GetParent() (*string, error) {
 func (m *NodeResultModel) setParent(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, parentKey, val)
 }
-func (m *NodeResultModel) GetCdmId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*NodeResultModel, *string](m, cdmIdKey)
+func (m *NodeResultModel) GetCdmID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*NodeResultModel, *string](m, cdmIDKey)
 }
-func (m *NodeResultModel) setCdmId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, cdmIdKey, val)
+func (m *NodeResultModel) setCdmID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, cdmIDKey, val)
 }
 
 func CreateNodeResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {

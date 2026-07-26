@@ -31,7 +31,7 @@ func (m *FindServiceResult) Serialize(writer serialization.SerializationWriter) 
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
 		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
 		internalSerialization.SerializeStringFunc(numberKey, m.GetNumber),
 		internalSerialization.SerializeStringFunc(environmentKey, m.GetEnvironment),
@@ -41,7 +41,7 @@ func (m *FindServiceResult) Serialize(writer serialization.SerializationWriter) 
 
 func (m *FindServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:       internalSerialization.DeserializeStringFunc(m.setSysId),
+		sysIDKey:       internalSerialization.DeserializeStringFunc(m.setSysID),
 		nameKey:        internalSerialization.DeserializeStringFunc(m.setName),
 		numberKey:      internalSerialization.DeserializeStringFunc(m.setNumber),
 		environmentKey: internalSerialization.DeserializeStringFunc(m.setEnvironment),
@@ -49,12 +49,12 @@ func (m *FindServiceResult) GetFieldDeserializers() map[string]func(serializatio
 	}
 }
 
-func (m *FindServiceResult) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*FindServiceResult, *string](m, sysIdKey)
+func (m *FindServiceResult) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*FindServiceResult, *string](m, sysIDKey)
 }
 
-func (m *FindServiceResult) setSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, sysIdKey, val)
+func (m *FindServiceResult) setSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 
 func (m *FindServiceResult) GetName() (*string, error) {

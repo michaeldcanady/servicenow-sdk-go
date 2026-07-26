@@ -3,8 +3,9 @@ package appserviceapi
 import (
 	"context"
 	"errors"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"testing"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
@@ -12,6 +13,7 @@ import (
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func newTestServicePostRequestBuilder(adapter *mocking.MockRequestAdapter) *servicePostRequestBuilder[*CreateServiceRequest, CreateServiceResponse] {
@@ -80,10 +82,10 @@ func TestServicePostRequestBuilder_Post(t *testing.T) {
 
 			switch {
 			case tt.nilBuilder, tt.nilInner:
-				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, resp)
 			case tt.expectedErr != nil:
-				assert.EqualError(t, err, tt.expectedErr.Error())
+				require.EqualError(t, err, tt.expectedErr.Error())
 				assert.Nil(t, resp)
 			default:
 				assert.NoError(t, err)
@@ -100,7 +102,7 @@ func TestServicePostRequestBuilder_ToPostRequestInformation(t *testing.T) {
 
 	reqInfo, err := builder.toPostRequestInformation(context.Background(), NewCreateServiceRequest(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, reqInfo)
 	assert.Equal(t, abstractions.POST, reqInfo.Method)
 	assert.Equal(t, createURLTemplate, reqInfo.UrlTemplate)
@@ -108,14 +110,14 @@ func TestServicePostRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	t.Run("Nil builder", func(t *testing.T) {
 		var builder *servicePostRequestBuilder[*CreateServiceRequest, CreateServiceResponse]
 		reqInfo, err := builder.toPostRequestInformation(context.Background(), NewCreateServiceRequest(), nil)
-		assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		assert.Nil(t, reqInfo)
 	})
 
 	t.Run("Nil inner request builder", func(t *testing.T) {
 		builder := &servicePostRequestBuilder[*CreateServiceRequest, CreateServiceResponse]{}
 		reqInfo, err := builder.toPostRequestInformation(context.Background(), NewCreateServiceRequest(), nil)
-		assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		assert.Nil(t, reqInfo)
 	})
 }

@@ -44,7 +44,7 @@ func _() {
 
 	// Step 3: Check whether the current user is subscribed to an object
 	subscribed, err := actSub.Subscriptions().
-		ByObjectId("xSDK_SN_TABLE_SYS_IDx").
+		ByObjectID("xSDK_SN_TABLE_SYS_IDx").
 		IsSubscribed().
 		Get(ctx, nil)
 	if err != nil {

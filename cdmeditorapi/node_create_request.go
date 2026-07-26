@@ -18,10 +18,10 @@ type NodeCreateRequest interface {
 	setName(*string) error
 	GetType() (*string, error)
 	setType(*string) error
-	GetParentId() (*string, error)
-	setParentId(*string) error
-	GetCdmId() (*string, error)
-	setCdmId(*string) error
+	GetParentID() (*string, error)
+	setParentID(*string) error
+	GetCdmID() (*string, error)
+	setCdmID(*string) error
 }
 
 type NodeCreateRequestModel struct {
@@ -39,8 +39,8 @@ func (m *NodeCreateRequestModel) Serialize(writer serialization.SerializationWri
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
 		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
-		internalSerialization.SerializeStringFunc(parentIdKey, m.GetParentId),
-		internalSerialization.SerializeStringFunc(cdmIdKey, m.GetCdmId),
+		internalSerialization.SerializeStringFunc(parentIDKey, m.GetParentID),
+		internalSerialization.SerializeStringFunc(cdmIDKey, m.GetCdmID),
 	)
 }
 
@@ -48,8 +48,8 @@ func (m *NodeCreateRequestModel) GetFieldDeserializers() map[string]func(seriali
 	return map[string]func(serialization.ParseNode) error{
 		nameKey:     internalSerialization.DeserializeStringFunc(m.setName),
 		typeKey:     internalSerialization.DeserializeStringFunc(m.setType),
-		parentIdKey: internalSerialization.DeserializeStringFunc(m.setParentId),
-		cdmIdKey:    internalSerialization.DeserializeStringFunc(m.setCdmId),
+		parentIDKey: internalSerialization.DeserializeStringFunc(m.setParentID),
+		cdmIDKey:    internalSerialization.DeserializeStringFunc(m.setCdmID),
 	}
 }
 
@@ -65,17 +65,17 @@ func (m *NodeCreateRequestModel) GetType() (*string, error) {
 func (m *NodeCreateRequestModel) setType(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, typeKey, val)
 }
-func (m *NodeCreateRequestModel) GetParentId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*NodeCreateRequestModel, *string](m, parentIdKey)
+func (m *NodeCreateRequestModel) GetParentID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*NodeCreateRequestModel, *string](m, parentIDKey)
 }
-func (m *NodeCreateRequestModel) setParentId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, parentIdKey, val)
+func (m *NodeCreateRequestModel) setParentID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, parentIDKey, val)
 }
-func (m *NodeCreateRequestModel) GetCdmId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*NodeCreateRequestModel, *string](m, cdmIdKey)
+func (m *NodeCreateRequestModel) GetCdmID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*NodeCreateRequestModel, *string](m, cdmIDKey)
 }
-func (m *NodeCreateRequestModel) setCdmId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, cdmIdKey, val)
+func (m *NodeCreateRequestModel) setCdmID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, cdmIDKey, val)
 }
 
 func CreateNodeCreateRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {

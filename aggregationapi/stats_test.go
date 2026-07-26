@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMapFromRaw(t *testing.T) {
@@ -55,7 +56,7 @@ func TestMapFromRaw(t *testing.T) {
 				assert.Error(t, err)
 				return
 			}
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.expected, result)
 		})
 	}
@@ -68,7 +69,7 @@ func TestNewStats(t *testing.T) {
 
 func TestCreateStatsFromDiscriminatorValue(t *testing.T) {
 	stats, err := CreateStatsFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, stats)
 }
 
@@ -77,10 +78,10 @@ func TestStats_CountGetterAndSetter(t *testing.T) {
 	val := internal.ToPointer("67")
 
 	err := m.setCount(val)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	res, err := m.GetCount()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, val, res)
 }
 
@@ -118,10 +119,10 @@ func TestStats_MapGettersAndSetters(t *testing.T) {
 			val := map[string]string{"reassignment_count": "2"}
 
 			err := tt.setter(m, val)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			res, err := tt.getter(m)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, val, res)
 		})
 	}
@@ -137,7 +138,7 @@ func TestStats_Serialize(t *testing.T) {
 	_ = m.setSum(map[string]string{"reassignment_count": "56"})
 
 	err := m.Serialize(writer)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	var nilStats *StatsModel
 	err = nilStats.Serialize(writer)
@@ -152,7 +153,7 @@ func TestStats_Serialize_SkipsNilMaps(t *testing.T) {
 	_ = m.setCount(internal.ToPointer("67"))
 
 	err := m.Serialize(writer)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	writer.AssertNotCalled(t, "WriteAnyValue", mock.Anything, mock.Anything)
 }

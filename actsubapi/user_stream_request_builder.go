@@ -28,14 +28,14 @@ func NewUserStreamRequestBuilderInternal(pathParameters map[string]string, reque
 	}
 }
 
-// ByProfileId returns a UserStreamItemRequestBuilder.
-func (rB *UserStreamRequestBuilder) ByProfileId(profileId string) *UserStreamItemRequestBuilder {
+// ByProfileID returns a UserStreamItemRequestBuilder.
+func (rB *UserStreamRequestBuilder) ByProfileID(profileID string) *UserStreamItemRequestBuilder {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
 
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["profileId"] = profileId
+	pathParameters["profileId"] = profileID
 	return NewUserStreamItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 

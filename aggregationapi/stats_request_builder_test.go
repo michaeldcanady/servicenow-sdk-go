@@ -31,13 +31,13 @@ func TestStatsRequestBuilder_Get(t *testing.T) {
 		{
 			name:      "nil builder",
 			builder:   nil,
-			setupMock: func(m *mocking.MockRequestAdapter) {},
+			setupMock: func(_ *mocking.MockRequestAdapter) {},
 			err:       snerrors.ErrNilRequestBuilder,
 		},
 		{
 			name:      "nil request adapter",
 			builder:   NewStatsRequestBuilderInternal(map[string]string{}, nil),
-			setupMock: func(m *mocking.MockRequestAdapter) {},
+			setupMock: func(_ *mocking.MockRequestAdapter) {},
 			err:       snerrors.ErrNilRequestAdapter,
 		},
 		{

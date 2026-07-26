@@ -9,6 +9,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewFile(t *testing.T) {
@@ -175,14 +176,14 @@ func TestFileModel_Accessors(t *testing.T) {
 			m := NewFile()
 			test.set(m)
 			res, err := test.get(m)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			switch v := res.(type) {
 			case *string:
 				assert.Equal(t, test.expect, *v)
 			case *bool:
 				assert.Equal(t, test.expect, *v)
 			case *float64:
-				assert.Equal(t, test.expect, *v)
+				assert.Equal(t, test.expect, *v) // nolint:testifylint // exact round-trip identity check, not a numeric computation
 			case *int64:
 				assert.Equal(t, test.expect, *v)
 			case *time.Time:
@@ -237,29 +238,29 @@ func TestFileModel_ErrorBranches(t *testing.T) {
 		var nilM *File
 		for _, test := range tests {
 			res, err := test.get(nilM)
-			assert.ErrorIs(t, err, snerrors.ErrNilModel)
+			require.ErrorIs(t, err, snerrors.ErrNilModel)
 			assert.Nil(t, res)
 		}
 
-		assert.ErrorIs(t, nilM.SetAverageImageColor(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetCompressed(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetContentType(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetCreatedByName(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetDownloadLink(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetFileName(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetImageHeight(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetImageWidth(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetSizeBytes(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetSizeCompressed(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetSysCreatedBy(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetSysCreatedOn(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetSysID(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetSysModCount(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetSysTags(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetSysUpdatedBy(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetSysUpdatedOn(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetTableName(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetTableSysID(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetAverageImageColor(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetCompressed(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetContentType(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetCreatedByName(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetDownloadLink(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetFileName(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetImageHeight(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetImageWidth(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetSizeBytes(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetSizeCompressed(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetSysCreatedBy(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetSysCreatedOn(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetSysID(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetSysModCount(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetSysTags(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetSysUpdatedBy(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetSysUpdatedOn(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetTableName(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetTableSysID(nil), snerrors.ErrNilModel)
 		assert.ErrorIs(t, nilM.SetUpdatedByName(nil), snerrors.ErrNilModel)
 	})
 }

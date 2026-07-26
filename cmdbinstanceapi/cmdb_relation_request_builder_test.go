@@ -9,6 +9,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCmdbRelationRequestBuilder_Post(t *testing.T) {
@@ -43,10 +44,10 @@ func TestCmdbRelationRequestBuilder_Post(t *testing.T) {
 			resp, err := builder.Post(context.Background(), nil, nil)
 
 			if tt.expectedErr != nil {
-				assert.EqualError(t, err, tt.expectedErr.Error())
+				require.EqualError(t, err, tt.expectedErr.Error())
 				assert.Nil(t, resp)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, resp)
 			}
 		})

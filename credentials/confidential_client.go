@@ -12,10 +12,10 @@ type confidentialClient struct {
 // newConfidentialClient creates a new confidentialClient.
 func newConfidentialClient(clientID, clientSecret string, authority Authority, options ...clientOption) (*confidentialClient, error) {
 	if clientID == "" {
-		return nil, EmptyClientID
+		return nil, ErrEmptyClientID
 	}
 	if clientSecret == "" {
-		return nil, EmptyClientSecret
+		return nil, ErrEmptyClientSecret
 	}
 
 	opts := defaultOptions()

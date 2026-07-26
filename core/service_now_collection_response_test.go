@@ -6,6 +6,7 @@ import (
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewBaseServiceNowCollectionResponse(t *testing.T) {
@@ -16,7 +17,7 @@ func TestNewBaseServiceNowCollectionResponse(t *testing.T) {
 func TestBaseServiceNowCollectionResponse_Serialize(t *testing.T) {
 	res := NewBaseServiceNowCollectionResponse[serialization.Parsable](nil)
 	err := res.Serialize(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	var nilR *BaseServiceNowCollectionResponse[serialization.Parsable]
 	err = nilR.Serialize(nil)
@@ -65,11 +66,11 @@ func TestBaseServiceNowCollectionResponse_ErrorBranches(t *testing.T) {
 	var nilR *BaseServiceNowCollectionResponse[*MainError]
 
 	r, err := nilR.GetResult()
-	assert.ErrorIs(t, err, snerrors.ErrNilModel)
+	require.ErrorIs(t, err, snerrors.ErrNilModel)
 	assert.Nil(t, r)
 
 	l, err := nilR.GetNextLink()
-	assert.ErrorIs(t, err, snerrors.ErrNilModel)
+	require.ErrorIs(t, err, snerrors.ErrNilModel)
 	assert.Nil(t, l)
 
 	err = nilR.SetNextLink(nil)

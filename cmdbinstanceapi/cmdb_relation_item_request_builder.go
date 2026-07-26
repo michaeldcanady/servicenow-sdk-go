@@ -47,7 +47,7 @@ func (rB *CmdbRelationItemRequestBuilder) Delete(ctx context.Context, config *Cm
 }
 
 // ToDeleteRequestInformation converts request configurations to Delete request information.
-func (rB *CmdbRelationItemRequestBuilder) ToDeleteRequestInformation(ctx context.Context, config *CmdbRelationItemRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *CmdbRelationItemRequestBuilder) ToDeleteRequestInformation(_ context.Context, config *CmdbRelationItemRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if headers := config.Headers; !conversion.IsNil(headers) {

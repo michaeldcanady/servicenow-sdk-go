@@ -6,7 +6,7 @@ const (
 	statusKey              = "status"
 	stateKey               = "state"
 	outputKey              = "output"
-	sysIdKey               = "sys_id"
+	sysIDKey               = "sys_id"
 	numberKey              = "number"
 	progressKey            = "progress"
 	versionKey             = "version"

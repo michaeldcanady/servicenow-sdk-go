@@ -22,7 +22,7 @@ func (m *ChangesetActivityResult) Serialize(writer serialization.SerializationWr
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeObjectValueFunc[*Reference](changesetIdKey, m.GetChangesetId),
+		internalSerialization.SerializeObjectValueFunc[*Reference](changesetIDKey, m.GetChangesetID),
 		internalSerialization.SerializeBoolFunc(conflictKey, m.GetConflict),
 		internalSerialization.SerializeStringFunc(namePathKey, m.GetNamePath),
 		internalSerialization.SerializeStringFunc(newNameKey, m.GetNewName),
@@ -36,7 +36,7 @@ func (m *ChangesetActivityResult) Serialize(writer serialization.SerializationWr
 
 func (m *ChangesetActivityResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		changesetIdKey: internalSerialization.DeserializeObjectValueFunc[*Reference](CreateReferenceFromDiscriminatorValue, m.setChangesetId),
+		changesetIDKey: internalSerialization.DeserializeObjectValueFunc[*Reference](CreateReferenceFromDiscriminatorValue, m.setChangesetID),
 		conflictKey:    internalSerialization.DeserializeBoolFunc(m.setConflict),
 		namePathKey:    internalSerialization.DeserializeStringFunc(m.setNamePath),
 		newNameKey:     internalSerialization.DeserializeStringFunc(m.setNewName),
@@ -48,11 +48,11 @@ func (m *ChangesetActivityResult) GetFieldDeserializers() map[string]func(serial
 	}
 }
 
-func (m *ChangesetActivityResult) GetChangesetId() (*Reference, error) {
-	return store.DefaultBackedModelAccessorFunc[*ChangesetActivityResult, *Reference](m, changesetIdKey)
+func (m *ChangesetActivityResult) GetChangesetID() (*Reference, error) {
+	return store.DefaultBackedModelAccessorFunc[*ChangesetActivityResult, *Reference](m, changesetIDKey)
 }
-func (m *ChangesetActivityResult) setChangesetId(val *Reference) error {
-	return store.DefaultBackedModelMutatorFunc(m, changesetIdKey, val)
+func (m *ChangesetActivityResult) setChangesetID(val *Reference) error {
+	return store.DefaultBackedModelMutatorFunc(m, changesetIDKey, val)
 }
 func (m *ChangesetActivityResult) GetConflict() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetActivityResult, *bool](m, conflictKey)

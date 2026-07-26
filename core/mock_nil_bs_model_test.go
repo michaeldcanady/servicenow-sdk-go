@@ -8,4 +8,4 @@ func (m *mockNilBSModel) GetBackingStore() store.BackingStore { return nil }
 func (m *mockNilBSModel) GetBackingStoreFactory() store.BackingStoreFactory {
 	return store.NewInMemoryBackingStore
 }
-func (m *mockNilBSModel) SetBackingStoreFactory(f store.BackingStoreFactory) error { return nil }
+func (m *mockNilBSModel) SetBackingStoreFactory(_ store.BackingStoreFactory) error { return nil }

@@ -22,7 +22,7 @@ func (m *ExportResult) Serialize(writer serialization.SerializationWriter) error
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
 		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
 		internalSerialization.SerializeStringFunc(stateKey, m.GetState),
 		internalSerialization.SerializeStringFunc(statusKey, m.GetStatus),
@@ -32,7 +32,7 @@ func (m *ExportResult) Serialize(writer serialization.SerializationWriter) error
 
 func (m *ExportResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:   internalSerialization.DeserializeStringFunc(m.setSysId),
+		sysIDKey:   internalSerialization.DeserializeStringFunc(m.setSysID),
 		nameKey:    internalSerialization.DeserializeStringFunc(m.setName),
 		stateKey:   internalSerialization.DeserializeStringFunc(m.setState),
 		statusKey:  internalSerialization.DeserializeStringFunc(m.setStatus),
@@ -40,11 +40,11 @@ func (m *ExportResult) GetFieldDeserializers() map[string]func(serialization.Par
 	}
 }
 
-func (m *ExportResult) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ExportResult, *string](m, sysIdKey)
+func (m *ExportResult) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ExportResult, *string](m, sysIDKey)
 }
-func (m *ExportResult) setSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, sysIdKey, val)
+func (m *ExportResult) setSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 func (m *ExportResult) GetName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ExportResult, *string](m, nameKey)

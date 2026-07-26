@@ -8,6 +8,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestElementVis_VisitSlice(t *testing.T) {
@@ -22,7 +23,7 @@ func TestElementVis_VisitSlice(t *testing.T) {
 
 				elem, err := visitor.VisitSlice(reflect.ValueOf([]string{"test", "testing"}))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: []*ElementValue{{val: "test"}, {val: "testing"}}}, elem)
 			},
 		},
@@ -33,7 +34,7 @@ func TestElementVis_VisitSlice(t *testing.T) {
 
 				elem, err := visitor.VisitSlice(reflect.ValueOf(([]string)(nil)))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: []*ElementValue{}}, elem)
 			},
 		},
@@ -67,7 +68,7 @@ func TestElementVis_VisitMap(t *testing.T) {
 
 				elem, err := visitor.VisitMap(reflect.ValueOf(map[string]string{"test": "testing"}))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: map[string]*ElementValue{"test": {val: "testing"}}}, elem)
 			},
 		},
@@ -78,7 +79,7 @@ func TestElementVis_VisitMap(t *testing.T) {
 
 				elem, err := visitor.VisitMap(reflect.ValueOf((map[string]string)(nil)))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: map[string]*ElementValue{}}, elem)
 			},
 		},
@@ -112,7 +113,7 @@ func TestElementVis_VisitPointer(t *testing.T) {
 
 				elem, err := visitor.VisitPointer(reflect.ValueOf(internal.ToPointer("test")))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: "test"}, elem)
 			},
 		},
@@ -123,7 +124,7 @@ func TestElementVis_VisitPointer(t *testing.T) {
 
 				elem, err := visitor.VisitPointer(reflect.ValueOf((*string)(nil)))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, (*ElementValue)(nil), elem)
 			},
 		},
@@ -146,7 +147,7 @@ func TestElementVis_VisitPrimitive(t *testing.T) {
 
 				elem, err := visitor.VisitPrimitive(reflect.ValueOf("test"))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: "test"}, elem)
 			},
 		},
@@ -169,7 +170,7 @@ func TestElementVis_Visit(t *testing.T) {
 
 				elem, err := visitor.Visit("test")
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: "test"}, elem)
 			},
 		},
@@ -180,7 +181,7 @@ func TestElementVis_Visit(t *testing.T) {
 
 				elem, err := visitor.Visit(int64(1))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: int64(1)}, elem)
 			},
 		},
@@ -191,7 +192,7 @@ func TestElementVis_Visit(t *testing.T) {
 
 				elem, err := visitor.Visit(int32(1))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: int32(1)}, elem)
 			},
 		},
@@ -202,7 +203,7 @@ func TestElementVis_Visit(t *testing.T) {
 
 				elem, err := visitor.Visit(float64(1.00))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: float64(1.00)}, elem)
 			},
 		},
@@ -213,7 +214,7 @@ func TestElementVis_Visit(t *testing.T) {
 
 				elem, err := visitor.Visit(float32(1.00))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: float32(1.00)}, elem)
 			},
 		},
@@ -224,7 +225,7 @@ func TestElementVis_Visit(t *testing.T) {
 
 				elem, err := visitor.Visit(byte(1))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: byte(1)}, elem)
 			},
 		},
@@ -235,7 +236,7 @@ func TestElementVis_Visit(t *testing.T) {
 
 				elem, err := visitor.Visit(int8(1))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: int8(1)}, elem)
 			},
 		},
@@ -246,7 +247,7 @@ func TestElementVis_Visit(t *testing.T) {
 
 				elem, err := visitor.Visit(true)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: true}, elem)
 			},
 		},
@@ -257,7 +258,7 @@ func TestElementVis_Visit(t *testing.T) {
 
 				elem, err := visitor.Visit(reflect.ValueOf(true))
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: true}, elem)
 			},
 		},
@@ -268,7 +269,7 @@ func TestElementVis_Visit(t *testing.T) {
 
 				elem, err := visitor.Visit(nil)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: nil}, elem)
 			},
 		},
@@ -280,7 +281,7 @@ func TestElementVis_Visit(t *testing.T) {
 				in := map[string]string{"test": "test"}
 
 				elem, err := visitor.Visit(in)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &ElementValue{val: map[string]*ElementValue{"test": {val: "test"}}}, elem)
 			},
 		},

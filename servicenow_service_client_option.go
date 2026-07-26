@@ -56,7 +56,7 @@ func WithURL(uri string) ServiceNowServiceClientOption {
 		}
 
 		if _, err := url.ParseRequestURI(uri); err != nil {
-			return fmt.Errorf("%s", err)
+			return err
 		}
 
 		config.rawURI = uri
