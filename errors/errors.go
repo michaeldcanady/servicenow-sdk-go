@@ -21,6 +21,14 @@ var (
 	ErrNilModel                = errors.New("model is nil")
 	ErrEmptyMiddleware         = errors.New("middleware is empty")
 	ErrEmptyKey                = errors.New("key is empty")
+	ErrNilRequestInfo          = errors.New("requestInfo cannot be nil")
+	ErrNilClient               = errors.New("client can't be nil")
+	ErrNilResult               = errors.New("result property missing in response object")
+	ErrWrongResponseType       = errors.New("incorrect Response Type")
+	ErrParsing                 = errors.New("parsing nextLink url failed")
+	ErrEmptyURI                = errors.New("empty URI")
+	ErrNilCallback             = errors.New("callback can't be nil")
+	ErrNilParams               = errors.New("params cannot be nil")
 )
 
 // NewValidationError creates a standardized validation error message.

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
@@ -234,7 +235,7 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 
 				name, err := header.GetName()
 
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, name)
 
 				intModel.AssertExpectations(t)
@@ -247,7 +248,7 @@ func TestRestRequestHeader_GetName(t *testing.T) {
 
 				name, err := header.GetName()
 
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, name)
 			},
 		},
@@ -319,7 +320,7 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 
 				err := header.SetName(input)
 
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -331,7 +332,7 @@ func TestRestRequestHeader_SetName(t *testing.T) {
 
 				err := header.SetName(internal.ToPointer("name"))
 
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -422,7 +423,7 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 
 				value, err := header.GetValue()
 
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, value)
 
 				intModel.AssertExpectations(t)
@@ -435,7 +436,7 @@ func TestRestRequestHeader_GetValue(t *testing.T) {
 
 				value, err := header.GetValue()
 
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, value)
 			},
 		},
@@ -507,7 +508,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 
 				err := header.SetValue(input)
 
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -519,7 +520,7 @@ func TestRestRequestHeader_SetValue(t *testing.T) {
 
 				err := header.SetValue(internal.ToPointer("value"))
 
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}

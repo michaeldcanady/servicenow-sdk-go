@@ -261,7 +261,7 @@ func TestFileModel_ErrorBranches(t *testing.T) {
 		require.ErrorIs(t, nilM.SetSysUpdatedOn(nil), snerrors.ErrNilModel)
 		require.ErrorIs(t, nilM.SetTableName(nil), snerrors.ErrNilModel)
 		require.ErrorIs(t, nilM.SetTableSysID(nil), snerrors.ErrNilModel)
-		assert.ErrorIs(t, nilM.SetUpdatedByName(nil), snerrors.ErrNilModel)
+		require.ErrorIs(t, nilM.SetUpdatedByName(nil), snerrors.ErrNilModel)
 	})
 }
 

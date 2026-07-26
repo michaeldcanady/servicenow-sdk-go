@@ -33,6 +33,12 @@
             "command": "jq -r '.tool_response.filePath // .tool_input.file_path // empty' | { read -r f; case \"$f\" in *.go) cd /workspaces/servicenow-sdk-go && go build ./... ;; esac; }",
             "statusMessage": "Running go build ./...",
             "timeout": 60
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_response.filePath // .tool_input.file_path // empty' | { read -r f; case \"$f\" in *.go) cd /workspaces/servicenow-sdk-go && golangci-lint run \"$(dirname \"$f\")/...\" ;; esac; }",
+            "statusMessage": "Running golangci-lint...",
+            "timeout": 120
           }
         ]
       }

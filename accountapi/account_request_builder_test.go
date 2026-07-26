@@ -5,12 +5,31 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
+
+func TestAccountRequestBuilder_Get_NilBuilder(t *testing.T) {
+	var builder *AccountRequestBuilder
+
+	res, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, res)
+}
+
+func TestAccountRequestBuilder_ToGetRequestInformation_NilBuilder(t *testing.T) {
+	var builder *AccountRequestBuilder
+
+	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, requestInfo)
+}
 
 func TestAccountRequestBuilder_Builders(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}

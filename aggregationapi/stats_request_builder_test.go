@@ -23,22 +23,25 @@ func TestNewStatsRequestBuilder(t *testing.T) {
 
 func TestStatsRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
-		name      string
-		builder   *StatsRequestBuilder
-		setupMock func(m *mocking.MockRequestAdapter)
-		err       error
+		name       string
+		builder    *StatsRequestBuilder
+		setupMock  func(m *mocking.MockRequestAdapter)
+		err        error
+		isSentinel bool
 	}{
 		{
-			name:      "nil builder",
-			builder:   nil,
-			setupMock: func(_ *mocking.MockRequestAdapter) {},
-			err:       snerrors.ErrNilRequestBuilder,
+			name:       "nil builder",
+			builder:    nil,
+			setupMock:  func(_ *mocking.MockRequestAdapter) {},
+			err:        snerrors.ErrNilRequestBuilder,
+			isSentinel: true,
 		},
 		{
-			name:      "nil request adapter",
-			builder:   NewStatsRequestBuilderInternal(map[string]string{}, nil),
-			setupMock: func(_ *mocking.MockRequestAdapter) {},
-			err:       snerrors.ErrNilRequestAdapter,
+			name:       "nil request adapter",
+			builder:    NewStatsRequestBuilderInternal(map[string]string{}, nil),
+			setupMock:  func(_ *mocking.MockRequestAdapter) {},
+			err:        snerrors.ErrNilRequestAdapter,
+			isSentinel: true,
 		},
 		{
 			name: "adapter returns error",
@@ -54,7 +57,8 @@ func TestStatsRequestBuilder_Get(t *testing.T) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(nil, nil)
 			},
-			err: snerrors.ErrNilResponse,
+			err:        snerrors.ErrNilResponse,
+			isSentinel: true,
 		},
 		{
 			name: "adapter returns wrong type",
@@ -78,7 +82,11 @@ func TestStatsRequestBuilder_Get(t *testing.T) {
 
 			resp, err := builder.Get(context.Background(), nil)
 			if tt.err != nil {
-				require.Equal(t, tt.err, err)
+				if tt.isSentinel {
+					require.ErrorIs(t, err, tt.err)
+				} else {
+					require.Equal(t, tt.err, err)
+				}
 				assert.Nil(t, resp)
 			} else if tt.name == "nil builder" {
 				require.NoError(t, err)

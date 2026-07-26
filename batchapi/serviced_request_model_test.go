@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -288,7 +289,7 @@ func TestServicedRequestModel_GetBody(t *testing.T) {
 				}
 
 				id, err := resp.GetBody()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 			},
@@ -299,7 +300,7 @@ func TestServicedRequestModel_GetBody(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				id, err := resp.GetBody()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -371,7 +372,7 @@ func TestServicedRequestModel_setBody(t *testing.T) {
 				}
 
 				err := resp.setBody(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -384,7 +385,7 @@ func TestServicedRequestModel_setBody(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				err := resp.setBody(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -476,7 +477,7 @@ func TestServicedRequestModel_GetErrorMessage(t *testing.T) {
 				}
 
 				id, err := resp.GetErrorMessage()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 			},
@@ -487,7 +488,7 @@ func TestServicedRequestModel_GetErrorMessage(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				id, err := resp.GetErrorMessage()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -559,7 +560,7 @@ func TestServicedRequestModel_setErrorMessage(t *testing.T) {
 				}
 
 				err := resp.setErrorMessage(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -572,7 +573,7 @@ func TestServicedRequestModel_setErrorMessage(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				err := resp.setErrorMessage(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -603,7 +604,7 @@ func TestServicedRequestModel_GetExecutionTime(t *testing.T) {
 			test: func(t *testing.T) {
 				var m *ServicedRequestModel
 				res, err := m.GetExecutionTime()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, res)
 			},
 		},
@@ -633,7 +634,7 @@ func TestServicedRequestModel_setExecutionTime(t *testing.T) {
 			test: func(t *testing.T) {
 				var m *ServicedRequestModel
 				err := m.setExecutionTime(nil)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -725,7 +726,7 @@ func TestServicedRequestModel_GetHeaders(t *testing.T) {
 				}
 
 				id, err := resp.GetHeaders()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 			},
@@ -736,7 +737,7 @@ func TestServicedRequestModel_GetHeaders(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				id, err := resp.GetHeaders()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -808,7 +809,7 @@ func TestServicedRequestModel_setHeaders(t *testing.T) {
 				}
 
 				err := resp.setHeaders(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -821,7 +822,7 @@ func TestServicedRequestModel_setHeaders(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				err := resp.setHeaders(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -913,7 +914,7 @@ func TestServicedRequestModel_GetID(t *testing.T) {
 				}
 
 				id, err := resp.GetID()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 			},
@@ -924,7 +925,7 @@ func TestServicedRequestModel_GetID(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				id, err := resp.GetID()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -996,7 +997,7 @@ func TestServicedRequestModel_setID(t *testing.T) {
 				}
 
 				err := resp.setID(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -1009,7 +1010,7 @@ func TestServicedRequestModel_setID(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				err := resp.setID(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -1101,7 +1102,7 @@ func TestServicedRequestModel_GetRedirectURL(t *testing.T) {
 				}
 
 				id, err := resp.GetRedirectURL()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 			},
@@ -1112,7 +1113,7 @@ func TestServicedRequestModel_GetRedirectURL(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				id, err := resp.GetRedirectURL()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -1184,7 +1185,7 @@ func TestServicedRequestModel_setRedirectURL(t *testing.T) {
 				}
 
 				err := resp.setRedirectURL(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -1197,7 +1198,7 @@ func TestServicedRequestModel_setRedirectURL(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				err := resp.setRedirectURL(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -1289,7 +1290,7 @@ func TestServicedRequestModel_GetStatusCode(t *testing.T) {
 				}
 
 				id, err := resp.GetStatusCode()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 			},
@@ -1300,7 +1301,7 @@ func TestServicedRequestModel_GetStatusCode(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				id, err := resp.GetStatusCode()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -1372,7 +1373,7 @@ func TestServicedRequestModel_setStatusCode(t *testing.T) {
 				}
 
 				err := resp.setStatusCode(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -1385,7 +1386,7 @@ func TestServicedRequestModel_setStatusCode(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				err := resp.setStatusCode(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -1477,7 +1478,7 @@ func TestServicedRequestModel_GetStatusText(t *testing.T) {
 				}
 
 				id, err := resp.GetStatusText()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 				intModel.AssertExpectations(t)
 			},
@@ -1488,7 +1489,7 @@ func TestServicedRequestModel_GetStatusText(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				id, err := resp.GetStatusText()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -1560,7 +1561,7 @@ func TestServicedRequestModel_setStatusText(t *testing.T) {
 				}
 
 				err := resp.setStatusText(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -1573,7 +1574,7 @@ func TestServicedRequestModel_setStatusText(t *testing.T) {
 				resp := (*ServicedRequestModel)(nil)
 
 				err := resp.setStatusText(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}

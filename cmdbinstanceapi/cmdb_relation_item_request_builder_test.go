@@ -5,9 +5,11 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCmdbRelationItemRequestBuilder_Delete(t *testing.T) {
@@ -50,6 +52,19 @@ func TestCmdbRelationItemRequestBuilder_Delete(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 			}
+		})
+	}
+}
+
+func TestCmdbRelationItemRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*CmdbRelationItemRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			err := builder.Delete(context.Background(), nil)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		})
 	}
 }

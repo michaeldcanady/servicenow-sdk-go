@@ -12,6 +12,7 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewAttachmentItemRequestBuilderInternal(t *testing.T) {
@@ -115,11 +116,12 @@ func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 	mockParsable := core.NewBaseServiceNowItemResponse[*Attachment](CreateAttachmentFromDiscriminatorValue)
 
 	tests := []struct {
-		name         string
-		isNilBuilder bool
-		setupMocks   func() *mocking.MockRequestBuilder
-		expectedRes  any
-		expectedErr  error
+		name                  string
+		isNilBuilder          bool
+		setupMocks            func() *mocking.MockRequestBuilder
+		expectedRes           any
+		expectedErr           error
+		expectedErrIsSentinel bool
 	}{
 		{
 			name: "Successful",
@@ -172,17 +174,20 @@ func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 				mockInternal.On("GetPathParameters").Return(mockPathParameters)
 				return mockInternal
 			},
-			expectedErr: snerrors.ErrNilResponse,
+			expectedErr:           snerrors.ErrNilResponse,
+			expectedErrIsSentinel: true,
 		},
 		{
-			name:        "Nil inner model",
-			setupMocks:  func() *mocking.MockRequestBuilder { return &mocking.MockRequestBuilder{} }, // Mocking is not used here but to satisfy interface
-			expectedErr: snerrors.ErrNilRequestBuilder,
+			name:                  "Nil inner model",
+			setupMocks:            func() *mocking.MockRequestBuilder { return &mocking.MockRequestBuilder{} }, // Mocking is not used here but to satisfy interface
+			expectedErr:           snerrors.ErrNilRequestBuilder,
+			expectedErrIsSentinel: true,
 		},
 		{
-			name:         "Nil model",
-			isNilBuilder: true,
-			expectedErr:  snerrors.ErrNilRequestBuilder,
+			name:                  "Nil model",
+			isNilBuilder:          true,
+			expectedErr:           snerrors.ErrNilRequestBuilder,
+			expectedErrIsSentinel: true,
 		},
 	}
 
@@ -198,7 +203,11 @@ func TestAttachmentItemRequestBuilder_Get(t *testing.T) {
 			result, err := builder.Get(context.Background(), nil)
 
 			if tt.expectedErr != nil {
-				assert.Equal(t, tt.expectedErr, err)
+				if tt.expectedErrIsSentinel {
+					require.ErrorIs(t, err, tt.expectedErr)
+				} else {
+					assert.Equal(t, tt.expectedErr, err)
+				}
 			} else {
 				assert.NoError(t, err)
 				if !tt.isNilBuilder && tt.name != "Nil inner model" {
@@ -216,10 +225,11 @@ func TestAttachmentItemRequestBuilder_Delete(t *testing.T) {
 	mockURLTemplate := ""
 
 	tests := []struct {
-		name         string
-		isNilBuilder bool
-		setupMocks   func() *mocking.MockRequestBuilder
-		expectedErr  error
+		name                  string
+		isNilBuilder          bool
+		setupMocks            func() *mocking.MockRequestBuilder
+		expectedErr           error
+		expectedErrIsSentinel bool
 	}{
 		{
 			name: "Successful",
@@ -248,14 +258,16 @@ func TestAttachmentItemRequestBuilder_Delete(t *testing.T) {
 			expectedErr: errors.New("send error"),
 		},
 		{
-			name:        "Nil inner model",
-			setupMocks:  func() *mocking.MockRequestBuilder { return &mocking.MockRequestBuilder{} },
-			expectedErr: snerrors.ErrNilRequestBuilder,
+			name:                  "Nil inner model",
+			setupMocks:            func() *mocking.MockRequestBuilder { return &mocking.MockRequestBuilder{} },
+			expectedErr:           snerrors.ErrNilRequestBuilder,
+			expectedErrIsSentinel: true,
 		},
 		{
-			name:         "Nil model",
-			isNilBuilder: true,
-			expectedErr:  snerrors.ErrNilRequestBuilder,
+			name:                  "Nil model",
+			isNilBuilder:          true,
+			expectedErr:           snerrors.ErrNilRequestBuilder,
+			expectedErrIsSentinel: true,
 		},
 	}
 
@@ -271,7 +283,11 @@ func TestAttachmentItemRequestBuilder_Delete(t *testing.T) {
 			err := builder.Delete(context.Background(), nil)
 
 			if tt.expectedErr != nil {
-				assert.Equal(t, tt.expectedErr, err)
+				if tt.expectedErrIsSentinel {
+					require.ErrorIs(t, err, tt.expectedErr)
+				} else {
+					assert.Equal(t, tt.expectedErr, err)
+				}
 			} else {
 				assert.NoError(t, err)
 			}

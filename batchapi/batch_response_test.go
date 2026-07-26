@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -368,7 +369,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				}
 
 				id, err := resp.GetBatchRequestID()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 			},
 		},
@@ -378,7 +379,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				resp := (*BatchResponseModel)(nil)
 
 				id, err := resp.GetBatchRequestID()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -450,7 +451,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 				}
 
 				err := resp.setBatchRequestID(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -463,7 +464,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 				resp := (*BatchResponseModel)(nil)
 
 				err := resp.setBatchRequestID(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -546,7 +547,7 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				}
 
 				id, err := resp.GetServicedRequests()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 			},
 		},
@@ -556,7 +557,7 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				resp := (*BatchResponseModel)(nil)
 
 				id, err := resp.GetServicedRequests()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -628,7 +629,7 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 				}
 
 				err := resp.setServicedRequests(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -641,7 +642,7 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 				resp := (*BatchResponseModel)(nil)
 
 				err := resp.setServicedRequests(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -724,7 +725,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				}
 
 				id, err := resp.GetUnservicedRequests()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 			},
 		},
@@ -734,7 +735,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				resp := (*BatchResponseModel)(nil)
 
 				id, err := resp.GetUnservicedRequests()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -806,7 +807,7 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 				}
 
 				err := resp.setUnservicedRequests(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -819,7 +820,7 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 				resp := (*BatchResponseModel)(nil)
 
 				err := resp.setUnservicedRequests(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}

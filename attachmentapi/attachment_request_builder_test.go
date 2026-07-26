@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -64,6 +65,24 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestAttachmentRequestBuilder_Get_NilBuilder(t *testing.T) {
+	builder := (*AttachmentRequestBuilder)(nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	assert.Nil(t, resp)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+}
+
+func TestAttachmentRequestBuilder_Head_NilBuilder(t *testing.T) {
+	builder := (*AttachmentRequestBuilder)(nil)
+
+	headers, err := builder.Head(context.Background(), nil)
+
+	assert.Nil(t, headers)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 }
 
 func TestAttachmentRequestBuilder_Builders(t *testing.T) {

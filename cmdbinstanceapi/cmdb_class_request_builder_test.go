@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -92,6 +93,24 @@ func TestCmdbClassRequestBuilder_Post(t *testing.T) {
 				require.NoError(t, err)
 				assert.NotNil(t, resp)
 			}
+		})
+	}
+}
+
+func TestCmdbClassRequestBuilder_NilReceiverGuards(t *testing.T) {
+	builders := map[string]*CmdbClassRequestBuilder{
+		"nil builder":              nil,
+		"nil inner RequestBuilder": {},
+	}
+	for name, builder := range builders {
+		t.Run(name, func(t *testing.T) {
+			resp, err := builder.Get(context.Background(), nil)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, resp)
+
+			itemResp, err := builder.Post(context.Background(), nil, nil)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			assert.Nil(t, itemResp)
 		})
 	}
 }

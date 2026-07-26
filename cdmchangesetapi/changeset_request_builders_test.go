@@ -121,7 +121,7 @@ func TestChangesetsRequestBuilder_NilReceiverGuards(t *testing.T) {
 			assert.Nil(t, resp)
 
 			err = builder.Delete(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		})
 	}
 }

@@ -176,7 +176,7 @@ func TestPoliciesMappingsRequestBuilder_ToDeleteRequestInformation(t *testing.T)
 
 			if tt.nilRB {
 				assert.Nil(t, requestInfo)
-				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			} else {
 				assert.NotNil(t, requestInfo)
 				require.NoError(t, err)
@@ -329,7 +329,7 @@ func TestPoliciesMappingsRequestBuilder_ToPostRequestInformation(t *testing.T) {
 
 			if tt.nilRB {
 				assert.Nil(t, requestInfo)
-				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			} else {
 				assert.NotNil(t, requestInfo)
 				require.NoError(t, err)

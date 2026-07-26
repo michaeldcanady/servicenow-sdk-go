@@ -5,11 +5,30 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
+
+func TestActivitiesRequestBuilder_Get_NilBuilder(t *testing.T) {
+	var builder *ActivitiesRequestBuilder
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, resp)
+}
+
+func TestActivitiesRequestBuilder_ToGetRequestInformation_NilBuilder(t *testing.T) {
+	var builder *ActivitiesRequestBuilder
+
+	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, requestInfo)
+}
 
 func TestActivitiesRequestBuilder_Get(t *testing.T) {
 	type testCase struct {

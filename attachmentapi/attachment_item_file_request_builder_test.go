@@ -66,15 +66,16 @@ func TestNewAttachmentItemFileRequestBuilder(t *testing.T) {
 }
 
 type attachmentItemFileGetTestCase struct {
-	name                 string
-	nilBuilder           bool
-	requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration
-	nilRequestAdapter    bool
-	sendError            error
-	sendResponse         any
-	metadataHeaderValue  string
-	expectedErr          error
-	expectedErrorMessage string
+	name                  string
+	nilBuilder            bool
+	requestConfiguration  *AttachmentItemFileRequestBuilderGetRequestConfiguration
+	nilRequestAdapter     bool
+	sendError             error
+	sendResponse          any
+	metadataHeaderValue   string
+	expectedErr           error
+	expectedErrIsSentinel bool
+	expectedErrorMessage  string
 }
 
 // newAttachmentItemFileGetTestBuilder builds the *AttachmentItemFileRequestBuilder
@@ -122,13 +123,17 @@ func assertAttachmentItemFileGetResult(t *testing.T, tt attachmentItemFileGetTes
 
 	if tt.nilBuilder {
 		assert.Nil(t, result)
-		assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		return
 	}
 
 	if tt.expectedErr != nil {
 		require.Error(t, err)
-		assert.Equal(t, tt.expectedErr, err)
+		if tt.expectedErrIsSentinel {
+			require.ErrorIs(t, err, tt.expectedErr)
+		} else {
+			assert.Equal(t, tt.expectedErr, err)
+		}
 		assert.Nil(t, result)
 		return
 	}
@@ -173,10 +178,11 @@ func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 			expectedErr:          errors.New("resp is not []byte"),
 		},
 		{
-			name:                 "Nil request adapter",
-			requestConfiguration: &AttachmentItemFileRequestBuilderGetRequestConfiguration{},
-			nilRequestAdapter:    true,
-			expectedErr:          snerrors.ErrNilRequestAdapter,
+			name:                  "Nil request adapter",
+			requestConfiguration:  &AttachmentItemFileRequestBuilderGetRequestConfiguration{},
+			nilRequestAdapter:     true,
+			expectedErr:           snerrors.ErrNilRequestAdapter,
+			expectedErrIsSentinel: true,
 		},
 		{
 			name:                 "Nil response",
@@ -233,7 +239,7 @@ func assertAttachmentItemFileToGetRequestInformation(t *testing.T, tt attachment
 
 	if tt.nilBuilder || tt.nilRequestBuilder {
 		assert.Nil(t, reqInfo)
-		assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		return
 	}
 

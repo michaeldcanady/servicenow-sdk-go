@@ -16,9 +16,10 @@ import (
 
 func TestTableRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
-		name      string
-		setupMock func(m *mocking.MockRequestAdapter)
-		err       error
+		name          string
+		setupMock     func(m *mocking.MockRequestAdapter)
+		err           error
+		errIsSentinel bool
 	}{
 		{
 			name: "adapter returns error",
@@ -34,7 +35,8 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(nil, nil)
 			},
-			err: snerrors.ErrNilResponse,
+			err:           snerrors.ErrNilResponse,
+			errIsSentinel: true,
 		},
 		{
 			name: "adapter returns wrong type",
@@ -59,7 +61,11 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 
 			resp, err := builder.Get(context.Background(), nil)
 			if tt.err != nil {
-				require.Equal(t, tt.err, err)
+				if tt.errIsSentinel {
+					require.ErrorIs(t, err, tt.err)
+				} else {
+					require.Equal(t, tt.err, err)
+				}
 				assert.Nil(t, resp)
 			} else {
 				require.NoError(t, err)
@@ -149,6 +155,54 @@ func TestTableRequestBuilder_Post(t *testing.T) {
 			mockAdapter.AssertExpectations(t)
 		})
 	}
+}
+
+func TestTableRequestBuilder_Get_NilGuards(t *testing.T) {
+	t.Run("nil builder", func(t *testing.T) {
+		var builder *TableRequestBuilder[*TableRecord]
+		resp, err := builder.Get(context.Background(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	})
+
+	t.Run("nil request adapter", func(t *testing.T) {
+		builder := NewTableRequestBuilderInternal[*TableRecord](map[string]string{}, nil, CreateTableRecordFromDiscriminatorValue)
+		resp, err := builder.Get(context.Background(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	})
+}
+
+func TestTableRequestBuilder_Post_NilGuards(t *testing.T) {
+	t.Run("nil builder", func(t *testing.T) {
+		var builder *TableRequestBuilder[*TableRecord]
+		resp, err := builder.Post(context.Background(), NewTableRecord(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	})
+
+	t.Run("nil request adapter", func(t *testing.T) {
+		builder := NewTableRequestBuilderInternal[*TableRecord](map[string]string{}, nil, CreateTableRecordFromDiscriminatorValue)
+		resp, err := builder.Post(context.Background(), NewTableRecord(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	})
+}
+
+func TestTableRequestBuilder_Head_NilGuards(t *testing.T) {
+	t.Run("nil builder", func(t *testing.T) {
+		var builder *TableRequestBuilder[*TableRecord]
+		resp, err := builder.Head(context.Background(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	})
+
+	t.Run("nil request adapter", func(t *testing.T) {
+		builder := NewTableRequestBuilderInternal[*TableRecord](map[string]string{}, nil, CreateTableRecordFromDiscriminatorValue)
+		resp, err := builder.Head(context.Background(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	})
 }
 
 // TODO: fix test table design

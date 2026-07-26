@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
@@ -249,7 +250,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 				}
 
 				id, err := resp.GetBody()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 			},
 		},
@@ -259,7 +260,7 @@ func TestRestRequest_GetBody(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetBody()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -377,7 +378,7 @@ func TestRestRequest_SetBody(t *testing.T) {
 				}
 
 				err := resp.SetBody(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -390,7 +391,7 @@ func TestRestRequest_SetBody(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetBody(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -473,7 +474,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				}
 
 				id, err := resp.GetExcludeResponseHeaders()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 			},
 		},
@@ -483,7 +484,7 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetExcludeResponseHeaders()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -555,7 +556,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 				}
 
 				err := resp.SetExcludeResponseHeaders(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -568,7 +569,7 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetExcludeResponseHeaders(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -651,7 +652,7 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				}
 
 				id, err := resp.GetHeaders()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 			},
 		},
@@ -661,7 +662,7 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetHeaders()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -733,7 +734,7 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 				}
 
 				err := resp.SetHeaders(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -746,7 +747,7 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetHeaders(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -829,7 +830,7 @@ func TestRestRequest_GetID(t *testing.T) {
 				}
 
 				id, err := resp.GetID()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 			},
 		},
@@ -839,7 +840,7 @@ func TestRestRequest_GetID(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetID()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -911,7 +912,7 @@ func TestRestRequest_SetID(t *testing.T) {
 				}
 
 				err := resp.SetID(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -924,7 +925,7 @@ func TestRestRequest_SetID(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetID(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -1007,7 +1008,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				}
 
 				id, err := resp.GetMethod()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 			},
 		},
@@ -1017,7 +1018,7 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetMethod()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -1089,7 +1090,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 				}
 
 				err := resp.SetMethod(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
@@ -1102,7 +1103,7 @@ func TestRestRequest_SetMethod(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				err := resp.SetMethod(input)
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -1185,7 +1186,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 				}
 
 				id, err := resp.GetURL()
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, id)
 			},
 		},
@@ -1195,7 +1196,7 @@ func TestRestRequest_GetURL(t *testing.T) {
 				resp := (*RestRequestModel)(nil)
 
 				id, err := resp.GetURL()
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, id)
 			},
 		},
@@ -1284,7 +1285,7 @@ func TestRestRequest_SetURL(t *testing.T) {
 				}
 
 				err := resp.SetURL(input)
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 
 				intModel.AssertExpectations(t)
 			},
