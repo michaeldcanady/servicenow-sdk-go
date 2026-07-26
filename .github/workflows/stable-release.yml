@@ -5,6 +5,8 @@ on:
     branches:
       - main
 
+permissions: {}
+
 jobs:
   release-please:
     runs-on: ubuntu-latest
@@ -14,7 +16,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Create release
-        uses: googleapis/release-please-action@v5
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
         id: release
         with:
           config-file: release-please-config.json
