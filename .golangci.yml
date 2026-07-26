@@ -17,6 +17,7 @@ linters:
     - unparam
     - whitespace
     - revive
+    - errorlint
   settings:
     dupl:
       threshold: 200

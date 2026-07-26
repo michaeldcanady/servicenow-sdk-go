@@ -1,6 +1,7 @@
 package query
 
 import (
+	"errors"
 	"testing"
 	"time"
 )
@@ -107,7 +108,7 @@ func TestNewErrorCondition(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := NewErrorCondition(tt.err)
-			if c.Error() != tt.err {
+			if !errors.Is(c.Error(), tt.err) {
 				t.Error("Failed to store error")
 			}
 		})

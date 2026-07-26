@@ -111,7 +111,7 @@ func TestWithURL(t *testing.T) {
 				option := WithURL(input)
 				config := &ServiceNowServiceClientConfig{}
 				err := option(config)
-				assert.Equal(t, errors.New("parse \"https://example url.com\": invalid character \" \" in host name"), err)
+				assert.EqualError(t, err, "parse \"https://example url.com\": invalid character \" \" in host name")
 				assert.Equal(t, "", config.rawURI)
 			},
 		},

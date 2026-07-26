@@ -84,7 +84,7 @@ func convertValue(srcVal reflect.Value, targetType reflect.Type) (reflect.Value,
 	if srcKind == reflect.String && isNumericKind(dstKind) {
 		num, err := strconv.ParseFloat(srcVal.String(), 64)
 		if err != nil {
-			return reflect.Value{}, fmt.Errorf("unable to convert %s to float: %s", srcVal, err)
+			return reflect.Value{}, fmt.Errorf("unable to convert %s to float: %w", srcVal, err)
 		}
 		converted, err := convertNumeric(reflect.ValueOf(num), targetType)
 		if err != nil {
