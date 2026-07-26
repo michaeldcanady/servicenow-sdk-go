@@ -147,7 +147,7 @@ func TestTableItemRequestBuilder_Put(t *testing.T) {
 		{
 			name: "nil body",
 			body: nil,
-			setupMock: func(m *mocking.MockRequestAdapter) {
+			setupMock: func(_ *mocking.MockRequestAdapter) {
 			},
 			err: snerrors.ErrNilBody,
 		},
@@ -206,7 +206,7 @@ func TestTableItemRequestBuilder_Patch(t *testing.T) {
 		{
 			name: "nil body",
 			body: nil,
-			setupMock: func(m *mocking.MockRequestAdapter) {
+			setupMock: func(_ *mocking.MockRequestAdapter) {
 			},
 			err: snerrors.ErrNilBody,
 		},

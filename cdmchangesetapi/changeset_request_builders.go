@@ -147,9 +147,9 @@ func NewCommitStatusRequestBuilderInternal(pathParameters map[string]string, req
 	}
 }
 
-func (rB *CommitStatusRequestBuilder) ByID(commitId string) *CommitStatusItemRequestBuilder {
+func (rB *CommitStatusRequestBuilder) ByID(commitID string) *CommitStatusItemRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["commit_id"] = commitId
+	pathParameters["commit_id"] = commitID
 	return NewCommitStatusItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
@@ -266,23 +266,23 @@ func NewChangesetItemRequestBuilderInternal(pathParameters map[string]string, re
 	}
 }
 
-// ImpactedDeployables returns an ImpactedDeployablesBySysIdRequestBuilder.
-func (rB *ChangesetItemRequestBuilder) ImpactedDeployables() *ImpactedDeployablesBySysIdRequestBuilder {
-	return NewImpactedDeployablesBySysIdRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+// ImpactedDeployables returns an ImpactedDeployablesBySysIDRequestBuilder.
+func (rB *ChangesetItemRequestBuilder) ImpactedDeployables() *ImpactedDeployablesBySysIDRequestBuilder {
+	return NewImpactedDeployablesBySysIDRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
-// ImpactedDeployablesBySysIdRequestBuilder handles /changesets/{changeset_id}/impacted-deployables endpoint.
-type ImpactedDeployablesBySysIdRequestBuilder struct {
+// ImpactedDeployablesBySysIDRequestBuilder handles /changesets/{changeset_id}/impacted-deployables endpoint.
+type ImpactedDeployablesBySysIDRequestBuilder struct {
 	core.RequestBuilder
 }
 
-func NewImpactedDeployablesBySysIdRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ImpactedDeployablesBySysIdRequestBuilder {
-	return &ImpactedDeployablesBySysIdRequestBuilder{
+func NewImpactedDeployablesBySysIDRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ImpactedDeployablesBySysIDRequestBuilder {
+	return &ImpactedDeployablesBySysIDRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, changesetItemImpactedDeployablesURLTemplate, pathParameters),
 	}
 }
 
-func (rB *ImpactedDeployablesBySysIdRequestBuilder) Get(ctx context.Context, config *ImpactedDeployablesBySysIdRequestBuilderGetRequestConfiguration) (ImpactedDeployablesBySysIdResponse, error) {
+func (rB *ImpactedDeployablesBySysIDRequestBuilder) Get(ctx context.Context, config *ImpactedDeployablesBySysIDRequestBuilderGetRequestConfiguration) (ImpactedDeployablesBySysIDResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -296,9 +296,9 @@ func (rB *ImpactedDeployablesBySysIdRequestBuilder) Get(ctx context.Context, con
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedDeployablesBySysIdResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedDeployablesBySysIDResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
 	}
-	return res.(ImpactedDeployablesBySysIdResponse), nil
+	return res.(ImpactedDeployablesBySysIDResponse), nil
 }

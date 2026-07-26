@@ -83,7 +83,7 @@ func TestCollectionApply(t *testing.T) {
 		{
 			name:       "Empty collection",
 			collection: []int{},
-			mutator: func(i int) (string, bool) {
+			mutator: func(_ int) (string, bool) {
 				return "", true
 			},
 			want: []string{},
@@ -91,7 +91,7 @@ func TestCollectionApply(t *testing.T) {
 		{
 			name:       "Nil collection",
 			collection: nil,
-			mutator: func(i int) (string, bool) {
+			mutator: func(_ int) (string, bool) {
 				return "", true
 			},
 			want: ([]string)(nil),

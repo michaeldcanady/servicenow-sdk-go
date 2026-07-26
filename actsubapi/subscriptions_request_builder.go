@@ -28,25 +28,25 @@ func NewSubscriptionsRequestBuilderInternal(pathParameters map[string]string, re
 	}
 }
 
-// BySubscriberId returns a SubscriptionItemRequestBuilder.
-func (rB *SubscriptionsRequestBuilder) BySubscriberId(subscriberId string) *SubscriptionItemRequestBuilder {
+// BySubscriberID returns a SubscriptionItemRequestBuilder.
+func (rB *SubscriptionsRequestBuilder) BySubscriberID(subscriberID string) *SubscriptionItemRequestBuilder {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
 
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["subscriber_id"] = subscriberId
+	pathParameters["subscriber_id"] = subscriberID
 	return NewSubscriptionItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
-// ByObjectId returns a SubscriptionObjectRequestBuilder.
-func (rB *SubscriptionsRequestBuilder) ByObjectId(subObjId string) *SubscriptionObjectRequestBuilder {
+// ByObjectID returns a SubscriptionObjectRequestBuilder.
+func (rB *SubscriptionsRequestBuilder) ByObjectID(subObjID string) *SubscriptionObjectRequestBuilder {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
 
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["sub_obj_id"] = subObjId
+	pathParameters["sub_obj_id"] = subObjID
 	return NewSubscriptionObjectRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
@@ -88,7 +88,7 @@ func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *Subsc
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *SubscriptionItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *SubscriptionsRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *SubscriptionItemRequestBuilder) ToGetRequestInformation(_ context.Context, config *SubscriptionsRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -180,7 +180,7 @@ func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscri
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *IsSubscribedRequestBuilder) ToGetRequestInformation(ctx context.Context, config *IsSubscribedRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *IsSubscribedRequestBuilder) ToGetRequestInformation(_ context.Context, config *IsSubscribedRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -289,7 +289,7 @@ func (rB *UnsubscribeRequestBuilder) Delete(ctx context.Context, config *Unsubsc
 }
 
 // ToDeleteRequestInformation creates a RequestInformation object for a DELETE request.
-func (rB *UnsubscribeRequestBuilder) ToDeleteRequestInformation(ctx context.Context, config *UnsubscribeRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *UnsubscribeRequestBuilder) ToDeleteRequestInformation(_ context.Context, config *UnsubscribeRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}

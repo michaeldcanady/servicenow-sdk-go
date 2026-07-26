@@ -74,14 +74,14 @@ func (rB *PreferencesRequestBuilder) ToPostRequestInformation(ctx context.Contex
 	return requestInfo, nil
 }
 
-// ByProfileId returns a PreferenceItemRequestBuilder.
-func (rB *PreferencesRequestBuilder) ByProfileId(profileId string) *PreferenceItemRequestBuilder {
+// ByProfileID returns a PreferenceItemRequestBuilder.
+func (rB *PreferencesRequestBuilder) ByProfileID(profileID string) *PreferenceItemRequestBuilder {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
 
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["profileId"] = profileId
+	pathParameters["profileId"] = profileID
 	return NewPreferenceItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
@@ -123,7 +123,7 @@ func (rB *PreferenceItemRequestBuilder) Get(ctx context.Context, config *Prefere
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *PreferenceItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *PreferencesRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *PreferenceItemRequestBuilder) ToGetRequestInformation(_ context.Context, config *PreferencesRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}

@@ -153,14 +153,14 @@ func (rE *RestRequestModel) GetFieldDeserializers() map[string]func(serializatio
 			if s == nil {
 				return nil, nil
 			}
-			m, err := parseHttpMethod(*s)
+			m, err := parseHTTPMethod(*s)
 			return &m, err
 		}, rE.SetMethod),
 		urlKey: internalSerialization.DeserializeStringFunc(rE.SetURL),
 	}
 }
 
-func parseHttpMethod(method string) (abstractions.HttpMethod, error) {
+func parseHTTPMethod(method string) (abstractions.HttpMethod, error) {
 	switch strings.ToUpper(method) {
 	case "GET":
 		return abstractions.GET, nil

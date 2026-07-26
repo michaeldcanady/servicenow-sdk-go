@@ -113,7 +113,7 @@ func TestRestRequest_Serialize(t *testing.T) {
 		},
 		{
 			name: "Nil Model",
-			setup: func(m *RestRequestModel) {
+			setup: func(_ *RestRequestModel) {
 				// handled by test loop
 			},
 			expectedErr: false,
@@ -277,7 +277,7 @@ func TestRestRequest_SetBodyFromParsable(t *testing.T) {
 	}{
 		{
 			name: "Successful",
-			setup: func(m *RestRequestModel) {
+			setup: func(_ *RestRequestModel) {
 				// We need a registered serialization writer
 				serialization.DefaultSerializationWriterFactoryInstance.ContentTypeAssociatedFactories["application/json"] = mocking.NewMockSerializationWriterFactory()
 			},
@@ -285,7 +285,7 @@ func TestRestRequest_SetBodyFromParsable(t *testing.T) {
 		},
 		{
 			name: "Registry Error",
-			setup: func(m *RestRequestModel) {
+			setup: func(_ *RestRequestModel) {
 				delete(serialization.DefaultSerializationWriterFactoryInstance.ContentTypeAssociatedFactories, "application/json")
 			},
 			expectedErr: true,

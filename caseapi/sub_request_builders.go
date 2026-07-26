@@ -71,7 +71,7 @@ func (rB *CaseItemRequestBuilder) Get(ctx context.Context, config *CaseItemReque
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *CaseItemRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CaseItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *CaseItemRequestBuilder) ToGetRequestInformation(_ context.Context, config *CaseItemRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -155,7 +155,7 @@ func (rB *CaseActivitiesRequestBuilder) Get(ctx context.Context, config *CaseAct
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *CaseActivitiesRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CaseActivitiesRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *CaseActivitiesRequestBuilder) ToGetRequestInformation(_ context.Context, config *CaseActivitiesRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -206,7 +206,7 @@ func (rB *CaseFieldValuesRequestBuilder) Get(ctx context.Context, config *CaseFi
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *CaseFieldValuesRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CaseFieldValuesRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *CaseFieldValuesRequestBuilder) ToGetRequestInformation(_ context.Context, config *CaseFieldValuesRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}

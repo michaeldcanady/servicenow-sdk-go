@@ -40,10 +40,10 @@ var (
 	}
 )
 
-func newNumericRange(max, min float64, allowDecimal bool) *numericRange {
+func newNumericRange(maxVal, minVal float64, allowDecimal bool) *numericRange {
 	return &numericRange{
-		min:          min,
-		max:          max,
+		min:          minVal,
+		max:          maxVal,
 		allowDecimal: allowDecimal,
 	}
 }

@@ -52,7 +52,7 @@ func (rB *collectionGetRequestBuilder) Get(ctx context.Context, config *abstract
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *collectionGetRequestBuilder) ToGetRequestInformation(ctx context.Context, config *abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]) (*abstractions.RequestInformation, error) {
+func (rB *collectionGetRequestBuilder) ToGetRequestInformation(_ context.Context, config *abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}

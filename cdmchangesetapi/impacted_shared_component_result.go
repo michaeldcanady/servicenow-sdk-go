@@ -30,7 +30,7 @@ func (m *ImpactedSharedComponentResult) Serialize(writer serialization.Serializa
 		internalSerialization.SerializeStringFunc(stateKey, m.GetState),
 		internalSerialization.SerializeStringFunc(sysCreatedByKey, m.GetSysCreatedBy),
 		internalSerialization.SerializeStringFunc(sysCreatedOnKey, m.GetSysCreatedOn),
-		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
 		internalSerialization.SerializeStringFunc(sysUpdatedByKey, m.GetSysUpdatedBy),
 		internalSerialization.SerializeStringFunc(sysUpdatedOnKey, m.GetSysUpdatedOn),
 		internalSerialization.SerializeInt32Func(versionCounterKey, m.GetVersionCounter),
@@ -47,7 +47,7 @@ func (m *ImpactedSharedComponentResult) GetFieldDeserializers() map[string]func(
 		stateKey:            internalSerialization.DeserializeStringFunc(m.setState),
 		sysCreatedByKey:     internalSerialization.DeserializeStringFunc(m.setSysCreatedBy),
 		sysCreatedOnKey:     internalSerialization.DeserializeStringFunc(m.setSysCreatedOn),
-		sysIdKey:            internalSerialization.DeserializeStringFunc(m.setSysId),
+		sysIDKey:            internalSerialization.DeserializeStringFunc(m.setSysID),
 		sysUpdatedByKey:     internalSerialization.DeserializeStringFunc(m.setSysUpdatedBy),
 		sysUpdatedOnKey:     internalSerialization.DeserializeStringFunc(m.setSysUpdatedOn),
 		versionCounterKey:   internalSerialization.DeserializeInt32Func(m.setVersionCounter),
@@ -102,11 +102,11 @@ func (m *ImpactedSharedComponentResult) GetSysCreatedOn() (*string, error) {
 func (m *ImpactedSharedComponentResult) setSysCreatedOn(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysCreatedOnKey, val)
 }
-func (m *ImpactedSharedComponentResult) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedSharedComponentResult, *string](m, sysIdKey)
+func (m *ImpactedSharedComponentResult) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedSharedComponentResult, *string](m, sysIDKey)
 }
-func (m *ImpactedSharedComponentResult) setSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, sysIdKey, val)
+func (m *ImpactedSharedComponentResult) setSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 func (m *ImpactedSharedComponentResult) GetSysUpdatedBy() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ImpactedSharedComponentResult, *string](m, sysUpdatedByKey)

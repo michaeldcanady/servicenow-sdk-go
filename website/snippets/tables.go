@@ -311,8 +311,8 @@ func tableGuideSnippets() {
 
 	result, _ := createGuideResponse.GetResult()
 
-	sysId, _ := result.GetSysID()
-	fmt.Printf("Created incident with sys_id: %s\n", *sysId)
+	sysID, _ := result.GetSysID()
+	fmt.Printf("Created incident with sys_id: %s\n", *sysID)
 
 	sysIdStr := "xSDK_SN_TABLE_SYS_IDx" // your record sys_id
 

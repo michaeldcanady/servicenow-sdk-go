@@ -200,9 +200,9 @@ func NewUploadStatusRequestBuilderInternal(pathParameters map[string]string, req
 }
 
 // ByID returns a UploadStatusItemRequestBuilder.
-func (rB *UploadStatusRequestBuilder) ByID(uploadId string) *UploadStatusItemRequestBuilder {
+func (rB *UploadStatusRequestBuilder) ByID(uploadID string) *UploadStatusItemRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["upload_id"] = uploadId
+	pathParameters["upload_id"] = uploadID
 	return NewUploadStatusItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
@@ -278,9 +278,9 @@ func (rB *ExportsRequestBuilder) Get(ctx context.Context, config *ExportsRequest
 }
 
 // ByID returns a ExportItemRequestBuilder.
-func (rB *ExportsRequestBuilder) ByID(exportId string) *ExportItemRequestBuilder {
+func (rB *ExportsRequestBuilder) ByID(exportID string) *ExportItemRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["export_id"] = exportId
+	pathParameters["export_id"] = exportID
 	return NewExportItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 

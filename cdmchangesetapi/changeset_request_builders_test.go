@@ -182,7 +182,7 @@ func TestImpactedDeployablesRequestBuilder_NilReceiverGuards(t *testing.T) {
 }
 
 func TestImpactedDeployablesBySysIdRequestBuilder_NilReceiverGuards(t *testing.T) {
-	builders := map[string]*ImpactedDeployablesBySysIdRequestBuilder{
+	builders := map[string]*ImpactedDeployablesBySysIDRequestBuilder{
 		"nil builder":              nil,
 		"nil inner RequestBuilder": {},
 	}

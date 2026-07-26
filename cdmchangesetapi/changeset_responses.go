@@ -50,11 +50,11 @@ func CreateImpactedDeployablesResponseFromDiscriminatorValue(_ serialization.Par
 	return core.NewBaseServiceNowCollectionResponse[*ImpactedDeployableResult](CreateImpactedDeployableResultFromDiscriminatorValue), nil
 }
 
-// ImpactedDeployablesBySysIdResponse represents a response for impacted deployables (path-based).
-type ImpactedDeployablesBySysIdResponse interface {
-	core.ServiceNowCollectionResponse[*ImpactedDeployableBySysIdResult]
+// ImpactedDeployablesBySysIDResponse represents a response for impacted deployables (path-based).
+type ImpactedDeployablesBySysIDResponse interface {
+	core.ServiceNowCollectionResponse[*ImpactedDeployableBySysIDResult]
 }
 
-func CreateImpactedDeployablesBySysIdResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return core.NewBaseServiceNowCollectionResponse[*ImpactedDeployableBySysIdResult](CreateImpactedDeployableBySysIdResultFromDiscriminatorValue), nil
+func CreateImpactedDeployablesBySysIDResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return core.NewBaseServiceNowCollectionResponse[*ImpactedDeployableBySysIDResult](CreateImpactedDeployableBySysIDResultFromDiscriminatorValue), nil
 }

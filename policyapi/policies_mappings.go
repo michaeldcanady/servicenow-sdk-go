@@ -41,8 +41,8 @@ type PoliciesMappingable interface {
 	SetSysCreatedBy(*string) error
 	GetSysCreatedOn() (*time.Time, error)
 	SetSysCreatedOn(*time.Time) error
-	GetSysId() (*string, error)
-	SetSysId(*string) error
+	GetSysID() (*string, error)
+	SetSysID(*string) error
 	GetSysUpdatedBy() (*string, error)
 	SetSysUpdatedBy(*string) error
 	GetSysUpdatedOn() (*time.Time, error)
@@ -67,7 +67,7 @@ const (
 	PoliciesMappingsResolvedSysClassName     string = "sys_class_name"
 	PoliciesMappingsResolvedSysCreatedBy     string = "sys_created_by"
 	PoliciesMappingsResolvedSysCreatedOn     string = "sys_created_on"
-	PoliciesMappingsResolvedSysId            string = "sys_id"
+	PoliciesMappingsResolvedSysID            string = "sys_id"
 	PoliciesMappingsResolvedSysUpdatedBy     string = "sys_updated_by"
 	PoliciesMappingsResolvedSysUpdatedOn     string = "sys_updated_on"
 )
@@ -106,7 +106,7 @@ func (p *PoliciesMapping) GetFieldDeserializers() map[string]func(serialization.
 		PoliciesMappingsResolvedSysClassName:     internalSerialization.DeserializeStringFunc(p.SetSysClassName),
 		PoliciesMappingsResolvedSysCreatedBy:     internalSerialization.DeserializeStringFunc(p.SetSysCreatedBy),
 		PoliciesMappingsResolvedSysCreatedOn:     internalSerialization.DeserializeTimeFunc(p.SetSysCreatedOn),
-		PoliciesMappingsResolvedSysId:            internalSerialization.DeserializeStringFunc(p.SetSysId),
+		PoliciesMappingsResolvedSysID:            internalSerialization.DeserializeStringFunc(p.SetSysID),
 		PoliciesMappingsResolvedSysUpdatedBy:     internalSerialization.DeserializeStringFunc(p.SetSysUpdatedBy),
 		PoliciesMappingsResolvedSysUpdatedOn:     internalSerialization.DeserializeTimeFunc(p.SetSysUpdatedOn),
 	}
@@ -134,7 +134,7 @@ func (p *PoliciesMapping) Serialize(writer serialization.SerializationWriter) er
 		internalSerialization.SerializeStringFunc(PoliciesMappingsResolvedSysClassName, p.GetSysClassName),
 		internalSerialization.SerializeStringFunc(PoliciesMappingsResolvedSysCreatedBy, p.GetSysCreatedBy),
 		internalSerialization.SerializeTimeFunc(PoliciesMappingsResolvedSysCreatedOn, p.GetSysCreatedOn),
-		internalSerialization.SerializeStringFunc(PoliciesMappingsResolvedSysId, p.GetSysId),
+		internalSerialization.SerializeStringFunc(PoliciesMappingsResolvedSysID, p.GetSysID),
 		internalSerialization.SerializeStringFunc(PoliciesMappingsResolvedSysUpdatedBy, p.GetSysUpdatedBy),
 		internalSerialization.SerializeTimeFunc(PoliciesMappingsResolvedSysUpdatedOn, p.GetSysUpdatedOn),
 	)
@@ -262,12 +262,12 @@ func (p *PoliciesMapping) SetSysCreatedOn(val *time.Time) error {
 	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedSysCreatedOn, val)
 }
 
-func (p *PoliciesMapping) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *string](p, PoliciesMappingsResolvedSysId)
+func (p *PoliciesMapping) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*PoliciesMapping, *string](p, PoliciesMappingsResolvedSysID)
 }
 
-func (p *PoliciesMapping) SetSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedSysId, val)
+func (p *PoliciesMapping) SetSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(p, PoliciesMappingsResolvedSysID, val)
 }
 
 func (p *PoliciesMapping) GetSysUpdatedBy() (*string, error) {

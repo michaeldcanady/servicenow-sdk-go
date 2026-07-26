@@ -32,7 +32,7 @@ func (m *ImpactedDeployableResult) Serialize(writer serialization.SerializationW
 		internalSerialization.SerializeObjectValueFunc[*Reference](nodeKey, m.GetNode),
 		internalSerialization.SerializeInt32Func(snapshotVersionCounterKey, m.GetSnapshotVersionCounter),
 		internalSerialization.SerializeStringFunc(stateKey, m.GetState),
-		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
 		internalSerialization.SerializeStringFunc(sysCreatedByKey, m.GetSysCreatedBy),
 		internalSerialization.SerializeStringFunc(sysCreatedOnKey, m.GetSysCreatedOn),
 		internalSerialization.SerializeStringFunc(sysUpdatedByKey, m.GetSysUpdatedBy),
@@ -52,7 +52,7 @@ func (m *ImpactedDeployableResult) GetFieldDeserializers() map[string]func(seria
 		nodeKey:                   internalSerialization.DeserializeObjectValueFunc[*Reference](CreateReferenceFromDiscriminatorValue, m.setNode),
 		snapshotVersionCounterKey: internalSerialization.DeserializeInt32Func(m.setSnapshotVersionCounter),
 		stateKey:                  internalSerialization.DeserializeStringFunc(m.setState),
-		sysIdKey:                  internalSerialization.DeserializeStringFunc(m.setSysId),
+		sysIDKey:                  internalSerialization.DeserializeStringFunc(m.setSysID),
 		sysCreatedByKey:           internalSerialization.DeserializeStringFunc(m.setSysCreatedBy),
 		sysCreatedOnKey:           internalSerialization.DeserializeStringFunc(m.setSysCreatedOn),
 		sysUpdatedByKey:           internalSerialization.DeserializeStringFunc(m.setSysUpdatedBy),
@@ -120,11 +120,11 @@ func (m *ImpactedDeployableResult) GetState() (*string, error) {
 func (m *ImpactedDeployableResult) setState(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, stateKey, val)
 }
-func (m *ImpactedDeployableResult) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableResult, *string](m, sysIdKey)
+func (m *ImpactedDeployableResult) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableResult, *string](m, sysIDKey)
 }
-func (m *ImpactedDeployableResult) setSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, sysIdKey, val)
+func (m *ImpactedDeployableResult) setSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 func (m *ImpactedDeployableResult) GetSysCreatedBy() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableResult, *string](m, sysCreatedByKey)

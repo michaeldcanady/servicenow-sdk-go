@@ -193,7 +193,7 @@ func TestServicedRequestModel_GetBodyAsParsable(t *testing.T) {
 				factory.On("GetRootParseNode", "application/json", mock.Anything).Return(node, nil)
 			}
 
-			_, err := m.GetBodyAsParsable(func(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+			_, err := m.GetBodyAsParsable(func(_ serialization.ParseNode) (serialization.Parsable, error) {
 				return mocking.NewMockParsable(), nil
 			})
 			if test.expectedErr {

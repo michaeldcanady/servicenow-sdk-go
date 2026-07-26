@@ -185,6 +185,6 @@ func TestActSubRequestBuilder_Hierarchy_Extra(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewActSubRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	assert.NotNil(t, builder.Preferences().ByProfileId("prof1"))
+	assert.NotNil(t, builder.Preferences().ByProfileID("prof1"))
 	assert.NotNil(t, builder.Subscribers().BySubObject("obj1"))
 }

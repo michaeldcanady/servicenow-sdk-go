@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	sysIDKey = "sysId"
+	sysIDKey = "sysID"
 
 	// batchURLTemplate the url template for Service-Now batch API
 	tableURLTemplate = "{+baseurl}/api/now/v1/table{/table}{?sysparm_display_value,sysparm_exclude_reference_link,sysparm_fields,sysparm_query_no_domain,sysparm_view,sysparm_limit,sysparm_no_count,sysparm_offset,sysparm_query,sysparm_query_category,sysparm_suppress_pagination_header}"
@@ -151,10 +151,10 @@ func (rB *TableRequestBuilder[T]) Post(ctx context.Context, body T, requestConfi
 	return typedResp, nil
 }
 
-// ByID returns a TableItemRequestBuilder for the specified sysId.
-func (rB *TableRequestBuilder[T]) ByID(sysId string) *TableItemRequestBuilder[T] {
+// ByID returns a TableItemRequestBuilder for the specified sysID.
+func (rB *TableRequestBuilder[T]) ByID(sysID string) *TableItemRequestBuilder[T] {
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters[sysIDKey] = sysId
+	pathParameters[sysIDKey] = sysID
 	return NewTableItemRequestBuilderInternal[T](pathParameters, rB.GetRequestAdapter(), rB.factory)
 }
 

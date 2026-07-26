@@ -69,7 +69,7 @@ func (rB *CaseRequestBuilder) Get(ctx context.Context, config *CaseRequestBuilde
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *CaseRequestBuilder) ToGetRequestInformation(ctx context.Context, config *CaseRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *CaseRequestBuilder) ToGetRequestInformation(_ context.Context, config *CaseRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}

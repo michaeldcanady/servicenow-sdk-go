@@ -858,7 +858,7 @@ func TestBatchResponse_GetServicedRequestByID(t *testing.T) {
 		{
 			name: "Nil Model",
 			id:   "1",
-			setup: func(m *BatchResponseModel) {
+			setup: func(_ *BatchResponseModel) {
 				// handled by test loop
 			},
 			expectedNil: true,

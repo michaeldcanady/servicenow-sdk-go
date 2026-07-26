@@ -18,7 +18,7 @@ func NewMessageResult(message *string) *MessageResult {
 	}
 }
 
-func (m *MessageResult) Serialize(writer serialization.SerializationWriter) error { return nil }
+func (m *MessageResult) Serialize(_ serialization.SerializationWriter) error { return nil }
 func (m *MessageResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return nil
 }

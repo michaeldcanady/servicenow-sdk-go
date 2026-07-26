@@ -62,7 +62,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			name: "Authorization Code Provider with Custom Options",
 			provider: func() (authentication.AuthenticationProvider, error) {
 				customStateGen := func() string { return "custom-state" }
-				customURLOpener := func(url string) error { return nil }
+				customURLOpener := func(_ string) error { return nil }
 				return NewAuthorizationCodeProvider("client-id", "client-secret",
 					WithPort(8080),
 					WithStateGenerator(customStateGen),
@@ -81,7 +81,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 		{
 			name: "Authorization Code Provider with Custom Server Factory",
 			provider: func() (authentication.AuthenticationProvider, error) {
-				customServerFactory := func(state string, port int) (AuthorizationCodeServer, error) {
+				customServerFactory := func(_ string, _ int) (AuthorizationCodeServer, error) {
 					m := &mockAuthorizationCodeServer{}
 					m.On("GetAddr").Return("http://localhost:1234")
 					return m, nil

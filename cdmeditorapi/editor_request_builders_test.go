@@ -26,10 +26,10 @@ func TestNodesRequestBuilder_Get(t *testing.T) {
 	builder := NewNodesRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
 
 	t.Run("URI Construction", func(t *testing.T) {
-		sysId := "123"
+		sysID := "123"
 		config := &NodesRequestBuilderGetRequestConfiguration{
 			QueryParameters: &NodesRequestBuilderGetQueryParameters{
-				SysId: &sysId,
+				SysID: &sysID,
 			},
 		}
 		requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())
@@ -110,10 +110,10 @@ func TestValidationRequestBuilder_Get(t *testing.T) {
 	builder := NewValidationRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
 
 	t.Run("URI Construction", func(t *testing.T) {
-		cdmId := "cdm456"
+		cdmID := "cdm456"
 		config := &ValidationRequestBuilderGetRequestConfiguration{
 			QueryParameters: &ValidationRequestBuilderGetQueryParameters{
-				CdmId: &cdmId,
+				CdmID: &cdmID,
 			},
 		}
 		requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, builder.GetURLTemplate(), builder.GetPathParameters())

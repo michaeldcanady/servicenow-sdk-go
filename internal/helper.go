@@ -17,7 +17,7 @@ type Logger interface {
 // NoOpLogger is a default logger that does nothing.
 type NoOpLogger struct{}
 
-func (n *NoOpLogger) Log(message string, args ...interface{}) {}
+func (n *NoOpLogger) Log(_ string, _ ...interface{}) {}
 
 // IsPointer
 func IsPointer(value any) bool {

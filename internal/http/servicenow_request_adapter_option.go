@@ -1,4 +1,4 @@
-package http
+package internalhttp
 
 import (
 	"errors"
@@ -37,7 +37,7 @@ func WithParseNodeFactory(factory serialization.ParseNodeFactory) ServiceNowRequ
 }
 
 // WithServiceNowClientOptions provides options to create a ServiceNowClient to use a the http.Client
-func WithServiceNowClientOptions(opts ...serviceNowClientOption) ServiceNowRequestAdapterOption {
+func WithServiceNowClientOptions(opts ...ServiceNowClientOption) ServiceNowRequestAdapterOption {
 	client, err := GetDefaultClient(opts...)
 	if err != nil {
 		return func(_ *serviceNowRequestAdapterConfig) error {

@@ -116,7 +116,7 @@ func refGetPreference() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_preference]
-	response, err := client.Now().ActSub().Preferences().ByProfileId("{profileID}").Get(ctx, nil)
+	response, err := client.Now().ActSub().Preferences().ByProfileID("{profileID}").Get(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -142,7 +142,7 @@ func refGetSubscription() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_subscription]
-	response, err := client.Now().ActSub().Subscriptions().BySubscriberId("{subscriberID}").Get(ctx, nil)
+	response, err := client.Now().ActSub().Subscriptions().BySubscriberID("{subscriberID}").Get(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -154,7 +154,7 @@ func refCheckSubscription() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_check_subscription]
-	response, err := client.Now().ActSub().Subscriptions().ByObjectId("{objectID}").IsSubscribed().Get(ctx, nil)
+	response, err := client.Now().ActSub().Subscriptions().ByObjectID("{objectID}").IsSubscribed().Get(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -168,7 +168,7 @@ func refSubscribe() {
 	// [START ref_subscribe]
 	// Build the request body
 	var body *actsubapi.ActivitySubscriptionModel
-	response, err := client.Now().ActSub().Subscriptions().ByObjectId("{objectID}").Subscribe().Post(ctx, body, nil)
+	response, err := client.Now().ActSub().Subscriptions().ByObjectID("{objectID}").Subscribe().Post(ctx, body, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -180,7 +180,7 @@ func refUnsubscribe() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_unsubscribe]
-	if err := client.Now().ActSub().Subscriptions().ByObjectId("{objectID}").Unsubscribe().Delete(ctx, nil); err != nil {
+	if err := client.Now().ActSub().Subscriptions().ByObjectID("{objectID}").Unsubscribe().Delete(ctx, nil); err != nil {
 		log.Fatal(err)
 	}
 	// [END ref_unsubscribe]
@@ -202,7 +202,7 @@ func refGetUserStream() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_get_user_stream]
-	response, err := client.Now().ActSub().UserStream().ByProfileId("{profileID}").Get(ctx, nil)
+	response, err := client.Now().ActSub().UserStream().ByProfileID("{profileID}").Get(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -216,7 +216,7 @@ func refUpdateUserStream() {
 	// [START ref_update_user_stream]
 	// Build the request body
 	var body *actsubapi.ActivitySubscriptionModel
-	response, err := client.Now().ActSub().UserStream().ByProfileId("{profileID}").Put(ctx, body, nil)
+	response, err := client.Now().ActSub().UserStream().ByProfileID("{profileID}").Put(ctx, body, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

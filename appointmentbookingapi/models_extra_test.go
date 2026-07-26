@@ -48,9 +48,9 @@ func TestExecuteRuleConditionsRequestModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"CatalogId", func(v interface{}) error { return model.SetCatalogId(v.(*string)) }, func() (interface{}, error) { return model.GetCatalogId() }, internal.ToPointer("val")},
+		{"CatalogId", func(v interface{}) error { return model.SetCatalogID(v.(*string)) }, func() (interface{}, error) { return model.GetCatalogID() }, internal.ToPointer("val")},
 		{"OtherInputs", func(v interface{}) error { return model.SetOtherInputs(v) }, func() (interface{}, error) { return model.GetOtherInputs() }, "val"},
-		{"TaskId", func(v interface{}) error { return model.SetTaskId(v.(*string)) }, func() (interface{}, error) { return model.GetTaskId() }, internal.ToPointer("val")},
+		{"TaskId", func(v interface{}) error { return model.SetTaskID(v.(*string)) }, func() (interface{}, error) { return model.GetTaskID() }, internal.ToPointer("val")},
 	}
 
 	for _, tt := range tests {
@@ -75,7 +75,7 @@ func TestExecuteRuleConditionsResultModel_GettersSetters(t *testing.T) {
 	}{
 		{"DedicatedCapacity", func(v interface{}) error { return model.SetDedicatedCapacity(v.(*bool)) }, func() (interface{}, error) { return model.GetDedicatedCapacity() }, internal.ToPointer(true)},
 		{"FutureMaxBookableDays", func(v interface{}) error { return model.SetFutureMaxBookableDays(v.(*string)) }, func() (interface{}, error) { return model.GetFutureMaxBookableDays() }, internal.ToPointer("val")},
-		{"RuleId", func(v interface{}) error { return model.SetRuleId(v.(*string)) }, func() (interface{}, error) { return model.GetRuleId() }, internal.ToPointer("val")},
+		{"RuleId", func(v interface{}) error { return model.SetRuleID(v.(*string)) }, func() (interface{}, error) { return model.GetRuleID() }, internal.ToPointer("val")},
 		{"RuleName", func(v interface{}) error { return model.SetRuleName(v.(*string)) }, func() (interface{}, error) { return model.GetRuleName() }, internal.ToPointer("val")},
 	}
 

@@ -45,7 +45,7 @@ func (rB *FindServiceRequestBuilder) Get(ctx context.Context, config *FindServic
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
-func (rB *FindServiceRequestBuilder) ToGetRequestInformation(ctx context.Context, config *FindServiceRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *FindServiceRequestBuilder) ToGetRequestInformation(_ context.Context, config *FindServiceRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}

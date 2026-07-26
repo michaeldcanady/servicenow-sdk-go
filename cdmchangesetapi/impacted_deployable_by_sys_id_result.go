@@ -8,21 +8,21 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
-// ImpactedDeployableBySysIdResult represents an impacted deployable (path-based).
-type ImpactedDeployableBySysIdResult struct {
+// ImpactedDeployableBySysIDResult represents an impacted deployable (path-based).
+type ImpactedDeployableBySysIDResult struct {
 	core.BaseModel
 }
 
-func NewImpactedDeployableBySysIdResult() *ImpactedDeployableBySysIdResult {
-	return &ImpactedDeployableBySysIdResult{BaseModel: *core.NewBaseModel()}
+func NewImpactedDeployableBySysIDResult() *ImpactedDeployableBySysIDResult {
+	return &ImpactedDeployableBySysIDResult{BaseModel: *core.NewBaseModel()}
 }
 
-func (m *ImpactedDeployableBySysIdResult) Serialize(writer serialization.SerializationWriter) error {
+func (m *ImpactedDeployableBySysIDResult) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(changesetIdKey, m.GetChangesetId),
+		internalSerialization.SerializeStringFunc(changesetIDKey, m.GetChangesetID),
 		internalSerialization.SerializeBoolFunc(conflictKey, m.GetConflict),
 		internalSerialization.SerializeStringFunc(conflictTypeKey, m.GetConflictType),
 		internalSerialization.SerializeStringFunc(descriptionKey, m.GetDescription),
@@ -30,21 +30,21 @@ func (m *ImpactedDeployableBySysIdResult) Serialize(writer serialization.Seriali
 		internalSerialization.SerializeStringFunc(effectiveToKey, m.GetEffectiveTo),
 		internalSerialization.SerializeInt32Func(levelKey, m.GetLevel),
 		internalSerialization.SerializeStringFunc(linkedToKey, m.GetLinkedTo),
-		internalSerialization.SerializeStringFunc(mainIdKey, m.GetMainId),
-		internalSerialization.SerializeStringFunc(mainIdEncodedKey, m.GetMainIdEncoded),
+		internalSerialization.SerializeStringFunc(mainIDKey, m.GetMainID),
+		internalSerialization.SerializeStringFunc(mainIDEncodedKey, m.GetMainIDEncoded),
 		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
 		internalSerialization.SerializeStringFunc(nodeClassifierKey, m.GetNodeClassifier),
 		internalSerialization.SerializeStringFunc(statusKey, m.GetStatus),
-		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
 		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
 		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
 		internalSerialization.SerializeStringFunc(secureValueKey, m.GetSecureValue),
 	)
 }
 
-func (m *ImpactedDeployableBySysIdResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (m *ImpactedDeployableBySysIDResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		changesetIdKey:    internalSerialization.DeserializeStringFunc(m.setChangesetId),
+		changesetIDKey:    internalSerialization.DeserializeStringFunc(m.setChangesetID),
 		conflictKey:       internalSerialization.DeserializeBoolFunc(m.setConflict),
 		conflictTypeKey:   internalSerialization.DeserializeStringFunc(m.setConflictType),
 		descriptionKey:    internalSerialization.DeserializeStringFunc(m.setDescription),
@@ -52,121 +52,121 @@ func (m *ImpactedDeployableBySysIdResult) GetFieldDeserializers() map[string]fun
 		effectiveToKey:    internalSerialization.DeserializeStringFunc(m.setEffectiveTo),
 		levelKey:          internalSerialization.DeserializeInt32Func(m.setLevel),
 		linkedToKey:       internalSerialization.DeserializeStringFunc(m.setLinkedTo),
-		mainIdKey:         internalSerialization.DeserializeStringFunc(m.setMainId),
-		mainIdEncodedKey:  internalSerialization.DeserializeStringFunc(m.setMainIdEncoded),
+		mainIDKey:         internalSerialization.DeserializeStringFunc(m.setMainID),
+		mainIDEncodedKey:  internalSerialization.DeserializeStringFunc(m.setMainIDEncoded),
 		nameKey:           internalSerialization.DeserializeStringFunc(m.setName),
 		nodeClassifierKey: internalSerialization.DeserializeStringFunc(m.setNodeClassifier),
 		statusKey:         internalSerialization.DeserializeStringFunc(m.setStatus),
-		sysIdKey:          internalSerialization.DeserializeStringFunc(m.setSysId),
+		sysIDKey:          internalSerialization.DeserializeStringFunc(m.setSysID),
 		typeKey:           internalSerialization.DeserializeStringFunc(m.setType),
 		valueKey:          internalSerialization.DeserializeStringFunc(m.setValue),
 		secureValueKey:    internalSerialization.DeserializeStringFunc(m.setSecureValue),
 	}
 }
 
-func (m *ImpactedDeployableBySysIdResult) GetChangesetId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, changesetIdKey)
+func (m *ImpactedDeployableBySysIDResult) GetChangesetID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, changesetIDKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setChangesetId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, changesetIdKey, val)
+func (m *ImpactedDeployableBySysIDResult) setChangesetID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, changesetIDKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetConflict() (*bool, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *bool](m, conflictKey)
+func (m *ImpactedDeployableBySysIDResult) GetConflict() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *bool](m, conflictKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setConflict(val *bool) error {
+func (m *ImpactedDeployableBySysIDResult) setConflict(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, conflictKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetConflictType() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, conflictTypeKey)
+func (m *ImpactedDeployableBySysIDResult) GetConflictType() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, conflictTypeKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setConflictType(val *string) error {
+func (m *ImpactedDeployableBySysIDResult) setConflictType(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, conflictTypeKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetDescription() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, descriptionKey)
+func (m *ImpactedDeployableBySysIDResult) GetDescription() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, descriptionKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setDescription(val *string) error {
+func (m *ImpactedDeployableBySysIDResult) setDescription(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, descriptionKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetEffectiveFrom() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, effectiveFromKey)
+func (m *ImpactedDeployableBySysIDResult) GetEffectiveFrom() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, effectiveFromKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setEffectiveFrom(val *string) error {
+func (m *ImpactedDeployableBySysIDResult) setEffectiveFrom(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, effectiveFromKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetEffectiveTo() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, effectiveToKey)
+func (m *ImpactedDeployableBySysIDResult) GetEffectiveTo() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, effectiveToKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setEffectiveTo(val *string) error {
+func (m *ImpactedDeployableBySysIDResult) setEffectiveTo(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, effectiveToKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetLevel() (*int32, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *int32](m, levelKey)
+func (m *ImpactedDeployableBySysIDResult) GetLevel() (*int32, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *int32](m, levelKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setLevel(val *int32) error {
+func (m *ImpactedDeployableBySysIDResult) setLevel(val *int32) error {
 	return store.DefaultBackedModelMutatorFunc(m, levelKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetLinkedTo() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, linkedToKey)
+func (m *ImpactedDeployableBySysIDResult) GetLinkedTo() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, linkedToKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setLinkedTo(val *string) error {
+func (m *ImpactedDeployableBySysIDResult) setLinkedTo(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, linkedToKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetMainId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, mainIdKey)
+func (m *ImpactedDeployableBySysIDResult) GetMainID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, mainIDKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setMainId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, mainIdKey, val)
+func (m *ImpactedDeployableBySysIDResult) setMainID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, mainIDKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetMainIdEncoded() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, mainIdEncodedKey)
+func (m *ImpactedDeployableBySysIDResult) GetMainIDEncoded() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, mainIDEncodedKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setMainIdEncoded(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, mainIdEncodedKey, val)
+func (m *ImpactedDeployableBySysIDResult) setMainIDEncoded(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, mainIDEncodedKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetName() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, nameKey)
+func (m *ImpactedDeployableBySysIDResult) GetName() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, nameKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setName(val *string) error {
+func (m *ImpactedDeployableBySysIDResult) setName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, nameKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetNodeClassifier() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, nodeClassifierKey)
+func (m *ImpactedDeployableBySysIDResult) GetNodeClassifier() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, nodeClassifierKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setNodeClassifier(val *string) error {
+func (m *ImpactedDeployableBySysIDResult) setNodeClassifier(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, nodeClassifierKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetStatus() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, statusKey)
+func (m *ImpactedDeployableBySysIDResult) GetStatus() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, statusKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setStatus(val *string) error {
+func (m *ImpactedDeployableBySysIDResult) setStatus(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, statusKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, sysIdKey)
+func (m *ImpactedDeployableBySysIDResult) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, sysIDKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, sysIdKey, val)
+func (m *ImpactedDeployableBySysIDResult) setSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetType() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, typeKey)
+func (m *ImpactedDeployableBySysIDResult) GetType() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, typeKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setType(val *string) error {
+func (m *ImpactedDeployableBySysIDResult) setType(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, typeKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetValue() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, valueKey)
+func (m *ImpactedDeployableBySysIDResult) GetValue() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, valueKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setValue(val *string) error {
+func (m *ImpactedDeployableBySysIDResult) setValue(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, valueKey, val)
 }
-func (m *ImpactedDeployableBySysIdResult) GetSecureValue() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIdResult, *string](m, secureValueKey)
+func (m *ImpactedDeployableBySysIDResult) GetSecureValue() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ImpactedDeployableBySysIDResult, *string](m, secureValueKey)
 }
-func (m *ImpactedDeployableBySysIdResult) setSecureValue(val *string) error {
+func (m *ImpactedDeployableBySysIDResult) setSecureValue(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, secureValueKey, val)
 }
 
-func CreateImpactedDeployableBySysIdResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewImpactedDeployableBySysIdResult(), nil
+func CreateImpactedDeployableBySysIDResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewImpactedDeployableBySysIDResult(), nil
 }

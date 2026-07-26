@@ -69,7 +69,7 @@ func moduleActSub() {
 
 	// Check whether the current user is subscribed to an object
 	subscribed, err := actSub.Subscriptions().
-		ByObjectId("{objectID}").
+		ByObjectID("{objectID}").
 		IsSubscribed().
 		Get(context.Background(), nil)
 	if err != nil {
@@ -89,7 +89,7 @@ func moduleAppointmentBooking() {
 
 	// Check availability
 	availabilityRequest := appointmentbookingapi.NewAvailabilityRequest()
-	if err := availabilityRequest.SetCatalogId(&catalogID); err != nil {
+	if err := availabilityRequest.SetCatalogID(&catalogID); err != nil {
 		log.Fatal(err)
 	}
 	if err := availabilityRequest.SetStartDate(&startDate); err != nil {
@@ -105,7 +105,7 @@ func moduleAppointmentBooking() {
 
 	// Book an appointment
 	appointmentRequest := appointmentbookingapi.NewAppointmentRequest()
-	if err := appointmentRequest.SetCatalogId(&catalogID); err != nil {
+	if err := appointmentRequest.SetCatalogID(&catalogID); err != nil {
 		log.Fatal(err)
 	}
 	appointment, err := booking.Appointment().Post(context.Background(), appointmentRequest, nil)

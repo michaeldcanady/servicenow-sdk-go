@@ -47,7 +47,7 @@ func TestPoliciesMappingsInput_Getters(t *testing.T) {
 		{"GetSysClassName", PoliciesMappingsResolvedSysClassName, internal.ToPointer("class"), func(p *PoliciesMapping) (interface{}, error) { return p.GetSysClassName() }},
 		{"GetSysCreatedBy", PoliciesMappingsResolvedSysCreatedBy, internal.ToPointer("user"), func(p *PoliciesMapping) (interface{}, error) { return p.GetSysCreatedBy() }},
 		{"GetSysCreatedOn", PoliciesMappingsResolvedSysCreatedOn, &now, func(p *PoliciesMapping) (interface{}, error) { return p.GetSysCreatedOn() }},
-		{"GetSysId", PoliciesMappingsResolvedSysId, internal.ToPointer("id"), func(p *PoliciesMapping) (interface{}, error) { return p.GetSysId() }},
+		{"GetSysID", PoliciesMappingsResolvedSysID, internal.ToPointer("id"), func(p *PoliciesMapping) (interface{}, error) { return p.GetSysID() }},
 		{"GetSysUpdatedBy", PoliciesMappingsResolvedSysUpdatedBy, internal.ToPointer("user2"), func(p *PoliciesMapping) (interface{}, error) { return p.GetSysUpdatedBy() }},
 		{"GetSysUpdatedOn", PoliciesMappingsResolvedSysUpdatedOn, &now, func(p *PoliciesMapping) (interface{}, error) { return p.GetSysUpdatedOn() }},
 	}
@@ -94,7 +94,7 @@ func TestPoliciesMappingsInput_Setters(t *testing.T) {
 		{"SetSysClassName", PoliciesMappingsResolvedSysClassName, internal.ToPointer("class"), func(p *PoliciesMapping) error { return p.SetSysClassName(internal.ToPointer("class")) }},
 		{"SetSysCreatedBy", PoliciesMappingsResolvedSysCreatedBy, internal.ToPointer("user"), func(p *PoliciesMapping) error { return p.SetSysCreatedBy(internal.ToPointer("user")) }},
 		{"SetSysCreatedOn", PoliciesMappingsResolvedSysCreatedOn, &now, func(p *PoliciesMapping) error { return p.SetSysCreatedOn(&now) }},
-		{"SetSysId", PoliciesMappingsResolvedSysId, internal.ToPointer("id"), func(p *PoliciesMapping) error { return p.SetSysId(internal.ToPointer("id")) }},
+		{"SetSysID", PoliciesMappingsResolvedSysID, internal.ToPointer("id"), func(p *PoliciesMapping) error { return p.SetSysID(internal.ToPointer("id")) }},
 		{"SetSysUpdatedBy", PoliciesMappingsResolvedSysUpdatedBy, internal.ToPointer("user2"), func(p *PoliciesMapping) error { return p.SetSysUpdatedBy(internal.ToPointer("user2")) }},
 		{"SetSysUpdatedOn", PoliciesMappingsResolvedSysUpdatedOn, &now, func(p *PoliciesMapping) error { return p.SetSysUpdatedOn(&now) }},
 	}

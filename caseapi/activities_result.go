@@ -14,8 +14,8 @@ type ActivitiesResult interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
-	GetSysId() (*string, error)
-	setSysId(*string) error
+	GetSysID() (*string, error)
+	setSysID(*string) error
 	GetType() (*string, error)
 	setType(*string) error
 	GetValue() (*string, error)
@@ -41,7 +41,7 @@ func (m *ActivitiesResultModel) Serialize(writer serialization.SerializationWrit
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
 		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
 		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
 		internalSerialization.SerializeStringFunc(userKey, m.GetUser),
@@ -52,7 +52,7 @@ func (m *ActivitiesResultModel) Serialize(writer serialization.SerializationWrit
 
 func (m *ActivitiesResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:        internalSerialization.DeserializeStringFunc(m.setSysId),
+		sysIDKey:        internalSerialization.DeserializeStringFunc(m.setSysID),
 		typeKey:         internalSerialization.DeserializeStringFunc(m.setType),
 		valueKey:        internalSerialization.DeserializeStringFunc(m.setValue),
 		userKey:         internalSerialization.DeserializeStringFunc(m.setUser),
@@ -61,11 +61,11 @@ func (m *ActivitiesResultModel) GetFieldDeserializers() map[string]func(serializ
 	}
 }
 
-func (m *ActivitiesResultModel) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ActivitiesResultModel, *string](m, sysIdKey)
+func (m *ActivitiesResultModel) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ActivitiesResultModel, *string](m, sysIDKey)
 }
-func (m *ActivitiesResultModel) setSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, sysIdKey, val)
+func (m *ActivitiesResultModel) setSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 func (m *ActivitiesResultModel) GetType() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ActivitiesResultModel, *string](m, typeKey)

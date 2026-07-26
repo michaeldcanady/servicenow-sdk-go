@@ -22,7 +22,7 @@ func (m *SharedLibraryComponentApplication) Serialize(writer serialization.Seria
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(sysIdKey, m.GetSysId),
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
 		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
 		internalSerialization.SerializeStringFunc(versionKey, m.GetVersion),
 		internalSerialization.SerializeStringFunc(descriptionKey, m.GetDescription),
@@ -32,7 +32,7 @@ func (m *SharedLibraryComponentApplication) Serialize(writer serialization.Seria
 
 func (m *SharedLibraryComponentApplication) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		sysIdKey:       internalSerialization.DeserializeStringFunc(m.setSysId),
+		sysIDKey:       internalSerialization.DeserializeStringFunc(m.setSysID),
 		nameKey:        internalSerialization.DeserializeStringFunc(m.setName),
 		versionKey:     internalSerialization.DeserializeStringFunc(m.setVersion),
 		descriptionKey: internalSerialization.DeserializeStringFunc(m.setDescription),
@@ -40,11 +40,11 @@ func (m *SharedLibraryComponentApplication) GetFieldDeserializers() map[string]f
 	}
 }
 
-func (m *SharedLibraryComponentApplication) GetSysId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*SharedLibraryComponentApplication, *string](m, sysIdKey)
+func (m *SharedLibraryComponentApplication) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*SharedLibraryComponentApplication, *string](m, sysIDKey)
 }
-func (m *SharedLibraryComponentApplication) setSysId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, sysIdKey, val)
+func (m *SharedLibraryComponentApplication) setSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 func (m *SharedLibraryComponentApplication) GetName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*SharedLibraryComponentApplication, *string](m, nameKey)

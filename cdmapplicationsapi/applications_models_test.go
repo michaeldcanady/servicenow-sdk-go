@@ -16,7 +16,7 @@ func TestUploadStatusOutputModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, internal.ToPointer("sys-id")},
+		{"SysID", func(v interface{}) error { return model.setSysID(v.(*string)) }, func() (interface{}, error) { return model.GetSysID() }, internal.ToPointer("sys-id")},
 		{"Number", func(v interface{}) error { return model.setNumber(v.(*string)) }, func() (interface{}, error) { return model.GetNumber() }, internal.ToPointer("123")},
 	}
 
@@ -65,7 +65,7 @@ func TestExportResultModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, internal.ToPointer("sys-id")},
+		{"SysID", func(v interface{}) error { return model.setSysID(v.(*string)) }, func() (interface{}, error) { return model.GetSysID() }, internal.ToPointer("sys-id")},
 		{"Name", func(v interface{}) error { return model.setName(v.(*string)) }, func() (interface{}, error) { return model.GetName() }, internal.ToPointer("export-name")},
 		{"State", func(v interface{}) error { return model.setState(v.(*string)) }, func() (interface{}, error) { return model.GetState() }, internal.ToPointer("active")},
 		{"Status", func(v interface{}) error { return model.setStatus(v.(*string)) }, func() (interface{}, error) { return model.GetStatus() }, internal.ToPointer("success")},
@@ -130,7 +130,7 @@ func TestSharedLibraryComponentApplicationModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"SysId", func(v interface{}) error { return model.setSysId(v.(*string)) }, func() (interface{}, error) { return model.GetSysId() }, internal.ToPointer("sys-id")},
+		{"SysID", func(v interface{}) error { return model.setSysID(v.(*string)) }, func() (interface{}, error) { return model.GetSysID() }, internal.ToPointer("sys-id")},
 		{"Name", func(v interface{}) error { return model.setName(v.(*string)) }, func() (interface{}, error) { return model.GetName() }, internal.ToPointer("app-name")},
 		{"Version", func(v interface{}) error { return model.setVersion(v.(*string)) }, func() (interface{}, error) { return model.GetVersion() }, internal.ToPointer("1.0.0")},
 		{"Description", func(v interface{}) error { return model.setDescription(v.(*string)) }, func() (interface{}, error) { return model.GetDescription() }, internal.ToPointer("app-desc")},

@@ -26,7 +26,7 @@ func TestDeserializeMutatedStringFunc(t *testing.T) {
 			mock: func(m *mocking.MockParseNode) {
 				m.On("GetStringValue").Return(&val, nil)
 			},
-			mutator: func(s *string) (int, error) { return mutated, nil },
+			mutator: func(_ *string) (int, error) { return mutated, nil },
 			wantErr: false,
 			wantVal: mutated,
 		},
@@ -319,7 +319,7 @@ func TestDeserializeMutatedByteArrayFunc(t *testing.T) {
 			mock: func(m *mocking.MockParseNode) {
 				m.On("GetByteArrayValue").Return(val, nil)
 			},
-			mutator: func(b []byte) (string, error) { return mutated, nil },
+			mutator: func(_ []byte) (string, error) { return mutated, nil },
 			wantErr: false,
 			wantVal: mutated,
 		},
@@ -525,7 +525,7 @@ func TestDeserializeMutatedAnyFunc(t *testing.T) {
 			mock: func(m *mocking.MockParseNode) {
 				m.On("GetRawValue").Return(val, nil)
 			},
-			mutator: func(a any) (int, error) { return mutated, nil },
+			mutator: func(_ any) (int, error) { return mutated, nil },
 			wantErr: false,
 			wantVal: mutated,
 		},

@@ -98,12 +98,12 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 		},
 		{
 			name:        "Missing Content-Type",
-			setup:       func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {},
+			setup:       func(_ *mocking.MockRequestAdapter, _ abstractions.MultipartBody) {},
 			expectedErr: true,
 		},
 		{
 			name: "Missing table_name",
-			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+			setup: func(_ *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
 				s := "test"
 				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
 			},
@@ -111,7 +111,7 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 		},
 		{
 			name: "Missing table_sys_id",
-			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+			setup: func(_ *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
 				s := "test"
 				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
 				_ = body.AddOrReplacePart("table_name", "text/plain", &s)
@@ -120,7 +120,7 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 		},
 		{
 			name: "Missing uploadFile",
-			setup: func(ra *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
+			setup: func(_ *mocking.MockRequestAdapter, body abstractions.MultipartBody) {
 				s := "test"
 				_ = body.AddOrReplacePart("Content-Type", "text/plain", &s)
 				_ = body.AddOrReplacePart("table_name", "text/plain", &s)

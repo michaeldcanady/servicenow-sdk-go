@@ -16,7 +16,7 @@ func TestAvailabilityRequestModel_GettersSetters(t *testing.T) {
 		getter func() (interface{}, error)
 		value  interface{}
 	}{
-		{"CatalogId", func(v interface{}) error { return model.SetCatalogId(v.(*string)) }, func() (interface{}, error) { return model.GetCatalogId() }, internal.ToPointer("val")},
+		{"CatalogId", func(v interface{}) error { return model.SetCatalogID(v.(*string)) }, func() (interface{}, error) { return model.GetCatalogID() }, internal.ToPointer("val")},
 		{"EndDate", func(v interface{}) error { return model.SetEndDate(v.(*string)) }, func() (interface{}, error) { return model.GetEndDate() }, internal.ToPointer("val")},
 		{"FetchDaysSlot", func(v interface{}) error { return model.SetFetchDaysSlot(v.(*bool)) }, func() (interface{}, error) { return model.GetFetchDaysSlot() }, internal.ToPointer(true)},
 		{"FullDay", func(v interface{}) error { return model.SetFullDay(v.(*bool)) }, func() (interface{}, error) { return model.GetFullDay() }, internal.ToPointer(true)},
@@ -27,7 +27,7 @@ func TestAvailabilityRequestModel_GettersSetters(t *testing.T) {
 		{"OtherInputs", func(v interface{}) error { return model.SetOtherInputs(v) }, func() (interface{}, error) { return model.GetOtherInputs() }, "val"},
 		{"ServiceConfigRule", func(v interface{}) error { return model.SetServiceConfigRule(v.(*string)) }, func() (interface{}, error) { return model.GetServiceConfigRule() }, internal.ToPointer("val")},
 		{"StartDate", func(v interface{}) error { return model.SetStartDate(v.(*string)) }, func() (interface{}, error) { return model.GetStartDate() }, internal.ToPointer("val")},
-		{"TaskId", func(v interface{}) error { return model.SetTaskId(v.(*string)) }, func() (interface{}, error) { return model.GetTaskId() }, internal.ToPointer("val")},
+		{"TaskId", func(v interface{}) error { return model.SetTaskID(v.(*string)) }, func() (interface{}, error) { return model.GetTaskID() }, internal.ToPointer("val")},
 		{"TaskTable", func(v interface{}) error { return model.SetTaskTable(v.(*string)) }, func() (interface{}, error) { return model.GetTaskTable() }, internal.ToPointer("val")},
 		{"UseReadReplica", func(v interface{}) error { return model.SetUseReadReplica(v.(*bool)) }, func() (interface{}, error) { return model.GetUseReadReplica() }, internal.ToPointer(true)},
 		{"View", func(v interface{}) error { return model.SetView(v.(*string)) }, func() (interface{}, error) { return model.GetView() }, internal.ToPointer("val")},

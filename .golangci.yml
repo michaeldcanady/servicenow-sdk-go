@@ -29,6 +29,10 @@ linters:
           - gosec
           - typecheck
         path: _test\.go
+      - linters:
+          - revive
+        path: internal/mocking/(mock_request_adapter|mock_backing_store)\.go
+        text: "var-naming:.*(SetBaseUrl|GetBaseUrl|SubscribeWithId)"
     presets:
       - comments
       - common-false-positives

@@ -27,7 +27,7 @@ func (m *ExecuteRuleConditionsResult) Serialize(writer serialization.Serializati
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeBoolFunc(dedicatedCapacityKey, m.GetDedicatedCapacity),
 		internalSerialization.SerializeStringFunc(futureMaxBookableDaysKey, m.GetFutureMaxBookableDays),
-		internalSerialization.SerializeStringFunc(ruleIdKey, m.GetRuleId),
+		internalSerialization.SerializeStringFunc(ruleIDKey, m.GetRuleID),
 		internalSerialization.SerializeStringFunc(ruleNameKey, m.GetRuleName),
 	)
 }
@@ -36,7 +36,7 @@ func (m *ExecuteRuleConditionsResult) GetFieldDeserializers() map[string]func(se
 	return map[string]func(serialization.ParseNode) error{
 		dedicatedCapacityKey:     internalSerialization.DeserializeBoolFunc(m.SetDedicatedCapacity),
 		futureMaxBookableDaysKey: internalSerialization.DeserializeStringFunc(m.SetFutureMaxBookableDays),
-		ruleIdKey:                internalSerialization.DeserializeStringFunc(m.SetRuleId),
+		ruleIDKey:                internalSerialization.DeserializeStringFunc(m.SetRuleID),
 		ruleNameKey:              internalSerialization.DeserializeStringFunc(m.SetRuleName),
 	}
 }
@@ -53,11 +53,11 @@ func (m *ExecuteRuleConditionsResult) GetFutureMaxBookableDays() (*string, error
 func (m *ExecuteRuleConditionsResult) SetFutureMaxBookableDays(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, futureMaxBookableDaysKey, val)
 }
-func (m *ExecuteRuleConditionsResult) GetRuleId() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsResult, *string](m, ruleIdKey)
+func (m *ExecuteRuleConditionsResult) GetRuleID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsResult, *string](m, ruleIDKey)
 }
-func (m *ExecuteRuleConditionsResult) SetRuleId(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, ruleIdKey, val)
+func (m *ExecuteRuleConditionsResult) SetRuleID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, ruleIDKey, val)
 }
 func (m *ExecuteRuleConditionsResult) GetRuleName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsResult, *string](m, ruleNameKey)

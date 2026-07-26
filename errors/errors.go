@@ -1,4 +1,4 @@
-package errors
+package errors // nolint: revive // renaming this public package would be a breaking API change; see CLAUDE.md's error-sentinel layout
 
 import "errors"
 

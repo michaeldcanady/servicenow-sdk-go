@@ -1,4 +1,4 @@
-package http
+package internalhttp
 
 import (
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
@@ -6,11 +6,11 @@ import (
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
-// serviceNowClientOption represents options for the ServiceNowClient
-type serviceNowClientOption func(*serviceNowClientConfig) error
+// ServiceNowClientOption represents options for the ServiceNowClient
+type ServiceNowClientOption func(*serviceNowClientConfig) error
 
 // WithMiddleware adds supplied middleware to the ServiceNowClientConfig
-func WithMiddleware(middleware ...nethttplibrary.Middleware) serviceNowClientOption {
+func WithMiddleware(middleware ...nethttplibrary.Middleware) ServiceNowClientOption {
 	return func(config *serviceNowClientConfig) error {
 		if len(middleware) == 0 {
 			return snerrors.ErrEmptyMiddleware
@@ -26,7 +26,7 @@ func WithMiddleware(middleware ...nethttplibrary.Middleware) serviceNowClientOpt
 	}
 }
 
-func serviceNowClientDefaultOptions() serviceNowClientOption {
+func serviceNowClientDefaultOptions() ServiceNowClientOption {
 	return func(config *serviceNowClientConfig) error {
 		if len(config.middleware) == 0 {
 			config.middleware = getDefaultMiddleware()

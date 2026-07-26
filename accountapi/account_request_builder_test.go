@@ -56,7 +56,7 @@ type AccountCollectionResponseMock struct {
 	core.BaseServiceNowCollectionResponse[*AccountModel]
 }
 
-func (m *AccountCollectionResponseMock) Serialize(writer serialization.SerializationWriter) error {
+func (m *AccountCollectionResponseMock) Serialize(_ serialization.SerializationWriter) error {
 	return nil
 }
 func (m *AccountCollectionResponseMock) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {

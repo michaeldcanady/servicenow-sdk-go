@@ -2,13 +2,13 @@ package cdmeditorapi
 
 const (
 	// Shared keys
-	sysIdKey    = "sys_id"
+	sysIDKey    = "sys_id"
 	nameKey     = "name"
 	typeKey     = "type"
 	valueKey    = "value"
 	parentKey   = "parent"
-	cdmIdKey    = "cdm_id"
-	parentIdKey = "parent_id"
+	cdmIDKey    = "cdm_id"
+	parentIDKey = "parent_id"
 
 	// Validation keys
 	statusKey   = "status"

@@ -15,8 +15,8 @@ import (
 func TestSerialize(t *testing.T) {
 	writer := mocking.NewMockSerializationWriter()
 
-	s1 := func(sw serialization.SerializationWriter) error { return nil }
-	s2 := func(sw serialization.SerializationWriter) error { return errors.New("err") }
+	s1 := func(_ serialization.SerializationWriter) error { return nil }
+	s2 := func(_ serialization.SerializationWriter) error { return errors.New("err") }
 
 	err := Serialize(writer, s1)
 	assert.NoError(t, err)
@@ -38,7 +38,7 @@ func TestSerializeMutatedStringFunc(t *testing.T) {
 		{
 			name:     "Success",
 			accessor: func() (int, error) { return val, nil },
-			mutator:  func(v int) (*string, error) { return &mutated, nil },
+			mutator:  func(_ int) (*string, error) { return &mutated, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteStringValue", "key", &mutated).Return(nil)
 			},
@@ -76,13 +76,13 @@ func TestSerializeStringFunc(t *testing.T) {
 		{
 			name:     "Nil value",
 			accessor: func() (*string, error) { return nil, nil },
-			mock:     func(m *mocking.MockSerializationWriter) {},
+			mock:     func(_ *mocking.MockSerializationWriter) {},
 			wantErr:  false,
 		},
 		{
 			name:     "Error",
 			accessor: func() (*string, error) { return nil, errors.New("err") },
-			mock:     func(m *mocking.MockSerializationWriter) {},
+			mock:     func(_ *mocking.MockSerializationWriter) {},
 			wantErr:  true,
 		},
 	}

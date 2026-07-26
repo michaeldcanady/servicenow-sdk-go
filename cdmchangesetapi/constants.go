@@ -2,7 +2,7 @@ package cdmchangesetapi
 
 const (
 	// Shared keys
-	sysIdKey  = "sys_id"
+	sysIDKey  = "sys_id"
 	numberKey = "number"
 	stateKey  = "state"
 	typeKey   = "type"
@@ -28,7 +28,7 @@ const (
 	titleKey                     = "title"
 
 	// Activity keys
-	changesetIdKey = "changeset_id"
+	changesetIDKey = "changeset_id"
 	conflictKey    = "conflict"
 	namePathKey    = "name_path"
 	newNameKey     = "new_name"
@@ -56,8 +56,8 @@ const (
 	effectiveToKey    = "effective_to"
 	levelKey          = "level"
 	linkedToKey       = "linked_to"
-	mainIdKey         = "main_id"
-	mainIdEncodedKey  = "main_id_encoded"
+	mainIDKey         = "main_id"
+	mainIDEncodedKey  = "main_id_encoded"
 	nodeClassifierKey = "node_classifier"
 	statusKey         = "status"
 	secureValueKey    = "secure_value"

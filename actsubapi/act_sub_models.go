@@ -34,7 +34,7 @@ func CreateActivitySubscriptionModelFromDiscriminatorValue(serialization.ParseNo
 }
 
 // Serialize writes the objects properties to the current writer.
-func (m *ActivitySubscriptionModel) Serialize(writer serialization.SerializationWriter) error {
+func (m *ActivitySubscriptionModel) Serialize(_ serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
 	}

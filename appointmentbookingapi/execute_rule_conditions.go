@@ -14,12 +14,12 @@ type ExecuteRuleConditionsRequest interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
-	GetCatalogId() (*string, error)
-	SetCatalogId(*string) error
+	GetCatalogID() (*string, error)
+	SetCatalogID(*string) error
 	GetOtherInputs() (any, error)
 	SetOtherInputs(any) error
-	GetTaskId() (*string, error)
-	SetTaskId(*string) error
+	GetTaskID() (*string, error)
+	SetTaskID(*string) error
 }
 
 type ExecuteRuleConditionsRequestModel struct {
@@ -39,24 +39,24 @@ func (m *ExecuteRuleConditionsRequestModel) Serialize(writer serialization.Seria
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(catalogIDKey, m.GetCatalogId),
+		internalSerialization.SerializeStringFunc(catalogIDKey, m.GetCatalogID),
 		internalSerialization.SerializeAnyFunc(otherInputsKey, m.GetOtherInputs),
-		internalSerialization.SerializeStringFunc(taskIDKey, m.GetTaskId),
+		internalSerialization.SerializeStringFunc(taskIDKey, m.GetTaskID),
 	)
 }
 
 func (m *ExecuteRuleConditionsRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		catalogIDKey:   internalSerialization.DeserializeStringFunc(m.SetCatalogId),
+		catalogIDKey:   internalSerialization.DeserializeStringFunc(m.SetCatalogID),
 		otherInputsKey: internalSerialization.DeserializeAnyFunc(m.SetOtherInputs),
-		taskIDKey:      internalSerialization.DeserializeStringFunc(m.SetTaskId),
+		taskIDKey:      internalSerialization.DeserializeStringFunc(m.SetTaskID),
 	}
 }
 
-func (m *ExecuteRuleConditionsRequestModel) GetCatalogId() (*string, error) {
+func (m *ExecuteRuleConditionsRequestModel) GetCatalogID() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsRequestModel, *string](m, catalogIDKey)
 }
-func (m *ExecuteRuleConditionsRequestModel) SetCatalogId(val *string) error {
+func (m *ExecuteRuleConditionsRequestModel) SetCatalogID(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, catalogIDKey, val)
 }
 func (m *ExecuteRuleConditionsRequestModel) GetOtherInputs() (any, error) {
@@ -65,9 +65,9 @@ func (m *ExecuteRuleConditionsRequestModel) GetOtherInputs() (any, error) {
 func (m *ExecuteRuleConditionsRequestModel) SetOtherInputs(val any) error {
 	return store.DefaultBackedModelMutatorFunc(m, otherInputsKey, val)
 }
-func (m *ExecuteRuleConditionsRequestModel) GetTaskId() (*string, error) {
+func (m *ExecuteRuleConditionsRequestModel) GetTaskID() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ExecuteRuleConditionsRequestModel, *string](m, taskIDKey)
 }
-func (m *ExecuteRuleConditionsRequestModel) SetTaskId(val *string) error {
+func (m *ExecuteRuleConditionsRequestModel) SetTaskID(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, taskIDKey, val)
 }
