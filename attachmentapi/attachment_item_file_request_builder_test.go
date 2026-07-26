@@ -12,6 +12,7 @@ import (
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewAttachmentItemFileRequestBuilderInternal(t *testing.T) {
@@ -126,20 +127,20 @@ func assertAttachmentItemFileGetResult(t *testing.T, tt attachmentItemFileGetTes
 	}
 
 	if tt.expectedErr != nil {
-		assert.Error(t, err)
+		require.Error(t, err)
 		assert.Equal(t, tt.expectedErr, err)
 		assert.Nil(t, result)
 		return
 	}
 
 	if tt.expectedErrorMessage != "" {
-		assert.Error(t, err)
+		require.Error(t, err)
 		assert.Contains(t, err.Error(), tt.expectedErrorMessage)
 		assert.Nil(t, result)
 		return
 	}
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	if tt.sendResponse == nil {
 		assert.Nil(t, result)
 		return
@@ -237,12 +238,12 @@ func assertAttachmentItemFileToGetRequestInformation(t *testing.T, tt attachment
 	}
 
 	if tt.expectedErr {
-		assert.Error(t, err)
+		require.Error(t, err)
 		assert.Nil(t, reqInfo)
 		return
 	}
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, reqInfo)
 	assert.Equal(t, abstractions.GET, reqInfo.Method)
 
@@ -254,7 +255,7 @@ func assertAttachmentItemFileToGetRequestInformation(t *testing.T, tt attachment
 
 	if len(tt.expectedOptionsKeys) > 0 {
 		options := reqInfo.GetRequestOptions()
-		assert.Equal(t, len(tt.expectedOptionsKeys), len(options))
+		assert.Len(t, options, len(tt.expectedOptionsKeys))
 		for i, opt := range options {
 			assert.Equal(t, tt.expectedOptionsKeys[i], opt.GetKey().Key)
 		}

@@ -10,6 +10,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewBatchResponse(t *testing.T) {
@@ -48,7 +49,7 @@ func TestCreateBatchResponseFromDiscriminatorValue(t *testing.T) {
 
 				parsable, err := CreateBatchResponseFromDiscriminatorValue(parseNode)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, parsable)
 				assert.IsType(t, &BatchResponseModel{}, parsable)
 			},
@@ -82,7 +83,7 @@ func TestBatchResponse_Serialize(t *testing.T) {
 
 				resp := (*BatchResponseModel)(nil)
 				err := resp.Serialize(writer)
-				assert.Equal(t, nil, err)
+				assert.NoError(t, err)
 			},
 		},
 	}
@@ -126,7 +127,7 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 
 							err := deserializers[batchRequestIDKey](mockParseNode)
 
-							assert.Nil(t, err)
+							assert.NoError(t, err)
 						},
 					},
 					{
@@ -138,7 +139,7 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 
 							err := deserializers[servicedRequestsKey](mockParseNode)
 
-							assert.Nil(t, err)
+							assert.NoError(t, err)
 						},
 					},
 					{
@@ -150,7 +151,7 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 
 							err := deserializers[unservicedRequestsKey](mockParseNode)
 
-							assert.Nil(t, err)
+							assert.NoError(t, err)
 						},
 					},
 				}
@@ -188,7 +189,7 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 
 							err := deserializers[batchRequestIDKey](mockParseNode)
 
-							assert.Nil(t, err)
+							assert.NoError(t, err)
 						},
 					},
 					{
@@ -199,7 +200,7 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 
 							err := deserializers[servicedRequestsKey](mockParseNode)
 
-							assert.Nil(t, err)
+							assert.NoError(t, err)
 						},
 					},
 					{
@@ -210,7 +211,7 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 
 							err := deserializers[unservicedRequestsKey](mockParseNode)
 
-							assert.Nil(t, err)
+							assert.NoError(t, err)
 						},
 					},
 				}
@@ -314,7 +315,7 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				}
 
 				id, err := resp.GetBatchRequestID()
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 			},
 		},
@@ -408,7 +409,7 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 				}
 
 				err := resp.setBatchRequestID(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -492,7 +493,7 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				}
 
 				id, err := resp.GetServicedRequests()
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 			},
 		},
@@ -586,7 +587,7 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 				}
 
 				err := resp.setServicedRequests(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -670,7 +671,7 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				}
 
 				id, err := resp.GetUnservicedRequests()
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 			},
 		},
@@ -764,7 +765,7 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 				}
 
 				err := resp.setUnservicedRequests(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -874,7 +875,7 @@ func TestBatchResponse_GetServicedRequestByID(t *testing.T) {
 			}
 
 			res, err := m.GetServicedRequestByID(test.id)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			if test.expectedNil {
 				assert.Nil(t, res)
 			} else {

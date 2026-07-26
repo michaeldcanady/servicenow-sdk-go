@@ -38,12 +38,12 @@ func TestMockRequestAdapter(t *testing.T) {
 			resp, err := adapter.Send(context.Background(), requestInfo, nil, nil)
 
 			if tt.err != nil {
-				if !assert.Error(t, err) {
+				if !assert.Error(t, err) { // nolint:testifylint // return value is used to gate logger.LogFailure; require doesn't return a bool
 					logger.LogFailure(t.Name(), err, tt)
 				}
 				assert.Nil(t, resp)
 			} else {
-				if !assert.NoError(t, err) {
+				if !assert.NoError(t, err) { // nolint:testifylint // return value is used to gate logger.LogFailure; require doesn't return a bool
 					logger.LogFailure(t.Name(), err, tt)
 				}
 				assert.Equal(t, tt.response, resp)

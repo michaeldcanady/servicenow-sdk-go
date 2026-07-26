@@ -9,6 +9,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAccountRequestBuilder_Builders(t *testing.T) {
@@ -48,7 +49,7 @@ func TestAccountRequestBuilder_Get(t *testing.T) {
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockResponse, nil)
 
 	res, err := builder.Get(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, res)
 }
 
@@ -71,7 +72,7 @@ func TestAccountItemRequestBuilder_Get(t *testing.T) {
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&core.BaseServiceNowItemResponse[*AccountModel]{}, nil)
 
 	res, err := builder.Get(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, res)
 }
 
@@ -108,7 +109,7 @@ func TestAccountItemRequestBuilder_GetRequestInformation(t *testing.T) {
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, requestInfo)
 				assert.Equal(t, accountItemURLTemplate, requestInfo.UrlTemplate)
 				assert.Equal(t, "test-id", requestInfo.PathParameters["account_id"])

@@ -8,6 +8,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestWithClient(t *testing.T) {
@@ -23,7 +24,7 @@ func TestWithClient(t *testing.T) {
 
 				opt := WithClient(client)
 				err := opt(config)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &serviceNowRequestAdapterConfig{
 					client: client,
 				}, config)
@@ -59,7 +60,7 @@ func TestWithParseNodeFactory(t *testing.T) {
 
 				opt := WithParseNodeFactory(factory)
 				err := opt(config)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &serviceNowRequestAdapterConfig{
 					parseNodeFactory: factory,
 				}, config)
@@ -95,7 +96,7 @@ func TestWithSerializationFactory(t *testing.T) {
 
 				opt := WithSerializationFactory(factory)
 				err := opt(config)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, &serviceNowRequestAdapterConfig{
 					serializationWriterFactory: factory,
 				}, config)
@@ -130,7 +131,7 @@ func TestWithServiceNowClientOptions(t *testing.T) {
 
 				option := WithServiceNowClientOptions()
 				err := option(config)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.IsType(t, &http.Client{}, config.client)
 				assert.NotNil(t, config.client)
 			},

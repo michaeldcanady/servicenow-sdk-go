@@ -20,7 +20,7 @@ func TestNewServiceNowRequestAdapter(t *testing.T) {
 				authProvider := mocking.NewMockAuthenticationProvider()
 
 				_, err := NewServiceNowRequestAdapter(authProvider)
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 		{

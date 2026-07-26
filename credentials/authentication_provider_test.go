@@ -5,6 +5,7 @@ import (
 
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAuthenticationProviders_Initialization(t *testing.T) {
@@ -119,7 +120,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p, err := tt.provider()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			tt.verify(t, p)
 		})

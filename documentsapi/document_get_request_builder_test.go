@@ -3,14 +3,16 @@ package documentsapi
 import (
 	"context"
 	"errors"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"testing"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDocumentGetRequestBuilder_Get(t *testing.T) {
@@ -61,13 +63,13 @@ func TestDocumentGetRequestBuilder_Get(t *testing.T) {
 			resp, err := builder.get(context.Background(), &documentGetRequestConfiguration{})
 
 			if tt.nilBuilder {
-				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, resp)
 				return
 			}
 
 			if tt.expectedErr != nil {
-				assert.EqualError(t, err, tt.expectedErr.Error())
+				require.EqualError(t, err, tt.expectedErr.Error())
 				assert.Nil(t, resp)
 				return
 			}
@@ -126,7 +128,7 @@ func TestDocumentGetRequestBuilder_ToGetRequestInformation(t *testing.T) {
 
 			reqInfo, err := builder.toGetRequestInformation(context.Background(), tt.requestConfig)
 
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.NotNil(t, reqInfo)
 			assert.Equal(t, abstractions.GET, reqInfo.Method)
 			for k, v := range tt.expectedHeaders {
@@ -138,7 +140,7 @@ func TestDocumentGetRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	t.Run("Nil builder", func(t *testing.T) {
 		var builder *documentGetRequestBuilder
 		reqInfo, err := builder.toGetRequestInformation(context.Background(), nil)
-		assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		assert.Nil(t, reqInfo)
 	})
 }

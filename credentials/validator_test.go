@@ -6,6 +6,7 @@ import (
 
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestValidator(t *testing.T) {
@@ -38,9 +39,9 @@ func TestValidator(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			v, err := authentication.NewAllowedHostsValidatorErrorCheck(test.allowedHosts)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			u, err := url.Parse(test.url)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, test.expected, v.IsUrlHostValid(u))
 		})
 	}

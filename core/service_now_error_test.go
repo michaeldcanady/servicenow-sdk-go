@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewServiceNowError(t *testing.T) {
@@ -26,7 +27,7 @@ func TestCreateServiceNowErrorFromDiscriminatorValue(t *testing.T) {
 
 func TestServiceNowError_Serialize(t *testing.T) {
 	err := NewServiceNowError().Serialize(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	var nilE *ServiceNowError
 	err = nilE.Serialize(nil)
@@ -95,7 +96,7 @@ func TestServiceNowError_setError(t *testing.T) {
 // TODO: improve test table design
 func TestServiceNowError_ErrorBranches(t *testing.T) {
 	eWrongType := NewServiceNowError()
-	assert.Nil(t, eWrongType.GetBackingStore().Set(errorKey, 123))
+	require.NoError(t, eWrongType.GetBackingStore().Set(errorKey, 123))
 	val, err := eWrongType.GetError()
 	assert.Nil(t, val)
 	assert.Equal(t, errors.New("cannot convert '123' to type core.MainErrorable"), err)

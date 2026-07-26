@@ -5,6 +5,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewActivitySubscriptionModel(t *testing.T) {
@@ -17,7 +18,7 @@ func TestNewActivitySubscriptionModel(t *testing.T) {
 func TestCreateActivitySubscriptionModelFromDiscriminatorValue(t *testing.T) {
 	t.Run("SuccessfulCreation", func(t *testing.T) {
 		instance, err := CreateActivitySubscriptionModelFromDiscriminatorValue(nil)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.NotNil(t, instance)
 	})
 }
@@ -110,9 +111,9 @@ func TestActivitySubscriptionModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			if tt.name == "Activities" {
 				assert.Equal(t, tt.want, got)

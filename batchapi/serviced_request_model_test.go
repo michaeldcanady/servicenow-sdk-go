@@ -11,6 +11,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewServicedRequest(t *testing.T) {
@@ -49,7 +50,7 @@ func TestCreateServicedRequestFromDiscriminatorValue(t *testing.T) {
 
 				parsable, err := CreateServicedRequestFromDiscriminatorValue(parseNode)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, parsable)
 				assert.IsType(t, &ServicedRequestModel{}, parsable)
 			},
@@ -75,7 +76,7 @@ func TestServicedRequestModel_Serialize(t *testing.T) {
 
 				err := resp.Serialize(writer)
 
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				writer.AssertExpectations(t)
 			},
 		},
@@ -88,7 +89,7 @@ func TestServicedRequestModel_Serialize(t *testing.T) {
 
 				err := resp.Serialize(writer)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				writer.AssertExpectations(t)
 			},
 		},
@@ -226,7 +227,7 @@ func TestServicedRequestModel_GetBody(t *testing.T) {
 
 				id, err := resp.GetBody()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -329,7 +330,7 @@ func TestServicedRequestModel_setBody(t *testing.T) {
 				}
 
 				err := resp.setBody(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -414,7 +415,7 @@ func TestServicedRequestModel_GetErrorMessage(t *testing.T) {
 
 				id, err := resp.GetErrorMessage()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -517,7 +518,7 @@ func TestServicedRequestModel_setErrorMessage(t *testing.T) {
 				}
 
 				err := resp.setErrorMessage(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -593,7 +594,7 @@ func TestServicedRequestModel_GetExecutionTime(t *testing.T) {
 				v := &serialization.ISODuration{}
 				_ = m.setExecutionTime(v)
 				res, err := m.GetExecutionTime()
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, v, res)
 			},
 		},
@@ -663,7 +664,7 @@ func TestServicedRequestModel_GetHeaders(t *testing.T) {
 
 				id, err := resp.GetHeaders()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -766,7 +767,7 @@ func TestServicedRequestModel_setHeaders(t *testing.T) {
 				}
 
 				err := resp.setHeaders(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -851,7 +852,7 @@ func TestServicedRequestModel_GetID(t *testing.T) {
 
 				id, err := resp.GetID()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -954,7 +955,7 @@ func TestServicedRequestModel_setID(t *testing.T) {
 				}
 
 				err := resp.setID(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -1039,7 +1040,7 @@ func TestServicedRequestModel_GetRedirectURL(t *testing.T) {
 
 				id, err := resp.GetRedirectURL()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -1142,7 +1143,7 @@ func TestServicedRequestModel_setRedirectURL(t *testing.T) {
 				}
 
 				err := resp.setRedirectURL(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -1227,7 +1228,7 @@ func TestServicedRequestModel_GetStatusCode(t *testing.T) {
 
 				id, err := resp.GetRedirectURL()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -1330,7 +1331,7 @@ func TestServicedRequestModel_setStatusCode(t *testing.T) {
 				}
 
 				err := resp.setStatusCode(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)
@@ -1415,7 +1416,7 @@ func TestServicedRequestModel_GetStatusText(t *testing.T) {
 
 				id, err := resp.GetStatusText()
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, ret, id)
 				intModel.AssertExpectations(t)
 				backingStore.AssertExpectations(t)
@@ -1518,7 +1519,7 @@ func TestServicedRequestModel_setStatusText(t *testing.T) {
 				}
 
 				err := resp.setStatusText(input)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
 				intModel.AssertExpectations(t)

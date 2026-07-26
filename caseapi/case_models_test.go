@@ -5,6 +5,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestReferenceModel_GettersSetters(t *testing.T) {
@@ -23,9 +24,9 @@ func TestReferenceModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -58,9 +59,9 @@ func TestCaseResultModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -86,9 +87,9 @@ func TestActivitiesResultModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -112,9 +113,9 @@ func TestFieldValuesResultModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -122,24 +123,24 @@ func TestFieldValuesResultModel_GettersSetters(t *testing.T) {
 
 func TestCreateReferenceFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateReferenceFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
 func TestCreateCaseResultFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateCaseResultFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
 func TestCreateActivitiesResultFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateActivitiesResultFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
 
 func TestCreateFieldValuesResultFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateFieldValuesResultFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }

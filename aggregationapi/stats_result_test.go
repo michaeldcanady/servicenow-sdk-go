@@ -6,6 +6,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewStatsResult(t *testing.T) {
@@ -15,7 +16,7 @@ func TestNewStatsResult(t *testing.T) {
 
 func TestCreateStatsResultFromDiscriminatorValue(t *testing.T) {
 	result, err := CreateStatsResultFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, result)
 }
 
@@ -24,10 +25,10 @@ func TestStatsResult_StatsGetterAndSetter(t *testing.T) {
 	stats := NewStats()
 
 	err := result.setStats(stats)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	res, err := result.GetStats()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, Stats(stats), res)
 }
 
@@ -39,7 +40,7 @@ func TestStatsResult_Serialize(t *testing.T) {
 	_ = result.setStats(NewStats())
 
 	err := result.Serialize(writer)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	var nilResult *StatsResultModel
 	err = nilResult.Serialize(writer)

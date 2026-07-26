@@ -12,6 +12,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestThrowErrors(t *testing.T) {
@@ -83,7 +84,7 @@ func TestSerializeContent(t *testing.T) {
 				abstractions.RegisterDefaultDeserializer(func() serialization.ParseNodeFactory { return parseNodeFactory })
 
 				parsable, err := serializeContent[*mocking.MockParsable](contentType, []byte{}, factory)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, mocking.NewMockParsable(), parsable)
 
 				parseNode.AssertExpectations(t)

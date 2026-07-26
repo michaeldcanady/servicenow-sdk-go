@@ -27,7 +27,7 @@ func TestWithBackingStoreFactory(t *testing.T) {
 
 				err := option(setter)
 
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 		{

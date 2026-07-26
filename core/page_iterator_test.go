@@ -62,13 +62,13 @@ func TestNewPageIterator(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			iterator, err := NewPageIterator(tt.res, tt.reqAdapter, tt.constructor)
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Nil(t, iterator)
 				if tt.errMsg != "" {
 					assert.Contains(t, err.Error(), tt.errMsg)
 				}
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, iterator)
 			}
 		})
@@ -160,12 +160,12 @@ func TestPageIterator_NextItem(t *testing.T) {
 
 			item, err := iterator.NextItem(context.Background())
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				if tt.errIs != nil {
-					assert.ErrorIs(t, err, tt.errIs)
+					require.ErrorIs(t, err, tt.errIs)
 				}
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, item)
 			}
 		})
@@ -229,12 +229,12 @@ func TestPageIterator_PreviousItem(t *testing.T) {
 
 			item, err := iterator.PreviousItem(context.Background())
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				if tt.errIs != nil {
-					assert.ErrorIs(t, err, tt.errIs)
+					require.ErrorIs(t, err, tt.errIs)
 				}
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, item)
 			}
 		})
@@ -347,7 +347,7 @@ func TestPageIterator_Next(t *testing.T) {
 			require.NoError(t, err)
 
 			resp, err := tt.navFunc(context.Background(), iterator)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			if tt.wantRes {
 				assert.NotEqual(t, PageResult[*mocking.MockParsable]{}, resp)
 			} else {
@@ -387,7 +387,7 @@ func TestPageIterator_Options(t *testing.T) {
 					WithHeaders[*mocking.MockParsable](headers),
 					WithRequestOptions[*mocking.MockParsable](options...),
 				)
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, iterator)
 				assert.Equal(t, headers, iterator.headers)
 				assert.Contains(t, iterator.reqOptions, options[0])

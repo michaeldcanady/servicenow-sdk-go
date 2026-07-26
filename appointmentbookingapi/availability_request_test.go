@@ -5,6 +5,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAvailabilityRequestModel_GettersSetters(t *testing.T) {
@@ -36,9 +37,9 @@ func TestAvailabilityRequestModel_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(tt.value)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.value, got)
 		})
 	}
@@ -46,6 +47,6 @@ func TestAvailabilityRequestModel_GettersSetters(t *testing.T) {
 
 func TestCreateAvailabilityRequestFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateAvailabilityRequestFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }

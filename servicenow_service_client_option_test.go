@@ -11,6 +11,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/store"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestWithAuthenticationProvider(t *testing.T) {
@@ -25,7 +26,7 @@ func TestWithAuthenticationProvider(t *testing.T) {
 				option := WithAuthenticationProvider(authProvider)
 				config := &ServiceNowServiceClientConfig{}
 				err := option(config)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, authProvider, config.authenticationProvider)
 			},
 		},
@@ -57,7 +58,7 @@ func TestWithRequestAdapter(t *testing.T) {
 				option := WithRequestAdapter(adapter)
 				config := &ServiceNowServiceClientConfig{}
 				err := option(config)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, adapter, config.requestAdapter)
 			},
 		},
@@ -89,7 +90,7 @@ func TestWithURL(t *testing.T) {
 				option := WithURL(input)
 				config := &ServiceNowServiceClientConfig{}
 				err := option(config)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, input, config.rawURI)
 			},
 		},
@@ -101,7 +102,7 @@ func TestWithURL(t *testing.T) {
 				config := &ServiceNowServiceClientConfig{}
 				err := option(config)
 				assert.Equal(t, errors.New("url is empty"), err)
-				assert.Equal(t, "", config.rawURI)
+				assert.Empty(t, config.rawURI)
 			},
 		},
 		{
@@ -111,8 +112,8 @@ func TestWithURL(t *testing.T) {
 				option := WithURL(input)
 				config := &ServiceNowServiceClientConfig{}
 				err := option(config)
-				assert.EqualError(t, err, "parse \"https://example url.com\": invalid character \" \" in host name")
-				assert.Equal(t, "", config.rawURI)
+				require.EqualError(t, err, "parse \"https://example url.com\": invalid character \" \" in host name")
+				assert.Empty(t, config.rawURI)
 			},
 		},
 		{
@@ -147,7 +148,7 @@ func TestWithMiddleware(t *testing.T) {
 
 				err := option(config)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, middleware, config.middleware[0])
 			},
 		},
@@ -196,7 +197,7 @@ func TestWithInstance(t *testing.T) {
 				option := WithInstance(instance)
 				err := option(config)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, fmt.Sprintf("https://%s.%s", instance, defaultServiceNowHost), config.rawURI)
 			},
 		},
@@ -222,7 +223,7 @@ func TestWithInstance(t *testing.T) {
 				err := option(config)
 
 				assert.Equal(t, errors.New("instance is empty"), err)
-				assert.Equal(t, "", config.rawURI)
+				assert.Empty(t, config.rawURI)
 			},
 		},
 	}
@@ -246,7 +247,7 @@ func TestWithBackingStore(t *testing.T) {
 				option := WithBackingStoreFactory(backingStore)
 				err := option(config)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				// can't verify they're the same because they're functions
 				assert.NotNil(t, config.backingStoreFactory)
 			},
@@ -284,7 +285,7 @@ func TestWithHTTPClient(t *testing.T) {
 				option := WithHTTPClient(client)
 				err := option(config)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotEmpty(t, config.requestAdapterOptions)
 			},
 		},

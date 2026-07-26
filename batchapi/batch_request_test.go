@@ -9,6 +9,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewBatchRequestModel(t *testing.T) {
@@ -47,7 +48,7 @@ func TestCreateBatchRequestFromDiscriminatorValue(t *testing.T) {
 
 				parsable, err := CreateBatchRequestFromDiscriminatorValue(parseNode)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, parsable)
 				assert.IsType(t, &BatchRequestModel{}, parsable)
 			},
@@ -113,7 +114,7 @@ func TestBatchRequest_GetFieldDeserializers(t *testing.T) {
 				s := "id"
 				nodeID.On("GetStringValue").Return(&s, nil)
 				err := deser[batchRequestIDKey](nodeID)
-				assert.NoError(t, err)
+				require.NoError(t, err)
 
 				// Test restRequestsKey
 				nodeReqs := mocking.NewMockParseNode()
@@ -157,7 +158,7 @@ func TestBatchRequest_AddRequest(t *testing.T) {
 
 				err := parsable.AddRequest(req)
 
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				backingStore.AssertExpectations(t)
 				model.AssertExpectations(t)
 			},
@@ -171,7 +172,7 @@ func TestBatchRequest_AddRequest(t *testing.T) {
 
 				err := parsable.AddRequest(request)
 
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 		{
@@ -205,7 +206,7 @@ func TestBatchRequest_GetBatchRequestID(t *testing.T) {
 				s := "id"
 				_ = m.SetBatchRequestID(&s)
 				res, err := m.GetBatchRequestID()
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, s, *res)
 			},
 		},
@@ -214,7 +215,7 @@ func TestBatchRequest_GetBatchRequestID(t *testing.T) {
 			test: func(t *testing.T) {
 				var m *BatchRequestModel
 				res, err := m.GetBatchRequestID()
-				assert.ErrorIs(t, err, snerrors.ErrNilModel)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, res)
 			},
 		},
@@ -266,7 +267,7 @@ func TestBatchRequest_GetRestRequests(t *testing.T) {
 				reqs := []RestRequest{newMockRestRequest()}
 				_ = m.SetRestRequests(reqs)
 				res, err := m.GetRestRequests()
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, reqs, res)
 			},
 		},
@@ -275,7 +276,7 @@ func TestBatchRequest_GetRestRequests(t *testing.T) {
 			test: func(t *testing.T) {
 				var m *BatchRequestModel
 				res, err := m.GetRestRequests()
-				assert.ErrorIs(t, err, snerrors.ErrNilModel)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, res)
 			},
 		},

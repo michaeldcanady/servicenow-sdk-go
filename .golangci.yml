@@ -18,6 +18,7 @@ linters:
     - whitespace
     - revive
     - errorlint
+    - testifylint
   settings:
     dupl:
       threshold: 200

@@ -8,6 +8,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestActivitiesRequestBuilder_Get(t *testing.T) {
@@ -53,7 +54,7 @@ func TestActivitiesRequestBuilder_Get(t *testing.T) {
 			resp, err := builder.Get(context.Background(), tc.config)
 
 			if tc.expectErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Nil(t, resp)
 			} else {
 				assert.NoError(t, err)
@@ -73,7 +74,7 @@ func TestActivitiesRequestBuilder_ToGetRequestInformation_Extra(t *testing.T) {
 
 	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "{+baseurl}/api/now/v1/actsub/activities", requestInfo.UrlTemplate)
 	assert.Equal(t, "https://example.com", requestInfo.PathParameters["baseurl"])

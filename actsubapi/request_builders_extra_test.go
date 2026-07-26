@@ -9,6 +9,7 @@ import (
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestContextsRequestBuilder_Get(t *testing.T) {
@@ -20,7 +21,7 @@ func TestContextsRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -33,7 +34,7 @@ func TestFacetsInstanceRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -47,7 +48,7 @@ func TestPreferencesRequestBuilder_Post(t *testing.T) {
 
 	resp, err := builder.Post(context.Background(), NewActivitySubscriptionModel(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -60,7 +61,7 @@ func TestPreferenceItemRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -73,7 +74,7 @@ func TestSubscriptionItemRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -86,7 +87,7 @@ func TestIsSubscribedRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -100,7 +101,7 @@ func TestSubscribeRequestBuilder_Post(t *testing.T) {
 
 	resp, err := builder.Post(context.Background(), NewActivitySubscriptionModel(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -124,7 +125,7 @@ func TestFollowingItemRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -137,7 +138,7 @@ func TestSubObjectsRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -150,7 +151,7 @@ func TestSubscriberItemRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -163,7 +164,7 @@ func TestUserStreamItemRequestBuilder_Get(t *testing.T) {
 
 	resp, err := builder.Get(context.Background(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
@@ -177,7 +178,7 @@ func TestUserStreamItemRequestBuilder_Put(t *testing.T) {
 
 	resp, err := builder.Put(context.Background(), NewActivitySubscriptionModel(), nil)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 

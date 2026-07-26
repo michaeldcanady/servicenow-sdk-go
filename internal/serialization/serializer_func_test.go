@@ -10,6 +10,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSerialize(t *testing.T) {
@@ -19,7 +20,7 @@ func TestSerialize(t *testing.T) {
 	s2 := func(_ serialization.SerializationWriter) error { return errors.New("err") }
 
 	err := Serialize(writer, s1)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	err = Serialize(writer, s1, s2)
 	assert.Error(t, err)
@@ -51,7 +52,7 @@ func TestSerializeMutatedStringFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 			err := SerializeMutatedStringFunc("key", tt.mutator, tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -94,9 +95,9 @@ func TestSerializeStringFunc(t *testing.T) {
 
 			err := SerializeStringFunc("key", tt.accessor)(writer)
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 			writer.AssertExpectations(t)
 		})
@@ -128,9 +129,9 @@ func TestSerializeBoolFunc(t *testing.T) {
 
 			err := SerializeBoolFunc("key", tt.accessor)(writer)
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 			writer.AssertExpectations(t)
 		})
@@ -161,7 +162,7 @@ func TestSerializeInt64Func(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeInt64Func("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -191,7 +192,7 @@ func TestSerializeInt32Func(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeInt32Func("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -221,7 +222,7 @@ func TestSerializeFloat64Func(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeFloat64Func("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -251,7 +252,7 @@ func TestSerializeFloat32Func(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeFloat32Func("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -281,7 +282,7 @@ func TestSerializeTimeFunc(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeTimeFunc("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -311,7 +312,7 @@ func TestSerializeObjectValueFunc(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeObjectValueFunc[serialization.Parsable]("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -341,7 +342,7 @@ func TestSerializeByteArrayFunc(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeByteArrayFunc("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -371,7 +372,7 @@ func TestSerializeCollectionOfObjectValuesFunc(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeCollectionOfObjectValuesFunc[serialization.Parsable]("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -401,7 +402,7 @@ func TestSerializeCollectionOfStringValuesFunc(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeCollectionOfStringValuesFunc("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -438,7 +439,7 @@ func TestSerializeEnumFunc(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeEnumFunc[mockEnum]("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -469,7 +470,7 @@ func TestSerializeStringToBoolFunc(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeStringToBoolFunc("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -500,7 +501,7 @@ func TestSerializeStringToFloat64Func(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeStringToFloat64Func("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -531,7 +532,7 @@ func TestSerializeStringToInt64Func(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeStringToInt64Func("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -563,7 +564,7 @@ func TestSerializeStringToTimeFunc(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeStringToTimeFunc("key", layout, tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -593,7 +594,7 @@ func TestSerializeISODurationFunc(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeISODurationFunc("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -623,7 +624,7 @@ func TestSerializeAnyFunc(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeAnyFunc("key", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -654,7 +655,7 @@ func TestSerializeStringToSliceFunc(t *testing.T) {
 			tt.mock(writer)
 
 			err := SerializeStringToSliceFunc("key", ",", tt.accessor)(writer)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}

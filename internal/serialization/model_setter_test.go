@@ -6,6 +6,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSetMutatedValueFromSource(t *testing.T) {
@@ -78,7 +79,7 @@ func TestSetMutatedValueFromSource(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := SetMutatedValueFromSource(tt.source, tt.setter, tt.mutator)
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Equal(t, tt.err, err.Error())
 			} else {
 				assert.NoError(t, err)
@@ -184,7 +185,7 @@ func TestWriteMutatedValueToSource(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := WriteMutatedValueToSource(tt.writer, tt.accessor, tt.mutator)
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Equal(t, tt.err, err.Error())
 			} else {
 				assert.NoError(t, err)

@@ -8,6 +8,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestChangesetsRequestBuilder_Get(t *testing.T) {
@@ -116,7 +117,7 @@ func TestChangesetsRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 
 			err = builder.Delete(context.Background(), nil)
@@ -133,7 +134,7 @@ func TestChangesetActivityRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -147,7 +148,7 @@ func TestCommitStatusItemRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -161,7 +162,7 @@ func TestImpactedSharedComponentsRequestBuilder_NilReceiverGuards(t *testing.T) 
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -175,7 +176,7 @@ func TestImpactedDeployablesRequestBuilder_NilReceiverGuards(t *testing.T) {
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}
@@ -189,7 +190,7 @@ func TestImpactedDeployablesBySysIdRequestBuilder_NilReceiverGuards(t *testing.T
 	for name, builder := range builders {
 		t.Run(name, func(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
-			assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
 		})
 	}

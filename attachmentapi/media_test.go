@@ -51,7 +51,7 @@ func TestMedia_Serialize(t *testing.T) {
 
 				err := media.Serialize(mockWriter)
 
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 		{

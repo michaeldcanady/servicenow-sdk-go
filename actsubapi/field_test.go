@@ -5,6 +5,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewField(t *testing.T) {
@@ -14,7 +15,7 @@ func TestNewField(t *testing.T) {
 
 func TestCreateFieldFromDiscriminatorValue(t *testing.T) {
 	instance, err := CreateFieldFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, instance)
 }
 
@@ -52,9 +53,9 @@ func TestField_GettersSetters(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.setter(&val)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			got, err := tt.getter()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, &val, got)
 		})
 	}

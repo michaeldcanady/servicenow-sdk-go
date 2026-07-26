@@ -9,6 +9,7 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewServiceNowErrorThrower(t *testing.T) {
@@ -60,7 +61,7 @@ func TestServiceNowErrorThrower_resolveErrorFactory(t *testing.T) {
 
 				factory, err := thrower.resolveErrorFactory(typeName, statusCode)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, factory)
 				errorRegistry.AssertExpectations(t)
 				strct.AssertExpectations(t)
@@ -86,7 +87,7 @@ func TestServiceNowErrorThrower_resolveErrorFactory(t *testing.T) {
 
 				factory, err := thrower.resolveErrorFactory(typeName, statusCode)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, factory)
 				errorRegistry.AssertExpectations(t)
 				strct.AssertExpectations(t)
@@ -112,7 +113,7 @@ func TestServiceNowErrorThrower_resolveErrorFactory(t *testing.T) {
 
 				factory, err := thrower.resolveErrorFactory(typeName, statusCode)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, factory)
 				errorRegistry.AssertExpectations(t)
 				strct.AssertExpectations(t)
@@ -138,7 +139,7 @@ func TestServiceNowErrorThrower_resolveErrorFactory(t *testing.T) {
 
 				factory, err := thrower.resolveErrorFactory(typeName, statusCode)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, factory)
 				errorRegistry.AssertExpectations(t)
 				strct.AssertExpectations(t)

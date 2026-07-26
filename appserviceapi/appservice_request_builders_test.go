@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAppServiceRequestBuilder_Create(t *testing.T) {
@@ -27,10 +28,10 @@ func TestAppServiceRequestBuilder_Create(t *testing.T) {
 	_ = req.setComments(&comments)
 
 	requestInfo, err := createBuilder.ToPostRequestInformation(context.Background(), req, nil)
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/app_service/create", uri.String())
 }
 
@@ -57,10 +58,10 @@ func TestAppServiceRequestBuilder_Csdm_FindService(t *testing.T) {
 	}
 
 	requestInfo, err := findBuilder.ToGetRequestInformation(context.Background(), config)
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/csdm/app_service/find_service?name=Email_East&number=SNSVC0001018", uri.String())
 }
 
@@ -83,10 +84,10 @@ func TestAppServiceRequestBuilder_Csdm_RegisterService(t *testing.T) {
 	_ = req.setBasicDetails(details)
 
 	requestInfo, err := registerBuilder.ToPostRequestInformation(context.Background(), req, nil)
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/csdm/app_service/register_service", uri.String())
 }
 
@@ -111,10 +112,10 @@ func TestAppServiceRequestBuilder_Csdm_PopulateService(t *testing.T) {
 	_ = req.setServiceRelations([]*ServiceRelation{rel})
 
 	requestInfo, err := populateBuilder.ToPutRequestInformation(context.Background(), req, nil)
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/csdm/app_service/service123/populate_service", uri.String())
 }
 
@@ -137,9 +138,9 @@ func TestAppServiceRequestBuilder_Csdm_ServiceDetails(t *testing.T) {
 	_ = req.setBasicDetails(details)
 
 	requestInfo, err := detailsBuilder.ToPutRequestInformation(context.Background(), req, nil)
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	uri, err := requestInfo.GetUri()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/csdm/app_service/service123/service_details", uri.String())
 }

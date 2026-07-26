@@ -8,6 +8,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCreateTableRecordFromDiscriminatorValue(t *testing.T) {
@@ -24,7 +25,7 @@ func TestCreateTableRecordFromDiscriminatorValue(t *testing.T) {
 				parsable, err := CreateTableRecordFromDiscriminatorValue(parseNode)
 
 				assert.NotNil(t, parsable)
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				parseNode.AssertExpectations(t)
 			},
 		},
@@ -77,7 +78,7 @@ func TestRecordElementParserFromRaw(t *testing.T) {
 				element, err := recordElementParserFromRaw(data)
 
 				assert.NotNil(t, element)
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 		{
@@ -92,7 +93,7 @@ func TestRecordElementParserFromRaw(t *testing.T) {
 				element, err := recordElementParserFromRaw(data)
 
 				assert.NotNil(t, element)
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 		{
@@ -116,7 +117,7 @@ func TestRecordElementParserFromRaw(t *testing.T) {
 				element, err := recordElementParserFromRaw(internal.ToPointer("value"))
 
 				assert.NotNil(t, element)
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 	}
@@ -185,7 +186,7 @@ func TestTableRecord_Serialize(t *testing.T) {
 
 				err := record.Serialize(writer)
 
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 		{
@@ -199,7 +200,7 @@ func TestTableRecord_Serialize(t *testing.T) {
 
 				err := record.Serialize(writer)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				writer.AssertExpectations(t)
 			},
 		},
@@ -233,7 +234,7 @@ func TestTableRecord_Get(t *testing.T) {
 
 				elem, err := record.Get("Test")
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, result, elem)
 				innerModel.AssertExpectations(t)
 				store.AssertExpectations(t)
@@ -269,7 +270,7 @@ func TestTableRecord_SetElement(t *testing.T) {
 
 				err := record.SetElement("Test", input)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				innerModel.AssertExpectations(t)
 				store.AssertExpectations(t)
 			},
@@ -302,7 +303,7 @@ func TestTableRecord_SetValue(t *testing.T) {
 
 				err := record.SetValue("Test", "value")
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				innerModel.AssertExpectations(t)
 				store.AssertExpectations(t)
 			},

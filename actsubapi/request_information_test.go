@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestActivitiesRequestBuilder_ToGetRequestInformation(t *testing.T) {
@@ -14,7 +15,7 @@ func TestActivitiesRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	builder := NewActivitiesRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "GET", requestInfo.Method.String())
 }
@@ -24,7 +25,7 @@ func TestContextsRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	builder := NewContextsRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "GET", requestInfo.Method.String())
 }
@@ -34,7 +35,7 @@ func TestFacetsInstanceRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	builder := NewFacetsInstanceRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "GET", requestInfo.Method.String())
 }
@@ -44,7 +45,7 @@ func TestFollowingItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	builder := NewFollowingItemRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "GET", requestInfo.Method.String())
 }
@@ -54,7 +55,7 @@ func TestPreferenceItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	builder := NewPreferenceItemRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "GET", requestInfo.Method.String())
 }
@@ -65,7 +66,7 @@ func TestPreferencesRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	builder := NewPreferencesRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToPostRequestInformation(context.Background(), NewActivitySubscriptionModel(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "POST", requestInfo.Method.String())
 }
@@ -75,7 +76,7 @@ func TestSubObjectsRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	builder := NewSubObjectsRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "GET", requestInfo.Method.String())
 }
@@ -85,7 +86,7 @@ func TestSubscriberItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	builder := NewSubscriberItemRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "GET", requestInfo.Method.String())
 }
@@ -95,7 +96,7 @@ func TestSubscriptionItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	builder := NewSubscriptionItemRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "GET", requestInfo.Method.String())
 }
@@ -105,7 +106,7 @@ func TestIsSubscribedRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	builder := NewIsSubscribedRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "GET", requestInfo.Method.String())
 }
@@ -116,7 +117,7 @@ func TestSubscribeRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	builder := NewSubscribeRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToPostRequestInformation(context.Background(), NewActivitySubscriptionModel(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "POST", requestInfo.Method.String())
 }
@@ -126,7 +127,7 @@ func TestUnsubscribeRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
 	builder := NewUnsubscribeRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToDeleteRequestInformation(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "DELETE", requestInfo.Method.String())
 }
@@ -136,7 +137,7 @@ func TestUserStreamItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	builder := NewUserStreamItemRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "GET", requestInfo.Method.String())
 }
@@ -147,7 +148,7 @@ func TestUserStreamItemRequestBuilder_ToPutRequestInformation(t *testing.T) {
 	builder := NewUserStreamItemRequestBuilderInternal(nil, adapter)
 
 	requestInfo, err := builder.ToPutRequestInformation(context.Background(), NewActivitySubscriptionModel(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "PUT", requestInfo.Method.String())
 }

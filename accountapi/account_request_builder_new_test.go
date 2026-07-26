@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAccountRequestBuilder_Get_New(t *testing.T) {
@@ -29,9 +30,9 @@ func TestAccountRequestBuilder_Get_New(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			res, err := builder.Get(context.Background(), nil)
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, res)
 			}
 

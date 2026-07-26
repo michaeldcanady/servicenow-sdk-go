@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCreateAttachmentCollectionResponseFromDiscriminatorValue(t *testing.T) {
@@ -36,7 +37,7 @@ func TestCreateAttachmentCollectionResponseFromDiscriminatorValue(t *testing.T) 
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, got)
 				assert.IsType(t, tt.expectedType, got)
 

@@ -5,6 +5,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewMainError(t *testing.T) {
@@ -14,7 +15,7 @@ func TestNewMainError(t *testing.T) {
 
 func TestCreateMainErrorFromDiscriminatorValue(t *testing.T) {
 	res, err := CreateMainErrorFromDiscriminatorValue(nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, res)
 }
 
@@ -121,13 +122,13 @@ func TestMainError_Accessors(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.setter != nil && tt.model != nil {
 				err := tt.setter(tt.model, tt.expected)
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 			res, err := tt.getter(tt.model)
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, tt.expected, res)
 			}
 		})
@@ -153,7 +154,7 @@ func TestMainError_ErrorBranches(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.fn()
-			assert.Error(t, err)
+			require.Error(t, err)
 			assert.Equal(t, tt.wantErr, err.Error())
 		})
 	}
@@ -161,6 +162,6 @@ func TestMainError_ErrorBranches(t *testing.T) {
 	mWrongType := NewMainError()
 	_ = mWrongType.GetBackingStore().Set(detailKey, 123)
 	_, err := mWrongType.GetDetail()
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Contains(t, err.Error(), "cannot convert '123' to type *string")
 }

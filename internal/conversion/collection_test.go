@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCastCollection(t *testing.T) {
@@ -44,10 +45,10 @@ func TestCastCollection(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := CastCollection[any, string](tt.collection)
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Nil(t, got)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, tt.want, got)
 			}
 		})

@@ -7,6 +7,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewServiceNowServiceClient(t *testing.T) {
@@ -72,10 +73,10 @@ func TestNewServiceNowServiceClient(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			client, err := NewServiceNowServiceClient(test.opts()...)
 			if test.expectedErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 				assert.Nil(t, client)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.NotNil(t, client)
 			}
 		})
@@ -96,7 +97,7 @@ func TestNewServiceNowServiceClient_LowLevel(t *testing.T) {
 		WithURL("https://example.com"),
 	)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, client)
 	requestAdapter.AssertExpectations(t)
 }

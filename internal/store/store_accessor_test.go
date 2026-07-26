@@ -6,6 +6,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDefaultStoreAccessorFunc(t *testing.T) {
@@ -23,7 +24,7 @@ func TestDefaultStoreAccessorFunc(t *testing.T) {
 
 				response, err := DefaultStoreAccessorFunc[*mocking.MockBackingStore, string](store, key)
 
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, value, response)
 				store.AssertExpectations(t)
 			},
@@ -37,7 +38,7 @@ func TestDefaultStoreAccessorFunc(t *testing.T) {
 				response, err := DefaultStoreAccessorFunc[*mocking.MockBackingStore, string](store, key)
 
 				assert.Equal(t, errors.New("store is nil"), err)
-				assert.Equal(t, "", response)
+				assert.Empty(t, response)
 			},
 		},
 		{
@@ -49,7 +50,7 @@ func TestDefaultStoreAccessorFunc(t *testing.T) {
 				response, err := DefaultStoreAccessorFunc[*mocking.MockBackingStore, string](store, key)
 
 				assert.Equal(t, errors.New("key is empty"), err)
-				assert.Equal(t, "", response)
+				assert.Empty(t, response)
 				store.AssertExpectations(t)
 			},
 		},
@@ -62,7 +63,7 @@ func TestDefaultStoreAccessorFunc(t *testing.T) {
 
 				response, err := DefaultStoreAccessorFunc[*mocking.MockBackingStore, string](store, key)
 
-				assert.Equal(t, "", response)
+				assert.Empty(t, response)
 				assert.Equal(t, errors.New("store error"), err)
 				store.AssertExpectations(t)
 			},
@@ -78,7 +79,7 @@ func TestDefaultStoreAccessorFunc(t *testing.T) {
 				response, err := DefaultStoreAccessorFunc[*mocking.MockBackingStore, string](store, key)
 
 				assert.Equal(t, errors.New("cannot convert 'true' to type string"), err)
-				assert.Equal(t, "", response)
+				assert.Empty(t, response)
 			},
 		},
 	}
