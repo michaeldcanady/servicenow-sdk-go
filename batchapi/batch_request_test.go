@@ -245,7 +245,7 @@ func TestBatchRequest_SetBatchRequestID(t *testing.T) {
 			test: func(t *testing.T) {
 				var m *BatchRequestModel
 				err := m.SetBatchRequestID(nil)
-				assert.ErrorIs(t, err, snerrors.ErrNilModel)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}
@@ -306,7 +306,7 @@ func TestBatchRequest_SetRestRequests(t *testing.T) {
 			test: func(t *testing.T) {
 				var m *BatchRequestModel
 				err := m.SetRestRequests(nil)
-				assert.ErrorIs(t, err, snerrors.ErrNilModel)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 			},
 		},
 	}

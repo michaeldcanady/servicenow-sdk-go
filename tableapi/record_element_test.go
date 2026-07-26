@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
@@ -86,7 +87,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 
 				elementValue, err := model.GetDisplayValue()
 
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
@@ -97,7 +98,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 
 				elementValue, err := model.GetDisplayValue()
 
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
@@ -220,7 +221,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 
 				elementValue, err := model.GetValue()
 
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
@@ -231,7 +232,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 
 				elementValue, err := model.GetValue()
 
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Equal(t, ElementValue{}, elementValue)
 			},
 		},
@@ -352,7 +353,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 
 				elementValue, err := model.GetLink()
 
-				assert.Equal(t, errors.New("store is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilStore)
 				assert.Nil(t, elementValue)
 			},
 		},
@@ -363,7 +364,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 
 				elementValue, err := model.GetLink()
 
-				assert.Equal(t, errors.New("model is nil"), err)
+				require.ErrorIs(t, err, snerrors.ErrNilModel)
 				assert.Nil(t, elementValue)
 			},
 		},

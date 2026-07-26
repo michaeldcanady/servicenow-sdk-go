@@ -1,0 +1,103 @@
+package appserviceapi
+
+import (
+	"context"
+	"testing"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+// Nil-builder guard coverage for request builders in this package that did
+// not otherwise have a dedicated test exercising the guard.
+
+func TestRegisterServiceRequestBuilder_Post_NilBuilder(t *testing.T) {
+	var builder *RegisterServiceRequestBuilder
+
+	resp, err := builder.Post(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, resp)
+}
+
+func TestRegisterServiceRequestBuilder_ToPostRequestInformation_NilBuilder(t *testing.T) {
+	var builder *RegisterServiceRequestBuilder
+
+	requestInfo, err := builder.ToPostRequestInformation(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, requestInfo)
+}
+
+func TestCreateRequestBuilder_Post_NilBuilder(t *testing.T) {
+	var builder *CreateRequestBuilder
+
+	resp, err := builder.Post(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, resp)
+}
+
+func TestCreateRequestBuilder_ToPostRequestInformation_NilBuilder(t *testing.T) {
+	var builder *CreateRequestBuilder
+
+	requestInfo, err := builder.ToPostRequestInformation(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, requestInfo)
+}
+
+func TestFindServiceRequestBuilder_Get_NilBuilder(t *testing.T) {
+	var builder *FindServiceRequestBuilder
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, resp)
+}
+
+func TestFindServiceRequestBuilder_ToGetRequestInformation_NilBuilder(t *testing.T) {
+	var builder *FindServiceRequestBuilder
+
+	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, requestInfo)
+}
+
+func TestPopulateServiceRequestBuilder_Put_NilBuilder(t *testing.T) {
+	var builder *PopulateServiceRequestBuilder
+
+	resp, err := builder.Put(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, resp)
+}
+
+func TestPopulateServiceRequestBuilder_ToPutRequestInformation_NilBuilder(t *testing.T) {
+	var builder *PopulateServiceRequestBuilder
+
+	requestInfo, err := builder.ToPutRequestInformation(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, requestInfo)
+}
+
+func TestServiceDetailsRequestBuilder_Put_NilBuilder(t *testing.T) {
+	var builder *ServiceDetailsRequestBuilder
+
+	resp, err := builder.Put(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, resp)
+}
+
+func TestServiceDetailsRequestBuilder_ToPutRequestInformation_NilBuilder(t *testing.T) {
+	var builder *ServiceDetailsRequestBuilder
+
+	requestInfo, err := builder.ToPutRequestInformation(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, requestInfo)
+}

@@ -75,16 +75,17 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 	}
 
 	tests := []struct {
-		name                 string
-		nilBuilder           bool
-		media                *Media
-		requestConfig        *AttachmentFileRequestBuilderPostRequestConfiguration
-		nilRequestAdapter    bool
-		sendError            error
-		sendResponse         serialization.Parsable
-		serializationErr     error
-		expectedErr          error
-		expectedErrorMessage string
+		name                  string
+		nilBuilder            bool
+		media                 *Media
+		requestConfig         *AttachmentFileRequestBuilderPostRequestConfiguration
+		nilRequestAdapter     bool
+		sendError             error
+		sendResponse          serialization.Parsable
+		serializationErr      error
+		expectedErr           error
+		expectedErrIsSentinel bool
+		expectedErrorMessage  string
 	}{
 		{
 			name: "Successful upload",
@@ -175,9 +176,10 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
 				QueryParameters: defaultParams,
 			},
-			media:             defaultMedia,
-			nilRequestAdapter: true,
-			expectedErr:       snerrors.ErrNilRequestAdapter,
+			media:                 defaultMedia,
+			nilRequestAdapter:     true,
+			expectedErr:           snerrors.ErrNilRequestAdapter,
+			expectedErrIsSentinel: true,
 		},
 		{
 			name: "Adapter send error",
@@ -193,9 +195,10 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 			requestConfig: &AttachmentFileRequestBuilderPostRequestConfiguration{
 				QueryParameters: defaultParams,
 			},
-			media:        defaultMedia,
-			sendResponse: nil,
-			expectedErr:  snerrors.ErrNilResponse,
+			media:                 defaultMedia,
+			sendResponse:          nil,
+			expectedErr:           snerrors.ErrNilResponse,
+			expectedErrIsSentinel: true,
 		},
 		{
 			name: "Wrong response type from adapter",
@@ -244,13 +247,17 @@ func TestAttachmentFileRequestBuilder_Post(t *testing.T) {
 
 			if tt.nilBuilder {
 				assert.Nil(t, res)
-				assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				return
 			}
 
 			if tt.expectedErr != nil {
 				require.Error(t, err)
-				assert.Equal(t, tt.expectedErr, err)
+				if tt.expectedErrIsSentinel {
+					require.ErrorIs(t, err, tt.expectedErr)
+				} else {
+					assert.Equal(t, tt.expectedErr, err)
+				}
 				assert.Nil(t, res)
 			} else if tt.expectedErrorMessage != "" {
 				require.Error(t, err)
@@ -322,7 +329,7 @@ func assertAttachmentFilePostRequestInformation(t *testing.T, tt attachmentFileP
 
 	if tt.nilBuilder || tt.nilRequestBuilder {
 		assert.Nil(t, reqInfo)
-		assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		return
 	}
 

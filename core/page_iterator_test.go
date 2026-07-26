@@ -5,6 +5,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
@@ -32,6 +33,7 @@ func TestNewPageIterator(t *testing.T) {
 		constructor serialization.ParsableFactory
 		wantErr     bool
 		errMsg      string
+		errIs       error
 	}{
 		{
 			name:        "Valid initialization",
@@ -47,6 +49,7 @@ func TestNewPageIterator(t *testing.T) {
 			constructor: parsableFactory,
 			wantErr:     true,
 			errMsg:      "requestAdapter cannot be nil",
+			errIs:       snerrors.ErrNilRequestAdapter,
 		},
 		{
 			name:        "Nil response",
@@ -55,6 +58,7 @@ func TestNewPageIterator(t *testing.T) {
 			constructor: parsableFactory,
 			wantErr:     true,
 			errMsg:      "response cannot be nil",
+			errIs:       snerrors.ErrNilResponse,
 		},
 	}
 
@@ -66,6 +70,9 @@ func TestNewPageIterator(t *testing.T) {
 				assert.Nil(t, iterator)
 				if tt.errMsg != "" {
 					assert.Contains(t, err.Error(), tt.errMsg)
+				}
+				if tt.errIs != nil {
+					require.ErrorIs(t, err, tt.errIs)
 				}
 			} else {
 				require.NoError(t, err)

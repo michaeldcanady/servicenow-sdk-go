@@ -74,5 +74,5 @@ func TestBaseServiceNowCollectionResponse_ErrorBranches(t *testing.T) {
 	assert.Nil(t, l)
 
 	err = nilR.SetNextLink(nil)
-	assert.ErrorIs(t, err, snerrors.ErrNilModel)
+	require.ErrorIs(t, err, snerrors.ErrNilModel)
 }

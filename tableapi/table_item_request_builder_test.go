@@ -17,9 +17,10 @@ import (
 
 func TestTableItemRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
-		name      string
-		setupMock func(m *mocking.MockRequestAdapter)
-		err       error
+		name          string
+		setupMock     func(m *mocking.MockRequestAdapter)
+		err           error
+		errIsSentinel bool
 	}{
 		{
 			name: "Successful",
@@ -43,7 +44,8 @@ func TestTableItemRequestBuilder_Get(t *testing.T) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(nil, nil)
 			},
-			err: snerrors.ErrNilResponse,
+			err:           snerrors.ErrNilResponse,
+			errIsSentinel: true,
 		},
 	}
 
@@ -60,7 +62,11 @@ func TestTableItemRequestBuilder_Get(t *testing.T) {
 
 			resp, err := builder.Get(context.Background(), nil)
 			if tt.err != nil {
-				require.Equal(t, tt.err, err)
+				if tt.errIsSentinel {
+					require.ErrorIs(t, err, tt.err)
+				} else {
+					require.Equal(t, tt.err, err)
+				}
 				assert.Nil(t, resp)
 			} else {
 				require.NoError(t, err)
@@ -166,7 +172,7 @@ func TestTableItemRequestBuilder_Put(t *testing.T) {
 
 			resp, err := builder.Put(context.Background(), tt.body, nil)
 			if tt.err != nil {
-				require.Equal(t, tt.err, err)
+				require.ErrorIs(t, err, tt.err)
 				assert.Nil(t, resp)
 			} else {
 				require.NoError(t, err)
@@ -225,7 +231,7 @@ func TestTableItemRequestBuilder_Patch(t *testing.T) {
 
 			resp, err := builder.Patch(context.Background(), tt.body, nil)
 			if tt.err != nil {
-				require.Equal(t, tt.err, err)
+				require.ErrorIs(t, err, tt.err)
 				assert.Nil(t, resp)
 			} else {
 				require.NoError(t, err)
@@ -238,6 +244,68 @@ func TestTableItemRequestBuilder_Patch(t *testing.T) {
 }
 
 // ... (rest of tests)
+
+func TestTableItemRequestBuilder_Get_NilGuards(t *testing.T) {
+	t.Run("nil builder", func(t *testing.T) {
+		var builder *TableItemRequestBuilder[*TableRecord]
+		resp, err := builder.Get(context.Background(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	})
+
+	t.Run("nil request adapter", func(t *testing.T) {
+		builder := NewTableItemRequestBuilderInternal[*TableRecord](map[string]string{}, nil, CreateTableRecordFromDiscriminatorValue)
+		resp, err := builder.Get(context.Background(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	})
+}
+
+func TestTableItemRequestBuilder_Delete_NilGuards(t *testing.T) {
+	t.Run("nil builder", func(t *testing.T) {
+		var builder *TableItemRequestBuilder[*TableRecord]
+		err := builder.Delete(context.Background(), nil)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	})
+
+	t.Run("nil request adapter", func(t *testing.T) {
+		builder := NewTableItemRequestBuilderInternal[*TableRecord](map[string]string{}, nil, CreateTableRecordFromDiscriminatorValue)
+		err := builder.Delete(context.Background(), nil)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	})
+}
+
+func TestTableItemRequestBuilder_Put_NilGuards(t *testing.T) {
+	t.Run("nil builder", func(t *testing.T) {
+		var builder *TableItemRequestBuilder[*TableRecord]
+		resp, err := builder.Put(context.Background(), NewTableRecord(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	})
+
+	t.Run("nil request adapter", func(t *testing.T) {
+		builder := NewTableItemRequestBuilderInternal[*TableRecord](map[string]string{}, nil, CreateTableRecordFromDiscriminatorValue)
+		resp, err := builder.Put(context.Background(), NewTableRecord(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	})
+}
+
+func TestTableItemRequestBuilder_Patch_NilGuards(t *testing.T) {
+	t.Run("nil builder", func(t *testing.T) {
+		var builder *TableItemRequestBuilder[*TableRecord]
+		resp, err := builder.Patch(context.Background(), NewTableRecord(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	})
+
+	t.Run("nil request adapter", func(t *testing.T) {
+		builder := NewTableItemRequestBuilderInternal[*TableRecord](map[string]string{}, nil, CreateTableRecordFromDiscriminatorValue)
+		resp, err := builder.Patch(context.Background(), NewTableRecord(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	})
+}
 
 func TestTableItemRequestBuilder_ToRequestInformation(t *testing.T) {
 	mockAdapter := new(mocking.MockRequestAdapter)

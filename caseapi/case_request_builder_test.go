@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
@@ -127,6 +128,60 @@ func TestCaseItemRequestBuilder_Hierarchy(t *testing.T) {
 
 	assert.NotNil(t, builder.Activities())
 	assert.NotNil(t, builder.FieldValues("state"))
+}
+
+func TestCaseRequestBuilder_Get_NilBuilder(t *testing.T) {
+	var builder *CaseRequestBuilder
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	assert.Nil(t, resp)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+}
+
+func TestCaseRequestBuilder_Post_NilBuilder(t *testing.T) {
+	var builder *CaseRequestBuilder
+
+	resp, err := builder.Post(context.Background(), NewCaseResult(), nil)
+
+	assert.Nil(t, resp)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+}
+
+func TestCaseItemRequestBuilder_Get_NilBuilder(t *testing.T) {
+	var builder *CaseItemRequestBuilder
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	assert.Nil(t, resp)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+}
+
+func TestCaseItemRequestBuilder_Put_NilBuilder(t *testing.T) {
+	var builder *CaseItemRequestBuilder
+
+	resp, err := builder.Put(context.Background(), NewCaseResult(), nil)
+
+	assert.Nil(t, resp)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+}
+
+func TestCaseActivitiesRequestBuilder_Get_NilBuilder(t *testing.T) {
+	var builder *CaseActivitiesRequestBuilder
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	assert.Nil(t, resp)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+}
+
+func TestCaseFieldValuesRequestBuilder_Get_NilBuilder(t *testing.T) {
+	var builder *CaseFieldValuesRequestBuilder
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	assert.Nil(t, resp)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 }
 
 func TestCustomerServiceRequestBuilder_Hierarchy(t *testing.T) {

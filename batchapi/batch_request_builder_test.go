@@ -405,6 +405,40 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 	}
 }
 
+func TestBatchRequestBuilder_Head(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Nil requestBuilder",
+			test: func(t *testing.T) {
+				builder := (*BatchRequestBuilder)(nil)
+
+				responseHeaders, err := builder.Head(context.Background(), nil)
+
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				assert.Nil(t, responseHeaders)
+			},
+		},
+		{
+			name: "Nil inner requestBuilder",
+			test: func(t *testing.T) {
+				builder := &BatchRequestBuilder{nil}
+
+				responseHeaders, err := builder.Head(context.Background(), nil)
+
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				assert.Nil(t, responseHeaders)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
 func TestBatchRequestBuilder_toPostRequestInformation(t *testing.T) {
 	tests := []struct {
 		name string
