@@ -16,6 +16,7 @@ linters:
     - unconvert
     - unparam
     - whitespace
+    - revive
   settings:
     dupl:
       threshold: 200
