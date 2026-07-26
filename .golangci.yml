@@ -22,9 +22,26 @@ linters:
     - errname
     - bodyclose
     - noctx
+    - importas
   settings:
     dupl:
       threshold: 200
+    importas:
+      alias:
+        - pkg: github.com/microsoft/kiota-abstractions-go
+          alias: abstractions
+        - pkg: github.com/microsoft/kiota-abstractions-go/store
+          alias: kiotaStore
+        - pkg: github.com/microsoft/kiota-http-go
+          alias: nethttplibrary
+        - pkg: github.com/michaeldcanady/servicenow-sdk-go/errors
+          alias: snerrors
+        - pkg: github.com/michaeldcanady/servicenow-sdk-go/internal/http
+          alias: internalhttp
+        - pkg: github.com/michaeldcanady/servicenow-sdk-go/internal/serialization
+          alias: internalSerialization
+        - pkg: github.com/michaeldcanady/servicenow-sdk-go/internal/store
+          alias: internalStore
   exclusions:
     rules:
       - linters:
