@@ -194,6 +194,22 @@ func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 			nilBuilder:           true,
 			requestConfiguration: &AttachmentItemFileRequestBuilderGetRequestConfiguration{},
 		},
+		{
+			// A nil configuration is replaced with an empty one, so header inspection is
+			// still registered and the call succeeds.
+			name:                "Nil request configuration",
+			sendResponse:        mockContent,
+			metadataHeaderValue: `{"file_name":"test.txt"}`,
+		},
+		{
+			// The metadata header is parsed as JSON; malformed JSON fails the whole call
+			// rather than being silently dropped.
+			name:                 "Malformed metadata header",
+			requestConfiguration: &AttachmentItemFileRequestBuilderGetRequestConfiguration{},
+			sendResponse:         mockContent,
+			metadataHeaderValue:  `{not-json`,
+			expectedErrorMessage: "invalid",
+		},
 	}
 
 	for _, tt := range tests {
