@@ -8,6 +8,8 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -168,5 +170,90 @@ func TestCmdbItemRequestBuilder_Relation(t *testing.T) {
 	t.Run("Relation", func(t *testing.T) {
 		relationBuilder := builder.Relation()
 		assert.NotNil(t, relationBuilder)
+	})
+}
+
+func newTestRequestOption() *mocking.MockRequestOption {
+	option := mocking.NewMockRequestOption()
+	option.On("GetKey").Return(abstractions.RequestOptionKey{Key: "testOption"})
+	return option
+}
+
+func TestCmdbItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
+	builder := NewCmdbItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "className": "test", "sys_id": "123"}, &mocking.MockRequestAdapter{})
+
+	t.Run("nil config", func(t *testing.T) {
+		requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.GET, requestInfo.Method)
+	})
+
+	t.Run("config with headers and options", func(t *testing.T) {
+		headers := abstractions.NewRequestHeaders()
+		headers.Add("X-Test", "value")
+
+		config := &CmdbItemRequestBuilderGetRequestConfiguration{
+			Headers: headers,
+			Options: []abstractions.RequestOption{newTestRequestOption()},
+		}
+
+		requestInfo, err := builder.ToGetRequestInformation(context.Background(), config)
+		require.NoError(t, err)
+		assert.Equal(t, []string{"value"}, requestInfo.Headers.Get("X-Test"))
+		assert.Len(t, requestInfo.GetRequestOptions(), 1)
+	})
+}
+
+func TestCmdbItemRequestBuilder_ToPutRequestInformation(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
+	builder := NewCmdbItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "className": "test", "sys_id": "123"}, adapter)
+
+	t.Run("nil config and nil body", func(t *testing.T) {
+		requestInfo, err := builder.ToPutRequestInformation(context.Background(), nil, nil)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.PUT, requestInfo.Method)
+	})
+
+	t.Run("config with headers and options, and non-nil body", func(t *testing.T) {
+		headers := abstractions.NewRequestHeaders()
+		headers.Add("X-Test", "value")
+
+		config := &CmdbItemRequestBuilderPutRequestConfiguration{
+			Headers: headers,
+			Options: []abstractions.RequestOption{newTestRequestOption()},
+		}
+
+		requestInfo, err := builder.ToPutRequestInformation(context.Background(), NewCmdbInstance(), config)
+		require.NoError(t, err)
+		assert.Equal(t, []string{"value"}, requestInfo.Headers.Get("X-Test"))
+		assert.Len(t, requestInfo.GetRequestOptions(), 1)
+	})
+}
+
+func TestCmdbItemRequestBuilder_ToPatchRequestInformation(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
+	builder := NewCmdbItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "className": "test", "sys_id": "123"}, adapter)
+
+	t.Run("nil config and nil body", func(t *testing.T) {
+		requestInfo, err := builder.ToPatchRequestInformation(context.Background(), nil, nil)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.PATCH, requestInfo.Method)
+	})
+
+	t.Run("config with headers and options, and non-nil body", func(t *testing.T) {
+		headers := abstractions.NewRequestHeaders()
+		headers.Add("X-Test", "value")
+
+		config := &CmdbItemRequestBuilderPatchRequestConfiguration{
+			Headers: headers,
+			Options: []abstractions.RequestOption{newTestRequestOption()},
+		}
+
+		requestInfo, err := builder.ToPatchRequestInformation(context.Background(), NewCmdbInstance(), config)
+		require.NoError(t, err)
+		assert.Equal(t, []string{"value"}, requestInfo.Headers.Get("X-Test"))
+		assert.Len(t, requestInfo.GetRequestOptions(), 1)
 	})
 }

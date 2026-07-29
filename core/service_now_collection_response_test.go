@@ -75,4 +75,7 @@ func TestBaseServiceNowCollectionResponse_ErrorBranches(t *testing.T) {
 
 	err = nilR.SetNextLink(nil)
 	require.ErrorIs(t, err, snerrors.ErrNilModel)
+
+	err = nilR.setResult([]*MainError{NewMainError()})
+	require.ErrorIs(t, err, snerrors.ErrNilModel)
 }

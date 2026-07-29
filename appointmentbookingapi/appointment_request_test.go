@@ -4,7 +4,9 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
 
@@ -47,4 +49,90 @@ func TestCreateAppointmentRequestFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateAppointmentRequestFromDiscriminatorValue(nil)
 	require.NoError(t, err)
 	assert.NotNil(t, parsable)
+}
+
+func TestAppointmentRequestModel_GetFieldDeserializers(t *testing.T) {
+	model := NewAppointmentRequest()
+	deserializers := model.GetFieldDeserializers()
+	for _, key := range []string{
+		actualEndDateKey, actualStartDateKey, catalogIDKey, endDateUTCKey, locationKey,
+		openedForKey, rescheduleKey, serviceConfigRuleKey, startDateUTCKey, taskIDKey,
+		taskTableKey, timezoneKey, validateRequestKey,
+	} {
+		assert.NotNil(t, deserializers[key], "expected deserializer for %s", key)
+	}
+	assert.Len(t, deserializers, 13)
+}
+
+func TestAppointmentRequestModel_Serialize(t *testing.T) {
+	tests := []struct {
+		name      string
+		model     *AppointmentRequestModel
+		setupMock func(w *mocking.MockSerializationWriter)
+		wantErr   error
+	}{
+		{
+			name:  "nil model returns nil",
+			model: nil,
+		},
+		{
+			// Every field here is a primitive serializer, all of which skip nil, so an
+			// empty model writes nothing at all.
+			name:  "empty model writes nothing",
+			model: NewAppointmentRequest(),
+		},
+		{
+			name: "happy path - writes all fields",
+			model: func() *AppointmentRequestModel {
+				m := NewAppointmentRequest()
+				_ = m.SetActualEndDate(internal.ToPointer("2026-08-01"))
+				_ = m.SetActualStartDate(internal.ToPointer("2026-07-29"))
+				_ = m.SetCatalogID(internal.ToPointer("catalog-id"))
+				_ = m.SetEndDateUTC(internal.ToPointer("2026-08-01T10:00:00Z"))
+				_ = m.SetLocation(internal.ToPointer("location"))
+				_ = m.SetOpenedFor(internal.ToPointer("user"))
+				_ = m.SetReschedule(internal.ToPointer(true))
+				_ = m.SetServiceConfigRule(internal.ToPointer("rule"))
+				_ = m.SetStartDateUTC(internal.ToPointer("2026-07-29T10:00:00Z"))
+				_ = m.SetTaskID(internal.ToPointer("task-id"))
+				_ = m.SetTaskTable(internal.ToPointer("task"))
+				_ = m.SetTimezone(internal.ToPointer("UTC"))
+				_ = m.SetValidateRequest(internal.ToPointer(false))
+				return m
+			}(),
+			setupMock: func(w *mocking.MockSerializationWriter) {
+				w.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
+				w.On("WriteBoolValue", mock.Anything, mock.Anything).Return(nil)
+			},
+		},
+		{
+			name: "write error propagates",
+			model: func() *AppointmentRequestModel {
+				m := NewAppointmentRequest()
+				_ = m.SetActualEndDate(internal.ToPointer("2026-08-01"))
+				return m
+			}(),
+			setupMock: func(w *mocking.MockSerializationWriter) {
+				w.On("WriteStringValue", actualEndDateKey, mock.Anything).Return(errWrite)
+			},
+			wantErr: errWrite,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			writer := mocking.NewMockSerializationWriter()
+			if test.setupMock != nil {
+				test.setupMock(writer)
+			}
+
+			err := test.model.Serialize(writer)
+
+			if test.wantErr != nil {
+				require.ErrorIs(t, err, test.wantErr)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
 }

@@ -4,9 +4,19 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
+
+func TestNewDocumentsRequestBuilder(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	builder := NewDocumentsRequestBuilder("https://example.com/api/now/v1/documents", adapter)
+
+	require.NotNil(t, builder)
+	assert.Equal(t, "https://example.com/api/now/v1/documents", builder.GetPathParameters()[internal.RawURLKey])
+}
 
 func TestDocumentsRequestBuilder_Builders(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}

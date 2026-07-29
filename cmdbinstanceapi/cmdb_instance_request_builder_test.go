@@ -6,7 +6,17 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
+
+func TestNewCmdbInstanceRequestBuilder(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+
+	builder := NewCmdbInstanceRequestBuilder("https://example.com/api/now/v1/cmdb/instance", adapter)
+
+	require.NotNil(t, builder)
+	assert.Equal(t, cmdbInstanceURLTemplate, builder.GetURLTemplate())
+}
 
 func TestCmdbInstanceRequestBuilder_Builders(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}

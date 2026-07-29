@@ -7,6 +7,7 @@ import (
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -67,4 +68,37 @@ func TestCmdbRelationItemRequestBuilder_NilReceiverGuards(t *testing.T) {
 			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		})
 	}
+}
+
+func TestCmdbRelationItemRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
+	builder := NewCmdbRelationItemRequestBuilderInternal(map[string]string{
+		"baseurl":    "https://example.com",
+		"className":  "test",
+		"sys_id":     "123",
+		"rel_sys_id": "456",
+	}, &mocking.MockRequestAdapter{})
+
+	t.Run("nil config", func(t *testing.T) {
+		requestInfo, err := builder.ToDeleteRequestInformation(context.Background(), nil)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.DELETE, requestInfo.Method)
+	})
+
+	t.Run("config with headers and options", func(t *testing.T) {
+		headers := abstractions.NewRequestHeaders()
+		headers.Add("X-Test", "value")
+
+		option := mocking.NewMockRequestOption()
+		option.On("GetKey").Return(abstractions.RequestOptionKey{Key: "testOption"})
+
+		config := &CmdbRelationItemRequestBuilderDeleteRequestConfiguration{
+			Headers: headers,
+			Options: []abstractions.RequestOption{option},
+		}
+
+		requestInfo, err := builder.ToDeleteRequestInformation(context.Background(), config)
+		require.NoError(t, err)
+		assert.Equal(t, []string{"value"}, requestInfo.Headers.Get("X-Test"))
+		assert.Len(t, requestInfo.GetRequestOptions(), 1)
+	})
 }

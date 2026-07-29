@@ -2,6 +2,8 @@ package batchapi
 
 import (
 	"errors"
+	"fmt"
+	"sync/atomic"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -14,6 +16,18 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
+
+// deserializerRegistrations makes each registered content type unique. Kiota's
+// RegisterDefaultDeserializer keeps the FIRST factory registered for a content type and
+// silently ignores later ones, and the registry is a process-wide singleton. Reusing a fixed
+// content type therefore breaks these tests on a repeat run (go test -count=2), because the
+// stale factory from the previous run stays registered and the fresh mock is never called.
+var deserializerRegistrations atomic.Uint64
+
+// uniqueContentType returns a content type no previous registration has claimed.
+func uniqueContentType(name string) string {
+	return fmt.Sprintf("application/json-%s-%d", name, deserializerRegistrations.Add(1))
+}
 
 func TestThrowErrors(t *testing.T) {
 	tests := []struct {
@@ -69,7 +83,7 @@ func TestSerializeContent(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				const contentType = "application/json-shared-test-successful"
+				contentType := uniqueContentType("shared-test-successful")
 
 				strct := mocking.NewMockParsableFactory()
 				factory := strct.Factory
@@ -107,7 +121,7 @@ func TestSerializeContent(t *testing.T) {
 		{
 			name: "Bad content",
 			test: func(t *testing.T) {
-				const contentType = "application/json-shared-test-bad-content"
+				contentType := uniqueContentType("shared-test-bad-content")
 
 				strct := mocking.NewMockParsableFactory()
 				factory := strct.Factory
@@ -129,7 +143,7 @@ func TestSerializeContent(t *testing.T) {
 		{
 			name: "differing type",
 			test: func(t *testing.T) {
-				const contentType = "application/json-shared-test-differing-type"
+				contentType := uniqueContentType("shared-test-differing-type")
 
 				strct := mocking.NewMockParsableFactory()
 				factory := strct.Factory

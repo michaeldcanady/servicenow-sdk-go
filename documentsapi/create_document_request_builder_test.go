@@ -1,0 +1,85 @@
+package documentsapi
+
+import (
+	"context"
+	"errors"
+	"testing"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
+)
+
+func TestCreateDocumentRequestBuilder_Post(t *testing.T) {
+	tests := []struct {
+		name        string
+		setupMock   func(*mocking.MockRequestAdapter)
+		expectedErr error
+	}{
+		{
+			name: "Success",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				resp := core.NewBaseServiceNowItemResponse[Document](CreateDocumentFromDiscriminatorValue)
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(resp, nil)
+			},
+		},
+		{
+			name: "Error",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, errors.New("create document failed"))
+			},
+			expectedErr: errors.New("create document failed"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			adapter := &mocking.MockRequestAdapter{}
+			tt.setupMock(adapter)
+
+			builder := NewCreateDocumentRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+			resp, err := builder.Post(context.Background(), nil)
+
+			if tt.expectedErr != nil {
+				require.EqualError(t, err, tt.expectedErr.Error())
+				assert.Nil(t, resp)
+				return
+			}
+			require.NoError(t, err)
+			assert.NotNil(t, resp)
+		})
+	}
+}
+
+func TestCreateDocumentRequestBuilder_Post_NilBuilder(t *testing.T) {
+	var builder *CreateDocumentRequestBuilder
+
+	resp, err := builder.Post(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, resp)
+}
+
+func TestCreateDocumentRequestBuilder_ToPostRequestInformation(t *testing.T) {
+	t.Run("happy path", func(t *testing.T) {
+		adapter := &mocking.MockRequestAdapter{}
+		builder := NewCreateDocumentRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+		reqInfo, err := builder.ToPostRequestInformation(context.Background(), nil)
+
+		require.NoError(t, err)
+		assert.NotNil(t, reqInfo)
+	})
+
+	t.Run("nil receiver returns ErrNilRequestBuilder", func(t *testing.T) {
+		var builder *CreateDocumentRequestBuilder
+
+		reqInfo, err := builder.ToPostRequestInformation(context.Background(), nil)
+
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+		assert.Nil(t, reqInfo)
+	})
+}

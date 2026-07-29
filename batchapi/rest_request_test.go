@@ -1307,3 +1307,36 @@ func TestRestRequest_SetURL(t *testing.T) {
 		t.Run(test.name, test.test)
 	}
 }
+
+func TestParseHTTPMethod(t *testing.T) {
+	tests := []struct {
+		name       string
+		method     string
+		wantMethod abstractions.HttpMethod
+		wantErr    bool
+	}{
+		{"GET", "get", abstractions.GET, false},
+		{"POST", "POST", abstractions.POST, false},
+		{"PATCH", "PATCH", abstractions.PATCH, false},
+		{"DELETE", "DELETE", abstractions.DELETE, false},
+		{"OPTIONS", "OPTIONS", abstractions.OPTIONS, false},
+		{"CONNECT", "CONNECT", abstractions.CONNECT, false},
+		{"PUT", "PUT", abstractions.PUT, false},
+		{"TRACE", "TRACE", abstractions.TRACE, false},
+		{"HEAD", "HEAD", abstractions.HEAD, false},
+		{"invalid", "INVALID", 0, true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := parseHTTPMethod(tt.method)
+
+			if tt.wantErr {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+			assert.Equal(t, tt.wantMethod, got)
+		})
+	}
+}

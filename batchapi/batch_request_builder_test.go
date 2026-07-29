@@ -432,6 +432,105 @@ func TestBatchRequestBuilder_Head(t *testing.T) {
 				assert.Nil(t, responseHeaders)
 			},
 		},
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				mockPathParameters := map[string]string{"baseurl": "https://mock.service-now.com"}
+				mockURLTemplate := "{+baseurl}/api/now/v1/batch"
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("SendNoContent", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &BatchRequestBuilder{mockInternalRequestBuilder}
+
+				responseHeaders, err := builder.Head(context.Background(), nil)
+
+				require.NoError(t, err)
+				assert.NotNil(t, responseHeaders)
+				mockRequestAdapter.AssertExpectations(t)
+				mockInternalRequestBuilder.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Adapter error",
+			test: func(t *testing.T) {
+				mockPathParameters := map[string]string{"baseurl": "https://mock.service-now.com"}
+				mockURLTemplate := "{+baseurl}/api/now/v1/batch"
+
+				mockRequestAdapter := mocking.NewMockRequestAdapter()
+				mockRequestAdapter.On("SendNoContent", mock.Anything, mock.Anything, mock.Anything).Return(errors.New("head failed"))
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mockRequestAdapter)
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &BatchRequestBuilder{mockInternalRequestBuilder}
+
+				responseHeaders, err := builder.Head(context.Background(), nil)
+
+				require.EqualError(t, err, "head failed")
+				assert.Nil(t, responseHeaders)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestBatchRequestBuilder_ToHeadRequestInformation(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "Nil requestBuilder",
+			test: func(t *testing.T) {
+				builder := (*BatchRequestBuilder)(nil)
+
+				requestInfo, err := builder.ToHeadRequestInformation(context.Background(), nil)
+
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				assert.Nil(t, requestInfo)
+			},
+		},
+		{
+			name: "Nil inner requestBuilder",
+			test: func(t *testing.T) {
+				builder := &BatchRequestBuilder{nil}
+
+				requestInfo, err := builder.ToHeadRequestInformation(context.Background(), nil)
+
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				assert.Nil(t, requestInfo)
+			},
+		},
+		{
+			name: "Successful",
+			test: func(t *testing.T) {
+				mockPathParameters := map[string]string{"baseurl": "https://mock.service-now.com"}
+				mockURLTemplate := "{+baseurl}/api/now/v1/batch"
+
+				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetURLTemplate").Return(mockURLTemplate)
+				mockInternalRequestBuilder.On("GetPathParameters").Return(mockPathParameters)
+
+				builder := &BatchRequestBuilder{mockInternalRequestBuilder}
+
+				requestInfo, err := builder.ToHeadRequestInformation(context.Background(), nil)
+
+				require.NoError(t, err)
+				require.NotNil(t, requestInfo)
+				assert.Equal(t, abstractions.HEAD, requestInfo.Method)
+			},
+		},
 	}
 
 	for _, test := range tests {
