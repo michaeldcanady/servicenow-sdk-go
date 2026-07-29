@@ -524,7 +524,6 @@ func TestResponses_CreateFromDiscriminatorValue(t *testing.T) {
 		{"NodesResponse", func() (any, error) { return CreateNodesResponseFromDiscriminatorValue(nil) }},
 		{"NodeResponse", func() (any, error) { return CreateNodeResponseFromDiscriminatorValue(nil) }},
 		{"ValidationResponse", func() (any, error) { return CreateValidationResponseFromDiscriminatorValue(nil) }},
-		{"NodeDeleteResponse", func() (any, error) { return CreateNodeDeleteResponseFromDiscriminatorValue(nil) }},
 	}
 
 	for _, tt := range tests {

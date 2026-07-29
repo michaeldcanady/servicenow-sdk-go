@@ -39,6 +39,7 @@ func newEditorAdapter(response any, sendErr error) *mocking.MockRequestAdapter {
 	adapter := mocking.NewMockRequestAdapter()
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(response, sendErr)
+	adapter.On("SendNoContent", mock.Anything, mock.Anything, mock.Anything).Return(sendErr)
 
 	return adapter
 }
@@ -121,7 +122,7 @@ func TestEditorRequestBuilders_ConfigurationIsApplied(t *testing.T) {
 	})
 
 	t.Run("NodeItem Delete applies headers and options", func(t *testing.T) {
-		adapter := newEditorAdapter(core.NewBaseServiceNowItemResponse[*MessageResult](CreateMessageResultFromDiscriminatorValue), nil)
+		adapter := newEditorAdapter(nil, nil)
 		builder := NewNodeItemRequestBuilderInternal(editorTestPathParameters(), adapter)
 
 		headers := abstractions.NewRequestHeaders()
@@ -132,10 +133,7 @@ func TestEditorRequestBuilders_ConfigurationIsApplied(t *testing.T) {
 			Options: editorTestOptions(),
 		}
 
-		response, err := builder.Delete(ctx, config)
-
-		require.NoError(t, err)
-		assert.NotNil(t, response)
+		require.NoError(t, builder.Delete(ctx, config))
 	})
 
 	t.Run("Validation Get applies headers, options and query parameters", func(t *testing.T) {
@@ -187,7 +185,8 @@ func TestEditorRequestBuilders_AdapterErrorPropagates(t *testing.T) {
 		{
 			name: "NodeItem Delete",
 			call: func(adapter *mocking.MockRequestAdapter) (any, error) {
-				return NewNodeItemRequestBuilderInternal(editorTestPathParameters(), adapter).Delete(ctx, nil)
+				// Delete reports only an error, so there is no response to hand back.
+				return nil, NewNodeItemRequestBuilderInternal(editorTestPathParameters(), adapter).Delete(ctx, nil)
 			},
 		},
 		{

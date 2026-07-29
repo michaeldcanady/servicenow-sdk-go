@@ -97,13 +97,13 @@ func TestNodeItemRequestBuilder_Delete(t *testing.T) {
 		"node_sys_id": "node123",
 	}, adapter)
 
-	mockRes := core.NewBaseServiceNowItemResponse[*MessageResult](CreateMessageResultFromDiscriminatorValue)
-	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
+	// Delete goes through SendNoContent: the endpoint answers with no body, so the method
+	// reports only an error.
+	adapter.On("SendNoContent", mock.Anything, mock.Anything, mock.Anything).Return(nil)
 
-	resp, err := builder.Delete(context.Background(), nil)
+	require.NoError(t, builder.Delete(context.Background(), nil))
 
-	require.NoError(t, err)
-	assert.Equal(t, mockRes, resp)
+	adapter.AssertExpectations(t)
 }
 
 func TestValidationRequestBuilder_Get(t *testing.T) {
@@ -164,9 +164,7 @@ func TestNodeItemRequestBuilder_NilReceiverGuards(t *testing.T) {
 			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, putResp)
 
-			delResp, err := builder.Delete(context.Background(), nil)
-			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
-			assert.Nil(t, delResp)
+			require.ErrorIs(t, builder.Delete(context.Background(), nil), snerrors.ErrNilRequestBuilder)
 		})
 	}
 }

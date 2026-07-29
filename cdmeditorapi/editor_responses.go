@@ -31,12 +31,3 @@ type ValidationResponse interface {
 func CreateValidationResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return core.NewBaseServiceNowItemResponse[*ValidationResultModel](CreateValidationResultFromDiscriminatorValue), nil
 }
-
-// NodeDeleteResponse represents the response for deleting a node.
-type NodeDeleteResponse interface {
-	core.ServiceNowItemResponse[*MessageResult]
-}
-
-func CreateNodeDeleteResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return core.NewBaseServiceNowItemResponse[*MessageResult](CreateMessageResultFromDiscriminatorValue), nil
-}
