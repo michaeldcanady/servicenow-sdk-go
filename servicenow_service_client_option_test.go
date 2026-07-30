@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
@@ -287,6 +288,56 @@ func TestWithHTTPClient(t *testing.T) {
 
 				require.NoError(t, err)
 				assert.NotEmpty(t, config.requestAdapterOptions)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
+	}
+}
+
+func TestWithLogger(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(t *testing.T)
+	}{
+		{
+			name: "successful",
+			test: func(t *testing.T) {
+				logger := &internal.NoOpLogger{}
+				config := &ServiceNowServiceClientConfig{}
+
+				option := WithLogger(logger)
+				err := option(config)
+
+				require.NoError(t, err)
+				assert.Equal(t, logger, config.logger)
+			},
+		},
+		{
+			name: "nil logger",
+			test: func(t *testing.T) {
+				config := &ServiceNowServiceClientConfig{}
+
+				option := WithLogger(nil)
+				err := option(config)
+
+				assert.Equal(t, errors.New("logger is nil"), err)
+				assert.Nil(t, config.logger)
+			},
+		},
+		{
+			name: "typed nil logger is rejected",
+			test: func(t *testing.T) {
+				var logger *internal.NoOpLogger
+				config := &ServiceNowServiceClientConfig{}
+
+				option := WithLogger(logger)
+				err := option(config)
+
+				assert.Equal(t, errors.New("logger is nil"), err)
+				assert.Nil(t, config.logger)
 			},
 		},
 	}

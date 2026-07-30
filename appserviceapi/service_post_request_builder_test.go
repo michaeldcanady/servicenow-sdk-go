@@ -120,4 +120,43 @@ func TestServicePostRequestBuilder_ToPostRequestInformation(t *testing.T) {
 		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 		assert.Nil(t, reqInfo)
 	})
+
+	t.Run("Serialization failure propagates", func(t *testing.T) {
+		builder := newTestServicePostRequestBuilder(newFailingSerializationAdapter())
+
+		reqInfo, err := builder.toPostRequestInformation(context.Background(), NewCreateServiceRequest(), nil)
+
+		require.ErrorIs(t, err, errSerializationFailed)
+		assert.Nil(t, reqInfo)
+	})
+}
+
+// errSerializationFailed stands in for an error surfaced while writing the request body.
+var errSerializationFailed = errors.New("serialization failed")
+
+// newFailingSerializationAdapter returns an adapter whose serialization writer fails on
+// write, which is the only way toPostRequestInformation can fail past its nil guard.
+func newFailingSerializationAdapter() *mocking.MockRequestAdapter {
+	writer := mocking.NewMockSerializationWriter()
+	writer.On("WriteObjectValue", "", mock.Anything, mock.Anything).Return(errSerializationFailed)
+	writer.On("Close").Return(nil)
+
+	factory := mocking.NewMockSerializationWriterFactory()
+	factory.On("GetSerializationWriter", "application/json").Return(writer, nil)
+
+	adapter := mocking.NewMockRequestAdapter()
+	adapter.On("GetSerializationWriterFactory").Return(factory, nil)
+
+	return adapter
+}
+
+// TestServicePostRequestBuilder_PostSerializationFailure covers post's propagation of a
+// toPostRequestInformation error, which only a body-write failure can trigger.
+func TestServicePostRequestBuilder_PostSerializationFailure(t *testing.T) {
+	builder := newTestServicePostRequestBuilder(newFailingSerializationAdapter())
+
+	resp, err := builder.post(context.Background(), NewCreateServiceRequest(), nil)
+
+	require.ErrorIs(t, err, errSerializationFailed)
+	assert.Nil(t, resp)
 }

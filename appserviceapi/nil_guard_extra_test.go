@@ -101,3 +101,43 @@ func TestServiceDetailsRequestBuilder_ToPutRequestInformation_NilBuilder(t *test
 	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 	assert.Nil(t, requestInfo)
 }
+
+// ---------------------------------------------------------------------------
+// Child-builder nil-receiver guards (AppServiceRequestBuilder, CsdmRequestBuilder,
+// CsdmAppServiceItemRequestBuilder)
+// ---------------------------------------------------------------------------
+
+func TestAppServiceRequestBuilder_Create_NilReceiver(t *testing.T) {
+	var builder *AppServiceRequestBuilder
+	assert.Nil(t, builder.Create())
+}
+
+func TestAppServiceRequestBuilder_Csdm_NilReceiver(t *testing.T) {
+	var builder *AppServiceRequestBuilder
+	assert.Nil(t, builder.Csdm())
+}
+
+func TestCsdmRequestBuilder_FindService_NilReceiver(t *testing.T) {
+	var builder *CsdmRequestBuilder
+	assert.Nil(t, builder.FindService())
+}
+
+func TestCsdmRequestBuilder_RegisterService_NilReceiver(t *testing.T) {
+	var builder *CsdmRequestBuilder
+	assert.Nil(t, builder.RegisterService())
+}
+
+func TestCsdmRequestBuilder_ByID_NilReceiver(t *testing.T) {
+	var builder *CsdmRequestBuilder
+	assert.Nil(t, builder.ByID("service123"))
+}
+
+func TestCsdmAppServiceItemRequestBuilder_PopulateService_NilReceiver(t *testing.T) {
+	var builder *CsdmAppServiceItemRequestBuilder
+	assert.Nil(t, builder.PopulateService())
+}
+
+func TestCsdmAppServiceItemRequestBuilder_ServiceDetails_NilReceiver(t *testing.T) {
+	var builder *CsdmAppServiceItemRequestBuilder
+	assert.Nil(t, builder.ServiceDetails())
+}

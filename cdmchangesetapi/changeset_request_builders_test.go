@@ -2,14 +2,20 @@ package cdmchangesetapi
 
 import (
 	"context"
+	"errors"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
+
+// errNetwork is a stand-in for a transport-level error returned by the adapter.
+var errNetwork = errors.New("network error")
 
 func TestChangesetsRequestBuilder_Get(t *testing.T) {
 	adapter := mocking.NewMockRequestAdapter()
@@ -58,6 +64,15 @@ func TestCommitStatusItemRequestBuilder_Get(t *testing.T) {
 
 	uri, _ := requestInfo.GetUri()
 	assert.Equal(t, "https://example.service-now.com/api/sn_cdm/changesets/commit-status/commit123", uri.String())
+}
+
+func TestChangesetsRequestBuilder_Activity(t *testing.T) {
+	adapter := mocking.NewMockRequestAdapter()
+	builder := NewChangesetsRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
+
+	activityBuilder := builder.Activity()
+	require.NotNil(t, activityBuilder)
+	assert.Equal(t, changesetActivityURLTemplate, activityBuilder.GetURLTemplate())
 }
 
 func TestChangesetsRequestBuilder_ImpactedSharedComponents(t *testing.T) {
@@ -192,6 +207,323 @@ func TestImpactedDeployablesBySysIdRequestBuilder_NilReceiverGuards(t *testing.T
 			resp, err := builder.Get(context.Background(), nil)
 			require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 			assert.Nil(t, resp)
+		})
+	}
+}
+
+func TestCommitStatusRequestBuilder_ByID(t *testing.T) {
+	adapter := mocking.NewMockRequestAdapter()
+	builder := NewCommitStatusRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
+
+	itemBuilder := builder.ByID("commit123")
+	require.NotNil(t, itemBuilder)
+	assert.Equal(t, "commit123", itemBuilder.GetPathParameters()["commit_id"])
+	assert.Equal(t, commitStatusURLTemplate, itemBuilder.GetURLTemplate())
+}
+
+// ---------------------------------------------------------------------------
+// Happy-path / adapter-error coverage for verb methods.
+//
+// NOTE: like cdmapplicationsapi, these builders' Get methods cast the
+// adapter's Send() result directly to the response interface without a nil
+// check first (res.(XResponse) instead of `if res == nil { return nil, nil }`
+// then the cast) - see PR report. A nil Send() response would therefore
+// panic, so no nil-response test case is included here.
+// ---------------------------------------------------------------------------
+
+func TestChangesetsRequestBuilder_Get_HappyAndError(t *testing.T) {
+	tests := []struct {
+		name      string
+		setupMock func(m *mocking.MockRequestAdapter)
+		wantErr   error
+	}{
+		{
+			name: "happy path",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(core.NewBaseServiceNowCollectionResponse[*ChangesetResult](CreateChangesetResultFromDiscriminatorValue), nil)
+			},
+		},
+		{
+			name: "adapter error propagates",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, errNetwork)
+			},
+			wantErr: errNetwork,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			adapter := mocking.NewMockRequestAdapter()
+			tt.setupMock(adapter)
+			builder := NewChangesetsRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+			resp, err := builder.Get(context.Background(), nil)
+
+			if tt.wantErr != nil {
+				require.ErrorIs(t, err, tt.wantErr)
+				assert.Nil(t, resp)
+				return
+			}
+			require.NoError(t, err)
+			assert.NotNil(t, resp)
+			adapter.AssertExpectations(t)
+		})
+	}
+}
+
+func TestChangesetsRequestBuilder_Delete_HappyAndError(t *testing.T) {
+	tests := []struct {
+		name      string
+		setupMock func(m *mocking.MockRequestAdapter)
+		wantErr   error
+	}{
+		{
+			name: "happy path",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("SendNoContent", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+			},
+		},
+		{
+			name: "adapter error propagates",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("SendNoContent", mock.Anything, mock.Anything, mock.Anything).Return(errNetwork)
+			},
+			wantErr: errNetwork,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			adapter := mocking.NewMockRequestAdapter()
+			tt.setupMock(adapter)
+			builder := NewChangesetsRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+			err := builder.Delete(context.Background(), nil)
+
+			if tt.wantErr != nil {
+				require.ErrorIs(t, err, tt.wantErr)
+				return
+			}
+			require.NoError(t, err)
+			adapter.AssertExpectations(t)
+		})
+	}
+}
+
+func TestChangesetActivityRequestBuilder_Get_HappyAndError(t *testing.T) {
+	tests := []struct {
+		name      string
+		setupMock func(m *mocking.MockRequestAdapter)
+		wantErr   error
+	}{
+		{
+			name: "happy path",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(core.NewBaseServiceNowCollectionResponse[*ChangesetActivityResult](CreateChangesetActivityResultFromDiscriminatorValue), nil)
+			},
+		},
+		{
+			name: "adapter error propagates",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, errNetwork)
+			},
+			wantErr: errNetwork,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			adapter := mocking.NewMockRequestAdapter()
+			tt.setupMock(adapter)
+			builder := NewChangesetActivityRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+			resp, err := builder.Get(context.Background(), nil)
+
+			if tt.wantErr != nil {
+				require.ErrorIs(t, err, tt.wantErr)
+				assert.Nil(t, resp)
+				return
+			}
+			require.NoError(t, err)
+			assert.NotNil(t, resp)
+			adapter.AssertExpectations(t)
+		})
+	}
+}
+
+func TestCommitStatusItemRequestBuilder_Get_HappyAndError(t *testing.T) {
+	tests := []struct {
+		name      string
+		setupMock func(m *mocking.MockRequestAdapter)
+		wantErr   error
+	}{
+		{
+			name: "happy path",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(core.NewBaseServiceNowItemResponse[*CommitStatusResult](CreateCommitStatusResultFromDiscriminatorValue), nil)
+			},
+		},
+		{
+			name: "adapter error propagates",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, errNetwork)
+			},
+			wantErr: errNetwork,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			adapter := mocking.NewMockRequestAdapter()
+			tt.setupMock(adapter)
+			builder := NewChangesetsRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter).CommitStatus().ByID("commit123")
+
+			resp, err := builder.Get(context.Background(), nil)
+
+			if tt.wantErr != nil {
+				require.ErrorIs(t, err, tt.wantErr)
+				assert.Nil(t, resp)
+				return
+			}
+			require.NoError(t, err)
+			assert.NotNil(t, resp)
+			adapter.AssertExpectations(t)
+		})
+	}
+}
+
+func TestImpactedSharedComponentsRequestBuilder_Get_HappyAndError(t *testing.T) {
+	tests := []struct {
+		name      string
+		setupMock func(m *mocking.MockRequestAdapter)
+		wantErr   error
+	}{
+		{
+			name: "happy path",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(core.NewBaseServiceNowCollectionResponse[*ImpactedSharedComponentResult](CreateImpactedSharedComponentResultFromDiscriminatorValue), nil)
+			},
+		},
+		{
+			name: "adapter error propagates",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, errNetwork)
+			},
+			wantErr: errNetwork,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			adapter := mocking.NewMockRequestAdapter()
+			tt.setupMock(adapter)
+			builder := NewImpactedSharedComponentsRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+			resp, err := builder.Get(context.Background(), nil)
+
+			if tt.wantErr != nil {
+				require.ErrorIs(t, err, tt.wantErr)
+				assert.Nil(t, resp)
+				return
+			}
+			require.NoError(t, err)
+			assert.NotNil(t, resp)
+			adapter.AssertExpectations(t)
+		})
+	}
+}
+
+func TestImpactedDeployablesRequestBuilder_Get_HappyAndError(t *testing.T) {
+	tests := []struct {
+		name      string
+		setupMock func(m *mocking.MockRequestAdapter)
+		wantErr   error
+	}{
+		{
+			name: "happy path",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(core.NewBaseServiceNowCollectionResponse[*ImpactedDeployableResult](CreateImpactedDeployableResultFromDiscriminatorValue), nil)
+			},
+		},
+		{
+			name: "adapter error propagates",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, errNetwork)
+			},
+			wantErr: errNetwork,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			adapter := mocking.NewMockRequestAdapter()
+			tt.setupMock(adapter)
+			builder := NewImpactedDeployablesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+			resp, err := builder.Get(context.Background(), nil)
+
+			if tt.wantErr != nil {
+				require.ErrorIs(t, err, tt.wantErr)
+				assert.Nil(t, resp)
+				return
+			}
+			require.NoError(t, err)
+			assert.NotNil(t, resp)
+			adapter.AssertExpectations(t)
+		})
+	}
+}
+
+func TestImpactedDeployablesBySysIDRequestBuilder_Get_HappyAndError(t *testing.T) {
+	tests := []struct {
+		name      string
+		setupMock func(m *mocking.MockRequestAdapter)
+		wantErr   error
+	}{
+		{
+			name: "happy path",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(core.NewBaseServiceNowCollectionResponse[*ImpactedDeployableBySysIDResult](CreateImpactedDeployableBySysIDResultFromDiscriminatorValue), nil)
+			},
+		},
+		{
+			name: "adapter error propagates",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, errNetwork)
+			},
+			wantErr: errNetwork,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			adapter := mocking.NewMockRequestAdapter()
+			tt.setupMock(adapter)
+			builder := NewChangesetsRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter).ByID("chg-123").ImpactedDeployables()
+
+			resp, err := builder.Get(context.Background(), nil)
+
+			if tt.wantErr != nil {
+				require.ErrorIs(t, err, tt.wantErr)
+				assert.Nil(t, resp)
+				return
+			}
+			require.NoError(t, err)
+			assert.NotNil(t, resp)
+			adapter.AssertExpectations(t)
 		})
 	}
 }

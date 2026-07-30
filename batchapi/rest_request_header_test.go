@@ -16,6 +16,12 @@ func TestNewRestRequestHeader(t *testing.T) {
 	assert.NotNil(t, header)
 }
 
+func TestCreateRestRequestHeaderFromDiscriminatorValue(t *testing.T) {
+	parsable, err := CreateRestRequestHeaderFromDiscriminatorValue(nil)
+	require.NoError(t, err)
+	assert.NotNil(t, parsable)
+}
+
 func TestRestRequestHeader_Serialize(t *testing.T) {
 	tests := []struct {
 		name string

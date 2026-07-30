@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -116,6 +117,64 @@ func TestWithSerializationFactory(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, test.test)
+	}
+}
+
+func TestServiceNowRequestAdapterDefaultOptions(t *testing.T) {
+	tests := []struct {
+		name   string
+		config *serviceNowRequestAdapterConfig
+		verify func(*testing.T, *serviceNowRequestAdapterConfig)
+	}{
+		{
+			name:   "empty config gets all defaults",
+			config: &serviceNowRequestAdapterConfig{},
+			verify: func(t *testing.T, config *serviceNowRequestAdapterConfig) {
+				assert.NotNil(t, config.client)
+				assert.Equal(t, serialization.DefaultSerializationWriterFactoryInstance, config.serializationWriterFactory)
+				assert.Equal(t, serialization.DefaultParseNodeFactoryInstance, config.parseNodeFactory)
+			},
+		},
+		{
+			name: "existing client without middleware is left untouched",
+			config: &serviceNowRequestAdapterConfig{
+				client: &http.Client{Timeout: 42},
+			},
+			verify: func(t *testing.T, config *serviceNowRequestAdapterConfig) {
+				assert.Equal(t, &http.Client{Timeout: 42}, config.client)
+			},
+		},
+		{
+			name: "existing client with middleware is rebuilt via GetDefaultClient",
+			config: &serviceNowRequestAdapterConfig{
+				client:     &http.Client{Timeout: 42},
+				middleware: []nethttplibrary.Middleware{nethttplibrary.NewHeadersInspectionHandler()},
+			},
+			verify: func(t *testing.T, config *serviceNowRequestAdapterConfig) {
+				assert.NotNil(t, config.client)
+				assert.NotEqual(t, &http.Client{Timeout: 42}, config.client)
+			},
+		},
+		{
+			name: "existing factories are preserved",
+			config: &serviceNowRequestAdapterConfig{
+				serializationWriterFactory: serialization.DefaultSerializationWriterFactoryInstance,
+				parseNodeFactory:           serialization.DefaultParseNodeFactoryInstance,
+			},
+			verify: func(t *testing.T, config *serviceNowRequestAdapterConfig) {
+				assert.Equal(t, serialization.DefaultSerializationWriterFactoryInstance, config.serializationWriterFactory)
+				assert.Equal(t, serialization.DefaultParseNodeFactoryInstance, config.parseNodeFactory)
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			opt := serviceNowRequestAdapterDefaultOptions()
+			err := opt(tt.config)
+			require.NoError(t, err)
+			tt.verify(t, tt.config)
+		})
 	}
 }
 

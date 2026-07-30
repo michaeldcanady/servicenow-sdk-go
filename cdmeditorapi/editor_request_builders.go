@@ -142,9 +142,11 @@ func (rB *NodeItemRequestBuilder) Put(ctx context.Context, body NodeUpdateReques
 	return res.(NodeResponse), nil
 }
 
-func (rB *NodeItemRequestBuilder) Delete(ctx context.Context, config *NodeItemRequestBuilderDeleteRequestConfiguration) (NodeDeleteResponse, error) {
+// Delete removes a node. It returns only an error: the endpoint answers with no content, so
+// there is no response body to hand back.
+func (rB *NodeItemRequestBuilder) Delete(ctx context.Context, config *NodeItemRequestBuilderDeleteRequestConfiguration) error {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, snerrors.ErrNilRequestBuilder
+		return snerrors.ErrNilRequestBuilder
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
@@ -156,11 +158,8 @@ func (rB *NodeItemRequestBuilder) Delete(ctx context.Context, config *NodeItemRe
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateNodeDeleteResponseFromDiscriminatorValue, nil)
-	if err != nil {
-		return nil, err
-	}
-	return res.(NodeDeleteResponse), nil
+
+	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, core.DefaultErrorMapping())
 }
 
 // ValidationRequestBuilder handles /v1/validation endpoint.

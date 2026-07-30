@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -89,6 +90,113 @@ func TestServiceNowError_setError(t *testing.T) {
 			if (err != nil) != tt.err {
 				t.Errorf("err: got %v, expected %v", err, tt.err)
 			}
+		})
+	}
+}
+
+func TestCreateSpecificErrorFromDiscriminatorValue(t *testing.T) {
+	tests := []struct {
+		name    string
+		create  func(serialization.ParseNode) (serialization.Parsable, error)
+		wantErr string
+	}{
+		{
+			name:   "BadRequestError",
+			create: CreateBadRequestErrorFromDiscriminatorValue,
+		},
+		{
+			name:   "UnauthorizedError",
+			create: CreateUnauthorizedErrorFromDiscriminatorValue,
+		},
+		{
+			name:   "ForbiddenError",
+			create: CreateForbiddenErrorFromDiscriminatorValue,
+		},
+		{
+			name:   "NotFoundError",
+			create: CreateNotFoundErrorFromDiscriminatorValue,
+		},
+		{
+			name:   "TooManyRequestsError",
+			create: CreateTooManyRequestsErrorFromDiscriminatorValue,
+		},
+		{
+			name:   "ServerError",
+			create: CreateServerErrorFromDiscriminatorValue,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := tt.create(nil)
+			require.NoError(t, err)
+			assert.NotNil(t, res)
+		})
+	}
+}
+
+func TestDefaultErrorMapping(t *testing.T) {
+	mapping := DefaultErrorMapping()
+
+	tests := []struct {
+		key      string
+		wantType any
+	}{
+		{"400", &BadRequestError{}},
+		{"401", &UnauthorizedError{}},
+		{"403", &ForbiddenError{}},
+		{"404", &NotFoundError{}},
+		{"429", &TooManyRequestsError{}},
+		{"5XX", &ServerError{}},
+		{"XXX", &ServiceNowError{}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.key, func(t *testing.T) {
+			factory, ok := mapping[tt.key]
+			require.True(t, ok, "expected mapping for key %q", tt.key)
+
+			res, err := factory(nil)
+			require.NoError(t, err)
+			assert.IsType(t, tt.wantType, res)
+		})
+	}
+}
+
+func TestServiceNowError_Error(t *testing.T) {
+	tests := []struct {
+		name     string
+		setup    func() *ServiceNowError
+		expected string
+	}{
+		{
+			name: "message present",
+			setup: func() *ServiceNowError {
+				e := NewServiceNowError()
+				me := NewMainError()
+				_ = me.SetMessage(func() *string { s := "bad request"; return &s }())
+				_ = e.setError(me)
+				return e
+			},
+			expected: "bad request",
+		},
+		{
+			name: "message nil, detail present",
+			setup: func() *ServiceNowError {
+				e := NewServiceNowError()
+				me := NewMainError()
+				_ = me.SetDetail(func() *string { s := "detailed reason"; return &s }())
+				_ = e.setError(me)
+				return e
+			},
+			expected: "detailed reason",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := tt.setup()
+			assert.Equal(t, tt.expected, e.Error())
 		})
 	}
 }

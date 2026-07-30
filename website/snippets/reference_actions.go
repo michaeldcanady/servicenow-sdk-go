@@ -958,12 +958,11 @@ func refDeleteNode() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
 	// [START ref_delete_node]
-	response, err := client.Cdm().Editor().Nodes().ByID("{nodeSysID}").Delete(ctx, nil)
-	if err != nil {
+	// Delete reports only an error: the endpoint answers with no content.
+	if err := client.Cdm().Editor().Nodes().ByID("{nodeSysID}").Delete(ctx, nil); err != nil {
 		log.Fatal(err)
 	}
 	// [END ref_delete_node]
-	_ = response
 }
 
 func refValidateConfiguration() {
