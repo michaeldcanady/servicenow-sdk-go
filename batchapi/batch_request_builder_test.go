@@ -363,6 +363,7 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 				expected.AddRequestOptions([]abstractions.RequestOption{})
 
 				mockInternalRequestBuilder := mocking.NewMockRequestBuilder()
+				mockInternalRequestBuilder.On("GetRequestAdapter").Return(mocking.NewMockRequestAdapter())
 
 				builder := &BatchRequestBuilder{mockInternalRequestBuilder}
 
@@ -396,6 +397,19 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 
 				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 				assert.Nil(t, requestInformation)
+			},
+		},
+		{
+			name: "Nil request adapter",
+			test: func(t *testing.T) {
+				request := newMockBatchRequest()
+
+				builder := NewBatchRequestBuilderInternal(map[string]string{}, nil)
+
+				result, err := builder.Post(context.Background(), request, nil)
+
+				require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+				assert.Nil(t, result)
 			},
 		},
 	}

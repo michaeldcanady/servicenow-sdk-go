@@ -37,6 +37,10 @@ func (rB *CmdbRelationRequestBuilder) Post(ctx context.Context, body CmdbInstanc
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err

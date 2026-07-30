@@ -36,6 +36,10 @@ func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, config *CmdbClassReq
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
@@ -58,6 +62,10 @@ func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, config *CmdbClassReq
 func (rB *CmdbClassRequestBuilder) Post(ctx context.Context, body CmdbInstance, config *CmdbClassRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)

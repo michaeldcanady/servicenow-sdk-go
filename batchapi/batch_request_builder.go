@@ -92,6 +92,10 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	if conversion.IsNil(body) {
 		return nil, snerrors.NewValidationError("body")
 	}

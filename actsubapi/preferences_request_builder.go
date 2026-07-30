@@ -36,6 +36,10 @@ func (rB *PreferencesRequestBuilder) Post(ctx context.Context, body *ActivitySub
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
@@ -103,6 +107,10 @@ func NewPreferenceItemRequestBuilderInternal(pathParameters map[string]string, r
 func (rB *PreferenceItemRequestBuilder) Get(ctx context.Context, config *PreferencesRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)

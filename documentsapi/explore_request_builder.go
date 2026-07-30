@@ -29,8 +29,12 @@ func NewExploreRequestBuilderInternal(pathParameters map[string]string, requestA
 
 // Get retrieves folder and document metadata with filters, sorting, and pagination.
 func (rB *ExploreRequestBuilder) Get(ctx context.Context, requestConfiguration *ExploreRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[Document], error) {
-	if conversion.IsNil(rB) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)

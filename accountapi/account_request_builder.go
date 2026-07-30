@@ -12,7 +12,10 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-const accountURLTemplate = "{+baseurl}/api/now/v1/account"
+const (
+	accountURLTemplate = "{+baseurl}/api/now/v1/account"
+	accountIDKey       = "account_id"
+)
 
 // AccountRequestBuilder provides operations to manage accounts.
 type AccountRequestBuilder struct {
@@ -29,7 +32,7 @@ func NewAccountRequestBuilderInternal(pathParameters map[string]string, requestA
 // ByID returns an AccountItemRequestBuilder for the specified account ID.
 func (rB *AccountRequestBuilder) ByID(accountID string) *AccountItemRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["account_id"] = accountID
+	pathParameters[accountIDKey] = accountID
 	return NewAccountItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
@@ -37,6 +40,10 @@ func (rB *AccountRequestBuilder) ByID(accountID string) *AccountItemRequestBuild
 func (rB *AccountRequestBuilder) Get(ctx context.Context, config *AccountRequestBuilderGetRequestConfiguration) (AccountCollectionResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)

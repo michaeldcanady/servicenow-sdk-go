@@ -84,6 +84,10 @@ func (rB *FacetsInstanceRequestBuilder) Get(ctx context.Context, config *FacetsR
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err

@@ -109,6 +109,10 @@ func (rB *PopulateServiceRequestBuilder) Put(ctx context.Context, body *Populate
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
@@ -157,6 +161,10 @@ func NewServiceDetailsRequestBuilderInternal(pathParameters map[string]string, r
 func (rB *ServiceDetailsRequestBuilder) Put(ctx context.Context, body *ServiceDetailsRequest, config *ServiceDetailsRequestConfiguration) (ServiceDetailsResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)

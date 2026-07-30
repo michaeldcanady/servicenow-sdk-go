@@ -75,6 +75,15 @@ func TestVersionsRequestBuilder_Get_NilBuilder(t *testing.T) {
 	assert.Nil(t, resp)
 }
 
+func TestVersionsRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewVersionsRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "document_sys_id": "doc-id"}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
 func TestVersionsRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewVersionsRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "document_sys_id": "doc-id"}, adapter)

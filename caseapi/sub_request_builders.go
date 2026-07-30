@@ -53,6 +53,9 @@ func (rB *CaseItemRequestBuilder) Get(ctx context.Context, config *CaseItemReque
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
@@ -86,6 +89,9 @@ func (rB *CaseItemRequestBuilder) ToGetRequestInformation(_ context.Context, con
 func (rB *CaseItemRequestBuilder) Put(ctx context.Context, body CaseResult, config *CaseItemRequestBuilderPutRequestConfiguration) (CaseItemResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)
 	if err != nil {
@@ -137,6 +143,9 @@ func (rB *CaseActivitiesRequestBuilder) Get(ctx context.Context, config *CaseAct
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
@@ -187,6 +196,9 @@ func NewItemFieldValuesRequestBuilderInternal(pathParameters map[string]string, 
 func (rB *CaseFieldValuesRequestBuilder) Get(ctx context.Context, config *CaseFieldValuesRequestBuilderGetRequestConfiguration) (FieldValuesResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {

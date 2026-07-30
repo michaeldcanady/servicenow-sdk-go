@@ -211,6 +211,57 @@ func TestImpactedDeployablesBySysIdRequestBuilder_NilReceiverGuards(t *testing.T
 	}
 }
 
+func TestChangesetsRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewChangesetsRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+
+	err = builder.Delete(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+}
+
+func TestChangesetActivityRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewChangesetActivityRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestCommitStatusItemRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewCommitStatusItemRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestImpactedSharedComponentsRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewImpactedSharedComponentsRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestImpactedDeployablesRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewImpactedDeployablesRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestImpactedDeployablesBySysIdRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewImpactedDeployablesBySysIDRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
 func TestCommitStatusRequestBuilder_ByID(t *testing.T) {
 	adapter := mocking.NewMockRequestAdapter()
 	builder := NewCommitStatusRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)

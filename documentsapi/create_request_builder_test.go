@@ -22,6 +22,15 @@ func TestCreateRequestBuilder_Post_NilBuilder(t *testing.T) {
 	assert.Nil(t, resp)
 }
 
+func TestCreateRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
+	builder := NewCreateRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, nil)
+
+	resp, err := builder.Post(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
 func TestCreateRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	t.Run("happy path", func(t *testing.T) {
 		adapter := &mocking.MockRequestAdapter{}

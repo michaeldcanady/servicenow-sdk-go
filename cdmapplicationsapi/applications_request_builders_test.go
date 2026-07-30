@@ -456,6 +456,108 @@ func TestUploadsDeployablesFileRequestBuilder_NilReceiverGuards(t *testing.T) {
 	}
 }
 
+func TestDeployablesRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewDeployablesRequestBuilderInternal(map[string]string{}, nil)
+
+	err := builder.Delete(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+
+	resp, err := builder.Put(context.Background(), nil, nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestSharedComponentsRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewSharedComponentsRequestBuilderInternal(map[string]string{}, nil)
+
+	err := builder.Delete(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+
+	resp, err := builder.Put(context.Background(), nil, nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestUploadStatusItemRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewUploadStatusItemRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestExportsRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewExportsRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestExportItemStatusRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewExportItemStatusRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestExportItemContentRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewExportItemContentRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestSharedLibrariesComponentsApplicationsRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewSharedLibrariesComponentsApplicationsRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestUploadsComponentsRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewUploadsComponentsRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Post(context.Background(), nil, nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestUploadsComponentsVarsRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewUploadsComponentsVarsRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Post(context.Background(), nil, nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestUploadsCollectionsRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewUploadsCollectionsRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Post(context.Background(), nil, nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestUploadsCollectionsFileRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewUploadsCollectionsFileRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Post(context.Background(), nil, nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestUploadsDeployablesFileRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewUploadsDeployablesFileRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Post(context.Background(), nil, nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
 // ---------------------------------------------------------------------------
 // Happy-path / adapter-error coverage for verb methods.
 //

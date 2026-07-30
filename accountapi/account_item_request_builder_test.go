@@ -19,6 +19,15 @@ func TestAccountItemRequestBuilder_Get_NilBuilder(t *testing.T) {
 	assert.Nil(t, resp)
 }
 
+func TestAccountItemRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewAccountItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "account_id": "test-id"}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
 func TestAccountItemRequestBuilder_ToGetRequestInformation_NilBuilder(t *testing.T) {
 	var builder *AccountItemRequestBuilder
 

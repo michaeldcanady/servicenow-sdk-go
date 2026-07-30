@@ -76,6 +76,15 @@ func TestAttachmentRequestBuilder_Get_NilBuilder(t *testing.T) {
 	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 }
 
+func TestAttachmentRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewAttachmentRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	assert.Nil(t, resp)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+}
+
 func TestAttachmentRequestBuilder_Head_NilBuilder(t *testing.T) {
 	builder := (*AttachmentRequestBuilder)(nil)
 

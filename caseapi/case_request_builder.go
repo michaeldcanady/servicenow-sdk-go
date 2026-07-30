@@ -51,6 +51,9 @@ func (rB *CaseRequestBuilder) Get(ctx context.Context, config *CaseRequestBuilde
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
@@ -84,6 +87,9 @@ func (rB *CaseRequestBuilder) ToGetRequestInformation(_ context.Context, config 
 func (rB *CaseRequestBuilder) Post(ctx context.Context, body CaseResult, config *CaseRequestBuilderPostRequestConfiguration) (CaseItemResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {

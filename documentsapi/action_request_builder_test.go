@@ -41,6 +41,14 @@ func TestVersionActionRequestBuilder_Patch_NilBuilder(t *testing.T) {
 	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 }
 
+func TestVersionActionRequestBuilder_Patch_NilRequestAdapter(t *testing.T) {
+	builder := NewVersionActionRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, nil)
+
+	err := builder.Patch(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+}
+
 func TestVersionActionRequestBuilder_Patch(t *testing.T) {
 	tests := []struct {
 		name        string

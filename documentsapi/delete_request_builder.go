@@ -29,8 +29,12 @@ func NewDeleteRequestBuilderInternal(pathParameters map[string]string, requestAd
 
 // Delete removes a document.
 func (rB *DeleteRequestBuilder) Delete(ctx context.Context, requestConfiguration *DeleteRequestBuilderDeleteRequestConfiguration) error {
-	if conversion.IsNil(rB) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToDeleteRequestInformation(ctx, requestConfiguration)

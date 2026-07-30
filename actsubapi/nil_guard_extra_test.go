@@ -93,6 +93,15 @@ func TestFacetsInstanceRequestBuilder_Get_NilBuilder(t *testing.T) {
 	assert.Nil(t, resp)
 }
 
+func TestFacetsInstanceRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewFacetsInstanceRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
 func TestFacetsInstanceRequestBuilder_ToGetRequestInformation_NilBuilder(t *testing.T) {
 	var builder *FacetsInstanceRequestBuilder
 

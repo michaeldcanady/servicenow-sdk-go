@@ -232,6 +232,15 @@ func TestAttachmentUploadRequestBuilder_Post_NilBuilder(t *testing.T) {
 	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 }
 
+func TestAttachmentUploadRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
+	rb := NewAttachmentUploadRequestBuilderInternal(map[string]string{}, nil)
+
+	res, err := rb.Post(context.Background(), abstractions.NewMultipartBody(), nil)
+
+	assert.Nil(t, res)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+}
+
 func TestAttachmentUploadRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	setupMockSerialization := func(mockContent abstractions.MultipartBody) *mocking.MockSerializationWriterFactory {
 		mockSerializationWriter := mocking.NewMockSerializationWriter()

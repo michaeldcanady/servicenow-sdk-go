@@ -155,3 +155,74 @@ func TestUnsubscribeRequestBuilder_ToDeleteRequestInformation_NilBuilder(t *test
 	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 	assert.Nil(t, requestInfo)
 }
+
+func TestUserStreamItemRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewUserStreamItemRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestUserStreamItemRequestBuilder_Put_NilRequestAdapter(t *testing.T) {
+	builder := NewUserStreamItemRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Put(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestPreferencesRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
+	builder := NewPreferencesRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Post(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestPreferenceItemRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewPreferenceItemRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestSubscriptionItemRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewSubscriptionItemRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestIsSubscribedRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewIsSubscribedRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestSubscribeRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
+	builder := NewSubscribeRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Post(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestUnsubscribeRequestBuilder_Delete_NilRequestAdapter(t *testing.T) {
+	builder := NewUnsubscribeRequestBuilderInternal(map[string]string{}, nil)
+
+	err := builder.Delete(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+}

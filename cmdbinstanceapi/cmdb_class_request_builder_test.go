@@ -118,6 +118,18 @@ func TestCmdbClassRequestBuilder_NilReceiverGuards(t *testing.T) {
 	}
 }
 
+func TestCmdbClassRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewCmdbClassRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+
+	itemResp, err := builder.Post(context.Background(), nil, nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, itemResp)
+}
+
 func TestCmdbClassRequestBuilder_ByID(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewCmdbClassRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "className": "test"}, adapter)

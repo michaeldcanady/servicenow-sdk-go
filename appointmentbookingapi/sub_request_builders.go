@@ -30,6 +30,10 @@ func (rB *AvailabilityRequestBuilder) Post(ctx context.Context, body Availabilit
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
@@ -84,6 +88,10 @@ func (rB *CalendarRequestBuilder) Get(ctx context.Context, config *CalendarReque
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
@@ -133,6 +141,10 @@ func (rB *ConfigurationRequestBuilder) Get(ctx context.Context, config *Configur
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
@@ -180,6 +192,10 @@ func NewExecuteRuleConditionsRequestBuilder(pathParameters map[string]string, re
 func (rB *ExecuteRuleConditionsRequestBuilder) Post(ctx context.Context, body ExecuteRuleConditionsRequest, config *ExecuteRuleConditionsRequestBuilderPostRequestConfiguration) (ExecuteRuleConditionsResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
@@ -234,6 +250,10 @@ func NewUserWindowRequestBuilder(pathParameters map[string]string, requestAdapte
 func (rB *UserWindowRequestBuilder) Post(ctx context.Context, body any, config *UserWindowRequestBuilderPostRequestConfiguration) (AvailabilityResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)

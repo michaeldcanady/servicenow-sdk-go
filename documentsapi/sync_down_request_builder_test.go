@@ -63,6 +63,15 @@ func TestSyncDownRequestBuilder_Post_NilBuilder(t *testing.T) {
 	assert.Nil(t, resp)
 }
 
+func TestSyncDownRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
+	builder := NewSyncDownRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "documentSysId": "doc-id"}, nil)
+
+	resp, err := builder.Post(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
 func TestSyncDownRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	t.Run("happy path", func(t *testing.T) {
 		adapter := &mocking.MockRequestAdapter{}

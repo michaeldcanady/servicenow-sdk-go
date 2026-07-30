@@ -70,6 +70,10 @@ func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *Subsc
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
@@ -162,6 +166,10 @@ func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscri
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
@@ -213,6 +221,10 @@ func NewSubscribeRequestBuilderInternal(pathParameters map[string]string, reques
 func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubscriptionModel, config *SubscribeRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
@@ -273,6 +285,10 @@ func NewUnsubscribeRequestBuilderInternal(pathParameters map[string]string, requ
 func (rB *UnsubscribeRequestBuilder) Delete(ctx context.Context, config *UnsubscribeRequestBuilderDeleteRequestConfiguration) error {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToDeleteRequestInformation(ctx, config)

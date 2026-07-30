@@ -69,6 +69,14 @@ func TestCmdbRelationRequestBuilder_NilReceiverGuards(t *testing.T) {
 	}
 }
 
+func TestCmdbRelationRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewCmdbRelationRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Post(context.Background(), nil, nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
 func TestCmdbRelationRequestBuilder_ByID(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewCmdbRelationRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "className": "test", "sys_id": "123"}, adapter)

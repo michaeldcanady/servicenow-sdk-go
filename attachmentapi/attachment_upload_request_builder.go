@@ -52,8 +52,12 @@ func NewAttachmentUploadRequestBuilder(
 
 // Post Uploads the provided attachment using the provided arguments
 func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstractions.MultipartBody, requestConfiguration *AttachmentUploadRequestBuilderPostRequestConfiguration) (*File, error) {
-	if conversion.IsNil(rB) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	if conversion.IsNil(body) {
