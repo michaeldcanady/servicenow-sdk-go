@@ -19,6 +19,7 @@ func TestCollectionGetRequestBuilder_Get(t *testing.T) {
 		name       string
 		nilBuilder bool
 		nilInner   bool
+		nilAdapter bool
 		config     *abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 		mockRes    interface{}
 		mockErr    error
@@ -47,6 +48,10 @@ func TestCollectionGetRequestBuilder_Get(t *testing.T) {
 			name:     "Nil inner request builder",
 			nilInner: true,
 		},
+		{
+			name:       "Nil request adapter",
+			nilAdapter: true,
+		},
 	}
 
 	for _, tc := range tests {
@@ -58,6 +63,8 @@ func TestCollectionGetRequestBuilder_Get(t *testing.T) {
 				builder = nil
 			case tc.nilInner:
 				builder = &collectionGetRequestBuilder{nil}
+			case tc.nilAdapter:
+				builder = newCollectionGetRequestBuilder(map[string]string{"baseurl": "https://example.com"}, nil, activitiesURLTemplate)
 			default:
 				adapter := &mocking.MockRequestAdapter{}
 				adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(tc.mockRes, tc.mockErr)
@@ -69,6 +76,9 @@ func TestCollectionGetRequestBuilder_Get(t *testing.T) {
 			switch {
 			case tc.nilBuilder, tc.nilInner:
 				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+				assert.Nil(t, resp)
+			case tc.nilAdapter:
+				require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
 				assert.Nil(t, resp)
 			case tc.expectErr:
 				require.Error(t, err)
