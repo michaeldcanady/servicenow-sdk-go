@@ -232,7 +232,7 @@ func TestServer_handleCallback(t *testing.T) {
 				state:  tt.state,
 			}
 
-			req := httptest.NewRequest(http.MethodGet, "/callback?"+tt.query.Encode(), nil)
+			req := httptest.NewRequestWithContext(t.Context(), http.MethodGet, "/callback?"+tt.query.Encode(), nil)
 			rec := httptest.NewRecorder()
 
 			s.handleCallback(rec, req)
