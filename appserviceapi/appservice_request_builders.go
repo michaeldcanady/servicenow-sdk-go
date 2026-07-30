@@ -122,7 +122,7 @@ func (rB *PopulateServiceRequestBuilder) Put(ctx context.Context, body *Populate
 	if err != nil {
 		return nil, err
 	}
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 	return res.(PopulateServiceResponse), nil
@@ -176,7 +176,7 @@ func (rB *ServiceDetailsRequestBuilder) Put(ctx context.Context, body *ServiceDe
 	if err != nil {
 		return nil, err
 	}
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 	return res.(ServiceDetailsResponse), nil

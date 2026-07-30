@@ -81,6 +81,9 @@ func (rB *NodesRequestBuilder) Get(ctx context.Context, config *NodesRequestBuil
 	if err != nil {
 		return nil, err
 	}
+	if conversion.IsNil(res) {
+		return nil, nil
+	}
 	return res.(NodesResponse), nil
 }
 
@@ -108,6 +111,9 @@ func (rB *NodesRequestBuilder) Post(ctx context.Context, body NodeCreateRequest,
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateNodeResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
+	}
+	if conversion.IsNil(res) {
+		return nil, nil
 	}
 	return res.(NodeResponse), nil
 }
@@ -147,6 +153,9 @@ func (rB *NodeItemRequestBuilder) Put(ctx context.Context, body NodeUpdateReques
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateNodeResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
+	}
+	if conversion.IsNil(res) {
+		return nil, nil
 	}
 	return res.(NodeResponse), nil
 }
@@ -208,6 +217,9 @@ func (rB *ValidationRequestBuilder) Get(ctx context.Context, config *ValidationR
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateValidationResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
+	}
+	if conversion.IsNil(res) {
+		return nil, nil
 	}
 	return res.(ValidationResponse), nil
 }

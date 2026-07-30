@@ -74,7 +74,7 @@ func (rB *UserStreamItemRequestBuilder) Get(ctx context.Context, config *UserStr
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
@@ -116,7 +116,7 @@ func (rB *UserStreamItemRequestBuilder) Put(ctx context.Context, body *ActivityS
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 

@@ -50,7 +50,7 @@ func (rB *servicePostRequestBuilder[TBody, TResponse]) post(ctx context.Context,
 	if err != nil {
 		return zero, err
 	}
-	if res == nil {
+	if conversion.IsNil(res) {
 		return zero, nil
 	}
 	return res.(TResponse), nil

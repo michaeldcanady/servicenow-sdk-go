@@ -66,7 +66,7 @@ func (rB *CaseItemRequestBuilder) Get(ctx context.Context, config *CaseItemReque
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
@@ -103,7 +103,7 @@ func (rB *CaseItemRequestBuilder) Put(ctx context.Context, body CaseResult, conf
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
@@ -156,7 +156,7 @@ func (rB *CaseActivitiesRequestBuilder) Get(ctx context.Context, config *CaseAct
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
@@ -210,7 +210,7 @@ func (rB *CaseFieldValuesRequestBuilder) Get(ctx context.Context, config *CaseFi
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 

@@ -42,7 +42,7 @@ func (rB *FindServiceRequestBuilder) Get(ctx context.Context, config *FindServic
 	if err != nil {
 		return nil, err
 	}
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 	return res.(FindServiceResponse), nil

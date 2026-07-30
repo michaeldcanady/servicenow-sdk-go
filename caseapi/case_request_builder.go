@@ -64,7 +64,7 @@ func (rB *CaseRequestBuilder) Get(ctx context.Context, config *CaseRequestBuilde
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
@@ -101,7 +101,7 @@ func (rB *CaseRequestBuilder) Post(ctx context.Context, body CaseResult, config 
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 

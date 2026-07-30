@@ -98,7 +98,7 @@ func (rB *FacetsInstanceRequestBuilder) Get(ctx context.Context, config *FacetsR
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
