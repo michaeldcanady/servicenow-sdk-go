@@ -83,6 +83,9 @@ func (rB *DeployablesRequestBuilder) Delete(ctx context.Context, config *Deploya
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return snerrors.ErrNilRequestBuilder
 	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return snerrors.ErrNilRequestAdapter
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -102,6 +105,9 @@ func (rB *DeployablesRequestBuilder) Delete(ctx context.Context, config *Deploya
 func (rB *DeployablesRequestBuilder) Put(ctx context.Context, body *DeployableUpdateRequest, config *DeployablesRequestBuilderPutRequestConfiguration) (DeployableUpdateResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
@@ -146,6 +152,9 @@ func (rB *SharedComponentsRequestBuilder) Delete(ctx context.Context, config *Sh
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return snerrors.ErrNilRequestBuilder
 	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return snerrors.ErrNilRequestAdapter
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -165,6 +174,9 @@ func (rB *SharedComponentsRequestBuilder) Delete(ctx context.Context, config *Sh
 func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, body *SharedComponentUpdateRequest, config *SharedComponentsRequestBuilderPutRequestConfiguration) (SharedComponentUpdateResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
@@ -223,6 +235,9 @@ func (rB *UploadStatusItemRequestBuilder) Get(ctx context.Context, config *Uploa
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -256,6 +271,9 @@ func NewExportsRequestBuilderInternal(pathParameters map[string]string, requestA
 func (rB *ExportsRequestBuilder) Get(ctx context.Context, config *ExportsRequestBuilderGetRequestConfiguration) (ExportsResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
@@ -323,6 +341,9 @@ func (rB *ExportItemStatusRequestBuilder) Get(ctx context.Context, config *Expor
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -356,6 +377,9 @@ func NewExportItemContentRequestBuilderInternal(pathParameters map[string]string
 func (rB *ExportItemContentRequestBuilder) Get(ctx context.Context, config *ExportItemContentRequestBuilderGetRequestConfiguration) ([]byte, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
@@ -428,6 +452,9 @@ func (rB *SharedLibrariesComponentsApplicationsRequestBuilder) Get(ctx context.C
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -492,6 +519,9 @@ func (rB *UploadsComponentsRequestBuilder) Post(ctx context.Context, body *Compo
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -535,6 +565,9 @@ func (rB *UploadsComponentsVarsRequestBuilder) Post(ctx context.Context, body *C
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -572,6 +605,9 @@ func NewUploadsCollectionsRequestBuilderInternal(pathParameters map[string]strin
 func (rB *UploadsCollectionsRequestBuilder) Post(ctx context.Context, body *CollectionUploadRequest, config *UploadsCollectionsRequestBuilderPostRequestConfiguration) (UploadStatusResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
@@ -615,6 +651,9 @@ func NewUploadsCollectionsFileRequestBuilderInternal(pathParameters map[string]s
 func (rB *UploadsCollectionsFileRequestBuilder) Post(ctx context.Context, media *Media, config *UploadsCollectionsFileRequestBuilderPostRequestConfiguration) (UploadStatusResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
@@ -670,6 +709,9 @@ func NewUploadsDeployablesFileRequestBuilderInternal(pathParameters map[string]s
 func (rB *UploadsDeployablesFileRequestBuilder) Post(ctx context.Context, media *Media, config *UploadsDeployablesFileRequestBuilderPostRequestConfiguration) (UploadStatusResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {

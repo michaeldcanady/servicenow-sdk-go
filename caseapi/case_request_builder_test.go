@@ -97,11 +97,12 @@ func TestCaseRequestBuilder_ToGetRequestInformation(t *testing.T) {
 
 func TestCaseRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
-		name      string
-		setupMock func(m *mocking.MockRequestAdapter)
-		nilRecv   bool
-		wantErr   error
-		wantNil   bool
+		name       string
+		setupMock  func(m *mocking.MockRequestAdapter)
+		nilRecv    bool
+		nilAdapter bool
+		wantErr    error
+		wantNil    bool
 	}{
 		{
 			name: "happy path - returns collection response",
@@ -131,12 +132,25 @@ func TestCaseRequestBuilder_Get(t *testing.T) {
 			nilRecv: true,
 			wantErr: snerrors.ErrNilRequestBuilder,
 		},
+		{
+			name:       "nil request adapter returns ErrNilRequestAdapter",
+			nilAdapter: true,
+			wantErr:    snerrors.ErrNilRequestAdapter,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.nilRecv {
 				var builder *CaseRequestBuilder
+				resp, err := builder.Get(context.Background(), nil)
+				assert.Nil(t, resp)
+				require.ErrorIs(t, err, tt.wantErr)
+				return
+			}
+
+			if tt.nilAdapter {
+				builder := NewCaseRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, nil)
 				resp, err := builder.Get(context.Background(), nil)
 				assert.Nil(t, resp)
 				require.ErrorIs(t, err, tt.wantErr)
@@ -210,11 +224,12 @@ func TestCaseRequestBuilder_ToPostRequestInformation(t *testing.T) {
 
 func TestCaseRequestBuilder_Post(t *testing.T) {
 	tests := []struct {
-		name      string
-		setupMock func(m *mocking.MockRequestAdapter)
-		nilRecv   bool
-		wantErr   error
-		wantNil   bool
+		name       string
+		setupMock  func(m *mocking.MockRequestAdapter)
+		nilRecv    bool
+		nilAdapter bool
+		wantErr    error
+		wantNil    bool
 	}{
 		{
 			name: "happy path - returns item response",
@@ -247,12 +262,25 @@ func TestCaseRequestBuilder_Post(t *testing.T) {
 			nilRecv: true,
 			wantErr: snerrors.ErrNilRequestBuilder,
 		},
+		{
+			name:       "nil request adapter returns ErrNilRequestAdapter",
+			nilAdapter: true,
+			wantErr:    snerrors.ErrNilRequestAdapter,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.nilRecv {
 				var builder *CaseRequestBuilder
+				resp, err := builder.Post(context.Background(), NewCaseResult(), nil)
+				assert.Nil(t, resp)
+				require.ErrorIs(t, err, tt.wantErr)
+				return
+			}
+
+			if tt.nilAdapter {
+				builder := NewCaseRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, nil)
 				resp, err := builder.Post(context.Background(), NewCaseResult(), nil)
 				assert.Nil(t, resp)
 				require.ErrorIs(t, err, tt.wantErr)
@@ -350,11 +378,12 @@ func TestCaseItemRequestBuilder_ToGetRequestInformation(t *testing.T) {
 
 func TestCaseItemRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
-		name      string
-		setupMock func(m *mocking.MockRequestAdapter)
-		nilRecv   bool
-		wantErr   error
-		wantNil   bool
+		name       string
+		setupMock  func(m *mocking.MockRequestAdapter)
+		nilRecv    bool
+		nilAdapter bool
+		wantErr    error
+		wantNil    bool
 	}{
 		{
 			name: "happy path - returns item response",
@@ -384,12 +413,25 @@ func TestCaseItemRequestBuilder_Get(t *testing.T) {
 			nilRecv: true,
 			wantErr: snerrors.ErrNilRequestBuilder,
 		},
+		{
+			name:       "nil request adapter returns ErrNilRequestAdapter",
+			nilAdapter: true,
+			wantErr:    snerrors.ErrNilRequestAdapter,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.nilRecv {
 				var builder *CaseItemRequestBuilder
+				resp, err := builder.Get(context.Background(), nil)
+				assert.Nil(t, resp)
+				require.ErrorIs(t, err, tt.wantErr)
+				return
+			}
+
+			if tt.nilAdapter {
+				builder := NewCaseItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "id": "test-id"}, nil)
 				resp, err := builder.Get(context.Background(), nil)
 				assert.Nil(t, resp)
 				require.ErrorIs(t, err, tt.wantErr)
@@ -463,11 +505,12 @@ func TestCaseItemRequestBuilder_ToPutRequestInformation(t *testing.T) {
 
 func TestCaseItemRequestBuilder_Put(t *testing.T) {
 	tests := []struct {
-		name      string
-		setupMock func(m *mocking.MockRequestAdapter)
-		nilRecv   bool
-		wantErr   error
-		wantNil   bool
+		name       string
+		setupMock  func(m *mocking.MockRequestAdapter)
+		nilRecv    bool
+		nilAdapter bool
+		wantErr    error
+		wantNil    bool
 	}{
 		{
 			name: "happy path - returns item response",
@@ -500,12 +543,25 @@ func TestCaseItemRequestBuilder_Put(t *testing.T) {
 			nilRecv: true,
 			wantErr: snerrors.ErrNilRequestBuilder,
 		},
+		{
+			name:       "nil request adapter returns ErrNilRequestAdapter",
+			nilAdapter: true,
+			wantErr:    snerrors.ErrNilRequestAdapter,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.nilRecv {
 				var builder *CaseItemRequestBuilder
+				resp, err := builder.Put(context.Background(), NewCaseResult(), nil)
+				assert.Nil(t, resp)
+				require.ErrorIs(t, err, tt.wantErr)
+				return
+			}
+
+			if tt.nilAdapter {
+				builder := NewCaseItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "id": "test-id"}, nil)
 				resp, err := builder.Put(context.Background(), NewCaseResult(), nil)
 				assert.Nil(t, resp)
 				require.ErrorIs(t, err, tt.wantErr)
@@ -573,11 +629,12 @@ func TestCaseActivitiesRequestBuilder_ToGetRequestInformation(t *testing.T) {
 
 func TestCaseActivitiesRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
-		name      string
-		setupMock func(m *mocking.MockRequestAdapter)
-		nilRecv   bool
-		wantErr   error
-		wantNil   bool
+		name       string
+		setupMock  func(m *mocking.MockRequestAdapter)
+		nilRecv    bool
+		nilAdapter bool
+		wantErr    error
+		wantNil    bool
 	}{
 		{
 			name: "happy path - returns item response",
@@ -607,12 +664,25 @@ func TestCaseActivitiesRequestBuilder_Get(t *testing.T) {
 			nilRecv: true,
 			wantErr: snerrors.ErrNilRequestBuilder,
 		},
+		{
+			name:       "nil request adapter returns ErrNilRequestAdapter",
+			nilAdapter: true,
+			wantErr:    snerrors.ErrNilRequestAdapter,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.nilRecv {
 				var builder *CaseActivitiesRequestBuilder
+				resp, err := builder.Get(context.Background(), nil)
+				assert.Nil(t, resp)
+				require.ErrorIs(t, err, tt.wantErr)
+				return
+			}
+
+			if tt.nilAdapter {
+				builder := NewCaseActivitiesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "id": "test-id"}, nil)
 				resp, err := builder.Get(context.Background(), nil)
 				assert.Nil(t, resp)
 				require.ErrorIs(t, err, tt.wantErr)
@@ -686,11 +756,12 @@ func TestCaseFieldValuesRequestBuilder_ToGetRequestInformation(t *testing.T) {
 
 func TestCaseFieldValuesRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
-		name      string
-		setupMock func(m *mocking.MockRequestAdapter)
-		nilRecv   bool
-		wantErr   error
-		wantNil   bool
+		name       string
+		setupMock  func(m *mocking.MockRequestAdapter)
+		nilRecv    bool
+		nilAdapter bool
+		wantErr    error
+		wantNil    bool
 	}{
 		{
 			name: "happy path - returns item response",
@@ -720,12 +791,25 @@ func TestCaseFieldValuesRequestBuilder_Get(t *testing.T) {
 			nilRecv: true,
 			wantErr: snerrors.ErrNilRequestBuilder,
 		},
+		{
+			name:       "nil request adapter returns ErrNilRequestAdapter",
+			nilAdapter: true,
+			wantErr:    snerrors.ErrNilRequestAdapter,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.nilRecv {
 				var builder *CaseFieldValuesRequestBuilder
+				resp, err := builder.Get(context.Background(), nil)
+				assert.Nil(t, resp)
+				require.ErrorIs(t, err, tt.wantErr)
+				return
+			}
+
+			if tt.nilAdapter {
+				builder := NewCaseFieldValuesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "field_name": "state"}, nil)
 				resp, err := builder.Get(context.Background(), nil)
 				assert.Nil(t, resp)
 				require.ErrorIs(t, err, tt.wantErr)

@@ -61,6 +61,9 @@ func (rB *NodesRequestBuilder) Get(ctx context.Context, config *NodesRequestBuil
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -84,6 +87,9 @@ func (rB *NodesRequestBuilder) Get(ctx context.Context, config *NodesRequestBuil
 func (rB *NodesRequestBuilder) Post(ctx context.Context, body NodeCreateRequest, config *NodesRequestBuilderPostRequestConfiguration) (NodeResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
@@ -121,6 +127,9 @@ func (rB *NodeItemRequestBuilder) Put(ctx context.Context, body NodeUpdateReques
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -147,6 +156,9 @@ func (rB *NodeItemRequestBuilder) Put(ctx context.Context, body NodeUpdateReques
 func (rB *NodeItemRequestBuilder) Delete(ctx context.Context, config *NodeItemRequestBuilderDeleteRequestConfiguration) error {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return snerrors.ErrNilRequestAdapter
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
@@ -176,6 +188,9 @@ func NewValidationRequestBuilderInternal(pathParameters map[string]string, reque
 func (rB *ValidationRequestBuilder) Get(ctx context.Context, config *ValidationRequestBuilderGetRequestConfiguration) (ValidationResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {

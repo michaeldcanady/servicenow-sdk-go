@@ -40,6 +40,10 @@ func (rB *documentPostRequestBuilder) post(ctx context.Context, requestConfigura
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.toPostRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return nil, err

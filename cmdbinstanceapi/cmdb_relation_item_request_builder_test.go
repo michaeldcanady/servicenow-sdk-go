@@ -70,6 +70,13 @@ func TestCmdbRelationItemRequestBuilder_NilReceiverGuards(t *testing.T) {
 	}
 }
 
+func TestCmdbRelationItemRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewCmdbRelationItemRequestBuilderInternal(map[string]string{}, nil)
+
+	err := builder.Delete(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+}
+
 func TestCmdbRelationItemRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
 	builder := NewCmdbRelationItemRequestBuilderInternal(map[string]string{
 		"baseurl":    "https://example.com",

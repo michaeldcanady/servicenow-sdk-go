@@ -37,6 +37,10 @@ func (rB *servicePostRequestBuilder[TBody, TResponse]) post(ctx context.Context,
 		return zero, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return zero, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.toPostRequestInformation(ctx, body, config)
 	if err != nil {
 		return zero, err

@@ -68,8 +68,12 @@ func NewVersionActionRequestBuilderInternal(pathParameters map[string]string, re
 
 // Patch executes the specified action on the document version.
 func (rB *VersionActionRequestBuilder) Patch(ctx context.Context, requestConfiguration *VersionActionRequestBuilderPatchRequestConfiguration) error {
-	if conversion.IsNil(rB) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToPatchRequestInformation(ctx, requestConfiguration)

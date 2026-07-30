@@ -5,10 +5,28 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
+
+func TestDeleteRequestBuilder_Delete_NilBuilder(t *testing.T) {
+	var builder *DeleteRequestBuilder
+
+	err := builder.Delete(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+}
+
+func TestDeleteRequestBuilder_Delete_NilRequestAdapter(t *testing.T) {
+	builder := NewDeleteRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, nil)
+
+	err := builder.Delete(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+}
 
 func TestDeleteRequestBuilder_Delete(t *testing.T) {
 	tests := []struct {

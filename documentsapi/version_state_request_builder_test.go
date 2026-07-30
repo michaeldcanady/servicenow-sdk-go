@@ -63,6 +63,15 @@ func TestVersionStateRequestBuilder_Get_NilBuilder(t *testing.T) {
 	assert.Nil(t, resp)
 }
 
+func TestVersionStateRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewVersionStateRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "version_sys_id": "version-id"}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
 func TestVersionStateRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	t.Run("happy path", func(t *testing.T) {
 		adapter := &mocking.MockRequestAdapter{}

@@ -6,11 +6,30 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
+
+func TestExploreRequestBuilder_Get_NilBuilder(t *testing.T) {
+	var builder *ExploreRequestBuilder
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, resp)
+}
+
+func TestExploreRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewExploreRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
 
 func TestExploreRequestBuilder_Get(t *testing.T) {
 	tests := []struct {

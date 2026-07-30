@@ -66,6 +66,10 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return nil, err
@@ -93,6 +97,10 @@ func (rB *AttachmentItemRequestBuilder) Get(ctx context.Context, requestConfigur
 func (rB *AttachmentItemRequestBuilder) Delete(ctx context.Context, requestConfiguration *AttachmentItemRequestBuilderDeleteRequestConfiguration) error {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToDeleteRequestInformation(ctx, requestConfiguration)

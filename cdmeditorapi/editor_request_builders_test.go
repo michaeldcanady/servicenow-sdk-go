@@ -182,3 +182,33 @@ func TestValidationRequestBuilder_NilReceiverGuards(t *testing.T) {
 		})
 	}
 }
+
+func TestNodesRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewNodesRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+
+	postResp, err := builder.Post(context.Background(), nil, nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, postResp)
+}
+
+func TestNodeItemRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewNodeItemRequestBuilderInternal(map[string]string{}, nil)
+
+	putResp, err := builder.Put(context.Background(), nil, nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, putResp)
+
+	require.ErrorIs(t, builder.Delete(context.Background(), nil), snerrors.ErrNilRequestAdapter)
+}
+
+func TestValidationRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
+	builder := NewValidationRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}

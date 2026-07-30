@@ -30,8 +30,12 @@ func NewContentRequestBuilderInternal(pathParameters map[string]string, requestA
 
 // Get fetches and streams the default version attachment for the document.
 func (rB *ContentRequestBuilder) Get(ctx context.Context, requestConfiguration *ContentRequestBuilderGetRequestConfiguration) ([]byte, error) {
-	if conversion.IsNil(rB) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)

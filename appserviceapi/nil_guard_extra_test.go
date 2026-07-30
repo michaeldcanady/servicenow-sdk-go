@@ -102,6 +102,51 @@ func TestServiceDetailsRequestBuilder_ToPutRequestInformation_NilBuilder(t *test
 	assert.Nil(t, requestInfo)
 }
 
+func TestRegisterServiceRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
+	builder := NewRegisterServiceRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Post(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestCreateRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
+	builder := NewCreateRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Post(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestFindServiceRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewFindServiceRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestPopulateServiceRequestBuilder_Put_NilRequestAdapter(t *testing.T) {
+	builder := NewPopulateServiceRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Put(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
+func TestServiceDetailsRequestBuilder_Put_NilRequestAdapter(t *testing.T) {
+	builder := NewServiceDetailsRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Put(context.Background(), nil, nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	assert.Nil(t, resp)
+}
+
 // ---------------------------------------------------------------------------
 // Child-builder nil-receiver guards (AppServiceRequestBuilder, CsdmRequestBuilder,
 // CsdmAppServiceItemRequestBuilder)

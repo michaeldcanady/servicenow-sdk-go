@@ -32,6 +32,10 @@ func (rB *CmdbRelationItemRequestBuilder) Delete(ctx context.Context, config *Cm
 		return snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToDeleteRequestInformation(ctx, config)
 	if err != nil {
 		return err

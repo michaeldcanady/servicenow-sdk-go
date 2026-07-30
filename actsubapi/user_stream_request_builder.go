@@ -59,6 +59,10 @@ func (rB *UserStreamItemRequestBuilder) Get(ctx context.Context, config *UserStr
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
@@ -95,6 +99,10 @@ func (rB *UserStreamItemRequestBuilder) ToGetRequestInformation(_ context.Contex
 func (rB *UserStreamItemRequestBuilder) Put(ctx context.Context, body *ActivitySubscriptionModel, config *UserStreamRequestBuilderPutRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)

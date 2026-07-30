@@ -472,3 +472,20 @@ func TestAttachmentItemRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
 		})
 	}
 }
+
+func TestAttachmentItemRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewAttachmentItemRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	assert.Nil(t, resp)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+}
+
+func TestAttachmentItemRequestBuilder_Delete_NilRequestAdapter(t *testing.T) {
+	builder := NewAttachmentItemRequestBuilderInternal(map[string]string{}, nil)
+
+	err := builder.Delete(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+}

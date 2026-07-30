@@ -89,8 +89,12 @@ func (rB *AttachmentRequestBuilder) Upload() *AttachmentUploadRequestBuilder {
 
 // Get returns AttachmentCollectionResponse using provided arguments
 func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*AttachmentCollectionResponse, error) {
-	if conversion.IsNil(rB) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	if conversion.IsNil(requestConfiguration) {

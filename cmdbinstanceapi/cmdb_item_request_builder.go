@@ -37,6 +37,10 @@ func (rB *CmdbItemRequestBuilder) Get(ctx context.Context, config *CmdbItemReque
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
@@ -61,6 +65,10 @@ func (rB *CmdbItemRequestBuilder) Put(ctx context.Context, body CmdbInstance, co
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)
 	if err != nil {
 		return nil, err
@@ -83,6 +91,10 @@ func (rB *CmdbItemRequestBuilder) Put(ctx context.Context, body CmdbInstance, co
 func (rB *CmdbItemRequestBuilder) Patch(ctx context.Context, body CmdbInstance, config *CmdbItemRequestBuilderPatchRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	requestInfo, err := rB.ToPatchRequestInformation(ctx, body, config)
