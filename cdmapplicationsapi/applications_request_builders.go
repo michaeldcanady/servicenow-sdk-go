@@ -100,7 +100,7 @@ func (rB *DeployablesRequestBuilder) Delete(ctx context.Context, config *Deploya
 			requestInfo.AddQueryParameters(*config.QueryParameters)
 		}
 	}
-	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, nil)
+	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, core.DefaultErrorMapping())
 }
 
 // Put updates deployables.
@@ -125,7 +125,7 @@ func (rB *DeployablesRequestBuilder) Put(ctx context.Context, body *DeployableUp
 	if err != nil {
 		return nil, err
 	}
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateDeployableUpdateResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateDeployableUpdateResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -176,7 +176,7 @@ func (rB *SharedComponentsRequestBuilder) Delete(ctx context.Context, config *Sh
 			requestInfo.AddQueryParameters(*config.QueryParameters)
 		}
 	}
-	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, nil)
+	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, core.DefaultErrorMapping())
 }
 
 // Put updates shared components.
@@ -201,7 +201,7 @@ func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, body *SharedC
 	if err != nil {
 		return nil, err
 	}
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateSharedComponentUpdateResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateSharedComponentUpdateResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -264,7 +264,7 @@ func (rB *UploadStatusItemRequestBuilder) Get(ctx context.Context, config *Uploa
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -311,7 +311,7 @@ func (rB *ExportsRequestBuilder) Get(ctx context.Context, config *ExportsRequest
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateExportsResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateExportsResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -384,7 +384,7 @@ func (rB *ExportItemStatusRequestBuilder) Get(ctx context.Context, config *Expor
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateExportStatusResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateExportStatusResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -428,7 +428,7 @@ func (rB *ExportItemContentRequestBuilder) Get(ctx context.Context, config *Expo
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internal.ContentTypeApplicationOctetStream)
-	res, err := rB.GetRequestAdapter().SendPrimitive(ctx, requestInfo, "[]byte", nil)
+	res, err := rB.GetRequestAdapter().SendPrimitive(ctx, requestInfo, "[]byte", core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -509,7 +509,7 @@ func (rB *SharedLibrariesComponentsApplicationsRequestBuilder) Get(ctx context.C
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateSharedLibrariesComponentsApplicationsResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateSharedLibrariesComponentsApplicationsResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -584,7 +584,7 @@ func (rB *UploadsComponentsRequestBuilder) Post(ctx context.Context, body *Compo
 	if err != nil {
 		return nil, err
 	}
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -637,7 +637,7 @@ func (rB *UploadsComponentsVarsRequestBuilder) Post(ctx context.Context, body *C
 	if err != nil {
 		return nil, err
 	}
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -685,7 +685,7 @@ func (rB *UploadsCollectionsRequestBuilder) Post(ctx context.Context, body *Coll
 	if err != nil {
 		return nil, err
 	}
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -738,7 +738,7 @@ func (rB *UploadsCollectionsFileRequestBuilder) Post(ctx context.Context, media 
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	requestInfo.SetStreamContentAndContentType(media.GetData(), media.GetContentType())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -803,7 +803,7 @@ func (rB *UploadsDeployablesFileRequestBuilder) Post(ctx context.Context, media 
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 	requestInfo.SetStreamContentAndContentType(media.GetData(), media.GetContentType())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}

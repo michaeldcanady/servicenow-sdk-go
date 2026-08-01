@@ -80,7 +80,7 @@ func (rB *ChangesetsRequestBuilder) Get(ctx context.Context, config *ChangesetsR
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateChangesetsResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateChangesetsResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (rB *ChangesetsRequestBuilder) Delete(ctx context.Context, config *Changese
 			requestInfo.AddQueryParameters(*config.QueryParameters)
 		}
 	}
-	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, nil)
+	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, core.DefaultErrorMapping())
 }
 
 // ChangesetActivityRequestBuilder handles /changesets/activity endpoint.
@@ -147,7 +147,7 @@ func (rB *ChangesetActivityRequestBuilder) Get(ctx context.Context, config *Chan
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateChangesetActivityResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateChangesetActivityResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -206,7 +206,7 @@ func (rB *CommitStatusItemRequestBuilder) Get(ctx context.Context, config *Commi
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCommitStatusResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateCommitStatusResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -251,7 +251,7 @@ func (rB *ImpactedSharedComponentsRequestBuilder) Get(ctx context.Context, confi
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedSharedComponentsResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedSharedComponentsResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -296,7 +296,7 @@ func (rB *ImpactedDeployablesRequestBuilder) Get(ctx context.Context, config *Im
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedDeployablesResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedDeployablesResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -354,7 +354,7 @@ func (rB *ImpactedDeployablesBySysIDRequestBuilder) Get(ctx context.Context, con
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedDeployablesBySysIDResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedDeployablesBySysIDResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
