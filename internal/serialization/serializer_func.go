@@ -207,6 +207,9 @@ func SerializeISODurationFunc(key string, accessor ModelAccessor[*serialization.
 func SerializeAnyFunc(key string, accessor ModelAccessor[any]) WriterFunc {
 	return func(sw serialization.SerializationWriter) error {
 		return WriteValueToSource(func(v any) error {
+			if conversion.IsNil(v) {
+				return nil
+			}
 			return sw.WriteAnyValue(key, v)
 		}, accessor)
 	}

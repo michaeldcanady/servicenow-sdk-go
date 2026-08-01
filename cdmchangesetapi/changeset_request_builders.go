@@ -82,6 +82,9 @@ func (rB *ChangesetsRequestBuilder) Get(ctx context.Context, config *ChangesetsR
 	if err != nil {
 		return nil, err
 	}
+	if conversion.IsNil(res) {
+		return nil, nil
+	}
 	return res.(ChangesetsResponse), nil
 }
 
@@ -142,6 +145,9 @@ func (rB *ChangesetActivityRequestBuilder) Get(ctx context.Context, config *Chan
 	if err != nil {
 		return nil, err
 	}
+	if conversion.IsNil(res) {
+		return nil, nil
+	}
 	return res.(ChangesetActivityResponse), nil
 }
 
@@ -194,6 +200,9 @@ func (rB *CommitStatusItemRequestBuilder) Get(ctx context.Context, config *Commi
 	if err != nil {
 		return nil, err
 	}
+	if conversion.IsNil(res) {
+		return nil, nil
+	}
 	return res.(CommitStatusResponse), nil
 }
 
@@ -232,6 +241,9 @@ func (rB *ImpactedSharedComponentsRequestBuilder) Get(ctx context.Context, confi
 	if err != nil {
 		return nil, err
 	}
+	if conversion.IsNil(res) {
+		return nil, nil
+	}
 	return res.(ImpactedSharedComponentsResponse), nil
 }
 
@@ -269,6 +281,9 @@ func (rB *ImpactedDeployablesRequestBuilder) Get(ctx context.Context, config *Im
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedDeployablesResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
+	}
+	if conversion.IsNil(res) {
+		return nil, nil
 	}
 	return res.(ImpactedDeployablesResponse), nil
 }
@@ -320,6 +335,9 @@ func (rB *ImpactedDeployablesBySysIDRequestBuilder) Get(ctx context.Context, con
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateImpactedDeployablesBySysIDResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
+	}
+	if conversion.IsNil(res) {
+		return nil, nil
 	}
 	return res.(ImpactedDeployablesBySysIDResponse), nil
 }

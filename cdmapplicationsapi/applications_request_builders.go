@@ -1,3 +1,4 @@
+//nolint:dupl // per-verb request-builder methods share the mandatory nil-guard/send boilerplate by convention; each depends on its own outer type, response type, and discriminator factory, so it can't be extracted into a shared helper
 package cdmapplicationsapi
 
 import (
@@ -127,6 +128,9 @@ func (rB *DeployablesRequestBuilder) Put(ctx context.Context, body *DeployableUp
 	if err != nil {
 		return nil, err
 	}
+	if conversion.IsNil(res) {
+		return nil, nil
+	}
 	return res.(DeployableUpdateResponse), nil
 }
 
@@ -196,6 +200,9 @@ func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, body *SharedC
 	if err != nil {
 		return nil, err
 	}
+	if conversion.IsNil(res) {
+		return nil, nil
+	}
 	return res.(SharedComponentUpdateResponse), nil
 }
 
@@ -252,6 +259,9 @@ func (rB *UploadStatusItemRequestBuilder) Get(ctx context.Context, config *Uploa
 	if err != nil {
 		return nil, err
 	}
+	if conversion.IsNil(res) {
+		return nil, nil
+	}
 	return res.(UploadStatusResponse), nil
 }
 
@@ -291,6 +301,9 @@ func (rB *ExportsRequestBuilder) Get(ctx context.Context, config *ExportsRequest
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateExportsResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
+	}
+	if conversion.IsNil(res) {
+		return nil, nil
 	}
 	return res.(ExportsResponse), nil
 }
@@ -357,6 +370,9 @@ func (rB *ExportItemStatusRequestBuilder) Get(ctx context.Context, config *Expor
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateExportStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
+	}
+	if conversion.IsNil(res) {
+		return nil, nil
 	}
 	return res.(ExportStatusResponse), nil
 }
@@ -472,6 +488,9 @@ func (rB *SharedLibrariesComponentsApplicationsRequestBuilder) Get(ctx context.C
 	if err != nil {
 		return nil, err
 	}
+	if conversion.IsNil(res) {
+		return nil, nil
+	}
 	return res.(SharedLibrariesComponentsApplicationsResponse), nil
 }
 
@@ -540,6 +559,9 @@ func (rB *UploadsComponentsRequestBuilder) Post(ctx context.Context, body *Compo
 	if err != nil {
 		return nil, err
 	}
+	if conversion.IsNil(res) {
+		return nil, nil
+	}
 	return res.(UploadStatusResponse), nil
 }
 
@@ -586,6 +608,9 @@ func (rB *UploadsComponentsVarsRequestBuilder) Post(ctx context.Context, body *C
 	if err != nil {
 		return nil, err
 	}
+	if conversion.IsNil(res) {
+		return nil, nil
+	}
 	return res.(UploadStatusResponse), nil
 }
 
@@ -626,6 +651,9 @@ func (rB *UploadsCollectionsRequestBuilder) Post(ctx context.Context, body *Coll
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
+	}
+	if conversion.IsNil(res) {
+		return nil, nil
 	}
 	return res.(UploadStatusResponse), nil
 }
@@ -672,6 +700,9 @@ func (rB *UploadsCollectionsFileRequestBuilder) Post(ctx context.Context, media 
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
+	}
+	if conversion.IsNil(res) {
+		return nil, nil
 	}
 	return res.(UploadStatusResponse), nil
 }
@@ -730,6 +761,9 @@ func (rB *UploadsDeployablesFileRequestBuilder) Post(ctx context.Context, media 
 	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateUploadStatusResponseFromDiscriminatorValue, nil)
 	if err != nil {
 		return nil, err
+	}
+	if conversion.IsNil(res) {
+		return nil, nil
 	}
 	return res.(UploadStatusResponse), nil
 }

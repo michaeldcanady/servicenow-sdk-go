@@ -46,7 +46,7 @@ func (rB *AccountItemRequestBuilder) Get(ctx context.Context, config *AccountIte
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 

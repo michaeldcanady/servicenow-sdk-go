@@ -84,7 +84,7 @@ func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *Subsc
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
@@ -180,7 +180,7 @@ func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscri
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
@@ -237,7 +237,7 @@ func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubsc
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 

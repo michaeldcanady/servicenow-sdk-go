@@ -81,6 +81,17 @@ func TestAccountRequestBuilder_Get(t *testing.T) {
 	assert.NotNil(t, res)
 }
 
+func TestAccountRequestBuilder_Get_NilResponse(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	builder := NewAccountRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
+
+	res, err := builder.Get(context.Background(), nil)
+	require.NoError(t, err)
+	assert.Nil(t, res)
+}
+
 type AccountCollectionResponseMock struct {
 	core.BaseServiceNowCollectionResponse[*AccountModel]
 }
@@ -102,6 +113,17 @@ func TestAccountItemRequestBuilder_Get(t *testing.T) {
 	res, err := builder.Get(context.Background(), nil)
 	require.NoError(t, err)
 	assert.NotNil(t, res)
+}
+
+func TestAccountItemRequestBuilder_Get_NilResponse(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	builder := NewAccountItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "account_id": "test-id"}, adapter)
+
+	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
+
+	res, err := builder.Get(context.Background(), nil)
+	require.NoError(t, err)
+	assert.Nil(t, res)
 }
 
 type AccountItemResponseMock struct {

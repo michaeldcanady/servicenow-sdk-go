@@ -44,7 +44,7 @@ func (rB *AvailabilityRequestBuilder) Post(ctx context.Context, body Availabilit
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
@@ -102,7 +102,7 @@ func (rB *CalendarRequestBuilder) Get(ctx context.Context, config *CalendarReque
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
@@ -155,7 +155,7 @@ func (rB *ConfigurationRequestBuilder) Get(ctx context.Context, config *Configur
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
@@ -208,7 +208,7 @@ func (rB *ExecuteRuleConditionsRequestBuilder) Post(ctx context.Context, body Ex
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
@@ -266,7 +266,7 @@ func (rB *UserWindowRequestBuilder) Post(ctx context.Context, body any, config *
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 

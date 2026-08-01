@@ -616,6 +616,18 @@ func TestSerializeAnyFunc(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name:     "Nil value",
+			accessor: func() (any, error) { return nil, nil },
+			mock:     func(_ *mocking.MockSerializationWriter) {},
+			wantErr:  false,
+		},
+		{
+			name:     "Typed-nil value",
+			accessor: func() (any, error) { var p *string; return p, nil },
+			mock:     func(_ *mocking.MockSerializationWriter) {},
+			wantErr:  false,
+		},
 	}
 
 	for _, tt := range tests {

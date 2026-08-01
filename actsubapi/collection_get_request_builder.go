@@ -48,7 +48,7 @@ func (rB *collectionGetRequestBuilder) Get(ctx context.Context, config *abstract
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 

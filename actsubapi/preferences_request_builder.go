@@ -50,7 +50,7 @@ func (rB *PreferencesRequestBuilder) Post(ctx context.Context, body *ActivitySub
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
@@ -123,7 +123,7 @@ func (rB *PreferenceItemRequestBuilder) Get(ctx context.Context, config *Prefere
 		return nil, err
 	}
 
-	if res == nil {
+	if conversion.IsNil(res) {
 		return nil, nil
 	}
 
