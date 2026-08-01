@@ -94,6 +94,15 @@ func TestAttachmentRequestBuilder_Head_NilBuilder(t *testing.T) {
 	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
 }
 
+func TestAttachmentRequestBuilder_Head_NilRequestAdapter(t *testing.T) {
+	builder := NewAttachmentRequestBuilderInternal(map[string]string{}, nil)
+
+	headers, err := builder.Head(context.Background(), nil)
+
+	assert.Nil(t, headers)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+}
+
 func TestAttachmentRequestBuilder_Builders(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewAttachmentRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
