@@ -79,7 +79,7 @@ func (rB *NodesRequestBuilder) Get(ctx context.Context, config *NodesRequestBuil
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateNodesResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateNodesResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +114,7 @@ func (rB *NodesRequestBuilder) Post(ctx context.Context, body NodeCreateRequest,
 	if err != nil {
 		return nil, err
 	}
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateNodeResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateNodeResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -160,7 +160,7 @@ func (rB *NodeItemRequestBuilder) Put(ctx context.Context, body NodeUpdateReques
 	if err != nil {
 		return nil, err
 	}
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateNodeResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateNodeResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -228,7 +228,7 @@ func (rB *ValidationRequestBuilder) Get(ctx context.Context, config *ValidationR
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateValidationResponseFromDiscriminatorValue, nil)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateValidationResponseFromDiscriminatorValue, core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}

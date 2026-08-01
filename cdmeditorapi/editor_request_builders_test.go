@@ -261,3 +261,34 @@ func TestValidationRequestBuilder_NilRequestAdapterGuards(t *testing.T) {
 	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
 	assert.Nil(t, resp)
 }
+
+// isDefaultErrorMapping reports whether the given argument is a non-nil
+// abstractions.ErrorMappings with core.DefaultErrorMapping()'s status-code keys.
+func isDefaultErrorMapping(v any) bool {
+	mapping, ok := v.(abstractions.ErrorMappings)
+	if !ok || mapping == nil {
+		return false
+	}
+	for _, code := range []string{"400", "401", "403", "404", "429", "5XX", "XXX"} {
+		if _, ok := mapping[code]; !ok {
+			return false
+		}
+	}
+	return len(mapping) == 7
+}
+
+// TestNodesRequestBuilder_Get_PassesDefaultErrorMapping guards against #565:
+// CDM builders previously passed literal nil instead of core.DefaultErrorMapping(),
+// so ServiceNow API errors never mapped to a typed core.ServiceNowError.
+func TestNodesRequestBuilder_Get_PassesDefaultErrorMapping(t *testing.T) {
+	adapter := mocking.NewMockRequestAdapter()
+	mockRes := core.NewBaseServiceNowCollectionResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue)
+	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.MatchedBy(isDefaultErrorMapping)).Return(mockRes, nil)
+
+	builder := NewNodesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+	_, err := builder.Get(context.Background(), nil)
+
+	require.NoError(t, err)
+	adapter.AssertExpectations(t)
+}
