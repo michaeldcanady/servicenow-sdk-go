@@ -150,6 +150,10 @@ func (rB *AttachmentRequestBuilder) Head(ctx context.Context, requestConfigurati
 		return nil, err
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	errorMapping := core.DefaultErrorMapping()
 	if err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping); err != nil {
 		return nil, err

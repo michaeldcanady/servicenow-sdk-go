@@ -63,6 +63,10 @@ func (rB *BatchRequestBuilder) Head(ctx context.Context, requestConfiguration *B
 		return nil, err
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	errorMapping := core.DefaultErrorMapping()
 
 	if err = rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping); err != nil {

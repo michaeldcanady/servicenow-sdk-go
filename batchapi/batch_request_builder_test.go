@@ -447,6 +447,17 @@ func TestBatchRequestBuilder_Head(t *testing.T) {
 			},
 		},
 		{
+			name: "Nil request adapter",
+			test: func(t *testing.T) {
+				builder := NewBatchRequestBuilderInternal(map[string]string{}, nil)
+
+				responseHeaders, err := builder.Head(context.Background(), nil)
+
+				require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+				assert.Nil(t, responseHeaders)
+			},
+		},
+		{
 			name: "Successful",
 			test: func(t *testing.T) {
 				mockPathParameters := map[string]string{"baseurl": "https://mock.service-now.com"}
