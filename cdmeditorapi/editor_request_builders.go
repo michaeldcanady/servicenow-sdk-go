@@ -3,6 +3,7 @@ package cdmeditorapi
 
 import (
 	"context"
+	"fmt"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -85,7 +86,11 @@ func (rB *NodesRequestBuilder) Get(ctx context.Context, config *NodesRequestBuil
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(NodesResponse), nil
+	typedRes, ok := res.(NodesResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*NodesResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 func (rB *NodesRequestBuilder) Post(ctx context.Context, body NodeCreateRequest, config *NodesRequestBuilderPostRequestConfiguration) (NodeResponse, error) {
@@ -116,7 +121,11 @@ func (rB *NodesRequestBuilder) Post(ctx context.Context, body NodeCreateRequest,
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(NodeResponse), nil
+	typedRes, ok := res.(NodeResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*NodeResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // NodeItemRequestBuilder handles /v1/nodes/{id} endpoint.
@@ -158,7 +167,11 @@ func (rB *NodeItemRequestBuilder) Put(ctx context.Context, body NodeUpdateReques
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(NodeResponse), nil
+	typedRes, ok := res.(NodeResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*NodeResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // Delete removes a node. It returns only an error: the endpoint answers with no content, so
@@ -222,5 +235,9 @@ func (rB *ValidationRequestBuilder) Get(ctx context.Context, config *ValidationR
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(ValidationResponse), nil
+	typedRes, ok := res.(ValidationResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*ValidationResponse)(nil))
+	}
+	return typedRes, nil
 }

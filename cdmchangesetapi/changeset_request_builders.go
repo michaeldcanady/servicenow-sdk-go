@@ -1,7 +1,9 @@
+//nolint:dupl // per-verb request-builder methods share the mandatory nil-guard/send boilerplate by convention; each depends on its own outer type, response type, and discriminator factory, so it can't be extracted into a shared helper
 package cdmchangesetapi
 
 import (
 	"context"
+	"fmt"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -85,7 +87,11 @@ func (rB *ChangesetsRequestBuilder) Get(ctx context.Context, config *ChangesetsR
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(ChangesetsResponse), nil
+	typedRes, ok := res.(ChangesetsResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*ChangesetsResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 func (rB *ChangesetsRequestBuilder) Delete(ctx context.Context, config *ChangesetsRequestBuilderDeleteRequestConfiguration) error {
@@ -148,7 +154,11 @@ func (rB *ChangesetActivityRequestBuilder) Get(ctx context.Context, config *Chan
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(ChangesetActivityResponse), nil
+	typedRes, ok := res.(ChangesetActivityResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*ChangesetActivityResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // CommitStatusRequestBuilder handles /changesets/commit-status endpoint.
@@ -203,7 +213,11 @@ func (rB *CommitStatusItemRequestBuilder) Get(ctx context.Context, config *Commi
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(CommitStatusResponse), nil
+	typedRes, ok := res.(CommitStatusResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*CommitStatusResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // ImpactedSharedComponentsRequestBuilder handles /changesets/impacted-shared-components endpoint.
@@ -244,7 +258,11 @@ func (rB *ImpactedSharedComponentsRequestBuilder) Get(ctx context.Context, confi
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(ImpactedSharedComponentsResponse), nil
+	typedRes, ok := res.(ImpactedSharedComponentsResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*ImpactedSharedComponentsResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // ImpactedDeployablesRequestBuilder handles /changesets/impacted-deployables endpoint.
@@ -285,7 +303,11 @@ func (rB *ImpactedDeployablesRequestBuilder) Get(ctx context.Context, config *Im
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(ImpactedDeployablesResponse), nil
+	typedRes, ok := res.(ImpactedDeployablesResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*ImpactedDeployablesResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // ChangesetItemRequestBuilder handles /changesets/{changeset_id} endpoint.
@@ -339,5 +361,9 @@ func (rB *ImpactedDeployablesBySysIDRequestBuilder) Get(ctx context.Context, con
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(ImpactedDeployablesBySysIDResponse), nil
+	typedRes, ok := res.(ImpactedDeployablesBySysIDResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*ImpactedDeployablesBySysIDResponse)(nil))
+	}
+	return typedRes, nil
 }

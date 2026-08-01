@@ -3,6 +3,7 @@ package cdmapplicationsapi
 
 import (
 	"context"
+	"fmt"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -131,7 +132,11 @@ func (rB *DeployablesRequestBuilder) Put(ctx context.Context, body *DeployableUp
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(DeployableUpdateResponse), nil
+	typedRes, ok := res.(DeployableUpdateResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*DeployableUpdateResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // Exports returns an ExportsRequestBuilder.
@@ -203,7 +208,11 @@ func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, body *SharedC
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(SharedComponentUpdateResponse), nil
+	typedRes, ok := res.(SharedComponentUpdateResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*SharedComponentUpdateResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // UploadStatusRequestBuilder provides operations to access upload status.
@@ -262,7 +271,11 @@ func (rB *UploadStatusItemRequestBuilder) Get(ctx context.Context, config *Uploa
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(UploadStatusResponse), nil
+	typedRes, ok := res.(UploadStatusResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*UploadStatusResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // ExportsRequestBuilder provides operations to manage deployable exports.
@@ -305,7 +318,11 @@ func (rB *ExportsRequestBuilder) Get(ctx context.Context, config *ExportsRequest
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(ExportsResponse), nil
+	typedRes, ok := res.(ExportsResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*ExportsResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // ByID returns a ExportItemRequestBuilder.
@@ -374,7 +391,11 @@ func (rB *ExportItemStatusRequestBuilder) Get(ctx context.Context, config *Expor
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(ExportStatusResponse), nil
+	typedRes, ok := res.(ExportStatusResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*ExportStatusResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // ExportItemContentRequestBuilder provides operations to download export content.
@@ -414,7 +435,11 @@ func (rB *ExportItemContentRequestBuilder) Get(ctx context.Context, config *Expo
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.([]byte), nil
+	typedRes, ok := res.([]byte)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", []byte(nil))
+	}
+	return typedRes, nil
 }
 
 // SharedLibrariesRequestBuilder provides operations to manage shared libraries.
@@ -491,7 +516,11 @@ func (rB *SharedLibrariesComponentsApplicationsRequestBuilder) Get(ctx context.C
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(SharedLibrariesComponentsApplicationsResponse), nil
+	typedRes, ok := res.(SharedLibrariesComponentsApplicationsResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*SharedLibrariesComponentsApplicationsResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // UploadsRequestBuilder provides operations to manage uploads.
@@ -562,7 +591,11 @@ func (rB *UploadsComponentsRequestBuilder) Post(ctx context.Context, body *Compo
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(UploadStatusResponse), nil
+	typedRes, ok := res.(UploadStatusResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*UploadStatusResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // Vars returns a UploadsComponentsVarsRequestBuilder.
@@ -611,7 +644,11 @@ func (rB *UploadsComponentsVarsRequestBuilder) Post(ctx context.Context, body *C
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(UploadStatusResponse), nil
+	typedRes, ok := res.(UploadStatusResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*UploadStatusResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // UploadsCollectionsRequestBuilder provides operations to upload collections.
@@ -655,7 +692,11 @@ func (rB *UploadsCollectionsRequestBuilder) Post(ctx context.Context, body *Coll
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(UploadStatusResponse), nil
+	typedRes, ok := res.(UploadStatusResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*UploadStatusResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // File returns a UploadsCollectionsFileRequestBuilder.
@@ -704,7 +745,11 @@ func (rB *UploadsCollectionsFileRequestBuilder) Post(ctx context.Context, media 
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(UploadStatusResponse), nil
+	typedRes, ok := res.(UploadStatusResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*UploadStatusResponse)(nil))
+	}
+	return typedRes, nil
 }
 
 // UploadsDeployablesRequestBuilder provides operations to manage deployables uploads.
@@ -765,5 +810,9 @@ func (rB *UploadsDeployablesFileRequestBuilder) Post(ctx context.Context, media 
 	if conversion.IsNil(res) {
 		return nil, nil
 	}
-	return res.(UploadStatusResponse), nil
+	typedRes, ok := res.(UploadStatusResponse)
+	if !ok {
+		return nil, fmt.Errorf("res is not %T", (*UploadStatusResponse)(nil))
+	}
+	return typedRes, nil
 }
