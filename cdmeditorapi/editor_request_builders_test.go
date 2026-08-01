@@ -49,6 +49,17 @@ func TestNodesRequestBuilder_Get(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, mockRes, resp)
 	})
+
+	t.Run("Nil response", func(t *testing.T) {
+		nilAdapter := mocking.NewMockRequestAdapter()
+		nilBuilder := NewNodesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, nilAdapter)
+		nilAdapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
+
+		resp, err := nilBuilder.Get(context.Background(), nil)
+
+		require.NoError(t, err)
+		assert.Nil(t, resp)
+	})
 }
 
 func TestNodesRequestBuilder_Post(t *testing.T) {
@@ -63,6 +74,18 @@ func TestNodesRequestBuilder_Post(t *testing.T) {
 
 	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
+}
+
+func TestNodesRequestBuilder_Post_NilResponse(t *testing.T) {
+	adapter := mocking.NewMockRequestAdapter()
+	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
+	builder := NewNodesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
+
+	resp, err := builder.Post(context.Background(), NewNodeCreateRequest(), nil)
+
+	require.NoError(t, err)
+	assert.Nil(t, resp)
 }
 
 func TestNodeItemRequestBuilder_Put(t *testing.T) {
@@ -87,6 +110,21 @@ func TestNodeItemRequestBuilder_Put(t *testing.T) {
 
 		require.NoError(t, err)
 		assert.Equal(t, mockRes, resp)
+	})
+
+	t.Run("Nil response", func(t *testing.T) {
+		nilAdapter := mocking.NewMockRequestAdapter()
+		nilAdapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
+		nilBuilder := NewNodeItemRequestBuilderInternal(map[string]string{
+			"baseurl":     "https://example.service-now.com",
+			"node_sys_id": "node123",
+		}, nilAdapter)
+		nilAdapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
+
+		resp, err := nilBuilder.Put(context.Background(), NewNodeUpdateRequest(), nil)
+
+		require.NoError(t, err)
+		assert.Nil(t, resp)
 	})
 }
 
@@ -132,6 +170,17 @@ func TestValidationRequestBuilder_Get(t *testing.T) {
 
 		require.NoError(t, err)
 		assert.Equal(t, mockRes, resp)
+	})
+
+	t.Run("Nil response", func(t *testing.T) {
+		nilAdapter := mocking.NewMockRequestAdapter()
+		nilBuilder := NewValidationRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, nilAdapter)
+		nilAdapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
+
+		resp, err := nilBuilder.Get(context.Background(), nil)
+
+		require.NoError(t, err)
+		assert.Nil(t, resp)
 	})
 }
 

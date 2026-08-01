@@ -560,14 +560,6 @@ func TestUploadsDeployablesFileRequestBuilder_NilRequestAdapterGuards(t *testing
 
 // ---------------------------------------------------------------------------
 // Happy-path / adapter-error coverage for verb methods.
-//
-// NOTE: unlike caseapi, these builders' Get/Post/Put methods cast the
-// adapter's Send() result directly to the response interface without a nil
-// check first (res.(XResponse) instead of `if res == nil { return nil, nil }`
-// then the cast). A nil Send() response therefore panics instead of
-// returning (nil, nil) - see PR report for details. Only
-// ExportItemContentRequestBuilder.Get has the guard, so only it gets a
-// nil-response test case.
 // ---------------------------------------------------------------------------
 
 func TestDeployablesRequestBuilder_Delete_HappyAndError(t *testing.T) {
@@ -614,6 +606,7 @@ func TestDeployablesRequestBuilder_Put_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -632,6 +625,15 @@ func TestDeployablesRequestBuilder_Put_HappyAndError(t *testing.T) {
 			},
 			wantErr: errNetwork,
 		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -648,6 +650,10 @@ func TestDeployablesRequestBuilder_Put_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -698,6 +704,7 @@ func TestSharedComponentsRequestBuilder_Put_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -715,6 +722,15 @@ func TestSharedComponentsRequestBuilder_Put_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -732,6 +748,10 @@ func TestSharedComponentsRequestBuilder_Put_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -743,6 +763,7 @@ func TestUploadStatusItemRequestBuilder_Get_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -758,6 +779,14 @@ func TestUploadStatusItemRequestBuilder_Get_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -775,6 +804,10 @@ func TestUploadStatusItemRequestBuilder_Get_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -786,6 +819,7 @@ func TestExportsRequestBuilder_Get_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -801,6 +835,14 @@ func TestExportsRequestBuilder_Get_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -818,6 +860,10 @@ func TestExportsRequestBuilder_Get_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -829,6 +875,7 @@ func TestExportItemStatusRequestBuilder_Get_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -844,6 +891,14 @@ func TestExportItemStatusRequestBuilder_Get_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -861,6 +916,10 @@ func TestExportItemStatusRequestBuilder_Get_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -928,6 +987,7 @@ func TestSharedLibrariesComponentsApplicationsRequestBuilder_Get_HappyAndError(t
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -943,6 +1003,14 @@ func TestSharedLibrariesComponentsApplicationsRequestBuilder_Get_HappyAndError(t
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -961,6 +1029,10 @@ func TestSharedLibrariesComponentsApplicationsRequestBuilder_Get_HappyAndError(t
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -972,6 +1044,7 @@ func TestUploadsComponentsRequestBuilder_Post_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -989,6 +1062,15 @@ func TestUploadsComponentsRequestBuilder_Post_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -1007,6 +1089,10 @@ func TestUploadsComponentsRequestBuilder_Post_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -1018,6 +1104,7 @@ func TestUploadsComponentsVarsRequestBuilder_Post_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -1035,6 +1122,15 @@ func TestUploadsComponentsVarsRequestBuilder_Post_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -1053,6 +1149,10 @@ func TestUploadsComponentsVarsRequestBuilder_Post_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -1064,6 +1164,7 @@ func TestUploadsCollectionsRequestBuilder_Post_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -1081,6 +1182,15 @@ func TestUploadsCollectionsRequestBuilder_Post_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -1099,6 +1209,10 @@ func TestUploadsCollectionsRequestBuilder_Post_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -1110,6 +1224,7 @@ func TestUploadsCollectionsFileRequestBuilder_Post_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -1125,6 +1240,14 @@ func TestUploadsCollectionsFileRequestBuilder_Post_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -1143,6 +1266,10 @@ func TestUploadsCollectionsFileRequestBuilder_Post_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -1154,6 +1281,7 @@ func TestUploadsDeployablesFileRequestBuilder_Post_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -1169,6 +1297,14 @@ func TestUploadsDeployablesFileRequestBuilder_Post_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -1187,6 +1323,10 @@ func TestUploadsDeployablesFileRequestBuilder_Post_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})

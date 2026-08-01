@@ -274,12 +274,6 @@ func TestCommitStatusRequestBuilder_ByID(t *testing.T) {
 
 // ---------------------------------------------------------------------------
 // Happy-path / adapter-error coverage for verb methods.
-//
-// NOTE: like cdmapplicationsapi, these builders' Get methods cast the
-// adapter's Send() result directly to the response interface without a nil
-// check first (res.(XResponse) instead of `if res == nil { return nil, nil }`
-// then the cast) - see PR report. A nil Send() response would therefore
-// panic, so no nil-response test case is included here.
 // ---------------------------------------------------------------------------
 
 func TestChangesetsRequestBuilder_Get_HappyAndError(t *testing.T) {
@@ -287,6 +281,7 @@ func TestChangesetsRequestBuilder_Get_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -302,6 +297,14 @@ func TestChangesetsRequestBuilder_Get_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -319,6 +322,10 @@ func TestChangesetsRequestBuilder_Get_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -369,6 +376,7 @@ func TestChangesetActivityRequestBuilder_Get_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -384,6 +392,14 @@ func TestChangesetActivityRequestBuilder_Get_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -401,6 +417,10 @@ func TestChangesetActivityRequestBuilder_Get_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -412,6 +432,7 @@ func TestCommitStatusItemRequestBuilder_Get_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -427,6 +448,14 @@ func TestCommitStatusItemRequestBuilder_Get_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -444,6 +473,10 @@ func TestCommitStatusItemRequestBuilder_Get_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -455,6 +488,7 @@ func TestImpactedSharedComponentsRequestBuilder_Get_HappyAndError(t *testing.T) 
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -470,6 +504,14 @@ func TestImpactedSharedComponentsRequestBuilder_Get_HappyAndError(t *testing.T) 
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -487,6 +529,10 @@ func TestImpactedSharedComponentsRequestBuilder_Get_HappyAndError(t *testing.T) 
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -498,6 +544,7 @@ func TestImpactedDeployablesRequestBuilder_Get_HappyAndError(t *testing.T) {
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -513,6 +560,14 @@ func TestImpactedDeployablesRequestBuilder_Get_HappyAndError(t *testing.T) {
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -530,6 +585,10 @@ func TestImpactedDeployablesRequestBuilder_Get_HappyAndError(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -541,6 +600,7 @@ func TestImpactedDeployablesBySysIDRequestBuilder_Get_HappyAndError(t *testing.T
 		name      string
 		setupMock func(m *mocking.MockRequestAdapter)
 		wantErr   error
+		wantNil   bool
 	}{
 		{
 			name: "happy path",
@@ -556,6 +616,14 @@ func TestImpactedDeployablesBySysIDRequestBuilder_Get_HappyAndError(t *testing.T
 					Return(nil, errNetwork)
 			},
 			wantErr: errNetwork,
+		},
+		{
+			name: "nil response returns nil, nil",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			wantNil: true,
 		},
 	}
 
@@ -573,6 +641,10 @@ func TestImpactedDeployablesBySysIDRequestBuilder_Get_HappyAndError(t *testing.T
 				return
 			}
 			require.NoError(t, err)
+			if tt.wantNil {
+				assert.Nil(t, resp)
+				return
+			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
