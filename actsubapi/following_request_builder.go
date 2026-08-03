@@ -2,8 +2,10 @@ package actsubapi // nolint:dupl // FollowingItemRequestBuilder/SubscriberItemRe
 
 import (
 	"context"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -26,7 +28,15 @@ func NewFollowingsRequestBuilderInternal(pathParameters map[string]string, reque
 	}
 }
 
-// ByFollower returns a FollowingItemRequestBuilder.
+// NewFollowingsRequestBuilder instantiates a new [FollowingsRequestBuilder] with a raw URL and request adapter.
+func NewFollowingsRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *FollowingsRequestBuilder {
+	return NewFollowingsRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
+}
+
+// ByFollower returns a [FollowingItemRequestBuilder].
 func (rB *FollowingsRequestBuilder) ByFollower(follower string) *FollowingItemRequestBuilder {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
@@ -51,8 +61,16 @@ func NewFollowingItemRequestBuilderInternal(pathParameters map[string]string, re
 	}
 }
 
+// NewFollowingItemRequestBuilder instantiates a new [FollowingItemRequestBuilder] with a raw URL and request adapter.
+func NewFollowingItemRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *FollowingItemRequestBuilder {
+	return NewFollowingItemRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
+}
+
 // Get sends a GET request to retrieve following.
-func (rB *FollowingItemRequestBuilder) Get(ctx context.Context, config *FollowingsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+func (rB *FollowingItemRequestBuilder) Get(ctx context.Context, config *FollowingsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscription], error) {
 	if conversion.IsNil(rB) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}

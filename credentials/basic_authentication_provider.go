@@ -11,6 +11,8 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
+// BasicAuthenticationProvider is an authentication.AuthenticationProvider implementing HTTP
+// Basic authentication with a static username/password pair.
 type BasicAuthenticationProvider struct {
 	username string
 	password string

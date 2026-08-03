@@ -6,6 +6,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
+// PageIteratorOption[T] configures a PageIterator[T] at construction time.
 type PageIteratorOption[T serialization.Parsable] = internal.Option[*PageIterator[T]]
 
 // WithHeaders sets the headers for the next page request.

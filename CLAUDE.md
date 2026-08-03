@@ -60,8 +60,11 @@ template's path parameters accumulate as you chain deeper (see `now_request_buil
   `kiotaStore.BackingStore`, not struct fields (this changed from plain fields to store-backed
   accessors during the v2 rework — see PR #474 / commit `95ee5a9`).
 - `core.ServiceNowItemResponse[T]` / `core.ServiceNowCollectionResponse[T]` — generic response
-  envelopes; `T` is constrained by `internal/model.ServiceNowItem` (`store.BackedModel` +
-  `serialization.Parsable` + `GetSysID()`).
+  envelopes; `T` is constrained only by `serialization.Parsable`, deliberately looser than
+  `internal/model.ServiceNowItem` (`store.BackedModel` + `serialization.Parsable` +
+  `GetSysID()`) used elsewhere (e.g. `tableapi`). Many real result payloads (e.g.
+  `StatsResultModel`, `ConfigurationResult`, `ActivitySubscriptionModel`) aren't table records
+  and have no `sys_id`, so tightening this to `model.ServiceNowItem` is not viable.
 - `core.DefaultErrorMapping()` + `internal.GetErrorRegistryInstance()` — every request builder's
   `Send`/`SendPrimitive` call passes `core.DefaultErrorMapping()`, which maps HTTP status codes
   (`"400"`, `"401"`, `"404"`, `"5XX"`, `"XXX"`, ...) to `core.ServiceNowError` discriminator

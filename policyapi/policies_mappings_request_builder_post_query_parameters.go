@@ -1,5 +1,6 @@
 package policyapi
 
+// PoliciesMappingsRequestBuilderPostQueryParameters are the query parameters for the Post method.
 type PoliciesMappingsRequestBuilderPostQueryParameters struct {
 	// AppName Name of the CDM application for which to map the policy.
 	AppName *string `uriparametername:"appName"`

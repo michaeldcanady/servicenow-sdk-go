@@ -20,7 +20,7 @@ A subagent is a single file, `.claude/agents/<name>.md` — YAML frontmatter
 `model`), then a markdown body that IS the subagent's system prompt, written
 directly as instructions to that agent (no wrapper). See
 `.claude/agents/api-module-consistency-reviewer.md` and
-`.claude/agents/godog-test-writer.md` in this repo for the exact shape to
+`.claude/agents/test-coverage-writer.md` in this repo for the exact shape to
 match.
 
 Triggering also works differently from skills. There's no `Skill` tool or

@@ -65,7 +65,7 @@ func TestPreferencesRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	builder := NewPreferencesRequestBuilderInternal(nil, adapter)
 
-	requestInfo, err := builder.ToPostRequestInformation(context.Background(), NewActivitySubscriptionModel(), nil)
+	requestInfo, err := builder.ToPostRequestInformation(context.Background(), NewActivitySubscription(), nil)
 	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "POST", requestInfo.Method.String())
@@ -116,7 +116,7 @@ func TestSubscribeRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	builder := NewSubscribeRequestBuilderInternal(nil, adapter)
 
-	requestInfo, err := builder.ToPostRequestInformation(context.Background(), NewActivitySubscriptionModel(), nil)
+	requestInfo, err := builder.ToPostRequestInformation(context.Background(), NewActivitySubscription(), nil)
 	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "POST", requestInfo.Method.String())
@@ -147,7 +147,7 @@ func TestUserStreamItemRequestBuilder_ToPutRequestInformation(t *testing.T) {
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	builder := NewUserStreamItemRequestBuilderInternal(nil, adapter)
 
-	requestInfo, err := builder.ToPutRequestInformation(context.Background(), NewActivitySubscriptionModel(), nil)
+	requestInfo, err := builder.ToPutRequestInformation(context.Background(), NewActivitySubscription(), nil)
 	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
 	assert.Equal(t, "PUT", requestInfo.Method.String())

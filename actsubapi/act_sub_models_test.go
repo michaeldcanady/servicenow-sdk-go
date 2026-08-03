@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestNewActivitySubscriptionModel(t *testing.T) {
+func TestNewActivitySubscription(t *testing.T) {
 	t.Run("SuccessfulCreation", func(t *testing.T) {
-		instance := NewActivitySubscriptionModel()
+		instance := NewActivitySubscription()
 		assert.NotNil(t, instance)
 	})
 }
@@ -25,7 +25,7 @@ func TestCreateActivitySubscriptionModelFromDiscriminatorValue(t *testing.T) {
 
 func TestActivitySubscriptionModel_Serialize(t *testing.T) {
 	t.Run("SuccessfulSerialization", func(t *testing.T) {
-		instance := NewActivitySubscriptionModel()
+		instance := NewActivitySubscription()
 		writer := &mocking.MockSerializationWriter{}
 
 		err := instance.Serialize(writer)
@@ -35,14 +35,14 @@ func TestActivitySubscriptionModel_Serialize(t *testing.T) {
 
 func TestActivitySubscriptionModel_GetFieldDeserializers(t *testing.T) {
 	t.Run("SuccessfulGet", func(t *testing.T) {
-		instance := NewActivitySubscriptionModel()
+		instance := NewActivitySubscription()
 		deserializers := instance.GetFieldDeserializers()
 		assert.NotNil(t, deserializers)
 	})
 }
 
 func TestActivitySubscriptionModel_GettersSetters(t *testing.T) {
-	instance := NewActivitySubscriptionModel()
+	instance := NewActivitySubscription()
 
 	activities := []*Activity{NewActivity()}
 

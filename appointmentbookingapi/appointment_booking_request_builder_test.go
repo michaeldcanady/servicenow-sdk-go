@@ -62,7 +62,7 @@ func TestAppointmentRequestBuilder_Post(t *testing.T) {
 func TestAvailabilityRequestBuilder_Post(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
-	builder := NewAvailabilityRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+	builder := NewAvailabilityRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 	mockRes := core.NewBaseServiceNowItemResponse[*AvailabilityResultModel](CreateAvailabilityResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
@@ -76,7 +76,7 @@ func TestAvailabilityRequestBuilder_Post(t *testing.T) {
 func TestExecuteRuleConditionsRequestBuilder_Post(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
-	builder := NewExecuteRuleConditionsRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+	builder := NewExecuteRuleConditionsRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 	mockRes := core.NewBaseServiceNowItemResponse[*ExecuteRuleConditionsResult](CreateExecuteRuleConditionsResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
@@ -90,7 +90,7 @@ func TestExecuteRuleConditionsRequestBuilder_Post(t *testing.T) {
 func TestUserWindowRequestBuilder_Post(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
-	builder := NewUserWindowRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+	builder := NewUserWindowRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 	mockRes := core.NewBaseServiceNowItemResponse[*AvailabilityResultModel](CreateAvailabilityResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)

@@ -166,10 +166,14 @@ func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOpt
 	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
 }
 
+// NewPrivateAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization
+// Code flow using a confidential (client-secret-bearing) client.
 func NewPrivateAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
 	return NewAuthorizationCodeProvider(clientID, clientSecret, opts...)
 }
 
+// NewPublicAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization
+// Code flow using a public (no client-secret) client.
 func NewPublicAuthorizationCodeProvider(clientID string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
 	return NewAuthorizationCodeProvider(clientID, "", opts...)
 }

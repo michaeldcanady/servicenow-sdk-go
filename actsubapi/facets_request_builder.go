@@ -2,9 +2,11 @@ package actsubapi
 
 import (
 	"context"
+	"fmt"
 	"maps"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -26,6 +28,14 @@ func NewFacetsRequestBuilderInternal(pathParameters map[string]string, requestAd
 	return &FacetsRequestBuilder{
 		core.NewBaseRequestBuilder(requestAdapter, facetsURLTemplate, pathParameters),
 	}
+}
+
+// NewFacetsRequestBuilder instantiates a new [FacetsRequestBuilder] with a raw URL and request adapter.
+func NewFacetsRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *FacetsRequestBuilder {
+	return NewFacetsRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // ByContext returns a FacetsContextRequestBuilder.
@@ -79,7 +89,7 @@ func NewFacetsInstanceRequestBuilderInternal(pathParameters map[string]string, r
 }
 
 // Get sends a GET request to retrieve facets.
-func (rB *FacetsInstanceRequestBuilder) Get(ctx context.Context, config *FacetsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+func (rB *FacetsInstanceRequestBuilder) Get(ctx context.Context, config *FacetsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscription], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -93,7 +103,7 @@ func (rB *FacetsInstanceRequestBuilder) Get(ctx context.Context, config *FacetsR
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscription](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +112,12 @@ func (rB *FacetsInstanceRequestBuilder) Get(ctx context.Context, config *FacetsR
 		return nil, nil
 	}
 
-	return res.(*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel]), nil
+	typedRes, ok := res.(*core.BaseServiceNowCollectionResponse[*ActivitySubscription])
+	if !ok {
+		return nil, fmt.Errorf("unexpected response type %T", res)
+	}
+
+	return typedRes, nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.

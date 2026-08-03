@@ -13,10 +13,12 @@ type ComponentVarsUploadRequest struct {
 	core.BaseModel
 }
 
+// NewComponentVarsUploadRequest instantiates a new ComponentVarsUploadRequest.
 func NewComponentVarsUploadRequest() *ComponentVarsUploadRequest {
 	return &ComponentVarsUploadRequest{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the object's properties to the given writer.
 func (m *ComponentVarsUploadRequest) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -28,6 +30,7 @@ func (m *ComponentVarsUploadRequest) Serialize(writer serialization.Serializatio
 	)
 }
 
+// GetFieldDeserializers returns the deserializers for this object's fields.
 func (m *ComponentVarsUploadRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		appNameKey:       internalSerialization.DeserializeStringFunc(m.setAppName),
@@ -36,18 +39,23 @@ func (m *ComponentVarsUploadRequest) GetFieldDeserializers() map[string]func(ser
 	}
 }
 
+// GetAppName returns the app name.
 func (m *ComponentVarsUploadRequest) GetAppName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ComponentVarsUploadRequest, *string](m, appNameKey)
 }
 func (m *ComponentVarsUploadRequest) setAppName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, appNameKey, val)
 }
+
+// GetComponentName returns the component name.
 func (m *ComponentVarsUploadRequest) GetComponentName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ComponentVarsUploadRequest, *string](m, componentNameKey)
 }
 func (m *ComponentVarsUploadRequest) setComponentName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, componentNameKey, val)
 }
+
+// GetVars returns the vars.
 func (m *ComponentVarsUploadRequest) GetVars() (any, error) {
 	return store.DefaultBackedModelAccessorFunc[*ComponentVarsUploadRequest, any](m, varsKey)
 }
@@ -55,6 +63,7 @@ func (m *ComponentVarsUploadRequest) setVars(val any) error {
 	return store.DefaultBackedModelMutatorFunc(m, varsKey, val)
 }
 
+// CreateComponentVarsUploadRequestFromDiscriminatorValue creates a new ComponentVarsUploadRequest from a ParseNode.
 func CreateComponentVarsUploadRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewComponentVarsUploadRequest(), nil
 }

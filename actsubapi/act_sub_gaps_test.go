@@ -246,21 +246,21 @@ func verbCalls() []verbCall {
 		{
 			name: "PreferencesRequestBuilder Post",
 			call: func(a *mocking.MockRequestAdapter) (any, error) {
-				return NewPreferencesRequestBuilderInternal(params, a).Post(ctx, NewActivitySubscriptionModel(), nil)
+				return NewPreferencesRequestBuilderInternal(params, a).Post(ctx, NewActivitySubscription(), nil)
 			},
 		},
 		{
 			name: "SubscribeRequestBuilder Post",
 			call: func(a *mocking.MockRequestAdapter) (any, error) {
 				return NewSubscriptionsRequestBuilderInternal(params, a).ByObjectID("o").Subscribe().
-					Post(ctx, NewActivitySubscriptionModel(), nil)
+					Post(ctx, NewActivitySubscription(), nil)
 			},
 		},
 		{
 			name: "UserStreamItemRequestBuilder Put",
 			call: func(a *mocking.MockRequestAdapter) (any, error) {
 				return NewUserStreamRequestBuilderInternal(params, a).ByProfileID("p").
-					Put(ctx, NewActivitySubscriptionModel(), nil)
+					Put(ctx, NewActivitySubscription(), nil)
 			},
 		},
 	}
@@ -328,21 +328,21 @@ func TestBodyVerbs_SerializationFailure(t *testing.T) {
 		{
 			name: "PreferencesRequestBuilder Post",
 			call: func(a *mocking.MockRequestAdapter) (any, error) {
-				return NewPreferencesRequestBuilderInternal(params, a).Post(ctx, NewActivitySubscriptionModel(), nil)
+				return NewPreferencesRequestBuilderInternal(params, a).Post(ctx, NewActivitySubscription(), nil)
 			},
 		},
 		{
 			name: "SubscribeRequestBuilder Post",
 			call: func(a *mocking.MockRequestAdapter) (any, error) {
 				return NewSubscriptionsRequestBuilderInternal(params, a).ByObjectID("o").Subscribe().
-					Post(ctx, NewActivitySubscriptionModel(), nil)
+					Post(ctx, NewActivitySubscription(), nil)
 			},
 		},
 		{
 			name: "UserStreamItemRequestBuilder Put",
 			call: func(a *mocking.MockRequestAdapter) (any, error) {
 				return NewUserStreamRequestBuilderInternal(params, a).ByProfileID("p").
-					Put(ctx, NewActivitySubscriptionModel(), nil)
+					Put(ctx, NewActivitySubscription(), nil)
 			},
 		},
 	}
@@ -367,9 +367,9 @@ func TestModels_SerializeNilReceiver(t *testing.T) {
 	writer := mocking.NewMockSerializationWriter()
 
 	t.Run("ActivitySubscriptionModel", func(t *testing.T) {
-		var model *ActivitySubscriptionModel
+		var model *ActivitySubscription
 		require.NoError(t, model.Serialize(writer))
-		require.NoError(t, NewActivitySubscriptionModel().Serialize(writer))
+		require.NoError(t, NewActivitySubscription().Serialize(writer))
 	})
 
 	t.Run("Activity", func(t *testing.T) {

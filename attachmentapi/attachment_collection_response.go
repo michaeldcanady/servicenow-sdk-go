@@ -10,4 +10,5 @@ func CreateAttachmentCollectionResponseFromDiscriminatorValue(_ serialization.Pa
 	return core.NewBaseServiceNowCollectionResponse[*Attachment](CreateAttachmentFromDiscriminatorValue), nil
 }
 
+// AttachmentCollectionResponse Represents a Service-Now API collection response of Attachment.
 type AttachmentCollectionResponse = core.BaseServiceNowCollectionResponse[*Attachment]

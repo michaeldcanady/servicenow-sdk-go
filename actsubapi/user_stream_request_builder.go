@@ -5,6 +5,7 @@ import (
 	"maps"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -26,6 +27,14 @@ func NewUserStreamRequestBuilderInternal(pathParameters map[string]string, reque
 	return &UserStreamRequestBuilder{
 		core.NewBaseRequestBuilder(requestAdapter, userStreamURLTemplate, pathParameters),
 	}
+}
+
+// NewUserStreamRequestBuilder instantiates a new [UserStreamRequestBuilder] with a raw URL and request adapter.
+func NewUserStreamRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *UserStreamRequestBuilder {
+	return NewUserStreamRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // ByProfileID returns a UserStreamItemRequestBuilder.
@@ -54,7 +63,7 @@ func NewUserStreamItemRequestBuilderInternal(pathParameters map[string]string, r
 }
 
 // Get sends a GET request to retrieve a specific user activity stream.
-func (rB *UserStreamItemRequestBuilder) Get(ctx context.Context, config *UserStreamRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+func (rB *UserStreamItemRequestBuilder) Get(ctx context.Context, config *UserStreamRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscription], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -69,7 +78,7 @@ func (rB *UserStreamItemRequestBuilder) Get(ctx context.Context, config *UserStr
 	}
 
 	errorMapping := core.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), errorMapping)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscription](CreateActivitySubscriptionModelFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +87,7 @@ func (rB *UserStreamItemRequestBuilder) Get(ctx context.Context, config *UserStr
 		return nil, nil
 	}
 
-	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscription]), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
@@ -96,7 +105,7 @@ func (rB *UserStreamItemRequestBuilder) ToGetRequestInformation(_ context.Contex
 }
 
 // Put sends a PUT request to update a specific user activity stream.
-func (rB *UserStreamItemRequestBuilder) Put(ctx context.Context, body *ActivitySubscriptionModel, config *UserStreamRequestBuilderPutRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+func (rB *UserStreamItemRequestBuilder) Put(ctx context.Context, body *ActivitySubscription, config *UserStreamRequestBuilderPutRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscription], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -111,7 +120,7 @@ func (rB *UserStreamItemRequestBuilder) Put(ctx context.Context, body *ActivityS
 	}
 
 	errorMapping := core.DefaultErrorMapping()
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), errorMapping)
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscription](CreateActivitySubscriptionModelFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}
@@ -120,11 +129,11 @@ func (rB *UserStreamItemRequestBuilder) Put(ctx context.Context, body *ActivityS
 		return nil, nil
 	}
 
-	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscription]), nil
 }
 
 // ToPutRequestInformation creates a RequestInformation object for a PUT request.
-func (rB *UserStreamItemRequestBuilder) ToPutRequestInformation(ctx context.Context, body *ActivitySubscriptionModel, config *UserStreamRequestBuilderPutRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *UserStreamItemRequestBuilder) ToPutRequestInformation(ctx context.Context, body *ActivitySubscription, config *UserStreamRequestBuilderPutRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}

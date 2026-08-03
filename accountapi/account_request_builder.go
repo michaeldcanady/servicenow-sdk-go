@@ -2,6 +2,7 @@ package accountapi
 
 import (
 	"context"
+	"fmt"
 	"maps"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
@@ -61,7 +62,13 @@ func (rB *AccountRequestBuilder) Get(ctx context.Context, config *AccountRequest
 		return nil, nil
 	}
 
-	return res.(AccountCollectionResponse), nil
+	typedRes, ok := res.(AccountCollectionResponse)
+
+	if !ok {
+		return nil, fmt.Errorf("unexpected response type: %T", res)
+	}
+
+	return typedRes, nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.

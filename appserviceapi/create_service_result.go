@@ -13,10 +13,12 @@ type CreateServiceRequest struct {
 	core.BaseModel
 }
 
+// NewCreateServiceRequest creates a new instance of CreateServiceRequest.
 func NewCreateServiceRequest() *CreateServiceRequest {
 	return &CreateServiceRequest{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the objects properties to the current writer.
 func (m *CreateServiceRequest) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -27,6 +29,7 @@ func (m *CreateServiceRequest) Serialize(writer serialization.SerializationWrite
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *CreateServiceRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		nameKey:     internalSerialization.DeserializeStringFunc(m.setName),
@@ -34,6 +37,7 @@ func (m *CreateServiceRequest) GetFieldDeserializers() map[string]func(serializa
 	}
 }
 
+// GetName returns the name value.
 func (m *CreateServiceRequest) GetName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CreateServiceRequest, *string](m, nameKey)
 }
@@ -42,6 +46,7 @@ func (m *CreateServiceRequest) setName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, nameKey, val)
 }
 
+// GetComments returns the comments value.
 func (m *CreateServiceRequest) GetComments() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CreateServiceRequest, *string](m, commentsKey)
 }
@@ -50,6 +55,7 @@ func (m *CreateServiceRequest) setComments(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, commentsKey, val)
 }
 
+// CreateCreateServiceRequestFromDiscriminatorValue creates a new CreateServiceRequest from a ParseNode.
 func CreateCreateServiceRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewCreateServiceRequest(), nil
 }
@@ -59,10 +65,12 @@ type CreateServiceResult struct {
 	core.BaseModel
 }
 
+// NewCreateServiceResult creates a new instance of CreateServiceResult.
 func NewCreateServiceResult() *CreateServiceResult {
 	return &CreateServiceResult{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the objects properties to the current writer.
 func (m *CreateServiceResult) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -74,6 +82,7 @@ func (m *CreateServiceResult) Serialize(writer serialization.SerializationWriter
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *CreateServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		sysIDKey:    internalSerialization.DeserializeStringFunc(m.setSysID),
@@ -82,6 +91,7 @@ func (m *CreateServiceResult) GetFieldDeserializers() map[string]func(serializat
 	}
 }
 
+// GetSysID returns the sys id value.
 func (m *CreateServiceResult) GetSysID() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CreateServiceResult, *string](m, sysIDKey)
 }
@@ -90,6 +100,7 @@ func (m *CreateServiceResult) setSysID(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 
+// GetName returns the name value.
 func (m *CreateServiceResult) GetName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CreateServiceResult, *string](m, nameKey)
 }
@@ -98,6 +109,7 @@ func (m *CreateServiceResult) setName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, nameKey, val)
 }
 
+// GetComments returns the comments value.
 func (m *CreateServiceResult) GetComments() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CreateServiceResult, *string](m, commentsKey)
 }
@@ -106,6 +118,7 @@ func (m *CreateServiceResult) setComments(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, commentsKey, val)
 }
 
+// CreateCreateServiceResultFromDiscriminatorValue creates a new CreateServiceResult from a ParseNode.
 func CreateCreateServiceResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewCreateServiceResult(), nil
 }

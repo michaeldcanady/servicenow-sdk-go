@@ -10,6 +10,7 @@ type FindServiceResponse interface {
 	core.ServiceNowItemResponse[*FindServiceResult]
 }
 
+// CreateFindServiceResponseFromDiscriminatorValue creates a new FindServiceResponse from a ParseNode.
 func CreateFindServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return core.NewBaseServiceNowItemResponse[*FindServiceResult](CreateFindServiceResultFromDiscriminatorValue), nil
 }

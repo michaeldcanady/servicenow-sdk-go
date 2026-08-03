@@ -11,6 +11,7 @@ type MessageResult struct {
 	Message *string
 }
 
+// NewMessageResult instantiates a new MessageResult.
 func NewMessageResult(message *string) *MessageResult {
 	return &MessageResult{
 		BaseModel: *core.NewBaseModel(),
@@ -18,11 +19,15 @@ func NewMessageResult(message *string) *MessageResult {
 	}
 }
 
+// Serialize writes the object's properties to the given writer.
 func (m *MessageResult) Serialize(_ serialization.SerializationWriter) error { return nil }
+
+// GetFieldDeserializers returns the deserializers for this object's fields.
 func (m *MessageResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return nil
 }
 
+// CreateMessageResultFromDiscriminatorValue creates a new MessageResult from a ParseNode.
 func CreateMessageResultFromDiscriminatorValue(node serialization.ParseNode) (serialization.Parsable, error) {
 	val, err := node.GetStringValue()
 	if err != nil {

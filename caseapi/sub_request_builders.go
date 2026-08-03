@@ -24,6 +24,7 @@ type CaseItemRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewCaseItemRequestBuilderInternal instantiates a new CaseItemRequestBuilder.
 func NewCaseItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CaseItemRequestBuilder {
 	return &CaseItemRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, caseItemURLTemplate, pathParameters),
@@ -132,6 +133,7 @@ type CaseActivitiesRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewCaseActivitiesRequestBuilderInternal instantiates a new CaseActivitiesRequestBuilder.
 func NewCaseActivitiesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CaseActivitiesRequestBuilder {
 	return &CaseActivitiesRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, caseActivitiesURLTemplate, pathParameters),
@@ -180,12 +182,14 @@ type CaseFieldValuesRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewCaseFieldValuesRequestBuilderInternal instantiates a new CaseFieldValuesRequestBuilder for the case-level field_values endpoint.
 func NewCaseFieldValuesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CaseFieldValuesRequestBuilder {
 	return &CaseFieldValuesRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, fieldValuesURLTemplate, pathParameters),
 	}
 }
 
+// NewItemFieldValuesRequestBuilderInternal instantiates a new CaseFieldValuesRequestBuilder for a single case's field_values endpoint.
 func NewItemFieldValuesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CaseFieldValuesRequestBuilder {
 	return &CaseFieldValuesRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, itemFieldValuesURLTemplate, pathParameters),

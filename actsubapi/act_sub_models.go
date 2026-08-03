@@ -16,25 +16,25 @@ const (
 	statusKey     = "status"
 )
 
-// ActivitySubscriptionModel represents a generic model for Activity Subscriptions.
-type ActivitySubscriptionModel struct {
+// ActivitySubscription represents an activity subscriptions.
+type ActivitySubscription struct {
 	core.BaseModel
 }
 
-// NewActivitySubscriptionModel creates a new instance of ActivitySubscriptionModel.
-func NewActivitySubscriptionModel() *ActivitySubscriptionModel {
-	return &ActivitySubscriptionModel{
+// NewActivitySubscription creates a new instance of ActivitySubscriptionModel.
+func NewActivitySubscription() *ActivitySubscription {
+	return &ActivitySubscription{
 		BaseModel: *core.NewBaseModel(),
 	}
 }
 
 // CreateActivitySubscriptionModelFromDiscriminatorValue creates a new instance of ActivitySubscriptionModel.
 func CreateActivitySubscriptionModelFromDiscriminatorValue(serialization.ParseNode) (serialization.Parsable, error) {
-	return NewActivitySubscriptionModel(), nil
+	return NewActivitySubscription(), nil
 }
 
 // Serialize writes the objects properties to the current writer.
-func (m *ActivitySubscriptionModel) Serialize(_ serialization.SerializationWriter) error {
+func (m *ActivitySubscription) Serialize(_ serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
 	}
@@ -42,7 +42,7 @@ func (m *ActivitySubscriptionModel) Serialize(_ serialization.SerializationWrite
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (m *ActivitySubscriptionModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (m *ActivitySubscription) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		messageKey:    internalSerialization.DeserializeStringFunc(m.SetMessage),
 		streamKey:     internalSerialization.DeserializeStringFunc(m.SetStream),
@@ -52,42 +52,52 @@ func (m *ActivitySubscriptionModel) GetFieldDeserializers() map[string]func(seri
 	}
 }
 
-func (m *ActivitySubscriptionModel) GetMessage() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ActivitySubscriptionModel, *string](m, messageKey)
+// GetMessage returns the message value.
+func (m *ActivitySubscription) GetMessage() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ActivitySubscription, *string](m, messageKey)
 }
 
-func (m *ActivitySubscriptionModel) SetMessage(value *string) error {
+// SetMessage sets the message value.
+func (m *ActivitySubscription) SetMessage(value *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, messageKey, value)
 }
 
-func (m *ActivitySubscriptionModel) GetStream() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ActivitySubscriptionModel, *string](m, streamKey)
+// GetStream returns the stream value.
+func (m *ActivitySubscription) GetStream() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ActivitySubscription, *string](m, streamKey)
 }
 
-func (m *ActivitySubscriptionModel) SetStream(value *string) error {
+// SetStream sets the stream value.
+func (m *ActivitySubscription) SetStream(value *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, streamKey, value)
 }
 
-func (m *ActivitySubscriptionModel) GetUser() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ActivitySubscriptionModel, *string](m, userKey)
+// GetUser returns the user value.
+func (m *ActivitySubscription) GetUser() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*ActivitySubscription, *string](m, userKey)
 }
 
-func (m *ActivitySubscriptionModel) SetUser(value *string) error {
+// SetUser sets the user value.
+func (m *ActivitySubscription) SetUser(value *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, userKey, value)
 }
 
-func (m *ActivitySubscriptionModel) GetActivities() ([]*Activity, error) {
-	return store.DefaultBackedModelAccessorFunc[*ActivitySubscriptionModel, []*Activity](m, activitiesKey)
+// GetActivities returns the activities value.
+func (m *ActivitySubscription) GetActivities() ([]*Activity, error) {
+	return store.DefaultBackedModelAccessorFunc[*ActivitySubscription, []*Activity](m, activitiesKey)
 }
 
-func (m *ActivitySubscriptionModel) SetActivities(value []*Activity) error {
+// SetActivities sets the activities value.
+func (m *ActivitySubscription) SetActivities(value []*Activity) error {
 	return store.DefaultBackedModelMutatorFunc(m, activitiesKey, value)
 }
 
-func (m *ActivitySubscriptionModel) GetStatus() (*int64, error) {
-	return store.DefaultBackedModelAccessorFunc[*ActivitySubscriptionModel, *int64](m, statusKey)
+// GetStatus returns the status value.
+func (m *ActivitySubscription) GetStatus() (*int64, error) {
+	return store.DefaultBackedModelAccessorFunc[*ActivitySubscription, *int64](m, statusKey)
 }
 
-func (m *ActivitySubscriptionModel) SetStatus(value *int64) error {
+// SetStatus sets the status value.
+func (m *ActivitySubscription) SetStatus(value *int64) error {
 	return store.DefaultBackedModelMutatorFunc(m, statusKey, value)
 }

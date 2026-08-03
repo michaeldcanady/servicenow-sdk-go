@@ -7,8 +7,10 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
+// ModelOption configures a Model at construction time.
 type ModelOption = internal.Option[Model]
 
+// BackingStoreSettableOption[T] configures a T that supports setting its backing store factory.
 type BackingStoreSettableOption[T BackingStoreFactorySetter] func(T) error
 
 // WithBackingStoreFactory

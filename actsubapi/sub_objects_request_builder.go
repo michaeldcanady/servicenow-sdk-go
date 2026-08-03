@@ -2,7 +2,9 @@ package actsubapi
 
 import (
 	"context"
+
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -25,8 +27,16 @@ func NewSubObjectsRequestBuilderInternal(pathParameters map[string]string, reque
 	}
 }
 
+// NewSubObjectsRequestBuilder instantiates a new [SubObjectsRequestBuilder] with a raw URL and request adapter.
+func NewSubObjectsRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *SubObjectsRequestBuilder {
+	return NewSubObjectsRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
+}
+
 // Get sends a GET request to retrieve subscribable objects.
-func (rB *SubObjectsRequestBuilder) Get(ctx context.Context, config *SubObjectsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+func (rB *SubObjectsRequestBuilder) Get(ctx context.Context, config *SubObjectsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscription], error) {
 	if conversion.IsNil(rB) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}

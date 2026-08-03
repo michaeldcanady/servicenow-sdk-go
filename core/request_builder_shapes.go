@@ -31,6 +31,8 @@ type requestConfigurationShape[Q any] interface {
 // ActivitiesRequestBuilderGetRequestConfiguration). Every real builder in this codebase
 // takes *C, never C by value, so these interfaces take *C too.
 
+// CollectionGetRequestBuilder[T,Q,C] is satisfied by any request builder whose Get method
+// returns a *BaseServiceNowCollectionResponse[T] using the typed-QueryParameters convention.
 type CollectionGetRequestBuilder[T serialization.Parsable, Q any, C requestConfigurationShape[Q]] interface {
 	Get(ctx context.Context, requestConfiguration *C) (*BaseServiceNowCollectionResponse[T], error)
 	ToGetRequestInformation(ctx context.Context, requestConfiguration *C) (*abstractions.RequestInformation, error)
@@ -41,21 +43,29 @@ type CollectionGetRequestBuilder[T serialization.Parsable, Q any, C requestConfi
 // (matched by ItemPostRequestBuilder below) or a bespoke response type outside this
 // taxonomy (e.g. appserviceapi's CreateServiceResponse).
 
+// ItemGetRequestBuilder[T,Q,C] is satisfied by any request builder whose Get method returns
+// a *BaseServiceNowItemResponse[T] using the typed-QueryParameters convention.
 type ItemGetRequestBuilder[T serialization.Parsable, Q any, C requestConfigurationShape[Q]] interface {
 	Get(ctx context.Context, requestConfiguration *C) (*BaseServiceNowItemResponse[T], error)
 	ToGetRequestInformation(ctx context.Context, requestConfiguration *C) (*abstractions.RequestInformation, error)
 }
 
+// ItemPostRequestBuilder[T,Q,C] is satisfied by any request builder whose Post method returns
+// a *BaseServiceNowItemResponse[T] using the typed-QueryParameters convention.
 type ItemPostRequestBuilder[T serialization.Parsable, Q any, C requestConfigurationShape[Q]] interface {
 	Post(ctx context.Context, body T, requestConfiguration *C) (*BaseServiceNowItemResponse[T], error)
 	ToPostRequestInformation(ctx context.Context, body T, requestConfiguration *C) (*abstractions.RequestInformation, error)
 }
 
+// ItemPatchRequestBuilder[T,Q,C] is satisfied by any request builder whose Patch method returns
+// a *BaseServiceNowItemResponse[T] using the typed-QueryParameters convention.
 type ItemPatchRequestBuilder[T serialization.Parsable, Q any, C requestConfigurationShape[Q]] interface {
 	Patch(ctx context.Context, body T, requestConfiguration *C) (*BaseServiceNowItemResponse[T], error)
 	ToPatchRequestInformation(ctx context.Context, body T, requestConfiguration *C) (*abstractions.RequestInformation, error)
 }
 
+// ItemDeleteRequestBuilder[Q,C] is satisfied by any request builder with a Delete method using
+// the typed-QueryParameters convention.
 type ItemDeleteRequestBuilder[Q any, C requestConfigurationShape[Q]] interface {
 	Delete(ctx context.Context, requestConfiguration *C) error
 	ToDeleteRequestInformation(ctx context.Context, requestConfiguration *C) (*abstractions.RequestInformation, error)

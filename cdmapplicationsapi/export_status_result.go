@@ -13,10 +13,12 @@ type ExportStatusResult struct {
 	core.BaseModel
 }
 
+// NewExportStatusResult instantiates a new ExportStatusResult.
 func NewExportStatusResult() *ExportStatusResult {
 	return &ExportStatusResult{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the object's properties to the given writer.
 func (m *ExportStatusResult) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -29,6 +31,7 @@ func (m *ExportStatusResult) Serialize(writer serialization.SerializationWriter)
 	)
 }
 
+// GetFieldDeserializers returns the deserializers for this object's fields.
 func (m *ExportStatusResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		stateKey:    internalSerialization.DeserializeStringFunc(m.setState),
@@ -38,24 +41,31 @@ func (m *ExportStatusResult) GetFieldDeserializers() map[string]func(serializati
 	}
 }
 
+// GetState returns the state.
 func (m *ExportStatusResult) GetState() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ExportStatusResult, *string](m, stateKey)
 }
 func (m *ExportStatusResult) setState(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, stateKey, val)
 }
+
+// GetStatus returns the status.
 func (m *ExportStatusResult) GetStatus() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ExportStatusResult, *string](m, statusKey)
 }
 func (m *ExportStatusResult) setStatus(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, statusKey, val)
 }
+
+// GetMessage returns the message.
 func (m *ExportStatusResult) GetMessage() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ExportStatusResult, *string](m, messageKey)
 }
 func (m *ExportStatusResult) setMessage(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, messageKey, val)
 }
+
+// GetProgress returns the progress.
 func (m *ExportStatusResult) GetProgress() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ExportStatusResult, *string](m, progressKey)
 }
@@ -63,6 +73,7 @@ func (m *ExportStatusResult) setProgress(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, progressKey, val)
 }
 
+// CreateExportStatusResultFromDiscriminatorValue creates a new ExportStatusResult from a ParseNode.
 func CreateExportStatusResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewExportStatusResult(), nil
 }

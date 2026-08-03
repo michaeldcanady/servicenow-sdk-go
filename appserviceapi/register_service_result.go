@@ -13,10 +13,12 @@ type RegisterServiceResult struct {
 	core.BaseModel
 }
 
+// NewRegisterServiceResult creates a new instance of RegisterServiceResult.
 func NewRegisterServiceResult() *RegisterServiceResult {
 	return &RegisterServiceResult{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the objects properties to the current writer.
 func (m *RegisterServiceResult) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -29,6 +31,7 @@ func (m *RegisterServiceResult) Serialize(writer serialization.SerializationWrit
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *RegisterServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		sysIDKey:   internalSerialization.DeserializeStringFunc(m.setSysID),
@@ -38,6 +41,7 @@ func (m *RegisterServiceResult) GetFieldDeserializers() map[string]func(serializ
 	}
 }
 
+// GetSysID returns the sys id value.
 func (m *RegisterServiceResult) GetSysID() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*RegisterServiceResult, *string](m, sysIDKey)
 }
@@ -46,6 +50,7 @@ func (m *RegisterServiceResult) setSysID(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 
+// GetNumber returns the number value.
 func (m *RegisterServiceResult) GetNumber() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*RegisterServiceResult, *string](m, numberKey)
 }
@@ -54,6 +59,7 @@ func (m *RegisterServiceResult) setNumber(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, numberKey, val)
 }
 
+// GetStatus returns the status value.
 func (m *RegisterServiceResult) GetStatus() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*RegisterServiceResult, *string](m, statusKey)
 }
@@ -62,6 +68,7 @@ func (m *RegisterServiceResult) setStatus(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, statusKey, val)
 }
 
+// GetMessage returns the message value.
 func (m *RegisterServiceResult) GetMessage() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*RegisterServiceResult, *string](m, messageKey)
 }
@@ -70,6 +77,7 @@ func (m *RegisterServiceResult) setMessage(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, messageKey, val)
 }
 
+// CreateRegisterServiceResultFromDiscriminatorValue creates a new RegisterServiceResult from a ParseNode.
 func CreateRegisterServiceResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewRegisterServiceResult(), nil
 }

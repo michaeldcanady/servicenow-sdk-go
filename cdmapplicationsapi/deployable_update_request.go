@@ -13,10 +13,12 @@ type DeployableUpdateRequest struct {
 	core.BaseModel
 }
 
+// NewDeployableUpdateRequest instantiates a new DeployableUpdateRequest.
 func NewDeployableUpdateRequest() *DeployableUpdateRequest {
 	return &DeployableUpdateRequest{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the object's properties to the given writer.
 func (m *DeployableUpdateRequest) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -28,6 +30,7 @@ func (m *DeployableUpdateRequest) Serialize(writer serialization.SerializationWr
 	)
 }
 
+// GetFieldDeserializers returns the deserializers for this object's fields.
 func (m *DeployableUpdateRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		appNameKey:        internalSerialization.DeserializeStringFunc(m.setAppName),
@@ -36,18 +39,23 @@ func (m *DeployableUpdateRequest) GetFieldDeserializers() map[string]func(serial
 	}
 }
 
+// GetAppName returns the app name.
 func (m *DeployableUpdateRequest) GetAppName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*DeployableUpdateRequest, *string](m, appNameKey)
 }
 func (m *DeployableUpdateRequest) setAppName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, appNameKey, val)
 }
+
+// GetDeployableName returns the deployable name.
 func (m *DeployableUpdateRequest) GetDeployableName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*DeployableUpdateRequest, *string](m, deployableNameKey)
 }
 func (m *DeployableUpdateRequest) setDeployableName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, deployableNameKey, val)
 }
+
+// GetData returns the data.
 func (m *DeployableUpdateRequest) GetData() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*DeployableUpdateRequest, *string](m, dataKey)
 }
@@ -55,6 +63,7 @@ func (m *DeployableUpdateRequest) setData(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, dataKey, val)
 }
 
+// CreateDeployableUpdateRequestFromDiscriminatorValue creates a new DeployableUpdateRequest from a ParseNode.
 func CreateDeployableUpdateRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewDeployableUpdateRequest(), nil
 }

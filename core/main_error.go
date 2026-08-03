@@ -13,6 +13,7 @@ const (
 	statusKey  = "status"
 )
 
+// MainErrorable represents the detail/message/status fields of a Service-Now API error.
 type MainErrorable interface {
 	GetDetail() (*string, error)
 	GetMessage() (*string, error)

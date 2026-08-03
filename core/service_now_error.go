@@ -130,6 +130,7 @@ func (exc *ServiceNowError) setError(mainError MainErrorable) error {
 	return store.DefaultBackedModelMutatorFunc(exc, errorKey, mainError)
 }
 
+// Error implements the error interface, returning the main error's message or detail.
 func (exc *ServiceNowError) Error() string {
 	mainErr, _ := exc.GetError()
 	msg, _ := mainErr.GetMessage()

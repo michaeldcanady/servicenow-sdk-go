@@ -64,6 +64,7 @@ type file interface {
 	kiotaStore.BackedModel
 }
 
+// File implements the FileModel interface, representing a file attachment.
 type File struct {
 	core.BackedModel
 }

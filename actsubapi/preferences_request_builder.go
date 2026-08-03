@@ -5,6 +5,7 @@ import (
 	"maps"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -21,7 +22,7 @@ type PreferencesRequestBuilder struct {
 	core.RequestBuilder
 }
 
-var _ core.ItemPostRequestBuilder[*ActivitySubscriptionModel, abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*PreferencesRequestBuilder)(nil)
+var _ core.ItemPostRequestBuilder[*ActivitySubscription, abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*PreferencesRequestBuilder)(nil)
 
 // NewPreferencesRequestBuilderInternal instantiates a new PreferencesRequestBuilder.
 func NewPreferencesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *PreferencesRequestBuilder {
@@ -30,8 +31,16 @@ func NewPreferencesRequestBuilderInternal(pathParameters map[string]string, requ
 	}
 }
 
+// NewPreferencesRequestBuilder instantiates a new [PreferencesRequestBuilder] with a raw URL and request adapter.
+func NewPreferencesRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *PreferencesRequestBuilder {
+	return NewPreferencesRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
+}
+
 // Post sends a POST request to create preferences.
-func (rB *PreferencesRequestBuilder) Post(ctx context.Context, body *ActivitySubscriptionModel, config *PreferencesRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+func (rB *PreferencesRequestBuilder) Post(ctx context.Context, body *ActivitySubscription, config *PreferencesRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscription], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -45,7 +54,7 @@ func (rB *PreferencesRequestBuilder) Post(ctx context.Context, body *ActivitySub
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscription](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -54,11 +63,11 @@ func (rB *PreferencesRequestBuilder) Post(ctx context.Context, body *ActivitySub
 		return nil, nil
 	}
 
-	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscription]), nil
 }
 
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
-func (rB *PreferencesRequestBuilder) ToPostRequestInformation(ctx context.Context, body *ActivitySubscriptionModel, config *PreferencesRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *PreferencesRequestBuilder) ToPostRequestInformation(ctx context.Context, body *ActivitySubscription, config *PreferencesRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -104,7 +113,7 @@ func NewPreferenceItemRequestBuilderInternal(pathParameters map[string]string, r
 }
 
 // Get sends a GET request to retrieve preferences.
-func (rB *PreferenceItemRequestBuilder) Get(ctx context.Context, config *PreferencesRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+func (rB *PreferenceItemRequestBuilder) Get(ctx context.Context, config *PreferencesRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscription], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -118,7 +127,7 @@ func (rB *PreferenceItemRequestBuilder) Get(ctx context.Context, config *Prefere
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscription](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +136,7 @@ func (rB *PreferenceItemRequestBuilder) Get(ctx context.Context, config *Prefere
 		return nil, nil
 	}
 
-	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscription]), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.

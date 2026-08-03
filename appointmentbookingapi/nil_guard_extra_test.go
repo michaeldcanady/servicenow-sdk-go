@@ -130,7 +130,7 @@ func TestAppointmentRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
 }
 
 func TestAvailabilityRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
-	builder := NewAvailabilityRequestBuilder(map[string]string{}, nil)
+	builder := NewAvailabilityRequestBuilderInternal(map[string]string{}, nil)
 
 	resp, err := builder.Post(context.Background(), nil, nil)
 
@@ -139,7 +139,7 @@ func TestAvailabilityRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
 }
 
 func TestCalendarRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
-	builder := NewCalendarRequestBuilder(map[string]string{}, nil)
+	builder := NewCalendarRequestBuilderInternal(map[string]string{}, nil)
 
 	resp, err := builder.Get(context.Background(), nil)
 
@@ -148,7 +148,7 @@ func TestCalendarRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
 }
 
 func TestConfigurationRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
-	builder := NewConfigurationRequestBuilder(map[string]string{}, nil)
+	builder := NewConfigurationRequestBuilderInternal(map[string]string{}, nil)
 
 	resp, err := builder.Get(context.Background(), nil)
 
@@ -157,7 +157,7 @@ func TestConfigurationRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
 }
 
 func TestExecuteRuleConditionsRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
-	builder := NewExecuteRuleConditionsRequestBuilder(map[string]string{}, nil)
+	builder := NewExecuteRuleConditionsRequestBuilderInternal(map[string]string{}, nil)
 
 	resp, err := builder.Post(context.Background(), nil, nil)
 
@@ -166,7 +166,7 @@ func TestExecuteRuleConditionsRequestBuilder_Post_NilRequestAdapter(t *testing.T
 }
 
 func TestUserWindowRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
-	builder := NewUserWindowRequestBuilder(map[string]string{}, nil)
+	builder := NewUserWindowRequestBuilderInternal(map[string]string{}, nil)
 
 	resp, err := builder.Post(context.Background(), nil, nil)
 

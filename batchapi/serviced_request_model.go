@@ -197,7 +197,7 @@ func (sR *ServicedRequestModel) setID(id *string) error {
 	return store.DefaultBackedModelMutatorFunc(sR, idKey, id)
 }
 
-// GetRedirectURL, if present, returns redirect url for batch item.
+// GetRedirectURL returns the redirect url for the batch item, if present.
 func (sR *ServicedRequestModel) GetRedirectURL() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServicedRequestModel, *string](sR, redirectURLKey)
 }

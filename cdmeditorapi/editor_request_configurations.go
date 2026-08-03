@@ -16,9 +16,17 @@ type ValidationRequestBuilderGetQueryParameters struct {
 	CdmID *string `uriparametername:"cdm_id"`
 }
 
-// Request Configurations
+// NodesRequestBuilderGetRequestConfiguration represents the configuration for a Get request.
 type NodesRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[NodesRequestBuilderGetQueryParameters]
+
+// NodesRequestBuilderPostRequestConfiguration represents the POST request configuration for the Nodes resource.
 type NodesRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
+
+// NodeItemRequestBuilderPutRequestConfiguration represents the PUT request configuration for the Node Item resource.
 type NodeItemRequestBuilderPutRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
+
+// NodeItemRequestBuilderDeleteRequestConfiguration represents the DELETE request configuration for the Node Item resource.
 type NodeItemRequestBuilderDeleteRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
+
+// ValidationRequestBuilderGetRequestConfiguration represents the GET request configuration for the Validation resource.
 type ValidationRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[ValidationRequestBuilderGetQueryParameters]

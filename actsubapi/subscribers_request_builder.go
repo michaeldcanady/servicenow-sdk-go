@@ -2,8 +2,10 @@ package actsubapi // nolint:dupl // FollowingItemRequestBuilder/SubscriberItemRe
 
 import (
 	"context"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"maps"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -24,6 +26,14 @@ func NewSubscribersRequestBuilderInternal(pathParameters map[string]string, requ
 	return &SubscribersRequestBuilder{
 		core.NewBaseRequestBuilder(requestAdapter, subscribersURLTemplate, pathParameters),
 	}
+}
+
+// NewSubscribersRequestBuilder instantiates a new [SubscribersRequestBuilder] with a raw URL and request adapter.
+func NewSubscribersRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *SubscribersRequestBuilder {
+	return NewSubscribersRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // BySubObject returns a SubscriberItemRequestBuilder.
@@ -52,7 +62,7 @@ func NewSubscriberItemRequestBuilderInternal(pathParameters map[string]string, r
 }
 
 // Get sends a GET request to retrieve subscribers.
-func (rB *SubscriberItemRequestBuilder) Get(ctx context.Context, config *SubscribersRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+func (rB *SubscriberItemRequestBuilder) Get(ctx context.Context, config *SubscribersRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowCollectionResponse[*ActivitySubscription], error) {
 	if conversion.IsNil(rB) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}

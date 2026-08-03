@@ -43,7 +43,7 @@ func TestActivitiesRequestBuilder_Get(t *testing.T) {
 		{
 			name:      "Success",
 			config:    nil,
-			mockRes:   core.NewBaseServiceNowCollectionResponse[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue),
+			mockRes:   core.NewBaseServiceNowCollectionResponse[*ActivitySubscription](CreateActivitySubscriptionModelFromDiscriminatorValue),
 			mockErr:   nil,
 			expectErr: false,
 		},

@@ -45,6 +45,7 @@ func NewDefaultTableItemRequestBuilderInternal(
 	return NewTableItemRequestBuilderInternal[*TableRecord](pathParameters, requestAdapter, CreateTableRecordFromDiscriminatorValue)
 }
 
+// NewDefaultTableItemRequestBuilder instantiates a new TableItemRequestBuilder with a raw URL and default table record parsable.
 func NewDefaultTableItemRequestBuilder(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,

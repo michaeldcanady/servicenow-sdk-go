@@ -20,14 +20,17 @@ type Reference interface {
 	setValue(*string) error
 }
 
+// ReferenceModel implementation of Reference.
 type ReferenceModel struct {
 	core.BaseModel
 }
 
+// NewReference creates a new instance of ReferenceModel.
 func NewReference() *ReferenceModel {
 	return &ReferenceModel{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the objects properties to the current writer.
 func (m *ReferenceModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -38,6 +41,7 @@ func (m *ReferenceModel) Serialize(writer serialization.SerializationWriter) err
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *ReferenceModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		linkKey:  internalSerialization.DeserializeStringFunc(m.setLink),
@@ -45,12 +49,15 @@ func (m *ReferenceModel) GetFieldDeserializers() map[string]func(serialization.P
 	}
 }
 
+// GetLink ...
 func (m *ReferenceModel) GetLink() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ReferenceModel, *string](m, linkKey)
 }
 func (m *ReferenceModel) setLink(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, linkKey, val)
 }
+
+// GetValue ...
 func (m *ReferenceModel) GetValue() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ReferenceModel, *string](m, valueKey)
 }
@@ -58,6 +65,7 @@ func (m *ReferenceModel) setValue(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, valueKey, val)
 }
 
+// CreateReferenceFromDiscriminatorValue creates a new instance of Reference.
 func CreateReferenceFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewReference(), nil
 }

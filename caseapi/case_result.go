@@ -42,14 +42,17 @@ type CaseResult interface {
 	setSysUpdatedOn(*string) error
 }
 
+// CaseResultModel implementation of CaseResult.
 type CaseResultModel struct {
 	core.BaseModel
 }
 
+// NewCaseResult creates a new instance of CaseResult.
 func NewCaseResult() *CaseResultModel {
 	return &CaseResultModel{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the objects properties to the current writer.
 func (m *CaseResultModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -71,6 +74,7 @@ func (m *CaseResultModel) Serialize(writer serialization.SerializationWriter) er
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *CaseResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		sysIDKey:            internalSerialization.DeserializeStringFunc(m.setSysID),
@@ -89,78 +93,103 @@ func (m *CaseResultModel) GetFieldDeserializers() map[string]func(serialization.
 	}
 }
 
+// GetSysID ...
 func (m *CaseResultModel) GetSysID() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, *string](m, sysIDKey)
 }
 func (m *CaseResultModel) setSysID(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
+
+// GetNumber ...
 func (m *CaseResultModel) GetNumber() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, *string](m, numberKey)
 }
 func (m *CaseResultModel) setNumber(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, numberKey, val)
 }
+
+// GetShortDescription ...
 func (m *CaseResultModel) GetShortDescription() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, *string](m, shortDescriptionKey)
 }
 func (m *CaseResultModel) setShortDescription(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, shortDescriptionKey, val)
 }
+
+// GetDescription ...
 func (m *CaseResultModel) GetDescription() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, *string](m, descriptionKey)
 }
 func (m *CaseResultModel) setDescription(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, descriptionKey, val)
 }
+
+// GetState ...
 func (m *CaseResultModel) GetState() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, *string](m, stateKey)
 }
 func (m *CaseResultModel) setState(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, stateKey, val)
 }
+
+// GetPriority ...
 func (m *CaseResultModel) GetPriority() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, *string](m, priorityKey)
 }
 func (m *CaseResultModel) setPriority(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, priorityKey, val)
 }
+
+// GetCategory ...
 func (m *CaseResultModel) GetCategory() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, *string](m, categoryKey)
 }
 func (m *CaseResultModel) setCategory(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, categoryKey, val)
 }
+
+// GetAssignmentGroup ...
 func (m *CaseResultModel) GetAssignmentGroup() (Reference, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, Reference](m, assignmentGroupKey)
 }
 func (m *CaseResultModel) setAssignmentGroup(val Reference) error {
 	return store.DefaultBackedModelMutatorFunc(m, assignmentGroupKey, val)
 }
+
+// GetAssignedTo ...
 func (m *CaseResultModel) GetAssignedTo() (Reference, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, Reference](m, assignedToKey)
 }
 func (m *CaseResultModel) setAssignedTo(val Reference) error {
 	return store.DefaultBackedModelMutatorFunc(m, assignedToKey, val)
 }
+
+// GetContact ...
 func (m *CaseResultModel) GetContact() (Reference, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, Reference](m, contactKey)
 }
 func (m *CaseResultModel) setContact(val Reference) error {
 	return store.DefaultBackedModelMutatorFunc(m, contactKey, val)
 }
+
+// GetAccount ...
 func (m *CaseResultModel) GetAccount() (Reference, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, Reference](m, accountKey)
 }
 func (m *CaseResultModel) setAccount(val Reference) error {
 	return store.DefaultBackedModelMutatorFunc(m, accountKey, val)
 }
+
+// GetSysCreatedOn ...
 func (m *CaseResultModel) GetSysCreatedOn() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, *string](m, sysCreatedOnKey)
 }
 func (m *CaseResultModel) setSysCreatedOn(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysCreatedOnKey, val)
 }
+
+// GetSysUpdatedOn ...
 func (m *CaseResultModel) GetSysUpdatedOn() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CaseResultModel, *string](m, sysUpdatedOnKey)
 }
@@ -168,6 +197,7 @@ func (m *CaseResultModel) setSysUpdatedOn(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysUpdatedOnKey, val)
 }
 
+// CreateCaseResultFromDiscriminatorValue creates a new instance of CaseResult.
 func CreateCaseResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewCaseResult(), nil
 }

@@ -27,6 +27,7 @@ type ChangesetsRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewChangesetsRequestBuilderInternal instantiates a new ChangesetsRequestBuilder.
 func NewChangesetsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ChangesetsRequestBuilder {
 	return &ChangesetsRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, changesetsURLTemplate, pathParameters),
@@ -60,6 +61,7 @@ func (rB *ChangesetsRequestBuilder) ByID(id string) *ChangesetItemRequestBuilder
 	return NewChangesetItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
+// Get sends a GET request.
 func (rB *ChangesetsRequestBuilder) Get(ctx context.Context, config *ChangesetsRequestBuilderGetRequestConfiguration) (ChangesetsResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
@@ -94,6 +96,7 @@ func (rB *ChangesetsRequestBuilder) Get(ctx context.Context, config *ChangesetsR
 	return typedRes, nil
 }
 
+// Delete sends a DELETE request.
 func (rB *ChangesetsRequestBuilder) Delete(ctx context.Context, config *ChangesetsRequestBuilderDeleteRequestConfiguration) error {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return snerrors.ErrNilRequestBuilder
@@ -121,12 +124,14 @@ type ChangesetActivityRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewChangesetActivityRequestBuilderInternal instantiates a new ChangesetActivityRequestBuilder.
 func NewChangesetActivityRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ChangesetActivityRequestBuilder {
 	return &ChangesetActivityRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, changesetActivityURLTemplate, pathParameters),
 	}
 }
 
+// Get sends a GET request.
 func (rB *ChangesetActivityRequestBuilder) Get(ctx context.Context, config *ChangesetActivityRequestBuilderGetRequestConfiguration) (ChangesetActivityResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
@@ -166,12 +171,14 @@ type CommitStatusRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewCommitStatusRequestBuilderInternal instantiates a new CommitStatusRequestBuilder.
 func NewCommitStatusRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CommitStatusRequestBuilder {
 	return &CommitStatusRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, commitStatusURLTemplate, pathParameters),
 	}
 }
 
+// ByID returns the by id request builder.
 func (rB *CommitStatusRequestBuilder) ByID(commitID string) *CommitStatusItemRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["commit_id"] = commitID
@@ -183,12 +190,14 @@ type CommitStatusItemRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewCommitStatusItemRequestBuilderInternal instantiates a new CommitStatusItemRequestBuilder.
 func NewCommitStatusItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CommitStatusItemRequestBuilder {
 	return &CommitStatusItemRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, commitStatusURLTemplate, pathParameters),
 	}
 }
 
+// Get sends a GET request.
 func (rB *CommitStatusItemRequestBuilder) Get(ctx context.Context, config *CommitStatusRequestBuilderGetRequestConfiguration) (CommitStatusResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
@@ -225,12 +234,14 @@ type ImpactedSharedComponentsRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewImpactedSharedComponentsRequestBuilderInternal instantiates a new ImpactedSharedComponentsRequestBuilder.
 func NewImpactedSharedComponentsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ImpactedSharedComponentsRequestBuilder {
 	return &ImpactedSharedComponentsRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, impactedSharedComponentsURLTemplate, pathParameters),
 	}
 }
 
+// Get sends a GET request.
 func (rB *ImpactedSharedComponentsRequestBuilder) Get(ctx context.Context, config *ImpactedSharedComponentsRequestBuilderGetRequestConfiguration) (ImpactedSharedComponentsResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
@@ -270,12 +281,14 @@ type ImpactedDeployablesRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewImpactedDeployablesRequestBuilderInternal instantiates a new ImpactedDeployablesRequestBuilder.
 func NewImpactedDeployablesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ImpactedDeployablesRequestBuilder {
 	return &ImpactedDeployablesRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, impactedDeployablesURLTemplate, pathParameters),
 	}
 }
 
+// Get sends a GET request.
 func (rB *ImpactedDeployablesRequestBuilder) Get(ctx context.Context, config *ImpactedDeployablesRequestBuilderGetRequestConfiguration) (ImpactedDeployablesResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
@@ -315,6 +328,7 @@ type ChangesetItemRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewChangesetItemRequestBuilderInternal instantiates a new ChangesetItemRequestBuilder.
 func NewChangesetItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ChangesetItemRequestBuilder {
 	return &ChangesetItemRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, changesetItemImpactedDeployablesURLTemplate, pathParameters),
@@ -331,12 +345,14 @@ type ImpactedDeployablesBySysIDRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewImpactedDeployablesBySysIDRequestBuilderInternal instantiates a new ImpactedDeployablesBySysIDRequestBuilder.
 func NewImpactedDeployablesBySysIDRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ImpactedDeployablesBySysIDRequestBuilder {
 	return &ImpactedDeployablesBySysIDRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, changesetItemImpactedDeployablesURLTemplate, pathParameters),
 	}
 }
 
+// Get sends a GET request.
 func (rB *ImpactedDeployablesBySysIDRequestBuilder) Get(ctx context.Context, config *ImpactedDeployablesBySysIDRequestBuilderGetRequestConfiguration) (ImpactedDeployablesBySysIDResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -11,14 +12,25 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
+// AppointmentRequestBuilder represents the appointment request builder.
 type AppointmentRequestBuilder struct {
 	core.RequestBuilder
 }
 
-func NewAppointmentRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AppointmentRequestBuilder {
+// NewAppointmentRequestBuilderInternal creates a new instance of AppointmentRequestBuilder.
+func NewAppointmentRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AppointmentRequestBuilder {
 	return &AppointmentRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/appointment", pathParameters),
 	}
+}
+
+// NewAppointmentRequestBuilder instantiates a new [AppointmentRequestBuilder] with the provided base URL
+// and request adapter.
+func NewAppointmentRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *AppointmentRequestBuilder {
+	return NewAppointmentRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // Post sends a POST request to book or reschedule an appointment.

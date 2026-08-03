@@ -10,6 +10,7 @@ type NodesResponse interface {
 	core.ServiceNowCollectionResponse[*NodeResultModel]
 }
 
+// CreateNodesResponseFromDiscriminatorValue creates a new NodesResponse from a ParseNode.
 func CreateNodesResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return core.NewBaseServiceNowCollectionResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue), nil
 }
@@ -19,6 +20,7 @@ type NodeResponse interface {
 	core.ServiceNowItemResponse[*NodeResultModel]
 }
 
+// CreateNodeResponseFromDiscriminatorValue creates a new NodeResponse from a ParseNode.
 func CreateNodeResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return core.NewBaseServiceNowItemResponse[*NodeResultModel](CreateNodeResultFromDiscriminatorValue), nil
 }
@@ -28,6 +30,7 @@ type ValidationResponse interface {
 	core.ServiceNowItemResponse[*ValidationResultModel]
 }
 
+// CreateValidationResponseFromDiscriminatorValue creates a new ValidationResponse from a ParseNode.
 func CreateValidationResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return core.NewBaseServiceNowItemResponse[*ValidationResultModel](CreateValidationResultFromDiscriminatorValue), nil
 }

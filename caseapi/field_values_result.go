@@ -24,14 +24,17 @@ type FieldValuesResult interface {
 	setDependentValue(*string) error
 }
 
+// FieldValuesResultModel implementation of FieldValuesResult.
 type FieldValuesResultModel struct {
 	core.BaseModel
 }
 
+// NewFieldValuesResult creates a new instance of FieldValuesResult.
 func NewFieldValuesResult() *FieldValuesResultModel {
 	return &FieldValuesResultModel{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the objects properties to the current writer.
 func (m *FieldValuesResultModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -44,6 +47,7 @@ func (m *FieldValuesResultModel) Serialize(writer serialization.SerializationWri
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *FieldValuesResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		labelKey:          internalSerialization.DeserializeStringFunc(m.setLabel),
@@ -53,24 +57,31 @@ func (m *FieldValuesResultModel) GetFieldDeserializers() map[string]func(seriali
 	}
 }
 
+// GetLabel ...
 func (m *FieldValuesResultModel) GetLabel() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*FieldValuesResultModel, *string](m, labelKey)
 }
 func (m *FieldValuesResultModel) setLabel(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, labelKey, val)
 }
+
+// GetValue ...
 func (m *FieldValuesResultModel) GetValue() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*FieldValuesResultModel, *string](m, valueKey)
 }
 func (m *FieldValuesResultModel) setValue(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, valueKey, val)
 }
+
+// GetSequence ...
 func (m *FieldValuesResultModel) GetSequence() (*int32, error) {
 	return store.DefaultBackedModelAccessorFunc[*FieldValuesResultModel, *int32](m, sequenceKey)
 }
 func (m *FieldValuesResultModel) setSequence(val *int32) error {
 	return store.DefaultBackedModelMutatorFunc(m, sequenceKey, val)
 }
+
+// GetDependentValue ...
 func (m *FieldValuesResultModel) GetDependentValue() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*FieldValuesResultModel, *string](m, dependentValueKey)
 }
@@ -78,6 +89,7 @@ func (m *FieldValuesResultModel) setDependentValue(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, dependentValueKey, val)
 }
 
+// CreateFieldValuesResultFromDiscriminatorValue creates a new instance of FieldValuesResult.
 func CreateFieldValuesResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewFieldValuesResult(), nil
 }

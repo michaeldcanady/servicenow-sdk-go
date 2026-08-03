@@ -29,7 +29,7 @@ func TestCollectionGetRequestBuilder_Get(t *testing.T) {
 	tests := []testCase{
 		{
 			name:      "Success",
-			mockRes:   core.NewBaseServiceNowCollectionResponse[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue),
+			mockRes:   core.NewBaseServiceNowCollectionResponse[*ActivitySubscription](CreateActivitySubscriptionModelFromDiscriminatorValue),
 			expectErr: false,
 		},
 		{

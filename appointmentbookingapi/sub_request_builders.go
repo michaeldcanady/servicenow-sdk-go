@@ -4,6 +4,7 @@ import (
 	"context"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -17,11 +18,20 @@ type AvailabilityRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// NewAvailabilityRequestBuilder instantiates a new AvailabilityRequestBuilder.
-func NewAvailabilityRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AvailabilityRequestBuilder {
+// NewAvailabilityRequestBuilderInternal instantiates a new AvailabilityRequestBuilder.
+func NewAvailabilityRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AvailabilityRequestBuilder {
 	return &AvailabilityRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/availability", pathParameters),
 	}
+}
+
+// NewAvailabilityRequestBuilder instantiates a new [AvailabilityRequestBuilder] with the provided base URL
+// and request adapter.
+func NewAvailabilityRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *AvailabilityRequestBuilder {
+	return NewAvailabilityRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // Post sends a POST request to get availability.
@@ -75,11 +85,20 @@ type CalendarRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// NewCalendarRequestBuilder instantiates a new CalendarRequestBuilder.
-func NewCalendarRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CalendarRequestBuilder {
+// NewCalendarRequestBuilderInternal instantiates a new CalendarRequestBuilder.
+func NewCalendarRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CalendarRequestBuilder {
 	return &CalendarRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/calendar{?catalog_id,location,opened_for}", pathParameters),
 	}
+}
+
+// NewCalendarRequestBuilder instantiates a new [CalendarRequestBuilder] with the provided base URL
+// and request adapter.
+func NewCalendarRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *CalendarRequestBuilder {
+	return NewCalendarRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // Get sends a GET request to retrieve calendar.
@@ -128,11 +147,20 @@ type ConfigurationRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// NewConfigurationRequestBuilder instantiates a new ConfigurationRequestBuilder.
-func NewConfigurationRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ConfigurationRequestBuilder {
+// NewConfigurationRequestBuilderInternal instantiates a new ConfigurationRequestBuilder.
+func NewConfigurationRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ConfigurationRequestBuilder {
 	return &ConfigurationRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/configuration{?catalog_id}", pathParameters),
 	}
+}
+
+// NewConfigurationRequestBuilder instantiates a new [ConfigurationRequestBuilder] with the provided base URL
+// and request adapter.
+func NewConfigurationRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *ConfigurationRequestBuilder {
+	return NewConfigurationRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // Get sends a GET request to retrieve configuration.
@@ -181,11 +209,20 @@ type ExecuteRuleConditionsRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// NewExecuteRuleConditionsRequestBuilder instantiates a new ExecuteRuleConditionsRequestBuilder.
-func NewExecuteRuleConditionsRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ExecuteRuleConditionsRequestBuilder {
+// NewExecuteRuleConditionsRequestBuilderInternal instantiates a new ExecuteRuleConditionsRequestBuilder.
+func NewExecuteRuleConditionsRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ExecuteRuleConditionsRequestBuilder {
 	return &ExecuteRuleConditionsRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/execute_rule_conditions", pathParameters),
 	}
+}
+
+// NewExecuteRuleConditionsRequestBuilder instantiates a new [ExecuteRuleConditionsRequestBuilder] with the provided base URL
+// and request adapter.
+func NewExecuteRuleConditionsRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *ExecuteRuleConditionsRequestBuilder {
+	return NewExecuteRuleConditionsRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // Post sends a POST request to execute rule conditions.
@@ -239,11 +276,20 @@ type UserWindowRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// NewUserWindowRequestBuilder instantiates a new UserWindowRequestBuilder.
-func NewUserWindowRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UserWindowRequestBuilder {
+// NewUserWindowRequestBuilderInternal instantiates a new UserWindowRequestBuilder.
+func NewUserWindowRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *UserWindowRequestBuilder {
 	return &UserWindowRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/userwindow", pathParameters),
 	}
+}
+
+// NewUserWindowRequestBuilder instantiates a new [UserWindowRequestBuilder] with the provided base URL
+// and request adapter.
+func NewUserWindowRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *UserWindowRequestBuilder {
+	return NewUserWindowRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // Post sends a POST request to get user window.

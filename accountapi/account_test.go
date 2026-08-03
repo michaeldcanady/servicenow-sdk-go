@@ -22,7 +22,7 @@ func TestAccountSerialization(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			account := NewAccount()
 			name := tt.val
-			err := account.setName(&name)
+			err := account.SetName(&name)
 			require.NoError(t, err)
 
 			retrievedName, err := account.GetName()
@@ -38,66 +38,66 @@ func TestAccountGettersSetters(t *testing.T) {
 
 	tests := []struct {
 		name   string
-		setter func(*string) error
+		Setter func(*string) error
 		getter func() (*string, error)
 	}{
-		{"BannerImageLight", account.setBannerImageLight, account.GetBannerImageLight},
-		{"Country", account.setCountry, account.GetCountry},
-		{"Parent", account.setParent, account.GetParent},
-		{"Notes", account.setNotes, account.GetNotes},
-		{"StockSymbol", account.setStockSymbol, account.GetStockSymbol},
-		{"Discount", account.setDiscount, account.GetDiscount},
-		{"ActiveEscalation", account.setActiveEscalation, account.GetActiveEscalation},
-		{"SysUpdatedOn", account.setSysUpdatedOn, account.GetSysUpdatedOn},
-		{"AppleIcon", account.setAppleIcon, account.GetAppleIcon},
-		{"Number", account.setNumber, account.GetNumber},
-		{"SysUpdatedBy", account.setSysUpdatedBy, account.GetSysUpdatedBy},
-		{"FiscalYear", account.setFiscalYear, account.GetFiscalYear},
-		{"SysCreatedOn", account.setSysCreatedOn, account.GetSysCreatedOn},
-		{"Contact", account.setContact, account.GetContact},
-		{"StockPrice", account.setStockPrice, account.GetStockPrice},
-		{"State", account.setState, account.GetState},
-		{"BannerImage", account.setBannerImage, account.GetBannerImage},
-		{"SysCreatedBy", account.setSysCreatedBy, account.GetSysCreatedBy},
-		{"Longitude", account.setLongitude, account.GetLongitude},
-		{"Zip", account.setZip, account.GetZip},
-		{"Profits", account.setProfits, account.GetProfits},
-		{"Phone", account.setPhone, account.GetPhone},
-		{"FaxPhone", account.setFaxPhone, account.GetFaxPhone},
-		{"Name", account.setName, account.GetName},
-		{"BannerText", account.setBannerText, account.GetBannerText},
-		{"AccountCode", account.setAccountCode, account.GetAccountCode},
-		{"Primary", account.setPrimary, account.GetPrimary},
-		{"City", account.setCity, account.GetCity},
-		{"Latitude", account.setLatitude, account.GetLatitude},
-		{"SysClassName", account.setSysClassName, account.GetSysClassName},
-		{"Manufacturer", account.setManufacturer, account.GetManufacturer},
-		{"AccountParent", account.setAccountParent, account.GetAccountParent},
-		{"SysID", account.setSysID, account.GetSysID},
-		{"MarketCap", account.setMarketCap, account.GetMarketCap},
-		{"NumEmployees", account.setNumEmployees, account.GetNumEmployees},
-		{"RankTier", account.setRankTier, account.GetRankTier},
-		{"Street", account.setStreet, account.GetStreet},
-		{"Vendor", account.setVendor, account.GetVendor},
-		{"LatLongError", account.setLatLongError, account.GetLatLongError},
-		{"Theme", account.setTheme, account.GetTheme},
-		{"VendorType", account.setVendorType, account.GetVendorType},
-		{"Website", account.setWebsite, account.GetWebsite},
-		{"RevenuePerYear", account.setRevenuePerYear, account.GetRevenuePerYear},
-		{"PubliclyTraded", account.setPubliclyTraded, account.GetPubliclyTraded},
-		{"SysModCount", account.setSysModCount, account.GetSysModCount},
-		{"SysTags", account.setSysTags, account.GetSysTags},
-		{"Partner", account.setPartner, account.GetPartner},
-		{"RegistrationCode", account.setRegistrationCode, account.GetRegistrationCode},
-		{"VendorManager", account.setVendorManager, account.GetVendorManager},
-		{"AccountPath", account.setAccountPath, account.GetAccountPath},
-		{"PrimaryContact", account.setPrimaryContact, account.GetPrimaryContact},
-		{"Customer", account.setCustomer, account.GetCustomer},
+		{"BannerImageLight", account.SetBannerImageLight, account.GetBannerImageLight},
+		{"Country", account.SetCountry, account.GetCountry},
+		{"Parent", account.SetParent, account.GetParent},
+		{"Notes", account.SetNotes, account.GetNotes},
+		{"StockSymbol", account.SetStockSymbol, account.GetStockSymbol},
+		{"Discount", account.SetDiscount, account.GetDiscount},
+		{"ActiveEscalation", account.SetActiveEscalation, account.GetActiveEscalation},
+		{"SysUpdatedOn", account.SetSysUpdatedOn, account.GetSysUpdatedOn},
+		{"AppleIcon", account.SetAppleIcon, account.GetAppleIcon},
+		{"Number", account.SetNumber, account.GetNumber},
+		{"SysUpdatedBy", account.SetSysUpdatedBy, account.GetSysUpdatedBy},
+		{"FiscalYear", account.SetFiscalYear, account.GetFiscalYear},
+		{"SysCreatedOn", account.SetSysCreatedOn, account.GetSysCreatedOn},
+		{"Contact", account.SetContact, account.GetContact},
+		{"StockPrice", account.SetStockPrice, account.GetStockPrice},
+		{"State", account.SetState, account.GetState},
+		{"BannerImage", account.SetBannerImage, account.GetBannerImage},
+		{"SysCreatedBy", account.SetSysCreatedBy, account.GetSysCreatedBy},
+		{"Longitude", account.SetLongitude, account.GetLongitude},
+		{"Zip", account.SetZip, account.GetZip},
+		{"Profits", account.SetProfits, account.GetProfits},
+		{"Phone", account.SetPhone, account.GetPhone},
+		{"FaxPhone", account.SetFaxPhone, account.GetFaxPhone},
+		{"Name", account.SetName, account.GetName},
+		{"BannerText", account.SetBannerText, account.GetBannerText},
+		{"AccountCode", account.SetAccountCode, account.GetAccountCode},
+		{"Primary", account.SetPrimary, account.GetPrimary},
+		{"City", account.SetCity, account.GetCity},
+		{"Latitude", account.SetLatitude, account.GetLatitude},
+		{"SysClassName", account.SetSysClassName, account.GetSysClassName},
+		{"Manufacturer", account.SetManufacturer, account.GetManufacturer},
+		{"AccountParent", account.SetAccountParent, account.GetAccountParent},
+		{"SysID", account.SetSysID, account.GetSysID},
+		{"MarketCap", account.SetMarketCap, account.GetMarketCap},
+		{"NumEmployees", account.SetNumEmployees, account.GetNumEmployees},
+		{"RankTier", account.SetRankTier, account.GetRankTier},
+		{"Street", account.SetStreet, account.GetStreet},
+		{"Vendor", account.SetVendor, account.GetVendor},
+		{"LatLongError", account.SetLatLongError, account.GetLatLongError},
+		{"Theme", account.SetTheme, account.GetTheme},
+		{"VendorType", account.SetVendorType, account.GetVendorType},
+		{"Website", account.SetWebsite, account.GetWebsite},
+		{"RevenuePerYear", account.SetRevenuePerYear, account.GetRevenuePerYear},
+		{"PubliclyTraded", account.SetPubliclyTraded, account.GetPubliclyTraded},
+		{"SysModCount", account.SetSysModCount, account.GetSysModCount},
+		{"SysTags", account.SetSysTags, account.GetSysTags},
+		{"Partner", account.SetPartner, account.GetPartner},
+		{"RegistrationCode", account.SetRegistrationCode, account.GetRegistrationCode},
+		{"VendorManager", account.SetVendorManager, account.GetVendorManager},
+		{"AccountPath", account.SetAccountPath, account.GetAccountPath},
+		{"PrimaryContact", account.SetPrimaryContact, account.GetPrimaryContact},
+		{"Customer", account.SetCustomer, account.GetCustomer},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.setter(&val)
+			err := tt.Setter(&val)
 			require.NoError(t, err)
 			got, err := tt.getter()
 			require.NoError(t, err)
@@ -119,7 +119,7 @@ func TestAccountModel_Serialize(t *testing.T) {
 	t.Run("SuccessfulSerialization", func(t *testing.T) {
 		account := NewAccount()
 		name := "test-account"
-		_ = account.setName(&name)
+		_ = account.SetName(&name)
 
 		writer := &mocking.MockSerializationWriter{}
 		writer.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
@@ -136,6 +136,6 @@ func TestCreateAccountFromDiscriminatorValue(t *testing.T) {
 		instance, err := CreateAccountFromDiscriminatorValue(nil)
 		require.NoError(t, err)
 		assert.NotNil(t, instance)
-		assert.IsType(t, &AccountModel{}, instance)
+		assert.IsType(t, &Account{}, instance)
 	})
 }

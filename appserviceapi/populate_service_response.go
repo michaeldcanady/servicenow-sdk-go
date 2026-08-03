@@ -10,6 +10,7 @@ type PopulateServiceResponse interface {
 	core.ServiceNowItemResponse[*PopulateServiceResult]
 }
 
+// CreatePopulateServiceResponseFromDiscriminatorValue creates a new PopulateServiceResponse from a ParseNode.
 func CreatePopulateServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return core.NewBaseServiceNowItemResponse[*PopulateServiceResult](CreatePopulateServiceResultFromDiscriminatorValue), nil
 }

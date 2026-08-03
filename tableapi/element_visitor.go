@@ -7,10 +7,12 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 )
 
+// NewElementVisitor creates a new instance of ElementVisitor.
 func NewElementVisitor() *ElementVisitor {
 	return &ElementVisitor{}
 }
 
+// ElementVisitor converts arbitrary values into ElementValue instances.
 type ElementVisitor struct{}
 
 // Visit converts the provided value to an ElementValue

@@ -2,6 +2,7 @@ package actsubapi
 
 import (
 	"context"
+	"fmt"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
@@ -19,8 +20,9 @@ type collectionGetRequestBuilder struct {
 	core.RequestBuilder
 }
 
-var _ core.CollectionGetRequestBuilder[*ActivitySubscriptionModel, abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*collectionGetRequestBuilder)(nil)
+var _ core.CollectionGetRequestBuilder[*ActivitySubscription, abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*collectionGetRequestBuilder)(nil)
 
+// TODO: what is this?
 // newCollectionGetRequestBuilder instantiates a new collectionGetRequestBuilder.
 func newCollectionGetRequestBuilder(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter, urlTemplate string) *collectionGetRequestBuilder {
 	return &collectionGetRequestBuilder{
@@ -29,7 +31,7 @@ func newCollectionGetRequestBuilder(pathParameters map[string]string, requestAda
 }
 
 // Get sends a GET request to retrieve the collection.
-func (rB *collectionGetRequestBuilder) Get(ctx context.Context, config *abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]) (*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel], error) {
+func (rB *collectionGetRequestBuilder) Get(ctx context.Context, config *abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]) (*core.BaseServiceNowCollectionResponse[*ActivitySubscription], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -43,7 +45,7 @@ func (rB *collectionGetRequestBuilder) Get(ctx context.Context, config *abstract
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowCollectionResponseFromDiscriminatorValue[*ActivitySubscription](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +54,12 @@ func (rB *collectionGetRequestBuilder) Get(ctx context.Context, config *abstract
 		return nil, nil
 	}
 
-	return res.(*core.BaseServiceNowCollectionResponse[*ActivitySubscriptionModel]), nil
+	typedRes, ok := res.(*core.BaseServiceNowCollectionResponse[*ActivitySubscription])
+	if !ok {
+		return nil, fmt.Errorf("unexpected response type %T", res)
+	}
+
+	return typedRes, nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.

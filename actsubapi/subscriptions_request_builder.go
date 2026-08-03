@@ -5,6 +5,7 @@ import (
 	"maps"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -26,6 +27,14 @@ func NewSubscriptionsRequestBuilderInternal(pathParameters map[string]string, re
 	return &SubscriptionsRequestBuilder{
 		core.NewBaseRequestBuilder(requestAdapter, subscriptionsURLTemplate, pathParameters),
 	}
+}
+
+// NewSubscriptionsRequestBuilder instantiates a new [SubscriptionsRequestBuilder] with a raw URL and request adapter.
+func NewSubscriptionsRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *SubscriptionsRequestBuilder {
+	return NewSubscriptionsRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // BySubscriberID returns a SubscriptionItemRequestBuilder.
@@ -65,7 +74,7 @@ func NewSubscriptionItemRequestBuilderInternal(pathParameters map[string]string,
 }
 
 // Get sends a GET request to retrieve a specific subscription.
-func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *SubscriptionsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *SubscriptionsRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscription], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -79,7 +88,7 @@ func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *Subsc
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscription](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +97,7 @@ func (rB *SubscriptionItemRequestBuilder) Get(ctx context.Context, config *Subsc
 		return nil, nil
 	}
 
-	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscription]), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
@@ -161,7 +170,7 @@ func NewIsSubscribedRequestBuilderInternal(pathParameters map[string]string, req
 }
 
 // Get sends a GET request to check if the current user is subscribed.
-func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscribedRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscribedRequestBuilderGetRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscription], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -175,7 +184,7 @@ func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscri
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscription](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -184,7 +193,7 @@ func (rB *IsSubscribedRequestBuilder) Get(ctx context.Context, config *IsSubscri
 		return nil, nil
 	}
 
-	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscription]), nil
 }
 
 // ToGetRequestInformation creates a RequestInformation object for a GET request.
@@ -206,7 +215,7 @@ type SubscribeRequestBuilder struct {
 	core.RequestBuilder
 }
 
-var _ core.ItemPostRequestBuilder[*ActivitySubscriptionModel, abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*SubscribeRequestBuilder)(nil)
+var _ core.ItemPostRequestBuilder[*ActivitySubscription, abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*SubscribeRequestBuilder)(nil)
 
 const subscribeURLTemplate = "{+baseurl}/api/now/v1/actsub/subscriptions/{sub_obj_id}/subscribe"
 
@@ -218,7 +227,7 @@ func NewSubscribeRequestBuilderInternal(pathParameters map[string]string, reques
 }
 
 // Post sends a POST request to subscribe to an object.
-func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubscriptionModel, config *SubscribeRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel], error) {
+func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubscription, config *SubscribeRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[*ActivitySubscription], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -232,7 +241,7 @@ func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubsc
 		return nil, err
 	}
 
-	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscriptionModel](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*ActivitySubscription](CreateActivitySubscriptionModelFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -241,11 +250,11 @@ func (rB *SubscribeRequestBuilder) Post(ctx context.Context, body *ActivitySubsc
 		return nil, nil
 	}
 
-	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscriptionModel]), nil
+	return res.(*core.BaseServiceNowItemResponse[*ActivitySubscription]), nil
 }
 
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
-func (rB *SubscribeRequestBuilder) ToPostRequestInformation(ctx context.Context, body *ActivitySubscriptionModel, config *SubscribeRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *SubscribeRequestBuilder) ToPostRequestInformation(ctx context.Context, body *ActivitySubscription, config *SubscribeRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}

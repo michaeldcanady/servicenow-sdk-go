@@ -80,81 +80,132 @@ func (m *ConfigurationResult) GetFieldDeserializers() map[string]func(serializat
 	}
 }
 
+// GetActive returns the active value.
 func (m *ConfigurationResult) GetActive() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *bool](m, activeKey)
 }
+
+// SetActive sets the active value.
 func (m *ConfigurationResult) SetActive(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, activeKey, val)
 }
+
+// GetActiveString returns the active string value.
 func (m *ConfigurationResult) GetActiveString() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *string](m, activeStringKey)
 }
+
+// SetActiveString sets the active string value.
 func (m *ConfigurationResult) SetActiveString(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, activeStringKey, val)
 }
+
+// GetAdvancedCalendarViewPortal returns the advanced calendar view portal value.
 func (m *ConfigurationResult) GetAdvancedCalendarViewPortal() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *bool](m, advancedCalendarViewPortalKey)
 }
+
+// SetAdvancedCalendarViewPortal sets the advanced calendar view portal value.
 func (m *ConfigurationResult) SetAdvancedCalendarViewPortal(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, advancedCalendarViewPortalKey, val)
 }
+
+// GetAutoAcceptance returns the auto acceptance value.
 func (m *ConfigurationResult) GetAutoAcceptance() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *bool](m, autoAcceptanceKey)
 }
+
+// SetAutoAcceptance sets the auto acceptance value.
 func (m *ConfigurationResult) SetAutoAcceptance(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, autoAcceptanceKey, val)
 }
+
+// GetLocaleLanguage returns the locale language value.
 func (m *ConfigurationResult) GetLocaleLanguage() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *string](m, localeLanguageKey)
 }
+
+// SetLocaleLanguage sets the locale language value.
 func (m *ConfigurationResult) SetLocaleLanguage(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, localeLanguageKey, val)
 }
+
+// GetServiceConfig returns the service config value.
 func (m *ConfigurationResult) GetServiceConfig() (ServiceConfig, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, ServiceConfig](m, serviceConfigKey)
 }
+
+// SetServiceConfig sets the service config value.
 func (m *ConfigurationResult) SetServiceConfig(val ServiceConfig) error {
 	return store.DefaultBackedModelMutatorFunc(m, serviceConfigKey, val)
 }
+
+// GetTaskTable returns the task table value.
 func (m *ConfigurationResult) GetTaskTable() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *string](m, taskTableKey)
 }
+
+// SetTaskTable sets the task table value.
 func (m *ConfigurationResult) SetTaskTable(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, taskTableKey, val)
 }
+
+// GetTranslations returns the translations value.
 func (m *ConfigurationResult) GetTranslations() (any, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, any](m, translationsKey)
 }
+
+// SetTranslations sets the translations value.
 func (m *ConfigurationResult) SetTranslations(val any) error {
 	return store.DefaultBackedModelMutatorFunc(m, translationsKey, val)
 }
+
+// GetUserDateFormatOptions returns the user date format options value.
 func (m *ConfigurationResult) GetUserDateFormatOptions() (UserDateFormatOptions, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, UserDateFormatOptions](m, userDateFormatOptionsKey)
 }
+
+// SetUserDateFormatOptions sets the user date format options value.
 func (m *ConfigurationResult) SetUserDateFormatOptions(val UserDateFormatOptions) error {
 	return store.DefaultBackedModelMutatorFunc(m, userDateFormatOptionsKey, val)
 }
+
+// GetUseRR returns the use rr value.
 func (m *ConfigurationResult) GetUseRR() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *bool](m, useRRKey)
 }
+
+// SetUseRR sets the use rr value.
 func (m *ConfigurationResult) SetUseRR(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, useRRKey, val)
 }
+
+// GetUserTimeFormat returns the user time format value.
 func (m *ConfigurationResult) GetUserTimeFormat() (UserTimeFormat, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, UserTimeFormat](m, userTimeFormatKey)
 }
+
+// SetUserTimeFormat sets the user time format value.
 func (m *ConfigurationResult) SetUserTimeFormat(val UserTimeFormat) error {
 	return store.DefaultBackedModelMutatorFunc(m, userTimeFormatKey, val)
 }
+
+// GetUserTimeFormatOptions returns the user time format options value.
 func (m *ConfigurationResult) GetUserTimeFormatOptions() (UserTimeFormatOptions, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, UserTimeFormatOptions](m, userTimeFormatOptionsKey)
 }
+
+// SetUserTimeFormatOptions sets the user time format options value.
 func (m *ConfigurationResult) SetUserTimeFormatOptions(val UserTimeFormatOptions) error {
 	return store.DefaultBackedModelMutatorFunc(m, userTimeFormatOptionsKey, val)
 }
+
+// GetViewScale returns the view scale value.
 func (m *ConfigurationResult) GetViewScale() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *string](m, viewScaleKey)
 }
+
+// SetViewScale sets the view scale value.
 func (m *ConfigurationResult) SetViewScale(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, viewScaleKey, val)
 }
@@ -174,20 +225,24 @@ type UserDateFormatOptions interface {
 	SetWeekday(*string) error
 }
 
+// UserDateFormatOptionsModel represents the user date format options model.
 type UserDateFormatOptionsModel struct {
 	core.BaseModel
 }
 
+// NewUserDateFormatOptions creates a new instance of UserDateFormatOptionsModel.
 func NewUserDateFormatOptions() *UserDateFormatOptionsModel {
 	return &UserDateFormatOptionsModel{
 		BaseModel: *core.NewBaseModel(),
 	}
 }
 
+// CreateUserDateFormatOptionsFromDiscriminatorValue creates a new UserDateFormatOptions from a ParseNode.
 func CreateUserDateFormatOptionsFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewUserDateFormatOptions(), nil
 }
 
+// Serialize writes the objects properties to the current writer.
 func (m *UserDateFormatOptionsModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -200,6 +255,7 @@ func (m *UserDateFormatOptionsModel) Serialize(writer serialization.Serializatio
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *UserDateFormatOptionsModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		dayKey:     internalSerialization.DeserializeStringFunc(m.SetDay),
@@ -209,27 +265,42 @@ func (m *UserDateFormatOptionsModel) GetFieldDeserializers() map[string]func(ser
 	}
 }
 
+// GetDay returns the day value.
 func (m *UserDateFormatOptionsModel) GetDay() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, dayKey)
 }
+
+// SetDay sets the day value.
 func (m *UserDateFormatOptionsModel) SetDay(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, dayKey, val)
 }
+
+// GetMonth returns the month value.
 func (m *UserDateFormatOptionsModel) GetMonth() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, monthKey)
 }
+
+// SetMonth sets the month value.
 func (m *UserDateFormatOptionsModel) SetMonth(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, monthKey, val)
 }
+
+// GetWeek returns the week value.
 func (m *UserDateFormatOptionsModel) GetWeek() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, weekKey)
 }
+
+// SetWeek sets the week value.
 func (m *UserDateFormatOptionsModel) SetWeek(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, weekKey, val)
 }
+
+// GetWeekday returns the weekday value.
 func (m *UserDateFormatOptionsModel) GetWeekday() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, weekdayKey)
 }
+
+// SetWeekday sets the weekday value.
 func (m *UserDateFormatOptionsModel) SetWeekday(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, weekdayKey, val)
 }

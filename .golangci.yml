@@ -26,6 +26,10 @@ linters:
   settings:
     dupl:
       threshold: 200
+    revive:
+      rules:
+        - name: exported
+          disabled: false
     importas:
       alias:
         - pkg: github.com/microsoft/kiota-abstractions-go
@@ -59,6 +63,10 @@ linters:
           - revive
         path: internal/mocking/(mock_request_adapter|mock_backing_store)\.go
         text: "var-naming:.*(SetBaseUrl|GetBaseUrl|SubscribeWithId)"
+      - linters:
+          - revive
+        path: internal/
+        text: "^exported:"
     presets:
       - comments
       - common-false-positives

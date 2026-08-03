@@ -4,44 +4,44 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-// ActivitiesRequestBuilderGetRequestConfiguration ...
+// ActivitiesRequestBuilderGetRequestConfiguration represents the configuration for a GET request.
 type ActivitiesRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// ContextsRequestBuilderGetRequestConfiguration ...
+// ContextsRequestBuilderGetRequestConfiguration represents the configuration for a GET request.
 type ContextsRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// FacetsRequestBuilderGetRequestConfiguration ...
+// FacetsRequestBuilderGetRequestConfiguration represents the configuration for a GET request.
 type FacetsRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// FollowingsRequestBuilderGetRequestConfiguration ...
+// FollowingsRequestBuilderGetRequestConfiguration represents the configuration for a GET request.
 type FollowingsRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// PreferencesRequestBuilderPostRequestConfiguration ...
+// PreferencesRequestBuilderPostRequestConfiguration represents the configuration for a POST request.
 type PreferencesRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// PreferencesRequestBuilderGetRequestConfiguration ...
+// PreferencesRequestBuilderGetRequestConfiguration represents the configuration for a GET request.
 type PreferencesRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// SubObjectsRequestBuilderGetRequestConfiguration ...
+// SubObjectsRequestBuilderGetRequestConfiguration represents the configuration for a GET request.
 type SubObjectsRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// SubscribersRequestBuilderGetRequestConfiguration ...
+// SubscribersRequestBuilderGetRequestConfiguration represents the configuration for a GET request.
 type SubscribersRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// SubscriptionsRequestBuilderGetRequestConfiguration ...
+// SubscriptionsRequestBuilderGetRequestConfiguration represents the configuration for a GET request.
 type SubscriptionsRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// IsSubscribedRequestBuilderGetRequestConfiguration ...
+// IsSubscribedRequestBuilderGetRequestConfiguration represents the configuration for a GET request.
 type IsSubscribedRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// SubscribeRequestBuilderPostRequestConfiguration ...
+// SubscribeRequestBuilderPostRequestConfiguration represents the configuration for a POST request.
 type SubscribeRequestBuilderPostRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// UnsubscribeRequestBuilderDeleteRequestConfiguration ...
+// UnsubscribeRequestBuilderDeleteRequestConfiguration represents the configuration for a DELETE request.
 type UnsubscribeRequestBuilderDeleteRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// UserStreamRequestBuilderGetRequestConfiguration ...
+// UserStreamRequestBuilderGetRequestConfiguration represents the configuration for a GET request.
 type UserStreamRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
 
-// UserStreamRequestBuilderPutRequestConfiguration ...
+// UserStreamRequestBuilderPutRequestConfiguration represents the configuration for a PUT request.
 type UserStreamRequestBuilderPutRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]

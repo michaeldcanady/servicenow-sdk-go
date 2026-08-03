@@ -22,20 +22,24 @@ type UserTimeFormatOptions interface {
 	SetMinute(*string) error
 }
 
+// UserTimeFormatOptionsModel represents the user time format options model.
 type UserTimeFormatOptionsModel struct {
 	core.BaseModel
 }
 
+// NewUserTimeFormatOptions creates a new instance of UserTimeFormatOptionsModel.
 func NewUserTimeFormatOptions() *UserTimeFormatOptionsModel {
 	return &UserTimeFormatOptionsModel{
 		BaseModel: *core.NewBaseModel(),
 	}
 }
 
+// CreateUserTimeFormatOptionsFromDiscriminatorValue creates a new UserTimeFormatOptions from a ParseNode.
 func CreateUserTimeFormatOptionsFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewUserTimeFormatOptions(), nil
 }
 
+// Serialize writes the objects properties to the current writer.
 func (m *UserTimeFormatOptionsModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -47,6 +51,7 @@ func (m *UserTimeFormatOptionsModel) Serialize(writer serialization.Serializatio
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *UserTimeFormatOptionsModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		hourKey:      internalSerialization.DeserializeStringFunc(m.SetHour),
@@ -55,21 +60,32 @@ func (m *UserTimeFormatOptionsModel) GetFieldDeserializers() map[string]func(ser
 	}
 }
 
+// GetHour returns the hour value.
 func (m *UserTimeFormatOptionsModel) GetHour() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatOptionsModel, *string](m, hourKey)
 }
+
+// SetHour sets the hour value.
 func (m *UserTimeFormatOptionsModel) SetHour(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, hourKey, val)
 }
+
+// GetHourCycle returns the hour cycle value.
 func (m *UserTimeFormatOptionsModel) GetHourCycle() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatOptionsModel, *string](m, hourCycleKey)
 }
+
+// SetHourCycle sets the hour cycle value.
 func (m *UserTimeFormatOptionsModel) SetHourCycle(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, hourCycleKey, val)
 }
+
+// GetMinute returns the minute value.
 func (m *UserTimeFormatOptionsModel) GetMinute() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatOptionsModel, *string](m, minuteKey)
 }
+
+// SetMinute sets the minute value.
 func (m *UserTimeFormatOptionsModel) SetMinute(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, minuteKey, val)
 }

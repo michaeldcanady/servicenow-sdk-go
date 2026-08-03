@@ -10,6 +10,7 @@ type RegisterServiceResponse interface {
 	core.ServiceNowItemResponse[*RegisterServiceResult]
 }
 
+// CreateRegisterServiceResponseFromDiscriminatorValue creates a new RegisterServiceResponse from a ParseNode.
 func CreateRegisterServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return core.NewBaseServiceNowItemResponse[*RegisterServiceResult](CreateRegisterServiceResultFromDiscriminatorValue), nil
 }
