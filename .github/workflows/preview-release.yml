@@ -1,0 +1,32 @@
+name: Preview Release
+
+on:
+  push:
+    branches:
+      - test/preview-release-please-poc
+
+permissions: {}
+
+jobs:
+  preview-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Create preview release PR
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
+        id: release
+        with:
+          config-file: .github/preview-release-please-config.json
+          manifest-file: .github/preview-release-please-manifest.json
+          target-branch: test/preview-release-please-poc
+
+      - name: Auto-merge preview release PR
+        if: ${{ steps.release.outputs.prs_created == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pr_number=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.number')
+          gh pr merge "$pr_number" --auto --squash --repo "${{ github.repository }}"

@@ -1,0 +1,19 @@
+{
+    "$schema": "https://raw.githubusercontent.com/googleapis/release-please/refs/heads/main/schemas/config.json",
+    "release-type": "go",
+    "separate-pull-requests": true,
+    "bump-minor-pre-major": true,
+    "bump-patch-for-minor-pre-major": true,
+    "include-v-in-tag": true,
+    "include-component-in-tag": false,
+    "label": "rc",
+    "prerelease-type": "rc",
+    "prerelease": true,
+    "skip-changelog": true,
+    "packages": {
+        ".": {
+            "package-name": "github.com/michaeldcanady/servicenow-sdk-go",
+            "changelog-path": "CHANGELOG.md"
+        }
+    }
+}
