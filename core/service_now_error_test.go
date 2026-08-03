@@ -191,11 +191,47 @@ func TestServiceNowError_Error(t *testing.T) {
 			},
 			expected: "detailed reason",
 		},
+		{
+			name: "message present, detail present prefers message",
+			setup: func() *ServiceNowError {
+				e := NewServiceNowError()
+				me := NewMainError()
+				_ = me.SetMessage(func() *string { s := "bad request"; return &s }())
+				_ = me.SetDetail(func() *string { s := "detailed reason"; return &s }())
+				_ = e.setError(me)
+				return e
+			},
+			expected: "bad request",
+		},
+		{
+			name: "main error absent",
+			setup: func() *ServiceNowError {
+				return NewServiceNowError()
+			},
+			expected: unknownErrorMessage,
+		},
+		{
+			name: "main error present, message and detail nil",
+			setup: func() *ServiceNowError {
+				e := NewServiceNowError()
+				_ = e.setError(NewMainError())
+				return e
+			},
+			expected: unknownErrorMessage,
+		},
+		{
+			name: "nil receiver",
+			setup: func() *ServiceNowError {
+				return nil
+			},
+			expected: unknownErrorMessage,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			e := tt.setup()
+			assert.NotPanics(t, func() { _ = e.Error() })
 			assert.Equal(t, tt.expected, e.Error())
 		})
 	}
