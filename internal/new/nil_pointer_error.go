@@ -14,5 +14,9 @@ func NewNilPointerError(text string) *NilPointerError {
 
 // Error returns the error string.
 func (err *NilPointerError) Error() string {
+	if IsNil(err) {
+		return "nil pointer error"
+	}
+
 	return err.s
 }
