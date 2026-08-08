@@ -9,59 +9,61 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
+// TODO: figure out dates
+
 const (
-	bannerImageLightKey = "banner_image_light"
-	countryKey          = "country"
-	parentKey           = "parent"
-	notesKey            = "notes"
-	stockSymbolKey      = "stock_symbol"
-	discountKey         = "discount"
-	activeEscalationKey = "active_escalation"
-	sysUpdatedOnKey     = "sys_updated_on"
-	appleIconKey        = "apple_icon"
-	numberKey           = "number"
-	sysUpdatedByKey     = "sys_updated_by"
-	fiscalYearKey       = "fiscal_year"
-	sysCreatedOnKey     = "sys_created_on"
-	contactKey          = "contact"
-	stockPriceKey       = "stock_price"
-	stateKey            = "state"
-	bannerImageKey      = "banner_image"
-	sysCreatedByKey     = "sys_created_by"
-	longitudeKey        = "longitude"
-	zipKey              = "zip"
-	profitsKey          = "profits"
-	phoneKey            = "phone"
-	faxPhoneKey         = "fax_phone"
-	nameKey             = "name"
-	bannerTextKey       = "banner_text"
-	accountCodeKey      = "account_code"
-	primaryKey          = "primary"
-	cityKey             = "city"
-	latitudeKey         = "latitude"
-	sysClassNameKey     = "sys_class_name"
-	manufacturerKey     = "manufacturer"
-	accountParentKey    = "account_parent"
-	sysIDKey            = "sys_id"
-	marketCapKey        = "market_cap"
-	numEmployeesKey     = "num_employees"
-	rankTierKey         = "rank_tier"
-	streetKey           = "street"
-	vendorKey           = "vendor"
-	latLongErrorKey     = "lat_long_error"
-	themeKey            = "theme"
-	vendorTypeKey       = "vendor_type"
-	websiteKey          = "website"
-	revenuePerYearKey   = "revenue_per_year"
-	publiclyTradedKey   = "publicly_traded"
-	sysModCountKey      = "sys_mod_count"
-	sysTagsKey          = "sys_tags"
-	partnerKey          = "partner"
-	registrationCodeKey = "registration_code"
-	vendorManagerKey    = "vendor_manager"
-	accountPathKey      = "account_path"
-	primaryContactKey   = "primary_contact"
-	customerKey         = "customer"
+	bannerImageLightKey = "banner_image_light" // V
+	countryKey          = "country"            // V
+	parentKey           = "parent"             // V
+	notesKey            = "notes"              // V
+	stockSymbolKey      = "stock_symbol"       // V
+	discountKey         = "discount"           // V
+	activeEscalationKey = "active_escalation"  // V
+	sysUpdatedOnKey     = "sys_updated_on"     // V
+	appleIconKey        = "apple_icon"         // V
+	numberKey           = "number"             // V
+	sysUpdatedByKey     = "sys_updated_by"     // V
+	fiscalYearKey       = "fiscal_year"        // V
+	sysCreatedOnKey     = "sys_created_on"     // V
+	contactKey          = "contact"            // V
+	stockPriceKey       = "stock_price"        // V
+	stateKey            = "state"              // V
+	bannerImageKey      = "banner_image"       // V
+	sysCreatedByKey     = "sys_created_by"     // V
+	longitudeKey        = "longitude"          // V
+	zipKey              = "zip"                // V
+	profitsKey          = "profits"            // V
+	phoneKey            = "phone"              // V
+	faxPhoneKey         = "fax_phone"          // V
+	nameKey             = "name"               // V
+	bannerTextKey       = "banner_text"        // V
+	accountCodeKey      = "account_code"       // V
+	primaryKey          = "primary"            // V
+	cityKey             = "city"               // V
+	latitudeKey         = "latitude"           // V
+	sysClassNameKey     = "sys_class_name"     // V
+	manufacturerKey     = "manufacturer"       // V
+	accountParentKey    = "account_parent"     // V
+	sysIDKey            = "sys_id"             // V
+	marketCapKey        = "market_cap"         // V
+	numEmployeesKey     = "num_employees"      // V
+	rankTierKey         = "rank_tier"          // V
+	streetKey           = "street"             // V
+	vendorKey           = "vendor"             // V
+	latLongErrorKey     = "lat_long_error"     // V
+	themeKey            = "theme"              // V
+	vendorTypeKey       = "vendor_type"        // V
+	websiteKey          = "website"            // V
+	revenuePerYearKey   = "revenue_per_year"   // V
+	publiclyTradedKey   = "publicly_traded"    // V
+	sysModCountKey      = "sys_mod_count"      // V
+	sysTagsKey          = "sys_tags"           // V
+	partnerKey          = "partner"            // V
+	registrationCodeKey = "registration_code"  // V
+	vendorManagerKey    = "vendor_manager"     // V
+	accountPathKey      = "account_path"       // V
+	primaryContactKey   = "primary_contact"    // V
+	customerKey         = "customer"           // V
 )
 
 // Account represents an account object in ServiceNow.
@@ -93,7 +95,7 @@ func (m *Account) Serialize(writer serialization.SerializationWriter) error {
 		internalSerialization.SerializeStringFunc(parentKey, m.GetParent),
 		internalSerialization.SerializeStringFunc(notesKey, m.GetNotes),
 		internalSerialization.SerializeStringFunc(stockSymbolKey, m.GetStockSymbol),
-		internalSerialization.SerializeStringFunc(discountKey, m.GetDiscount),
+		internalSerialization.SerializeInt64Func(discountKey, m.GetDiscount),
 		internalSerialization.SerializeStringFunc(activeEscalationKey, m.GetActiveEscalation),
 		internalSerialization.SerializeStringFunc(sysUpdatedOnKey, m.GetSysUpdatedOn),
 		internalSerialization.SerializeStringFunc(appleIconKey, m.GetAppleIcon),
@@ -106,40 +108,40 @@ func (m *Account) Serialize(writer serialization.SerializationWriter) error {
 		internalSerialization.SerializeStringFunc(stateKey, m.GetState),
 		internalSerialization.SerializeStringFunc(bannerImageKey, m.GetBannerImage),
 		internalSerialization.SerializeStringFunc(sysCreatedByKey, m.GetSysCreatedBy),
-		internalSerialization.SerializeStringFunc(longitudeKey, m.GetLongitude),
+		internalSerialization.SerializeFloat64Func(longitudeKey, m.GetLongitude),
 		internalSerialization.SerializeStringFunc(zipKey, m.GetZip),
-		internalSerialization.SerializeStringFunc(profitsKey, m.GetProfits),
+		internalSerialization.SerializeInt64Func(profitsKey, m.GetProfits),
 		internalSerialization.SerializeStringFunc(phoneKey, m.GetPhone),
 		internalSerialization.SerializeStringFunc(faxPhoneKey, m.GetFaxPhone),
 		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
 		internalSerialization.SerializeStringFunc(bannerTextKey, m.GetBannerText),
 		internalSerialization.SerializeStringFunc(accountCodeKey, m.GetAccountCode),
-		internalSerialization.SerializeStringFunc(primaryKey, m.GetPrimary),
+		internalSerialization.SerializeBoolFunc(primaryKey, m.GetPrimary),
 		internalSerialization.SerializeStringFunc(cityKey, m.GetCity),
-		internalSerialization.SerializeStringFunc(latitudeKey, m.GetLatitude),
+		internalSerialization.SerializeFloat64Func(latitudeKey, m.GetLatitude),
 		internalSerialization.SerializeStringFunc(sysClassNameKey, m.GetSysClassName),
-		internalSerialization.SerializeStringFunc(manufacturerKey, m.GetManufacturer),
+		internalSerialization.SerializeBoolFunc(manufacturerKey, m.GetManufacturer),
 		internalSerialization.SerializeStringFunc(accountParentKey, m.GetAccountParent),
 		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
-		internalSerialization.SerializeStringFunc(marketCapKey, m.GetMarketCap),
-		internalSerialization.SerializeStringFunc(numEmployeesKey, m.GetNumEmployees),
-		internalSerialization.SerializeStringFunc(rankTierKey, m.GetRankTier),
+		internalSerialization.SerializeFloat64Func(marketCapKey, m.GetMarketCap),
+		internalSerialization.SerializeInt64Func(numEmployeesKey, m.GetNumEmployees),
+		internalSerialization.SerializeEnumFunc(rankTierKey, m.GetRankTier),
 		internalSerialization.SerializeStringFunc(streetKey, m.GetStreet),
-		internalSerialization.SerializeStringFunc(vendorKey, m.GetVendor),
+		internalSerialization.SerializeBoolFunc(vendorKey, m.GetVendor),
 		internalSerialization.SerializeStringFunc(latLongErrorKey, m.GetLatLongError),
 		internalSerialization.SerializeStringFunc(themeKey, m.GetTheme),
 		internalSerialization.SerializeStringFunc(vendorTypeKey, m.GetVendorType),
 		internalSerialization.SerializeStringFunc(websiteKey, m.GetWebsite),
-		internalSerialization.SerializeStringFunc(revenuePerYearKey, m.GetRevenuePerYear),
-		internalSerialization.SerializeStringFunc(publiclyTradedKey, m.GetPubliclyTraded),
+		internalSerialization.SerializeInt64Func(revenuePerYearKey, m.GetRevenuePerYear),
+		internalSerialization.SerializeBoolFunc(publiclyTradedKey, m.GetPubliclyTraded),
 		internalSerialization.SerializeStringFunc(sysModCountKey, m.GetSysModCount),
 		internalSerialization.SerializeStringFunc(sysTagsKey, m.GetSysTags),
-		internalSerialization.SerializeStringFunc(partnerKey, m.GetPartner),
+		internalSerialization.SerializeBoolFunc(partnerKey, m.GetPartner),
 		internalSerialization.SerializeStringFunc(registrationCodeKey, m.GetRegistrationCode),
 		internalSerialization.SerializeStringFunc(vendorManagerKey, m.GetVendorManager),
 		internalSerialization.SerializeStringFunc(accountPathKey, m.GetAccountPath),
 		internalSerialization.SerializeStringFunc(primaryContactKey, m.GetPrimaryContact),
-		internalSerialization.SerializeStringFunc(customerKey, m.GetCustomer),
+		internalSerialization.SerializeBoolFunc(customerKey, m.GetCustomer),
 	)
 }
 
@@ -151,7 +153,7 @@ func (m *Account) GetFieldDeserializers() map[string]func(serialization.ParseNod
 		parentKey:           internalSerialization.DeserializeStringFunc(m.SetParent),
 		notesKey:            internalSerialization.DeserializeStringFunc(m.SetNotes),
 		stockSymbolKey:      internalSerialization.DeserializeStringFunc(m.SetStockSymbol),
-		discountKey:         internalSerialization.DeserializeStringFunc(m.SetDiscount),
+		discountKey:         internalSerialization.DeserializeInt64Func(m.SetDiscount),
 		activeEscalationKey: internalSerialization.DeserializeStringFunc(m.SetActiveEscalation),
 		sysUpdatedOnKey:     internalSerialization.DeserializeStringFunc(m.SetSysUpdatedOn),
 		appleIconKey:        internalSerialization.DeserializeStringFunc(m.SetAppleIcon),
@@ -164,40 +166,40 @@ func (m *Account) GetFieldDeserializers() map[string]func(serialization.ParseNod
 		stateKey:            internalSerialization.DeserializeStringFunc(m.SetState),
 		bannerImageKey:      internalSerialization.DeserializeStringFunc(m.SetBannerImage),
 		sysCreatedByKey:     internalSerialization.DeserializeStringFunc(m.SetSysCreatedBy),
-		longitudeKey:        internalSerialization.DeserializeStringFunc(m.SetLongitude),
+		longitudeKey:        internalSerialization.DeserializeFloat64Func(m.SetLongitude),
 		zipKey:              internalSerialization.DeserializeStringFunc(m.SetZip),
-		profitsKey:          internalSerialization.DeserializeStringFunc(m.SetProfits),
+		profitsKey:          internalSerialization.DeserializeInt64Func(m.SetProfits),
 		phoneKey:            internalSerialization.DeserializeStringFunc(m.SetPhone),
 		faxPhoneKey:         internalSerialization.DeserializeStringFunc(m.SetFaxPhone),
 		nameKey:             internalSerialization.DeserializeStringFunc(m.SetName),
 		bannerTextKey:       internalSerialization.DeserializeStringFunc(m.SetBannerText),
 		accountCodeKey:      internalSerialization.DeserializeStringFunc(m.SetAccountCode),
-		primaryKey:          internalSerialization.DeserializeStringFunc(m.SetPrimary),
+		primaryKey:          internalSerialization.DeserializeBoolFunc(m.SetPrimary),
 		cityKey:             internalSerialization.DeserializeStringFunc(m.SetCity),
-		latitudeKey:         internalSerialization.DeserializeStringFunc(m.SetLatitude),
+		latitudeKey:         internalSerialization.DeserializeFloat64Func(m.SetLatitude),
 		sysClassNameKey:     internalSerialization.DeserializeStringFunc(m.SetSysClassName),
-		manufacturerKey:     internalSerialization.DeserializeStringFunc(m.SetManufacturer),
+		manufacturerKey:     internalSerialization.DeserializeBoolFunc(m.SetManufacturer),
 		accountParentKey:    internalSerialization.DeserializeStringFunc(m.SetAccountParent),
 		sysIDKey:            internalSerialization.DeserializeStringFunc(m.SetSysID),
-		marketCapKey:        internalSerialization.DeserializeStringFunc(m.SetMarketCap),
-		numEmployeesKey:     internalSerialization.DeserializeStringFunc(m.SetNumEmployees),
-		rankTierKey:         internalSerialization.DeserializeStringFunc(m.SetRankTier),
+		marketCapKey:        internalSerialization.DeserializeFloat64Func(m.SetMarketCap),
+		numEmployeesKey:     internalSerialization.DeserializeInt64Func(m.SetNumEmployees),
+		rankTierKey:         internalSerialization.DeserializeEnumFunc(ParseRankTier, m.SetRankTier),
 		streetKey:           internalSerialization.DeserializeStringFunc(m.SetStreet),
-		vendorKey:           internalSerialization.DeserializeStringFunc(m.SetVendor),
+		vendorKey:           internalSerialization.DeserializeBoolFunc(m.SetVendor),
 		latLongErrorKey:     internalSerialization.DeserializeStringFunc(m.SetLatLongError),
 		themeKey:            internalSerialization.DeserializeStringFunc(m.SetTheme),
 		vendorTypeKey:       internalSerialization.DeserializeStringFunc(m.SetVendorType),
 		websiteKey:          internalSerialization.DeserializeStringFunc(m.SetWebsite),
-		revenuePerYearKey:   internalSerialization.DeserializeStringFunc(m.SetRevenuePerYear),
-		publiclyTradedKey:   internalSerialization.DeserializeStringFunc(m.SetPubliclyTraded),
+		revenuePerYearKey:   internalSerialization.DeserializeInt64Func(m.SetRevenuePerYear),
+		publiclyTradedKey:   internalSerialization.DeserializeBoolFunc(m.SetPubliclyTraded),
 		sysModCountKey:      internalSerialization.DeserializeStringFunc(m.SetSysModCount),
 		sysTagsKey:          internalSerialization.DeserializeStringFunc(m.SetSysTags),
-		partnerKey:          internalSerialization.DeserializeStringFunc(m.SetPartner),
+		partnerKey:          internalSerialization.DeserializeBoolFunc(m.SetPartner),
 		registrationCodeKey: internalSerialization.DeserializeStringFunc(m.SetRegistrationCode),
 		vendorManagerKey:    internalSerialization.DeserializeStringFunc(m.SetVendorManager),
 		accountPathKey:      internalSerialization.DeserializeStringFunc(m.SetAccountPath),
 		primaryContactKey:   internalSerialization.DeserializeStringFunc(m.SetPrimaryContact),
-		customerKey:         internalSerialization.DeserializeStringFunc(m.SetCustomer),
+		customerKey:         internalSerialization.DeserializeBoolFunc(m.SetCustomer),
 	}
 }
 
@@ -205,6 +207,8 @@ func (m *Account) GetFieldDeserializers() map[string]func(serialization.ParseNod
 func (m *Account) GetBannerImageLight() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, bannerImageLightKey)
 }
+
+// SetBannerImageLight sets the banner image light value.
 func (m *Account) SetBannerImageLight(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, bannerImageLightKey, val)
 }
@@ -213,6 +217,8 @@ func (m *Account) SetBannerImageLight(val *string) error {
 func (m *Account) GetCountry() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, countryKey)
 }
+
+// SetCountry sets the country value.
 func (m *Account) SetCountry(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, countryKey, val)
 }
@@ -221,6 +227,8 @@ func (m *Account) SetCountry(val *string) error {
 func (m *Account) GetParent() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, parentKey)
 }
+
+// SetParent sets the parent value.
 func (m *Account) SetParent(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, parentKey, val)
 }
@@ -229,6 +237,8 @@ func (m *Account) SetParent(val *string) error {
 func (m *Account) GetNotes() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, notesKey)
 }
+
+// SetNotes sets the notes value.
 func (m *Account) SetNotes(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, notesKey, val)
 }
@@ -237,15 +247,19 @@ func (m *Account) SetNotes(val *string) error {
 func (m *Account) GetStockSymbol() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, stockSymbolKey)
 }
+
+// SetStockSymbol sets the stock symbol value.
 func (m *Account) SetStockSymbol(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, stockSymbolKey, val)
 }
 
 // GetDiscount returns the discount value.
-func (m *Account) GetDiscount() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, discountKey)
+func (m *Account) GetDiscount() (*int64, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *int64](m, discountKey)
 }
-func (m *Account) SetDiscount(val *string) error {
+
+// SetDiscount sets the discount value.
+func (m *Account) SetDiscount(val *int64) error {
 	return store.DefaultBackedModelMutatorFunc(m, discountKey, val)
 }
 
@@ -253,6 +267,8 @@ func (m *Account) SetDiscount(val *string) error {
 func (m *Account) GetActiveEscalation() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, activeEscalationKey)
 }
+
+// SetActiveEscalation sets the active escalation value.
 func (m *Account) SetActiveEscalation(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, activeEscalationKey, val)
 }
@@ -261,6 +277,8 @@ func (m *Account) SetActiveEscalation(val *string) error {
 func (m *Account) GetSysUpdatedOn() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, sysUpdatedOnKey)
 }
+
+// SetSysUpdatedOn sets the sys updated on value.
 func (m *Account) SetSysUpdatedOn(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysUpdatedOnKey, val)
 }
@@ -269,6 +287,8 @@ func (m *Account) SetSysUpdatedOn(val *string) error {
 func (m *Account) GetAppleIcon() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, appleIconKey)
 }
+
+// SetAppleIcon sets the apple icon value.
 func (m *Account) SetAppleIcon(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, appleIconKey, val)
 }
@@ -277,6 +297,8 @@ func (m *Account) SetAppleIcon(val *string) error {
 func (m *Account) GetNumber() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, numberKey)
 }
+
+// SetNumber sets the number value.
 func (m *Account) SetNumber(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, numberKey, val)
 }
@@ -285,6 +307,8 @@ func (m *Account) SetNumber(val *string) error {
 func (m *Account) GetSysUpdatedBy() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, sysUpdatedByKey)
 }
+
+// SetSysUpdatedBy sets the sys updated by value.
 func (m *Account) SetSysUpdatedBy(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysUpdatedByKey, val)
 }
@@ -293,6 +317,8 @@ func (m *Account) SetSysUpdatedBy(val *string) error {
 func (m *Account) GetFiscalYear() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, fiscalYearKey)
 }
+
+// SetFiscalYear sets the fiscal year value.
 func (m *Account) SetFiscalYear(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, fiscalYearKey, val)
 }
@@ -301,6 +327,8 @@ func (m *Account) SetFiscalYear(val *string) error {
 func (m *Account) GetSysCreatedOn() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, sysCreatedOnKey)
 }
+
+// SetSysCreatedOn sets the sys created on value.
 func (m *Account) SetSysCreatedOn(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysCreatedOnKey, val)
 }
@@ -309,6 +337,8 @@ func (m *Account) SetSysCreatedOn(val *string) error {
 func (m *Account) GetContact() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, contactKey)
 }
+
+// SetContact sets the contact value.
 func (m *Account) SetContact(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, contactKey, val)
 }
@@ -317,6 +347,8 @@ func (m *Account) SetContact(val *string) error {
 func (m *Account) GetStockPrice() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, stockPriceKey)
 }
+
+// SetStockPrice sets the stock price value.
 func (m *Account) SetStockPrice(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, stockPriceKey, val)
 }
@@ -325,6 +357,8 @@ func (m *Account) SetStockPrice(val *string) error {
 func (m *Account) GetState() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, stateKey)
 }
+
+// SetState sets the state value.
 func (m *Account) SetState(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, stateKey, val)
 }
@@ -333,6 +367,8 @@ func (m *Account) SetState(val *string) error {
 func (m *Account) GetBannerImage() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, bannerImageKey)
 }
+
+// SetBannerImage sets the banner image value.
 func (m *Account) SetBannerImage(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, bannerImageKey, val)
 }
@@ -341,15 +377,19 @@ func (m *Account) SetBannerImage(val *string) error {
 func (m *Account) GetSysCreatedBy() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, sysCreatedByKey)
 }
+
+// SetSysCreatedBy sets the sys created by value.
 func (m *Account) SetSysCreatedBy(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysCreatedByKey, val)
 }
 
 // GetLongitude returns the longitude value.
-func (m *Account) GetLongitude() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, longitudeKey)
+func (m *Account) GetLongitude() (*float64, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *float64](m, longitudeKey)
 }
-func (m *Account) SetLongitude(val *string) error {
+
+// SetLongitude sets the longitude value.
+func (m *Account) SetLongitude(val *float64) error {
 	return store.DefaultBackedModelMutatorFunc(m, longitudeKey, val)
 }
 
@@ -357,15 +397,19 @@ func (m *Account) SetLongitude(val *string) error {
 func (m *Account) GetZip() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, zipKey)
 }
+
+// SetZip sets the zip value.
 func (m *Account) SetZip(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, zipKey, val)
 }
 
 // GetProfits returns the profits value.
-func (m *Account) GetProfits() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, profitsKey)
+func (m *Account) GetProfits() (*int64, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *int64](m, profitsKey)
 }
-func (m *Account) SetProfits(val *string) error {
+
+// SetProfits sets the profits value.
+func (m *Account) SetProfits(val *int64) error {
 	return store.DefaultBackedModelMutatorFunc(m, profitsKey, val)
 }
 
@@ -373,6 +417,8 @@ func (m *Account) SetProfits(val *string) error {
 func (m *Account) GetPhone() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, phoneKey)
 }
+
+// SetPhone sets the phone value.
 func (m *Account) SetPhone(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, phoneKey, val)
 }
@@ -381,6 +427,8 @@ func (m *Account) SetPhone(val *string) error {
 func (m *Account) GetFaxPhone() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, faxPhoneKey)
 }
+
+// SetFaxPhone sets the fax phone value.s
 func (m *Account) SetFaxPhone(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, faxPhoneKey, val)
 }
@@ -389,6 +437,8 @@ func (m *Account) SetFaxPhone(val *string) error {
 func (m *Account) GetName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, nameKey)
 }
+
+// SetName sets the name value.
 func (m *Account) SetName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, nameKey, val)
 }
@@ -397,6 +447,8 @@ func (m *Account) SetName(val *string) error {
 func (m *Account) GetBannerText() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, bannerTextKey)
 }
+
+// SetBannerText sets the banner text value.
 func (m *Account) SetBannerText(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, bannerTextKey, val)
 }
@@ -405,15 +457,19 @@ func (m *Account) SetBannerText(val *string) error {
 func (m *Account) GetAccountCode() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, accountCodeKey)
 }
+
+// SetAccountCode sets the account code value.
 func (m *Account) SetAccountCode(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, accountCodeKey, val)
 }
 
 // GetPrimary returns the primary value.
-func (m *Account) GetPrimary() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, primaryKey)
+func (m *Account) GetPrimary() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *bool](m, primaryKey)
 }
-func (m *Account) SetPrimary(val *string) error {
+
+// SetPrimary sets the primary value.
+func (m *Account) SetPrimary(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, primaryKey, val)
 }
 
@@ -421,15 +477,19 @@ func (m *Account) SetPrimary(val *string) error {
 func (m *Account) GetCity() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, cityKey)
 }
+
+// SetCity sets the city value.
 func (m *Account) SetCity(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, cityKey, val)
 }
 
 // GetLatitude returns the latitude value.
-func (m *Account) GetLatitude() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, latitudeKey)
+func (m *Account) GetLatitude() (*float64, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *float64](m, latitudeKey)
 }
-func (m *Account) SetLatitude(val *string) error {
+
+// SetLatitude sets the latitude value.
+func (m *Account) SetLatitude(val *float64) error {
 	return store.DefaultBackedModelMutatorFunc(m, latitudeKey, val)
 }
 
@@ -437,15 +497,19 @@ func (m *Account) SetLatitude(val *string) error {
 func (m *Account) GetSysClassName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, sysClassNameKey)
 }
+
+// SetSysClassName sets the sys class name value.
 func (m *Account) SetSysClassName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysClassNameKey, val)
 }
 
 // GetManufacturer returns the manufacturer value.
-func (m *Account) GetManufacturer() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, manufacturerKey)
+func (m *Account) GetManufacturer() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *bool](m, manufacturerKey)
 }
-func (m *Account) SetManufacturer(val *string) error {
+
+// SetManufacturer sets the manufacturer value.
+func (m *Account) SetManufacturer(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, manufacturerKey, val)
 }
 
@@ -453,6 +517,8 @@ func (m *Account) SetManufacturer(val *string) error {
 func (m *Account) GetAccountParent() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, accountParentKey)
 }
+
+// SetAccountParent sets the account parent value.
 func (m *Account) SetAccountParent(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, accountParentKey, val)
 }
@@ -461,31 +527,39 @@ func (m *Account) SetAccountParent(val *string) error {
 func (m *Account) GetSysID() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, sysIDKey)
 }
+
+// SetSysID sets the sys id value.
 func (m *Account) SetSysID(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 
 // GetMarketCap returns the market cap value.
-func (m *Account) GetMarketCap() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, marketCapKey)
+func (m *Account) GetMarketCap() (*float64, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *float64](m, marketCapKey)
 }
-func (m *Account) SetMarketCap(val *string) error {
+
+// SetMarketCap sets the market cap value.
+func (m *Account) SetMarketCap(val *float64) error {
 	return store.DefaultBackedModelMutatorFunc(m, marketCapKey, val)
 }
 
 // GetNumEmployees returns the num employees value.
-func (m *Account) GetNumEmployees() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, numEmployeesKey)
+func (m *Account) GetNumEmployees() (*int64, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *int64](m, numEmployeesKey)
 }
-func (m *Account) SetNumEmployees(val *string) error {
+
+// SetNumEmployees sets the num employees value.
+func (m *Account) SetNumEmployees(val *int64) error {
 	return store.DefaultBackedModelMutatorFunc(m, numEmployeesKey, val)
 }
 
 // GetRankTier returns the rank tier value.
-func (m *Account) GetRankTier() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, rankTierKey)
+func (m *Account) GetRankTier() (*RankTier, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *RankTier](m, rankTierKey)
 }
-func (m *Account) SetRankTier(val *string) error {
+
+// SetRankTier sets the rank tier value.
+func (m *Account) SetRankTier(val *RankTier) error {
 	return store.DefaultBackedModelMutatorFunc(m, rankTierKey, val)
 }
 
@@ -493,15 +567,19 @@ func (m *Account) SetRankTier(val *string) error {
 func (m *Account) GetStreet() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, streetKey)
 }
+
+// SetStreet sets the street value.
 func (m *Account) SetStreet(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, streetKey, val)
 }
 
 // GetVendor returns the vendor value.
-func (m *Account) GetVendor() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, vendorKey)
+func (m *Account) GetVendor() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *bool](m, vendorKey)
 }
-func (m *Account) SetVendor(val *string) error {
+
+// SetVendor sets the vendor value.
+func (m *Account) SetVendor(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, vendorKey, val)
 }
 
@@ -509,6 +587,8 @@ func (m *Account) SetVendor(val *string) error {
 func (m *Account) GetLatLongError() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, latLongErrorKey)
 }
+
+// SetLatLongError sets the lat long error value.
 func (m *Account) SetLatLongError(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, latLongErrorKey, val)
 }
@@ -517,6 +597,8 @@ func (m *Account) SetLatLongError(val *string) error {
 func (m *Account) GetTheme() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, themeKey)
 }
+
+// SetTheme sets the theme value.
 func (m *Account) SetTheme(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, themeKey, val)
 }
@@ -525,6 +607,8 @@ func (m *Account) SetTheme(val *string) error {
 func (m *Account) GetVendorType() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, vendorTypeKey)
 }
+
+// SetVendorType sets the vendor type value.
 func (m *Account) SetVendorType(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, vendorTypeKey, val)
 }
@@ -533,23 +617,29 @@ func (m *Account) SetVendorType(val *string) error {
 func (m *Account) GetWebsite() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, websiteKey)
 }
+
+// SetWebsite sets the website value.
 func (m *Account) SetWebsite(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, websiteKey, val)
 }
 
 // GetRevenuePerYear returns the revenue per year value.
-func (m *Account) GetRevenuePerYear() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, revenuePerYearKey)
+func (m *Account) GetRevenuePerYear() (*int64, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *int64](m, revenuePerYearKey)
 }
-func (m *Account) SetRevenuePerYear(val *string) error {
+
+// SetRevenuePerYear sets the revenue per year value.
+func (m *Account) SetRevenuePerYear(val *int64) error {
 	return store.DefaultBackedModelMutatorFunc(m, revenuePerYearKey, val)
 }
 
 // GetPubliclyTraded returns the publicly traded value.
-func (m *Account) GetPubliclyTraded() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, publiclyTradedKey)
+func (m *Account) GetPubliclyTraded() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *bool](m, publiclyTradedKey)
 }
-func (m *Account) SetPubliclyTraded(val *string) error {
+
+// SetPubliclyTraded sets the publicly traded value.
+func (m *Account) SetPubliclyTraded(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, publiclyTradedKey, val)
 }
 
@@ -557,6 +647,8 @@ func (m *Account) SetPubliclyTraded(val *string) error {
 func (m *Account) GetSysModCount() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, sysModCountKey)
 }
+
+// SetSysModCount sets the sys mod count value.
 func (m *Account) SetSysModCount(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysModCountKey, val)
 }
@@ -565,15 +657,19 @@ func (m *Account) SetSysModCount(val *string) error {
 func (m *Account) GetSysTags() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, sysTagsKey)
 }
+
+// SetSysTags sets the sys tags value.
 func (m *Account) SetSysTags(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysTagsKey, val)
 }
 
 // GetPartner returns the partner value.
-func (m *Account) GetPartner() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, partnerKey)
+func (m *Account) GetPartner() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *bool](m, partnerKey)
 }
-func (m *Account) SetPartner(val *string) error {
+
+// SetPartner sets the partner value.
+func (m *Account) SetPartner(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, partnerKey, val)
 }
 
@@ -581,6 +677,8 @@ func (m *Account) SetPartner(val *string) error {
 func (m *Account) GetRegistrationCode() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, registrationCodeKey)
 }
+
+// SetRegistrationCode sets the registration code value.
 func (m *Account) SetRegistrationCode(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, registrationCodeKey, val)
 }
@@ -589,6 +687,8 @@ func (m *Account) SetRegistrationCode(val *string) error {
 func (m *Account) GetVendorManager() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, vendorManagerKey)
 }
+
+// SetVendorManager sets the vendor manager value.
 func (m *Account) SetVendorManager(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, vendorManagerKey, val)
 }
@@ -597,6 +697,8 @@ func (m *Account) SetVendorManager(val *string) error {
 func (m *Account) GetAccountPath() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, accountPathKey)
 }
+
+// SetAccountPath sets the account path value.
 func (m *Account) SetAccountPath(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, accountPathKey, val)
 }
@@ -605,14 +707,18 @@ func (m *Account) SetAccountPath(val *string) error {
 func (m *Account) GetPrimaryContact() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, primaryContactKey)
 }
+
+// SetPrimaryContact sets the primary contact value.
 func (m *Account) SetPrimaryContact(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, primaryContactKey, val)
 }
 
 // GetCustomer returns the customer value.
-func (m *Account) GetCustomer() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*Account, *string](m, customerKey)
+func (m *Account) GetCustomer() (*bool, error) {
+	return store.DefaultBackedModelAccessorFunc[*Account, *bool](m, customerKey)
 }
-func (m *Account) SetCustomer(val *string) error {
+
+// SetCustomer sets the customer value.
+func (m *Account) SetCustomer(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, customerKey, val)
 }

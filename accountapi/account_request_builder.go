@@ -6,6 +6,7 @@ import (
 	"maps"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -30,7 +31,13 @@ func NewAccountRequestBuilderInternal(pathParameters map[string]string, requestA
 	}
 }
 
-// ByID returns an AccountItemRequestBuilder for the specified account ID.
+// NewAccountRequestBuilder instantiates a new [AccountRequestBuilder].
+func NewAccountRequestBuilder(rawUrl string, requestAdapter abstractions.RequestAdapter) *AccountRequestBuilder {
+	urlParams := map[string]string{internal.RawURLKey: rawUrl}
+	return NewAccountRequestBuilderInternal(urlParams, requestAdapter)
+}
+
+// ByID returns an [AccountItemRequestBuilder] for the specified account ID.
 func (rB *AccountRequestBuilder) ByID(accountID string) *AccountItemRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters[accountIDKey] = accountID

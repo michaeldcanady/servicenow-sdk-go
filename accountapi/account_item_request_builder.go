@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -19,11 +20,17 @@ type AccountItemRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// NewAccountItemRequestBuilderInternal instantiates a new AccountItemRequestBuilder with the provided request parameters.
+// NewAccountItemRequestBuilderInternal instantiates a new [AccountItemRequestBuilder] with the provided request parameters.
 func NewAccountItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AccountItemRequestBuilder {
 	return &AccountItemRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, accountItemURLTemplate, pathParameters),
 	}
+}
+
+// NewAccountItemRequestBuilder instantiates a new [AccountItemRequestBuilder].
+func NewAccountItemRequestBuilder(rawUrl string, requestAdapter abstractions.RequestAdapter) *AccountItemRequestBuilder {
+	urlParams := map[string]string{internal.RawURLKey: rawUrl}
+	return NewAccountItemRequestBuilderInternal(urlParams, requestAdapter)
 }
 
 // Get sends a GET request to retrieve a single account.
