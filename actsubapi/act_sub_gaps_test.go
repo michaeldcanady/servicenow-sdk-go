@@ -36,7 +36,6 @@ func newGapsAdapter(response any, err error) *mocking.MockRequestAdapter {
 // the package. Each returns a nil child rather than panicking, so a broken chain surfaces at the
 // call site instead of mid-traversal.
 func TestNavigationMethods_NilReceivers(t *testing.T) {
-
 	t.Run("FacetsRequestBuilder ByContext", func(t *testing.T) {
 		var builder *FacetsRequestBuilder
 		assert.Nil(t, builder.ByContext("context"))
@@ -48,7 +47,6 @@ func TestNavigationMethods_NilReceivers(t *testing.T) {
 		assert.Nil(t, builder.ByInstance("instance"))
 		assert.Nil(t, (&FacetsContextRequestBuilder{}).ByInstance("instance"))
 	})
-
 }
 
 // verbCall names one verb and how to invoke it, so the shared adapter-error and empty-response
