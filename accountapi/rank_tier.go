@@ -1,6 +1,10 @@
 package accountapi
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+)
 
 type RankTier int16
 
@@ -12,25 +16,33 @@ const (
 	RankTierTactical
 	RankTierValued
 
-	rankTierUnknownString   = "unknown"
-	rankTierBlacklistString = "blacklist"
-	rankTierOtherString     = "other"
-	rankTierStrategicString = "strategic"
-	rankTierTacticalString  = "tactical"
-	rankTierValuedString    = "valued"
+	rankTierUnknown   = "unknown"
+	rankTierBlacklist = "blacklist"
+	rankTierOther     = "other"
+	rankTierStrategic = "strategic"
+	rankTierTactical  = "tactical"
+	rankTierValued    = "valued"
 )
+
+var rankTierStrings = map[RankTier]string{
+	RankTierBlacklist: rankTierBlacklist,
+	RankTierOther:     rankTierOther,
+	RankTierStrategic: rankTierStrategic,
+	RankTierTactical:  rankTierTactical,
+	RankTierValued:    rankTierValued,
+}
 
 func ParseRankTier(s string) (interface{}, error) {
 	switch s {
-	case rankTierBlacklistString:
+	case rankTierBlacklist:
 		return RankTierBlacklist, nil
-	case rankTierOtherString:
+	case rankTierOther:
 		return RankTierOther, nil
-	case rankTierStrategicString:
+	case rankTierStrategic:
 		return RankTierStrategic, nil
-	case rankTierTacticalString:
+	case rankTierTactical:
 		return RankTierTactical, nil
-	case rankTierValuedString:
+	case rankTierValued:
 		return RankTierValued, nil
 	default:
 		return RankTierUnknown, fmt.Errorf("invalid rank tier: %s", s)
@@ -38,18 +50,5 @@ func ParseRankTier(s string) (interface{}, error) {
 }
 
 func (r RankTier) String() string {
-	switch r {
-	case RankTierBlacklist:
-		return rankTierBlacklistString
-	case RankTierOther:
-		return rankTierOtherString
-	case RankTierStrategic:
-		return rankTierStrategicString
-	case RankTierTactical:
-		return rankTierTacticalString
-	case RankTierValued:
-		return rankTierValuedString
-	default:
-		return rankTierUnknownString
-	}
+	return conversion.EnumString(rankTierStrings, r, rankTierUnknown)
 }
