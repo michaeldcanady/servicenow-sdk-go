@@ -16,6 +16,14 @@ const (
 	statusKey     = "status"
 )
 
+// CreateActivitySubscriptionItemResponseFromDiscriminatorValue is a factory for creating an [ActivitySubscriptionItemResponse].
+func CreateActivitySubscriptionItemResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return core.NewBaseServiceNowItemResponse[*ActivitySubscription](CreateActivitySubscriptionFromDiscriminatorValue), nil
+}
+
+// ActivitySubscriptionItemResponse is the implementation of ActivitySubscriptionItemResponse.
+type ActivitySubscriptionItemResponse = core.BaseServiceNowItemResponse[*ActivitySubscription]
+
 // ActivitySubscription represents an activity subscriptions.
 type ActivitySubscription struct {
 	core.BaseModel
@@ -28,8 +36,8 @@ func NewActivitySubscription() *ActivitySubscription {
 	}
 }
 
-// CreateActivitySubscriptionModelFromDiscriminatorValue creates a new instance of ActivitySubscriptionModel.
-func CreateActivitySubscriptionModelFromDiscriminatorValue(serialization.ParseNode) (serialization.Parsable, error) {
+// CreateActivitySubscriptionFromDiscriminatorValue creates a new instance of ActivitySubscriptionModel.
+func CreateActivitySubscriptionFromDiscriminatorValue(serialization.ParseNode) (serialization.Parsable, error) {
 	return NewActivitySubscription(), nil
 }
 

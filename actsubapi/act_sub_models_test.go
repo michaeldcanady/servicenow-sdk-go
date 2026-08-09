@@ -15,9 +15,9 @@ func TestNewActivitySubscription(t *testing.T) {
 	})
 }
 
-func TestCreateActivitySubscriptionModelFromDiscriminatorValue(t *testing.T) {
+func TestCreateActivitySubscriptionFromDiscriminatorValue(t *testing.T) {
 	t.Run("SuccessfulCreation", func(t *testing.T) {
-		instance, err := CreateActivitySubscriptionModelFromDiscriminatorValue(nil)
+		instance, err := CreateActivitySubscriptionFromDiscriminatorValue(nil)
 		require.NoError(t, err)
 		assert.NotNil(t, instance)
 	})
