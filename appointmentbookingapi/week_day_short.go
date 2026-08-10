@@ -1,7 +1,6 @@
 package appointmentbookingapi
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -16,6 +15,8 @@ const (
 	shortWeekdayWed     = "Wed"
 	shortWeekdayThu     = "Thu"
 	shortWeekdayFri     = "Fri"
+	shortWeekdaySat     = "Sat"
+	shortWeekdaySun     = "Sun"
 )
 
 // ShortWeekday specifies the UI shortWeekday for which to render the data.
@@ -29,22 +30,17 @@ const (
 	ShortWeekdayWed
 	ShortWeekdayThu
 	ShortWeekdayFri
+	ShortWeekdaySat
+	ShortWeekdaySun
 )
 
+// ParseShortWeekday resolves the wire representation of a weekday to a [ShortWeekday].
+// Matching is case-insensitive; the constants themselves are canonical title-case ("Mon").
 func ParseShortWeekday(s string) (interface{}, error) {
-	switch strings.ToLower(s) {
-	case shortWeekdayMon:
-		return shortWeekdayMon, nil
-	case shortWeekdayTue:
-		return ShortWeekdayTue, nil
-	case shortWeekdayWed:
-		return ShortWeekdayWed, nil
-	case shortWeekdayThu:
-		return ShortWeekdayThu, nil
-	case shortWeekdayFri:
-		return ShortWeekdayFri, nil
+	if weekday, ok := shortWeekdayValues[strings.ToLower(s)]; ok {
+		return weekday, nil
 	}
-	return ShortWeekdayUnknown, errors.New("unknown short month")
+	return ShortWeekdayUnknown, unknownEnumValueError("short weekday", s)
 }
 
 var shortWeekdayStrings = map[ShortWeekday]string{
@@ -54,7 +50,12 @@ var shortWeekdayStrings = map[ShortWeekday]string{
 	ShortWeekdayWed:     shortWeekdayWed,
 	ShortWeekdayThu:     shortWeekdayThu,
 	ShortWeekdayFri:     shortWeekdayFri,
+	ShortWeekdaySat:     shortWeekdaySat,
+	ShortWeekdaySun:     shortWeekdaySun,
 }
+
+// shortWeekdayValues is the lower-cased inverse of [shortWeekdayStrings], used by [ParseShortWeekday].
+var shortWeekdayValues = invertEnumStrings(shortWeekdayStrings, ShortWeekdayUnknown)
 
 // String returns the string representation of the ShortWeekday.
 func (e ShortWeekday) String() string {

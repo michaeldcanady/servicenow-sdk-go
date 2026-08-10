@@ -29,6 +29,11 @@ var (
 	ErrEmptyURI                = errors.New("empty URI")
 	ErrNilCallback             = errors.New("callback can't be nil")
 	ErrNilParams               = errors.New("params cannot be nil")
+	// ErrUnknownEnumValue reports a wire value that does not correspond to any member of
+	// an enum. Parse<Enum> functions wrap this with the enum name and the offending value,
+	// so callers can match the class of failure with errors.Is regardless of which enum
+	// produced it.
+	ErrUnknownEnumValue = errors.New("unknown enum value")
 )
 
 // NewValidationError creates a standardized validation error message.

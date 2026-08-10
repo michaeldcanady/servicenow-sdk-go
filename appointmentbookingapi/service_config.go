@@ -28,8 +28,8 @@ type ServiceConfig interface {
 	SetBookableDays(*string) error
 	GetCancelByTime() (*string, error)
 	SetCancelByTime(*string) error
-	GetDefaultTimezone() (*string, error)
-	SetDefaultTimezone(*string) error
+	GetDefaultTimezone() (*DefaultTimeZone, error)
+	SetDefaultTimezone(*DefaultTimeZone) error
 	GetEnableAdvancedConfig() (*bool, error)
 	SetEnableAdvancedConfig(*bool) error
 	GetFieldMapping() (FieldMapping, error)

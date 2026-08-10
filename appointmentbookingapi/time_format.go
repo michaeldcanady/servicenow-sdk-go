@@ -1,7 +1,6 @@
 package appointmentbookingapi
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -25,14 +24,13 @@ const (
 	TimeFormat24Hr
 )
 
+// ParseTimeFormat resolves the wire representation of a time format to a [TimeFormat].
+// Matching is case-insensitive.
 func ParseTimeFormat(s string) (interface{}, error) {
-	switch strings.ToLower(s) {
-	case timeFormat12Hr:
-		return TimeFormat12Hr, nil
-	case timeFormat24Hr:
-		return TimeFormat24Hr, nil
+	if format, ok := timeFormatValues[strings.ToLower(s)]; ok {
+		return format, nil
 	}
-	return TimeFormatUnknown, errors.New("unknown timeFormat")
+	return TimeFormatUnknown, unknownEnumValueError("time format", s)
 }
 
 var timeFormatStrings = map[TimeFormat]string{
@@ -40,6 +38,9 @@ var timeFormatStrings = map[TimeFormat]string{
 	TimeFormat12Hr:    timeFormat12Hr,
 	TimeFormat24Hr:    timeFormat24Hr,
 }
+
+// timeFormatValues is the lower-cased inverse of [timeFormatStrings], used by [ParseTimeFormat].
+var timeFormatValues = invertEnumStrings(timeFormatStrings, TimeFormatUnknown)
 
 // String returns the string representation of the TimeFormat.
 func (e TimeFormat) String() string {

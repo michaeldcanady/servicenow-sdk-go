@@ -50,7 +50,7 @@ func (m *UserDateFormatOptionsModel) Serialize(writer serialization.Serializatio
 	}
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeStringFunc(dayKey, m.GetDay),
-		internalSerialization.SerializeStringFunc(monthKey, m.GetMonth),
+		internalSerialization.SerializeEnumFunc(monthKey, m.GetMonth),
 		internalSerialization.SerializeStringFunc(weekKey, m.GetWeek),
 		internalSerialization.SerializeEnumFunc(weekdayKey, m.GetWeekday),
 	)
@@ -60,7 +60,7 @@ func (m *UserDateFormatOptionsModel) Serialize(writer serialization.Serializatio
 func (m *UserDateFormatOptionsModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		dayKey:     internalSerialization.DeserializeStringFunc(m.SetDay),
-		monthKey:   internalSerialization.DeserializeStringFunc(m.SetMonth),
+		monthKey:   internalSerialization.DeserializeEnumFunc(ParseShortMonth, m.SetMonth),
 		weekKey:    internalSerialization.DeserializeStringFunc(m.SetWeek),
 		weekdayKey: internalSerialization.DeserializeEnumFunc(ParseShortWeekday, m.SetWeekday),
 	}
@@ -77,12 +77,12 @@ func (m *UserDateFormatOptionsModel) SetDay(val *string) error {
 }
 
 // GetMonth returns the month value.
-func (m *UserDateFormatOptionsModel) GetMonth() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, monthKey)
+func (m *UserDateFormatOptionsModel) GetMonth() (*ShortMonth, error) {
+	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *ShortMonth](m, monthKey)
 }
 
 // SetMonth sets the month value.
-func (m *UserDateFormatOptionsModel) SetMonth(val *string) error {
+func (m *UserDateFormatOptionsModel) SetMonth(val *ShortMonth) error {
 	return store.DefaultBackedModelMutatorFunc(m, monthKey, val)
 }
 

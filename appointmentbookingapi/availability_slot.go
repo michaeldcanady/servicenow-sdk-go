@@ -73,7 +73,6 @@ func (m *AvailabilitySlotModel) Serialize(writer serialization.SerializationWrit
 		internalSerialization.SerializeStringFunc(startDateDisplayKey, m.GetStartDateDisplay),
 		internalSerialization.SerializeStringFunc(startDateUTCKey, m.GetStartDateUTC),
 	)
-
 }
 
 // GetFieldDeserializers

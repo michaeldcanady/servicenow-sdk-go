@@ -1,7 +1,6 @@
 package appointmentbookingapi
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -11,10 +10,11 @@ import (
 
 const (
 	shortMonthUnknown = "unknown"
-	shortMonthJan     = "jan"
+	shortMonthJan     = "Jan"
 	shortMonthFeb     = "Feb"
 	shortMonthMar     = "Mar"
 	shortMonthApr     = "Apr"
+	shortMonthMay     = "May"
 	shortMonthJun     = "Jun"
 	shortMonthJul     = "Jul"
 	shortMonthAug     = "Aug"
@@ -34,6 +34,7 @@ const (
 	ShortMonthFeb
 	ShortMonthMar
 	ShortMonthApr
+	ShortMonthMay
 	ShortMonthJun
 	ShortMonthJul
 	ShortMonthAug
@@ -43,32 +44,13 @@ const (
 	ShortMonthDec
 )
 
+// ParseShortMonth resolves the wire representation of a month to a [ShortMonth].
+// Matching is case-insensitive; the constants themselves are canonical title-case ("Jan").
 func ParseShortMonth(s string) (interface{}, error) {
-	switch strings.ToLower(s) {
-	case shortMonthJan:
-		return ShortMonthJan, nil
-	case shortMonthFeb:
-		return ShortMonthFeb, nil
-	case shortMonthMar:
-		return ShortMonthMar, nil
-	case shortMonthApr:
-		return ShortMonthApr, nil
-	case shortMonthJun:
-		return ShortMonthJun, nil
-	case shortMonthJul:
-		return ShortMonthJul, nil
-	case shortMonthAug:
-		return ShortMonthAug, nil
-	case shortMonthSep:
-		return ShortMonthSep, nil
-	case shortMonthOct:
-		return ShortMonthOct, nil
-	case shortMonthNov:
-		return ShortMonthNov, nil
-	case shortMonthDec:
-		return ShortMonthDec, nil
+	if month, ok := shortMonthValues[strings.ToLower(s)]; ok {
+		return month, nil
 	}
-	return ShortMonthUnknown, errors.New("unknown short month")
+	return ShortMonthUnknown, unknownEnumValueError("short month", s)
 }
 
 var shortMonthStrings = map[ShortMonth]string{
@@ -77,6 +59,7 @@ var shortMonthStrings = map[ShortMonth]string{
 	ShortMonthFeb:     shortMonthFeb,
 	ShortMonthMar:     shortMonthMar,
 	ShortMonthApr:     shortMonthApr,
+	ShortMonthMay:     shortMonthMay,
 	ShortMonthJun:     shortMonthJun,
 	ShortMonthJul:     shortMonthJul,
 	ShortMonthAug:     shortMonthAug,
@@ -85,6 +68,9 @@ var shortMonthStrings = map[ShortMonth]string{
 	ShortMonthNov:     shortMonthNov,
 	ShortMonthDec:     shortMonthDec,
 }
+
+// shortMonthValues is the lower-cased inverse of [shortMonthStrings], used by [ParseShortMonth].
+var shortMonthValues = invertEnumStrings(shortMonthStrings, ShortMonthUnknown)
 
 // String returns the string representation of the ShortMonth.
 func (e ShortMonth) String() string {

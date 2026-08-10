@@ -102,7 +102,7 @@ func TestAvailabilityResultModel_GettersSetters(t *testing.T) {
 	}{
 		{"Availability", func(v interface{}) error { return model.SetAvailability(v.([]AvailabilitySlot)) }, func() (interface{}, error) { return model.GetAvailability() }, []AvailabilitySlot{NewAvailabilitySlot()}},
 		{"HasMore", func(v interface{}) error { return model.SetHasMore(v.(*bool)) }, func() (interface{}, error) { return model.GetHasMore() }, internal.ToPointer(true)},
-		{"NextAvailableSlot", func(v interface{}) error { return model.SetNextAvailableSlot(v) }, func() (interface{}, error) { return model.GetNextAvailableSlot() }, "val"},
+		{"NextAvailableSlot", func(v interface{}) error { return model.SetNextAvailableSlot(v.(AvailabilitySlot)) }, func() (interface{}, error) { return model.GetNextAvailableSlot() }, AvailabilitySlot(NewAvailabilitySlot())},
 		{"NoApptAvailable", func(v interface{}) error { return model.SetNoApptAvailable(v.(*bool)) }, func() (interface{}, error) { return model.GetNoApptAvailable() }, internal.ToPointer(true)},
 		{"Success", func(v interface{}) error { return model.SetSuccess(v.(*bool)) }, func() (interface{}, error) { return model.GetSuccess() }, internal.ToPointer(true)},
 		{"TimeZone", func(v interface{}) error { return model.SetTimeZone(v.(*string)) }, func() (interface{}, error) { return model.GetTimeZone() }, internal.ToPointer("val")},

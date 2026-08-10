@@ -1,7 +1,6 @@
 package appointmentbookingapi
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -25,14 +24,13 @@ const (
 	ViewPortal
 )
 
+// ParseView resolves the wire representation of a view to a [View].
+// Matching is case-insensitive.
 func ParseView(s string) (interface{}, error) {
-	switch strings.ToLower(s) {
-	case viewPortal:
-		return ViewPortal, nil
-	case viewPlatform:
-		return ViewPlatform, nil
+	if view, ok := viewValues[strings.ToLower(s)]; ok {
+		return view, nil
 	}
-	return ViewUnknown, errors.New("unknown view")
+	return ViewUnknown, unknownEnumValueError("view", s)
 }
 
 var viewStrings = map[View]string{
@@ -40,6 +38,9 @@ var viewStrings = map[View]string{
 	ViewPlatform: viewPlatform,
 	ViewPortal:   viewPortal,
 }
+
+// viewValues is the lower-cased inverse of [viewStrings], used by [ParseView].
+var viewValues = invertEnumStrings(viewStrings, ViewUnknown)
 
 // String returns the string representation of the View.
 func (e View) String() string {

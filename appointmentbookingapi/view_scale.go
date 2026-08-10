@@ -1,7 +1,6 @@
 package appointmentbookingapi
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -25,14 +24,13 @@ const (
 	ViewScaleWeek
 )
 
+// ParseViewScale resolves the wire representation of a view scale to a [ViewScale].
+// Matching is case-insensitive.
 func ParseViewScale(s string) (interface{}, error) {
-	switch strings.ToLower(s) {
-	case viewScaleWeek:
-		return ViewScaleWeek, nil
-	case viewScaleDay:
-		return ViewScaleDay, nil
+	if scale, ok := viewScaleValues[strings.ToLower(s)]; ok {
+		return scale, nil
 	}
-	return ViewScaleUnknown, errors.New("unknown viewScale")
+	return ViewScaleUnknown, unknownEnumValueError("view scale", s)
 }
 
 var viewScaleStrings = map[ViewScale]string{
@@ -40,6 +38,9 @@ var viewScaleStrings = map[ViewScale]string{
 	ViewScaleDay:     viewScaleDay,
 	ViewScaleWeek:    viewScaleWeek,
 }
+
+// viewScaleValues is the lower-cased inverse of [viewScaleStrings], used by [ParseViewScale].
+var viewScaleValues = invertEnumStrings(viewScaleStrings, ViewScaleUnknown)
 
 // String returns the string representation of the ViewScale.
 func (e ViewScale) String() string {

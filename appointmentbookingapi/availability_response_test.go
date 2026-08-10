@@ -28,11 +28,8 @@ func TestAvailabilityResultModel_Serialize(t *testing.T) {
 			model: nil,
 		},
 		{
-			name:  "empty model writes only the any-typed field unconditionally",
+			name:  "empty model writes nothing",
 			model: NewAvailabilityResult(),
-			setupMock: func(w *mocking.MockSerializationWriter) {
-				w.On("WriteAnyValue", nextAvailableSlotKey, mock.Anything).Return(nil)
-			},
 		},
 		{
 			name: "happy path - writes all fields",
@@ -40,7 +37,7 @@ func TestAvailabilityResultModel_Serialize(t *testing.T) {
 				m := NewAvailabilityResult()
 				_ = m.SetAvailability([]AvailabilitySlot{NewAvailabilitySlot()})
 				_ = m.SetHasMore(internal.ToPointer(true))
-				_ = m.SetNextAvailableSlot("next")
+				_ = m.SetNextAvailableSlot(NewAvailabilitySlot())
 				_ = m.SetNoApptAvailable(internal.ToPointer(false))
 				_ = m.SetSuccess(internal.ToPointer(true))
 				_ = m.SetTimeZone(internal.ToPointer("UTC"))
@@ -50,7 +47,7 @@ func TestAvailabilityResultModel_Serialize(t *testing.T) {
 			setupMock: func(w *mocking.MockSerializationWriter) {
 				w.On("WriteCollectionOfObjectValues", availabilityKey, mock.Anything).Return(nil)
 				w.On("WriteBoolValue", mock.Anything, mock.Anything).Return(nil)
-				w.On("WriteAnyValue", nextAvailableSlotKey, mock.Anything).Return(nil)
+				w.On("WriteObjectValue", nextAvailableSlotKey, mock.Anything, mock.Anything).Return(nil)
 				w.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
 			},
 		},

@@ -62,7 +62,7 @@ func (m *AvailabilityResultModel) Serialize(writer serialization.SerializationWr
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeCollectionOfObjectValuesFunc[AvailabilitySlot](availabilityKey, m.GetAvailability),
 		internalSerialization.SerializeBoolFunc(hasMoreKey, m.GetHasMore),
-		internalSerialization.SerializeAnyFunc(nextAvailableSlotKey, m.GetNextAvailableSlot),
+		internalSerialization.SerializeObjectValueFunc[AvailabilitySlot](nextAvailableSlotKey, m.GetNextAvailableSlot),
 		internalSerialization.SerializeBoolFunc(noApptAvailableKey, m.GetNoApptAvailable),
 		internalSerialization.SerializeBoolFunc(successKey, m.GetSuccess),
 		internalSerialization.SerializeStringFunc(timeZoneKey, m.GetTimeZone),
@@ -75,7 +75,7 @@ func (m *AvailabilityResultModel) GetFieldDeserializers() map[string]func(serial
 	return map[string]func(serialization.ParseNode) error{
 		availabilityKey:         internalSerialization.DeserializeCollectionOfObjectValuesFunc[AvailabilitySlot](CreateAvailabilitySlotFromDiscriminatorValue, m.SetAvailability),
 		hasMoreKey:              internalSerialization.DeserializeBoolFunc(m.SetHasMore),
-		nextAvailableSlotKey:    internalSerialization.DeserializeAnyFunc(m.SetNextAvailableSlot),
+		nextAvailableSlotKey:    internalSerialization.DeserializeObjectValueFunc[AvailabilitySlot](CreateAvailabilitySlotFromDiscriminatorValue, m.SetNextAvailableSlot),
 		noApptAvailableKey:      internalSerialization.DeserializeBoolFunc(m.SetNoApptAvailable),
 		successKey:              internalSerialization.DeserializeBoolFunc(m.SetSuccess),
 		timeZoneKey:             internalSerialization.DeserializeStringFunc(m.SetTimeZone),
@@ -104,12 +104,12 @@ func (m *AvailabilityResultModel) SetHasMore(val *bool) error {
 }
 
 // GetNextAvailableSlot returns the next available slot value.
-func (m *AvailabilityResultModel) GetNextAvailableSlot() (any, error) {
-	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, any](m, nextAvailableSlotKey)
+func (m *AvailabilityResultModel) GetNextAvailableSlot() (AvailabilitySlot, error) {
+	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, AvailabilitySlot](m, nextAvailableSlotKey)
 }
 
 // SetNextAvailableSlot sets the next available slot value.
-func (m *AvailabilityResultModel) SetNextAvailableSlot(val any) error {
+func (m *AvailabilityResultModel) SetNextAvailableSlot(val AvailabilitySlot) error {
 	return store.DefaultBackedModelMutatorFunc(m, nextAvailableSlotKey, val)
 }
 
