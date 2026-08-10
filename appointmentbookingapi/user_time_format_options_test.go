@@ -19,9 +19,9 @@ func TestUserTimeFormatOptionsModel_GettersSetters(t *testing.T) {
 		getter func() (any, error)
 		value  any
 	}{
-		{"Hour", func(v any) error { return model.SetHour(v.(*string)) }, func() (any, error) { return model.GetHour() }, internal.ToPointer("2-digit")},
+		{"Hour", func(v any) error { return model.SetHour(v.(*int8)) }, func() (any, error) { return model.GetHour() }, internal.ToPointer(int8(9))},
 		{"HourCycle", func(v any) error { return model.SetHourCycle(v.(*string)) }, func() (any, error) { return model.GetHourCycle() }, internal.ToPointer("h12")},
-		{"Minute", func(v any) error { return model.SetMinute(v.(*string)) }, func() (any, error) { return model.GetMinute() }, internal.ToPointer("2-digit")},
+		{"Minute", func(v any) error { return model.SetMinute(v.(*int8)) }, func() (any, error) { return model.GetMinute() }, internal.ToPointer(int8(30))},
 	}
 
 	for _, tt := range tests {
@@ -60,12 +60,13 @@ func TestUserTimeFormatOptionsModel_Serialize(t *testing.T) {
 			name: "happy path - writes all fields",
 			model: func() *UserTimeFormatOptionsModel {
 				m := NewUserTimeFormatOptions()
-				_ = m.SetHour(internal.ToPointer("2-digit"))
+				_ = m.SetHour(internal.ToPointer(int8(9)))
 				_ = m.SetHourCycle(internal.ToPointer("h12"))
-				_ = m.SetMinute(internal.ToPointer("2-digit"))
+				_ = m.SetMinute(internal.ToPointer(int8(30)))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
+				w.On("WriteInt8Value", mock.Anything, mock.Anything).Return(nil)
 				w.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
 			},
 		},
@@ -73,11 +74,11 @@ func TestUserTimeFormatOptionsModel_Serialize(t *testing.T) {
 			name: "write error propagates",
 			model: func() *UserTimeFormatOptionsModel {
 				m := NewUserTimeFormatOptions()
-				_ = m.SetHour(internal.ToPointer("2-digit"))
+				_ = m.SetHour(internal.ToPointer(int8(9)))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
-				w.On("WriteStringValue", hourKey, mock.Anything).Return(errWrite)
+				w.On("WriteInt8Value", hourKey, mock.Anything).Return(errWrite)
 			},
 			wantErr: errWrite,
 		},

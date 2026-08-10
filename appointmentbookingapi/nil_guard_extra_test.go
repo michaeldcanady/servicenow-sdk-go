@@ -102,26 +102,8 @@ func TestExecuteRuleConditionsRequestBuilder_ToPostRequestInformation_NilBuilder
 	assert.Nil(t, requestInfo)
 }
 
-func TestUserWindowRequestBuilder_Post_NilBuilder(t *testing.T) {
-	var builder *UserWindowRequestBuilder
-
-	resp, err := builder.Post(context.Background(), nil, nil)
-
-	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
-	assert.Nil(t, resp)
-}
-
-func TestUserWindowRequestBuilder_ToPostRequestInformation_NilBuilder(t *testing.T) {
-	var builder *UserWindowRequestBuilder
-
-	requestInfo, err := builder.ToPostRequestInformation(context.Background(), nil, nil)
-
-	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
-	assert.Nil(t, requestInfo)
-}
-
 func TestAppointmentRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
-	builder := NewAppointmentRequestBuilder(map[string]string{}, nil)
+	builder := NewAppointmentRequestBuilderInternal(map[string]string{}, nil)
 
 	resp, err := builder.Post(context.Background(), nil, nil)
 
@@ -158,15 +140,6 @@ func TestConfigurationRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
 
 func TestExecuteRuleConditionsRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
 	builder := NewExecuteRuleConditionsRequestBuilderInternal(map[string]string{}, nil)
-
-	resp, err := builder.Post(context.Background(), nil, nil)
-
-	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
-	assert.Nil(t, resp)
-}
-
-func TestUserWindowRequestBuilder_Post_NilRequestAdapter(t *testing.T) {
-	builder := NewUserWindowRequestBuilderInternal(map[string]string{}, nil)
 
 	resp, err := builder.Post(context.Background(), nil, nil)
 

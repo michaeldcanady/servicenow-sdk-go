@@ -15,11 +15,14 @@ type ExecuteRuleConditionsRequest interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
-	GetCatalogID() (*string, error)
+	// TODO: required
+	GetCatalogID() (*string, error) // V
 	SetCatalogID(*string) error
-	GetOtherInputs() (any, error)
+	// TODO: I don't understand,  required if taskID isn't specified
+	GetOtherInputs() (any, error) // V
 	SetOtherInputs(any) error
-	GetTaskID() (*string, error)
+	// TODO: required if OtherInputs isn't specified
+	GetTaskID() (*string, error) // V
 	SetTaskID(*string) error
 }
 

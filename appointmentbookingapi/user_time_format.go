@@ -14,9 +14,9 @@ type UserTimeFormat interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
-	GetType() (*string, error)
-	SetType(*string) error
-	GetValue() (*string, error)
+	GetType() (*TimeFormat, error) // V
+	SetType(*TimeFormat) error
+	GetValue() (*string, error) // V
 	SetValue(*string) error
 }
 
@@ -43,7 +43,7 @@ func (m *UserTimeFormatModel) Serialize(writer serialization.SerializationWriter
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
+		internalSerialization.SerializeEnumFunc(typeKey, m.GetType),
 		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
 	)
 }
@@ -51,18 +51,18 @@ func (m *UserTimeFormatModel) Serialize(writer serialization.SerializationWriter
 // GetFieldDeserializers returns the deserialization information for this object.
 func (m *UserTimeFormatModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		typeKey:  internalSerialization.DeserializeStringFunc(m.SetType),
+		typeKey:  internalSerialization.DeserializeEnumFunc(ParseTimeFormat, m.SetType),
 		valueKey: internalSerialization.DeserializeStringFunc(m.SetValue),
 	}
 }
 
 // GetType returns the type value.
-func (m *UserTimeFormatModel) GetType() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatModel, *string](m, typeKey)
+func (m *UserTimeFormatModel) GetType() (*TimeFormat, error) {
+	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatModel, *TimeFormat](m, typeKey)
 }
 
 // SetType sets the type value.
-func (m *UserTimeFormatModel) SetType(val *string) error {
+func (m *UserTimeFormatModel) SetType(val *TimeFormat) error {
 	return store.DefaultBackedModelMutatorFunc(m, typeKey, val)
 }
 

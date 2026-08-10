@@ -7,7 +7,6 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
 // ConfigurationResponse represents the configuration response.
@@ -57,26 +56,28 @@ func (m *ConfigurationResult) Serialize(writer serialization.SerializationWriter
 		internalSerialization.SerializeBoolFunc(useRRKey, m.GetUseRR),
 		internalSerialization.SerializeObjectValueFunc(userTimeFormatKey, m.GetUserTimeFormat),
 		internalSerialization.SerializeObjectValueFunc(userTimeFormatOptionsKey, m.GetUserTimeFormatOptions),
-		internalSerialization.SerializeStringFunc(viewScaleKey, m.GetViewScale),
+		internalSerialization.SerializeEnumFunc(viewScaleKey, m.GetViewScale),
 	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (m *ConfigurationResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		activeKey:                     internalSerialization.DeserializeBoolFunc(m.SetActive),
-		activeStringKey:               internalSerialization.DeserializeStringFunc(m.SetActiveString),
-		advancedCalendarViewPortalKey: internalSerialization.DeserializeBoolFunc(m.SetAdvancedCalendarViewPortal),
-		autoAcceptanceKey:             internalSerialization.DeserializeBoolFunc(m.SetAutoAcceptance),
-		localeLanguageKey:             internalSerialization.DeserializeStringFunc(m.SetLocaleLanguage),
-		serviceConfigKey:              internalSerialization.DeserializeObjectValueFunc(CreateServiceConfigFromDiscriminatorValue, m.SetServiceConfig),
-		taskTableKey:                  internalSerialization.DeserializeStringFunc(m.SetTaskTable),
-		translationsKey:               internalSerialization.DeserializeAnyFunc(m.SetTranslations),
-		userDateFormatOptionsKey:      internalSerialization.DeserializeObjectValueFunc(CreateUserDateFormatOptionsFromDiscriminatorValue, m.SetUserDateFormatOptions),
-		useRRKey:                      internalSerialization.DeserializeBoolFunc(m.SetUseRR),
-		userTimeFormatKey:             internalSerialization.DeserializeObjectValueFunc(CreateUserTimeFormatFromDiscriminatorValue, m.SetUserTimeFormat),
-		userTimeFormatOptionsKey:      internalSerialization.DeserializeObjectValueFunc(CreateUserTimeFormatOptionsFromDiscriminatorValue, m.SetUserTimeFormatOptions),
-		viewScaleKey:                  internalSerialization.DeserializeStringFunc(m.SetViewScale),
+		activeKey:                     internalSerialization.DeserializeBoolFunc(m.SetActive),                     // V
+		activeStringKey:               internalSerialization.DeserializeStringFunc(m.SetActiveString),             // V
+		advancedCalendarViewPortalKey: internalSerialization.DeserializeBoolFunc(m.SetAdvancedCalendarViewPortal), // V
+		autoAcceptanceKey:             internalSerialization.DeserializeBoolFunc(m.SetAutoAcceptance),             // V
+		// TODO:  ISO 639.1 language code
+		localeLanguageKey: internalSerialization.DeserializeStringFunc(m.SetLocaleLanguage),                                                // V
+		serviceConfigKey:  internalSerialization.DeserializeObjectValueFunc(CreateServiceConfigFromDiscriminatorValue, m.SetServiceConfig), // V
+		taskTableKey:      internalSerialization.DeserializeStringFunc(m.SetTaskTable),                                                     // V
+		// TODO: "object," arbitrary map key-value pairs
+		translationsKey:          internalSerialization.DeserializeAnyFunc(m.SetTranslations),                                                                     // V
+		userDateFormatOptionsKey: internalSerialization.DeserializeObjectValueFunc(CreateUserDateFormatOptionsFromDiscriminatorValue, m.SetUserDateFormatOptions), // V
+		useRRKey:                 internalSerialization.DeserializeBoolFunc(m.SetUseRR),                                                                           // V
+		userTimeFormatKey:        internalSerialization.DeserializeObjectValueFunc(CreateUserTimeFormatFromDiscriminatorValue, m.SetUserTimeFormat),               // V
+		userTimeFormatOptionsKey: internalSerialization.DeserializeObjectValueFunc(CreateUserTimeFormatOptionsFromDiscriminatorValue, m.SetUserTimeFormatOptions), // V
+		viewScaleKey:             internalSerialization.DeserializeEnumFunc(ParseViewScale, m.SetViewScale),                                                       // V
 	}
 }
 
@@ -201,106 +202,11 @@ func (m *ConfigurationResult) SetUserTimeFormatOptions(val UserTimeFormatOptions
 }
 
 // GetViewScale returns the view scale value.
-func (m *ConfigurationResult) GetViewScale() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *string](m, viewScaleKey)
+func (m *ConfigurationResult) GetViewScale() (*ViewScale, error) {
+	return store.DefaultBackedModelAccessorFunc[*ConfigurationResult, *ViewScale](m, viewScaleKey)
 }
 
 // SetViewScale sets the view scale value.
-func (m *ConfigurationResult) SetViewScale(val *string) error {
+func (m *ConfigurationResult) SetViewScale(val *ViewScale) error {
 	return store.DefaultBackedModelMutatorFunc(m, viewScaleKey, val)
-}
-
-// UserDateFormatOptions represents userDateFormatOptions nested object.
-type UserDateFormatOptions interface {
-	serialization.Parsable
-	kiotaStore.BackedModel
-
-	GetDay() (*string, error)
-	SetDay(*string) error
-	GetMonth() (*string, error)
-	SetMonth(*string) error
-	GetWeek() (*string, error)
-	SetWeek(*string) error
-	GetWeekday() (*string, error)
-	SetWeekday(*string) error
-}
-
-// UserDateFormatOptionsModel represents the user date format options model.
-type UserDateFormatOptionsModel struct {
-	core.BaseModel
-}
-
-// NewUserDateFormatOptions creates a new instance of UserDateFormatOptionsModel.
-func NewUserDateFormatOptions() *UserDateFormatOptionsModel {
-	return &UserDateFormatOptionsModel{
-		BaseModel: *core.NewBaseModel(),
-	}
-}
-
-// CreateUserDateFormatOptionsFromDiscriminatorValue creates a new UserDateFormatOptions from a ParseNode.
-func CreateUserDateFormatOptionsFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewUserDateFormatOptions(), nil
-}
-
-// Serialize writes the objects properties to the current writer.
-func (m *UserDateFormatOptionsModel) Serialize(writer serialization.SerializationWriter) error {
-	if conversion.IsNil(m) {
-		return nil
-	}
-	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(dayKey, m.GetDay),
-		internalSerialization.SerializeStringFunc(monthKey, m.GetMonth),
-		internalSerialization.SerializeStringFunc(weekKey, m.GetWeek),
-		internalSerialization.SerializeStringFunc(weekdayKey, m.GetWeekday),
-	)
-}
-
-// GetFieldDeserializers returns the deserialization information for this object.
-func (m *UserDateFormatOptionsModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	return map[string]func(serialization.ParseNode) error{
-		dayKey:     internalSerialization.DeserializeStringFunc(m.SetDay),
-		monthKey:   internalSerialization.DeserializeStringFunc(m.SetMonth),
-		weekKey:    internalSerialization.DeserializeStringFunc(m.SetWeek),
-		weekdayKey: internalSerialization.DeserializeStringFunc(m.SetWeekday),
-	}
-}
-
-// GetDay returns the day value.
-func (m *UserDateFormatOptionsModel) GetDay() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, dayKey)
-}
-
-// SetDay sets the day value.
-func (m *UserDateFormatOptionsModel) SetDay(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, dayKey, val)
-}
-
-// GetMonth returns the month value.
-func (m *UserDateFormatOptionsModel) GetMonth() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, monthKey)
-}
-
-// SetMonth sets the month value.
-func (m *UserDateFormatOptionsModel) SetMonth(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, monthKey, val)
-}
-
-// GetWeek returns the week value.
-func (m *UserDateFormatOptionsModel) GetWeek() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, weekKey)
-}
-
-// SetWeek sets the week value.
-func (m *UserDateFormatOptionsModel) SetWeek(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, weekKey, val)
-}
-
-// GetWeekday returns the weekday value.
-func (m *UserDateFormatOptionsModel) GetWeekday() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*UserDateFormatOptionsModel, *string](m, weekdayKey)
-}
-
-// SetWeekday sets the weekday value.
-func (m *UserDateFormatOptionsModel) SetWeekday(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, weekdayKey, val)
 }

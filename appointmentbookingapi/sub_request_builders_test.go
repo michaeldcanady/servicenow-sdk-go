@@ -23,7 +23,6 @@ func TestAppointmentBookingRequestBuilder_NilReceiver(t *testing.T) {
 	assert.Nil(t, builder.Calendar())
 	assert.Nil(t, builder.Configuration())
 	assert.Nil(t, builder.ExecuteRuleConditions())
-	assert.Nil(t, builder.UserWindow())
 }
 
 func TestCalendarRequestBuilder_Get(t *testing.T) {
@@ -37,7 +36,7 @@ func TestCalendarRequestBuilder_Get(t *testing.T) {
 			name: "happy path - returns response",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(NewCalendarResponse(), nil)
+					Return(core.NewBaseServiceNowItemResponse[*CalendarResponse](CreateCalendarResponseFromDiscriminatorValue), nil)
 			},
 		},
 		{

@@ -33,7 +33,7 @@ func TestAvailabilityRequestModel_GettersSetters(t *testing.T) {
 		{"TaskId", func(v interface{}) error { return model.SetTaskID(v.(*string)) }, func() (interface{}, error) { return model.GetTaskID() }, internal.ToPointer("val")},
 		{"TaskTable", func(v interface{}) error { return model.SetTaskTable(v.(*string)) }, func() (interface{}, error) { return model.GetTaskTable() }, internal.ToPointer("val")},
 		{"UseReadReplica", func(v interface{}) error { return model.SetUseReadReplica(v.(*bool)) }, func() (interface{}, error) { return model.GetUseReadReplica() }, internal.ToPointer(true)},
-		{"View", func(v interface{}) error { return model.SetView(v.(*string)) }, func() (interface{}, error) { return model.GetView() }, internal.ToPointer("val")},
+		{"View", func(v interface{}) error { return model.SetView(v.(*View)) }, func() (interface{}, error) { return model.GetView() }, internal.ToPointer(ViewPortal)},
 	}
 
 	for _, tt := range tests {
@@ -104,7 +104,7 @@ func TestAvailabilityRequestModel_Serialize(t *testing.T) {
 				_ = m.SetTaskID(internal.ToPointer("task-id"))
 				_ = m.SetTaskTable(internal.ToPointer("task"))
 				_ = m.SetUseReadReplica(internal.ToPointer(true))
-				_ = m.SetView(internal.ToPointer("view"))
+				_ = m.SetView(internal.ToPointer(ViewPortal))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {

@@ -23,6 +23,7 @@
     "APIV",
     "appointmentbookingapi",
     "appserviceapi",
+    "apptmnt",
     "attachmentapi",
     "Batchable",
     "batchapi",
@@ -131,6 +132,7 @@
     "uriparametername",
     "usernamehw",
     "userns",
+    "userwindow",
     "vscodeintellicode",
     "waderyan",
     "yzhang"

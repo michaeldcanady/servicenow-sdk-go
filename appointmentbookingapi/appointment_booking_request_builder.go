@@ -9,15 +9,17 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
+const appointmentBookingURLTemplate = "{+baseurl}/api/sn_apptmnt_booking/v1/appointment"
+
 // AppointmentBookingRequestBuilder builds and executes requests for the 'api/sn_apptmnt_booking/v1/appointment' path.
 type AppointmentBookingRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// NewAppointmentBookingRequestBuilderInternal creates a new instance of the AppointmentBookingRequestBuilder.
+// NewAppointmentBookingRequestBuilderInternal creates a new instance of the [AppointmentBookingRequestBuilder].
 func NewAppointmentBookingRequestBuilderInternal(requestAdapter abstractions.RequestAdapter, pathParameters map[string]string) *AppointmentBookingRequestBuilder {
 	return &AppointmentBookingRequestBuilder{
-		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment", pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, appointmentBookingURLTemplate, pathParameters),
 	}
 }
 
@@ -31,7 +33,7 @@ func NewAppointmentBookingRequestBuilder(
 }
 
 // Appointment returns a [AppointmentRequestBuilder].
-func (rB *AppointmentBookingRequestBuilder) Appointment() *AppointmentRequestBuilder {
+func (rB *AppointmentBookingRequestBuilder) Appointment() *AppointmentRequestBuilder { // V
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
@@ -39,7 +41,7 @@ func (rB *AppointmentBookingRequestBuilder) Appointment() *AppointmentRequestBui
 }
 
 // Availability returns a [AvailabilityRequestBuilder].
-func (rB *AppointmentBookingRequestBuilder) Availability() *AvailabilityRequestBuilder {
+func (rB *AppointmentBookingRequestBuilder) Availability() *AvailabilityRequestBuilder { // V
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
@@ -47,7 +49,7 @@ func (rB *AppointmentBookingRequestBuilder) Availability() *AvailabilityRequestB
 }
 
 // Calendar returns a [CalendarRequestBuilder].
-func (rB *AppointmentBookingRequestBuilder) Calendar() *CalendarRequestBuilder {
+func (rB *AppointmentBookingRequestBuilder) Calendar() *CalendarRequestBuilder { // V
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
@@ -55,7 +57,7 @@ func (rB *AppointmentBookingRequestBuilder) Calendar() *CalendarRequestBuilder {
 }
 
 // Configuration returns a [ConfigurationRequestBuilder].
-func (rB *AppointmentBookingRequestBuilder) Configuration() *ConfigurationRequestBuilder {
+func (rB *AppointmentBookingRequestBuilder) Configuration() *ConfigurationRequestBuilder { // V
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
@@ -63,17 +65,9 @@ func (rB *AppointmentBookingRequestBuilder) Configuration() *ConfigurationReques
 }
 
 // ExecuteRuleConditions returns a [ExecuteRuleConditionsRequestBuilder].
-func (rB *AppointmentBookingRequestBuilder) ExecuteRuleConditions() *ExecuteRuleConditionsRequestBuilder {
+func (rB *AppointmentBookingRequestBuilder) ExecuteRuleConditions() *ExecuteRuleConditionsRequestBuilder { // V
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
 	return NewExecuteRuleConditionsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
-}
-
-// UserWindow returns a [UserWindowRequestBuilder].
-func (rB *AppointmentBookingRequestBuilder) UserWindow() *UserWindowRequestBuilder {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil
-	}
-	return NewUserWindowRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

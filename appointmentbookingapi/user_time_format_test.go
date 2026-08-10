@@ -19,7 +19,7 @@ func TestUserTimeFormatModel_GettersSetters(t *testing.T) {
 		getter func() (any, error)
 		value  any
 	}{
-		{"Type", func(v any) error { return model.SetType(v.(*string)) }, func() (any, error) { return model.GetType() }, internal.ToPointer("12hour")},
+		{"Type", func(v any) error { return model.SetType(v.(*TimeFormat)) }, func() (any, error) { return model.GetType() }, internal.ToPointer(TimeFormat12Hr)},
 		{"Value", func(v any) error { return model.SetValue(v.(*string)) }, func() (any, error) { return model.GetValue() }, internal.ToPointer("h:mm a")},
 	}
 
@@ -59,7 +59,7 @@ func TestUserTimeFormatModel_Serialize(t *testing.T) {
 			name: "happy path - writes all fields",
 			model: func() *UserTimeFormatModel {
 				m := NewUserTimeFormat()
-				_ = m.SetType(internal.ToPointer("12hour"))
+				_ = m.SetType(internal.ToPointer(TimeFormat12Hr))
 				_ = m.SetValue(internal.ToPointer("h:mm a"))
 				return m
 			}(),
@@ -71,7 +71,7 @@ func TestUserTimeFormatModel_Serialize(t *testing.T) {
 			name: "write error propagates",
 			model: func() *UserTimeFormatModel {
 				m := NewUserTimeFormat()
-				_ = m.SetType(internal.ToPointer("12hour"))
+				_ = m.SetType(internal.ToPointer(TimeFormat12Hr))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {

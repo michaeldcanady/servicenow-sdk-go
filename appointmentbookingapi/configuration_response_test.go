@@ -10,6 +10,77 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// ConfigurationResult's nested-object setters take the ServiceConfig and
+// UserDateFormatOptions interfaces, but neither model satisfies its own interface
+// today: ServiceConfig declares GetDefaultTimezone() (*string, error) while
+// ServiceConfigModel returns (*DefaultTimeZone, error), and UserDateFormatOptions
+// declares GetMonth() (*ShortMonth, error) while UserDateFormatOptionsModel returns
+// (*string, error). These adapters embed the models and bridge only the mismatched
+// pair so the setters stay exercised. Delete them once the interfaces and models
+// agree.
+
+type serviceConfigStub struct {
+	*ServiceConfigModel
+}
+
+func (s serviceConfigStub) GetDefaultTimezone() (*string, error) {
+	val, err := s.ServiceConfigModel.GetDefaultTimezone()
+	if err != nil || val == nil {
+		return nil, err
+	}
+	str := val.String()
+
+	return &str, nil
+}
+
+func (s serviceConfigStub) SetDefaultTimezone(val *string) error {
+	if val == nil {
+		return s.ServiceConfigModel.SetDefaultTimezone(nil)
+	}
+	parsed, err := ParseDefaultTimeZone(*val)
+	if err != nil {
+		return err
+	}
+	zone := parsed.(DefaultTimeZone)
+
+	return s.ServiceConfigModel.SetDefaultTimezone(&zone)
+}
+
+type userDateFormatOptionsStub struct {
+	*UserDateFormatOptionsModel
+}
+
+func (s userDateFormatOptionsStub) GetMonth() (*ShortMonth, error) {
+	val, err := s.UserDateFormatOptionsModel.GetMonth()
+	if err != nil || val == nil {
+		return nil, err
+	}
+	parsed, err := ParseShortMonth(*val)
+	if err != nil {
+		return nil, err
+	}
+	month := parsed.(ShortMonth)
+
+	return &month, nil
+}
+
+func (s userDateFormatOptionsStub) SetMonth(val *ShortMonth) error {
+	if val == nil {
+		return s.UserDateFormatOptionsModel.SetMonth(nil)
+	}
+	str := val.String()
+
+	return s.UserDateFormatOptionsModel.SetMonth(&str)
+}
+
+func newServiceConfigStub() serviceConfigStub {
+	return serviceConfigStub{ServiceConfigModel: NewServiceConfig()}
+}
+
+func newUserDateFormatOptionsStub() userDateFormatOptionsStub {
+	return userDateFormatOptionsStub{UserDateFormatOptionsModel: NewUserDateFormatOptions()}
+}
+
 // ---------------------------------------------------------------------------
 // ConfigurationResponse
 // ---------------------------------------------------------------------------
@@ -38,14 +109,14 @@ func TestConfigurationResult_GettersSetters(t *testing.T) {
 		{"AdvancedCalendarViewPortal", func(v any) error { return model.SetAdvancedCalendarViewPortal(v.(*bool)) }, func() (any, error) { return model.GetAdvancedCalendarViewPortal() }, internal.ToPointer(true)},
 		{"AutoAcceptance", func(v any) error { return model.SetAutoAcceptance(v.(*bool)) }, func() (any, error) { return model.GetAutoAcceptance() }, internal.ToPointer(false)},
 		{"LocaleLanguage", func(v any) error { return model.SetLocaleLanguage(v.(*string)) }, func() (any, error) { return model.GetLocaleLanguage() }, internal.ToPointer("en")},
-		{"ServiceConfig", func(v any) error { return model.SetServiceConfig(v.(ServiceConfig)) }, func() (any, error) { return model.GetServiceConfig() }, ServiceConfig(NewServiceConfig())},
+		{"ServiceConfig", func(v any) error { return model.SetServiceConfig(v.(ServiceConfig)) }, func() (any, error) { return model.GetServiceConfig() }, ServiceConfig(newServiceConfigStub())},
 		{"TaskTable", func(v any) error { return model.SetTaskTable(v.(*string)) }, func() (any, error) { return model.GetTaskTable() }, internal.ToPointer("task")},
 		{"Translations", func(v any) error { return model.SetTranslations(v) }, func() (any, error) { return model.GetTranslations() }, "translated"},
-		{"UserDateFormatOptions", func(v any) error { return model.SetUserDateFormatOptions(v.(UserDateFormatOptions)) }, func() (any, error) { return model.GetUserDateFormatOptions() }, UserDateFormatOptions(NewUserDateFormatOptions())},
+		{"UserDateFormatOptions", func(v any) error { return model.SetUserDateFormatOptions(v.(UserDateFormatOptions)) }, func() (any, error) { return model.GetUserDateFormatOptions() }, UserDateFormatOptions(newUserDateFormatOptionsStub())},
 		{"UseRR", func(v any) error { return model.SetUseRR(v.(*bool)) }, func() (any, error) { return model.GetUseRR() }, internal.ToPointer(true)},
 		{"UserTimeFormat", func(v any) error { return model.SetUserTimeFormat(v.(UserTimeFormat)) }, func() (any, error) { return model.GetUserTimeFormat() }, UserTimeFormat(NewUserTimeFormat())},
 		{"UserTimeFormatOptions", func(v any) error { return model.SetUserTimeFormatOptions(v.(UserTimeFormatOptions)) }, func() (any, error) { return model.GetUserTimeFormatOptions() }, UserTimeFormatOptions(NewUserTimeFormatOptions())},
-		{"ViewScale", func(v any) error { return model.SetViewScale(v.(*string)) }, func() (any, error) { return model.GetViewScale() }, internal.ToPointer("day")},
+		{"ViewScale", func(v any) error { return model.SetViewScale(v.(*ViewScale)) }, func() (any, error) { return model.GetViewScale() }, internal.ToPointer(ViewScaleDay)},
 	}
 
 	for _, tt := range tests {
@@ -92,14 +163,14 @@ func TestConfigurationResult_Serialize(t *testing.T) {
 				_ = m.SetAdvancedCalendarViewPortal(internal.ToPointer(true))
 				_ = m.SetAutoAcceptance(internal.ToPointer(false))
 				_ = m.SetLocaleLanguage(internal.ToPointer("en"))
-				_ = m.SetServiceConfig(NewServiceConfig())
+				_ = m.SetServiceConfig(newServiceConfigStub())
 				_ = m.SetTaskTable(internal.ToPointer("task"))
 				_ = m.SetTranslations("translated")
-				_ = m.SetUserDateFormatOptions(NewUserDateFormatOptions())
+				_ = m.SetUserDateFormatOptions(newUserDateFormatOptionsStub())
 				_ = m.SetUseRR(internal.ToPointer(true))
 				_ = m.SetUserTimeFormat(NewUserTimeFormat())
 				_ = m.SetUserTimeFormatOptions(NewUserTimeFormatOptions())
-				_ = m.SetViewScale(internal.ToPointer("day"))
+				_ = m.SetViewScale(internal.ToPointer(ViewScaleDay))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
@@ -125,7 +196,7 @@ func TestConfigurationResult_Serialize(t *testing.T) {
 			name: "nested object write error propagates",
 			model: func() *ConfigurationResult {
 				m := NewConfigurationResult()
-				_ = m.SetServiceConfig(NewServiceConfig())
+				_ = m.SetServiceConfig(newServiceConfigStub())
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
@@ -183,7 +254,7 @@ func TestUserDateFormatOptionsModel_GettersSetters(t *testing.T) {
 		{"Day", func(v any) error { return model.SetDay(v.(*string)) }, func() (any, error) { return model.GetDay() }, internal.ToPointer("2-digit")},
 		{"Month", func(v any) error { return model.SetMonth(v.(*string)) }, func() (any, error) { return model.GetMonth() }, internal.ToPointer("short")},
 		{"Week", func(v any) error { return model.SetWeek(v.(*string)) }, func() (any, error) { return model.GetWeek() }, internal.ToPointer("1")},
-		{"Weekday", func(v any) error { return model.SetWeekday(v.(*string)) }, func() (any, error) { return model.GetWeekday() }, internal.ToPointer("long")},
+		{"Weekday", func(v any) error { return model.SetWeekday(v.(*ShortWeekday)) }, func() (any, error) { return model.GetWeekday() }, internal.ToPointer(ShortWeekdayMon)},
 	}
 
 	for _, tt := range tests {
@@ -225,7 +296,7 @@ func TestUserDateFormatOptionsModel_Serialize(t *testing.T) {
 				_ = m.SetDay(internal.ToPointer("2-digit"))
 				_ = m.SetMonth(internal.ToPointer("short"))
 				_ = m.SetWeek(internal.ToPointer("1"))
-				_ = m.SetWeekday(internal.ToPointer("long"))
+				_ = m.SetWeekday(internal.ToPointer(ShortWeekdayMon))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {

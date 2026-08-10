@@ -30,6 +30,7 @@ func (m *ExecuteRuleConditionsResult) Serialize(writer serialization.Serializati
 	}
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeBoolFunc(dedicatedCapacityKey, m.GetDedicatedCapacity),
+		// TODO: string representation of an int
 		internalSerialization.SerializeStringFunc(futureMaxBookableDaysKey, m.GetFutureMaxBookableDays),
 		internalSerialization.SerializeStringFunc(ruleIDKey, m.GetRuleID),
 		internalSerialization.SerializeStringFunc(ruleNameKey, m.GetRuleName),

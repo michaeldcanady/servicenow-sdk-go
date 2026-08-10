@@ -15,28 +15,38 @@ type AppointmentRequest interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
+	// TODO: date, required
 	GetActualEndDate() (*string, error)
 	SetActualEndDate(*string) error
+	// TODO: date, required
 	GetActualStartDate() (*string, error)
 	SetActualStartDate(*string) error
 	GetCatalogID() (*string, error)
 	SetCatalogID(*string) error
+	// TODO: date, required
 	GetEndDateUTC() (*string, error)
 	SetEndDateUTC(*string) error
+	// required
 	GetLocation() (*string, error)
 	SetLocation(*string) error
+	// required
 	GetOpenedFor() (*string, error)
 	SetOpenedFor(*string) error
+
+	// required
 	GetReschedule() (*bool, error)
 	SetReschedule(*bool) error
 	GetServiceConfigRule() (*string, error)
 	SetServiceConfigRule(*string) error
+	// TODO: date, required
 	GetStartDateUTC() (*string, error)
 	SetStartDateUTC(*string) error
 	GetTaskID() (*string, error)
 	SetTaskID(*string) error
+	// TODO: required
 	GetTaskTable() (*string, error)
 	SetTaskTable(*string) error
+	// TODO: required
 	GetTimezone() (*string, error)
 	SetTimezone(*string) error
 	GetValidateRequest() (*bool, error)

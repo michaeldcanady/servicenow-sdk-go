@@ -26,7 +26,7 @@ func TestServiceConfigModel_GettersSetters(t *testing.T) {
 		{"AppointmentsPerBookableSlot", func(v any) error { return model.SetAppointmentsPerBookableSlot(v.(*string)) }, func() (any, error) { return model.GetAppointmentsPerBookableSlot() }, internal.ToPointer("1")},
 		{"BookableDays", func(v any) error { return model.SetBookableDays(v.(*string)) }, func() (any, error) { return model.GetBookableDays() }, internal.ToPointer("MON,TUE")},
 		{"CancelByTime", func(v any) error { return model.SetCancelByTime(v.(*string)) }, func() (any, error) { return model.GetCancelByTime() }, internal.ToPointer("24")},
-		{"DefaultTimezone", func(v any) error { return model.SetDefaultTimezone(v.(*string)) }, func() (any, error) { return model.GetDefaultTimezone() }, internal.ToPointer("UTC")},
+		{"DefaultTimezone", func(v any) error { return model.SetDefaultTimezone(v.(*DefaultTimeZone)) }, func() (any, error) { return model.GetDefaultTimezone() }, internal.ToPointer(DefaultTimeZoneUser)},
 		{"EnableAdvancedConfig", func(v any) error { return model.SetEnableAdvancedConfig(v.(*bool)) }, func() (any, error) { return model.GetEnableAdvancedConfig() }, internal.ToPointer(false)},
 		{"FieldMapping", func(v any) error { return model.SetFieldMapping(v.(FieldMapping)) }, func() (any, error) { return model.GetFieldMapping() }, FieldMapping(NewFieldMapping())},
 		{"FutureBookableMaxDays", func(v any) error { return model.SetFutureBookableMaxDays(v.(*string)) }, func() (any, error) { return model.GetFutureBookableMaxDays() }, internal.ToPointer("30")},
@@ -79,7 +79,7 @@ func TestServiceConfigModel_Serialize(t *testing.T) {
 				_ = m.SetAppointmentsPerBookableSlot(internal.ToPointer("1"))
 				_ = m.SetBookableDays(internal.ToPointer("MON"))
 				_ = m.SetCancelByTime(internal.ToPointer("24"))
-				_ = m.SetDefaultTimezone(internal.ToPointer("UTC"))
+				_ = m.SetDefaultTimezone(internal.ToPointer(DefaultTimeZoneUser))
 				_ = m.SetEnableAdvancedConfig(internal.ToPointer(false))
 				_ = m.SetFieldMapping(NewFieldMapping())
 				_ = m.SetFutureBookableMaxDays(internal.ToPointer("30"))

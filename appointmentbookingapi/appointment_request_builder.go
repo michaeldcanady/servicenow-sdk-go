@@ -2,6 +2,7 @@ package appointmentbookingapi
 
 import (
 	"context"
+	"errors"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -12,6 +13,8 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
+const appointmentAppointmentBookingURLTemplate = "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/appointment"
+
 // AppointmentRequestBuilder represents the appointment request builder.
 type AppointmentRequestBuilder struct {
 	core.RequestBuilder
@@ -20,7 +23,7 @@ type AppointmentRequestBuilder struct {
 // NewAppointmentRequestBuilderInternal creates a new instance of AppointmentRequestBuilder.
 func NewAppointmentRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AppointmentRequestBuilder {
 	return &AppointmentRequestBuilder{
-		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/appointment", pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, appointmentAppointmentBookingURLTemplate, pathParameters),
 	}
 }
 
@@ -57,7 +60,13 @@ func (rB *AppointmentRequestBuilder) Post(ctx context.Context, body AppointmentR
 		return nil, nil
 	}
 
-	return res.(AppointmentResponse), nil
+	typedResp, ok := res.(AppointmentResponse)
+	if !ok {
+		// TODO: standardize error
+		return nil, errors.New("unexpected type")
+	}
+
+	return typedResp, nil
 }
 
 // ToPostRequestInformation creates a RequestInformation object for a POST request.
@@ -71,8 +80,7 @@ func (rB *AppointmentRequestBuilder) ToPostRequestInformation(ctx context.Contex
 
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
 
-	err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
-	if err != nil {
+	if err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body); err != nil {
 		return nil, err
 	}
 

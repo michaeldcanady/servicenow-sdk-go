@@ -72,17 +72,26 @@ func (m *ServiceConfigModel) Serialize(writer serialization.SerializationWriter)
 		internalSerialization.SerializeBoolFunc(activeKey, m.GetActive),
 		internalSerialization.SerializeStringFunc(activeStringKey, m.GetActiveString),
 		internalSerialization.SerializeStringFunc(appointmentBookingConfigKey, m.GetAppointmentBookingConfig),
+		// TODO: duration, minutes
 		internalSerialization.SerializeStringFunc(appointmentDurationKey, m.GetAppointmentDuration),
+		// TODO: number as string
 		internalSerialization.SerializeStringFunc(appointmentsPerBookableSlotKey, m.GetAppointmentsPerBookableSlot),
+		// TODO: comma-separated list of days as numbers (Monday = 1 and Sunday = 7)
 		internalSerialization.SerializeStringFunc(bookableDaysKey, m.GetBookableDays),
+		// TODO: This value is the date and time difference from “1970-01-01 00:00:00”. So if the returned value is "1970-01-01 04:00:00, it means that the room must be canceled four hours before the meeting starts.
 		internalSerialization.SerializeStringFunc(cancelByTimeKey, m.GetCancelByTime),
-		internalSerialization.SerializeStringFunc(defaultTimezoneKey, m.GetDefaultTimezone),
+		internalSerialization.SerializeEnumFunc(defaultTimezoneKey, m.GetDefaultTimezone),
 		internalSerialization.SerializeBoolFunc(enableAdvancedConfigKey, m.GetEnableAdvancedConfig),
 		internalSerialization.SerializeObjectValueFunc[FieldMapping](fieldMappingKey, m.GetFieldMapping),
+		// TODO: number represented as a string
 		internalSerialization.SerializeStringFunc(futureBookableMaxDaysKey, m.GetFutureBookableMaxDays),
+		// TODO: This value is the date and time difference from “1970-01-01 00:00:00”. So if the returned value is "1970-01-01 04:00:00, it means that the room must be booked four hours before the meeting starts.
 		internalSerialization.SerializeStringFunc(leadTimeKey, m.GetLeadTime),
+		// TODO: string representation of an int representation of a bool
 		internalSerialization.SerializeStringFunc(mandatoryKey, m.GetMandatory),
+		// TODO: enum with empty value
 		internalSerialization.SerializeStringFunc(useSlotEndTimeAsKey, m.GetUseSlotEndTimeAs),
+		// TODO: Unit: Minutes, duration
 		internalSerialization.SerializeStringFunc(workDurationKey, m.GetWorkDuration),
 	)
 }
@@ -97,7 +106,7 @@ func (m *ServiceConfigModel) GetFieldDeserializers() map[string]func(serializati
 		appointmentsPerBookableSlotKey: internalSerialization.DeserializeStringFunc(m.SetAppointmentsPerBookableSlot),
 		bookableDaysKey:                internalSerialization.DeserializeStringFunc(m.SetBookableDays),
 		cancelByTimeKey:                internalSerialization.DeserializeStringFunc(m.SetCancelByTime),
-		defaultTimezoneKey:             internalSerialization.DeserializeStringFunc(m.SetDefaultTimezone),
+		defaultTimezoneKey:             internalSerialization.DeserializeEnumFunc(ParseDefaultTimeZone, m.SetDefaultTimezone),
 		enableAdvancedConfigKey:        internalSerialization.DeserializeBoolFunc(m.SetEnableAdvancedConfig),
 		fieldMappingKey:                internalSerialization.DeserializeObjectValueFunc(CreateFieldMappingFromDiscriminatorValue, m.SetFieldMapping),
 		futureBookableMaxDaysKey:       internalSerialization.DeserializeStringFunc(m.SetFutureBookableMaxDays),
@@ -179,12 +188,12 @@ func (m *ServiceConfigModel) SetCancelByTime(val *string) error {
 }
 
 // GetDefaultTimezone returns the default timezone value.
-func (m *ServiceConfigModel) GetDefaultTimezone() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *string](m, defaultTimezoneKey)
+func (m *ServiceConfigModel) GetDefaultTimezone() (*DefaultTimeZone, error) {
+	return store.DefaultBackedModelAccessorFunc[*ServiceConfigModel, *DefaultTimeZone](m, defaultTimezoneKey)
 }
 
 // SetDefaultTimezone sets the default timezone value.
-func (m *ServiceConfigModel) SetDefaultTimezone(val *string) error {
+func (m *ServiceConfigModel) SetDefaultTimezone(val *DefaultTimeZone) error {
 	return store.DefaultBackedModelMutatorFunc(m, defaultTimezoneKey, val)
 }
 

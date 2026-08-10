@@ -73,6 +73,13 @@ func SerializeInt32Func(key string, accessor ModelAccessor[*int32]) WriterFunc {
 	})
 }
 
+// SerializeInt8Func returns a serializer function for an [int8] value.
+func SerializeInt8Func(key string, accessor ModelAccessor[*int8]) WriterFunc {
+	return serializePrimitiveFunc(key, accessor, func(sw serialization.SerializationWriter, k string, v *int8) error {
+		return sw.WriteInt8Value(k, v)
+	})
+}
+
 // SerializeFloat64Func returns a serializer function for a float64 value.
 func SerializeFloat64Func(key string, accessor ModelAccessor[*float64]) WriterFunc {
 	return serializePrimitiveFunc(key, accessor, func(sw serialization.SerializationWriter, k string, v *float64) error {

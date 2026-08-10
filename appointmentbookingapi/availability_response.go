@@ -27,15 +27,15 @@ type AvailabilityResult interface {
 	SetAvailability([]AvailabilitySlot) error
 	GetHasMore() (*bool, error)
 	SetHasMore(*bool) error
-	GetNextAvailableSlot() (any, error)
-	SetNextAvailableSlot(any) error
-	GetNoApptAvailable() (*bool, error)
+	GetNextAvailableSlot() (AvailabilitySlot, error) // V
+	SetNextAvailableSlot(AvailabilitySlot) error
+	GetNoApptAvailable() (*bool, error) // V
 	SetNoApptAvailable(*bool) error
 	GetSuccess() (*bool, error)
-	SetSuccess(*bool) error
-	GetTimeZone() (*string, error)
+	SetSuccess(*bool) error        // V
+	GetTimeZone() (*string, error) // V
 	SetTimeZone(*string) error
-	GetTimeZoneDisplayValue() (*string, error)
+	GetTimeZoneDisplayValue() (*string, error) // V
 	SetTimeZoneDisplayValue(*string) error
 }
 
@@ -65,7 +65,7 @@ func (m *AvailabilityResultModel) Serialize(writer serialization.SerializationWr
 		internalSerialization.SerializeAnyFunc(nextAvailableSlotKey, m.GetNextAvailableSlot),
 		internalSerialization.SerializeBoolFunc(noApptAvailableKey, m.GetNoApptAvailable),
 		internalSerialization.SerializeBoolFunc(successKey, m.GetSuccess),
-		internalSerialization.SerializeStringFunc("time_zone", m.GetTimeZone),
+		internalSerialization.SerializeStringFunc(timeZoneKey, m.GetTimeZone),
 		internalSerialization.SerializeStringFunc(timeZoneDisplayValueKey, m.GetTimeZoneDisplayValue),
 	)
 }
@@ -151,60 +151,4 @@ func (m *AvailabilityResultModel) GetTimeZoneDisplayValue() (*string, error) {
 // SetTimeZoneDisplayValue sets the time zone display value value.
 func (m *AvailabilityResultModel) SetTimeZoneDisplayValue(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, timeZoneDisplayValueKey, val)
-}
-
-// AvailabilitySlot represents an available slot.
-//
-// The ServiceNow schema for this object is not documented, so it is modeled as a
-// pass-through additional-data holder: every field it contains is exposed only
-// through GetAdditionalData/SetAdditionalData, the same mechanism Kiota generates
-// for open/dynamic objects.
-type AvailabilitySlot interface {
-	serialization.Parsable
-	serialization.AdditionalDataHolder
-	kiotaStore.BackedModel
-}
-
-// AvailabilitySlotModel represents the availability slot model.
-type AvailabilitySlotModel struct {
-	core.BaseModel
-}
-
-// NewAvailabilitySlot creates a new instance of AvailabilitySlotModel.
-func NewAvailabilitySlot() *AvailabilitySlotModel {
-	return &AvailabilitySlotModel{BaseModel: *core.NewBaseModel()}
-}
-
-// CreateAvailabilitySlotFromDiscriminatorValue creates a new AvailabilitySlot from a ParseNode.
-func CreateAvailabilitySlotFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewAvailabilitySlot(), nil
-}
-
-// Serialize writes the objects properties to the current writer.
-func (m *AvailabilitySlotModel) Serialize(writer serialization.SerializationWriter) error {
-	if conversion.IsNil(m) {
-		return nil
-	}
-	return writer.WriteAdditionalData(m.GetAdditionalData())
-}
-
-// GetFieldDeserializers returns no known fields; the underlying kiota-serialization-json-go
-// parse node automatically routes any unrecognized property into AdditionalData for models
-// implementing serialization.AdditionalDataHolder, so no wildcard entry is needed here.
-func (m *AvailabilitySlotModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	return map[string]func(serialization.ParseNode) error{}
-}
-
-// GetAdditionalData returns the additional data value.
-func (m *AvailabilitySlotModel) GetAdditionalData() map[string]interface{} {
-	val, err := store.DefaultBackedModelAccessorFunc[*AvailabilitySlotModel, map[string]interface{}](m, additionalDataKey)
-	if err != nil || val == nil {
-		return make(map[string]interface{})
-	}
-	return val
-}
-
-// SetAdditionalData sets the additional data value.
-func (m *AvailabilitySlotModel) SetAdditionalData(value map[string]interface{}) {
-	_ = store.DefaultBackedModelMutatorFunc(m, additionalDataKey, value)
 }

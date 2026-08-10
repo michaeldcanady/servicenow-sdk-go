@@ -9,6 +9,13 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
+type CalendarItemResponse = core.ServiceNowItemResponse[*CalendarResponse]
+
+// CreateAvailabilityResponseFromDiscriminatorValue is a factory for creating an AvailabilityResponse.
+func CreateCalendarItemResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return core.NewBaseServiceNowItemResponse[*CalendarResponse](CreateCalendarResponseFromDiscriminatorValue), nil
+}
+
 // CalendarResponse implementation of CalendarResponse
 type CalendarResponse struct {
 	core.BaseModel
@@ -45,6 +52,7 @@ func (m *CalendarResponse) GetFieldDeserializers() map[string]func(serialization
 	}
 }
 
+// TODO: date
 // GetRangeEnd returns the range end value.
 func (m *CalendarResponse) GetRangeEnd() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CalendarResponse, *string](m, rangeEndKey)
@@ -55,6 +63,7 @@ func (m *CalendarResponse) SetRangeEnd(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, rangeEndKey, val)
 }
 
+// TODO: date
 // GetRangeStart returns the range start value.
 func (m *CalendarResponse) GetRangeStart() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*CalendarResponse, *string](m, rangeStartKey)

@@ -14,13 +14,13 @@ type FieldMapping interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
-	GetContact() (*string, error)
+	GetContact() (*string, error) // V
 	SetContact(*string) error
-	GetContactRPVariable() (RPVariable, error)
+	GetContactRPVariable() (RPVariable, error) // V
 	SetContactRPVariable(RPVariable) error
-	GetLocation() (*string, error)
+	GetLocation() (*string, error) // V
 	SetLocation(*string) error
-	GetLocationRPVariable() (RPVariable, error)
+	GetLocationRPVariable() (RPVariable, error) // V
 	SetLocationRPVariable(RPVariable) error
 }
 

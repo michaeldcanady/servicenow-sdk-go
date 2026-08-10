@@ -17,6 +17,7 @@ type AvailabilityRequest interface {
 
 	GetCatalogID() (*string, error)
 	SetCatalogID(*string) error
+	// TODO: date, required
 	GetEndDate() (*string, error)
 	SetEndDate(*string) error
 	GetFetchDaysSlot() (*bool, error)
@@ -27,24 +28,30 @@ type AvailabilityRequest interface {
 	SetGetNextAvailableSlot(*bool) error
 	GetLimit() (*int32, error)
 	SetLimit(*int32) error
+	// TODO: required
 	GetLocation() (*string, error)
 	SetLocation(*string) error
+	// TODO: required
 	GetOpenedFor() (*string, error)
 	SetOpenedFor(*string) error
+	// TODO: free form "object"
 	GetOtherInputs() (any, error)
 	SetOtherInputs(any) error
 	GetServiceConfigRule() (*string, error)
 	SetServiceConfigRule(*string) error
+	// TODO: required
 	GetStartDate() (*string, error)
 	SetStartDate(*string) error
 	GetTaskID() (*string, error)
 	SetTaskID(*string) error
+	// TODO: required
 	GetTaskTable() (*string, error)
 	SetTaskTable(*string) error
 	GetUseReadReplica() (*bool, error)
 	SetUseReadReplica(*bool) error
-	GetView() (*string, error)
-	SetView(*string) error
+	// TODO: required
+	GetView() (*View, error)
+	SetView(*View) error
 }
 
 // AvailabilityRequestModel represents the availability request model.
@@ -82,7 +89,7 @@ func (m *AvailabilityRequestModel) Serialize(writer serialization.SerializationW
 		internalSerialization.SerializeStringFunc(taskIDKey, m.GetTaskID),
 		internalSerialization.SerializeStringFunc(taskTableKey, m.GetTaskTable),
 		internalSerialization.SerializeBoolFunc(useReadReplicaKey, m.GetUseReadReplica),
-		internalSerialization.SerializeStringFunc(viewKey, m.GetView),
+		internalSerialization.SerializeEnumFunc(viewKey, m.GetView),
 	)
 }
 
@@ -103,7 +110,7 @@ func (m *AvailabilityRequestModel) GetFieldDeserializers() map[string]func(seria
 		taskIDKey:               internalSerialization.DeserializeStringFunc(m.SetTaskID),
 		taskTableKey:            internalSerialization.DeserializeStringFunc(m.SetTaskTable),
 		useReadReplicaKey:       internalSerialization.DeserializeBoolFunc(m.SetUseReadReplica),
-		viewKey:                 internalSerialization.DeserializeStringFunc(m.SetView),
+		viewKey:                 internalSerialization.DeserializeEnumFunc(ParseView, m.SetView),
 	}
 }
 
@@ -248,11 +255,11 @@ func (m *AvailabilityRequestModel) SetUseReadReplica(val *bool) error {
 }
 
 // GetView returns the view value.
-func (m *AvailabilityRequestModel) GetView() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *string](m, viewKey)
+func (m *AvailabilityRequestModel) GetView() (*View, error) {
+	return store.DefaultBackedModelAccessorFunc[*AvailabilityRequestModel, *View](m, viewKey)
 }
 
 // SetView sets the view value.
-func (m *AvailabilityRequestModel) SetView(val *string) error {
+func (m *AvailabilityRequestModel) SetView(val *View) error {
 	return store.DefaultBackedModelMutatorFunc(m, viewKey, val)
 }
