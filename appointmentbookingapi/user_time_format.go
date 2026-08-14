@@ -14,9 +14,9 @@ type UserTimeFormat interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
-	GetType() (*TimeFormat, error) // V
+	GetType() (*TimeFormat, error)
 	SetType(*TimeFormat) error
-	GetValue() (*string, error) // V
+	GetValue() (*string, error)
 	SetValue(*string) error
 }
 

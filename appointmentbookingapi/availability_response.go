@@ -27,15 +27,15 @@ type AvailabilityResult interface {
 	SetAvailability([]AvailabilitySlot) error
 	GetHasMore() (*bool, error)
 	SetHasMore(*bool) error
-	GetNextAvailableSlot() (AvailabilitySlot, error) // V
+	GetNextAvailableSlot() (AvailabilitySlot, error)
 	SetNextAvailableSlot(AvailabilitySlot) error
-	GetNoApptAvailable() (*bool, error) // V
+	GetNoApptAvailable() (*bool, error)
 	SetNoApptAvailable(*bool) error
 	GetSuccess() (*bool, error)
-	SetSuccess(*bool) error        // V
-	GetTimeZone() (*string, error) // V
+	SetSuccess(*bool) error
+	GetTimeZone() (*string, error)
 	SetTimeZone(*string) error
-	GetTimeZoneDisplayValue() (*string, error) // V
+	GetTimeZoneDisplayValue() (*string, error)
 	SetTimeZoneDisplayValue(*string) error
 }
 

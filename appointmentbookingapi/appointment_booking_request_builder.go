@@ -33,7 +33,7 @@ func NewAppointmentBookingRequestBuilder(
 }
 
 // Appointment returns a [AppointmentRequestBuilder].
-func (rB *AppointmentBookingRequestBuilder) Appointment() *AppointmentRequestBuilder { // V
+func (rB *AppointmentBookingRequestBuilder) Appointment() *AppointmentRequestBuilder {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
@@ -41,7 +41,7 @@ func (rB *AppointmentBookingRequestBuilder) Appointment() *AppointmentRequestBui
 }
 
 // Availability returns a [AvailabilityRequestBuilder].
-func (rB *AppointmentBookingRequestBuilder) Availability() *AvailabilityRequestBuilder { // V
+func (rB *AppointmentBookingRequestBuilder) Availability() *AvailabilityRequestBuilder {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
@@ -49,7 +49,7 @@ func (rB *AppointmentBookingRequestBuilder) Availability() *AvailabilityRequestB
 }
 
 // Calendar returns a [CalendarRequestBuilder].
-func (rB *AppointmentBookingRequestBuilder) Calendar() *CalendarRequestBuilder { // V
+func (rB *AppointmentBookingRequestBuilder) Calendar() *CalendarRequestBuilder {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
@@ -57,7 +57,7 @@ func (rB *AppointmentBookingRequestBuilder) Calendar() *CalendarRequestBuilder {
 }
 
 // Configuration returns a [ConfigurationRequestBuilder].
-func (rB *AppointmentBookingRequestBuilder) Configuration() *ConfigurationRequestBuilder { // V
+func (rB *AppointmentBookingRequestBuilder) Configuration() *ConfigurationRequestBuilder {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
@@ -65,7 +65,7 @@ func (rB *AppointmentBookingRequestBuilder) Configuration() *ConfigurationReques
 }
 
 // ExecuteRuleConditions returns a [ExecuteRuleConditionsRequestBuilder].
-func (rB *AppointmentBookingRequestBuilder) ExecuteRuleConditions() *ExecuteRuleConditionsRequestBuilder { // V
+func (rB *AppointmentBookingRequestBuilder) ExecuteRuleConditions() *ExecuteRuleConditionsRequestBuilder {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}

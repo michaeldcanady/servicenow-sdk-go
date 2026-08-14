@@ -4,7 +4,7 @@ import (
 	"maps"
 
 	accountapi "github.com/michaeldcanady/servicenow-sdk-go/accountapi"
-	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/actsubapi"
+	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/activitysubscriptionsapi"
 	aggregationapi "github.com/michaeldcanady/servicenow-sdk-go/aggregationapi"
 	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
 	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batchapi"

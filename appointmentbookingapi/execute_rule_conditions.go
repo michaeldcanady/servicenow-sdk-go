@@ -16,13 +16,13 @@ type ExecuteRuleConditionsRequest interface {
 	kiotaStore.BackedModel
 
 	// TODO: required
-	GetCatalogID() (*string, error) // V
+	GetCatalogID() (*string, error)
 	SetCatalogID(*string) error
 	// TODO: I don't understand,  required if taskID isn't specified
-	GetOtherInputs() (any, error) // V
+	GetOtherInputs() (any, error)
 	SetOtherInputs(any) error
 	// TODO: required if OtherInputs isn't specified
-	GetTaskID() (*string, error) // V
+	GetTaskID() (*string, error)
 	SetTaskID(*string) error
 }
 

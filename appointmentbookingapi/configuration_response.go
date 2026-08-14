@@ -63,21 +63,21 @@ func (m *ConfigurationResult) Serialize(writer serialization.SerializationWriter
 // GetFieldDeserializers returns the deserialization information for this object.
 func (m *ConfigurationResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		activeKey:                     internalSerialization.DeserializeBoolFunc(m.SetActive),                     // V
-		activeStringKey:               internalSerialization.DeserializeStringFunc(m.SetActiveString),             // V
-		advancedCalendarViewPortalKey: internalSerialization.DeserializeBoolFunc(m.SetAdvancedCalendarViewPortal), // V
-		autoAcceptanceKey:             internalSerialization.DeserializeBoolFunc(m.SetAutoAcceptance),             // V
+		activeKey:                     internalSerialization.DeserializeBoolFunc(m.SetActive),
+		activeStringKey:               internalSerialization.DeserializeStringFunc(m.SetActiveString),
+		advancedCalendarViewPortalKey: internalSerialization.DeserializeBoolFunc(m.SetAdvancedCalendarViewPortal),
+		autoAcceptanceKey:             internalSerialization.DeserializeBoolFunc(m.SetAutoAcceptance),
 		// TODO:  ISO 639.1 language code
-		localeLanguageKey: internalSerialization.DeserializeStringFunc(m.SetLocaleLanguage),                                                // V
-		serviceConfigKey:  internalSerialization.DeserializeObjectValueFunc(CreateServiceConfigFromDiscriminatorValue, m.SetServiceConfig), // V
-		taskTableKey:      internalSerialization.DeserializeStringFunc(m.SetTaskTable),                                                     // V
+		localeLanguageKey: internalSerialization.DeserializeStringFunc(m.SetLocaleLanguage),
+		serviceConfigKey:  internalSerialization.DeserializeObjectValueFunc(CreateServiceConfigFromDiscriminatorValue, m.SetServiceConfig),
+		taskTableKey:      internalSerialization.DeserializeStringFunc(m.SetTaskTable),
 		// TODO: "object," arbitrary map key-value pairs
-		translationsKey:          internalSerialization.DeserializeAnyFunc(m.SetTranslations),                                                                     // V
-		userDateFormatOptionsKey: internalSerialization.DeserializeObjectValueFunc(CreateUserDateFormatOptionsFromDiscriminatorValue, m.SetUserDateFormatOptions), // V
-		useRRKey:                 internalSerialization.DeserializeBoolFunc(m.SetUseRR),                                                                           // V
-		userTimeFormatKey:        internalSerialization.DeserializeObjectValueFunc(CreateUserTimeFormatFromDiscriminatorValue, m.SetUserTimeFormat),               // V
-		userTimeFormatOptionsKey: internalSerialization.DeserializeObjectValueFunc(CreateUserTimeFormatOptionsFromDiscriminatorValue, m.SetUserTimeFormatOptions), // V
-		viewScaleKey:             internalSerialization.DeserializeEnumFunc(ParseViewScale, m.SetViewScale),                                                       // V
+		translationsKey:          internalSerialization.DeserializeAnyFunc(m.SetTranslations),
+		userDateFormatOptionsKey: internalSerialization.DeserializeObjectValueFunc(CreateUserDateFormatOptionsFromDiscriminatorValue, m.SetUserDateFormatOptions),
+		useRRKey:                 internalSerialization.DeserializeBoolFunc(m.SetUseRR),
+		userTimeFormatKey:        internalSerialization.DeserializeObjectValueFunc(CreateUserTimeFormatFromDiscriminatorValue, m.SetUserTimeFormat),
+		userTimeFormatOptionsKey: internalSerialization.DeserializeObjectValueFunc(CreateUserTimeFormatOptionsFromDiscriminatorValue, m.SetUserTimeFormatOptions),
+		viewScaleKey:             internalSerialization.DeserializeEnumFunc(ParseViewScale, m.SetViewScale),
 	}
 }
 

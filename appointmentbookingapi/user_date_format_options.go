@@ -15,14 +15,14 @@ type UserDateFormatOptions interface {
 	kiotaStore.BackedModel
 
 	// TODO: string representation of Numeric (Values or 1-31)
-	GetDay() (*string, error) // V
+	GetDay() (*string, error)
 	SetDay(*string) error
-	GetMonth() (*ShortMonth, error) // V
+	GetMonth() (*ShortMonth, error)
 	SetMonth(*ShortMonth) error
 	// TODO: string representation of Numeric (Values of 1-5)
-	GetWeek() (*string, error) // V
+	GetWeek() (*string, error)
 	SetWeek(*string) error
-	GetWeekday() (*ShortWeekday, error) // V
+	GetWeekday() (*ShortWeekday, error)
 	SetWeekday(*ShortWeekday) error
 }
 

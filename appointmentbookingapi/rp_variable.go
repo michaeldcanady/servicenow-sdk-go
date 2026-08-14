@@ -14,11 +14,11 @@ type RPVariable interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
-	GetDisplayName() (*string, error) // V
+	GetDisplayName() (*string, error)
 	SetDisplayName(*string) error
-	GetLabel() (*string, error) // V
+	GetLabel() (*string, error)
 	SetLabel(*string) error
-	GetName() (*string, error) // V
+	GetName() (*string, error)
 	SetName(*string) error
 }
 

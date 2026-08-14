@@ -14,11 +14,11 @@ type UserTimeFormatOptions interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
-	GetHour() (*int8, error) // V
+	GetHour() (*int8, error)
 	SetHour(*int8) error
-	GetHourCycle() (*string, error) // V
+	GetHourCycle() (*string, error)
 	SetHourCycle(*string) error
-	GetMinute() (*int8, error) // V
+	GetMinute() (*int8, error)
 	SetMinute(*int8) error
 }
 
