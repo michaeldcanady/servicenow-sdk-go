@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestRegisterServiceResultModel_GettersSetters(t *testing.T) {
-	model := NewRegisterServiceResult()
+func TestDiscoveryPopulationMethodAttributeModel_GettersSetters(t *testing.T) {
+	model := NewDiscoveryPopulationMethodAttributeModel()
 
 	tests := []struct {
 		name   string
@@ -19,8 +19,8 @@ func TestRegisterServiceResultModel_GettersSetters(t *testing.T) {
 		getter func() (any, error)
 		value  any
 	}{
-		{"SysID", func(v any) error { return model.SetSysID(v.(*string)) }, func() (any, error) { return model.GetSysID() }, internal.ToPointer("sys-id")},
-		{"Number", func(v any) error { return model.SetNumber(v.(*string)) }, func() (any, error) { return model.GetNumber() }, internal.ToPointer("SNSVC0001019")},
+		{"Name", func(v any) error { return model.SetName(v.(*string)) }, func() (any, error) { return model.GetName() }, internal.ToPointer("attr-name")},
+		{"Value", func(v any) error { return model.SetValue(v.(*string)) }, func() (any, error) { return model.GetValue() }, internal.ToPointer("attr-value")},
 	}
 
 	for _, tt := range tests {
@@ -34,10 +34,10 @@ func TestRegisterServiceResultModel_GettersSetters(t *testing.T) {
 	}
 }
 
-func TestRegisterServiceResultModel_Serialize(t *testing.T) {
+func TestDiscoveryPopulationMethodAttributeModel_Serialize(t *testing.T) {
 	tests := []struct {
 		name      string
-		model     *RegisterServiceResult
+		model     *DiscoveryPopulationMethodAttributeModel
 		setupMock func(w *mocking.MockSerializationWriter)
 		wantErr   error
 	}{
@@ -47,14 +47,14 @@ func TestRegisterServiceResultModel_Serialize(t *testing.T) {
 		},
 		{
 			name:  "empty model writes nothing",
-			model: NewRegisterServiceResult(),
+			model: NewDiscoveryPopulationMethodAttributeModel(),
 		},
 		{
 			name: "happy path - writes all fields",
-			model: func() *RegisterServiceResult {
-				m := NewRegisterServiceResult()
-				_ = m.SetSysID(internal.ToPointer("sys-id"))
-				_ = m.SetNumber(internal.ToPointer("SNSVC0001019"))
+			model: func() *DiscoveryPopulationMethodAttributeModel {
+				m := NewDiscoveryPopulationMethodAttributeModel()
+				_ = m.SetName(internal.ToPointer("attr-name"))
+				_ = m.SetValue(internal.ToPointer("attr-value"))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
@@ -63,13 +63,13 @@ func TestRegisterServiceResultModel_Serialize(t *testing.T) {
 		},
 		{
 			name: "write error propagates",
-			model: func() *RegisterServiceResult {
-				m := NewRegisterServiceResult()
-				_ = m.SetSysID(internal.ToPointer("sys-id"))
+			model: func() *DiscoveryPopulationMethodAttributeModel {
+				m := NewDiscoveryPopulationMethodAttributeModel()
+				_ = m.SetName(internal.ToPointer("attr-name"))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
-				w.On("WriteStringValue", sysIDKey, mock.Anything).Return(errWrite)
+				w.On("WriteStringValue", nameKey, mock.Anything).Return(errWrite)
 			},
 			wantErr: errWrite,
 		},
@@ -93,17 +93,17 @@ func TestRegisterServiceResultModel_Serialize(t *testing.T) {
 	}
 }
 
-func TestRegisterServiceResultModel_GetFieldDeserializers(t *testing.T) {
-	model := NewRegisterServiceResult()
+func TestDiscoveryPopulationMethodAttributeModel_GetFieldDeserializers(t *testing.T) {
+	model := NewDiscoveryPopulationMethodAttributeModel()
 	deserializers := model.GetFieldDeserializers()
-	for _, key := range []string{sysIDKey, numberKey} {
+	for _, key := range []string{nameKey, valueKey} {
 		assert.NotNil(t, deserializers[key], "expected deserializer for %s", key)
 	}
 	assert.Len(t, deserializers, 2)
 }
 
-func TestCreateRegisterServiceResultFromDiscriminatorValue(t *testing.T) {
-	parsable, err := CreateRegisterServiceResultFromDiscriminatorValue(nil)
+func TestCreateDiscoveryPopulationMethodAttributeModelFromDiscriminatorValue(t *testing.T) {
+	parsable, err := CreateDiscoveryPopulationMethodAttributeModelFromDiscriminatorValue(nil)
 	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }

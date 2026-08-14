@@ -6,9 +6,7 @@ import (
 )
 
 // PopulateServiceResponse represents the response containing populate result details.
-type PopulateServiceResponse interface {
-	core.ServiceNowItemResponse[*PopulateServiceResult]
-}
+type PopulateServiceResponse = core.ServiceNowItemResponse[*PopulateServiceResult]
 
 // CreatePopulateServiceResponseFromDiscriminatorValue creates a new PopulateServiceResponse from a ParseNode.
 func CreatePopulateServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {

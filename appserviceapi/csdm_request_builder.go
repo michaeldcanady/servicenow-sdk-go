@@ -8,6 +8,8 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
+const csdmAppServiceURLTemplate = "{+baseurl}/api/now/v1/cmdb/csdm/app_service"
+
 // CsdmRequestBuilder provides operations under /api/now/v1/cmdb/csdm/app_service.
 type CsdmRequestBuilder struct {
 	core.RequestBuilder
@@ -45,6 +47,6 @@ func (rB *CsdmRequestBuilder) ByID(sysID string) *CsdmAppServiceItemRequestBuild
 	}
 
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["sys_id"] = sysID
+	pathParameters[sysIDKey] = sysID
 	return NewCsdmAppServiceItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }

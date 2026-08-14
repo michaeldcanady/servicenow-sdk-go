@@ -91,6 +91,20 @@ func DeserializeMutatedByteArrayFunc[T any](mutator conversion.Mutator[[]byte, T
 	}
 }
 
+func DeserializeGetCollectionOfPrimitiveValuesFunc[T any](targetType string, setter ModelSetter[[]T]) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		val, err := node.GetCollectionOfPrimitiveValues(targetType)
+		if err != nil {
+			return err
+		}
+		res := make([]T, len(val))
+		for i, v := range val {
+			res[i] = v.(T)
+		}
+		return setter(res)
+	}
+}
+
 // DeserializeCollectionOfObjectValuesFunc returns a deserializer function for a collection of Parsable objects.
 func DeserializeCollectionOfObjectValuesFunc[T serialization.Parsable](factory serialization.ParsableFactory, setter ModelSetter[[]T]) serialization.NodeParser {
 	return func(node serialization.ParseNode) error {

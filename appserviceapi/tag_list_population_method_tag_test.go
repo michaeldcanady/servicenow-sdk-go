@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestRegisterServiceResultModel_GettersSetters(t *testing.T) {
-	model := NewRegisterServiceResult()
+func TestTagListPopulationMethodTagModel_GettersSetters(t *testing.T) {
+	model := NewTagListPopulationMethodTag()
 
 	tests := []struct {
 		name   string
@@ -19,8 +19,8 @@ func TestRegisterServiceResultModel_GettersSetters(t *testing.T) {
 		getter func() (any, error)
 		value  any
 	}{
-		{"SysID", func(v any) error { return model.SetSysID(v.(*string)) }, func() (any, error) { return model.GetSysID() }, internal.ToPointer("sys-id")},
-		{"Number", func(v any) error { return model.SetNumber(v.(*string)) }, func() (any, error) { return model.GetNumber() }, internal.ToPointer("SNSVC0001019")},
+		{"Tag", func(v any) error { return model.SetTag(v.(*string)) }, func() (any, error) { return model.GetTag() }, internal.ToPointer("env")},
+		{"Value", func(v any) error { return model.SetValue(v.(*string)) }, func() (any, error) { return model.GetValue() }, internal.ToPointer("production")},
 	}
 
 	for _, tt := range tests {
@@ -34,10 +34,10 @@ func TestRegisterServiceResultModel_GettersSetters(t *testing.T) {
 	}
 }
 
-func TestRegisterServiceResultModel_Serialize(t *testing.T) {
+func TestTagListPopulationMethodTagModel_Serialize(t *testing.T) {
 	tests := []struct {
 		name      string
-		model     *RegisterServiceResult
+		model     *TagListPopulationMethodTagModel
 		setupMock func(w *mocking.MockSerializationWriter)
 		wantErr   error
 	}{
@@ -47,14 +47,14 @@ func TestRegisterServiceResultModel_Serialize(t *testing.T) {
 		},
 		{
 			name:  "empty model writes nothing",
-			model: NewRegisterServiceResult(),
+			model: NewTagListPopulationMethodTag(),
 		},
 		{
 			name: "happy path - writes all fields",
-			model: func() *RegisterServiceResult {
-				m := NewRegisterServiceResult()
-				_ = m.SetSysID(internal.ToPointer("sys-id"))
-				_ = m.SetNumber(internal.ToPointer("SNSVC0001019"))
+			model: func() *TagListPopulationMethodTagModel {
+				m := NewTagListPopulationMethodTag()
+				_ = m.SetTag(internal.ToPointer("env"))
+				_ = m.SetValue(internal.ToPointer("production"))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
@@ -63,13 +63,13 @@ func TestRegisterServiceResultModel_Serialize(t *testing.T) {
 		},
 		{
 			name: "write error propagates",
-			model: func() *RegisterServiceResult {
-				m := NewRegisterServiceResult()
-				_ = m.SetSysID(internal.ToPointer("sys-id"))
+			model: func() *TagListPopulationMethodTagModel {
+				m := NewTagListPopulationMethodTag()
+				_ = m.SetTag(internal.ToPointer("env"))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
-				w.On("WriteStringValue", sysIDKey, mock.Anything).Return(errWrite)
+				w.On("WriteStringValue", tagKey, mock.Anything).Return(errWrite)
 			},
 			wantErr: errWrite,
 		},
@@ -93,17 +93,17 @@ func TestRegisterServiceResultModel_Serialize(t *testing.T) {
 	}
 }
 
-func TestRegisterServiceResultModel_GetFieldDeserializers(t *testing.T) {
-	model := NewRegisterServiceResult()
+func TestTagListPopulationMethodTagModel_GetFieldDeserializers(t *testing.T) {
+	model := NewTagListPopulationMethodTag()
 	deserializers := model.GetFieldDeserializers()
-	for _, key := range []string{sysIDKey, numberKey} {
+	for _, key := range []string{tagKey, valueKey} {
 		assert.NotNil(t, deserializers[key], "expected deserializer for %s", key)
 	}
 	assert.Len(t, deserializers, 2)
 }
 
-func TestCreateRegisterServiceResultFromDiscriminatorValue(t *testing.T) {
-	parsable, err := CreateRegisterServiceResultFromDiscriminatorValue(nil)
+func TestCreateTagListPopulationMethodTagFromDiscriminatorValue(t *testing.T) {
+	parsable, err := CreateTagListPopulationMethodTagFromDiscriminatorValue(nil)
 	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }

@@ -14,15 +14,15 @@ import (
 func TestPopulateServiceRequestModel_GettersSetters(t *testing.T) {
 	model := NewPopulateServiceRequest()
 
-	rel := NewServiceRelation()
-	_ = rel.setParent(internal.ToPointer("parent123"))
+	method := NewPopulationMethod()
+	_ = method.SetType(internal.ToPointer("discovery"))
 
-	err := model.setServiceRelations([]*ServiceRelation{rel})
+	err := model.SetPopulationMethod(method)
 	require.NoError(t, err)
 
-	got, err := model.GetServiceRelations()
+	got, err := model.GetPopulationMethod()
 	require.NoError(t, err)
-	assert.Equal(t, []*ServiceRelation{rel}, got)
+	assert.Equal(t, method, got)
 }
 
 func TestPopulateServiceRequestModel_Serialize(t *testing.T) {
@@ -41,28 +41,25 @@ func TestPopulateServiceRequestModel_Serialize(t *testing.T) {
 			model: NewPopulateServiceRequest(),
 		},
 		{
-			name: "happy path - writes service relations collection",
+			name: "happy path - writes population method",
 			model: func() *PopulateServiceRequest {
 				m := NewPopulateServiceRequest()
-				rel := NewServiceRelation()
-				_ = rel.setParent(internal.ToPointer("parent123"))
-				_ = m.setServiceRelations([]*ServiceRelation{rel})
+				_ = m.SetPopulationMethod(NewPopulationMethod())
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
-				w.On("WriteCollectionOfObjectValues", serviceRelationsKey, mock.Anything).Return(nil)
+				w.On("WriteObjectValue", populationMethodKey, mock.Anything, mock.Anything).Return(nil)
 			},
 		},
 		{
 			name: "write error propagates",
 			model: func() *PopulateServiceRequest {
 				m := NewPopulateServiceRequest()
-				rel := NewServiceRelation()
-				_ = m.setServiceRelations([]*ServiceRelation{rel})
+				_ = m.SetPopulationMethod(NewPopulationMethod())
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
-				w.On("WriteCollectionOfObjectValues", serviceRelationsKey, mock.Anything).Return(errWrite)
+				w.On("WriteObjectValue", populationMethodKey, mock.Anything, mock.Anything).Return(errWrite)
 			},
 			wantErr: errWrite,
 		},
@@ -89,7 +86,7 @@ func TestPopulateServiceRequestModel_Serialize(t *testing.T) {
 func TestPopulateServiceRequestModel_GetFieldDeserializers(t *testing.T) {
 	model := NewPopulateServiceRequest()
 	deserializers := model.GetFieldDeserializers()
-	assert.NotNil(t, deserializers[serviceRelationsKey])
+	assert.NotNil(t, deserializers[populationMethodKey])
 	assert.Len(t, deserializers, 1)
 }
 
@@ -98,9 +95,9 @@ func TestPopulateServiceRequestModel_GetFieldDeserializers_MalformedInput(t *tes
 	deserializers := model.GetFieldDeserializers()
 
 	parseNode := &mocking.MockParseNode{}
-	parseNode.On("GetCollectionOfObjectValues", mock.Anything).Return([]serialization.Parsable(nil), errWrite)
+	parseNode.On("GetObjectValue", mock.Anything).Return(nil, errWrite)
 
-	err := deserializers[serviceRelationsKey](parseNode)
+	err := deserializers[populationMethodKey](parseNode)
 	require.ErrorIs(t, err, errWrite)
 }
 

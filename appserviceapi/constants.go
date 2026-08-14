@@ -3,7 +3,6 @@ package appserviceapi
 const (
 	nameKey                     = "name"
 	commentsKey                 = "comments"
-	serviceRelationsKey         = "service_relations"
 	parentKey                   = "parent"
 	childKey                    = "child"
 	basicDetailsKey             = "basic_details"
@@ -22,4 +21,5 @@ const (
 	attributesKey               = "attributes"
 	valueKey                    = "value"
 	numberKey                   = "number"
+	servicesKey                 = "services"
 )

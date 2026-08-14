@@ -24,12 +24,9 @@ func TestBasicDetailsModel_GettersSetters(t *testing.T) {
 		getter func() (any, error)
 		value  any
 	}{
-		{"Environment", func(v any) error { return model.setEnvironment(v.(*string)) }, func() (any, error) { return model.GetEnvironment() }, internal.ToPointer("Production")},
-		{"Name", func(v any) error { return model.setName(v.(*string)) }, func() (any, error) { return model.GetName() }, internal.ToPointer("Service Name")},
-		{"Version", func(v any) error { return model.setVersion(v.(*string)) }, func() (any, error) { return model.GetVersion() }, internal.ToPointer("1.0")},
-		{"BusinessApp", func(v any) error { return model.setBusinessApp(v.(*string)) }, func() (any, error) { return model.GetBusinessApp() }, internal.ToPointer("app-sys-id")},
-		{"BusinessServiceOffering", func(v any) error { return model.setBusinessServiceOffering(v.(*string)) }, func() (any, error) { return model.GetBusinessServiceOffering() }, internal.ToPointer("offering-sys-id")},
-		{"TechnicalServiceOffering", func(v any) error { return model.setTechnicalServiceOffering(v.(*string)) }, func() (any, error) { return model.GetTechnicalServiceOffering() }, internal.ToPointer("tech-offering-sys-id")},
+		{"Environment", func(v any) error { return model.SetEnvironment(v.(*string)) }, func() (any, error) { return model.GetEnvironment() }, internal.ToPointer("Production")},
+		{"Name", func(v any) error { return model.SetName(v.(*string)) }, func() (any, error) { return model.GetName() }, internal.ToPointer("Service Name")},
+		{"Version", func(v any) error { return model.SetVersion(v.(*string)) }, func() (any, error) { return model.GetVersion() }, internal.ToPointer("1.0")},
 	}
 
 	for _, tt := range tests {
@@ -62,12 +59,9 @@ func TestBasicDetailsModel_Serialize(t *testing.T) {
 			name: "happy path - writes all fields",
 			model: func() *BasicDetails {
 				m := NewBasicDetails()
-				_ = m.setEnvironment(internal.ToPointer("Production"))
-				_ = m.setName(internal.ToPointer("Service Name"))
-				_ = m.setVersion(internal.ToPointer("1.0"))
-				_ = m.setBusinessApp(internal.ToPointer("app-sys-id"))
-				_ = m.setBusinessServiceOffering(internal.ToPointer("offering-sys-id"))
-				_ = m.setTechnicalServiceOffering(internal.ToPointer("tech-offering-sys-id"))
+				_ = m.SetEnvironment(internal.ToPointer("Production"))
+				_ = m.SetName(internal.ToPointer("Service Name"))
+				_ = m.SetVersion(internal.ToPointer("1.0"))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
@@ -78,7 +72,7 @@ func TestBasicDetailsModel_Serialize(t *testing.T) {
 			name: "write error propagates",
 			model: func() *BasicDetails {
 				m := NewBasicDetails()
-				_ = m.setEnvironment(internal.ToPointer("Production"))
+				_ = m.SetEnvironment(internal.ToPointer("Production"))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
@@ -109,13 +103,10 @@ func TestBasicDetailsModel_Serialize(t *testing.T) {
 func TestBasicDetailsModel_GetFieldDeserializers(t *testing.T) {
 	model := NewBasicDetails()
 	deserializers := model.GetFieldDeserializers()
-	for _, key := range []string{
-		environmentKey, nameKey, versionKey, businessAppKey,
-		businessServiceOfferingKey, technicalServiceOfferingKey,
-	} {
+	for _, key := range []string{environmentKey, nameKey, versionKey} {
 		assert.NotNil(t, deserializers[key], "expected deserializer for %s", key)
 	}
-	assert.Len(t, deserializers, 6)
+	assert.Len(t, deserializers, 3)
 }
 
 func TestCreateBasicDetailsFromDiscriminatorValue(t *testing.T) {

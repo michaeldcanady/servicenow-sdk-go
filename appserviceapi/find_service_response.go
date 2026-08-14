@@ -6,9 +6,7 @@ import (
 )
 
 // FindServiceResponse represents the response containing the found application service details.
-type FindServiceResponse interface {
-	core.ServiceNowItemResponse[*FindServiceResult]
-}
+type FindServiceResponse = core.ServiceNowItemResponse[*FindServiceResult]
 
 // CreateFindServiceResponseFromDiscriminatorValue creates a new FindServiceResponse from a ParseNode.
 func CreateFindServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
