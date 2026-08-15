@@ -9,19 +9,17 @@ import (
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
+var _ FieldValuesResult = (*FieldValuesResultModel)(nil)
+
 // FieldValuesResult represents field values.
 type FieldValuesResult interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
 	GetLabel() (*string, error)
-	setLabel(*string) error
+	SetLabel(*string) error
 	GetValue() (*string, error)
-	setValue(*string) error
-	GetSequence() (*int32, error)
-	setSequence(*int32) error
-	GetDependentValue() (*string, error)
-	setDependentValue(*string) error
+	SetValue(*string) error
 }
 
 // FieldValuesResultModel implementation of FieldValuesResult.
@@ -34,6 +32,11 @@ func NewFieldValuesResult() *FieldValuesResultModel {
 	return &FieldValuesResultModel{BaseModel: *core.NewBaseModel()}
 }
 
+// CreateFieldValuesResultFromDiscriminatorValue creates a new instance of FieldValuesResult.
+func CreateFieldValuesResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewFieldValuesResult(), nil
+}
+
 // Serialize writes the objects properties to the current writer.
 func (m *FieldValuesResultModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
@@ -42,18 +45,14 @@ func (m *FieldValuesResultModel) Serialize(writer serialization.SerializationWri
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeStringFunc(labelKey, m.GetLabel),
 		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
-		internalSerialization.SerializeInt32Func(sequenceKey, m.GetSequence),
-		internalSerialization.SerializeStringFunc(dependentValueKey, m.GetDependentValue),
 	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (m *FieldValuesResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		labelKey:          internalSerialization.DeserializeStringFunc(m.setLabel),
-		valueKey:          internalSerialization.DeserializeStringFunc(m.setValue),
-		sequenceKey:       internalSerialization.DeserializeInt32Func(m.setSequence),
-		dependentValueKey: internalSerialization.DeserializeStringFunc(m.setDependentValue),
+		labelKey: internalSerialization.DeserializeStringFunc(m.SetLabel),
+		valueKey: internalSerialization.DeserializeStringFunc(m.SetValue),
 	}
 }
 
@@ -61,7 +60,7 @@ func (m *FieldValuesResultModel) GetFieldDeserializers() map[string]func(seriali
 func (m *FieldValuesResultModel) GetLabel() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*FieldValuesResultModel, *string](m, labelKey)
 }
-func (m *FieldValuesResultModel) setLabel(val *string) error {
+func (m *FieldValuesResultModel) SetLabel(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, labelKey, val)
 }
 
@@ -69,27 +68,6 @@ func (m *FieldValuesResultModel) setLabel(val *string) error {
 func (m *FieldValuesResultModel) GetValue() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*FieldValuesResultModel, *string](m, valueKey)
 }
-func (m *FieldValuesResultModel) setValue(val *string) error {
+func (m *FieldValuesResultModel) SetValue(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, valueKey, val)
-}
-
-// GetSequence ...
-func (m *FieldValuesResultModel) GetSequence() (*int32, error) {
-	return store.DefaultBackedModelAccessorFunc[*FieldValuesResultModel, *int32](m, sequenceKey)
-}
-func (m *FieldValuesResultModel) setSequence(val *int32) error {
-	return store.DefaultBackedModelMutatorFunc(m, sequenceKey, val)
-}
-
-// GetDependentValue ...
-func (m *FieldValuesResultModel) GetDependentValue() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*FieldValuesResultModel, *string](m, dependentValueKey)
-}
-func (m *FieldValuesResultModel) setDependentValue(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, dependentValueKey, val)
-}
-
-// CreateFieldValuesResultFromDiscriminatorValue creates a new instance of FieldValuesResult.
-func CreateFieldValuesResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewFieldValuesResult(), nil
 }

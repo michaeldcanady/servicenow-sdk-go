@@ -6,8 +6,3 @@ type CaseRequestBuilderGetQueryParameters struct {
 	// Based on "Search Case by Case Attributes", it likely supports standard sysparm_query.
 	SysparmQuery *string `uriparametername:"sysparm_query"`
 }
-
-// CaseFieldValuesRequestBuilderGetQueryParameters represents query parameters for field_values.
-type CaseFieldValuesRequestBuilderGetQueryParameters struct {
-	// Placeholder
-}

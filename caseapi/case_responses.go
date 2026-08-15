@@ -21,16 +21,13 @@ func CreateCaseItemResponseFromDiscriminatorValue(_ serialization.ParseNode) (se
 	return core.NewBaseServiceNowItemResponse[*CaseResultModel](CreateCaseResultFromDiscriminatorValue), nil
 }
 
-// ActivitiesResponse represents a single activities response.
-type ActivitiesResponse = core.ServiceNowItemResponse[*ActivitiesResultModel]
-
 // CreateActivitiesResponseFromDiscriminatorValue is a factory for creating an ActivitiesResponse.
 func CreateActivitiesResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return core.NewBaseServiceNowItemResponse[*ActivitiesResultModel](CreateActivitiesResultFromDiscriminatorValue), nil
 }
 
 // FieldValuesResponse represents a single field values response.
-type FieldValuesResponse = core.ServiceNowItemResponse[*FieldValuesResultModel]
+type FieldValuesResponse = core.ServiceNowCollectionResponse[*FieldValuesResultModel]
 
 // CreateFieldValuesResponseFromDiscriminatorValue is a factory for creating a FieldValuesResponse.
 func CreateFieldValuesResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
