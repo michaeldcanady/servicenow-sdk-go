@@ -12,7 +12,7 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-const populateServiceURLTemplate = "{+baseurl}/api/now/v1/cmdb/csdm/app_service/{sys_id}/populate_service"
+const populateServiceURLTemplate = "{+baseurl}/api/now/cmdb/csdm/app_service/{sys_id}/populate_service"
 
 // PopulateServiceRequestBuilder provides operations to populate a CSDM service.
 type PopulateServiceRequestBuilder struct {

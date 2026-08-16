@@ -50,7 +50,7 @@ func newConfigTestAdapter(response any) *mocking.MockRequestAdapter {
 }
 
 func uploadStatusResponse() any {
-	return core.NewBaseServiceNowItemResponse[*UploadStatusResult](CreateUploadStatusResultFromDiscriminatorValue)
+	return core.NewBaseServiceNowItemResponse[*UploadStatusResultModel](CreateUploadStatusResultFromDiscriminatorValue)
 }
 
 func exportsResponse() any {

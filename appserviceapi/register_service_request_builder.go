@@ -13,7 +13,7 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-const registerServiceURLTemplate = "{+baseurl}/api/now/v1/cmdb/csdm/app_service/register_service"
+const registerServiceURLTemplate = "{+baseurl}/api/now/cmdb/csdm/app_service/register_service"
 
 // RegisterServiceRequestBuilder provides operations to register a CSDM service.
 type RegisterServiceRequestBuilder struct {

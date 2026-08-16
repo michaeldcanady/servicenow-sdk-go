@@ -10,7 +10,7 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-const createURLTemplate = "{+baseurl}/api/now/v1/cmdb/app_service/create"
+const createURLTemplate = "{+baseurl}/api/now/cmdb/app_service/create"
 
 // CreateRequestBuilder provides operations to create an application service.
 type CreateRequestBuilder struct {

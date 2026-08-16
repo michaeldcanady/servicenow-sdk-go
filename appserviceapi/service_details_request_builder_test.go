@@ -15,7 +15,7 @@ import (
 func TestNewServiceDetailsRequestBuilder(t *testing.T) {
 	adapter := mocking.NewMockRequestAdapter()
 
-	builder := NewServiceDetailsRequestBuilder("https://example.com/api/now/v1/cmdb/csdm/app_service/service123/service_details", adapter)
+	builder := NewServiceDetailsRequestBuilder("https://example.com/api/now/cmdb/csdm/app_service/service123/service_details", adapter)
 
 	require.NotNil(t, builder)
 	assert.Equal(t, serviceDetailsURLTemplate, builder.GetURLTemplate())

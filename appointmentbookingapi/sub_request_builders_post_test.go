@@ -95,6 +95,19 @@ func postInvocations() []postInvocation {
 				return builder.Post(ctx, NewExecuteRuleConditionsRequest(), nil)
 			},
 		},
+		{
+			name: "UserWindowRequestBuilder",
+			post: func(adapter *mocking.MockRequestAdapter) (any, error) {
+				builder := NewUserWindowRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+				return builder.Post(ctx, NewUserWindowRequest(), nil)
+			},
+			postNilBuilder: func() (any, error) {
+				var builder *UserWindowRequestBuilder
+
+				return builder.Post(ctx, NewUserWindowRequest(), nil)
+			},
+		},
 	}
 }
 

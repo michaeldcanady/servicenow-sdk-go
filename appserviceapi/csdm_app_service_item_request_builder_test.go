@@ -34,7 +34,7 @@ func TestCsdmAppServiceItemRequestBuilder_PopulateService(t *testing.T) {
 
 	uri, err := requestInfo.GetUri()
 	require.NoError(t, err)
-	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/csdm/app_service/service123/populate_service", uri.String())
+	assert.Equal(t, "https://example.service-now.com/api/now/cmdb/csdm/app_service/service123/populate_service", uri.String())
 }
 
 func TestCsdmAppServiceItemRequestBuilder_ServiceDetails(t *testing.T) {
@@ -60,5 +60,5 @@ func TestCsdmAppServiceItemRequestBuilder_ServiceDetails(t *testing.T) {
 
 	uri, err := requestInfo.GetUri()
 	require.NoError(t, err)
-	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/csdm/app_service/service123/service_details", uri.String())
+	assert.Equal(t, "https://example.service-now.com/api/now/cmdb/csdm/app_service/service123/service_details", uri.String())
 }

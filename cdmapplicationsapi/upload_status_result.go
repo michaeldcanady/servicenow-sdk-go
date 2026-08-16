@@ -8,18 +8,59 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
-// UploadStatusResult represents the status response of an upload.
-type UploadStatusResult struct {
+var _ UploadStatusResult = (*UploadStatusResultModel)(nil)
+
+const (
+	sysIdKey = "sys_id"
+	// nameKey
+	nodeKey = "node"
+	//descriptionKey
+	identifierKey = "identifier"
+)
+
+type UploadStatusResult interface {
+	serialization.Parsable
+
+	// GetSysID returns the CDM deployable sys_Id.
+	GetSysID() (*string, error)
+	// SetSysID sets the CDM deployable sys_Id.
+	SetSysID(*string) error
+
+	// GetName returns the name of the CDM Deployable.
+	GetName() (*string, error)
+	// SetName sets the name of the CDM Deployable.
+	SetName(*string) error
+
+	// GetNode returns the deployable node object.
+	GetNode() (Reference, error)
+	// SetNode sets the deployable node object.
+	SetNode(Reference) error
+
+	// GetDescription returns the CDM deployable description.
+	GetDescription() (*string, error)
+	// SetDescription returns the CDM deployable description.
+	SetDescription(*string) error
+
+	// GetIdentifier returns an identifier for the deployable.
+	GetIdentifier() (*string, error)
+	// SetIdentifier returns an identifier for the deployable.
+	SetIdentifier(*string) error
+
+	// TODO: add remaining properties
+}
+
+// UploadStatusResultModel represents the status response of an upload.
+type UploadStatusResultModel struct {
 	core.BaseModel
 }
 
 // NewUploadStatusResult instantiates a new UploadStatusResult.
-func NewUploadStatusResult() *UploadStatusResult {
-	return &UploadStatusResult{BaseModel: *core.NewBaseModel()}
+func NewUploadStatusResult() *UploadStatusResultModel {
+	return &UploadStatusResultModel{BaseModel: *core.NewBaseModel()}
 }
 
 // Serialize serializes information the current object.
-func (m *UploadStatusResult) Serialize(writer serialization.SerializationWriter) error {
+func (m *UploadStatusResultModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
 	}
@@ -31,7 +72,7 @@ func (m *UploadStatusResult) Serialize(writer serialization.SerializationWriter)
 }
 
 // GetFieldDeserializers the deserialization information for the current model.
-func (m *UploadStatusResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+func (m *UploadStatusResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		typeKey:   internalSerialization.DeserializeStringFunc(m.setType),
 		stateKey:  internalSerialization.DeserializeStringFunc(m.setState),
@@ -40,32 +81,32 @@ func (m *UploadStatusResult) GetFieldDeserializers() map[string]func(serializati
 }
 
 // GetType gets the type property value.
-func (m *UploadStatusResult) GetType() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*UploadStatusResult, *string](m, typeKey)
+func (m *UploadStatusResultModel) GetType() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*UploadStatusResultModel, *string](m, typeKey)
 }
 
 // setType sets the type property value.
-func (m *UploadStatusResult) setType(val *string) error {
+func (m *UploadStatusResultModel) setType(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, typeKey, val)
 }
 
 // GetState gets the state property value.
-func (m *UploadStatusResult) GetState() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*UploadStatusResult, *string](m, stateKey)
+func (m *UploadStatusResultModel) GetState() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*UploadStatusResultModel, *string](m, stateKey)
 }
 
 // setState sets the state property value.
-func (m *UploadStatusResult) setState(val *string) error {
+func (m *UploadStatusResultModel) setState(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, stateKey, val)
 }
 
 // GetOutput gets the output property value.
-func (m *UploadStatusResult) GetOutput() (*UploadStatusOutput, error) {
-	return store.DefaultBackedModelAccessorFunc[*UploadStatusResult, *UploadStatusOutput](m, outputKey)
+func (m *UploadStatusResultModel) GetOutput() (*UploadStatusOutput, error) {
+	return store.DefaultBackedModelAccessorFunc[*UploadStatusResultModel, *UploadStatusOutput](m, outputKey)
 }
 
 // setOutput sets the output property value.
-func (m *UploadStatusResult) setOutput(val *UploadStatusOutput) error {
+func (m *UploadStatusResultModel) setOutput(val *UploadStatusOutput) error {
 	return store.DefaultBackedModelMutatorFunc(m, outputKey, val)
 }
 

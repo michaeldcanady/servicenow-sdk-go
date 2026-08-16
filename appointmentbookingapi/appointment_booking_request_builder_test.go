@@ -39,6 +39,10 @@ func TestAppointmentBookingRequestBuilder_ToGetRequestInformation(t *testing.T) 
 	t.Run("ExecuteRuleConditions", func(t *testing.T) {
 		assert.NotNil(t, builder.ExecuteRuleConditions())
 	})
+
+	t.Run("UserWindow", func(t *testing.T) {
+		assert.NotNil(t, builder.UserWindow())
+	})
 }
 
 func TestAppointmentRequestBuilder_Post(t *testing.T) {
@@ -81,6 +85,32 @@ func TestExecuteRuleConditionsRequestBuilder_Post(t *testing.T) {
 
 	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
+}
+
+func TestUserWindowRequestBuilder_Post(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
+	builder := NewUserWindowRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+	mockRes := core.NewBaseServiceNowItemResponse[*UserWindowResult](CreateUserWindowResultFromDiscriminatorValue)
+	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
+
+	resp, err := builder.Post(context.Background(), NewUserWindowRequest(), nil)
+
+	require.NoError(t, err)
+	assert.Equal(t, mockRes, resp)
+}
+
+func TestUserWindowRequestBuilder_ToPostRequestInformation(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
+	builder := NewAppointmentBookingRequestBuilderInternal(adapter, map[string]string{"baseurl": "https://example.com"}).UserWindow()
+
+	body := NewUserWindowRequest()
+	requestInfo, err := builder.ToPostRequestInformation(context.Background(), body, nil)
+	require.NoError(t, err)
+	assert.NotNil(t, requestInfo)
+	assert.Equal(t, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/userwindow", requestInfo.UrlTemplate)
 }
 
 func TestAppointmentRequestBuilder_ToPostRequestInformation(t *testing.T) {

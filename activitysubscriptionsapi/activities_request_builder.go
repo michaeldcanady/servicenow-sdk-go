@@ -2,7 +2,7 @@ package actsubapi
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -76,7 +76,8 @@ func (rB *ActivitiesRequestBuilder) Get(ctx context.Context, config *ActivitiesR
 
 	typedRes, ok := res.(*ActivitySubscriptionItemResponse)
 	if !ok {
-		return nil, fmt.Errorf("unexpected response type: %T", res)
+		// TODO: standardize error
+		return nil, errors.New("unexpected type")
 	}
 
 	return typedRes, nil

@@ -8,7 +8,7 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-const csdmAppServiceItemURLTemplate = "{+baseurl}/api/now/v1/cmdb/csdm/app_service/{sys_id}"
+const csdmAppServiceItemURLTemplate = "{+baseurl}/api/now/cmdb/csdm/app_service/{sys_id}"
 
 // CsdmAppServiceItemRequestBuilder provides operations for a specific CSDM application service.
 type CsdmAppServiceItemRequestBuilder struct {

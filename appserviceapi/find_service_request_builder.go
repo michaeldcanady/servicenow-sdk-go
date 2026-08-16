@@ -13,7 +13,7 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-const findServiceURLTemplate = "{+baseurl}/api/now/v1/cmdb/csdm/app_service/find_service{?name,number}"
+const findServiceURLTemplate = "{+baseurl}/api/now/cmdb/csdm/app_service/find_service{?name,number}"
 
 // FindServiceRequestBuilder provides operations to find an application service.
 type FindServiceRequestBuilder struct {

@@ -23,6 +23,7 @@ func TestAppointmentBookingRequestBuilder_NilReceiver(t *testing.T) {
 	assert.Nil(t, builder.Calendar())
 	assert.Nil(t, builder.Configuration())
 	assert.Nil(t, builder.ExecuteRuleConditions())
+	assert.Nil(t, builder.UserWindow())
 }
 
 func TestCalendarRequestBuilder_Get(t *testing.T) {

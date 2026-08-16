@@ -490,7 +490,7 @@ func TestUploadStatusOutputModel_GetFieldDeserializers(t *testing.T) {
 func TestUploadStatusResultModel_Serialize(t *testing.T) {
 	tests := []struct {
 		name      string
-		model     *UploadStatusResult
+		model     *UploadStatusResultModel
 		setupMock func(w *mocking.MockSerializationWriter)
 		wantErr   error
 	}{
@@ -504,7 +504,7 @@ func TestUploadStatusResultModel_Serialize(t *testing.T) {
 		},
 		{
 			name: "happy path - writes all fields including nested output",
-			model: func() *UploadStatusResult {
+			model: func() *UploadStatusResultModel {
 				m := NewUploadStatusResult()
 				_ = m.setType(internal.ToPointer("upload"))
 				_ = m.setState(internal.ToPointer("completed"))
@@ -518,7 +518,7 @@ func TestUploadStatusResultModel_Serialize(t *testing.T) {
 		},
 		{
 			name: "write error propagates",
-			model: func() *UploadStatusResult {
+			model: func() *UploadStatusResultModel {
 				m := NewUploadStatusResult()
 				_ = m.setType(internal.ToPointer("upload"))
 				return m
@@ -530,7 +530,7 @@ func TestUploadStatusResultModel_Serialize(t *testing.T) {
 		},
 		{
 			name: "nested object write error propagates",
-			model: func() *UploadStatusResult {
+			model: func() *UploadStatusResultModel {
 				m := NewUploadStatusResult()
 				_ = m.setOutput(NewUploadStatusOutput())
 				return m

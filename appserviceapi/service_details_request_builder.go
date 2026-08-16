@@ -13,7 +13,7 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-const serviceDetailsURLTemplate = "{+baseurl}/api/now/v1/cmdb/csdm/app_service/{sys_id}/service_details"
+const serviceDetailsURLTemplate = "{+baseurl}/api/now/cmdb/csdm/app_service/{sys_id}/service_details"
 
 // ServiceDetailsRequestBuilder provides operations to update details of a CSDM service.
 type ServiceDetailsRequestBuilder struct {

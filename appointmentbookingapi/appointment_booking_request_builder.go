@@ -71,3 +71,11 @@ func (rB *AppointmentBookingRequestBuilder) ExecuteRuleConditions() *ExecuteRule
 	}
 	return NewExecuteRuleConditionsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
+
+// UserWindow returns a [UserWindowRequestBuilder].
+func (rB *AppointmentBookingRequestBuilder) UserWindow() *UserWindowRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+	return NewUserWindowRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}

@@ -41,7 +41,7 @@ func TestCsdmRequestBuilder_FindService(t *testing.T) {
 
 	uri, err := requestInfo.GetUri()
 	require.NoError(t, err)
-	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/csdm/app_service/find_service?name=Email_East&number=SNSVC0001018", uri.String())
+	assert.Equal(t, "https://example.service-now.com/api/now/cmdb/csdm/app_service/find_service?name=Email_East&number=SNSVC0001018", uri.String())
 }
 
 func TestCsdmRequestBuilder_RegisterService(t *testing.T) {

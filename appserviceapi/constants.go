@@ -22,4 +22,5 @@ const (
 	valueKey                    = "value"
 	numberKey                   = "number"
 	servicesKey                 = "services"
+	numberOfLevelsKey           = "number_of_levels"
 )

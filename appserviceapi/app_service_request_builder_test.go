@@ -41,7 +41,7 @@ func TestAppServiceRequestBuilder_Create(t *testing.T) {
 
 	uri, err := requestInfo.GetUri()
 	require.NoError(t, err)
-	assert.Equal(t, "https://example.service-now.com/api/now/v1/cmdb/app_service/create", uri.String())
+	assert.Equal(t, "https://example.service-now.com/api/now/cmdb/app_service/create", uri.String())
 }
 
 func TestAppServiceRequestBuilder_Csdm(t *testing.T) {
@@ -52,4 +52,54 @@ func TestAppServiceRequestBuilder_Csdm(t *testing.T) {
 	csdmBuilder := builder.Csdm()
 	assert.NotNil(t, csdmBuilder)
 	assert.Equal(t, csdmAppServiceURLTemplate, csdmBuilder.GetURLTemplate())
+}
+
+func TestAppServiceRequestBuilder_ByID(t *testing.T) {
+	adapter := mocking.NewMockRequestAdapter()
+
+	builder := NewAppServiceRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
+
+	itemBuilder := builder.ByID("service123")
+	assert.NotNil(t, itemBuilder)
+	assert.Equal(t, appServiceItemURLTemplate, itemBuilder.GetURLTemplate())
+}
+
+func TestAppServiceRequestBuilder_ConvertToDynamicService(t *testing.T) {
+	adapter := mocking.NewMockRequestAdapter()
+
+	builder := NewAppServiceRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
+
+	convertBuilder := builder.ConvertToDynamicService()
+	assert.NotNil(t, convertBuilder)
+	assert.Equal(t, convertToDynamicServiceURLTemplate, convertBuilder.GetURLTemplate())
+}
+
+func TestAppServiceRequestBuilder_ConvertToManualService(t *testing.T) {
+	adapter := mocking.NewMockRequestAdapter()
+
+	builder := NewAppServiceRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
+
+	convertBuilder := builder.ConvertToManualService()
+	assert.NotNil(t, convertBuilder)
+	assert.Equal(t, convertToManualServiceURLTemplate, convertBuilder.GetURLTemplate())
+}
+
+func TestAppServiceRequestBuilder_CreateDynamicService(t *testing.T) {
+	adapter := mocking.NewMockRequestAdapter()
+
+	builder := NewAppServiceRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
+
+	createDynamicBuilder := builder.CreateDynamicService()
+	assert.NotNil(t, createDynamicBuilder)
+	assert.Equal(t, createDynamicServiceURLTemplate, createDynamicBuilder.GetURLTemplate())
+}
+
+func TestAppServiceRequestBuilder_UpdateDynamicNumberOfLevels(t *testing.T) {
+	adapter := mocking.NewMockRequestAdapter()
+
+	builder := NewAppServiceRequestBuilderInternal(map[string]string{"baseurl": "https://example.service-now.com"}, adapter)
+
+	updateBuilder := builder.UpdateDynamicNumberOfLevels()
+	assert.NotNil(t, updateBuilder)
+	assert.Equal(t, updateDynamicNumberOfLevelsURLTemplate, updateBuilder.GetURLTemplate())
 }

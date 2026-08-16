@@ -613,7 +613,7 @@ func TestDeployablesRequestBuilder_Put_HappyAndError(t *testing.T) {
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResult](CreateUploadStatusResultFromDiscriminatorValue), nil)
+					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResultModel](CreateUploadStatusResultFromDiscriminatorValue), nil)
 			},
 		},
 		{
@@ -682,7 +682,7 @@ func TestDeployablesRequestBuilder_Put_PassesDefaultErrorMapping(t *testing.T) {
 	adapter := mocking.NewMockRequestAdapter()
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.MatchedBy(isDefaultErrorMapping)).
-		Return(core.NewBaseServiceNowItemResponse[*UploadStatusResult](CreateUploadStatusResultFromDiscriminatorValue), nil)
+		Return(core.NewBaseServiceNowItemResponse[*UploadStatusResultModel](CreateUploadStatusResultFromDiscriminatorValue), nil)
 
 	builder := NewDeployablesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
@@ -743,7 +743,7 @@ func TestSharedComponentsRequestBuilder_Put_HappyAndError(t *testing.T) {
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResult](CreateUploadStatusResultFromDiscriminatorValue), nil)
+					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResultModel](CreateUploadStatusResultFromDiscriminatorValue), nil)
 			},
 		},
 		{
@@ -801,7 +801,7 @@ func TestUploadStatusItemRequestBuilder_Get_HappyAndError(t *testing.T) {
 			name: "happy path",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResult](CreateUploadStatusResultFromDiscriminatorValue), nil)
+					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResultModel](CreateUploadStatusResultFromDiscriminatorValue), nil)
 			},
 		},
 		{
@@ -1083,7 +1083,7 @@ func TestUploadsComponentsRequestBuilder_Post_HappyAndError(t *testing.T) {
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResult](CreateUploadStatusResultFromDiscriminatorValue), nil)
+					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResultModel](CreateUploadStatusResultFromDiscriminatorValue), nil)
 			},
 		},
 		{
@@ -1143,7 +1143,7 @@ func TestUploadsComponentsVarsRequestBuilder_Post_HappyAndError(t *testing.T) {
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResult](CreateUploadStatusResultFromDiscriminatorValue), nil)
+					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResultModel](CreateUploadStatusResultFromDiscriminatorValue), nil)
 			},
 		},
 		{
@@ -1203,7 +1203,7 @@ func TestUploadsCollectionsRequestBuilder_Post_HappyAndError(t *testing.T) {
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResult](CreateUploadStatusResultFromDiscriminatorValue), nil)
+					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResultModel](CreateUploadStatusResultFromDiscriminatorValue), nil)
 			},
 		},
 		{
@@ -1262,7 +1262,7 @@ func TestUploadsCollectionsFileRequestBuilder_Post_HappyAndError(t *testing.T) {
 			name: "happy path",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResult](CreateUploadStatusResultFromDiscriminatorValue), nil)
+					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResultModel](CreateUploadStatusResultFromDiscriminatorValue), nil)
 			},
 		},
 		{
@@ -1319,7 +1319,7 @@ func TestUploadsDeployablesFileRequestBuilder_Post_HappyAndError(t *testing.T) {
 			name: "happy path",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResult](CreateUploadStatusResultFromDiscriminatorValue), nil)
+					Return(core.NewBaseServiceNowItemResponse[*UploadStatusResultModel](CreateUploadStatusResultFromDiscriminatorValue), nil)
 			},
 		},
 		{
