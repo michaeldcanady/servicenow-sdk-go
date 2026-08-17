@@ -152,27 +152,6 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Activity Subscriptions API',
-      link: { type: 'doc', id: 'apis/activity-subscriptions/index' },
-      items: [
-        'apis/activity-subscriptions/list-activities',
-        'apis/activity-subscriptions/list-contexts',
-        'apis/activity-subscriptions/list-subscription-objects',
-        'apis/activity-subscriptions/get-facet-instances',
-        'apis/activity-subscriptions/get-followings',
-        'apis/activity-subscriptions/get-preference',
-        'apis/activity-subscriptions/create-preference',
-        'apis/activity-subscriptions/get-subscription',
-        'apis/activity-subscriptions/check-subscription',
-        'apis/activity-subscriptions/subscribe',
-        'apis/activity-subscriptions/unsubscribe',
-        'apis/activity-subscriptions/get-subscribers',
-        'apis/activity-subscriptions/get-user-stream',
-        'apis/activity-subscriptions/update-user-stream',
-      ],
-    },
-    {
-      type: 'category',
       label: 'CMDB & CSDM',
       items: [
         {
