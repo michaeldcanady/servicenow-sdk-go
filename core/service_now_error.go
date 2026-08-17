@@ -10,6 +10,9 @@ import (
 
 const (
 	errorKey = "error"
+
+	// unknownErrorMessage is returned by Error when neither a message nor a detail is available.
+	unknownErrorMessage = "unknown service-now error"
 )
 
 // ServiceNowError represents a Service-Now API error
@@ -130,22 +133,26 @@ func (exc *ServiceNowError) setError(mainError MainErrorable) error {
 	return store.DefaultBackedModelMutatorFunc(exc, errorKey, mainError)
 }
 
-// Error implements the error interface, returning the main error's message or detail.
+// Error returns the error's message, falling back to its detail and then to a
+// generic message when neither is populated.
 func (exc *ServiceNowError) Error() string {
 	if conversion.IsNil(exc) {
-		return "ServiceNow error occurred"
+		return unknownErrorMessage
 	}
 	mainErr, _ := exc.GetError()
 	if conversion.IsNil(mainErr) {
-		return "ServiceNow error occurred (details unavailable)"
+		return unknownErrorMessage
 	}
+
 	msg, _ := mainErr.GetMessage()
 	if msg != nil {
 		return *msg
 	}
+
 	details, _ := mainErr.GetDetail()
 	if details != nil {
 		return *details
 	}
-	return "ServiceNow error occurred (message and details unavailable)"
+
+	return unknownErrorMessage
 }
