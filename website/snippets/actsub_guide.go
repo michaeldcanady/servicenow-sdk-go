@@ -31,16 +31,22 @@ func _() {
 	actSub := client.Now().ActSub()
 
 	// Step 2: List the activities available to the current user
-	activities, err := actSub.Activities().Get(ctx, nil)
+	response, err := actSub.Activities().Get(ctx, nil)
 	if err != nil {
 		log.Fatalf("unable to list activities: %v", err)
 	}
 
-	list, err := activities.GetResult()
+	results, err := response.GetResult()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("%d activities\n", len(list))
+
+	activities, err := results.GetActivities()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("%d activities\n", len(activities))
 
 	// Step 3: Check whether the current user is subscribed to an object
 	subscribed, err := actSub.Subscriptions().
