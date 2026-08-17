@@ -10,43 +10,13 @@ import (
 
 var _ UploadStatusResult = (*UploadStatusResultModel)(nil)
 
-const (
-	sysIdKey = "sys_id"
-	// nameKey
-	nodeKey = "node"
-	//descriptionKey
-	identifierKey = "identifier"
-)
-
+// UploadStatusResult is the status payload returned for CDM upload operations.
 type UploadStatusResult interface {
 	serialization.Parsable
 
-	// GetSysID returns the CDM deployable sys_Id.
-	GetSysID() (*string, error)
-	// SetSysID sets the CDM deployable sys_Id.
-	SetSysID(*string) error
-
-	// GetName returns the name of the CDM Deployable.
-	GetName() (*string, error)
-	// SetName sets the name of the CDM Deployable.
-	SetName(*string) error
-
-	// GetNode returns the deployable node object.
-	GetNode() (Reference, error)
-	// SetNode sets the deployable node object.
-	SetNode(Reference) error
-
-	// GetDescription returns the CDM deployable description.
-	GetDescription() (*string, error)
-	// SetDescription returns the CDM deployable description.
-	SetDescription(*string) error
-
-	// GetIdentifier returns an identifier for the deployable.
-	GetIdentifier() (*string, error)
-	// SetIdentifier returns an identifier for the deployable.
-	SetIdentifier(*string) error
-
-	// TODO: add remaining properties
+	GetType() (*string, error)
+	GetState() (*string, error)
+	GetOutput() (*UploadStatusOutput, error)
 }
 
 // UploadStatusResultModel represents the status response of an upload.

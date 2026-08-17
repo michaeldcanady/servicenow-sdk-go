@@ -6,9 +6,12 @@ import (
 )
 
 // GetContentResponse represents the response containing the content of an application service.
-type GetContentResponse = core.ServiceNowItemResponse[*GetContentResult]
+type GetContentResponse interface {
+	core.ServiceNowItemResponse[*GetContentResult]
+}
 
 // CreateGetContentResponseFromDiscriminatorValue creates a new GetContentResponse from a ParseNode.
-func CreateGetContentResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return core.NewBaseServiceNowItemResponse[*GetContentResult](CreateGetContentResultFromDiscriminatorValue), nil
+func CreateGetContentResponseFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+	return core.ServiceNowItemResponseFromDiscriminatorValue[*GetContentResult](CreateGetContentResultFromDiscriminatorValue)(parseNode)
 }
+

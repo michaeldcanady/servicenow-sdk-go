@@ -109,14 +109,14 @@ func (exc *ServiceNowError) Serialize(writer serialization.SerializationWriter) 
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeObjectValueFunc[MainErrorable](errorKey, exc.GetError),
+		internalSerialization.SerializeObjectValueFunc(errorKey, exc.GetError),
 	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (exc *ServiceNowError) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		errorKey: internalSerialization.DeserializeObjectValueFunc[MainErrorable](CreateMainErrorFromDiscriminatorValue, exc.setError),
+		errorKey: internalSerialization.DeserializeObjectValueFunc(CreateMainErrorFromDiscriminatorValue, exc.setError),
 	}
 }
 
@@ -132,11 +132,20 @@ func (exc *ServiceNowError) setError(mainError MainErrorable) error {
 
 // Error implements the error interface, returning the main error's message or detail.
 func (exc *ServiceNowError) Error() string {
+	if conversion.IsNil(exc) {
+		return "ServiceNow error occurred"
+	}
 	mainErr, _ := exc.GetError()
+	if conversion.IsNil(mainErr) {
+		return "ServiceNow error occurred (details unavailable)"
+	}
 	msg, _ := mainErr.GetMessage()
 	if msg != nil {
 		return *msg
 	}
 	details, _ := mainErr.GetDetail()
-	return *details
+	if details != nil {
+		return *details
+	}
+	return "ServiceNow error occurred (message and details unavailable)"
 }

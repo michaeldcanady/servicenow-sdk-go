@@ -199,7 +199,7 @@ func TestCreateServiceResultModel_GetFieldDeserializers(t *testing.T) {
 	for _, key := range []string{sysIDKey, nameKey, commentsKey} {
 		assert.NotNil(t, deserializers[key], "expected deserializer for %s", key)
 	}
-	assert.Len(t, deserializers, 3)
+	assert.Len(t, deserializers, 6)
 }
 
 func TestCreateCreateServiceResultFromDiscriminatorValue(t *testing.T) {

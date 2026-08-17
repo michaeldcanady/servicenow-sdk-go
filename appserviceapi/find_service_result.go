@@ -29,14 +29,14 @@ func (m *FindServiceResult) Serialize(writer serialization.SerializationWriter) 
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeCollectionOfObjectValuesFunc(servicesKey, m.GetServices),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[*Service](servicesKey, m.GetServices),
 	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (m *FindServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		servicesKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc(CreateServiceFromDiscriminatorValue, m.SetServices),
+		servicesKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc[*Service](CreateServiceFromDiscriminatorValue, m.SetServices),
 	}
 }
 

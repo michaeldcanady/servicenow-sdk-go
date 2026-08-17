@@ -11,6 +11,6 @@ type CreateServiceResponse interface {
 }
 
 // CreateCreateServiceResponseFromDiscriminatorValue creates a new CreateServiceResponse from a ParseNode.
-func CreateCreateServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return core.NewBaseServiceNowItemResponse[*CreateServiceResult](CreateCreateServiceResultFromDiscriminatorValue), nil
+func CreateCreateServiceResponseFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+	return core.ServiceNowItemResponseFromDiscriminatorValue[*CreateServiceResult](CreateCreateServiceResultFromDiscriminatorValue)(parseNode)
 }

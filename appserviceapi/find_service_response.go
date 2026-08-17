@@ -9,6 +9,6 @@ import (
 type FindServiceResponse = core.ServiceNowItemResponse[*FindServiceResult]
 
 // CreateFindServiceResponseFromDiscriminatorValue creates a new FindServiceResponse from a ParseNode.
-func CreateFindServiceResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return core.NewBaseServiceNowItemResponse[*FindServiceResult](CreateFindServiceResultFromDiscriminatorValue), nil
+func CreateFindServiceResponseFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
+	return core.ServiceNowItemResponseFromDiscriminatorValue[*FindServiceResult](CreateFindServiceResultFromDiscriminatorValue)(parseNode)
 }

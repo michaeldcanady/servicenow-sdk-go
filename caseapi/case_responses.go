@@ -27,7 +27,7 @@ func CreateActivitiesResponseFromDiscriminatorValue(_ serialization.ParseNode) (
 }
 
 // FieldValuesResponse represents a single field values response.
-type FieldValuesResponse = core.ServiceNowCollectionResponse[*FieldValuesResultModel]
+type FieldValuesResponse = core.ServiceNowItemResponse[*FieldValuesResultModel]
 
 // CreateFieldValuesResponseFromDiscriminatorValue is a factory for creating a FieldValuesResponse.
 func CreateFieldValuesResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {

@@ -28,5 +28,7 @@ func TestGetContentResult_Serialize(t *testing.T) {
 
 func TestGetContentResult_GetFieldDeserializers(t *testing.T) {
 	model := NewGetContentResult()
-	assert.Empty(t, model.GetFieldDeserializers())
+	deserializers := model.GetFieldDeserializers()
+	assert.NotNil(t, deserializers[sysIDKey])
+	assert.Len(t, deserializers, 1)
 }

@@ -31,7 +31,7 @@ func (m *Service) Serialize(writer serialization.SerializationWriter) error {
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
 		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
-		internalSerialization.SerializeCollectionOfObjectValuesFunc(relationshipsKey, m.GetRelationships),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[*ServiceRelationship](relationshipsKey, m.GetRelationships),
 		internalSerialization.SerializeStringFunc(numberKey, m.GetNumber),
 		internalSerialization.SerializeStringFunc(environmentKey, m.GetEnvironment),
 		internalSerialization.SerializeStringFunc(versionKey, m.GetVersion),
@@ -44,11 +44,12 @@ func (m *Service) GetFieldDeserializers() map[string]func(serialization.ParseNod
 		sysIDKey:         internalSerialization.DeserializeStringFunc(m.SetSysID),
 		nameKey:          internalSerialization.DeserializeStringFunc(m.SetName),
 		numberKey:        internalSerialization.DeserializeStringFunc(m.SetNumber),
-		relationshipsKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc(CreateServiceRelationshipFromDiscriminatorValue, m.SetRelationships),
+		relationshipsKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc[*ServiceRelationship](CreateServiceRelationshipFromDiscriminatorValue, m.SetRelationships),
 		environmentKey:   internalSerialization.DeserializeStringFunc(m.SetEnvironment),
 		versionKey:       internalSerialization.DeserializeStringFunc(m.SetVersion),
 	}
 }
+
 
 // GetEnvironment returns the environment value.
 func (m *Service) GetEnvironment() (*string, error) {
