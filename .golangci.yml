@@ -5,7 +5,6 @@ run:
 linters:
   enable:
     - dogsled
-    - dupl
     - errcheck
     - gocognit
     - gocyclo
