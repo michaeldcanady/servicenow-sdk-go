@@ -1,4 +1,4 @@
-import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 // Mirrors the former mkdocs.yml nav, split into one sidebar per navbar tab.
 
@@ -14,7 +14,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Authentication',
-      link: {type: 'doc', id: 'user-guide/authentication/index'},
+      link: { type: 'doc', id: 'user-guide/authentication/index' },
       items: [
         'user-guide/authentication/ropc',
         'user-guide/authentication/auth-code-private',
@@ -31,7 +31,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: 'Tables',
-          link: {type: 'doc', id: 'user-guide/tables/index'},
+          link: { type: 'doc', id: 'user-guide/tables/index' },
           items: [
             'user-guide/tables/create-a-record',
             'user-guide/tables/list-and-query-records',
@@ -42,7 +42,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: 'Attachments',
-          link: {type: 'doc', id: 'user-guide/attachments/index'},
+          link: { type: 'doc', id: 'user-guide/attachments/index' },
           items: [
             'user-guide/attachments/upload-from-disk',
             'user-guide/attachments/download-record-attachments',
@@ -50,22 +50,17 @@ const sidebars: SidebarsConfig = {
             'user-guide/attachments/delete-aging-attachments',
           ],
         },
-        {type: 'category', label: 'Batch', items: ['user-guide/batch']},
-        {type: 'category', label: 'Aggregation', items: ['user-guide/apis/aggregation/aggregate-records']},
-        {type: 'category', label: 'Documents', items: ['user-guide/apis/documents/explore-documents']},
-        {
-          type: 'category',
-          label: 'Activity Subscriptions',
-          items: ['user-guide/apis/activity-subscriptions/check-subscriptions'],
-        },
+        { type: 'category', label: 'Batch', items: ['user-guide/batch'] },
+        { type: 'category', label: 'Aggregation', items: ['user-guide/apis/aggregation/aggregate-records'] },
+        { type: 'category', label: 'Documents', items: ['user-guide/apis/documents/explore-documents'] },
         {
           type: 'category',
           label: 'CMDB Instance',
           items: ['user-guide/apis/cmdb-instance/query-configuration-items'],
         },
-        {type: 'category', label: 'Application Service', items: ['user-guide/apis/app-service/find-a-service']},
-        {type: 'category', label: 'Case', items: ['user-guide/apis/case/read-cases']},
-        {type: 'category', label: 'Account', items: ['user-guide/apis/account/read-accounts']},
+        { type: 'category', label: 'Application Service', items: ['user-guide/apis/app-service/find-a-service'] },
+        { type: 'category', label: 'Case', items: ['user-guide/apis/case/read-cases'] },
+        { type: 'category', label: 'Account', items: ['user-guide/apis/account/read-accounts'] },
         {
           type: 'category',
           label: 'Appointment Booking',
@@ -76,9 +71,9 @@ const sidebars: SidebarsConfig = {
           label: 'CDM Applications',
           items: ['user-guide/apis/cdm-applications/track-uploads'],
         },
-        {type: 'category', label: 'CDM Changesets', items: ['user-guide/apis/cdm-changesets/track-changesets']},
-        {type: 'category', label: 'CDM Editor', items: ['user-guide/apis/cdm-editor/edit-and-validate']},
-        {type: 'category', label: 'Policy', items: ['user-guide/apis/policy/manage-mappings']},
+        { type: 'category', label: 'CDM Changesets', items: ['user-guide/apis/cdm-changesets/track-changesets'] },
+        { type: 'category', label: 'CDM Editor', items: ['user-guide/apis/cdm-editor/edit-and-validate'] },
+        { type: 'category', label: 'Policy', items: ['user-guide/apis/policy/manage-mappings'] },
       ],
     },
     'user-guide/pagination',
@@ -86,7 +81,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Preview features',
-      link: {type: 'doc', id: 'user-guide/preview-features'},
+      link: { type: 'doc', id: 'user-guide/preview-features' },
       items: ['user-guide/query-builder'],
     },
   ],
@@ -95,7 +90,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Table API',
-      link: {type: 'doc', id: 'apis/tables/index'},
+      link: { type: 'doc', id: 'apis/tables/index' },
       items: [
         'apis/tables/list',
         'apis/tables/create',
@@ -107,18 +102,18 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Attachment API',
-      link: {type: 'doc', id: 'apis/attachment/index'},
+      link: { type: 'doc', id: 'apis/attachment/index' },
       items: [
         {
           type: 'category',
           label: 'File',
-          link: {type: 'doc', id: 'apis/attachment/file/index'},
+          link: { type: 'doc', id: 'apis/attachment/file/index' },
           items: ['apis/attachment/file/get', 'apis/attachment/file/create'],
         },
         {
           type: 'category',
           label: 'Upload',
-          link: {type: 'doc', id: 'apis/attachment/upload/index'},
+          link: { type: 'doc', id: 'apis/attachment/upload/index' },
           items: ['apis/attachment/upload/create'],
         },
         'apis/attachment/list',
@@ -129,19 +124,19 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Batch API',
-      link: {type: 'doc', id: 'apis/batch/index'},
+      link: { type: 'doc', id: 'apis/batch/index' },
       items: ['apis/batch/create'],
     },
     {
       type: 'category',
       label: 'Aggregation API',
-      link: {type: 'doc', id: 'apis/aggregation/index'},
+      link: { type: 'doc', id: 'apis/aggregation/index' },
       items: ['apis/aggregation/get-aggregates'],
     },
     {
       type: 'category',
       label: 'Documents API',
-      link: {type: 'doc', id: 'apis/documents/index'},
+      link: { type: 'doc', id: 'apis/documents/index' },
       items: [
         'apis/documents/explore-documents',
         'apis/documents/create-document',
@@ -158,7 +153,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Activity Subscriptions API',
-      link: {type: 'doc', id: 'apis/activity-subscriptions/index'},
+      link: { type: 'doc', id: 'apis/activity-subscriptions/index' },
       items: [
         'apis/activity-subscriptions/list-activities',
         'apis/activity-subscriptions/list-contexts',
@@ -183,7 +178,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: 'CMDB Instance API',
-          link: {type: 'doc', id: 'apis/cmdb-instance/index'},
+          link: { type: 'doc', id: 'apis/cmdb-instance/index' },
           items: [
             'apis/cmdb-instance/list-configuration-items',
             'apis/cmdb-instance/create-configuration-item',
@@ -197,7 +192,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: 'Application Service API',
-          link: {type: 'doc', id: 'apis/app-service/index'},
+          link: { type: 'doc', id: 'apis/app-service/index' },
           items: [
             'apis/app-service/create-application-service',
             'apis/app-service/find-service',
@@ -215,7 +210,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: 'Case API',
-          link: {type: 'doc', id: 'apis/case/index'},
+          link: { type: 'doc', id: 'apis/case/index' },
           items: [
             'apis/case/list-cases',
             'apis/case/create-case',
@@ -228,13 +223,13 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: 'Account API',
-          link: {type: 'doc', id: 'apis/account/index'},
+          link: { type: 'doc', id: 'apis/account/index' },
           items: ['apis/account/list-accounts', 'apis/account/get-account'],
         },
         {
           type: 'category',
           label: 'Appointment Booking API',
-          link: {type: 'doc', id: 'apis/appointment-booking/index'},
+          link: { type: 'doc', id: 'apis/appointment-booking/index' },
           items: [
             'apis/appointment-booking/check-availability',
             'apis/appointment-booking/book-appointment',
@@ -253,7 +248,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: 'CDM Applications API',
-          link: {type: 'doc', id: 'apis/cdm-applications/index'},
+          link: { type: 'doc', id: 'apis/cdm-applications/index' },
           items: [
             'apis/cdm-applications/update-deployables',
             'apis/cdm-applications/delete-deployables',
@@ -274,7 +269,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: 'CDM Changesets API',
-          link: {type: 'doc', id: 'apis/cdm-changesets/index'},
+          link: { type: 'doc', id: 'apis/cdm-changesets/index' },
           items: [
             'apis/cdm-changesets/list-changesets',
             'apis/cdm-changesets/delete-changesets',
@@ -288,7 +283,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: 'CDM Editor API',
-          link: {type: 'doc', id: 'apis/cdm-editor/index'},
+          link: { type: 'doc', id: 'apis/cdm-editor/index' },
           items: [
             'apis/cdm-editor/list-nodes',
             'apis/cdm-editor/create-node',
@@ -300,7 +295,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: 'Policy API',
-          link: {type: 'doc', id: 'apis/policy/index'},
+          link: { type: 'doc', id: 'apis/policy/index' },
           items: ['apis/policy/create-policy-mapping', 'apis/policy/delete-policy-mapping'],
         },
       ],
@@ -330,7 +325,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: "Why it's built this way",
-      link: {type: 'doc', id: 'contributing/design-decisions'},
+      link: { type: 'doc', id: 'contributing/design-decisions' },
       items: [
         'contributing/design-hand-written-kiota',
         'contributing/design-backed-models',
