@@ -69,7 +69,6 @@ func (m *CreateServiceRequest) SetComments(val *string) error {
 
 // CreateCreateServiceRequestFromDiscriminatorValue creates a new CreateServiceRequest from a ParseNode.
 func CreateCreateServiceRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-
 	return NewCreateServiceRequest(), nil
 }
 
@@ -151,7 +150,6 @@ func (m *CreateServiceResult) setSysID(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
 
-
 // SetSysID sets the sys id value.
 func (m *CreateServiceResult) SetSysID(val *string) error {
 	return m.setSysID(val)
@@ -231,4 +229,3 @@ func (m *CreateServiceResult) SetInfo(val *string) error {
 func CreateCreateServiceResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewCreateServiceResult(), nil
 }
-

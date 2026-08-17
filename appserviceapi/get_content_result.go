@@ -55,4 +55,3 @@ func (m *GetContentResult) SetSysID(val *string) error {
 func (m *GetContentResult) GetResult() (*GetContentResult, error) {
 	return m, nil
 }
-

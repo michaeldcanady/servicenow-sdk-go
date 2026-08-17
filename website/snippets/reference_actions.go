@@ -7,7 +7,7 @@ import (
 	"log"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/actsubapi"
+	activitysubscriptionsapi "github.com/michaeldcanady/servicenow-sdk-go/activitysubscriptionsapi"
 	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/appointmentbookingapi"
 	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/appserviceapi"
 	caseapi "github.com/michaeldcanady/servicenow-sdk-go/caseapi"
@@ -129,7 +129,7 @@ func refCreatePreference() {
 	ctx := context.Background()
 	// [START ref_create_preference]
 	// Build the request body
-	var body *actsubapi.ActivitySubscriptionModel
+	var body *activitysubscriptionsapi.ActivitySubscriptionModel
 	response, err := client.Now().ActSub().Preferences().Post(ctx, body, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -167,7 +167,7 @@ func refSubscribe() {
 	ctx := context.Background()
 	// [START ref_subscribe]
 	// Build the request body
-	var body *actsubapi.ActivitySubscriptionModel
+	var body *activitysubscriptionsapi.ActivitySubscriptionModel
 	response, err := client.Now().ActSub().Subscriptions().ByObjectID("{objectID}").Subscribe().Post(ctx, body, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -215,7 +215,7 @@ func refUpdateUserStream() {
 	ctx := context.Background()
 	// [START ref_update_user_stream]
 	// Build the request body
-	var body *actsubapi.ActivitySubscriptionModel
+	var body *activitysubscriptionsapi.ActivitySubscriptionModel
 	response, err := client.Now().ActSub().UserStream().ByProfileID("{profileID}").Put(ctx, body, nil)
 	if err != nil {
 		log.Fatal(err)

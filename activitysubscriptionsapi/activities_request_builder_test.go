@@ -31,6 +31,13 @@ func TestActivitiesRequestBuilder_ToGetRequestInformation_NilBuilder(t *testing.
 }
 
 func TestActivitiesRequestBuilder_Get(t *testing.T) {
+	validConfig := &ActivitiesRequestBuilderGetRequestConfiguration{
+		QueryParameters: &ActivitiesRequestBuilderGetQueryParameters{
+			Context:         strPtr("ctx1"),
+			ContextInstance: strPtr("inst1"),
+		},
+	}
+
 	type testCase struct {
 		name      string
 		config    *ActivitiesRequestBuilderGetRequestConfiguration
@@ -41,22 +48,29 @@ func TestActivitiesRequestBuilder_Get(t *testing.T) {
 
 	tests := []testCase{
 		{
-			name:      "Success",
+			name:      "NilConfig",
 			config:    nil,
-			mockRes:   core.NewBaseServiceNowCollectionResponse[*ActivitySubscription](CreateActivitySubscriptionFromDiscriminatorValue),
+			mockRes:   nil,
+			mockErr:   nil,
+			expectErr: true,
+		},
+		{
+			name:      "Success",
+			config:    validConfig,
+			mockRes:   core.NewBaseServiceNowItemResponse[*ActivitySubscription](CreateActivitySubscriptionFromDiscriminatorValue),
 			mockErr:   nil,
 			expectErr: false,
 		},
 		{
 			name:      "Error",
-			config:    nil,
+			config:    validConfig,
 			mockRes:   nil,
 			mockErr:   assert.AnError,
 			expectErr: true,
 		},
 		{
 			name:      "NilResponse",
-			config:    nil,
+			config:    validConfig,
 			mockRes:   nil,
 			mockErr:   nil,
 			expectErr: false,
@@ -87,6 +101,8 @@ func TestActivitiesRequestBuilder_Get(t *testing.T) {
 	}
 }
 
+func strPtr(s string) *string { return &s }
+
 func TestActivitiesRequestBuilder_ToGetRequestInformation_Extra(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewActivitiesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
@@ -95,6 +111,6 @@ func TestActivitiesRequestBuilder_ToGetRequestInformation_Extra(t *testing.T) {
 
 	require.NoError(t, err)
 	assert.NotNil(t, requestInfo)
-	assert.Equal(t, "{+baseurl}/api/now/v1/actsub/activities", requestInfo.UrlTemplate)
+	assert.Equal(t, "{+baseurl}/api/now/v1/actsub/activities{?before,context,context_instance,end_date,facets,last,record_id,start_date,stFrom}", requestInfo.UrlTemplate)
 	assert.Equal(t, "https://example.com", requestInfo.PathParameters["baseurl"])
 }

@@ -14,4 +14,3 @@ type GetContentResponse interface {
 func CreateGetContentResponseFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
 	return core.ServiceNowItemResponseFromDiscriminatorValue[*GetContentResult](CreateGetContentResultFromDiscriminatorValue)(parseNode)
 }
-

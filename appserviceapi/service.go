@@ -50,7 +50,6 @@ func (m *Service) GetFieldDeserializers() map[string]func(serialization.ParseNod
 	}
 }
 
-
 // GetEnvironment returns the environment value.
 func (m *Service) GetEnvironment() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*Service, *string](m, environmentKey)

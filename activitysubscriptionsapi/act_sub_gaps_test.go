@@ -60,11 +60,18 @@ func verbCalls() []verbCall {
 	ctx := context.Background()
 	params := gapsTestPathParameters()
 
+	activitiesConfig := &ActivitiesRequestBuilderGetRequestConfiguration{
+		QueryParameters: &ActivitiesRequestBuilderGetQueryParameters{
+			Context:         strPtr("ctx1"),
+			ContextInstance: strPtr("inst1"),
+		},
+	}
+
 	return []verbCall{
 		{
 			name: "ActivitiesRequestBuilder Get",
 			call: func(a *mocking.MockRequestAdapter) (any, error) {
-				return NewActivitiesRequestBuilderInternal(params, a).Get(ctx, nil)
+				return NewActivitiesRequestBuilderInternal(params, a).Get(ctx, activitiesConfig)
 			},
 		},
 
