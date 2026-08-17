@@ -21,12 +21,12 @@ question:
 | ---- | ------------------- | ------------------ | ----------- |
 | **Unit** (`*_test.go`, co-located) | Does this component do what it claims, including when things go wrong? | No | Always |
 | **Integration** (`tests/integration/`, `-tags integration`) | Do builders, serialization, and error mapping agree end-to-end? | No — HTTP is mocked | Always |
-| **E2E** (`tests/e2e/`, `-tags e2e`) | Does the SDK's model match what ServiceNow *actually* sends? | Yes — real credentials | Manual |
+| **E2E** (`tests/integration/v2/`, `-tags e2e`) | Does the SDK's model match what ServiceNow *actually* sends? | Yes — real credentials | Manual |
 
 ```bash
-go test ./...                                      # unit — fast, no network
-go test -tags integration ./tests/integration/...  # godog BDD over httpmock
-go test -tags e2e ./tests/e2e/...                  # live instance from .env
+go test ./...                                         # unit — fast, no network
+go test -tags integration ./tests/integration/v2/...  # godog BDD over httpmock
+go test -tags e2e ./tests/integration/v2/...          # live instance from .env
 ```
 
 Most changes only need the first ring. Add integration coverage when you've

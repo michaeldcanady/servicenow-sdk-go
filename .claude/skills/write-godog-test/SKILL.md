@@ -189,5 +189,6 @@ prefix.
   deserialization edge cases in isolation) is `write-unit-tests` territory,
   not this skill's — don't duplicate that work here just because you're
   already looking at the same request builder.
-- `tests/e2e/` (`//go:build e2e`, real ServiceNow instance, run manually)
-  is out of scope — this skill only ever touches `tests/integration/`.
+- `tests/e2e/` was superseded by the E2E runner in `tests/integration/v2/e2e_test.go`
+  (`//go:build e2e`, real ServiceNow instance, run manually). E2E scenarios are tagged `@e2e`
+  in the same feature files this skill maintains.
