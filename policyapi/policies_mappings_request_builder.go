@@ -66,8 +66,7 @@ func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestCon
 		return err
 	}
 
-	errorMapping := core.DefaultErrorMapping()
-	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
+	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, core.DefaultErrorMapping())
 }
 
 // Post creates a new policy mapping.
@@ -106,8 +105,7 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 		return nil, err
 	}
 
-	errorMapping := core.DefaultErrorMapping()
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue), errorMapping)
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}

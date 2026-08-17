@@ -13,7 +13,7 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-const deployablesURLTemplate = "{+baseurl}/api/sn_cdm/v1/applications/deployables{?appName,name}"
+const deployablesURLTemplate = "{+baseurl}/api/sn_cdm/applications/deployables{?appName,name}"
 
 // DeployablesRequestBuilder provides operations to manage deployables.
 type DeployablesRequestBuilder struct {
@@ -89,6 +89,9 @@ func (rB *DeployablesRequestBuilder) ToPutRequestInformation(ctx context.Context
 		}
 		if config.Options != nil {
 			requestInfo.AddRequestOptions(config.Options)
+		}
+		if config.QueryParameters != nil {
+			requestInfo.AddQueryParameters(*config.QueryParameters)
 		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())

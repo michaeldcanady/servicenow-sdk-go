@@ -94,7 +94,7 @@ func TestRequestBuilders_ConfigurationIsApplied(t *testing.T) {
 			name: "Deployables Put",
 			call: func(adapter *mocking.MockRequestAdapter) error {
 				_, err := NewDeployablesRequestBuilderInternal(configTestPathParameters(), adapter).
-					Put(ctx, NewDeployableUpdateRequest(), &DeployablesRequestBuilderPutRequestConfiguration{
+					Put(ctx, &DeployablesRequestBuilderPutRequestConfiguration{
 						Headers: configTestHeaders(),
 						Options: configTestOptions(),
 					})
@@ -117,7 +117,7 @@ func TestRequestBuilders_ConfigurationIsApplied(t *testing.T) {
 			name: "SharedComponents Put",
 			call: func(adapter *mocking.MockRequestAdapter) error {
 				_, err := NewSharedComponentsRequestBuilderInternal(configTestPathParameters(), adapter).
-					Put(ctx, NewSharedComponentUpdateRequest(), &SharedComponentsRequestBuilderPutRequestConfiguration{
+					Put(ctx, &SharedComponentsRequestBuilderPutRequestConfiguration{
 						Headers: configTestHeaders(),
 						Options: configTestOptions(),
 					})
@@ -295,20 +295,6 @@ func TestRequestBuilders_BodySerializationFailure(t *testing.T) {
 		name string
 		call func(adapter *mocking.MockRequestAdapter) (any, error)
 	}{
-		{
-			name: "Deployables Put",
-			call: func(adapter *mocking.MockRequestAdapter) (any, error) {
-				return NewDeployablesRequestBuilderInternal(configTestPathParameters(), adapter).
-					Put(ctx, NewDeployableUpdateRequest(), nil)
-			},
-		},
-		{
-			name: "SharedComponents Put",
-			call: func(adapter *mocking.MockRequestAdapter) (any, error) {
-				return NewSharedComponentsRequestBuilderInternal(configTestPathParameters(), adapter).
-					Put(ctx, NewSharedComponentUpdateRequest(), nil)
-			},
-		},
 		{
 			name: "UploadsComponents Post",
 			call: func(adapter *mocking.MockRequestAdapter) (any, error) {

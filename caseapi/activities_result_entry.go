@@ -10,15 +10,15 @@ import (
 )
 
 const (
-	attachmentKey          = "attachment"
-	containsCodeKey        = "contains_code"
-	elementKey             = "element"
-	fieldLabelKey          = "field_label"
-	initialsKey            = "initials"
-	loginNameKey           = "login_name"
-	nameKey                = "name"
-	sysCreatedOnAdjKey     = "sys_created_on_adjusted"
-	userSysIdKey           = "user_sys_id"
+	attachmentKey      = "attachment"
+	containsCodeKey    = "contains_code"
+	elementKey         = "element"
+	fieldLabelKey      = "field_label"
+	initialsKey        = "initials"
+	loginNameKey       = "login_name"
+	nameKey            = "name"
+	sysCreatedOnAdjKey = "sys_created_on_adjusted"
+	userSysIdKey       = "user_sys_id"
 )
 
 var _ ActivitiesResultEntry = (*ActivitiesResultEntryModel)(nil)
@@ -110,7 +110,7 @@ func (a *ActivitiesResultEntryModel) Serialize(writer serialization.Serializatio
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeObjectValueFunc[ActivitiesResultEntryAttachment](attachmentKey, a.GetAttachment),
+		internalSerialization.SerializeObjectValueFunc(attachmentKey, a.GetAttachment),
 		internalSerialization.SerializeBoolFunc(containsCodeKey, a.GetContainsCode),
 		internalSerialization.SerializeStringFunc(elementKey, a.GetElement),
 		internalSerialization.SerializeStringFunc(fieldLabelKey, a.GetFieldLabel),
@@ -128,18 +128,18 @@ func (a *ActivitiesResultEntryModel) Serialize(writer serialization.Serializatio
 // GetFieldDeserializers returns the deserialization information for this object.
 func (a *ActivitiesResultEntryModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		attachmentKey:     internalSerialization.DeserializeObjectValueFunc[ActivitiesResultEntryAttachment](CreateActivitiesResultEntryAttachmentFromDiscriminatorValue, a.SetAttachment),
-		containsCodeKey:   internalSerialization.DeserializeBoolFunc(a.SetContainsCode),
-		elementKey:        internalSerialization.DeserializeStringFunc(a.SetElement),
-		fieldLabelKey:     internalSerialization.DeserializeStringFunc(a.SetFieldLabel),
-		initialsKey:       internalSerialization.DeserializeStringFunc(a.SetInitials),
-		loginNameKey:      internalSerialization.DeserializeStringFunc(a.SetLoginName),
-		nameKey:           internalSerialization.DeserializeStringFunc(a.SetName),
-		sysCreatedOnKey:   internalSerialization.DeserializeStringFunc(a.SetSysCreatedOn),
+		attachmentKey:      internalSerialization.DeserializeObjectValueFunc(CreateActivitiesResultEntryAttachmentFromDiscriminatorValue, a.SetAttachment),
+		containsCodeKey:    internalSerialization.DeserializeBoolFunc(a.SetContainsCode),
+		elementKey:         internalSerialization.DeserializeStringFunc(a.SetElement),
+		fieldLabelKey:      internalSerialization.DeserializeStringFunc(a.SetFieldLabel),
+		initialsKey:        internalSerialization.DeserializeStringFunc(a.SetInitials),
+		loginNameKey:       internalSerialization.DeserializeStringFunc(a.SetLoginName),
+		nameKey:            internalSerialization.DeserializeStringFunc(a.SetName),
+		sysCreatedOnKey:    internalSerialization.DeserializeStringFunc(a.SetSysCreatedOn),
 		sysCreatedOnAdjKey: internalSerialization.DeserializeStringFunc(a.SetSysCreatedOnAdjusted),
-		sysIDKey:          internalSerialization.DeserializeStringFunc(a.SetSysID),
-		userSysIdKey:      internalSerialization.DeserializeStringFunc(a.SetUserSysID),
-		valueKey:          internalSerialization.DeserializeStringFunc(a.SetValue),
+		sysIDKey:           internalSerialization.DeserializeStringFunc(a.SetSysID),
+		userSysIdKey:       internalSerialization.DeserializeStringFunc(a.SetUserSysID),
+		valueKey:           internalSerialization.DeserializeStringFunc(a.SetValue),
 	}
 }
 

@@ -5,4 +5,4 @@ import (
 )
 
 // SharedComponentsRequestBuilderPutRequestConfiguration represents the PUT request configuration for the Shared Components resource.
-type SharedComponentsRequestBuilderPutRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
+type SharedComponentsRequestBuilderPutRequestConfiguration = abstractions.RequestConfiguration[SharedComponentsRequestBuilderPutQueryParameters]

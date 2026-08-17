@@ -52,7 +52,7 @@ func (rB *SharedComponentsRequestBuilder) Delete(ctx context.Context, config *Sh
 }
 
 // Put updates shared components.
-func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, body *SharedComponentUpdateRequest, config *SharedComponentsRequestBuilderPutRequestConfiguration) (SharedComponentUpdateResponse, error) {
+func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, config *SharedComponentsRequestBuilderPutRequestConfiguration) (SharedComponentUpdateResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
@@ -60,7 +60,7 @@ func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, body *SharedC
 		return nil, snerrors.ErrNilRequestAdapter
 	}
 
-	requestInfo, err := rB.ToPutRequestInformation(ctx, body, config)
+	requestInfo, err := rB.ToPutRequestInformation(ctx, config)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func (rB *SharedComponentsRequestBuilder) ToDeleteRequestInformation(_ context.C
 }
 
 // ToPutRequestInformation builds the request information for the Put method.
-func (rB *SharedComponentsRequestBuilder) ToPutRequestInformation(ctx context.Context, body *SharedComponentUpdateRequest, config *SharedComponentsRequestBuilderPutRequestConfiguration) (*abstractions.RequestInformation, error) {
+func (rB *SharedComponentsRequestBuilder) ToPutRequestInformation(_ context.Context, config *SharedComponentsRequestBuilderPutRequestConfiguration) (*abstractions.RequestInformation, error) {
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.PUT, rB.GetURLTemplate(), rB.GetPathParameters())
 	if !conversion.IsNil(config) {
 		if config.Headers != nil {
@@ -107,11 +107,10 @@ func (rB *SharedComponentsRequestBuilder) ToPutRequestInformation(ctx context.Co
 		if config.Options != nil {
 			requestInfo.AddRequestOptions(config.Options)
 		}
+		if config.QueryParameters != nil {
+			requestInfo.AddQueryParameters(*config.QueryParameters)
+		}
 	}
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
-	err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
-	if err != nil {
-		return nil, err
-	}
 	return requestInfo, nil
 }

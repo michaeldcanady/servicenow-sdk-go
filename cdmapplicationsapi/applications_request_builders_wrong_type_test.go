@@ -17,12 +17,11 @@ import (
 
 func TestDeployablesRequestBuilder_Put_WrongTypeResponse(t *testing.T) {
 	adapter := mocking.NewMockRequestAdapter()
-	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 		Return(mocking.NewMockParsable(), nil)
 	builder := NewDeployablesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	resp, err := builder.Put(context.Background(), NewDeployableUpdateRequest(), nil)
+	resp, err := builder.Put(context.Background(), nil)
 
 	require.Error(t, err)
 	assert.Nil(t, resp)
@@ -30,12 +29,11 @@ func TestDeployablesRequestBuilder_Put_WrongTypeResponse(t *testing.T) {
 
 func TestSharedComponentsRequestBuilder_Put_WrongTypeResponse(t *testing.T) {
 	adapter := mocking.NewMockRequestAdapter()
-	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 		Return(mocking.NewMockParsable(), nil)
 	builder := NewSharedComponentsRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	resp, err := builder.Put(context.Background(), NewSharedComponentUpdateRequest(), nil)
+	resp, err := builder.Put(context.Background(), nil)
 
 	require.Error(t, err)
 	assert.Nil(t, resp)
