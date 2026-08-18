@@ -1,6 +1,7 @@
 package caseapi
 
 const (
+	thumbnailPathKey = "thumbnail_path"
 	// CaseResult keys
 	sysIDKey            = "sys_id"
 	numberKey           = "number"

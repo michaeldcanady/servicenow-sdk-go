@@ -11,6 +11,7 @@ type BackingStoreFactorySetter interface {
 	SetBackingStoreFactory(store.BackingStoreFactory) error
 }
 
+// BaseModel is the base backing-store-backed implementation every model in this SDK embeds.
 type BaseModel struct {
 	// backingStoreFactory factory to create backingStore
 	backingStoreFactory store.BackingStoreFactory

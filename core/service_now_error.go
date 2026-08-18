@@ -112,14 +112,14 @@ func (exc *ServiceNowError) Serialize(writer serialization.SerializationWriter) 
 	}
 
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeObjectValueFunc[MainErrorable](errorKey, exc.GetError),
+		internalSerialization.SerializeObjectValueFunc(errorKey, exc.GetError),
 	)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
 func (exc *ServiceNowError) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		errorKey: internalSerialization.DeserializeObjectValueFunc[MainErrorable](CreateMainErrorFromDiscriminatorValue, exc.setError),
+		errorKey: internalSerialization.DeserializeObjectValueFunc(CreateMainErrorFromDiscriminatorValue, exc.setError),
 	}
 }
 
@@ -136,6 +136,9 @@ func (exc *ServiceNowError) setError(mainError MainErrorable) error {
 // Error returns the error's message, falling back to its detail and then to a
 // generic message when neither is populated.
 func (exc *ServiceNowError) Error() string {
+	if conversion.IsNil(exc) {
+		return unknownErrorMessage
+	}
 	mainErr, _ := exc.GetError()
 	if conversion.IsNil(mainErr) {
 		return unknownErrorMessage

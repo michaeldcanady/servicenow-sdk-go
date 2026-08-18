@@ -28,11 +28,8 @@ func TestAvailabilityResultModel_Serialize(t *testing.T) {
 			model: nil,
 		},
 		{
-			name:  "empty model writes only the any-typed field unconditionally",
+			name:  "empty model writes nothing",
 			model: NewAvailabilityResult(),
-			setupMock: func(w *mocking.MockSerializationWriter) {
-				w.On("WriteAnyValue", nextAvailableSlotKey, mock.Anything).Return(nil)
-			},
 		},
 		{
 			name: "happy path - writes all fields",
@@ -40,7 +37,7 @@ func TestAvailabilityResultModel_Serialize(t *testing.T) {
 				m := NewAvailabilityResult()
 				_ = m.SetAvailability([]AvailabilitySlot{NewAvailabilitySlot()})
 				_ = m.SetHasMore(internal.ToPointer(true))
-				_ = m.SetNextAvailableSlot("next")
+				_ = m.SetNextAvailableSlot(NewAvailabilitySlot())
 				_ = m.SetNoApptAvailable(internal.ToPointer(false))
 				_ = m.SetSuccess(internal.ToPointer(true))
 				_ = m.SetTimeZone(internal.ToPointer("UTC"))
@@ -50,7 +47,7 @@ func TestAvailabilityResultModel_Serialize(t *testing.T) {
 			setupMock: func(w *mocking.MockSerializationWriter) {
 				w.On("WriteCollectionOfObjectValues", availabilityKey, mock.Anything).Return(nil)
 				w.On("WriteBoolValue", mock.Anything, mock.Anything).Return(nil)
-				w.On("WriteAnyValue", nextAvailableSlotKey, mock.Anything).Return(nil)
+				w.On("WriteObjectValue", nextAvailableSlotKey, mock.Anything, mock.Anything).Return(nil)
 				w.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
 			},
 		},
@@ -110,21 +107,36 @@ func TestAvailabilitySlotModel_Serialize(t *testing.T) {
 			model: nil,
 		},
 		{
-			name:  "happy path - writes additional data",
+			name:  "empty model writes nothing",
 			model: NewAvailabilitySlot(),
+		},
+		{
+			name: "happy path - writes all fields",
+			model: func() *AvailabilitySlotModel {
+				m := NewAvailabilitySlot()
+				_ = m.SetAvailable(internal.ToPointer(true))
+				_ = m.SetEndDate(internal.ToPointer("2026-07-29 10:00:00"))
+				_ = m.SetEndDateDisplay(internal.ToPointer("10:00 AM"))
+				_ = m.SetEndDateUTC(internal.ToPointer("2026-07-29 17:00:00"))
+				_ = m.SetStartDate(internal.ToPointer("2026-07-29 09:00:00"))
+				_ = m.SetStartDateDisplay(internal.ToPointer("9:00 AM"))
+				_ = m.SetStartDateUTC(internal.ToPointer("2026-07-29 16:00:00"))
+				return m
+			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
-				w.On("WriteAdditionalData", mock.Anything).Return(nil)
+				w.On("WriteBoolValue", mock.Anything, mock.Anything).Return(nil)
+				w.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
 			},
 		},
 		{
 			name: "write error propagates",
 			model: func() *AvailabilitySlotModel {
 				m := NewAvailabilitySlot()
-				m.SetAdditionalData(map[string]interface{}{"start": "09:00"})
+				_ = m.SetAvailable(internal.ToPointer(true))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
-				w.On("WriteAdditionalData", mock.Anything).Return(errWrite)
+				w.On("WriteBoolValue", availableKey, mock.Anything).Return(errWrite)
 			},
 			wantErr: errWrite,
 		},
@@ -151,5 +163,11 @@ func TestAvailabilitySlotModel_Serialize(t *testing.T) {
 func TestAvailabilitySlotModel_GetFieldDeserializers(t *testing.T) {
 	model := NewAvailabilitySlot()
 	deserializers := model.GetFieldDeserializers()
-	assert.Empty(t, deserializers)
+	for _, key := range []string{
+		availableKey, endDateKey, endDateDisplayKey, endDateUTCKey,
+		startDateKey, startDateDisplayKey, startDateUTCKey,
+	} {
+		assert.NotNil(t, deserializers[key], "expected deserializer for %s", key)
+	}
+	assert.Len(t, deserializers, 7)
 }

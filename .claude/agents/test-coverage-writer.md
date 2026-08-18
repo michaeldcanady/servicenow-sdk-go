@@ -96,8 +96,8 @@ found in Phase 1, matching this repo's established conventions exactly:
 ## What NOT to do
 
 - Don't touch integration (`tests/integration/`, `//go:build integration`)
-  or e2e (`tests/e2e/`, `//go:build e2e`) suites — that's
-  `godog-test-writer`'s and manual e2e territory respectively, not yours.
+  or e2e (`tests/e2e/`, `//go:build e2e`) suites — integration coverage is
+  the `write-godog-test` skill's territory, e2e is manual, neither is yours.
 - Don't refactor source code to make it "more testable" — if a function
   can't be tested without a production change, report that as a finding
   instead of making the change yourself.

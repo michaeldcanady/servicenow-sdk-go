@@ -59,7 +59,7 @@ func postInvocations() []postInvocation {
 		{
 			name: "AvailabilityRequestBuilder",
 			post: func(adapter *mocking.MockRequestAdapter) (any, error) {
-				builder := NewAvailabilityRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+				builder := NewAvailabilityRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 				return builder.Post(ctx, NewAvailabilityRequest(), nil)
 			},
@@ -72,7 +72,7 @@ func postInvocations() []postInvocation {
 		{
 			name: "AppointmentRequestBuilder",
 			post: func(adapter *mocking.MockRequestAdapter) (any, error) {
-				builder := NewAppointmentRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+				builder := NewAppointmentRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 				return builder.Post(ctx, NewAppointmentRequest(), nil)
 			},
@@ -85,7 +85,7 @@ func postInvocations() []postInvocation {
 		{
 			name: "ExecuteRuleConditionsRequestBuilder",
 			post: func(adapter *mocking.MockRequestAdapter) (any, error) {
-				builder := NewExecuteRuleConditionsRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+				builder := NewExecuteRuleConditionsRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 				return builder.Post(ctx, NewExecuteRuleConditionsRequest(), nil)
 			},
@@ -98,14 +98,14 @@ func postInvocations() []postInvocation {
 		{
 			name: "UserWindowRequestBuilder",
 			post: func(adapter *mocking.MockRequestAdapter) (any, error) {
-				builder := NewUserWindowRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+				builder := NewUserWindowRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-				return builder.Post(ctx, NewAvailabilityRequest(), nil)
+				return builder.Post(ctx, NewUserWindowRequest(), nil)
 			},
 			postNilBuilder: func() (any, error) {
 				var builder *UserWindowRequestBuilder
 
-				return builder.Post(ctx, NewAvailabilityRequest(), nil)
+				return builder.Post(ctx, NewUserWindowRequest(), nil)
 			},
 		},
 	}
@@ -168,18 +168,4 @@ func TestPostRequestBuilders_NilBuilder(t *testing.T) {
 			assert.Nil(t, response)
 		})
 	}
-}
-
-// TestUserWindowRequestBuilder_PostNilBody covers the one POST builder that tolerates a nil
-// body: it skips serialization entirely rather than casting nil to a Parsable.
-func TestUserWindowRequestBuilder_PostNilBody(t *testing.T) {
-	adapter := &mocking.MockRequestAdapter{}
-	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
-	builder := NewUserWindowRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
-
-	response, err := builder.Post(context.Background(), nil, nil)
-
-	require.NoError(t, err)
-	assert.Nil(t, response)
-	adapter.AssertNotCalled(t, "GetSerializationWriterFactory")
 }

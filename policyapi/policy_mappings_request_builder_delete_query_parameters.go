@@ -1,5 +1,6 @@
 package policyapi
 
+// PolicyMappingsRequestBuilderDeleteQueryParameters are the query parameters for the Delete method.
 type PolicyMappingsRequestBuilderDeleteQueryParameters struct {
 	// AppName Name of the CDM deployable for which to map the policy.
 	AppName *string `uriparametername:"appName"`

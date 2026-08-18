@@ -13,12 +13,21 @@ func TestServiceDetailsRequestModel_GettersSetters(t *testing.T) {
 	model := NewServiceDetailsRequest()
 	details := NewBasicDetails()
 
-	err := model.setBasicDetails(details)
+	err := model.SetBasicDetails(details)
 	require.NoError(t, err)
 
 	got, err := model.GetBasicDetails()
 	require.NoError(t, err)
 	assert.Equal(t, details, got)
+
+	relationship := NewServiceRelationship()
+
+	err = model.SetRelationships(relationship)
+	require.NoError(t, err)
+
+	gotRelationship, err := model.GetRelationships()
+	require.NoError(t, err)
+	assert.Equal(t, relationship, gotRelationship)
 }
 
 func TestServiceDetailsRequestModel_Serialize(t *testing.T) {
@@ -40,7 +49,7 @@ func TestServiceDetailsRequestModel_Serialize(t *testing.T) {
 			name: "happy path - writes nested basic details",
 			model: func() *ServiceDetailsRequest {
 				m := NewServiceDetailsRequest()
-				_ = m.setBasicDetails(NewBasicDetails())
+				_ = m.SetBasicDetails(NewBasicDetails())
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
@@ -51,7 +60,7 @@ func TestServiceDetailsRequestModel_Serialize(t *testing.T) {
 			name: "nested object write error propagates",
 			model: func() *ServiceDetailsRequest {
 				m := NewServiceDetailsRequest()
-				_ = m.setBasicDetails(NewBasicDetails())
+				_ = m.SetBasicDetails(NewBasicDetails())
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {

@@ -91,4 +91,3 @@
   - changed-files:
       - any-glob-to-any-file:
           - "tests/integration/**"
-          - "tests/e2e/**"

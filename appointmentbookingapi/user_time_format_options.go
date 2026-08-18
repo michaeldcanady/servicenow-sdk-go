@@ -14,62 +14,78 @@ type UserTimeFormatOptions interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
-	GetHour() (*string, error)
-	SetHour(*string) error
+	GetHour() (*int8, error)
+	SetHour(*int8) error
 	GetHourCycle() (*string, error)
 	SetHourCycle(*string) error
-	GetMinute() (*string, error)
-	SetMinute(*string) error
+	GetMinute() (*int8, error)
+	SetMinute(*int8) error
 }
 
+// UserTimeFormatOptionsModel represents the user time format options model.
 type UserTimeFormatOptionsModel struct {
 	core.BaseModel
 }
 
+// NewUserTimeFormatOptions creates a new instance of UserTimeFormatOptionsModel.
 func NewUserTimeFormatOptions() *UserTimeFormatOptionsModel {
 	return &UserTimeFormatOptionsModel{
 		BaseModel: *core.NewBaseModel(),
 	}
 }
 
+// CreateUserTimeFormatOptionsFromDiscriminatorValue creates a new UserTimeFormatOptions from a ParseNode.
 func CreateUserTimeFormatOptionsFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewUserTimeFormatOptions(), nil
 }
 
+// Serialize writes the objects properties to the current writer.
 func (m *UserTimeFormatOptionsModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(hourKey, m.GetHour),
+		internalSerialization.SerializeInt8Func(hourKey, m.GetHour),
 		internalSerialization.SerializeStringFunc(hourCycleKey, m.GetHourCycle),
-		internalSerialization.SerializeStringFunc(minuteKey, m.GetMinute),
+		internalSerialization.SerializeInt8Func(minuteKey, m.GetMinute),
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *UserTimeFormatOptionsModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		hourKey:      internalSerialization.DeserializeStringFunc(m.SetHour),
+		hourKey:      internalSerialization.DeserializeInt8Func(m.SetHour),
 		hourCycleKey: internalSerialization.DeserializeStringFunc(m.SetHourCycle),
-		minuteKey:    internalSerialization.DeserializeStringFunc(m.SetMinute),
+		minuteKey:    internalSerialization.DeserializeInt8Func(m.SetMinute),
 	}
 }
 
-func (m *UserTimeFormatOptionsModel) GetHour() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatOptionsModel, *string](m, hourKey)
+// GetHour returns the hour value.
+func (m *UserTimeFormatOptionsModel) GetHour() (*int8, error) {
+	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatOptionsModel, *int8](m, hourKey)
 }
-func (m *UserTimeFormatOptionsModel) SetHour(val *string) error {
+
+// SetHour sets the hour value.
+func (m *UserTimeFormatOptionsModel) SetHour(val *int8) error {
 	return store.DefaultBackedModelMutatorFunc(m, hourKey, val)
 }
+
+// GetHourCycle returns the hour cycle value.
 func (m *UserTimeFormatOptionsModel) GetHourCycle() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatOptionsModel, *string](m, hourCycleKey)
 }
+
+// SetHourCycle sets the hour cycle value.
 func (m *UserTimeFormatOptionsModel) SetHourCycle(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, hourCycleKey, val)
 }
-func (m *UserTimeFormatOptionsModel) GetMinute() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatOptionsModel, *string](m, minuteKey)
+
+// GetMinute returns the minute value.
+func (m *UserTimeFormatOptionsModel) GetMinute() (*int8, error) {
+	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatOptionsModel, *int8](m, minuteKey)
 }
-func (m *UserTimeFormatOptionsModel) SetMinute(val *string) error {
+
+// SetMinute sets the minute value.
+func (m *UserTimeFormatOptionsModel) SetMinute(val *int8) error {
 	return store.DefaultBackedModelMutatorFunc(m, minuteKey, val)
 }

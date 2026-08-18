@@ -16,6 +16,7 @@ func NewDateTimeValue(val time.Time) DateTimeValue {
 	}
 }
 
+// String returns the value's ServiceNow encoded-query literal.
 func (v DateTimeValue) String() string {
 	return v.literal
 }

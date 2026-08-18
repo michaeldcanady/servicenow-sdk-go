@@ -30,6 +30,7 @@ func NewPoliciesMappingsRequestBuilderInternal(
 	}
 }
 
+// Delete removes a policy mapping.
 func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) error {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return snerrors.ErrNilRequestBuilder
@@ -65,10 +66,10 @@ func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestCon
 		return err
 	}
 
-	errorMapping := core.DefaultErrorMapping()
-	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, errorMapping)
+	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, core.DefaultErrorMapping())
 }
 
+// Post creates a new policy mapping.
 func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (core.ServiceNowItemResponse[*PoliciesMapping], error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
@@ -104,8 +105,7 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 		return nil, err
 	}
 
-	errorMapping := core.DefaultErrorMapping()
-	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue), errorMapping)
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue), core.DefaultErrorMapping())
 	if err != nil {
 		return nil, err
 	}
@@ -122,6 +122,7 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 	return typedResp, nil
 }
 
+// ToPostRequestInformation builds the request information for the Post method.
 func (rB *PoliciesMappingsRequestBuilder) ToPostRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
@@ -135,6 +136,7 @@ func (rB *PoliciesMappingsRequestBuilder) ToPostRequestInformation(_ context.Con
 	return requestInfo, nil
 }
 
+// ToDeleteRequestInformation builds the request information for the Delete method.
 func (rB *PoliciesMappingsRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder

@@ -93,7 +93,7 @@ func TestAccountRequestBuilder_Get_NilResponse(t *testing.T) {
 }
 
 type AccountCollectionResponseMock struct {
-	core.BaseServiceNowCollectionResponse[*AccountModel]
+	core.BaseServiceNowCollectionResponse[*Account]
 }
 
 func (m *AccountCollectionResponseMock) Serialize(_ serialization.SerializationWriter) error {
@@ -108,7 +108,7 @@ func TestAccountItemRequestBuilder_Get(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	builder := NewAccountItemRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "account_id": "test-id"}, adapter)
 
-	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&core.BaseServiceNowItemResponse[*AccountModel]{}, nil)
+	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&core.BaseServiceNowItemResponse[*Account]{}, nil)
 
 	res, err := builder.Get(context.Background(), nil)
 	require.NoError(t, err)

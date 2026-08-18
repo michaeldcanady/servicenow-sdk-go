@@ -37,7 +37,7 @@ func TestCalendarRequestBuilder_Get(t *testing.T) {
 			name: "happy path - returns response",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-					Return(NewCalendarResponse(), nil)
+					Return(core.NewBaseServiceNowItemResponse[*CalendarResponse](CreateCalendarResponseFromDiscriminatorValue), nil)
 			},
 		},
 		{
@@ -62,7 +62,7 @@ func TestCalendarRequestBuilder_Get(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			adapter := &mocking.MockRequestAdapter{}
 			tt.setupMock(adapter)
-			builder := NewCalendarRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+			builder := NewCalendarRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 			resp, err := builder.Get(context.Background(), nil)
 
@@ -118,7 +118,7 @@ func TestConfigurationRequestBuilder_Get(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			adapter := &mocking.MockRequestAdapter{}
 			tt.setupMock(adapter)
-			builder := NewConfigurationRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+			builder := NewConfigurationRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 			resp, err := builder.Get(context.Background(), nil)
 
@@ -139,7 +139,7 @@ func TestConfigurationRequestBuilder_Get(t *testing.T) {
 }
 
 func TestAvailabilityRequestBuilder_Post_SerializationError(t *testing.T) {
-	builder := NewAvailabilityRequestBuilder(map[string]string{"baseurl": "https://example.com"}, nil)
+	builder := NewAvailabilityRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, nil)
 
 	resp, err := builder.Post(context.Background(), NewAvailabilityRequest(), nil)
 

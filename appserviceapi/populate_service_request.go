@@ -13,79 +13,39 @@ type PopulateServiceRequest struct {
 	core.BaseModel
 }
 
+// NewPopulateServiceRequest creates a new instance of [PopulateServiceRequest].
 func NewPopulateServiceRequest() *PopulateServiceRequest {
 	return &PopulateServiceRequest{BaseModel: *core.NewBaseModel()}
 }
 
+// CreatePopulateServiceRequestFromDiscriminatorValue creates a new [PopulateServiceRequest] from a [serialization.ParseNode].
+func CreatePopulateServiceRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewPopulateServiceRequest(), nil
+}
+
+// Serialize writes the objects properties to the current writer.
 func (m *PopulateServiceRequest) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeCollectionOfObjectValuesFunc[*ServiceRelation](serviceRelationsKey, m.GetServiceRelations),
+		internalSerialization.SerializeObjectValueFunc[PopulationMethod](populationMethodKey, m.GetPopulationMethod),
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *PopulateServiceRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		serviceRelationsKey: internalSerialization.DeserializeCollectionOfObjectValuesFunc[*ServiceRelation](CreateServiceRelationFromDiscriminatorValue, m.setServiceRelations),
+		populationMethodKey: internalSerialization.DeserializeObjectValueFunc[PopulationMethod](CreatePopulationMethodFromDiscriminatorValue, m.SetPopulationMethod),
 	}
 }
 
-func (m *PopulateServiceRequest) GetServiceRelations() ([]*ServiceRelation, error) {
-	return store.DefaultBackedModelAccessorFunc[*PopulateServiceRequest, []*ServiceRelation](m, serviceRelationsKey)
+// GetServiceRelations returns the service relations value.
+func (m *PopulateServiceRequest) GetPopulationMethod() (PopulationMethod, error) {
+	return store.DefaultBackedModelAccessorFunc[*PopulateServiceRequest, PopulationMethod](m, populationMethodKey)
 }
 
-func (m *PopulateServiceRequest) setServiceRelations(val []*ServiceRelation) error {
-	return store.DefaultBackedModelMutatorFunc(m, serviceRelationsKey, val)
-}
-
-func CreatePopulateServiceRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewPopulateServiceRequest(), nil
-}
-
-// PopulateServiceResult represents the result details of populating a service.
-type PopulateServiceResult struct {
-	core.BaseModel
-}
-
-func NewPopulateServiceResult() *PopulateServiceResult {
-	return &PopulateServiceResult{BaseModel: *core.NewBaseModel()}
-}
-
-func (m *PopulateServiceResult) Serialize(writer serialization.SerializationWriter) error {
-	if conversion.IsNil(m) {
-		return nil
-	}
-	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(statusKey, m.GetStatus),
-		internalSerialization.SerializeStringFunc(messageKey, m.GetMessage),
-	)
-}
-
-func (m *PopulateServiceResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	return map[string]func(serialization.ParseNode) error{
-		statusKey:  internalSerialization.DeserializeStringFunc(m.setStatus),
-		messageKey: internalSerialization.DeserializeStringFunc(m.setMessage),
-	}
-}
-
-func (m *PopulateServiceResult) GetStatus() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*PopulateServiceResult, *string](m, statusKey)
-}
-
-func (m *PopulateServiceResult) setStatus(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, statusKey, val)
-}
-
-func (m *PopulateServiceResult) GetMessage() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*PopulateServiceResult, *string](m, messageKey)
-}
-
-func (m *PopulateServiceResult) setMessage(val *string) error {
-	return store.DefaultBackedModelMutatorFunc(m, messageKey, val)
-}
-
-func CreatePopulateServiceResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewPopulateServiceResult(), nil
+// SetPopulationMethod
+func (m *PopulateServiceRequest) SetPopulationMethod(val PopulationMethod) error {
+	return store.DefaultBackedModelMutatorFunc(m, populationMethodKey, val)
 }

@@ -251,31 +251,6 @@ func TestCollectionUploadRequestModel_GettersSetters(t *testing.T) {
 	}
 }
 
-func TestDeployableUpdateRequestModel_GettersSetters(t *testing.T) {
-	model := NewDeployableUpdateRequest()
-
-	tests := []struct {
-		name   string
-		setter func(val interface{}) error
-		getter func() (interface{}, error)
-		value  interface{}
-	}{
-		{"AppName", func(v interface{}) error { return model.setAppName(v.(*string)) }, func() (interface{}, error) { return model.GetAppName() }, internal.ToPointer("app-name")},
-		{"DeployableName", func(v interface{}) error { return model.setDeployableName(v.(*string)) }, func() (interface{}, error) { return model.GetDeployableName() }, internal.ToPointer("deploy-name")},
-		{"Data", func(v interface{}) error { return model.setData(v.(*string)) }, func() (interface{}, error) { return model.GetData() }, internal.ToPointer("new-data")},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.setter(tt.value)
-			require.NoError(t, err)
-			got, err := tt.getter()
-			require.NoError(t, err)
-			assert.Equal(t, tt.value, got)
-		})
-	}
-}
-
 func TestSharedComponentUpdateRequestModel_GettersSetters(t *testing.T) {
 	model := NewSharedComponentUpdateRequest()
 
@@ -315,12 +290,6 @@ func TestCreateComponentVarsUploadRequestFromDiscriminatorValue(t *testing.T) {
 
 func TestCreateCollectionUploadRequestFromDiscriminatorValue(t *testing.T) {
 	parsable, err := CreateCollectionUploadRequestFromDiscriminatorValue(nil)
-	require.NoError(t, err)
-	assert.NotNil(t, parsable)
-}
-
-func TestCreateDeployableUpdateRequestFromDiscriminatorValue(t *testing.T) {
-	parsable, err := CreateDeployableUpdateRequestFromDiscriminatorValue(nil)
 	require.NoError(t, err)
 	assert.NotNil(t, parsable)
 }
@@ -490,7 +459,7 @@ func TestUploadStatusOutputModel_GetFieldDeserializers(t *testing.T) {
 func TestUploadStatusResultModel_Serialize(t *testing.T) {
 	tests := []struct {
 		name      string
-		model     *UploadStatusResult
+		model     *UploadStatusResultModel
 		setupMock func(w *mocking.MockSerializationWriter)
 		wantErr   error
 	}{
@@ -504,7 +473,7 @@ func TestUploadStatusResultModel_Serialize(t *testing.T) {
 		},
 		{
 			name: "happy path - writes all fields including nested output",
-			model: func() *UploadStatusResult {
+			model: func() *UploadStatusResultModel {
 				m := NewUploadStatusResult()
 				_ = m.setType(internal.ToPointer("upload"))
 				_ = m.setState(internal.ToPointer("completed"))
@@ -518,7 +487,7 @@ func TestUploadStatusResultModel_Serialize(t *testing.T) {
 		},
 		{
 			name: "write error propagates",
-			model: func() *UploadStatusResult {
+			model: func() *UploadStatusResultModel {
 				m := NewUploadStatusResult()
 				_ = m.setType(internal.ToPointer("upload"))
 				return m
@@ -530,7 +499,7 @@ func TestUploadStatusResultModel_Serialize(t *testing.T) {
 		},
 		{
 			name: "nested object write error propagates",
-			model: func() *UploadStatusResult {
+			model: func() *UploadStatusResultModel {
 				m := NewUploadStatusResult()
 				_ = m.setOutput(NewUploadStatusOutput())
 				return m
@@ -1001,75 +970,6 @@ func TestComponentVarsUploadRequestModel_GetFieldDeserializers(t *testing.T) {
 	model := NewComponentVarsUploadRequest()
 	deserializers := model.GetFieldDeserializers()
 	for _, key := range []string{appNameKey, componentNameKey, varsKey} {
-		assert.NotNil(t, deserializers[key], "expected deserializer for %s", key)
-	}
-	assert.Len(t, deserializers, 3)
-}
-
-func TestDeployableUpdateRequestModel_Serialize(t *testing.T) {
-	tests := []struct {
-		name      string
-		model     *DeployableUpdateRequest
-		setupMock func(w *mocking.MockSerializationWriter)
-		wantErr   error
-	}{
-		{
-			name:  "nil model returns nil",
-			model: nil,
-		},
-		{
-			name:  "empty model writes nothing",
-			model: NewDeployableUpdateRequest(),
-		},
-		{
-			name: "happy path - writes all fields",
-			model: func() *DeployableUpdateRequest {
-				m := NewDeployableUpdateRequest()
-				_ = m.setAppName(internal.ToPointer("app-name"))
-				_ = m.setDeployableName(internal.ToPointer("deploy-name"))
-				_ = m.setData(internal.ToPointer("new-data"))
-				return m
-			}(),
-			setupMock: func(w *mocking.MockSerializationWriter) {
-				w.On("WriteStringValue", mock.Anything, mock.Anything).Return(nil)
-			},
-		},
-		{
-			name: "write error propagates",
-			model: func() *DeployableUpdateRequest {
-				m := NewDeployableUpdateRequest()
-				_ = m.setAppName(internal.ToPointer("app-name"))
-				return m
-			}(),
-			setupMock: func(w *mocking.MockSerializationWriter) {
-				w.On("WriteStringValue", appNameKey, mock.Anything).Return(errWrite)
-			},
-			wantErr: errWrite,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			writer := mocking.NewMockSerializationWriter()
-			if tt.setupMock != nil {
-				tt.setupMock(writer)
-			}
-
-			err := tt.model.Serialize(writer)
-
-			if tt.wantErr != nil {
-				require.ErrorIs(t, err, tt.wantErr)
-				return
-			}
-			require.NoError(t, err)
-		})
-	}
-}
-
-func TestDeployableUpdateRequestModel_GetFieldDeserializers(t *testing.T) {
-	model := NewDeployableUpdateRequest()
-	deserializers := model.GetFieldDeserializers()
-	for _, key := range []string{appNameKey, deployableNameKey, dataKey} {
 		assert.NotNil(t, deserializers[key], "expected deserializer for %s", key)
 	}
 	assert.Len(t, deserializers, 3)

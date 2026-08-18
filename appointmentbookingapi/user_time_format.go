@@ -14,52 +14,64 @@ type UserTimeFormat interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
 
-	GetType() (*string, error)
-	SetType(*string) error
+	GetType() (*TimeFormat, error)
+	SetType(*TimeFormat) error
 	GetValue() (*string, error)
 	SetValue(*string) error
 }
 
+// UserTimeFormatModel represents the user time format model.
 type UserTimeFormatModel struct {
 	core.BaseModel
 }
 
+// NewUserTimeFormat creates a new instance of UserTimeFormatModel.
 func NewUserTimeFormat() *UserTimeFormatModel {
 	return &UserTimeFormatModel{
 		BaseModel: *core.NewBaseModel(),
 	}
 }
 
+// CreateUserTimeFormatFromDiscriminatorValue creates a new UserTimeFormat from a ParseNode.
 func CreateUserTimeFormatFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewUserTimeFormat(), nil
 }
 
+// Serialize writes the objects properties to the current writer.
 func (m *UserTimeFormatModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
 	}
 	return internalSerialization.Serialize(writer,
-		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
+		internalSerialization.SerializeEnumFunc(typeKey, m.GetType),
 		internalSerialization.SerializeStringFunc(valueKey, m.GetValue),
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *UserTimeFormatModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		typeKey:  internalSerialization.DeserializeStringFunc(m.SetType),
+		typeKey:  internalSerialization.DeserializeEnumFunc(ParseTimeFormat, m.SetType),
 		valueKey: internalSerialization.DeserializeStringFunc(m.SetValue),
 	}
 }
 
-func (m *UserTimeFormatModel) GetType() (*string, error) {
-	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatModel, *string](m, typeKey)
+// GetType returns the type value.
+func (m *UserTimeFormatModel) GetType() (*TimeFormat, error) {
+	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatModel, *TimeFormat](m, typeKey)
 }
-func (m *UserTimeFormatModel) SetType(val *string) error {
+
+// SetType sets the type value.
+func (m *UserTimeFormatModel) SetType(val *TimeFormat) error {
 	return store.DefaultBackedModelMutatorFunc(m, typeKey, val)
 }
+
+// GetValue returns the value value.
 func (m *UserTimeFormatModel) GetValue() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*UserTimeFormatModel, *string](m, valueKey)
 }
+
+// SetValue sets the value value.
 func (m *UserTimeFormatModel) SetValue(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, valueKey, val)
 }

@@ -19,7 +19,6 @@ import (
 
 func _() {
 	moduleAccount()
-	moduleActSub()
 	moduleAppointmentBooking()
 	moduleAppService()
 	moduleAttachment()
@@ -53,31 +52,6 @@ func moduleAccount() {
 	// [END module_account]
 	_ = accounts
 	_ = account
-}
-
-func moduleActSub() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-
-	// [START module_actsub]
-	actSub := client.Now().ActSub()
-
-	// List activities
-	activities, err := actSub.Activities().Get(context.Background(), nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Check whether the current user is subscribed to an object
-	subscribed, err := actSub.Subscriptions().
-		ByObjectID("{objectID}").
-		IsSubscribed().
-		Get(context.Background(), nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END module_actsub]
-	_ = activities
-	_ = subscribed
 }
 
 func moduleAppointmentBooking() {

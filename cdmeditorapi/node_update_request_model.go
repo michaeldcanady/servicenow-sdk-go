@@ -20,14 +20,17 @@ type NodeUpdateRequest interface {
 	setValue(*string) error
 }
 
+// NodeUpdateRequestModel represents a node update request model.
 type NodeUpdateRequestModel struct {
 	core.BaseModel
 }
 
+// NewNodeUpdateRequest instantiates a new NodeUpdateRequest.
 func NewNodeUpdateRequest() *NodeUpdateRequestModel {
 	return &NodeUpdateRequestModel{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the object's properties to the given writer.
 func (m *NodeUpdateRequestModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -38,6 +41,7 @@ func (m *NodeUpdateRequestModel) Serialize(writer serialization.SerializationWri
 	)
 }
 
+// GetFieldDeserializers returns the deserializers for this object's fields.
 func (m *NodeUpdateRequestModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		nameKey:  internalSerialization.DeserializeStringFunc(m.setName),
@@ -45,12 +49,15 @@ func (m *NodeUpdateRequestModel) GetFieldDeserializers() map[string]func(seriali
 	}
 }
 
+// GetName returns the name.
 func (m *NodeUpdateRequestModel) GetName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*NodeUpdateRequestModel, *string](m, nameKey)
 }
 func (m *NodeUpdateRequestModel) setName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, nameKey, val)
 }
+
+// GetValue returns the value.
 func (m *NodeUpdateRequestModel) GetValue() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*NodeUpdateRequestModel, *string](m, valueKey)
 }
@@ -58,6 +65,7 @@ func (m *NodeUpdateRequestModel) setValue(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, valueKey, val)
 }
 
+// CreateNodeUpdateRequestFromDiscriminatorValue creates a new NodeUpdateRequest from a ParseNode.
 func CreateNodeUpdateRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewNodeUpdateRequest(), nil
 }

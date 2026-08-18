@@ -97,9 +97,6 @@ const (
 	timeZoneDisplayValueKey = "time_zone_display_value"
 	timeZoneKey             = "time_zone"
 
-	// AvailabilitySlot keys
-	additionalDataKey = "additionalData"
-
 	// CalendarResponse keys
 	rangeEndKey   = "range_end"
 	rangeStartKey = "range_start"

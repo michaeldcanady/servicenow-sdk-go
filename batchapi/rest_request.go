@@ -60,7 +60,7 @@ func CreateRestRequestFromDiscriminatorValue(_ serialization.ParseNode) (seriali
 	return NewRestRequest(), nil
 }
 
-// CreateRestRequestFromRequestInformation
+// CreateRestRequestFromRequestInformation creates a new RestRequest from the given RequestInformation.
 func CreateRestRequestFromRequestInformation(requestInfo *abstractions.RequestInformation, excludeResponseHeaders bool) (RestRequest, error) {
 	request := NewRestRequest()
 	if err := request.SetBody(requestInfo.Content); err != nil {

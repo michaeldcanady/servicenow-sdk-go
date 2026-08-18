@@ -19,10 +19,8 @@ func TestRegisterServiceResultModel_GettersSetters(t *testing.T) {
 		getter func() (any, error)
 		value  any
 	}{
-		{"SysID", func(v any) error { return model.setSysID(v.(*string)) }, func() (any, error) { return model.GetSysID() }, internal.ToPointer("sys-id")},
-		{"Number", func(v any) error { return model.setNumber(v.(*string)) }, func() (any, error) { return model.GetNumber() }, internal.ToPointer("SNSVC0001019")},
-		{"Status", func(v any) error { return model.setStatus(v.(*string)) }, func() (any, error) { return model.GetStatus() }, internal.ToPointer("success")},
-		{"Message", func(v any) error { return model.setMessage(v.(*string)) }, func() (any, error) { return model.GetMessage() }, internal.ToPointer("registered")},
+		{"SysID", func(v any) error { return model.SetSysID(v.(*string)) }, func() (any, error) { return model.GetSysID() }, internal.ToPointer("sys-id")},
+		{"Number", func(v any) error { return model.SetNumber(v.(*string)) }, func() (any, error) { return model.GetNumber() }, internal.ToPointer("SNSVC0001019")},
 	}
 
 	for _, tt := range tests {
@@ -55,10 +53,8 @@ func TestRegisterServiceResultModel_Serialize(t *testing.T) {
 			name: "happy path - writes all fields",
 			model: func() *RegisterServiceResult {
 				m := NewRegisterServiceResult()
-				_ = m.setSysID(internal.ToPointer("sys-id"))
-				_ = m.setNumber(internal.ToPointer("SNSVC0001019"))
-				_ = m.setStatus(internal.ToPointer("success"))
-				_ = m.setMessage(internal.ToPointer("registered"))
+				_ = m.SetSysID(internal.ToPointer("sys-id"))
+				_ = m.SetNumber(internal.ToPointer("SNSVC0001019"))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
@@ -69,7 +65,7 @@ func TestRegisterServiceResultModel_Serialize(t *testing.T) {
 			name: "write error propagates",
 			model: func() *RegisterServiceResult {
 				m := NewRegisterServiceResult()
-				_ = m.setSysID(internal.ToPointer("sys-id"))
+				_ = m.SetSysID(internal.ToPointer("sys-id"))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
@@ -100,10 +96,10 @@ func TestRegisterServiceResultModel_Serialize(t *testing.T) {
 func TestRegisterServiceResultModel_GetFieldDeserializers(t *testing.T) {
 	model := NewRegisterServiceResult()
 	deserializers := model.GetFieldDeserializers()
-	for _, key := range []string{sysIDKey, numberKey, statusKey, messageKey} {
+	for _, key := range []string{sysIDKey, numberKey} {
 		assert.NotNil(t, deserializers[key], "expected deserializer for %s", key)
 	}
-	assert.Len(t, deserializers, 4)
+	assert.Len(t, deserializers, 2)
 }
 
 func TestCreateRegisterServiceResultFromDiscriminatorValue(t *testing.T) {

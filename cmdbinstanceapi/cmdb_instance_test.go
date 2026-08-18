@@ -113,10 +113,54 @@ func TestCmdbInstanceModel_Serialize(t *testing.T) {
 func TestCmdbInstanceModel_GetFieldDeserializers(t *testing.T) {
 	model := NewCmdbInstance()
 	deserializers := model.GetFieldDeserializers()
-	for _, key := range []string{sysIDKey, nameKey, classNameKey} {
+	for _, key := range []string{sysIDKey, nameKey, classNameKey, attributesKey} {
 		assert.NotNil(t, deserializers[key], "expected deserializer for %s", key)
 	}
-	assert.Len(t, deserializers, 3)
+	assert.Len(t, deserializers, 4)
+}
+
+func TestCmdbInstanceModel_AttributesPromoteTopLevelFields(t *testing.T) {
+	model := NewCmdbInstance()
+	nested := NewCmdbInstance()
+	require.NoError(t, nested.SetSysID(internal.ToPointer("from-attrs")))
+	require.NoError(t, nested.SetName(internal.ToPointer("name-from-attrs")))
+
+	node := mocking.NewMockParseNode()
+	node.On("GetObjectValue", mock.Anything).Return(nested, nil)
+
+	require.NoError(t, model.GetFieldDeserializers()[attributesKey](node))
+
+	sysID, err := model.GetSysID()
+	require.NoError(t, err)
+	require.NotNil(t, sysID)
+	assert.Equal(t, "from-attrs", *sysID)
+
+	name, err := model.GetName()
+	require.NoError(t, err)
+	require.NotNil(t, name)
+	assert.Equal(t, "name-from-attrs", *name)
+
+	attrs, err := model.GetAttributes()
+	require.NoError(t, err)
+	assert.Equal(t, nested, attrs)
+}
+
+func TestCmdbInstanceModel_AttributesDoNotOverwriteTopLevelFields(t *testing.T) {
+	model := NewCmdbInstance()
+	require.NoError(t, model.SetSysID(internal.ToPointer("top-level")))
+
+	nested := NewCmdbInstance()
+	require.NoError(t, nested.SetSysID(internal.ToPointer("from-attrs")))
+
+	node := mocking.NewMockParseNode()
+	node.On("GetObjectValue", mock.Anything).Return(nested, nil)
+
+	require.NoError(t, model.GetFieldDeserializers()[attributesKey](node))
+
+	sysID, err := model.GetSysID()
+	require.NoError(t, err)
+	require.NotNil(t, sysID)
+	assert.Equal(t, "top-level", *sysID)
 }
 
 func TestCreateCmdbInstanceFromDiscriminatorValue(t *testing.T) {

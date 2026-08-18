@@ -13,12 +13,21 @@ func TestRegisterServiceRequestModel_GettersSetters(t *testing.T) {
 	model := NewRegisterServiceRequest()
 	details := NewBasicDetails()
 
-	err := model.setBasicDetails(details)
+	err := model.SetBasicDetails(details)
 	require.NoError(t, err)
 
 	got, err := model.GetBasicDetails()
 	require.NoError(t, err)
 	assert.Equal(t, details, got)
+
+	relationship := NewServiceRelationship()
+
+	err = model.SetRelationships(relationship)
+	require.NoError(t, err)
+
+	gotRelationship, err := model.GetRelationships()
+	require.NoError(t, err)
+	assert.Equal(t, relationship, gotRelationship)
 }
 
 func TestRegisterServiceRequestModel_Serialize(t *testing.T) {
@@ -37,21 +46,23 @@ func TestRegisterServiceRequestModel_Serialize(t *testing.T) {
 			model: NewRegisterServiceRequest(),
 		},
 		{
-			name: "happy path - writes nested basic details",
+			name: "happy path - writes nested basic details and relationships",
 			model: func() *RegisterServiceRequest {
 				m := NewRegisterServiceRequest()
-				_ = m.setBasicDetails(NewBasicDetails())
+				_ = m.SetBasicDetails(NewBasicDetails())
+				_ = m.SetRelationships(NewServiceRelationship())
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
 				w.On("WriteObjectValue", basicDetailsKey, mock.Anything, mock.Anything).Return(nil)
+				w.On("WriteObjectValue", relationshipsKey, mock.Anything, mock.Anything).Return(nil)
 			},
 		},
 		{
 			name: "nested object write error propagates",
 			model: func() *RegisterServiceRequest {
 				m := NewRegisterServiceRequest()
-				_ = m.setBasicDetails(NewBasicDetails())
+				_ = m.SetBasicDetails(NewBasicDetails())
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
@@ -83,7 +94,8 @@ func TestRegisterServiceRequestModel_GetFieldDeserializers(t *testing.T) {
 	model := NewRegisterServiceRequest()
 	deserializers := model.GetFieldDeserializers()
 	assert.NotNil(t, deserializers[basicDetailsKey])
-	assert.Len(t, deserializers, 1)
+	assert.NotNil(t, deserializers[relationshipsKey])
+	assert.Len(t, deserializers, 2)
 }
 
 func TestRegisterServiceRequestModel_GetFieldDeserializers_MalformedInput(t *testing.T) {
@@ -94,6 +106,9 @@ func TestRegisterServiceRequestModel_GetFieldDeserializers_MalformedInput(t *tes
 	parseNode.On("GetObjectValue", mock.Anything).Return(nil, errWrite)
 
 	err := deserializers[basicDetailsKey](parseNode)
+	require.ErrorIs(t, err, errWrite)
+
+	err = deserializers[relationshipsKey](parseNode)
 	require.ErrorIs(t, err, errWrite)
 }
 

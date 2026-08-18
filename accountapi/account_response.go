@@ -6,23 +6,23 @@ import (
 )
 
 // AccountCollectionResponse represents a collection of accounts.
-type AccountCollectionResponse = core.ServiceNowCollectionResponse[*AccountModel]
+type AccountCollectionResponse = core.ServiceNowCollectionResponse[*Account]
 
 // CreateAccountCollectionResponseFromDiscriminatorValue is a factory for creating an AccountCollectionResponse.
 func CreateAccountCollectionResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return core.NewBaseServiceNowCollectionResponse[*AccountModel](CreateAccountFromDiscriminatorValue), nil
+	return core.NewBaseServiceNowCollectionResponse[*Account](CreateAccountFromDiscriminatorValue), nil
 }
 
 // AccountCollectionResponseModel is the implementation of AccountCollectionResponse.
-type AccountCollectionResponseModel = core.BaseServiceNowCollectionResponse[*AccountModel]
+type AccountCollectionResponseModel = core.BaseServiceNowCollectionResponse[*Account]
 
 // AccountItemResponse represents a single account response.
-type AccountItemResponse = core.ServiceNowItemResponse[*AccountModel]
+type AccountItemResponse = core.ServiceNowItemResponse[*Account]
 
 // CreateAccountItemResponseFromDiscriminatorValue is a factory for creating an AccountItemResponse.
 func CreateAccountItemResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return core.NewBaseServiceNowItemResponse[*AccountModel](CreateAccountFromDiscriminatorValue), nil
+	return core.NewBaseServiceNowItemResponse[*Account](CreateAccountFromDiscriminatorValue), nil
 }
 
 // AccountItemResponseModel is the implementation of AccountItemResponse.
-type AccountItemResponseModel = core.BaseServiceNowItemResponse[*AccountModel]
+type AccountItemResponseModel = core.BaseServiceNowItemResponse[*Account]

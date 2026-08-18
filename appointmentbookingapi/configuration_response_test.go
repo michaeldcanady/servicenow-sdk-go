@@ -45,7 +45,7 @@ func TestConfigurationResult_GettersSetters(t *testing.T) {
 		{"UseRR", func(v any) error { return model.SetUseRR(v.(*bool)) }, func() (any, error) { return model.GetUseRR() }, internal.ToPointer(true)},
 		{"UserTimeFormat", func(v any) error { return model.SetUserTimeFormat(v.(UserTimeFormat)) }, func() (any, error) { return model.GetUserTimeFormat() }, UserTimeFormat(NewUserTimeFormat())},
 		{"UserTimeFormatOptions", func(v any) error { return model.SetUserTimeFormatOptions(v.(UserTimeFormatOptions)) }, func() (any, error) { return model.GetUserTimeFormatOptions() }, UserTimeFormatOptions(NewUserTimeFormatOptions())},
-		{"ViewScale", func(v any) error { return model.SetViewScale(v.(*string)) }, func() (any, error) { return model.GetViewScale() }, internal.ToPointer("day")},
+		{"ViewScale", func(v any) error { return model.SetViewScale(v.(*ViewScale)) }, func() (any, error) { return model.GetViewScale() }, internal.ToPointer(ViewScaleDay)},
 	}
 
 	for _, tt := range tests {
@@ -99,7 +99,7 @@ func TestConfigurationResult_Serialize(t *testing.T) {
 				_ = m.SetUseRR(internal.ToPointer(true))
 				_ = m.SetUserTimeFormat(NewUserTimeFormat())
 				_ = m.SetUserTimeFormatOptions(NewUserTimeFormatOptions())
-				_ = m.SetViewScale(internal.ToPointer("day"))
+				_ = m.SetViewScale(internal.ToPointer(ViewScaleDay))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {
@@ -181,9 +181,9 @@ func TestUserDateFormatOptionsModel_GettersSetters(t *testing.T) {
 		value  any
 	}{
 		{"Day", func(v any) error { return model.SetDay(v.(*string)) }, func() (any, error) { return model.GetDay() }, internal.ToPointer("2-digit")},
-		{"Month", func(v any) error { return model.SetMonth(v.(*string)) }, func() (any, error) { return model.GetMonth() }, internal.ToPointer("short")},
+		{"Month", func(v any) error { return model.SetMonth(v.(*ShortMonth)) }, func() (any, error) { return model.GetMonth() }, internal.ToPointer(ShortMonthMay)},
 		{"Week", func(v any) error { return model.SetWeek(v.(*string)) }, func() (any, error) { return model.GetWeek() }, internal.ToPointer("1")},
-		{"Weekday", func(v any) error { return model.SetWeekday(v.(*string)) }, func() (any, error) { return model.GetWeekday() }, internal.ToPointer("long")},
+		{"Weekday", func(v any) error { return model.SetWeekday(v.(*ShortWeekday)) }, func() (any, error) { return model.GetWeekday() }, internal.ToPointer(ShortWeekdayMon)},
 	}
 
 	for _, tt := range tests {
@@ -223,9 +223,9 @@ func TestUserDateFormatOptionsModel_Serialize(t *testing.T) {
 			model: func() *UserDateFormatOptionsModel {
 				m := NewUserDateFormatOptions()
 				_ = m.SetDay(internal.ToPointer("2-digit"))
-				_ = m.SetMonth(internal.ToPointer("short"))
+				_ = m.SetMonth(internal.ToPointer(ShortMonthMay))
 				_ = m.SetWeek(internal.ToPointer("1"))
-				_ = m.SetWeekday(internal.ToPointer("long"))
+				_ = m.SetWeekday(internal.ToPointer(ShortWeekdayMon))
 				return m
 			}(),
 			setupMock: func(w *mocking.MockSerializationWriter) {

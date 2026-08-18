@@ -34,11 +34,23 @@ type ImpactedDeployablesRequestBuilderGetQueryParameters struct {
 	ReturnFields    []string `uriparametername:"returnFields"`
 }
 
-// Request Configurations
+// ChangesetsRequestBuilderGetRequestConfiguration represents the configuration for a Get request.
 type ChangesetsRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[ChangesetsRequestBuilderGetQueryParameters]
+
+// ChangesetsRequestBuilderDeleteRequestConfiguration represents the DELETE request configuration for the Changesets resource.
 type ChangesetsRequestBuilderDeleteRequestConfiguration = abstractions.RequestConfiguration[ChangesetsRequestBuilderDeleteQueryParameters]
+
+// ChangesetActivityRequestBuilderGetRequestConfiguration represents the GET request configuration for the Changeset Activity resource.
 type ChangesetActivityRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[ChangesetActivityRequestBuilderGetQueryParameters]
+
+// CommitStatusRequestBuilderGetRequestConfiguration represents the GET request configuration for the Commit Status resource.
 type CommitStatusRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]
+
+// ImpactedSharedComponentsRequestBuilderGetRequestConfiguration represents the GET request configuration for the Impacted Shared Components resource.
 type ImpactedSharedComponentsRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[ImpactedSharedComponentsRequestBuilderGetQueryParameters]
+
+// ImpactedDeployablesRequestBuilderGetRequestConfiguration represents the GET request configuration for the Impacted Deployables resource.
 type ImpactedDeployablesRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[ImpactedDeployablesRequestBuilderGetQueryParameters]
+
+// ImpactedDeployablesBySysIDRequestBuilderGetRequestConfiguration represents the GET request configuration for the Impacted Deployables By Sys ID resource.
 type ImpactedDeployablesBySysIDRequestBuilderGetRequestConfiguration = abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]

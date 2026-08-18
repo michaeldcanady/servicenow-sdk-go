@@ -1,0 +1,116 @@
+package actsubapi
+
+import (
+	"context"
+	"testing"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
+)
+
+func TestActivitiesRequestBuilder_Get_NilBuilder(t *testing.T) {
+	var builder *ActivitiesRequestBuilder
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, resp)
+}
+
+func TestActivitiesRequestBuilder_ToGetRequestInformation_NilBuilder(t *testing.T) {
+	var builder *ActivitiesRequestBuilder
+
+	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
+
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	assert.Nil(t, requestInfo)
+}
+
+func TestActivitiesRequestBuilder_Get(t *testing.T) {
+	validConfig := &ActivitiesRequestBuilderGetRequestConfiguration{
+		QueryParameters: &ActivitiesRequestBuilderGetQueryParameters{
+			Context:         strPtr("ctx1"),
+			ContextInstance: strPtr("inst1"),
+		},
+	}
+
+	type testCase struct {
+		name      string
+		config    *ActivitiesRequestBuilderGetRequestConfiguration
+		mockRes   interface{}
+		mockErr   error
+		expectErr bool
+	}
+
+	tests := []testCase{
+		{
+			name:      "NilConfig",
+			config:    nil,
+			mockRes:   nil,
+			mockErr:   nil,
+			expectErr: true,
+		},
+		{
+			name:      "Success",
+			config:    validConfig,
+			mockRes:   core.NewBaseServiceNowItemResponse[*ActivitySubscription](CreateActivitySubscriptionFromDiscriminatorValue),
+			mockErr:   nil,
+			expectErr: false,
+		},
+		{
+			name:      "Error",
+			config:    validConfig,
+			mockRes:   nil,
+			mockErr:   assert.AnError,
+			expectErr: true,
+		},
+		{
+			name:      "NilResponse",
+			config:    validConfig,
+			mockRes:   nil,
+			mockErr:   nil,
+			expectErr: false,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			adapter := &mocking.MockRequestAdapter{}
+			builder := NewActivitiesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+			adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(tc.mockRes, tc.mockErr)
+
+			resp, err := builder.Get(context.Background(), tc.config)
+
+			if tc.expectErr {
+				require.Error(t, err)
+				assert.Nil(t, resp)
+			} else {
+				assert.NoError(t, err)
+				if tc.mockRes != nil {
+					assert.Equal(t, tc.mockRes, resp)
+				} else {
+					assert.Nil(t, resp)
+				}
+			}
+		})
+	}
+}
+
+func strPtr(s string) *string { return &s }
+
+func TestActivitiesRequestBuilder_ToGetRequestInformation_Extra(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	builder := NewActivitiesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+	requestInfo, err := builder.ToGetRequestInformation(context.Background(), nil)
+
+	require.NoError(t, err)
+	assert.NotNil(t, requestInfo)
+	assert.Equal(t, "{+baseurl}/api/now/v1/actsub/activities{?before,context,context_instance,end_date,facets,last,record_id,start_date,stFrom}", requestInfo.UrlTemplate)
+	assert.Equal(t, "https://example.com", requestInfo.PathParameters["baseurl"])
+}

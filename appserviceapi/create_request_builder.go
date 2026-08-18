@@ -2,11 +2,15 @@ package appserviceapi
 
 import (
 	"context"
+
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
+
+const createURLTemplate = "{+baseurl}/api/now/cmdb/app_service/create"
 
 // CreateRequestBuilder provides operations to create an application service.
 type CreateRequestBuilder struct {
@@ -18,6 +22,14 @@ func NewCreateRequestBuilderInternal(pathParameters map[string]string, requestAd
 	return &CreateRequestBuilder{
 		newServicePostRequestBuilder[*CreateServiceRequest, CreateServiceResponse](requestAdapter, createURLTemplate, pathParameters, CreateCreateServiceResponseFromDiscriminatorValue),
 	}
+}
+
+// NewCreateRequestBuilder instantiates a new [CreateRequestBuilder].
+func NewCreateRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *CreateRequestBuilder {
+	return NewCreateRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
 // Post sends a POST request to create an application service.

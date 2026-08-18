@@ -13,10 +13,17 @@ type ServiceDetailsRequest struct {
 	core.BaseModel
 }
 
+// NewServiceDetailsRequest creates a new instance of [ServiceDetailsRequest].
 func NewServiceDetailsRequest() *ServiceDetailsRequest {
 	return &ServiceDetailsRequest{BaseModel: *core.NewBaseModel()}
 }
 
+// CreateServiceDetailsRequestFromDiscriminatorValue creates a new [ServiceDetailsRequest] from a [serialization.ParseNode].
+func CreateServiceDetailsRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewServiceDetailsRequest(), nil
+}
+
+// Serialize writes the objects properties to the current writer.
 func (m *ServiceDetailsRequest) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -26,20 +33,28 @@ func (m *ServiceDetailsRequest) Serialize(writer serialization.SerializationWrit
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *ServiceDetailsRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
-		basicDetailsKey: internalSerialization.DeserializeObjectValueFunc[*BasicDetails](CreateBasicDetailsFromDiscriminatorValue, m.setBasicDetails),
+		basicDetailsKey: internalSerialization.DeserializeObjectValueFunc[*BasicDetails](CreateBasicDetailsFromDiscriminatorValue, m.SetBasicDetails),
 	}
 }
 
+// GetBasicDetails returns the basic details value.
 func (m *ServiceDetailsRequest) GetBasicDetails() (*BasicDetails, error) {
 	return store.DefaultBackedModelAccessorFunc[*ServiceDetailsRequest, *BasicDetails](m, basicDetailsKey)
 }
 
-func (m *ServiceDetailsRequest) setBasicDetails(val *BasicDetails) error {
+func (m *ServiceDetailsRequest) SetBasicDetails(val *BasicDetails) error {
 	return store.DefaultBackedModelMutatorFunc(m, basicDetailsKey, val)
 }
 
-func CreateServiceDetailsRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewServiceDetailsRequest(), nil
+// GetRelationships
+func (m *ServiceDetailsRequest) GetRelationships() (*ServiceRelationship, error) {
+	return store.DefaultBackedModelAccessorFunc[*ServiceDetailsRequest, *ServiceRelationship](m, relationshipsKey)
+}
+
+// SetRelationships
+func (m *ServiceDetailsRequest) SetRelationships(val *ServiceRelationship) error {
+	return store.DefaultBackedModelMutatorFunc(m, relationshipsKey, val)
 }

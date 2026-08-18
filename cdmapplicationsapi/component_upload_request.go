@@ -13,10 +13,12 @@ type ComponentUploadRequest struct {
 	core.BaseModel
 }
 
+// NewComponentUploadRequest instantiates a new ComponentUploadRequest.
 func NewComponentUploadRequest() *ComponentUploadRequest {
 	return &ComponentUploadRequest{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the object's properties to the given writer.
 func (m *ComponentUploadRequest) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -29,6 +31,7 @@ func (m *ComponentUploadRequest) Serialize(writer serialization.SerializationWri
 	)
 }
 
+// GetFieldDeserializers returns the deserializers for this object's fields.
 func (m *ComponentUploadRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		appNameKey:       internalSerialization.DeserializeStringFunc(m.setAppName),
@@ -38,24 +41,31 @@ func (m *ComponentUploadRequest) GetFieldDeserializers() map[string]func(seriali
 	}
 }
 
+// GetAppName returns the app name.
 func (m *ComponentUploadRequest) GetAppName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ComponentUploadRequest, *string](m, appNameKey)
 }
 func (m *ComponentUploadRequest) setAppName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, appNameKey, val)
 }
+
+// GetComponentName returns the component name.
 func (m *ComponentUploadRequest) GetComponentName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ComponentUploadRequest, *string](m, componentNameKey)
 }
 func (m *ComponentUploadRequest) setComponentName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, componentNameKey, val)
 }
+
+// GetData returns the data.
 func (m *ComponentUploadRequest) GetData() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ComponentUploadRequest, *string](m, dataKey)
 }
 func (m *ComponentUploadRequest) setData(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, dataKey, val)
 }
+
+// GetFormat returns the format.
 func (m *ComponentUploadRequest) GetFormat() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ComponentUploadRequest, *string](m, formatKey)
 }
@@ -63,6 +73,7 @@ func (m *ComponentUploadRequest) setFormat(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, formatKey, val)
 }
 
+// CreateComponentUploadRequestFromDiscriminatorValue creates a new ComponentUploadRequest from a ParseNode.
 func CreateComponentUploadRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewComponentUploadRequest(), nil
 }

@@ -31,7 +31,7 @@ var (
 	registerDeserializersOnce sync.Once
 )
 
-// ServiceNowServiceClient is the core service used by ServiceNowServiceClient to make requests to Service-Now's APIs
+// ServiceNowServiceClient is the core service to make requests to Service-Now's APIs
 type ServiceNowServiceClient struct {
 	core.RequestBuilder
 }
@@ -63,7 +63,7 @@ func registerDefaultDeserializers() {
 	})
 }
 
-// NewServiceNowServiceClient creates a new ServiceNowServiceClient using the provided options.
+// NewServiceNowServiceClient creates a new [ServiceNowServiceClient] using the provided options.
 func NewServiceNowServiceClient(opts ...ServiceNowServiceClientOption) (*ServiceNowServiceClient, error) {
 	config, err := buildServiceClientConfig(opts...)
 	if err != nil {
@@ -77,6 +77,7 @@ func NewServiceNowServiceClient(opts ...ServiceNowServiceClientOption) (*Service
 
 	baseURL := config.getBaseURL()
 	if strings.TrimSpace(baseURL) == "" {
+		// TODO: sentinel-ize this error message
 		return nil, errors.New("baseURL is empty")
 	}
 
@@ -90,18 +91,22 @@ func NewServiceNowServiceClient(opts ...ServiceNowServiceClientOption) (*Service
 	}, nil
 }
 
+// Now returns the request builder for the Now API namespace.
 func (rB *ServiceNowServiceClient) Now() *NowRequestBuilder {
 	return NewServiceNowRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
+// Cdm returns the request builder for the Configuration Data Model (CDM) API namespace.
 func (rB *ServiceNowServiceClient) Cdm() *CdmRequestBuilder {
 	return NewCdmRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
+// AppointmentBooking returns the request builder for the Appointment Booking API namespace.
 func (rB *ServiceNowServiceClient) AppointmentBooking() *appointmentbookingapi.AppointmentBookingRequestBuilder {
-	return appointmentbookingapi.NewAppointmentBookingRequestBuilder(rB.GetRequestAdapter(), maps.Clone(rB.GetPathParameters()))
+	return appointmentbookingapi.NewAppointmentBookingRequestBuilderInternal(rB.GetRequestAdapter(), maps.Clone(rB.GetPathParameters()))
 }
 
+// CustomerService returns the request builder for the Customer Service Management API namespace.
 func (rB *ServiceNowServiceClient) CustomerService() *caseapi.CustomerServiceRequestBuilder {
 	return caseapi.NewCustomerServiceRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

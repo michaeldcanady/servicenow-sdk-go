@@ -14,7 +14,7 @@ import (
 
 func TestAppointmentBookingRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
-	builder := NewAppointmentBookingRequestBuilder(adapter, map[string]string{"baseurl": "https://example.com"})
+	builder := NewAppointmentBookingRequestBuilderInternal(adapter, map[string]string{"baseurl": "https://example.com"})
 
 	t.Run("Calendar Get", func(t *testing.T) {
 		calendarBuilder := builder.Calendar()
@@ -48,7 +48,7 @@ func TestAppointmentBookingRequestBuilder_ToGetRequestInformation(t *testing.T) 
 func TestAppointmentRequestBuilder_Post(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
-	builder := NewAppointmentRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+	builder := NewAppointmentRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 	mockRes := core.NewBaseServiceNowItemResponse[*AppointmentResultModel](CreateAppointmentResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
@@ -62,7 +62,7 @@ func TestAppointmentRequestBuilder_Post(t *testing.T) {
 func TestAvailabilityRequestBuilder_Post(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
-	builder := NewAvailabilityRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+	builder := NewAvailabilityRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 	mockRes := core.NewBaseServiceNowItemResponse[*AvailabilityResultModel](CreateAvailabilityResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
@@ -76,7 +76,7 @@ func TestAvailabilityRequestBuilder_Post(t *testing.T) {
 func TestExecuteRuleConditionsRequestBuilder_Post(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
-	builder := NewExecuteRuleConditionsRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+	builder := NewExecuteRuleConditionsRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
 	mockRes := core.NewBaseServiceNowItemResponse[*ExecuteRuleConditionsResult](CreateExecuteRuleConditionsResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
@@ -90,21 +90,33 @@ func TestExecuteRuleConditionsRequestBuilder_Post(t *testing.T) {
 func TestUserWindowRequestBuilder_Post(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
-	builder := NewUserWindowRequestBuilder(map[string]string{"baseurl": "https://example.com"}, adapter)
+	builder := NewUserWindowRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
 
-	mockRes := core.NewBaseServiceNowItemResponse[*AvailabilityResultModel](CreateAvailabilityResultFromDiscriminatorValue)
+	mockRes := core.NewBaseServiceNowItemResponse[*UserWindowResult](CreateUserWindowResultFromDiscriminatorValue)
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(mockRes, nil)
 
-	resp, err := builder.Post(context.Background(), NewAvailabilityRequest(), nil)
+	resp, err := builder.Post(context.Background(), NewUserWindowRequest(), nil)
 
 	require.NoError(t, err)
 	assert.Equal(t, mockRes, resp)
 }
 
+func TestUserWindowRequestBuilder_ToPostRequestInformation(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
+	builder := NewAppointmentBookingRequestBuilderInternal(adapter, map[string]string{"baseurl": "https://example.com"}).UserWindow()
+
+	body := NewUserWindowRequest()
+	requestInfo, err := builder.ToPostRequestInformation(context.Background(), body, nil)
+	require.NoError(t, err)
+	assert.NotNil(t, requestInfo)
+	assert.Equal(t, "{+baseurl}/api/sn_apptmnt_booking/v1/appointment/userwindow", requestInfo.UrlTemplate)
+}
+
 func TestAppointmentRequestBuilder_ToPostRequestInformation(t *testing.T) {
 	adapter := &mocking.MockRequestAdapter{}
 	adapter.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
-	builder := NewAppointmentBookingRequestBuilder(adapter, map[string]string{"baseurl": "https://example.com"}).Appointment()
+	builder := NewAppointmentBookingRequestBuilderInternal(adapter, map[string]string{"baseurl": "https://example.com"}).Appointment()
 
 	body := NewAppointmentRequest()
 	requestInfo, err := builder.ToPostRequestInformation(context.Background(), body, nil)

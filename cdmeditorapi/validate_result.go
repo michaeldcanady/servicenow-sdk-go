@@ -22,14 +22,17 @@ type ValidationResult interface {
 	setWarnings(any) error
 }
 
+// ValidationResultModel represents a validation result model.
 type ValidationResultModel struct {
 	core.BaseModel
 }
 
+// NewValidationResult instantiates a new ValidationResult.
 func NewValidationResult() *ValidationResultModel {
 	return &ValidationResultModel{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the object's properties to the given writer.
 func (m *ValidationResultModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -41,6 +44,7 @@ func (m *ValidationResultModel) Serialize(writer serialization.SerializationWrit
 	)
 }
 
+// GetFieldDeserializers returns the deserializers for this object's fields.
 func (m *ValidationResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		statusKey:   internalSerialization.DeserializeStringFunc(m.setStatus),
@@ -49,18 +53,23 @@ func (m *ValidationResultModel) GetFieldDeserializers() map[string]func(serializ
 	}
 }
 
+// GetStatus returns the status.
 func (m *ValidationResultModel) GetStatus() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ValidationResultModel, *string](m, statusKey)
 }
 func (m *ValidationResultModel) setStatus(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, statusKey, val)
 }
+
+// GetErrors returns the errors.
 func (m *ValidationResultModel) GetErrors() (any, error) {
 	return store.DefaultBackedModelAccessorFunc[*ValidationResultModel, any](m, errorsKey)
 }
 func (m *ValidationResultModel) setErrors(val any) error {
 	return store.DefaultBackedModelMutatorFunc(m, errorsKey, val)
 }
+
+// GetWarnings returns the warnings.
 func (m *ValidationResultModel) GetWarnings() (any, error) {
 	return store.DefaultBackedModelAccessorFunc[*ValidationResultModel, any](m, warningsKey)
 }
@@ -68,6 +77,7 @@ func (m *ValidationResultModel) setWarnings(val any) error {
 	return store.DefaultBackedModelMutatorFunc(m, warningsKey, val)
 }
 
+// CreateValidationResultFromDiscriminatorValue creates a new ValidationResult from a ParseNode.
 func CreateValidationResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewValidationResult(), nil
 }

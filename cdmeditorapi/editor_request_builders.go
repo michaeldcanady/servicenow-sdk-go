@@ -47,18 +47,21 @@ type NodesRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewNodesRequestBuilderInternal instantiates a new NodesRequestBuilder.
 func NewNodesRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *NodesRequestBuilder {
 	return &NodesRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, editorNodesURLTemplate, pathParameters),
 	}
 }
 
+// ByID returns the by id request builder.
 func (rB *NodesRequestBuilder) ByID(id string) *NodeItemRequestBuilder {
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["node_sys_id"] = id
 	return NewNodeItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
+// Get sends a GET request.
 func (rB *NodesRequestBuilder) Get(ctx context.Context, config *NodesRequestBuilderGetRequestConfiguration) (NodesResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
@@ -93,6 +96,7 @@ func (rB *NodesRequestBuilder) Get(ctx context.Context, config *NodesRequestBuil
 	return typedRes, nil
 }
 
+// Post sends a POST request.
 func (rB *NodesRequestBuilder) Post(ctx context.Context, body NodeCreateRequest, config *NodesRequestBuilderPostRequestConfiguration) (NodeResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
@@ -133,12 +137,14 @@ type NodeItemRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewNodeItemRequestBuilderInternal instantiates a new NodeItemRequestBuilder.
 func NewNodeItemRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *NodeItemRequestBuilder {
 	return &NodeItemRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, editorNodeItemURLTemplate, pathParameters),
 	}
 }
 
+// Put sends a PUT request.
 func (rB *NodeItemRequestBuilder) Put(ctx context.Context, body NodeUpdateRequest, config *NodeItemRequestBuilderPutRequestConfiguration) (NodeResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
@@ -202,12 +208,14 @@ type ValidationRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// NewValidationRequestBuilderInternal instantiates a new ValidationRequestBuilder.
 func NewValidationRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *ValidationRequestBuilder {
 	return &ValidationRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, editorValidateURLTemplate, pathParameters),
 	}
 }
 
+// Get sends a GET request.
 func (rB *ValidationRequestBuilder) Get(ctx context.Context, config *ValidationRequestBuilderGetRequestConfiguration) (ValidationResponse, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder

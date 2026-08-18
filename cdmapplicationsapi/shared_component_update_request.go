@@ -13,10 +13,12 @@ type SharedComponentUpdateRequest struct {
 	core.BaseModel
 }
 
+// NewSharedComponentUpdateRequest instantiates a new SharedComponentUpdateRequest.
 func NewSharedComponentUpdateRequest() *SharedComponentUpdateRequest {
 	return &SharedComponentUpdateRequest{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the object's properties to the given writer.
 func (m *SharedComponentUpdateRequest) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -28,6 +30,7 @@ func (m *SharedComponentUpdateRequest) Serialize(writer serialization.Serializat
 	)
 }
 
+// GetFieldDeserializers returns the deserializers for this object's fields.
 func (m *SharedComponentUpdateRequest) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		appNameKey:             internalSerialization.DeserializeStringFunc(m.setAppName),
@@ -36,18 +39,23 @@ func (m *SharedComponentUpdateRequest) GetFieldDeserializers() map[string]func(s
 	}
 }
 
+// GetAppName returns the app name.
 func (m *SharedComponentUpdateRequest) GetAppName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*SharedComponentUpdateRequest, *string](m, appNameKey)
 }
 func (m *SharedComponentUpdateRequest) setAppName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, appNameKey, val)
 }
+
+// GetSharedComponentName returns the shared component name.
 func (m *SharedComponentUpdateRequest) GetSharedComponentName() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*SharedComponentUpdateRequest, *string](m, sharedComponentNameKey)
 }
 func (m *SharedComponentUpdateRequest) setSharedComponentName(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sharedComponentNameKey, val)
 }
+
+// GetData returns the data.
 func (m *SharedComponentUpdateRequest) GetData() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*SharedComponentUpdateRequest, *string](m, dataKey)
 }
@@ -55,6 +63,7 @@ func (m *SharedComponentUpdateRequest) setData(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, dataKey, val)
 }
 
+// CreateSharedComponentUpdateRequestFromDiscriminatorValue creates a new SharedComponentUpdateRequest from a ParseNode.
 func CreateSharedComponentUpdateRequestFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewSharedComponentUpdateRequest(), nil
 }

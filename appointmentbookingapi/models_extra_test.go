@@ -102,7 +102,7 @@ func TestAvailabilityResultModel_GettersSetters(t *testing.T) {
 	}{
 		{"Availability", func(v interface{}) error { return model.SetAvailability(v.([]AvailabilitySlot)) }, func() (interface{}, error) { return model.GetAvailability() }, []AvailabilitySlot{NewAvailabilitySlot()}},
 		{"HasMore", func(v interface{}) error { return model.SetHasMore(v.(*bool)) }, func() (interface{}, error) { return model.GetHasMore() }, internal.ToPointer(true)},
-		{"NextAvailableSlot", func(v interface{}) error { return model.SetNextAvailableSlot(v) }, func() (interface{}, error) { return model.GetNextAvailableSlot() }, "val"},
+		{"NextAvailableSlot", func(v interface{}) error { return model.SetNextAvailableSlot(v.(AvailabilitySlot)) }, func() (interface{}, error) { return model.GetNextAvailableSlot() }, AvailabilitySlot(NewAvailabilitySlot())},
 		{"NoApptAvailable", func(v interface{}) error { return model.SetNoApptAvailable(v.(*bool)) }, func() (interface{}, error) { return model.GetNoApptAvailable() }, internal.ToPointer(true)},
 		{"Success", func(v interface{}) error { return model.SetSuccess(v.(*bool)) }, func() (interface{}, error) { return model.GetSuccess() }, internal.ToPointer(true)},
 		{"TimeZone", func(v interface{}) error { return model.SetTimeZone(v.(*string)) }, func() (interface{}, error) { return model.GetTimeZone() }, internal.ToPointer("val")},
@@ -132,30 +132,40 @@ func TestCreateAvailabilitySlotFromDiscriminatorValue(t *testing.T) {
 	assert.NotNil(t, parsable)
 }
 
-func TestAvailabilitySlotModel_GetAdditionalData_Empty(t *testing.T) {
+func TestAvailabilitySlotModel_GettersSetters(t *testing.T) {
 	model := NewAvailabilitySlot()
 
-	got := model.GetAdditionalData()
+	tests := []struct {
+		name   string
+		setter func(val any) error
+		getter func() (any, error)
+		value  any
+	}{
+		{"Available", func(v any) error { return model.SetAvailable(v.(*bool)) }, func() (any, error) { return model.GetAvailable() }, internal.ToPointer(true)},
+		{"EndDate", func(v any) error { return model.SetEndDate(v.(*string)) }, func() (any, error) { return model.GetEndDate() }, internal.ToPointer("2026-07-29 10:00:00")},
+		{"EndDateDisplay", func(v any) error { return model.SetEndDateDisplay(v.(*string)) }, func() (any, error) { return model.GetEndDateDisplay() }, internal.ToPointer("10:00 AM")},
+		{"EndDateUTC", func(v any) error { return model.SetEndDateUTC(v.(*string)) }, func() (any, error) { return model.GetEndDateUTC() }, internal.ToPointer("2026-07-29 17:00:00")},
+		{"StartDate", func(v any) error { return model.SetStartDate(v.(*string)) }, func() (any, error) { return model.GetStartDate() }, internal.ToPointer("2026-07-29 09:00:00")},
+		{"StartDateDisplay", func(v any) error { return model.SetStartDateDisplay(v.(*string)) }, func() (any, error) { return model.GetStartDateDisplay() }, internal.ToPointer("9:00 AM")},
+		{"StartDateUTC", func(v any) error { return model.SetStartDateUTC(v.(*string)) }, func() (any, error) { return model.GetStartDateUTC() }, internal.ToPointer("2026-07-29 16:00:00")},
+	}
 
-	assert.Equal(t, map[string]interface{}{}, got)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.setter(tt.value)
+			require.NoError(t, err)
+			got, err := tt.getter()
+			require.NoError(t, err)
+			assert.Equal(t, tt.value, got)
+		})
+	}
 }
 
-func TestAvailabilitySlotModel_GetSetAdditionalData(t *testing.T) {
-	model := NewAvailabilitySlot()
-	want := map[string]interface{}{"start": "09:00", "end": "10:00"}
+func TestAvailabilitySlotModel_GettersOnNilModel(t *testing.T) {
+	var model *AvailabilitySlotModel
 
-	model.SetAdditionalData(want)
-	got := model.GetAdditionalData()
+	got, err := model.GetAvailable()
 
-	assert.Equal(t, want, got)
-}
-
-func TestAvailabilitySlotModel_GetAdditionalData_DoesNotWriteBackOnEmptyRead(t *testing.T) {
-	model := NewAvailabilitySlot()
-
-	_ = model.GetAdditionalData()
-	val, err := model.GetBackingStore().Get(additionalDataKey)
-
-	require.NoError(t, err)
-	assert.Nil(t, val)
+	require.Error(t, err)
+	assert.Nil(t, got)
 }

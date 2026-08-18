@@ -2,9 +2,11 @@ package caseapi
 
 import (
 	"context"
+	"errors"
 	"maps"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
@@ -19,14 +21,22 @@ type CaseRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// NewCaseRequestBuilderInternal instantiates a new CaseRequestBuilder with the provided request parameters.
+// NewCaseRequestBuilderInternal instantiates a new [CaseRequestBuilder].
 func NewCaseRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CaseRequestBuilder {
 	return &CaseRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, caseURLTemplate, pathParameters),
 	}
 }
 
-// ByID returns a CaseItemRequestBuilder for the specified case ID.
+// NewFindServiceRequestBuilder instantiates a new [CaseRequestBuilder].
+func NewFindServiceRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *CaseRequestBuilder {
+	return NewCaseRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
+}
+
+// ByID returns a [CaseItemRequestBuilder] for the specified case ID.
 func (rB *CaseRequestBuilder) ByID(id string) *CaseItemRequestBuilder {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
@@ -36,13 +46,13 @@ func (rB *CaseRequestBuilder) ByID(id string) *CaseItemRequestBuilder {
 	return NewCaseItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
-// FieldValues returns a CaseFieldValuesRequestBuilder for the specified field name.
-func (rB *CaseRequestBuilder) FieldValues(fieldName string) *CaseFieldValuesRequestBuilder {
+// FieldValues returns a [CaseFieldValuesRequestBuilder] for the specified field name.
+func (rB *CaseRequestBuilder) FieldValues(fieldName string) *CaseFieldValuesRequestBuilder { // V
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
-	pathParameters["field_name"] = fieldName
+	pathParameters[fieldNameKey] = fieldName
 	return NewCaseFieldValuesRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
@@ -68,14 +78,22 @@ func (rB *CaseRequestBuilder) Get(ctx context.Context, config *CaseRequestBuilde
 		return nil, nil
 	}
 
-	return res.(CaseCollectionResponse), nil
+	typedResp, ok := res.(CaseCollectionResponse)
+	if !ok {
+		// TODO: standardize error
+		return nil, errors.New("unexpected type")
+	}
+
+	return typedResp, nil
 }
 
-// ToGetRequestInformation creates a RequestInformation object for a GET request.
+// ToGetRequestInformation creates a [abstractions.RequestInformation] object for a GET request.
 func (rB *CaseRequestBuilder) ToGetRequestInformation(_ context.Context, config *CaseRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
+
+	// TODO: check for nil/empty template and path parameters
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
 	abstractions.ConfigureRequestInformation(requestInfo, config)
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
@@ -105,14 +123,22 @@ func (rB *CaseRequestBuilder) Post(ctx context.Context, body CaseResult, config 
 		return nil, nil
 	}
 
-	return res.(CaseItemResponse), nil
+	typedResp, ok := res.(CaseItemResponse)
+	if !ok {
+		// TODO: standardize error
+		return nil, errors.New("unexpected type")
+	}
+
+	return typedResp, nil
 }
 
-// ToPostRequestInformation creates a RequestInformation object for a POST request.
+// ToPostRequestInformation creates a [abstractions.RequestInformation] object for a POST request.
 func (rB *CaseRequestBuilder) ToPostRequestInformation(ctx context.Context, body CaseResult, config *CaseRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
 	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
 	}
+
+	// TODO: check for nil/empty template and path parameters
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
 	abstractions.ConfigureRequestInformation(requestInfo, config)
 	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())

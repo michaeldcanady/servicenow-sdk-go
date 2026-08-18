@@ -26,7 +26,7 @@ just build | just lint | just fmt   # justfile wraps the above
 Integration and e2e tests are excluded from a plain `go test ./...` by build tags:
 ```bash
 go test -tags integration ./tests/integration/...   # godog/BDD, uses httpmock — no live instance needed
-go test -tags e2e ./tests/e2e/...                   # hits a real ServiceNow instance via .env credentials
+go test -tags e2e ./tests/integration/v2/...        # hits a real ServiceNow instance via .env credentials
 ```
 
 Docs (Docusaurus, in `website/`) are built via `just generate-docs` / served via `just serve-docs` (Node 20+; `just setup-docs` first). Site pages live in `website/docs/`; Go code samples are single-sourced from `website/snippets/*.go` via the `GoSnippet`/`GoExample` MDX components (`// [START x]` / `// [END x]` region markers). `docs/` now holds only internal engineering docs (ADRs, blueprints).
@@ -60,8 +60,11 @@ template's path parameters accumulate as you chain deeper (see `now_request_buil
   `kiotaStore.BackingStore`, not struct fields (this changed from plain fields to store-backed
   accessors during the v2 rework — see PR #474 / commit `95ee5a9`).
 - `core.ServiceNowItemResponse[T]` / `core.ServiceNowCollectionResponse[T]` — generic response
-  envelopes; `T` is constrained by `internal/model.ServiceNowItem` (`store.BackedModel` +
-  `serialization.Parsable` + `GetSysID()`).
+  envelopes; `T` is constrained only by `serialization.Parsable`, deliberately looser than
+  `internal/model.ServiceNowItem` (`store.BackedModel` + `serialization.Parsable` +
+  `GetSysID()`) used elsewhere (e.g. `tableapi`). Many real result payloads (e.g.
+  `StatsResultModel`, `ConfigurationResult`, `ActivitySubscriptionModel`) aren't table records
+  and have no `sys_id`, so tightening this to `model.ServiceNowItem` is not viable.
 - `core.DefaultErrorMapping()` + `internal.GetErrorRegistryInstance()` — every request builder's
   `Send`/`SendPrimitive` call passes `core.DefaultErrorMapping()`, which maps HTTP status codes
   (`"400"`, `"401"`, `"404"`, `"5XX"`, `"XXX"`, ...) to `core.ServiceNowError` discriminator
@@ -145,11 +148,12 @@ option.
   HTTP mocked via `httpmock` and internal `testify/mock`-based mocks in `internal/mocking`. Every new
   exported type/method needs a test — this is enforced by convention (and by the
   `api-module-consistency-reviewer` agent), not tooling.
-- **Integration tests** (`tests/integration/`, `//go:build integration`): Gherkin `.feature` files
-  under `tests/integration/features/` + step definitions using `godog`, `httpmock`, and `godotenv` for
+- **Integration tests** (`tests/integration/v2/`, `//go:build integration`): Gherkin `.feature` files
+  under `tests/integration/v2/features/` + step definitions using `godog`, `httpmock`, and `godotenv` for
   `.env`-based config — no live ServiceNow instance required.
-- **E2E tests** (`tests/e2e/`, `//go:build e2e`): hit a real ServiceNow instance using credentials
-  from `.env`; run manually, not part of the default suite.
+- **E2E tests** (`tests/integration/v2/`, `//go:build e2e`): same godog feature files and step
+  definitions as integration, but run against a real ServiceNow instance (no httpmock). Uses
+  `@e2e`-tagged scenarios and tag filtering to select live-only tests. Credentials from `.env`.
 
 ## Subagent conventions
 

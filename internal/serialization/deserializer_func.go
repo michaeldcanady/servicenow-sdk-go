@@ -24,22 +24,27 @@ func deserializePrimitiveFunc[T any](setter ModelSetter[T], get func(serializati
 	}
 }
 
-// DeserializeStringFunc returns a deserializer function for a string value.
+// DeserializeStringFunc returns a deserializer function for a [string] value.
 func DeserializeStringFunc(setter ModelSetter[*string]) serialization.NodeParser {
 	return deserializePrimitiveFunc(setter, func(n serialization.ParseNode) (*string, error) { return n.GetStringValue() })
 }
 
-// DeserializeInt64Func returns a deserializer function for an int64 value.
+// DeserializeInt64Func returns a deserializer function for an [int64] value.
 func DeserializeInt64Func(setter ModelSetter[*int64]) serialization.NodeParser {
 	return deserializePrimitiveFunc(setter, func(n serialization.ParseNode) (*int64, error) { return n.GetInt64Value() })
 }
 
-// DeserializeInt32Func returns a deserializer function for an int32 value.
+// DeserializeInt32Func returns a deserializer function for an [int32] value.
 func DeserializeInt32Func(setter ModelSetter[*int32]) serialization.NodeParser {
 	return deserializePrimitiveFunc(setter, func(n serialization.ParseNode) (*int32, error) { return n.GetInt32Value() })
 }
 
-// DeserializeBoolFunc returns a deserializer function for a bool value.
+// DeserializeInt8Func returns a deserializer function for an [int8] value.
+func DeserializeInt8Func(setter ModelSetter[*int8]) serialization.NodeParser {
+	return deserializePrimitiveFunc(setter, func(n serialization.ParseNode) (*int8, error) { return n.GetInt8Value() })
+}
+
+// DeserializeBoolFunc returns a deserializer function for a [bool] value.
 func DeserializeBoolFunc(setter ModelSetter[*bool]) serialization.NodeParser {
 	return deserializePrimitiveFunc(setter, func(n serialization.ParseNode) (*bool, error) { return n.GetBoolValue() })
 }
@@ -83,6 +88,20 @@ func DeserializeByteArrayFunc(setter ModelSetter[[]byte]) serialization.NodePars
 func DeserializeMutatedByteArrayFunc[T any](mutator conversion.Mutator[[]byte, T], setter ModelSetter[T]) serialization.NodeParser {
 	return func(node serialization.ParseNode) error {
 		return SetMutatedValueFromSource(node.GetByteArrayValue, setter, mutator)
+	}
+}
+
+func DeserializeGetCollectionOfPrimitiveValuesFunc[T any](targetType string, setter ModelSetter[[]T]) serialization.NodeParser {
+	return func(node serialization.ParseNode) error {
+		val, err := node.GetCollectionOfPrimitiveValues(targetType)
+		if err != nil {
+			return err
+		}
+		res := make([]T, len(val))
+		for i, v := range val {
+			res[i] = v.(T)
+		}
+		return setter(res)
 	}
 }
 

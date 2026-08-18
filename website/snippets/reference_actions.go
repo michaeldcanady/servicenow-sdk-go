@@ -7,7 +7,6 @@ import (
 	"log"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/actsubapi"
 	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/appointmentbookingapi"
 	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/appserviceapi"
 	caseapi "github.com/michaeldcanady/servicenow-sdk-go/caseapi"
@@ -64,30 +63,6 @@ func refListActivities() {
 	_ = response
 }
 
-func refListContexts() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_list_contexts]
-	response, err := client.Now().ActSub().Contexts().Get(ctx, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_list_contexts]
-	_ = response
-}
-
-func refListSubscriptionObjects() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_list_subscription_objects]
-	response, err := client.Now().ActSub().SubObjects().Get(ctx, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_list_subscription_objects]
-	_ = response
-}
-
 func refGetFacetInstances() {
 	var client *servicenowsdkgo.ServiceNowServiceClient
 	ctx := context.Background()
@@ -97,130 +72,6 @@ func refGetFacetInstances() {
 		log.Fatal(err)
 	}
 	// [END ref_get_facet_instances]
-	_ = response
-}
-
-func refGetFollowings() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_get_followings]
-	response, err := client.Now().ActSub().Followings().ByFollower("{follower}").Get(ctx, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_get_followings]
-	_ = response
-}
-
-func refGetPreference() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_get_preference]
-	response, err := client.Now().ActSub().Preferences().ByProfileID("{profileID}").Get(ctx, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_get_preference]
-	_ = response
-}
-
-func refCreatePreference() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_create_preference]
-	// Build the request body
-	var body *actsubapi.ActivitySubscriptionModel
-	response, err := client.Now().ActSub().Preferences().Post(ctx, body, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_create_preference]
-	_ = response
-}
-
-func refGetSubscription() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_get_subscription]
-	response, err := client.Now().ActSub().Subscriptions().BySubscriberID("{subscriberID}").Get(ctx, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_get_subscription]
-	_ = response
-}
-
-func refCheckSubscription() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_check_subscription]
-	response, err := client.Now().ActSub().Subscriptions().ByObjectID("{objectID}").IsSubscribed().Get(ctx, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_check_subscription]
-	_ = response
-}
-
-func refSubscribe() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_subscribe]
-	// Build the request body
-	var body *actsubapi.ActivitySubscriptionModel
-	response, err := client.Now().ActSub().Subscriptions().ByObjectID("{objectID}").Subscribe().Post(ctx, body, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_subscribe]
-	_ = response
-}
-
-func refUnsubscribe() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_unsubscribe]
-	if err := client.Now().ActSub().Subscriptions().ByObjectID("{objectID}").Unsubscribe().Delete(ctx, nil); err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_unsubscribe]
-}
-
-func refGetSubscribers() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_get_subscribers]
-	response, err := client.Now().ActSub().Subscribers().BySubObject("{subObject}").Get(ctx, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_get_subscribers]
-	_ = response
-}
-
-func refGetUserStream() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_get_user_stream]
-	response, err := client.Now().ActSub().UserStream().ByProfileID("{profileID}").Get(ctx, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_get_user_stream]
-	_ = response
-}
-
-func refUpdateUserStream() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_update_user_stream]
-	// Build the request body
-	var body *actsubapi.ActivitySubscriptionModel
-	response, err := client.Now().ActSub().UserStream().ByProfileID("{profileID}").Put(ctx, body, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_update_user_stream]
 	_ = response
 }
 
@@ -287,20 +138,6 @@ func refExecuteRuleConditions() {
 		log.Fatal(err)
 	}
 	// [END ref_execute_rule_conditions]
-	_ = response
-}
-
-func refRequestUserWindow() {
-	var client *servicenowsdkgo.ServiceNowServiceClient
-	ctx := context.Background()
-	// [START ref_request_user_window]
-	// Build the request body
-	body := map[string]any{ /* window inputs */ }
-	response, err := client.AppointmentBooking().UserWindow().Post(ctx, body, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// [END ref_request_user_window]
 	_ = response
 }
 
@@ -659,8 +496,8 @@ func refUpdateDeployables() {
 	ctx := context.Background()
 	// [START ref_update_deployables]
 	// Build the request body
-	var body *cdmapplicationsapi.DeployableUpdateRequest
-	response, err := client.Cdm().Applications().Deployables().Put(ctx, body, nil)
+
+	response, err := client.Cdm().Applications().Deployables().Put(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -719,8 +556,7 @@ func refUpdateSharedComponents() {
 	ctx := context.Background()
 	// [START ref_update_shared_components]
 	// Build the request body
-	var body *cdmapplicationsapi.SharedComponentUpdateRequest
-	response, err := client.Cdm().Applications().SharedComponents().Put(ctx, body, nil)
+	response, err := client.Cdm().Applications().SharedComponents().Put(ctx, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -1004,25 +840,12 @@ func _() {
 	refGetAccount()
 	refGetAggregates()
 	refListActivities()
-	refListContexts()
-	refListSubscriptionObjects()
 	refGetFacetInstances()
-	refGetFollowings()
-	refGetPreference()
-	refCreatePreference()
-	refGetSubscription()
-	refCheckSubscription()
-	refSubscribe()
-	refUnsubscribe()
-	refGetSubscribers()
-	refGetUserStream()
-	refUpdateUserStream()
 	refCheckAvailability()
 	refBookAppointment()
 	refGetCalendar()
 	refGetConfiguration()
 	refExecuteRuleConditions()
-	refRequestUserWindow()
 	refCreateApplicationService()
 	refFindService()
 	refRegisterService()

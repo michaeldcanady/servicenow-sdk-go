@@ -21,9 +21,6 @@ func CreateCaseItemResponseFromDiscriminatorValue(_ serialization.ParseNode) (se
 	return core.NewBaseServiceNowItemResponse[*CaseResultModel](CreateCaseResultFromDiscriminatorValue), nil
 }
 
-// ActivitiesResponse represents a single activities response.
-type ActivitiesResponse = core.ServiceNowItemResponse[*ActivitiesResultModel]
-
 // CreateActivitiesResponseFromDiscriminatorValue is a factory for creating an ActivitiesResponse.
 func CreateActivitiesResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return core.NewBaseServiceNowItemResponse[*ActivitiesResultModel](CreateActivitiesResultFromDiscriminatorValue), nil

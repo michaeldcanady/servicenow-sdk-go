@@ -13,8 +13,10 @@ const (
 	stateInactive = "inactive"
 )
 
+// State represents the state of a policy mapping.
 type State int64
 
+// StateUnknown, StateActive, and StateInactive are the possible values of State.
 const (
 	StateUnknown State = iota - 1
 	StateActive
@@ -27,12 +29,14 @@ var stateStrings = map[State]string{
 	StateInactive: stateInactive,
 }
 
+// String returns the string representation of the State.
 func (i State) String() string {
 	return conversion.EnumString(stateStrings, i, stateUnknown)
 }
 
 var _ serialization.EnumFactory = ParseState
 
+// ParseState parses a string into a State.
 func ParseState(v string) (interface{}, error) {
 	switch v {
 	case stateUnknown:

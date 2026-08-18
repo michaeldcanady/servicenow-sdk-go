@@ -28,6 +28,7 @@ func (e *CredentialError) Error() string {
 	return e.Message
 }
 
+// Sentinel Oauth2Error values for missing required credential fields.
 var (
 	ErrEmptyClientID     = NewOauth2Error("clientId is empty")
 	ErrEmptyClientSecret = NewOauth2Error("clientSecret is empty")

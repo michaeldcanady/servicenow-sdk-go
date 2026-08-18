@@ -27,8 +27,8 @@ type AvailabilityResult interface {
 	SetAvailability([]AvailabilitySlot) error
 	GetHasMore() (*bool, error)
 	SetHasMore(*bool) error
-	GetNextAvailableSlot() (any, error)
-	SetNextAvailableSlot(any) error
+	GetNextAvailableSlot() (AvailabilitySlot, error)
+	SetNextAvailableSlot(AvailabilitySlot) error
 	GetNoApptAvailable() (*bool, error)
 	SetNoApptAvailable(*bool) error
 	GetSuccess() (*bool, error)
@@ -39,18 +39,22 @@ type AvailabilityResult interface {
 	SetTimeZoneDisplayValue(*string) error
 }
 
+// AvailabilityResultModel represents the availability result model.
 type AvailabilityResultModel struct {
 	core.BaseModel
 }
 
+// NewAvailabilityResult creates a new instance of AvailabilityResultModel.
 func NewAvailabilityResult() *AvailabilityResultModel {
 	return &AvailabilityResultModel{BaseModel: *core.NewBaseModel()}
 }
 
+// CreateAvailabilityResultFromDiscriminatorValue creates a new AvailabilityResult from a ParseNode.
 func CreateAvailabilityResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewAvailabilityResult(), nil
 }
 
+// Serialize writes the objects properties to the current writer.
 func (m *AvailabilityResultModel) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -58,19 +62,20 @@ func (m *AvailabilityResultModel) Serialize(writer serialization.SerializationWr
 	return internalSerialization.Serialize(writer,
 		internalSerialization.SerializeCollectionOfObjectValuesFunc[AvailabilitySlot](availabilityKey, m.GetAvailability),
 		internalSerialization.SerializeBoolFunc(hasMoreKey, m.GetHasMore),
-		internalSerialization.SerializeAnyFunc(nextAvailableSlotKey, m.GetNextAvailableSlot),
+		internalSerialization.SerializeObjectValueFunc[AvailabilitySlot](nextAvailableSlotKey, m.GetNextAvailableSlot),
 		internalSerialization.SerializeBoolFunc(noApptAvailableKey, m.GetNoApptAvailable),
 		internalSerialization.SerializeBoolFunc(successKey, m.GetSuccess),
-		internalSerialization.SerializeStringFunc("time_zone", m.GetTimeZone),
+		internalSerialization.SerializeStringFunc(timeZoneKey, m.GetTimeZone),
 		internalSerialization.SerializeStringFunc(timeZoneDisplayValueKey, m.GetTimeZoneDisplayValue),
 	)
 }
 
+// GetFieldDeserializers returns the deserialization information for this object.
 func (m *AvailabilityResultModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		availabilityKey:         internalSerialization.DeserializeCollectionOfObjectValuesFunc[AvailabilitySlot](CreateAvailabilitySlotFromDiscriminatorValue, m.SetAvailability),
 		hasMoreKey:              internalSerialization.DeserializeBoolFunc(m.SetHasMore),
-		nextAvailableSlotKey:    internalSerialization.DeserializeAnyFunc(m.SetNextAvailableSlot),
+		nextAvailableSlotKey:    internalSerialization.DeserializeObjectValueFunc[AvailabilitySlot](CreateAvailabilitySlotFromDiscriminatorValue, m.SetNextAvailableSlot),
 		noApptAvailableKey:      internalSerialization.DeserializeBoolFunc(m.SetNoApptAvailable),
 		successKey:              internalSerialization.DeserializeBoolFunc(m.SetSuccess),
 		timeZoneKey:             internalSerialization.DeserializeStringFunc(m.SetTimeZone),
@@ -78,95 +83,72 @@ func (m *AvailabilityResultModel) GetFieldDeserializers() map[string]func(serial
 	}
 }
 
+// GetAvailability returns the availability value.
 func (m *AvailabilityResultModel) GetAvailability() ([]AvailabilitySlot, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, []AvailabilitySlot](m, availabilityKey)
 }
+
+// SetAvailability sets the availability value.
 func (m *AvailabilityResultModel) SetAvailability(val []AvailabilitySlot) error {
 	return store.DefaultBackedModelMutatorFunc(m, availabilityKey, val)
 }
+
+// GetHasMore returns the has more value.
 func (m *AvailabilityResultModel) GetHasMore() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, *bool](m, hasMoreKey)
 }
+
+// SetHasMore sets the has more value.
 func (m *AvailabilityResultModel) SetHasMore(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, hasMoreKey, val)
 }
-func (m *AvailabilityResultModel) GetNextAvailableSlot() (any, error) {
-	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, any](m, nextAvailableSlotKey)
+
+// GetNextAvailableSlot returns the next available slot value.
+func (m *AvailabilityResultModel) GetNextAvailableSlot() (AvailabilitySlot, error) {
+	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, AvailabilitySlot](m, nextAvailableSlotKey)
 }
-func (m *AvailabilityResultModel) SetNextAvailableSlot(val any) error {
+
+// SetNextAvailableSlot sets the next available slot value.
+func (m *AvailabilityResultModel) SetNextAvailableSlot(val AvailabilitySlot) error {
 	return store.DefaultBackedModelMutatorFunc(m, nextAvailableSlotKey, val)
 }
+
+// GetNoApptAvailable returns the no appt available value.
 func (m *AvailabilityResultModel) GetNoApptAvailable() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, *bool](m, noApptAvailableKey)
 }
+
+// SetNoApptAvailable sets the no appt available value.
 func (m *AvailabilityResultModel) SetNoApptAvailable(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, noApptAvailableKey, val)
 }
+
+// GetSuccess returns the success value.
 func (m *AvailabilityResultModel) GetSuccess() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, *bool](m, successKey)
 }
+
+// SetSuccess sets the success value.
 func (m *AvailabilityResultModel) SetSuccess(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, successKey, val)
 }
+
+// GetTimeZone returns the time zone value.
 func (m *AvailabilityResultModel) GetTimeZone() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, *string](m, timeZoneKey)
 }
+
+// SetTimeZone sets the time zone value.
 func (m *AvailabilityResultModel) SetTimeZone(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, timeZoneKey, val)
 }
+
+// GetTimeZoneDisplayValue returns the time zone display value value.
 func (m *AvailabilityResultModel) GetTimeZoneDisplayValue() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*AvailabilityResultModel, *string](m, timeZoneDisplayValueKey)
 }
+
+// SetTimeZoneDisplayValue sets the time zone display value value.
 func (m *AvailabilityResultModel) SetTimeZoneDisplayValue(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, timeZoneDisplayValueKey, val)
-}
-
-// AvailabilitySlot represents an available slot.
-//
-// The ServiceNow schema for this object is not documented, so it is modeled as a
-// pass-through additional-data holder: every field it contains is exposed only
-// through GetAdditionalData/SetAdditionalData, the same mechanism Kiota generates
-// for open/dynamic objects.
-type AvailabilitySlot interface {
-	serialization.Parsable
-	serialization.AdditionalDataHolder
-	kiotaStore.BackedModel
-}
-
-type AvailabilitySlotModel struct {
-	core.BaseModel
-}
-
-func NewAvailabilitySlot() *AvailabilitySlotModel {
-	return &AvailabilitySlotModel{BaseModel: *core.NewBaseModel()}
-}
-
-func CreateAvailabilitySlotFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
-	return NewAvailabilitySlot(), nil
-}
-
-func (m *AvailabilitySlotModel) Serialize(writer serialization.SerializationWriter) error {
-	if conversion.IsNil(m) {
-		return nil
-	}
-	return writer.WriteAdditionalData(m.GetAdditionalData())
-}
-
-// GetFieldDeserializers returns no known fields; the underlying kiota-serialization-json-go
-// parse node automatically routes any unrecognized property into AdditionalData for models
-// implementing serialization.AdditionalDataHolder, so no wildcard entry is needed here.
-func (m *AvailabilitySlotModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	return map[string]func(serialization.ParseNode) error{}
-}
-
-func (m *AvailabilitySlotModel) GetAdditionalData() map[string]interface{} {
-	val, err := store.DefaultBackedModelAccessorFunc[*AvailabilitySlotModel, map[string]interface{}](m, additionalDataKey)
-	if err != nil || val == nil {
-		return make(map[string]interface{})
-	}
-	return val
-}
-
-func (m *AvailabilitySlotModel) SetAdditionalData(value map[string]interface{}) {
-	_ = store.DefaultBackedModelMutatorFunc(m, additionalDataKey, value)
 }

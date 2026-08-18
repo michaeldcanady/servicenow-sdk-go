@@ -13,10 +13,12 @@ type ChangesetResult struct {
 	core.BaseModel
 }
 
+// NewChangesetResult instantiates a new ChangesetResult.
 func NewChangesetResult() *ChangesetResult {
 	return &ChangesetResult{BaseModel: *core.NewBaseModel()}
 }
 
+// Serialize writes the object's properties to the given writer.
 func (m *ChangesetResult) Serialize(writer serialization.SerializationWriter) error {
 	if conversion.IsNil(m) {
 		return nil
@@ -36,6 +38,7 @@ func (m *ChangesetResult) Serialize(writer serialization.SerializationWriter) er
 	)
 }
 
+// GetFieldDeserializers returns the deserializers for this object's fields.
 func (m *ChangesetResult) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
 	return map[string]func(serialization.ParseNode) error{
 		autoValidateKey:              internalSerialization.DeserializeBoolFunc(m.setAutoValidate),
@@ -52,66 +55,87 @@ func (m *ChangesetResult) GetFieldDeserializers() map[string]func(serialization.
 	}
 }
 
+// GetAutoValidate returns the auto validate.
 func (m *ChangesetResult) GetAutoValidate() (*bool, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *bool](m, autoValidateKey)
 }
 func (m *ChangesetResult) setAutoValidate(val *bool) error {
 	return store.DefaultBackedModelMutatorFunc(m, autoValidateKey, val)
 }
+
+// GetCdmApplication returns the cdm application.
 func (m *ChangesetResult) GetCdmApplication() (*Reference, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *Reference](m, cdmApplicationKey)
 }
 func (m *ChangesetResult) setCdmApplication(val *Reference) error {
 	return store.DefaultBackedModelMutatorFunc(m, cdmApplicationKey, val)
 }
+
+// GetCommittedAt returns the committed at.
 func (m *ChangesetResult) GetCommittedAt() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *string](m, committedAtKey)
 }
 func (m *ChangesetResult) setCommittedAt(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, committedAtKey, val)
 }
+
+// GetCommittedBy returns the committed by.
 func (m *ChangesetResult) GetCommittedBy() (*Reference, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *Reference](m, committedByKey)
 }
 func (m *ChangesetResult) setCommittedBy(val *Reference) error {
 	return store.DefaultBackedModelMutatorFunc(m, committedByKey, val)
 }
+
+// GetDescription returns the description.
 func (m *ChangesetResult) GetDescription() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *string](m, descriptionKey)
 }
 func (m *ChangesetResult) setDescription(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, descriptionKey, val)
 }
+
+// GetLastConflictDetectionTime returns the last conflict detection time.
 func (m *ChangesetResult) GetLastConflictDetectionTime() (*int64, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *int64](m, lastConflictDetectionTimeKey)
 }
 func (m *ChangesetResult) setLastConflictDetectionTime(val *int64) error {
 	return store.DefaultBackedModelMutatorFunc(m, lastConflictDetectionTimeKey, val)
 }
+
+// GetNumber returns the number.
 func (m *ChangesetResult) GetNumber() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *string](m, numberKey)
 }
 func (m *ChangesetResult) setNumber(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, numberKey, val)
 }
+
+// GetPublishOption returns the publish option.
 func (m *ChangesetResult) GetPublishOption() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *string](m, publishOptionKey)
 }
 func (m *ChangesetResult) setPublishOption(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, publishOptionKey, val)
 }
+
+// GetState returns the state.
 func (m *ChangesetResult) GetState() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *string](m, stateKey)
 }
 func (m *ChangesetResult) setState(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, stateKey, val)
 }
+
+// GetSysID returns the sys id.
 func (m *ChangesetResult) GetSysID() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *string](m, sysIDKey)
 }
 func (m *ChangesetResult) setSysID(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
 }
+
+// GetTitle returns the title.
 func (m *ChangesetResult) GetTitle() (*string, error) {
 	return store.DefaultBackedModelAccessorFunc[*ChangesetResult, *string](m, titleKey)
 }
@@ -119,6 +143,7 @@ func (m *ChangesetResult) setTitle(val *string) error {
 	return store.DefaultBackedModelMutatorFunc(m, titleKey, val)
 }
 
+// CreateChangesetResultFromDiscriminatorValue creates a new ChangesetResult from a ParseNode.
 func CreateChangesetResultFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewChangesetResult(), nil
 }

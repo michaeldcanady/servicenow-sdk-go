@@ -19,9 +19,11 @@
   "cSpell.words": [
     "accountapi",
     "actsubapi",
+    "aggregationapi",
     "APIV",
     "appointmentbookingapi",
     "appserviceapi",
+    "apptmnt",
     "attachmentapi",
     "Batchable",
     "batchapi",
@@ -127,8 +129,10 @@
     "Unmarshall",
     "unparam",
     "Unserviced",
+    "uriparametername",
     "usernamehw",
     "userns",
+    "userwindow",
     "vscodeintellicode",
     "waderyan",
     "yzhang"

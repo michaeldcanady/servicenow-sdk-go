@@ -19,10 +19,12 @@ type RequestBuilder interface {
 	SetURLTemplate(string) error
 }
 
+// BaseRequestBuilder is the base every *api request builder in this SDK embeds.
 type BaseRequestBuilder struct {
 	abstractions.BaseRequestBuilder
 }
 
+// NewBaseRequestBuilder instantiates a new BaseRequestBuilder.
 func NewBaseRequestBuilder(
 	requestAdapter abstractions.RequestAdapter,
 	urlTemplate string,
@@ -41,6 +43,7 @@ func NewBaseRequestBuilder(
 	}
 }
 
+// GetPathParameters returns the request builder's URL path parameters.
 func (rB *BaseRequestBuilder) GetPathParameters() map[string]string {
 	if conversion.IsNil(rB) {
 		return nil
@@ -49,6 +52,7 @@ func (rB *BaseRequestBuilder) GetPathParameters() map[string]string {
 	return rB.PathParameters
 }
 
+// SetPathParameters sets the request builder's URL path parameters.
 func (rB *BaseRequestBuilder) SetPathParameters(pathParameters map[string]string) error {
 	if conversion.IsNil(rB) {
 		return snerrors.ErrNilRequestBuilder
@@ -62,6 +66,7 @@ func (rB *BaseRequestBuilder) SetPathParameters(pathParameters map[string]string
 	return nil
 }
 
+// GetRequestAdapter returns the request builder's RequestAdapter.
 func (rB *BaseRequestBuilder) GetRequestAdapter() abstractions.RequestAdapter {
 	if conversion.IsNil(rB) {
 		return nil
@@ -70,6 +75,7 @@ func (rB *BaseRequestBuilder) GetRequestAdapter() abstractions.RequestAdapter {
 	return rB.RequestAdapter
 }
 
+// SetRequestAdapter sets the request builder's RequestAdapter.
 func (rB *BaseRequestBuilder) SetRequestAdapter(requestAdapter abstractions.RequestAdapter) error {
 	if conversion.IsNil(rB) {
 		return snerrors.ErrNilRequestBuilder
@@ -83,6 +89,7 @@ func (rB *BaseRequestBuilder) SetRequestAdapter(requestAdapter abstractions.Requ
 	return nil
 }
 
+// GetURLTemplate returns the request builder's URL template.
 func (rB *BaseRequestBuilder) GetURLTemplate() string {
 	if conversion.IsNil(rB) {
 		return ""
@@ -91,6 +98,7 @@ func (rB *BaseRequestBuilder) GetURLTemplate() string {
 	return rB.UrlTemplate
 }
 
+// SetURLTemplate sets the request builder's URL template.
 func (rB *BaseRequestBuilder) SetURLTemplate(urlTemplate string) error {
 	if conversion.IsNil(rB) {
 		return snerrors.ErrNilRequestBuilder

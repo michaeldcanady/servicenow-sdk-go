@@ -10,6 +10,7 @@ type ServiceDetailsResponse interface {
 	core.ServiceNowItemResponse[*ServiceDetailsResult]
 }
 
+// CreateServiceDetailsResponseFromDiscriminatorValue creates a new ServiceDetailsResponse from a ParseNode.
 func CreateServiceDetailsResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return core.NewBaseServiceNowItemResponse[*ServiceDetailsResult](CreateServiceDetailsResultFromDiscriminatorValue), nil
 }
