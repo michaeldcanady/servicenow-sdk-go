@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -51,7 +52,7 @@ func TestAttachmentModel_GetFieldDeserializers(t *testing.T) {
 func TestAttachmentModel_Serialize(t *testing.T) {
 	m := NewAttachment()
 	err := m.Serialize(nil)
-	require.NoError(t, err)
+	require.ErrorIs(t, err, snerrors.ErrNilWriter)
 
 	var nilM *Attachment
 	err = nilM.Serialize(nil)

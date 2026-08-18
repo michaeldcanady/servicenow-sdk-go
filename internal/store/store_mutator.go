@@ -10,7 +10,7 @@ import (
 
 type MutatorFunc[S store.BackingStore, T any] func(bs S, key string, value T) error
 
-// DefaultStoreMutatorFunc[T] sets the store at the provided key to the provided value.
+// DefaultStoreMutatorFunc[T] sets the [store.BackingStore] at the provided key to the provided value.
 func DefaultStoreMutatorFunc[S store.BackingStore, T any](store store.BackingStore, key string, value T) error {
 	if conversion.IsNil(store) {
 		return snerrors.ErrNilStore

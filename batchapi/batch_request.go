@@ -27,13 +27,13 @@ type BatchRequest interface {
 
 // BatchRequestModel implementation of BatchRequest
 type BatchRequestModel struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewBatchRequestModel creates a new BatchRequest.
 func NewBatchRequestModel() *BatchRequestModel {
 	request := &BatchRequestModel{
-		core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 
 	id := uuid.NewString()

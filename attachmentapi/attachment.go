@@ -38,7 +38,7 @@ const (
 
 // Attachment
 type Attachment struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewAttachment creates a new instance of AttachmentModel
@@ -47,9 +47,9 @@ func NewAttachment() *Attachment {
 }
 
 // newAttachment creates a new instance of AttachmentModel with the provided model underlying it
-func newAttachment(model core.BackedModel) *Attachment {
+func newAttachment(model *core.BaseModel) *Attachment {
 	return &Attachment{
-		model,
+		BaseModel: model,
 	}
 }
 

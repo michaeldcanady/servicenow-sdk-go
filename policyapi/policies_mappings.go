@@ -52,6 +52,11 @@ type PoliciesMappingable interface {
 	core.BackedModel
 }
 
+// PoliciesMapping represents a Service-Now policy mapping.
+type PoliciesMapping struct {
+	*core.BaseModel
+}
+
 // PoliciesMappingsResolved* are the field keys used to (de)serialize a PoliciesMapping.
 const (
 	PoliciesMappingsResolvedDescription      string = "description"
@@ -74,15 +79,10 @@ const (
 	PoliciesMappingsResolvedSysUpdatedOn     string = "sys_updated_on"
 )
 
-// PoliciesMapping represents a Service-Now policy mapping.
-type PoliciesMapping struct {
-	core.BackedModel
-}
-
 // NewPoliciesMapping creates a new instance of PoliciesMappingsInput.
 func NewPoliciesMapping() *PoliciesMapping {
 	return &PoliciesMapping{
-		BackedModel: core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 

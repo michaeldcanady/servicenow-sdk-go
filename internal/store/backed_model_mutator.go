@@ -6,18 +6,21 @@ import (
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 )
 
-// BackedModelMutatorFunc[S, T] defines a generic function signature for setting the value of a backing store
+// BackedModelMutatorFunc[S, T] defines a generic function signature for setting the value of a [kiotaStore.BackedModel]
 // using a specified key.
-type BackedModelMutatorFunc[S kiotaStore.BackingStore, T any] func(S, string, T) error
+type BackedModelMutatorFunc[S kiotaStore.BackedModel, T any] func(S, string, T) error
 
-// DefaultBackedModelMutatorFunc[S, T] is a generic implementation of BackedModelMutatorFunc that sets the value
+// DefaultBackedModelMutatorFunc[S, T] is a generic implementation of [BackedModelMutatorFunc] that sets the value
 // of a backed model.
-// DefaultBackedModelMutatorFunc[S, T] is a generic implementation of BackedModelMutatorFunc that sets the value
-// of a backing kiotaStore.
 func DefaultBackedModelMutatorFunc[S kiotaStore.BackedModel, T any](model S, key string, value T) error {
 	if conversion.IsNil(model) {
 		return snerrors.ErrNilModel
 	}
 
-	return DefaultStoreMutatorFunc[kiotaStore.BackingStore, T](model.GetBackingStore(), key, value)
+	bs := model.GetBackingStore()
+	if conversion.IsNil(bs) {
+		return snerrors.ErrNilStore
+	}
+
+	return DefaultStoreMutatorFunc[kiotaStore.BackingStore](bs, key, value)
 }

@@ -32,13 +32,13 @@ type RestRequestHeader interface {
 
 // RestRequestHeaderModel implementation of RestRequestHeader
 type RestRequestHeaderModel struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewRestRequestHeader creates new instance of BatchHeader
 func NewRestRequestHeader() *RestRequestHeaderModel {
 	return &RestRequestHeaderModel{
-		core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 

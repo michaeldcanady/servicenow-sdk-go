@@ -26,13 +26,13 @@ const (
 
 // ServicedRequestModel represents Service-Now Batch API response's serviced request.
 type ServicedRequestModel struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewServicedRequest instantiates a new ServicedRequest.
 func NewServicedRequest() *ServicedRequestModel {
 	return &ServicedRequestModel{
-		core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 

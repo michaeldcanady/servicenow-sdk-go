@@ -7,6 +7,7 @@ import (
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	"github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -25,8 +26,8 @@ func TestNewBatchRequestModel(t *testing.T) {
 				assert.NotNil(t, parsable)
 				assert.IsType(t, &BatchRequestModel{}, parsable)
 
-				assert.NotNil(t, parsable.BackedModel)
-				assert.IsType(t, &core.BaseModel{}, parsable.BackedModel)
+				assert.NotNil(t, parsable.BaseModel)
+				assert.IsType(t, &core.BaseModel{}, parsable.BaseModel)
 			},
 		},
 	}
@@ -145,11 +146,11 @@ func TestBatchRequest_AddRequest(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				model := mocking.NewMockModel()
 				backingStore := mocking.NewMockBackingStore()
-				model.On("GetBackingStore").Return(backingStore)
 
-				parsable := &BatchRequestModel{model}
+				bs := core.NewBaseModel()
+				bs.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
+				parsable := &BatchRequestModel{BaseModel: bs}
 				req := newMockRestRequest()
 
 				// Expectation that backingStore.Set is called
@@ -160,7 +161,6 @@ func TestBatchRequest_AddRequest(t *testing.T) {
 
 				require.NoError(t, err)
 				backingStore.AssertExpectations(t)
-				model.AssertExpectations(t)
 			},
 		},
 		{
@@ -178,9 +178,7 @@ func TestBatchRequest_AddRequest(t *testing.T) {
 		{
 			name: "Nil request",
 			test: func(t *testing.T) {
-				model := mocking.NewMockModel()
-
-				parsable := &BatchRequestModel{model}
+				parsable := NewBatchRequestModel()
 
 				err := parsable.AddRequest(nil)
 

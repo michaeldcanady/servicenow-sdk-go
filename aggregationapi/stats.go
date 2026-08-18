@@ -75,13 +75,13 @@ type Stats interface {
 
 // StatsModel is the default implementation of Stats.
 type StatsModel struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewStats creates a new instance of StatsModel.
 func NewStats() *StatsModel {
 	return &StatsModel{
-		BackedModel: core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 

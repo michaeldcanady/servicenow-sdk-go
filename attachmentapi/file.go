@@ -66,7 +66,7 @@ type file interface {
 
 // File implements the FileModel interface, representing a file attachment.
 type File struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewFile creates a new instance of FileModel
@@ -75,9 +75,9 @@ func NewFile() *File {
 }
 
 // newFile creates a new instance of FileModel with the provided model underlying it
-func newFile(model core.BackedModel) *File {
+func newFile(model *core.BaseModel) *File {
 	return &File{
-		model,
+		BaseModel: model,
 	}
 }
 

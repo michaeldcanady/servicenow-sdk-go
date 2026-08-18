@@ -32,13 +32,13 @@ type BatchResponse interface {
 
 // BatchResponseModel implementation of BatchResponse
 type BatchResponseModel struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewBatchResponse creates a new batch response
 func NewBatchResponse() *BatchResponseModel {
 	return &BatchResponseModel{
-		core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 

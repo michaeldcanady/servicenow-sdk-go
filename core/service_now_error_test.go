@@ -4,6 +4,9 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
+
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -28,7 +31,7 @@ func TestCreateServiceNowErrorFromDiscriminatorValue(t *testing.T) {
 
 func TestServiceNowError_Serialize(t *testing.T) {
 	err := NewServiceNowError().Serialize(nil)
-	require.NoError(t, err)
+	require.ErrorIs(t, err, snerrors.ErrNilWriter)
 
 	var nilE *ServiceNowError
 	err = nilE.Serialize(nil)
@@ -245,7 +248,7 @@ func TestServiceNowError_ErrorBranches(t *testing.T) {
 	assert.Nil(t, val)
 	assert.Equal(t, errors.New("cannot convert '123' to type core.MainErrorable"), err)
 
-	eNilBS := &ServiceNowError{BackedModel: &mockNilBSModel{}}
+	eNilBS := &ServiceNowError{BaseModel: &BaseModel{backingStoreFactory: func() kiotaStore.BackingStore { return nil }}}
 	val, err = eNilBS.GetError()
 	assert.Nil(t, val)
 	assert.Equal(t, errors.New("store is nil"), err)

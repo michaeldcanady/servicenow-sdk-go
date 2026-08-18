@@ -68,13 +68,13 @@ const (
 
 // Account represents an account object in ServiceNow.
 type Account struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewAccount creates a new instance of AccountModel
 func NewAccount() *Account {
 	return &Account{
-		BackedModel: core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 

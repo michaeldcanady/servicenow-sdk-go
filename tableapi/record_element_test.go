@@ -7,10 +7,17 @@ import (
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
+
+func newRecordElementWithMockStore(bs store.BackingStore) *RecordElement {
+	model := NewRecordElement()
+	model.SetBackingStoreFactory(func() store.BackingStore { return bs })
+	return model
+}
 
 func TestNewRecordElement(t *testing.T) {
 	tests := []struct {
@@ -47,10 +54,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", "display_value").Return(value, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				model := &RecordElement{intModel}
+				model := newRecordElementWithMockStore(backingStore)
 
 				elementValue, err := model.GetDisplayValue()
 
@@ -66,10 +70,7 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", "display_value").Return(nil, errors.New("retrieval error"))
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				model := &RecordElement{intModel}
+				model := newRecordElementWithMockStore(backingStore)
 
 				elementValue, err := model.GetDisplayValue()
 
@@ -80,10 +81,8 @@ func TestRecordElementModel_GetDisplayValue(t *testing.T) {
 		{
 			name: "Nil store",
 			test: func(t *testing.T) {
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				model := &RecordElement{intModel}
+				model := NewRecordElement()
+				model.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				elementValue, err := model.GetDisplayValue()
 
@@ -120,16 +119,12 @@ func TestRecordElementModel_SetDisplayValue(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", "display_value", mock.AnythingOfType("tableapi.ElementValue")).Return(nil)
 
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(backingStore)
-
-				record := &RecordElement{innerModel}
+				record := newRecordElementWithMockStore(backingStore)
 
 				err := record.SetDisplayValue("displayValue")
 
 				require.NoError(t, err)
 				backingStore.AssertExpectations(t)
-				innerModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -138,16 +133,12 @@ func TestRecordElementModel_SetDisplayValue(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", "display_value", mock.AnythingOfType("tableapi.ElementValue")).Return(errors.New("store error"))
 
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(backingStore)
-
-				record := &RecordElement{innerModel}
+				record := newRecordElementWithMockStore(backingStore)
 
 				err := record.SetDisplayValue("displayValue")
 
 				assert.Equal(t, errors.New("store error"), err)
 				backingStore.AssertExpectations(t)
-				innerModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -181,10 +172,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", "value").Return(value, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				model := &RecordElement{intModel}
+				model := newRecordElementWithMockStore(backingStore)
 
 				elementValue, err := model.GetValue()
 
@@ -200,10 +188,7 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", "value").Return(nil, errors.New("retrieval error"))
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				model := &RecordElement{intModel}
+				model := newRecordElementWithMockStore(backingStore)
 
 				elementValue, err := model.GetValue()
 
@@ -214,10 +199,8 @@ func TestRecordElementModel_GetValue(t *testing.T) {
 		{
 			name: "Nil store",
 			test: func(t *testing.T) {
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				model := &RecordElement{intModel}
+				model := NewRecordElement()
+				model.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				elementValue, err := model.GetValue()
 
@@ -254,16 +237,12 @@ func TestRecordElementModel_SetValue(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", "value", mock.AnythingOfType("tableapi.ElementValue")).Return(nil)
 
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(backingStore)
-
-				record := &RecordElement{innerModel}
+				record := newRecordElementWithMockStore(backingStore)
 
 				err := record.SetValue("value")
 
 				require.NoError(t, err)
 				backingStore.AssertExpectations(t)
-				innerModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -272,16 +251,12 @@ func TestRecordElementModel_SetValue(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", "value", mock.AnythingOfType("tableapi.ElementValue")).Return(errors.New("store error"))
 
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(backingStore)
-
-				record := &RecordElement{innerModel}
+				record := newRecordElementWithMockStore(backingStore)
 
 				err := record.SetValue("value")
 
 				assert.Equal(t, errors.New("store error"), err)
 				backingStore.AssertExpectations(t)
-				innerModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -314,10 +289,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", "link").Return(value, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				model := &RecordElement{intModel}
+				model := newRecordElementWithMockStore(backingStore)
 
 				elementValue, err := model.GetLink()
 
@@ -332,10 +304,7 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", "link").Return(nil, errors.New("retrieval error"))
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				model := &RecordElement{intModel}
+				model := newRecordElementWithMockStore(backingStore)
 
 				elementValue, err := model.GetLink()
 
@@ -346,10 +315,8 @@ func TestRecordElementModel_GetLink(t *testing.T) {
 		{
 			name: "Nil store",
 			test: func(t *testing.T) {
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				model := &RecordElement{intModel}
+				model := NewRecordElement()
+				model.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				elementValue, err := model.GetLink()
 
@@ -388,16 +355,12 @@ func TestRecordElementModel_SetLink(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", "link", link).Return(nil)
 
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(backingStore)
-
-				record := &RecordElement{innerModel}
+				record := newRecordElementWithMockStore(backingStore)
 
 				err := record.SetLink(link)
 
 				require.NoError(t, err)
 				backingStore.AssertExpectations(t)
-				innerModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -408,16 +371,12 @@ func TestRecordElementModel_SetLink(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", "link", link).Return(errors.New("store error"))
 
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(backingStore)
-
-				record := &RecordElement{innerModel}
+				record := newRecordElementWithMockStore(backingStore)
 
 				err := record.SetLink(link)
 
 				assert.Equal(t, errors.New("store error"), err)
 				backingStore.AssertExpectations(t)
-				innerModel.AssertExpectations(t)
 			},
 		},
 	}

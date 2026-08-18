@@ -22,13 +22,14 @@ var (
 	ErrEmptyMiddleware         = errors.New("middleware is empty")
 	ErrEmptyKey                = errors.New("key is empty")
 	ErrNilRequestInfo          = errors.New("requestInfo cannot be nil")
-	ErrNilClient               = errors.New("client can't be nil")
+	ErrNilClient               = errors.New("client cannot be nil")
 	ErrNilResult               = errors.New("result property missing in response object")
 	ErrWrongResponseType       = errors.New("incorrect Response Type")
 	ErrParsing                 = errors.New("parsing nextLink url failed")
-	ErrEmptyURI                = errors.New("empty URI")
-	ErrNilCallback             = errors.New("callback can't be nil")
+	ErrEmptyURI                = errors.New("URI is empty")
+	ErrNilCallback             = errors.New("callback cannot be nil")
 	ErrNilParams               = errors.New("params cannot be nil")
+	ErrNilWriter               = errors.New("serialization writer is nil")
 	// ErrUnknownEnumValue reports a wire value that does not correspond to any member of
 	// an enum. Parse<Enum> functions wrap this with the enum name and the offending value,
 	// so callers can match the class of failure with errors.Is regardless of which enum

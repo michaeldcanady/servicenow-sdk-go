@@ -19,12 +19,12 @@ type DiscoveryPopulationMethodAttribute interface {
 }
 
 type DiscoveryPopulationMethodAttributeModel struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 func NewDiscoveryPopulationMethodAttributeModel() *DiscoveryPopulationMethodAttributeModel {
 	return &DiscoveryPopulationMethodAttributeModel{
-		core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 

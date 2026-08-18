@@ -45,13 +45,13 @@ type RestRequest interface {
 
 // RestRequestModel implementation of RestRequestable
 type RestRequestModel struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewRestRequest creates a new rest request
 func NewRestRequest() *RestRequestModel {
 	return &RestRequestModel{
-		core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 

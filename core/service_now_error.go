@@ -17,7 +17,7 @@ const (
 
 // ServiceNowError represents a Service-Now API error
 type ServiceNowError struct {
-	BackedModel
+	*BaseModel
 }
 
 // BadRequestError represents a 400 Bad Request error

@@ -7,6 +7,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -58,10 +59,8 @@ func TestPoliciesMappingsInput_Getters(t *testing.T) {
 			mockStore := mocking.NewMockBackingStore()
 			mockStore.On("Get", tt.key).Return(tt.value, nil)
 
-			mockModel := mocking.NewMockModel()
-			mockModel.On("GetBackingStore").Return(mockStore)
-
-			p := &PoliciesMapping{BackedModel: mockModel}
+			p := NewPoliciesMapping()
+			p.SetBackingStoreFactory(func() kiotaStore.BackingStore { return mockStore })
 
 			res, err := tt.call(p)
 
@@ -105,10 +104,8 @@ func TestPoliciesMappingsInput_Setters(t *testing.T) {
 			mockStore := mocking.NewMockBackingStore()
 			mockStore.On("Set", tt.key, mock.Anything).Return(nil)
 
-			mockModel := mocking.NewMockModel()
-			mockModel.On("GetBackingStore").Return(mockStore)
-
-			p := &PoliciesMapping{BackedModel: mockModel}
+			p := NewPoliciesMapping()
+			p.SetBackingStoreFactory(func() kiotaStore.BackingStore { return mockStore })
 
 			err := tt.call(p)
 

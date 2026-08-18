@@ -6,12 +6,17 @@ import (
 	"strings"
 	"time"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
 // Serialize executes a list of serializers in sequence.
 func Serialize(writer serialization.SerializationWriter, serializers ...WriterFunc) error {
+	if conversion.IsNil(writer) {
+		return snerrors.ErrNilWriter
+	}
+
 	for _, s := range serializers {
 		if err := s(writer); err != nil {
 			return err

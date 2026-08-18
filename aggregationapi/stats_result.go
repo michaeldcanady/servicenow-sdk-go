@@ -28,13 +28,13 @@ type StatsResult interface {
 
 // StatsResultModel is the default implementation of StatsResult.
 type StatsResultModel struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewStatsResult creates a new instance of StatsResultModel.
 func NewStatsResult() *StatsResultModel {
 	return &StatsResultModel{
-		BackedModel: core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 

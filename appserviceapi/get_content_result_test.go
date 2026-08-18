@@ -3,6 +3,7 @@ package appserviceapi
 import (
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -23,7 +24,7 @@ func TestGetContentResult_Serialize(t *testing.T) {
 	require.NoError(t, nilModel.Serialize(nil))
 
 	model := NewGetContentResult()
-	require.NoError(t, model.Serialize(nil))
+	require.ErrorIs(t, model.Serialize(nil), snerrors.ErrNilWriter)
 }
 
 func TestGetContentResult_GetFieldDeserializers(t *testing.T) {

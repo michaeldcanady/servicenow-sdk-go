@@ -17,7 +17,7 @@ func TestNewBaseServiceNowCollectionResponse(t *testing.T) {
 func TestBaseServiceNowCollectionResponse_Serialize(t *testing.T) {
 	res := NewBaseServiceNowCollectionResponse[serialization.Parsable](nil)
 	err := res.Serialize(nil)
-	require.NoError(t, err)
+	require.ErrorIs(t, err, snerrors.ErrNilWriter)
 
 	var nilR *BaseServiceNowCollectionResponse[serialization.Parsable]
 	err = nilR.Serialize(nil)

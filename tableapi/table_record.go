@@ -20,7 +20,7 @@ var _ serialization.Parsable = (*TableRecord)(nil)
 // using a backing store. It supports both raw values and structured RecordElement instances.
 type TableRecord struct {
 	keys []string
-	core.BackedModel
+	*core.BaseModel
 }
 
 // CreateTableRecordFromDiscriminatorValue creates a new TableRecord from a ParseNode.
@@ -145,8 +145,8 @@ func (tR *TableRecord) Serialize(writer serialization.SerializationWriter) error
 // NewTableRecord creates a new instance of TableRecord.
 func NewTableRecord() *TableRecord {
 	return &TableRecord{
-		keys:        make([]string, 0),
-		BackedModel: core.NewBaseModel(),
+		keys:      make([]string, 0),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 

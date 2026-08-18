@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/mock"
@@ -20,7 +21,7 @@ func TestNewBaseServiceNowItemResponse(t *testing.T) {
 func TestBaseServiceNowItemResponse_Serialize(t *testing.T) {
 	res := NewBaseServiceNowItemResponse[serialization.Parsable](nil)
 	err := res.Serialize(nil)
-	require.NoError(t, err)
+	require.ErrorIs(t, err, snerrors.ErrNilWriter)
 
 	var nilR *BaseServiceNowItemResponse[serialization.Parsable]
 	if err := nilR.Serialize(nil); err != nil {

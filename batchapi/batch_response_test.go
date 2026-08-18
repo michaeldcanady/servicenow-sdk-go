@@ -9,6 +9,7 @@ import (
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	"github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -27,8 +28,8 @@ func TestNewBatchResponse(t *testing.T) {
 				assert.NotNil(t, parsable)
 				assert.IsType(t, &BatchResponseModel{}, parsable)
 
-				assert.NotNil(t, parsable.BackedModel)
-				assert.IsType(t, &core.BaseModel{}, parsable.BackedModel)
+				assert.NotNil(t, parsable.BaseModel)
+				assert.IsType(t, &core.BaseModel{}, parsable.BaseModel)
 			},
 		},
 	}
@@ -104,14 +105,10 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 			test: func(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
 				mockParseNode := mocking.NewMockParseNode()
 
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				deserializers := resp.GetFieldDeserializers()
 
@@ -167,14 +164,10 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 			test: func(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
 				mockParseNode := mocking.NewMockParseNode()
 
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				deserializers := resp.GetFieldDeserializers()
 
@@ -237,14 +230,10 @@ func TestBatchResponse_GetFieldDeserializers(t *testing.T) {
 			test: func(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
 				mockParseNode := mocking.NewMockParseNode()
 
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				deserializers := resp.GetFieldDeserializers()
 
@@ -308,12 +297,8 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", batchRequestIDKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetBatchRequestID()
 				require.NoError(t, err)
@@ -327,12 +312,8 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", batchRequestIDKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetBatchRequestID()
 				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
@@ -346,12 +327,8 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", batchRequestIDKey).Return(nil, retErr)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetBatchRequestID()
 				assert.Equal(t, retErr, err)
@@ -361,12 +338,8 @@ func TestBatchResponse_GetBatchRequestID(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				id, err := resp.GetBatchRequestID()
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
@@ -402,18 +375,13 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", batchRequestIDKey, input).Return(nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.setBatchRequestID(input)
 				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -424,18 +392,13 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", batchRequestIDKey, input).Return(ret)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.setBatchRequestID(input)
 				assert.Equal(t, ret, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -443,17 +406,11 @@ func TestBatchResponse_setBatchRequestID(t *testing.T) {
 			test: func(t *testing.T) {
 				input := internal.ToPointer("id")
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				err := resp.setBatchRequestID(input)
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
-
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -486,12 +443,8 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", servicedRequestsKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetServicedRequests()
 				require.NoError(t, err)
@@ -505,12 +458,8 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", servicedRequestsKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetServicedRequests()
 				assert.Equal(t, errors.New("cannot convert 'true' to type []batchapi.ServicedRequest"), err)
@@ -524,12 +473,8 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", servicedRequestsKey).Return(nil, retErr)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetServicedRequests()
 				assert.Equal(t, retErr, err)
@@ -539,12 +484,8 @@ func TestBatchResponse_GetServicedRequests(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				id, err := resp.GetServicedRequests()
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
@@ -580,18 +521,13 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", servicedRequestsKey, input).Return(nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.setServicedRequests(input)
 				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -602,18 +538,13 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", servicedRequestsKey, input).Return(ret)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.setServicedRequests(input)
 				assert.Equal(t, ret, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -621,17 +552,11 @@ func TestBatchResponse_setServicedRequests(t *testing.T) {
 			test: func(t *testing.T) {
 				input := []ServicedRequest{}
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				err := resp.setServicedRequests(input)
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
-
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -664,12 +589,8 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", unservicedRequestsKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetUnservicedRequests()
 				require.NoError(t, err)
@@ -683,12 +604,8 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", unservicedRequestsKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetUnservicedRequests()
 				assert.Equal(t, errors.New("cannot convert 'true' to type []string"), err)
@@ -702,12 +619,8 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", unservicedRequestsKey).Return(nil, retErr)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetUnservicedRequests()
 				assert.Equal(t, retErr, err)
@@ -717,12 +630,8 @@ func TestBatchResponse_GetUnservicedRequests(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				id, err := resp.GetUnservicedRequests()
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
@@ -758,18 +667,13 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", unservicedRequestsKey, input).Return(nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.setUnservicedRequests(input)
 				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -780,18 +684,13 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", unservicedRequestsKey, input).Return(ret)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.setUnservicedRequests(input)
 				assert.Equal(t, ret, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -799,17 +698,11 @@ func TestBatchResponse_setUnservicedRequests(t *testing.T) {
 			test: func(t *testing.T) {
 				input := []string{}
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &BatchResponseModel{
-					intModel,
-				}
+				resp := NewBatchResponse()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				err := resp.setUnservicedRequests(input)
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
-
-				intModel.AssertExpectations(t)
 			},
 		},
 		{

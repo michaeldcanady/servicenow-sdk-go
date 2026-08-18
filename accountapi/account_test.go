@@ -595,27 +595,21 @@ func TestAccountSerialize(t *testing.T) {
 	}
 }
 
-// TestAccountSerializeNilWriter documents that Serialize does not guard its
-// writer argument: the serializer helpers only nil-check the closure they wrap,
-// not the SerializationWriter it calls, so a nil writer panics as soon as the
-// first non-nil property is written. An empty model never reaches a write and so
-// tolerates a nil writer.
-//
-// BUG: Serialize(nil) panics rather than returning snerrors.ErrNilWriter.
+// TestAccountSerializeNilWriter verifies that Serialize(nil) returns
+// snerrors.ErrNilWriter consistently, regardless of whether the model is empty
+// or populated.
 func TestAccountSerializeNilWriter(t *testing.T) {
 	t.Run("empty model", func(t *testing.T) {
-		assert.NotPanics(t, func() {
-			_ = NewAccount().Serialize(nil)
-		})
+		err := NewAccount().Serialize(nil)
+		require.ErrorIs(t, err, snerrors.ErrNilWriter)
 	})
 
 	t.Run("populated model", func(t *testing.T) {
 		account := NewAccount()
 		require.NoError(t, account.SetName(internal.ToPointer("acme")))
 
-		assert.Panics(t, func() {
-			_ = account.Serialize(nil)
-		})
+		err := account.Serialize(nil)
+		require.ErrorIs(t, err, snerrors.ErrNilWriter)
 	})
 }
 
@@ -805,22 +799,23 @@ func TestAccountGetFieldDeserializersNilReceiver(t *testing.T) {
 	assert.ErrorIs(t, deserializers[nameKey](node), snerrors.ErrNilModel)
 }
 
-// TestAccountZeroValueReceiverPanics documents that an Account built as a struct
-// literal (rather than via NewAccount) has a nil embedded core.BackedModel, so
-// every accessor, mutator and Serialize panics instead of returning
-// snerrors.ErrNilModel the way a nil *Account does.
-//
-// BUG: &Account{} is not guarded the way (*Account)(nil) is.
-func TestAccountZeroValueReceiverPanics(t *testing.T) {
+// TestAccountZeroValueReceiverNoPanic verifies that an Account built as a struct
+// literal (rather than via NewAccount) no longer panics. With *core.BaseModel
+// embedded (instead of the core.BackedModel interface), the zero-value has a nil
+// *BaseModel pointer that conversion.IsNil catches, returning snerrors.ErrNilModel.
+func TestAccountZeroValueReceiverNoPanic(t *testing.T) {
 	t.Run("getter", func(t *testing.T) {
-		assert.Panics(t, func() { _, _ = (&Account{}).GetName() })
+		_, err := (&Account{}).GetName()
+		assert.ErrorIs(t, err, snerrors.ErrNilStore)
 	})
 
 	t.Run("setter", func(t *testing.T) {
-		assert.Panics(t, func() { _ = (&Account{}).SetName(internal.ToPointer("x")) })
+		err := (&Account{}).SetName(internal.ToPointer("x"))
+		assert.ErrorIs(t, err, snerrors.ErrNilStore)
 	})
 
 	t.Run("serialize", func(t *testing.T) {
-		assert.Panics(t, func() { _ = (&Account{}).Serialize(mocking.NewMockSerializationWriter()) })
+		err := (&Account{}).Serialize(mocking.NewMockSerializationWriter())
+		assert.ErrorIs(t, err, snerrors.ErrNilStore)
 	})
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
+	"github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -29,8 +30,8 @@ func TestNewRestRequest(t *testing.T) {
 				assert.NotNil(t, parsable)
 				assert.IsType(t, &RestRequestModel{}, parsable)
 
-				assert.NotNil(t, parsable.BackedModel)
-				assert.IsType(t, &core.BaseModel{}, parsable.BackedModel)
+				assert.NotNil(t, parsable.BaseModel)
+				assert.IsType(t, &core.BaseModel{}, parsable.BaseModel)
 			},
 		},
 	}
@@ -189,12 +190,8 @@ func TestRestRequest_GetBody(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", bodyKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetBody()
 				require.NoError(t, err)
@@ -208,12 +205,8 @@ func TestRestRequest_GetBody(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", bodyKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetBody()
 				assert.Equal(t, errors.New("cannot convert 'true' to type []uint8"), err)
@@ -227,12 +220,8 @@ func TestRestRequest_GetBody(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", bodyKey).Return(nil, retErr)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetBody()
 				assert.Equal(t, retErr, err)
@@ -242,12 +231,8 @@ func TestRestRequest_GetBody(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				id, err := resp.GetBody()
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
@@ -329,18 +314,13 @@ func TestRestRequest_SetBody(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", bodyKey, input).Return(nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.SetBody(input)
 				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -351,18 +331,13 @@ func TestRestRequest_SetBody(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", bodyKey, input).Return(ret)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.SetBody(input)
 				assert.Equal(t, ret, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -370,17 +345,11 @@ func TestRestRequest_SetBody(t *testing.T) {
 			test: func(t *testing.T) {
 				input := []byte{}
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				err := resp.SetBody(input)
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
-
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -413,12 +382,8 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", excludeResponseHeadersKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetExcludeResponseHeaders()
 				require.NoError(t, err)
@@ -432,12 +397,8 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", excludeResponseHeadersKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetExcludeResponseHeaders()
 				assert.Equal(t, errors.New("cannot convert 'test' to type *bool"), err)
@@ -451,12 +412,8 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", excludeResponseHeadersKey).Return(nil, retErr)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetExcludeResponseHeaders()
 				assert.Equal(t, retErr, err)
@@ -466,12 +423,8 @@ func TestRestRequest_GetExcludeResponseHeaders(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				id, err := resp.GetExcludeResponseHeaders()
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
@@ -507,18 +460,13 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", excludeResponseHeadersKey, input).Return(nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.SetExcludeResponseHeaders(input)
 				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -529,18 +477,13 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", excludeResponseHeadersKey, input).Return(ret)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.SetExcludeResponseHeaders(input)
 				assert.Equal(t, ret, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -548,17 +491,11 @@ func TestRestRequest_SetExcludeResponseHeaders(t *testing.T) {
 			test: func(t *testing.T) {
 				input := internal.ToPointer(true)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				err := resp.SetExcludeResponseHeaders(input)
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
-
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -591,12 +528,8 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", headersKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetHeaders()
 				require.NoError(t, err)
@@ -610,12 +543,8 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", headersKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetHeaders()
 				assert.Equal(t, errors.New("cannot convert 'test' to type []batchapi.RestRequestHeader"), err)
@@ -629,12 +558,8 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", headersKey).Return(nil, retErr)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetHeaders()
 				assert.Equal(t, retErr, err)
@@ -644,12 +569,8 @@ func TestRestRequest_GetHeaders(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				id, err := resp.GetHeaders()
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
@@ -685,18 +606,13 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", headersKey, input).Return(nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.SetHeaders(input)
 				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -707,18 +623,13 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", headersKey, input).Return(ret)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.SetHeaders(input)
 				assert.Equal(t, ret, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -726,17 +637,11 @@ func TestRestRequest_SetHeaders(t *testing.T) {
 			test: func(t *testing.T) {
 				input := make([]RestRequestHeader, 0)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				err := resp.SetHeaders(input)
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
-
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -769,12 +674,8 @@ func TestRestRequest_GetID(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", idKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetID()
 				require.NoError(t, err)
@@ -788,12 +689,8 @@ func TestRestRequest_GetID(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", idKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetID()
 				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
@@ -807,12 +704,8 @@ func TestRestRequest_GetID(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", idKey).Return(nil, retErr)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetID()
 				assert.Equal(t, retErr, err)
@@ -822,12 +715,8 @@ func TestRestRequest_GetID(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				id, err := resp.GetID()
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
@@ -863,18 +752,13 @@ func TestRestRequest_SetID(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", idKey, input).Return(nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.SetID(input)
 				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -885,18 +769,13 @@ func TestRestRequest_SetID(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", idKey, input).Return(ret)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.SetID(input)
 				assert.Equal(t, ret, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -904,17 +783,11 @@ func TestRestRequest_SetID(t *testing.T) {
 			test: func(t *testing.T) {
 				input := internal.ToPointer("id")
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				err := resp.SetID(input)
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
-
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -947,12 +820,8 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", methodKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetMethod()
 				require.NoError(t, err)
@@ -966,12 +835,8 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", methodKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetMethod()
 				assert.Equal(t, errors.New("cannot convert 'true' to type *abstractions.HttpMethod"), err)
@@ -985,12 +850,8 @@ func TestRestRequest_GetMethod(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", methodKey).Return(nil, retErr)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetMethod()
 				assert.Equal(t, retErr, err)
@@ -1000,12 +861,8 @@ func TestRestRequest_GetMethod(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				id, err := resp.GetMethod()
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
@@ -1041,18 +898,13 @@ func TestRestRequest_SetMethod(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", methodKey, input).Return(nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.SetMethod(input)
 				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -1063,18 +915,13 @@ func TestRestRequest_SetMethod(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", methodKey, input).Return(ret)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.SetMethod(input)
 				assert.Equal(t, ret, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -1082,17 +929,11 @@ func TestRestRequest_SetMethod(t *testing.T) {
 			test: func(t *testing.T) {
 				input := internal.ToPointer(abstractions.GET)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				err := resp.SetMethod(input)
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
-
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -1125,12 +966,8 @@ func TestRestRequest_GetURL(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", urlKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetURL()
 				require.NoError(t, err)
@@ -1144,12 +981,8 @@ func TestRestRequest_GetURL(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", urlKey).Return(ret, nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetURL()
 				assert.Equal(t, errors.New("cannot convert 'true' to type *string"), err)
@@ -1163,12 +996,8 @@ func TestRestRequest_GetURL(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Get", urlKey).Return(nil, retErr)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				id, err := resp.GetURL()
 				assert.Equal(t, retErr, err)
@@ -1178,12 +1007,8 @@ func TestRestRequest_GetURL(t *testing.T) {
 		{
 			name: "Nil backingStore",
 			test: func(t *testing.T) {
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				id, err := resp.GetURL()
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
@@ -1219,18 +1044,13 @@ func TestRestRequest_SetURL(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", urlKey, mock.AnythingOfType("*string")).Return(nil)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.SetURL(input)
 				require.NoError(t, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -1238,16 +1058,10 @@ func TestRestRequest_SetURL(t *testing.T) {
 			test: func(t *testing.T) {
 				input := internal.ToPointer("https://service-now.com/now/table")
 
-				intModel := mocking.NewMockModel()
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
 
 				err := resp.SetURL(input)
 				assert.Equal(t, errors.New("invalid URL: path doesn't begin with \"/api\""), err)
-
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -1258,18 +1072,13 @@ func TestRestRequest_SetURL(t *testing.T) {
 				backingStore := mocking.NewMockBackingStore()
 				backingStore.On("Set", urlKey, mock.AnythingOfType("*string")).Return(ret)
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return(backingStore)
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return backingStore })
 
 				err := resp.SetURL(input)
 				assert.Equal(t, ret, err)
 
 				backingStore.AssertExpectations(t)
-				intModel.AssertExpectations(t)
 			},
 		},
 		{
@@ -1277,17 +1086,11 @@ func TestRestRequest_SetURL(t *testing.T) {
 			test: func(t *testing.T) {
 				input := internal.ToPointer("https://service-now.com/api/now/table")
 
-				intModel := mocking.NewMockModel()
-				intModel.On("GetBackingStore").Return((*mocking.MockBackingStore)(nil))
-
-				resp := &RestRequestModel{
-					intModel,
-				}
+				resp := NewRestRequest()
+				resp.SetBackingStoreFactory(func() store.BackingStore { return nil })
 
 				err := resp.SetURL(input)
 				require.ErrorIs(t, err, snerrors.ErrNilStore)
-
-				intModel.AssertExpectations(t)
 			},
 		},
 		{

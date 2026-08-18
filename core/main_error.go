@@ -24,7 +24,7 @@ type MainErrorable interface {
 
 // MainError represents internal error of Service-Now API error
 type MainError struct {
-	BackedModel
+	*BaseModel
 }
 
 // NewMainError instantiates a new MainError

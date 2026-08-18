@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -136,7 +137,7 @@ func TestMainError_Accessors(t *testing.T) {
 }
 
 func TestMainError_ErrorBranches(t *testing.T) {
-	mNilBS := &MainError{BackedModel: &mockNilBSModel{}}
+	mNilBS := &MainError{BaseModel: &BaseModel{backingStoreFactory: func() kiotaStore.BackingStore { return nil }}}
 
 	tests := []struct {
 		name    string

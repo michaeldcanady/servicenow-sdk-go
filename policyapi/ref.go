@@ -25,13 +25,13 @@ type Refable interface {
 
 // Ref represents a reference with a link and a value.
 type Ref struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewRef creates a new instance of Ref.
 func NewRef() *Ref {
 	return &Ref{
-		BackedModel: core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 

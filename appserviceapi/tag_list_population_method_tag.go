@@ -23,13 +23,13 @@ type TagListPopulationMethodTag interface {
 }
 
 type TagListPopulationMethodTagModel struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewTagListPopulationMethodTag
 func NewTagListPopulationMethodTag() *TagListPopulationMethodTagModel {
 	return &TagListPopulationMethodTagModel{
-		BackedModel: core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 

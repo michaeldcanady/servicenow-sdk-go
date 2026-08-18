@@ -6,6 +6,7 @@ import (
 
 	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -221,23 +222,17 @@ func TestTableRecord_Get(t *testing.T) {
 			test: func(t *testing.T) {
 				result := NewRecordElement()
 
-				store := mocking.NewMockBackingStore()
-				store.On("Get", "Test").Return(result, nil)
+				bs := mocking.NewMockBackingStore()
+				bs.On("Get", "Test").Return(result, nil)
 
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(store)
-
-				record := &TableRecord{
-					keys:        make([]string, 0),
-					BackedModel: innerModel,
-				}
+				record := NewTableRecord()
+				record.SetBackingStoreFactory(func() kiotaStore.BackingStore { return bs })
 
 				elem, err := record.Get("Test")
 
 				require.NoError(t, err)
 				assert.Equal(t, result, elem)
-				innerModel.AssertExpectations(t)
-				store.AssertExpectations(t)
+				bs.AssertExpectations(t)
 			},
 		},
 	}
@@ -257,22 +252,16 @@ func TestTableRecord_SetElement(t *testing.T) {
 			test: func(t *testing.T) {
 				input := NewRecordElement()
 
-				store := mocking.NewMockBackingStore()
-				store.On("Set", "Test", input).Return(nil)
+				bs := mocking.NewMockBackingStore()
+				bs.On("Set", "Test", input).Return(nil)
 
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(store)
-
-				record := &TableRecord{
-					keys:        make([]string, 0),
-					BackedModel: innerModel,
-				}
+				record := NewTableRecord()
+				record.SetBackingStoreFactory(func() kiotaStore.BackingStore { return bs })
 
 				err := record.SetElement("Test", input)
 
 				require.NoError(t, err)
-				innerModel.AssertExpectations(t)
-				store.AssertExpectations(t)
+				bs.AssertExpectations(t)
 			},
 		},
 	}
@@ -290,31 +279,22 @@ func TestTableRecord_SetValue(t *testing.T) {
 		{
 			name: "Successful",
 			test: func(t *testing.T) {
-				store := mocking.NewMockBackingStore()
-				store.On("Set", "Test", mock.AnythingOfType("*tableapi.RecordElement")).Return(nil)
+				bs := mocking.NewMockBackingStore()
+				bs.On("Set", "Test", mock.AnythingOfType("*tableapi.RecordElement")).Return(nil)
 
-				innerModel := mocking.NewMockModel()
-				innerModel.On("GetBackingStore").Return(store)
-
-				record := &TableRecord{
-					make([]string, 0),
-					innerModel,
-				}
+				record := NewTableRecord()
+				record.SetBackingStoreFactory(func() kiotaStore.BackingStore { return bs })
 
 				err := record.SetValue("Test", "value")
 
 				require.NoError(t, err)
-				innerModel.AssertExpectations(t)
-				store.AssertExpectations(t)
+				bs.AssertExpectations(t)
 			},
 		},
 		{
 			name: "Unsupported",
 			test: func(t *testing.T) {
-				record := &TableRecord{
-					make([]string, 0),
-					nil,
-				}
+				record := NewTableRecord()
 
 				err := record.SetValue("Test", make(chan int))
 

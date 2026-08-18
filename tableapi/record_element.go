@@ -9,13 +9,13 @@ import (
 //
 // It contains the raw value, the display value, and an optional reference link.
 type RecordElement struct {
-	core.BackedModel
+	*core.BaseModel
 }
 
 // NewRecordElement creates a new instance of RecordElement.
 func NewRecordElement() *RecordElement {
 	return &RecordElement{
-		core.NewBaseModel(),
+		BaseModel: core.NewBaseModel(),
 	}
 }
 
