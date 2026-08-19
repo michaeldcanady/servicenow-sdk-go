@@ -7,7 +7,8 @@ apt-get install -y --no-install-recommends zstd curl ca-certificates
 rm -rf /var/lib/apt/lists/*
 
 echo "Installing Ollama CLI..."
-# Use the official installer but we only want the binary
+# NOTE: curl-pipe-sh cannot be pinned by hash (Scorecard downloadThenRun finding).
+# The installer URL is Ollama's official endpoint; it verifies its own binary checksum.
 curl -fsSL https://ollama.com/install.sh | sh
 
 # The installer might try to start a service, but we don't need it in this container
