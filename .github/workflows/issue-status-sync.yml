@@ -1,0 +1,75 @@
+# Sync issue status labels when PRs open/close.
+#
+# - PR opened/reopened → linked issues get "status: in progress"
+# - PR closed (not merged) → linked issues revert to "status: reviewed"
+# - PR merged → GitHub auto-closes issues natively via "Closes #N"
+#
+# Uses mondeja/pr-linked-issues-action for finding linked issues (well-maintained,
+# 1k+ stars), with minimal bash for the label updates.
+#
+# Security: Runs on pull_request_target with author association check.
+
+name: Issue Status Sync
+
+on:
+  pull_request_target:
+    types: [opened, reopened, closed]
+
+permissions:
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: issue-status-sync-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Sync Issue Status
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get linked issues
+        id: linked
+        uses: mondeja/pr-linked-issues-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          include-closed-issues: false
+
+      - name: Mark issues in-progress (PR opened)
+        if: >-
+          steps.linked.outputs.issues != '' &&
+          (github.event.action == 'opened' || github.event.action == 'reopened') &&
+          contains(fromJson('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.pull_request.author_association)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUES: ${{ steps.linked.outputs.issues }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          IFS=',' read -ra nums <<< "$ISSUES"
+          for n in "${nums[@]}"; do
+            echo "Marking issue #$n as in-progress"
+            gh issue edit "$n" --repo "$REPO" --remove-label "status: new" 2>/dev/null || true
+            gh issue edit "$n" --repo "$REPO" --remove-label "status: reviewed" 2>/dev/null || true
+            gh issue edit "$n" --repo "$REPO" --add-label "status: in progress" 2>/dev/null || true
+          done
+
+      - name: Revert issue status (PR closed without merge)
+        if: >-
+          steps.linked.outputs.issues != '' &&
+          github.event.action == 'closed' &&
+          github.event.pull_request.merged == false &&
+          contains(fromJson('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.pull_request.author_association)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUES: ${{ steps.linked.outputs.issues }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          IFS=',' read -ra nums <<< "$ISSUES"
+          for n in "${nums[@]}"; do
+            echo "Reverting issue #$n to reviewed"
+            gh issue edit "$n" --repo "$REPO" --remove-label "status: in progress" 2>/dev/null || true
+            gh issue edit "$n" --repo "$REPO" --add-label "status: reviewed" 2>/dev/null || true
+          done

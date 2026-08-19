@@ -1,5 +1,9 @@
 # Implementation Plan: v2.0 Comprehensive Refinement
 
+## Status: Archived
+
+> **Archived**: This spec is mostly implemented. Directory renaming complete, error mapping centralized, HEAD methods implemented. Only pluggable logging (Phase 4) was not implemented - can be a separate spec if needed.
+
 ## Objective
 Finalize the ServiceNow SDK for Go v2.0 release with a production-grade architecture, idiomatic Go patterns, and robust error handling. This plan focus on architectural cleanup and explicit error mapping while deferring CI-breaking changes.
 

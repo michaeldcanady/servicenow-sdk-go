@@ -1,5 +1,9 @@
 # Spec: Internal Package Migration
 
+## Status: Archived
+
+> **Archived**: This spec is fully implemented. The `core/` package exists at project root with all public types (`BaseRequestBuilder`, `ServiceNowError`, `PageIterator`, etc.). All API modules import from `core/` instead of `internal/`.
+
 ## Objective
 Audit the `internal` package and migrate components that should be publicly accessible to a new `core` package, ensuring the SDK is extensible and its error handling is accessible to users.
 

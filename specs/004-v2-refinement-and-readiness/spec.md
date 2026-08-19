@@ -1,5 +1,9 @@
 # Specification: v2.0 Refinement & Readiness
 
+## Status: Archived
+
+> **Archived**: This spec is fully implemented. All *2 suffixes removed, HEAD methods implemented, error mapping centralized in `core.DefaultErrorMapping()`, and multipart helpers in place.
+
 ## 1. Introduction
 The v2.0 release of the ServiceNow SDK for Go is a major milestone. While the primary goal is removing deprecated code, this specification addresses the secondary goal of ensuring the resulting codebase is of production-grade quality, idiomatic, and fully featured.
 
