@@ -1,0 +1,36 @@
+# Edit and validate CDM configuration
+
+import GoExample from '@site/src/components/GoExample';
+import cegGo from '@site/snippets/cdm_editor_guide.go';
+
+List configuration-data nodes and validate the configuration.
+
+## When to use this pattern
+
+- You're programmatically editing configuration data nodes
+- You want validation results before committing a changeset
+
+## Required values
+
+| Value | Description |
+| ----- | ----------- |
+| Changeset context | Editor operations run against your active changeset |
+
+## Example
+
+<GoExample language="go" files={{ cegGo: cegGo }} template={`package main
+
+{{cegGo:ceg_imports}}
+
+func main() {
+    {{cegGo:ceg_main}}
+}`} />
+
+## Tips
+
+- `Nodes().Post/Put/Delete` modify nodes; validate before you commit.
+
+## Next steps
+
+- **[CDM Editor API reference](../../../apis/cdm-editor/index.mdx)**
+- **[Track changesets](../cdm-changesets/track-changesets.mdx)**

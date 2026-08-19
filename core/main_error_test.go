@@ -1,0 +1,168 @@
+package core
+
+import (
+	"testing"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+func TestNewMainError(t *testing.T) {
+	err := NewMainError()
+	assert.NotNil(t, err)
+}
+
+func TestCreateMainErrorFromDiscriminatorValue(t *testing.T) {
+	res, err := CreateMainErrorFromDiscriminatorValue(nil)
+	require.NoError(t, err)
+	assert.NotNil(t, res)
+}
+
+func TestMainError_Serialize(t *testing.T) {
+	tests := []struct {
+		name    string
+		model   *MainError
+		wantErr bool
+	}{
+		{
+			name:    "Successful",
+			model:   NewMainError(),
+			wantErr: false,
+		},
+		{
+			name:    "nil model",
+			model:   nil,
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			writer := mocking.NewMockSerializationWriter()
+			err := tt.model.Serialize(writer)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestMainError_GetFieldDeserializers(t *testing.T) {
+	m := NewMainError()
+	deser := m.GetFieldDeserializers()
+	assert.NotNil(t, deser[detailKey])
+	assert.NotNil(t, deser[messageKey])
+	assert.NotNil(t, deser[statusKey])
+}
+
+func TestMainError_Accessors(t *testing.T) {
+	val := "test-value"
+	tests := []struct {
+		name     string
+		model    *MainError
+		setter   func(*MainError, *string) error
+		getter   func(*MainError) (*string, error)
+		expected *string
+		wantErr  bool
+	}{
+		{
+			name:     "Detail Success",
+			model:    NewMainError(),
+			setter:   func(m *MainError, v *string) error { return m.SetDetail(v) },
+			getter:   func(m *MainError) (*string, error) { return m.GetDetail() },
+			expected: &val,
+			wantErr:  false,
+		},
+		{
+			name:     "Detail Nil Model",
+			model:    nil,
+			setter:   func(m *MainError, v *string) error { return m.SetDetail(v) },
+			getter:   func(m *MainError) (*string, error) { return m.GetDetail() },
+			expected: nil,
+			wantErr:  true,
+		},
+		{
+			name:     "Message Success",
+			model:    NewMainError(),
+			setter:   func(m *MainError, v *string) error { return m.SetMessage(v) },
+			getter:   func(m *MainError) (*string, error) { return m.GetMessage() },
+			expected: &val,
+			wantErr:  false,
+		},
+		{
+			name:     "Message Nil Model",
+			model:    nil,
+			setter:   func(m *MainError, v *string) error { return m.SetMessage(v) },
+			getter:   func(m *MainError) (*string, error) { return m.GetMessage() },
+			expected: nil,
+			wantErr:  true,
+		},
+		{
+			name:     "Status Success",
+			model:    NewMainError(),
+			setter:   func(m *MainError, v *string) error { return m.SetStatus(v) },
+			getter:   func(m *MainError) (*string, error) { return m.GetStatus() },
+			expected: &val,
+			wantErr:  false,
+		},
+		{
+			name:     "Status Nil Model",
+			model:    nil,
+			setter:   func(m *MainError, v *string) error { return m.SetStatus(v) },
+			getter:   func(m *MainError) (*string, error) { return m.GetStatus() },
+			expected: nil,
+			wantErr:  true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.setter != nil && tt.model != nil {
+				err := tt.setter(tt.model, tt.expected)
+				require.NoError(t, err)
+			}
+			res, err := tt.getter(tt.model)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				require.NoError(t, err)
+				assert.Equal(t, tt.expected, res)
+			}
+		})
+	}
+}
+
+func TestMainError_ErrorBranches(t *testing.T) {
+	mNilBS := &MainError{BaseModel: &BaseModel{backingStoreFactory: func() kiotaStore.BackingStore { return nil }}}
+
+	tests := []struct {
+		name    string
+		fn      func() error
+		wantErr string
+	}{
+		{"GetDetail Nil BS", func() error { _, err := mNilBS.GetDetail(); return err }, "store is nil"},
+		{"setDetail Nil BS", func() error { return mNilBS.SetDetail(nil) }, "store is nil"},
+		{"GetMessage Nil BS", func() error { _, err := mNilBS.GetMessage(); return err }, "store is nil"},
+		{"setMessage Nil BS", func() error { return mNilBS.SetMessage(nil) }, "store is nil"},
+		{"GetStatus Nil BS", func() error { _, err := mNilBS.GetStatus(); return err }, "store is nil"},
+		{"setStatus Nil BS", func() error { return mNilBS.SetStatus(nil) }, "store is nil"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.fn()
+			require.Error(t, err)
+			assert.Equal(t, tt.wantErr, err.Error())
+		})
+	}
+
+	mWrongType := NewMainError()
+	_ = mWrongType.GetBackingStore().Set(detailKey, 123)
+	_, err := mWrongType.GetDetail()
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "cannot convert '123' to type *string")
+}

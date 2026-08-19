@@ -4,9 +4,9 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/microsoft/kiota-abstractions-go/store"
@@ -20,7 +20,8 @@ type ServiceNowServiceClientConfig struct {
 	middleware             []nethttplibrary.Middleware
 	rawURI                 string
 	backingStoreFactory    store.BackingStoreFactory
-	requestAdapterOptions  []internalHttp.ServiceNowRequestAdapterOption
+	requestAdapterOptions  []internalhttp.ServiceNowRequestAdapterOption
+	logger                 internal.Logger
 }
 
 // newServiceNowClientConfig instantiates a new empty config with default values.
@@ -28,7 +29,8 @@ func newServiceNowClientConfig() *ServiceNowServiceClientConfig {
 	return &ServiceNowServiceClientConfig{
 		middleware:            make([]nethttplibrary.Middleware, 0),
 		backingStoreFactory:   store.BackingStoreFactoryInstance,
-		requestAdapterOptions: make([]internalHttp.ServiceNowRequestAdapterOption, 0),
+		requestAdapterOptions: make([]internalhttp.ServiceNowRequestAdapterOption, 0),
+		logger:                &internal.NoOpLogger{},
 	}
 }
 
@@ -50,7 +52,7 @@ func buildServiceClientConfig(opts ...ServiceNowServiceClientOption) (*ServiceNo
 
 // Validate checks if the configuration is valid.
 func (c *ServiceNowServiceClientConfig) Validate() error {
-	if internal.IsNil(c.requestAdapter) && internal.IsNil(c.authenticationProvider) {
+	if conversion.IsNil(c.requestAdapter) && conversion.IsNil(c.authenticationProvider) {
 		return errors.New("must provide either an AuthenticationProvider or a RequestAdapter")
 	}
 
@@ -67,14 +69,14 @@ func (c *ServiceNowServiceClientConfig) getRequestAdapter() (abstractions.Reques
 	requestAdapter := c.requestAdapter
 	var err error
 
-	if internal.IsNil(requestAdapter) {
-		requestAdapter, err = internalHttp.NewServiceNowRequestAdapter(c.authenticationProvider, c.requestAdapterOptions...)
+	if conversion.IsNil(requestAdapter) {
+		requestAdapter, err = internalhttp.NewServiceNowRequestAdapter(c.authenticationProvider, c.requestAdapterOptions...)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	if !newInternal.IsNil(c.backingStoreFactory) {
+	if !conversion.IsNil(c.backingStoreFactory) {
 		requestAdapter.EnableBackingStore(c.backingStoreFactory)
 	}
 

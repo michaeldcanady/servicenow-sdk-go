@@ -1,0 +1,133 @@
+package attachmentapi
+
+import (
+	"context"
+	"errors"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
+	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
+)
+
+const (
+	// attachmentItemFileURLTemplate the url template for Service-Now's attachment item file endpoint
+	attachmentItemFileURLTemplate = "{+baseurl}/api/now/v1/attachment{/sys_id}/file"
+
+	// attachmentMetadataHeader is the header name where Service-Now returns attachment metadata when requesting the file content
+	attachmentMetadataHeader = "x-attachment-metadata"
+)
+
+// AttachmentItemFileRequestBuilder provides operations to manage Service-Now attachments.
+type AttachmentItemFileRequestBuilder struct {
+	core.RequestBuilder
+}
+
+// NewAttachmentItemFileRequestBuilderInternal instantiates a new AttachmentItemFileRequestBuilder with custom parsable for table entries.
+func NewAttachmentItemFileRequestBuilderInternal(
+	pathParameters map[string]string,
+	requestAdapter abstractions.RequestAdapter,
+) *AttachmentItemFileRequestBuilder {
+	return &AttachmentItemFileRequestBuilder{
+		core.NewBaseRequestBuilder(requestAdapter, attachmentItemFileURLTemplate, pathParameters),
+	}
+}
+
+// NewAttachmentItemFileRequestBuilder instantiates a new AttachmentItemFileRequestBuilder with custom parsable for table entries.
+func NewAttachmentItemFileRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *AttachmentItemFileRequestBuilder {
+	urlParams := make(map[string]string)
+	urlParams[internal.RawURLKey] = rawURL
+	return NewAttachmentItemFileRequestBuilderInternal(urlParams, requestAdapter)
+}
+
+// Get returns file with content using provided parameters
+func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration) (*FileWithContent, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(requestConfiguration) {
+		requestConfiguration = &AttachmentItemFileRequestBuilderGetRequestConfiguration{}
+	}
+
+	opts := nethttplibrary.NewHeadersInspectionOptions()
+	opts.InspectResponseHeaders = true
+
+	requestConfiguration.Options = append(requestConfiguration.Options, opts)
+
+	requestInfo, err := rB.ToGetRequestInformation(ctx, requestConfiguration)
+	if err != nil {
+		return nil, err
+	}
+
+	errorMapping := core.DefaultErrorMapping()
+	requestAdapter := rB.GetRequestAdapter()
+	if conversion.IsNil(requestAdapter) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
+	resp, err := rB.GetRequestAdapter().SendPrimitive(ctx, requestInfo, "[]byte", errorMapping)
+	if err != nil {
+		return nil, err
+	}
+	if resp == nil {
+		return nil, snerrors.ErrNilResponse
+	}
+	typedResp, ok := resp.([]byte)
+	if !ok {
+		return nil, errors.New("resp is not []byte")
+	}
+
+	var file serialization.Parsable = NewFileWithContent()
+
+	metadataHeaders := opts.ResponseHeaders.Get(attachmentMetadataHeader)
+	if len(metadataHeaders) > 0 {
+		metadata := metadataHeaders[0]
+
+		var node serialization.ParseNode
+
+		node, err = jsonserialization.NewJsonParseNode([]byte(metadata))
+		if err != nil {
+			return nil, err
+		}
+
+		file, err = node.GetObjectValue(CreateFileWithContentFromDiscriminatorValue)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	typedFile, ok := file.(*FileWithContent)
+	if !ok {
+		return nil, errors.New("file is not *FileWithContentModel")
+	}
+
+	if err := typedFile.SetContent(typedResp); err != nil {
+		return nil, err
+	}
+
+	return typedFile, nil
+}
+
+// ToGetRequestInformation converts request configurations to Get request information.
+func (rB *AttachmentItemFileRequestBuilder) ToGetRequestInformation(_ context.Context, requestConfiguration *AttachmentItemFileRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
+	if !conversion.IsNil(requestConfiguration) {
+		requestInfo.Headers.AddAll(requestConfiguration.Headers)
+		requestInfo.AddRequestOptions(requestConfiguration.Options)
+	}
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeAny.String())
+	return requestInfo, nil
+}

@@ -1,0 +1,81 @@
+package policyapi
+
+import (
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/store"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
+)
+
+const (
+	refLinkKey  = "link"
+	refValueKey = "value"
+)
+
+// Refable interface for Ref model
+type Refable interface {
+	GetLink() (*string, error)
+	SetLink(*string) error
+	GetValue() (*string, error)
+	SetValue(*string) error
+	serialization.Parsable
+	core.BackedModel
+}
+
+// Ref represents a reference with a link and a value.
+type Ref struct {
+	*core.BaseModel
+}
+
+// NewRef creates a new instance of Ref.
+func NewRef() *Ref {
+	return &Ref{
+		BaseModel: core.NewBaseModel(),
+	}
+}
+
+// CreateRefFromDiscriminatorValue creates a new Ref from a ParseNode.
+func CreateRefFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewRef(), nil
+}
+
+// GetFieldDeserializers returns the deserialization information for this object.
+func (r *Ref) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		refLinkKey:  internalSerialization.DeserializeStringFunc(r.SetLink),
+		refValueKey: internalSerialization.DeserializeStringFunc(r.SetValue),
+	}
+}
+
+// Serialize writes the objects properties to the current writer.
+func (r *Ref) Serialize(writer serialization.SerializationWriter) error {
+	if conversion.IsNil(r) {
+		return nil
+	}
+
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(refLinkKey, r.GetLink),
+		internalSerialization.SerializeStringFunc(refValueKey, r.GetValue),
+	)
+}
+
+// GetLink returns the link.
+func (r *Ref) GetLink() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*Ref, *string](r, refLinkKey)
+}
+
+// SetLink sets the link.
+func (r *Ref) SetLink(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(r, refLinkKey, val)
+}
+
+// GetValue returns the value.
+func (r *Ref) GetValue() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*Ref, *string](r, refValueKey)
+}
+
+// SetValue sets the value.
+func (r *Ref) SetValue(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(r, refValueKey, val)
+}

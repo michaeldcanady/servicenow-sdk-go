@@ -1,0 +1,157 @@
+package batchapi
+
+import (
+	"fmt"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/store"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
+)
+
+const (
+	batchRequestIDKey     = "batch_request_id"
+	servicedRequestsKey   = "serviced_requests"
+	unservicedRequestsKey = "unserviced_requests"
+)
+
+// BatchResponse representation of Service-Now Batch API response
+type BatchResponse interface {
+	GetBatchRequestID() (*string, error)
+	GetServicedRequestByID(id string) (ServicedRequest, error)
+	setBatchRequestID(*string) error
+	GetServicedRequests() ([]ServicedRequest, error)
+	setServicedRequests([]ServicedRequest) error
+	GetUnservicedRequests() ([]string, error)
+	setUnservicedRequests([]string) error
+	serialization.Parsable
+	kiotaStore.BackedModel
+}
+
+// BatchResponseModel implementation of BatchResponse
+type BatchResponseModel struct {
+	*core.BaseModel
+}
+
+// NewBatchResponse creates a new batch response
+func NewBatchResponse() *BatchResponseModel {
+	return &BatchResponseModel{
+		BaseModel: core.NewBaseModel(),
+	}
+}
+
+// CreateBatchResponseFromDiscriminatorValue is a parsable factory for creating a BatchResponse
+func CreateBatchResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewBatchResponse(), nil
+}
+
+// Serialize writes the objects properties to the current writer
+func (bR *BatchResponseModel) Serialize(writer serialization.SerializationWriter) error {
+	if conversion.IsNil(bR) {
+		return nil
+	}
+
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(batchRequestIDKey, bR.GetBatchRequestID),
+		internalSerialization.SerializeCollectionOfObjectValuesFunc[ServicedRequest](servicedRequestsKey, bR.GetServicedRequests),
+		internalSerialization.SerializeCollectionOfStringValuesFunc(unservicedRequestsKey, bR.GetUnservicedRequests),
+	)
+}
+
+// GetFieldDeserializers returns the deserialization information for this object
+func (bR *BatchResponseModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	if conversion.IsNil(bR) {
+		return nil
+	}
+
+	return map[string]func(serialization.ParseNode) error{
+		batchRequestIDKey: internalSerialization.DeserializeStringFunc(bR.setBatchRequestID),
+		servicedRequestsKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetCollectionOfObjectValues(CreateServicedRequestFromDiscriminatorValue)
+			if err != nil {
+				return err
+			}
+
+			requests := make([]ServicedRequest, len(val))
+			for index, value := range val {
+				typedValue, ok := value.(ServicedRequest)
+				if !ok {
+					return fmt.Errorf("value is not ServicedRequest")
+				}
+				requests[index] = typedValue
+			}
+
+			return bR.setServicedRequests(requests)
+		},
+		unservicedRequestsKey: func(pn serialization.ParseNode) error {
+			val, err := pn.GetCollectionOfPrimitiveValues("string")
+			if err != nil {
+				return err
+			}
+
+			requests := make([]string, len(val))
+			for index, value := range val {
+				requests[index] = value.(string)
+			}
+
+			return bR.setUnservicedRequests(requests)
+		},
+	}
+}
+
+// GetBatchRequestID returns the id of the associated batch request
+func (bR *BatchResponseModel) GetBatchRequestID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*BatchResponseModel, *string](bR, batchRequestIDKey)
+}
+
+// GetServicedRequestByID returns the serviced request with the provided id
+func (bR *BatchResponseModel) GetServicedRequestByID(id string) (ServicedRequest, error) {
+	if conversion.IsNil(bR) {
+		return nil, nil
+	}
+
+	requests, err := bR.GetServicedRequests()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, request := range requests {
+		reqID, err := request.GetID()
+		if err != nil {
+			continue
+		}
+
+		if reqID != nil && *reqID == id {
+			return request, nil
+		}
+	}
+
+	return nil, nil
+}
+
+// setBatchRequestID sets the id of the associated batch request
+func (bR *BatchResponseModel) setBatchRequestID(id *string) error {
+	return store.DefaultBackedModelMutatorFunc(bR, batchRequestIDKey, id)
+}
+
+// GetServicedRequests returns serviced requests
+func (bR *BatchResponseModel) GetServicedRequests() ([]ServicedRequest, error) {
+	return store.DefaultBackedModelAccessorFunc[*BatchResponseModel, []ServicedRequest](bR, servicedRequestsKey)
+}
+
+// setServicedRequests sets the serviced requests to the provided values
+func (bR *BatchResponseModel) setServicedRequests(requests []ServicedRequest) error {
+	return store.DefaultBackedModelMutatorFunc(bR, servicedRequestsKey, requests)
+}
+
+// GetUnservicedRequests returns the unserviced requests' id
+func (bR *BatchResponseModel) GetUnservicedRequests() ([]string, error) {
+	return store.DefaultBackedModelAccessorFunc[*BatchResponseModel, []string](bR, unservicedRequestsKey)
+}
+
+// setUnservicedRequests sets the ids of the unserviced requests to the provided value
+func (bR *BatchResponseModel) setUnservicedRequests(unservicedRequests []string) error {
+	return store.DefaultBackedModelMutatorFunc(bR, unservicedRequestsKey, unservicedRequests)
+}

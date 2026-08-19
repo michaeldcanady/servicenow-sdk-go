@@ -1,4 +1,4 @@
-package internal
+package internalhttp
 
 import (
 	"errors"

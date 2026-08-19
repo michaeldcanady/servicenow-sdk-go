@@ -6,6 +6,7 @@ import (
 
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestValidator(t *testing.T) {
@@ -37,9 +38,10 @@ func TestValidator(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			//nolint: staticcheck // while being deprecated there doesn't seem to be a replacement
-			v := authentication.NewAllowedHostsValidator(test.allowedHosts)
-			u, _ := url.Parse(test.url)
+			v, err := authentication.NewAllowedHostsValidatorErrorCheck(test.allowedHosts)
+			require.NoError(t, err)
+			u, err := url.Parse(test.url)
+			require.NoError(t, err)
 			assert.Equal(t, test.expected, v.IsUrlHostValid(u))
 		})
 	}

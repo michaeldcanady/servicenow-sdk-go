@@ -1,0 +1,238 @@
+name: CI
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "**.go"
+      - "!docs/snippets/**"
+      - "tests/integration/features/**"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    paths:
+      - "**.go"
+      - "!docs/snippets/**"
+      - "tests/integration/features/**"
+      - ".github/workflows/ci.yml"
+      - ".golangci.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+env:
+  COVERAGE_FILE: coverage.out
+
+permissions: {}
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'release-please--'))
+    outputs:
+      code: ${{ steps.filter.outputs.any_changed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Changed Files
+        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
+        id: filter
+        with:
+          files: |
+            **.go
+            !docs/snippets/**
+            tests/integration/features/**
+            .github/workflows/ci.yml
+
+  check-go:
+    name: Check Go Modules
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        go-version: ["stable", "oldstable"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache: true
+      - run: go mod download
+      - run: go mod verify
+      - run: |
+          go mod tidy
+          git diff --exit-code -- .
+
+  build-go:
+    name: Build Go Code
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ["stable", "oldstable"]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      pull-requests: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache: true
+      - name: Build Go Code
+        run: |
+          PACKAGES=$(go list ./... | grep -v "/docs")
+          go build $PACKAGES
+
+  lint-go:
+    name: Lint Go Code
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        go-version: ["stable", "oldstable"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9
+        with:
+          version: v2.12.2
+          skip-cache: false
+          args: --timeout=5m
+
+  test-go:
+    name: Test Go Code
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ["stable", "oldstable"]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      pull-requests: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Install tparse
+        run: |
+          go install github.com/mfridman/tparse@v0.18.0
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+      - name: Run Tests & Report
+        run: .github/scripts/report-tests.sh
+        id: test-run
+      - name: Prepare Test Summary
+        if: failure()
+        id: create-summary
+        run: |
+          echo "SUMMARY<<EOF" >> $GITHUB_OUTPUT
+          head -c 60000 test-summary.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Post Sticky Comment
+        if: failure()
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          header: test-failure-summary
+          message: ${{ steps.create-summary.outputs.SUMMARY }}
+      - name: Delete Test Failure Comment
+        if: success()
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          header: test-failure-summary
+          delete: true
+
+      - name: Upload coverage to Codecov
+        if: runner.os == 'Linux' && matrix.go-version == 'stable'
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
+        with:
+          files: ./${{ env.COVERAGE_FILE }}
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  integration-test-go:
+    name: Integration Tests (mocked)
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "stable"
+          cache: true
+      - name: Run integration tests
+        env:
+          SN_OFFLINE: "true"
+          SN_INSTANCE: mock_instance
+          SN_USERNAME: mock_user
+          SN_PASSWORD: mock_password
+        run: |
+          cd tests/integration/v2
+          go test -tags integration ./...
+
+  tag-gated-test-go:
+    name: Tag-Gated Tests (preview.query)
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "stable"
+          cache: true
+      - name: Run preview.query tests
+        run: go test -tags preview.query ./internal/...
+
+  govulncheck:
+    name: Vulnerability Scan
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Run govulncheck
+        uses: golang/govulncheck-action@032d45514ae346b1db93c04b0c90b841c370344f # v1
+        with:
+          go-version-input: stable
+          go-package: ./...

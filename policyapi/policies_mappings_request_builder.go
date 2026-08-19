@@ -1,0 +1,151 @@
+package policyapi
+
+import (
+	"context"
+	"errors"
+	"fmt"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+)
+
+const (
+	policiesMappingsURLTemplate = "{+baseurl}/api/sn_cdm/v1/policies/mappings"
+)
+
+// PoliciesMappingsRequestBuilder provides operations to manage Service-Now policy definitions.
+type PoliciesMappingsRequestBuilder struct {
+	core.RequestBuilder
+}
+
+// NewPoliciesMappingsRequestBuilderInternal instantiates a new PoliciesMappingsRequestBuilder with the provided path parameters and request adapter.
+func NewPoliciesMappingsRequestBuilderInternal(
+	pathParameters map[string]string,
+	requestAdapter abstractions.RequestAdapter,
+) *PoliciesMappingsRequestBuilder {
+	return &PoliciesMappingsRequestBuilder{
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, policiesMappingsURLTemplate, pathParameters),
+	}
+}
+
+// Delete removes a policy mapping.
+func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) error {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(requestConfiguration) {
+		return snerrors.ErrNilRequestConfiguration
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return snerrors.ErrNilRequestAdapter
+	}
+
+	if conversion.IsNil(requestConfiguration.QueryParameters) {
+		return snerrors.ErrNilQueryParameters
+	}
+
+	queryParameters := requestConfiguration.QueryParameters
+	if queryParameters.AppName == nil || *queryParameters.AppName == "" {
+		return errors.New("requestConfiguration.QueryParameters.AppName is required")
+	}
+
+	if queryParameters.DeployableName == nil || *queryParameters.DeployableName == "" {
+		return errors.New("requestConfiguration.QueryParameters.DeployableName is required")
+	}
+
+	if queryParameters.PolicyName == nil || *queryParameters.PolicyName == "" {
+		return errors.New("requestConfiguration.QueryParameters.PolicyName is required")
+	}
+
+	requestInfo, err := rB.ToDeleteRequestInformation(ctx, requestConfiguration)
+	if err != nil {
+		return err
+	}
+
+	return rB.GetRequestAdapter().SendNoContent(ctx, requestInfo, core.DefaultErrorMapping())
+}
+
+// Post creates a new policy mapping.
+func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (core.ServiceNowItemResponse[*PoliciesMapping], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(requestConfiguration) {
+		return nil, snerrors.ErrNilRequestConfiguration
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
+	if conversion.IsNil(requestConfiguration.QueryParameters) {
+		return nil, snerrors.ErrNilQueryParameters
+	}
+
+	queryParameters := requestConfiguration.QueryParameters
+	if queryParameters.AppName == nil || *queryParameters.AppName == "" {
+		return nil, errors.New("requestConfiguration.QueryParameters.AppName is required")
+	}
+
+	if queryParameters.DeployableName == nil || *queryParameters.DeployableName == "" {
+		return nil, errors.New("requestConfiguration.QueryParameters.DeployableName is required")
+	}
+
+	if queryParameters.PolicyName == nil || *queryParameters.PolicyName == "" {
+		return nil, errors.New("requestConfiguration.QueryParameters.PolicyName is required")
+	}
+
+	requestInfo, err := rB.ToPostRequestInformation(ctx, requestConfiguration)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue), core.DefaultErrorMapping())
+	if err != nil {
+		return nil, err
+	}
+
+	if resp == nil {
+		return nil, snerrors.ErrNilResponse
+	}
+
+	typedResp, ok := resp.(core.ServiceNowItemResponse[*PoliciesMapping])
+	if !ok {
+		return nil, fmt.Errorf("resp is not %T", (*core.ServiceNowItemResponse[*PoliciesMapping])(nil))
+	}
+
+	return typedResp, nil
+}
+
+// ToPostRequestInformation builds the request information for the Post method.
+func (rB *PoliciesMappingsRequestBuilder) ToPostRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
+	if !conversion.IsNil(requestConfiguration) {
+		abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
+	}
+
+	return requestInfo, nil
+}
+
+// ToDeleteRequestInformation builds the request information for the Delete method.
+func (rB *PoliciesMappingsRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
+	if !conversion.IsNil(requestConfiguration) {
+		abstractions.ConfigureRequestInformation(requestInfo, requestConfiguration)
+	}
+
+	return requestInfo, nil
+}

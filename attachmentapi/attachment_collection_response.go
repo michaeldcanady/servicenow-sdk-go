@@ -1,0 +1,14 @@
+package attachmentapi
+
+import (
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
+)
+
+// CreateAttachmentCollectionResponseFromDiscriminatorValue is a parsable factory for creating an Collection Request for AttachmentCollectionResponse
+func CreateAttachmentCollectionResponseFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return core.NewBaseServiceNowCollectionResponse[*Attachment](CreateAttachmentFromDiscriminatorValue), nil
+}
+
+// AttachmentCollectionResponse Represents a Service-Now API collection response of Attachment.
+type AttachmentCollectionResponse = core.BaseServiceNowCollectionResponse[*Attachment]

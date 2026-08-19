@@ -1,0 +1,37 @@
+# Read customer accounts
+
+import GoExample from '@site/src/components/GoExample';
+import acgGo from '@site/snippets/account_guide.go';
+
+List the customer accounts visible to the integration user.
+
+## When to use this pattern
+
+- You're linking CSM cases or contacts to their owning accounts
+- You're exporting account data for CRM reconciliation
+
+## Required values
+
+| Value | Description |
+| ----- | ----------- |
+| Account filters | Optional query parameters narrowing which accounts you get |
+
+## Example
+
+<GoExample language="go" files={{ acgGo: acgGo }} template={`package main
+
+{{acgGo:acg_imports}}
+
+func main() {
+    {{acgGo:acg_main}}
+}`} />
+
+## Tips
+
+- The Account API is read-oriented; account records are managed in ServiceNow itself.
+- `ByID(accountID)` fetches one account by its account ID.
+
+## Next steps
+
+- **[Account API reference](../../../apis/account/index.mdx)**
+- **[List and read CSM cases](../case/read-cases.mdx)**

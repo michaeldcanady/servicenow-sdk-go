@@ -4,8 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDefaultBackedModelMutatorFunc(t *testing.T) {
@@ -22,8 +23,12 @@ func TestDefaultBackedModelMutatorFunc(t *testing.T) {
 				store := mocking.NewMockBackingStore()
 				store.On("Set", key, value).Return(nil)
 
-				err := DefaultBackedModelMutatorFunc(store, key, value)
-				assert.Nil(t, err)
+				model := mocking.NewMockModel()
+				model.On("GetBackingStore").Return(store)
+
+				err := DefaultBackedModelMutatorFunc(model, key, value)
+				require.NoError(t, err)
+				model.AssertExpectations(t)
 				store.AssertExpectations(t)
 			},
 		},
@@ -33,10 +38,10 @@ func TestDefaultBackedModelMutatorFunc(t *testing.T) {
 				key := "key"
 				value := "value"
 
-				model := (*mocking.MockBackingStore)(nil)
+				model := (*mocking.MockModel)(nil)
 
 				err := DefaultBackedModelMutatorFunc(model, key, value)
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("model is nil"), err)
 			},
 		},
 	}

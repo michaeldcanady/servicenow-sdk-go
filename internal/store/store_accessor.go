@@ -1,28 +1,27 @@
 package store
 
 import (
-	"errors"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 
-// StoreAccessorFunc[S,T] defines a generic function signature for retrieving a value from a backing store
+// AccessorFunc[S,T] defines a generic function signature for retrieving a value from a backing store
 // using a specified key and converting it to a desired type.
-type StoreAccessorFunc[S store.BackingStore, T any] func(S, string) (T, error)
+type AccessorFunc[S store.BackingStore, T any] func(S, string) (T, error)
 
-// DefaultStoreAccessorFunc[S, T] is a generic implementation of StoreAccessorFunc that retrieves a value
+// DefaultStoreAccessorFunc[S, T] is a generic implementation of AccessorFunc that retrieves a value
 // from a backing store and attempts to convert it to the specified type.
 func DefaultStoreAccessorFunc[S store.BackingStore, T any](store S, key string) (T, error) {
 	var result T
 
-	if internal.IsNil(store) {
-		return result, errors.New("store is nil")
+	if conversion.IsNil(store) {
+		return result, snerrors.ErrNilStore
 	}
 	if strings.TrimSpace(key) == "" {
-		return result, errors.New("key is empty")
+		return result, snerrors.ErrEmptyKey
 	}
 
 	val, err := store.Get(key)

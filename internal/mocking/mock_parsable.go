@@ -7,6 +7,7 @@ import (
 
 type MockParsable struct {
 	mock.Mock
+	serialization.Parsable
 }
 
 func NewMockParsable() *MockParsable {
@@ -15,14 +16,12 @@ func NewMockParsable() *MockParsable {
 	}
 }
 
-// Serialize writes the objects properties to the current writer.
-func (mP *MockParsable) Serialize(writer serialization.SerializationWriter) error {
-	args := mP.Called(writer)
+func (m *MockParsable) Serialize(writer serialization.SerializationWriter) error {
+	args := m.Called(writer)
 	return args.Error(0)
 }
 
-// GetFieldDeserializers returns the deserialization information for this object.
-func (mP *MockParsable) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	args := mP.Called()
+func (m *MockParsable) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	args := m.Called()
 	return args.Get(0).(map[string]func(serialization.ParseNode) error)
 }

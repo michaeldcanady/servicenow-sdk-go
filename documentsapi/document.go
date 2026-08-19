@@ -1,0 +1,93 @@
+package documentsapi
+
+import (
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/store"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
+	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
+)
+
+const (
+	sysIDKey = "sys_id"
+	nameKey  = "name"
+	typeKey  = "type"
+)
+
+// Document represents a ServiceNow document record.
+type Document interface {
+	GetSysID() (*string, error)
+	SetSysID(val *string) error
+	GetName() (*string, error)
+	SetName(val *string) error
+	GetType() (*string, error)
+	SetType(val *string) error
+
+	serialization.Parsable
+	kiotaStore.BackedModel
+}
+
+// DocumentModel implementation of Document
+type DocumentModel struct {
+	core.BaseModel
+}
+
+// NewDocument creates a new instance of DocumentModel
+func NewDocument() *DocumentModel {
+	return &DocumentModel{
+		BaseModel: *core.NewBaseModel(),
+	}
+}
+
+// CreateDocumentFromDiscriminatorValue creates a new instance of Document.
+func CreateDocumentFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewDocument(), nil
+}
+
+// Serialize writes the objects properties to the current writer.
+func (m *DocumentModel) Serialize(writer serialization.SerializationWriter) error {
+	return internalSerialization.Serialize(writer,
+		internalSerialization.SerializeStringFunc(sysIDKey, m.GetSysID),
+		internalSerialization.SerializeStringFunc(nameKey, m.GetName),
+		internalSerialization.SerializeStringFunc(typeKey, m.GetType),
+	)
+}
+
+// GetFieldDeserializers returns the deserialization information for this object.
+func (m *DocumentModel) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	return map[string]func(serialization.ParseNode) error{
+		sysIDKey: internalSerialization.DeserializeStringFunc(m.SetSysID),
+		nameKey:  internalSerialization.DeserializeStringFunc(m.SetName),
+		typeKey:  internalSerialization.DeserializeStringFunc(m.SetType),
+	}
+}
+
+// GetSysID ...
+func (m *DocumentModel) GetSysID() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*DocumentModel, *string](m, sysIDKey)
+}
+
+// SetSysID ...
+func (m *DocumentModel) SetSysID(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, sysIDKey, val)
+}
+
+// GetName ...
+func (m *DocumentModel) GetName() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*DocumentModel, *string](m, nameKey)
+}
+
+// SetName ...
+func (m *DocumentModel) SetName(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, nameKey, val)
+}
+
+// GetType ...
+func (m *DocumentModel) GetType() (*string, error) {
+	return store.DefaultBackedModelAccessorFunc[*DocumentModel, *string](m, typeKey)
+}
+
+// SetType ...
+func (m *DocumentModel) SetType(val *string) error {
+	return store.DefaultBackedModelMutatorFunc(m, typeKey, val)
+}

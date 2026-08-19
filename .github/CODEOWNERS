@@ -1,0 +1,13 @@
+# Fallback owner for everything
+* @michaeldcanady
+
+# Require owner review on CI/CD and automation changes
+/.github/ @michaeldcanady
+
+# Authentication and credential handling
+/credentials/ @michaeldcanady
+/internal/oauth2/ @michaeldcanady
+
+# Module dependency changes
+/go.mod @michaeldcanady
+/go.sum @michaeldcanady

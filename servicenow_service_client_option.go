@@ -7,8 +7,10 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	internalHttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/microsoft/kiota-abstractions-go/store"
@@ -22,7 +24,7 @@ type ServiceNowServiceClientOption func(*ServiceNowServiceClientConfig) error
 // WithAuthenticationProvider sets the authentication provider for the ServiceNowServiceClient.
 func WithAuthenticationProvider(authenticationProvider authentication.AuthenticationProvider) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
-		if internal.IsNil(authenticationProvider) {
+		if conversion.IsNil(authenticationProvider) {
 			return errors.New("authenticationProvider is nil")
 		}
 		config.authenticationProvider = authenticationProvider
@@ -33,8 +35,8 @@ func WithAuthenticationProvider(authenticationProvider authentication.Authentica
 // WithRequestAdapter sets a pre-configured RequestAdapter for the ServiceNowServiceClient.
 func WithRequestAdapter(requestAdapter abstractions.RequestAdapter) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
-		if internal.IsNil(requestAdapter) {
-			return errors.New("requestAdapter is nil")
+		if conversion.IsNil(requestAdapter) {
+			return snerrors.ErrNilRequestAdapter
 		}
 		config.requestAdapter = requestAdapter
 		return nil
@@ -45,8 +47,8 @@ func WithRequestAdapter(requestAdapter abstractions.RequestAdapter) ServiceNowSe
 // It returns an error if the provided configuration is nil or the URL is empty.
 func WithURL(uri string) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
-		if internal.IsNil(config) {
-			return errors.New("config is nil")
+		if conversion.IsNil(config) {
+			return snerrors.ErrNilConfig
 		}
 		uri = strings.TrimSpace(uri)
 		if uri == "" {
@@ -54,7 +56,7 @@ func WithURL(uri string) ServiceNowServiceClientOption {
 		}
 
 		if _, err := url.ParseRequestURI(uri); err != nil {
-			return fmt.Errorf("%s", err)
+			return err
 		}
 
 		config.rawURI = uri
@@ -67,11 +69,11 @@ func WithURL(uri string) ServiceNowServiceClientOption {
 // It returns an error if the provided configuration is nil or the middleware slice is empty.
 func WithMiddleware(middleware ...nethttplibrary.Middleware) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
-		if internal.IsNil(config) {
-			return errors.New("config is nil")
+		if conversion.IsNil(config) {
+			return snerrors.ErrNilConfig
 		}
 		if len(middleware) == 0 {
-			return errors.New("middleware is empty")
+			return snerrors.ErrEmptyMiddleware
 		}
 
 		config.middleware = append(config.middleware, middleware...)
@@ -96,7 +98,7 @@ func WithInstance(instance string) ServiceNowServiceClientOption {
 // It returns an error if the provided factory is nil.
 func WithBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
-		if internal.IsNil(backingStoreFactory) {
+		if conversion.IsNil(backingStoreFactory) {
 			return errors.New("backingStoreFactory is nil")
 		}
 
@@ -109,8 +111,19 @@ func WithBackingStoreFactory(backingStoreFactory store.BackingStoreFactory) Serv
 // WithHTTPClient creates an option to set the HTTP client used by the requests.
 func WithHTTPClient(client *http.Client) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
-		config.requestAdapterOptions = append(config.requestAdapterOptions, internalHttp.WithClient(client))
+		config.requestAdapterOptions = append(config.requestAdapterOptions, internalhttp.WithClient(client))
 
+		return nil
+	}
+}
+
+// WithLogger creates an option to set the logger used by the service client.
+func WithLogger(logger internal.Logger) ServiceNowServiceClientOption {
+	return func(config *ServiceNowServiceClientConfig) error {
+		if conversion.IsNil(logger) {
+			return errors.New("logger is nil")
+		}
+		config.logger = logger
 		return nil
 	}
 }

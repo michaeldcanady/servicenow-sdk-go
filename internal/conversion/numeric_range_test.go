@@ -1,0 +1,40 @@
+package conversion
+
+import (
+	"testing"
+)
+
+func TestNumericRange_Compatible(t *testing.T) {
+	tests := []struct {
+		name     string
+		rng      *numericRange
+		val      float64
+		expected bool
+	}{
+		{"Int8Ok", int8Range, 10, true},
+		{"Int8Overflow", int8Range, 200, false},
+		{"Int8Decimal", int8Range, 10.5, false},
+		{"FloatOk", float64Range, 10.5, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.rng.Compatible(tt.val) != tt.expected {
+				t.Errorf("got %v, expected %v", tt.rng.Compatible(tt.val), tt.expected)
+			}
+		})
+	}
+}
+
+func TestNewNumericRange(t *testing.T) {
+	rng := newNumericRange(100, 0, false)
+	if rng.max != 100 || rng.min != 0 || rng.allowDecimal != false {
+		t.Error("newNumericRange failed")
+	}
+}
+
+func TestNumericRange_Within(t *testing.T) {
+	rng := newNumericRange(10, 0, false)
+	if !rng.Within(5) || rng.Within(15) || rng.Within(-5) {
+		t.Error("Within failed")
+	}
+}

@@ -28,11 +28,11 @@ jobs:
         run: |
           # Same type vocabulary as pull-request-title-lint.yml, so branch
           # names and PR titles stay in sync.
-          PATTERN='^(fix|feat|chore|docs|style|refactor|perf|test)/[a-z0-9]+(-[a-z0-9]+)*$'
+          PATTERN='^(fix|feat|chore|docs|style|refactor|perf|test|release)/[a-z0-9]+(-[a-z0-9]+)*$'
 
           if [[ ! "$HEAD_REF" =~ $PATTERN ]]; then
             echo "::error::Branch name '$HEAD_REF' does not match the required '<type>/<kebab-description>' pattern (e.g. 'fix/nil-pointer-in-tableapi')."
-            echo "Allowed types: fix, feat, chore, docs, style, refactor, perf, test"
+            echo "Allowed types: fix, feat, chore, docs, style, refactor, perf, test, release"
             exit 1
           fi
 

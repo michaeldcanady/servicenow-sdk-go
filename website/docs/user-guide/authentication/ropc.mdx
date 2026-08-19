@@ -1,0 +1,62 @@
+# Resource owner password credentials
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import authGo from '@site/snippets/auth.go';
+
+
+The resource owner password credentials flow lets the SDK exchange a
+username and password for an OAuth access token. This method is typically used
+only in controlled environments or legacy integrations where interactive login
+isn't possible.
+
+## Objective
+
+Configure and use the Resource Owner Password Credentials (ROPC) OAuth flow with the Service‑Now SDK using values
+provided by your ServiceNow administrator.
+
+## Required values
+
+Your administrator must provide:
+
+| Value           | Description                                        |
+| --------------- | -------------------------------------------------- |
+| Service‑Now URL | Base URL of the instance                           |
+| Client ID       | From a ServiceNow OAuth application registry entry |
+| Client Secret   | From the same registry entry                       |
+| Username        | ServiceNow user account used for authentication    |
+| Password        | Password for the user account                      |
+
+## SDK flow
+
+
+```mermaid
+flowchart TD
+    A([App code]):::app --> B(NewROPCProvider<br/>client ID + secret,<br/>username + password):::sdk
+
+    subgraph acquire ["Getting the first token"]
+        F(Exchange username/password<br/>for tokens):::sdk --> G(Access token<br/>+ refresh token):::token
+        G --> H(Token cache):::token
+    end
+    B --> F
+
+    subgraph request ["On every request"]
+        I{Token<br/>expired?}:::decision
+        I -- yes --> J(Refresh-token grant):::sdk
+        I -- no --> K[[Kiota request adapter]]:::sdk
+    end
+    H --> I
+    J --> H
+    K --> L[[ServiceNow instance]]:::external
+
+    classDef app fill:#c7d2fe,stroke:#4f46e5,color:#1e1b4b
+    classDef sdk fill:#e2e8f0,stroke:#64748b,color:#0f172a
+    classDef decision fill:#fde68a,stroke:#d97706,color:#78350f
+    classDef token fill:#bbf7d0,stroke:#16a34a,color:#14532d
+    classDef external fill:#bae6fd,stroke:#0284c7,color:#0c4a6e
+    style acquire fill:transparent,stroke:#94a3b8,stroke-dasharray:4 4
+    style request fill:transparent,stroke:#94a3b8,stroke-dasharray:4 4
+```
+
+## Initialize the SDK
+
+<GoSnippet language="go" src={authGo} region="auth_ropc" />

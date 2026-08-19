@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"math"
 	"reflect"
-
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
 )
 
 type numericRange struct {
@@ -29,6 +27,19 @@ var (
 	}
 )
 
+// IsNil checks if a value is nil or a nil interface.
+func IsNil(a interface{}) bool {
+	if a == nil {
+		return true
+	}
+	v := reflect.ValueOf(a)
+	k := v.Kind()
+	if k == reflect.Chan || k == reflect.Func || k == reflect.Map || k == reflect.Pointer || k == reflect.UnsafePointer || k == reflect.Interface || k == reflect.Slice {
+		return v.IsNil()
+	}
+	return false
+}
+
 // isCompatible checks if the value is compatible with the type tp.
 func isCompatible(value interface{}, tp reflect.Type, strict bool) bool {
 	if value == nil {
@@ -49,49 +60,17 @@ func isCompatible(value interface{}, tp reflect.Type, strict bool) bool {
 	return valType.ConvertibleTo(tp)
 }
 
-// As converts the value to the type T.
-func As[T any](in interface{}, out T) error {
-	if internal.IsNil(in) {
-		return nil
-	}
-
-	valValue := reflect.ValueOf(in)
-	for valValue.Kind() == reflect.Pointer {
-		valValue = valValue.Elem()
-		in = valValue.Interface()
-	}
-
-	outVal := reflect.ValueOf(out)
-	if outVal.Kind() != reflect.Pointer || internal.IsNil(out) {
-		return fmt.Errorf("out is not pointer or is nil")
-	}
-
-	nestedOutVal := outVal.Elem()
-	if nestedOutVal.Kind() == reflect.Interface && !nestedOutVal.IsNil() {
-		nestedOutVal = nestedOutVal.Elem()
-	}
-
-	outType := nestedOutVal.Type()
-
-	if !isCompatible(in, outType, true) {
-		return fmt.Errorf("value '%v' is not compatible with type %T", in, nestedOutVal.Interface())
-	}
-
-	outVal.Elem().Set(valValue.Convert(outType))
-	return nil
-}
-
 // As2 converts the input value to the specified type T and assigns it to out if compatible.
 // It supports strict and non-strict mode.
 func As2[T any](in any, out T, strict bool) error {
 	// Early return if input is nil
-	if internal.IsNil(in) {
+	if IsNil(in) {
 		return nil
 	}
 
 	// Validate output is a non-nil pointer
 	outVal := reflect.ValueOf(out)
-	if outVal.Kind() != reflect.Pointer || internal.IsNil(out) {
+	if outVal.Kind() != reflect.Pointer || IsNil(out) {
 		return fmt.Errorf("out must be a non-nil pointer")
 	}
 

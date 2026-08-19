@@ -18,7 +18,7 @@ type Client struct {
 	// ClientID is the public identifier for the application.
 	ClientID string
 	// ClientSecret is the secret identifier for the application (confidential clients only).
-	ClientSecret string //nolint:gosec // G117: Needed for flow, no secret
+	ClientSecret string //nolint:gosec // G117: Confirmed secret used for OAuth2 authentication flow
 	// Endpoints holds the URLs for the various OAuth2 service endpoints.
 	Endpoints *Endpoints
 	// AuthMethod specifies how the client identifies itself to the authorization server.
@@ -132,7 +132,7 @@ func (c *Client) doRequest(req *http.Request) (*Token, error) {
 	if err != nil {
 		return nil, fmt.Errorf("token request failed: %w", err)
 	}
-	defer res.Body.Close() //nolint:errcheck
+	defer func() { _ = res.Body.Close() }()
 
 	body, _ := io.ReadAll(res.Body)
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
@@ -248,7 +248,7 @@ func (c *Client) RequestDeviceAuthorization(ctx context.Context, scopes []string
 	if err != nil {
 		return nil, err
 	}
-	defer res.Body.Close()
+	defer func() { _ = res.Body.Close() }()
 
 	body, _ := io.ReadAll(res.Body)
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
@@ -298,7 +298,7 @@ func (c *Client) Revoke(ctx context.Context, token, tokenTypeHint string) error 
 	if err != nil {
 		return err
 	}
-	defer res.Body.Close()
+	defer func() { _ = res.Body.Close() }()
 
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		body, _ := io.ReadAll(res.Body)
@@ -336,7 +336,7 @@ func (c *Client) Introspect(ctx context.Context, token, tokenTypeHint string) (*
 	if err != nil {
 		return nil, err
 	}
-	defer res.Body.Close()
+	defer func() { _ = res.Body.Close() }()
 
 	body, _ := io.ReadAll(res.Body)
 	if res.StatusCode < 200 || res.StatusCode >= 300 {

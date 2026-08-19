@@ -1,4 +1,4 @@
-package internal
+package internalhttp
 
 // RequestHeader A request header is an HTTP header that can be used in an HTTP request to provide information about
 // the request context, so that the server can tailor the response.
@@ -11,13 +11,15 @@ const (
 	RequestHeaderAccept
 )
 
+var requestHeaderStrings = map[RequestHeader]string{
+	RequestHeaderUnknown:       "unknown",
+	RequestHeaderAuthorization: "authorization",
+	RequestHeaderAccept:        "accept",
+}
+
 // String returns string representation of the request header
 func (rH RequestHeader) String() string {
-	stringVal, ok := map[RequestHeader]string{
-		RequestHeaderUnknown:       "unknown",
-		RequestHeaderAuthorization: "authorization",
-		RequestHeaderAccept:        "accept",
-	}[rH]
+	stringVal, ok := requestHeaderStrings[rH]
 	if !ok {
 		return RequestHeaderUnknown.String()
 	}

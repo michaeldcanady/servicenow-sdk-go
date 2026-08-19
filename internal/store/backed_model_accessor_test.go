@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,12 +16,12 @@ func TestDefaultBackedModelAccessorFunc(t *testing.T) {
 		{
 			name: "nil model",
 			test: func(t *testing.T) {
-				model := (*mocking.MockBackingStore)(nil)
+				model := (*mocking.MockModel)(nil)
 
-				value, err := DefaultBackedModelAccessorFunc[*mocking.MockBackingStore, string](model, "test")
+				value, err := DefaultBackedModelAccessorFunc[*mocking.MockModel, string](model, "test")
 
 				assert.Empty(t, value)
-				assert.Equal(t, errors.New("backingStore is nil"), err)
+				assert.Equal(t, errors.New("model is nil"), err)
 			},
 		},
 	}

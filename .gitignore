@@ -24,6 +24,11 @@ go.work.sum
 # env file
 *.env
 
+# Claude Code personal/local settings (may contain secrets)
+.claude/settings.local.json
+.claude/.*.redacted
+.claude/hooks/__pycache__/
+
 # Editor/IDE
 .vscode/*
 !.vscode/settings.json
@@ -39,11 +44,18 @@ go.work.sum
 
 .test/
 .local/
+
+# python
+
+__pycache__/
+
 # Cache directory
 .cache/
 
-# Documentation site
-site/
+# Documentation site (Docusaurus)
+website/node_modules/
+website/build/
+website/.docusaurus/
 
 # Vale styles
 .github/styles/*
@@ -55,3 +67,5 @@ site/
 !.gemini/tmp/.gitkeep
 spec/**
 !.gitkeep
+website/.docusaurus/**
+website/node_modules/**

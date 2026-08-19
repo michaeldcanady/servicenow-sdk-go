@@ -5,20 +5,22 @@ import (
 	"testing"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSerialize(t *testing.T) {
 	writer := mocking.NewMockSerializationWriter()
 
-	s1 := func(sw serialization.SerializationWriter) error { return nil }
-	s2 := func(sw serialization.SerializationWriter) error { return errors.New("err") }
+	s1 := func(_ serialization.SerializationWriter) error { return nil }
+	s2 := func(_ serialization.SerializationWriter) error { return errors.New("err") }
 
 	err := Serialize(writer, s1)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	err = Serialize(writer, s1, s2)
 	assert.Error(t, err)
@@ -30,14 +32,14 @@ func TestSerializeMutatedStringFunc(t *testing.T) {
 	tests := []struct {
 		name     string
 		accessor ModelAccessor[int]
-		mutator  Mutator[int, *string]
+		mutator  conversion.Mutator[int, *string]
 		mock     func(*mocking.MockSerializationWriter)
 		wantErr  bool
 	}{
 		{
 			name:     "Success",
 			accessor: func() (int, error) { return val, nil },
-			mutator:  func(v int) (*string, error) { return &mutated, nil },
+			mutator:  func(_ int) (*string, error) { return &mutated, nil },
 			mock: func(m *mocking.MockSerializationWriter) {
 				m.On("WriteStringValue", "key", &mutated).Return(nil)
 			},
@@ -49,8 +51,8 @@ func TestSerializeMutatedStringFunc(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
-			err := SerializeMutatedStringFunc("key", tt.mutator)(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeMutatedStringFunc("key", tt.mutator, tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -75,13 +77,13 @@ func TestSerializeStringFunc(t *testing.T) {
 		{
 			name:     "Nil value",
 			accessor: func() (*string, error) { return nil, nil },
-			mock:     func(m *mocking.MockSerializationWriter) {},
+			mock:     func(_ *mocking.MockSerializationWriter) {},
 			wantErr:  false,
 		},
 		{
 			name:     "Error",
 			accessor: func() (*string, error) { return nil, errors.New("err") },
-			mock:     func(m *mocking.MockSerializationWriter) {},
+			mock:     func(_ *mocking.MockSerializationWriter) {},
 			wantErr:  true,
 		},
 	}
@@ -91,11 +93,11 @@ func TestSerializeStringFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeStringFunc("key")(tt.accessor)(writer)
+			err := SerializeStringFunc("key", tt.accessor)(writer)
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 			writer.AssertExpectations(t)
 		})
@@ -125,11 +127,11 @@ func TestSerializeBoolFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeBoolFunc("key")(tt.accessor)(writer)
+			err := SerializeBoolFunc("key", tt.accessor)(writer)
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 			writer.AssertExpectations(t)
 		})
@@ -159,8 +161,8 @@ func TestSerializeInt64Func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeInt64Func("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeInt64Func("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -189,8 +191,8 @@ func TestSerializeInt32Func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeInt32Func("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeInt32Func("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -219,8 +221,8 @@ func TestSerializeFloat64Func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeFloat64Func("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeFloat64Func("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -249,8 +251,8 @@ func TestSerializeFloat32Func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeFloat32Func("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeFloat32Func("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -279,8 +281,8 @@ func TestSerializeTimeFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeTimeFunc("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeTimeFunc("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -309,8 +311,8 @@ func TestSerializeObjectValueFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeObjectValueFunc[serialization.Parsable]("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeObjectValueFunc[serialization.Parsable]("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -339,8 +341,8 @@ func TestSerializeByteArrayFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeByteArrayFunc("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeByteArrayFunc("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -369,8 +371,8 @@ func TestSerializeCollectionOfObjectValuesFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeCollectionOfObjectValuesFunc[serialization.Parsable]("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeCollectionOfObjectValuesFunc[serialization.Parsable]("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -399,8 +401,8 @@ func TestSerializeCollectionOfStringValuesFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeCollectionOfStringValuesFunc("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeCollectionOfStringValuesFunc("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -436,8 +438,8 @@ func TestSerializeEnumFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeEnumFunc[mockEnum]("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeEnumFunc[mockEnum]("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -467,8 +469,8 @@ func TestSerializeStringToBoolFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeStringToBoolFunc("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeStringToBoolFunc("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -498,8 +500,8 @@ func TestSerializeStringToFloat64Func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeStringToFloat64Func("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeStringToFloat64Func("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -529,8 +531,8 @@ func TestSerializeStringToInt64Func(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeStringToInt64Func("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeStringToInt64Func("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -561,8 +563,8 @@ func TestSerializeStringToTimeFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeStringToTimeFunc("key", layout)(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeStringToTimeFunc("key", layout, tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -591,8 +593,8 @@ func TestSerializeISODurationFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeISODurationFunc("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeISODurationFunc("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -614,6 +616,18 @@ func TestSerializeAnyFunc(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name:     "Nil value",
+			accessor: func() (any, error) { return nil, nil },
+			mock:     func(_ *mocking.MockSerializationWriter) {},
+			wantErr:  false,
+		},
+		{
+			name:     "Typed-nil value",
+			accessor: func() (any, error) { var p *string; return p, nil },
+			mock:     func(_ *mocking.MockSerializationWriter) {},
+			wantErr:  false,
+		},
 	}
 
 	for _, tt := range tests {
@@ -621,8 +635,8 @@ func TestSerializeAnyFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeAnyFunc("key")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeAnyFunc("key", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}
@@ -652,8 +666,8 @@ func TestSerializeStringToSliceFunc(t *testing.T) {
 			writer := mocking.NewMockSerializationWriter()
 			tt.mock(writer)
 
-			err := SerializeStringToSliceFunc("key", ",")(tt.accessor)(writer)
-			assert.NoError(t, err)
+			err := SerializeStringToSliceFunc("key", ",", tt.accessor)(writer)
+			require.NoError(t, err)
 			writer.AssertExpectations(t)
 		})
 	}

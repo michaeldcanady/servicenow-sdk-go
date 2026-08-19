@@ -1,0 +1,82 @@
+package batchapi
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
+)
+
+// throwErrors returns error is provided req is an error
+func throwErrors(req ServicedRequest, typeName string) error {
+	code, err := req.GetStatusCode()
+	if err != nil {
+		return err
+	}
+
+	if code == nil || *code < 400 {
+		return nil
+	}
+
+	body, err := req.GetErrorMessage()
+	if err != nil {
+		return err
+	}
+
+	headers, err := req.GetHeaders()
+	if err != nil {
+		return err
+	}
+
+	contentType := getHTTPHeader(headers, internalhttp.HTTPHeaderContentType, "")
+
+	var bodyBytes []byte
+	if body != nil {
+		bodyBytes = []byte(*body)
+	}
+
+	return internal.NewServiceNowErrorThrower(internal.GetErrorRegistryInstance(), internal.NewKiotaDeserializer()).Throw(typeName, *code, contentType, bodyBytes)
+}
+
+// serializeContent serializes the provided content using the provided ParsableFactory
+func serializeContent[T serialization.Parsable](contentType string, content []byte, constructor serialization.ParsableFactory) (T, error) {
+	var res T
+
+	parseNodeFactory := serialization.DefaultParseNodeFactoryInstance
+	parseNode, err := parseNodeFactory.GetRootParseNode(contentType, content)
+	if err != nil {
+		return res, err
+	}
+
+	result, err := parseNode.GetObjectValue(constructor)
+	if err != nil {
+		return res, err
+	}
+
+	typedResult, ok := result.(T)
+	if !ok {
+		return res, fmt.Errorf("result is not %T", res)
+	}
+	return typedResult, nil
+}
+
+// getHTTPHeader gets the requested header's value from a slice of RestRequestHeader
+// nolint: unparam
+func getHTTPHeader(headers []RestRequestHeader, httpHeader internalhttp.HTTPHeader, defaultValue string) string {
+	for _, header := range headers {
+		name, err := header.GetName()
+		if err != nil {
+			continue
+		}
+
+		if strings.EqualFold(*name, httpHeader.String()) {
+			value, err := header.GetValue()
+			if err == nil {
+				return *value
+			}
+		}
+	}
+	return defaultValue
+}

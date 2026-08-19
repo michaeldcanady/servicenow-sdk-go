@@ -4,10 +4,12 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDeserializeMutatedStringFunc(t *testing.T) {
@@ -16,7 +18,7 @@ func TestDeserializeMutatedStringFunc(t *testing.T) {
 	tests := []struct {
 		name    string
 		mock    func(*mocking.MockParseNode)
-		mutator Mutator[*string, int]
+		mutator conversion.Mutator[*string, int]
 		wantErr bool
 		wantVal int
 	}{
@@ -25,7 +27,7 @@ func TestDeserializeMutatedStringFunc(t *testing.T) {
 			mock: func(m *mocking.MockParseNode) {
 				m.On("GetStringValue").Return(&val, nil)
 			},
-			mutator: func(s *string) (int, error) { return mutated, nil },
+			mutator: func(_ *string) (int, error) { return mutated, nil },
 			wantErr: false,
 			wantVal: mutated,
 		},
@@ -40,8 +42,8 @@ func TestDeserializeMutatedStringFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeMutatedStringFunc(tt.mutator)(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeMutatedStringFunc(tt.mutator, setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
 	}
@@ -84,11 +86,11 @@ func TestDeserializeStringFunc(t *testing.T) {
 				return nil
 			}
 
-			err := DeserializeStringFunc()(setter)(node)
+			err := DeserializeStringFunc(setter)(node)
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, tt.wantVal, result)
 			}
 			node.AssertExpectations(t)
@@ -125,8 +127,8 @@ func TestDeserializeInt64Func(t *testing.T) {
 				return nil
 			}
 
-			err := DeserializeInt64Func()(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeInt64Func(setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 			node.AssertExpectations(t)
 		})
@@ -160,8 +162,8 @@ func TestDeserializeInt32Func(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeInt32Func()(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeInt32Func(setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
 	}
@@ -194,8 +196,8 @@ func TestDeserializeBoolFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeBoolFunc()(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeBoolFunc(setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
 	}
@@ -228,8 +230,8 @@ func TestDeserializeFloat64Func(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeFloat64Func()(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeFloat64Func(setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
 	}
@@ -262,8 +264,8 @@ func TestDeserializeFloat32Func(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeFloat32Func()(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeFloat32Func(setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
 	}
@@ -296,8 +298,8 @@ func TestDeserializeByteArrayFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeByteArrayFunc()(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeByteArrayFunc(setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
 	}
@@ -309,7 +311,7 @@ func TestDeserializeMutatedByteArrayFunc(t *testing.T) {
 	tests := []struct {
 		name    string
 		mock    func(*mocking.MockParseNode)
-		mutator Mutator[[]byte, string]
+		mutator conversion.Mutator[[]byte, string]
 		wantErr bool
 		wantVal string
 	}{
@@ -318,7 +320,7 @@ func TestDeserializeMutatedByteArrayFunc(t *testing.T) {
 			mock: func(m *mocking.MockParseNode) {
 				m.On("GetByteArrayValue").Return(val, nil)
 			},
-			mutator: func(b []byte) (string, error) { return mutated, nil },
+			mutator: func(_ []byte) (string, error) { return mutated, nil },
 			wantErr: false,
 			wantVal: mutated,
 		},
@@ -333,8 +335,8 @@ func TestDeserializeMutatedByteArrayFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeMutatedByteArrayFunc(tt.mutator)(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeMutatedByteArrayFunc(tt.mutator, setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
 	}
@@ -371,8 +373,8 @@ func TestDeserializeCollectionOfObjectValuesFunc(t *testing.T) {
 				return nil
 			}
 
-			err := DeserializeCollectionOfObjectValuesFunc[serialization.Parsable](nil)(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeCollectionOfObjectValuesFunc[serialization.Parsable](nil, setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 			node.AssertExpectations(t)
 		})
@@ -417,8 +419,8 @@ func TestDeserializeObjectValueFunc(t *testing.T) {
 				return nil
 			}
 
-			err := DeserializeObjectValueFunc[serialization.Parsable](nil)(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeObjectValueFunc[serialization.Parsable](nil, setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 			node.AssertExpectations(t)
 		})
@@ -468,8 +470,8 @@ func TestDeserializeEnumFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeEnumFunc[mockEnum](nil)(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeEnumFunc[mockEnum](nil, setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
 	}
@@ -502,8 +504,8 @@ func TestDeserializeAnyFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeAnyFunc()(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeAnyFunc(setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
 	}
@@ -515,7 +517,7 @@ func TestDeserializeMutatedAnyFunc(t *testing.T) {
 	tests := []struct {
 		name    string
 		mock    func(*mocking.MockParseNode)
-		mutator Mutator[any, int]
+		mutator conversion.Mutator[any, int]
 		wantErr bool
 		wantVal int
 	}{
@@ -524,7 +526,7 @@ func TestDeserializeMutatedAnyFunc(t *testing.T) {
 			mock: func(m *mocking.MockParseNode) {
 				m.On("GetRawValue").Return(val, nil)
 			},
-			mutator: func(a any) (int, error) { return mutated, nil },
+			mutator: func(_ any) (int, error) { return mutated, nil },
 			wantErr: false,
 			wantVal: mutated,
 		},
@@ -539,8 +541,8 @@ func TestDeserializeMutatedAnyFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeMutatedAnyFunc(tt.mutator)(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeMutatedAnyFunc(tt.mutator, setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
 	}
@@ -573,8 +575,8 @@ func TestDeserializeISODurationFunc(t *testing.T) {
 				result = v
 				return nil
 			}
-			err := DeserializeISODurationFunc()(setter)(node)
-			assert.NoError(t, err)
+			err := DeserializeISODurationFunc(setter)(node)
+			require.NoError(t, err)
 			assert.Equal(t, tt.wantVal, result)
 		})
 	}

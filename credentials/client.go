@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"sync"
 
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
 )
 
 type oauth2Client interface {
@@ -39,7 +39,7 @@ func (c *baseClient) Initialize(baseURL string) {
 		return
 	}
 
-	if !internal.IsNil(c.oauthClient) {
+	if !conversion.IsNil(c.oauthClient) {
 		return
 	}
 

@@ -1,0 +1,92 @@
+package accountapi
+
+import (
+	"context"
+	"fmt"
+	"maps"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+)
+
+const (
+	accountURLTemplate = "{+baseurl}/api/now/v1/account"
+	accountIDKey       = "account_id"
+)
+
+// AccountRequestBuilder provides operations to manage accounts.
+type AccountRequestBuilder struct {
+	core.RequestBuilder
+}
+
+// NewAccountRequestBuilderInternal instantiates a new AccountRequestBuilder with the provided request parameters.
+func NewAccountRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *AccountRequestBuilder {
+	return &AccountRequestBuilder{
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, accountURLTemplate, pathParameters),
+	}
+}
+
+// NewAccountRequestBuilder instantiates a new [AccountRequestBuilder].
+func NewAccountRequestBuilder(rawUrl string, requestAdapter abstractions.RequestAdapter) *AccountRequestBuilder {
+	urlParams := map[string]string{internal.RawURLKey: rawUrl}
+	return NewAccountRequestBuilderInternal(urlParams, requestAdapter)
+}
+
+// ByID returns an [AccountItemRequestBuilder] for the specified account ID.
+func (rB *AccountRequestBuilder) ByID(accountID string) *AccountItemRequestBuilder {
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters[accountIDKey] = accountID
+	return NewAccountItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}
+
+// Get sends a GET request to retrieve a list of accounts.
+func (rB *AccountRequestBuilder) Get(ctx context.Context, config *AccountRequestBuilderGetRequestConfiguration) (AccountCollectionResponse, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
+	requestInfo, err := rB.ToGetRequestInformation(ctx, config)
+	if err != nil {
+		return nil, err
+	}
+
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, CreateAccountCollectionResponseFromDiscriminatorValue, errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	if conversion.IsNil(res) {
+		return nil, snerrors.ErrNilResponse
+	}
+
+	typedRes, ok := res.(AccountCollectionResponse)
+	if !ok {
+		return nil, fmt.Errorf("resp is not %T", (*AccountCollectionResponse)(nil))
+	}
+
+	return typedRes, nil
+}
+
+// ToGetRequestInformation creates a RequestInformation object for a GET request.
+func (rB *AccountRequestBuilder) ToGetRequestInformation(_ context.Context, config *AccountRequestBuilderGetRequestConfiguration) (*abstractions.RequestInformation, error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.GET, rB.GetURLTemplate(), rB.GetPathParameters())
+	abstractions.ConfigureRequestInformation(requestInfo, config)
+
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+
+	return requestInfo, nil
+}

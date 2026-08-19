@@ -85,36 +85,6 @@ func TestIsCompatible(t *testing.T) {
 	}
 }
 
-func TestAs(t *testing.T) {
-	var i int16
-	tests := []struct {
-		name string
-		in   any
-		out  any
-		err  bool
-	}{
-		{"Successful", int16(10), &i, false},
-		{"NilInput", nil, &i, false},
-		{"NilOutput", 10, nil, true},
-		{"NonPtrOutput", 10, i, true},
-		{"Incompatible", "s", &i, true},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := As(tt.in, tt.out)
-			if tt.err {
-				if err == nil {
-					t.Error("Expected error")
-				}
-			} else {
-				if err != nil {
-					t.Errorf("Unexpected error: %v", err)
-				}
-			}
-		})
-	}
-}
-
 func TestAs2(t *testing.T) {
 	var i16 int16
 	var s string

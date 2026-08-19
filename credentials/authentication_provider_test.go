@@ -5,6 +5,7 @@ import (
 
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAuthenticationProviders_Initialization(t *testing.T) {
@@ -62,7 +63,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			name: "Authorization Code Provider with Custom Options",
 			provider: func() (authentication.AuthenticationProvider, error) {
 				customStateGen := func() string { return "custom-state" }
-				customURLOpener := func(url string) error { return nil }
+				customURLOpener := func(_ string) error { return nil }
 				return NewAuthorizationCodeProvider("client-id", "client-secret",
 					WithPort(8080),
 					WithStateGenerator(customStateGen),
@@ -81,7 +82,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 		{
 			name: "Authorization Code Provider with Custom Server Factory",
 			provider: func() (authentication.AuthenticationProvider, error) {
-				customServerFactory := func(state string, port int) (AuthorizationCodeServer, error) {
+				customServerFactory := func(_ string, _ int) (AuthorizationCodeServer, error) {
 					m := &mockAuthorizationCodeServer{}
 					m.On("GetAddr").Return("http://localhost:1234")
 					return m, nil
@@ -119,7 +120,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p, err := tt.provider()
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			tt.verify(t, p)
 		})

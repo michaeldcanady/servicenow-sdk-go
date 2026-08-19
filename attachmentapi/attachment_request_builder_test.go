@@ -1,0 +1,120 @@
+package attachmentapi
+
+import (
+	"context"
+	"errors"
+	"testing"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
+)
+
+func TestAttachmentRequestBuilder_Get(t *testing.T) {
+	tests := []struct {
+		name        string
+		setupMock   func(*mocking.MockRequestAdapter)
+		config      *AttachmentRequestBuilderGetRequestConfiguration
+		expectedErr error
+	}{
+		{
+			name: "Success",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				resp := core.NewBaseServiceNowCollectionResponse[*Attachment](CreateAttachmentFromDiscriminatorValue)
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(resp, nil)
+			},
+			expectedErr: nil,
+		},
+		{
+			name: "Error",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, errors.New("network error"))
+			},
+			expectedErr: errors.New("network error"),
+		},
+		{
+			name: "Nil Response",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
+			},
+			expectedErr: snerrors.ErrNilResponse,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			adapter := &mocking.MockRequestAdapter{}
+			tt.setupMock(adapter)
+
+			builder := NewAttachmentRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+			resp, err := builder.Get(context.Background(), tt.config)
+
+			if tt.expectedErr != nil {
+				require.EqualError(t, err, tt.expectedErr.Error())
+				assert.Nil(t, resp)
+			} else {
+				require.NoError(t, err)
+				assert.NotNil(t, resp)
+			}
+		})
+	}
+}
+
+func TestAttachmentRequestBuilder_Get_NilBuilder(t *testing.T) {
+	builder := (*AttachmentRequestBuilder)(nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	assert.Nil(t, resp)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+}
+
+func TestAttachmentRequestBuilder_Get_NilRequestAdapter(t *testing.T) {
+	builder := NewAttachmentRequestBuilderInternal(map[string]string{}, nil)
+
+	resp, err := builder.Get(context.Background(), nil)
+
+	assert.Nil(t, resp)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+}
+
+func TestAttachmentRequestBuilder_Head_NilBuilder(t *testing.T) {
+	builder := (*AttachmentRequestBuilder)(nil)
+
+	headers, err := builder.Head(context.Background(), nil)
+
+	assert.Nil(t, headers)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+}
+
+func TestAttachmentRequestBuilder_Head_NilRequestAdapter(t *testing.T) {
+	builder := NewAttachmentRequestBuilderInternal(map[string]string{}, nil)
+
+	headers, err := builder.Head(context.Background(), nil)
+
+	assert.Nil(t, headers)
+	require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+}
+
+func TestAttachmentRequestBuilder_Builders(t *testing.T) {
+	adapter := &mocking.MockRequestAdapter{}
+	builder := NewAttachmentRequestBuilderInternal(map[string]string{"baseurl": "https://example.com"}, adapter)
+
+	t.Run("ByID", func(t *testing.T) {
+		itemBuilder := builder.ByID("sys_id_123")
+		assert.NotNil(t, itemBuilder)
+	})
+
+	t.Run("File", func(t *testing.T) {
+		fileBuilder := builder.File()
+		assert.NotNil(t, fileBuilder)
+	})
+
+	t.Run("Upload", func(t *testing.T) {
+		uploadBuilder := builder.Upload()
+		assert.NotNil(t, uploadBuilder)
+	})
+}

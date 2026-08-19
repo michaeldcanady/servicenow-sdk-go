@@ -1,46 +1,90 @@
 package servicenowsdkgo
 
 import (
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
-	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batch-api"
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/table-api"
+	"maps"
+
+	accountapi "github.com/michaeldcanady/servicenow-sdk-go/v2/accountapi"
+	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/v2/activitysubscriptionsapi"
+	aggregationapi "github.com/michaeldcanady/servicenow-sdk-go/v2/aggregationapi"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachmentapi"
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/v2/batchapi"
+	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/v2/cmdbinstanceapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	documentsapi "github.com/michaeldcanady/servicenow-sdk-go/v2/documentsapi"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-// DEPRECATED: deprecated since v1.11.0. Please use [NewServiceNowRequestBuilder3]
-//
-// NewNowRequestBuilder2
-func NewNowRequestBuilder2(url string, client core.Client2) *NowRequestBuilder {
-	pathParameters := map[string]string{"baseurl": url}
-	requestBuilder := core.NewRequestBuilder2(client, nowURLTemplate, pathParameters)
+const (
+	nowURLTemplate = "{+baseurl}/api/now"
+	tablePathKey   = "table"
+)
+
+// NowRequestBuilder provides operations to manage the "now" API namespace.
+type NowRequestBuilder struct {
+	core.RequestBuilder
+}
+
+// NewServiceNowRequestBuilderInternal instantiates a new [NowRequestBuilder] from raw path
+// parameters. It is exported so sibling packages can construct a NowRequestBuilder while
+// chaining through this SDK's fluent builder tree; consumers should generally use
+// [NewServiceNowRequestBuilder] instead.
+func NewServiceNowRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *NowRequestBuilder {
 	return &NowRequestBuilder{
-		*requestBuilder,
+		core.NewBaseRequestBuilder(requestAdapter, nowURLTemplate, pathParameters),
 	}
 }
 
-// Deprecated: deprecated since v1.9.0. Please use [NowRequestBuilder.TableV2]
-func (rB *NowRequestBuilder) Table2(tableName string) *tableapi.TableRequestBuilder {
-	rB.PathParameters["table"] = tableName
-	return tableapi.New2TableRequestBuilder(rB.Client2, rB.PathParameters)
+// NewServiceNowRequestBuilder instantiates a new [NowRequestBuilder] with the provided base URL
+// and request adapter.
+func NewServiceNowRequestBuilder(
+	rawURL string,
+	requestAdapter abstractions.RequestAdapter,
+) *NowRequestBuilder {
+	return NewServiceNowRequestBuilderInternal(map[string]string{internal.RawURLKey: rawURL}, requestAdapter)
 }
 
-// TableV2 returns a TableRequestBuilder2 associated with the NowRequestBuilder.
-func (rB *NowRequestBuilder) TableV2(tableName string) *tableapi.TableRequestBuilder2[*tableapi.TableRecord] {
-	pathParameters := make(map[string]string)
-	for k, v := range rB.PathParameters {
-		pathParameters[k] = v
-	}
-	pathParameters["table"] = tableName
-	return tableapi.NewDefaultTableRequestBuilder2Internal(pathParameters, rB.Client.(*ServiceNowClient).RequestAdapter)
+// Table returns a [tableapi.TableRequestBuilder] for the specified table name.
+func (rB *NowRequestBuilder) Table(tableName string) *tableapi.TableRequestBuilder[*tableapi.TableRecord] {
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters[tablePathKey] = tableName
+	return tableapi.NewDefaultTableRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
-// Attachment returns an AttachmentRequestBuilder associated with the NowRequestBuilder.
-// It allows you to work with attachments and manage attachments in ServiceNow.
-func (rB *NowRequestBuilder) Attachment2() *attachmentapi.AttachmentRequestBuilder2 {
-	return attachmentapi.NewAttachmentRequestBuilder2Internal(rB.PathParameters, rB.Client.(*ServiceNowClient).RequestAdapter)
+// Stats returns a [aggregationapi.StatsRequestBuilder] for the specified table.
+func (rB *NowRequestBuilder) Stats(tableName string) *aggregationapi.StatsRequestBuilder {
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters[tablePathKey] = tableName
+	return aggregationapi.NewStatsRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
-// Batch returns a BatchRequestBuilder, entrypoint into the batch api.
+// Attachment returns an [attachmentapi.AttachmentRequestBuilder] associated with the [NowRequestBuilder].
+func (rB *NowRequestBuilder) Attachment() *attachmentapi.AttachmentRequestBuilder {
+	return attachmentapi.NewAttachmentRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+// Batch returns a [batchapi.BatchRequestBuilder] associated with the [NowRequestBuilder].
 func (rB *NowRequestBuilder) Batch() *batchapi.BatchRequestBuilder {
-	return batchapi.NewBatchRequestBuilderInternal(rB.PathParameters, rB.Client.(*ServiceNowClient).RequestAdapter)
+	return batchapi.NewBatchRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+// Documents returns a [documentsapi.DocumentsRequestBuilder] associated with the [NowRequestBuilder].
+func (rB *NowRequestBuilder) Documents() *documentsapi.DocumentsRequestBuilder {
+	return documentsapi.NewDocumentsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+// Cmdb returns a [cmdbinstanceapi.CmdbRequestBuilder] associated with the [NowRequestBuilder].
+func (rB *NowRequestBuilder) Cmdb() *cmdbinstanceapi.CmdbRequestBuilder {
+	return cmdbinstanceapi.NewCmdbRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+// Account returns an [accountapi.AccountRequestBuilder] associated with the [NowRequestBuilder].
+func (rB *NowRequestBuilder) Account() *accountapi.AccountRequestBuilder {
+	return accountapi.NewAccountRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}
+
+// ActSub returns an [actsubapi.ActSubRequestBuilder] associated with the [NowRequestBuilder].
+func (rB *NowRequestBuilder) ActSub() *actsubapi.ActSubRequestBuilder {
+	return actsubapi.NewActSubRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

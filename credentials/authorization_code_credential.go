@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2/pkce"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/pkg/browser"
 )
@@ -166,10 +166,14 @@ func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOpt
 	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
 }
 
+// NewPrivateAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization
+// Code flow using a confidential (client-secret-bearing) client.
 func NewPrivateAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
 	return NewAuthorizationCodeProvider(clientID, clientSecret, opts...)
 }
 
+// NewPublicAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization
+// Code flow using a public (no client-secret) client.
 func NewPublicAuthorizationCodeProvider(clientID string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
 	return NewAuthorizationCodeProvider(clientID, "", opts...)
 }

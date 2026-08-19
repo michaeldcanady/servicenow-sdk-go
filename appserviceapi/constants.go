@@ -1,0 +1,26 @@
+package appserviceapi
+
+const (
+	nameKey                     = "name"
+	commentsKey                 = "comments"
+	parentKey                   = "parent"
+	childKey                    = "child"
+	basicDetailsKey             = "basic_details"
+	relationshipsKey            = "relationships"
+	environmentKey              = "environment"
+	versionKey                  = "version"
+	businessAppKey              = "business_app"
+	businessServiceOfferingKey  = "business_service_offering"
+	technicalServiceOfferingKey = "technical_service_offering"
+	sysIDKey                    = "sys_id"
+	statusKey                   = "status"
+	messageKey                  = "message"
+	populationMethodKey         = "population_method"
+	typeKey                     = "type"
+	entryPointIDKey             = "entry_point_id"
+	attributesKey               = "attributes"
+	valueKey                    = "value"
+	numberKey                   = "number"
+	servicesKey                 = "services"
+	numberOfLevelsKey           = "number_of_levels"
+)

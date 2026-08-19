@@ -1,0 +1,54 @@
+package attachmentapi
+
+import (
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/store"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
+)
+
+const (
+	contentKey = "content"
+)
+
+// FileWithContent implementation of FileWithContent
+type FileWithContent struct {
+	file
+}
+
+// NewFileWithContent creates a new instance of FileWithContent
+func newFileWithContent(file file) *FileWithContent {
+	return &FileWithContent{
+		file,
+	}
+}
+
+// NewFileWithContent creates a new instance of FileWithContent
+func NewFileWithContent() *FileWithContent {
+	return newFileWithContent(
+		NewFile(),
+	)
+}
+
+// CreateFileWithContentFromDiscriminatorValue is a parsable factory for creating a FileWithContent
+func CreateFileWithContentFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
+	return NewFileWithContent(), nil
+}
+
+// GetFieldDeserializers returns the deserialization information for this object.
+func (f *FileWithContent) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	if conversion.IsNil(f) {
+		return nil
+	}
+
+	return f.file.GetFieldDeserializers()
+}
+
+// GetContent returns contents of file
+func (f *FileWithContent) GetContent() ([]byte, error) {
+	return store.DefaultBackedModelAccessorFunc[*FileWithContent, []byte](f, contentKey)
+}
+
+// SetContent sets the content to the provided value
+func (f *FileWithContent) SetContent(content []byte) error {
+	return store.DefaultBackedModelMutatorFunc(f, contentKey, content)
+}

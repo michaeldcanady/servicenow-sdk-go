@@ -1,0 +1,299 @@
+package tableapi
+
+import (
+	"context"
+	"errors"
+	"testing"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
+)
+
+func TestTableRequestBuilder_Get(t *testing.T) {
+	tests := []struct {
+		name          string
+		setupMock     func(m *mocking.MockRequestAdapter)
+		err           error
+		errIsSentinel bool
+	}{
+		{
+			name: "adapter returns error",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, errors.New("network error"))
+			},
+			err: errors.New("network error"),
+		},
+		{
+			name: "adapter returns nil response",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, nil)
+			},
+			err:           snerrors.ErrNilResponse,
+			errIsSentinel: true,
+		},
+		{
+			name: "adapter returns wrong type",
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(mocking.NewMockParsable(), nil)
+			},
+			err: errors.New("resp is not *core.ServiceNowCollectionResponse[*github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi.TableRecord]"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockAdapter := new(mocking.MockRequestAdapter)
+			tt.setupMock(mockAdapter)
+
+			builder := NewTableRequestBuilder[*TableRecord](
+				"https://example.com/api/now/v1/table/test",
+				mockAdapter,
+				CreateTableRecordFromDiscriminatorValue,
+			)
+
+			resp, err := builder.Get(context.Background(), nil)
+			if tt.err != nil {
+				if tt.errIsSentinel {
+					require.ErrorIs(t, err, tt.err)
+				} else {
+					require.Equal(t, tt.err, err)
+				}
+				assert.Nil(t, resp)
+			} else {
+				require.NoError(t, err)
+				assert.NotNil(t, resp)
+			}
+
+			mockAdapter.AssertExpectations(t)
+		})
+	}
+}
+
+func TestTableRequestBuilder_Post(t *testing.T) {
+	tests := []struct {
+		name      string
+		body      *TableRecord
+		setupMock func(m *mocking.MockRequestAdapter)
+		expectErr bool
+		err       error
+	}{
+		{
+			name:      "nil body returns error",
+			body:      nil,
+			setupMock: func(_ *mocking.MockRequestAdapter) {},
+			expectErr: true,
+			err:       snerrors.ErrNilBody,
+		},
+		{
+			name: "adapter returns error",
+			body: &TableRecord{},
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				serializationWriter := mocking.NewMockSerializationWriter()
+				serializationWriter.On("WriteObjectValue", "", mock.AnythingOfType("*tableapi.TableRecord"), mock.Anything).Return(nil)
+				serializationWriter.On("Close").Return(nil)
+				serializationWriter.On("GetSerializedContent").Return([]byte(""), nil)
+
+				serializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+				serializationWriterFactory.On("GetSerializationWriter", "application/json").Return(serializationWriter, nil)
+
+				m.On("GetSerializationWriterFactory").Return(serializationWriterFactory)
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(nil, errors.New("network error"))
+			},
+			expectErr: true,
+			err:       errors.New("network error"),
+		},
+		{
+			name: "adapter returns wrong type",
+			body: &TableRecord{},
+			setupMock: func(m *mocking.MockRequestAdapter) {
+				serializationWriter := mocking.NewMockSerializationWriter()
+				serializationWriter.On("WriteObjectValue", "", mock.AnythingOfType("*tableapi.TableRecord"), mock.Anything).Return(nil)
+				serializationWriter.On("Close").Return(nil)
+				serializationWriter.On("GetSerializedContent").Return([]byte(""), nil)
+
+				serializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+				serializationWriterFactory.On("GetSerializationWriter", "application/json").Return(serializationWriter, nil)
+
+				m.On("GetSerializationWriterFactory").Return(serializationWriterFactory)
+				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+					Return(mocking.NewMockParsable(), nil)
+			},
+			expectErr: true,
+			err:       errors.New("resp is not *core.ServiceNowItemResponse[*github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi.TableRecord]"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockAdapter := new(mocking.MockRequestAdapter)
+			tt.setupMock(mockAdapter)
+
+			builder := NewTableRequestBuilder[*TableRecord](
+				"https://example.com/api/now/v1/table/test",
+				mockAdapter,
+				CreateTableRecordFromDiscriminatorValue,
+			)
+
+			resp, err := builder.Post(context.Background(), tt.body, nil)
+			if tt.expectErr {
+				require.Error(t, err)
+				assert.Nil(t, resp)
+			} else {
+				require.NoError(t, err)
+				assert.NotNil(t, resp)
+			}
+
+			mockAdapter.AssertExpectations(t)
+		})
+	}
+}
+
+func TestTableRequestBuilder_Get_NilGuards(t *testing.T) {
+	t.Run("nil builder", func(t *testing.T) {
+		var builder *TableRequestBuilder[*TableRecord]
+		resp, err := builder.Get(context.Background(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	})
+
+	t.Run("nil request adapter", func(t *testing.T) {
+		builder := NewTableRequestBuilderInternal[*TableRecord](map[string]string{}, nil, CreateTableRecordFromDiscriminatorValue)
+		resp, err := builder.Get(context.Background(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	})
+}
+
+func TestTableRequestBuilder_Post_NilGuards(t *testing.T) {
+	t.Run("nil builder", func(t *testing.T) {
+		var builder *TableRequestBuilder[*TableRecord]
+		resp, err := builder.Post(context.Background(), NewTableRecord(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	})
+
+	t.Run("nil request adapter", func(t *testing.T) {
+		builder := NewTableRequestBuilderInternal[*TableRecord](map[string]string{}, nil, CreateTableRecordFromDiscriminatorValue)
+		resp, err := builder.Post(context.Background(), NewTableRecord(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	})
+}
+
+func TestTableRequestBuilder_Head_NilGuards(t *testing.T) {
+	t.Run("nil builder", func(t *testing.T) {
+		var builder *TableRequestBuilder[*TableRecord]
+		resp, err := builder.Head(context.Background(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	})
+
+	t.Run("nil request adapter", func(t *testing.T) {
+		builder := NewTableRequestBuilderInternal[*TableRecord](map[string]string{}, nil, CreateTableRecordFromDiscriminatorValue)
+		resp, err := builder.Head(context.Background(), nil)
+		assert.Nil(t, resp)
+		require.ErrorIs(t, err, snerrors.ErrNilRequestAdapter)
+	})
+}
+
+// TODO: fix test table design
+func TestTableRequestBuilder_ByID(t *testing.T) {
+	mockAdapter := new(mocking.MockRequestAdapter)
+	builder := NewTableRequestBuilder[*TableRecord](
+		"https://example.com/api/now/v1/table/test",
+		mockAdapter,
+		CreateTableRecordFromDiscriminatorValue,
+	)
+
+	itemBuilder := builder.ByID("sysid123")
+	assert.NotNil(t, itemBuilder)
+	assert.Equal(t, "sysid123", itemBuilder.GetPathParameters()[sysIDKey])
+}
+
+func TestTableRequestBuilder_ToRequestInformation(t *testing.T) {
+	mockAdapter := new(mocking.MockRequestAdapter)
+	builder := NewTableRequestBuilder[*TableRecord](
+		"https://example.com/api/now/v1/table/test",
+		mockAdapter,
+		CreateTableRecordFromDiscriminatorValue,
+	)
+
+	t.Run("ToGetRequestInformation", func(t *testing.T) {
+		config := &TableRequestBuilderGetRequestConfiguration{
+			QueryParameters: &TableRequestBuilderGetQueryParameters{
+				Limit: internal.ToPointer(int32(10)),
+			},
+		}
+		requestInfo, err := builder.ToGetRequestInformation(context.Background(), config)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.GET, requestInfo.Method)
+		// This builder is constructed via the raw-URL test shortcut, so GetUri()
+		// short-circuits template/query expansion here.
+	})
+
+	t.Run("ToPostRequestInformation", func(t *testing.T) {
+		serializationWriter := mocking.NewMockSerializationWriter()
+		serializationWriter.On("WriteObjectValue", "", mock.AnythingOfType("*tableapi.TableRecord"), mock.Anything).Return(nil)
+		serializationWriter.On("Close").Return(nil)
+		serializationWriter.On("GetSerializedContent").Return([]byte("{}"), nil)
+
+		serializationWriterFactory := mocking.NewMockSerializationWriterFactory()
+		serializationWriterFactory.On("GetSerializationWriter", "application/json").Return(serializationWriter, nil)
+
+		mockAdapter.On("GetSerializationWriterFactory").Return(serializationWriterFactory)
+
+		requestInfo, err := builder.ToPostRequestInformation(context.Background(), NewTableRecord(), nil)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.POST, requestInfo.Method)
+	})
+
+	t.Run("ToHeadRequestInformation", func(t *testing.T) {
+		requestInfo, err := builder.ToHeadRequestInformation(context.Background(), nil)
+		require.NoError(t, err)
+		assert.Equal(t, abstractions.HEAD, requestInfo.Method)
+	})
+}
+
+// TestTableRequestBuilder_ToGetRequestInformation_QueryEncoding builds the
+// request through a "baseurl"-based path-parameter builder (the shape the
+// real client uses) instead of the raw-URL test shortcut, so GetUri()
+// actually expands the URL template and query parameters. This locks in that
+// the pointer-typed, uriparametername-tagged QueryParameters fields encode
+// correctly end-to-end via abstractions.ConfigureRequestInformation.
+func TestTableRequestBuilder_ToGetRequestInformation_QueryEncoding(t *testing.T) {
+	mockAdapter := new(mocking.MockRequestAdapter)
+	builder := NewDefaultTableRequestBuilderInternal(
+		map[string]string{"baseurl": "https://example.com", "table": "incident"},
+		mockAdapter,
+	)
+
+	displayValue := DisplayValueTrue
+	config := &TableRequestBuilderGetRequestConfiguration{
+		QueryParameters: &TableRequestBuilderGetQueryParameters{
+			Query:        internal.ToPointer("active=true"),
+			Limit:        internal.ToPointer(int32(10)),
+			Fields:       []string{"sys_id", "number"},
+			DisplayValue: &displayValue,
+		},
+	}
+
+	requestInfo, err := builder.ToGetRequestInformation(context.Background(), config)
+	require.NoError(t, err)
+
+	uri, err := requestInfo.GetUri()
+	require.NoError(t, err)
+	assert.Equal(
+		t,
+		"https://example.com/api/now/v1/table/incident?sysparm_display_value=true&sysparm_fields=sys_id,number&sysparm_limit=10&sysparm_query=active%3Dtrue",
+		uri.String(),
+	)
+}

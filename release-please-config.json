@@ -10,7 +10,10 @@
     ".": {
       "package-name": "github.com/michaeldcanady/servicenow-sdk-go",
       "changelog-path": "CHANGELOG.md",
-      "extra-files": ["VERSION", "version.go"]
+      "extra-files": [
+        "VERSION",
+        "version.go"
+      ]
     }
   }
 }

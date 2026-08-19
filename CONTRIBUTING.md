@@ -1,60 +1,29 @@
-# Contributing to ServiceNow SDK Go
+# Contributing to the ServiceNow SDK for Go
 
-Thanks for your interest in contributing to ServiceNow SDK Go! We welcome contributions from everyone, regardless of skill level or experience. Here are some guidelines to help you get started:
+Thanks for your interest in contributing! To keep guidance in one place, the
+full contributor documentation lives on the docs site:
 
-## Getting Started
+- **[Your first PR](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/first-pr)** —
+  new here? A time-boxed walkthrough from fork to open PR in about an hour.
+- **[Contributor guide](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/)** —
+  workflow, branch naming, Conventional Commits, and PR expectations.
+- **[Development setup](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/setup)** —
+  dev container or local environment.
+- **[Architecture](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/architecture)** —
+  how the SDK is put together.
+- **[Testing guide](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/testing)** —
+  unit, integration, and e2e suites.
+- **[Conventions reference](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/conventions)** —
+  the dense field guide reviewers hold PRs to.
 
-To get started, you'll need to have the following tools installed:
+The two rules most worth knowing before your first PR:
 
-- [Golang v1.21+](https://go.dev/doc/install)
+1. Commits and PR titles follow
+   [Conventional Commits](https://www.conventionalcommits.org/) — CI enforces
+   this, and `release-please` generates `VERSION` and `CHANGELOG.md` from it
+   (never edit those files by hand).
+2. Changes to exported API surface must update the docs site (`website/`) or
+   explain why not.
 
-## Recommended tools
-
-- [Visual Studio Code (VS Code)](https://code.visualstudio.com/)
-
-## Running the tests
-
-    ```bash
-    go test ./...
-    ```
-
-## Contributing Code
-
-1. Fork the repository
-2. Clone it to your local machine: `git clone {url}`
-3. Create a new branch for your changes, named `<type>/<kebab-description>` (see
-   [Branching convention](#branching-convention) below): `git checkout -b fix/nil-pointer-in-tableapi`
-4. Make your changes and commit them: `git commit -am 'Add some feature'`
-   1. Include tests that cover your changes.
-   2. Update the documentation to reflect your changes, where appropriate.
-   3. Add and entry to the `changelog.md` file describing your changes if appropriate.
-5. Push your changes to your fork: `git push origin fix/nil-pointer-in-tableapi`
-6. Create a pull request from your fork to the main repository: `gh pr create` (With the GitHub CLI).
-   The PR description must reference the issue it addresses (e.g. `Closes #123` or `Part of #123`) —
-   see [Linking issues](#linking-issues) below.
-
-## Branching convention
-
-This repo practices trunk-based development with typed feature branches. Branch names must match:
-
-```
-<type>/<kebab-description>
-```
-
-where `<type>` is one of `fix`, `feat`, `chore`, `docs`, `style`, `refactor`, `perf`, `test` — the
-same vocabulary enforced on PR titles — and `<kebab-description>` is a short, lowercase,
-hyphen-separated summary (e.g. `feat/add-cdm-changeset-api`, `docs/publish-support-policy`).
-`.github/workflows/branch-policy.yml` enforces this on every PR targeting `main` (automated
-`release-please--*` and `dependabot/*` branches are exempt).
-
-## Linking issues
-
-Every PR must reference an issue in its description (e.g. `Closes #123`, `Fixes #123`, or
-`Part of #123` for PRs that only address part of a larger issue).
-`.github/workflows/branch-policy.yml` enforces this on every PR targeting `main`. If a PR is a
-genuinely trivial chore with no associated issue, apply the `no-issue-required` label instead of
-opening a throwaway issue.
-
-## Reporting Bugs
-
-If you find a bug in Servicenow-SDK-Go, please report it by opening a new issue in the issue tracker. Please include as much detail as possible, including steps to reproduce the bug and any relevant error messages.
+Found a bug? [Open an issue](https://github.com/michaeldcanady/servicenow-sdk-go/issues)
+with reproduction steps and any error output.

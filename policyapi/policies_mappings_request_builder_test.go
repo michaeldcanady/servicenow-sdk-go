@@ -1,0 +1,341 @@
+package policyapi
+
+import (
+	"context"
+	"testing"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/stretchr/testify/require"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+)
+
+func TestPoliciesMappingsRequestBuilder(t *testing.T) {
+	tests := []struct {
+		name           string
+		pathParameters map[string]string
+	}{
+		{
+			name:           "Default",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			requestAdapter := mocking.NewMockRequestAdapter()
+			rB := NewPoliciesMappingsRequestBuilderInternal(tt.pathParameters, requestAdapter)
+
+			assert.NotNil(t, rB)
+			assert.Equal(t, policiesMappingsURLTemplate, rB.GetURLTemplate())
+			assert.Equal(t, tt.pathParameters, rB.GetPathParameters())
+			assert.Equal(t, requestAdapter, rB.GetRequestAdapter())
+		})
+	}
+}
+
+func TestPoliciesMappingsRequestBuilder_Delete(t *testing.T) {
+	tests := []struct {
+		name           string
+		pathParameters map[string]string
+		nilRB          bool
+		config         *PoliciesMappingsRequestBuilderDeleteRequestConfiguration
+		setup          func(adapter *mocking.MockRequestAdapter)
+		wantErr        bool
+		errMessage     string
+	}{
+		{
+			name:           "Successful",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+			config: &PoliciesMappingsRequestBuilderDeleteRequestConfiguration{
+				QueryParameters: &PolicyMappingsRequestBuilderDeleteQueryParameters{
+					AppName:        internal.ToPointer("app"),
+					DeployableName: internal.ToPointer("deployable"),
+					PolicyName:     internal.ToPointer("policy"),
+				},
+			},
+			setup: func(adapter *mocking.MockRequestAdapter) {
+				adapter.On("SendNoContent", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+			},
+			wantErr: false,
+		},
+		{
+			name:       "Nil_RequestBuilder",
+			nilRB:      true,
+			wantErr:    true,
+			errMessage: "request builder is nil",
+		},
+		{
+			name:           "Nil_Configuration",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+			config:         nil,
+			wantErr:        true,
+			errMessage:     "requestConfiguration is nil",
+		},
+		{
+			name:           "Missing_AppName",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+			config: &PoliciesMappingsRequestBuilderDeleteRequestConfiguration{
+				QueryParameters: &PolicyMappingsRequestBuilderDeleteQueryParameters{
+					DeployableName: internal.ToPointer("deployable"),
+					PolicyName:     internal.ToPointer("policy"),
+				},
+			},
+			wantErr:    true,
+			errMessage: "requestConfiguration.QueryParameters.AppName is required",
+		},
+		{
+			name:           "Missing_DeployableName",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+			config: &PoliciesMappingsRequestBuilderDeleteRequestConfiguration{
+				QueryParameters: &PolicyMappingsRequestBuilderDeleteQueryParameters{
+					AppName:    internal.ToPointer("app"),
+					PolicyName: internal.ToPointer("policy"),
+				},
+			},
+			wantErr:    true,
+			errMessage: "requestConfiguration.QueryParameters.DeployableName is required",
+		},
+		{
+			name:           "Missing_PolicyName",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+			config: &PoliciesMappingsRequestBuilderDeleteRequestConfiguration{
+				QueryParameters: &PolicyMappingsRequestBuilderDeleteQueryParameters{
+					AppName:        internal.ToPointer("app"),
+					DeployableName: internal.ToPointer("deployable"),
+				},
+			},
+			wantErr:    true,
+			errMessage: "requestConfiguration.QueryParameters.PolicyName is required",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var rB *PoliciesMappingsRequestBuilder
+			requestAdapter := mocking.NewMockRequestAdapter()
+
+			if tt.setup != nil {
+				tt.setup(requestAdapter)
+			}
+
+			if !tt.nilRB {
+				rB = NewPoliciesMappingsRequestBuilderInternal(tt.pathParameters, requestAdapter)
+			}
+
+			err := rB.Delete(context.Background(), tt.config)
+
+			if tt.wantErr {
+				require.Error(t, err)
+				assert.Equal(t, tt.errMessage, err.Error())
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestPoliciesMappingsRequestBuilder_ToDeleteRequestInformation(t *testing.T) {
+	tests := []struct {
+		name           string
+		pathParameters map[string]string
+		nilRB          bool
+		config         *PoliciesMappingsRequestBuilderDeleteRequestConfiguration
+	}{
+		{
+			name:           "Successful",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+			config: &PoliciesMappingsRequestBuilderDeleteRequestConfiguration{
+				QueryParameters: &PolicyMappingsRequestBuilderDeleteQueryParameters{
+					AppName:        internal.ToPointer("app"),
+					DeployableName: internal.ToPointer("deployable"),
+					PolicyName:     internal.ToPointer("policy"),
+				},
+			},
+		},
+		{
+			name:  "Nil_RequestBuilder",
+			nilRB: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var rB *PoliciesMappingsRequestBuilder
+			requestAdapter := mocking.NewMockRequestAdapter()
+
+			if !tt.nilRB {
+				rB = NewPoliciesMappingsRequestBuilderInternal(tt.pathParameters, requestAdapter)
+			}
+
+			requestInfo, err := rB.ToDeleteRequestInformation(context.Background(), tt.config)
+
+			if tt.nilRB {
+				assert.Nil(t, requestInfo)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			} else {
+				assert.NotNil(t, requestInfo)
+				require.NoError(t, err)
+				assert.Equal(t, tt.pathParameters, requestInfo.PathParameters)
+				assert.Equal(t, policiesMappingsURLTemplate, requestInfo.UrlTemplate)
+			}
+		})
+	}
+}
+
+func TestPoliciesMappingsRequestBuilder_Post(t *testing.T) {
+	tests := []struct {
+		name           string
+		pathParameters map[string]string
+		nilRB          bool
+		config         *PoliciesMappingsRequestBuilderPostRequestConfiguration
+		setup          func(adapter *mocking.MockRequestAdapter)
+		wantErr        bool
+		errMessage     string
+	}{
+		{
+			name:           "Successful",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+			config: &PoliciesMappingsRequestBuilderPostRequestConfiguration{
+				QueryParameters: &PoliciesMappingsRequestBuilderPostQueryParameters{
+					AppName:        internal.ToPointer("app"),
+					DeployableName: internal.ToPointer("deployable"),
+					PolicyName:     internal.ToPointer("policy"),
+				},
+			},
+			setup: func(adapter *mocking.MockRequestAdapter) {
+				adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(core.NewBaseServiceNowItemResponse[*PoliciesMapping](CreatePoliciesMappingsInputFromDiscriminatorValue), nil)
+			},
+			wantErr: false,
+		},
+		{
+			name:       "Nil_RequestBuilder",
+			nilRB:      true,
+			wantErr:    true,
+			errMessage: "request builder is nil",
+		},
+		{
+			name:           "Nil_Configuration",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+			config:         nil,
+			wantErr:        true,
+			errMessage:     "requestConfiguration is nil",
+		},
+		{
+			name:           "Missing_AppName",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+			config: &PoliciesMappingsRequestBuilderPostRequestConfiguration{
+				QueryParameters: &PoliciesMappingsRequestBuilderPostQueryParameters{
+					DeployableName: internal.ToPointer("deployable"),
+					PolicyName:     internal.ToPointer("policy"),
+				},
+			},
+			wantErr:    true,
+			errMessage: "requestConfiguration.QueryParameters.AppName is required",
+		},
+		{
+			name:           "Missing_DeployableName",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+			config: &PoliciesMappingsRequestBuilderPostRequestConfiguration{
+				QueryParameters: &PoliciesMappingsRequestBuilderPostQueryParameters{
+					AppName:    internal.ToPointer("app"),
+					PolicyName: internal.ToPointer("policy"),
+				},
+			},
+			wantErr:    true,
+			errMessage: "requestConfiguration.QueryParameters.DeployableName is required",
+		},
+		{
+			name:           "Missing_PolicyName",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+			config: &PoliciesMappingsRequestBuilderPostRequestConfiguration{
+				QueryParameters: &PoliciesMappingsRequestBuilderPostQueryParameters{
+					AppName:        internal.ToPointer("app"),
+					DeployableName: internal.ToPointer("deployable"),
+				},
+			},
+			wantErr:    true,
+			errMessage: "requestConfiguration.QueryParameters.PolicyName is required",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var rB *PoliciesMappingsRequestBuilder
+			requestAdapter := mocking.NewMockRequestAdapter()
+
+			if tt.setup != nil {
+				tt.setup(requestAdapter)
+			}
+
+			if !tt.nilRB {
+				rB = NewPoliciesMappingsRequestBuilderInternal(tt.pathParameters, requestAdapter)
+			}
+
+			resp, err := rB.Post(context.Background(), tt.config)
+
+			if tt.wantErr {
+				require.Error(t, err)
+				assert.Equal(t, tt.errMessage, err.Error())
+				assert.Nil(t, resp)
+			} else {
+				assert.NoError(t, err)
+				if !tt.nilRB {
+					assert.NotNil(t, resp)
+				}
+			}
+		})
+	}
+}
+
+func TestPoliciesMappingsRequestBuilder_ToPostRequestInformation(t *testing.T) {
+	tests := []struct {
+		name           string
+		pathParameters map[string]string
+		nilRB          bool
+		config         *PoliciesMappingsRequestBuilderPostRequestConfiguration
+	}{
+		{
+			name:           "Successful",
+			pathParameters: map[string]string{"baseurl": "https://instance.service-now.com"},
+			config: &PoliciesMappingsRequestBuilderPostRequestConfiguration{
+				QueryParameters: &PoliciesMappingsRequestBuilderPostQueryParameters{
+					AppName:        internal.ToPointer("app"),
+					DeployableName: internal.ToPointer("deployable"),
+					PolicyName:     internal.ToPointer("policy"),
+				},
+			},
+		},
+		{
+			name:  "Nil_RequestBuilder",
+			nilRB: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var rB *PoliciesMappingsRequestBuilder
+			requestAdapter := mocking.NewMockRequestAdapter()
+
+			if !tt.nilRB {
+				rB = NewPoliciesMappingsRequestBuilderInternal(tt.pathParameters, requestAdapter)
+			}
+
+			requestInfo, err := rB.ToPostRequestInformation(context.Background(), tt.config)
+
+			if tt.nilRB {
+				assert.Nil(t, requestInfo)
+				require.ErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+			} else {
+				assert.NotNil(t, requestInfo)
+				require.NoError(t, err)
+				assert.Equal(t, tt.pathParameters, requestInfo.PathParameters)
+				assert.Equal(t, policiesMappingsURLTemplate, requestInfo.UrlTemplate)
+			}
+		})
+	}
+}

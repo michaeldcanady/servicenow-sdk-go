@@ -57,23 +57,23 @@ func (m *MockServiceNowCollectionResponse[T]) SetLastLink(val *string) error {
 }
 
 // Serialize writes the objects properties to the current writer.
-func (mP *MockServiceNowCollectionResponse[T]) Serialize(writer serialization.SerializationWriter) error {
-	args := mP.Called(writer)
+func (m *MockServiceNowCollectionResponse[T]) Serialize(writer serialization.SerializationWriter) error {
+	args := m.Called(writer)
 	return args.Error(0)
 }
 
 // GetFieldDeserializers returns the deserialization information for this object.
-func (mP *MockServiceNowCollectionResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
-	args := mP.Called()
+func (m *MockServiceNowCollectionResponse[T]) GetFieldDeserializers() map[string]func(serialization.ParseNode) error {
+	args := m.Called()
 	return args.Get(0).(map[string]func(serialization.ParseNode) error)
 }
 
 // GetBackingStore returns the BackingStore of the model.
-func (mM *MockServiceNowCollectionResponse[T]) GetBackingStore() store.BackingStore {
-	args := mM.Called()
+func (m *MockServiceNowCollectionResponse[T]) GetBackingStore() store.BackingStore {
+	args := m.Called()
 	return args.Get(0).(store.BackingStore)
 }
 
-func (mM *MockServiceNowCollectionResponse[T]) ParseHeaders(header *abstractions.ResponseHeaders) {
-	_ = mM.Called(header)
+func (m *MockServiceNowCollectionResponse[T]) ParseHeaders(header *abstractions.ResponseHeaders) {
+	_ = m.Called(header)
 }

@@ -1,4 +1,4 @@
-package internal
+package internalhttp
 
 import (
 	"errors"
@@ -7,6 +7,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestBuildServiceNowRequestAdapterConfig(t *testing.T) {
@@ -18,7 +19,7 @@ func TestBuildServiceNowRequestAdapterConfig(t *testing.T) {
 			name: "successful",
 			test: func(t *testing.T) {
 				config, err := buildServiceNowRequestAdapterConfig()
-				assert.Nil(t, err)
+				require.NoError(t, err)
 				// can't test config.Client since it can/does contain functions as properties
 				assert.Equal(t, serialization.DefaultSerializationWriterFactoryInstance, config.serializationWriterFactory)
 				assert.Equal(t, serialization.DefaultParseNodeFactoryInstance, config.parseNodeFactory)

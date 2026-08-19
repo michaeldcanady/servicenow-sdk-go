@@ -1,60 +1,62 @@
 # Path-based PR labeling config for actions/labeler.
 #
-# The "module: *" labels use the same per-package vocabulary as the "Affected
-# Module / API" dropdown in .github/ISSUE_TEMPLATE/bug-template.yaml (which
-# currently groups some of these more coarsely), so issues and PRs stay
-# comparable.
+# The "module: *" labels intentionally mirror the "Affected Module / API" dropdown in
+# .github/ISSUE_TEMPLATE/bug-template.yaml, so issues and PRs use the same vocabulary.
 
 "module: table-api":
   - changed-files:
-      - any-glob-to-any-file: "table-api/**"
+      - any-glob-to-any-file: "tableapi/**"
 
 "module: attachment-api":
   - changed-files:
-      - any-glob-to-any-file: "attachment-api/**"
+      - any-glob-to-any-file: "attachmentapi/**"
 
 "module: batch-api":
   - changed-files:
-      - any-glob-to-any-file: "batch-api/**"
+      - any-glob-to-any-file: "batchapi/**"
 
 "module: case-api":
   - changed-files:
-      - any-glob-to-any-file: "case-api/**"
+      - any-glob-to-any-file: "caseapi/**"
 
 "module: cdm":
   - changed-files:
       - any-glob-to-any-file:
-          - "cdm-applications-api/**"
-          - "cdm-changeset-api/**"
-          - "cdm-editor-api/**"
+          - "cdmapplicationsapi/**"
+          - "cdmchangesetapi/**"
+          - "cdmeditorapi/**"
 
 "module: cmdb":
   - changed-files:
-      - any-glob-to-any-file: "cmdb-instance-api/**"
+      - any-glob-to-any-file: "cmdbinstanceapi/**"
 
 "module: documents-api":
   - changed-files:
-      - any-glob-to-any-file: "documents-api/**"
+      - any-glob-to-any-file: "documentsapi/**"
 
 "module: account-api":
   - changed-files:
-      - any-glob-to-any-file: "account-api/**"
+      - any-glob-to-any-file: "accountapi/**"
 
 "module: actsub-api":
   - changed-files:
-      - any-glob-to-any-file: "actsub-api/**"
+      - any-glob-to-any-file: "actsubapi/**"
+
+"module: aggregation-api":
+  - changed-files:
+      - any-glob-to-any-file: "aggregationapi/**"
 
 "module: appointment-booking-api":
   - changed-files:
-      - any-glob-to-any-file: "appointmentbooking-api/**"
+      - any-glob-to-any-file: "appointmentbookingapi/**"
 
 "module: app-service-api":
   - changed-files:
-      - any-glob-to-any-file: "appservice-api/**"
+      - any-glob-to-any-file: "appserviceapi/**"
 
 "module: policy-api":
   - changed-files:
-      - any-glob-to-any-file: "policy-api/**"
+      - any-glob-to-any-file: "policyapi/**"
 
 "module: credentials":
   - changed-files:
@@ -65,21 +67,21 @@
       - any-glob-to-any-file:
           - "core/**"
           - "internal/**"
-          - "errors.go"
+          - "errors/**"
           - "query/**"
 
 "type: documentation":
   - changed-files:
       - any-glob-to-any-file:
+          - "website/**"
           - "docs/**"
-          - "mkdocs.yml"
           - "**/*.md"
 
 "type: devops":
   - changed-files:
       - any-glob-to-any-file:
           - ".github/workflows/**"
-          - ".github/actions/**"
+          - ".github/scripts/**"
           - ".github/dependabot.yml"
           - ".github/labeler.yml"
           - "justfile"
@@ -87,4 +89,5 @@
 
 "tests":
   - changed-files:
-      - any-glob-to-any-file: "tests/**"
+      - any-glob-to-any-file:
+          - "tests/integration/**"

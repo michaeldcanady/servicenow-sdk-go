@@ -1,4 +1,4 @@
-package internal
+package internalhttp
 
 import (
 	"net/http"
@@ -13,7 +13,7 @@ type serviceNowClientConfig struct {
 }
 
 // buildServiceNowClientConfig constructs new serviceNowClientConfig from provided options
-func buildServiceNowClientConfig(opts ...serviceNowClientOption) (*serviceNowClientConfig, error) {
+func buildServiceNowClientConfig(opts ...ServiceNowClientOption) (*serviceNowClientConfig, error) {
 	opts = append(opts, serviceNowClientDefaultOptions())
 
 	config := new(serviceNowClientConfig)
@@ -32,7 +32,6 @@ func getDefaultMiddleware() []nethttplibrary.Middleware {
 	kiotaMiddlewares := nethttplibrary.GetDefaultMiddlewares()
 
 	serviceNowMiddlewares := []nethttplibrary.Middleware{
-		//NewGraphTelemetryHandler(options),
 		nethttplibrary.NewHeadersInspectionHandler(),
 	}
 	graphMiddlewaresLen := len(serviceNowMiddlewares)
@@ -43,7 +42,7 @@ func getDefaultMiddleware() []nethttplibrary.Middleware {
 }
 
 // GetDefaultClient constructs default client using provided options
-func GetDefaultClient(opts ...serviceNowClientOption) (*http.Client, error) {
+func GetDefaultClient(opts ...ServiceNowClientOption) (*http.Client, error) {
 	config, err := buildServiceNowClientConfig(opts...)
 	if err != nil {
 		return nil, err

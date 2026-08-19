@@ -1,142 +1,337 @@
 package core
 
 import (
+	"context"
+	"errors"
 	"net/url"
+	"strings"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/microsoft/kiota-abstractions-go/serialization"
+	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
-// Deprecated: deprecated in v1.5.0. Please use PageIterator2[T].
-// PageIterator
-type PageIterator[T any, C CollectionResponse[T]] struct {
-	currentPage PageResult[T]
-	client      Client
-	pauseIndex  int
+// ErrNoMoreItems is returned when the iterator has reached the end of the collection.
+var (
+	ErrNoMoreItems = errors.New("no more items")
+)
+
+// PageIterator represents an iterator for paginated collections.
+// T is the type of the items in the collection, which must implement [serialization.Parsable].
+type PageIterator[T serialization.Parsable] struct {
+	currentPage     PageResult[T]
+	originalPage    PageResult[T]
+	reqAdapter      abstractions.RequestAdapter
+	pauseIndex      int
+	constructorFunc serialization.ParsableFactory
+	headers         *abstractions.RequestHeaders
+	reqOptions      []abstractions.RequestOption
+	errorMappings   abstractions.ErrorMappings
 }
 
-// Deprecated: deprecated in v1.5.0. Please use NewPageIterator2[T].
 // NewPageIterator creates a new PageIterator instance.
-func NewPageIterator[T any, C CollectionResponse[T]](currentPage CollectionResponse[T], client Client) (*PageIterator[T, C], error) {
-	if isNil(client) {
-		return nil, ErrNilClient
+//
+// res is the initial response containing the first page of results.
+// reqAdapter is the RequestAdapter used to fetch subsequent pages.
+// constructorFunc is the factory function for creating new instances of T.
+// options allows for additional configuration of the iterator.
+func NewPageIterator[T serialization.Parsable](
+	res ServiceNowCollectionResponse[T],
+	reqAdapter abstractions.RequestAdapter,
+	constructorFunc serialization.ParsableFactory,
+	options ...PageIteratorOption[T],
+) (*PageIterator[T], error) {
+	if reqAdapter == nil {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
-	page, err := convertToPage[T](currentPage)
+	page, err := convertToPage(res)
 	if err != nil {
 		return nil, err
 	}
 
-	return &PageIterator[T, C]{
-		currentPage: page,
-		client:      client,
-	}, nil
+	errorMapping := DefaultErrorMapping()
+	headerOpt := nethttplibrary.NewHeadersInspectionOptions()
+	headerOpt.InspectResponseHeaders = true
+
+	iterator := &PageIterator[T]{
+		currentPage:     page,
+		originalPage:    page,
+		reqAdapter:      reqAdapter,
+		pauseIndex:      0,
+		constructorFunc: constructorFunc,
+		headers:         abstractions.NewRequestHeaders(),
+		errorMappings:   errorMapping,
+		reqOptions:      []abstractions.RequestOption{headerOpt},
+	}
+
+	if err := internal.ApplyOptions(iterator, options...); err != nil {
+		return nil, err
+	}
+
+	return iterator, nil
 }
 
-// Iterate iterates through pages and invokes the provided callback for each page item.
-func (pI *PageIterator[T, C]) Iterate(callback func(pageItem *T) bool) error {
-	if callback == nil {
-		return ErrNilCallback
+// Reset returns the iterator to the initial state (first page, first item).
+func (i *PageIterator[T]) Reset() {
+	i.currentPage = i.originalPage
+	i.pauseIndex = 0
+}
+
+// ResetPage restarts the iteration of the current page.
+func (i *PageIterator[T]) ResetPage() {
+	i.pauseIndex = 0
+}
+
+// Iterate traverses the pages and invokes the callback for each item.
+//
+// reverse determines the direction of page traversal.
+// callback should return true to continue iteration, or false to stop.
+func (i *PageIterator[T]) Iterate(ctx context.Context, reverse bool, callback func(T) bool) error {
+	if reverse && i.pauseIndex == 0 {
+		i.pauseIndex = len(i.currentPage.Result)
 	}
 
 	for {
-		keepIterating := pI.enumerate(callback)
+		var item T
+		var err error
 
-		if !keepIterating {
-			// Callback returned false, stop iterating through pages.
-			return nil
+		if reverse {
+			item, err = i.PreviousItem(ctx)
+		} else {
+			item, err = i.NextItem(ctx)
 		}
 
-		if pI.currentPage.NextPageLink == "" {
-			// NextPageLink is empty, stop iterating through pages.
+		if errors.Is(err, ErrNoMoreItems) {
 			return nil
 		}
-
-		// TODO: Add option for reverse
-		nextPage, err := pI.Next()
 		if err != nil {
 			return err
 		}
 
-		pI.currentPage = nextPage
-		pI.pauseIndex = 0
+		if !callback(item) {
+			return nil
+		}
 	}
 }
 
-// enumerate iterates through the items on the current page and invokes the callback.
-func (pI *PageIterator[T, C]) enumerate(callback func(item *T) bool) bool {
-	keepIterating := true
+// HasNext returns true if there are more items to iterate over in the forward direction.
+func (i *PageIterator[T]) HasNext() bool {
+	return (i.pauseIndex < len(i.currentPage.Result)) ||
+		(i.currentPage.NextLink != nil && strings.TrimSpace(*i.currentPage.NextLink) != "")
+}
 
-	pageItems := pI.currentPage.Result
-	if pageItems == nil {
-		return false
-	}
+// HasPrevious returns true if there are more items to iterate over in the reverse direction.
+func (i *PageIterator[T]) HasPrevious() bool {
+	return (i.pauseIndex > 0) ||
+		(i.currentPage.PrevLink != nil && strings.TrimSpace(*i.currentPage.PrevLink) != "")
+}
 
-	for i := pI.pauseIndex; i < len(pageItems); i++ {
-		keepIterating = callback(pageItems[i])
-
-		if !keepIterating {
-			break
+// NextItem returns the next item in the collection, fetching the next page if necessary.
+//
+// Returns [ErrNoMoreItems] if the end of the collection is reached.
+func (i *PageIterator[T]) NextItem(ctx context.Context) (T, error) {
+	for {
+		if i.pauseIndex < 0 {
+			i.pauseIndex = 0
 		}
 
-		pI.pauseIndex = i + 1
+		if i.pauseIndex < len(i.currentPage.Result) {
+			item := i.currentPage.Result[i.pauseIndex]
+			i.pauseIndex++
+			return item, nil
+		}
+
+		if !i.HasNext() {
+			var zero T
+			return zero, ErrNoMoreItems
+		}
+
+		_, err := i.Next(ctx)
+		if err != nil {
+			var zero T
+			return zero, err
+		}
 	}
-	return keepIterating
 }
 
-// Next fetches the Next page of results.
-func (pI *PageIterator[T, C]) Next() (PageResult[T], error) {
-	return pI.fetchAndConvertPage(pI.currentPage.NextPageLink)
+// PreviousItem returns the previous item in the collection, fetching the previous page if necessary.
+//
+// Returns [ErrNoMoreItems] if the beginning of the collection is reached.
+func (i *PageIterator[T]) PreviousItem(ctx context.Context) (T, error) {
+	for {
+		if i.pauseIndex > len(i.currentPage.Result) {
+			i.pauseIndex = len(i.currentPage.Result)
+		}
+
+		if i.pauseIndex > 0 {
+			i.pauseIndex--
+			item := i.currentPage.Result[i.pauseIndex]
+			return item, nil
+		}
+
+		if !i.HasPrevious() {
+			var zero T
+			return zero, ErrNoMoreItems
+		}
+
+		_, err := i.Previous(ctx)
+		if err != nil {
+			var zero T
+			return zero, err
+		}
+	}
 }
 
-// Last fetches the last page of results.
-func (pI *PageIterator[T, C]) Last() (PageResult[T], error) {
-	return pI.fetchAndConvertPage(pI.currentPage.LastPageLink)
-}
+// Previous fetches and returns the previous page of results.
+func (i *PageIterator[T]) Previous(ctx context.Context) (PageResult[T], error) {
+	if i.currentPage.PrevLink == nil || strings.TrimSpace(*i.currentPage.PrevLink) == "" {
+		return PageResult[T]{}, nil
+	}
 
-// fetchAndConvertPage fetches next page and converts it
-func (pI *PageIterator[T, C]) fetchAndConvertPage(uri string) (PageResult[T], error) {
-	var page PageResult[T]
-
-	resp, err := pI.fetchPage(uri)
+	collection, err := i.fetchPage(ctx, i.currentPage.PrevLink)
 	if err != nil {
-		return page, err
+		return PageResult[T]{}, err
 	}
 
-	page, err = convertToPage[T]((*resp))
+	page, err := convertToPage(collection)
 	if err != nil {
-		return page, err
+		return PageResult[T]{}, err
 	}
 
-	return page, nil
+	i.updatePage(page, len(page.Result))
+
+	return i.currentPage, nil
 }
 
-// fetchPage fetches the specified uri page of results.
-func (pI *PageIterator[T, C]) fetchPage(uri string) (*C, error) {
-	var collectionResp C
+// Next fetches and returns the next page of results.
+func (i *PageIterator[T]) Next(ctx context.Context) (PageResult[T], error) {
+	if i.currentPage.NextLink == nil || strings.TrimSpace(*i.currentPage.NextLink) == "" {
+		return PageResult[T]{}, nil
+	}
+
+	collection, err := i.fetchPage(ctx, i.currentPage.NextLink)
+	if err != nil {
+		return PageResult[T]{}, err
+	}
+
+	page, err := convertToPage(collection)
+	if err != nil {
+		return PageResult[T]{}, err
+	}
+
+	i.updatePage(page, 0)
+
+	return i.currentPage, nil
+}
+
+// First fetches and returns the first page of results.
+func (i *PageIterator[T]) First(ctx context.Context) (PageResult[T], error) {
+	if i.currentPage.FirstLink == nil || strings.TrimSpace(*i.currentPage.FirstLink) == "" {
+		return PageResult[T]{}, nil
+	}
+
+	collection, err := i.fetchPage(ctx, i.currentPage.FirstLink)
+	if err != nil {
+		return PageResult[T]{}, err
+	}
+
+	page, err := convertToPage(collection)
+	if err != nil {
+		return PageResult[T]{}, err
+	}
+
+	i.updatePage(page, 0)
+
+	return i.currentPage, nil
+}
+
+// Last fetches and returns the last page of results.
+func (i *PageIterator[T]) Last(ctx context.Context) (PageResult[T], error) {
+	if i.currentPage.LastLink == nil || strings.TrimSpace(*i.currentPage.LastLink) == "" {
+		return PageResult[T]{}, nil
+	}
+
+	collection, err := i.fetchPage(ctx, i.currentPage.LastLink)
+	if err != nil {
+		return PageResult[T]{}, err
+	}
+
+	page, err := convertToPage(collection)
+	if err != nil {
+		return PageResult[T]{}, err
+	}
+
+	i.updatePage(page, len(page.Result))
+
+	return i.currentPage, nil
+}
+
+func (i *PageIterator[T]) updatePage(page PageResult[T], pauseIndex int) {
+	i.currentPage = page
+	i.pauseIndex = pauseIndex
+}
+
+// SetHeaders sets the headers for the next page request.
+func (i *PageIterator[T]) SetHeaders(headers *abstractions.RequestHeaders) {
+	i.headers = headers
+}
+
+// AddRequestOptions adds the request options for the next page request.
+func (i *PageIterator[T]) AddRequestOptions(options ...abstractions.RequestOption) {
+	i.reqOptions = append(i.reqOptions, options...)
+}
+
+func (i *PageIterator[T]) fetchPage(ctx context.Context, pageLink *string) (ServiceNowCollectionResponse[T], error) {
+	var response ServiceNowCollectionResponse[T]
+	var rawResponse serialization.Parsable
 	var err error
 
-	if uri == "" {
-		return nil, ErrEmptyURI
+	if pageLink == nil || strings.TrimSpace(*pageLink) == "" {
+		return response, nil
 	}
 
-	// parse provided link
-	nextLink, err := url.ParseRequestURI(uri)
+	link, err := url.Parse(*pageLink)
 	if err != nil {
-		return nil, err
+		return response, errors.New("parsing nextLink url failed")
 	}
 
-	// build request information
-	requestInformation := NewRequestInformation()
-	requestInformation.Method = GET
-	requestInformation.SetUri(nextLink)
+	var headerOption *nethttplibrary.HeadersInspectionOptions
 
-	resp, err := pI.client.Send(requestInformation, nil)
+	headerOptionKey := (&nethttplibrary.HeadersInspectionOptions{}).GetKey()
+	for _, opt := range i.reqOptions {
+		if opt.GetKey() == headerOptionKey {
+			headerOption = opt.(*nethttplibrary.HeadersInspectionOptions)
+			break
+		}
+	}
+
+	if headerOption == nil {
+		headerOption = nethttplibrary.NewHeadersInspectionOptions()
+		headerOption.InspectResponseHeaders = true
+		i.reqOptions = append(i.reqOptions, headerOption)
+	}
+
+	requestInfo := abstractions.NewRequestInformation()
+	requestInfo.Method = abstractions.GET
+	requestInfo.SetUri(*link)
+	requestInfo.Headers.AddAll(i.headers)
+	requestInfo.Headers.TryAdd("Accept", "application/json")
+	requestInfo.AddRequestOptions(i.reqOptions)
+
+	rawResponse, err = i.reqAdapter.Send(ctx, requestInfo, ServiceNowCollectionResponseFromDiscriminatorValue[T](i.constructorFunc), i.errorMappings)
 	if err != nil {
-		return nil, err
+		return response, err
 	}
 
-	err = ParseResponse(resp, &collectionResp)
-	if err != nil {
-		return nil, err
+	response, ok := rawResponse.(ServiceNowCollectionResponse[T])
+	if !ok {
+		return response, errors.New("response is of wrong type")
 	}
 
-	return &collectionResp, nil
+	ParseHeaders(response, headerOption.GetResponseHeaders())
+
+	return response, nil
 }

@@ -1,0 +1,98 @@
+# Release Notes — v2.0.0
+
+## Highlights
+
+- **Kiota-aligned architecture.** The SDK is built on Microsoft's Kiota
+  abstractions (`kiota-abstractions-go`, `kiota-http-go`,
+  `kiota-serialization-*-go`). Request builders, parsable, and backing
+  stores follow the same conventions as `msgraph-sdk-go` and other
+  Kiota-generated SDKs, so patterns transfer across ecosystems.
+
+- **Backing-store models.** Every model property is stored in a Kiota
+  `BackingStore` with change tracking. Getters return pointers — `nil`
+  means "absent," a zero value means "the server sent zero." Request
+  bodies contain only the properties you set, eliminating accidental
+  overwrites on `PUT`/`PATCH`.
+
+- **One pagination pattern.** A single generic `core.PageIterator` handles
+  cursor-based pagination for all collection endpoints — table, attachment,
+  and any future module. No per-module wrappers.
+
+- **Typed error handling.** API failures are now `*core.ServiceNowError`
+  (or a subtype like `*core.NotFoundError`), matchable with `errors.As`.
+  Nil-receiver guards return a shared sentinel error instead of
+  `nil, nil`.
+
+## Breaking changes
+
+- **Module path.** Import paths change to `/v2`:
+  `github.com/michaeldcanady/servicenow-sdk-go/v2`.
+
+- **Client construction.** `NewServiceNowClient` /
+  `NewServiceNowClient2` are removed. Use
+  `NewServiceNowServiceClient(opts...)` with functional options
+  (`WithURL`, `WithInstance`, `WithAuthenticationProvider`, …).
+
+- **Credentials.** v1's `Credential` interface
+  (`GetAuthentication() (string, error)`) is removed. Use Kiota's
+  `authentication.AuthenticationProvider` — built-in providers:
+  `NewBasicProvider`, `NewROPCProvider`, `NewClientCredentialsProvider`,
+  `NewPrivateAuthorizationCodeProvider`, `NewPublicAuthorizationCodeProvider`,
+  `NewJWTProvider`.
+
+- **Fluent chain.** The interim `2`/`V2` names collapse back to the plain
+  names (`Now2` → `Now`, `TableV2` → `Table`, `ById` → `ByID`).
+  Verb-specific methods (`Get2`, `Post4`, …) are gone; each builder has
+  exactly one `Get`/`Post`/`Put`/`Delete`.
+
+- **Type names.** Drop the `2` suffix: `TableRequestBuilder2` →
+  `TableRequestBuilder`, `TableItemRequestBuilder2GetRequestConfiguration`
+  → `TableItemRequestBuilderGetRequestConfiguration`, etc.
+
+- **Import paths.** Hyphens removed: `table-api` → `tableapi`,
+  `attachment-api` → `attachmentapi`, `batch-api` → `batchapi`.
+  `query2` → `query`.
+
+- **Models.** `TableEntry` (`map[string]interface{}`) is replaced by
+  `TableRecord` (backed model). Reading:
+  `entry.Value("field")` → `record.Get("field")`.
+  Writing: `entry.Set("field", v)` → `record.SetValue("field", v)`.
+
+- **Responses.** `response.Result` (field) → `response.GetResult()`
+  (method, returns `(T, error)`).
+
+- **Pagination.** Module-specific page-iterator wrappers
+  (`tableapi.NewTablePageIterator`, etc.) are removed. Use
+  `core.NewPageIterator` directly.
+
+- **Nil-receiver behavior.** Calling a verb method on a nil builder
+  returns a sentinel error (`snerrors.ErrNilRequestBuilder`) instead of
+  `(nil, nil)`.
+
+## New features
+
+- `core.PageIterator` — generic cursor-based pagination for any
+  collection endpoint.
+- `query` package — fluent query-condition builder
+  (`query.String("field").Contains("term")`).
+- OAuth2 authentication providers: ROPC, client credentials,
+  authorization code (public and private), JWT bearer.
+- Attachment API: `File().Post()` for disk uploads,
+  `ByID().File().Get()` for downloads, `Upload()` for multipart.
+- Configurable HTTP client and middleware via `WithHTTPClient` /
+  `WithMiddleware` client options.
+
+## Removed deprecations
+
+All `V2`/`2`-suffixed types and methods from the v1.8–v1.9 transitional
+period are removed. The plain names now refer exclusively to the v2
+implementations.
+
+## Upgrade path
+
+See [Migrating from v1 to v2](user-guide/migrate-v1-to-v2.mdx) for a
+section-by-section guide with code examples for every changed surface.
+
+If something doesn't map cleanly,
+[open an issue](https://github.com/michaeldcanady/servicenow-sdk-go/issues) —
+gaps in the migration guide are release blockers for us.

@@ -1,0 +1,30 @@
+# Attachment file overview
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import attachmentsGo from '@site/snippets/attachments.go';
+
+
+The Attachment File API lets you interact with the raw binary content of file attachments. Unlike the base Attachment API which handles metadata (like filenames and sizes), the File sub-module handles the actual upload and download of file data.
+
+Commonly used for:
+- Uploading a new file and attaching it to a specific record.
+- Downloading the content of an existing attachment by its `sys_id`.
+
+## Basic usage
+
+### Uploading a file
+
+To upload a file, you specify the target table and record ID, along with the desired filename and the raw data.
+
+<GoSnippet language="go" src={attachmentsGo} region="attachment_file_create" />
+
+### Downloading a file
+
+To download a file, you use the `ByID` method with the attachment's `sys_id` and then access the `File()` sub-module.
+
+<GoSnippet language="go" src={attachmentsGo} region="attachment_file_get" />
+
+## Available operations
+
+- [**Upload File**](create.mdx): Upload raw binary data as an attachment.
+- [**Download File**](get.mdx): Retrieve the raw binary data of an attachment.

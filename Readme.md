@@ -1,62 +1,65 @@
-# ServiceNow SDK for Go
+![ServiceNow SDK for Go](.github/servicenow-sdk-go_logo.png)
+
+# Service-Now SDK for Go
+
+A type-safe, idiomatic Go client for the ServiceNow REST APIs.
 
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/michaeldcanady/servicenow-sdk-go?style=plastic)
 [![GoDoc](https://img.shields.io/static/v1?style=plastic&label=godoc&message=reference&color=blue)](https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/michaeldcanady/servicenow-sdk-go?style=plastic)
-![GitHub issues](https://img.shields.io/github/issues/michaeldcanady/servicenow-sdk-go?style=plastic)
-![GitHub](https://img.shields.io/github/license/michaeldcanady/servicenow-sdk-go?style=plastic)
 [![Maintainability](https://qlty.sh/badges/e778f295-dfb1-4637-a15e-f179549fcae4/maintainability.svg)](https://qlty.sh/gh/michaeldcanady/projects/servicenow-sdk-go)
-[![codecov](https://codecov.io/gh/michaeldcanady/servicenow-sdk-go/graph/badge.svg?token=MJPM1UAI78)](https://codecov.io/gh/michaeldcanady/servicenow-sdk-go)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/michaeldcanady/servicenow-sdk-go/badge)](https://scorecard.dev/viewer/?uri=github.com/michaeldcanady/servicenow-sdk-go)
 
-A Service-Now API client enabling Go programs to interact with Service-Now in a simple and uniform way
+## Install
+```bash
+go get github.com/michaeldcanady/servicenow-sdk-go/v2@latest
+```
+> Requires **Go 1.25+**
 
-![servicenow-sdk-go](.github/servicenow-sdk-go_logo.png)
+## Quickstart
 
-## Supported Service-Now APIs
+```go
+package main
 
-| API                                                                                                 | Status | Issues                                                                                                                                                                                                                                              |
-| --------------------------------------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Account](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/account-api)                | ✔️     |                                                                                                                                                                                                                                                     |
-| [ActivitySubscriptions](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/actsub-api)   | ✔️     |                                                                                                                                                                                                                                                     |
-| Agent Client Collector                                                                              | ✖️     |                                                                                                                                                                                                                                                     |
-| [Aggregate](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/aggregate-api)            | ✔️     |                                                                                                                                                                                                                                                     |
-| AI Search External User Mapping                                                                     | ✖️     |                                                                                                                                                                                                                                                     |
-| Alarm Management Open                                                                               | ✖️     |                                                                                                                                                                                                                                                     |
-| [Application Service](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/appservice-api) | ✔️     |                                                                                                                                                                                                                                                     |
-| [Appointment](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/appointmentbooking-api) | ✔️     |                                                                                                                                                                                                                                                     |
-| [Attachment](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/attachment-api)          | ✔️     | [![Attachment API Issues](https://img.shields.io/github/issues-raw/michaeldcanady/servicenow-sdk-go/attachment%20api?label=%20)](https://github.com/michaeldcanady/servicenow-sdk-go/labels/attachment%20api)                                       |
-| Advanced Work Assignment (AWA) Agent                                                                | ✖️     |                                                                                                                                                                                                                                                     |
-| AWA Assignment                                                                                      | ✖️     |                                                                                                                                                                                                                                                     |
-| AWA Routing                                                                                         | ✖️     |                                                                                                                                                                                                                                                     |
-| [Batch](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/batch-api)                    | ✔️     |                                                                                                                                                                                                                                                     |
-| [Case](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/case-api)                      | ✔️     |                                                                                                                                                                                                                                                     |
-| [CMDB Instance](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/cmdb-instance-api)    | ✔️     |                                                                                                                                                                                                                                                     |
-| Custom Chat Chatbot Interoperability Framework (CCCIF) Media Resource                               | ✖️     |                                                                                                                                                                                                                                                     |
-| [CdmApplicationsApi](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/cdm-applications-api)                   | ✔️     |                                                                                                                                                                                                                                                     |
-| [CdmChangesetsApi](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/cdm-changeset-api) | ✔️     |                                                                                                                                                                                                                                                     |
-| [CdmEditorApi](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/cdm-editor-api)        | ✖️     |                                                                                                                                                                                                                                                     |
-| [CdmPoliciesApi](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/policy-api)          | ✔️     |                                                                                                                                                                                                                                                     |
-| [Documents](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/documents-api)            | ✔️     |                                                                                                                                                                                                                                                     |
-| [Tables](https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/table-api)                   | ✔️     | [![Table API Issues](https://img.shields.io/github/issues-raw/michaeldcanady/servicenow-sdk-go/module%3A+table-api?label=%20)](https://github.com/michaeldcanady/servicenow-sdk-go/issues?q=is%3Aissue+is%3Aopen+label%3A%22module%3A+table-api%22) |
+import (
+    "context"
+    "fmt"
+    "log"
 
----
+    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2/v2"
+    "github.com/michaeldcanady/servicenow-sdk-go/v2/v2/credentials"
+)
 
-| Emoji | Meaning       |
-| ----- | ------------- |
-| ✔️    | Supported     |
-| 🆕    | Preview       |
-| ♻️    | In progress   |
-| ✖️    | Not supported |
+func main() {
+    authProvider := credentials.NewBasicProvider("username", "password")
 
-## Documentation
+    client, err := servicenowsdkgo.NewServiceNowServiceClient(
+        servicenowsdkgo.WithInstance("your-instance"),
+        servicenowsdkgo.WithAuthenticationProvider(authProvider),
+    )
+    if err != nil {
+        log.Fatal(err)
+    }
 
-For detailed information on how to get started and use this SDK, please visit
-the [official documentation](https://michaeldcanady.github.io/servicenow-sdk-go/).
+    resp, err := client.Now().Table("incident").Get(context.Background(), nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    records, err := resp.GetResult()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    for _, record := range records {
+        fmt.Println(record)
+    }
+}
+```
 
 ## Contributing
 
-We welcome contributions from the community! Whether you're fixing a bug, adding
-a new feature, or improving documentation, please review our
-[Contributor Guide](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/)
-to get started.
+Contributions are welcome: Start with the [Contributor Guide](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/)
+
+## License
+
+[MIT](./LICENSE)

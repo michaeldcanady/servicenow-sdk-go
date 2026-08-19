@@ -1,8 +1,13 @@
 version: "2"
+run:
+  build-tags:
+    - preview.query
 linters:
   enable:
     - dogsled
+    - errcheck
     - gocognit
+    - gocyclo
     - gosec
     - misspell
     - nakedret
@@ -10,8 +15,57 @@ linters:
     - unconvert
     - unparam
     - whitespace
+    - revive
+    - errorlint
+    - testifylint
+    - errname
+    - bodyclose
+    - noctx
+    - importas
+  settings:
+    dupl:
+      threshold: 200
+    revive:
+      rules:
+        - name: exported
+          disabled: false
+    importas:
+      alias:
+        - pkg: github.com/microsoft/kiota-abstractions-go
+          alias: abstractions
+        - pkg: github.com/microsoft/kiota-abstractions-go/store
+          alias: kiotaStore
+        - pkg: github.com/microsoft/kiota-http-go
+          alias: nethttplibrary
+        - pkg: github.com/michaeldcanady/servicenow-sdk-go/errors
+          alias: snerrors
+        - pkg: github.com/michaeldcanady/servicenow-sdk-go/internal/http
+          alias: internalhttp
+        - pkg: github.com/michaeldcanady/servicenow-sdk-go/internal/serialization
+          alias: internalSerialization
+        - pkg: github.com/michaeldcanady/servicenow-sdk-go/internal/store
+          alias: internalStore
   exclusions:
-    generated: lax
+    rules:
+      - linters:
+          - dupl
+          - errcheck
+          - gocyclo
+          - gosec
+          - typecheck
+        path: _test\.go
+      - linters:
+          - bodyclose
+        path: internal/oauth2/client_test\.go
+        text: "response body must be closed"
+      - linters:
+          - revive
+        path: internal/mocking/(mock_request_adapter|mock_backing_store)\.go
+        text: "var-naming:.*(SetBaseUrl|GetBaseUrl|SubscribeWithId)"
+      - linters:
+          - revive
+        path: internal/
+        text: "^exported:"
     presets:
       - comments
       - common-false-positives
@@ -25,10 +79,3 @@ linters:
 formatters:
   enable:
     - gofmt
-  exclusions:
-    generated: lax
-    paths:
-      - third_party$
-      - builtin$
-      - examples$
-      - docs/assets/snippets/.*\.go$

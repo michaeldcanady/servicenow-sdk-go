@@ -1,0 +1,41 @@
+package policyapi
+
+import (
+	"maps"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+)
+
+const (
+	policyURLTemplate = "{+baseurl}/api/sn_cdm/v1/policies"
+)
+
+// PoliciesRequestBuilder provides operations to manage Service-Now policies.
+type PoliciesRequestBuilder struct {
+	core.RequestBuilder
+}
+
+// NewPolicyRequestBuilderInternal instantiates a new PolicyRequestBuilder with the provided path parameters and request adapter.
+func NewPolicyRequestBuilderInternal(
+	pathParameters map[string]string,
+	requestAdapter abstractions.RequestAdapter,
+) *PoliciesRequestBuilder {
+	return &PoliciesRequestBuilder{
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, policyURLTemplate, pathParameters),
+	}
+}
+
+// Mappings provides the way to access Service-Now's policy definitions API
+func (rB *PoliciesRequestBuilder) Mappings() *PoliciesMappingsRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil
+	}
+
+	return NewPoliciesMappingsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+}

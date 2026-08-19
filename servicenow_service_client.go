@@ -6,9 +6,9 @@ import (
 	"strings"
 	"sync"
 
-	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/appointmentbooking-api"
-	caseapi "github.com/michaeldcanady/servicenow-sdk-go/case-api"
-	newInternal "github.com/michaeldcanady/servicenow-sdk-go/internal/new"
+	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/v2/appointmentbookingapi"
+	caseapi "github.com/michaeldcanady/servicenow-sdk-go/v2/caseapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	formserialization "github.com/microsoft/kiota-serialization-form-go"
@@ -31,9 +31,9 @@ var (
 	registerDeserializersOnce sync.Once
 )
 
-// ServiceNowServiceClient is the core service used by ServiceNowServiceClient to make requests to Service-Now's APIs
+// ServiceNowServiceClient is the core service to make requests to Service-Now's APIs
 type ServiceNowServiceClient struct {
-	newInternal.RequestBuilder
+	core.RequestBuilder
 }
 
 // registerDefaultSerializers registers default serializers
@@ -63,7 +63,7 @@ func registerDefaultDeserializers() {
 	})
 }
 
-// NewServiceNowServiceClient creates a new ServiceNowServiceClient using the provided options.
+// NewServiceNowServiceClient creates a new [ServiceNowServiceClient] using the provided options.
 func NewServiceNowServiceClient(opts ...ServiceNowServiceClientOption) (*ServiceNowServiceClient, error) {
 	config, err := buildServiceClientConfig(opts...)
 	if err != nil {
@@ -77,7 +77,8 @@ func NewServiceNowServiceClient(opts ...ServiceNowServiceClientOption) (*Service
 
 	baseURL := config.getBaseURL()
 	if strings.TrimSpace(baseURL) == "" {
-		return nil, errors.New("baseURL cannot be empty")
+		// TODO: sentinel-ize this error message
+		return nil, errors.New("baseURL is empty")
 	}
 
 	pathParameters := map[string]string{baseURLParameter: baseURL}
@@ -86,22 +87,26 @@ func NewServiceNowServiceClient(opts ...ServiceNowServiceClientOption) (*Service
 	registerDefaultDeserializers()
 
 	return &ServiceNowServiceClient{
-		RequestBuilder: newInternal.NewBaseRequestBuilder(requestAdapter, baseURLVariable, pathParameters),
+		RequestBuilder: core.NewBaseRequestBuilder(requestAdapter, baseURLVariable, pathParameters),
 	}, nil
 }
 
-func (rB *ServiceNowServiceClient) Now() *NowRequestBuilder2 {
-	return NewServiceNowRequestBuilder3Internal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
+// Now returns the request builder for the Now API namespace.
+func (rB *ServiceNowServiceClient) Now() *NowRequestBuilder {
+	return NewServiceNowRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
+// Cdm returns the request builder for the Configuration Data Model (CDM) API namespace.
 func (rB *ServiceNowServiceClient) Cdm() *CdmRequestBuilder {
 	return NewCdmRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
+// AppointmentBooking returns the request builder for the Appointment Booking API namespace.
 func (rB *ServiceNowServiceClient) AppointmentBooking() *appointmentbookingapi.AppointmentBookingRequestBuilder {
-	return appointmentbookingapi.NewAppointmentBookingRequestBuilder(rB.GetRequestAdapter(), maps.Clone(rB.GetPathParameters()))
+	return appointmentbookingapi.NewAppointmentBookingRequestBuilderInternal(rB.GetRequestAdapter(), maps.Clone(rB.GetPathParameters()))
 }
 
+// CustomerService returns the request builder for the Customer Service Management API namespace.
 func (rB *ServiceNowServiceClient) CustomerService() *caseapi.CustomerServiceRequestBuilder {
 	return caseapi.NewCustomerServiceRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

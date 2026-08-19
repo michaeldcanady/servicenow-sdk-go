@@ -1,0 +1,100 @@
+package cmdbinstanceapi
+
+import (
+	"context"
+	"fmt"
+	"maps"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+)
+
+const (
+	relSysIDKey             = "rel_sys_id"
+	cmdbRelationURLTemplate = "{+baseurl}/api/now/v1/cmdb/instance/{className}/{sys_id}/relation"
+)
+
+// CmdbRelationRequestBuilder provides operations to manage CI relationships.
+type CmdbRelationRequestBuilder struct {
+	core.RequestBuilder
+}
+
+var _ core.ItemPostRequestBuilder[CmdbInstance, abstractions.DefaultQueryParameters, abstractions.RequestConfiguration[abstractions.DefaultQueryParameters]] = (*CmdbRelationRequestBuilder)(nil)
+
+// NewCmdbRelationRequestBuilderInternal instantiates a new CmdbRelationRequestBuilder.
+func NewCmdbRelationRequestBuilderInternal(pathParameters map[string]string, requestAdapter abstractions.RequestAdapter) *CmdbRelationRequestBuilder {
+	return &CmdbRelationRequestBuilder{
+		core.NewBaseRequestBuilder(requestAdapter, cmdbRelationURLTemplate, pathParameters),
+	}
+}
+
+// Post creates a Relation for the CI.
+func (rB *CmdbRelationRequestBuilder) Post(ctx context.Context, body CmdbInstance, config *CmdbRelationRequestBuilderPostRequestConfiguration) (*core.BaseServiceNowItemResponse[CmdbInstance], error) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
+	requestInfo, err := rB.ToPostRequestInformation(ctx, body, config)
+	if err != nil {
+		return nil, err
+	}
+
+	errorMapping := core.DefaultErrorMapping()
+	res, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[CmdbInstance](CreateCmdbInstanceFromDiscriminatorValue), errorMapping)
+	if err != nil {
+		return nil, err
+	}
+
+	if conversion.IsNil(res) {
+		return nil, snerrors.ErrNilResponse
+	}
+
+	typedResp, ok := res.(*core.BaseServiceNowItemResponse[CmdbInstance])
+	if !ok {
+		return nil, fmt.Errorf("resp is not %T", (*core.BaseServiceNowItemResponse[CmdbInstance])(nil))
+	}
+
+	return typedResp, nil
+}
+
+// ToPostRequestInformation converts request configurations to Post request information.
+func (rB *CmdbRelationRequestBuilder) ToPostRequestInformation(ctx context.Context, body CmdbInstance, config *CmdbRelationRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
+	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
+	if !conversion.IsNil(config) {
+		if headers := config.Headers; !conversion.IsNil(headers) {
+			requestInfo.Headers.AddAll(headers)
+		}
+		if options := config.Options; !conversion.IsNil(options) {
+			requestInfo.AddRequestOptions(options)
+		}
+	}
+	requestInfo.Headers.TryAdd(internalhttp.RequestHeaderAccept.String(), internalhttp.ContentTypeApplicationJSON.String())
+
+	if !conversion.IsNil(body) {
+		err := requestInfo.SetContentFromParsable(ctx, rB.GetRequestAdapter(), internalhttp.ContentTypeApplicationJSON.String(), body)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return requestInfo, nil
+}
+
+// ByID provides operations to manage a specific CI relationship.
+func (rB *CmdbRelationRequestBuilder) ByID(relSysID string) *CmdbRelationItemRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
+	pathParameters := maps.Clone(rB.GetPathParameters())
+	pathParameters[relSysIDKey] = relSysID
+	return NewCmdbRelationItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
+}

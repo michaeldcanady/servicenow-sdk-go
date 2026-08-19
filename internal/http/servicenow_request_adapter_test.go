@@ -1,10 +1,10 @@
-package internal
+package internalhttp
 
 import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -20,7 +20,7 @@ func TestNewServiceNowRequestAdapter(t *testing.T) {
 				authProvider := mocking.NewMockAuthenticationProvider()
 
 				_, err := NewServiceNowRequestAdapter(authProvider)
-				assert.Nil(t, err)
+				assert.NoError(t, err)
 			},
 		},
 		{
