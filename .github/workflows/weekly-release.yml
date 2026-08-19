@@ -59,7 +59,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Create preview release
-        uses: googleapis/release-please-action@v5
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
         id: release
         with:
           config-file: weekly-release-please-config.json

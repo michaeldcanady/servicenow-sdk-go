@@ -115,7 +115,7 @@ jobs:
     name: deploy-docs
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # required: pushes built site to gh-pages branch
     needs:
       - build
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -142,7 +142,7 @@ jobs:
     name: deploy-preview
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # required: pushes PR preview to gh-pages branch
       pull-requests: write
     # Fork PRs get a read-only token, so previews are same-repo only. Runs on
     # `closed` too (without the build steps) so the preview gets removed.
