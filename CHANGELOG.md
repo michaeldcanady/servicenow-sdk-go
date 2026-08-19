@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v1.12.1...v2.0.0) (2026-08-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* Removed all deprecated 2 suffixes from types, package names, and file names throughout the table-api, attachment-api, and internal modules, streamlining the API surface for v2.0. This change requires downstream consumers to update their import paths and type references.
+
+### Features
+
+* v2 rework ([#600](https://github.com/michaeldcanady/servicenow-sdk-go/issues/600)) ([89016cf](https://github.com/michaeldcanady/servicenow-sdk-go/commit/89016cf4a7b520c0819c7d850ac52675a70ea2c4))
+
 ## [1.12.1](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v1.12.0...v1.12.1) (2026-08-09)
 
 
