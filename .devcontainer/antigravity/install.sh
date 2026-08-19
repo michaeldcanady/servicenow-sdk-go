@@ -13,7 +13,9 @@ rm -rf /var/lib/apt/lists/*
 # Install directory for the CLI
 INSTALL_DIR="/usr/local/bin"
 
-# Run the official installer with explicit install directory
+# NOTE: curl-pipe-bash cannot be pinned by hash (Scorecard downloadThenRun finding).
+# The installer URL is an official Google endpoint; the binary is verified by the
+# installer's own checksum logic.
 curl -fsSL https://antigravity.google/cli/install.sh | bash -s -- --dir "$INSTALL_DIR"
 
 # The installer places the binary as "agy"
