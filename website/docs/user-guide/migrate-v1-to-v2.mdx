@@ -2,7 +2,10 @@
 
 import GoSnippet from '@site/src/components/GoSnippet';
 import GoExample from '@site/src/components/GoExample';
+import attachmentsGo from '@site/snippets/attachments.go';
 import authGo from '@site/snippets/auth.go';
+import paginationGo from '@site/snippets/pagination.go';
+import queryGo from '@site/snippets/query.go';
 import tablesGo from '@site/snippets/tables.go';
 
 Version 2.0 finishes the transition that v1.8–v1.9 started: the interim
@@ -161,6 +164,121 @@ for _, entry := range response.Result {
 - API failures are now typed: match `*core.ServiceNowError` (or a specific
   subtype like `*core.NotFoundError`) with `errors.As`. See
   [Error handling](error-handling.mdx).
+
+## Attachments
+
+v1 imported `attachment-api`; v2 moves to the hyphen-free `attachmentapi`.
+The fluent chain changes too — `Attachment()` is now on the `Now()` builder,
+and `File()`/`Upload()` sit underneath it:
+
+```go title="v1"
+import attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachment-api"
+
+file, _ := os.Open("file.txt")
+data, _ := io.ReadAll(file)
+media := attachmentapi.NewMedia("text/plain", data)
+
+config := &attachmentapi.AttachmentFileRequestBuilderPostRequestConfiguration{
+    QueryParameters: &attachmentapi.AttachmentFileRequestBuilderPostQueryParameters{
+        TableSysID: &sysID,
+        TableName:  &tableName,
+        FileName:   &fileName,
+    },
+}
+
+response, err := client.Attachment().File().Post(ctx, media, config)
+```
+
+<GoExample language="go" title="v2" files={{ attachmentsGo: attachmentsGo }} template={`{{attachmentsGo:attachment_create_guide}}
+
+{{attachmentsGo:attachment_download_guide}}`} />
+
+See [Attachments](attachments/index.mdx) for the full upload and download
+guides.
+
+## Pagination
+
+v1 had no built-in pagination helper — callers used `Offset`/`Limit` query
+parameters and looped manually. v2 introduces
+[`core.PageIterator`](pagination.mdx), which follows `Link` headers across
+pages automatically:
+
+```go title="v1"
+offset := int32(0)
+limit := int32(100)
+for {
+    params := &tableapi.TableRequestBuilderGetQueryParameters{
+        Offset: &offset,
+        Limit:  &limit,
+    }
+    response, _ := client.Now().Table("incident").Get(ctx,
+        &tableapi.TableRequestBuilderGetRequestConfiguration{QueryParameters: params})
+    results, _ := response.GetResult()
+    if len(results) == 0 {
+        break
+    }
+    for _, record := range results {
+        // process record
+    }
+    offset += limit
+}
+```
+
+<GoSnippet language="go" title="v2 — iterate all pages" src={paginationGo} region="pagination_table_manual" />
+
+<GoSnippet language="go" title="v2 — item by item" src={paginationGo} region="pagination_item_by_item" />
+
+The iterator also works for attachments and other collection endpoints —
+see [Pagination](pagination.mdx) for the full API including reverse
+iteration and state management.
+
+## Queries
+
+The `query2` package is now simply `query`. The fluent builder API is
+unchanged — build conditions, chain them, and call `.String()`:
+
+```go title="v1"
+import "github.com/michaeldcanady/servicenow-sdk-go/query2"
+
+q := query2.String("short_description").Contains("System").
+    And(query2.Number("priority").Is(1)).String()
+
+params := &tableapi.TableRequestBuilderGetQueryParameters{Query: &q}
+response, err := client.Now().Table("incident").Get(ctx,
+    &tableapi.TableRequestBuilderGetRequestConfiguration{QueryParameters: params})
+```
+
+<GoSnippet language="go" title="v2" src={queryGo} region="query_basic" />
+
+<GoSnippet language="go" title="v2 — pass to table API" src={queryGo} region="query_table_api" />
+
+See [Query builder](query-builder.mdx) for the full condition API.
+
+## Authentication
+
+v1's `Credential` interface (`GetAuthentication() (string, error)`) is
+replaced by Kiota's `authentication.AuthenticationProvider`. The built-in
+providers follow the same construction pattern — create a provider, pass it
+to the client:
+
+```go title="v1"
+cred := credentials.NewUsernamePasswordCredential("user", "pass")
+client, _ := servicenowsdkgo.NewServiceNowClient2(cred, url)
+```
+
+<GoExample language="go" title="v2" files={{ authGo: authGo }} template={`{{authGo:auth_basic}}
+
+{{authGo:client_init}}`} />
+
+OAuth2 providers use the same shape — `NewROPCProvider`, `NewClientCredentialsProvider`,
+`NewPrivateAuthorizationCodeProvider`, and `NewJWTProvider` all satisfy
+`AuthenticationProvider`:
+
+<GoExample language="go" title="v2 — ROPC" files={{ authGo: authGo }} template={`{{authGo:auth_ropc}}`} />
+
+If you implemented v1's `Credential` interface yourself, implement Kiota's
+`authentication.AuthenticationProvider` instead — see
+[Authentication](authentication/index.md) for the full provider reference.
 
 ## Migration checklist
 
