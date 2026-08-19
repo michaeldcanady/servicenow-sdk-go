@@ -1,0 +1,63 @@
+name: Branch Policy
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+    branches:
+      - main
+
+permissions: {}
+
+jobs:
+  branch-name:
+    name: Check Branch Name
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    # Automated branches (release-please, dependabot) don't follow the
+    # human-authored <type>/<kebab-description> convention, so they're exempt.
+    if: ${{ !startsWith(github.head_ref, 'release-please--') && !startsWith(github.head_ref, 'dependabot/') }}
+    steps:
+      - name: Validate branch name matches <type>/<kebab-description>
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          # Same type vocabulary as pull-request-title-lint.yml, so branch
+          # names and PR titles stay in sync.
+          PATTERN='^(fix|feat|chore|docs|style|refactor|perf|test)/[a-z0-9]+(-[a-z0-9]+)*$'
+
+          if [[ ! "$HEAD_REF" =~ $PATTERN ]]; then
+            echo "::error::Branch name '$HEAD_REF' does not match the required '<type>/<kebab-description>' pattern (e.g. 'fix/nil-pointer-in-tableapi')."
+            echo "Allowed types: fix, feat, chore, docs, style, refactor, perf, test"
+            exit 1
+          fi
+
+          echo "Branch name '$HEAD_REF' is valid."
+
+  linked-issue:
+    name: Check Linked Issue
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    # Automated PRs (release-please, dependabot) and PRs explicitly labeled
+    # as trivial don't require a linked issue.
+    if: ${{ github.actor != 'dependabot[bot]' && !contains(github.event.pull_request.labels.*.name, 'no-issue-required') }}
+    steps:
+      - name: Validate PR body references an issue
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          # Accepts any "#123" reference (e.g. "Closes #123", "Part of #123",
+          # "Fixes #123") so partial/complementary work against an issue is
+          # still recognized, not just PRs that auto-close the issue.
+          if ! grep -qE '#[0-9]+' <<< "$PR_BODY"; then
+            echo "::error::PR description must reference a linked issue (e.g. 'Closes #123' or 'Part of #123')."
+            echo "If this PR is a trivial chore with no associated issue, apply the 'no-issue-required' label instead."
+            exit 1
+          fi
+
+          echo "PR body references a linked issue."

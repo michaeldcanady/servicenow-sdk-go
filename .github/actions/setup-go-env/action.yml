@@ -1,0 +1,28 @@
+name: "Setup Go Environment"
+description: "Checks out the repository (optional) and installs the requested Go toolchain."
+
+inputs:
+  go-version:
+    description: "Go version to install, as accepted by actions/setup-go (e.g. 'stable', 'oldstable', '1.22.x')."
+    required: true
+  cache:
+    description: "Whether to enable module/build caching, passed through to actions/setup-go."
+    required: false
+    default: "true"
+  checkout:
+    description: "Whether to check out the repository before installing Go. Set to 'false' if the caller has already checked out the ref it wants built (note: the caller must always checkout first anyway in order for GitHub Actions to resolve this local action, so callers in this repo should pass 'false')."
+    required: false
+    default: "true"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      if: inputs.checkout == 'true'
+      uses: actions/checkout@v7
+
+    - name: Set up Go
+      uses: actions/setup-go@v7
+      with:
+        go-version: ${{ inputs.go-version }}
+        cache: ${{ inputs.cache }}
