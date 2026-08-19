@@ -3,6 +3,8 @@
 # - Move issue to "In Progress" on board → "status: in progress" label added
 # - Add "status: in progress" label → board Status updates to "🏗 In progress"
 # - Conflicts resolved by timestamp (most recent wins)
+#
+# Requires a classic PAT with `project` scope (fine-grained tokens don't support Projects v2).
 
 name: Sync Project Status
 
@@ -23,7 +25,7 @@ jobs:
       has-token: ${{ steps.check.outputs.has-token }}
     steps:
       - id: check
-        run: echo "has-token=${{ secrets.SYNC_PROJECT_SYNC_TOKEN_PROVIDER_PEM != '' }}" >> $GITHUB_OUTPUT
+        run: echo "has-token=${{ secrets.PROJECT_PAT != '' }}" >> $GITHUB_OUTPUT
 
   sync:
     needs: check-secret
@@ -32,14 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ vars.SYNC_PROJECT_SYNC_TOKEN_PROVIDER_APP_ID }}
-          private-key: ${{ secrets.SYNC_PROJECT_SYNC_TOKEN_PROVIDER_PEM }}
-
       - uses: dvhthomas/project-label-sync@v0.1.2
         with:
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ secrets.PROJECT_PAT }}
           apply: ${{ github.event.inputs.apply || 'false' }}
