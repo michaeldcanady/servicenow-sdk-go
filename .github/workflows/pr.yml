@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' }}
     permissions:
-      contents: write
+      contents: write # required: gh pr merge --auto needs write to enable auto-merge
       pull-requests: write
     steps:
       - name: Dependabot metadata
