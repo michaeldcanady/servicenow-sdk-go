@@ -1,7 +1,7 @@
 name: "Bug Report"
 description: Report something that's broken or behaving unexpectedly in the SDK.
 title: "[Bug]: "
-labels: ["type: bug", "state: new"]
+labels: ["type: bug", "status: new"]
 body:
   - type: markdown
     attributes:

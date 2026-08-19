@@ -137,6 +137,36 @@ contract in brief:
   `go test ./...` (config: `.golangci.yml`; `just build|lint|fmt` wrap the
   same commands).
 
+## Issue triage and labels
+
+Issues use the following label taxonomy:
+
+**Priority** (score = Impact + Risk-of-delay):
+
+| Label | Score | Description |
+|-------|-------|-------------|
+| `priority: urgent` | 6 | Blocks a release or active work |
+| `priority: high` | 5 | Should be picked up soon |
+| `priority: medium` | 4 | Worth doing, no rush |
+| `priority: low` | 2-3 | Nice to have, no urgency |
+
+**Type labels:** `type: bug`, `type: feature`, `type: refactor`, `type: documentation`, `type: devops`, `type: epic`, `type: test`
+
+**Module labels:** Auto-applied by PR based on changed files (e.g., `module: table-api`, `module: core`).
+
+**Status** (workflow state, auto-synced by automation):
+
+| Label | Meaning |
+|-------|---------|
+| `status: new` | Newly filed, not yet triaged |
+| `status: reviewed` | Triaged, ready for work |
+| `status: in progress` | Actively being worked on (set automatically when a PR is linked) |
+| `status: blocked` | Blocked on another issue, decision, or external dependency |
+
+> **Automation:** When you open a PR with `Closes #N` in the description, the linked issue automatically moves to `status: in progress`. When the PR is closed without merge, it reverts to `status: reviewed`. Merged PRs close issues via GitHub's native behavior.
+
+For the full triage process, scoring rubric, and examples, see [Issue Triage Process](https://github.com/michaeldcanady/servicenow-sdk-go/blob/main/docs/TRIAGE.md).
+
 ## Documentation conventions
 
 - A PR that changes exported API surface updates the docs site (`website/`)

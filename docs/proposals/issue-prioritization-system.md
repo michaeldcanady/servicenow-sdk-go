@@ -56,8 +56,9 @@ it).
   `priority: urgent` (3 tiers). `priority: medium` does **not** exist yet —
   this spec adds it (see Design and Adoption plan below); it needs to be created
   before or during the retroactive scoring pass, not as a separate step.
-- **`state:` labels** track triage/workflow status independently:
-  `state: new`, `state: reviewed`, `state: in progress`, `state: blocked`.
+- **`status:` labels** track triage/workflow status independently:
+  `status: new`, `status: reviewed`, `status: blocked`, `status: duplicate`, `status: invalid`, `status: wontfix`.
+  (Note: The original `state:` prefix was removed in Phase 1 of the project management redesign; `status:` is the canonical prefix.)
 - **`type:` labels** classify the kind of work: `type: bug`,
   `type: feature`, `type: refactor`, `type: documentation`, `type: devops`,
   `type: epic`, `type: test`.

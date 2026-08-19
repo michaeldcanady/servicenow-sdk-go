@@ -1,0 +1,13 @@
+project-url: https://github.com/users/michaeldcanady/projects/7
+field: Status
+mapping:
+  "🤷‍♂️ Needs Triage":
+    - "status: new"
+  "🔖 Backlog - Ready":
+    - "status: reviewed"
+  "🏗 In progress":
+    - "status: in progress"
+  "👀 In review":
+    - "status: in review"
+  "❌ Won't do":
+    - "status: wontfix"
