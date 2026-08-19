@@ -24,24 +24,21 @@ jobs:
     steps:
       - id: check
         run: echo "has-token=${{ secrets.SYNC_PROJECT_SYNC_TOKEN_PROVIDER_PEM != '' }}" >> $GITHUB_OUTPUT
+
   sync:
     needs: check-secret
     if: needs.check-secret.outputs.has-token == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v4
 
       - name: Generate GitHub App token
         id: app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        uses: actions/create-github-app-token@v1
         with:
-          client-id: ${{ vars.SYNC_PROJECT_SYNC_TOKEN_PROVIDER_APP_ID }}
+          app-id: ${{ vars.SYNC_PROJECT_SYNC_TOKEN_PROVIDER_APP_ID }}
           private-key: ${{ secrets.SYNC_PROJECT_SYNC_TOKEN_PROVIDER_PEM }}
 
-    name: Sync labels ↔ project status
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
       - uses: dvhthomas/project-label-sync@v0.1.2
         with:
           token: ${{ steps.app-token.outputs.token }}
