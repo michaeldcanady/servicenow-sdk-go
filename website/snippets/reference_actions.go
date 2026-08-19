@@ -835,6 +835,20 @@ func refDeletePolicyMapping() {
 	// [END ref_delete_policy_mapping]
 }
 
+func refRequestUserWindow() {
+	var client *servicenowsdkgo.ServiceNowServiceClient
+	ctx := context.Background()
+	// [START ref_request_user_window]
+	// Build the request body
+	body := appointmentbookingapi.NewUserWindowRequest()
+	response, err := client.AppointmentBooking().UserWindow().Post(ctx, body, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END ref_request_user_window]
+	_ = response
+}
+
 func _() {
 	refListAccounts()
 	refGetAccount()
@@ -902,4 +916,5 @@ func _() {
 	refValidateConfiguration()
 	refCreatePolicyMapping()
 	refDeletePolicyMapping()
+	refRequestUserWindow()
 }

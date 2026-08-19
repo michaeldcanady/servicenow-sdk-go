@@ -7,6 +7,7 @@ import (
 	"log"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	activitysubscriptionsapi "github.com/michaeldcanady/servicenow-sdk-go/activitysubscriptionsapi"
 	aggregationapi "github.com/michaeldcanady/servicenow-sdk-go/aggregationapi"
 	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/appointmentbookingapi"
 	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/appserviceapi"
@@ -19,6 +20,7 @@ import (
 
 func _() {
 	moduleAccount()
+	moduleActSub()
 	moduleAppointmentBooking()
 	moduleAppService()
 	moduleAttachment()
@@ -52,6 +54,36 @@ func moduleAccount() {
 	// [END module_account]
 	_ = accounts
 	_ = account
+}
+
+func moduleActSub() {
+	var client *servicenowsdkgo.ServiceNowServiceClient
+
+	// [START module_actsub]
+	actSub := client.Now().ActSub()
+
+	// List activities (requires context and context instance query params)
+	ctx := "incident"
+	instance := "instance"
+	config := &activitysubscriptionsapi.ActivitiesRequestBuilderGetRequestConfiguration{
+		QueryParameters: &activitysubscriptionsapi.ActivitiesRequestBuilderGetQueryParameters{
+			Context:         &ctx,
+			ContextInstance: &instance,
+		},
+	}
+	activities, err := actSub.Activities().Get(context.Background(), config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Get facet instances for a context
+	facets, err := actSub.Facets().ByContext("{activityContext}").ByInstance("{contextInstance}").Get(context.Background(), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END module_actsub]
+	_ = activities
+	_ = facets
 }
 
 func moduleAppointmentBooking() {

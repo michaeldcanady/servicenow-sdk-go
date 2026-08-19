@@ -4,7 +4,7 @@ import GoSnippet from '@site/src/components/GoSnippet';
 import modulesGo from '@site/snippets/modules.go';
 
 
-The Activity Subscriptions API (`actsubapi`) manages activity-stream
+The Activity Subscriptions API (`activitysubscriptionsapi`) manages activity-stream
 subscriptions: which objects a user follows, their notification preferences,
 and their activity feed.
 
@@ -17,10 +17,4 @@ Access it through the `Now()` namespace via `ActSub()`:
 ## Available operations
 
 - **Activities** — `Activities().Get` lists activity records.
-- **Contexts** — `Contexts().Get` lists activity contexts.
 - **Facets** — `Facets().ByContext(context).ByInstance(instance).Get` lists facets for a context instance.
-- **Followings** — `Followings().ByFollower(follower).Get` lists what a user follows.
-- **Preferences** — `Preferences().Post` creates a preference; `Preferences().ByProfileId(profileID).Get` retrieves one.
-- **Subscribed objects** — `SubObjects().Get` lists subscribable objects; `Subscribers().BySubObject(subObject).Get` lists subscribers.
-- **Subscriptions** — `Subscriptions().BySubscriberId(id).Get`, plus `ByObjectId(id)` with `IsSubscribed()`, `Subscribe()` (POST), and `Unsubscribe()` (DELETE).
-- **User stream** — `UserStream().ByProfileId(profileID)` with `Get` and `Put`.

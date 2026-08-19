@@ -4,13 +4,13 @@
 
 - **Kiota-aligned architecture.** The SDK is built on Microsoft's Kiota
   abstractions (`kiota-abstractions-go`, `kiota-http-go`,
-  `kiota-serialization-*-go`). Request builders, parsables, and backing
+  `kiota-serialization-*-go`). Request builders, parsable, and backing
   stores follow the same conventions as `msgraph-sdk-go` and other
   Kiota-generated SDKs, so patterns transfer across ecosystems.
 
 - **Backing-store models.** Every model property is stored in a Kiota
   `BackingStore` with change tracking. Getters return pointers — `nil`
-  means "absent", a zero value means "the server sent zero". Request
+  means "absent," a zero value means "the server sent zero." Request
   bodies contain only the properties you set, eliminating accidental
   overwrites on `PUT`/`PATCH`.
 
@@ -93,6 +93,6 @@ implementations.
 See [Migrating from v1 to v2](user-guide/migrate-v1-to-v2.mdx) for a
 section-by-section guide with code examples for every changed surface.
 
-If something does not map cleanly,
+If something doesn't map cleanly,
 [open an issue](https://github.com/michaeldcanady/servicenow-sdk-go/issues) —
 gaps in the migration guide are release blockers for us.
