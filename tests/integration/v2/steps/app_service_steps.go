@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/cucumber/godog"
-	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/appserviceapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/tests/integration/v2/support"
+	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/v2/appserviceapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2/support"
 )
 
 type appServiceSteps struct{}

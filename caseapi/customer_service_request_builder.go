@@ -3,8 +3,8 @@ package caseapi
 import (
 	"maps"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

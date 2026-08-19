@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/oauth2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

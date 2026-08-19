@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"

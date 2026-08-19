@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
 )
 
 // RequireNoError asserts that the world's error is nil.

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 )
 
 // StringPtrToInt64Ptr Converts string pointer to int64 pointer.

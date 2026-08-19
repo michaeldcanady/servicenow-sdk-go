@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A Go SDK (`github.com/michaeldcanady/servicenow-sdk-go`) that exposes ServiceNow's REST APIs as a
+A Go SDK (`github.com/michaeldcanady/servicenow-sdk-go/v2`) that exposes ServiceNow's REST APIs as a
 fluent, typed client. It is built directly on Microsoft's Kiota abstractions
 (`kiota-abstractions-go`, `kiota-http-go`, `kiota-serialization-*-go`) rather than a generated
 Kiota client — the request-builder/parsable/backing-store pattern is hand-written to match Kiota's
@@ -126,7 +126,7 @@ package follows:
 
 There are **three** distinct sentinel-error locations that look similar but are not interchangeable:
 1. Root package `errors.go` (`package servicenowsdkgo`) — a couple of client-config-level sentinels.
-2. `errors/errors.go` (imported as `snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"`) —
+2. `errors/errors.go` (imported as `snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"`) —
    the shared, cross-package sentinels (`ErrNilRequestAdapter`, `ErrNilResponse`, `ErrNilConfig`,
    `ErrNilBody`, etc.) that most `internal/*`, `core/*`, and `*api` nil-guards should return.
 3. Some individual API packages (e.g. `tableapi/errors.go`) additionally define their **own**

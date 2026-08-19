@@ -5,9 +5,9 @@ import (
 	"errors"
 	"testing"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -66,7 +66,7 @@ func TestStatsRequestBuilder_Get(t *testing.T) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(mocking.NewMockParsable(), nil)
 			},
-			err: errors.New("resp is not *core.ServiceNowItemResponse[*github.com/michaeldcanady/servicenow-sdk-go/aggregationapi.StatsResultModel]"),
+			err: errors.New("resp is not *core.ServiceNowItemResponse[*github.com/michaeldcanady/servicenow-sdk-go/v2/aggregationapi.StatsResultModel]"),
 		},
 	}
 

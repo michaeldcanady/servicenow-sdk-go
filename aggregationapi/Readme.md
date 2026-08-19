@@ -18,8 +18,8 @@ package main
 import (
 	"context"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	"github.com/michaeldcanady/servicenow-sdk-go/aggregationapi"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2/v2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/aggregationapi"
 )
 
 func main() {

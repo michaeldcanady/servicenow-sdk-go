@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"

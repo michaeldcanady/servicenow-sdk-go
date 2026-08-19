@@ -3,7 +3,7 @@ package activitysubscriptionsapi
 import (
 	"reflect"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 )
 
 // isNilOrEmpty reports whether value is nil or empty.

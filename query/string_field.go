@@ -1,7 +1,7 @@
 package query
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/ast"
 )
 
 // StringField represents a string field in ServiceNow.

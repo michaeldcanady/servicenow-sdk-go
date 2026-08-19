@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"testing"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 	"github.com/stretchr/testify/assert"

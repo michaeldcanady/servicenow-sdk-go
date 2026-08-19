@@ -7,8 +7,8 @@ import (
 	"context"
 	"log"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batchapi"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/v2/batchapi"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

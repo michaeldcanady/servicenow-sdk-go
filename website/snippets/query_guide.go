@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"log"
 
-	servicenow "github.com/michaeldcanady/servicenow-sdk-go"
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
-	"github.com/michaeldcanady/servicenow-sdk-go/query"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
+	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/query"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi"
 )
 
 // [END qg_imports]

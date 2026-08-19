@@ -1,7 +1,7 @@
 package appserviceapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 

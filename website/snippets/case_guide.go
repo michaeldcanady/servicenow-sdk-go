@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"log"
 
-	servicenow "github.com/michaeldcanady/servicenow-sdk-go"
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
+	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
 )
 
 // [END csg_imports]

@@ -6,9 +6,9 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/jarcoal/httpmock"
-	"github.com/michaeldcanady/servicenow-sdk-go/accountapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/tests/integration/v2/mockdata"
-	"github.com/michaeldcanady/servicenow-sdk-go/tests/integration/v2/support"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/accountapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2/mockdata"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2/support"
 )
 
 type accountSteps struct{}

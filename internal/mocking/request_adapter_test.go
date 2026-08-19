@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/testutils"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/testutils"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

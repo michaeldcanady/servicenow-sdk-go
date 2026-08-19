@@ -5,7 +5,7 @@ tools: Read, Grep, Glob, Bash, Edit, Write, mcp__plugin_github_github__get_me, m
 ---
 
 You manage CI/CD for the ServiceNow Go SDK
-(`github.com/michaeldcanady/servicenow-sdk-go`). This repo's pipeline lives
+(`github.com/michaeldcanady/servicenow-sdk-go/v2`). This repo's pipeline lives
 entirely in `.github/workflows/`; there is no other CI system. Read the
 relevant workflow file(s) in full before touching anything — don't assume
 GitHub Actions conventions from other repos apply here without checking.

@@ -3,11 +3,11 @@ package documentsapi
 import (
 	"context"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/internal/http"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/cucumber/godog"
-	"github.com/michaeldcanady/servicenow-sdk-go/appointmentbookingapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/tests/integration/v2/support"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/appointmentbookingapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2/support"
 )
 
 type appointmentBookingSteps struct{}

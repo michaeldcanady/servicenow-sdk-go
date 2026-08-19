@@ -1,6 +1,6 @@
 package tableapi
 
-import "github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+import "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 
 const (
 	primitiveUnknown  = "unknown"

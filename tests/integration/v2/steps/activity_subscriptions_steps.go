@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/cucumber/godog"
-	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/activitysubscriptionsapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/tests/integration/v2/support"
+	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/v2/activitysubscriptionsapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2/support"
 )
 
 type activitySubscriptionsSteps struct{}

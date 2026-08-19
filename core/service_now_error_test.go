@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 
 	"github.com/microsoft/kiota-abstractions-go/serialization"

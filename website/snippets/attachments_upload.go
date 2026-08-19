@@ -9,9 +9,9 @@ import (
 	"log"
 	"os"
 
-	servicenow "github.com/michaeldcanady/servicenow-sdk-go"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
+	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachmentapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
 )
 
 // [END ag_upload_imports]

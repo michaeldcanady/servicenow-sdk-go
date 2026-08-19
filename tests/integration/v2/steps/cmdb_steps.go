@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/cucumber/godog"
-	"github.com/michaeldcanady/servicenow-sdk-go/cmdbinstanceapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/tests/integration/v2/support"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/cmdbinstanceapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2/support"
 )
 
 type cmdbSteps struct{}

@@ -9,9 +9,9 @@ import (
 	"log"
 	"os"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachmentapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

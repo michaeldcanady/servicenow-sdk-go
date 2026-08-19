@@ -12,7 +12,7 @@ package main
 import (
 	"context"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2/v2"
 )
 
 func main() {
@@ -36,7 +36,7 @@ package main
 import (
 	"context"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2/v2"
 )
 
 func main() {
@@ -60,8 +60,8 @@ package main
 import (
 	"context"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	"github.com/michaeldcanady/servicenow-sdk-go/caseapi"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2/v2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/caseapi"
 )
 
 func main() {
@@ -86,8 +86,8 @@ package main
 import (
 	"context"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	"github.com/michaeldcanady/servicenow-sdk-go/caseapi"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2/v2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/caseapi"
 )
 
 func main() {
@@ -112,7 +112,7 @@ package main
 import (
 	"context"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2/v2"
 )
 
 func main() {

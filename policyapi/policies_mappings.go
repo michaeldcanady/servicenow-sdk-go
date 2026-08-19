@@ -3,10 +3,10 @@ package policyapi
 import (
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
-	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/internal/serialization"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 

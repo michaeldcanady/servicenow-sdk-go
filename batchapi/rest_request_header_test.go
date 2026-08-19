@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

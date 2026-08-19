@@ -6,7 +6,7 @@ require (
 	github.com/cucumber/godog v0.15.1
 	github.com/jarcoal/httpmock v1.4.1
 	github.com/joho/godotenv v1.5.1
-	github.com/michaeldcanady/servicenow-sdk-go v0.0.0
+	github.com/michaeldcanady/servicenow-sdk-go/v2 v0.0.0
 	github.com/microsoft/kiota-abstractions-go v1.9.4
 	github.com/microsoft/kiota-http-go v1.5.6
 )
@@ -37,4 +37,4 @@ require (
 	golang.org/x/sys v0.44.0 // indirect
 )
 
-replace github.com/michaeldcanady/servicenow-sdk-go => ../../../
+replace github.com/michaeldcanady/servicenow-sdk-go/v2 => ../../../

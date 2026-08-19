@@ -12,7 +12,7 @@ package main
 import (
 	"context"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2/v2"
 )
 
 func main() {
@@ -36,7 +36,7 @@ package main
 import (
 	"context"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2/v2"
 )
 
 func main() {

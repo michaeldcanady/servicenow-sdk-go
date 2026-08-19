@@ -3,7 +3,7 @@ package accountapi
 import (
 	"fmt"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 )
 
 // RankTier represents the strategic ranking tier of an account.

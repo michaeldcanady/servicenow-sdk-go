@@ -5,9 +5,9 @@ import (
 	"errors"
 	"testing"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -44,7 +44,7 @@ func TestTableRequestBuilder_Get(t *testing.T) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(mocking.NewMockParsable(), nil)
 			},
-			err: errors.New("resp is not *core.ServiceNowCollectionResponse[*github.com/michaeldcanady/servicenow-sdk-go/tableapi.TableRecord]"),
+			err: errors.New("resp is not *core.ServiceNowCollectionResponse[*github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi.TableRecord]"),
 		},
 	}
 
@@ -128,7 +128,7 @@ func TestTableRequestBuilder_Post(t *testing.T) {
 					Return(mocking.NewMockParsable(), nil)
 			},
 			expectErr: true,
-			err:       errors.New("resp is not *core.ServiceNowItemResponse[*github.com/michaeldcanady/servicenow-sdk-go/tableapi.TableRecord]"),
+			err:       errors.New("resp is not *core.ServiceNowItemResponse[*github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi.TableRecord]"),
 		},
 	}
 

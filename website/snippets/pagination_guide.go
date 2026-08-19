@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"log"
 
-	servicenow "github.com/michaeldcanady/servicenow-sdk-go"
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
+	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi"
 )
 
 // [END pgg_imports]

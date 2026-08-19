@@ -1,7 +1,7 @@
 package core
 
 import (
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	sdk "github.com/michaeldcanady/servicenow-sdk-go"
-	"github.com/michaeldcanady/servicenow-sdk-go/credentials"
+	sdk "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 

@@ -1,6 +1,6 @@
 package ast
 
-import "github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+import "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 
 //https://www.servicenow.com/docs/bundle/vancouver-platform-user-interface/page/use/common-ui-elements/reference/r_OpAvailableFiltersQueries.html
 

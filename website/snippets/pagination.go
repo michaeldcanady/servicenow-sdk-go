@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"log"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachmentapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi"
 )
 
 func _() {

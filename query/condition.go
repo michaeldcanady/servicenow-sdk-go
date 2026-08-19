@@ -3,7 +3,7 @@ package query
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/ast"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/ast"
 )
 
 // Condition represents a part of a ServiceNow query.

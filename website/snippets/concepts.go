@@ -8,8 +8,8 @@ import (
 	"log"
 	"time"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi"
 )
 
 func _() {

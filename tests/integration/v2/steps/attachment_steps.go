@@ -5,10 +5,10 @@ import (
 	"fmt"
 
 	"github.com/cucumber/godog"
-	"github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/tableapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/tests/integration/v2/support"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/attachmentapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2/support"
 )
 
 type attachmentSteps struct{}

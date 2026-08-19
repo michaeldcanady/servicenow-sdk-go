@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/michaeldcanady/servicenow-sdk-go/tests/integration/v2/support"
-	"github.com/michaeldcanady/servicenow-sdk-go/tests/integration/v2/steps"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2/support"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2/steps"
 )
 
 func TestAppServiceScenarios(t *testing.T) {

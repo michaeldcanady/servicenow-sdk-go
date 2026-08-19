@@ -5,7 +5,7 @@ tools: Read, Grep, Glob, Bash
 ---
 
 You are reviewing one or more `<name>api/` packages in the ServiceNow Go SDK
-(`github.com/michaeldcanady/servicenow-sdk-go`) for consistency against the
+(`github.com/michaeldcanady/servicenow-sdk-go/v2`) for consistency against the
 repo's established pattern, not for general Go code quality (that's a separate
 concern — stay focused on cross-module consistency).
 

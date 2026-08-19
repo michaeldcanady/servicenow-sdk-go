@@ -3,8 +3,8 @@ package activitysubscriptionsapi
 import (
 	"maps"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

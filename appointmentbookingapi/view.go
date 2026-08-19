@@ -3,7 +3,7 @@ package appointmentbookingapi
 import (
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 )
 
 const (

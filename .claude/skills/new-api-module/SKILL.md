@@ -72,7 +72,7 @@ simpler module, `policyapi/` shows a smaller single-resource shape.
      using `httpmock` to stub HTTP responses (see `tableapi/table_item_request_builder_test.go`).
 
 4. **Follow these repo conventions exactly**:
-   - Import `core "github.com/michaeldcanady/servicenow-sdk-go/core"` for
+   - Import `core "github.com/michaeldcanady/servicenow-sdk-go/v2/core"` for
      `core.RequestBuilder`, `core.ServiceNowItemResponse[T]`, `core.DefaultErrorMapping()`.
    - Every method starts with the nil-guard pattern:
      ```go

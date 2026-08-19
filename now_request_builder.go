@@ -3,16 +3,16 @@ package servicenowsdkgo
 import (
 	"maps"
 
-	accountapi "github.com/michaeldcanady/servicenow-sdk-go/accountapi"
-	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/activitysubscriptionsapi"
-	aggregationapi "github.com/michaeldcanady/servicenow-sdk-go/aggregationapi"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/attachmentapi"
-	batchapi "github.com/michaeldcanady/servicenow-sdk-go/batchapi"
-	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/cmdbinstanceapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	documentsapi "github.com/michaeldcanady/servicenow-sdk-go/documentsapi"
-	internal "github.com/michaeldcanady/servicenow-sdk-go/internal"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/tableapi"
+	accountapi "github.com/michaeldcanady/servicenow-sdk-go/v2/accountapi"
+	actsubapi "github.com/michaeldcanady/servicenow-sdk-go/v2/activitysubscriptionsapi"
+	aggregationapi "github.com/michaeldcanady/servicenow-sdk-go/v2/aggregationapi"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachmentapi"
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/v2/batchapi"
+	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/v2/cmdbinstanceapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	documentsapi "github.com/michaeldcanady/servicenow-sdk-go/v2/documentsapi"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

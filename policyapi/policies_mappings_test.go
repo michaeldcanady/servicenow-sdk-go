@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

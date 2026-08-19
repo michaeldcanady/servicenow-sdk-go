@@ -6,13 +6,13 @@ import (
 	"context"
 	"log"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go"
-	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/appointmentbookingapi"
-	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/appserviceapi"
-	caseapi "github.com/michaeldcanady/servicenow-sdk-go/caseapi"
-	cdmapplicationsapi "github.com/michaeldcanady/servicenow-sdk-go/cdmapplicationsapi"
-	cdmeditorapi "github.com/michaeldcanady/servicenow-sdk-go/cdmeditorapi"
-	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/cmdbinstanceapi"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/v2/appointmentbookingapi"
+	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/v2/appserviceapi"
+	caseapi "github.com/michaeldcanady/servicenow-sdk-go/v2/caseapi"
+	cdmapplicationsapi "github.com/michaeldcanady/servicenow-sdk-go/v2/cdmapplicationsapi"
+	cdmeditorapi "github.com/michaeldcanady/servicenow-sdk-go/v2/cdmeditorapi"
+	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/v2/cmdbinstanceapi"
 )
 
 func refListAccounts() {
