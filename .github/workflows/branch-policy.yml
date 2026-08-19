@@ -7,6 +7,8 @@ on:
       - reopened
       - edited
       - synchronize
+      - labeled
+      - unlabeled
     branches:
       - main
 
