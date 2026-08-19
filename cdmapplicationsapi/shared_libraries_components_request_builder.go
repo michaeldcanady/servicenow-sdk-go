@@ -4,6 +4,7 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -23,5 +24,8 @@ func NewSharedLibrariesComponentsRequestBuilderInternal(pathParameters map[strin
 
 // Applications returns a [SharedLibrariesComponentsApplicationsRequestBuilder].
 func (rB *SharedLibrariesComponentsRequestBuilder) Applications() *SharedLibrariesComponentsApplicationsRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewSharedLibrariesComponentsApplicationsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

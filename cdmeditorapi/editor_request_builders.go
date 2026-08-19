@@ -34,11 +34,17 @@ func NewCdmEditorRequestBuilderInternal(pathParameters map[string]string, reques
 
 // Nodes returns a NodesRequestBuilder.
 func (rB *CdmEditorRequestBuilder) Nodes() *NodesRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewNodesRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // Validation returns a ValidationRequestBuilder.
 func (rB *CdmEditorRequestBuilder) Validation() *ValidationRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewValidationRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
@@ -56,6 +62,9 @@ func NewNodesRequestBuilderInternal(pathParameters map[string]string, requestAda
 
 // ByID returns the by id request builder.
 func (rB *NodesRequestBuilder) ByID(id string) *NodeItemRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["node_sys_id"] = id
 	return NewNodeItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -87,7 +96,7 @@ func (rB *NodesRequestBuilder) Get(ctx context.Context, config *NodesRequestBuil
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(NodesResponse)
 	if !ok {
@@ -123,7 +132,7 @@ func (rB *NodesRequestBuilder) Post(ctx context.Context, body NodeCreateRequest,
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(NodeResponse)
 	if !ok {
@@ -171,7 +180,7 @@ func (rB *NodeItemRequestBuilder) Put(ctx context.Context, body NodeUpdateReques
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(NodeResponse)
 	if !ok {
@@ -241,7 +250,7 @@ func (rB *ValidationRequestBuilder) Get(ctx context.Context, config *ValidationR
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(ValidationResponse)
 	if !ok {

@@ -22,22 +22,14 @@ type AttachmentFileRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// newAttachmentFileRequestBuilderInternal instantiates a new AttachmentFileRequestBuilder with the provided requestBuilder
-func newAttachmentFileRequestBuilderInternal(requestBuilder core.RequestBuilder) *AttachmentFileRequestBuilder {
-	m := &AttachmentFileRequestBuilder{
-		requestBuilder,
-	}
-	return m
-}
-
 // NewAttachmentFileRequestBuilderInternal instantiates a new AttachmentFileRequestBuilder with custom parsable for table entries.
 func NewAttachmentFileRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentFileRequestBuilder {
-	return newAttachmentFileRequestBuilderInternal(
+	return &AttachmentFileRequestBuilder{
 		core.NewBaseRequestBuilder(requestAdapter, attachmentFileURLTemplate, pathParameters),
-	)
+	}
 }
 
 // NewAttachmentFileRequestBuilder instantiates a new AttachmentFileRequestBuilder with custom parsable for table entries.
@@ -52,8 +44,12 @@ func NewAttachmentFileRequestBuilder(
 
 // Post uploads provided content to Service-Now using provided parameters
 func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, requestConfiguration *AttachmentFileRequestBuilderPostRequestConfiguration) (core.ServiceNowItemResponse[*File], error) {
-	if conversion.IsNil(rB) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	if conversion.IsNil(requestConfiguration) {
@@ -95,12 +91,8 @@ func (rB *AttachmentFileRequestBuilder) Post(ctx context.Context, media *Media, 
 	}
 
 	errorMapping := core.DefaultErrorMapping()
-	requestAdapter := rB.GetRequestAdapter()
-	if conversion.IsNil(requestAdapter) {
-		return nil, snerrors.ErrNilRequestAdapter
-	}
 
-	resp, err := requestAdapter.Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*File](CreateFileFromDiscriminatorValue), errorMapping)
+	resp, err := rB.GetRequestAdapter().Send(ctx, requestInfo, core.ServiceNowItemResponseFromDiscriminatorValue[*File](CreateFileFromDiscriminatorValue), errorMapping)
 	if err != nil {
 		return nil, err
 	}

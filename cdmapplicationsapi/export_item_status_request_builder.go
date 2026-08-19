@@ -53,7 +53,7 @@ func (rB *ExportItemStatusRequestBuilder) Get(ctx context.Context, config *Expor
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(ExportStatusResponse)
 	if !ok {

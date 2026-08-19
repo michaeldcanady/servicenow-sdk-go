@@ -2,6 +2,7 @@ package documentsapi
 
 import (
 	"context"
+	"fmt"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
@@ -56,10 +57,15 @@ func (rB *documentPostRequestBuilder) post(ctx context.Context, requestConfigura
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
-	return res.(*core.BaseServiceNowItemResponse[Document]), nil
+	typedResp, ok := res.(*core.BaseServiceNowItemResponse[Document])
+	if !ok {
+		return nil, fmt.Errorf("resp is not %T", (*core.BaseServiceNowItemResponse[Document])(nil))
+	}
+
+	return typedResp, nil
 }
 
 // toPostRequestInformation converts request configurations to Post request information.

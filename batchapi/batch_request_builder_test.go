@@ -279,7 +279,7 @@ func TestBatchRequestBuilder_Post(t *testing.T) {
 				result, err := builder.Post(context.Background(), request, nil)
 
 				assert.Nil(t, result)
-				require.NoError(t, err)
+				require.ErrorIs(t, err, snerrors.ErrNilResponse)
 				mockRequestAdapter.AssertExpectations(t)
 				mockInternalRequestBuilder.AssertExpectations(t)
 				mockWriter.AssertExpectations(t)

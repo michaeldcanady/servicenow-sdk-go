@@ -2,7 +2,7 @@ package appointmentbookingapi
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
@@ -56,13 +56,12 @@ func (rB *CalendarRequestBuilder) Get(ctx context.Context, config *CalendarReque
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := res.(CalendarItemResponse)
 	if !ok {
-		// TODO: standardize error
-		return nil, errors.New("unexpected type")
+		return nil, fmt.Errorf("resp is not %T", (*CalendarItemResponse)(nil))
 	}
 
 	return typedResp, nil

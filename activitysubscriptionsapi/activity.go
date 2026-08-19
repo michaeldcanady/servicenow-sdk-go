@@ -1,4 +1,4 @@
-package actsubapi
+package activitysubscriptionsapi
 
 import (
 	"github.com/michaeldcanady/servicenow-sdk-go/core"

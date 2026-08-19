@@ -1,4 +1,4 @@
-package actsubapi
+package activitysubscriptionsapi
 
 import (
 	"context"
@@ -73,7 +73,7 @@ func TestActivitiesRequestBuilder_Get(t *testing.T) {
 			config:    validConfig,
 			mockRes:   nil,
 			mockErr:   nil,
-			expectErr: false,
+			expectErr: true,
 		},
 	}
 
@@ -88,6 +88,9 @@ func TestActivitiesRequestBuilder_Get(t *testing.T) {
 
 			if tc.expectErr {
 				require.Error(t, err)
+				if tc.name == "NilResponse" {
+					require.ErrorIs(t, err, snerrors.ErrNilResponse)
+				}
 				assert.Nil(t, resp)
 			} else {
 				assert.NoError(t, err)

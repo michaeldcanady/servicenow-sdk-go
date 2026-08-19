@@ -5,6 +5,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -33,6 +34,10 @@ func NewCmdbInstanceRequestBuilder(rawURL string, requestAdapter abstractions.Re
 
 // ByClass provides operations to manage a specific CMDB class.
 func (rB *CmdbInstanceRequestBuilder) ByClass(className string) *CmdbClassRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters[classNameKey] = className
 	return NewCmdbClassRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())

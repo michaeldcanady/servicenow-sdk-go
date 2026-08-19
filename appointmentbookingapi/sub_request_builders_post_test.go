@@ -127,7 +127,7 @@ func TestPostRequestBuilders_AdapterErrorPropagates(t *testing.T) {
 }
 
 // TestPostRequestBuilders_NilResponse covers the "adapter returned no response" branch, where
-// the builders return a nil response and a nil error rather than attempting a type assertion.
+// the builders return a nil response and snerrors.ErrNilResponse rather than attempting a type assertion.
 func TestPostRequestBuilders_NilResponse(t *testing.T) {
 	for _, invocation := range postInvocations() {
 		t.Run(invocation.name, func(t *testing.T) {
@@ -136,7 +136,7 @@ func TestPostRequestBuilders_NilResponse(t *testing.T) {
 
 			response, err := invocation.post(adapter)
 
-			require.NoError(t, err)
+			require.ErrorIs(t, err, snerrors.ErrNilResponse)
 			assert.Nil(t, response)
 		})
 	}

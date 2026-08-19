@@ -8,6 +8,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
+// ServiceRelationship represents a service relationship between business and technical service offerings.
 type ServiceRelationship struct {
 	core.BaseModel
 }

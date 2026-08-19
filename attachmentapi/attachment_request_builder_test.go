@@ -40,7 +40,7 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
 			},
-			expectedErr: nil, // Current implementation returns nil, nil for nil response
+			expectedErr: snerrors.ErrNilResponse,
 		},
 	}
 
@@ -56,12 +56,8 @@ func TestAttachmentRequestBuilder_Get(t *testing.T) {
 				require.EqualError(t, err, tt.expectedErr.Error())
 				assert.Nil(t, resp)
 			} else {
-				assert.NoError(t, err)
-				if tt.name != "Nil Response" {
-					assert.NotNil(t, resp)
-				} else {
-					assert.Nil(t, resp)
-				}
+				require.NoError(t, err)
+				assert.NotNil(t, resp)
 			}
 		})
 	}

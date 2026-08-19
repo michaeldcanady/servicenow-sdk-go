@@ -1,5 +1,6 @@
-package actsubapi
+package activitysubscriptionsapi
 
+// FacetsRequestBuilderGetQueryParameters defines query parameters for retrieving activity facets.
 type FacetsRequestBuilderGetQueryParameters struct {
 	// TODO: is a date YYYY-MM-DD hh:mm:ss or YYYY-MM-DD
 	EndDate *string `uriparametername:"end_date"`

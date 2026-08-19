@@ -53,7 +53,7 @@ func (rB *UploadsComponentsVarsRequestBuilder) Post(ctx context.Context, body *C
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(UploadStatusResponse)
 	if !ok {

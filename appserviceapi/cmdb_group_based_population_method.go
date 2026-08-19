@@ -14,22 +14,26 @@ const (
 var _ PopulationMethod = (*CmdbGroupBasedPopulationMethodModel)(nil)
 var _ CmdbGroupBasedPopulationMethod = (*CmdbGroupBasedPopulationMethodModel)(nil)
 
+// CmdbGroupBasedPopulationMethod represents a CMDB-group-based population method that uses a CMDB group to discover service relationships.
 type CmdbGroupBasedPopulationMethod interface {
 	PopulationMethod
 	GetGroupID() (*string, error)
 	SetGroupID(*string) error
 }
 
+// CmdbGroupBasedPopulationMethodModel is the backing-store-backed implementation of [CmdbGroupBasedPopulationMethod].
 type CmdbGroupBasedPopulationMethodModel struct {
 	PopulationMethod
 }
 
+// NewCmdbGroupBasedPopulationMethod creates a new instance of [CmdbGroupBasedPopulationMethodModel].
 func NewCmdbGroupBasedPopulationMethod() *CmdbGroupBasedPopulationMethodModel {
 	return &CmdbGroupBasedPopulationMethodModel{
 		PopulationMethod: NewPopulationMethod(),
 	}
 }
 
+// CreateCmdbGroupBasedPopulationMethodFromDiscriminatorValue creates a new [CmdbGroupBasedPopulationMethodModel] from a ParseNode.
 func CreateCmdbGroupBasedPopulationMethodFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewCmdbGroupBasedPopulationMethod(), nil
 }

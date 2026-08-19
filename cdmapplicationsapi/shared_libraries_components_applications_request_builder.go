@@ -53,7 +53,7 @@ func (rB *SharedLibrariesComponentsApplicationsRequestBuilder) Get(ctx context.C
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(SharedLibrariesComponentsApplicationsResponse)
 	if !ok {

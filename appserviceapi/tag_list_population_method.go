@@ -13,12 +13,14 @@ const (
 
 var _ TagListPopulationMethod = (*TagListPopulationMethodModel)(nil)
 
+// TagListPopulationMethod represents a tag-list-based population method that uses tags to discover service relationships.
 type TagListPopulationMethod interface {
 	PopulationMethod
 	GetTags() ([]TagListPopulationMethodTag, error)
 	SetTags([]TagListPopulationMethodTag) error
 }
 
+// TagListPopulationMethodModel is the backing-store-backed implementation of [TagListPopulationMethod].
 type TagListPopulationMethodModel struct {
 	PopulationMethod
 }

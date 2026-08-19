@@ -54,7 +54,7 @@ func (rB *UploadsDeployablesFileRequestBuilder) Post(ctx context.Context, media 
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(UploadStatusResponse)
 	if !ok {

@@ -2,6 +2,7 @@ package documentsapi
 
 import (
 	"context"
+	"fmt"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
@@ -49,10 +50,15 @@ func (rB *VersionsRequestBuilder) Get(ctx context.Context, requestConfiguration 
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
-	return res.(*core.BaseServiceNowCollectionResponse[Document]), nil
+	typedResp, ok := res.(*core.BaseServiceNowCollectionResponse[Document])
+	if !ok {
+		return nil, fmt.Errorf("resp is not %T", (*core.BaseServiceNowCollectionResponse[Document])(nil))
+	}
+
+	return typedResp, nil
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.

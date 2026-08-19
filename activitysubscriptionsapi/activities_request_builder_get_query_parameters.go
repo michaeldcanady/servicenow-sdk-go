@@ -1,5 +1,6 @@
-package actsubapi
+package activitysubscriptionsapi
 
+// ActivitiesRequestBuilderGetQueryParameters defines query parameters for retrieving activity subscriptions.
 type ActivitiesRequestBuilderGetQueryParameters struct {
 	// TODO: is a date YYYY-MM-DD hh:mm:ss or YYYY-MM-DD
 	Before *string `uriparametername:"before"`

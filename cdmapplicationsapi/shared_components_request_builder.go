@@ -2,7 +2,7 @@ package cdmapplicationsapi
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
@@ -70,12 +70,11 @@ func (rB *SharedComponentsRequestBuilder) Put(ctx context.Context, config *Share
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(SharedComponentUpdateResponse)
 	if !ok {
-		// TODO: standardize error
-		return nil, errors.New("unexpected type")
+		return nil, fmt.Errorf("resp is not %T", (*SharedComponentUpdateResponse)(nil))
 	}
 	return typedRes, nil
 }

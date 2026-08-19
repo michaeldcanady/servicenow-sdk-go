@@ -129,7 +129,7 @@ func TestAttachmentUploadRequestBuilder_Post_Gaps(t *testing.T) {
 		}
 	})
 
-	t.Run("a nil response returns no file and no error", func(t *testing.T) {
+	t.Run("a nil response returns no file and an error", func(t *testing.T) {
 		builder := NewAttachmentUploadRequestBuilderInternal(
 			map[string]string{"baseurl": "https://example.com"},
 			newSerializingUploadAdapter(nil, nil),
@@ -137,7 +137,7 @@ func TestAttachmentUploadRequestBuilder_Post_Gaps(t *testing.T) {
 
 		file, err := builder.Post(ctx, newUploadTestBody(t), nil)
 
-		require.NoError(t, err)
+		require.ErrorIs(t, err, snerrors.ErrNilResponse)
 		assert.Nil(t, file)
 	})
 

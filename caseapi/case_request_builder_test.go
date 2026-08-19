@@ -120,12 +120,12 @@ func TestCaseRequestBuilder_Get(t *testing.T) {
 			wantErr: errNetwork,
 		},
 		{
-			name: "nil response returns nil, nil",
+			name: "nil response returns snerrors.ErrNilResponse",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(nil, nil)
 			},
-			wantNil: true,
+			wantErr: snerrors.ErrNilResponse,
 		},
 		{
 			name:    "nil receiver returns ErrNilRequestBuilder",
@@ -169,10 +169,6 @@ func TestCaseRequestBuilder_Get(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			if tt.wantNil {
-				assert.Nil(t, resp)
-				return
-			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -249,13 +245,13 @@ func TestCaseRequestBuilder_Post(t *testing.T) {
 			wantErr: errNetwork,
 		},
 		{
-			name: "nil response returns nil, nil",
+			name: "nil response returns snerrors.ErrNilResponse",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(nil, nil)
 			},
-			wantNil: true,
+			wantErr: snerrors.ErrNilResponse,
 		},
 		{
 			name:    "nil receiver returns ErrNilRequestBuilder",
@@ -299,10 +295,6 @@ func TestCaseRequestBuilder_Post(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			if tt.wantNil {
-				assert.Nil(t, resp)
-				return
-			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -401,12 +393,12 @@ func TestCaseItemRequestBuilder_Get(t *testing.T) {
 			wantErr: errNetwork,
 		},
 		{
-			name: "nil response returns nil, nil",
+			name: "nil response returns snerrors.ErrNilResponse",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(nil, nil)
 			},
-			wantNil: true,
+			wantErr: snerrors.ErrNilResponse,
 		},
 		{
 			name:    "nil receiver returns ErrNilRequestBuilder",
@@ -450,10 +442,6 @@ func TestCaseItemRequestBuilder_Get(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			if tt.wantNil {
-				assert.Nil(t, resp)
-				return
-			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -530,13 +518,13 @@ func TestCaseItemRequestBuilder_Put(t *testing.T) {
 			wantErr: errNetwork,
 		},
 		{
-			name: "nil response returns nil, nil",
+			name: "nil response returns snerrors.ErrNilResponse",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("GetSerializationWriterFactory").Return(jsonserialization.NewJsonSerializationWriterFactory())
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(nil, nil)
 			},
-			wantNil: true,
+			wantErr: snerrors.ErrNilResponse,
 		},
 		{
 			name:    "nil receiver returns ErrNilRequestBuilder",
@@ -580,10 +568,6 @@ func TestCaseItemRequestBuilder_Put(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			if tt.wantNil {
-				assert.Nil(t, resp)
-				return
-			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -652,12 +636,12 @@ func TestCaseActivitiesRequestBuilder_Get(t *testing.T) {
 			wantErr: errNetwork,
 		},
 		{
-			name: "nil response returns nil, nil",
+			name: "nil response returns snerrors.ErrNilResponse",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(nil, nil)
 			},
-			wantNil: true,
+			wantErr: snerrors.ErrNilResponse,
 		},
 		{
 			name:    "nil receiver returns ErrNilRequestBuilder",
@@ -701,10 +685,6 @@ func TestCaseActivitiesRequestBuilder_Get(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			if tt.wantNil {
-				assert.Nil(t, resp)
-				return
-			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})
@@ -779,12 +759,12 @@ func TestCaseFieldValuesRequestBuilder_Get(t *testing.T) {
 			wantErr: errNetwork,
 		},
 		{
-			name: "nil response returns nil, nil",
+			name: "nil response returns snerrors.ErrNilResponse",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(nil, nil)
 			},
-			wantNil: true,
+			wantErr: snerrors.ErrNilResponse,
 		},
 		{
 			name:    "nil receiver returns ErrNilRequestBuilder",
@@ -828,10 +808,6 @@ func TestCaseFieldValuesRequestBuilder_Get(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			if tt.wantNil {
-				assert.Nil(t, resp)
-				return
-			}
 			assert.NotNil(t, resp)
 			adapter.AssertExpectations(t)
 		})

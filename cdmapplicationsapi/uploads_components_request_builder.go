@@ -55,7 +55,7 @@ func (rB *UploadsComponentsRequestBuilder) Post(ctx context.Context, body *Compo
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(UploadStatusResponse)
 	if !ok {
@@ -85,5 +85,8 @@ func (rB *UploadsComponentsRequestBuilder) ToPostRequestInformation(ctx context.
 
 // Vars returns a [UploadsComponentsVarsRequestBuilder].
 func (rB *UploadsComponentsRequestBuilder) Vars() *UploadsComponentsVarsRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewUploadsComponentsVarsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

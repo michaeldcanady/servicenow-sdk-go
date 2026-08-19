@@ -9,6 +9,7 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 
+// CalendarItemResponse is the response envelope for a single CalendarResponse.
 type CalendarItemResponse = core.ServiceNowItemResponse[*CalendarResponse]
 
 // CreateAvailabilityResponseFromDiscriminatorValue is a factory for creating an AvailabilityResponse.

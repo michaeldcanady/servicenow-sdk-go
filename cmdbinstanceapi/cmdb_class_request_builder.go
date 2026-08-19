@@ -2,6 +2,7 @@ package cmdbinstanceapi
 
 import (
 	"context"
+	"fmt"
 	"maps"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
@@ -52,10 +53,15 @@ func (rB *CmdbClassRequestBuilder) Get(ctx context.Context, config *CmdbClassReq
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
-	return res.(*core.BaseServiceNowCollectionResponse[CmdbInstance]), nil
+	typedResp, ok := res.(*core.BaseServiceNowCollectionResponse[CmdbInstance])
+	if !ok {
+		return nil, fmt.Errorf("resp is not %T", (*core.BaseServiceNowCollectionResponse[CmdbInstance])(nil))
+	}
+
+	return typedResp, nil
 }
 
 // Post creates a record with associated relations.
@@ -80,10 +86,15 @@ func (rB *CmdbClassRequestBuilder) Post(ctx context.Context, body CmdbInstance, 
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
-	return res.(*core.BaseServiceNowItemResponse[CmdbInstance]), nil
+	typedResp, ok := res.(*core.BaseServiceNowItemResponse[CmdbInstance])
+	if !ok {
+		return nil, fmt.Errorf("resp is not %T", (*core.BaseServiceNowItemResponse[CmdbInstance])(nil))
+	}
+
+	return typedResp, nil
 }
 
 // ToGetRequestInformation converts request configurations to Get request information.
@@ -130,6 +141,10 @@ func (rB *CmdbClassRequestBuilder) ToPostRequestInformation(ctx context.Context,
 
 // ByID provides operations to manage a specific CI record.
 func (rB *CmdbClassRequestBuilder) ByID(sysID string) *CmdbItemRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters[sysIDKey] = sysID
 	return NewCmdbItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())

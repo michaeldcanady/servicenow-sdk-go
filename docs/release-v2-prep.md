@@ -114,13 +114,13 @@ No consumer-facing artifact answers "I'm on v1.12 — what do I do?"
 
 ## Current State
 
-| Check | Status |
-|-------|--------|
-| `go build ./...` | Pass |
-| `go test ./...` (31 packages) | Pass |
-| `go vet ./...` | Pass |
-| `golangci-lint run ./...` | 0 issues |
-| Integration tests (local, `-tags integration`) | Pass |
+| Check                                          | Status   |
+| ---------------------------------------------- | -------- |
+| `go build ./...`                               | Pass     |
+| `go test ./...` (31 packages)                  | Pass     |
+| `go vet ./...`                                 | Pass     |
+| `golangci-lint run ./...`                      | 0 issues |
+| Integration tests (local, `-tags integration`) | Pass     |
 
 **Open issues:** 27 total — 2 urgent (blockers above), 4 high (pre-GA above),
 remainder deferred.
@@ -147,14 +147,14 @@ remainder deferred.
 
 Deferrable to after v2.0.0 GA:
 
-| Issue | Description |
-|-------|-------------|
-| #563 | Move tests into nested go.mod |
-| #568 | Collapse nil-guard preamble into shared helper |
-| #585 | CDM comma-ok sentinel error question |
-| #502 | Backfill ADRs for existing design decisions |
-| #501 | Spike: Kiota raw URL vs path parameters |
-| #500 | Remaining authentication flows (device code, certificate) |
-| #499 | BYO logging via WithLogger client option |
-| #498 | Testing rigor epic (BDD policy + coverage ratchet) |
-| #497 | License headers on Go files + CI enforcement |
+| Issue | Description                                               |
+| ----- | --------------------------------------------------------- |
+| #563  | Move tests into nested go.mod                             |
+| #568  | Collapse nil-guard preamble into shared helper            |
+| #585  | CDM comma-ok sentinel error question                      |
+| #502  | Backfill ADRs for existing design decisions               |
+| #501  | Spike: Kiota raw URL vs path parameters                   |
+| #500  | Remaining authentication flows (device code, certificate) |
+| #499  | BYO logging via WithLogger client option                  |
+| #498  | Testing rigor epic (BDD policy + coverage ratchet)        |
+| #497  | License headers on Go files + CI enforcement              |

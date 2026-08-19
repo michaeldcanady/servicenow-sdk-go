@@ -9,6 +9,7 @@ import (
 
 var _ DiscoveryPopulationMethod = (*DiscoveryPopulationMethodModel)(nil)
 
+// DiscoveryPopulationMethod represents a discovery-based population method that uses entry points and attributes to discover service relationships.
 type DiscoveryPopulationMethod interface {
 	PopulationMethod
 	GetEntryPointID() (*string, error)
@@ -18,16 +19,19 @@ type DiscoveryPopulationMethod interface {
 	AddAttribute(DiscoveryPopulationMethodAttribute) error
 }
 
+// DiscoveryPopulationMethodModel is the backing-store-backed implementation of [DiscoveryPopulationMethod].
 type DiscoveryPopulationMethodModel struct {
 	PopulationMethod
 }
 
+// NewDiscoveryPopulationMethod creates a new instance of [DiscoveryPopulationMethodModel].
 func NewDiscoveryPopulationMethod() *DiscoveryPopulationMethodModel {
 	return &DiscoveryPopulationMethodModel{
 		PopulationMethod: NewPopulationMethod(),
 	}
 }
 
+// CreateDiscoveryPopulationMethodFromDiscriminatorValue creates a new [DiscoveryPopulationMethodModel] from a ParseNode.
 func CreateDiscoveryPopulationMethodFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewDiscoveryPopulationMethod(), nil
 }

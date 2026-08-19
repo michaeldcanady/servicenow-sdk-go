@@ -1,4 +1,4 @@
-package actsubapi
+package activitysubscriptionsapi
 
 import (
 	"context"
@@ -46,7 +46,7 @@ func (rB *FacetsInstanceRequestBuilder) Get(ctx context.Context, config *FacetsI
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedRes, ok := res.(*core.BaseServiceNowCollectionResponse[*ActivitySubscription])

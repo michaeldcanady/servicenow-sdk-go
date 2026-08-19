@@ -4,6 +4,7 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -23,15 +24,24 @@ func NewUploadsRequestBuilderInternal(pathParameters map[string]string, requestA
 
 // Components returns a [UploadsComponentsRequestBuilder].
 func (rB *UploadsRequestBuilder) Components() *UploadsComponentsRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewUploadsComponentsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // Collections returns a [UploadsCollectionsRequestBuilder].
 func (rB *UploadsRequestBuilder) Collections() *UploadsCollectionsRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewUploadsCollectionsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // Deployables returns a [UploadsDeployablesRequestBuilder].
 func (rB *UploadsRequestBuilder) Deployables() *UploadsDeployablesRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewUploadsDeployablesRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

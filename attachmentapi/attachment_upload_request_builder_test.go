@@ -194,8 +194,7 @@ func TestAttachmentUploadRequestBuilder_Post(t *testing.T) {
 				ra.On("GetSerializationWriterFactory").Return(mockSerializationWriterFactory)
 				ra.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
 			},
-			expectedErr: false,
-			nilRes:      true,
+			expectedErr: true,
 		},
 	}
 

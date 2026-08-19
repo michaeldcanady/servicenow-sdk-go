@@ -6,6 +6,7 @@ import (
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 )
 
+// RankTier represents the strategic ranking tier of an account.
 type RankTier int16
 
 const (
@@ -32,6 +33,7 @@ var rankTierStrings = map[RankTier]string{
 	RankTierValued:    rankTierValued,
 }
 
+// ParseRankTier converts a string to a [RankTier] value, returning an error for unrecognized values.
 func ParseRankTier(s string) (interface{}, error) {
 	switch s {
 	case rankTierBlacklist:

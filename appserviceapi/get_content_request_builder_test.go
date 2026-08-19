@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -34,12 +35,12 @@ func TestGetContentRequestBuilder_Get(t *testing.T) {
 			wantErr: errNetwork,
 		},
 		{
-			name: "nil response returns nil, nil",
+			name: "nil response returns snerrors.ErrNilResponse",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 					Return(nil, nil)
 			},
-			wantNil: true,
+			wantErr: snerrors.ErrNilResponse,
 		},
 	}
 

@@ -53,7 +53,7 @@ func (rB *ExportItemContentRequestBuilder) Get(ctx context.Context, config *Expo
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.([]byte)
 	if !ok {

@@ -5,6 +5,7 @@ import (
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -34,24 +35,36 @@ func NewDocumentsRequestBuilder(rawURL string, requestAdapter abstractions.Reque
 
 // Explore provides operations to manage the explore endpoint.
 func (rB *DocumentsRequestBuilder) Explore() *ExploreRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	return NewExploreRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
 // Create provides operations to manage the create endpoint.
 func (rB *DocumentsRequestBuilder) Create() *CreateRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	return NewCreateRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
 // CreateDocument provides operations to manage the createDocument endpoint.
 func (rB *DocumentsRequestBuilder) CreateDocument() *CreateDocumentRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	return NewCreateDocumentRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
 // VersionState provides operations to manage document version states.
 func (rB *DocumentsRequestBuilder) VersionState(versionSysID string) *VersionStateRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["version_sys_id"] = versionSysID
 	return NewVersionStateRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -59,6 +72,9 @@ func (rB *DocumentsRequestBuilder) VersionState(versionSysID string) *VersionSta
 
 // Attach provides operations to manage document attachments via a provider.
 func (rB *DocumentsRequestBuilder) Attach(providerID string) *AttachRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["provider_id"] = providerID
 	return NewAttachRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -66,12 +82,18 @@ func (rB *DocumentsRequestBuilder) Attach(providerID string) *AttachRequestBuild
 
 // Delete provides operations to manage the delete endpoint.
 func (rB *DocumentsRequestBuilder) Delete() *DeleteRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	return NewDeleteRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
 }
 
 // Versions provides operations to manage document versions.
 func (rB *DocumentsRequestBuilder) Versions(documentSysID string) *VersionsRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["document_sys_id"] = documentSysID
 	return NewVersionsRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -79,6 +101,9 @@ func (rB *DocumentsRequestBuilder) Versions(documentSysID string) *VersionsReque
 
 // Content provides operations to manage document content.
 func (rB *DocumentsRequestBuilder) Content(documentSysID string) *ContentRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["document_sys_id"] = documentSysID
 	return NewContentRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -86,6 +111,9 @@ func (rB *DocumentsRequestBuilder) Content(documentSysID string) *ContentRequest
 
 // SyncDown provides operations to manage document synchronization.
 func (rB *DocumentsRequestBuilder) SyncDown(documentSysID string) *SyncDownRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["documentSysId"] = documentSysID
 	return NewSyncDownRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -93,6 +121,9 @@ func (rB *DocumentsRequestBuilder) SyncDown(documentSysID string) *SyncDownReque
 
 // Action provides operations to manage document actions.
 func (rB *DocumentsRequestBuilder) Action(action string) *ActionRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["action"] = action
 	return NewActionRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())

@@ -18,7 +18,6 @@ func TestVersionsRequestBuilder_Get(t *testing.T) {
 		name      string
 		setupMock func(*mocking.MockRequestAdapter)
 		wantErr   error
-		wantNil   bool
 	}{
 		{
 			name: "happy path - returns collection response",
@@ -35,11 +34,11 @@ func TestVersionsRequestBuilder_Get(t *testing.T) {
 			wantErr: errors.New("versions failed"),
 		},
 		{
-			name: "nil response returns nil, nil",
+			name: "nil response returns snerrors.ErrNilResponse",
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
 			},
-			wantNil: true,
+			wantErr: snerrors.ErrNilResponse,
 		},
 	}
 
@@ -52,15 +51,15 @@ func TestVersionsRequestBuilder_Get(t *testing.T) {
 			resp, err := builder.Get(context.Background(), nil)
 
 			if tt.wantErr != nil {
-				require.EqualError(t, err, tt.wantErr.Error())
+				if tt.name == "nil response returns snerrors.ErrNilResponse" {
+					require.ErrorIs(t, err, tt.wantErr)
+				} else {
+					require.EqualError(t, err, tt.wantErr.Error())
+				}
 				assert.Nil(t, resp)
 				return
 			}
 			require.NoError(t, err)
-			if tt.wantNil {
-				assert.Nil(t, resp)
-				return
-			}
 			assert.NotNil(t, resp)
 		})
 	}

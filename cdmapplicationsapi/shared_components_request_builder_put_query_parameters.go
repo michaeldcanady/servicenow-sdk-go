@@ -1,5 +1,6 @@
 package cdmapplicationsapi
 
+// SharedComponentsRequestBuilderPutQueryParameters defines query parameters for updating a CDM shared component.
 type SharedComponentsRequestBuilderPutQueryParameters struct {
 	// ChangesetNumber unique identifier of the associated changeset.
 	ChangesetNumber *string `uriparametername:"changesetNumber"`

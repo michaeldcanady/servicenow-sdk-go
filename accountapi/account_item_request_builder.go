@@ -55,7 +55,7 @@ func (rB *AccountItemRequestBuilder) Get(ctx context.Context, config *AccountIte
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedRes, ok := res.(AccountItemResponse)

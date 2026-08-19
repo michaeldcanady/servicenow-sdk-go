@@ -25,22 +25,14 @@ type AttachmentRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// newAttachmentRequestBuilderInternal instantiates a new AttachmentRequestBuilder with the provided requestBuilder
-func newAttachmentRequestBuilderInternal(requestBuilder core.RequestBuilder) *AttachmentRequestBuilder {
-	m := &AttachmentRequestBuilder{
-		requestBuilder,
-	}
-	return m
-}
-
 // NewAttachmentRequestBuilderInternal instantiates a new AttachmentRequestBuilder with custom parsable for table entries.
 func NewAttachmentRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentRequestBuilder {
-	return newAttachmentRequestBuilderInternal(
+	return &AttachmentRequestBuilder{
 		core.NewBaseRequestBuilder(requestAdapter, attachmentURLTemplate, pathParameters),
-	)
+	}
 }
 
 // NewAttachmentRequestBuilder instantiates a new AttachmentRequestBuilder with custom parsable for table entries.
@@ -55,7 +47,7 @@ func NewAttachmentRequestBuilder(
 
 // ByID provides the way to manage attachment item with provided sys id
 func (rB *AttachmentRequestBuilder) ByID(sysID string) *AttachmentItemRequestBuilder {
-	if conversion.IsNil(rB) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
 
@@ -67,7 +59,7 @@ func (rB *AttachmentRequestBuilder) ByID(sysID string) *AttachmentItemRequestBui
 
 // File provides the way to access Service-Now's attachment file API
 func (rB *AttachmentRequestBuilder) File() *AttachmentFileRequestBuilder {
-	if conversion.IsNil(rB) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
 
@@ -78,7 +70,7 @@ func (rB *AttachmentRequestBuilder) File() *AttachmentFileRequestBuilder {
 
 // Upload provides the way to access Service-Now's attachment upload API
 func (rB *AttachmentRequestBuilder) Upload() *AttachmentUploadRequestBuilder {
-	if conversion.IsNil(rB) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil
 	}
 
@@ -118,7 +110,7 @@ func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguratio
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	snRes, ok := res.(*AttachmentCollectionResponse)
@@ -133,8 +125,12 @@ func (rB *AttachmentRequestBuilder) Get(ctx context.Context, requestConfiguratio
 
 // Head sends an HTTP HEAD request and returns the response headers.
 func (rB *AttachmentRequestBuilder) Head(ctx context.Context, requestConfiguration *AttachmentRequestBuilderGetRequestConfiguration) (*abstractions.ResponseHeaders, error) {
-	if conversion.IsNil(rB) {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
 		return nil, snerrors.ErrNilRequestBuilder
+	}
+
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	if conversion.IsNil(requestConfiguration) {
@@ -148,10 +144,6 @@ func (rB *AttachmentRequestBuilder) Head(ctx context.Context, requestConfigurati
 	requestInfo, err := rB.ToHeadRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return nil, err
-	}
-
-	if conversion.IsNil(rB.GetRequestAdapter()) {
-		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	errorMapping := core.DefaultErrorMapping()

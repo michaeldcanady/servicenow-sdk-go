@@ -51,7 +51,7 @@ func (rB *UploadStatusItemRequestBuilder) Get(ctx context.Context, config *Uploa
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(UploadStatusResponse)
 	if !ok {

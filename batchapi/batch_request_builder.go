@@ -50,6 +50,10 @@ func (rB *BatchRequestBuilder) Head(ctx context.Context, requestConfiguration *B
 		return nil, snerrors.ErrNilRequestBuilder
 	}
 
+	if conversion.IsNil(rB.GetRequestAdapter()) {
+		return nil, snerrors.ErrNilRequestAdapter
+	}
+
 	if conversion.IsNil(requestConfiguration) {
 		requestConfiguration = &BatchRequestBuilderGetRequestConfiguration{}
 	}
@@ -61,10 +65,6 @@ func (rB *BatchRequestBuilder) Head(ctx context.Context, requestConfiguration *B
 	requestInfo, err := rB.ToHeadRequestInformation(ctx, requestConfiguration)
 	if err != nil {
 		return nil, err
-	}
-
-	if conversion.IsNil(rB.GetRequestAdapter()) {
-		return nil, snerrors.ErrNilRequestAdapter
 	}
 
 	errorMapping := core.DefaultErrorMapping()
@@ -117,7 +117,7 @@ func (rB *BatchRequestBuilder) Post(ctx context.Context, body BatchRequest, requ
 	}
 
 	if resp == nil {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := resp.(*BatchResponseModel)

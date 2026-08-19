@@ -1,4 +1,4 @@
-package actsubapi
+package activitysubscriptionsapi
 
 import "errors"
 

@@ -57,7 +57,7 @@ func TestNodesRequestBuilder_Get(t *testing.T) {
 
 		resp, err := nilBuilder.Get(context.Background(), nil)
 
-		require.NoError(t, err)
+		require.ErrorIs(t, err, snerrors.ErrNilResponse)
 		assert.Nil(t, resp)
 	})
 }
@@ -84,7 +84,7 @@ func TestNodesRequestBuilder_Post_NilResponse(t *testing.T) {
 
 	resp, err := builder.Post(context.Background(), NewNodeCreateRequest(), nil)
 
-	require.NoError(t, err)
+	require.ErrorIs(t, err, snerrors.ErrNilResponse)
 	assert.Nil(t, resp)
 }
 
@@ -123,7 +123,7 @@ func TestNodeItemRequestBuilder_Put(t *testing.T) {
 
 		resp, err := nilBuilder.Put(context.Background(), NewNodeUpdateRequest(), nil)
 
-		require.NoError(t, err)
+		require.ErrorIs(t, err, snerrors.ErrNilResponse)
 		assert.Nil(t, resp)
 	})
 }
@@ -179,7 +179,7 @@ func TestValidationRequestBuilder_Get(t *testing.T) {
 
 		resp, err := nilBuilder.Get(context.Background(), nil)
 
-		require.NoError(t, err)
+		require.ErrorIs(t, err, snerrors.ErrNilResponse)
 		assert.Nil(t, resp)
 	})
 }

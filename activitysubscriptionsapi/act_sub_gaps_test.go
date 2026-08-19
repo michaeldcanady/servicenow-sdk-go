@@ -1,10 +1,11 @@
-package actsubapi
+package activitysubscriptionsapi
 
 import (
 	"context"
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal/mocking"
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
@@ -98,13 +99,13 @@ func TestVerbs_AdapterErrorPropagates(t *testing.T) {
 }
 
 // TestVerbs_NilResponse covers the branch where the adapter reports no response: the verbs hand
-// back a nil response and a nil error rather than attempting a type assertion.
+// back a nil response and snerrors.ErrNilResponse rather than attempting a type assertion.
 func TestVerbs_NilResponse(t *testing.T) {
 	for _, verb := range verbCalls() {
 		t.Run(verb.name, func(t *testing.T) {
 			response, err := verb.call(newGapsAdapter(nil, nil))
 
-			require.NoError(t, err)
+			require.ErrorIs(t, err, snerrors.ErrNilResponse)
 			assert.Nil(t, response)
 		})
 	}

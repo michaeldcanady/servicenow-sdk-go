@@ -4,6 +4,7 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -23,5 +24,8 @@ func NewUploadsDeployablesRequestBuilderInternal(pathParameters map[string]strin
 
 // File returns a [UploadsDeployablesFileRequestBuilder].
 func (rB *UploadsDeployablesRequestBuilder) File() *UploadsDeployablesFileRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewUploadsDeployablesFileRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

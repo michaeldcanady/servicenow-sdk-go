@@ -2,7 +2,7 @@ package cdmapplicationsapi
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
@@ -71,12 +71,11 @@ func (rB *DeployablesRequestBuilder) Put(ctx context.Context, config *Deployable
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(DeployableUpdateResponse)
 	if !ok {
-		// TODO: standardize error
-		return nil, errors.New("unexpected type")
+		return nil, fmt.Errorf("resp is not %T", (*DeployableUpdateResponse)(nil))
 	}
 	return typedRes, nil
 }
@@ -116,5 +115,8 @@ func (rB *DeployablesRequestBuilder) ToDeleteRequestInformation(ctx context.Cont
 
 // Exports returns an [ExportsRequestBuilder].
 func (rB *DeployablesRequestBuilder) Exports() *ExportsRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewExportsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

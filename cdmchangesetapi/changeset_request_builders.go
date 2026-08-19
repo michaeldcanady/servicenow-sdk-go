@@ -36,26 +36,41 @@ func NewChangesetsRequestBuilderInternal(pathParameters map[string]string, reque
 
 // Activity returns a ChangesetActivityRequestBuilder.
 func (rB *ChangesetsRequestBuilder) Activity() *ChangesetActivityRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewChangesetActivityRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // CommitStatus returns a CommitStatusRequestBuilder.
 func (rB *ChangesetsRequestBuilder) CommitStatus() *CommitStatusRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewCommitStatusRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // ImpactedSharedComponents returns an ImpactedSharedComponentsRequestBuilder.
 func (rB *ChangesetsRequestBuilder) ImpactedSharedComponents() *ImpactedSharedComponentsRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewImpactedSharedComponentsRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // ImpactedDeployables returns an ImpactedDeployablesRequestBuilder.
 func (rB *ChangesetsRequestBuilder) ImpactedDeployables() *ImpactedDeployablesRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewImpactedDeployablesRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // ByID returns a ChangesetItemRequestBuilder.
 func (rB *ChangesetsRequestBuilder) ByID(id string) *ChangesetItemRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["changeset_id"] = id
 	return NewChangesetItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -87,7 +102,7 @@ func (rB *ChangesetsRequestBuilder) Get(ctx context.Context, config *ChangesetsR
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(ChangesetsResponse)
 	if !ok {
@@ -157,7 +172,7 @@ func (rB *ChangesetActivityRequestBuilder) Get(ctx context.Context, config *Chan
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(ChangesetActivityResponse)
 	if !ok {
@@ -180,6 +195,9 @@ func NewCommitStatusRequestBuilderInternal(pathParameters map[string]string, req
 
 // ByID returns the by id request builder.
 func (rB *CommitStatusRequestBuilder) ByID(commitID string) *CommitStatusItemRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters["commit_id"] = commitID
 	return NewCommitStatusItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())
@@ -220,7 +238,7 @@ func (rB *CommitStatusItemRequestBuilder) Get(ctx context.Context, config *Commi
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(CommitStatusResponse)
 	if !ok {
@@ -267,7 +285,7 @@ func (rB *ImpactedSharedComponentsRequestBuilder) Get(ctx context.Context, confi
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(ImpactedSharedComponentsResponse)
 	if !ok {
@@ -314,7 +332,7 @@ func (rB *ImpactedDeployablesRequestBuilder) Get(ctx context.Context, config *Im
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(ImpactedDeployablesResponse)
 	if !ok {
@@ -337,6 +355,9 @@ func NewChangesetItemRequestBuilderInternal(pathParameters map[string]string, re
 
 // ImpactedDeployables returns an ImpactedDeployablesBySysIDRequestBuilder.
 func (rB *ChangesetItemRequestBuilder) ImpactedDeployables() *ImpactedDeployablesBySysIDRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewImpactedDeployablesBySysIDRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
@@ -375,7 +396,7 @@ func (rB *ImpactedDeployablesBySysIDRequestBuilder) Get(ctx context.Context, con
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(ImpactedDeployablesBySysIDResponse)
 	if !ok {

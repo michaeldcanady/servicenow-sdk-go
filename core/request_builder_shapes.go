@@ -13,7 +13,7 @@ import (
 // named generic type from another package, only on the type's underlying literal shape.
 //
 // This only matches request-configuration types built on the "typed QueryParameters"
-// convention (a type alias of abstractions.RequestConfiguration[Q], as actsubapi and
+// convention (a type alias of abstractions.RequestConfiguration[Q], as activitysubscriptionsapi and
 // appserviceapi use). It intentionally does NOT match the other request-configuration
 // convention used elsewhere in this codebase (e.g. documentsapi's
 // VersionStateRequestBuilderGetRequestConfiguration), whose bespoke structs omit

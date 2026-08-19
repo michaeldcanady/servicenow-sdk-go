@@ -54,7 +54,7 @@ func (rB *ExportsRequestBuilder) Get(ctx context.Context, config *ExportsRequest
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(ExportsResponse)
 	if !ok {

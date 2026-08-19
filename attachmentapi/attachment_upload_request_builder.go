@@ -22,22 +22,14 @@ type AttachmentUploadRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// newAttachmentUploadRequestBuilderInternal instantiates a new AttachmentUploadRequestBuilder with the provided requestBuilder
-func newAttachmentUploadRequestBuilderInternal(requestBuilder core.RequestBuilder) *AttachmentUploadRequestBuilder {
-	m := &AttachmentUploadRequestBuilder{
-		requestBuilder,
-	}
-	return m
-}
-
 // NewAttachmentUploadRequestBuilderInternal instantiates a new AttachmentUploadRequestBuilder with custom parsable for table entries.
 func NewAttachmentUploadRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentUploadRequestBuilder {
-	return newAttachmentUploadRequestBuilderInternal(
+	return &AttachmentUploadRequestBuilder{
 		core.NewBaseRequestBuilder(requestAdapter, attachmentUploadURLTemplate, pathParameters),
-	)
+	}
 }
 
 // NewAttachmentUploadRequestBuilder instantiates a new AttachmentUploadRequestBuilder with custom parsable for table entries.
@@ -105,7 +97,7 @@ func (rB *AttachmentUploadRequestBuilder) Post(ctx context.Context, body abstrac
 	}
 
 	if resp == nil {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	file, ok := resp.(*File)

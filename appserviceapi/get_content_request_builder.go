@@ -2,7 +2,7 @@ package appserviceapi
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
@@ -56,13 +56,12 @@ func (rB *GetContentRequestBuilder) Get(ctx context.Context, config *GetContentR
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := res.(GetContentResponse)
 	if !ok {
-		// TODO: standardize error
-		return nil, errors.New("unexpected type")
+		return nil, fmt.Errorf("resp is not %T", (*GetContentResponse)(nil))
 	}
 
 	return typedResp, nil

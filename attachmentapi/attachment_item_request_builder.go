@@ -23,22 +23,14 @@ type AttachmentItemRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// newAttachmentItemRequestBuilderInternal instantiates a new AttachmentItemRequestBuilder with the provided requestBuilder
-func newAttachmentItemRequestBuilderInternal(requestBuilder core.RequestBuilder) *AttachmentItemRequestBuilder {
-	m := &AttachmentItemRequestBuilder{
-		requestBuilder,
-	}
-	return m
-}
-
 // NewAttachmentItemRequestBuilderInternal instantiates a new AttachmentItemRequestBuilder with custom parsable for table entries.
 func NewAttachmentItemRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentItemRequestBuilder {
-	return newAttachmentItemRequestBuilderInternal(
+	return &AttachmentItemRequestBuilder{
 		core.NewBaseRequestBuilder(requestAdapter, attachmentItemURLTemplate, pathParameters),
-	)
+	}
 }
 
 // NewAttachmentItemRequestBuilder instantiates a new AttachmentItemRequestBuilder with custom parsable for table entries.

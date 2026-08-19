@@ -6,6 +6,7 @@ import (
 	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/appserviceapi"
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
 	"github.com/michaeldcanady/servicenow-sdk-go/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -32,10 +33,18 @@ func NewCmdbRequestBuilder(rawURL string, requestAdapter abstractions.RequestAda
 
 // Instance returns a CmdbInstanceRequestBuilder associated with the CmdbRequestBuilder.
 func (rB *CmdbRequestBuilder) Instance() *CmdbInstanceRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	return NewCmdbInstanceRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // AppService returns an AppServiceRequestBuilder associated with the CmdbRequestBuilder.
 func (rB *CmdbRequestBuilder) AppService() *appserviceapi.AppServiceRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	return appserviceapi.NewAppServiceRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

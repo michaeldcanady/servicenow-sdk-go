@@ -2,7 +2,7 @@ package caseapi
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
 
@@ -55,13 +55,12 @@ func (rB *CaseFieldValuesRequestBuilder) Get(ctx context.Context, config *CaseFi
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := res.(FieldValuesResponse)
 	if !ok {
-		// TODO: standardize error
-		return nil, errors.New("unexpected type")
+		return nil, fmt.Errorf("resp is not %T", (*FieldValuesResponse)(nil))
 	}
 
 	return typedResp, nil

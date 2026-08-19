@@ -2,7 +2,7 @@ package caseapi
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"maps"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
@@ -28,8 +28,8 @@ func NewCaseRequestBuilderInternal(pathParameters map[string]string, requestAdap
 	}
 }
 
-// NewFindServiceRequestBuilder instantiates a new [CaseRequestBuilder].
-func NewFindServiceRequestBuilder(
+// NewDefaultCaseRequestBuilder instantiates a new [CaseRequestBuilder].
+func NewDefaultCaseRequestBuilder(
 	rawURL string,
 	requestAdapter abstractions.RequestAdapter,
 ) *CaseRequestBuilder {
@@ -75,13 +75,12 @@ func (rB *CaseRequestBuilder) Get(ctx context.Context, config *CaseRequestBuilde
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := res.(CaseCollectionResponse)
 	if !ok {
-		// TODO: standardize error
-		return nil, errors.New("unexpected type")
+		return nil, fmt.Errorf("resp is not %T", (*CaseCollectionResponse)(nil))
 	}
 
 	return typedResp, nil
@@ -120,13 +119,12 @@ func (rB *CaseRequestBuilder) Post(ctx context.Context, body CaseResult, config 
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := res.(CaseItemResponse)
 	if !ok {
-		// TODO: standardize error
-		return nil, errors.New("unexpected type")
+		return nil, fmt.Errorf("resp is not %T", (*CaseItemResponse)(nil))
 	}
 
 	return typedResp, nil

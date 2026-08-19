@@ -1,5 +1,6 @@
 package cdmapplicationsapi
 
+// DeployablesRequestBuilderPutQueryParameters defines query parameters for updating a CDM deployable.
 type DeployablesRequestBuilderPutQueryParameters struct {
 	// TODO: required
 	// AppName the name of the CDM application to which the deployable is associated.

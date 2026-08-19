@@ -23,6 +23,7 @@ const (
 	sizeBytesKey         = "size_bytes"
 )
 
+// ActivitiesResultEntryAttachment represents an attachment on an activity result entry.
 type ActivitiesResultEntryAttachment interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
@@ -81,6 +82,7 @@ type ActivitiesResultEntryAttachment interface {
 	SetThumbnailPath(*string) error
 }
 
+// ActivitiesResultEntryAttachmentModel is the backing-store-backed implementation of [ActivitiesResultEntryAttachment].
 type ActivitiesResultEntryAttachmentModel struct {
 	core.BaseModel
 }

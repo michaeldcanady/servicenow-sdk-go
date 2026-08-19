@@ -2,6 +2,7 @@ package cmdbinstanceapi
 
 import (
 	"context"
+	"fmt"
 	"maps"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
@@ -53,10 +54,15 @@ func (rB *CmdbRelationRequestBuilder) Post(ctx context.Context, body CmdbInstanc
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
-	return res.(*core.BaseServiceNowItemResponse[CmdbInstance]), nil
+	typedResp, ok := res.(*core.BaseServiceNowItemResponse[CmdbInstance])
+	if !ok {
+		return nil, fmt.Errorf("resp is not %T", (*core.BaseServiceNowItemResponse[CmdbInstance])(nil))
+	}
+
+	return typedResp, nil
 }
 
 // ToPostRequestInformation converts request configurations to Post request information.
@@ -84,6 +90,10 @@ func (rB *CmdbRelationRequestBuilder) ToPostRequestInformation(ctx context.Conte
 
 // ByID provides operations to manage a specific CI relationship.
 func (rB *CmdbRelationRequestBuilder) ByID(relSysID string) *CmdbRelationItemRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
+
 	pathParameters := maps.Clone(rB.GetPathParameters())
 	pathParameters[relSysIDKey] = relSysID
 	return NewCmdbRelationItemRequestBuilderInternal(pathParameters, rB.GetRequestAdapter())

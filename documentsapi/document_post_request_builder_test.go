@@ -41,6 +41,7 @@ func TestDocumentPostRequestBuilder_Post(t *testing.T) {
 			setupMock: func(m *mocking.MockRequestAdapter) {
 				m.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
 			},
+			expectedErr: snerrors.ErrNilResponse,
 		},
 		{
 			name:       "Nil builder",
@@ -69,7 +70,11 @@ func TestDocumentPostRequestBuilder_Post(t *testing.T) {
 			}
 
 			if tt.expectedErr != nil {
-				require.EqualError(t, err, tt.expectedErr.Error())
+				if tt.name == "Nil response" {
+					require.ErrorIs(t, err, tt.expectedErr)
+				} else {
+					require.EqualError(t, err, tt.expectedErr.Error())
+				}
 				assert.Nil(t, resp)
 				return
 			}

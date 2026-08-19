@@ -2,7 +2,7 @@ package caseapi
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"maps"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
@@ -64,13 +64,12 @@ func (rB *CaseItemRequestBuilder) Get(ctx context.Context, config *CaseItemReque
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := res.(CaseItemResponse)
 	if !ok {
-		// TODO: standardize error
-		return nil, errors.New("unexpected type")
+		return nil, fmt.Errorf("resp is not %T", (*CaseItemResponse)(nil))
 	}
 
 	return typedResp, nil
@@ -109,13 +108,12 @@ func (rB *CaseItemRequestBuilder) Put(ctx context.Context, body CaseResult, conf
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedResp, ok := res.(CaseItemResponse)
 	if !ok {
-		// TODO: standardize error
-		return nil, errors.New("unexpected type")
+		return nil, fmt.Errorf("resp is not %T", (*CaseItemResponse)(nil))
 	}
 
 	return typedResp, nil

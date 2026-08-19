@@ -10,6 +10,7 @@ import (
 
 var _ DiscoveryPopulationMethodAttribute = (*DiscoveryPopulationMethodAttributeModel)(nil)
 
+// DiscoveryPopulationMethodAttribute represents an attribute used by a discovery population method to filter or refine service discovery.
 type DiscoveryPopulationMethodAttribute interface {
 	core.Model
 	GetName() (*string, error)
@@ -18,16 +19,19 @@ type DiscoveryPopulationMethodAttribute interface {
 	SetValue(*string) error
 }
 
+// DiscoveryPopulationMethodAttributeModel is the backing-store-backed implementation of [DiscoveryPopulationMethodAttribute].
 type DiscoveryPopulationMethodAttributeModel struct {
 	*core.BaseModel
 }
 
+// NewDiscoveryPopulationMethodAttributeModel creates a new instance of [DiscoveryPopulationMethodAttributeModel].
 func NewDiscoveryPopulationMethodAttributeModel() *DiscoveryPopulationMethodAttributeModel {
 	return &DiscoveryPopulationMethodAttributeModel{
 		BaseModel: core.NewBaseModel(),
 	}
 }
 
+// CreateDiscoveryPopulationMethodAttributeModelFromDiscriminatorValue creates a new [DiscoveryPopulationMethodAttributeModel] from a ParseNode.
 func CreateDiscoveryPopulationMethodAttributeModelFromDiscriminatorValue(_ serialization.ParseNode) (serialization.Parsable, error) {
 	return NewDiscoveryPopulationMethodAttributeModel(), nil
 }

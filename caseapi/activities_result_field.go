@@ -17,6 +17,7 @@ const (
 
 var _ ActivitiesResultField = (*ActivitiesResultFieldModel)(nil)
 
+// ActivitiesResultField represents a field metadata entry in a case activity result.
 type ActivitiesResultField interface {
 	serialization.Parsable
 	kiotaStore.BackedModel
@@ -47,6 +48,7 @@ type ActivitiesResultField interface {
 	SetName(*string) error
 }
 
+// ActivitiesResultFieldModel is the backing-store-backed implementation of [ActivitiesResultField].
 type ActivitiesResultFieldModel struct {
 	core.BaseModel
 }

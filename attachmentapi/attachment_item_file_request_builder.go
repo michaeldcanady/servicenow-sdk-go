@@ -28,22 +28,14 @@ type AttachmentItemFileRequestBuilder struct {
 	core.RequestBuilder
 }
 
-// newAttachmentItemFileRequestBuilderInternal instantiates a new AttachmentItemFileRequestBuilder with the provided requestBuilder
-func newAttachmentItemFileRequestBuilderInternal(requestBuilder core.RequestBuilder) *AttachmentItemFileRequestBuilder {
-	m := &AttachmentItemFileRequestBuilder{
-		requestBuilder,
-	}
-	return m
-}
-
 // NewAttachmentItemFileRequestBuilderInternal instantiates a new AttachmentItemFileRequestBuilder with custom parsable for table entries.
 func NewAttachmentItemFileRequestBuilderInternal(
 	pathParameters map[string]string,
 	requestAdapter abstractions.RequestAdapter,
 ) *AttachmentItemFileRequestBuilder {
-	return newAttachmentItemFileRequestBuilderInternal(
+	return &AttachmentItemFileRequestBuilder{
 		core.NewBaseRequestBuilder(requestAdapter, attachmentItemFileURLTemplate, pathParameters),
-	)
+	}
 }
 
 // NewAttachmentItemFileRequestBuilder instantiates a new AttachmentItemFileRequestBuilder with custom parsable for table entries.
@@ -87,7 +79,7 @@ func (rB *AttachmentItemFileRequestBuilder) Get(ctx context.Context, requestConf
 		return nil, err
 	}
 	if resp == nil {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedResp, ok := resp.([]byte)
 	if !ok {

@@ -185,9 +185,11 @@ func TestAttachmentItemFileRequestBuilder_Get(t *testing.T) {
 			expectedErrIsSentinel: true,
 		},
 		{
-			name:                 "Nil response",
-			requestConfiguration: &AttachmentItemFileRequestBuilderGetRequestConfiguration{},
-			sendResponse:         nil,
+			name:                  "Nil response",
+			requestConfiguration:  &AttachmentItemFileRequestBuilderGetRequestConfiguration{},
+			sendResponse:          nil,
+			expectedErr:           snerrors.ErrNilResponse,
+			expectedErrIsSentinel: true,
 		},
 		{
 			name:                 "Nil builder",

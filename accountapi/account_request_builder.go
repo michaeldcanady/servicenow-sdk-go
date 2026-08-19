@@ -2,7 +2,7 @@ package accountapi
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"maps"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/errors"
@@ -66,13 +66,12 @@ func (rB *AccountRequestBuilder) Get(ctx context.Context, config *AccountRequest
 	}
 
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 
 	typedRes, ok := res.(AccountCollectionResponse)
 	if !ok {
-		// TODO: standardize error
-		return nil, errors.New("unexpected type")
+		return nil, fmt.Errorf("resp is not %T", (*AccountCollectionResponse)(nil))
 	}
 
 	return typedRes, nil

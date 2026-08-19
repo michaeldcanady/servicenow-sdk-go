@@ -1,4 +1,4 @@
-package actsubapi
+package activitysubscriptionsapi
 
 import abstractions "github.com/microsoft/kiota-abstractions-go"
 

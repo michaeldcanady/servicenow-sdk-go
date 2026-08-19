@@ -17,21 +17,25 @@ import (
 
 var _ PopulationMethod = (*PopulationMethodModel)(nil)
 
+// PopulationMethod represents the base interface for all population methods used to discover or populate application service relationships.
 type PopulationMethod interface {
 	core.Model
 	GetType() (*string, error)
 }
 
+// PopulationMethodModel is the backing-store-backed implementation of [PopulationMethod].
 type PopulationMethodModel struct {
 	core.BaseModel
 }
 
+// NewPopulationMethod creates a new instance of [PopulationMethodModel].
 func NewPopulationMethod() *PopulationMethodModel {
 	return &PopulationMethodModel{
 		BaseModel: *core.NewBaseModel(),
 	}
 }
 
+// CreatePopulationMethodFromDiscriminatorValue creates a new [PopulationMethod] from a ParseNode, dispatching to the correct concrete type based on the type field.
 func CreatePopulationMethodFromDiscriminatorValue(parseNode serialization.ParseNode) (serialization.Parsable, error) {
 	typeNode, err := parseNode.GetChildNode(typeKey)
 	if err != nil {

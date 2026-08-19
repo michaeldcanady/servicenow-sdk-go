@@ -14,6 +14,7 @@ const (
 
 var _ TagListPopulationMethodTag = (*TagListPopulationMethodTagModel)(nil)
 
+// TagListPopulationMethodTag represents a tag key-value pair used by a tag-list population method to discover service relationships.
 type TagListPopulationMethodTag interface {
 	core.Model
 	GetTag() (*string, error)
@@ -22,6 +23,7 @@ type TagListPopulationMethodTag interface {
 	SetValue(*string) error
 }
 
+// TagListPopulationMethodTagModel is the backing-store-backed implementation of [TagListPopulationMethodTag].
 type TagListPopulationMethodTagModel struct {
 	*core.BaseModel
 }

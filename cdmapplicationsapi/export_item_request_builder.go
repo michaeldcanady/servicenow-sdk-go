@@ -4,6 +4,7 @@ import (
 	"maps"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
@@ -23,10 +24,16 @@ func NewExportItemRequestBuilderInternal(pathParameters map[string]string, reque
 
 // Content returns a [ExportItemContentRequestBuilder].
 func (rB *ExportItemRequestBuilder) Content() *ExportItemContentRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewExportItemContentRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
 
 // Status returns a [ExportItemStatusRequestBuilder].
 func (rB *ExportItemRequestBuilder) Status() *ExportItemStatusRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewExportItemStatusRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }

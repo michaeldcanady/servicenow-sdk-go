@@ -88,7 +88,7 @@ func TestAccountRequestBuilder_Get_NilResponse(t *testing.T) {
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
 
 	res, err := builder.Get(context.Background(), nil)
-	require.NoError(t, err)
+	require.ErrorIs(t, err, snerrors.ErrNilResponse)
 	assert.Nil(t, res)
 }
 
@@ -122,7 +122,7 @@ func TestAccountItemRequestBuilder_Get_NilResponse(t *testing.T) {
 	adapter.On("Send", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil, nil)
 
 	res, err := builder.Get(context.Background(), nil)
-	require.NoError(t, err)
+	require.ErrorIs(t, err, snerrors.ErrNilResponse)
 	assert.Nil(t, res)
 }
 

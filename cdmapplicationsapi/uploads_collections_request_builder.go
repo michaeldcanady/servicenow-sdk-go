@@ -55,7 +55,7 @@ func (rB *UploadsCollectionsRequestBuilder) Post(ctx context.Context, body *Coll
 		return nil, err
 	}
 	if conversion.IsNil(res) {
-		return nil, nil
+		return nil, snerrors.ErrNilResponse
 	}
 	typedRes, ok := res.(UploadStatusResponse)
 	if !ok {
@@ -85,5 +85,8 @@ func (rB *UploadsCollectionsRequestBuilder) ToPostRequestInformation(ctx context
 
 // File returns a [UploadsCollectionsFileRequestBuilder].
 func (rB *UploadsCollectionsRequestBuilder) File() *UploadsCollectionsFileRequestBuilder {
+	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+		return nil
+	}
 	return NewUploadsCollectionsFileRequestBuilderInternal(maps.Clone(rB.GetPathParameters()), rB.GetRequestAdapter())
 }
