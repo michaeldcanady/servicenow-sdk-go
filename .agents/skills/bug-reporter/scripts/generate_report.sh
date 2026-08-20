@@ -10,8 +10,8 @@ EXPECTED_BEHAVIOR=$4
 ADDITIONAL_CONTEXT=$5
 OUTPUT_FILE=$6
 
-TEMPLATE_PATH="/workspaces/servicenow-sdk-go/.gemini/skills/bug-reporter/references/bug_report_template.md"
-GATHER_INFO_SCRIPT="/workspaces/servicenow-sdk-go/.gemini/skills/bug-reporter/scripts/gather_info.sh"
+TEMPLATE_PATH="/workspaces/servicenow-sdk-go/.agents/skills/bug-reporter/references/bug_report_template.md"
+GATHER_INFO_SCRIPT="/workspaces/servicenow-sdk-go/.agents/skills/bug-reporter/scripts/gather_info.sh"
 
 if [ -z "$TITLE" ] || [ -z "$DESCRIPTION" ] || [ -z "$OUTPUT_FILE" ]; then
     echo "Error: Missing required arguments (Title, Description, OutputFile)."

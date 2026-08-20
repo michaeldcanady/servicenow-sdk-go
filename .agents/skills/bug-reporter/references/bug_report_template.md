@@ -1,63 +1,22 @@
----
-name: "🐞 Bug Report"
-about: "Report an issue to help the project improve."
-title: "[Bug] "
-labels: ["type: bug"]
-assignees: 
+# Bug Report
 
----
+Use this as a reference when generating bug reports. The canonical form is the
+YAML issue template at `.github/ISSUE_TEMPLATE/bug-template.yaml`.
 
-# **🐞 Bug Report**
+## Fields
 
-## **Describe the bug**
-<!-- A clear and concise description of what the bug is. -->
+**SDK Version** — `go list -m github.com/michaeldcanady/servicenow-sdk-go` output or go.mod pin.
 
-*
+**Go Version** — output of `go version`.
 
----
+**Module** — closest matching package (table-api, attachment-api, core / request pipeline, etc.).
 
-### **To Reproduce**
+**What happened?** — clear description of the bug.
 
-<!-- Steps to reproduce the error:
-(e.g.:)
-1. Use x argument / navigate to
-2. Fill this information
-3. Go to...
-4. See error -->
+**What did you expect?** — expected behavior.
 
-<!-- Write the steps here (add or remove as many steps as needed)-->
+**Reproduction** — minimal Go code that triggers the bug. Redact instance URLs and credentials.
 
-1.
-2.
-3.
-4.
+**Error output** — stack trace or error messages, if any.
 
----
-
-### **Expected behaviour**
-<!-- A clear and concise description of what you expected to happen. -->
-
-*
-
----
-
-### **Media prove**
-<!-- If applicable, add screenshots or videos to help explain your problem. -->
-
----
-
-### **Your environment**
-
-<!-- use all the applicable bulleted list elements for this specific issue,
-and remove all the bulleted list elements that are not relevant for this issue. -->
-
-* OS: <!--[e.g. Ubuntu 5.4.0-26-generic x86_64 / Windows 1904 ...]-->
-* Golang version:
-* module version:
-
----
-
-### **Additional context**
-<!-- Add any other context or additional information about the problem here.-->
-
-*
+**Additional context** — related issues, ServiceNow version, plugin config, etc.
