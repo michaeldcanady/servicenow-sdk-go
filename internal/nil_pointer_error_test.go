@@ -76,23 +76,13 @@ func TestNilPointerError_Error(t *testing.T) {
 	}
 }
 
-// Curveball (see write-unit-tests skill, step 6): a nil *NilPointerError
-// panics on Error() instead of returning a safe value, because Error()
-// dereferences the receiver directly with no nil-guard. This is the same
-// "typed nil" trap that conversion.IsNil exists elsewhere in this repo to
-// avoid - any caller that ends up with a nil *NilPointerError stored in an
-// error-typed variable (e.g. a function returning (*NilPointerError)(nil), nil
-// mistakenly, or a struct field left at its zero value) will crash the first
-// time something calls .Error() on it, such as fmt.Errorf("%w", err) or a
-// logger. Left as a skipped, documented case rather than "fixed" here since
-// silently changing production code isn't this test pass's call - reported to
-// the user instead.
+// A typed-nil *NilPointerError must return a safe string instead of panicking.
+// The guard was added in #591 and regressed by the v2 rework (#600); this test
+// (previously skipped as a known bug) now protects the restored guard.
 func TestNilPointerError_Error_NilReceiver(t *testing.T) {
-	t.Skip("BUG: (*NilPointerError)(nil).Error() panics with a nil pointer dereference instead of returning a safe string")
-
 	var err *NilPointerError
 
-	assert.NotPanics(t, func() {
-		_ = err.Error()
-	})
+	var got string
+	assert.NotPanics(t, func() { got = err.Error() })
+	assert.Equal(t, "nil pointer error", got)
 }

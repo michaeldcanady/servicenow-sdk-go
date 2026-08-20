@@ -55,3 +55,13 @@ func TestCredentialError_Error(t *testing.T) {
 		})
 	}
 }
+
+// A typed-nil *CredentialError must return a safe string instead of panicking,
+// matching the nil-receiver guard on NilPointerError (#591).
+func TestCredentialError_Error_NilReceiver(t *testing.T) {
+	var e *CredentialError
+
+	var got string
+	assert.NotPanics(t, func() { got = e.Error() })
+	assert.Equal(t, "nil credential error", got)
+}

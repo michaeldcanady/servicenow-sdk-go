@@ -1,5 +1,7 @@
 package internal
 
+import "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+
 // NilPointerError represents a nil pointer when a value pointer is expected.
 type NilPointerError struct {
 	s string
@@ -14,5 +16,8 @@ func NewNilPointerError(text string) *NilPointerError {
 
 // Error returns the error string.
 func (err *NilPointerError) Error() string {
+	if conversion.IsNil(err) {
+		return "nil pointer error"
+	}
 	return err.s
 }
