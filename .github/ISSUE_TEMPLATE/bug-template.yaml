@@ -6,15 +6,14 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for reporting a bug! Bugs are triaged outside the feature backlog, so please include
-        enough detail (version, code sample, actual vs. expected) for a maintainer to reproduce it quickly.
+        Thanks for the report! Please fill in what you can — a code sample that reproduces the issue is the most helpful thing you can include.
 
   - type: input
     id: sdk-version
     attributes:
       label: SDK Version
-      description: Output of `go list -m github.com/michaeldcanady/servicenow-sdk-go` or your go.mod pin.
-      placeholder: v1.11.2
+      description: "`go list -m github.com/michaeldcanady/servicenow-sdk-go` or your go.mod pin."
+      placeholder: v2.0.0
     validations:
       required: true
 
@@ -22,18 +21,15 @@ body:
     id: go-version
     attributes:
       label: Go Version
-      placeholder: go1.24.1
+      placeholder: go1.25.0
     validations:
       required: true
 
   - type: dropdown
     id: module
     attributes:
-      label: Affected Module / API
-      description: >
-        Used to auto-apply a `module: *` label so contributors can filter issues by area they know.
-        Pick the closest match — see the package list in the repo root if you're not sure which
-        package this maps to.
+      label: Module
+      description: Closest match — see the package list in the repo root if unsure.
       options:
         - table-api
         - attachment-api
@@ -58,22 +54,21 @@ body:
     id: what-happened
     attributes:
       label: What happened?
-      description: A clear description of the bug.
     validations:
       required: true
 
   - type: textarea
     id: expected
     attributes:
-      label: What did you expect to happen?
+      label: What did you expect?
     validations:
       required: true
 
   - type: textarea
     id: repro
     attributes:
-      label: Minimal Reproduction
-      description: A minimal Go code sample that reproduces the issue. Redact any real instance URLs or credentials.
+      label: Reproduction
+      description: Minimal Go code that triggers the bug. Redact instance URLs and credentials.
       render: go
     validations:
       required: true
@@ -81,42 +76,15 @@ body:
   - type: textarea
     id: error-output
     attributes:
-      label: Error Output / Stack Trace (if any)
+      label: Error output (if any)
       render: shell
-    validations:
-      required: false
-
-  - type: dropdown
-    id: difficulty
-    attributes:
-      label: Estimated Difficulty (maintainer use)
-      description: >
-        Leave as "not triaged yet" if you're filing this — a maintainer sets this during triage so
-        contributors browsing issues can self-select work matching their skill level/available time.
-      options:
-        - not triaged yet
-        - good first issue (single module, no design decisions)
-        - intermediate (touches one module, some design judgment)
-        - advanced (cross-cutting or requires design discussion)
     validations:
       required: false
 
   - type: textarea
     id: additional-context
     attributes:
-      label: Additional Context
-      description: Anything else — related issues, ServiceNow instance version/plugin config, etc.
+      label: Additional context
+      description: Related issues, ServiceNow version/plugin config, etc.
     validations:
       required: false
-
-  - type: checkboxes
-    id: checklist
-    attributes:
-      label: Before submitting
-      options:
-        - label: I searched existing issues (including closed ones) for a duplicate of this bug.
-          required: true
-        - label: I reproduced this on the latest released version.
-          required: true
-        - label: I included a minimal reproduction, not just a description.
-          required: true

@@ -1,73 +1,39 @@
 name: "Feature Request"
-description: Request a new capability or enhancement (e.g. support for a new ServiceNow API, auth method, or SDK ergonomics improvement).
-title: "[Story]: "
+description: Request a new capability or enhancement (e.g. a new API module, auth method, or DX improvement).
+title: "[Feature]: "
 labels: ["type: feature", "status: new"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to request a feature! Please fill this out as completely as you can —
-        the more concrete the "so that" clause and acceptance criteria, the faster this can be scoped,
-        prioritized, and picked up by a contributor.
+        Use the "Job to be done" format — the more concrete, the easier it is to scope and prioritize.
 
   - type: textarea
-    id: user-story
+    id: job-to-be-done
     attributes:
-      label: User Story
-      description: State this as "As a <persona>, I want <capability>, so that <outcome>."
-      placeholder: |
-        As a Go developer integrating with ServiceNow's Import Set API,
-        I want to insert records into a staging table,
-        so that I can trigger transform maps without hand-building HTTP calls.
-    validations:
-      required: true
-
-  - type: textarea
-    id: problem
-    attributes:
-      label: What problem does this solve?
-      description: What can't you do today? What's the workaround, if any?
-    validations:
-      required: true
-
-  - type: textarea
-    id: acceptance-criteria
-    attributes:
-      label: Acceptance Criteria
+      label: Job to be done
       description: >
-        What has to be true for this to be considered done? A short checklist helps a contributor
-        scope the work and know when they're finished, without waiting on back-and-forth.
+        Please describe the situation, what you want to be able to do, and why you believe the action is necessary by filling out the provided template.
       placeholder: |
-        - [ ] `<X>RequestBuilder` supports `Get`/`Post`/... following the existing constructor triad
-        - [ ] Unit tests cover happy path + at least one error case
-        - [ ] Package Readme.md documents the endpoint
+        When [situation],
+        I want to [action],
+        so I can [outcome].
     validations:
-      required: false
+      required: true
 
   - type: textarea
     id: proposed-solution
     attributes:
-      label: Proposed Solution (optional)
-      description: If you have an idea of the API surface, request builder shape, or config style, sketch it here.
-    validations:
-      required: false
-
-  - type: textarea
-    id: alternatives
-    attributes:
-      label: Alternatives Considered (optional)
-      description: Other approaches you've tried or considered, and why they fell short.
+      label: Proposed solution (optional)
+      description: If you have a specific API shape, builder pattern, or config style in mind, sketch it here.
     validations:
       required: false
 
   - type: dropdown
     id: module
     attributes:
-      label: Affected Module / API
-      description: >
-        Used to auto-apply a `module: *` label so contributors can filter issues by area they know.
-        Pick the closest match — see the package list in the repo root if you're not sure which
-        package this maps to.
+      label: Module
+      description: Closest match — pick "new module" if this doesn't exist yet.
       options:
         - table-api
         - attachment-api
@@ -83,54 +49,16 @@ body:
         - app-service-api
         - authentication / credentials
         - core / request pipeline
-        - all / cross-cutting
-        - documentation
-        - CI
-        - GitHub
         - new module (doesn't exist yet)
+        - documentation
         - other / not sure
     validations:
       required: true
 
-  - type: dropdown
-    id: difficulty
-    attributes:
-      label: Estimated Difficulty (maintainer use)
-      description: >
-        Leave as "not triaged yet" if you're filing this — a maintainer sets this during triage so
-        contributors browsing issues can self-select work matching their skill level/available time.
-      options:
-        - not triaged yet
-        - good first issue (single module, no design decisions)
-        - intermediate (touches one module, some design judgment)
-        - advanced (cross-cutting or requires design discussion)
-    validations:
-      required: false
-
-  - type: input
-    id: version
-    attributes:
-      label: Target Version (optional)
-      description: If you have a preference for which SDK version should include this, note it here.
-    validations:
-      required: false
-
   - type: textarea
     id: additional-context
     attributes:
-      label: Additional Context
-      description: Links to related issues/PRs, relevant ServiceNow docs, or anything else useful.
+      label: Additional context
+      description: Related issues/PRs, ServiceNow docs links, etc.
     validations:
       required: false
-
-  - type: checkboxes
-    id: checklist
-    attributes:
-      label: Before submitting
-      options:
-        - label: I searched existing issues (including closed ones) for a duplicate of this request.
-          required: true
-        - label: I checked the latest release to confirm this doesn't already exist.
-          required: true
-        - label: I've given this a clear, descriptive title.
-          required: true
