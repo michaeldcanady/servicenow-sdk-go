@@ -42,7 +42,7 @@ branches (maintainer decision, 2026-08-21):
 1. **`main` is always the tip of the next major's development.**
 2. **Maintenance branches are named `release/vX.Y`** (no patch segment) and
    are **created lazily** from the last `vX.Y.*` tag at first need —
-   `git branch release/v2.x v2.4.5 && git push origin release/v2.x`. Tags
+   `git branch release/v2.4 v2.4.5 && git push origin release/v2.4`. Tags
    are immutable, so when the branch is cut is irrelevant; never cut one
    preemptively.
 3. **Downstream-only within a major:** fixes land on `main` first, then move
@@ -69,11 +69,13 @@ branches (maintainer decision, 2026-08-21):
    scoped to `release/v*` refs. Weekly preview releases remain `main`-only.
    `VERSION` and `CHANGELOG.md` stay release-please-owned on every branch —
    never hand-edited.
-7. **EOL policy:** the current major's latest minor receives fixes and
-   features; the prior major receives critical/security fixes only; its
-   `release/*` branch is deleted at EOL with an announcement in the release
-   notes. Forgotten long-lived branches are how the v2 incident happens
-   twice.
+7. **EOL policy:** vocabulary — *current* means the highest tagged major,
+   *prior* any tagged major below it. The current major's latest minor
+   receives fixes and features until the successor major tags its first
+   stable release; from that moment every prior major drops to
+   critical/security fixes only. Its `release/*` branch is deleted at EOL
+   with an announcement in the release notes. Forgotten long-lived branches
+   are how the v2 incident happens twice.
 
 The contributor-facing walkthrough of these rules — where changes land,
 how to manage backports and forward-ports, and worked examples — lives on

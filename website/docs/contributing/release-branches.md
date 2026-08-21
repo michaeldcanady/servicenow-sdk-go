@@ -24,17 +24,19 @@ Four rules explain almost every decision on this page:
 
 | Rule | Meaning |
 | --- | --- |
-| `main` is next-major trunk | All new development lands on `main`, always. It is the tip of the next major version. |
+| `main` is next-major trunk | All new development lands on `main`, always. It's the tip of the next major version. |
 | Tags are cut points | Releases are tagged; branches merely give tags a place to grow from. You can branch from a tag at any time — even years later — so branches are created **only when first needed**, never preemptively. |
-| Maintenance branches flow downstream | A `release/vX.Y` branch only ever receives changes that came from (or are accounted to) `main`. It is never a second development trunk. |
+| Maintenance branches flow downstream | A `release/vX.Y` branch only ever receives changes that came from (or are accounted to) `main`. It's never a second development trunk. |
 | Drift must be tracked, never silent | Every change that reaches a maintenance branch without coming from `main` automatically opens a tracking issue demanding an explicit port-or-won't-port decision. |
 
 ```
+          every fix lands here FIRST…
+             ▼
 main ────────────●──────●──────●──▶  next major (e.g. v3-dev)
                   \
-                   \  every fix lands here FIRST…
+                   \   …then each lands downstream by cherry-pick PR
                     \
-release/v2.4 ────────●──────●────▶  …then moves down by cherry-pick PR
+release/v2.4 ────────●──────●────▶  maintenance line
       ▲              │
       └─ cut lazily from tag v2.4.5 the day it's first needed
 ```
@@ -79,7 +81,7 @@ old major. Then:
 
 1. Add the label **`backport release/vX.Y`** to the merged PR (or ask a
    maintainer to).
-2. Automation opens a cherry-pick PR against `release/vX.Y`.
+2. Automation (#656) opens a cherry-pick PR against the maintenance branch.
 3. Review and merge it like any other PR. Required CI runs there too.
 
 When the cherry-pick conflicts — common across majors — expect the import
@@ -93,16 +95,16 @@ Direct pushes to `release/*` are blocked. Everything arrives by PR.
 
 ## Landing an old-major-only feature
 
-Sometimes a new ServiceNow capability should ship to consumers who cannot
+Sometimes a new ServiceNow capability should ship to consumers who can't
 move majors yet. When the feature depends on prior-major shapes:
 
-1. Branch `feat/<name>-v2` off `release/v2.x` and open the PR **against the
+1. Branch `feat/<name>-v2` off `release/v2.4` and open the PR **against the
    release branch**.
 2. Use Conventional Commits as everywhere else — a `feat:` merge bumps the
    maintenance line's **minor** (`v2.(Y+1).0`), a `fix:` bumps the patch.
-   `release-please` opens the release PR from the alternate config; never
-   hand-edit `VERSION` or `CHANGELOG.md` on any branch.
-3. Because this change did not come from `main`, automation immediately
+   `release-please` opens the release PR from the alternate config (#659);
+   never hand-edit `VERSION` or `CHANGELOG.md` on any branch.
+3. Because this change didn't come from `main`, automation immediately
    opens a **`needs-forward-port`** issue asking whether the feature should
    also reach `main`. That's expected and fine — see next section.
 
@@ -114,14 +116,14 @@ takes exactly one of two actions:
 
 - **Port it**: open the matching PR against `main` (import suffix goes the
   other direction this time), and close the issue with its number.
-- **Decline it**: close the issue with a short written rationale — e.g.
-  "v3 replaced the model layer this builds on". A recorded decision is
-  progress; silence is drift.
+- **Decline it**: close the issue with a short written rationale, for
+  example: "v3 replaced the model layer this builds on." A recorded decision
+  is progress; silence is drift.
 
 This is the mechanism that makes the one exception to "downstream-only"
 safe: divergence can happen, but it can never happen invisibly.
 
-## Worked example: a new ServiceNow API ships today
+## Worked example: A new ServiceNow API ships today
 
 `main` is mid-v3-development. ServiceNow publishes a new endpoint, and v2
 users are asking for it now.
@@ -130,15 +132,15 @@ users are asking for it now.
 
 1. Build the module on `main` against `/v3`, following the
    [module playbook](add-api-module.md). It ships in the next v3 release.
-2. Cut `release/v2.x` from the latest `v2.*` tag if it doesn't exist yet.
-3. Open a second PR carrying the same package to `release/v2.x`, rewriting
+2. Cut `release/v2.4` from the latest `v2.*` tag if it doesn't exist yet.
+3. Open a second PR carrying the same package to `release/v2.4`, rewriting
    import suffixes `/v3` → `/v2`. New modules port well — they're
    self-contained packages.
 4. Both lines ship the capability; the two PRs reference each other.
 
 **Path B — v2-only by design:** the feature leans on v2-era model shapes,
 or v3 has restructured the area it touches. Land it directly on
-`release/v2.x` (previous section); answer the resulting
+`release/v2.4` (previous section); answer the resulting
 `needs-forward-port` issue honestly — "will port once v3 settles" or
 "won't port because…" are both acceptable answers.
 
@@ -147,7 +149,8 @@ one-tag-per-merge.
 
 ## Hard rules
 
-- ❌ No direct pushes to `release/*` — PRs only, required CI green.
+- ❌ No direct pushes to `release/*` (branch protection, #658) — PRs only,
+  required CI green.
 - ❌ No preemptive `release/*` branches.
 - ❌ No feature development on a maintenance branch without accepting the
   forward-port assessment that follows it.
@@ -158,10 +161,16 @@ one-tag-per-merge.
 
 ## Retiring a maintenance branch
 
-Support windows are deliberate, not accidental (ADR 011, rule 7):
+Support windows are deliberate, not accidental (ADR 011, rule 7).
+Vocabulary: *current* means the highest tagged major; *prior* means any
+tagged major below it.
 
-- Current major's latest minor: fixes **and** selected features.
-- Previous major: critical and security fixes only.
+- The current major's latest minor receives fixes **and** selected features.
+- The transition is explicit: the day the successor major tags its **first
+  stable release**, every prior major drops to critical/security fixes only.
+  Until that tag exists, the latest released major stays feature-eligible —
+  that window is what makes [old-major-only features](#landing-an-old-major-only-feature)
+  possible while the next major is still in development.
 - At end of support, the `release/*` branch is deleted and the retirement
   is announced in the release notes. If a maintenance branch starts feeling
   like active development again, that's the signal to revisit the EOL clock
