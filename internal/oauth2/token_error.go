@@ -1,6 +1,10 @@
 package oauth2
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+)
 
 // TokenError represents an error returned by the OAuth2 server during token exchange or management.
 type TokenError struct {
@@ -18,6 +22,9 @@ type TokenError struct {
 
 // Error returns the string representation of the TokenError.
 func (e *TokenError) Error() string {
+	if conversion.IsNil(e) {
+		return "nil oauth2 token error"
+	}
 	msg := fmt.Sprintf("oauth2 error: %s", e.Err)
 	if e.ErrorDescription != "" {
 		msg += fmt.Sprintf(" (%s)", e.ErrorDescription)

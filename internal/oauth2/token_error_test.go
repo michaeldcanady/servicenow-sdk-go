@@ -60,3 +60,13 @@ func TestTokenError_ErrorsAs(t *testing.T) {
 	assert.Equal(t, "invalid_grant", tokenErr.Err)
 	assert.Equal(t, 400, tokenErr.StatusCode)
 }
+
+// A typed-nil *TokenError must return a safe string instead of panicking,
+// matching the nil-receiver guard on NilPointerError (#591).
+func TestTokenError_Error_NilReceiver(t *testing.T) {
+	var e *TokenError
+
+	var got string
+	assert.NotPanics(t, func() { got = e.Error() })
+	assert.Equal(t, "nil oauth2 token error", got)
+}

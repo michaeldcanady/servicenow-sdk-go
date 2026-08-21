@@ -1,5 +1,7 @@
 package credentials
 
+import "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+
 // CredentialError represents an error related to credentials or authentication.
 type CredentialError struct {
 	// Message is the error message associated with the credential error.
@@ -25,6 +27,9 @@ func NewCredentialError(message string) *CredentialError {
 
 // Error returns the error message associated with the CredentialError.
 func (e *CredentialError) Error() string {
+	if conversion.IsNil(e) {
+		return "nil credential error"
+	}
 	return e.Message
 }
 
