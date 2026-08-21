@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.0...v2.0.1) (2026-08-21)
+
+
+### Bug Fixes
+
+* restore and extend nil-receiver guard on error Error() methods ([#644](https://github.com/michaeldcanady/servicenow-sdk-go/issues/644)) ([62cccae](https://github.com/michaeldcanady/servicenow-sdk-go/commit/62cccae9a1d1c665291eb35f49bb4a52cb52a7d8))
+
 ## [2.0.0](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v1.12.1...v2.0.0) (2026-08-19)
 
 
