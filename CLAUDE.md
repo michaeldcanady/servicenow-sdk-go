@@ -175,3 +175,10 @@ majors) — **never edit `VERSION` or `CHANGELOG.md` by hand.**
 `scripts/`, or other pipeline plumbing is `chore:`, never `fix:`/`feat:`, even when it fixes a
 broken run. These don't affect the published SDK and must not appear in `CHANGELOG.md` as a fix
 or feature.
+
+**Deprecation notices use a `{unreleased}` placeholder** — write
+`// Deprecated: deprecated since v{unreleased}. [use X instead.]`. The
+`stamp-deprecations` workflow replaces `{unreleased}` with the pending version on the
+release-please branch before it merges, so the tagged commit (and pkg.go.dev docs) carries the
+final version. Weekly preview releases are not stamped; placeholders survive preview cycles until
+the next stable release stamps them.
