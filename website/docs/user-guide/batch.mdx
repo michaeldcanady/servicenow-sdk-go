@@ -41,7 +41,7 @@ func main() {
 
 ## Tips
 
-- ServiceNow executes the sub-requests independently — a batch is **not** a
+- ServiceNow executes the sub-requests independently — a batch **isn't** a
   transaction. Check `GetUnservicedRequests()` for the ones that didn't run.
 - Each serviced request carries its own status code and body; a `200` on the
   batch only means the batch itself was processed.

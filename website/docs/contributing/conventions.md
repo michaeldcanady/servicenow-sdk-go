@@ -152,9 +152,9 @@ Issues use the following label taxonomy:
 
 **Type labels:** `type: bug`, `type: feature`, `type: refactor`, `type: documentation`, `type: devops`, `type: epic`, `type: test`
 
-**Module labels:** Auto-applied by PR based on changed files (e.g., `module: table-api`, `module: core`).
+**Module labels:** Auto applied by PR based on changed files (for example, `module: table-api`, `module: core`).
 
-**Status** (workflow state, auto-synced by automation):
+**Status** (workflow state, auto synced by automation):
 
 | Label | Meaning |
 |-------|---------|

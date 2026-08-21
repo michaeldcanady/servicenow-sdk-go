@@ -194,7 +194,7 @@ CIs?('s)?
 (?i)substrings?
 (?i)swappable
 (?i)toolchains?
-(?i)triaging
+(?i)triag(ed|ing)
 (?i)uncompilable
 (?i)ungrouped
 (?i)unsuffixed
