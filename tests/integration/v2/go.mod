@@ -1,4 +1,4 @@
-module github.com/michaeldcanady/servicenow-sdk-go/tests/integration/v2
+module github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2
 
 go 1.25.0
 
@@ -6,7 +6,7 @@ require (
 	github.com/cucumber/godog v0.15.1
 	github.com/jarcoal/httpmock v1.4.1
 	github.com/joho/godotenv v1.5.1
-	github.com/michaeldcanady/servicenow-sdk-go/v2 v0.0.0
+	github.com/michaeldcanady/servicenow-sdk-go/v2 v2.0.0-00010101000000-000000000000
 	github.com/microsoft/kiota-abstractions-go v1.9.4
 	github.com/microsoft/kiota-http-go v1.5.6
 )
