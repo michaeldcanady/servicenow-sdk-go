@@ -2,12 +2,14 @@ package ast
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestBinaryNode_Accept(t *testing.T) {
 	node := NewBinaryNode(NewLiteralNode("f"), OperatorIs, NewLiteralNode("v"))
 	visitor := NewStringerVisitor()
-	node.Accept(visitor)
+	require.NoError(t, node.Accept(visitor))
 	if visitor.String() != "f=v" {
 		t.Errorf("got %s, expected f=v", visitor.String())
 	}

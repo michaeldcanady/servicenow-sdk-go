@@ -22,3 +22,23 @@ func TestOperator_String(t *testing.T) {
 		})
 	}
 }
+
+func TestOperator_known(t *testing.T) {
+	tests := []struct {
+		name     string
+		op       Operator
+		expected bool
+	}{
+		{"Known", OperatorIs, true},
+		{"UnknownSentinel", OperatorUnknown, false},
+		{"OutOfRange", Operator(999), false},
+		{"Negative", Operator(-99), false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.op.known() != tt.expected {
+				t.Errorf("got %t, expected %t", tt.op.known(), tt.expected)
+			}
+		})
+	}
+}

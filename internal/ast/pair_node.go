@@ -6,7 +6,15 @@ type PairNode struct {
 	Right Node
 }
 
-func (n *PairNode) Accept(v Visitor) { v.VisitPair(n) }
+// Accept visits the node, propagating any error the visitor reports. It
+// rejects a nil receiver so malformed trees surface as errors rather than
+// panics.
+func (n *PairNode) Accept(v Visitor) error {
+	if n == nil {
+		return ErrNilNode
+	}
+	return v.VisitPair(n)
+}
 
 // NewPairNode creates a new PairNode with the given left and right nodes.
 func NewPairNode(left, right Node) *PairNode {

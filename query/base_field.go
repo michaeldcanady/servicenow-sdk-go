@@ -20,15 +20,32 @@ func (f BaseField) buildBinary(op ast.Operator, right ast.Node) Condition {
 }
 
 func (f BaseField) binary(op ast.Operator, val interface{}) Condition {
+	if err := validateQueryValue(f.name, op, val); err != nil {
+		return NewErrorCondition(err)
+	}
 	return f.buildBinary(op, ast.NewLiteralNode(val))
 }
 
 func (f BaseField) pair(op ast.Operator, left, right interface{}) Condition {
+	if err := validateQueryValue(f.name, op, left); err != nil {
+		return NewErrorCondition(err)
+	}
+	if err := validateQueryValue(f.name, op, right); err != nil {
+		return NewErrorCondition(err)
+	}
 	return f.buildBinary(op, ast.NewPairNode(ast.NewLiteralNode(left), ast.NewLiteralNode(right)))
 }
 
-func (f BaseField) multi(op ast.Operator, nodes *ast.ArrayNode) Condition {
-	return f.buildBinary(op, nodes)
+// multi builds a condition over multiple primitive values (e.g., IN / NOT IN),
+// validating each value before building the array node. It is a package-level
+// function because Go methods cannot declare type parameters.
+func multi[T ast.Primitive](f BaseField, op ast.Operator, values ...T) Condition {
+	for _, value := range values {
+		if err := validateQueryValue(f.name, op, value); err != nil {
+			return NewErrorCondition(err)
+		}
+	}
+	return f.buildBinary(op, convertSliceToArrayNode(values...))
 }
 
 // IsAnything query that field is anything.

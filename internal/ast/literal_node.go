@@ -9,7 +9,15 @@ type LiteralNode struct {
 	Value string
 }
 
-func (n *LiteralNode) Accept(v Visitor) { v.VisitLiteral(n) }
+// Accept visits the node, propagating any error the visitor reports. It
+// rejects a nil receiver so malformed trees surface as errors rather than
+// panics.
+func (n *LiteralNode) Accept(v Visitor) error {
+	if n == nil {
+		return ErrNilNode
+	}
+	return v.VisitLiteral(n)
+}
 
 // NewLiteralNode creates a new LiteralNode for the given value.
 func NewLiteralNode(val any) *LiteralNode {
