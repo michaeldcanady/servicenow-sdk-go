@@ -3,32 +3,28 @@
 Workflow-level hygiene for `release/v*` PRs is enforced in-repo
 (`.github/workflows/branch-policy.yml` now targets `release/**` too), but
 the hard guarantees — no direct pushes, required reviews, protected history —
-are repository rulesets, which are admin settings outside Actions. This
-runbook captures the exact setup so it survives maintainer turnover
-(#658, ADR 011 rule 3).
+are repository rulesets, which are admin settings outside Actions. They are
+declared in this repo as code, following the same schema Microsoft's Kiota
+repositories use: `.github/policies/servicenow-sdk-go-branch-protection.yml`
+(#658, ADR 011 rule 3). That file is the single source of truth — reviewed
+in PRs like any other code — so the setup survives maintainer turnover.
 
-## One-time ruleset setup (admin: Settings → Rules → Rulesets)
+## Ruleset definition (declared in `.github/policies/`)
 
-The ruleset is codified in
-`scripts/apply-maintenance-ruleset.sh` — prefer it over clicking through the
-UI, since it is idempotent (create-or-update) and reviewable:
+`servicenow-sdk-go-branch-protection.yml` declares two branch-protection
+rules using the `resource: repository` / `configuration.branchProtectionRules`
+schema:
 
-```bash
-# Bootstrap: create without status checks (none exist yet on a fresh branch)
-gh auth status  # must be an admin
-scripts/apply-maintenance-ruleset.sh --dry-run   # inspect payload first
-scripts/apply-maintenance-ruleset.sh
+| Rule | Branches | Guarantees |
+| --- | --- | --- |
+| trunk | `main` | PR + 1 CODEOWNERS approval, stale-review dismissal, conversation resolution, no deletion/force-push |
+| maintenance lines | `release/v*` | same as trunk **plus required linear history** |
 
-# After the bootstrap PR's CI has reported once, enforce checks:
-scripts/apply-maintenance-ruleset.sh \
-  "Check Branch Name" "Check Linked Issue" "Validate PR Title" \
-  "test (stable)" "lint"
-```
+Both require only universally reporting status checks ("Check Branch Name",
+"Check Linked Issue", "Validate PR Title", "CodeQL") — path-filtered jobs
+would sit pending forever on PRs whose paths they skip.
 
-The table below is the human-readable spec the script encodes; consult it to
-review changes or recreate by hand if ever needed.
-
-Create a ruleset named `maintenance-lines`:
+The human-readable spec for the maintenance-line ruleset:
 
 | Setting | Value |
 | --- | --- |
