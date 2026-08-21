@@ -49,7 +49,7 @@ jobs:
         id: version
         # Tolerate stray whitespace/CRLF around the version line; the strict
         # guard in the next step still rejects anything malformed.
-        run: echo "version=$(grep -Em1 '^[0-9]+\.[0-9]+\.[0-9]+' VERSION | tr -d ' \r' || true)" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(tr -d ' \r' < VERSION | grep -Em1 '^[0-9]+\.[0-9]+\.[0-9]+$' || true)" >> "$GITHUB_OUTPUT"
 
       - name: Replace {unreleased}
         env:
