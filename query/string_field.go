@@ -41,12 +41,12 @@ func (f StringField) DoesNotContain(val string) Condition {
 
 // IsOneOf query that field is one of the provided values.
 func (f StringField) IsOneOf(values ...string) Condition {
-	return f.multi(ast.OperatorIsOneOf, convertSliceToArrayNode(values...))
+	return multi(f.BaseField, ast.OperatorIsOneOf, values...)
 }
 
 // IsNotOneOf query that field is not one of the provided values.
 func (f StringField) IsNotOneOf(values ...string) Condition {
-	return f.multi(ast.OperatorIsNotOneOf, convertSliceToArrayNode(values...))
+	return multi(f.BaseField, ast.OperatorIsNotOneOf, values...)
 }
 
 // IsEmptyString query that string field is empty.

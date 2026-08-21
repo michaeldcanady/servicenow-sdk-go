@@ -1,5 +1,10 @@
 // Package query provides a type-safe and fluent API for building ServiceNow encoded queries.
 // It is a redesign of the query package, focusing on usability and immutability.
+//
+// Condition values are validated at construction time: a value containing one
+// of the reserved encoded-query characters ("^", ",", "@") yields an error
+// Condition whose Error() is non-nil, because ServiceNow encoded queries offer
+// no way to escape those characters inside a value.
 package query
 
 // Where starts a new query on the specified field as a string field.

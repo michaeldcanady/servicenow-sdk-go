@@ -13,18 +13,26 @@ type DateTimeField struct {
 }
 
 func (f DateTimeField) dateTimeBinary(op ast.Operator, val any) Condition {
-	var literal string
 	switch v := val.(type) {
 	case DateTimeValue:
-		literal = v.String()
+		// Trusted composite built by this package (NewDateTimeValue, Time, JS,
+		// OnSpecialty): its "@" and "javascript:" separators are intentional
+		// encoded-query syntax, so it bypasses value validation.
+		return f.buildBinary(op, ast.NewLiteralNode(v.String()))
 	case time.Time:
-		literal = v.Format("2006-01-02 15:04:05")
+		return f.buildBinary(op, ast.NewLiteralNode(v.Format("2006-01-02 15:04:05")))
 	case string:
-		literal = v
+		if err := validateQueryValue(f.name, op, v); err != nil {
+			return NewErrorCondition(err)
+		}
+		return f.buildBinary(op, ast.NewLiteralNode(v))
 	default:
-		literal = fmt.Sprintf("%v", v)
+		literal := fmt.Sprintf("%v", v)
+		if err := validateQueryValue(f.name, op, literal); err != nil {
+			return NewErrorCondition(err)
+		}
+		return f.buildBinary(op, ast.NewLiteralNode(literal))
 	}
-	return f.binary(op, literal)
 }
 
 // On query the date-time field is on a specific date-time.
