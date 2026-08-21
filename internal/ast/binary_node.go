@@ -7,14 +7,14 @@ type BinaryNode struct {
 	Right Node
 }
 
-// Accept visits the node. It is a no-op on a nil receiver so that malformed
-// trees (e.g., those embedding rejected subtrees) can be traversed safely by
-// any visitor.
-func (n *BinaryNode) Accept(v Visitor) {
+// Accept visits the node, propagating any error the visitor reports. It
+// rejects a nil receiver so malformed trees surface as errors rather than
+// panics.
+func (n *BinaryNode) Accept(v Visitor) error {
 	if n == nil {
-		return
+		return ErrNilNode
 	}
-	v.VisitBinary(n)
+	return v.VisitBinary(n)
 }
 
 // NewBinaryNode creates a new BinaryNode with the given left node, operator, and right node.

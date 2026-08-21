@@ -11,6 +11,7 @@ type Condition interface {
 	And(other Condition) Condition
 	Or(other Condition) Condition
 	ToNode() ast.Node
+	Query() (string, error)
 	String() string
 	Error() error
 }
@@ -48,16 +49,51 @@ func (c baseCondition) Or(other Condition) Condition {
 // "a=1^<invalid query>"). It deliberately renders as an unusable term rather
 // than an empty string — an empty sysparm_query asks ServiceNow for every
 // record, while this placeholder fails the request server-side instead.
-// Callers that check Error() — as documented — never see it.
+// Callers that check [Condition.Error] — as documented — never see it;
+// [Condition.Query] additionally reports the underlying cause of a global
+// rendering failure.
 const invalidQueryPlaceholder = "<invalid query>" //nolint:gochecknoglobals
 
-func (c baseCondition) String() string {
+// render walks the condition's tree and returns its encoded-query fragment,
+// reporting structural faults (nil node, nil child, unknown operator) that
+// make the whole rendering untrustworthy. Construction-time faults are not
+// reported here: they degrade locally to invalidQueryPlaceholder terms while
+// the rest of the tree still renders, mirroring [Condition.String].
+func (c baseCondition) render() (string, error) {
 	if c.node == nil {
+		return "", ast.ErrNilNode
+	}
+
+	visitor := ast.NewStringerVisitor()
+	if err := c.node.Accept(visitor); err != nil {
+		return "", err
+	}
+
+	return visitor.String(), nil
+}
+
+// Query renders the condition as a ServiceNow encoded-query fragment,
+// reporting any construction ([Condition.Error]) or structural fault
+// encountered while rendering.
+//
+// A non-nil error means the result must not be sent to ServiceNow: the string
+// is either empty (identify the fault with errors.Is) or contains
+// invalidQueryPlaceholder terms in place of rejected sides. [Condition.String]
+// is the error-blind counterpart.
+func (c baseCondition) Query() (string, error) {
+	rendered, rerr := c.render()
+	return rendered, errors.Join(c.err, rerr)
+}
+
+func (c baseCondition) String() string {
+	rendered, rerr := c.render()
+	if rerr != nil {
+		// A structural fault means the tree has no valid rendering; degrade
+		// to the placeholder rather than emit a truncated or corrupted
+		// sysparm_query.
 		return invalidQueryPlaceholder
 	}
-	visitor := ast.NewStringerVisitor()
-	c.node.Accept(visitor)
-	return visitor.String()
+	return rendered
 }
 
 // NewCondition creates a condition from an AST node.

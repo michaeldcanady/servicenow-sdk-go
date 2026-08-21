@@ -18,7 +18,7 @@ const reservedQueryCharacters = "^,@" //nolint:gochecknoglobals
 // validateQueryValue checks that a consumer-supplied value contains no reserved
 // encoded-query characters. It returns nil for safe values and a descriptive
 // error otherwise; callers turn that error into an error Condition via
-// NewErrorCondition so it surfaces through Condition.Error().
+// [NewErrorCondition] so it surfaces through [Condition.Error].
 //
 // Literals composed internally by this package (for example the
 // "label@javascript:expr@javascript:expr" strings built by OnSpecialty) are
@@ -41,8 +41,8 @@ func validateQueryValue(field string, op ast.Operator, val any) error {
 // expressions) contains no reserved encoded-query characters. Unlike plain
 // values, fragments may not contain any of them — including "@": the package
 // inserts the only structural separators itself. Callers turn a non-nil error
-// into an error Condition via NewErrorCondition so it surfaces through
-// Condition.Error().
+// into an error Condition via [NewErrorCondition] so it surfaces through
+// [Condition.Error].
 func validateQueryFragment(name, fragment string) error {
 	index := strings.IndexAny(fragment, reservedQueryCharacters)
 	if index < 0 {

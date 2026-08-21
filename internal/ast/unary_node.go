@@ -6,14 +6,14 @@ type UnaryNode struct {
 	Left Node
 }
 
-// Accept visits the node. It is a no-op on a nil receiver so that malformed
-// trees (e.g., those embedding rejected subtrees) can be traversed safely by
-// any visitor.
-func (n *UnaryNode) Accept(v Visitor) {
+// Accept visits the node, propagating any error the visitor reports. It
+// rejects a nil receiver so malformed trees surface as errors rather than
+// panics.
+func (n *UnaryNode) Accept(v Visitor) error {
 	if n == nil {
-		return
+		return ErrNilNode
 	}
-	v.VisitUnary(n)
+	return v.VisitUnary(n)
 }
 
 // NewUnaryNode creates a new UnaryNode with the given operator and left node.

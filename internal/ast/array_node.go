@@ -5,14 +5,14 @@ type ArrayNode struct {
 	Nodes []Node
 }
 
-// Accept visits the node. It is a no-op on a nil receiver so that malformed
-// trees (e.g., those embedding rejected subtrees) can be traversed safely by
-// any visitor.
-func (n *ArrayNode) Accept(v Visitor) {
+// Accept visits the node, propagating any error the visitor reports. It
+// rejects a nil receiver so malformed trees surface as errors rather than
+// panics.
+func (n *ArrayNode) Accept(v Visitor) error {
 	if n == nil {
-		return
+		return ErrNilNode
 	}
-	v.VisitArray(n)
+	return v.VisitArray(n)
 }
 
 // NewArrayNode creates a new ArrayNode with the given nodes.

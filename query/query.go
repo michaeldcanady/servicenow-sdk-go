@@ -3,7 +3,7 @@
 //
 // Condition values are validated at construction time: a value containing one
 // of the reserved encoded-query characters ("^", ",", "@") yields an error
-// Condition whose Error() is non-nil, because ServiceNow encoded queries offer
+// Condition whose [Condition.Error] is non-nil, because ServiceNow encoded queries offer
 // no way to escape those characters inside a value.
 package query
 
