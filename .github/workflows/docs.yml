@@ -102,7 +102,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - name: Vale Linter
+      # Docs linting is scoped by event type (#661):
+      #   * PRs lint ONLY added/updated content relative to the base branch,
+      #     so pre-existing violations in untouched files can't gate an
+      #     unrelated docs change. filter_mode: added makes reviewdog fetch
+      #     the PR diff and drop alerts outside added lines.
+      #   * main pushes keep the full-tree scan — that is where whole-repo
+      #     drift (which PR scoping deliberately ignores) gets caught.
+      # The Vale binary itself is pinned: rule packs drift between releases,
+      # and an unpinned bump once failed every docs PR overnight.
+      - name: Vale Linter (changed content)
+        if: github.event_name == 'pull_request'
+        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # 3.0.0
+        with:
+          fail_on_error: true
+          files: website/docs
+          filter_mode: added
+          reporter: local
+          level: error
+          version: 3.18.0
+
+      - name: Vale Linter (full site)
+        if: github.event_name != 'pull_request'
         uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # 3.0.0
         with:
           fail_on_error: true
@@ -110,6 +131,7 @@ jobs:
           filter_mode: nofilter
           reporter: local
           level: error
+          version: 3.18.0
 
   deploy:
     name: deploy-docs
