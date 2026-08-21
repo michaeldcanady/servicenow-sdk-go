@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/ast"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 )
 
 // Condition represents a part of a ServiceNow query.
@@ -11,7 +12,6 @@ type Condition interface {
 	And(other Condition) Condition
 	Or(other Condition) Condition
 	ToNode() ast.Node
-	Query() (string, error)
 	String() string
 	Error() error
 }
@@ -30,6 +30,9 @@ func (c baseCondition) Error() error {
 }
 
 func (c baseCondition) And(other Condition) Condition {
+	if conversion.IsNil(other) {
+		return NewErrorCondition(ErrNilCondition)
+	}
 	return baseCondition{
 		node: ast.NewBinaryNode(c.ToNode(), ast.OperatorAnd, other.ToNode()),
 		err:  errors.Join(c.Error(), other.Error()),
@@ -37,6 +40,9 @@ func (c baseCondition) And(other Condition) Condition {
 }
 
 func (c baseCondition) Or(other Condition) Condition {
+	if conversion.IsNil(other) {
+		return NewErrorCondition(ErrNilCondition)
+	}
 	return baseCondition{
 		node: ast.NewBinaryNode(c.ToNode(), ast.OperatorOr, other.ToNode()),
 		err:  errors.Join(c.Error(), other.Error()),
@@ -49,9 +55,7 @@ func (c baseCondition) Or(other Condition) Condition {
 // "a=1^<invalid query>"). It deliberately renders as an unusable term rather
 // than an empty string — an empty sysparm_query asks ServiceNow for every
 // record, while this placeholder fails the request server-side instead.
-// Callers that check [Condition.Error] — as documented — never see it;
-// [Condition.Query] additionally reports the underlying cause of a global
-// rendering failure.
+// Callers that check [Condition.Error] — as documented — never see it.
 const invalidQueryPlaceholder = "<invalid query>" //nolint:gochecknoglobals
 
 // render walks the condition's tree and returns its encoded-query fragment,
@@ -72,19 +76,12 @@ func (c baseCondition) render() (string, error) {
 	return visitor.String(), nil
 }
 
-// Query renders the condition as a ServiceNow encoded-query fragment,
-// reporting any construction ([Condition.Error]) or structural fault
-// encountered while rendering.
-//
-// A non-nil error means the result must not be sent to ServiceNow: the string
-// is either empty (identify the fault with errors.Is) or contains
-// invalidQueryPlaceholder terms in place of rejected sides. [Condition.String]
-// is the error-blind counterpart.
-func (c baseCondition) Query() (string, error) {
-	rendered, rerr := c.render()
-	return rendered, errors.Join(c.err, rerr)
-}
-
+// String renders the condition as a ServiceNow encoded-query fragment.
+// Construction faults degrade locally — rejected sides render as
+// invalidQueryPlaceholder terms while the rest of the tree still renders —
+// and structural faults (nil child, unknown operator) degrade globally to the
+// placeholder, since a partially rendered query is worse than none. The
+// underlying construction fault is available via [Condition.Error].
 func (c baseCondition) String() string {
 	rendered, rerr := c.render()
 	if rerr != nil {

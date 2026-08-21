@@ -7,6 +7,10 @@
 // no way to escape those characters inside a value.
 package query
 
+import (
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+)
+
 // Where starts a new query on the specified field as a string field.
 func Where(name string) StringField {
 	return String(name)
@@ -38,9 +42,15 @@ func DateTime(name string) DateTimeField {
 }
 
 // And combines multiple conditions with an AND operator.
+//
+// Without any conditions it returns an error Condition matching
+// [ErrNoConditions]; a nil element yields one matching [ErrNilCondition].
 func And(conds ...Condition) Condition {
 	if len(conds) == 0 {
-		return nil
+		return NewErrorCondition(ErrNoConditions)
+	}
+	if conversion.IsNil(conds[0]) {
+		return NewErrorCondition(ErrNilCondition)
 	}
 	res := conds[0]
 	for _, c := range conds[1:] {
@@ -50,9 +60,15 @@ func And(conds ...Condition) Condition {
 }
 
 // Or combines multiple conditions with an OR operator.
+//
+// Without any conditions it returns an error Condition matching
+// [ErrNoConditions]; a nil element yields one matching [ErrNilCondition].
 func Or(conds ...Condition) Condition {
 	if len(conds) == 0 {
-		return nil
+		return NewErrorCondition(ErrNoConditions)
+	}
+	if conversion.IsNil(conds[0]) {
+		return NewErrorCondition(ErrNilCondition)
 	}
 	res := conds[0]
 	for _, c := range conds[1:] {
