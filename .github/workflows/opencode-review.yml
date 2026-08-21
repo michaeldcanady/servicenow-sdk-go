@@ -1,0 +1,77 @@
+name: OpenCode Review
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+  issue_comment:
+    types:
+      - created
+
+concurrency:
+  group: opencode-review-${{ github.event.pull_request.number || github.event.issue.number }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  review:
+    name: AI Code Review (opencode/big-pickle)
+    # Auto-review when an owner / member / collaborator opens, reopens, or
+    # marks a PR ready for review. Skip auto-review when the PR description
+    # contains `/no-bot-review`. Manual re-review (including for outside
+    # contributions) when an owner / member / collaborator comments
+    # `/oc review` or `/opencode review`; the explicit trigger overrides the
+    # skip marker.
+    if: |
+      (
+        github.event_name == 'pull_request' &&
+        (
+          github.event.pull_request.author_association == 'OWNER' ||
+          github.event.pull_request.author_association == 'MEMBER' ||
+          github.event.pull_request.author_association == 'COLLABORATOR'
+        ) &&
+        !contains(github.event.pull_request.body, '/no-bot-review')
+      ) ||
+      (
+        github.event_name == 'issue_comment' &&
+        github.event.issue.pull_request != null &&
+        (
+          contains(github.event.comment.body, ' /oc review') ||
+          startsWith(github.event.comment.body, '/oc review') ||
+          contains(github.event.comment.body, ' /opencode review') ||
+          startsWith(github.event.comment.body, '/opencode review')
+        ) &&
+        (
+          github.event.comment.author_association == 'OWNER' ||
+          github.event.comment.author_association == 'MEMBER' ||
+          github.event.comment.author_association == 'COLLABORATOR'
+        )
+      )
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      # Comment-triggered runs start on the default branch; switch to the PR
+      # head so opencode reviews the PR's code.
+      - if: github.event_name == 'issue_comment'
+        run: gh pr checkout "${{ github.event.issue.number }}" --repo "$GITHUB_REPOSITORY"
+
+      - name: Run opencode review
+        uses: Barmore-Genc/opencode-pr-reviewer@d34c66bc5c72cb84b6b7c1572c2752b16fdfe339 # v1
+        with:
+          model: opencode/big-pickle
+          pr-number: ${{ github.event.pull_request.number || github.event.issue.number }}
+          user-comment: ${{ github.event.comment.body }}
