@@ -11,20 +11,29 @@ in PRs like any other code — so the setup survives maintainer turnover.
 
 ## Ruleset definition (declared in `.github/policies/`)
 
-`servicenow-sdk-go-branch-protection.yml` declares two branch-protection
-rules using the `resource: repository` / `configuration.branchProtectionRules`
-schema:
-
-| Rule | Branches | Guarantees |
-| --- | --- | --- |
-| trunk | `main` | PR + 1 CODEOWNERS approval, stale-review dismissal, conversation resolution, no deletion/force-push |
-| maintenance lines | `release/v*` | same as trunk **plus required linear history** |
-
 Both require only universally reporting status checks ("Check Branch Name",
 "Check Linked Issue", "Validate PR Title", "CodeQL") — path-filtered jobs
 would sit pending forever on PRs whose paths they skip.
 
-The human-readable spec for the maintenance-line ruleset:
+Apply the maintenance-line declaration with
+`scripts/apply-maintenance-ruleset.sh`, which is idempotent
+(create-or-update) and encodes exactly the spec below — prefer it over
+clicking through the UI:
+
+```bash
+gh auth status  # must be an admin
+
+# Bootstrap: create without status checks (none exist yet on a fresh branch)
+scripts/apply-maintenance-ruleset.sh --dry-run   # inspect payload first
+scripts/apply-maintenance-ruleset.sh
+
+# After the bootstrap PR's CI has reported once, enforce the declared checks:
+scripts/apply-maintenance-ruleset.sh \
+  "Check Branch Name" "Check Linked Issue" "Validate PR Title" "CodeQL"
+```
+
+The table below is the human-readable spec both files encode; consult it to
+review changes or recreate by hand if ever needed.
 
 | Setting | Value |
 | --- | --- |
