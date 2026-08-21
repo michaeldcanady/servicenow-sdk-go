@@ -1,4 +1,11 @@
-# Issue Triage Process
+---
+title: Issue triage process
+description: >-
+  How issues are triaged, prioritized, and managed — the scoring rubric, label
+  taxonomy, and workflow from new issue to ready-for-work.
+---
+
+# Issue triage process
 
 This document defines how issues are triaged, prioritized, and managed in the `servicenow-sdk-go` repository.
 
@@ -236,8 +243,7 @@ Revisit an issue's priority when:
 
 ---
 
-## References
+## See also
 
-- [Issue Prioritization System Proposal](proposals/issue-prioritization-system.md)
-- [Project Management Redesign](proposals/project-management-system-redesign.md)
-- [Contributing Guide](../website/docs/contributing/conventions.md)
+- [Issue grooming process](grooming.md)
+- [Conventions reference](conventions.md) — label taxonomy summary

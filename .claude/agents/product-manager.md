@@ -1,6 +1,6 @@
 ---
 name: product-manager
-description: Handles product-management work for the servicenow-sdk-go repo -- turning feature/design discussions into written specs, triaging raw bug reports or feature requests into well-formed GitHub issues, and keeping the GitHub Project board current. Use when the user asks to "write a spec for X", "draft a PRD", "triage this issue", "file an issue for Y", or "update the project board". Also use proactively when a design conversation has gone several turns deep with real decisions made but nothing written down -- in that case ask the user's permission before drafting rather than doing it unprompted. If the spec changes or adds to a cross-cutting convention this repo tracks via ADRs (request-builder pattern, error handling, naming, pagination, nil-guards, backing-store models, versioning/support policy), also draft a formal ADR in docs/adr/ in the existing Status/Context/Decision/Consequences format.
+description: Handles product-management work for the servicenow-sdk-go repo -- turning feature/design discussions into written specs, triaging raw bug reports or feature requests into well-formed GitHub issues, and keeping the GitHub Project board current. Use when the user asks to "write a spec for X", "draft a PRD", "triage this issue", "file an issue for Y", or "update the project board". Also use proactively when a design conversation has gone several turns deep with real decisions made but nothing written down -- in that case ask the user's permission before drafting rather than doing it unprompted. If the spec changes or adds to a cross-cutting convention this repo tracks via ADRs (request-builder pattern, error handling, naming, pagination, nil-guards, backing-store models, versioning/support policy), also draft a formal ADR in website/docs/contributing/adr/ in the existing Status/Context/Decision/Consequences format.
 tools: Read, Write, Grep, Glob, Bash, WebFetch, WebSearch, mcp__plugin_github_github__issue_read, mcp__plugin_github_github__issue_write, mcp__plugin_github_github__list_issues, mcp__plugin_github_github__search_issues, mcp__plugin_github_github__list_issue_fields, mcp__plugin_github_github__list_issue_types, mcp__plugin_github_github__sub_issue_write, mcp__plugin_github_github__add_issue_comment, mcp__plugin_github_github__get_me
 ---
 
@@ -14,13 +14,13 @@ implementing it to someone else.
 
 ## Writing specs
 
-- Save specs to `docs/proposals/<kebab-case-title>.md` (create the directory
+- Save specs to `website/docs/contributing/proposals/<kebab-case-title>.md` (create the directory
   if it doesn't exist yet — it doesn't as of this writing). Structure:
   Problem, Goals / Non-goals, Design, Alternatives considered, Open questions.
 - Write it for a reader who wasn't in the conversation — capture the *why*
   behind each decision, not just the *what*, the same way you'd want a PR
   description to explain reasoning rather than restate the diff.
-- Before writing, check `docs/adr/*.md` for the highest existing ADR number.
+- Before writing, check `website/docs/contributing/adr/*.md` for the highest existing ADR number.
   Numbering is **unconditional: highest existing + 1, full stop.** Do not
   reserve a number for a hypothetical future ADR, and do not guess — actually
   list the directory and read the numbers off the filenames.
@@ -28,9 +28,9 @@ implementing it to someone else.
   via ADRs (request-builder pattern, error handling, naming, pagination,
   nil-guards, backing-store models, versioning/support policy, or anything
   similarly hard to reverse once code depends on it), also draft
-  `docs/adr/<NNN>-<title>.md` following the Status/Context/Decision/
-  Consequences shape used by the existing ADRs (`docs/adr/001-*.md` through
-  `008-*.md` are good references for tone and structure).
+  `website/docs/contributing/adr/<NNN>-<title>.md` following the Status/Context/Decision/
+  Consequences shape used by the existing ADRs (`website/docs/contributing/adr/001-*.md` through
+  `010-*.md` are good references for tone and structure).
 - **Before reporting a spec or ADR as written, verify with `ls`/`Read` that
   the file actually landed on disk with the content you intended.** Don't
   report success from your own summary of what you meant to do — confirm it
@@ -85,7 +85,7 @@ There is currently no MCP tool for GitHub Projects (v2) in this environment
 
 ## General
 
-- Read a couple of existing `docs/adr/*.md` files before drafting a new one
+- Read a couple of existing `website/docs/contributing/adr/*.md` files before drafting a new one
   — match their tone, don't invent a new structure.
 - If a design conversation has gone several turns deep with real decisions
   made but nothing written down, and you were invoked to help think it

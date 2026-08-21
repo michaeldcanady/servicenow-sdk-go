@@ -7,7 +7,7 @@ description: >-
 
 # Why hand-written on Kiota?
 
-*Primary source: [ADR 003 — Hand-written client on Kiota runtime abstractions](https://github.com/michaeldcanady/servicenow-sdk-go/blob/main/docs/adr/003-hand-written-on-kiota.md).*
+*Primary source: [ADR 003 — Hand-written client on Kiota runtime abstractions](./adr/003-hand-written-on-kiota.md).*
 
 ## The decision
 

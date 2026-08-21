@@ -96,7 +96,7 @@ notes. Structure:
 5. **Bug fixes** — reference the changelog for the full list
 6. **Upgrade path** — link to the migration guide
 
-Use the ADRs in `docs/adr/` for authoritative descriptions of design
+Use the ADRs in `website/docs/contributing/adr/` for authoritative descriptions of design
 decisions (especially 001-error-standardization, 002-backed-models,
 003-hand-written-kiota, 005-generic-page-iterator, 006-nil-sentinel).
 
