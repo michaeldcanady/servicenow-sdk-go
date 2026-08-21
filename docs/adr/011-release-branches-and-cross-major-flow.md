@@ -75,6 +75,10 @@ branches (maintainer decision, 2026-08-21):
    notes. Forgotten long-lived branches are how the v2 incident happens
    twice.
 
+The contributor-facing walkthrough of these rules — where changes land,
+how to manage backports and forward-ports, and worked examples — lives on
+the docs site at `website/docs/contributing/release-branches.md`.
+
 Follow-up tooling work implied by this decision: a `stable-release` job
 keyed on `release/v*` refs with an alternate release-please config, the
 backport label action, the forward-port tracker workflow, and
