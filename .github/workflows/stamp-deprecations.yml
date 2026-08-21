@@ -47,7 +47,9 @@ jobs:
 
       - name: Read pending version
         id: version
-        run: echo "version=$(grep -Em1 '^[0-9]+\.[0-9]+\.[0-9]+$' VERSION || true)" >> "$GITHUB_OUTPUT"
+        # Tolerate stray whitespace/CRLF around the version line; the strict
+        # guard in the next step still rejects anything malformed.
+        run: echo "version=$(grep -Em1 '^[0-9]+\.[0-9]+\.[0-9]+' VERSION | tr -d ' \r' || true)" >> "$GITHUB_OUTPUT"
 
       - name: Replace {unreleased}
         env:
@@ -57,7 +59,7 @@ jobs:
           # prerelease VERSION, so no match -> skip cleanly (placeholders survive
           # preview cycles by design) rather than leaving the check red.
           if [ -z "$VERSION" ]; then
-            echo "No stable x.y.z line in VERSION (weekly preview or missing); skipping stamp."
+            echo "::notice::No stable x.y.z line in VERSION (weekly preview or missing); skipping stamp."
             exit 0
           fi
           # Guard the value before it reaches shell/sed contexts; with digits and
