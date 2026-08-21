@@ -300,7 +300,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Conventions & playbooks',
       collapsed: false,
-      items: ['contributing/conventions', 'contributing/add-api-module'],
+      items: ['contributing/conventions', 'contributing/add-api-module', 'contributing/release-branches'],
     },
     {
       type: 'category',

@@ -204,3 +204,4 @@ CIs?('s)?
 Godog
 (?i)mockable
 (?i)preconfigured
+(?i)triage(d|s)?
