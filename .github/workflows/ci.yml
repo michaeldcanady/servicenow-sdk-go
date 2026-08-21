@@ -8,13 +8,15 @@ on:
     paths:
       - "**.go"
       - "!docs/snippets/**"
-      - "tests/integration/features/**"
+      - "tests/integration/**"
+      - "**/*.feature"
       - ".github/workflows/ci.yml"
   pull_request:
     paths:
       - "**.go"
       - "!docs/snippets/**"
-      - "tests/integration/features/**"
+      - "tests/integration/**"
+      - "**/*.feature"
       - ".github/workflows/ci.yml"
       - ".golangci.yml"
 
@@ -46,7 +48,8 @@ jobs:
           files: |
             **.go
             !docs/snippets/**
-            tests/integration/features/**
+            tests/integration/**
+            **/*.feature
             .github/workflows/ci.yml
 
   check-go:
