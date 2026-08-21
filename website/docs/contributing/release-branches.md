@@ -29,16 +29,18 @@ Four rules explain almost every decision on this page:
 | Maintenance branches flow downstream | A `release/vX.Y` branch only ever receives changes that came from (or are accounted to) `main`. It's never a second development trunk. |
 | Drift must be tracked, never silent | Every change that reaches a maintenance branch without coming from `main` automatically opens a tracking issue demanding an explicit port-or-won't-port decision. |
 
-```
-          every fix lands here FIRST…
-             ▼
-main ────────────●──────●──────●──▶  next major (e.g. v3-dev)
-                  \
-                   \   …then each lands downstream by cherry-pick PR
-                    \
-release/v2.4 ────────●──────●────▶  maintenance line
-      ▲              │
-      └─ cut lazily from tag v2.4.5 the day it's first needed
+```mermaid
+gitGraph
+   accTitle: Release branch flow - fixes land upstream first
+   accDescr: main is the trunk where every fix lands first; release/v2.4 is cut lazily from tag v2.4.5 and receives each fix afterwards as a cherry-pick copy.
+   commit id: "v2.4.5" tag: "v2.4.5"
+   branch release/v2.4
+   checkout main
+   commit id: "fix lands here FIRST" type: HIGHLIGHT
+   checkout release/v2.4
+   commit id: "cherry-pick copy (-x)"
+   checkout main
+   commit id: "next major work continues"
 ```
 
 ## Creating a maintenance branch
