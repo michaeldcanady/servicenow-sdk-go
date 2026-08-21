@@ -128,6 +128,13 @@ func TestQueryInjectionRejectedPerOperator(t *testing.T) {
 		{"DateTimeTrendBefore", DateTime("f").TrendBefore(injectionPayload)},
 		{"DateTimeRelativeAfter", DateTime("f").RelativeAfter(injectionPayload)},
 		{"DateTimeRelativeBefore", DateTime("f").RelativeBefore(injectionPayload)},
+		// Trusted composites validate their caller-supplied fragments at
+		// construction; the error must surface through the condition.
+		{"DateTimeJavascript", DateTime("f").Javascript(injectionPayload)},
+		{"DateTimeOnJSComposite", DateTime("f").On(JS(injectionPayload))},
+		{"DateTimeOnSpecialtyLabel", DateTime("f").OnSpecialty(injectionPayload, "gs.a()", "gs.b()")},
+		{"DateTimeOnSpecialtyStartExpr", DateTime("f").OnSpecialty("L", injectionPayload, "gs.b()")},
+		{"DateTimeOnSpecialtyEndExpr", DateTime("f").OnSpecialty("L", "gs.a()", injectionPayload)},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

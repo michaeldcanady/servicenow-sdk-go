@@ -9,10 +9,6 @@ Compose a ServiceNow encoded query from typed conditions and use it to
 filter a table request.
 
 :::note
-This is a preview feature currently under active development.
-:::
-
-:::warning
 Condition values are written into the encoded query verbatim, and ServiceNow's
 encoded-query syntax has no way to escape its structural characters (`^`
 separates clauses, `,` separates list values, `@` separates pairs). A value
@@ -35,8 +31,11 @@ if err := q.Error(); err != nil {
 sysparmQuery := q.String()
 ```
 
-A condition that reports an error has no valid encoded-query form, so don't
-call `String()` on it.
+A condition that reports an error has no valid encoded-query form. If you
+serialize one anyway, `String()` renders `<invalid query>` in place of the
+rejected part — an intentionally unusable term, never a silently weakened
+query. The same validation covers caller-supplied fragments of date-time
+composites (`Javascript()`, `JS()`, and `OnSpecialty()`).
 :::
 
 ## When to use this pattern

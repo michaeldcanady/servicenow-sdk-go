@@ -63,6 +63,12 @@ func TestCondition_String(t *testing.T) {
 		expected string
 	}{
 		{"Standard", String("f").Is("v"), "f=v"},
+		// A rejected condition must render the fail-closed placeholder instead
+		// of panicking on its missing subtree.
+		{"ErrorCondition", Number("n").Between(10, 5), invalidQueryPlaceholder},
+		{"ErrorOnLeft", Number("n").Between(10, 5).And(String("b").Is("2")), "<invalid query>^b=2"},
+		{"ErrorOnRight", String("a").Is("1").Or(Number("n").Between(10, 5)), "a=1^OR<invalid query>"},
+		{"NilNode", NewCondition(nil), invalidQueryPlaceholder},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -35,3 +35,22 @@ func validateQueryValue(field string, op ast.Operator, val any) error {
 		rendered, field, op.String(), rendered[index],
 	)
 }
+
+// validateQueryFragment checks that a caller-supplied fragment composed into a
+// trusted DateTimeValue (JavaScript expressions, OnSpecialty labels and
+// expressions) contains no reserved encoded-query characters. Unlike plain
+// values, fragments may not contain any of them — including "@": the package
+// inserts the only structural separators itself. Callers turn a non-nil error
+// into an error Condition via NewErrorCondition so it surfaces through
+// Condition.Error().
+func validateQueryFragment(name, fragment string) error {
+	index := strings.IndexAny(fragment, reservedQueryCharacters)
+	if index < 0 {
+		return nil
+	}
+
+	return fmt.Errorf(
+		"%s %q contains reserved encoded-query character %q; ^, ,, and @ structure the query itself and cannot be escaped",
+		name, fragment, fragment[index],
+	)
+}

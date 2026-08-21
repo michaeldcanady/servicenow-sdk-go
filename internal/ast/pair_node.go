@@ -6,7 +6,15 @@ type PairNode struct {
 	Right Node
 }
 
-func (n *PairNode) Accept(v Visitor) { v.VisitPair(n) }
+// Accept visits the node. It is a no-op on a nil receiver so that malformed
+// trees (e.g., those embedding rejected subtrees) can be traversed safely by
+// any visitor.
+func (n *PairNode) Accept(v Visitor) {
+	if n == nil {
+		return
+	}
+	v.VisitPair(n)
+}
 
 // NewPairNode creates a new PairNode with the given left and right nodes.
 func NewPairNode(left, right Node) *PairNode {

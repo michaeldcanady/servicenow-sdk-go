@@ -1,9 +1,17 @@
 package ast
 
+type LiteralVisitor interface {
+	VisitLiteral(node *LiteralNode)
+}
+
+type UnaryVisitor interface {
+	VisitUnary(node *UnaryNode)
+}
+
 // Visitor represents a visitor for the AST.
 type Visitor interface {
-	VisitLiteral(node *LiteralNode)
-	VisitUnary(node *UnaryNode)
+	LiteralVisitor
+	UnaryVisitor
 	VisitBinary(node *BinaryNode)
 	VisitPair(node *PairNode)
 	VisitArray(node *ArrayNode)

@@ -9,7 +9,15 @@ type LiteralNode struct {
 	Value string
 }
 
-func (n *LiteralNode) Accept(v Visitor) { v.VisitLiteral(n) }
+// Accept visits the node. It is a no-op on a nil receiver so that malformed
+// trees (e.g., those embedding rejected subtrees) can be traversed safely by
+// any visitor.
+func (n *LiteralNode) Accept(v Visitor) {
+	if n == nil {
+		return
+	}
+	v.VisitLiteral(n)
+}
 
 // NewLiteralNode creates a new LiteralNode for the given value.
 func NewLiteralNode(val any) *LiteralNode {

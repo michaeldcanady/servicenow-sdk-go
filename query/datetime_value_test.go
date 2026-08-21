@@ -41,3 +41,34 @@ func TestNewDateTimeValue(t *testing.T) {
 		})
 	}
 }
+
+func TestJS(t *testing.T) {
+	tests := []struct {
+		name     string
+		expr     string
+		expected string
+		wantErr  bool
+	}{
+		{"Standard", "gs.daysAgoStart(0)", "javascript:gs.daysAgoStart(0)", false},
+		{"CaretInjection", "gs.daysAgoStart(0)^ORactive=false", "", true},
+		{"CommaInjection", "a,b", "", true},
+		{"AtInjection", "a@b", "", true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v := JS(tt.expr)
+			if tt.wantErr {
+				if v.err == nil {
+					t.Fatal("Expected validation error")
+				}
+				return
+			}
+			if v.err != nil {
+				t.Fatalf("Unexpected error: %v", v.err)
+			}
+			if v.String() != tt.expected {
+				t.Errorf("got %s, expected %s", v.String(), tt.expected)
+			}
+		})
+	}
+}

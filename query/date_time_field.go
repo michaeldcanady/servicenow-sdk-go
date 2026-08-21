@@ -17,7 +17,13 @@ func (f DateTimeField) dateTimeBinary(op ast.Operator, val any) Condition {
 	case DateTimeValue:
 		// Trusted composite built by this package (NewDateTimeValue, Time, JS,
 		// OnSpecialty): its "@" and "javascript:" separators are intentional
-		// encoded-query syntax, so it bypasses value validation.
+		// encoded-query syntax, so it bypasses value validation. The
+		// caller-supplied fragments inside composites are validated when the
+		// composite is built; an invalid one surfaces here as an error
+		// condition.
+		if v.err != nil {
+			return NewErrorCondition(v.err)
+		}
 		return f.buildBinary(op, ast.NewLiteralNode(v.String()))
 	case time.Time:
 		return f.buildBinary(op, ast.NewLiteralNode(v.Format("2006-01-02 15:04:05")))
@@ -124,7 +130,24 @@ func (f DateTimeField) LastYear() Condition {
 }
 
 // OnSpecialty builds a specialty date-time condition (e.g., ONToday@javascript:...).
+//
+// The label and expressions are caller-supplied text embedded verbatim into
+// the encoded query, so each is validated; a violation produces an error
+// Condition.
 func (f DateTimeField) OnSpecialty(label, startExpr, endExpr string) Condition {
+	for _, fragment := range [...]struct {
+		name  string
+		value string
+	}{
+		{"label", label},
+		{"start expression", startExpr},
+		{"end expression", endExpr},
+	} {
+		if err := validateQueryFragment(fragment.name, fragment.value); err != nil {
+			return NewErrorCondition(err)
+		}
+	}
+
 	val := fmt.Sprintf("%s@javascript:%s@javascript:%s", label, startExpr, endExpr)
 	return f.On(DateTimeValue{literal: val})
 }

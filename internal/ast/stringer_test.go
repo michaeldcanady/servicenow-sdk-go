@@ -79,3 +79,26 @@ func TestStringerVisitor_Visit(t *testing.T) {
 		})
 	}
 }
+
+// TestNode_AcceptNilReceiver asserts that every node's Accept is a no-op on a
+// nil receiver, so malformed trees can be traversed by any visitor without
+// panicking.
+func TestNode_AcceptNilReceiver(t *testing.T) {
+	tests := []struct {
+		name   string
+		accept func(v Visitor)
+	}{
+		{"Literal", func(v Visitor) { var n *LiteralNode; n.Accept(v) }},
+		{"Unary", func(v Visitor) { var n *UnaryNode; n.Accept(v) }},
+		{"Binary", func(v Visitor) { var n *BinaryNode; n.Accept(v) }},
+		{"Pair", func(v Visitor) { var n *PairNode; n.Accept(v) }},
+		{"Array", func(v Visitor) { var n *ArrayNode; n.Accept(v) }},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			assert.NotPanics(t, func() {
+				test.accept(NewStringerVisitor())
+			})
+		})
+	}
+}
