@@ -9,6 +9,25 @@ runbook captures the exact setup so it survives maintainer turnover
 
 ## One-time ruleset setup (admin: Settings → Rules → Rulesets)
 
+The ruleset is codified in
+`scripts/apply-maintenance-ruleset.sh` — prefer it over clicking through the
+UI, since it is idempotent (create-or-update) and reviewable:
+
+```bash
+# Bootstrap: create without status checks (none exist yet on a fresh branch)
+gh auth status  # must be an admin
+scripts/apply-maintenance-ruleset.sh --dry-run   # inspect payload first
+scripts/apply-maintenance-ruleset.sh
+
+# After the bootstrap PR's CI has reported once, enforce checks:
+scripts/apply-maintenance-ruleset.sh \
+  "Check Branch Name" "Check Linked Issue" "Validate PR Title" \
+  "test (stable)" "lint"
+```
+
+The table below is the human-readable spec the script encodes; consult it to
+review changes or recreate by hand if ever needed.
+
 Create a ruleset named `maintenance-lines`:
 
 | Setting | Value |
