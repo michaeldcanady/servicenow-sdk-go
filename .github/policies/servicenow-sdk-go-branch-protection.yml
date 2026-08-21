@@ -1,10 +1,9 @@
 # Branch protection policy for the servicenow-sdk-go repository.
 # Declarative companion to ADR 011 (release-branch policy, #658): `main` is
 # the next-major trunk; `release/v*` are downstream-only maintenance lines
-# whose hard guarantees live here. The admin-side ruleset equivalent —
-# including bypass actors, which this schema cannot express — is codified in
-# scripts/apply-maintenance-ruleset.sh (#667); this file is the reviewed,
-# human-readable declaration of desired state.
+# whose hard guarantees live here. Following the same schema Microsoft's
+# Kiota repositories use for branch protection as code, this file is the
+# single reviewed source of truth for those settings.
 
 name: servicenow-sdk-go-branch-protection
 description: Branch protection policy for the servicenow-sdk-go repository
