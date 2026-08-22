@@ -91,6 +91,9 @@ jobs:
 
           # Only `backport release/vX.Y` (two numeric components) selects a
           # target; near-misses get a pointed warning so typos surface.
+          # Legacy maintenance branches named with three components
+          # (release/v1.0.0-era naming) never match here — rename them to
+          # the ADR 011 scheme rather than widening this pattern.
           PATTERN='^backport[[:space:]](release/v[0-9]+\.[0-9]+)$'
 
           existing=""
@@ -111,7 +114,7 @@ jobs:
               echo "::notice::PR #${PR_NUMBER} will be backported to ${branch}."
               existing="${existing}${branch} "
             elif [ "$rc" -eq 2 ]; then
-              echo "::notice::Target branch '${branch}' does not exist yet (maintenance branches are cut lazily); skipping backport for it."
+              echo "::notice::No branch named '${branch}' exists (maintenance branches are cut lazily, so absence is normal). If you meant a legacy three-component branch (e.g. release/v1.0.0), rename it to the release/vX.Y scheme first."
             else
               echo "::error::git ls-remote failed while checking '${branch}' (exit ${rc}); cannot safely proceed."
               exit "$rc"
@@ -128,7 +131,10 @@ jobs:
         with:
           # Disabled: targets were resolved (and filtered for existence) above.
           # Passing `target_branches` directly keeps lazy-cut branches from
-          # reading as hard failures inside the action.
+          # reading as hard failures inside the action. Verified against the
+          # pinned SHA: main.ts maps an empty input to `undefined`, and
+          # findTargetBranchesFromLabels returns [] for that — label scanning
+          # is fully off, not "matches everything".
           label_pattern: ''
           target_branches: ${{ steps.select.outputs.existing }}
           # On conflict, still open a draft PR holding the first conflict and
