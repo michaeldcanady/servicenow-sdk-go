@@ -11,6 +11,10 @@ name: Stamp Deprecated Notices
 #   the branch (wiping any prior stamp) -> synchronize fires -> re-stamp.
 # - Our own stamp push -> synchronize fires -> clean diff -> no-op.
 #
+# Maintenance release PRs (release/v* targets) get the same stamping so
+# {unreleased} never ships in a tagged maintenance line. Base-branch caveat:
+# GitHub evaluates this file from the PR's base ref, so lines cut before this
+# filter landed need the updated file synced onto them via PR.
 # Weekly preview releases are intentionally NOT stamped; placeholders survive
 # preview cycles until the next stable release stamps them. Both release flows
 # use the same `release-please--` branch prefix, so the discriminator is the
@@ -24,6 +28,7 @@ on:
       - synchronize
     branches:
       - main
+      - "release/v*"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
