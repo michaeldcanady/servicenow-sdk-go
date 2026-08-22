@@ -1,0 +1,210 @@
+name: Forward Port Tracker
+
+# ADR 011 rule 5: drift between `main` and the `release/v*` branches is tracked
+# debt, never silent divergence. When a PR merges directly into a release
+# branch (i.e. it did not originate from a backport flow), this workflow opens
+# a `needs-forward-port` issue so maintainers consciously assess the change
+# against `main`: port it up, or explicitly decline it with a recorded
+# rationale.
+#
+# Provenance heuristic — a merged PR counts as having backport provenance
+# (and therefore skips tracking) when any of these hold:
+#   - its head branch name starts with `backport-`
+#   - its head branch name starts with `cherry-pick-`
+#   - it carries any label whose name starts with `backport`
+#   - its head branch name starts with `release-please--` (release
+#     bookkeeping: version bumps and changelogs never port to main)
+#
+# Limits of that heuristic (accepted trade-offs, documented here on purpose):
+#   - It keys off naming/labeling conventions, not commit ancestry. A direct
+#     merge from an innocuously-named branch that actually carries cherry-
+#     picked commits produces a tracking issue anyway (false positive) —
+#     harmless: the maintainer closes it via the written won't-port path.
+#   - Conversely, for a brand-new change developed on a `cherry-pick-*`
+#     branch we assume backport provenance and skip tracking (false negative).
+#   - This workflow observes only PR-based merges; direct pushes to
+#     `release/v*` bypass pull_request events entirely and generate no
+#     tracking issue.
+#   - GitHub executes a workflow's BASE-BRANCH copy for pull_request_target,
+#     not main's. Branches cut before this file landed on them observe
+#     nothing until the file is synced onto them via PR, and every future
+#     edit to this file must be re-synced or those lines run stale logic.
+#
+# Why `pull_request_target`: merges originating from fork PRs get a read-only
+# token under the `pull_request` event, which cannot create labels/issues at
+# closure time. `pull_request_target` runs against the trusted base context;
+# this workflow never checks out or executes PR code — it only reads PR
+# metadata (number/title/ref/labels) passed through env vars.
+
+on:
+  pull_request_target:
+    types:
+      - closed
+    branches:
+      - 'release/v*'
+
+concurrency:
+  group: forward-port-tracker-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  track:
+    name: Track forward port to main
+    # Belt-and-braces alongside the trigger's branch filter: only merged PRs
+    # landing on a release/v* branch are in scope.
+    if: >-
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.base.ref, 'release/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+      pull-requests: read
+      contents: read
+    steps:
+      - name: Assess backport provenance
+        id: provenance
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+        run: |
+          set -euo pipefail
+
+          skip="false"
+          reason=""
+
+          if [[ "$HEAD_REF" == backport-* ]]; then
+            skip="true"
+            reason="head branch '${HEAD_REF}' starts with 'backport-'"
+          elif [[ "$HEAD_REF" == cherry-pick-* ]]; then
+            skip="true"
+            reason="head branch '${HEAD_REF}' starts with 'cherry-pick-'"
+          elif [[ "$HEAD_REF" == release-please--* ]]; then
+            skip="true"
+            reason="release bookkeeping merge from '${HEAD_REF}' (version bumps and changelogs never port to main)"
+          elif jq -e 'any(.[]; startswith("backport"))' >/dev/null <<<"$LABELS" 2>/dev/null; then
+            skip="true"
+            reason="PR carries a 'backport*' label: $(jq -r 'map(select(startswith("backport"))) | join(", ")' <<<"$LABELS")"
+          fi
+
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+          echo "reason=$reason" >> "$GITHUB_OUTPUT"
+
+          if [[ "$skip" == "true" ]]; then
+            echo "::notice::Backport provenance detected (${reason}); no forward-port tracking needed."
+            exit 0
+          fi
+
+          echo "No backport provenance detected for head branch '${HEAD_REF}'; opening a tracking issue."
+
+      - name: Ensure needs-forward-port label exists
+        if: steps.provenance.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          # Idempotent create: "already exists" is success here; any other
+          # failure aborts the run loudly instead of silently filing an
+          # unlabeled tracking issue.
+          if ! gh label create "needs-forward-port" \
+              --repo "$REPO" \
+              --color "D93F0B" \
+              --description "Merged into release/v* without backport provenance; assess porting to main" ; then
+            if gh label view "needs-forward-port" --repo "$REPO" >/dev/null 2>&1; then
+              echo "Label 'needs-forward-port' already exists; continuing."
+            else
+              echo "::error::Failed to create the 'needs-forward-port' label."
+              exit 1
+            fi
+          fi
+
+      - name: Open forward-port tracking issue
+        if: steps.provenance.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref }}/.github/workflows/forward-port-tracker.yml
+        run: |
+          set -euo pipefail
+
+          TITLE="Assess porting #${PR_NUMBER} to main"
+
+          # Dedupe guard keyed on a machine-readable marker in the issue body,
+          # immune to retitling, search-index lag, and future title-format
+          # changes. Only OPEN issues block: a won't-port closure followed by
+          # a re-merge legitimately reopens the assessment.
+          MARKER="forward-port-tracker:${PR_NUMBER}"
+          existing="$(gh issue list --repo "$REPO" --state open \
+                        --label "needs-forward-port" --json body \
+                        --jq --arg m "$MARKER" \
+                        '[.[] | select(contains(.body; $m))] | length')"
+          if [[ "$existing" -gt 0 ]]; then
+            echo "::notice::An open '${TITLE}' issue already exists; not duplicating."
+            exit 0
+          fi
+
+          # sed-safe escaping for interpolating free-form PR title text.
+          esc() {
+            local s=$1
+            s=${s//\\/\\\\}
+            s=${s//|/\\|}
+            s=${s//&/\\&}
+            printf '%s' "$s"
+          }
+
+          BODY="$(mktemp)"
+          trap 'rm -f "$BODY"' EXIT
+          cat > "$BODY" <<'TEMPLATE'
+          ## Forward-port assessment required
+
+          <!-- forward-port-tracker:@PR_NUMBER@ -->
+
+          [#@PR_NUMBER@](@PR_URL@) ("@PR_TITLE@") was merged directly into `@BASE_REF@` without backport
+          provenance (head branch was neither `backport-*`, `cherry-pick-*`, nor a release-please
+          bookkeeping branch, and the PR carried no `backport*` label).
+
+          Per ADR 011 (_Release branches & cross-major flow_), divergence between `main`
+          and a `release/v*` branch is acceptable **only while it is tracked**. Closing
+          this issue takes exactly one of two paths:
+
+          ### Path 1 — Port it
+
+          Open the matching PR against `main` — the module import suffix moves the other
+          direction this time: `/vN` → `/vN+1` — then close this issue with a comment
+          referencing that PR's number.
+
+          ### Path 2 — Won't-port it
+
+          Close this issue with a short written rationale for declining the port
+          (for example, "_the next major replaced the layer this builds on_"). Any honest
+          explanation counts.
+
+          A recorded decision is progress. **Silence is drift.**
+
+          ---
+          _Tracked automatically by
+          [`forward-port-tracker.yml`](@WORKFLOW_URL@);
+          contributor-facing playbook:
+          `website/docs/contributing/release-branches.md`._
+          TEMPLATE
+          sed -i \
+            -e "s|@PR_URL@|$(esc "${PR_URL}")|g" \
+            -e "s|@PR_TITLE@|$(esc "${PR_TITLE}")|g" \
+            -e "s|@PR_NUMBER@|$(esc "${PR_NUMBER}")|g" \
+            -e "s|@BASE_REF@|$(esc "${BASE_REF}")|g" \
+            -e "s|@WORKFLOW_URL@|$(esc "${WORKFLOW_URL}")|g" \
+            "$BODY"
+
+          gh issue create \
+            --repo "$REPO" \
+            --title "$TITLE" \
+            --body-file "$BODY" \
+            --label "needs-forward-port"
