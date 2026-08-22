@@ -101,31 +101,25 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          # reviewdog resolves filter_mode: added by diffing against the base
-          # branch locally; a depth-1 checkout leaves that diff empty and the
-          # step fails with "diff command is empty" even when Vale is clean.
-          fetch-depth: 0
 
       # Docs linting is scoped by event type (#661):
-      #   * PRs lint ONLY added/updated content relative to the base branch,
+      #   * PRs lint ONLY the markdown files changed relative to the base,
       #     so pre-existing violations in untouched files can't gate an
-      #     unrelated docs change. filter_mode: added makes reviewdog fetch
-      #     the PR diff and drop alerts outside added lines.
+      #     unrelated docs change.
       #   * main pushes keep the full-tree scan — that is where whole-repo
       #     drift (which PR scoping deliberately ignores) gets caught.
+      # Scoping is done at the file level here rather than handing reviewdog
+      # filter_mode: added — vale-action never passes a diff command, so that
+      # combination dies with "diff command is empty" even on clean runs.
       # The Vale binary itself is pinned: rule packs drift between releases,
       # and an unpinned bump once failed every docs PR overnight.
-      - name: Vale Linter (changed content)
+      - name: Changed markdown files
+        id: changed-md
         if: github.event_name == 'pull_request'
-        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # 3.0.0
+        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
         with:
-          fail_on_error: true
-          files: website/docs
-          filter_mode: added
-          reporter: local
-          level: error
-          version: 3.18.0
+          files: |
+            website/docs/**/*.md
 
       - name: Vale Linter (full site)
         if: github.event_name != 'pull_request'
@@ -133,8 +127,17 @@ jobs:
         with:
           fail_on_error: true
           files: website/docs
-          filter_mode: nofilter
-          reporter: local
+          level: error
+          version: 3.18.0
+
+      - name: Vale Linter (changed content)
+        if: >-
+          github.event_name == 'pull_request' &&
+          steps.changed-md.outputs.any_changed == 'true'
+        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # 3.0.0
+        with:
+          fail_on_error: true
+          files: ${{ steps.changed-md.outputs.all_changed_files }}
           level: error
           version: 3.18.0
 
