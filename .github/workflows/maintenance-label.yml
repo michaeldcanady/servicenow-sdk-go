@@ -42,7 +42,7 @@ jobs:
           fi
 
           # Idempotent create: "already exists" is success here (e.g. a branch
-          # re-created after deletion); any OTHER failure aborts loudly rather
+          # re-created after deletion); any other failure aborts loudly rather
           # than leaving the branch without its label.
           if ! gh label create "$LABEL" \
               --repo "$REPO" \

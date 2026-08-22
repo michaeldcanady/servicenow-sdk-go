@@ -5,7 +5,7 @@ name: Backport
 #
 # Label convention
 #   Label a PR targeting main with one or more labels of the form
-#     backport release/vX.Y        e.g. backport release/v2
+#     backport release/vX.Y        e.g. backport release/v2.4
 #   When the PR merges, this workflow opens one cherry-pick PR per labeled
 #   target branch carrying the same commits. Multiple labels fan out to
 #   multiple branches independently. The labels themselves are provisioned
@@ -13,19 +13,19 @@ name: Backport
 #   (maintenance-label.yml), so cutting release/vX.Y makes its label usable.
 #
 # Behavior
-#   - Missing target: maintenance branches are cut lazily, so a label naming
-#     a branch that does not exist yet is skipped with a ::notice:: instead
-#     of failing the run.
-#   - Conflicts: the backport PR is still opened — as a draft holding the
-#     first encountered conflict — with resolution instructions commented on
-#     the source PR. Import-suffix conflicts (/vN+1 -> /vN) are expected and
-#     resolved by hand; the important part is that nothing fails silently.
+#   - Missing target: maintenance branches are cut lazily, so when a label
+#     names a branch that does not exist yet, the workflow skips it with a
+#     ::notice:: instead of failing the run.
+#   - Conflicts: the action still opens the backport PR as a draft holding
+#     the first encountered conflict, and posts resolution instructions on
+#     the source PR. Expect import-suffix conflicts (/vN+1 -> /vN) and
+#     resolve them by hand; nothing fails silently.
 #
 # Manual fallback period
 #   This automation is new. Until it has proven itself over a few releases,
 #   maintainers may still cherry-pick manually per the contributor playbook
 #   (website/docs/contributing/release-branches.md); the label scheme is the
-#   same, so a missed automated backport can simply be performed by hand.
+#   same, so you can perform a missed automated backport by hand.
 #   After a proving period the manual path becomes the exception, not the
 #   procedure.
 #
@@ -45,7 +45,8 @@ name: Backport
 # Runs on pull_request_target so GITHUB_TOKEN holds write access even when
 # the merged PR came from a fork. Only pinned actions plus a read-only
 # label-parsing step (event data passed via env, never interpolated into the
-# script) execute here; nothing from the PR's ref is checked out or run.
+# script) execute here; this workflow checks out and runs nothing from the
+# PR's ref.
 
 on:
   pull_request_target:
