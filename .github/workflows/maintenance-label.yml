@@ -1,0 +1,59 @@
+name: Maintenance label sync
+
+# When a maintenance branch is cut lazily (ADR 011 rule 2), its companion
+# backport label must exist before the first PR can be labeled for it —
+# otherwise the Backport workflow's label probe silently finds nothing.
+# This provisions the label the moment the branch appears, so cutting
+# `release/vX.Y` is sufficient to make `backport release/vX.Y` usable.
+#
+# Labels are mutable repo settings with no declarative file form, so this
+# is inherently an API call from CI; it stays idempotent and scoped to
+# exactly one well-formed branch name per run.
+
+on:
+  create
+
+permissions: {}
+
+jobs:
+  ensure-backport-label:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write # labels live under the Issues API
+    if: >-
+      github.event.ref_type == 'branch' &&
+      startsWith(github.event.ref, 'release/v')
+    steps:
+      - name: Ensure backport label exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.event.ref }}
+        run: |
+          set -euo pipefail
+
+          # Only well-formed maintenance line names (release/vX.Y, two numeric
+          # components — same shape the Backport workflow's pattern expects)
+          # get a label; anything else under release/ is ignored.
+          LABEL="backport ${BRANCH#release/v}"
+          if [[ ! "$LABEL" =~ ^backport\ release/v[0-9]+\.[0-9]+$ ]]; then
+            echo "::notice::'${BRANCH}' is not a release/vX.Y maintenance line; no label provisioned."
+            exit 0
+          fi
+
+          # Idempotent create: "already exists" is success here (e.g. a branch
+          # re-created after deletion); any OTHER failure aborts loudly rather
+          # than leaving the branch without its label.
+          if ! gh label create "$LABEL" \
+              --repo "$REPO" \
+              --color "76A5E8" \
+              --description "Cherry-pick merged changes into ${BRANCH}" ; then
+            if gh label view "$LABEL" --repo "$REPO" >/dev/null 2>&1; then
+              echo "Label '${LABEL}' already exists; continuing."
+            else
+              echo "::error::Failed to create the '${LABEL}' label."
+              exit 1
+            fi
+          fi
+
+          echo "::notice::Label '${LABEL}' is available for backport targeting."

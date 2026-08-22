@@ -8,7 +8,9 @@ name: Backport
 #     backport release/vX.Y        e.g. backport release/v2
 #   When the PR merges, this workflow opens one cherry-pick PR per labeled
 #   target branch carrying the same commits. Multiple labels fan out to
-#   multiple branches independently.
+#   multiple branches independently. The labels themselves are provisioned
+#   automatically when a maintenance branch is opened
+#   (maintenance-label.yml), so cutting release/vX.Y makes its label usable.
 #
 # Behavior
 #   - Missing target: maintenance branches are cut lazily, so a label naming
