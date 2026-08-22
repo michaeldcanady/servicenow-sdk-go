@@ -101,6 +101,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # reviewdog resolves filter_mode: added by diffing against the base
+          # branch locally; a depth-1 checkout leaves that diff empty and the
+          # step fails with "diff command is empty" even when Vale is clean.
+          fetch-depth: 0
 
       # Docs linting is scoped by event type (#661):
       #   * PRs lint ONLY added/updated content relative to the base branch,
