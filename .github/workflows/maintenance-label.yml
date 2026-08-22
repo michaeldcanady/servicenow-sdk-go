@@ -34,8 +34,9 @@ jobs:
 
           # Only well-formed maintenance line names (release/vX.Y, two numeric
           # components — same shape the Backport workflow's pattern expects)
-          # get a label; anything else under release/ is ignored.
-          LABEL="backport ${BRANCH#release/v}"
+          # get a label; anything else under release/ is ignored. Keep the
+          # literal 'release/' segment when deriving: strip only 'release/'.
+          LABEL="backport release/${BRANCH#release/}"
           if [[ ! "$LABEL" =~ ^backport\ release/v[0-9]+\.[0-9]+$ ]]; then
             echo "::notice::'${BRANCH}' is not a release/vX.Y maintenance line; no label provisioned."
             exit 0
