@@ -103,7 +103,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       # Docs linting is scoped by event type (#661):
-      #   * PRs lint ONLY the markdown files changed relative to the base,
+      #   * PRs lint only the markdown files changed relative to the base,
       #     so pre-existing violations in untouched files can't gate an
       #     unrelated docs change.
       #   * main pushes keep the full-tree scan — that is where whole-repo
