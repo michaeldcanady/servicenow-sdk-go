@@ -1,26 +1,28 @@
 name: Forward Port Tracker
 
 # ADR 011 rule 5: drift between `main` and the `release/v*` branches is tracked
-# debt, never silent divergence. When a PR merges DIRECTLY into a release
+# debt, never silent divergence. When a PR merges directly into a release
 # branch (i.e. it did not originate from a backport flow), this workflow opens
-# a `needs-forward-port` issue so the change is consciously assessed against
-# `main`: either ported up, or explicitly declined with a recorded rationale.
+# a `needs-forward-port` issue so maintainers consciously assess the change
+# against `main`: port it up, or explicitly decline it with a recorded
+# rationale.
 #
 # Provenance heuristic — a merged PR counts as having backport provenance
-# (and is therefore SKIPPED) when ANY of these hold:
+# (and therefore skips tracking) when any of these hold:
 #   - its head branch name starts with `backport-`
 #   - its head branch name starts with `cherry-pick-`
 #   - it carries any label whose name starts with `backport`
 #
 # Limits of that heuristic (accepted trade-off, documented here on purpose):
-#   - It keys off naming/labeling CONVENTIONS, not commit ancestry. A direct
+#   - It keys off naming/labeling conventions, not commit ancestry. A direct
 #     merge from an innocuously-named branch that actually carries cherry-
 #     picked commits produces a tracking issue anyway (false positive) —
-#     harmless: the issue is then closed via the written won't-port path.
-#   - Conversely, a brand-new change developed on a `cherry-pick-*` branch is
-#     assumed to be a backport and skips tracking (false negative).
-#   - Only PR-based merges are observed; direct pushes to `release/v*` bypass
-#     pull_request events entirely and generate no tracking issue.
+#     harmless: the maintainer closes it via the written won't-port path.
+#   - Conversely, for a brand-new change developed on a `cherry-pick-*`
+#     branch we assume backport provenance and skip tracking (false negative).
+#   - This workflow observes only PR-based merges; direct pushes to
+#     `release/v*` bypass pull_request events entirely and generate no
+#     tracking issue.
 #
 # Why `pull_request_target`: merges originating from fork PRs get a read-only
 # token under the `pull_request` event, which cannot create labels/issues at
@@ -96,7 +98,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Idempotent create: "already exists" is success here; any OTHER
+          # Idempotent create: "already exists" is success here; any other
           # failure aborts the run loudly instead of silently filing an
           # unlabeled tracking issue.
           if ! gh label create "needs-forward-port" \
@@ -165,7 +167,7 @@ jobs:
           ### Path 2 — Won't-port it
 
           Close this issue with a short written rationale for declining the port
-          (e.g. "_the next major replaced the layer this builds on_"). Any honest
+          (for example, "_the next major replaced the layer this builds on_"). Any honest
           explanation counts.
 
           A recorded decision is progress. **Silence is drift.**
