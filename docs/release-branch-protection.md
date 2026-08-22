@@ -43,8 +43,8 @@ have already reported on the branch. Instead:
 - `pr.yml`: PR title lint already targeted `main` and `release/**`.
 - `ci.yml`: build/test/lint run for any PR touching Go paths, regardless of
   base branch; pushes to `release/**` were already covered.
-- `labeler.yml` / `CODEOWNERS`: path-based and base-agnostic; no changes
-  were required (#658 audit result).
+- `labeler.yml` / `CODEOWNERS`: path-based and base-agnostic; the #658
+  audit required no changes.
 
 ## Known gap
 
