@@ -3,13 +3,28 @@
 Workflow-level hygiene for `release/v*` PRs is enforced in-repo
 (`.github/workflows/branch-policy.yml` now targets `release/**` too), but
 the hard guarantees — no direct pushes, required reviews, protected history —
-are repository rulesets, which are admin settings outside Actions. This
-runbook captures the exact setup so it survives maintainer turnover
-(#658, ADR 011 rule 3).
+are repository rulesets, which are admin settings outside Actions. They are
+declared in this repo as code, following the same schema Microsoft's Kiota
+repositories use: `.github/policies/servicenow-sdk-go-branch-protection.yml`
+(#658, ADR 011 rule 3). That file is the single source of truth — reviewed
+in PRs like any other code — so the setup survives maintainer turnover.
 
-## One-time ruleset setup (admin: Settings → Rules → Rulesets)
+## Ruleset definition (declared in `.github/policies/`)
 
-Create a ruleset named `maintenance-lines`:
+`servicenow-sdk-go-branch-protection.yml` declares two branch-protection
+rules using the `resource: repository` / `configuration.branchProtectionRules`
+schema:
+
+| Rule | Branches | Guarantees |
+| --- | --- | --- |
+| trunk | `main` | PR + 1 CODEOWNERS approval, stale-review dismissal, conversation resolution, no deletion/force-push |
+| maintenance lines | `release/v*` | same as trunk **plus required linear history** |
+
+Both require only universally reporting status checks ("Check Branch Name",
+"Check Linked Issue", "Validate PR Title", "CodeQL") — path-filtered jobs
+would sit pending forever on PRs whose paths they skip.
+
+The human-readable spec for the maintenance-line ruleset:
 
 | Setting | Value |
 | --- | --- |
