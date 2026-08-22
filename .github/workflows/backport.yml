@@ -1,0 +1,145 @@
+name: Backport
+
+# Label-triggered cherry-pick automation for maintenance branches (ADR 011,
+# rules 3-4: fixes land on main first, then move down to release/vX.Y).
+#
+# Label convention
+#   Label a PR targeting main with one or more labels of the form
+#     backport release/vX.Y        e.g. backport release/v2.4
+#   When the PR merges, this workflow opens one cherry-pick PR per labeled
+#   target branch carrying the same commits. Multiple labels fan out to
+#   multiple branches independently. The labels themselves are provisioned
+#   automatically when a maintenance branch is opened
+#   (maintenance-label.yml), so cutting release/vX.Y makes its label usable.
+#
+# Behavior
+#   - Missing target: maintenance branches are cut lazily, so when a label
+#     names a branch that does not exist yet, the workflow skips it with a
+#     ::notice:: instead of failing the run.
+#   - Conflicts: the action still opens the backport PR as a draft holding
+#     the first encountered conflict, and posts resolution instructions on
+#     the source PR. Expect import-suffix conflicts (/vN+1 -> /vN) and
+#     resolve them by hand; nothing fails silently.
+#
+# Manual fallback period
+#   This automation is new. Until it has proven itself over a few releases,
+#   maintainers may still cherry-pick manually per the contributor playbook
+#   (website/docs/contributing/release-branches.md); the label scheme is the
+#   same, so you can perform a missed automated backport by hand.
+#   After a proving period the manual path becomes the exception, not the
+#   procedure.
+#
+# Implementation choice: korthout/backport-action over a hand-rolled script.
+#   Its default label_pattern (^backport ([^ ]+)$) already implements our
+#   multi-label fan-out; it handles every merge method (squash included),
+#   cherry-picks with `-x` for an audit trail, and its
+#   `conflict_resolution: draft_commit_conflicts` mode provides exactly the
+#   conflicted-but-opened-PR UX required above — recreating that (push a
+#   conflict-marker branch, open a draft PR, comment on the source PR) in
+#   bash would be real surface area to own and test. One deviation: the
+#   action treats a missing target branch as a hard failure, while our
+#   maintenance branches are cut lazily, so we pre-compute the target list
+#   ourselves (skipping absent branches with a notice) and pass it via
+#   `target_branches` with `label_pattern` disabled.
+#
+# Runs on pull_request_target so GITHUB_TOKEN holds write access even when
+# the merged PR came from a fork. Only pinned actions plus a read-only
+# label-parsing step (event data passed via env, never interpolated into the
+# script) execute here; this workflow checks out and runs nothing from the
+# PR's ref.
+
+on:
+  pull_request_target:
+    types:
+      - closed
+    branches:
+      - main
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+
+jobs:
+  backport:
+    name: Cherry-pick merged PR to release/vX.Y
+    # Closed without merging is not a backport candidate; the '"backport '
+    # probe cheaply short-circuits runs with no backport label at all.
+    if: >-
+      github.event.pull_request.merged &&
+      contains(toJSON(github.event.pull_request.labels.*.name), '"backport ')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write # push backport branches
+      pull-requests: write # open backport PRs, comment on the source PR
+    steps:
+      - name: Checkout repository history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Full history so cherry-picks across main and release branches
+          # always find their parent commits.
+          fetch-depth: 0
+
+      - name: Select existing target branches
+        id: select
+        env:
+          LABELS_JSON: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+
+          # Only `backport release/vX.Y` (two numeric components) selects a
+          # target; near-misses get a pointed warning so typos surface.
+          # Legacy maintenance branches named with three components
+          # (release/v1.0.0-era naming) never match here — rename them to
+          # the ADR 011 scheme rather than widening this pattern.
+          PATTERN='^backport[[:space:]](release/v[0-9]+\.[0-9]+)$'
+
+          existing=""
+          while IFS= read -r label; do
+            if [[ ! "$label" =~ $PATTERN ]]; then
+              if [[ "$label" == "backport "* ]]; then
+                echo "::warning::Label '${label}' looks like a backport request but does not match 'backport release/vX.Y'; ignoring."
+              fi
+              continue
+            fi
+
+            branch="${BASH_REMATCH[1]}"
+            rc=0
+            # Maintenance branches are cut lazily; absence is expected and
+            # skipped with a notice, while any other ls-remote failure is real.
+            git ls-remote --exit-code --heads origin "refs/heads/${branch}" >/dev/null 2>&1 || rc=$?
+            if [ "$rc" -eq 0 ]; then
+              echo "::notice::PR #${PR_NUMBER} will be backported to ${branch}."
+              existing="${existing}${branch} "
+            elif [ "$rc" -eq 2 ]; then
+              echo "::notice::No branch named '${branch}' exists (maintenance branches are cut lazily, so absence is normal). If you meant a legacy three-component branch (e.g. release/v1.0.0), rename it to the release/vX.Y scheme first."
+            else
+              echo "::error::git ls-remote failed while checking '${branch}' (exit ${rc}); cannot safely proceed."
+              exit "$rc"
+            fi
+          done < <(jq -r '.[]' <<< "$LABELS_JSON")
+
+          # Trailing space stripped; empty stays empty and disables the next step.
+          echo "existing=${existing% }" >> "$GITHUB_OUTPUT"
+
+      - name: Open cherry-pick PRs
+        id: backport
+        if: steps.select.outputs.existing != ''
+        uses: korthout/backport-action@2e830a1d0b8269505846ddd407a70876913ad1f8 # v4.6.0
+        with:
+          # Disabled: targets were resolved (and filtered for existence) above.
+          # Passing `target_branches` directly keeps lazy-cut branches from
+          # reading as hard failures inside the action. Verified against the
+          # pinned SHA: main.ts maps an empty input to `undefined`, and
+          # findTargetBranchesFromLabels returns [] for that — label scanning
+          # is fully off, not "matches everything".
+          label_pattern: ''
+          target_branches: ${{ steps.select.outputs.existing }}
+          # On conflict, still open a draft PR holding the first conflict and
+          # post resolution instructions on the source PR, instead of failing.
+          experimental: |
+            {
+              "conflict_resolution": "draft_commit_conflicts"
+            }
