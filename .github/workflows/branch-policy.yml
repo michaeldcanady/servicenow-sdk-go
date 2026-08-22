@@ -11,6 +11,10 @@ on:
       - unlabeled
     branches:
       - main
+      # Maintenance lines get the same PR hygiene as main (#658); the
+      # ruleset-level protections they also need are admin settings — see
+      # docs/release-branch-protection.md for the manual runbook.
+      - "release/**"
 
 permissions: {}
 
@@ -20,9 +24,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    # Automated branches (release-please, dependabot) don't follow the
-    # human-authored <type>/<kebab-description> convention, so they're exempt.
-    if: ${{ !startsWith(github.head_ref, 'release-please--') && !startsWith(github.head_ref, 'dependabot/') }}
+    # Automated branches (release-please, dependabot, backports) don't follow
+    # the human-authored <type>/<kebab-description> convention, so they're
+    # exempt.
+    if: ${{ !startsWith(github.head_ref, 'release-please--') && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'backport/') }}
     steps:
       - name: Validate branch name matches <type>/<kebab-description>
         env:
