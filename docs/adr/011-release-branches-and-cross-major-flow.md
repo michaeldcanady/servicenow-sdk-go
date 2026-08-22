@@ -6,8 +6,8 @@ Accepted
 
 ## Context
 
-The v2 launch left `main` (v1) and `release/v2` significantly drifted, because
-new development landed on `release/v2` while `main` stayed on v1. Go's
+The v2 launch drifted `main` (v1) and `release/v2` apart: new development
+landed on `release/v2` while `main` stayed on v1. Go's
 semantic-import-versioning module paths make this especially expensive to
 recover from: every touched file carries `/v1` vs `/v2` import suffixes, so
 cross-line merges conflict in nearly every file and effectively become
@@ -16,9 +16,9 @@ fast and does not heal on its own.
 
 Tooling reinforces the problem today: release-please fires only on `main`
 (`.github/workflows/stable-release.yml`), so there is no supported path for
-patching — or extending — a shipped major once `main` has moved on. That gap
-becomes acute whenever a new ServiceNow API surface ships mid-cycle that
-consumers still pinned to the previous major want *now*, not at the next
+patching — or extending — a shipped major once `main` moves on. That gap
+becomes acute whenever a new ServiceNow API surface ships mid-cycle and
+consumers pinned to the previous major want it *now*, not at the next
 major release.
 
 Alternatives considered:
@@ -46,9 +46,9 @@ branches (maintainer decision, 2026-08-21):
    are immutable, so when the branch is cut is irrelevant; never cut one
    preemptively.
 3. **Downstream-only within a major:** fixes land on `main` first, then move
-   down via a label-triggered backport action (`backport release/v2.x`
-   opens the cherry-pick PR). Direct pushes to `release/*` are blocked;
-   all changes arrive by PR with required CI.
+   down via a label-triggered backport action (`backport release/vX.Y`
+   opens the cherry-pick PR). Branch protection blocks direct pushes to
+   `release/*`; all changes arrive by PR with required CI.
 4. **Cross-major features** (a new ServiceNow capability arriving while
    `main` develops the next major):
    - Useful for both majors and small/portable (typical new API module) —
@@ -64,18 +64,19 @@ branches (maintainer decision, 2026-08-21):
    without backport provenance automatically opens a `needs-forward-port`
    issue ("assess porting #N to `main`"). It closes only by porting the
    change up or by recording an explicit "won't port" rationale.
-6. **Releases off maintenance lines are batched and demand-driven**, driven
-   by Conventional Commits through a second release-please configuration
-   scoped to `release/v*` refs. Weekly preview releases remain `main`-only.
+6. **Maintenance releases are batched and demand-driven:** Conventional
+   Commits on `release/v*` refs feed a second release-please configuration.
+   Weekly preview releases remain `main`-only.
    `VERSION` and `CHANGELOG.md` stay release-please-owned on every branch —
    never hand-edited.
 7. **EOL policy:** vocabulary — *current* means the highest tagged major,
-   *prior* any tagged major below it. The current major's latest minor
+   *prior* means any tagged major below it. The current major's latest minor
    receives fixes and features until the successor major tags its first
    stable release; from that moment every prior major drops to
-   critical/security fixes only. Its `release/*` branch is deleted at EOL
-   with an announcement in the release notes. Forgotten long-lived branches
-   are how the v2 incident happens twice.
+   critical/security fixes only. Maintainers delete the prior major's
+   `release/*` branch at EOL and announce the retirement in the release
+   notes. Forgotten long-lived branches are how the v2 incident happens
+   twice.
 
 The contributor-facing walkthrough of these rules — where changes land,
 how to manage backports and forward-ports, and worked examples — lives on
@@ -98,8 +99,8 @@ backport label action, the forward-port tracker workflow, and
   surface; rules 4–5 depend on reviewer discipline that automation only
   partially enforces.
 - **Rule for future release questions:** do not create preemptive
-  `release/*` branches, never land feature work on a maintenance branch
+  `release/*` branches, do not land feature work on a maintenance branch
   without completing the forward-port assessment, and do not treat a
-  maintenance branch as a development trunk — if v2-era work starts feeling
-  like active development again, that is the signal to re-evaluate the EOL
-  clock, not to grow the branch.
+  maintenance branch as a development trunk. If maintenance-line work
+  starts feeling like active development again, that is the cue to
+  re-evaluate the EOL clock, not to grow the branch.

@@ -13,16 +13,16 @@ exactly ```` ```mermaid ```` renders — you never need to touch the config.
 
 ## Why this matters here
 
-This repo's docs are reviewed hard for clarity. A diagram that can be read
-against its adjacent prose is worse than no diagram (PR #660's review caught
-an ASCII flow whose arrow label pointed downstream while the rule said fixes
+This repo's docs are reviewed hard for clarity. A diagram that contradicts
+its adjacent prose is worse than no diagram (PR #660's review caught an
+ASCII flow whose arrow label pointed downstream while the rule said fixes
 land upstream-first). Your job is fidelity: the Mermaid output must encode
-the SAME directionality, labels, and caveats as the source material — never
-just prettier shapes.
+the **same** directionality, labels, and caveats as the source material —
+never just prettier shapes.
 
 ## How to convert
 
-1. Read the surrounding prose section FIRST and extract the claims the
+1. Read the surrounding prose section first and extract the claims the
    diagram must express. List them before drawing anything.
 2. Pick the diagram type:
    - Branch/merge/tag flows over time → `gitGraph`

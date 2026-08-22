@@ -22,12 +22,12 @@ this page is the day-to-day version.
 
 Four rules explain almost every decision on this page:
 
-| Rule | Meaning |
-| --- | --- |
-| `main` is next-major trunk | All new development lands on `main`, always. It's the tip of the next major version. |
-| Tags are cut points | Releases are tagged; branches merely give tags a place to grow from. You can branch from a tag at any time — even years later — so branches are created **only when first needed**, never preemptively. |
-| Maintenance branches flow downstream | A `release/vX.Y` branch only ever receives changes that came from (or are accounted to) `main`. It's never a second development trunk. |
-| Drift must be tracked, never silent | Every change that reaches a maintenance branch without coming from `main` automatically opens a tracking issue demanding an explicit port-or-won't-port decision. |
+| Rule                                 | Meaning                                                                                                                                                                                                 |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `main` is next-major trunk           | All new development lands on `main`, always. It's the tip of the next major version.                                                                                                                    |
+| Tags are cut points                  | Releases are tagged; branches merely give tags a place to grow from. You can branch from a tag at any time — even years later — so create branches **only when first needed**, never preemptively. |
+| Maintenance branches flow downstream | A `release/vX.Y` branch only ever receives changes that came from (or are accounted to) `main`. It's never a second development trunk.                                                                  |
+| Drift must be tracked, never silent  | Every change that reaches a maintenance branch without coming from `main` automatically opens a tracking issue demanding an explicit port-or-won't-port decision.                                       |
 
 ```mermaid
 gitGraph
@@ -61,20 +61,20 @@ Naming rules:
 - One branch per actively-patched minor line — in practice, the latest
   minor of each supported major. If a feature release ships `v2.5.0` from a
   `release/v2.4` branch, later `v2.5.*` patches get a fresh
-  `release/v2.5` cut at `v2.5.0`; the older branch is retired unless it
-  still has patch work in flight.
+  `release/v2.5` cut at `v2.5.0`; retire the older branch unless it still
+  has patch work in flight.
 - Never create a branch "for symmetry" or ahead of need. An idle long-lived
   branch is how silent drift starts.
 
 ## Where does my change land?
 
-| Your change | Lands on |
-| --- | --- |
-| Bug fix, dependency bump, doc fix affecting both majors | `main`, then backport (next section) |
-| New ServiceNow feature useful for both majors, small/portable | `main`, then port down to `release/vX.Y` |
+| Your change                                                                                            | Lands on                                                                                      |
+| ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| Bug fix, dependency bump, doc fix affecting both majors                                                | `main`, then backport (next section)                                                          |
+| New ServiceNow feature useful for both majors, small/portable                                          | `main`, then port down to `release/vX.Y`                                                      |
 | New ServiceNow feature useful for both majors, but touching core code that has diverged between majors | `main` only, unless consumer demand justifies the port cost — document the decision in the PR |
-| Feature that only makes sense on the old major (depends on prior-major model shapes) | `release/vX.Y` directly — see [old-major-only features](#landing-an-old-major-only-feature) |
-| Anything else speculative | Don't. Ask in an issue first. |
+| Feature that only makes sense on the old major (depends on prior-major model shapes)                   | `release/vX.Y` directly — see [old-major-only features](#landing-an-old-major-only-feature)   |
+| Anything else speculative                                                                              | Don't. Ask in an issue first.                                                                 |
 
 ## Backporting fixes (`main` → `release/vX.Y`)
 
@@ -93,7 +93,8 @@ remainder by hand, and keep backport PRs small enough that this stays
 tractable. A fix too tangled to port cheaply is a signal to discuss whether
 it should be ported at all, not a reason to force it.
 
-Direct pushes to `release/*` are blocked. Everything arrives by PR.
+Branch protection blocks direct pushes to `release/*`. Everything arrives
+by PR.
 
 ## Landing an old-major-only feature
 
@@ -127,7 +128,7 @@ safe: divergence can happen, but it can never happen invisibly.
 
 ## Worked example: A new ServiceNow API ships today
 
-`main` is mid-v3-development. ServiceNow publishes a new endpoint, and v2
+`main` is mid-v3 development. ServiceNow publishes a new endpoint, and v2
 users are asking for it now.
 
 **Path A — both majors want it (the usual case):**
@@ -173,8 +174,8 @@ tagged major below it.
   Until that tag exists, the latest released major stays feature-eligible —
   that window is what makes [old-major-only features](#landing-an-old-major-only-feature)
   possible while the next major is still in development.
-- At end of support, the `release/*` branch is deleted and the retirement
-  is announced in the release notes. If a maintenance branch starts feeling
+- At end of support, maintainers delete the `release/*` branch and announce
+  the retirement in the release notes. If a maintenance branch starts feeling
   like active development again, that's the signal to revisit the EOL clock
   — not to keep growing the branch.
 
