@@ -12,13 +12,14 @@ name: Stable Release
 # Cutting a maintenance line:
 #   1. git branch release/v2.4 v2.4.5 && git push origin release/v2.4
 #   2. On that branch, commit .release-please-manifest.release.json seeded
-#      with the line's last released version, e.g. {"." : "2.4.5"} —
-#      release-please computes the next tag from THIS baseline, never from
-#      main's manifest, which is what keeps vX.Y.Z tags landing on the right
-#      branch.
+#      with the line's last released version (for example {"." : "2.4.5"}) —
+#      release-please computes the next tag from that seeded baseline, never
+#      from main's manifest, which is what keeps vX.Y.Z tags landing on the
+#      right branch.
 # Rehearsal before the first real v2.x drop: repeat steps 1-2 on a scratch
-# branch (e.g. release/v2.4-dryrun), push a throwaway `fix:` commit, confirm
-# the opened release PR and tag target, close it, delete the scratch branch.
+# branch (for example release/v2.4-dryrun), push a throwaway `fix:` commit,
+# confirm the opened release PR and tag target, close it, delete the scratch
+# branch.
 
 on:
   push:
@@ -48,7 +49,7 @@ jobs:
   # release-please no-ops (opens nothing) when a line has no commits since
   # its last tag, so pushing non-release chores to release/* is harmless.
   # Conventional Commits drive bump level exactly as on main:
-  # feat: -> minor (vX.Y+1.0), fix:/perf:/chore-with-footnote -> patch.
+  # feat: -> minor (vX.Y+1.0), fix:/perf: -> patch, all else -> no release.
   release-please-maintenance:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/heads/release/v')
