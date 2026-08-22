@@ -9,13 +9,23 @@ name: Stable Release
 #                      config bookkeeping nor the manifest state can ever
 #                      collide with main's during cross-line merges.
 #
-# Cutting a maintenance line:
+# Cutting a maintenance line (bootstrap needs one PR because the ruleset
+# from #658 blocks direct pushes to release/v*):
 #   1. git branch release/v2.4 v2.4.5 && git push origin release/v2.4
-#   2. On that branch, commit .release-please-manifest.release.json seeded
-#      with the line's last released version (for example {"." : "2.4.5"}) —
+#      -> the push fires this workflow once; without a seeded manifest the
+#         maintenance job skips cleanly with a notice (no red run).
+#   2. Open a PR against the new branch adding
+#      .release-please-manifest.release.json seeded with the line's last
+#      released version (for example {"." : "2.4.5"}) and merge it.
 #      release-please computes the next tag from that seeded baseline, never
 #      from main's manifest, which is what keeps vX.Y.Z tags landing on the
 #      right branch.
+#
+# Tag namespace: both configs emit plain vX.Y.Z tags, so cut a line only
+# after main has moved past that line's major (ADR 011 rule 1); until v3
+# tags its first stable, a main fix and a same-version maintenance bump
+# could otherwise race for the identical tag name.
+#
 # Rehearsal before the first real v2.x drop: repeat steps 1-2 on a scratch
 # branch (for example release/v2.4-dryrun), push a throwaway `fix:` commit,
 # confirm the opened release PR and tag target, close it, delete the scratch
@@ -58,7 +68,20 @@ jobs:
       issues: write
       pull-requests: write
     steps:
+      # A freshly cut line has no manifest until its bootstrap PR merges, and
+      # the branch push itself fires this workflow — skip cleanly instead of
+      # failing on the missing file.
+      - name: Check seeded manifest
+        id: manifest
+        run: |
+          if [ -f .release-please-manifest.release.json ]; then
+            echo "seeded=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::No .release-please-manifest.release.json on this line yet; open the bootstrap PR described in this workflow's header, merge it, and the next push releases normally."
+          fi
+
       - name: Create maintenance release
+        if: steps.manifest.outputs.seeded == 'true'
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
         id: release
         with:
