@@ -12,8 +12,10 @@ name: Forward Port Tracker
 #   - its head branch name starts with `backport-`
 #   - its head branch name starts with `cherry-pick-`
 #   - it carries any label whose name starts with `backport`
+#   - its head branch name starts with `release-please--` (release
+#     bookkeeping: version bumps and changelogs never port to main)
 #
-# Limits of that heuristic (accepted trade-off, documented here on purpose):
+# Limits of that heuristic (accepted trade-offs, documented here on purpose):
 #   - It keys off naming/labeling conventions, not commit ancestry. A direct
 #     merge from an innocuously-named branch that actually carries cherry-
 #     picked commits produces a tracking issue anyway (false positive) —
@@ -23,6 +25,10 @@ name: Forward Port Tracker
 #   - This workflow observes only PR-based merges; direct pushes to
 #     `release/v*` bypass pull_request events entirely and generate no
 #     tracking issue.
+#   - GitHub executes a workflow's BASE-BRANCH copy for pull_request_target,
+#     not main's. Branches cut before this file landed on them observe
+#     nothing until the file is synced onto them via PR, and every future
+#     edit to this file must be re-synced or those lines run stale logic.
 #
 # Why `pull_request_target`: merges originating from fork PRs get a read-only
 # token under the `pull_request` event, which cannot create labels/issues at
@@ -75,6 +81,9 @@ jobs:
           elif [[ "$HEAD_REF" == cherry-pick-* ]]; then
             skip="true"
             reason="head branch '${HEAD_REF}' starts with 'cherry-pick-'"
+          elif [[ "$HEAD_REF" == release-please--* ]]; then
+            skip="true"
+            reason="release bookkeeping merge from '${HEAD_REF}' (version bumps and changelogs never port to main)"
           elif jq -e 'any(.[]; startswith("backport"))' >/dev/null <<<"$LABELS" 2>/dev/null; then
             skip="true"
             reason="PR carries a 'backport*' label: $(jq -r 'map(select(startswith("backport"))) | join(", ")' <<<"$LABELS")"
@@ -122,15 +131,21 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_URL: ${{ github.event.pull_request.html_url }}
           BASE_REF: ${{ github.event.pull_request.base.ref }}
+          WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref }}/.github/workflows/forward-port-tracker.yml
         run: |
           set -euo pipefail
 
           TITLE="Assess porting #${PR_NUMBER} to main"
 
-          # Dedupe guard: a reopen + re-merge (or a retried run) must not stack
-          # duplicate tracking issues for the same source PR.
+          # Dedupe guard keyed on a machine-readable marker in the issue body,
+          # immune to retitling, search-index lag, and future title-format
+          # changes. Only OPEN issues block: a won't-port closure followed by
+          # a re-merge legitimately reopens the assessment.
+          MARKER="forward-port-tracker:${PR_NUMBER}"
           existing="$(gh issue list --repo "$REPO" --state open \
-                        --search "${TITLE} in:title" --json number --jq 'length')"
+                        --label "needs-forward-port" --json body \
+                        --jq --arg m "$MARKER" \
+                        '[.[] | select(contains(.body; $m))] | length')"
           if [[ "$existing" -gt 0 ]]; then
             echo "::notice::An open '${TITLE}' issue already exists; not duplicating."
             exit 0
@@ -150,9 +165,11 @@ jobs:
           cat > "$BODY" <<'TEMPLATE'
           ## Forward-port assessment required
 
+          <!-- forward-port-tracker:@PR_NUMBER@ -->
+
           [#@PR_NUMBER@](@PR_URL@) ("@PR_TITLE@") was merged directly into `@BASE_REF@` without backport
-          provenance (head branch was neither `backport-*` nor `cherry-pick-*`, and the
-          PR carried no `backport*` label).
+          provenance (head branch was neither `backport-*`, `cherry-pick-*`, nor a release-please
+          bookkeeping branch, and the PR carried no `backport*` label).
 
           Per ADR 011 (_Release branches & cross-major flow_), divergence between `main`
           and a `release/v*` branch is acceptable **only while it is tracked**. Closing
@@ -174,7 +191,7 @@ jobs:
 
           ---
           _Tracked automatically by
-          [`forward-port-tracker.yml`](https://github.com/michaeldcanady/servicenow-sdk-go/blob/main/.github/workflows/forward-port-tracker.yml);
+          [`forward-port-tracker.yml`](@WORKFLOW_URL@);
           contributor-facing playbook:
           `website/docs/contributing/release-branches.md`._
           TEMPLATE
@@ -183,6 +200,7 @@ jobs:
             -e "s|@PR_TITLE@|$(esc "${PR_TITLE}")|g" \
             -e "s|@PR_NUMBER@|$(esc "${PR_NUMBER}")|g" \
             -e "s|@BASE_REF@|$(esc "${BASE_REF}")|g" \
+            -e "s|@WORKFLOW_URL@|$(esc "${WORKFLOW_URL}")|g" \
             "$BODY"
 
           gh issue create \
