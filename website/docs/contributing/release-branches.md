@@ -15,7 +15,7 @@ older major, and the rules that exist because we already lived the failure
 mode once — during the v1→v2 transition, `main` and `release/v2` drifted so
 far apart they effectively became different codebases.
 
-The deep rationale lives in [ADR 011](https://github.com/michaeldcanady/servicenow-sdk-go/blob/main/docs/adr/011-release-branches-and-cross-major-flow.md);
+The deep rationale lives in [ADR 011](adrs/011-release-branches-and-cross-major-flow.md);
 this page is the day-to-day version.
 
 ## The mental model

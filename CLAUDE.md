@@ -29,7 +29,7 @@ go test -tags integration ./tests/integration/...   # godog/BDD, uses httpmock â
 go test -tags e2e ./tests/integration/v2/...        # hits a real ServiceNow instance via .env credentials
 ```
 
-Docs (Docusaurus, in `website/`) are built via `just generate-docs` / served via `just serve-docs` (Node 20+; `just setup-docs` first). Site pages live in `website/docs/`; Go code samples are single-sourced from `website/snippets/*.go` via the `GoSnippet`/`GoExample` MDX components (`// [START x]` / `// [END x]` region markers). `docs/` now holds only internal engineering docs (ADRs, blueprints).
+Docs (Docusaurus, in `website/`) are built via `just generate-docs` / served via `just serve-docs` (Node 20+; `just setup-docs` first). Site pages live in `website/docs/`; Go code samples are single-sourced from `website/snippets/*.go` via the `GoSnippet`/`GoExample` MDX components (`// [START x]` / `// [END x]` region markers). `docs/` holds only per-module design blueprints and the release-branch-protection runbook; ADRs live on the docs site at `website/docs/contributing/adrs/` (new ones must be added to `adrs/index.md` and `website/sidebars.ts`).
 
 ## Architecture
 

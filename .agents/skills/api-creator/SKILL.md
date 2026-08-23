@@ -57,4 +57,4 @@ The `api-creator` skill is a specialized tool for automating the generation of S
 
 ## 📚 Resources
 
-- **Process Guide**: Refer to [docs/api_generation_process.md](../../../docs/api_generation_process.md) for detailed templates and examples.
+- **Process Guide**: Refer to [Add a new API module](../../../website/docs/contributing/add-api-module.md) for the module playbook, templates, and conventions.
