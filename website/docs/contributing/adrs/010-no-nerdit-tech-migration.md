@@ -21,7 +21,7 @@ suffix (see the release-day runbook, `release-2.0-issues/003-v2-module-path-runb
 so folding an org migration into that same bump would have been free from a
 consumer-churn standpoint. Migrating the org *after* v2 ships would mean
 either a v3 major bump just for the path change, or a permanent
-redirect/fork story — "TBD" was not viable, since v2.0.0 is the only point
+redirect/fork story — "TBD" wasn't viable, since v2.0.0 is the only point
 where this decision is free.
 
 Alternatives considered:
@@ -39,7 +39,7 @@ Alternatives considered:
 
 Keep the module path at `github.com/michaeldcanady/servicenow-sdk-go`. The
 `/v2` module-path bump (release-day runbook item, `release-2.0-issues/003`)
-changes only the semantic-import-versioning suffix — it does **not** change
+changes only the semantic-import-versioning suffix — it **doesn't** change
 the org/owner segment. No GitHub repo transfer is planned for v2.0.0 or v3.
 
 ## Consequences
@@ -51,5 +51,5 @@ the org/owner segment. No GitHub repo transfer is planned for v2.0.0 or v3.
 - **Cons:** none identified — this was a speculative option, not a
   committed direction, so declining it costs nothing.
 - **Rule for future naming/org questions:** this is settled through v3 —
-  do not revisit without a new major version boundary and a concrete,
+  don't revisit without a new major version boundary and a concrete,
   non-speculative reason to move.

@@ -58,7 +58,7 @@ stateDiagram-v2
 | --------------------- | ---------------------------------------------------------- |
 | `status: new`         | Newly filed, not yet triaged                               |
 | `status: reviewed`    | Triaged, ready for work                                    |
-| `status: in progress` | Actively being worked on (auto-set when a PR is linked)    |
+| `status: in progress` | Actively being worked on (auto set when a PR is linked)    |
 | `status: blocked`     | Blocked on another issue, decision, or external dependency |
 | `status: duplicate`   | Already exists                                             |
 | `status: invalid`     | Doesn't seem right                                         |
@@ -78,7 +78,7 @@ stateDiagram-v2
 
 ### Module labels
 
-Auto-applied to PRs based on changed files. For issues, select from the
+Auto applied to PRs based on changed files. For issues, select from the
 "Affected Module / API" dropdown in the issue template.
 
 ## Priority scoring rubric
@@ -116,7 +116,7 @@ What gets worse the longer this sits?
 
 ### Effort as tie-breaker
 
-Effort (1–3) is **not** an input to the score. Use it only to order issues
+Effort (1–3) **isn't** an input to the score. Use it only to order issues
 within the same priority tier (cheaper first).
 
 | Score | Description                                                             |

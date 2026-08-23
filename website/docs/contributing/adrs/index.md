@@ -7,7 +7,7 @@ description: >-
 
 # Architecture decision records
 
-Architecture Decision Records (ADRs) are this repo's memory of *why* it is
+Architecture Decision Records (ADRs) are this repo's memory of *why* it's
 built the way it is. Each record states the context, the decision, the
 alternatives that were rejected, and the consequences — including the rules a
 change to that area must respect.

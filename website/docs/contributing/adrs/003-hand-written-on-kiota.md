@@ -20,7 +20,7 @@ APIs. The obvious options:
 2. **Hand-write** everything, including HTTP/serialization plumbing.
 3. **Hand-write** the client surface on top of Kiota's runtime libraries.
 
-ServiceNow does not publish complete, accurate OpenAPI documents for its REST
+ServiceNow doesn't publish complete, accurate OpenAPI documents for its REST
 APIs, so option 1 generates an incomplete SDK — or requires hand-maintaining
 specs, which moves the hand-work one step earlier without removing it.
 ServiceNow's response shapes (the `result` envelope, three-faceted fields with

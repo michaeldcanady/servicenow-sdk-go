@@ -23,7 +23,7 @@ stepping stone to reach `Resolved()` (#489).
 
 Alternatives considered:
 
-1. **Implement the missing verb method(s) to make the chain functional** —
+1. **Implement the missing verb methods to make the chain functional** —
    rejected for this PR specifically because the endpoint's actual behavior
    wasn't yet scoped; forcing an implementation just to match the existing
    (accidental) shape risked guessing at the wrong contract.
@@ -39,7 +39,7 @@ Alternatives considered:
 
 Remove builder-chain segments that have no reachable verb operation, rather
 than leaving them in place as a stub. A request-builder accessor should only
-exist once the operation(s) it leads to are actually implemented — not
+exist once the operations it leads to are actually implemented — not
 speculatively, to reserve a URL segment or match an API's documented shape
 in advance.
 
@@ -54,4 +54,4 @@ in advance.
   Inputs/Resolved endpoint later is an additive change, not a revert.
 - **Rule for new modules and reviews:** don't scaffold a full URL-segment
   chain "for completeness" ahead of the operation being implemented. Add the
-  builder when the verb method(s) it exposes are ready to ship together.
+  builder when the verb methods it exposes are ready to ship together.

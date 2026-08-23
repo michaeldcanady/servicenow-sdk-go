@@ -44,7 +44,7 @@ Alternatives considered:
 
 Package names follow ServiceNow's official name for the API surface.
 Exported symbol names follow the actual wire format. Accessor method names
-follow the literal URL segment. These three do not have to agree with each
+follow the literal URL segment. These three don't have to agree with each
 other, and a naming inconsistency in one axis doesn't imply the other two
 are wrong.
 
