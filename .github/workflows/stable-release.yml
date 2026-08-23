@@ -63,6 +63,7 @@ jobs:
   # feat: -> minor (vX.Y+1.0), fix:/perf: -> patch, all else -> no release.
   release-please-maintenance:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: startsWith(github.ref, 'refs/heads/release/v')
     permissions:
       contents: write
