@@ -164,8 +164,8 @@ one-tag-per-merge.
 ## Docs site versions
 
 The docs site keeps a frozen copy of the docs for each released minor line,
-selectable in the navbar's version dropdown. `main` is the default view;
-released lines live under a version prefix (`/2.0/`, `/2.1/`, ...).
+selectable from the version dropdown in the navbar. `main` is the default view;
+released lines live under a version prefix (`/2.0/`, `/2.1/`, and so on).
 
 When a minor release ships, cut the matching docs version in the same
 release window:
