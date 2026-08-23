@@ -1,6 +1,15 @@
 ---
 name: subagent-creator
-description: Create a new Claude Code subagent (.claude/agents/*.md) for this repo, or test/improve an existing one. Use whenever the user asks to "create a subagent for X", "add a new agent to .claude/agents", "I need a review/testing/scaffolding agent", wants a dedicated agent to run proactively after some kind of change, or wants to benchmark/tune an existing agent's description so it triggers reliably. Covers the full loop: interview the user, draft the agent's frontmatter and system prompt, spawn test runs via the Agent tool, grade and benchmark the results, show them in an HTML viewer, and iterate.
+description: >-
+  Create a new Claude Code subagent (.claude/agents/*.md) for this repo, or
+  test/improve an existing one. Use whenever the user asks to "create a
+  subagent for X", "add a new agent to .claude/agents", "I need a
+  review/testing/scaffolding agent", wants a dedicated agent to run
+  proactively after some kind of change, or wants to benchmark/tune an
+  existing agent's description so it triggers reliably. Covers the full loop:
+  interview the user, draft the agent's frontmatter and system prompt, spawn
+  test runs via the Agent tool, grade and benchmark the results, show them in
+  an HTML viewer, and iterate.
 ---
 
 # Subagent Creator
