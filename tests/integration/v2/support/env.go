@@ -31,6 +31,22 @@ func IntegrationInstance() string {
 	return strings.TrimSpace(inst)
 }
 
+// ClientCredentials returns OAuth2 client credentials from the environment
+// (SN_CLIENT_ID/SNOW_CLIENT_ID, SN_CLIENT_SECRET/SNOW_CLIENT_SECRET), falling
+// back to the historical mock pair so offline/httpmock suites keep matching
+// their recorded requests unchanged.
+func ClientCredentials() (clientID, clientSecret string) {
+	clientID = FirstEnv("SN_CLIENT_ID", "SNOW_CLIENT_ID")
+	if clientID == "" {
+		clientID = "mock-client-id"
+	}
+	clientSecret = FirstEnv("SN_CLIENT_SECRET", "SNOW_CLIENT_SECRET")
+	if clientSecret == "" {
+		clientSecret = "mock-client-secret"
+	}
+	return clientID, clientSecret
+}
+
 // RequireCredentials validates that required env vars are set for online mode.
 // Returns an error if running online without credentials.
 func RequireCredentials() error {

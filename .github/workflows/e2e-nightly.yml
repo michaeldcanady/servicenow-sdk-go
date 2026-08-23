@@ -57,6 +57,10 @@ jobs:
       SN_INSTANCE: ${{ secrets.SN_INSTANCE }}
       SN_USERNAME: ${{ secrets.SN_USERNAME }}
       SN_PASSWORD: ${{ secrets.SN_PASSWORD }}
+      # OAuth client for the live client-credentials scenario. Accepts either
+      # secrets or config vars; prefer secrets for SN_CLIENT_SECRET.
+      SN_CLIENT_ID: ${{ secrets.SN_CLIENT_ID || vars.SN_CLIENT_ID }}
+      SN_CLIENT_SECRET: ${{ secrets.SN_CLIENT_SECRET || vars.SN_CLIENT_SECRET }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
