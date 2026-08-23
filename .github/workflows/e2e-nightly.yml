@@ -71,7 +71,11 @@ jobs:
 
       - name: Run E2E suites
         working-directory: tests/integration/v2
-        run: go test -tags e2e ./... -timeout "$GO_TEST_TIMEOUT" -v 2>&1 | tee e2e-output.txt
+        # pipefail is mandatory: without it the pipeline's exit code comes from
+        # tee, and go test failures silently produce a green job.
+        run: |
+          set -o pipefail
+          go test -tags e2e ./... -timeout "$GO_TEST_TIMEOUT" -v 2>&1 | tee e2e-output.txt
 
       - name: Summarize failures
         if: failure()
