@@ -64,16 +64,30 @@ Do not hand-enumerate check names at ruleset-creation time — a fresh
 have already reported on the branch. Instead:
 
 1. Cut the branch and open one throwaway PR against it.
-2. Let `ci.yml`, `branch-policy.yml`, and `pr.yml` report once.
-3. Edit the ruleset and require the checks that appeared:
-   the two Branch Policy checks ("Check Branch Name", "Check Linked Issue"),
-   "Validate PR Title", and the CI test/lint jobs relevant to Go changes.
+2. Let `codeql.yml`, `branch-policy.yml`, and `pr.yml` report once.
+3. Edit the ruleset and require the checks that appeared — exactly the four
+   declared in `.github/policies/servicenow-sdk-go-branch-protection.yml`
+   ("Check Branch Name", "Check Linked Issue", "Validate PR Title", "CodeQL").
+   Never add path-filtered jobs (the ci.yml build/test/lint matrix): they
+   skip docs-only or workflow-only PRs, and a required check that never
+   reports sticks "pending" forever, blocking every merge until an admin
+   bypasses.
+
+## Bypass actors
+
+The human spec below lists a repository-admin bypass for emergency use, but
+the `branchProtectionRules` schema has no field for it — bypass actors can
+only be configured when applying the ruleset in repo settings. The declared
+file is therefore the source of truth for everything except bypasses; record
+any bypass grant here in this runbook when it happens.
 
 ## What workflows already cover (no admin action needed)
 
 - `branch-policy.yml`: branch naming (`backport/…` heads are exempt as
   automation) and linked-issue checks now run on `release/**` PRs.
 - `pr.yml`: PR title lint already targeted `main` and `release/**`.
+- `codeql.yml`: analyzes `release/**` PRs too, so "CodeQL" can report on
+  maintenance-line merges (a required check must first be able to appear).
 - `ci.yml`: build/test/lint run for any PR touching Go paths, regardless of
   base branch; pushes to `release/**` were already covered.
 - `labeler.yml` / `CODEOWNERS`: path-based and base-agnostic; the #658
