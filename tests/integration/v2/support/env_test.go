@@ -6,6 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// credentialEnvKeys are pinned in every case so ambient SN_*/SNOW_* variables
+// (e.g. real secrets set in the e2e-nightly job) cannot leak into assertions.
+var credentialEnvKeys = []string{
+	"SN_CLIENT_ID", "SN_CLIENT_SECRET",
+	"SNOW_CLIENT_ID", "SNOW_CLIENT_SECRET",
+}
+
 func TestClientCredentials(t *testing.T) {
 	tests := []struct {
 		name       string
@@ -54,8 +61,8 @@ func TestClientCredentials(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			for k, v := range tt.env {
-				t.Setenv(k, v)
+			for _, k := range credentialEnvKeys {
+				t.Setenv(k, tt.env[k]) // empty string == unset for FirstEnv
 			}
 			gotID, gotSecret := ClientCredentials()
 			assert.Equal(t, tt.wantID, gotID)
