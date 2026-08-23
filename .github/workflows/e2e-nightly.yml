@@ -1,0 +1,85 @@
+name: E2E Nightly
+
+# Runs the -tags e2e suite against a REAL ServiceNow instance so API drift is
+# caught by CI instead of by users. Requires repo secrets SN_INSTANCE,
+# SN_USERNAME, SN_PASSWORD (a sandbox tenant; use least-privilege creds).
+# Forks / repos without those secrets skip gracefully via the check-secret job.
+on:
+  workflow_dispatch:
+  schedule:
+    # Nightly at 04:00 UTC — after the Monday preview-release window.
+    - cron: "0 4 * * *"
+
+permissions: {}
+
+concurrency:
+  group: e2e-nightly
+  cancel-in-progress: false
+
+env:
+  GO_TEST_TIMEOUT: 40m
+
+jobs:
+  check-secret:
+    name: Check Credentials
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    outputs:
+      has-creds: ${{ steps.check.outputs.has-creds }}
+    steps:
+      - id: check
+        env:
+          HAS_INSTANCE: ${{ secrets.SN_INSTANCE != '' }}
+          HAS_USER: ${{ secrets.SN_USERNAME != '' }}
+          HAS_PASS: ${{ secrets.SN_PASSWORD != '' }}
+        run: |
+          if [ "$HAS_INSTANCE" = "true" ] && [ "$HAS_USER" = "true" ] && [ "$HAS_PASS" = "true" ]; then
+            echo "has-creds=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-creds=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::SN_INSTANCE/SN_USERNAME/SN_PASSWORD secrets are not set; skipping E2E run."
+          fi
+
+  e2e:
+    name: Live Instance Tests
+    needs: check-secret
+    if: needs.check-secret.outputs.has-creds == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    env:
+      SN_INSTANCE: ${{ secrets.SN_INSTANCE }}
+      SN_USERNAME: ${{ secrets.SN_USERNAME }}
+      SN_PASSWORD: ${{ secrets.SN_PASSWORD }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "stable"
+          cache: true
+
+      - name: Run E2E suites
+        working-directory: tests/integration/v2
+        run: go test -tags e2e ./... -timeout "$GO_TEST_TIMEOUT" -v 2>&1 | tee e2e-output.txt
+
+      - name: Summarize failures
+        if: failure()
+        run: |
+          {
+            echo "### E2E Nightly failed"
+            echo ""
+            echo '```'
+            grep -E "^(=== RUN|--- FAIL|FAIL|ok )" e2e-output.txt | tail -50 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload raw output
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: e2e-output
+          path: tests/integration/v2/e2e-output.txt
+          retention-days: 7

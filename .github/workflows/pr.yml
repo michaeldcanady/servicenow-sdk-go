@@ -16,6 +16,7 @@ jobs:
   lint-title:
     name: Validate PR Title
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       pull-requests: write
       contents: read
@@ -61,6 +62,7 @@ jobs:
 
   dependabot-merge:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     if: ${{ github.actor == 'dependabot[bot]' }}
     permissions:
       contents: write # required: gh pr merge --auto needs write to enable auto-merge

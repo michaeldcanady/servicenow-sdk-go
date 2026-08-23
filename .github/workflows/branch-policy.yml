@@ -22,6 +22,7 @@ jobs:
   branch-name:
     name: Check Branch Name
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
     # Automated branches (release-please, dependabot, backports) don't follow
@@ -48,6 +49,7 @@ jobs:
   linked-issue:
     name: Check Linked Issue
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
     # Automated PRs (release-please, dependabot) and PRs explicitly labeled
