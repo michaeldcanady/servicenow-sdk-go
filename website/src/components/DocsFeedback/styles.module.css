@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.prompt {
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+.thanks {
+  color: var(--ifm-color-emphasis-600);
+}
