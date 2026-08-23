@@ -27,6 +27,7 @@ permissions: {}
 jobs:
   changes-docs:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed' && !startsWith(github.head_ref, 'release-please--'))
@@ -49,6 +50,7 @@ jobs:
   build:
     name: build-site
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
     if: ${{ needs.changes-docs.outputs.docs == 'true' }}
@@ -93,6 +95,7 @@ jobs:
   lint:
     name: lint-md
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
     if: ${{ needs.changes-docs.outputs.docs == 'true' }}
@@ -144,6 +147,7 @@ jobs:
   deploy:
     name: deploy-docs
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write # required: pushes built site to gh-pages branch
     needs:
@@ -171,6 +175,7 @@ jobs:
   deploy-preview:
     name: deploy-preview
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: write # required: pushes PR preview to gh-pages branch
       pull-requests: write
@@ -218,6 +223,7 @@ jobs:
     if: success() && github.event_name == 'pull_request'
     needs: [build, lint, deploy-preview]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       pull-requests: write
     steps:
@@ -232,6 +238,7 @@ jobs:
     if: failure() && github.event_name == 'pull_request'
     needs: [build, lint, deploy-preview]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       pull-requests: write
     steps:
