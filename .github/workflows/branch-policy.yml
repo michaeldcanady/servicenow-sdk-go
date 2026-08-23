@@ -13,7 +13,7 @@ on:
       - main
       # Maintenance lines get the same PR hygiene as main (#658); the
       # ruleset-level protections they also need are admin settings — see
-      # docs/release-branch-protection.md for the manual runbook.
+      # website/docs/contributing/release-branch-protection.md for the runbook.
       - "release/**"
 
 permissions: {}

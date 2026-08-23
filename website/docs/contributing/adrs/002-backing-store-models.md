@@ -1,3 +1,10 @@
+---
+title: 'ADR 002: Backing-store-backed models'
+description: >-
+  Models keep their data in a change-tracking Kiota BackingStore, not struct
+  fields — so absent and zero stay distinguishable.
+---
+
 # ADR 002: Backing-store-backed models
 
 ## Status
@@ -10,8 +17,8 @@ v1 models were plain structs (`TableEntry` was literally a `map[string]interface
 Two problems followed:
 
 1. **Absent vs. zero was indistinguishable.** ServiceNow omits fields freely
-   (and `sysparm_fields` makes partial records routine). A struct field cannot
-   distinguish "the instance sent an empty string" from "the instance did not
+   (and `sysparm_fields` makes partial records routine). A struct field can't
+   distinguish "the instance sent an empty string" from "the instance didn't
    send this field", which forced callers into guesswork and produced
    accidental data loss on write.
 2. **Writes serialized whole objects.** Without change tracking, a `PUT`/`PATCH`
@@ -30,7 +37,7 @@ fields.
 - Accessors are generated from `internal/store` helpers
   (`DefaultBackedModelAccessorFunc` / `DefaultBackedModelMutatorFunc`), giving
   every property a `GetX() (T, error)` / `setX(T) error` pair.
-- Getters return **pointers**: `nil` means "not sent", distinct from a zero
+- Getters return **pointers**: `nil` means "not sent," distinct from a zero
   value.
 - Serialization walks the store's dirty set, so request bodies contain only
   properties the caller set.
@@ -43,7 +50,7 @@ fields.
   read-modify-write races on untouched fields; parity with msgraph-sdk-go and
   other Kiota SDKs; a single mechanical pattern for every model.
 - **Cons:** accessors are more verbose than field access — reads are a
-  `(value, error)` pair and a pointer dereference; models cannot be
+  `(value, error)` pair and a pointer dereference; models can't be
   constructed as struct literals; contributors must learn the
   `internal/store` / `internal/serialization` helper idiom.
 - User-facing explanation lives in the docs site's Core Concepts page; the
