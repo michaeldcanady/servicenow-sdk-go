@@ -72,7 +72,10 @@ func (s *authSteps) iInitializeAClientWithAStaticBearerToken(ctx context.Context
 
 func (s *authSteps) iInitializeAClientWithClientCredentialsAuth(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
-	err := support.NewClientWithClientCredentials(w, "mock-client-id", "mock-client-secret")
+	// Live e2e runs source a real OAuth client from the environment; offline
+	// runs keep the recorded mock pair.
+	clientID, clientSecret := support.ClientCredentials()
+	err := support.NewClientWithClientCredentials(w, clientID, clientSecret)
 	if err != nil {
 		w.AuthErr = err
 	}
