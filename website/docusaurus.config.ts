@@ -39,6 +39,20 @@ const config: Config = {
 
   themes: ['@docusaurus/theme-mermaid'],
 
+  scripts:
+    process.env.NODE_ENV === 'production' && !process.env.DOCS_BASE_URL
+      ? [
+          // Plausible analytics. Only loaded on production deploys: local
+          // dev runs with NODE_ENV=development, and PR previews inject
+          // DOCS_BASE_URL, so neither pollutes the stats.
+          {
+            src: 'https://plausible.io/js/script.js',
+            defer: true,
+            'data-domain': 'michaeldcanady.github.io',
+          },
+        ]
+      : [],
+
   plugins: [
     // Allow importing Go snippet files as raw source (single source of truth
     // for all code examples; see src/components/GoSnippet and GoExample).
