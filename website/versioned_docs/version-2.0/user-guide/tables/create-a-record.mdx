@@ -1,0 +1,47 @@
+# Create a record
+
+import GoExample from '@site/src/components/GoExample';
+import createGo from '@site/snippets/tables_create.go';
+
+Insert a new record into a table and read back the `sys_id` ServiceNow
+assigned to it.
+
+## When to use this pattern
+
+- You're opening incidents, requests, or cases from an external system
+- You're importing or synchronizing data into a ServiceNow table
+- You need the new record's `sys_id` to link follow-up work (attachments,
+  updates, references)
+
+## Required values
+
+| Value      | Description                                          |
+| ---------- | ---------------------------------------------------- |
+| Table name | The table to insert into (for example, `incident`)   |
+| Fields     | The field values for the new record                  |
+
+## Example
+
+<GoExample language="go" files={{ createGo: createGo }} template={`package main
+
+{{createGo:tgc_imports}}
+
+func main() {
+    {{createGo:tgc_main}}
+}`} />
+
+## Tips
+
+- Only fields you `SetValue` are sent — ServiceNow fills the rest with the
+  table's defaults ([why](../../core-concepts.mdx#4-backed-models-and-the-pointer-getter-pattern)).
+- Field values are strings as ServiceNow's forms would accept them
+  (`"1"` for a priority, not `1`).
+- Keep the returned `sys_id`; every follow-up operation on the record needs
+  it.
+
+## Next steps
+
+- **[Update a record](update-a-record.mdx):** Change the record you just
+  created.
+- **[Upload an attachment](../attachments/upload-from-disk.mdx):** Attach a
+  file to it.

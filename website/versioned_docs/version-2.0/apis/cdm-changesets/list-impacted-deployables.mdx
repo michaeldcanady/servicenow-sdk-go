@@ -1,0 +1,35 @@
+# List impacted deployables
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve the deployables impacted by a changeset.
+
+## HTTP request
+
+```http
+GET /api/sn_cdm/changesets/impacted-deployables
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `changesetNumber` | Optional — set via the verb's `QueryParameters` type. |
+| `returnFields` | Optional — set via the verb's `QueryParameters` type. |
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+`ImpactedDeployablesResponse`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_list_impacted_deployables" />

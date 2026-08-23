@@ -1,0 +1,36 @@
+# Delete CI relation
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Delete a relationship between CIs.
+
+## HTTP request
+
+```http
+DELETE /api/now/v1/cmdb/instance/{className}/{sys_id}/relation/{rel_sys_id}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `className` | Class name |
+| `sys_id` | Sys_id |
+| `rel_sys_id` | Rel sys_id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+No response body — a `nil` error means the relation was removed.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_delete_relation" />

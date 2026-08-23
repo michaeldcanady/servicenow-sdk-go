@@ -90,6 +90,13 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           editUrl:
             'https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/website/',
+          // "/" serves the docs from main; released doc lines live under
+          // their version prefix (e.g. /2.0/...) via the navbar dropdown.
+          lastVersion: 'current',
+          versions: {
+            current: {label: 'main'},
+            '2.0': {label: 'v2.0', banner: 'none'},
+          },
         },
         blog: false,
         theme: {
@@ -110,6 +117,10 @@ const config: Config = {
         {type: 'docSidebar', sidebarId: 'userGuide', position: 'left', label: 'User Guide'},
         {type: 'docSidebar', sidebarId: 'apiReference', position: 'left', label: 'API Reference'},
         {type: 'docSidebar', sidebarId: 'contributing', position: 'left', label: 'Contributor Guide'},
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+        },
         {
           href: 'https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go',
           label: 'GoDoc',

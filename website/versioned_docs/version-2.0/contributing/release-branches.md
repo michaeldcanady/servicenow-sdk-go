@@ -161,36 +161,6 @@ one-tag-per-merge.
 - ❌ Never hand-edit `VERSION` or `CHANGELOG.md` — on any branch.
 - ✅ Fixes on `main` first, labels second, cherry-pick third.
 
-## Docs site versions
-
-The docs site keeps a frozen copy of the docs for each released minor line,
-selectable in the navbar's version dropdown. `main` is the default view;
-released lines live under a version prefix (`/2.0/`, `/2.1/`, ...).
-
-When a minor release ships, cut the matching docs version in the same
-release window:
-
-```bash
-cd website
-npm run docusaurus docs:version 2.1   # match the released minor, no "v" prefix
-```
-
-This snapshots `docs/` and `sidebars.ts` into `versioned_docs/version-2.1/`,
-registers it in `versions.json`, and adds it to the dropdown. Open the
-resulting changes in a `chore(website):` PR.
-
-Rules of thumb:
-
-- One docs version per **minor** line, not per patch — patch releases don't
-  warrant a new snapshot.
-- Versioned copies are frozen. Fix content bugs in `main`'s `docs/` first,
-  then apply the same fix to the relevant `versioned_docs/version-X.Y/`
-  copy, the same way code backports work.
-- Go snippets in `website/snippets/` are shared across all versions — a
-  versioned page renders the *current* snippet source. If a snippet change
-  would mislead an older version's readers, cut the new docs version
-  *before* merging the snippet change.
-
 ## Retiring a maintenance branch
 
 Support windows are deliberate, not accidental (ADR 011, rule 7).

@@ -1,0 +1,20 @@
+# Activity Subscriptions API overview
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import modulesGo from '@site/snippets/modules.go';
+
+
+The Activity Subscriptions API (`activitysubscriptionsapi`) manages activity-stream
+subscriptions: which objects a user follows, their notification preferences,
+and their activity feed.
+
+## Basic usage
+
+Access it through the `Now()` namespace via `ActSub()`:
+
+<GoSnippet language="go" src={modulesGo} region="module_actsub" />
+
+## Available operations
+
+- **Activities** — `Activities().Get` lists activity records.
+- **Facets** — `Facets().ByContext(context).ByInstance(instance).Get` lists facets for a context instance.

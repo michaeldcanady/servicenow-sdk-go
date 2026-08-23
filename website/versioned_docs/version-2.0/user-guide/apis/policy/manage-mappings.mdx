@@ -1,0 +1,34 @@
+# Manage policy input mappings
+
+import GoExample from '@site/src/components/GoExample';
+import pmgGo from '@site/snippets/policy_guide.go';
+
+Create and delete CDM policy input mappings.
+
+## When to use this pattern
+
+- You're wiring policies to configuration inputs as part of CDM automation
+
+## Required values
+
+| Value | Description |
+| ----- | ----------- |
+| Mapping parameters | Supplied through the request configuration |
+
+## Example
+
+<GoExample language="go" files={{ pmgGo: pmgGo }} template={`package main
+
+{{pmgGo:pmg_imports}}
+
+func main() {
+    {{pmgGo:pmg_main}}
+}`} />
+
+## Tips
+
+- `Post` and `Delete` take their parameters via the request configuration rather than a body.
+
+## Next steps
+
+- **[Policy API reference](../../../apis/policy/index.mdx)**

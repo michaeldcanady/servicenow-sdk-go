@@ -1,0 +1,32 @@
+# Create application service
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Create an application service.
+
+## HTTP request
+
+```http
+POST /api/now/v1/cmdb/app_service/create
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+None.
+
+## Request body
+
+Supply a `appserviceapi.CreateServiceRequest`.
+
+## Response
+
+`CreateServiceResponse`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_create_application_service" />

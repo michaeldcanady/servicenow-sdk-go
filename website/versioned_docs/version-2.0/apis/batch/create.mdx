@@ -1,0 +1,62 @@
+# Create batch request
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import GoExample from '@site/src/components/GoExample';
+import batchGo from '@site/snippets/batch.go';
+import authGo from '@site/snippets/auth.go';
+
+## Overview
+
+Submits a `BatchRequest` containing all desired requests.
+
+## Path parameters
+
+N/A
+
+## Optional query parameters
+
+N/A
+
+# Required query parameters
+
+N/A
+
+## Examples
+
+<Tabs groupId="modality">
+<TabItem value="fluent" label="Fluent">
+
+<GoExample language="go" files={{ batchGo: batchGo, authGo: authGo }} template={`package main
+
+{{batchGo:batch_imports}}
+
+{{batchGo:batch_helper}}
+
+func main() {
+    // Step 1: Create credentials
+    {{authGo:auth_basic}}
+    // Step 2: Initialize client
+    {{authGo:client_init}}
+    {{batchGo:batch_create}}
+}`} />
+
+</TabItem>
+<TabItem value="standard" label="Standard">
+
+<GoExample language="go" files={{ batchGo: batchGo, authGo: authGo }} template={`package main
+
+{{batchGo:batch_imports}}
+
+{{batchGo:batch_helper}}
+
+func main() {
+    // Step 1: Create credentials
+    {{authGo:auth_basic}}
+    // Step 2: Initialize client
+    {{authGo:client_init}}
+    {{batchGo:batch_std_create}}
+}`} />
+
+</TabItem>
+</Tabs>

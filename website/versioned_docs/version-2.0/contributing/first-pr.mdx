@@ -1,0 +1,133 @@
+---
+title: Your first PR — in under an hour
+sidebar_label: Your first PR
+description: >-
+  A time-boxed walkthrough from fork to open pull request in about an hour,
+  scoped to a first contribution — no architecture reading required.
+---
+
+# Your first PR — in under an hour
+
+This page gets you from "I'd like to help" to an open pull request in about
+an hour, with a timer running. It's scoped to first contributions — a doc
+fix, a test, a `good first issue` — because the fastest way to learn a
+project's rhythm is to ship something small through the whole pipeline.
+
+:::tip You don't need to understand the SDK first
+For a change like this, the dev container, the linter, and CI catch what
+matters. The [architecture](architecture.md) and
+[design decisions](design-decisions.md) are for when you're ready to build
+features — they can wait.
+:::
+
+```mermaid
+timeline
+    title The hour, at a glance
+    0:00 : Fork, clone, open the dev container
+    0:10 : Pick something small
+    0:20 : Make the change
+    0:35 : Prove it locally
+    0:45 : Branch, commit, push, open the PR
+```
+
+## 0:00 — Get a working environment (~10 min)
+
+The repository ships a dev container with Go, `golangci-lint`, and `just`
+preinstalled — the same environment CI runs.
+
+1.  Fork the repo on GitHub, then:
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/servicenow-sdk-go.git
+    ```
+2.  Open the folder in VS Code and click **Reopen in Container**. While the
+    image builds (first launch only), move on to the next step.
+
+Prefer your own toolchain, or want the details? The full
+[development setup](setup.md) covers both paths — but don't let it eat your
+hour; the container is the fast lane.
+
+## 0:10 — Pick something small (~10 min)
+
+Good first-hour targets, in rough order of speed:
+
+- **A docs fix** — a typo, a stale sample, an unclear sentence on this exact
+  site (`website/docs/`). Doc PRs run the same pipeline as code PRs, so you
+  learn the full workflow either way.
+- **An issue labeled [`good first issue` or `help wanted`](https://github.com/michaeldcanady/servicenow-sdk-go/issues)**
+  — these are pre-scoped to be tractable without deep context.
+- **A missing test case** — a failure row (bad status code, nil input) that
+  an existing test table doesn't cover yet.
+
+Leave a comment on the issue saying you're taking it — it prevents duplicate
+work and gets you help early if you ask questions there.
+
+:::note Save the big ideas for a design conversation
+A new API module or a behavior change isn't a first-hour PR — those need a
+blueprint or an ADR first. Open an issue to discuss it, ship something small
+today, and come back with the [playbook](add-api-module.md).
+:::
+
+## 0:20 — Make the change (~15 min)
+
+The one rule that covers almost everything: **match the shape of the code
+(or prose) around you.** Modules are deliberately structurally identical, so
+the surrounding file is the style guide.
+
+- Changing Go code? If you're unsure what something should look like,
+  `tableapi/` is the canonical example of nearly everything.
+- Changing docs? Go samples live in `website/snippets/*.go` behind
+  `// [START x]` / `// [END x]` markers — never inline in the page — so CI
+  can compile them. Preview locally with `just serve-docs`.
+- Fixing a bug? Write the test that fails first; it becomes your regression
+  guard and your proof.
+
+## 0:35 — Prove it (~10 min)
+
+Three commands, three green results:
+
+```bash
+gofmt -s -w .             # format
+golangci-lint run ./...   # the exact lint gate CI enforces
+go test ./...             # unit tests — fast, no network, no instance
+```
+
+That's the whole local gate for a small change. (No ServiceNow instance is
+needed — the integration and e2e suites are opt-in and not expected for a
+first PR.)
+
+## 0:45 — Ship it (~15 min)
+
+1.  **Branch** from `main` as `type/kebab-description` — for example,
+    `docs/fix-auth-typo`, `fix/tableapi-nil-pointer`, `test/batch-error-rows`.
+2.  **Commit** in [Conventional Commits](https://www.conventionalcommits.org/)
+    format:
+    ```bash
+    git commit -m "docs: fix typo in authentication guide"
+    ```
+    This matters more than it looks: `release-please` builds the version
+    number and changelog from commit messages (so never edit `VERSION` or
+    `CHANGELOG.md` by hand).
+3.  **Push and open the PR** against `main`. The PR title must itself be a
+    valid Conventional Commit line — CI lints it, and it becomes the squash
+    commit. Link the issue in the body.
+
+## After the timer stops
+
+CI will lint your PR title, run the linter and full test suite, and compile
+every doc snippet. If a check fails, the log almost always names the exact
+line — fix, push, and the checks rerun automatically. Review feedback here
+is mostly structural ("use the shared sentinel," "move this to its own
+file") rather than subjective; it's the conventions doing their job, not a
+verdict on you.
+
+**Merged? Congratulations — you're a contributor.** 🎉
+
+## Where to next
+
+- **Understand what you just touched:** [Architecture](architecture.md)
+  follows one request through the whole SDK in a single page.
+- **Take on real features:** the [testing guide](testing.md) and the
+  [conventions reference](conventions.md) are what reviewers will hold your
+  next PR to.
+- **Go big:** [Add a new API module](add-api-module.md) is the playbook for
+  a whole new API surface.

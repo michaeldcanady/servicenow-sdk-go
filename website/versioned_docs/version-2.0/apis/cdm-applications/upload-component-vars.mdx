@@ -1,0 +1,32 @@
+# Upload component vars
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Upload component variable data.
+
+## HTTP request
+
+```http
+POST /api/sn_cdm/applications/uploads/components/vars
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+None.
+
+## Request body
+
+Supply a `cdmapplicationsapi.ComponentVarsUploadRequest`.
+
+## Response
+
+`UploadStatusResponse`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_upload_component_vars" />

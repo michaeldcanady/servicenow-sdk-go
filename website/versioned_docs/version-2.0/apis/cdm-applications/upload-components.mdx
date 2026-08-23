@@ -1,0 +1,32 @@
+# Upload components
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Upload component configuration data.
+
+## HTTP request
+
+```http
+POST /api/sn_cdm/applications/uploads/components
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+None.
+
+## Request body
+
+Supply a `cdmapplicationsapi.ComponentUploadRequest`.
+
+## Response
+
+`UploadStatusResponse` — poll [Get upload status](get-upload-status.mdx) with the returned ID.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_upload_components" />

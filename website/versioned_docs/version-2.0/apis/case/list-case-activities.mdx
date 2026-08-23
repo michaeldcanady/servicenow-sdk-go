@@ -1,0 +1,34 @@
+# List case activities
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve the activity stream for a case.
+
+## HTTP request
+
+```http
+GET /api/sn_customerservice/v1/case/{id}/activities
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `id` | Id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+`ActivitiesResponse`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_list_case_activities" />
