@@ -167,17 +167,22 @@ The docs site keeps a frozen copy of the docs for each released minor line,
 selectable in the navbar's version dropdown. `main` is the default view;
 released lines live under a version prefix (`/2.0/`, `/2.1/`, ...).
 
-When a minor release ships, cut the matching docs version in the same
-release window:
+The `docs-version` workflow automates this: when release-please tags a
+stable `vX.Y.Z` on `main` for a minor line without a snapshot, it cuts the
+version and opens a `chore(website):` PR — merge it in the release window.
+Preview tags, patch releases on existing lines, and older-major maintenance
+tags are skipped automatically.
+
+Fallback, or to cut one by hand:
 
 ```bash
 cd website
-npm run docusaurus docs:version 2.1   # match the released minor, no "v" prefix
+node scripts/cut-docs-version.mjs 2.1   # released minor, no "v" prefix
 ```
 
 This snapshots `docs/` and `sidebars.ts` into `versioned_docs/version-2.1/`,
-registers it in `versions.json`, and adds it to the dropdown. Open the
-resulting changes in a `chore(website):` PR.
+registers it in `versions.json`, and adds its dropdown entry to
+`docusaurus.config.ts`. Open the resulting changes in a `chore(website):` PR.
 
 Rules of thumb:
 
