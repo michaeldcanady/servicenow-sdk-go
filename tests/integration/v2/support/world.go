@@ -10,9 +10,9 @@ type worldKey struct{}
 
 // World holds all per-scenario state. A fresh World is created for every scenario.
 type World struct {
-	Client  *sdk.ServiceNowServiceClient
-	Err     error
-	AuthErr error
+	Client   *sdk.ServiceNowServiceClient
+	Err      error
+	AuthErr  error
 	Response interface{}
 
 	// Resource tracking for cleanup
