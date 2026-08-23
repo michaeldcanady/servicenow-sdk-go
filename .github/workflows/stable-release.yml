@@ -69,6 +69,13 @@ jobs:
       issues: write
       pull-requests: write
     steps:
+      # The manifest check inspects files, and runners start with an empty
+      # workspace, so the pushed ref must be checked out before the guard.
+      - name: Check out the pushed ref
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
       # A freshly cut line has no manifest until its bootstrap PR merges, and
       # the branch push itself fires this workflow — skip cleanly instead of
       # failing on the missing file.
@@ -88,3 +95,6 @@ jobs:
         with:
           config-file: release-please-config.release.json
           manifest-file: .release-please-manifest.release.json
+          # Operate on this maintenance line; without this pin the action
+          # computes releases against the repository's default branch (main).
+          target-branch: ${{ github.ref_name }}
