@@ -88,13 +88,21 @@ const config: Config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: './sidebars.ts',
-          editUrl:
-            'https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/website/',
+          // Only "main" offers edit links. Frozen versioned copies are fixed
+          // in docs/ first, then backported (see contributing/release-branches),
+          // so pointing "Edit this page" at a snapshot would invite edits in
+          // the wrong direction.
+          editUrl: ({version, docPath}) =>
+            version === 'current'
+              ? `https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/website/docs/${docPath}`
+              : undefined,
           // "/" serves the docs from main; released doc lines live under
           // their version prefix (e.g. /2.0/...) via the navbar dropdown.
           lastVersion: 'current',
           versions: {
-            current: {label: 'main'},
+            // The unreleased banner points readers at the newest released
+            // line (/2.0/) instead of silently documenting unreleased code.
+            current: {label: 'main', banner: 'unreleased'},
             '2.0': {label: 'v2.0', banner: 'none'},
           },
         },
