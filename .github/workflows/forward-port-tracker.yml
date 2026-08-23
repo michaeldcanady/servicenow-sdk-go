@@ -142,10 +142,13 @@ jobs:
           # changes. Only OPEN issues block: a won't-port closure followed by
           # a re-merge legitimately reopens the assessment.
           MARKER="forward-port-tracker:${PR_NUMBER}"
+          # gh's embedded jq has no --arg flag, so the marker binds through
+          # real jq instead; argument binding (not interpolation) keeps it
+          # injection-safe.
           existing="$(gh issue list --repo "$REPO" --state open \
-                        --label "needs-forward-port" --json body \
-                        --jq --arg m "$MARKER" \
-                        '[.[] | select(contains(.body; $m))] | length')"
+                        --label "needs-forward-port" --json body | \
+                      jq --arg m "$MARKER" \
+                         '[.[] | select(.body | contains($m))] | length')"
           if [[ "$existing" -gt 0 ]]; then
             echo "::notice::An open '${TITLE}' issue already exists; not duplicating."
             exit 0
