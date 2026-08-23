@@ -91,7 +91,7 @@ URLs and models.
 | `errors/` | The shared sentinel errors (`snerrors`) | Almost never — reuse, don't add |
 | `tests/integration/`, `tests/e2e/` | Godog BDD suites and live-instance tests | See the [testing guide](testing.md) |
 | `website/` | This documentation site, including compiled Go samples in `website/snippets/` | Any PR that changes what users see |
-| `docs/blueprints/` | Per-module design blueprints for new API surfaces | New modules |
+| `website/docs/contributing/blueprints/` | Per-module design blueprints for new API surfaces | New modules |
 
 Two rules of thumb fall out of this layout:
 

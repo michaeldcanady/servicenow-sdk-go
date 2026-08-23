@@ -179,7 +179,8 @@ For the full triage workflow, scoring rubric, and examples, see [Issue triage](t
   `just serve-docs` (Node 20+, `just setup-docs` first).
 - Design changes get an [ADR](adrs/index.md) plus a summary page here —
   see [Why it's built this way](design-decisions.md). New modules get a
-  blueprint under `docs/blueprints/` first.
+  blueprint first — see the [documents API
+  blueprint](blueprints/documents-api-blueprint.md) for the format.
 
 ## The playbook, when you need it
 

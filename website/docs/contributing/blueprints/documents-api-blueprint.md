@@ -1,3 +1,12 @@
+---
+title: Documents API blueprint
+description: Reference format for a module design blueprint — request-builder hierarchy, operations, models, and implementation strategy.
+---
+
+> Historical design blueprint for the shipped `documentsapi` module, kept as
+> the reference format for new blueprints (see the
+> [add-a-new-API-module playbook](add-api-module.md)).
+
 # Technical Blueprint: Documents API Support (`documentsapi`)
 
 This blueprint outlines the architectural plan for implementing the ServiceNow Documents API in the Go SDK, derived from `spec/now_documents_api_latest_spec.json`.

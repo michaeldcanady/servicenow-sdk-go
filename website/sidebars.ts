@@ -300,7 +300,22 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Conventions & playbooks',
       collapsed: false,
-      items: ['contributing/conventions', 'contributing/triage', 'contributing/add-api-module', 'contributing/release-branches'],
+      items: [
+        'contributing/conventions',
+        'contributing/triage',
+        'contributing/add-api-module',
+        'contributing/release-branches',
+        'contributing/release-branch-protection',
+        {
+          type: 'category',
+          label: 'Blueprints',
+          collapsed: true,
+          items: [
+            'contributing/blueprints/documents-api-blueprint',
+            'contributing/blueprints/cmdb-instance-api-blueprint',
+          ],
+        },
+      ],
     },
     {
       type: 'category',

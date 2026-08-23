@@ -14,8 +14,8 @@ implementing it to someone else.
 
 ## Writing specs
 
-- Save specs to `docs/proposals/<kebab-case-title>.md` (create the directory
-  if it doesn't exist yet — it doesn't as of this writing). Structure:
+- Save specs to `specs/<kebab-case-title>/spec.md` (create the numbered
+  directory if needed, matching the existing `specs/` layout). Structure:
   Problem, Goals / Non-goals, Design, Alternatives considered, Open questions.
 - Write it for a reader who wasn't in the conversation — capture the *why*
   behind each decision, not just the *what*, the same way you'd want a PR
