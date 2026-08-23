@@ -39,6 +39,8 @@ const config: Config = {
 
   themes: ['@docusaurus/theme-mermaid'],
 
+  clientModules: ['./src/clientModules/trackCodeCopy.ts'],
+
   scripts:
     process.env.NODE_ENV === 'production' && !process.env.DOCS_BASE_URL
       ? [
