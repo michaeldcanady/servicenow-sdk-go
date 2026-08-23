@@ -40,7 +40,11 @@ name: Backport
 #   action treats a missing target branch as a hard failure, while our
 #   maintenance branches are cut lazily, so we pre-compute the target list
 #   ourselves (skipping absent branches with a notice) and pass it via
-#   `target_branches` with `label_pattern` disabled.
+#   `target_branches` with `label_pattern` disabled. The disable uses '^$'
+#   (matches nothing — GitHub forbids empty label names) rather than the
+#   empty string, so no upstream change could silently reinterpret '' as a
+#   match-everything regex and turn arbitrary labels into cherry-pick
+#   targets.
 #
 # Runs on pull_request_target so GITHUB_TOKEN holds write access even when
 # the merged PR came from a fork. Only pinned actions plus a read-only
@@ -89,11 +93,9 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Only `backport release/vX.Y` (two numeric components) selects a
-          # target; near-misses get a pointed warning so typos surface.
-          # Legacy maintenance branches named with three components
-          # (release/v1.0.0-era naming) never match here — rename them to
-          # the ADR 011 scheme rather than widening this pattern.
+          # Only `backport release/vX.Y` (two numeric components, the ADR 011
+          # scheme) selects a target; near-misses get a pointed warning so
+          # typos surface.
           PATTERN='^backport[[:space:]](release/v[0-9]+\.[0-9]+)$'
 
           existing=""
@@ -114,7 +116,7 @@ jobs:
               echo "::notice::PR #${PR_NUMBER} will be backported to ${branch}."
               existing="${existing}${branch} "
             elif [ "$rc" -eq 2 ]; then
-              echo "::notice::No branch named '${branch}' exists (maintenance branches are cut lazily, so absence is normal). If you meant a legacy three-component branch (e.g. release/v1.0.0), rename it to the release/vX.Y scheme first."
+              echo "::notice::No branch named '${branch}' exists (maintenance branches are cut lazily, so absence is normal — cut it per ADR 011 rule 4 and re-add the label)."
             else
               echo "::error::git ls-remote failed while checking '${branch}' (exit ${rc}); cannot safely proceed."
               exit "$rc"
@@ -135,7 +137,7 @@ jobs:
           # pinned SHA: main.ts maps an empty input to `undefined`, and
           # findTargetBranchesFromLabels returns [] for that — label scanning
           # is fully off, not "matches everything".
-          label_pattern: ''
+          label_pattern: '^$' # matches nothing; see implementation-choice note above
           target_branches: ${{ steps.select.outputs.existing }}
           # On conflict, still open a draft PR holding the first conflict and
           # post resolution instructions on the source PR, instead of failing.
