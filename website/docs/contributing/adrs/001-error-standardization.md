@@ -6,7 +6,8 @@ description: Centralize sentinel errors and message phrasing in the errors packa
 # ADR 001: Standardizing error handling and messaging
 
 ## Status
-Proposed
+
+Accepted (implemented in the v2 rework)
 
 ## Context
 The ServiceNow SDK for Go has inconsistent error handling patterns, including varying message phrasing ("can't be nil" vs "is nil") and hard-coded error messages scattered throughout the codebase. This hinders maintainability and compromises the developer experience for v2.0.

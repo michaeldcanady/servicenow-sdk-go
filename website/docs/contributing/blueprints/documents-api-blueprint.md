@@ -5,7 +5,9 @@ description: Reference format for a module design blueprint — request-builder 
 
 > Historical design blueprint for the shipped `documentsapi` module, kept as
 > the reference format for new blueprints (see the
-> [add-a-new-API-module playbook](../add-api-module.md)).
+> [add-a-new-API-module playbook](../add-api-module.md)). Specifics like
+> package paths and tooling reflect the era it was written, not necessarily
+> current architecture.
 
 # Technical Blueprint: Documents API Support (`documentsapi`)
 

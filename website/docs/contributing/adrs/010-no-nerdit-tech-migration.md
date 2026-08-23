@@ -17,7 +17,8 @@ Backlog grooming for v2.0 (#493) flagged that a GitHub org migration — moving
 the repo from `michaeldcanady/servicenow-sdk-go` to a `NerdIT-Tech` org path —
 is inherently breaking, since it changes the module import path. v2 already
 forces every consumer to update their import paths for the `/v2` semantic-import-versioning
-suffix (see the release-day runbook, `release-2.0-issues/003-v2-module-path-runbook.md`),
+suffix (see the release-day runbook — a checklist for applying the bump
+across the repo, issue tracker, and docs at release time),
 so folding an org migration into that same bump would have been free from a
 consumer-churn standpoint. Migrating the org *after* v2 ships would mean
 either a v3 major bump just for the path change, or a permanent
@@ -38,7 +39,7 @@ Alternatives considered:
 ## Decision
 
 Keep the module path at `github.com/michaeldcanady/servicenow-sdk-go`. The
-`/v2` module-path bump (release-day runbook item, `release-2.0-issues/003`)
+`/v2` module-path bump (a release-day runbook item)
 changes only the semantic-import-versioning suffix — it **doesn't** change
 the org/owner segment. No GitHub repo transfer is planned for v2.0.0 or v3.
 
