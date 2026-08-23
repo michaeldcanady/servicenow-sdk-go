@@ -60,11 +60,11 @@ jobs:
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          # Accepts any "#123" reference (e.g. "Closes #123", "Part of #123",
+          # Accepts any "#123" reference (for example "Closes #123", "Part of #123",
           # "Fixes #123") so partial/complementary work against an issue is
           # still recognized, not just PRs that auto-close the issue.
           if ! grep -qE '#[0-9]+' <<< "$PR_BODY"; then
-            echo "::error::PR description must reference a linked issue (e.g. 'Closes #123' or 'Part of #123')."
+            echo "::error::PR description must reference a linked issue (for example 'Closes #123' or 'Part of #123')."
             echo "If this PR is a trivial chore with no associated issue, apply the 'no-issue-required' label instead."
             exit 1
           fi
