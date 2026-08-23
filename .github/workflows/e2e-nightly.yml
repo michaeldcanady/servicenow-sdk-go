@@ -25,6 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions: {}
+    # Secrets live in the "e2e-tests" environment; declaring it here makes
+    # them visible to the presence check below.
+    environment: e2e-tests
     outputs:
       has-creds: ${{ steps.check.outputs.has-creds }}
     steps:
@@ -47,6 +50,7 @@ jobs:
     if: needs.check-secret.outputs.has-creds == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    environment: e2e-tests
     permissions:
       contents: read
     env:
