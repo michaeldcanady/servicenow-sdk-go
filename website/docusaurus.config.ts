@@ -88,6 +88,9 @@ const config: Config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: './sidebars.ts',
+          // Keep numeric prefixes (e.g. adrs/001-error-standardization) in doc
+          // ids and URLs — ADR numbering is referenced as "ADR 003" everywhere.
+          numberPrefixParser: false,
           editUrl:
             'https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/website/',
         },

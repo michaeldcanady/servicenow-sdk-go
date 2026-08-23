@@ -37,8 +37,10 @@ plugin can't be activated, stop — don't build against a guessed schema.
 
 ## 2. Write a blueprint
 
-Add a short design doc under `docs/blueprints/` (see
-`documents_api_blueprint.md` for the format): package name, base path, a
+Add a short design doc under
+`website/docs/contributing/blueprints/` (see the
+[documents API blueprint](blueprints/documents-api-blueprint.md) for the
+format): package name, base path, a
 table of paths → request builders → verbs, and the models with their fields.
 This is what reviewers check the implementation against.
 

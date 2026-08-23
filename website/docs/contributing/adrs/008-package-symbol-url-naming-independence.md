@@ -1,3 +1,10 @@
+---
+title: 'ADR 008: Package names, exported symbol names, and URL segments are independent naming axes'
+description: >-
+  Package names follow ServiceNow's official API name, symbols follow the wire
+  format, accessors follow the URL segment — the three need not agree.
+---
+
 # ADR 008: Package names, exported symbol names, and URL segments are independent naming axes
 
 ## Status
@@ -37,7 +44,7 @@ Alternatives considered:
 
 Package names follow ServiceNow's official name for the API surface.
 Exported symbol names follow the actual wire format. Accessor method names
-follow the literal URL segment. These three do not have to agree with each
+follow the literal URL segment. These three don't have to agree with each
 other, and a naming inconsistency in one axis doesn't imply the other two
 are wrong.
 

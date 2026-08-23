@@ -1,6 +1,18 @@
 ---
 name: write-unit-tests
-description: Writes or extends Go unit tests for this repo (servicenow-sdk-go) using a six-step audit-first process — audit the target code, map every path (happy and non-happy), check for existing tests and reconcile with them, write table-driven testify tests, then deliberately try to break the code with curveball inputs and report anything that actually breaks. Use whenever the user asks to "write tests for X", "add unit tests", "cover this function/file", "improve test coverage for Y", or after writing/editing a non-test .go file that has no matching coverage yet — proactively suggest or run this even if the user only asked for the code change, not the tests. Distinct from the test-coverage-writer agent's repo-wide scan-and-report loop: this is the hands-on, one-file-at-a-time process for actually writing the test table once you're already looking at the code.
+description: >-
+  Writes or extends Go unit tests for this repo (servicenow-sdk-go) using a
+  six-step audit-first process — audit the target code, map every path (happy
+  and non-happy), check for existing tests and reconcile with them, write
+  table-driven testify tests, then deliberately try to break the code with
+  curveball inputs and report anything that actually breaks. Use whenever the
+  user asks to "write tests for X", "add unit tests", "cover this
+  function/file", "improve test coverage for Y", or after writing/editing a
+  non-test .go file that has no matching coverage yet — proactively suggest
+  or run this even if the user only asked for the code change, not the
+  tests. Distinct from the test-coverage-writer agent's repo-wide
+  scan-and-report loop: this is the hands-on, one-file-at-a-time process for
+  actually writing the test table once you're already looking at the code.
 ---
 
 # Writing unit tests for servicenow-sdk-go

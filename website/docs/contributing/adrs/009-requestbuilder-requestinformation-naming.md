@@ -1,3 +1,10 @@
+---
+title: 'ADR 009: Keep RequestBuilder/RequestInformation naming (Kiota parity)'
+description: >-
+  The names are technically imprecise but mirror kiota-abstractions-go and
+  msgraph-sdk-go; settled through v3.
+---
+
 # ADR 009: Keep `RequestBuilder`/`RequestInformation` naming (Kiota parity)
 
 ## Status
@@ -9,15 +16,16 @@ Accepted
 Backlog grooming for v2.0 (#496) flagged that `RequestBuilder` and
 `RequestInformation` are, strictly speaking, misnamed: the type most callers
 chain against (`core.RequestBuilder` / `core.BaseRequestBuilder` and the
-per-module `*RequestBuilder` types) is really a fluent **facade** over the
+per-module `*RequestBuilder` types) is really a fluent **façade** over the
 API surface, while `RequestInformation` — built up inside each `ToXRequestInformation`
 method and passed to `RequestAdapter.Send*` — is the object that actually
-accumulates URL, headers, query parameters, and body, i.e. the real
+accumulates URL, headers, query parameters, and body, that is, the real
 **builder** in the classic sense.
 
 This naming is inherited directly from Kiota's runtime abstractions
 (`kiota-abstractions-go`) and from Kiota-*generated* SDKs like
-`msgraph-sdk-go`, per [[003-hand-written-on-kiota]] and [[008-package-symbol-url-naming-independence]]'s underlying premise that
+`msgraph-sdk-go`, per [ADR 003](003-hand-written-on-kiota.md) and
+[ADR 008](008-package-symbol-url-naming-independence.md)'s underlying premise that
 matching Kiota/msgraph conventions is a stated design goal so developers
 arriving from other Kiota SDKs find familiar idioms.
 
@@ -27,7 +35,7 @@ therefore has to be made deliberately now, not left implicit.
 
 Alternatives considered:
 
-1. **Rename to reflect actual roles** (e.g. `RequestBuilder` → something
+1. **Rename to reflect actual roles** (for example, `RequestBuilder` → something
    like `Client`/`Facade`, `RequestInformation` → `RequestBuilder`) —
    rejected. This breaks the naming correspondence with
    `kiota-abstractions-go` and every Kiota-generated SDK (msgraph-sdk-go and
@@ -51,9 +59,9 @@ they are. No rename is scoped for v2.0 or planned for v3.
   Kiota-generated SDKs (msgraph-sdk-go and peers); no churn across every
   `*api` package's exported surface; nothing to migrate for consumers.
 - **Cons:** the names remain technically imprecise — `RequestBuilder` is a
-  facade, `RequestInformation` is the actual builder — which can be mildly
+  façade, `RequestInformation` is the actual builder — which can be mildly
   confusing on first read until a contributor connects it to the Kiota
   convention it mirrors.
 - **Rule for future naming questions on these types:** this is now settled
-  through v3 — do not revisit without a new major version boundary and a
+  through v3 — don't revisit without a new major version boundary and a
   concrete consumer-facing reason, not just internal-precision cleanup.
