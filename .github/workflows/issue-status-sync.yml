@@ -15,9 +15,7 @@ on:
   pull_request_target:
     types: [opened, reopened, closed]
 
-permissions:
-  issues: write
-  pull-requests: read
+permissions: {}
 
 concurrency:
   group: issue-status-sync-${{ github.event.pull_request.number }}
@@ -27,10 +25,14 @@ jobs:
   sync:
     name: Sync Issue Status
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+      pull-requests: read
     steps:
       - name: Get linked issues
         id: linked
-        uses: mondeja/pr-linked-issues-action@v2
+        uses: mondeja/pr-linked-issues-action@15e15b5aa999ae8a742117c9489aa63b1a007b76 # v2.2.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

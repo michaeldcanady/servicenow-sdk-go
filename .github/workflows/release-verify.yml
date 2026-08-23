@@ -1,0 +1,55 @@
+name: Release Verify
+
+# Tripwire for the release path: runs the full quality gate against the exact
+# tagged ref after a tag is pushed. Release PRs already run CI pre-merge (see
+# ci.yml `changes` job); this catches anything that slips through via direct
+# pushes or automation bugs. It cannot undo a published tag, so failures here
+# page a human to yank/patch the release immediately.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions: {}
+
+concurrency:
+  group: release-verify-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify Tagged Ref
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Verify modules
+        run: |
+          go mod download
+          go mod verify
+          go mod tidy
+          git diff --exit-code -- .
+
+      - name: Build
+        run: |
+          PACKAGES=$(go list ./... | grep -v "/docs")
+          go build $PACKAGES
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9
+        with:
+          install-mode: goinstall
+          version: v2.13.0
+          skip-cache: false
+          args: --timeout=5m
+
+      - name: Unit tests
+        run: go test ./...

@@ -10,7 +10,7 @@ name: Sync Project Status
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # every 15 minutes
+    - cron: '0 * * * *'  # hourly (was every 15 min; a PAT-bearing cron should not run that hot)
   workflow_dispatch:
     inputs:
       apply:
@@ -18,23 +18,32 @@ on:
         type: boolean
         default: false
 
+permissions: {}
+
 jobs:
   check-secret:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
     outputs:
       has-token: ${{ steps.check.outputs.has-token }}
     steps:
       - id: check
-        run: echo "has-token=${{ secrets.PROJECT_PAT != '' }}" >> $GITHUB_OUTPUT
+        env:
+          HAS_TOKEN: ${{ secrets.PROJECT_PAT != '' }}
+        run: echo "has-token=$HAS_TOKEN" >> "$GITHUB_OUTPUT"
 
   sync:
     needs: check-secret
     if: needs.check-secret.outputs.has-token == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - uses: dvhthomas/project-label-sync@v0.1.2
+      - uses: dvhthomas/project-label-sync@3717399ea3afad24da809603d1006148dbf94688 # v0.1.2
         with:
           token: ${{ secrets.PROJECT_PAT }}
           apply: ${{ github.event.inputs.apply || 'false' }}

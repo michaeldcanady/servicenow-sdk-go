@@ -1,0 +1,21 @@
+# Codecov coverage gate. `fail_ci_if_error` in ci.yml only guards the upload
+# itself; these status checks fail the check when coverage regresses.
+# `target: auto` ratchets against the base commit — no hardcoded number to
+# game or maintain; a drop >1% fails the project check, and patch coverage is
+# held to roughly the existing repo level for new code.
+# Note: to actually block merges, make "codecov/project" and "codecov/patch"
+# required status checks in branch protection.
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+        if_ci_failed: error
+    patch:
+      default:
+        target: auto
+        threshold: 5%
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
