@@ -79,7 +79,11 @@ jobs:
           }
 
           mapfile -t TITLE_KW < <(tokenize "$TITLE" | awk '!seen[$0]++')
-          BODY_KW=$(tokenize "$(printf '%s' "$BODY" | sed 's/```[^`]*```//g')" \
+          # The awk toggle strips GFM fenced blocks that span lines (the
+          # dominant form in bug reports); a same-line sed regex misses them
+          # and lets code identifiers pollute the frequency ranking.
+          BODY_KW=$(tokenize "$(printf '%s' "$BODY" \
+            | awk '/^[[:space:]]*```/{ skip = !skip; next } !skip')" \
             | sort | uniq -c | sort -rn | head -6 | awk '{print $2}')
 
           mapfile -t ALL_KW < <(
@@ -92,6 +96,10 @@ jobs:
           # --- Search ---------------------------------------------------------------
           # Prefix ladder: each rung keeps the highest-signal tokens (title
           # order) and drops from the tail. Respect the 256-char query budget.
+          # Rows accumulate across ALL rungs instead of stopping at the first
+          # hit: rung 1 usually matches the new issue itself (every keyword is
+          # its own token), and breaking there would make the narrower rungs
+          # dead code, gated on whether the indexer had caught up yet.
 
           join_kw() {
             local -n KWS=$1
@@ -121,17 +129,19 @@ jobs:
 
           RESULTS=""
           for TERMS in "${TERM_SETS[@]}"; do
-            QUERY=""
-            for KW in $TERMS; do
-              TRY="${QUERY:+$QUERY }$KW"
-              (( ${#TRY} <= 180 )) || break
-              QUERY="$TRY"
-            done
+            QUERY="$TERMS"
             [[ -n "$QUERY" ]] || continue
-            RESULTS=$(gh api --method GET search/issues \
+            if ! ROWS=$(gh api --method GET search/issues \
               -f q="repo:${REPO} is:issue is:open ${QUERY}" -f per_page='15' \
-              --jq '.items[] | [.number, .title, (.body // "" | gsub("\\s+"; " ") | .[0:3000])] | @tsv' 2>/dev/null || true)
-            [[ -n "$RESULTS" ]] && break
+              --jq '.items[] | [.number, .title, (.body // "" | gsub("\\s+"; " ") | .[0:3000])] | @tsv' 2>/tmp/gh-search-err); then
+              # Surface real failures (rate limits, transient errors) instead
+              # of letting them masquerade as "zero hits" silence.
+              echo "::warning::Issue search failed: $(head -c 200 /tmp/gh-search-err)"
+              continue
+            fi
+            [[ -z "$ROWS" ]] && continue
+            RESULTS="${RESULTS}${ROWS}
+          "
           done
           [[ -n "$RESULTS" ]] || { echo "::notice::No search hits; staying silent."; exit 0; }
 
@@ -168,7 +178,11 @@ jobs:
             done
             (( TITLE_HITS >= 1 && SCORE >= 5 )) || continue
             REPORTED="${REPORTED}|${NUM}|"
-            COMMENT="${COMMENT}- #${NUM} — ${CTITLE}
+            # Candidate titles are arbitrary user input; escape Markdown-
+            # significant characters so a crafted title cannot inject links,
+            # images, or fake formatting into what looks like bot text.
+            SAFE_TITLE=$(printf '%s' "$CTITLE" | sed -e 's/[][\\`*_<>()#]/\\&/g')
+            COMMENT="${COMMENT}- #${NUM} — ${SAFE_TITLE}
           "
             COUNT=$((COUNT + 1))
             (( COUNT >= 3 )) && break
