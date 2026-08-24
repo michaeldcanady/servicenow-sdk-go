@@ -1,0 +1,233 @@
+# Documentation preview — the per-change lifecycle. Everything that happens
+# while a PR is open: quality gates on the changed content, a live preview,
+# and cleanup when the PR closes.
+#
+# Pair file: docs-stable.yml owns the merge-to-main lifecycle (full-site scan
+# + publishing the canonical site). The two deliberately diverge on triggers:
+#   * .vale.ini / scripts/check-snippet-regions.sh are CHECKER configuration:
+#     changing them must re-run checks (this file watches them) but produces
+#     no new site output, so detect-changes below excludes them and a
+#     rules-only PR never publishes a pointless preview.
+#   * Whole-repo prose scanning never gates a PR — PRs lint changed files
+#     only (#666); drift in untouched files is caught at the stable gate.
+#     A dispatch run CAN scan the full site, so the exact stable scoping can
+#     be proven by hand before relying on it (#683).
+#
+# Previews are non-gating by intent (they are a reading aid, not a check);
+# failed lints show red without blocking the preview publish. The BUILD,
+# however, is a first-class per-PR check (verify-build) that runs on every
+# push — including forks — and deploy-preview only publishes what it built.
+#
+# release-please branches need no special-casing: their PRs touch only
+# CHANGELOG.md/VERSION/version.go (verified in .release-please-config.json).
+name: Documentation Preview
+
+on:
+  workflow_dispatch:
+  pull_request:
+    # `closed` drives preview cleanup.
+    types: [opened, reopened, synchronize, closed]
+    paths:
+      - "website/**"
+      - ".vale.ini"
+      - "scripts/check-snippet-regions.sh"
+      - ".github/workflows/docs-preview.yml"
+      - ".github/actions/docs-build/**"
+      - ".github/actions/check-snippets/**"
+
+permissions: {}
+
+jobs:
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    # `action` is unset on dispatch, so this skips ONLY close events.
+    if: github.event.action != 'closed'
+    outputs:
+      docs: ${{ steps.diff.outputs.any_changed }}
+    steps:
+      # Local actions resolve from the workspace, so something must be checked
+      # out before the action below can be found at all — its internal
+      # checkout step can never be the thing that bootstraps this.
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Detect site-output changes
+        id: diff
+        uses: ./.github/actions/detect-changes
+        with:
+          checkout: "false"
+          # Site-output-affecting paths only — keep in lockstep with
+          # docs-stable.yml's copy so "should publish" means the same thing
+          # in both lifecycles. Checker config (.vale.ini, the regions
+          # script) intentionally absent: see header.
+          files: |
+            website/**
+            .github/workflows/docs-preview.yml
+            .github/actions/docs-build/**
+
+  lint-md:
+    name: lint-md
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    # Dispatch is allowed so the full-site scan below — normally enforced
+    # only at the stable release gate — can be exercised by hand against a
+    # ref before relying on it (#683). PR behavior is unchanged.
+    if: >-
+      github.event_name == 'pull_request' ||
+      github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      # Scoping is done at the file level rather than handing reviewdog
+      # filter_mode: added — vale-action never passes a diff command, so that
+      # combination dies with "diff command is empty" even on clean runs.
+      # The Vale binary itself is pinned: rule packs drift between releases,
+      # and an unpinned bump once failed every docs PR overnight.
+      - name: Changed markdown files
+        id: changed-md
+        if: github.event_name == 'pull_request'
+        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
+        with:
+          # Comma-delimited on purpose (see the Vale steps below): vale-action
+          # only splits its files input when given a matching separator, and
+          # the delimiter must survive the runner, which trims action inputs
+          # (a "\n" arrives as "" after trimming). No repo path contains a
+          # comma.
+          separator: ","
+          files: |
+            website/docs/**/*.md
+            website/versioned_docs/**/*.md
+
+      - name: Vale Linter (full site)
+        if: github.event_name != 'pull_request'
+        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # 3.0.0
+        with:
+          fail_on_error: true
+          files: website/docs,website/versioned_docs
+          separator: ","
+          level: error
+          version: 3.18.0
+
+      - name: Vale Linter (changed content)
+        if: >-
+          github.event_name == 'pull_request' &&
+          steps.changed-md.outputs.any_changed == 'true'
+        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # 3.0.0
+        with:
+          fail_on_error: true
+          files: ${{ steps.changed-md.outputs.all_changed_files }}
+          separator: ","
+          level: error
+          version: 3.18.0
+
+  lint-snippets:
+    name: lint-snippets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Check doc snippets
+        uses: ./.github/actions/check-snippets
+
+  deploy-preview:
+    name: deploy-preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # required: pushes PR preview to gh-pages branch
+      # rossjrw/pr-preview-action posts the preview-URL comment on the PR
+      # through its embedded sticky-comment step; without this grant that
+      # step fails the job AFTER the deployment already succeeded.
+      pull-requests: write
+    needs: [detect-changes, verify-build]
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action != 'closed' &&
+      needs.detect-changes.outputs.docs == 'true'
+    concurrency:
+      group: docs-preview-${{ github.event.number }}
+      cancel-in-progress: true # a superseded push's preview is worthless
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Download site artifact
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: site
+          path: website/build
+
+      # Fork PRs get a read-only token, so publishing is same-repo only.
+      - name: Deploy preview
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
+        with:
+          source-dir: website/build
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
+
+  remove-preview:
+    name: remove-preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # required: rewrites gh-pages to drop the preview dir
+      pull-requests: write # same embedded comment step as deploy-preview
+    # Independent of detect-changes: closes must clean up even when the
+    # closing push itself carries no docs changes.
+    if: >-
+      github.event.action == 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Remove preview
+        uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
+        with:
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: remove
+
+  verify-build:
+    name: verify-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    # Every PR (forks included) proves the site compiles under a check named
+    # after building — not buried in a deploy job's log beside unrelated
+    # publish errors. Also the manual smoke test: on workflow_dispatch it
+    # exercises the exact recipe that path filters would otherwise skip.
+    #
+    # Built with the PR's preview base-url because deploy-preview consumes
+    # THIS artifact; Docusaurus bakes baseUrl at build time, so a production-
+    # flavored build published under /pr-preview/pr-N/ would 404 its assets.
+    # Dispatch runs have no PR number and fall back to production defaults.
+    if: github.event.action != 'closed'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Build site
+        uses: ./.github/actions/docs-build
+        with:
+          base-url: ${{ github.event_name == 'pull_request' && format('/servicenow-sdk-go/pr-preview/pr-{0}/', github.event.number) || '/servicenow-sdk-go/' }}
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: site
+          path: website/build

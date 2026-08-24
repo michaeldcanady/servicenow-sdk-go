@@ -4,6 +4,14 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+// CI contract (see .github/workflows/docs-build.yml):
+//   * DOCS_BASE_URL — path prefix the site is served under; defaults to the
+//     production path. PR previews pass /servicenow-sdk-go/pr-preview/pr-<N>/.
+//   * DOCS_ANALYTICS_DOMAIN — set ONLY for production builds. Absent/empty
+//     means no Plausible script: local dev and PR previews stay out of stats.
+const baseUrl = process.env.DOCS_BASE_URL || '/servicenow-sdk-go/';
+const analyticsDomain = process.env.DOCS_ANALYTICS_DOMAIN;
+
 const config: Config = {
   title: 'ServiceNow SDK for Go',
   tagline: 'A fluent, type-safe Go client for ServiceNow REST APIs',
@@ -14,9 +22,7 @@ const config: Config = {
   },
 
   url: 'https://michaeldcanady.github.io',
-  // Overridden by CI for PR previews, which deploy under
-  // /servicenow-sdk-go/pr-preview/pr-<N>/ (see .github/workflows/docs.yml).
-  baseUrl: process.env.DOCS_BASE_URL ?? '/servicenow-sdk-go/',
+  baseUrl,
 
   organizationName: 'michaeldcanady',
   projectName: 'servicenow-sdk-go',
@@ -42,15 +48,15 @@ const config: Config = {
   clientModules: ['./src/clientModules/trackCodeCopy.ts'],
 
   scripts:
-    process.env.NODE_ENV === 'production' && !process.env.DOCS_BASE_URL
+    process.env.NODE_ENV === 'production' && analyticsDomain
       ? [
           // Plausible analytics. Only loaded on production deploys: local
-          // dev runs with NODE_ENV=development, and PR previews inject
-          // DOCS_BASE_URL, so neither pollutes the stats.
+          // dev runs with NODE_ENV=development, and PR previews never set
+          // DOCS_ANALYTICS_DOMAIN, so neither pollutes the stats.
           {
             src: 'https://plausible.io/js/script.js',
             defer: true,
-            'data-domain': 'michaeldcanady.github.io',
+            'data-domain': analyticsDomain,
           },
         ]
       : [],
