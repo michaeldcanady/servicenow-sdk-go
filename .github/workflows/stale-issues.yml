@@ -1,20 +1,26 @@
 # Auto-close issues that are waiting on reporter information (#643).
 #
-# Once a day, issues with no activity for 14 days get a warning comment plus
-# a `stale` label; 7 days later they are closed as not planned. Any comment,
-# commit reference, or edit removes the `stale` label and resets the clock,
-# so a reporter who returns keeps their issue open.
+# Two tiers, because untriaged and triaged issues rot on different clocks:
+#
+# Active tier (everything except the triaged backlog): no activity for 14
+# days draws a warning comment plus a `stale` label; 7 days later the issue
+# is closed as not planned. Any comment, commit reference, or edit removes
+# the `stale` label and resets the clock, so a reporter who returns keeps
+# their issue open. In practice this tier sweeps quiet `status: new` issues.
+#
+# Backlog tier (`status: reviewed` only): maintainer-triaged issues wait on
+# a contributor, not the reporter, so they get a much longer leash — warned
+# at 90 days idle, closed 7 days after that. Implemented as a second
+# actions/stale pass scoped with only-issue-labels because one invocation
+# cannot carry two thresholds.
 #
 # Scope is issues only — PRs go stale through review pressure, not this bot.
 #
-# Exemptions:
+# Exemptions (both tiers):
 # - `pinned` and good-first-issue labels never go stale. Both spellings of
 #   good-first-issue are listed because the repo's existing label is
 #   "good first issue" (GitHub's default), while callers often write it
 #   hyphenated; GitHub treats those as distinct labels.
-# - `status: reviewed` is the maintainer-triaged backlog — those issues are
-#   waiting on a contributor, not on the reporter, so they never go stale.
-#   In practice the bot only sweeps `status: new` issues that went quiet.
 # - Issues with any assignee never go stale — an assignee means someone owns
 #   the work, which is the opposite of waiting on the reporter.
 #
@@ -74,7 +80,7 @@ jobs:
             fi
           fi
 
-      - name: Mark and close stale issues
+      - name: Mark and close stale issues (active tier)
         uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 # v10
         with:
           # Issues only: negative PR windows disable PR processing entirely.
@@ -106,3 +112,36 @@ jobs:
             This issue was closed automatically because it had no activity for 21 days and appeared to be waiting on reporter information.
 
             If this is still a problem, comment below or reopen it. Include your SDK version, Go version, and a minimal reproduction so we can pick it up quickly.
+
+      - name: Mark and close stale issues (backlog tier)
+        uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 # v10
+        with:
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          days-before-issue-stale: 90
+          days-before-issue-close: 7
+
+          # Touch only triaged backlog issues; the active tier above handles
+          # everything else, so the two passes never process the same issue.
+          only-issue-labels: "status: reviewed"
+
+          stale-issue-label: stale
+
+          exempt-issue-labels: "good first issue,good-first-issue,pinned"
+          exempt-all-issue-assignees: true
+
+          close-issue-reason: not_planned
+
+          operations-per-run: 30
+
+          debug-only: ${{ inputs.dry_run == true }}
+
+          stale-issue-message: |
+            This issue was triaged some time ago and has now had no activity for 90 days.
+
+            If it still matters, comment below or remove the `stale` label. If we hear nothing, it closes automatically in 7 days.
+
+          close-issue-message: |
+            This issue was closed automatically because it stayed inactive for 97 days after triage.
+
+            If this is still relevant, comment below or reopen it — ideally with your current SDK version, Go version, and a minimal reproduction.
