@@ -29,7 +29,7 @@ go test -tags integration ./tests/integration/...   # godog/BDD, uses httpmock �
 go test -tags e2e ./tests/integration/v2/...        # hits a real ServiceNow instance via .env credentials
 ```
 
-Docs (Docusaurus, in `website/`) are built via `just generate-docs` / served via `just serve-docs` (Node 20+; `just setup-docs` first). Site pages live in `website/docs/`; Go code samples are single-sourced from `website/snippets/*.go` via the `GoSnippet`/`GoExample` MDX components (`// [START x]` / `// [END x]` region markers). `docs/` now holds only internal engineering docs (ADRs, blueprints).
+Docs (Docusaurus, in `website/`) are built via `just generate-docs` / served via `just serve-docs` (Node 20+; `just setup-docs` first). Site pages live in `website/docs/`; Go code samples are single-sourced from `website/snippets/*.go` via the `GoSnippet`/`GoExample` MDX components (`// [START x]` / `// [END x]` region markers). All engineering docs live on the docs site: contributor guides under `website/docs/contributing/`, ADRs at `website/docs/contributing/adrs/` (new ones must be added to `adrs/index.md` and `website/sidebars.ts`), module design blueprints at `website/docs/contributing/blueprints/`, and the release-branch-protection runbook at `website/docs/contributing/release-branch-protection.md`. The repo keeps no top-level `docs/` directory.
 
 ## Architecture
 
@@ -175,3 +175,10 @@ majors) — **never edit `VERSION` or `CHANGELOG.md` by hand.**
 `scripts/`, or other pipeline plumbing is `chore:`, never `fix:`/`feat:`, even when it fixes a
 broken run. These don't affect the published SDK and must not appear in `CHANGELOG.md` as a fix
 or feature.
+
+**Deprecation notices use a `{unreleased}` placeholder** — write
+`// Deprecated: deprecated since v{unreleased}. [use X instead.]`. The
+`stamp-deprecations` workflow replaces `{unreleased}` with the pending version on the
+release-please branch before it merges, so the tagged commit (and pkg.go.dev docs) carries the
+final version. Weekly preview releases are not stamped; placeholders survive preview cycles until
+the next stable release stamps them.

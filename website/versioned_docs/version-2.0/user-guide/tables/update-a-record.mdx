@@ -1,0 +1,48 @@
+# Update a record
+
+import GoExample from '@site/src/components/GoExample';
+import updateGo from '@site/snippets/tables_update.go';
+
+Change specific fields on an existing record, leaving everything else
+untouched.
+
+## When to use this pattern
+
+- You're progressing a record through a workflow (state changes, assignments,
+  work notes)
+- You're writing back results from an external process to the record that
+  requested it
+- You have the record's `sys_id` — if you don't,
+  [find it first](list-and-query-records.mdx)
+
+## Required values
+
+| Value         | Description                                  |
+| ------------- | -------------------------------------------- |
+| Table name    | The record's table (for example, `incident`) |
+| Record sys_id | The record to update                         |
+| Fields        | The field values to change                   |
+
+## Example
+
+<GoExample language="go" files={{ updateGo: updateGo }} template={`package main
+
+{{updateGo:tgu_imports}}
+
+func main() {
+    {{updateGo:tgu_main}}
+}`} />
+
+## Tips
+
+- Only the fields you `SetValue` are serialized into the request — there's no
+  read-modify-write cycle to race with other writers on untouched fields.
+- `Put` on a wrong `sys_id` returns `core.NotFoundError`; match it with
+  `errors.As` ([error handling](../error-handling.mdx)).
+
+## Next steps
+
+- **[Delete a record](delete-a-record.mdx):** Remove records you no longer
+  need.
+- **[Error handling](../error-handling.mdx):** Handle not-found and
+  validation failures cleanly.

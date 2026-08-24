@@ -152,9 +152,9 @@ Issues use the following label taxonomy:
 
 **Type labels:** `type: bug`, `type: feature`, `type: refactor`, `type: documentation`, `type: devops`, `type: epic`, `type: test`
 
-**Module labels:** Auto applied by PR based on changed files (for example, `module: table-api`, `module: core`).
+**Module labels:** Applied automatically by PR based on changed files (for example, `module: table-api`, `module: core`).
 
-**Status** (workflow state, auto synced by automation):
+**Status** (workflow state, synced automatically):
 
 | Label | Meaning |
 |-------|---------|
@@ -165,7 +165,7 @@ Issues use the following label taxonomy:
 
 > **Automation:** When you open a PR with `Closes #N` in the description, the linked issue automatically moves to `status: in progress`. When the PR is closed without merge, it reverts to `status: reviewed`. Merged PRs close issues via GitHub's native behavior.
 
-For the full triage process, scoring rubric, and examples, see [Issue Triage Process](https://github.com/michaeldcanady/servicenow-sdk-go/blob/main/docs/TRIAGE.md).
+For the full triage workflow, scoring rubric, and examples, see [Issue triage](triage.md).
 
 ## Documentation conventions
 
@@ -177,9 +177,10 @@ For the full triage process, scoring rubric, and examples, see [Issue Triage Pro
   (`go vet -tags snippets ./website/snippets/`), so samples can't rot.
 - New pages register in `website/sidebars.ts`; preview with
   `just serve-docs` (Node 20+, `just setup-docs` first).
-- Design changes get an ADR under `docs/adr/` plus a summary page here —
+- Design changes get an [ADR](adrs/index.md) plus a summary page here —
   see [Why it's built this way](design-decisions.md). New modules get a
-  blueprint under `docs/blueprints/` first.
+  blueprint first — see the [documents API
+  blueprint](blueprints/documents-api-blueprint.md) for the format.
 
 ## The playbook, when you need it
 

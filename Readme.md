@@ -25,7 +25,7 @@ import (
     "fmt"
     "log"
 
-    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2/v2"
+    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
     "github.com/michaeldcanady/servicenow-sdk-go/v2/v2/credentials"
 )
 

@@ -1,0 +1,34 @@
+# Update node
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Update a configuration data node.
+
+## HTTP request
+
+```http
+PUT /api/sn_cdm/editor/v1/nodes/{node_sys_id}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `node_sys_id` | Node sys_id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Supply a `cdmeditorapi.NodeUpdateRequest`.
+
+## Response
+
+`NodeResponse` — the updated node.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_update_node" />

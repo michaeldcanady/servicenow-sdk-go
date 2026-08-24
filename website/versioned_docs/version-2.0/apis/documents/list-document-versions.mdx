@@ -1,0 +1,34 @@
+# List document versions
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve a document's version history.
+
+## HTTP request
+
+```http
+GET /api/now/v1/documents/versions/{document_sys_id}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `document_sys_id` | Document sys_id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+A collection envelope of `Document`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_list_document_versions" />

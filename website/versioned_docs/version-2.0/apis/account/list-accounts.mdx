@@ -1,0 +1,32 @@
+# List accounts
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve the customer accounts visible to the caller.
+
+## HTTP request
+
+```http
+GET /api/now/v1/account
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+`AccountCollectionResponse` — a collection envelope of `*AccountModel`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_list_accounts" />

@@ -3,6 +3,9 @@ package support
 import (
 	"fmt"
 	"net/http"
+	"strings"
+	"sync"
+	"time"
 
 	sdk "github.com/michaeldcanady/servicenow-sdk-go/v2"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
@@ -12,11 +15,51 @@ import (
 	"github.com/jarcoal/httpmock"
 )
 
+// tokenCaptureRT records the most recent Bearer token on outgoing requests so
+// scenarios can assert a real token was used. It must sit BELOW the Kiota
+// middleware pipeline (as the parent transport) — that is where the
+// authentication provider has already injected the Authorization header.
+type tokenCaptureRT struct {
+	w    *World
+	base http.RoundTripper
+
+	mu sync.Mutex
+}
+
+func (t *tokenCaptureRT) RoundTrip(req *http.Request) (*http.Response, error) {
+	if authz := req.Header.Get("Authorization"); strings.HasPrefix(authz, "Bearer ") {
+		t.mu.Lock()
+		t.w.CachedToken = strings.TrimPrefix(authz, "Bearer ")
+		t.mu.Unlock()
+	}
+	rt := t.base
+	if rt == nil {
+		rt = http.DefaultTransport
+	}
+	return rt.RoundTrip(req)
+}
+
+// newTokenCapturingClient builds an http.Client equivalent to the SDK default,
+// with token capture enabled. Only used for live (e2e) runs; offline runs keep
+// their httpmock transport untouched.
+func newTokenCapturingClient(w *World) *http.Client {
+	parent := &tokenCaptureRT{w: w}
+	return &http.Client{
+		Transport: nethttplibrary.NewCustomTransportWithParentTransport(
+			parent, nethttplibrary.GetDefaultMiddlewares()...,
+		),
+		Timeout: 60 * time.Second,
+	}
+}
+
 // NewSDKClient creates a ServiceNowServiceClient with the given options.
 // It automatically injects the HTTP client (httpmock when offline) and instance.
 func NewSDKClient(w *World, opts ...sdk.ServiceNowServiceClientOption) error {
 	instance := IntegrationInstance()
 	httpClient := GetHTTPClient()
+	if httpClient == nil && IsE2E() {
+		httpClient = newTokenCapturingClient(w)
+	}
 
 	baseOpts := []sdk.ServiceNowServiceClientOption{
 		sdk.WithInstance(instance),

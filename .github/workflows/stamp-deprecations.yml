@@ -1,0 +1,115 @@
+name: Stamp Deprecated Notices
+
+# Deprecation notices are authored as
+#   // Deprecated: deprecated since v{unreleased}. [use X instead.]
+# and this workflow replaces {unreleased} with the pending version on the
+# release-please branch, so the tagged commit (and therefore pkg.go.dev docs)
+# carries the final version instead of a placeholder.
+#
+# - Branch created  -> pull_request.opened fires -> stamp.
+# - More commits merge while the PR is open -> release-please force-updates
+#   the branch (wiping any prior stamp) -> synchronize fires -> re-stamp.
+# - Our own stamp push -> synchronize fires -> clean diff -> no-op.
+#
+# Maintenance release PRs (release/v* targets) get the same stamping so
+# {unreleased} never ships in a tagged maintenance line. Base-branch caveat:
+# GitHub evaluates this file from the PR's base ref, so lines cut before this
+# filter landed need the updated file synced onto them via PR.
+# Weekly preview releases are intentionally NOT stamped; placeholders survive
+# preview cycles until the next stable release stamps them. Both release flows
+# use the same `release-please--` branch prefix, so the discriminator is the
+# VERSION content: only a full-line strict `x.y.z` (stable) is stamped, while a
+# prerelease version (e.g. `2.0.3-rc.1`) skips cleanly.
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - main
+      - "release/v*"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  stamp:
+    name: Replace {unreleased} with pending version
+    if: ${{ startsWith(github.head_ref, 'release-please--') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout release PR branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Read pending version
+        id: version
+        # Tolerate stray whitespace/CRLF around the version line; the strict
+        # guard in the next step still rejects anything malformed.
+        run: echo "version=$(tr -d ' \r' < VERSION | grep -Em1 '^[0-9]+\.[0-9]+\.[0-9]+$' || true)" >> "$GITHUB_OUTPUT"
+
+      - name: Replace {unreleased}
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          # End-anchored strict semver only. Weekly preview branches carry a
+          # prerelease VERSION, so no match -> skip cleanly (placeholders survive
+          # preview cycles by design) rather than leaving the check red.
+          if [ -z "$VERSION" ]; then
+            echo "::notice::No stable x.y.z line in VERSION (weekly preview or missing); skipping stamp."
+            exit 0
+          fi
+          # Guard the value before it reaches shell/sed contexts; with digits and
+          # dots only, no metacharacters or sed delimiters can smuggle through.
+          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+            echo "::error::Unexpected VERSION value '${VERSION}'"
+            exit 1
+          }
+          # -Z/-0 keeps paths with spaces intact; -r makes an empty match list a
+          # no-op; --exclude-dir=.git keeps repo metadata out of reach. The sed
+          # address narrows edits to Deprecated notice lines so test fixtures or
+          # snippets that demonstrate the {unreleased} convention are untouched.
+          grep -rlZ --exclude-dir=.git '{unreleased}' --include='*.go' . | xargs -0 -r \
+            sed -i '/\/\/ Deprecated:/ s/{unreleased}/'"${VERSION}"'/g'
+
+      - name: Push stamp commit
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          git diff --quiet && exit 0
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "docs: stamp ${VERSION} into Deprecated notices"
+          for attempt in 1 2 3; do
+            SHA=$(git rev-parse HEAD)
+            if git push origin "HEAD:${HEAD_REF}"; then
+              git fetch origin "${HEAD_REF}"
+              # A trivially-successful no-op push must not read as green when it
+              # dropped our commit; verify the remote tip actually contains it.
+              if git merge-base --is-ancestor "${SHA}" "origin/${HEAD_REF}"; then
+                exit 0
+              fi
+              echo "::error::Push reported success but remote tip lacks ${SHA}."
+              exit 1
+            fi
+            # Likely raced with release-please force-updating the branch; pick up
+            # its state and try again. A conflicting rebase is aborted (not
+            # swallowed) so the retry keeps failing fast-forward and the run ends
+            # red instead of silently dropping the stamp; that force-push also
+            # triggers another synchronize event, which re-runs us.
+            sleep $((attempt * 10))
+            git fetch origin "${HEAD_REF}"
+            git rebase "origin/${HEAD_REF}" >/dev/null 2>&1 || { git rebase --abort || true; }
+          done
+          echo "::error::Could not push stamp commit; the next synchronize event will retry."
+          exit 1

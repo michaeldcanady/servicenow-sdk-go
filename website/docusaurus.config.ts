@@ -4,6 +4,14 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+// CI contract (see .github/workflows/docs-build.yml):
+//   * DOCS_BASE_URL — path prefix the site is served under; defaults to the
+//     production path. PR previews pass /servicenow-sdk-go/pr-preview/pr-<N>/.
+//   * DOCS_ANALYTICS_DOMAIN — set ONLY for production builds. Absent/empty
+//     means no Plausible script: local dev and PR previews stay out of stats.
+const baseUrl = process.env.DOCS_BASE_URL || '/servicenow-sdk-go/';
+const analyticsDomain = process.env.DOCS_ANALYTICS_DOMAIN;
+
 const config: Config = {
   title: 'ServiceNow SDK for Go',
   tagline: 'A fluent, type-safe Go client for ServiceNow REST APIs',
@@ -14,9 +22,7 @@ const config: Config = {
   },
 
   url: 'https://michaeldcanady.github.io',
-  // Overridden by CI for PR previews, which deploy under
-  // /servicenow-sdk-go/pr-preview/pr-<N>/ (see .github/workflows/docs.yml).
-  baseUrl: process.env.DOCS_BASE_URL ?? '/servicenow-sdk-go/',
+  baseUrl,
 
   organizationName: 'michaeldcanady',
   projectName: 'servicenow-sdk-go',
@@ -38,6 +44,22 @@ const config: Config = {
   },
 
   themes: ['@docusaurus/theme-mermaid'],
+
+  clientModules: ['./src/clientModules/trackCodeCopy.ts'],
+
+  scripts:
+    process.env.NODE_ENV === 'production' && analyticsDomain
+      ? [
+          // Plausible analytics. Only loaded on production deploys: local
+          // dev runs with NODE_ENV=development, and PR previews never set
+          // DOCS_ANALYTICS_DOMAIN, so neither pollutes the stats.
+          {
+            src: 'https://plausible.io/js/script.js',
+            defer: true,
+            'data-domain': analyticsDomain,
+          },
+        ]
+      : [],
 
   plugins: [
     // Allow importing Go snippet files as raw source (single source of truth
@@ -72,8 +94,26 @@ const config: Config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: './sidebars.ts',
-          editUrl:
-            'https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/website/',
+          // Keep numeric prefixes (e.g. adrs/001-error-standardization) in doc
+          // ids and URLs — ADR numbering is referenced as "ADR 003" everywhere.
+          numberPrefixParser: false,
+          // Only "main" offers edit links. Frozen versioned copies are fixed
+          // in docs/ first, then backported (see contributing/release-branches),
+          // so pointing "Edit this page" at a snapshot would invite edits in
+          // the wrong direction.
+          editUrl: ({version, docPath}) =>
+            version === 'current'
+              ? `https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/website/docs/${docPath}`
+              : undefined,
+          // "/" serves the docs from main; released doc lines live under
+          // their version prefix (e.g. /2.0/...) via the navbar dropdown.
+          lastVersion: 'current',
+          versions: {
+            // The unreleased banner points readers at the newest released
+            // line (/2.0/) instead of silently documenting unreleased code.
+            current: {label: 'main', banner: 'unreleased'},
+            '2.0': {label: 'v2.0', banner: 'none'},
+          },
         },
         blog: false,
         theme: {
@@ -94,6 +134,10 @@ const config: Config = {
         {type: 'docSidebar', sidebarId: 'userGuide', position: 'left', label: 'User Guide'},
         {type: 'docSidebar', sidebarId: 'apiReference', position: 'left', label: 'API Reference'},
         {type: 'docSidebar', sidebarId: 'contributing', position: 'left', label: 'Contributor Guide'},
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+        },
         {
           href: 'https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go',
           label: 'GoDoc',

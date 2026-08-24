@@ -204,3 +204,13 @@ CIs?('s)?
 Godog
 (?i)mockable
 (?i)preconfigured
+(?i)triage(d|s)?
+(?i)docusaurus
+(?i)frontmatter
+(?i)runbooks?
+(?i)tableapi
+(?i)dereference(d|s)?
+(?i)timebox(ed|ing)?
+(?i)runtimes?('s)?
+(?i)rulesets?
+(?i)codeowners
