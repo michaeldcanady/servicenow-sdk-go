@@ -2,11 +2,14 @@
 #
 # Two tiers, because untriaged and triaged issues rot on different clocks:
 #
-# Active tier (everything except the triaged backlog): no activity for 14
+# Active tier (everything except triaged statuses): no activity for 14
 # days draws a warning comment plus a `stale` label; 7 days later the issue
 # is closed as not planned. Any comment, commit reference, or edit removes
 # the `stale` label and resets the clock, so a reporter who returns keeps
-# their issue open. In practice this tier sweeps quiet `status: new` issues.
+# their issue open. In practice this tier sweeps quiet `status: new` issues
+# — `status: in progress` is exempt because issue-status-sync.yml applies
+# that label without assigning anyone, so an issue with work in flight is
+# not protected by the assignee rule alone.
 #
 # Backlog tier (`status: reviewed` only): maintainer-triaged issues wait on
 # a contributor, not the reporter, so they get a much longer leash — warned
@@ -30,7 +33,8 @@
 # silently fails to mark issues when its label is missing.
 #
 # Rollout/dry runs: trigger via workflow_dispatch with dry_run checked —
-# the bot logs everything it would do but touches nothing live.
+# the stale passes log everything they would do but touch nothing live,
+# and label provisioning is skipped entirely.
 
 name: Stale Issues
 
@@ -59,7 +63,11 @@ jobs:
     permissions:
       issues: write # labels, comments, and closes all live under the Issues API
     steps:
+      # Skipped on dry runs: provisioning is a live write, and the header's
+      # dry-run promise is that nothing is touched at all. The stale passes
+      # below are safe to dry-run because debug-only suppresses all writes.
       - name: Ensure stale label exists
+        if: inputs.dry_run != true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -91,7 +99,7 @@ jobs:
 
           stale-issue-label: stale
 
-          exempt-issue-labels: "good first issue,good-first-issue,pinned,status: reviewed"
+          exempt-issue-labels: "good first issue,good-first-issue,pinned,status: reviewed,status: in progress"
           exempt-all-issue-assignees: true
 
           close-issue-reason: not_planned
