@@ -25,8 +25,8 @@ schema:
 | trunk | `main` | PR + 1 CODEOWNERS approval, stale-review dismissal, conversation resolution, no deletion/force-push |
 | maintenance lines | `release/v*` | same as trunk **plus required linear history** |
 
-Both require only universally reporting status checks ("Check Branch Name",
-"Check Linked Issue", "Validate PR Title", "CodeQL") — path-filtered jobs
+Both require only universally reporting status checks (`Check Branch Name`,
+`Check Linked Issue`, `Validate PR Title`, `CodeQL`) — path-filtered jobs
 would sit pending forever on PRs whose paths they skip.
 
 The table below is the human-readable spec the declaration encodes; consult

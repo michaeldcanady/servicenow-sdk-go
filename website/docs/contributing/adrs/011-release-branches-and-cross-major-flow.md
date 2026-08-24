@@ -19,7 +19,7 @@ semantic-import-versioning module paths make this especially expensive to
 recover from: every touched file carries `/v1` vs `/v2` import suffixes, so
 cross-line merges conflict in nearly every file and effectively become
 rewrites rather than merges. Drift between major lines therefore compounds
-fast and does not heal on its own.
+fast and doesn't heal on its own.
 
 Tooling reinforces the problem today: release-please fires only on `main`
 (`.github/workflows/stable-release.yml`), so there is no supported path for
@@ -104,9 +104,9 @@ backport label action, the forward-port tracker workflow, and
   two release-please configs and several new workflows add maintenance
   surface; rules 4–5 depend on reviewer discipline that automation only
   partially enforces.
-- **Rule for future release questions:** do not create preemptive
+- **Rule for future release questions:** don't create preemptive
   `release/*` branches, never land feature work on a maintenance branch
-  without completing the forward-port assessment, and do not treat a
+  without completing the forward-port assessment, and don't treat a
   maintenance branch as a development trunk — if v2-era work starts feeling
-  like active development again, that is the signal to re-evaluate the EOL
+  like active development again, that's the signal to re-evaluate the EOL
   clock, not to grow the branch.
