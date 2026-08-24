@@ -88,6 +88,9 @@ const config: Config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: './sidebars.ts',
+          // Keep numeric prefixes (e.g. adrs/001-error-standardization) in doc
+          // ids and URLs — ADR numbering is referenced as "ADR 003" everywhere.
+          numberPrefixParser: false,
           // Only "main" offers edit links. Frozen versioned copies are fixed
           // in docs/ first, then backported (see contributing/release-branches),
           // so pointing "Edit this page" at a snapshot would invite edits in

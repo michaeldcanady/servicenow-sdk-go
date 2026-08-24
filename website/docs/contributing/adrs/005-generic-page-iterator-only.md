@@ -1,3 +1,8 @@
+---
+title: 'ADR 005: One generic page iterator, no per-module wrappers'
+description: A single generic page iterator is the only documented pagination pattern.
+---
+
 # ADR 005: One generic `core.PageIterator`, no per-module wrappers
 
 ## Status
@@ -45,7 +50,7 @@ iterator, err := core.NewPageIterator(response, client.GetRequestAdapter(),
   doesn't have.
 - **Cons:** breaking removal of the three wrapper constructors — callers
   must migrate to the generic call. Landed pre-v2.0 for that reason.
-- **Rule for new modules:** do not add a `New<X>PageIterator` wrapper for a
+- **Rule for new modules:** don't add a `New<X>PageIterator` wrapper for a
   new API module, even for symmetry with `tableapi`'s old shape — that
   shape was removed deliberately, not left behind by omission. Document
   per-endpoint whether it actually emits `Link` headers instead.

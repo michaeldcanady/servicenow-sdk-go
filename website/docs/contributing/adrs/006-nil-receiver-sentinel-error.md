@@ -1,3 +1,8 @@
+---
+title: 'ADR 006: Nil-receiver guards return a sentinel error, never (nil, nil)'
+description: Nil builders fail loud at the call site with a shared sentinel error.
+---
+
 # ADR 006: Nil-receiver guards return a sentinel error, never `(nil, nil)`
 
 ## Status
@@ -13,7 +18,7 @@ and no error — when the receiver or its embedded `RequestBuilder` was nil.
 `Delete`/`Patch` variants that only return an error swallowed the problem
 entirely with a bare `return nil`.
 
-This meant a caller holding a nil builder (e.g. from a failed prior chain
+This meant a caller holding a nil builder (for example, from a failed prior chain
 step) saw silent success and only failed later, at a point in the code far
 from the actual mistake, with no error to grep for or wrap.
 

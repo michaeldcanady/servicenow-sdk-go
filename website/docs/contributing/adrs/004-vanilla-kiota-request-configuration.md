@@ -1,3 +1,10 @@
+---
+title: 'ADR 004: Vanilla Kiota request-configuration pattern for query parameters'
+description: >-
+  Pointer-typed query parameters wired through
+  abstractions.ConfigureRequestInformation, replacing a go-querystring wrapper.
+---
+
 # ADR 004: Vanilla Kiota request-configuration pattern for query parameters
 
 ## Status
@@ -14,19 +21,19 @@ request via a repo-specific `internal.ConfigureRequestInformation` /
 `internal.KiotaRequestInformation` wrapper built on the `go-querystring`
 library.
 
-This diverged from how Kiota-generated SDKs (e.g. msgraph-sdk-go) shape query
+This diverged from how Kiota-generated SDKs (for example, msgraph-sdk-go) shape query
 parameters, and the divergence had a real cost: value fields can't represent
 "the caller didn't set this" separately from "the caller explicitly set the
 zero value," so `go-querystring` either always emitted a field or needed
 extra `omitempty`-style conventions layered on top to approximate what
-`abstractions.RequestInformation.AddQueryParameters` gives you for free with
+`abstractions.RequestInformation.AddQueryParameters` gives you out of the box with
 nil-checkable pointers.
 
 Alternatives considered:
 
 1. **Keep the value-typed structs and the go-querystring wrapper** — rejected
    because it's the thing ADR-003 already argues against: reinventing a
-   Kiota runtime capability (`AddQueryParameters`) that ships for free, and
+   Kiota runtime capability (`AddQueryParameters`) that ships by default, and
    it keeps the SDK's query-parameter shape looking different from every
    Kiota-generated SDK a caller might already know.
 2. **Pointer fields wired through `abstractions.ConfigureRequestInformation`
@@ -34,7 +41,7 @@ Alternatives considered:
    dependency.
 
 A timeboxed spike (#494) was run specifically to classify this as breaking
-vs. additive before the v2.0 cut, since it could not land after the tag
+vs. additive before the v2.0 cut, since it couldn't land after the tag
 without becoming a v3 change.
 
 ## Decision
@@ -59,7 +66,7 @@ declared as `*int32`, not `*int`, or it will vanish without error.
   distinguishable; one fewer third-party dependency.
 - **Cons:** breaking for every caller constructing these structs with value
   literals — they must switch to pointers (see `internal.ToPointer`).
-  Landed as a breaking v2.0 change specifically because it could not wait
+  Landed as a breaking v2.0 change specifically because it couldn't wait
   for v3.
 - **Sharp edge to guard in review:** a new `*int` query-parameter field is a
   silent bug, not a compile error — it must be `*int32`.

@@ -91,7 +91,7 @@ URLs and models.
 | `errors/` | The shared sentinel errors (`snerrors`) | Almost never — reuse, don't add |
 | `tests/integration/`, `tests/e2e/` | Godog BDD suites and live-instance tests | See the [testing guide](testing.md) |
 | `website/` | This documentation site, including compiled Go samples in `website/snippets/` | Any PR that changes what users see |
-| `docs/adr/`, `docs/blueprints/` | Architecture decision records and per-module design blueprints | Design changes and new modules |
+| `website/docs/contributing/blueprints/` | Per-module design blueprints for new API surfaces | New modules |
 
 Two rules of thumb fall out of this layout:
 
@@ -114,7 +114,7 @@ Two rules of thumb fall out of this layout:
   are all swappable, which is also what makes everything mockable in tests.
 
 The *why* behind these lives in [the design decisions](design-decisions.md)
-— each one backed by an ADR in `docs/adr/`:
+— each one backed by an [ADR](adrs/index.md):
 
 - [Why hand-written on Kiota?](design-hand-written-kiota.md)
 - [Why aren't models plain structs?](design-backed-models.md)

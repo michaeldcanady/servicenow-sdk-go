@@ -1,9 +1,14 @@
+---
+title: Release branch protection runbook
+description: How release branch protection is declared as code in this repo and applied by hand when needed.
+---
+
 # Release branch protection runbook
 
 Workflow-level hygiene for `release/v*` PRs is enforced in-repo
 (`.github/workflows/branch-policy.yml` now targets `release/**` too), but
 the hard guarantees — no direct pushes, required reviews, protected history —
-are repository rulesets, which are admin settings outside Actions. They are
+are repository rulesets, which are admin settings outside Actions. They're
 declared in this repo as code, following the same schema Microsoft's Kiota
 repositories use: `.github/policies/servicenow-sdk-go-branch-protection.yml`
 (#658, ADR 011 rule 3). That file is the single source of truth — reviewed
@@ -43,7 +48,7 @@ Settings → Rules → Rulesets if ever needed.
 
 ### Required status checks
 
-Do not hand-enumerate check names at ruleset-creation time — a fresh
+Don't hand-enumerate check names at ruleset-creation time — a fresh
 `release/vX.Y` branch has no runs yet, and GitHub only offers checks that
 have already reported on the branch. Instead:
 
@@ -51,7 +56,7 @@ have already reported on the branch. Instead:
 2. Let `codeql.yml`, `branch-policy.yml`, and `pr.yml` report once.
 3. Edit the ruleset and require the checks that appeared — exactly the four
    declared in `.github/policies/servicenow-sdk-go-branch-protection.yml`
-   ("Check Branch Name", "Check Linked Issue", "Validate PR Title", "CodeQL").
+   ("Check Branch Name," "Check Linked Issue," "Validate PR Title," "CodeQL.")
    Never add path-filtered jobs (the ci.yml build/test/lint matrix): they
    skip docs-only or workflow-only PRs, and a required check that never
    reports sticks "pending" forever, blocking every merge until an admin
