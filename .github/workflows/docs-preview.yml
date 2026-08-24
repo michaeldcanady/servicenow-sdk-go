@@ -48,10 +48,17 @@ jobs:
     outputs:
       docs: ${{ steps.diff.outputs.any_changed }}
     steps:
+      # Local actions resolve from the workspace, so something must be checked
+      # out before the action below can be found at all — its internal
+      # checkout step can never be the thing that bootstraps this.
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
       - name: Detect site-output changes
         id: diff
         uses: ./.github/actions/detect-changes
         with:
+          checkout: "false"
           # Site-output-affecting paths only — keep in lockstep with
           # docs-stable.yml's copy so "should publish" means the same thing
           # in both lifecycles. Checker config (.vale.ini, the regions
