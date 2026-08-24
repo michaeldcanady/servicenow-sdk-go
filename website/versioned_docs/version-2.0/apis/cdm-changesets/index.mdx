@@ -1,0 +1,22 @@
+# CDM Changesets API overview
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import modulesGo from '@site/snippets/modules.go';
+
+
+The CDM Changesets API manages Configuration Data Management changesets:
+inspect changeset activity, check commit status, and evaluate the impact of a
+changeset before committing it.
+
+## Basic usage
+
+Access it through the `Cdm()` namespace:
+
+<GoSnippet language="go" src={modulesGo} region="module_cdm_changesets" />
+
+## Available operations
+
+- **List / delete changesets** — `Changesets().Get(ctx, config)` and `.Delete(ctx, config)`.
+- **Activity** — `Activity().Get(ctx, config)`.
+- **Commit status** — `CommitStatus().ByID(commitID).Get(ctx, config)`.
+- **Impact analysis** — `ImpactedSharedComponents().Get`, `ImpactedDeployables().Get`, and per-changeset `ByID(id).ImpactedDeployables().Get`.

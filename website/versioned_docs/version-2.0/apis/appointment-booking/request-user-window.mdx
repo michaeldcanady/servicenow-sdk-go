@@ -1,0 +1,32 @@
+# Request user window
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve appointment availability for a user's window.
+
+## HTTP request
+
+```http
+POST /api/sn_apptmnt_booking/v1/appointment/userwindow
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+None.
+
+## Request body
+
+Supply a `}`.
+
+## Response
+
+`AvailabilityResponse`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_request_user_window" />

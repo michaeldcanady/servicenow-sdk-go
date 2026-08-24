@@ -111,6 +111,9 @@ jobs:
       #     unrelated docs change.
       #   * main pushes keep the full-tree scan — that is where whole-repo
       #     drift (which PR scoping deliberately ignores) gets caught.
+      # Both scopes include the versioned copies under website/versioned_docs:
+      # backport fixes to frozen pages (contributing/release-branches) must
+      # stay lint-clean too, not just website/docs.
       # Scoping is done at the file level here rather than handing reviewdog
       # filter_mode: added — vale-action never passes a diff command, so that
       # combination dies with "diff command is empty" even on clean runs.
@@ -123,13 +126,16 @@ jobs:
         with:
           files: |
             website/docs/**/*.md
+            website/versioned_docs/**/*.md
 
       - name: Vale Linter (full site)
         if: github.event_name != 'pull_request'
         uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # 3.0.0
         with:
           fail_on_error: true
-          files: website/docs
+          files: |
+            website/docs
+            website/versioned_docs
           level: error
           version: 3.18.0
 

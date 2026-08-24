@@ -1,0 +1,34 @@
+# Validate configuration
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Validate configuration data.
+
+## HTTP request
+
+```http
+GET /api/sn_cdm/editor/v1/validation
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `cdm_id` | Optional — set via the verb's `QueryParameters` type. |
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+`ValidationResponse`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_validate_configuration" />

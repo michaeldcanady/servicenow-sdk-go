@@ -1,0 +1,35 @@
+# Find an application service
+
+import GoExample from '@site/src/components/GoExample';
+import apgGo from '@site/snippets/appservice_guide.go';
+
+Look up an application service registered in the CSDM model.
+
+## When to use this pattern
+
+- You're mapping deployments or incidents to CSDM application services
+- You need to verify a service exists before registering it
+
+## Required values
+
+| Value | Description |
+| ----- | ----------- |
+| Service identifiers | Set through the request configuration's query parameters |
+
+## Example
+
+<GoExample language="go" files={{ apgGo: apgGo }} template={`package main
+
+{{apgGo:apg_imports}}
+
+func main() {
+    {{apgGo:apg_main}}
+}`} />
+
+## Tips
+
+- `Csdm().RegisterService()` registers a service; `Create()` creates one from scratch.
+
+## Next steps
+
+- **[Application Service API reference](../../../apis/app-service/index.mdx)**

@@ -1,0 +1,35 @@
+# Read appointment-booking configuration
+
+import GoExample from '@site/src/components/GoExample';
+import abgGo from '@site/snippets/appointment_guide.go';
+
+Read the appointment-booking configuration for a service to drive your own scheduling UI.
+
+## When to use this pattern
+
+- You're building a scheduling front-end on ServiceNow's appointment-booking rules
+- You need booking settings (active, acceptance, formats) before offering slots
+
+## Required values
+
+| Value | Description |
+| ----- | ----------- |
+| Service configuration | Identified via the request configuration's query parameters |
+
+## Example
+
+<GoExample language="go" files={{ abgGo: abgGo }} template={`package main
+
+{{abgGo:abg_imports}}
+
+func main() {
+    {{abgGo:abg_main}}
+}`} />
+
+## Tips
+
+- The module also models `Availability()` and `Appointment()` for checking slots and booking them — see the reference for the request shapes.
+
+## Next steps
+
+- **[Appointment Booking API reference](../../../apis/appointment-booking/index.mdx)**

@@ -1,0 +1,34 @@
+# Get account
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Retrieve a single customer account by its account ID.
+
+## HTTP request
+
+```http
+GET /api/now/v1/account/{account_id}
+```
+
+## Path parameters
+
+| Name | Description |
+| ---- | ----------- |
+| `account_id` | Account id |
+
+## Query parameters
+
+None.
+
+## Request body
+
+Don't supply a request body for this method.
+
+## Response
+
+`AccountItemResponse` — an item envelope of `*AccountModel`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_get_account" />

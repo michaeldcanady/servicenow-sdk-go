@@ -1,0 +1,36 @@
+# Book appointment
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Book an appointment slot.
+
+:::warning
+The request-body model for this operation currently has no exported setters, so the body can't be populated from outside the SDK — see [issue #488](https://github.com/michaeldcanady/servicenow-sdk-go/issues/488). The signature below is documented for completeness.
+:::
+
+## HTTP request
+
+```http
+POST /api/sn_apptmnt_booking/v1/appointment/appointment
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+None.
+
+## Request body
+
+Supply a `appointmentbookingapi.AppointmentRequest`.
+
+## Response
+
+`AppointmentResponse` — an item envelope of the booked appointment.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_book_appointment" />

@@ -1,0 +1,41 @@
+# Find the most recent attachment
+
+import GoExample from '@site/src/components/GoExample';
+import recentGo from '@site/snippets/attachments_recent.go';
+
+
+When working with attachments, you often don’t need every attachment—you need the latest log, screenshot, export, or document. This task shows you how to list attachments for a specific record, sort them by creation time, and select the most recent one.
+
+This is a foundational workflow that pairs with downloading, processing, or deleting attachments.
+
+## When to use this pattern
+
+Use this pattern when you need to:
+
+- Retrieve the newest log file for debugging
+- Identify the latest user‑submitted document
+- Prepare for a follow‑up action (download, delete, archive)
+- Build automation workflows that react to new attachments
+
+## Required values
+
+| Value    | Description              |
+| -------- | ------------------------ |
+| Instance | the Service-Now instance |
+
+## Example
+
+<GoExample language="go" files={{ recentGo: recentGo }} template={`package main
+
+{{recentGo:ag_recent_imports}}
+
+func main() {
+    {{recentGo:ag_recent}}
+}`} />
+
+## Tips
+
+- Use `ORDERBYDESCsys_created_on` to make sure the newest attachment appears first.
+- Limit your query (`sysparm_limit`) to reduce response size and improve performance.
+- Filter by table and `sys_id` when you only care about attachments for a specific record.
+- Always check for empty results—not all records have attachments.

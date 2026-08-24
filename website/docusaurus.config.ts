@@ -91,8 +91,23 @@ const config: Config = {
           // Keep numeric prefixes (e.g. adrs/001-error-standardization) in doc
           // ids and URLs — ADR numbering is referenced as "ADR 003" everywhere.
           numberPrefixParser: false,
-          editUrl:
-            'https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/website/',
+          // Only "main" offers edit links. Frozen versioned copies are fixed
+          // in docs/ first, then backported (see contributing/release-branches),
+          // so pointing "Edit this page" at a snapshot would invite edits in
+          // the wrong direction.
+          editUrl: ({version, docPath}) =>
+            version === 'current'
+              ? `https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/website/docs/${docPath}`
+              : undefined,
+          // "/" serves the docs from main; released doc lines live under
+          // their version prefix (e.g. /2.0/...) via the navbar dropdown.
+          lastVersion: 'current',
+          versions: {
+            // The unreleased banner points readers at the newest released
+            // line (/2.0/) instead of silently documenting unreleased code.
+            current: {label: 'main', banner: 'unreleased'},
+            '2.0': {label: 'v2.0', banner: 'none'},
+          },
         },
         blog: false,
         theme: {
@@ -113,6 +128,10 @@ const config: Config = {
         {type: 'docSidebar', sidebarId: 'userGuide', position: 'left', label: 'User Guide'},
         {type: 'docSidebar', sidebarId: 'apiReference', position: 'left', label: 'API Reference'},
         {type: 'docSidebar', sidebarId: 'contributing', position: 'left', label: 'Contributor Guide'},
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+        },
         {
           href: 'https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go',
           label: 'GoDoc',

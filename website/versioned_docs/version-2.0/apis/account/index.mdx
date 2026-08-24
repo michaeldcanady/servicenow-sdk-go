@@ -1,0 +1,19 @@
+# Account API overview
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import modulesGo from '@site/snippets/modules.go';
+
+
+The Account API provides read access to customer account records
+(`customer_account`) used by Customer Service Management.
+
+## Basic usage
+
+Access it through the `Now()` namespace:
+
+<GoSnippet language="go" src={modulesGo} region="module_account" />
+
+## Available operations
+
+- **List accounts** — `Account().Get(ctx, config)` returns an account collection.
+- **Get account** — `Account().ByID(accountID).Get(ctx, config)` returns a single account.
