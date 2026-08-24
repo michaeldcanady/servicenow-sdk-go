@@ -14,8 +14,9 @@
 #     be proven by hand before relying on it (#683).
 #
 # Previews are non-gating by intent (they are a reading aid, not a check);
-# failed lints show red without blocking the preview deploy. A failed build
-# fails the deploy job — there is nothing to show.
+# failed lints show red without blocking the preview publish. The BUILD,
+# however, is a first-class per-PR check (verify-build) that runs on every
+# push — including forks — and deploy-preview only publishes what it built.
 #
 # release-please branches need no special-casing: their PRs touch only
 # CHANGELOG.md/VERSION/version.go (verified in .release-please-config.json).
@@ -142,15 +143,16 @@ jobs:
   deploy-preview:
     name: deploy-preview
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     permissions:
       contents: write # required: pushes PR preview to gh-pages branch
       # rossjrw/pr-preview-action posts the preview-URL comment on the PR
       # through its embedded sticky-comment step; without this grant that
       # step fails the job AFTER the deployment already succeeded.
       pull-requests: write
-    needs: [detect-changes]
+    needs: [detect-changes, verify-build]
     if: >-
+      github.event_name == 'pull_request' &&
       github.event.action != 'closed' &&
       needs.detect-changes.outputs.docs == 'true'
     concurrency:
@@ -160,11 +162,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      # Runs unconditionally (including fork PRs): building IS the validation.
-      - name: Build site for preview path
-        uses: ./.github/actions/docs-build
+      - name: Download site artifact
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
-          base-url: /servicenow-sdk-go/pr-preview/pr-${{ github.event.number }}/
+          name: site
+          path: website/build
 
       # Fork PRs get a read-only token, so publishing is same-repo only.
       - name: Deploy preview
@@ -205,13 +207,27 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
-    # Manual end-to-end exercise of the real build recipe without touching
-    # gh-pages (path filters don't apply to dispatched runs, so everything
-    # always executes here).
-    if: github.event_name == 'workflow_dispatch'
+    # Every PR (forks included) proves the site compiles under a check named
+    # after building — not buried in a deploy job's log beside unrelated
+    # publish errors. Also the manual smoke test: on workflow_dispatch it
+    # exercises the exact recipe that path filters would otherwise skip.
+    #
+    # Built with the PR's preview base-url because deploy-preview consumes
+    # THIS artifact; Docusaurus bakes baseUrl at build time, so a production-
+    # flavored build published under /pr-preview/pr-N/ would 404 its assets.
+    # Dispatch runs have no PR number and fall back to production defaults.
+    if: github.event.action != 'closed'
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - name: Build site (production defaults)
+      - name: Build site
         uses: ./.github/actions/docs-build
+        with:
+          base-url: ${{ github.event_name == 'pull_request' && format('/servicenow-sdk-go/pr-preview/pr-{0}/', github.event.number) || '/servicenow-sdk-go/' }}
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: site
+          path: website/build
