@@ -35,10 +35,20 @@ func TestValidateQueryValue(t *testing.T) {
 		{"LeadingCaret", "f", ast.OperatorIs, "^b", true, "^"},
 		{"TrailingCaret", "f", ast.OperatorIs, "a^", true, "^"},
 		{"OrInjection", "f", ast.OperatorIs, "a^ORb=c", true, "^"},
-		{"Comma", "f", ast.OperatorIs, "a,b", true, ","},
-		{"AtSign", "f", ast.OperatorIs, "a@b", true, "@"},
 		{"MultipleReserved", "f", ast.OperatorIs, "a^b,c@d", true, "^"},
 		{"StringerMetacharacters", "f", ast.OperatorIs, evilStringer{}, true, "^"},
+		// "," and "@" are literals outside the operator contexts that render
+		// them: scalar values keep commas ("Smith, John") and at-signs
+		// (email addresses).
+		{"CommaLiteralInScalarValue", "f", ast.OperatorIs, "a,b", false, ""},
+		{"AtSignLiteralInScalarValue", "f", ast.OperatorIs, "a@b", false, ""},
+		// ...but they are structural where the operator renders them.
+		{"CommaInListValue", "f", ast.OperatorIsOneOf, "a,b", true, ","},
+		{"CommaInNotInListValue", "f", ast.OperatorIsNotOneOf, "a,b", true, ","},
+		{"AtSignInPairValue", "f", ast.OperatorBetween, "a@b", true, "@"},
+		// Each separator stays a literal in the other's context.
+		{"AtSignLiteralInListValue", "f", ast.OperatorIsOneOf, "a@b", false, ""},
+		{"CommaLiteralInPairValue", "f", ast.OperatorBetween, "a,b", false, ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -86,12 +96,12 @@ func TestQueryInjectionRejected(t *testing.T) {
 		}
 	})
 	t.Run("ErrorsJoinFromBothSides", func(t *testing.T) {
-		q := Where("a").Is("x^y").And(Where("b").Is("c,d"))
+		q := Where("a").Is("x^y").And(Where("b").Is("c^d"))
 		err := q.Error()
 		if err == nil {
 			t.Fatal("Expected joined validation errors")
 		}
-		for _, want := range []string{"x^y", "c,d"} {
+		for _, want := range []string{"x^y", "c^d"} {
 			if !strings.Contains(err.Error(), want) {
 				t.Errorf("joined error %q missing %q", err.Error(), want)
 			}
@@ -146,26 +156,33 @@ func TestQueryInjectionRejectedPerOperator(t *testing.T) {
 }
 
 func TestQueryInjectionRejectedEachCharacter(t *testing.T) {
+	// Each metacharacter is rejected exactly where it would be structural:
+	// "^" everywhere, "," in IN lists, "@" in BETWEEN pairs.
 	tests := []struct {
-		name  string
-		value string
+		name               string
+		value              string
+		rejectedByContains bool
+		rejectedByIsOneOf  bool
+		rejectedByBetween  bool
 	}{
-		{"Caret", "a^b"},
-		{"CaretOr", "a^ORb"},
-		{"Comma", "a,b"},
-		{"AtSign", "a@b"},
+		{"Caret", "a^b", true, true, true},
+		{"CaretOr", "a^ORb", true, true, true},
+		{"Comma", "a,b", false, true, false},
+		{"AtSign", "a@b", false, false, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if String("f").Contains(tt.value).Error() == nil {
-				t.Errorf("Expected Contains rejection of %q", tt.value)
+			assertRejected := func(opName string, err error, want bool) {
+				switch {
+				case want && err == nil:
+					t.Errorf("%s: expected rejection of %q", opName, tt.value)
+				case !want && err != nil:
+					t.Errorf("%s: unexpected rejection of %q: %v", opName, tt.value, err)
+				}
 			}
-			if String("f").IsOneOf("ok", tt.value).Error() == nil {
-				t.Errorf("Expected IsOneOf rejection of %q", tt.value)
-			}
-			if String("f").Between(tt.value, "z").Error() == nil {
-				t.Errorf("Expected Between rejection of %q", tt.value)
-			}
+			assertRejected("Contains", String("f").Contains(tt.value).Error(), tt.rejectedByContains)
+			assertRejected("IsOneOf", String("f").IsOneOf("ok", tt.value).Error(), tt.rejectedByIsOneOf)
+			assertRejected("Between", String("f").Between(tt.value, "z").Error(), tt.rejectedByBetween)
 		})
 	}
 }
@@ -182,6 +199,8 @@ func TestQueryInjectionSafeValuesRenderUnchanged(t *testing.T) {
 		{"EqualsInValue", String("name").Is("a=b"), "name=a=b"},
 		{"BangInValue", String("name").Is("a!=b"), "name=a!=b"},
 		{"PercentAndPunctuation", String("desc").Contains("50% off (today)!"), "descLIKE50% off (today)!"},
+		{"CommaInFreeText", String("name").Is("Smith, John"), "name=Smith, John"},
+		{"AtSignInEmail", String("email").EndsWith("@example.com"), "emailENDSWITH@example.com"},
 		{"Colon", String("t").StartsWith("javascript:"), "tSTARTSWITHjavascript:"},
 		{"NegativeFloat", Number("n").Is(-1.5), "n=-1.5"},
 		{"ExponentFloat", Number("n").Is(1e6), "n=1e+06"},

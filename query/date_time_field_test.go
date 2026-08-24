@@ -159,8 +159,9 @@ func TestDateTimeField_Javascript(t *testing.T) {
 		isErr    bool
 	}{
 		{"Standard", "f", "expr", "fONjavascript:expr", false},
+		// Commas are literals inside a javascript: expression.
+		{"CommaInExpression", "f", "gs.a(1,2)", "fONjavascript:gs.a(1,2)", false},
 		{"CaretInjection", "f", "gs.daysAgoStart(0)^ORactive=false", "", true},
-		{"CommaInjection", "f", "a,b", "", true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -349,6 +350,8 @@ func TestDateTimeField_OnSpecialty(t *testing.T) {
 		isErr    bool
 	}{
 		{"Standard", "f", "L", "S", "E", "fONL@javascript:S@javascript:E", false},
+		// Commas are literals inside composite expressions; "^" and "@" are not.
+		{"CommaInStartExpr", "f", "L", "gs.a(1,2)", "E", "fONL@javascript:gs.a(1,2)@javascript:E", false},
 		{"CaretInLabel", "f", "L^ORactive=false", "S", "E", "", true},
 		{"CaretInStartExpr", "f", "L", "gs.x()^active=false", "E", "", true},
 		{"CaretInEndExpr", "f", "L", "S", "gs.y()^active=false", "", true},
