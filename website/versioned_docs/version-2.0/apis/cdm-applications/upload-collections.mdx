@@ -1,0 +1,32 @@
+# Upload collections
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import refGo from '@site/snippets/reference_actions.go';
+
+Upload collection configuration data.
+
+## HTTP request
+
+```http
+POST /api/sn_cdm/applications/uploads/collections
+```
+
+## Path parameters
+
+None.
+
+## Query parameters
+
+None.
+
+## Request body
+
+Supply a `cdmapplicationsapi.CollectionUploadRequest`.
+
+## Response
+
+`UploadStatusResponse`.
+
+## Example
+
+<GoSnippet language="go" src={refGo} region="ref_upload_collections" />

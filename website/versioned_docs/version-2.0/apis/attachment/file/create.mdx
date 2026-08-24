@@ -1,0 +1,68 @@
+# Create attachment file
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import GoExample from '@site/src/components/GoExample';
+import attachmentsGo from '@site/snippets/attachments.go';
+import authGo from '@site/snippets/auth.go';
+
+## Overview
+
+Upload file of any supported content type. Requires you to provide the table sys id, table name, and file name via **the request query parameters**.
+
+## Path parameters
+
+N/A
+
+## Optional query parameters
+
+| Name                | Type      | Possible values | Description                               |
+| ------------------- | --------- | --------------- | ----------------------------------------- |
+| `EncryptionContext` | `*string` | N/A             | `sys_id` of an encryption context record. |
+
+## Required query parameters
+
+| Name         | Type      | Possible values | Description                                                                         |
+| ------------ | --------- | --------------- | ----------------------------------------------------------------------------------- |
+| `FileName`   | `*string` | N/A             | Name to provided file.                                                              |
+| `TableName`  | `*string` | N/A             | Name of the designated table which contains the record to attach the file to.       |
+| `TableSysID` | `*string` | N/A             | Specifies the `sys_id` of the record in the designated table to attach the file to. |
+
+## Examples
+
+<Tabs groupId="modality">
+<TabItem value="fluent" label="Fluent">
+
+<GoExample language="go" files={{ attachmentsGo: attachmentsGo, authGo: authGo }} template={`package main
+
+{{attachmentsGo:attachment_imports}}
+
+func main() {
+    // Step 1: Create credentials
+    {{authGo:auth_basic}}
+
+    // Step 2: Initialize client
+    {{authGo:client_init}}
+
+    {{attachmentsGo:attachment_file_create}}
+}`} />
+
+</TabItem>
+<TabItem value="standard" label="Standard">
+
+<GoExample language="go" files={{ attachmentsGo: attachmentsGo, authGo: authGo }} template={`package main
+
+{{attachmentsGo:attachment_imports}}
+
+func main() {
+    // Step 1: Create credentials
+    {{authGo:auth_basic}}
+
+    // Step 2: Initialize client
+    {{authGo:client_init}}
+
+    {{attachmentsGo:attachment_std_file_create}}
+}`} />
+
+</TabItem>
+</Tabs>

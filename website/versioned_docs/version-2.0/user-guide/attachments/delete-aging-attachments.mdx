@@ -1,0 +1,37 @@
+# Delete attachments older than X days
+
+import GoExample from '@site/src/components/GoExample';
+import agingGo from '@site/snippets/attachments_delete_aging.go';
+
+As attachments accumulate over time, they can consume storage and clutter records. Many teams implement retention policies to automatically remove older files—especially logs, exports, or temporary documents. This task shows you how to identify attachments older than a specified number of days and delete them.
+
+This workflow pairs with listing and downloading attachments.
+
+## When to use this pattern
+
+Use this pattern when you need to:
+
+- Enforce retention policies (for example, delete logs older than 30 days)  
+- Clean up temporary or auto‑generated files  
+- Reduce storage usage on large tables  
+- Prepare a record for archival or migration
+
+## Required values
+
+## Example
+
+<GoExample language="go" files={{ agingGo: agingGo }} template={`package main
+
+{{agingGo:ag_delete_aging_imports}}
+
+func main() {
+    {{agingGo:ag_delete_aging}}
+}`} />
+
+## Tips
+
+- Always **log deletions** for auditing.  
+- Consider performing a **dry run** first—list what you would delete without deleting.  
+- Download attachments before deleting them if you need to archive them.  
+- Use `sysparm_limit` and pagination for tables with many attachments.  
+- Combine this with the **Download All Attachments** task to archive before cleanup.

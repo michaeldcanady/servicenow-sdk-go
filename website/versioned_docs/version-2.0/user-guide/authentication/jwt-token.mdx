@@ -1,0 +1,66 @@
+# JWT token authentication
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import authGo from '@site/snippets/auth.go';
+
+
+JWT Token authentication lets the SDK authenticate using a signed JSON Web
+Token (JWT). ServiceNow validates the signature using a public key configured in
+your instance and issues an access token. This method is ideal for secure,
+non‑interactive server‑to‑server integrations.
+
+## Objective
+
+Configure and use JWT Token authentication with the Service‑Now SDK using values
+provided by your ServiceNow administrator.
+
+## Required values
+
+Your administrator must provide:
+
+| Value           | Description                                   |
+| --------------- | --------------------------------------------- |
+| Service‑Now URL | Base URL of the instance                      |
+| Client ID       | From a ServiceNow OAuth or JWT registry entry |
+| Client Secret   | Required by ServiceNow for JWT Bearer flows   |
+
+Your application must also provide:
+
+- **Private key** used to sign the JWT assertion
+- A **token provider** capable of generating signed JWT assertions
+
+## SDK flow
+
+
+```mermaid
+flowchart TD
+    A([App code]):::app --> B(NewJWTProvider<br/>client ID + secret,<br/>your token provider):::sdk
+
+    subgraph acquire ["Getting a token"]
+        F(Your provider generates<br/>a signed JWT assertion):::app --> G(SDK validates the JWT<br/>claims, iat, alg):::sdk
+        G --> H(Exchange assertion<br/>for an access token):::sdk
+        H --> I(Access token):::token
+        I --> J(Token cache):::token
+    end
+    B --> F
+
+    subgraph request ["On every request"]
+        K{Token<br/>expired?}:::decision
+        K -- no --> L[[Kiota request adapter]]:::sdk
+    end
+    J --> K
+    K -- "yes — new assertion" --> F
+    L --> M[[ServiceNow instance]]:::external
+
+    classDef app fill:#c7d2fe,stroke:#4f46e5,color:#1e1b4b
+    classDef sdk fill:#e2e8f0,stroke:#64748b,color:#0f172a
+    classDef decision fill:#fde68a,stroke:#d97706,color:#78350f
+    classDef token fill:#bbf7d0,stroke:#16a34a,color:#14532d
+    classDef external fill:#bae6fd,stroke:#0284c7,color:#0c4a6e
+    style acquire fill:transparent,stroke:#94a3b8,stroke-dasharray:4 4
+    style request fill:transparent,stroke:#94a3b8,stroke-dasharray:4 4
+```
+
+## Initialize the SDK
+
+<GoSnippet language="go" src={authGo} region="auth_jwt" />

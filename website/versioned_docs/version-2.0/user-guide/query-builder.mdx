@@ -1,0 +1,78 @@
+# Build a query
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import GoExample from '@site/src/components/GoExample';
+import queryGo from '@site/snippets/query.go';
+import qgGo from '@site/snippets/query_guide.go';
+
+Compose a ServiceNow encoded query from typed conditions and use it to
+filter a table request.
+
+:::note
+This is a preview feature currently under active development.
+:::
+
+## When to use this pattern
+
+- You're filtering records with more than one or two conditions, or building
+  queries from runtime values
+- You want the compiler to catch operator/type mismatches instead of
+  discovering a malformed encoded query at runtime
+- For a short, static filter, passing the encoded-query string directly (as
+  in [List and query records](tables/list-and-query-records.mdx)) is fine —
+  the builder earns its keep when composing conditions by hand gets
+  error-prone
+
+## Required values
+
+| Value      | Description                                    |
+| ---------- | ---------------------------------------------- |
+| Table name | The table to filter (for example, `incident`)  |
+| Conditions | The fields, operators, and values to filter by |
+
+## Example
+
+<GoExample language="go" files={{ qgGo: qgGo }} template={`package main
+
+{{qgGo:qg_imports}}
+
+func main() {
+    {{qgGo:qg_main}}
+}`} />
+
+## Variations
+
+### Inspect the encoded query
+
+`String()` renders the condition tree into ServiceNow's encoded-query
+syntax — print it to see exactly what will be sent:
+
+<GoSnippet language="go" src={queryGo} region="query_basic" />
+
+### Plug the query into a table request
+
+Pass the rendered string as the `Query` query parameter of a list request:
+
+<GoSnippet language="go" src={queryGo} region="query_table_api" />
+
+### Field types and operators
+
+Conditions start from a typed field constructor — `query.String`,
+`query.Number`, `query.Boolean`, `query.Date`/`query.DateTime` — each
+exposing the operators valid for that type (`Is`, `Contains`, `IsOneOf`,
+`Before`, …). Combine conditions with `.And(...)`/`.Or(...)` or the
+top-level `query.And(...)`/`query.Or(...)`.
+
+## Tips
+
+- Encoded-query cheat sheet: `^` joins with AND, `^OR` with OR, `LIKE`
+  matches substrings — the builder emits these for you.
+- The same encoded string works anywhere a `sysparm_query` is accepted (for
+  example, [filtering attachments](attachments/download-record-attachments.mdx)).
+
+## Next steps
+
+- **[List and query records](tables/list-and-query-records.mdx):** The
+  request this query plugs into.
+- **[Iterate over every record](pagination.mdx):** Page through large match
+  sets.
