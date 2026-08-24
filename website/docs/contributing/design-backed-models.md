@@ -8,7 +8,7 @@ description: >-
 
 # Why aren't models plain structs?
 
-*Primary source: [ADR 002 — Backing-store-backed models](https://github.com/michaeldcanady/servicenow-sdk-go/blob/main/docs/adr/002-backing-store-models.md).*
+*Primary source: [ADR 002 — Backing-store-backed models](adrs/002-backing-store-models.md).*
 
 ## The decision
 

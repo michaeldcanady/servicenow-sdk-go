@@ -1,3 +1,10 @@
+---
+title: 'ADR 011: Release branches are lazily cut, downstream-only, and never silently diverge'
+description: >-
+  Trunk-first development with lazily-cut release/vX.Y maintenance branches,
+  label-driven backports, and tracked forward-ports.
+---
+
 # ADR 011: Release branches are lazily cut, downstream-only, and never silently diverge
 
 ## Status

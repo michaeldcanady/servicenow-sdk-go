@@ -15,7 +15,7 @@ older major, and the rules that exist because we already lived the failure
 mode once — during the v1→v2 transition, `main` and `release/v2` drifted so
 far apart they effectively became different codebases.
 
-The deep rationale lives in [ADR 011](https://github.com/michaeldcanady/servicenow-sdk-go/blob/main/docs/adr/011-release-branches-and-cross-major-flow.md);
+The deep rationale lives in [ADR 011](adrs/011-release-branches-and-cross-major-flow.md);
 this page is the day-to-day version.
 
 ## The mental model
@@ -164,8 +164,9 @@ one-tag-per-merge.
 ## Docs site versions
 
 The docs site keeps a frozen copy of the docs for each released minor line,
-selectable in the navbar's version dropdown. `main` is the default view;
-released lines live under a version prefix (`/2.0/`, `/2.1/`, ...).
+selectable from the version dropdown in the top navigation. `main` is the
+default view; released lines live under a versioned prefix (`/2.0/` now,
+`/2.1/` when 2.1 ships).
 
 The `docs-version` workflow automates this: when release-please tags a
 stable `vX.Y.Z` on `main` for a minor line without a snapshot, it cuts the
@@ -190,7 +191,8 @@ Rules of thumb:
   warrant a new snapshot.
 - Versioned copies are frozen. Fix content bugs in `main`'s `docs/` first,
   then apply the same fix to the relevant `versioned_docs/version-X.Y/`
-  copy, the same way code backports work.
+  copy, the same way code backports work. Frozen pages offer no
+  "Edit this page" link — every fix starts in `main`.
 - Go snippets in `website/snippets/` are shared across all versions — a
   versioned page renders the *current* snippet source. If a snippet change
   would mislead an older version's readers, cut the new docs version
