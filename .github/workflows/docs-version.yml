@@ -1,0 +1,146 @@
+name: Docs Version Snapshot
+
+# When release-please tags a stable vX.Y.Z on main, snapshot the docs for
+# that minor line and open a PR adding it to the site's version dropdown.
+#
+# Skipped automatically for:
+#   - preview tags (vX.Y.Z-previewYYYYMMDD — the regex below rejects them)
+#   - tags whose major is behind main's VERSION (maintenance releases of
+#     older majors; main's docs don't describe those lines)
+#   - minor lines that already have a snapshot (patch releases)
+#
+# Fallback when the automation can't run: website/scripts/cut-docs-version.mjs,
+# documented in website/docs/contributing/release-branches.md.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: docs-version-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Decide whether a snapshot is needed
+        id: guard
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          # Stable releases only; preview tags carry a -preview suffix.
+          if [[ ! "$TAG_NAME" =~ ^v([0-9]+)\.([0-9]+)\.[0-9]+$ ]]; then
+            echo "::notice::${TAG_NAME} is not a stable vX.Y.Z tag; skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          tag_major="${BASH_REMATCH[1]}"
+          line="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+
+          # main's docs describe main's major; a maintenance release of an
+          # older major never snapshots main's docs. VERSION carries
+          # release-please marker comments, so match the numeric line. A
+          # missing match (malformed marker rewrite, renamed file) skips
+          # with a notice instead of aborting the step.
+          main_version="$(grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' VERSION | head -n1 || true)"
+          if [[ -z "$main_version" ]]; then
+            echo "::notice::Could not read a numeric version from VERSION; skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          main_major="${main_version%%.*}"
+          if [[ "$tag_major" != "$main_major" ]]; then
+            echo "::notice::Tag major ${tag_major} is behind main (v${main_major}.x); skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # One docs version per minor line.
+          if [[ -d "website/versioned_docs/version-${line}" ]]; then
+            echo "::notice::Docs version ${line} already exists; skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+          echo "line=${line}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Node
+        if: steps.guard.outputs.skip == 'false'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Cut docs version
+        if: steps.guard.outputs.skip == 'false'
+        working-directory: website
+        run: |
+          npm ci
+          node scripts/cut-docs-version.mjs "${{ steps.guard.outputs.line }}"
+
+      - name: Open snapshot PR
+        if: steps.guard.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+          LINE: ${{ steps.guard.outputs.line }}
+          # Dashes rather than dots keep the name kebab-case, per the
+          # <type>/<kebab-description> branch convention (dots are legal in
+          # Git branch names; this is a style choice).
+          BRANCH: chore/docs-version-${{ steps.guard.outputs.line }}
+        run: |
+          set -euo pipefail
+          BRANCH="${BRANCH//./-}"
+
+          # A re-run after partial failure (push landed, pr create didn't),
+          # or a second stable tag on the same minor while the first PR is
+          # still open, must degrade into a green no-op.
+          open_prs="$(gh pr list --head "$BRANCH" --state open --json number --jq 'length')"
+          if [[ "$open_prs" != "0" ]]; then
+            echo "::notice::A snapshot PR for ${LINE} (${BRANCH}) is already open; nothing to do."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add website
+          git commit -m "chore(website): cut docs version ${LINE}"
+
+          # A stale remote branch with divergent history (left by that same
+          # partial failure) would reject the push as non-fast-forward;
+          # replace it since no PR references it anymore.
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "--delete" "$BRANCH" 2>/dev/null || true
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
+
+          # The PR body is assembled with printf because a physically
+          # multi-line quoted string here would put an unindented line
+          # inside the run block, which terminates the YAML literal scalar
+          # and breaks the workflow file itself.
+          pr_body="$(printf '%s\n\n%s' \
+            "Automated snapshot of \`website/docs\` for the ${LINE} release line (tag \`${TAG_NAME}\`), created by the docs-version workflow." \
+            "The \`docusaurus.config.ts\` hunk (dropdown label + banner) is the only hand-worth-reviewing change; everything under \`versioned_docs/\` is the mechanical \`docs:version\` snapshot. Documentation CI validates the build on this PR.")"
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --label "no-issue-required" \
+            --title "chore(website): cut docs version ${LINE}" \
+            --body "$pr_body"
