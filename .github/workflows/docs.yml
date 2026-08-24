@@ -53,7 +53,11 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
-    if: ${{ needs.changes-docs.outputs.docs == 'true' }}
+    # workflow_dispatch bypasses the changed-files gate so the push-only
+    # steps (full-site Vale scan, deploy gating) can be exercised by hand
+    # against a ref before relying on them; !cancelled() is what lets this
+    # job evaluate at all when changes-docs was skipped.
+    if: ${{ !cancelled() && (needs.changes-docs.outputs.docs == 'true' || github.event_name == 'workflow_dispatch') }}
     needs:
       - changes-docs
     steps:
@@ -98,7 +102,10 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-    if: ${{ needs.changes-docs.outputs.docs == 'true' }}
+    # Same dispatch bypass as build-site (see the comment there): this is
+    # what makes the full-site scan below — the push-only step — runnable
+    # by hand against a ref.
+    if: ${{ !cancelled() && (needs.changes-docs.outputs.docs == 'true' || github.event_name == 'workflow_dispatch') }}
     needs:
       - changes-docs
     steps:
@@ -124,6 +131,14 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
         with:
+          # Comma-delimited on purpose. vale-action only splits its `files`
+          # input when given a matching `separator`; with the default (a
+          # single space-joined string) it treats the whole thing as one
+          # nonexistent path and silently falls back to linting ".". The
+          # delimiter must survive the runner, which trims action inputs —
+          # so a newline ("\n" arrives as "" after trimming) is out; a comma
+          # is safe because no repo path contains one.
+          separator: ","
           files: |
             website/docs/**/*.md
             website/versioned_docs/**/*.md
@@ -133,9 +148,8 @@ jobs:
         uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # 3.0.0
         with:
           fail_on_error: true
-          files: |
-            website/docs
-            website/versioned_docs
+          files: website/docs,website/versioned_docs
+          separator: ","
           level: error
           version: 3.18.0
 
@@ -147,6 +161,7 @@ jobs:
         with:
           fail_on_error: true
           files: ${{ steps.changed-md.outputs.all_changed_files }}
+          separator: ","
           level: error
           version: 3.18.0
 
