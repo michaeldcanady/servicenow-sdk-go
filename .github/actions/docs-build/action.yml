@@ -1,0 +1,55 @@
+# Everything about building the docs site except the literal deployment:
+# Node version, dependency install, cache key, and the build command. Every
+# flow (production, PR preview, manual verification) runs this composite
+# action and then performs its own single deploy step, so the recipe cannot
+# drift between flavors while each flow keeps its native publishing tool.
+#
+# A separate production vs preview build output is inherent, not accidental:
+# Docusaurus bakes `baseUrl` into every asset URL at build time, so a preview
+# served under /servicenow-sdk-go/pr-preview/pr-<N>/ needs its own build.
+#
+# Inputs form an explicit contract with website/docusaurus.config.ts:
+#   * base-url          — path prefix the site will be served under.
+#   * analytics-domain  — set ONLY for production deploys; absent/empty means
+#                         no analytics script is injected (local dev and PR
+#                         previews leave it unset). Never overload base-url
+#                         with this decision again.
+#
+# Expects the caller to have checked out the repository first. Build outputs
+# land in workspace `website/build` — callers consume them directly, no
+# artifact transfer needed.
+name: Docs site build
+description: Builds the Docusaurus site into website/build
+
+inputs:
+  base-url:
+    description: Path prefix the built site will be served under (trailing slash).
+    required: false
+    default: /servicenow-sdk-go/
+  analytics-domain:
+    description: Domain passed to Plausible; empty disables analytics injection.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      with:
+        node-version: "20"
+        cache: npm
+        cache-dependency-path: website/package-lock.json
+
+    - name: Install dependencies
+      working-directory: website
+      shell: bash
+      run: npm ci
+
+    - name: Build docs
+      working-directory: website
+      shell: bash
+      env:
+        DOCS_BASE_URL: ${{ inputs.base-url }}
+        DOCS_ANALYTICS_DOMAIN: ${{ inputs.analytics-domain }}
+      run: npm run build

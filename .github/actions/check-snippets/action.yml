@@ -1,0 +1,31 @@
+# Verifies the doc-snippet contract — the same assertions the preview
+# lifecycle runs per-PR and the stable lifecycle re-asserts before publishing
+# canonical output. Single-sourced here so the two lifecycles cannot drift:
+#   1. Go snippets compile (`go vet -tags snippets`),
+#   2. every region referenced by a docs page exists in website/snippets,
+#   3. every defined region is referenced by some page (orphans rot silently),
+#   4. every [START x] has a matching [END x] in the same file.
+#
+# Checker configuration, not site output: nothing here produces bytes that
+# get published, so workflows treat it like .vale.ini — always executed
+# before acting, never a trigger for rebuilds/deploys.
+#
+# Expects the caller to have checked out the repository first.
+name: Docs snippet checks
+description: Compiles Go snippets and validates the page/snippet region contract
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+      with:
+        go-version-file: go.mod
+
+    - name: Vet Go snippets
+      shell: bash
+      run: go vet -tags snippets ./website/snippets/
+
+    - name: Check snippet regions
+      shell: bash
+      run: ./scripts/check-snippet-regions.sh
