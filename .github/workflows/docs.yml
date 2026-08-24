@@ -131,10 +131,14 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
         with:
-          # Newline-delimited so vale-action can split the list below — its
-          # default (a single space-joined string) isn't an existing path,
-          # which makes vale-action silently fall back to linting ".".
-          separator: "\n"
+          # Comma-delimited on purpose. vale-action only splits its `files`
+          # input when given a matching `separator`; with the default (a
+          # single space-joined string) it treats the whole thing as one
+          # nonexistent path and silently falls back to linting ".". The
+          # delimiter must survive the runner, which trims action inputs —
+          # so a newline ("\n" arrives as "" after trimming) is out; a comma
+          # is safe because no repo path contains one.
+          separator: ","
           files: |
             website/docs/**/*.md
             website/versioned_docs/**/*.md
@@ -144,14 +148,8 @@ jobs:
         uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # 3.0.0
         with:
           fail_on_error: true
-          files: |
-            website/docs
-            website/versioned_docs
-          # Multiline `files` needs this: without a separator vale-action
-          # treats the whole string as one path, doesn't find it, and falls
-          # back to linting "." — which is how a main push once failed on
-          # hundreds of pre-existing violations outside website/.
-          separator: "\n"
+          files: website/docs,website/versioned_docs
+          separator: ","
           level: error
           version: 3.18.0
 
@@ -163,7 +161,7 @@ jobs:
         with:
           fail_on_error: true
           files: ${{ steps.changed-md.outputs.all_changed_files }}
-          separator: "\n"
+          separator: ","
           level: error
           version: 3.18.0
 
