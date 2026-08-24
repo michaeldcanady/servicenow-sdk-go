@@ -62,7 +62,7 @@ stateDiagram-v2
 | `status: blocked`     | Blocked on another issue, decision, or external dependency |
 | `status: duplicate`   | Already exists                                             |
 | `status: invalid`     | Doesn't seem right                                         |
-| `status: wontfix`     | Will not be worked on                                      |
+| `status: wontfix`     | Won't be worked on                                         |
 
 ### Type labels
 
