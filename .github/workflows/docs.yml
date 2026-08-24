@@ -124,6 +124,10 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
         with:
+          # Newline-delimited so vale-action can split the list below — its
+          # default (a single space-joined string) isn't an existing path,
+          # which makes vale-action silently fall back to linting ".".
+          separator: "\n"
           files: |
             website/docs/**/*.md
             website/versioned_docs/**/*.md
@@ -136,6 +140,11 @@ jobs:
           files: |
             website/docs
             website/versioned_docs
+          # Multiline `files` needs this: without a separator vale-action
+          # treats the whole string as one path, doesn't find it, and falls
+          # back to linting "." — which is how a main push once failed on
+          # hundreds of pre-existing violations outside website/.
+          separator: "\n"
           level: error
           version: 3.18.0
 
@@ -147,6 +156,7 @@ jobs:
         with:
           fail_on_error: true
           files: ${{ steps.changed-md.outputs.all_changed_files }}
+          separator: "\n"
           level: error
           version: 3.18.0
 
