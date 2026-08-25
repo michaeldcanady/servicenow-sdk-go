@@ -214,3 +214,4 @@ Godog
 (?i)runtimes?('s)?
 (?i)rulesets?
 (?i)codeowners
+(?i)deliverable(s)?

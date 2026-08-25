@@ -15,6 +15,9 @@ full contributor documentation lives on the docs site:
   unit, integration, and e2e suites.
 - **[Conventions reference](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/conventions)** —
   the dense field guide reviewers hold PRs to.
+- **[Issue triage](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/triage)** —
+  labels, priority scoring, and the Epic → Story → Task planning hierarchy
+  (maintainers file epics, stories, and tasks from `.github/templates/`).
 
 The two rules most worth knowing before your first PR:
 
