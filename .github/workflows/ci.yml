@@ -26,7 +26,11 @@ on:
       - ".golangci.yml"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  # Scheduled runs carry no head_ref or ref, so without the run_id fallback
+  # every weekly run shares one bare group key and cancel-in-progress drops
+  # whichever started first. run_id gives each its own slot; push, PR, and
+  # dispatch grouping are unchanged.
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
   cancel-in-progress: true
 
 env:
