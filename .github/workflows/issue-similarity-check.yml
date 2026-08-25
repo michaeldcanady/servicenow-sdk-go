@@ -1,0 +1,204 @@
+# Comment possibly-related open issues on newly opened issues (#641).
+#
+# When an issue is opened, significant keywords are pulled from its title
+# and body, the GitHub Search API finds open issues in this repo matching
+# those keywords, and candidates are scored by keyword overlap — title
+# matches weighted heavier than body matches. The top 2–3 are commented;
+# when nothing clears the bar the bot stays silent, so reporters never
+# get a "no matches found" nag on clearly novel reports.
+#
+# Two-pass search: GitHub search ANDs every term, so long queries return
+# zero rows even when related issues exist (verified against this repo).
+# The query therefore walks down a prefix ladder of progressively shorter
+# keyword prefixes — all keywords first, then title-only prefixes of 8,
+# 4, and 3 — until something comes back.
+#
+# Security: the title and body are attacker-controlled input; they reach
+# the script only through env vars, never interpolated into the program,
+# and the search query is built from sanitized keyword tokens alone.
+
+name: Issue Similarity Check
+
+on:
+  issues:
+    types: [opened]
+
+permissions: {}
+
+concurrency:
+  group: issue-similarity-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  find-related:
+    name: Find Possibly Related Issues
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write # posting the comment lives under the Issues API
+    if: github.event.issue.user.type != 'Bot'
+    steps:
+      - name: Comment with similar open issues
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          TITLE: ${{ github.event.issue.title }}
+          BODY: ${{ github.event.issue.body }}
+        run: |
+          set -euo pipefail
+
+          # --- Keyword extraction -------------------------------------------------
+          # Tokens of 4+ chars, lowercased, minus English and bug-template
+          # stopwords. Title keywords keep document order; body keywords are
+          # ranked by frequency (fenced code blocks stripped first so code
+          # samples do not pollute the signal).
+
+          cat > /tmp/stopwords <<'EOF'
+          the and for that this with have from what your does was were will been
+          are you its not but all can has had may out who get why how when where
+          version happened expected reproduction additional context description
+          report sample code minimal closest match package unsure related issues
+          servicenow instance urls include helpful thing most please thanks hello
+          there about into more than then them they their these those other which
+          would could should using used use also just some make made need work
+          works working seems look looks like able unable error output
+          task
+          feature
+          epic
+          spike
+          bug
+          question
+          refactor
+          documentation
+          EOF
+
+          tokenize() {
+            printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9' '\n' \
+              | awk 'length($0) >= 4' | grep -vxFf /tmp/stopwords || true
+          }
+
+          mapfile -t TITLE_KW < <(tokenize "$TITLE" | awk '!seen[$0]++')
+          # The awk toggle strips GFM fenced blocks that span lines (the
+          # dominant form in bug reports); a same-line sed regex misses them
+          # and lets code identifiers pollute the frequency ranking.
+          BODY_KW=$(tokenize "$(printf '%s' "$BODY" \
+            | awk '/^[[:space:]]*```/{ skip = !skip; next } !skip')" \
+            | sort | uniq -c | sort -rn | head -6 | awk '{print $2}')
+
+          mapfile -t ALL_KW < <(
+            printf '%s\n%s\n' "${TITLE_KW[*]:-}" "$BODY_KW" \
+              | sed '/^$/d' | sort -u
+          )
+
+          (( ${#ALL_KW[@]} > 0 )) || { echo "::notice::No usable keywords; skipping."; exit 0; }
+
+          # --- Search ---------------------------------------------------------------
+          # Prefix ladder: each rung keeps the highest-signal tokens (title
+          # order) and drops from the tail. Respect the 256-char query budget.
+          # Rows accumulate across ALL rungs instead of stopping at the first
+          # hit: rung 1 usually matches the new issue itself (every keyword is
+          # its own token), and breaking there would make the narrower rungs
+          # dead code, gated on whether the indexer had caught up yet.
+
+          join_kw() {
+            local -n KWS=$1
+            local MAX=$2 Q="" KW TRY N=0
+            for KW in "${KWS[@]}"; do
+              N=$((N + 1)); (( N > MAX )) && break
+              TRY="${Q:+$Q }$KW"
+              (( ${#TRY} <= 180 )) || break
+              Q=$TRY
+            done
+            printf '%s' "$Q"
+          }
+
+          TERM_SETS=()
+          PREV_SET=""
+          add_set() {
+            local S=$1
+            if [[ -z "$S" || "$S" == "$PREV_SET" ]]; then return 0; fi
+            TERM_SETS+=("$S")
+            PREV_SET=$S
+            return 0
+          }
+          add_set "$(join_kw ALL_KW 999)"
+          add_set "$(join_kw TITLE_KW 8)"
+          add_set "$(join_kw TITLE_KW 4)"
+          add_set "$(join_kw TITLE_KW 3)"
+
+          RESULTS=""
+          for TERMS in "${TERM_SETS[@]}"; do
+            QUERY="$TERMS"
+            [[ -n "$QUERY" ]] || continue
+            if ! ROWS=$(gh api --method GET search/issues \
+              -f q="repo:${REPO} is:issue is:open ${QUERY}" -f per_page='15' \
+              --jq '.items[] | [.number, .title, (.body // "" | gsub("\\s+"; " ") | .[0:3000])] | @tsv' 2>/tmp/gh-search-err); then
+              # Surface real failures (rate limits, transient errors) instead
+              # of letting them masquerade as "zero hits" silence.
+              echo "::warning::Issue search failed: $(head -c 200 /tmp/gh-search-err)"
+              continue
+            fi
+            [[ -z "$ROWS" ]] && continue
+            RESULTS="${RESULTS}${ROWS}
+          "
+          done
+          [[ -n "$RESULTS" ]] || { echo "::notice::No search hits; staying silent."; exit 0; }
+
+          # --- Score & rank -----------------------------------------------------------
+          # 3 points per shared title keyword, 1 per shared body keyword (word-
+          # boundary matches only, so "test" cannot match "latest"). A candidate
+          # qualifies only by sharing at least one *title* keyword — that is what
+          # separates genuinely related issues from coincidental body overlap —
+          # plus a total score of 5+. Report the best 2-3.
+
+          REPORTED=""
+          COMMENT=""
+          COUNT=0
+          while IFS=$'\t' read -r NUM CTITLE CBODY; do
+            [[ "$NUM" == "$NUMBER" ]] && continue
+            [[ "$REPORTED" == *"|$NUM|"* ]] && continue
+            CL=$(printf '%s' "$CTITLE" | tr '[:upper:]' '[:lower:]')
+            CB=$(printf '%s' "$CBODY" | tr '[:upper:]' '[:lower:]')
+            SCORE=0
+            TITLE_HITS=0
+            for KW in "${TITLE_KW[@]:-}"; do
+              [[ -z "$KW" ]] && continue
+              if printf '%s' "$CL" | grep -qw "$KW"; then
+                SCORE=$((SCORE + 3)); TITLE_HITS=$((TITLE_HITS + 1))
+              fi
+              if printf '%s' "$CB" | grep -qw "$KW"; then
+                SCORE=$((SCORE + 1))
+              fi
+            done
+            for KW in $BODY_KW; do
+              if printf '%s' "$CB" | grep -qw "$KW"; then
+                SCORE=$((SCORE + 1))
+              fi
+            done
+            (( TITLE_HITS >= 1 && SCORE >= 5 )) || continue
+            REPORTED="${REPORTED}|${NUM}|"
+            # Candidate titles are arbitrary user input; escape Markdown-
+            # significant characters so a crafted title cannot inject links,
+            # images, or fake formatting into what looks like bot text.
+            SAFE_TITLE=$(printf '%s' "$CTITLE" | sed -e 's/[][\\`*_<>()#]/\\&/g')
+            COMMENT="${COMMENT}- #${NUM} — ${SAFE_TITLE}
+          "
+            COUNT=$((COUNT + 1))
+            (( COUNT >= 3 )) && break
+          done <<< "$RESULTS"
+
+          (( COUNT >= 1 )) || { echo "::notice::Nothing scored high enough; staying silent."; exit 0; }
+
+          # --- Comment ------------------------------------------------------------------
+          # The heredoc body sits at base YAML indentation: anything deeper
+          # would reach Markdown as a four-space code block.
+
+          gh issue comment "$NUMBER" --repo "$REPO" --body-file - <<EOF
+          Possible related issue${COUNT:+s} found automatically by a keyword search:
+
+          ${COMMENT}
+          If one of these covers your report, adding your details there keeps the discussion in one place. If none apply, feel free to ignore this comment.
+          EOF
+
+          echo "Commented on #$NUMBER with $COUNT related issue(s)."
