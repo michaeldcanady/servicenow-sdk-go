@@ -71,6 +71,18 @@ Route the SDK's diagnostic output through your own logger — anything with a
 
 <GoSnippet language="go" src={configGo} region="config_logger" />
 
+When a logger is configured, the SDK's default HTTP pipeline emits one line
+per request and one per response — retries and redirect hops included:
+
+- `DEBUG` — the outgoing request: method, URL, and attempt number.
+- `INFO` — responses with a status below 400.
+- `WARN` — responses with a 4xx or 5xx status.
+- `ERROR` — requests that failed at the transport level.
+
+Only the method, URL, status code, duration, and attempt number are logged.
+Headers (including `Authorization` and cookies), bodies, URL query strings,
+fragments, and userinfo are never logged.
+
 ### Advanced options
 
 - **`WithRequestAdapter`** — supply a fully custom Kiota
@@ -84,9 +96,9 @@ Route the SDK's diagnostic output through your own logger — anything with a
 - Out of the box the client already retries transient failures with backoff
   (including 429s honoring `Retry-After`), follows redirects, and handles
   compression — you don't need any options for that.
-- For request/response logging, prefer a middleware over `WithLogger` — the
-  middleware sees the actual HTTP traffic; the logger only carries the SDK's
-  internal diagnostics.
+- `WithLogger` covers the common request/response diagnostics (see above).
+  Reach for a custom middleware only when you need more detail, such as
+  headers or timing per pipeline stage.
 - A middleware is any type implementing `Intercept(pipeline, index, req)`;
   the example's `myLoggingMiddleware` is the minimal shape.
 

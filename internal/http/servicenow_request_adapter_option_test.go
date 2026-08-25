@@ -3,8 +3,11 @@ package internalhttp
 import (
 	"errors"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 	"github.com/stretchr/testify/assert"
@@ -166,6 +169,50 @@ func TestServiceNowRequestAdapterDefaultOptions(t *testing.T) {
 				assert.Equal(t, serialization.DefaultParseNodeFactoryInstance, config.parseNodeFactory)
 			},
 		},
+		{
+			name: "logger builds a default client that logs requests",
+			config: func() *serviceNowRequestAdapterConfig {
+				config := &serviceNowRequestAdapterConfig{}
+				require.NoError(t, WithLogger(&captureLogger{})(config))
+
+				return config
+			}(),
+			verify: func(t *testing.T, config *serviceNowRequestAdapterConfig) {
+				require.NotNil(t, config.client)
+
+				server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusOK)
+				}))
+				defer server.Close()
+
+				req, err := http.NewRequestWithContext(t.Context(), http.MethodGet, server.URL+"/api/now/v1/table/incident", nil)
+				require.NoError(t, err)
+
+				resp, err := config.client.Do(req)
+				require.NoError(t, err)
+				require.NoError(t, resp.Body.Close())
+
+				output := config.logger.(*captureLogger).output()
+				assert.Contains(t, output, "DEBUG ")
+				assert.Contains(t, output, "GET ")
+				assert.Contains(t, output, "/api/now/v1/table/incident")
+				assert.Contains(t, output, "INFO ")
+				assert.Contains(t, output, "-> 200")
+			},
+		},
+		{
+			name: "existing client is left untouched even with a logger",
+			config: func() *serviceNowRequestAdapterConfig {
+				config := &serviceNowRequestAdapterConfig{}
+				require.NoError(t, WithClient(&http.Client{Timeout: 42})(config))
+				require.NoError(t, WithLogger(&captureLogger{})(config))
+
+				return config
+			}(),
+			verify: func(t *testing.T, config *serviceNowRequestAdapterConfig) {
+				assert.Equal(t, &http.Client{Timeout: 42}, config.client)
+			},
+		},
 	}
 
 	for _, tt := range tests {
@@ -175,6 +222,50 @@ func TestServiceNowRequestAdapterDefaultOptions(t *testing.T) {
 			require.NoError(t, err)
 			tt.verify(t, tt.config)
 		})
+	}
+}
+
+func TestWithLogger(t *testing.T) {
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{
+			name: "successful",
+			test: func(t *testing.T) {
+				logger := &internal.NoOpLogger{}
+				config := &serviceNowRequestAdapterConfig{}
+
+				opt := WithLogger(logger)
+				err := opt(config)
+				require.NoError(t, err)
+				assert.Equal(t, &serviceNowRequestAdapterConfig{logger: logger}, config)
+			},
+		},
+		{
+			name: "nil logger",
+			test: func(t *testing.T) {
+				config := &serviceNowRequestAdapterConfig{}
+
+				opt := WithLogger(nil)
+				err := opt(config)
+				assert.Equal(t, errors.New("logger is nil"), err)
+			},
+		},
+		{
+			name: "nil config",
+			test: func(t *testing.T) {
+				opt := WithLogger(&internal.NoOpLogger{})
+
+				err := opt(nil)
+
+				assert.Equal(t, snerrors.ErrNilConfig, err)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, test.test)
 	}
 }
 

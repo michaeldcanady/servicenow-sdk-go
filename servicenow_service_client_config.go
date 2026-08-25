@@ -70,7 +70,13 @@ func (c *ServiceNowServiceClientConfig) getRequestAdapter() (abstractions.Reques
 	var err error
 
 	if conversion.IsNil(requestAdapter) {
-		requestAdapter, err = internalhttp.NewServiceNowRequestAdapter(c.authenticationProvider, c.requestAdapterOptions...)
+		opts := make([]internalhttp.ServiceNowRequestAdapterOption, 0, len(c.requestAdapterOptions)+1)
+		opts = append(opts, c.requestAdapterOptions...)
+		if !conversion.IsNil(c.logger) {
+			opts = append(opts, internalhttp.WithLogger(c.logger))
+		}
+
+		requestAdapter, err = internalhttp.NewServiceNowRequestAdapter(c.authenticationProvider, opts...)
 		if err != nil {
 			return nil, err
 		}
