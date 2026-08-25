@@ -3,6 +3,8 @@ package internalhttp
 import (
 	"net/http"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 
@@ -39,6 +41,18 @@ func getDefaultMiddleware() []nethttplibrary.Middleware {
 	copy(resultMiddlewares, serviceNowMiddlewares)
 	copy(resultMiddlewares[graphMiddlewaresLen:], kiotaMiddlewares)
 	return resultMiddlewares
+}
+
+// defaultMiddlewareWithLogger returns the default middleware with a
+// LoggingMiddleware appended innermost (last), so it observes every attempt
+// made by the retry and redirect handlers.
+func defaultMiddlewareWithLogger(logger internal.Logger) []nethttplibrary.Middleware {
+	middleware := getDefaultMiddleware()
+	if !conversion.IsNil(logger) {
+		middleware = append(middleware, NewLoggingMiddleware(logger))
+	}
+
+	return middleware
 }
 
 // GetDefaultClient constructs default client using provided options

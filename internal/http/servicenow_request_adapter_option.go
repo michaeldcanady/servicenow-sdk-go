@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
@@ -59,16 +60,29 @@ func WithSerializationFactory(factory serialization.SerializationWriterFactory) 
 	}
 }
 
+// WithLogger provides an internal.Logger that receives request, response,
+// retry and redirect diagnostics from the default client pipeline. It has no
+// effect when a custom http.Client is supplied via WithClient.
+func WithLogger(logger internal.Logger) ServiceNowRequestAdapterOption {
+	return func(config *serviceNowRequestAdapterConfig) error {
+		if conversion.IsNil(config) {
+			return snerrors.ErrNilConfig
+		}
+		if conversion.IsNil(logger) {
+			return errors.New("logger is nil")
+		}
+
+		config.logger = logger
+
+		return nil
+	}
+}
+
 // serviceNowRequestAdapterDefaultOptions configures default options if an option is not supplied for the ServiceNowRequestAdapterConfig
 func serviceNowRequestAdapterDefaultOptions() ServiceNowRequestAdapterOption {
 	return func(config *serviceNowRequestAdapterConfig) error {
 		if conversion.IsNil(config.client) {
-			client, err := GetDefaultClient()
-			// can't test since an error can't be forced
-			if err != nil {
-				return err
-			}
-			config.client = client
+			config.client = nethttplibrary.GetDefaultClient(defaultMiddlewareWithLogger(config.logger)...)
 		} else if len(config.middleware) > 0 {
 			config.client = nethttplibrary.GetDefaultClient(config.middleware...)
 		}

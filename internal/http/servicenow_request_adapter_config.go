@@ -3,6 +3,7 @@ package internalhttp
 import (
 	"net/http"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
@@ -17,6 +18,7 @@ type serviceNowRequestAdapterConfig struct {
 	parseNodeFactory serialization.ParseNodeFactory
 
 	middleware []nethttplibrary.Middleware
+	logger     internal.Logger
 }
 
 // buildServiceNowRequestAdapterConfig constructs new serviceNowRequestAdapterConfig from provided options
