@@ -124,7 +124,7 @@ func TestLoggingMiddleware_Intercept(t *testing.T) {
 			pipeline: &stubPipeline{transport: roundTripperFunc(func(_ *http.Request) (*http.Response, error) {
 				return nil, &url.Error{
 					Op:  "Get",
-					URL: "https://instance.service-now.com/api/now/v1/table/incident?user_token=supersecrettoken",
+					URL: "https://instance.service-now.com/api/now/v1/table/incident?user_token=exampleusertoken",
 					Err: errors.New("connection refused"),
 				}
 			})},
@@ -137,7 +137,7 @@ func TestLoggingMiddleware_Intercept(t *testing.T) {
 				assert.True(t, strings.HasPrefix(messages[1], "ERROR "))
 				assert.Contains(t, messages[1], "failed after ")
 				assert.Contains(t, messages[1], "connection refused")
-				assert.NotContains(t, messages[1], "supersecrettoken")
+				assert.NotContains(t, messages[1], "exampleusertoken")
 			},
 		},
 		{
@@ -145,7 +145,7 @@ func TestLoggingMiddleware_Intercept(t *testing.T) {
 			request: func(t *testing.T) *http.Request {
 				return testRequest(
 					t,
-					"https://user:password123@instance.service-now.com/api/now/v1/table/incident?sysparm_query=secretquery&user_token=tok123456",
+					"https://user:examplepassword@instance.service-now.com/api/now/v1/table/incident?sysparm_query=examplesysparmquery&user_token=examplequerytoken",
 					"",
 				)
 			},
@@ -155,33 +155,33 @@ func TestLoggingMiddleware_Intercept(t *testing.T) {
 			verify: func(t *testing.T, logger internal.Logger, _ *http.Response, _ error) {
 				output := logger.(*captureLogger).output()
 				assert.Contains(t, output, "/api/now/v1/table/incident")
-				assert.NotContains(t, output, "secretquery")
-				assert.NotContains(t, output, "tok123456")
-				assert.NotContains(t, output, "password123")
+				assert.NotContains(t, output, "examplesysparmquery")
+				assert.NotContains(t, output, "examplequerytoken")
+				assert.NotContains(t, output, "examplepassword")
 				assert.NotContains(t, output, "?")
 			},
 		},
 		{
 			name: "authorization headers and bodies are never logged",
 			request: func(t *testing.T) *http.Request {
-				req := testRequest(t, "https://instance.service-now.com/api/now/v1/table/incident", `{"password":"hunter2"}`)
-				req.Header.Set("Authorization", "Bearer supersecretbearertoken")
-				req.Header.Set("Cookie", "sessionid=supersecretcookie")
+				req := testRequest(t, "https://instance.service-now.com/api/now/v1/table/incident", `{"password":"examplebodyvalue"}`)
+				req.Header.Set("Authorization", "Bearer examplebearervalue")
+				req.Header.Set("Cookie", "sessionid=examplecookievalue")
 
 				return req
 			},
 			pipeline: &stubPipeline{transport: roundTripperFunc(func(_ *http.Request) (*http.Response, error) {
 				resp := newResponse(http.StatusOK)
-				resp.Body = io.NopCloser(strings.NewReader(`{"secret":"responsebodysecret"}`))
+				resp.Body = io.NopCloser(strings.NewReader(`{"secret":"exampleresponsevalue"}`))
 
 				return resp, nil
 			})},
 			verify: func(t *testing.T, logger internal.Logger, _ *http.Response, _ error) {
 				output := logger.(*captureLogger).output()
-				assert.NotContains(t, output, "supersecretbearertoken")
-				assert.NotContains(t, output, "supersecretcookie")
-				assert.NotContains(t, output, "hunter2")
-				assert.NotContains(t, output, "responsebodysecret")
+				assert.NotContains(t, output, "examplebearervalue")
+				assert.NotContains(t, output, "examplecookievalue")
+				assert.NotContains(t, output, "examplebodyvalue")
+				assert.NotContains(t, output, "exampleresponsevalue")
 				assert.NotContains(t, output, "Bearer")
 			},
 		},
