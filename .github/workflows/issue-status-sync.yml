@@ -4,7 +4,8 @@
 # - PR closed (not merged) → linked issues revert to "status: reviewed"
 # - PR merged → GitHub auto-closes issues natively via "Closes #N";
 #   issue closure then strips active-work status labels
-# - Issue closed (any path) → "status: in progress" / "status: in review" removed
+# - Issue closed (any path) → pipeline status labels removed
+#   ("status: new" / "status: reviewed" / "status: in progress" / "status: in review")
 #
 # Uses mondeja/pr-linked-issues-action for finding linked issues (well-maintained,
 # 1k+ stars), with minimal bash for the label updates.
@@ -91,14 +92,14 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Remove active-work status labels
+      - name: Remove pipeline status labels
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          for label in "status: in progress" "status: in review"; do
+          for label in "status: new" "status: reviewed" "status: in progress" "status: in review"; do
             echo "Removing '$label' from issue #$NUMBER"
             gh issue edit "$NUMBER" --repo "$REPO" --remove-label "$label" 2>/dev/null || true
           done
