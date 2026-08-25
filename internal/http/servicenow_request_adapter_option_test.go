@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
@@ -249,6 +250,16 @@ func TestWithLogger(t *testing.T) {
 				opt := WithLogger(nil)
 				err := opt(config)
 				assert.Equal(t, errors.New("logger is nil"), err)
+			},
+		},
+		{
+			name: "nil config",
+			test: func(t *testing.T) {
+				opt := WithLogger(&internal.NoOpLogger{})
+
+				err := opt(nil)
+
+				assert.Equal(t, snerrors.ErrNilConfig, err)
 			},
 		},
 	}

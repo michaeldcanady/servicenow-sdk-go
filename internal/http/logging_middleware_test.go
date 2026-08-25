@@ -424,7 +424,7 @@ func TestSanitizeURL(t *testing.T) {
 		},
 		{
 			name:  "userinfo stripped",
-			input: mustParseURL(t, "https://admin:hunter2@instance.service-now.com/api/now/v1/table"),
+			input: mustParseURL(t, "https://admin:exampleuserinfo@instance.service-now.com/api/now/v1/table"),
 			want:  "https://instance.service-now.com/api/now/v1/table",
 		},
 		{
@@ -448,4 +448,43 @@ func mustParseURL(t *testing.T, raw string) *url.URL {
 	require.NoError(t, err)
 
 	return parsed
+}
+
+func TestErrorCause(t *testing.T) {
+	tests := []struct {
+		name     string
+		err      error
+		wantMsg  string
+		wantSame bool
+	}{
+		{
+			name:     "plain error passes through untouched",
+			err:      errors.New("connection refused"),
+			wantMsg:  "connection refused",
+			wantSame: true,
+		},
+		{
+			name:    "url.Error unwrapped so its URL never reaches logs",
+			err:     &url.Error{Op: "Get", URL: "https://instance.service-now.com/api/now/v1/table?user_token=exampleusertoken", Err: errors.New("connection refused")},
+			wantMsg: "connection refused",
+		},
+		{
+			name:     "url.Error without inner error passes through",
+			err:      &url.Error{Op: "Get", URL: "https://instance.service-now.com/api/now/v1/table"},
+			wantSame: true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got := errorCause(test.err)
+
+			if test.wantSame {
+				assert.Same(t, test.err, got)
+
+				return
+			}
+			assert.EqualError(t, got, test.wantMsg)
+		})
+	}
 }
