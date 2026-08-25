@@ -1,6 +1,11 @@
 name: CI
 on:
   workflow_dispatch:
+  # Run the full matrix weekly, independent of PR activity. Tuesdays 03:00 UTC
+  # avoids Scorecard (Mon 01:30), the weekly release (Mon 03:00), e2e-nightly
+  # (daily 04:00), the stale bot (daily 05:30), and CodeQL (Fri 03:00).
+  schedule:
+    - cron: "0 3 * * 2"
   push:
     branches:
       - main
@@ -37,14 +42,18 @@ jobs:
       contents: read
     # Release-please PRs are no longer exempt: they bump version.go (compiled
     # code) and must pass the same gates as any other change before a tag is cut.
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    if: >-
+      github.event_name == 'push' ||
+      github.event_name == 'pull_request' ||
+      github.event_name == 'schedule'
     outputs:
-      code: ${{ steps.filter.outputs.any_changed }}
+      code: ${{ github.event_name == 'schedule' || steps.filter.outputs.any_changed == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Changed Files
+        if: github.event_name != 'schedule'
         uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
         id: filter
         with:
