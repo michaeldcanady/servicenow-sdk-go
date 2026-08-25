@@ -1,29 +1,36 @@
-# Sync issue status labels when PRs open/close.
+# Sync issue status labels when PRs open/close and when issues close.
 #
 # - PR opened/reopened → linked issues get "status: in progress"
 # - PR closed (not merged) → linked issues revert to "status: reviewed"
-# - PR merged → GitHub auto-closes issues natively via "Closes #N"
+# - PR merged → GitHub auto-closes issues natively via "Closes #N";
+#   issue closure then strips active-work status labels
+# - Issue closed (any path) → "status: in progress" / "status: in review" removed
 #
 # Uses mondeja/pr-linked-issues-action for finding linked issues (well-maintained,
 # 1k+ stars), with minimal bash for the label updates.
 #
-# Security: Runs on pull_request_target with author association check.
+# Security: Runs on pull_request_target with author association check;
+# the issues.closed cleanup is self-scoped to the closing issue.
 
 name: Issue Status Sync
 
 on:
   pull_request_target:
     types: [opened, reopened, closed]
+  issues:
+    types: [closed]
 
 permissions: {}
 
+# Event-aware: PR runs serialize per-PR, issue-close runs serialize per-issue.
 concurrency:
-  group: issue-status-sync-${{ github.event.pull_request.number }}
+  group: ${{ github.event_name == 'pull_request_target' && format('issue-status-sync-pr-{0}', github.event.pull_request.number) || format('issue-status-sync-issue-{0}', github.event.issue.number) }}
   cancel-in-progress: false
 
 jobs:
   sync:
     name: Sync Issue Status
+    if: github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -74,4 +81,24 @@ jobs:
             echo "Reverting issue #$n to reviewed"
             gh issue edit "$n" --repo "$REPO" --remove-label "status: in progress" 2>/dev/null || true
             gh issue edit "$n" --repo "$REPO" --add-label "status: reviewed" 2>/dev/null || true
+          done
+
+  cleanup-closed:
+    name: Clear Active Status on Close
+    if: github.event_name == 'issues' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - name: Remove active-work status labels
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          for label in "status: in progress" "status: in review"; do
+            echo "Removing '$label' from issue #$NUMBER"
+            gh issue edit "$NUMBER" --repo "$REPO" --remove-label "$label" 2>/dev/null || true
           done
