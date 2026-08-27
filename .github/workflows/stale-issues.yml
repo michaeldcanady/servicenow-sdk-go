@@ -89,7 +89,7 @@ jobs:
           fi
 
       - name: Mark and close stale issues (active tier)
-        uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 # v10
+        uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
         with:
           # Issues only: negative PR windows disable PR processing entirely.
           days-before-pr-stale: -1
@@ -122,7 +122,7 @@ jobs:
             If this is still a problem, comment below or reopen it. Include your SDK version, Go version, and a minimal reproduction so we can pick it up quickly.
 
       - name: Mark and close stale issues (backlog tier)
-        uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 # v10
+        uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
         with:
           days-before-pr-stale: -1
           days-before-pr-close: -1
