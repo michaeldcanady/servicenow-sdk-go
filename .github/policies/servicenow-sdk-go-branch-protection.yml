@@ -4,6 +4,13 @@
 # whose hard guarantees live here. Following the same schema Microsoft's
 # Kiota repositories use for branch protection as code, this file is the
 # single reviewed source of truth for those settings.
+#
+# Live enforcement is hybrid so Scorecard v5.5.0 detects it (see
+# website/docs/contributing/release-branch-protection.md): `main` is
+# enforced via classic branch protection (branches/main/protection) and
+# `release/v*` via a repository ruleset
+# (servicenow-sdk-go-release-protection). Both are applied from this
+# declaration — the file alone does not protect anything until applied.
 
 name: servicenow-sdk-go-branch-protection
 description: Branch protection policy for the servicenow-sdk-go repository
