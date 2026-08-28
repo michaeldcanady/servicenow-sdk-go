@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
+      # Needed for Scorecard to read branch protection / rulesets (Branch-Protection check via GraphQL)
+      contents: read
       # Needed for Code scanning upload
       security-events: write
       # Needed for GitHub OIDC token if publish_results is true
