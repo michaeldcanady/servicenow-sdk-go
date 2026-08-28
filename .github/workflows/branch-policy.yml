@@ -18,13 +18,17 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   branch-name:
     name: Check Branch Name
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read
+      contents: read # read PR branch metadata (auditor requires comment)
     # Automated branches (release-please, dependabot, backports) don't follow
     # the human-authored <type>/<kebab-description> convention, so they're
     # exempt.
@@ -51,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read
+      contents: read # read PR body for linked issue check
     # Automated PRs (release-please, dependabot) and PRs explicitly labeled
     # as trivial don't require a linked issue.
     if: ${{ github.actor != 'dependabot[bot]' && !contains(github.event.pull_request.labels.*.name, 'no-issue-required') }}

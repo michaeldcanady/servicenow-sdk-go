@@ -60,9 +60,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      issues: write
-      pull-requests: read
-      contents: read
+      issues: write # create forward-port tracking issue
+      pull-requests: read # read PR labels / branch for provenance check
+      contents: read # read repo metadata
     steps:
       - name: Assess backport provenance
         id: provenance

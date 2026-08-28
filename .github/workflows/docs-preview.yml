@@ -155,11 +155,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: write # required: pushes PR preview to gh-pages branch
-      # rossjrw/pr-preview-action posts the preview-URL comment on the PR
-      # through its embedded sticky-comment step; without this grant that
-      # step fails the job AFTER the deployment already succeeded.
-      pull-requests: write
+      contents: write # pushes PR preview to gh-pages branch
+      pull-requests: write # pr-preview-action posts preview URL via sticky comment (auditor requires comment)
     needs: [detect-changes, verify-build]
     if: >-
       github.event_name == 'pull_request' &&
