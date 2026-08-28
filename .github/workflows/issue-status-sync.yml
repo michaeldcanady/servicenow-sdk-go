@@ -35,8 +35,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      issues: write
-      pull-requests: read
+      issues: write # add/remove status labels on linked issues
+      pull-requests: read # read PR-linked-issues metadata
     steps:
       - name: Get linked issues
         id: linked
@@ -90,7 +90,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      issues: write
+      issues: write # remove pipeline status labels from closed issue
     steps:
       - name: Remove pipeline status labels
         env:

@@ -11,18 +11,19 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   analysis:
     name: Scorecard Analysis
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      # Needed for Scorecard to read branch protection / rulesets (Branch-Protection check via GraphQL)
-      contents: read
-      # Needed for Code scanning upload
-      security-events: write
-      # Needed for GitHub OIDC token if publish_results is true
-      id-token: write
+      contents: read # Scorecard branch-protection check via GraphQL
+      security-events: write # SARIF upload to code scanning
+      id-token: write # OIDC token for publish_results
 
     steps:
       - name: Checkout code
