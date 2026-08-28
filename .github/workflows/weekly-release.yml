@@ -8,10 +8,7 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
-permissions:
-  contents: write
-  issues: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   detect-changes:
@@ -57,6 +54,10 @@ jobs:
     if: ${{ needs.detect-changes.outputs.should_release == 'true' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
       - name: Create preview release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
