@@ -33,13 +33,17 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   detect-changes:
     name: Detect Changes
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read
+      contents: read # checkout for change detection
     outputs:
       docs: ${{ steps.diff.outputs.any_changed }}
     steps:
@@ -47,7 +51,9 @@ jobs:
       # out before the action below can be found at all — its internal
       # checkout step can never be the thing that bootstraps this.
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Detect site-output changes
         id: diff
@@ -66,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
-      contents: write # required: pushes built site to gh-pages branch
+      contents: write # pushes built site to gh-pages branch (auditor requires comment)
     needs: [detect-changes]
     if: needs.detect-changes.outputs.docs == 'true'
     # Serialize stable deploys: two rapid merges finishing out of order would
@@ -76,7 +82,9 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       # Whole-tree prose scan at the release gate (#661). Includes versioned
       # copies under website/versioned_docs — backport fixes to frozen pages
