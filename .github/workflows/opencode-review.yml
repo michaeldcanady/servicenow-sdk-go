@@ -53,10 +53,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
-      contents: read
-      # PR review comments only need pull-requests: write; issues: write was
-      # dropped to shrink what a compromised/prompt-injected run can touch.
-      pull-requests: write
+      contents: read # checkout PR code for review
+      pull-requests: write # post review comment; issues:write intentionally omitted to limit blast radius
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}

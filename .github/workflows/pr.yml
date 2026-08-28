@@ -12,14 +12,18 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint-title:
     name: Validate PR Title
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      pull-requests: write
-      contents: read
+      pull-requests: write # post/remove sticky comment for title lint
+      contents: read # read PR metadata
     steps:
       - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6
         id: lint_title
@@ -61,12 +65,13 @@ jobs:
           delete: true
 
   dependabot-merge:
+    name: Auto-merge Dependabot PRs
     runs-on: ubuntu-latest
     timeout-minutes: 5
     if: ${{ github.actor == 'dependabot[bot]' }}
     permissions:
-      contents: write # required: gh pr merge --auto needs write to enable auto-merge
-      pull-requests: write
+      contents: write # gh pr merge --auto needs write to enable auto-merge
+      pull-requests: write # enable auto-merge
     steps:
       - name: Dependabot metadata
         id: metadata

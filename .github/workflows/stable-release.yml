@@ -39,16 +39,21 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   # Next-major line: unchanged behavior, now explicitly scoped to main.
   release-please:
+    name: Release Please (main)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: github.ref == 'refs/heads/main'
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+      contents: write # create release PR and tag
+      issues: write # label and comment on release PR
+      pull-requests: write # open and update release PR
     steps:
       - name: Create release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
@@ -62,13 +67,14 @@ jobs:
   # Conventional Commits drive bump level exactly as on main:
   # feat: -> minor (vX.Y+1.0), fix:/perf: -> patch, all else -> no release.
   release-please-maintenance:
+    name: Release Please (maintenance)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: startsWith(github.ref, 'refs/heads/release/v')
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+      contents: write # create maintenance release PR and tag
+      issues: write # label maintenance release PR
+      pull-requests: write # open maintenance release PR
     steps:
       # The manifest check inspects files, and runners start with an empty
       # workspace, so the pushed ref must be checked out before the guard.
