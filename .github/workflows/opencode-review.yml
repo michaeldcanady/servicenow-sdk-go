@@ -73,7 +73,7 @@ jobs:
       - name: Run opencode review
         uses: Barmore-Genc/opencode-pr-reviewer@d34c66bc5c72cb84b6b7c1572c2752b16fdfe339 # v1
         env:
-          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }} # zizmor: ignore[secrets-outside-env] -- OPENCODE_API_KEY is a repo secret for code review, not a deployment secret; scoped to step env
         with:
           model: opencode/big-pickle
           pr-number: ${{ github.event.pull_request.number || github.event.issue.number }}

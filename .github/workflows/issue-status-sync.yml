@@ -16,7 +16,7 @@
 name: Issue Status Sync
 
 on:
-  pull_request_target:
+  pull_request_target: # zizmor: ignore[dangerous-triggers] -- pull_request_target is required so GITHUB_TOKEN can manage issue labels for fork PRs; workflow never checks out PR code, only uses author_association and label data via env
     types: [opened, reopened, closed]
   issues:
     types: [closed]

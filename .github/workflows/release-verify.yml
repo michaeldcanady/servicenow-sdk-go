@@ -28,7 +28,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0 # zizmor: ignore[cache-poisoning] -- release-verify triggers only on tag push; Go cache is not exposed to fork poisoning
         with:
           go-version-file: go.mod
           cache: true

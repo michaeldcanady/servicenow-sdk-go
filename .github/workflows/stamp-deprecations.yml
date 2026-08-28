@@ -46,7 +46,7 @@ jobs:
       contents: write # push stamp commit to release-please branch
     steps:
       - name: Checkout release PR branch
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 # zizmor: ignore[artipacked] -- stamp job must push version-stamped commit to release-please branch; credential persistence is required
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0

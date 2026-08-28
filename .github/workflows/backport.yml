@@ -53,7 +53,7 @@ name: Backport
 # PR's ref.
 
 on:
-  pull_request_target:
+  pull_request_target: # zizmor: ignore[dangerous-triggers] -- pull_request_target is required so GITHUB_TOKEN has write for fork PRs; workflow never checks out or executes PR code, only reads PR metadata via env (see header comment)
     types:
       - closed
     branches:
@@ -79,7 +79,7 @@ jobs:
       pull-requests: write # open backport PRs, comment on the source PR
     steps:
       - name: Checkout repository history
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 # zizmor: ignore[artipacked] -- backport job must push cherry-pick branches; credential persistence is required and no artifact is uploaded
         with:
           # Full history so cherry-picks across main and release branches
           # always find their parent commits.
