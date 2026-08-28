@@ -93,9 +93,11 @@ jobs:
       - name: Cut docs version
         if: steps.guard.outputs.skip == 'false'
         working-directory: website
+        env:
+          LINE: ${{ steps.guard.outputs.line }}
         run: |
           npm ci
-          node scripts/cut-docs-version.mjs "${{ steps.guard.outputs.line }}"
+          node scripts/cut-docs-version.mjs "$LINE"
 
       - name: Open snapshot PR
         if: steps.guard.outputs.skip == 'false'

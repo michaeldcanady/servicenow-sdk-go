@@ -57,7 +57,6 @@ jobs:
       pull-requests: write # post review comment; issues:write intentionally omitted to limit blast radius
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -67,10 +66,14 @@ jobs:
       # Comment-triggered runs start on the default branch; switch to the PR
       # head so opencode reviews the PR's code.
       - if: github.event_name == 'issue_comment'
-        run: gh pr checkout "${{ github.event.issue.number }}" --repo "$GITHUB_REPOSITORY"
+        env:
+          PR_NUMBER: ${{ github.event.issue.number }}
+        run: gh pr checkout "$PR_NUMBER" --repo "$GITHUB_REPOSITORY"
 
       - name: Run opencode review
         uses: Barmore-Genc/opencode-pr-reviewer@d34c66bc5c72cb84b6b7c1572c2752b16fdfe339 # v1
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
           model: opencode/big-pickle
           pr-number: ${{ github.event.pull_request.number || github.event.issue.number }}

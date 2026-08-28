@@ -68,7 +68,7 @@ jobs:
     name: Auto-merge Dependabot PRs
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
     permissions:
       contents: write # gh pr merge --auto needs write to enable auto-merge
       pull-requests: write # read PR URL and enable auto-merge
