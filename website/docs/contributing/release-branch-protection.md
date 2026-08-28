@@ -180,7 +180,7 @@ Protection must not break `release-please`, `dependabot`, or backport
 automation. Rehearse after any live change:
 
 1. **Dry-run the declarative file:** `python3 -m json.tool .github/policies/servicenow-sdk-go-branch-protection.yml` — confirms schema parse.
-2. **Open a throwaway PR** against `main` and against `release/v1.0` (e.g. `chore/rehearse-branch-protection (#725)`) and verify the four required checks report and the PR is mergeable only with 1 CODEOWNERS approval and conversation resolution. With `strict:true`, the branch must be up-to-date before merging (rebase if behind). Close without merging.
+2. **Open a throwaway PR** against `main` and against `release/v1.0` (for example `chore/rehearse-branch-protection (#725)`) and verify the four required checks report and the PR is mergeable only with 1 CODEOWNERS approval and conversation resolution. With `strict:true`, the branch must be up-to-date before merging (rebase if behind). Close without merging.
 3. **Backport label:** label a dummy `main` PR with `backport release/v1.0` and confirm `backport.yml` would fan out (check `Select existing target branches` log); no actual backport PR needed.
 4. **Stable/maintenance release configs:** `stable-release.yml` (main) and `maintenance-label.yml`/`backport.yml` are branch-scoped and use `contents: write`/`pull-requests: write` — they push to `release-please--` branches and open PRs, never directly to `main`/`release/v*`, so the `admin(always)` bypass keeps them unblocked (admin actor bypasses the PR approval, not the branch creation). No `restrictions` (push allowlist) is set.
 

@@ -215,3 +215,6 @@ Godog
 (?i)rulesets?
 (?i)codeowners
 (?i)deliverable(s)?
+(?i)allowlist
+(?i)mergeable
+(?i)rebase
