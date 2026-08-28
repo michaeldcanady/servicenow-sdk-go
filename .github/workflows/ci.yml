@@ -88,9 +88,15 @@ jobs:
           cache: true
       - run: go mod download
       - run: go mod verify
-      - run: |
+      - name: Check root module tidiness
+        run: |
           go mod tidy
-          git diff --exit-code -- .
+          git diff --exit-code -- go.mod go.sum
+      - name: Check integration test module tidiness
+        run: |
+          cd tests/integration/v2
+          go mod tidy
+          git diff --exit-code -- go.mod go.sum
 
   build-go:
     name: Build Go Code
