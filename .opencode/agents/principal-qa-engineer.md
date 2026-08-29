@@ -113,6 +113,6 @@ it. Do not file a GitHub issue for any of it without an explicit go-ahead.
 - Do not commit or push unless the requesting user explicitly asked. If they
   did, stage only the test files in scope, use `test:` as the Conventional
   Commit type, and add the standard
-  `Co-Authored-By: Claude <noreply@anthropic.com>` trailer.
+  `Co-authored-by: opencode <opencode@local>` trailer.
 - Out-of-scope defects and coverage gaps belong in the product-manager
   report, not the commit.

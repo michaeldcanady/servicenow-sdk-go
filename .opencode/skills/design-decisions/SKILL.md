@@ -91,8 +91,8 @@ four), each with Docusaurus frontmatter and an entry in the index table:
 6. [`006-nil-receiver-sentinel-error.md`](../../../website/docs/contributing/adrs/006-nil-receiver-sentinel-error.md)
    — nil-receiver guards on verb methods return `snerrors.ErrNilRequestBuilder`,
    never a bare `(nil, nil)`/`nil`, so a nil builder fails loud at the call
-site instead of silently succeeding. Enforced by the
-    `principal-software-engineer` agent via new-module design reviews.
+   site instead of silently succeeding. Enforced by the
+   `principal-software-engineer` agent via new-module design reviews.
 7. [`007-no-speculative-builder-chains.md`](../../../website/docs/contributing/adrs/007-no-speculative-builder-chains.md)
    — don't add a request-builder accessor for a URL segment until the
    operation(s) behind it are actually implemented; a navigable chain with no

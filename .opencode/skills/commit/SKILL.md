@@ -6,7 +6,7 @@ description: >-
   only the intended files, splits work into atomic logical commits, and writes an imperative
   subject under 50 characters with a why-focused body wrapped at 72. Picks the type and any
   BREAKING CHANGE footer from the actual diff (feat/fix/docs/refactor/perf/chore/test; CI and
-  workflow changes are always chore). Adds the Standard Co-Authored-By trailer per repo
+  workflow changes are always chore). Adds the standard Co-authored-by trailer per repo
   convention. Never stages secrets or unrelated files, never skips hooks or force-pushes, and
   never pushes. Use whenever the user asks to "commit", "stage and commit", "make a commit",
   "write a good commit message", or after a unit of work is finished and a commit is requested.
@@ -146,7 +146,7 @@ sysparm_display_value wiring; the parameter is optional and defaults to
 unset as before.
 
 Closes #123
-Co-Authored-By: Claude <noreply@anthropic.com>
+Co-authored-by: opencode <opencode@local>
 ```
 
 ## Step 5 — Commit
@@ -165,7 +165,7 @@ or a `--file` temp file over fragile inline newlines.
 
 Repo commit conventions on top of the mechanics:
 
-- Include the `Co-Authored-By: Claude <noreply@anthropic.com>` trailer on
+- Include the `Co-authored-by: opencode <opencode@local>` trailer on
   commits you author, matching the existing history.
 - Do not skip hooks (`--no-verify`), do not use interactive rebase
   (`-i`) to rewrite, do not force-push, do not create empty commits —

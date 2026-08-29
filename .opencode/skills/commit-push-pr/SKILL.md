@@ -36,7 +36,7 @@ URL) out of the request.
   (step 8). This is the explicit fallback the repo wants when work ships
   without an issue on file.
 
-## Step 0 — Preflight (added)
+## Step 0 — Preflight
 
 Before touching anything, confirm the pipeline exists:
 
@@ -101,7 +101,7 @@ remote doesn't), **stop and ask** — the local default branch has diverged and
 rewriting or force-flagging it is not this skill's call to make. Never create
 a merge commit just to reconcile the trunk.
 
-## Step 5 — Restore the stashed changes on a PR branch (modified, necessary)
+## Step 5 — Restore the stashed changes on a PR branch
 
 You can't open a PR with head == base; the changes cannot be committed on the
 default branch itself. Decide where they land:
@@ -113,6 +113,18 @@ default branch itself. Decide where they land:
   git checkout <pre-stash-branch>
   git rebase origin/<default>
   ```
+  **But only if that branch hasn't been pushed.** Check first:
+  ```bash
+  git ls-remote --heads origin <pre-stash-branch> | grep -q .
+  ```
+  Rebasing a pushed branch rewrites every commit hash on it, which step 7's
+  never-force-push rule can't ship — a normal push would be rejected as
+  non-fast-forward and force is forbidden, dead-ending the flow. If the
+  branch exists on origin, **stop and ask** the user to choose: rebase with a
+  one-time `--force-with-lease` push under their explicit go-ahead (the only
+  sanctioned exception to the never-force rule), skip the rebase and keep the
+  branch as-is, or fall through to the fresh-branch path below. Never rewrite
+  a pushed branch's history without that decision.
 - **Fresh branch**: if you were on the default branch, detached HEAD, or no
   branch at all, run the **branch** skill to cut a branch off the
   freshly synced trunk. Hand it the base (`<default>`) and the naming seed —
@@ -176,7 +188,7 @@ gh pr create --base <default> --head <branch> \
 Let `gh` also fill in the default body template when the commit body is
 empty — an empty-handed `--body ""` forfeits the repo's template fields.
 
-## Step 9 — Verify and clean up (added)
+## Step 9 — Verify and clean up
 
 ```bash
 gh pr view <number> --json url,title,baseRefName,headRefName,labels

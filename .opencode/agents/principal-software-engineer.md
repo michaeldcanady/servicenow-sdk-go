@@ -135,6 +135,6 @@ repo's correctness and maintainability at scale:
 - Do not commit or push unless the requesting user explicitly asked you to.
   If they did, stage only the files you touched, write a Conventional Commit
   message, and add the standard
-  `Co-Authored-By: Claude <noreply@anthropic.com>` trailer.
+  `Co-authored-by: opencode <opencode@local>` trailer.
 - Out-of-scope findings go to product-manager (above), not into the commit
   message.

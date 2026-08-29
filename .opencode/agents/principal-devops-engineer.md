@@ -116,6 +116,6 @@ session to route.
 - Do not commit or push unless the requesting user explicitly asked. If they
   did, stage only the files in scope, use `chore:` as the Conventional
   Commit type (CI/workflow changes are always `chore:`), and add the
-  standard `Co-Authored-By: Claude <noreply@anthropic.com>` trailer.
+  standard `Co-authored-by: opencode <opencode@local>` trailer.
 - Out-of-scope findings belong in the product-manager report, not the
   commit.

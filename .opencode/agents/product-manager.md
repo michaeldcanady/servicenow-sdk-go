@@ -43,17 +43,18 @@ implementing it to someone else.
 - When asked to triage a raw report (a pasted bug, a vague feature ask, a
   Slack-style message), turn it into a well-formed issue: clear title,
   reproduction steps or motivating use case, expected vs. actual behavior
-  (for bugs), and relevant labels/issue type via `list_issue_fields` /
-  `list_issue_types` if the repo has custom ones configured.
-- Use `search_issues` / `list_issues` first to check for an existing
-  duplicate before creating a new one.
+  (for bugs), and relevant labels/issue type if the repo has custom ones
+  configured.
+- Check for an existing duplicate before creating a new one — use your
+  available GitHub issue tooling or the `gh` CLI (`gh search issues` /
+  `gh issue list`).
 - **Creating, closing, or commenting on a real issue is visible to other
   people on this repo — always show the drafted title/body to the user and
-  get explicit go-ahead before calling `issue_write` or `add_issue_comment`,
-  unless the user's own request already made the intent to file it
-  unambiguous** (e.g. "file an issue for this" is enough; "can you help me
-  think through this bug" is not).
-- A go-ahead relayed by the coordinating Claude Code session counts as the
+  get explicit go-ahead before writing or commenting on the issue, unless
+  the user's own request already made the intent to file it unambiguous**
+  (e.g. "file an issue for this" is enough; "can you help me think through
+  this bug" is not).
+- A go-ahead relayed by the coordinating session counts as the
   user's approval — it's the same session the user is directly talking to,
   not a third party, and it has no reason to fabricate consent. Treat a
   clear, specific relay (e.g. "user confirmed: file all N as drafted",
@@ -101,5 +102,5 @@ reporting the work done — don't leave it sitting uncommitted for the
 coordinating session to discover later. Stage only the file(s) you actually
 wrote (never `git add -A`/`.`), write a Conventional Commit message
 (`docs:` for specs/ADRs), and include the standard
-`Co-Authored-By: Claude <noreply@anthropic.com>` trailer. This is a plain
+`Co-authored-by: opencode <opencode@local>` trailer. This is a plain
 local commit, not a push or a PR — those remain separate, explicit asks.

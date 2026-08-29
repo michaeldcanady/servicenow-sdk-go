@@ -98,6 +98,7 @@ def run_single_query(
         )
 
         triggered = False
+        completed = False
         start_time = time.time()
         buffer = ""
 
@@ -118,7 +119,7 @@ def run_single_query(
                     break
                 buffer += chunk.decode("utf-8", errors="replace")
 
-                while "\n" in buffer:
+                while "\n" in buffer and not completed:
                     line, buffer = buffer.split("\n", 1)
                     line = line.strip()
                     if not line:
@@ -142,9 +143,25 @@ def run_single_query(
                         and part.get("tool") == "task"
                     ):
                         if clean_name in json.dumps(event):
-                            return True
+                            triggered = True
                     elif event.get("type") == "session.completed":
-                        return False
+                        completed = True
+
+            # Fallback: scan the raw event stream for the planted name, in
+            # case the event shape drifts from the assumptions above. A
+            # genuine reference to the subagent anywhere in the output still
+            # counts as a trigger.
+            if not triggered and clean_name in buffer:
+                triggered = True
+
+            # A non-zero exit without either a trigger signal or a clean
+            # completion is a failed run (auth/config/CLI problem), not a
+            # non-trigger — surface it instead of silently reporting False.
+            exit_code = process.poll()
+            if exit_code not in (None, 0) and not triggered and not completed:
+                raise RuntimeError(
+                    f"opencode run exited {exit_code} without invoking the agent"
+                )
         finally:
             # Clean up process on any exit path (return, exception, timeout)
             if process.poll() is None:
