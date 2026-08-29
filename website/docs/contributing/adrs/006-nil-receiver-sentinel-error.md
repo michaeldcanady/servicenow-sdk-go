@@ -56,7 +56,7 @@ codebase.
   every caller can check the same way regardless of module.
 - **Cons:** breaking — any caller relying on `(nil, nil)` as a success-shaped
   no-op must be updated to handle the returned error.
-- **Enforced by:** the `api-module-consistency-reviewer` agent and the
-  `new-api-module` skill both check for this pattern; a new module's guard
-  that returns bare `nil`/`(nil, nil)` instead of the sentinel is a
-  consistency-review finding, not a style nit.
+- **Enforced by:** the `principal-software-engineer` agent (consulting the
+  `.opencode/skills/design-decisions` conventions) checks for this pattern in
+  new-module reviews; a guard that returns bare `nil`/`(nil, nil)` instead of
+  the sentinel is a consistency-review finding, not a style nit.
