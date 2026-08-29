@@ -42,12 +42,15 @@ jobs:
 
       - name: Determine whether to release
         id: determine
+        env:
+          TAG: ${{ steps.latest_tag.outputs.tag }}
+          ANY_CHANGED: ${{ steps.diff.outputs.any_changed }}
         run: |
-          if [ -z "${{ steps.latest_tag.outputs.tag }}" ]; then
+          if [ -z "$TAG" ]; then
             echo "No prior tag found; defaulting should_release=true for first run."
             echo "should_release=true" >> "$GITHUB_OUTPUT"
           else
-            echo "should_release=${{ steps.diff.outputs.any_changed }}" >> "$GITHUB_OUTPUT"
+            echo "should_release=$ANY_CHANGED" >> "$GITHUB_OUTPUT"
           fi
 
   release-please:
