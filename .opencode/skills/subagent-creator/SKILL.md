@@ -1,20 +1,20 @@
 ---
 name: subagent-creator
 description: >-
-  Create a new Claude Code subagent (.claude/agents/*.md) for this repo, or
+  Create a new opencode subagent (.opencode/agents/*.md) for this repo, or
   test/improve an existing one. Use whenever the user asks to "create a
-  subagent for X", "add a new agent to .claude/agents", "I need a
+  subagent for X", "add a new agent to .opencode/agents", "I need a
   review/testing/scaffolding agent", wants a dedicated agent to run
   proactively after some kind of change, or wants to benchmark/tune an
   existing agent's description so it triggers reliably. Covers the full loop:
   interview the user, draft the agent's frontmatter and system prompt, spawn
-  test runs via the Agent tool, grade and benchmark the results, show them in
+  test runs via the Task tool, grade and benchmark the results, show them in
   an HTML viewer, and iterate.
 ---
 
 # Subagent Creator
 
-Helps write and iteratively improve `.claude/agents/*.md` subagent definitions
+Helps write and iteratively improve `.opencode/agents/*.md` subagent definitions
 for this repo, and mirrors the authoring→eval→iterate loop used by the
 upstream `skill-creator` skill, retargeted to subagents. Everything this
 skill needs (eval runner, grader, benchmark aggregator, HTML viewer) lives
@@ -24,25 +24,25 @@ plugin being installed.
 
 ## How a subagent differs from a skill (read this first)
 
-A subagent is a single file, `.claude/agents/<name>.md` — YAML frontmatter
+A subagent is a single file, `.opencode/agents/<name>.md` — YAML frontmatter
 (`name`, `description`, optionally `tools` as a comma-separated allowlist and
 `model`), then a markdown body that IS the subagent's system prompt, written
 directly as instructions to that agent (no wrapper). See
-`.claude/agents/api-module-consistency-reviewer.md` and
-`.claude/agents/test-coverage-writer.md` in this repo for the exact shape to
-match.
+`.opencode/agents/product-manager.md` and
+`.opencode/agents/principal-software-engineer.md` in this repo for the exact
+shape to match.
 
-Triggering also works differently from skills. There's no `Skill` tool or
-`available_skills` listing — instead, the orchestrating Claude is shown a
-list of available agent types (just `name` + `description`, the same
-one-liner you write in frontmatter) and decides whether to call the `Agent`
-tool with `subagent_type` set to one of them, based purely on that
-description matching the task at hand. It never sees the body up front. This
-means the description carries even more weight than a skill's does — it is
-the *only* signal for delegation, so treat it as a discoverability problem in
-the same spirit as the writing tips below, adapted for "when should the
-orchestrator hand this task off" rather than "when should Claude read this
-file."
+Triggering also works differently from skills. Skills are discovered through
+the `Skill` tool and its available-skill listing; subagents instead join the
+set of agent types the orchestrator can delegate to via the `Task` tool's
+`subagent_type`. The orchestrator is shown just the `name` + `description`
+(the same one-liner you write in frontmatter) and decides whether to
+delegate based purely on that description matching the task at hand. It never
+sees the body up front. This means the description carries even more weight
+than a skill's does: it is the *only* signal for delegation, so treat it as a
+discoverability problem in the same spirit as the writing tips below, adapted
+for "when should the orchestrator hand this task off" rather than "when
+should the agent read this file."
 
 ## Communicating with the user
 
@@ -59,16 +59,17 @@ Ask one question at a time, waiting for each answer:
 1. What should this subagent do, concretely? (e.g. "review new `*api`
    packages for structural consistency" — not just "help with APIs")
 2. When should it trigger — what would the user or orchestrator actually
-   say/need? Should it also be invoked *proactively* by Claude without the
-   user naming it (e.g. "after adding a new package", "before opening a
-   PR")? If so, say that explicitly in the description — orchestrators
-   default to *not* delegating unless a description clearly earns it.
+   say/need? Should it also be invoked *proactively* by the orchestrator
+   without the user naming it (e.g. "after adding a new package", "before
+   opening a PR")? If so, say that explicitly in the description —
+   orchestrators default to *not* delegating unless a description clearly
+   earns it.
 3. What tools does it need? Default to the full toolset (omit `tools`
    entirely) unless there's a reason to restrict it — e.g. a pure-review
    agent that should never edit files gets `tools: Read, Grep, Glob, Bash`.
-4. Does it need a non-default `model` (e.g. a cheap/fast reviewer might want
-   `model: haiku`, a hard architecture-review agent might want `model:
-   opus`)? Default: omit, inherit the caller's model.
+4. Does it need a non-default `model` (e.g. a cheap/fast reviewer might pin
+   a small model, a hard architecture-review agent a strong one)? Default:
+   omit, inherit the caller's model.
 5. Is this authoring-only, or should it also get an eval loop (test
    prompts, grading, benchmarking)? Agents with a checkable job (review
    findings, generated test files, structural conformance) benefit from
@@ -78,10 +79,10 @@ Ask one question at a time, waiting for each answer:
 
 Ask about edge cases, expected inputs, what a *wrong* output looks like, and
 whether there's an existing convention to hold the new agent to (in this
-repo: the "Canonical pattern" section of
-`api-module-consistency-reviewer.md` is a good model of "here's the standard,
-here's what drift looks like"). Read a couple of existing files in
-`.claude/agents/` before drafting — don't invent a new shape from scratch.
+repo: `product-manager.md` is a good model of "here's the standard, here's
+what drift looks like" as an agent's system prompt). Read a couple of
+existing files in `.opencode/agents/` before drafting — don't invent a new
+shape from scratch.
 
 ### Write the agent file
 
@@ -100,7 +101,7 @@ here's what drift looks like"). Read a couple of existing files in
 
 Validate the frontmatter mechanically before running anything:
 ```bash
-python3 .claude/skills/subagent-creator/scripts/quick_validate.py .claude/agents/<name>.md
+python3 .opencode/skills/subagent-creator/scripts/quick_validate.py .opencode/agents/<name>.md
 ```
 
 ## Running and evaluating test cases
@@ -125,14 +126,15 @@ Put results in `<agent-name>-workspace/iteration-N/eval-<id>/` (sibling to
 the skill, same convention as skill-creator). For each test case spawn two
 runs in the same turn:
 
-- **With the candidate subagent**: use the `Agent` tool with `subagent_type`
+- **With the candidate subagent**: use the `Task` tool with `subagent_type`
   set to the new agent's name, save outputs to `.../with_agent/outputs/`.
-- **Baseline**: the same prompt handled by a `general-purpose` agent (no
-  specialized subagent), saved to `.../without_agent/outputs/`. If you're
-  *improving* an existing agent instead of creating a new one, snapshot the
-  old file first and use it as the baseline (`old_agent`/`new_agent`
-  instead of `without_agent`/`with_agent`) — `aggregate_benchmark.py`
-  discovers whatever config directory names you use, so either pair works.
+- **Baseline**: the same prompt handled without the specialized subagent
+  (the primary agent, toolset as-is), saved to
+  `.../without_agent/outputs/`. If you're *improving* an existing agent
+  instead of creating a new one, snapshot the old file first and use it as
+  the baseline (`old_agent`/`new_agent` instead of
+  `without_agent`/`with_agent`) — `aggregate_benchmark.py` discovers
+  whatever config directory names you use, so either pair works.
 
 Write `eval_metadata.json` per case (assertions can start empty):
 ```json
@@ -156,7 +158,7 @@ Once everything's done:
    ```bash
    python3 -m scripts.aggregate_benchmark <workspace>/iteration-N --agent-name <name>
    ```
-   (run from inside `.claude/skills/subagent-creator/`, or adjust
+   (run from inside `.opencode/skills/subagent-creator/`, or adjust
    `PYTHONPATH`/cwd accordingly — it's a package-relative import).
 3. **Analyze** — read `agents/analyzer.md` for what to look for (assertions
    that never fail regardless of config, high-variance evals, time/token
@@ -210,15 +212,15 @@ have the user review them, then run:
 ```bash
 python3 -m scripts.run_loop \
   --eval-set <path-to-trigger-eval.json> \
-  --agent-path .claude/agents/<name>.md \
+  --agent-path .opencode/agents/<name>.md \
   --model <model-id-powering-this-session> \
   --max-iterations 5 \
   --verbose
 ```
 
 This splits queries 60/40 train/test, evaluates the current description
-(each query run 3x for a reliable trigger rate — detected by watching for an
-`Agent` tool_use naming a temporary planted agent, see `scripts/run_eval.py`
+(each query run 3x for a reliable trigger rate — detected by watching for a
+`task` tool call naming a temporary planted agent, see `scripts/run_eval.py`
 for the mechanics), proposes improvements via `scripts/improve_description.py`,
 and re-evaluates up to 5 times, picking the best description by *test* score
 to avoid overfitting. Take `best_description` from the JSON output, update
@@ -227,6 +229,6 @@ the agent file's frontmatter, and show the user before/after with scores.
 ## Done — no packaging step
 
 Unlike skills, subagents aren't packaged or distributed as a bundle — the
-finished `.claude/agents/<name>.md` file is already live and ready to use
-the moment it's saved and passes `quick_validate.py`. There's nothing
-further to build or install.
+finished `.opencode/agents/<name>.md` file is already live the moment it's
+saved and passes `quick_validate.py` (opencode picks it up on the next
+session/agent-list reload). There's nothing further to build or install.

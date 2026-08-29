@@ -8,7 +8,7 @@ def parse_agent_md(agent_path: Path) -> tuple[str, str, str]:
 
     Unlike a SKILL.md (which lives inside a skill directory), a subagent
     definition is a single loose ``.md`` file, typically
-    ``.claude/agents/<name>.md``. ``agent_path`` may point directly at that
+    ``.opencode/agents/<name>.md``. ``agent_path`` may point directly at that
     file, or at a directory containing exactly one ``.md`` file.
     """
     if agent_path.is_dir():

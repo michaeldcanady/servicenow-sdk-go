@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """Run trigger evaluation for a subagent description.
 
-Tests whether a subagent's description causes the orchestrating Claude to
-invoke it (via the `Agent` tool with a matching `subagent_type`) for a set of
-queries. Outputs results as JSON.
+Tests whether a subagent's description causes the orchestrator to invoke it
+(via the `task` tool with a matching `subagent_type`) for a set of queries.
+Outputs results as JSON.
 
 This mirrors skill-creator's run_eval.py, but subagents trigger differently
-from skills: there is no `Skill` tool or `available_skills` listing. Instead,
-Claude is shown a list of available agent types (name + description) and
-decides whether to call the `Agent` tool with `subagent_type` set to one of
+from skills: there is no `Skill` tool or available-skill listing. Instead,
+the orchestrator sees a list of agent types (name + description) and decides
+whether to delegate via the `Task` tool with `subagent_type` set to one of
 them. We detect that decision the same way skill-creator detects skill
 triggering — by planting a uniquely-named candidate and watching the tool_use
-stream for that name — just pointed at `.claude/agents/<unique-name>.md`
-instead of a `.claude/commands/` file, and watching for an `Agent` tool_use
-instead of a `Skill` tool_use.
+stream for that name — just pointed at `.opencode/agents/<unique-name>.md`
+and watching for a `task` tool call instead of a `Skill` tool_use. Each query
+runs headless via `opencode run --format json`.
 """
 
 import argparse
@@ -31,14 +31,14 @@ from scripts.utils import parse_agent_md
 
 
 def find_project_root() -> Path:
-    """Find the project root by walking up from cwd looking for .claude/.
+    """Find the project root by walking up from cwd looking for .opencode/.
 
-    Mimics how Claude Code discovers its project root, so the temporary
-    agent file we create ends up where `claude -p` will look for it.
+    Mimics how opencode discovers its project root, so the temporary
+    agent file we create ends up where `opencode run` will look for it.
     """
     current = Path.cwd()
     for parent in [current, *current.parents]:
-        if (parent / ".claude").is_dir():
+        if (parent / ".opencode").is_dir():
             return parent
     return current
 
@@ -53,16 +53,15 @@ def run_single_query(
 ) -> bool:
     """Run a single query and return whether the candidate subagent was invoked.
 
-    Creates a temporary subagent definition in `.claude/agents/` so it
-    appears in Claude's available agent-types list, then runs `claude -p`
-    with the raw query. Uses --include-partial-messages to detect the
-    `Agent` tool_use as early as possible from stream events
-    (content_block_start / content_block_delta) rather than waiting for the
-    full assistant message.
+    Creates a temporary subagent definition in `.opencode/agents/` so it
+    appears in the orchestrator's available agent-types list, then runs
+    `opencode run` with the raw query. Uses `--format json` to detect the
+    `task` tool_use as early as possible from the NDJSON event stream rather
+    than waiting for the full final message.
     """
     unique_id = uuid.uuid4().hex[:8]
     clean_name = f"{agent_name}-test-{unique_id}"
-    project_agents_dir = Path(project_root) / ".claude" / "agents"
+    project_agents_dir = Path(project_root) / ".opencode" / "agents"
     agent_file = project_agents_dir / f"{clean_name}.md"
 
     try:
@@ -80,19 +79,15 @@ def run_single_query(
         agent_file.write_text(agent_content)
 
         cmd = [
-            "claude",
-            "-p", query,
-            "--output-format", "stream-json",
-            "--verbose",
-            "--include-partial-messages",
+            "opencode",
+            "run",
+            query,
+            "--format", "json",
         ]
         if model:
             cmd.extend(["--model", model])
 
-        # Remove CLAUDECODE env var to allow nesting claude -p inside a
-        # Claude Code session. The guard is for interactive terminal conflicts;
-        # programmatic subprocess usage is safe.
-        env = {k: v for k, v in os.environ.items() if k != "CLAUDECODE"}
+        env = dict(os.environ)
 
         process = subprocess.Popen(
             cmd,
@@ -105,9 +100,6 @@ def run_single_query(
         triggered = False
         start_time = time.time()
         buffer = ""
-        # Track state for stream event detection
-        pending_tool_name = None
-        accumulated_json = ""
 
         try:
             while time.time() - start_time < timeout:
@@ -137,48 +129,22 @@ def run_single_query(
                     except json.JSONDecodeError:
                         continue
 
-                    # Early detection via stream events
-                    if event.get("type") == "stream_event":
-                        se = event.get("event", {})
-                        se_type = se.get("type", "")
-
-                        if se_type == "content_block_start":
-                            cb = se.get("content_block", {})
-                            if cb.get("type") == "tool_use":
-                                tool_name = cb.get("name", "")
-                                if tool_name == "Agent":
-                                    pending_tool_name = tool_name
-                                    accumulated_json = ""
-                                else:
-                                    return False
-
-                        elif se_type == "content_block_delta" and pending_tool_name:
-                            delta = se.get("delta", {})
-                            if delta.get("type") == "input_json_delta":
-                                accumulated_json += delta.get("partial_json", "")
-                                if clean_name in accumulated_json:
-                                    return True
-
-                        elif se_type in ("content_block_stop", "message_stop"):
-                            if pending_tool_name:
-                                return clean_name in accumulated_json
-                            if se_type == "message_stop":
-                                return False
-
-                    # Fallback: full assistant message
-                    elif event.get("type") == "assistant":
-                        message = event.get("message", {})
-                        for content_item in message.get("content", []):
-                            if content_item.get("type") != "tool_use":
-                                continue
-                            tool_name = content_item.get("name", "")
-                            tool_input = content_item.get("input", {})
-                            if tool_name == "Agent" and clean_name in json.dumps(tool_input):
-                                triggered = True
-                            return triggered
-
-                    elif event.get("type") == "result":
-                        return triggered
+                    # opencode `--format json` emits NDJSON events. A subagent
+                    # spawn surfaces as a `task` tool call: message.part.updated
+                    # events carry part.type "tool" / part.tool "task", with the
+                    # planted subagent type in the part's state/input; agent
+                    # lifecycle events also name the subagent type. The unique
+                    # uuid suffix makes false positives negligible, so any such
+                    # event line mentioning the planted name counts as a trigger.
+                    part = event.get("part", {})
+                    if event.get("type") == "agent.updated" or (
+                        isinstance(part, dict) and part.get("type") == "tool"
+                        and part.get("tool") == "task"
+                    ):
+                        if clean_name in json.dumps(event):
+                            return True
+                    elif event.get("type") == "session.completed":
+                        return False
         finally:
             # Clean up process on any exit path (return, exception, timeout)
             if process.poll() is None:
@@ -275,7 +241,7 @@ def main():
     parser.add_argument("--timeout", type=int, default=30, help="Timeout per query in seconds")
     parser.add_argument("--runs-per-query", type=int, default=3, help="Number of runs per query")
     parser.add_argument("--trigger-threshold", type=float, default=0.5, help="Trigger rate threshold")
-    parser.add_argument("--model", default=None, help="Model to use for claude -p (default: user's configured model)")
+    parser.add_argument("--model", default=None, help="Model to use for opencode run (default: user's configured model)")
     parser.add_argument("--verbose", action="store_true", help="Print progress to stderr")
     args = parser.parse_args()
 
