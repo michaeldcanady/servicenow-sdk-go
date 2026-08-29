@@ -10,7 +10,7 @@ description: >-
   function/file", "improve test coverage for Y", or after writing/editing a
   non-test .go file that has no matching coverage yet — proactively suggest
   or run this even if the user only asked for the code change, not the
-  tests. Distinct from the test-coverage-writer agent's repo-wide
+  tests. Distinct from the principal-qa-engineer agent's repo-wide
   scan-and-report loop: this is the hands-on, one-file-at-a-time process for
   actually writing the test table once you're already looking at the code.
 ---
@@ -202,6 +202,6 @@ golangci-lint run ./<package>/...
   (`tests/e2e/`, `//go:build e2e`) suites are out of scope for this skill.
 - This is the file-at-a-time authoring loop. If you need a repo-wide
   coverage audit across many files before deciding what to write, that's
-  the `test-coverage-writer` agent's job (classify-then-report across a
+  the `principal-qa-engineer` agent's job (classify-then-report across a
   diff or package) — use it first, then come back to this skill per file it
   flags.
