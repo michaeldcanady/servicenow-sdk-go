@@ -94,7 +94,7 @@ jobs:
       # vale-action only splits its files input when given one, and the
       # delimiter must survive the runner's input trimming.
       - name: Vale Linter (full site)
-        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # 3.0.0
+        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # v3.0.0
         with:
           fail_on_error: true
           files: website/docs,website/versioned_docs
