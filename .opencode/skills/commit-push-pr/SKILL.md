@@ -123,7 +123,10 @@ default branch itself. Decide where they land:
   branch exists on origin, **stop and ask** the user to choose: rebase with a
   one-time `--force-with-lease` push under their explicit go-ahead (the only
   sanctioned exception to the never-force rule), skip the rebase and keep the
-  branch as-is, or fall through to the fresh-branch path below. Never rewrite
+  branch as-is, or fall through to the fresh-branch path below. Note: the
+  fresh-branch path carries only the stashed (uncommitted) work — any commits
+  the user previously pushed on the old branch stay behind and are excluded
+  from the new PR, so that choice orphaning real work. Never rewrite
   a pushed branch's history without that decision.
 - **Fresh branch**: if you were on the default branch, detached HEAD, or no
   branch at all, run the **branch** skill to cut a branch off the

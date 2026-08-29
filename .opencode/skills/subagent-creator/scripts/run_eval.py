@@ -10,9 +10,9 @@ from skills: there is no `Skill` tool or available-skill listing. Instead,
 the orchestrator sees a list of agent types (name + description) and decides
 whether to delegate via the `Task` tool with `subagent_type` set to one of
 them. We detect that decision the same way skill-creator detects skill
-triggering — by planting a uniquely-named candidate and watching the tool_use
-stream for that name — just pointed at `.opencode/agents/<unique-name>.md`
-and watching for a `task` tool call instead of a `Skill` tool_use. Each query
+triggering — by planting a uniquely-named candidate and watching the NDJSON
+event stream for that name — just pointed at `.opencode/agents/<unique-name>.md`
+and watching for a `task` tool call instead of a `Skill` tool call. Each query
 runs headless via `opencode run --format json`.
 """
 
@@ -56,7 +56,7 @@ def run_single_query(
     Creates a temporary subagent definition in `.opencode/agents/` so it
     appears in the orchestrator's available agent-types list, then runs
     `opencode run` with the raw query. Uses `--format json` to detect the
-    `task` tool_use as early as possible from the NDJSON event stream rather
+    `task` tool call as early as possible from the NDJSON event stream rather
     than waiting for the full final message.
     """
     unique_id = uuid.uuid4().hex[:8]
