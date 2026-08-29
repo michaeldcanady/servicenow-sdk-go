@@ -117,7 +117,6 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: read # checkout and build
-      pull-requests: write # no PR creation; write used only if build artifacts require comment (auditor requires justification)
     defaults:
       run:
         shell: bash
@@ -221,7 +220,7 @@ jobs:
           files: ./${{ env.COVERAGE_FILE }}
           fail_ci_if_error: true
         env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }} # zizmor: ignore[secrets-outside-env] -- CODECOV_TOKEN is a repo secret for coverage upload, not a deployment secret; scoped to step env and not requiring GitHub environment protection
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration-test-go:
     name: Integration Tests (mocked)

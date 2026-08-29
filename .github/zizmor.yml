@@ -1,0 +1,37 @@
+# zizmor audit policy for this repository.
+#
+# Loaded automatically when auditing `.github`. The CI gate
+# (.github/workflows/zizmor.yml) runs zizmor with:
+#
+#   zizmor .github --persona auditor --min-severity informational --min-confidence low --collect all
+#
+# The repository is audited clean at that configuration (0 findings); the only
+# exceptions are the inline `# zizmor: ignore[...]` comments documented below.
+#
+# secrets-outside-env: CODECOV_TOKEN, OPENCODE_API_KEY, and PROJECT_PAT are
+# repository-level secrets used as API credentials for coverage upload, code
+# review, and Projects v2 sync respectively -- not deployment secrets. Each is
+# scoped to a single step's `env` and is never exposed to default-checked-out
+# code. Allowing them here (per secret name) is the zizmor-blessed alternative
+# to scattered per-site `# zizmor: ignore[secrets-outside-env]` comments.
+rules:
+  secrets-outside-env:
+    config:
+      allow:
+        - CODECOV_TOKEN
+        - OPENCODE_API_KEY
+        - PROJECT_PAT
+
+# Inline ignores still required at the audit configuration above:
+#
+# - cache-poisoning x6 (ci.yml setup-go steps): the module cache is retained
+#   for CI speed. setup-go saves caches only on default-branch refs; PR/fork
+#   runs only restore, so no fork-persisted cache reaches trusted runs or
+#   release artifacts.
+# - dangerous-triggers x3 (backport.yml, forward-port-tracker.yml,
+#   issue-status-sync.yml): pull_request_target is required so GITHUB_TOKEN
+#   holds write access for fork-sourced PRs (backports, forward-port labels,
+#   issue labels). None of these workflows checkout or execute PR code; each
+#   reads only PR metadata via env and enforces author-association checks.
+# - artipacked x1 (backport.yml): the backport action must push cherry-pick
+#   branches using the persisted checkout credential; no artifact is uploaded.

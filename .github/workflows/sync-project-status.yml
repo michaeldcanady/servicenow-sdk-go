@@ -35,7 +35,7 @@ jobs:
     steps:
       - id: check
         env:
-          PROJECT_PAT: ${{ secrets.PROJECT_PAT }} # zizmor: ignore[secrets-outside-env] -- PROJECT_PAT is a repo PAT for Projects v2 sync, not a deployment secret; scoped to step env and only checked for presence
+          PROJECT_PAT: ${{ secrets.PROJECT_PAT }}
         run: |
           if [ -z "$PROJECT_PAT" ]; then
             echo "has-token=false" >> "$GITHUB_OUTPUT"
@@ -58,7 +58,7 @@ jobs:
 
       - uses: dvhthomas/project-label-sync@3717399ea3afad24da809603d1006148dbf94688 # v0.1.2
         env:
-          PROJECT_PAT: ${{ secrets.PROJECT_PAT }} # zizmor: ignore[secrets-outside-env] -- PROJECT_PAT is a repo PAT for Projects v2 sync; scoped to step env, passed via env to action
+          PROJECT_PAT: ${{ secrets.PROJECT_PAT }}
         with:
           token: ${{ env.PROJECT_PAT }}
           apply: ${{ github.event.inputs.apply || 'false' }}
