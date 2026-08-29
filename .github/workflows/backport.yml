@@ -79,7 +79,8 @@ jobs:
       pull-requests: write # open backport PRs, comment on the source PR
     steps:
       - name: Checkout repository history
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 # zizmor: ignore[artipacked] -- backport job must push cherry-pick branches; credential persistence is required and no artifact is uploaded
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # zizmor: ignore[artipacked] -- backport job must push cherry-pick branches; credential persistence is required and no artifact is uploaded
         with:
           # Full history so cherry-picks across main and release branches
           # always find their parent commits.
