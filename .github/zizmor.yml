@@ -1,12 +1,19 @@
 # zizmor audit policy for this repository.
 #
-# Loaded automatically when auditing `.github`. The CI gate
-# (.github/workflows/zizmor.yml) runs zizmor with:
+# Loaded automatically when auditing `.github`. The CI gate that will run
+# zizmor as a required check (a follow-up PR, kept out of this one per
+# maintainer request) runs:
 #
 #   zizmor .github --persona auditor --min-severity informational --min-confidence low --collect all
 #
-# The repository is audited clean at that configuration (0 findings); the only
-# exceptions are the inline `# zizmor: ignore[...]` comments documented below.
+# That gate must pin the zizmor version and fail on any finding, so a config
+# regression (for example this allow-list being dropped or renamed by a future
+# zizmor release) is caught loudly instead of silently letting findings
+# reappear.
+#
+# The repository is audited clean at the configuration above (0 findings); the
+# only exceptions are the inline `# zizmor: ignore[...]` comments documented
+# below.
 #
 # secrets-outside-env: CODECOV_TOKEN, OPENCODE_API_KEY, and PROJECT_PAT are
 # repository-level secrets used as API credentials for coverage upload, code
