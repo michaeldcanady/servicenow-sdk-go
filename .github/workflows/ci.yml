@@ -40,10 +40,11 @@ permissions: {}
 
 jobs:
   changes:
+    name: Detect Changed Files
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read
+      contents: read # changed-files detection via checkout
     # Release-please PRs are no longer exempt: they bump version.go (compiled
     # code) and must pass the same gates as any other change before a tag is cut.
     if: >-
@@ -54,7 +55,9 @@ jobs:
       code: ${{ github.event_name == 'schedule' || steps.filter.outputs.any_changed == 'true' }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Changed Files
         if: github.event_name != 'schedule'
@@ -76,13 +79,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: read
+      contents: read # checkout only; no push or release
     strategy:
       matrix:
         go-version: ["stable", "oldstable"]
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0 # zizmor: ignore[cache-poisoning] -- check-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
           go-version: ${{ matrix.go-version }}
           cache: true
@@ -111,14 +116,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     permissions:
-      contents: read
-      pull-requests: write
+      contents: read # checkout and build
     defaults:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0 # zizmor: ignore[cache-poisoning] -- build-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
           go-version: ${{ matrix.go-version }}
           cache: true
@@ -135,14 +141,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      contents: read
+      contents: read # checkout and lint
     strategy:
       fail-fast: false
       matrix:
         go-version: ["stable", "oldstable"]
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0 # zizmor: ignore[cache-poisoning] -- lint-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
           go-version: ${{ matrix.go-version }}
       - name: Run golangci-lint
@@ -166,14 +174,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     permissions:
-      contents: read
-      pull-requests: write
+      contents: read # checkout and test
+      pull-requests: write # sticky PR comment on failure
     defaults:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0 # zizmor: ignore[cache-poisoning] -- test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
           go-version: ${{ matrix.go-version }}
       - name: Install tparse
@@ -209,7 +219,8 @@ jobs:
         with:
           files: ./${{ env.COVERAGE_FILE }}
           fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration-test-go:
     name: Integration Tests (mocked)
@@ -219,10 +230,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      contents: read
+      contents: read # checkout and mocked integration tests
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0 # zizmor: ignore[cache-poisoning] -- integration-test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
           go-version: "stable"
           cache: true
@@ -244,10 +257,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: read
+      contents: read # checkout and preview.query tests
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0 # zizmor: ignore[cache-poisoning] -- tag-gated-test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
           go-version: "stable"
           cache: true
@@ -262,7 +277,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: read
+      contents: read # govulncheck via default checkout handled by action
     steps:
       - name: Run govulncheck
         uses: golang/govulncheck-action@032d45514ae346b1db93c04b0c90b841c370344f # v1

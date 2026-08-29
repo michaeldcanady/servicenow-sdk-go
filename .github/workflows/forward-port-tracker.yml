@@ -37,7 +37,7 @@ name: Forward Port Tracker
 # metadata (number/title/ref/labels) passed through env vars.
 
 on:
-  pull_request_target:
+  pull_request_target: # zizmor: ignore[dangerous-triggers] -- pull_request_target is required so GITHUB_TOKEN can create labels/issues for fork merges; workflow never checks out or executes PR code, only reads PR metadata via env
     types:
       - closed
     branches:
@@ -60,9 +60,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      issues: write
-      pull-requests: read
-      contents: read
+      issues: write # create forward-port tracking issue
+      pull-requests: read # read PR labels / branch for provenance check
+      contents: read # read repo metadata
     steps:
       - name: Assess backport provenance
         id: provenance
