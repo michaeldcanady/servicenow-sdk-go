@@ -15,8 +15,13 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   ensure-backport-label:
+    name: Ensure Backport Label
     runs-on: ubuntu-latest
     permissions:
       issues: write # labels live under the Issues API
