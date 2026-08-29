@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI coding assistants (Claude Code and opencode) when working with code in this repository.
 
 ## What this is
 
@@ -118,9 +118,10 @@ package follows:
   (`<resource>_request_builder_<verb>_query_parameters.go`,
   `..._request_configuration.go`), never inlined into the request builder file.
 - A `Readme.md` per package describing the endpoint.
-- A `.claude/skills/new-api-module` skill and `.claude/agents/api-module-consistency-reviewer`
-  agent exist in this repo specifically to scaffold/review new modules against this pattern — use
-  them instead of re-deriving the shape by hand.
+- `tableapi/` (canonical) and `policyapi/` (minimal) are the reference implementations to copy,
+  the `design-decisions` skill (`.opencode/skills/design-decisions`) captures the conventions
+  behind this pattern, and the `principal-software-engineer` agent (`.opencode/agents/`) reviews
+  new modules against it before they ship — use those instead of re-deriving the shape by hand.
 
 ### Error-sentinel layout (non-obvious — three separate places)
 
@@ -147,7 +148,7 @@ option.
 - **Unit tests**: co-located `_test.go` per file, table-driven with `testify` (`assert`/`require`),
   HTTP mocked via `httpmock` and internal `testify/mock`-based mocks in `internal/mocking`. Every new
   exported type/method needs a test — this is enforced by convention (and by the
-  `api-module-consistency-reviewer` agent), not tooling.
+  `principal-qa-engineer` agent), not tooling.
 - **Integration tests** (`tests/integration/v2/`, `//go:build integration`): Gherkin `.feature` files
   under `tests/integration/v2/features/` + step definitions using `godog`, `httpmock`, and `godotenv` for
   `.env`-based config — no live ServiceNow instance required.
@@ -157,12 +158,12 @@ option.
 
 ## Subagent conventions
 
-Every subagent defined in `.claude/agents/` — whether reviewing code, scanning for missing tests, or
+Every subagent defined in `.opencode/agents/` — whether reviewing code, scanning for missing tests, or
 triaging issues — **reports findings to the `product-manager` agent rather than fixing them
 immediately**, even when that same agent is the one who will eventually implement the fix. This
 keeps a single place (the product-manager's specs/issues/ADRs) as the record of what was found and
-why, before anyone starts changing code. `api-module-consistency-reviewer` already follows this
-(it only reports); a scan-and-write agent like `test-coverage-writer` still classifies and reports
+why, before anyone starts changing code. `principal-software-engineer` already follows this
+(it only reports); a scan-and-write agent like `principal-qa-engineer` still classifies and reports
 first, and only writes tests after an explicit go-ahead — never fix-as-it-scans.
 
 ## Versioning & commits
