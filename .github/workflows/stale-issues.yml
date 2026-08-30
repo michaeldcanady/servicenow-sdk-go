@@ -80,7 +80,7 @@ jobs:
               --repo "$REPO" \
               --color "EDEDED" \
               --description "No recent activity; closes in 7 days without an update" ; then
-            if gh label view "stale" --repo "$REPO" >/dev/null 2>&1; then
+            if gh api "repos/$REPO/labels/stale" >/dev/null 2>&1; then
               echo "Label 'stale' already exists; continuing."
             else
               echo "::error::Failed to create the 'stale' label."
