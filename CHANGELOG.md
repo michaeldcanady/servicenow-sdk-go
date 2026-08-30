@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.0](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.1...v2.1.0) (2026-08-30)
+
+
+### Features
+
+* align branch protection so Scorecard detects enforcement ([#746](https://github.com/michaeldcanady/servicenow-sdk-go/issues/746)) ([514ceb9](https://github.com/michaeldcanady/servicenow-sdk-go/commit/514ceb923ac2aeabe3300fbd2ba1545742eca3de))
+
+
+### Bug Fixes
+
+* **ci:** propagate go test exit code through tee in e2e-nightly ([#674](https://github.com/michaeldcanady/servicenow-sdk-go/issues/674)) ([d8cafc1](https://github.com/michaeldcanady/servicenow-sdk-go/commit/d8cafc1acec41cee92861ae9fc0c725c49b14b99))
+* **ci:** sync integration test module after testify bump ([#744](https://github.com/michaeldcanady/servicenow-sdk-go/issues/744)) ([7391989](https://github.com/michaeldcanady/servicenow-sdk-go/commit/739198968fa62c19ed418e52c8da5aaefc85a979))
+
 ## [2.0.1](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.0...v2.0.1) (2026-08-21)
 
 
