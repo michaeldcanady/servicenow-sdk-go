@@ -67,6 +67,10 @@ jobs:
       # dry-run promise is that nothing is touched at all. The stale passes
       # below are safe to dry-run because debug-only suppresses all writes.
       - name: Ensure stale label exists
+        if: inputs.dry_run != true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
 
