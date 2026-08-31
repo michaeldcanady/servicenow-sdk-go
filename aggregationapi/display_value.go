@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package aggregationapi
 
 import "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"

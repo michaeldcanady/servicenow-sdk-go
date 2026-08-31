@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package appserviceapi
 
 // GetContentRequestBuilderGetQueryParameters represents the query parameters for a getContent request.

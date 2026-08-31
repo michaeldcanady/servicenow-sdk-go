@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package appointmentbookingapi
 
 // CalendarRequestBuilderGetQueryParameters represents the query parameters for GET /calendar.

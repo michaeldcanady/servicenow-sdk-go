@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package ast
 
 // BinaryNode represents a binary operation (e.g., field=value, fieldLIKEvalue).

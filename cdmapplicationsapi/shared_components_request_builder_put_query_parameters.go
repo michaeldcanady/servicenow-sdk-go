@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package cdmapplicationsapi
 
 // SharedComponentsRequestBuilderPutQueryParameters defines query parameters for updating a CDM shared component.

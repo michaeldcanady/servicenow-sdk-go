@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 // Package query provides a type-safe and fluent API for building ServiceNow encoded queries.
 // It is a redesign of the query package, focusing on usability and immutability.
 package query

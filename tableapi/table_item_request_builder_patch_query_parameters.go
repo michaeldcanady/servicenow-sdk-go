@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package tableapi
 
 // TableItemRequestBuilderPatchQueryParameters represents the query parameters for a Table item PATCH request.
