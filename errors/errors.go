@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package errors // nolint: revive // renaming this public package would be a breaking API change; see CLAUDE.md's error-sentinel layout
 
 import "errors"

@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package oauth2
 
 // Token represents an OAuth2 access token and its associated metadata.

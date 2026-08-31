@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) 2021 Michael Canady
+# SPDX-License-Identifier: MIT
+
 #
 # Prints (or runs) the set of Go packages affected by the current diff, including
 # transitive dependents. E.g. a change under core/ pulls in every *api package that

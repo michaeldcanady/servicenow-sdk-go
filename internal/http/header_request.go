@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package internalhttp
 
 // RequestHeader A request header is an HTTP header that can be used in an HTTP request to provide information about

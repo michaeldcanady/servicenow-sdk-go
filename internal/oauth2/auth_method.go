@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 // Package oauth2 provides a spec-compliant OAuth2 client for various grant types.
 package oauth2
 

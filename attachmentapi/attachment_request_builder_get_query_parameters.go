@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package attachmentapi
 
 // AttachmentRequestBuilderGetQueryParameters represents attachment get request query parameters

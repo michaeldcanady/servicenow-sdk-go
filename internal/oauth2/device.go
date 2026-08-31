@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package oauth2
 
 // DeviceAuthorizationResponse represents the response from the device authorization endpoint (RFC 8628).

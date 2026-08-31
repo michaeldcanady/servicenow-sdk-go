@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2021 Michael Canady
+# SPDX-License-Identifier: MIT
+
 set -e
 
 # Use the option from devcontainer-feature.json
