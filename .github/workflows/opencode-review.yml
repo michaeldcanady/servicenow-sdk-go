@@ -98,7 +98,14 @@ jobs:
       # `pull_request` and `issue_comment` triggers (github.handler.ts handles
       # local + fork branches), so no manual `gh pr checkout` step is needed.
       - name: Run opencode review
-        uses: anomalyco/opencode/github@10765ff2a9da8c3b88e4de873aa383a49c318912 # dev
+        # Pinned to the v1.18.25 tag commit (cb7d8b2f): the repo's newest
+        # stable tag. Its github/action.yml is byte-identical to the dev
+        # commit we previously pinned (use_github_token, prompt, model, ...),
+        # so SHA-pinning to the tag satisfies zizmor's stale-action-refs audit
+        # without changing action behavior. The action installs the latest
+        # opencode CLI itself and runs `opencode github run`, which handles
+        # both pull_request and issue_comment triggers.
+        uses: anomalyco/opencode/github@cb7d8b2f5e44876ef98b661dc10590c915af3a9f # v1.18.25
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
