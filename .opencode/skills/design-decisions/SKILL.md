@@ -187,5 +187,5 @@ deserves an ADR:
    `CLAUDE.md`, update it too — ADR and CLAUDE.md must never describe two
    different realities.
 
-Routine bug fixes, formatting, and behavior fully explained by the diff don't
+need an ADR.
 need an ADR.
