@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package appserviceapi
 
 // FindServiceQueryParameters represents the query parameters for a find_service request.

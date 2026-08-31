@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package ast
 
 // PairNode represents a pair of values, typically used for BETWEEN.

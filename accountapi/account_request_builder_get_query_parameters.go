@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package accountapi
 
 // AccountRequestBuilderGetQueryParameters represents the query parameters for a GET request.

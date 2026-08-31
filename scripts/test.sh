@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) 2021 Michael Canady
+# SPDX-License-Identifier: MIT
+
 
 # Unified test runner for ServiceNow SDK for Go
 

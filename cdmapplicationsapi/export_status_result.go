@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package cdmapplicationsapi // nolint:dupl // shares field-count shape with CollectionUploadRequest/ComponentUploadRequest by coincidence, not copy-paste; distinct API concept, not worth sacrificing named accessors for
 
 import (

@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package cdmapplicationsapi
 
 // ExportsRequestBuilderGetQueryParameters represents the GET query parameters for the Exports resource.

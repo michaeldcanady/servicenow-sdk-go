@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package conversion
 
 // EnumString looks up v in m and returns the matching string, or fallback if v has no entry.

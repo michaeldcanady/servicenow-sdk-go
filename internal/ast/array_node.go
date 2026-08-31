@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package ast
 
 // ArrayNode represents a list of values, typically used for IN/NOT IN.

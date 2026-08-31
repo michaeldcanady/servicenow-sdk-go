@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package cdmapplicationsapi
 
 // DeployablesRequestBuilderPutQueryParameters defines query parameters for updating a CDM deployable.

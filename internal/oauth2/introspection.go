@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package oauth2
 
 // IntrospectionResponse represents the response from the token introspection endpoint (RFC 7662).

@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package activitysubscriptionsapi
 
 // FacetsRequestBuilderGetQueryParameters defines query parameters for retrieving activity facets.

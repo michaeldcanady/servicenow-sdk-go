@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package internal
 
 import "github.com/microsoft/kiota-abstractions-go/serialization"
