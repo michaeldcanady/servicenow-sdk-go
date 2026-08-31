@@ -65,22 +65,49 @@ jobs:
 
       - name: Open license backfill PR
         if: steps.detect.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
-        with:
+        env:
+          # Matches docs-version.yml: x-access-token injection + gh pr create,
+          # since checkout runs with persist-credentials: false.
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
           # Matches branch-policy.yml's <type>/<kebab-description> convention.
-          branch: chore/license-backfill
+          BRANCH="chore/license-backfill"
+
+          # A re-run while a previous backfill PR is still open must degrade
+          # into a green no-op (same pattern as docs-version.yml).
+          open_prs="$(gh pr list --head "$BRANCH" --state open --json number --jq 'length')"
+          if [[ "$open_prs" != "0" ]]; then
+            echo "::notice::A license backfill PR ($BRANCH) is already open; nothing to do."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
           # Conventional-Commits (chore:) so release-please never surfaces the
           # header churn in CHANGELOG.md; the PR title also passes pr.yml.
-          title: "chore: add license headers to source files"
-          commit-message: "chore: add license headers to source files"
-          body: |
-            Automated license-header backfill by `.github/workflows/backfill-license.yml`.
+          git commit -m "chore: add license headers to source files"
 
-            Runs `scripts/add-license.sh` (google/addlicense) over the in-scope
-            source files (`**/*.go`, `**/*.sh`, root `*.yml`/`*.yaml`) and
-            opens this PR whenever the diff is non-empty. Existing headers are
-            never rewritten (addlicense skips files that already carry one);
-            new files receive the current year. No SDK behavior is affected.
+          # A stale remote branch left by a partial failure (push landed, PR
+          # create didn't) would reject the push as non-fast-forward; replace
+          # it since no PR references it anymore.
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "--delete" "$BRANCH" 2>/dev/null || true
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
+
+          # The PR body is assembled with printf because a physically
+          # multi-line quoted string here would put an unindented line inside
+          # the run block, which terminates the YAML literal scalar and breaks
+          # the workflow file itself.
+          pr_body="$(printf '%s\n\n%s' \
+            "Automated license-header backfill by \`.github/workflows/backfill-license.yml\`." \
+            "Runs \`scripts/add-license.sh\` (google/addlicense) over the in-scope source files (\`**/*.go\`, \`**/*.sh\`, root \`*.yml\`/\`*.yaml\`) and opens this PR whenever the diff is non-empty. Existing headers are never rewritten (addlicense skips files that already carry one); new files receive the current year. No SDK behavior is affected.")"
           # branch-policy.yml requires either an issue reference or this label.
-          labels: no-issue-required
-          delete-branch: true
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --label "no-issue-required" \
+            --title "chore: add license headers to source files" \
+            --body "$pr_body"
