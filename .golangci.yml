@@ -1,3 +1,6 @@
+# Copyright (c) 2021 Michael Canady
+# SPDX-License-Identifier: MIT
+
 version: "2"
 run:
   build-tags:
@@ -22,6 +25,7 @@ linters:
     - bodyclose
     - noctx
     - importas
+    - goheader
   settings:
     dupl:
       threshold: 200
@@ -45,7 +49,22 @@ linters:
           alias: internalSerialization
         - pkg: github.com/michaeldcanady/servicenow-sdk-go/internal/store
           alias: internalStore
+    goheader:
+      values:
+        regexp:
+          # Deliberately NOT the builtin {{ YEAR }} (which pins to the current
+          # year and would fail every file annually). A custom regexp means
+          # each file keeps its own static creation year (2021 for the
+          # backfill, current year for new files) with zero annual churn.
+          YEAR: '20\d{2}'
+      # Must match scripts/license-header.tmpl (addlicense output) byte-for-byte:
+      # holder, year, SPDX line order — matched line-for-line against the
+      # leading comment block of each .go file.
+      template: |-
+        Copyright (c) {{ YEAR }} Michael Canady
+        SPDX-License-Identifier: MIT
   exclusions:
+    generated: lax # exclude "// Code generated ... DO NOT EDIT." files (default, stated explicitly)
     rules:
       - linters:
           - dupl
@@ -76,6 +95,12 @@ linters:
       - builtin$
       - examples$
       - docs/assets/snippets/.*\.go$
+      # Defensive: never force a header onto generated files via the path
+      # convention either (the `generated: lax` exclusion already covers
+      # "// Code generated ... DO NOT EDIT." markers).
+      - .*\.gen\.go$
+      - .*_generated\.go$
+      - .*/generated/.*\.go$
 formatters:
   enable:
     - gofmt

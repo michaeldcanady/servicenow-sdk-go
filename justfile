@@ -31,6 +31,14 @@ check-docs:
 	go vet -tags snippets ./website/snippets/
 	./scripts/check-snippet-regions.sh
 
+# Apply license headers to in-scope source files (new files get the current year)
+add-license:
+	./scripts/add-license.sh
+
+# Verify all in-scope source files carry license headers
+check-license:
+	./scripts/add-license.sh --check-only
+
 # Clean up local build artifacts
 clean-docs:
 	rm -rf website/build website/.docusaurus
