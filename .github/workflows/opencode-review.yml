@@ -53,28 +53,117 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
-      contents: read # checkout PR code for review
-      pull-requests: write # post review comment; issues:write intentionally omitted to limit blast radius
+      contents: read # checkout PR code for review; read-only so opencode CANNOT push/commit
+      pull-requests: write # post inline PR review comments + the overall review comment
+      # issues: write and contents: write intentionally omitted to neuter the
+      # official action's built-in branch/commit/PR-creation capabilities and
+      # keep its blast radius limited to posting review comments.
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
           fetch-depth: 0
 
-      # Comment-triggered runs start on the default branch; switch to the PR
-      # head so opencode reviews the PR's code.
-      - if: github.event_name == 'issue_comment'
-        env:
-          PR_NUMBER: ${{ github.event.issue.number }}
-        run: gh pr checkout "$PR_NUMBER" --repo "$GITHUB_REPOSITORY"
+      # SECURITY POSTURE — read before changing anything here.
+      #
+      # The official action (anomalyco/opencode/github) is an *agentic* runner:
+      # unlike the old Barmore-Genc reviewer it will happily create/update
+      # comments, and if granted the permissions it will commit, push, and open
+      # PRs. We deliberately contain it:
+      #
+      #   * pull_request trigger (NOT pull_request_target) — so fork PRs never
+      #     receive OPENCODE_API_KEY and the GITHUB_TOKEN handed out on forks is
+      #     GitHub's read-only token. This preserves the fork-secret gating of
+      #     the previous reviewer: secret stays gated to trusted associations.
+      #   * use_github_token: true — opencode uses the repo-scoped GITHUB_TOKEN
+      #     (env above) instead of the OpenCode App OIDC exchange, so it never
+      #     asks for id-token: write and never gets a broader App token. With
+      #     this set the action also skips its own per-actor permission check.
+      #   * contents: read only — opencode's branch/commit/push/PR-create path
+      #     is blocked at the IAM level, not just by prompt. All it may do is
+      #     POST pull-request review comments (pull-requests: write).
+      #   * The prompt below reinforces the same boundary: only PR review
+      #     comments and one concise summary, no repo mutation, no branches/PRs.
+      #
+      # Residual posture difference vs the old reviewer (documented, accepted):
+      # opencode must now be able to call the GitHub API to POST inline
+      # comments (github api .../pulls/<n>/comments), which is a broader
+      # outbound capability than the old read-only sandbox. The token's scope
+      # is still limited to this repo's PR comments and is read-only on forks.
 
+      # The official action natively checks out the PR head for both the
+      # `pull_request` and `issue_comment` triggers (github.handler.ts handles
+      # local + fork branches), so no manual `gh pr checkout` step is needed.
       - name: Run opencode review
-        uses: Barmore-Genc/opencode-pr-reviewer@d34c66bc5c72cb84b6b7c1572c2752b16fdfe339 # v1
+        # Pinned to the v1.18.25 tag commit (cb7d8b2f): the repo's newest
+        # stable tag. Its github/action.yml is byte-identical to the dev
+        # commit we previously pinned (use_github_token, prompt, model, ...),
+        # so SHA-pinning to the tag satisfies zizmor's stale-action-refs audit
+        # without changing action behavior. The action installs the latest
+        # opencode CLI itself and runs `opencode github run`, which handles
+        # both pull_request and issue_comment triggers.
+        uses: anomalyco/opencode/github@cb7d8b2f5e44876ef98b661dc10590c915af3a9f # v1.18.25
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
           model: opencode/big-pickle
-          pr-number: ${{ github.event.pull_request.number || github.event.issue.number }}
-          user-comment: ${{ github.event.comment.body }}
+          # Use the repo-scoped GITHUB_TOKEN (set in job env) instead of the
+          # OpenCode App OIDC exchange. This is what keeps the review token
+          # limited to this repo's pull-request scope and unavailable to forks.
+          use_github_token: true
+          # No `review_mode` input exists on the released action; inline
+          # comments are driven through a custom PROMPT that instructs opencode
+          # to POST per-line PR review comments via the GitHub API and to end
+          # with a concise overall summary (which the action posts as the
+          # top-level review comment).
+          prompt: |
+            You are performing a code review of this pull request. The PR
+            number, head commit, changed files, and diff are available in this
+            session's context. Review the actual changed lines, read surrounding
+            context for accuracy, and focus on correctness, bugs, security,
+            and maintainability.
+
+            Your ONLY job is to post review feedback. You must NOT modify any
+            files, create branches, open pull requests, commit, or push code.
+            You may not request any additional permissions or run destructive
+            commands. Reviewing and posting comments is all you may do.
+
+            For every issue that genuinely needs attention (a real bug, a
+            security problem, or a defect that will cause confusion later),
+            post an INLINE review comment on the exact changed line using the
+            GitHub API. Use the `gh` CLI:
+
+            ```
+            gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              /repos/{owner}/{repo}/pulls/{pr_number}/comments \
+              -f 'body=<summary of the issue>' \
+              -f 'commit_id=<head commit SHA>' \
+              -f 'path=<path-to-file>' \
+              -F 'line=<exact line number in the head version>' \
+              -f 'side=RIGHT'
+            ```
+
+            Substitute {owner}/{repo} with the GitHub repository and {pr_number}
+            with the pull request number. Put the comment on the exact line
+            that needs the change and specify each finding precisely. If you
+            have a concrete suggested fix, include it in a suggestion code
+            block, but do not invent one when a plain explanation is clearer.
+
+            Then post ONE concise overall review summary as your final answer:
+            a short verdict (e.g. "Looks good", "Requesting changes", or
+            "Approving with minor nits") followed by a small number of bullet
+            points for the most important findings. This summary is what gets
+            posted as the top-level review comment, so keep it tight and
+            actionable — do not paste long diffs or repeat every inline comment.
+
+            If you find no actionable findings, leave a short passing review
+            summary instead of inventing comments. Do not request cosmetic
+            churn (style nits, renames, formatting) unless it prevents
+            confusion or future defects. Do not nitpick code that is not
+            actually in violation.
