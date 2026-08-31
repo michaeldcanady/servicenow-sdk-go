@@ -58,6 +58,15 @@ Read `CLAUDE.md` (Testing conventions) and map the actual test layout:
   coverage gap as an issue. Run it; it discovers the repo's actual GitHub
   issue templates and gets explicit go-ahead before anything visible is
   filed.
+- **design-decisions** — before triaging or asserting on behavior shaped by
+  an ADR — nil-receiver guards returning a sentinel instead of `(nil, nil)`
+  (ADR 006), error-sentinel identity (`errors.Is`, ADR 001), pagination via
+  the generic `core.PageIterator` and per-endpoint `Link`-header support
+  (ADR 005) — or before auditing the conventions that QA exists to protect.
+  Read the covering ADR in `website/docs/contributing/adrs/` first; a test
+  that encodes the wrong contract trains the whole suite on drift. You never
+  modify production code, but your tests must assert the repo's actual
+  decisions, not an invented alternative.
 
 ## Stay strictly inside the task's scope
 
