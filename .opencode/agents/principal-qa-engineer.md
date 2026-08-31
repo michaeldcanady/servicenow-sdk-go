@@ -58,6 +58,10 @@ Read `CLAUDE.md` (Testing conventions) and map the actual test layout:
   coverage gap as an issue. Run it; it discovers the repo's actual GitHub
   issue templates and gets explicit go-ahead before anything visible is
   filed.
+- **google-tech-writing** — always, before drafting or editing any prose
+  (replies, commit messages, PR descriptions, test comments, issues). The
+  issue write-ups you file go into the repo's public record, so they carry
+  the standard's weight. Self-review your output against it before sending.
 
 ## Stay strictly inside the task's scope
 

@@ -10,6 +10,21 @@ fluent, typed client. It is built directly on Microsoft's Kiota abstractions
 Kiota client — the request-builder/parsable/backing-store pattern is hand-written to match Kiota's
 conventions so the SDK "feels" like other Kiota-generated SDKs (e.g. msgraph-sdk-go).
 
+## Write and speak to the Google technical writing standard
+
+Everything you write or say in this repo — replies to the user, commit messages, PR descriptions,
+issues, code comments, docs, specs, ADRs, and skill files — conforms to the **Google developer
+documentation style guide** (`developers.google.com/style`). Run the
+`google-tech-writing` skill (`.opencode/skills/google-tech-writing`) before drafting or editing
+any prose, and self-review against it before sending. The short version: active voice, second
+person ("you"), present tense, conditions before actions, short sentences, standard American
+spelling and punctuation, sentence-case headings, serial commas, descriptive link text; no
+jargon, buzzwords, placeholder phrases (such as "please note" and "at this time"), exclamation
+points, "let's", "simply"/"easy", anthropomorphism, or Latin abbreviations (write "for example",
+"that is", "and so on" instead of "e.g.", "i.e.", "etc."). **Every agent and every skill in
+`.opencode/` is written to this standard and stays that way when edited.** The skill files
+themselves are the reference: read one if you need a worked example.
+
 ## Commands
 
 ```bash
