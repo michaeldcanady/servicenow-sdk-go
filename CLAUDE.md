@@ -25,6 +25,22 @@ points, "let's", "simply"/"easy", anthropomorphism, or Latin abbreviations (writ
 `.opencode/` is written to this standard and stays that way when edited.** The skill files
 themselves are the reference: read one if you need a worked example.
 
+## Consult the ADRs before you act
+
+The repo's load-bearing design trade-offs are recorded as Architecture Decision Records (ADRs) in
+`website/docs/contributing/adrs/` (index: `index.md`; plain-language overview: `design-decisions.md`).
+They cover the request-builder/model architecture, error handling, pagination, nil-guard behavior,
+naming, module path, and the branch/release flow. **Before proposing or changing anything in that
+scope — and before answering "why does this repo do X" — read the covering ADR first**, and run the
+`design-decisions` skill (`.opencode/skills/design-decisions`) to get the rules applied to your
+situation. These trade-offs (hand-writing on Kiota over generating from OpenAPI — ADR 003; backing
+stores over plain fields — ADR 002; shared error sentinels — ADR 001; generic `core.PageIterator`
+over per-module wrappers — ADR 005; trunk-first lazily-cut `release/vX.Y` branches — ADR 011) were
+chosen over real alternatives; a change that contradicts one without saying so is the most common
+way good work goes wrong in this repo. If you hit a genuinely new trade-off (a rejected alternative
+plus a reason), flag it as an ADR candidate to the `product-manager` agent rather than silently
+codifying it — routine bug fixes and formatting don't need ADR backing.
+
 ## Commands
 
 ```bash
