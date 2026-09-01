@@ -1,0 +1,222 @@
+name: Sign Release
+
+# Signs release artifacts and tags for supply-chain trust (issue #713).
+# release-please creates the tag and release asynchronously when the release
+# PR merges, so at the time stable-release.yml runs the release does not exist
+# yet and its assets are not uploadable. Signing therefore runs on the
+# release-published event instead, the same trigger sbom.yml uses. This one
+# workflow covers both stable releases and weekly preview releases, because
+# release-please publishes both through the GitHub Releases API.
+#
+# Artifacts are signed keylessly with cosign (sigstore): the GitHub Actions
+# OIDC identity is the signing principal, so no secrets are required. The
+# signature and Fulcio certificate are written as a single sigstore bundle and
+# attached to the GitHub release as SHA256SUMS.sigstore.json, which Scorecard's
+# signed_releases check recognizes (it looks for assets whose names end in
+# .sig, .sigstore, or .sigstore.json across the last five releases) and which
+# anyone can verify with `cosign verify-blob`.
+#
+# Tags: release-please creates a lightweight tag through the git API, which
+# cannot carry a signature. Scorecard's version_tags_signed check needs an
+# annotated tag signed with a key it can resolve, so this workflow re-creates
+# the tag as an annotated, GPG-signed tag over the same commit and force-pushes
+# it. This step is gated on the GPG_SIGNING_KEY secret and skips cleanly with a
+# notice until the key is configured.
+#
+# One-time setup for signed tags (a maintainer task, not part of this file):
+#   1. Generate a passphrase-less key used only for tag signing and capture
+#      its fingerprint from the output.
+#        gpg --batch --passphrase '' --quick-gen-key \
+#          "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" \
+#          ed25519 cert never
+#        gpg --batch --passphrase '' --quick-add-key <fingerprint> ed25519 sign 1y
+#   2. Store the armored private key as the repository secret GPG_SIGNING_KEY.
+#        gpg --armor --export-secret-keys <fingerprint>   # value goes in Secrets
+#   3. Publish the public key to a public keyserver so Scorecard and
+#      `git verify-tag` can resolve it.
+#        gpg --armor --export <fingerprint> | gpg --keyserver keys.openpgp.org --send-keys <fingerprint>
+#
+# Rehearsal before the first real release: dispatch this workflow with the
+# `tag` input set to an existing tag to exercise the artifact-signing job
+# (safe: it only adds assets). Rehearse the tag-signing job in a fork or on a
+# throwaway tag first, because it force-pushes the tag ref. If a tag
+# protection rule rejects the force push, add `github-actions[bot]` to the
+# rule's bypass list and re-run.
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag name to sign (for example v2.0.2)
+        required: true
+
+permissions: {}
+
+concurrency:
+  group: sign-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sign-artifacts:
+    name: Sign Release Artifacts (cosign keyless)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write # upload signature assets to the GitHub release
+      id-token: write # OIDC identity for keyless signing
+    steps:
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Find release ID for the tag
+        id: release
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RELEASE_ID=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" \
+            | jq -r '.id')
+
+          if [ -z "${RELEASE_ID}" ] || [ "${RELEASE_ID}" = "null" ]; then
+            echo "release_id=" >> "${GITHUB_OUTPUT}"
+          else
+            echo "release_id=${RELEASE_ID}" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Download release artifacts
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          mkdir -p artifacts
+          # GitHub auto-generates the source archives when the release is
+          # created; download the exact bytes that consumers fetch.
+          curl -sSfL -o "artifacts/${REPO_NAME}-${RELEASE_TAG}.tar.gz" \
+            "https://github.com/${GITHUB_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz"
+          curl -sSfL -o "artifacts/${REPO_NAME}-${RELEASE_TAG}.zip" \
+            "https://github.com/${GITHUB_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.zip"
+          # The SBOM is attached by sbom.yml. Both workflows race on release
+          # publication, so a missing SBOM is a notice, not an error.
+          if ! curl -sSfL -o "artifacts/sbom.spdx.json" \
+            "https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/sbom.spdx.json"; then
+            echo "::notice::sbom.spdx.json not available yet; SHA256SUMS covers only the source archives."
+          fi
+
+      - name: Generate SHA256SUMS
+        run: |
+          ( cd artifacts && sha256sum -- * ) > SHA256SUMS
+
+      - name: Sign SHA256SUMS with cosign (keyless)
+        run: |
+          cosign sign-blob --bundle SHA256SUMS.sigstore.json --yes SHA256SUMS
+
+      - name: Verify the signature
+        run: |
+          # Verify against this workflow's own OIDC identity so a broken sign
+          # fails the job loudly instead of shipping garbage data.
+          cosign verify-blob \
+            --bundle SHA256SUMS.sigstore.json \
+            --certificate-identity-regexp "https://github.com/${GITHUB_REPOSITORY}/.github/workflows/sign-release\\.yml@.*" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+            SHA256SUMS
+
+      - name: Upload signature assets to the release
+        if: steps.release.outputs.release_id != '' && steps.release.outputs.release_id != 'null'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_ID: ${{ steps.release.outputs.release_id }}
+        run: |
+          for ASSET in SHA256SUMS SHA256SUMS.sigstore.json; do
+            ASSET_ID=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets" \
+              | jq -r ".[] | select(.name == \"${ASSET}\") | .id")
+
+            if [ -n "${ASSET_ID}" ] && [ "${ASSET_ID}" != "null" ]; then
+              curl -s -X DELETE -H "Authorization: token ${GITHUB_TOKEN}" \
+                "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/assets/${ASSET_ID}" > /dev/null
+              echo "Deleted existing ${ASSET} asset"
+            fi
+
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+              -H "Authorization: token ${GITHUB_TOKEN}" \
+              --data-binary "@${ASSET}" \
+              "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=${ASSET}")
+            if [ "${HTTP_CODE}" != "201" ]; then
+              echo "::error::Failed to upload ${ASSET} to release ${RELEASE_ID} (HTTP ${HTTP_CODE})"
+              exit 1
+            fi
+          done
+          echo "Uploaded SHA256SUMS and SHA256SUMS.sigstore.json to release ${RELEASE_ID}"
+
+      - name: Notify if no release found for tag
+        if: steps.release.outputs.release_id == '' || steps.release.outputs.release_id == 'null'
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: |
+          echo "::notice::No GitHub Release found for tag $RELEASE_TAG. The signature files were produced at ./SHA256SUMS and ./SHA256SUMS.sigstore.json but were not attached to a release."
+
+  sign-tag:
+    name: Sign Release Tag (GPG)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # overwrite the lightweight tag with the signed annotated tag
+    steps:
+      - name: Check signing key
+        id: key
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+        run: |
+          if [ -z "${GPG_SIGNING_KEY}" ]; then
+            echo "::notice::GPG_SIGNING_KEY secret not configured; skipping tag signing. See this workflow's header for the one-time setup."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out the tag
+        if: steps.key.outputs.configured == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+          persist-credentials: false
+
+      - name: Import GPG signing key
+        if: steps.key.outputs.configured == 'true'
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+        run: |
+          echo "${GPG_SIGNING_KEY}" | gpg --batch --import
+          gpg --batch --with-colons --list-secret-keys | awk -F: '/^fpr/ {print $10; exit}' > /tmp/gpg-fingerprint
+          if [ ! -s /tmp/gpg-fingerprint ]; then
+            echo "::error::No secret key imported from the GPG_SIGNING_KEY secret"
+            exit 1
+          fi
+
+      - name: Re-create and push signed annotated tag
+        if: steps.key.outputs.configured == 'true'
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          FINGERPRINT=$(cat /tmp/gpg-fingerprint)
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.signingkey "${FINGERPRINT}"
+          git config tag.gpgsign true
+
+          # release-please created a lightweight tag through the git API.
+          # Re-create it as an annotated, GPG-signed tag on the same commit
+          # (HEAD after checkout) and force-push so the signed ref replaces
+          # the lightweight one.
+          git tag -f -a -s "${RELEASE_TAG}" HEAD -m "Release ${RELEASE_TAG}"
+          git push --force \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "refs/tags/${RELEASE_TAG}"
+          echo "Pushed signed annotated tag ${RELEASE_TAG}"
