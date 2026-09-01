@@ -14,7 +14,7 @@ import (
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 
-const facetsInstanceURLTemplate = "{+baseurl}/api/now/v1/actsub/facets/{activity_context}/{context_instance}"
+const facetsInstanceURLTemplate = "{+baseurl}/api/now/v1/actsub/facets/{activity_context}/{context_instance}{?end_date,facets,get_activity_count,lazy_load,start_date}"
 
 // FacetsInstanceRequestBuilder provides operations to manage facets for a specific context instance.
 type FacetsInstanceRequestBuilder struct {
