@@ -118,8 +118,9 @@ edit, check it against this list:
 - [ ] Did I address the reader as "you"?
 - [ ] Did I stay in the present tense?
 - [ ] Are my sentences short enough to read out loud?
-- [ ] Did I remove "please", "simply", "just", "will", "note that", and Latin
-      abbreviations?
+- [ ] Did I remove "please", "simply", "just", "note that", Latin
+      abbreviations, and "will" except where a post-publication event makes it
+      necessary?
 - [ ] Did I use serial commas and sentence case?
 - [ ] Did I avoid exclamation points and anthropomorphism?
 - [ ] Is the link text descriptive?

@@ -22,7 +22,7 @@ spelling and punctuation, sentence-case headings, serial commas, descriptive lin
 jargon, buzzwords, placeholder phrases (such as "please note" and "at this time"), exclamation
 points, "let's", "simply"/"easy", anthropomorphism, or Latin abbreviations (write "for example",
 "that is", "and so on" instead of "e.g.", "i.e.", "etc."). **Every agent and every skill in
-`.opencode/` is written to this standard and stays that way when edited.** The skill files
+`.opencode/` must be written to this standard and must stay that way when edited.** The skill files
 themselves are the reference: read one if you need a worked example.
 
 ## Consult the ADRs before you act
