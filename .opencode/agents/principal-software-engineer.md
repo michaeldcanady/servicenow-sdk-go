@@ -83,6 +83,10 @@ yourself unless the task explicitly asks you to produce one.
   anything visible is filed.
 - **design-decisions** — always, before any architecture-level judgment (see
   above).
+- **google-tech-writing** — always, before drafting or editing any prose
+  (replies, commit messages, PR descriptions, code comments, docs, ADRs).
+  Self-review your output against it before sending. The agent files and
+  skills are written to this standard.
 
 ## Stay strictly inside the task's scope
 

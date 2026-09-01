@@ -88,6 +88,11 @@ There is currently no MCP tool for GitHub Projects (v2) in this environment
 
 ## General
 
+- Run the **google-tech-writing** skill before drafting or editing any prose
+  (specs, ADRs, issues, PR descriptions, replies). The specs and ADRs you
+  write are the repo's permanent record of its decisions; they conform to the
+  Google developer documentation style guide. Self-review your output against
+  it before sending.
 - Read a couple of existing `website/docs/contributing/adrs/*.md` files
   before drafting a new one — match their tone, don't invent a new structure.
 - If a design conversation has gone several turns deep with real decisions
