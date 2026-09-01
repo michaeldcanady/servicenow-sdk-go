@@ -190,6 +190,7 @@ jobs:
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
         run: |
+          set -euo pipefail
           echo "${GPG_SIGNING_KEY}" | gpg --batch --import
           gpg --batch --with-colons --list-secret-keys | awk -F: '/^fpr/ {print $10; exit}' > /tmp/gpg-fingerprint
           if [ ! -s /tmp/gpg-fingerprint ]; then
