@@ -91,11 +91,19 @@ jobs:
             echo "Deleted existing sbom.spdx.json asset"
           fi
 
-          # Upload the SBOM as a release asset
-          curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
+          # Upload the SBOM as a release asset. The name query parameter is
+          # required by the GitHub uploads API; without it the POST fails with
+          # an HTTP 422, so capture the response code and fail loudly rather
+          # than silently reporting success.
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            -H "Authorization: token ${GITHUB_TOKEN}" \
             -H "Content-Type: application/spdx+json" \
             --data-binary @sbom.spdx.json \
-            "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets" > /dev/null
+            "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=sbom.spdx.json")
+          if [ "${HTTP_CODE}" != "201" ]; then
+            echo "::error::Failed to upload sbom.spdx.json to release ${RELEASE_ID} (HTTP ${HTTP_CODE})"
+            exit 1
+          fi
           echo "Uploaded sbom.spdx.json to release ${RELEASE_ID}"
 
       - name: Notify if no release found for tag
