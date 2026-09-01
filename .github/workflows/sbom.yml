@@ -1,17 +1,16 @@
 name: Generate SBOM
 
-# Runs on tag pushes matching the vX.Y.Z pattern.
-# This generates and attaches the SPDX SBOM asset to the GitHub release.
-# It is idempotent: if the SBOM asset already exists for the tag, it is
-# overwritten with the fresh scan output.
+# Generates and attaches an SPDX SBOM to the GitHub release for the pushed
+# version tag.  Runs only on vX.Y.Z tag pushes; the SBOM asset is uploaded
+# (or replaced) via the GitHub Releases API.  Idempotent: if the asset
+# already exists it is deleted and re-uploaded with fresh scan output.
+
 on:
   push:
     tags:
       - "v*"
 
-permissions:
-  contents: write
-  pull-requests: read
+permissions: {}
 
 concurrency:
   group: sbom-${{ github.ref }}
@@ -22,72 +21,76 @@ jobs:
     name: Generate and Attach SBOM
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write # upload SBOM asset to the GitHub release
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-
-      - name: Install Syft (pinned version)
+      - name: Install Syft (pinned version with checksum verification)
+        env:
+          SYFT_VERSION: "1.41.0"
         run: |
-          curl -sSfL https://raw.githubusercontent.com/anchore/syft/v$SYFT_VERSION/install.sh | sh -s -- -b /usr/local/bin
+          curl -sSfL -o syft.tar.gz \
+            "https://github.com/anchore/syft/releases/download/v${SYFT_VERSION}/syft_${SYFT_VERSION}_linux_amd64.tar.gz"
+          curl -sSfL -o syft_checksums.txt \
+            "https://github.com/anchore/syft/releases/download/v${SYFT_VERSION}/syft_${SYFT_VERSION}_checksums.txt"
+          # Verify the downloaded archive against the published checksum for this exact asset.
+          EXPECTED=$(awk '$2 == "syft_'${SYFT_VERSION}'_linux_amd64.tar.gz" {print $1}' syft_checksums.txt)
+          echo "${EXPECTED}  syft.tar.gz" | sha256sum -c -
+          tar -xzf syft.tar.gz syft
+          sudo mv syft /usr/local/bin/syft
+          rm -f syft.tar.gz syft_checksums.txt
 
       - name: Generate SBOM (SPDX format)
-        # Scan the project directory and output an SPDX SBOM file.
-        env:
-          SYFT_VERSION: 'v1.41.0'
         run: |
           syft . -o spdx-json=sbom.spdx.json
 
       - name: Find release ID for the pushed tag
         id: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG_NAME="${GITHUB_REF#refs/tags/}"
-          # Query the GitHub API for a release with this tag name
-          RELEASE_ID=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/$TAG_NAME" \
+          RELEASE_ID=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG_NAME}" \
             | jq -r '.id')
 
-          if [ -z "$RELEASE_ID" ] || [ "$RELEASE_ID" = "null" ]; then
-            echo "release_id=" >> "$GITHUB_OUTPUT"
+          if [ -z "${RELEASE_ID}" ] || [ "${RELEASE_ID}" = "null" ]; then
+            echo "release_id=" >> "${GITHUB_OUTPUT}"
           else
-            echo "release_id=$RELEASE_ID" >> "$GITHUB_OUTPUT"
+            echo "release_id=${RELEASE_ID}" >> "${GITHUB_OUTPUT}"
           fi
 
       - name: Check for existing SBOM asset and upload
         if: steps.release.outputs.release_id != '' && steps.release.outputs.release_id != 'null'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_ID: ${{ steps.release.outputs.release_id }}
         run: |
-          RELEASE_ID="${{ steps.release.outputs.release_id }}"
-
           # Check if an SBOM asset with this name already exists in the release
-          ASSET_ID=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+          ASSET_ID=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets" \
             | jq -r ".[] | select(.name == \"sbom.spdx.json\") | .id")
 
-          if [ -n "$ASSET_ID" ] && [ "$ASSET_ID" != "null" ]; then
+          if [ -n "${ASSET_ID}" ] && [ "${ASSET_ID}" != "null" ]; then
             # Delete existing SBOM asset so we can re-upload the fresh scan
-            curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
-              "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/assets/$ASSET_ID" > /dev/null
+            curl -s -X DELETE -H "Authorization: token ${GITHUB_TOKEN}" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/assets/${ASSET_ID}" > /dev/null
             echo "Deleted existing sbom.spdx.json asset"
           fi
 
           # Upload the SBOM as a release asset
-          curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+          curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
             -H "Content-Type: application/spdx+json" \
             --data-binary @sbom.spdx.json \
             "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets" > /dev/null
-          echo "Uploaded sbom.spdx.json to release $RELEASE_ID"
+          echo "Uploaded sbom.spdx.json to release ${RELEASE_ID}"
 
       - name: Notify if no release found for tag
         if: steps.release.outputs.release_id == '' || steps.release.outputs.release_id == 'null'
         run: |
-          echo "::notice::No GitHub Release found for tag ${GITHUB_REF#refs/tags/}. "
-          echo "The SBOM was generated at ./sbom.spdx.json but was not attached to a release."
-          echo "Ensure the tag was created by the release-please process "
-          "or manually create a release draft."
+          echo "::notice::No GitHub Release found for tag ${GITHUB_REF#refs/tags/}. The SBOM was generated at ./sbom.spdx.json but was not attached to a release. Ensure the tag was created by the release-please process or manually create a release draft."
