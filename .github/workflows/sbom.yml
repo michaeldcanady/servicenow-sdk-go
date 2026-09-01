@@ -11,6 +11,11 @@ on:
   release:
     types:
       - published
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag name to generate and attach an SBOM for (for example v2.0.2)
+        required: true
 
 permissions: {}
 
@@ -51,12 +56,13 @@ jobs:
         run: |
           syft . -o spdx-json=sbom.spdx.json
 
-      - name: Find release ID for the published tag
+      - name: Find release ID for the tag
         id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
         run: |
-          TAG_NAME="${{ github.event.release.tag_name }}"
+          TAG_NAME="${RELEASE_TAG}"
           RELEASE_ID=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG_NAME}" \
             | jq -r '.id')
@@ -94,5 +100,7 @@ jobs:
 
       - name: Notify if no release found for tag
         if: steps.release.outputs.release_id == '' || steps.release.outputs.release_id == 'null'
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
         run: |
-          echo "::notice::No GitHub Release found for tag ${{ github.event.release.tag_name }}. The SBOM was generated at ./sbom.spdx.json but was not attached to a release. Ensure the release was published by the release-please process or manually create a release draft."
+          echo "::notice::No GitHub Release found for tag $RELEASE_TAG. The SBOM was generated at ./sbom.spdx.json but was not attached to a release. Ensure the release was published by the release-please process or manually create a release draft."
