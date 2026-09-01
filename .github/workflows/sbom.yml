@@ -1,14 +1,21 @@
 name: Generate SBOM
 
-# Generates and attaches an SPDX SBOM to the GitHub release for the pushed
-# version tag.  Runs only on vX.Y.Z tag pushes; the SBOM asset is uploaded
-# (or replaced) via the GitHub Releases API.  Idempotent: if the asset
-# already exists it is deleted and re-uploaded with fresh scan output.
+# Generates and attaches an SPDX SBOM to the GitHub release for the published
+# version tag. Runs on the release-published event (release-please creates the
+# tag and release via the GitHub API, which does not emit a git push event, so
+# a `push: tags` trigger never fires). The SBOM asset is uploaded (or replaced)
+# via the GitHub Releases API. Idempotent: if the asset already exists it is
+# deleted and re-uploaded with fresh scan output.
 
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag name to generate and attach an SBOM for (for example v2.0.2)
+        required: true
 
 permissions: {}
 
@@ -49,12 +56,13 @@ jobs:
         run: |
           syft . -o spdx-json=sbom.spdx.json
 
-      - name: Find release ID for the pushed tag
+      - name: Find release ID for the tag
         id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
         run: |
-          TAG_NAME="${GITHUB_REF#refs/tags/}"
+          TAG_NAME="${RELEASE_TAG}"
           RELEASE_ID=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG_NAME}" \
             | jq -r '.id')
@@ -83,14 +91,24 @@ jobs:
             echo "Deleted existing sbom.spdx.json asset"
           fi
 
-          # Upload the SBOM as a release asset
-          curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
+          # Upload the SBOM as a release asset. The name query parameter is
+          # required by the GitHub uploads API; without it the POST fails with
+          # an HTTP 422, so capture the response code and fail loudly rather
+          # than silently reporting success.
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            -H "Authorization: token ${GITHUB_TOKEN}" \
             -H "Content-Type: application/spdx+json" \
             --data-binary @sbom.spdx.json \
-            "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets" > /dev/null
+            "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=sbom.spdx.json")
+          if [ "${HTTP_CODE}" != "201" ]; then
+            echo "::error::Failed to upload sbom.spdx.json to release ${RELEASE_ID} (HTTP ${HTTP_CODE})"
+            exit 1
+          fi
           echo "Uploaded sbom.spdx.json to release ${RELEASE_ID}"
 
       - name: Notify if no release found for tag
         if: steps.release.outputs.release_id == '' || steps.release.outputs.release_id == 'null'
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
         run: |
-          echo "::notice::No GitHub Release found for tag ${GITHUB_REF#refs/tags/}. The SBOM was generated at ./sbom.spdx.json but was not attached to a release. Ensure the tag was created by the release-please process or manually create a release draft."
+          echo "::notice::No GitHub Release found for tag $RELEASE_TAG. The SBOM was generated at ./sbom.spdx.json but was not attached to a release. Ensure the release was published by the release-please process or manually create a release draft."
