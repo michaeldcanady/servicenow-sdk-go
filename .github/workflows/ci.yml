@@ -53,6 +53,7 @@ jobs:
       github.event_name == 'schedule'
     outputs:
       code: ${{ github.event_name == 'schedule' || steps.filter.outputs.any_changed == 'true' }}
+      headers: ${{ github.event_name == 'schedule' || steps.header_filter.outputs.any_changed == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -69,6 +70,22 @@ jobs:
             !docs/snippets/**
             tests/integration/**
             **/*.feature
+            .github/workflows/ci.yml
+
+      # Files in scope for the license-header check (matches scripts/add-license.sh:
+      # all .go/.sh plus root-level .yml/.yaml). A separate output keeps shell-only
+      # and config-only changes from unnecessarily re-running the Go build/test
+      # matrix while still gating the header check on the files it inspects.
+      - name: License Files Changed
+        if: github.event_name != 'schedule'
+        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
+        id: header_filter
+        with:
+          files: |
+            **.go
+            **/*.sh
+            *.yml
+            *.yaml
             .github/workflows/ci.yml
 
   check-go:
@@ -163,6 +180,26 @@ jobs:
           version: v2.13.0
           skip-cache: false
           args: --timeout=5m
+
+  check-license:
+    name: License Headers
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.headers == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read # checkout and verify license headers
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        # zizmor: ignore[cache-poisoning] -- check-license: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
+        with:
+          go-version: "stable"
+      - name: Verify license headers
+        run: ./scripts/add-license.sh --check-only
 
   test-go:
     name: Test Go Code

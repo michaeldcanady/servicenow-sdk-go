@@ -89,6 +89,35 @@ Models are backing-store-backed, not plain structs
 - `Serialize()` / `GetFieldDeserializers()` are built from the
   `internal/serialization` generators — no hand-rolled property plumbing.
 
+## License headers
+
+Every in-scope source file carries an SPDX license header. CI enforces this:
+a PR that adds or edits a file without the header fails the **License
+Headers** check.
+
+In scope are all `*.go` and `*.sh` files, plus root-level `*.yml`/`*.yaml`
+configuration files. Workflow files under `.github/` are out of scope.
+
+The header template is:
+
+```text
+Copyright (c) {{.Year}} {{.Holder}}
+SPDX-License-Identifier: MIT
+```
+
+For this repository, that renders as a year plus the project holder, for
+example:
+
+```go
+// Copyright (c) 2026 Michael Canady
+// SPDX-License-Identifier: MIT
+```
+
+- Existing files keep their original creation year. Add or verify headers
+  with `./scripts/add-license.sh` — `--check-only` verifies without editing,
+  and a bare run applies the current year to new files.
+- New files receive the current year automatically.
+
 ## Compose `internal/`, don't reinvent
 
 If you're writing a nil check, a header string, an accessor, or serializer

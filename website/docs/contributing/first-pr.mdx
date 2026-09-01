@@ -75,6 +75,9 @@ the surrounding file is the style guide.
 
 - Changing Go code? If you're unsure what something should look like,
   `tableapi/` is the canonical example of nearly everything.
+- Adding a new file? Give it an SPDX license header (see the
+  [conventions reference](conventions.md)); `./scripts/add-license.sh`
+  applies it, and CI fails without one.
 - Changing docs? Go samples live in `website/snippets/*.go` behind
   `// [START x]` / `// [END x]` markers — never inline in the page — so CI
   can compile them. Preview locally with `just serve-docs`.
