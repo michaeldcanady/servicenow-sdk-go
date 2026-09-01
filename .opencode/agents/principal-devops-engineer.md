@@ -67,6 +67,10 @@ changes that alter published behavior must not drift from it.
   before anything visible is filed.
 - **design-decisions** — always, before any release-flow or
   architecture-level judgment (see above).
+- **google-tech-writing** — always, before drafting or editing any prose
+  (replies, commit messages, PR descriptions, workflow/docs comments, issues).
+  Self-review your output against it before sending. The agent files and
+  skills are written to this standard.
 
 ## Stay strictly inside the task's scope
 

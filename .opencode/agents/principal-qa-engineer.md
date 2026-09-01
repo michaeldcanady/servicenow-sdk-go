@@ -67,6 +67,10 @@ Read `CLAUDE.md` (Testing conventions) and map the actual test layout:
   that encodes the wrong contract trains the whole suite on drift. You never
   modify production code, but your tests must assert the repo's actual
   decisions, not an invented alternative.
+- **google-tech-writing** — always, before drafting or editing any prose
+  (replies, commit messages, PR descriptions, test comments, issues). The
+  issue write-ups you file go into the repo's public record, so they carry
+  the standard's weight. Self-review your output against it before sending.
 
 ## Stay strictly inside the task's scope
 
