@@ -159,13 +159,24 @@ func TestDateTimeField_Javascript(t *testing.T) {
 		field    string
 		expr     string
 		expected string
+		isErr    bool
 	}{
-		{"Standard", "f", "expr", "fONjavascript:expr"},
+		{"Standard", "f", "expr", "fONjavascript:expr", false},
+		// Commas are literals inside a javascript: expression.
+		{"CommaInExpression", "f", "gs.a(1,2)", "fONjavascript:gs.a(1,2)", false},
+		{"CaretInjection", "f", "gs.daysAgoStart(0)^ORactive=false", "", true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if DateTime(tt.field).Javascript(tt.expr).String() != tt.expected {
-				t.Errorf("got %s, expected %s", DateTime(tt.field).Javascript(tt.expr).String(), tt.expected)
+			res := DateTime(tt.field).Javascript(tt.expr)
+			if tt.isErr {
+				if res.Error() == nil {
+					t.Error("Expected error")
+				}
+				return
+			}
+			if res.String() != tt.expected {
+				t.Errorf("got %s, expected %s", res.String(), tt.expected)
 			}
 		})
 	}
@@ -339,15 +350,37 @@ func TestDateTimeField_OnSpecialty(t *testing.T) {
 		field    string
 		l, s, e  string
 		expected string
+		isErr    bool
 	}{
-		{"Standard", "f", "L", "S", "E", "fONL@javascript:S@javascript:E"},
+		{"Standard", "f", "L", "S", "E", "fONL@javascript:S@javascript:E", false},
+		// Commas are literals inside composite expressions; "^" and "@" are not.
+		{"CommaInStartExpr", "f", "L", "gs.a(1,2)", "E", "fONL@javascript:gs.a(1,2)@javascript:E", false},
+		{"CaretInLabel", "f", "L^ORactive=false", "S", "E", "", true},
+		{"CaretInStartExpr", "f", "L", "gs.x()^active=false", "E", "", true},
+		{"CaretInEndExpr", "f", "L", "S", "gs.y()^active=false", "", true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if DateTime(tt.field).OnSpecialty(tt.l, tt.s, tt.e).String() != tt.expected {
-				t.Errorf("got %s, expected %s", DateTime(tt.field).OnSpecialty(tt.l, tt.s, tt.e).String(), tt.expected)
+			res := DateTime(tt.field).OnSpecialty(tt.l, tt.s, tt.e)
+			if tt.isErr {
+				if res.Error() == nil {
+					t.Error("Expected error")
+				}
+				return
+			}
+			if res.String() != tt.expected {
+				t.Errorf("got %s, expected %s", res.String(), tt.expected)
 			}
 		})
+	}
+}
+
+func TestDateTimeField_OnInvalidComposite(t *testing.T) {
+	// JS validates its expression at construction; the invalid composite must
+	// surface as an error condition when used, not render the injection.
+	res := DateTime("f").On(JS("gs.daysAgoStart(0)^ORactive=false"))
+	if res.Error() == nil {
+		t.Fatal("Expected error for invalid composite value")
 	}
 }
 
@@ -520,13 +553,26 @@ func TestCoverageHacks(t *testing.T) {
 		op       ast.Operator
 		val      any
 		expected string
+		isErr    bool
 	}{
-		{"DefaultBranch", ast.OperatorIs, 123, "f=123"},
+		{"DefaultBranch", ast.OperatorIs, 123, "f=123", false},
+		// A non-primitive whose rendered form carries a reserved character must
+		// be rejected through the same render-then-validate path.
+		{"DefaultBranchInjection", ast.OperatorIs, evilStringer{}, "", true},
+		{"StringBranch", ast.OperatorIs, "plain", "f=plain", false},
+		{"StringBranchInjection", ast.OperatorIs, "a^b", "", true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if df.dateTimeBinary(tt.op, tt.val).String() != tt.expected {
-				t.Errorf("got %s, expected %s", df.dateTimeBinary(tt.op, tt.val).String(), tt.expected)
+			res := df.dateTimeBinary(tt.op, tt.val)
+			if tt.isErr {
+				if res.Error() == nil {
+					t.Error("Expected error")
+				}
+				return
+			}
+			if res.String() != tt.expected {
+				t.Errorf("got %s, expected %s", res.String(), tt.expected)
 			}
 		})
 	}

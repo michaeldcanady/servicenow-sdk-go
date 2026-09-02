@@ -9,7 +9,42 @@ Compose a ServiceNow encoded query from typed conditions and use it to
 filter a table request.
 
 :::note
-This is a preview feature currently under active development.
+Condition values are written into the encoded query verbatim, and ServiceNow's
+encoded-query syntax has no way to escape its structural characters. Which
+characters are rejected depends on where the value lands:
+
+- `^` separates clauses — rejected in every value and fragment
+- `,` separates list values — rejected in `IsOneOf` / `IsNotOneOf` values only
+- `@` separates pair halves — rejected in `Between` values only
+
+Elsewhere `,` and `@` are ordinary literal characters, so values like
+`"Smith, John"` or `"user@example.com"` pass through unchanged. A value
+containing a rejected character — for example, text taken from user input —
+could otherwise break out of its term and append arbitrary clauses, so the
+builder rejects it at construction time instead.
+
+Always check `Error()` on the finished condition before serializing or
+sending it:
+
+```go
+q := query.And(
+    query.Boolean("active").Is(true),
+    query.String("name").Is(userInput), // rejected if userInput contains ^
+)
+if err := q.Error(); err != nil {
+    // The value was rejected — do not serialize or send this condition.
+    return err
+}
+sysparmQuery := q.String()
+```
+
+A condition that reports an error has no valid encoded-query form. If you
+serialize one anyway, `String()` renders `<invalid query>` in place of the
+rejected part — an intentionally unusable term, never a silently weakened
+query. Date-time composite fragments (`Javascript()`, `JS()`, and
+`OnSpecialty()`) reject `^` and `@`, since the package inserts those
+separators itself; commas are allowed there, for example in multi-argument
+`gs.*` calls.
 :::
 
 ## When to use this pattern

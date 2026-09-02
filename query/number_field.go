@@ -54,12 +54,12 @@ func (f NumberField) Between(lower, upper float64) Condition {
 
 // IsOneOf query that field is one of the provided values.
 func (f NumberField) IsOneOf(values ...float64) Condition {
-	return f.multi(ast.OperatorIsOneOf, convertSliceToArrayNode(values...))
+	return multi(f.BaseField, ast.OperatorIsOneOf, values...)
 }
 
 // IsNotOneOf query that field is not one of the provided values.
 func (f NumberField) IsNotOneOf(values ...float64) Condition {
-	return f.multi(ast.OperatorIsNotOneOf, convertSliceToArrayNode(values...))
+	return multi(f.BaseField, ast.OperatorIsNotOneOf, values...)
 }
 
 // GreaterThanField query that field is greater than the provided field.

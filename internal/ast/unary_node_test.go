@@ -5,12 +5,14 @@ package ast
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestUnaryNode_Accept(t *testing.T) {
 	node := NewUnaryNode(OperatorIsEmpty, NewLiteralNode("f"))
 	visitor := NewStringerVisitor()
-	node.Accept(visitor)
+	require.NoError(t, node.Accept(visitor))
 	if visitor.String() != "fISEMPTY" {
 		t.Errorf("got %s, expected fISEMPTY", visitor.String())
 	}

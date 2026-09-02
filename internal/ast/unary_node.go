@@ -9,7 +9,15 @@ type UnaryNode struct {
 	Left Node
 }
 
-func (n *UnaryNode) Accept(v Visitor) { v.VisitUnary(n) }
+// Accept visits the node, propagating any error the visitor reports. It
+// rejects a nil receiver so malformed trees surface as errors rather than
+// panics.
+func (n *UnaryNode) Accept(v Visitor) error {
+	if n == nil {
+		return ErrNilNode
+	}
+	return v.VisitUnary(n)
+}
 
 // NewUnaryNode creates a new UnaryNode with the given operator and left node.
 func NewUnaryNode(op Operator, left Node) *UnaryNode {

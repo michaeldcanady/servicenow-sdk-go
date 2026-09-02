@@ -4,6 +4,7 @@
 package query
 
 import (
+	"errors"
 	"strings"
 	"testing"
 	"time"
@@ -60,8 +61,10 @@ func TestAndTop(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			res := And(tt.conds...)
 			if tt.name == "Empty" {
-				if res != nil {
-					t.Error("Empty And should return nil")
+				// Fails closed: an error condition rather than nil, so
+				// downstream String()/Error() calls stay safe.
+				if !errors.Is(res.Error(), ErrNoConditions) {
+					t.Errorf("got %v, expected %v", res.Error(), ErrNoConditions)
 				}
 			} else {
 				if res.String() != tt.expected {
@@ -85,8 +88,10 @@ func TestOrTop(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			res := Or(tt.conds...)
 			if tt.name == "Empty" {
-				if res != nil {
-					t.Error("Empty Or should return nil")
+				// Fails closed: an error condition rather than nil, so
+				// downstream String()/Error() calls stay safe.
+				if !errors.Is(res.Error(), ErrNoConditions) {
+					t.Errorf("got %v, expected %v", res.Error(), ErrNoConditions)
 				}
 			} else {
 				if res.String() != tt.expected {

@@ -13,54 +13,54 @@ type Operator int64
 const (
 	OperatorUnknown Operator = iota - 1
 	// all
-	OperatorIs         // implemented
-	OperatorIsNot      // implemented
-	OperatorIsEmpty    // implemented
-	OperatorIsNotEmpty // implemented
-	OperatorIsAnything // implemented
+	OperatorIs
+	OperatorIsNot
+	OperatorIsEmpty
+	OperatorIsNotEmpty
+	OperatorIsAnything
 	// string
-	OperatorStartsWith     // implemented
-	OperatorEndsWith       // implemented
-	OperatorContains       // implemented
-	OperatorIsEmptyString  // implemented
-	OperatorDoesNotContain // implemented
-	OperatorMatchesPattern // added
-	OperatorIsInHierarchy  // added
+	OperatorStartsWith
+	OperatorEndsWith
+	OperatorContains
+	OperatorIsEmptyString
+	OperatorDoesNotContain
+	OperatorMatchesPattern
+	OperatorIsInHierarchy
 	// field
-	OperatorIsDynamic // implemented
-	OperatorIsSame    // implemented
+	OperatorIsDynamic
+	OperatorIsSame
 	// date/time
-	OperatorOn              // implemented
-	OperatorNotOn           // implemented
-	OperatorBefore          // implemented
-	OperatorAtOrBefore      // implemented
-	OperatorAfter           // implemented
-	OperatorAtOrAfter       // implemented
-	OperatorTrendOnOrAfter  // implemented
-	OperatorTrendOnOrBefore // implemented
-	OperatorTrendAfter      // implemented
-	OperatorTrendBefore     // implemented
-	OperatorTrendOn         // implemented
-	OperatorRelativeAfter   // implemented
-	OperatorRelativeBefore  // implemented
+	OperatorOn
+	OperatorNotOn
+	OperatorBefore
+	OperatorAtOrBefore
+	OperatorAfter
+	OperatorAtOrAfter
+	OperatorTrendOnOrAfter
+	OperatorTrendOnOrBefore
+	OperatorTrendAfter
+	OperatorTrendBefore
+	OperatorTrendOn
+	OperatorRelativeAfter
+	OperatorRelativeBefore
 	// numeric
-	OperatorLessThan             // implemented
-	OperatorGreaterThan          // implemented
-	OperatorLessThanOrIs         // implemented
-	OperatorGreaterThanOrIs      // implemented
-	OperatorBetween              // implemented
-	OperatorIsDifferent          // implemented
-	OperatorGreaterThanField     // implemented
-	OperatorLessThanField        // implemented
-	OperatorGreaterThanOrIsField // implemented
-	OperatorLessThanOrIsField    // implemented
-	OperatorIsMoreThan           // implemented
-	OperatorIsLessThan           // implemented
-	OperatorIsOneOf              // implemented
-	OperatorIsNotOneOf           // implemented
+	OperatorLessThan
+	OperatorGreaterThan
+	OperatorLessThanOrIs
+	OperatorGreaterThanOrIs
+	OperatorBetween
+	OperatorIsDifferent
+	OperatorGreaterThanField
+	OperatorLessThanField
+	OperatorGreaterThanOrIsField
+	OperatorLessThanOrIsField
+	OperatorIsMoreThan
+	OperatorIsLessThan
+	OperatorIsOneOf
+	OperatorIsNotOneOf
 	// logical
-	OperatorAnd // implemented
-	OperatorOr  // implemented
+	OperatorAnd
+	OperatorOr
 )
 
 var operatorStrings = map[Operator]string{
@@ -112,4 +112,16 @@ var operatorStrings = map[Operator]string{
 
 func (o Operator) String() string {
 	return conversion.EnumString(operatorStrings, o, operatorStrings[OperatorUnknown])
+}
+
+// known reports whether o has a defined encoded-query rendering. Operators
+// outside the declared set (including OperatorUnknown) render as "unknown"
+// via String, which would corrupt a query silently; traversal treats them as
+// structural faults instead.
+func (o Operator) known() bool {
+	if o == OperatorUnknown {
+		return false
+	}
+	_, ok := operatorStrings[o]
+	return ok
 }

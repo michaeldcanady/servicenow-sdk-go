@@ -10,7 +10,15 @@ type BinaryNode struct {
 	Right Node
 }
 
-func (n *BinaryNode) Accept(v Visitor) { v.VisitBinary(n) }
+// Accept visits the node, propagating any error the visitor reports. It
+// rejects a nil receiver so malformed trees surface as errors rather than
+// panics.
+func (n *BinaryNode) Accept(v Visitor) error {
+	if n == nil {
+		return ErrNilNode
+	}
+	return v.VisitBinary(n)
+}
 
 // NewBinaryNode creates a new BinaryNode with the given left node, operator, and right node.
 func NewBinaryNode(left Node, op Operator, right Node) *BinaryNode {

@@ -5,12 +5,14 @@ package ast
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestLiteralNode_Accept(t *testing.T) {
 	node := NewLiteralNode("v")
 	visitor := NewStringerVisitor()
-	node.Accept(visitor)
+	require.NoError(t, node.Accept(visitor))
 	if visitor.String() != "v" {
 		t.Errorf("got %s, expected v", visitor.String())
 	}
