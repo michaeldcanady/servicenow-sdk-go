@@ -293,3 +293,134 @@ func TestMultiValueValidation(t *testing.T) {
 		}
 	})
 }
+
+func TestValidateFieldName(t *testing.T) {
+	tests := []struct {
+		name    string
+		input   string
+		wantErr bool
+		char    string
+	}{
+		{"CleanName", "name", false, ""},
+		{"DotSeparated", "incident.active", false, ""},
+		{"Underscore", "sys_id", false, ""},
+		{"EmptyField", "", false, ""},
+		{"Caret", "name^ORactive", true, "^"},
+		{"LeadingCaret", "^name", true, "^"},
+		{"TrailingCaret", "name^", true, "^"},
+		{"MiddleCaret", "na^me", true, "^"},
+		{"ComplexInjection", "name^ORactive=false^ORsys_id!=0", true, "^"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateFieldName(tt.input)
+			if !tt.wantErr {
+				if err != nil {
+					t.Errorf("validateFieldName(%q) = %v, expected nil", tt.input, err)
+				}
+				return
+			}
+			if err == nil {
+				t.Fatalf("validateFieldName(%q) = nil, expected error", tt.input)
+			}
+			if !strings.Contains(err.Error(), tt.char) {
+				t.Errorf("error %q does not mention offending character %q", err.Error(), tt.char)
+			}
+		})
+	}
+}
+
+func TestFieldNameInjectionRejected(t *testing.T) {
+	tests := []struct {
+		name string
+		cond Condition
+	}{
+		{"StringIs", String("f^g").Is("x")},
+		{"StringIsNot", String("f^g").IsNot("x")},
+		{"StringStartsWith", String("f^g").StartsWith("x")},
+		{"StringEndsWith", String("f^g").EndsWith("x")},
+		{"StringContains", String("f^g").Contains("x")},
+		{"StringDoesNotContain", String("f^g").DoesNotContain("x")},
+		{"StringMatchesPattern", String("f^g").MatchesPattern("x")},
+		{"StringBetween", String("f^g").Between("a", "z")},
+		{"StringIsOneOf", String("f^g").IsOneOf("ok")},
+		{"StringIsNotOneOf", String("f^g").IsNotOneOf("ok")},
+		{"NumberIs", Number("f^g").Is(1)},
+		{"NumberIsNot", Number("f^g").IsNot(1)},
+		{"NumberLessThan", Number("f^g").LessThan(1)},
+		{"NumberGreaterThan", Number("f^g").GreaterThan(1)},
+		{"BooleanIs", Boolean("f^g").Is(true)},
+		{"DateTimeIs", DateTime("f^g").On(JS("x"))},
+		{"DateTimeBefore", DateTime("f^g").Before(JS("x"))},
+		{"BaseIsAnything", String("f^g").IsAnything()},
+		{"BaseIsEmpty", String("f^g").IsEmpty()},
+		{"BaseIsNotEmpty", String("f^g").IsNotEmpty()},
+		{"BaseIsInHierarchy", String("f^g").IsInHierarchy()},
+		{"Where", Where("f^g").Is("x")},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.cond.Error() == nil {
+				t.Errorf("%s: expected error for field name with caret, got nil", tt.name)
+			}
+			if got := tt.cond.String(); got != invalidQueryPlaceholder {
+				t.Errorf("%s: expected placeholder, got %q", tt.name, got)
+			}
+		})
+	}
+}
+
+func TestFieldNameInjectionPropagatesThroughAndOr(t *testing.T) {
+	t.Run("InvalidFieldAndValidValue", func(t *testing.T) {
+		q := String("f^g").Is("x").And(Boolean("active").Is(true))
+		if q.Error() == nil {
+			t.Fatal("Expected joined validation errors")
+		}
+		// Construction errors degrade locally: the rejected side renders as
+		// invalidQueryPlaceholder while the rest of the tree renders normally.
+		if got := q.String(); !strings.Contains(got, invalidQueryPlaceholder) {
+			t.Errorf("Expected placeholder in output, got %q", got)
+		}
+	})
+	t.Run("ValidFieldAndInvalidValue", func(t *testing.T) {
+		q := String("f").Is("x^y").And(Boolean("active").Is(true))
+		if q.Error() == nil {
+			t.Fatal("Expected joined validation errors")
+		}
+	})
+	t.Run("BothInvalid", func(t *testing.T) {
+		q := String("f^g").Is("x^y").And(Boolean("active").Is(true))
+		err := q.Error()
+		if err == nil {
+			t.Fatal("Expected joined validation errors")
+		}
+		for _, want := range []string{"f^g", "x^y"} {
+			if !strings.Contains(err.Error(), want) {
+				t.Errorf("joined error %q missing %q", err.Error(), want)
+			}
+		}
+	})
+}
+
+func TestFieldNameCleanValuesRenderUnchanged(t *testing.T) {
+	tests := []struct {
+		name     string
+		cond     Condition
+		expected string
+	}{
+		{"Simple", String("name").Is("x"), "name=x"},
+		{"DotSeparated", String("incident.active").Is("true"), "incident.active=true"},
+		{"Underscore", String("sys_id").Is("x"), "sys_id=x"},
+		{"Hyphen", String("my-field").Is("x"), "my-field=x"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := tt.cond.Error(); err != nil {
+				t.Fatalf("Unexpected error: %v", err)
+			}
+			if got := tt.cond.String(); got != tt.expected {
+				t.Errorf("got %q, expected %q", got, tt.expected)
+			}
+		})
+	}
+}
