@@ -29,12 +29,14 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read # read PR branch metadata (auditor requires comment)
-    # Automated branches (release-please, dependabot, backports) don't follow
-    # the human-authored <type>/<kebab-description> convention, so they're
-    # exempt.
-    if: ${{ !startsWith(github.head_ref, 'release-please--') && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'backport/') }}
     steps:
+      # Automated branches (release-please, dependabot, backports) don't follow
+      # the human-authored <type>/<kebab-description> convention, so they're
+      # exempt. The job always runs (never skips) because the main ruleset
+      # requires this status check to report a conclusion; a skipped job would
+      # show as neutral and block the merge. Exempted branches report success.
       - name: Validate branch name matches <type>/<kebab-description>
+        if: ${{ !startsWith(github.head_ref, 'release-please--') && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'backport/') }}
         env:
           HEAD_REF: ${{ github.head_ref }}
         run: |
@@ -50,17 +52,29 @@ jobs:
 
           echo "Branch name '$HEAD_REF' is valid."
 
+      - name: Report success for exempt automated branch
+        if: ${{ startsWith(github.head_ref, 'release-please--') || startsWith(github.head_ref, 'dependabot/') || startsWith(github.head_ref, 'backport/') }}
+        run: |
+          echo "Branch name '$GITHUB_HEAD_REF' is an automated branch and is exempt from the '<type>/<kebab-description>' convention."
+        env:
+          GITHUB_HEAD_REF: ${{ github.head_ref }}
+
   linked-issue:
     name: Check Linked Issue
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read # read PR body for linked issue check
-    # Automated PRs (release-please, dependabot) and PRs explicitly labeled
-    # as trivial don't require a linked issue.
-    if: ${{ github.actor != 'dependabot[bot]' && !contains(github.event.pull_request.labels.*.name, 'no-issue-required') }}
     steps:
+      # Automated PRs (release-please, dependabot) and PRs explicitly labeled
+      # as trivial don't require a linked issue. The job always runs (never
+      # skips) because the main ruleset requires this status check to report a
+      # conclusion; a skipped job would show as neutral and block the merge.
+      # Exempted PRs report success. The actor check uses
+      # github.event.pull_request.user.login (the PR author) rather than
+      # github.actor, which is spoofable (see zizmor's bot-conditions audit).
       - name: Validate PR body references an issue
+        if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' && !contains(github.event.pull_request.labels.*.name, 'no-issue-required') }}
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
@@ -74,3 +88,9 @@ jobs:
           fi
 
           echo "PR body references a linked issue."
+
+      - name: Report success for exempt automated or no-issue-required PR
+        if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' || contains(github.event.pull_request.labels.*.name, 'no-issue-required') }}
+        run: |
+          echo "This automated or 'no-issue-required' PR is exempt from the linked-issue requirement."
+
