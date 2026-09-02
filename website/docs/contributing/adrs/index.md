@@ -1,8 +1,8 @@
 ---
 title: Architecture decision records
 description: >-
-  The catalog of accepted ADRs — every load-bearing design trade-off in the
-  SDK, what was rejected, and the rules each decision imposes on new code.
+  The catalog of accepted and proposed ADRs — every load-bearing design trade-off
+  in the SDK, what was rejected, and the rules each decision imposes on new code.
 ---
 
 # Architecture decision records
@@ -29,6 +29,8 @@ below are the primary sources.
 | [009](009-requestbuilder-requestinformation-naming.md) | Keep `RequestBuilder`/`RequestInformation` naming (Kiota parity) — settled through v3 | Accepted |
 | [010](010-no-nerdit-tech-migration.md) | Stay at `github.com/michaeldcanady/servicenow-sdk-go` — settled through v3 | Accepted |
 | [011](011-release-branches-and-cross-major-flow.md) | Release branches are lazily cut, downstream-only, and never silently diverge | Accepted |
+| [012](012-release-provenance-in-band.md) | Release provenance (SBOM, signatures, verification) is generated in-band, not event-driven | Accepted |
+| [013](013-event-driven-release-dispatch.md) | Proposed direction: decouple release tasks via `repository_dispatch` events with reconciliation, ending at a GitHub App for native triggers | Proposed |
 
 ## Proposing a new ADR
 
