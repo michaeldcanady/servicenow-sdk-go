@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.3](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.2...v2.0.3) (2026-09-02)
+
+
+### Bug Fixes
+
+* **query:** reject reserved encoded-query characters in condition values ([#653](https://github.com/michaeldcanady/servicenow-sdk-go/issues/653)) ([91f6df8](https://github.com/michaeldcanady/servicenow-sdk-go/commit/91f6df8b98d54675f41313d5a63ebce0d3f79106))
+
 ## [2.0.2](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.1...v2.0.2) (2026-09-01)
 
 
