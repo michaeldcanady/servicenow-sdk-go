@@ -13,12 +13,12 @@ description: >-
 Proposed (2026-09-02). Not adopted — this records a direction for moving
 release follow-on tasks from in-band coupling (ADR 012) to event-driven
 dispatch. If adopted, it supersedes [ADR 012](012-release-provenance-in-band.md),
-whose Status then reads "Superseded by ADR-013".
+whose Status then reads "Superseded by ADR-013."
 
 ## Context
 
 [ADR 012](012-release-provenance-in-band.md) couples follow-on work to the
-releasing workflows because GitHub does not start new runs from events created
+releasing workflows because GitHub doesn't start new runs from events created
 by `GITHUB_TOKEN`. In-band coupling is correct today, but it has real costs:
 
 - The releasing workflows name every consumer (`attach-sbom`, `attach-sign`,
@@ -31,9 +31,9 @@ by `GITHUB_TOKEN`. In-band coupling is correct today, but it has real costs:
 Event-driven dispatch is attractive because each concern becomes its own
 workflow with an explicit contract: consumers subscribe and receive a durable
 event rather than being invoked by the producer. GitHub offers one event type
-that is exempt from the `GITHUB_TOKEN` suppression and can carry arbitrary
+that's exempt from the `GITHUB_TOKEN` suppression and can carry arbitrary
 data: `repository_dispatch`. `workflow_dispatch` is the other exemption but
-cannot carry a custom payload.
+can't carry a custom payload.
 
 Options for true event delivery:
 
@@ -46,14 +46,15 @@ Options for true event delivery:
    new runs, restoring native triggers such as `release: published` and
    `push tags v*`. Adds an org-installed GitHub App, key storage and rotation,
    permitting scope, and a write-credential security review. This is the
-   "real principal" end state, but it is a heavy operational lift.
+   "real principal" end state, but it's a heavy operational lift.
 3. **`workflow_run` trigger** — keys off a dedicated "emit release events"
    workflow run rather than a repository event. The consumer receives no
    inputs and must resolve state from run metadata or artifacts, and the
    written security guidance prefers `workflow_call` chains over
    `workflow_run`. Kept out of scope.
 4. **State-file polling** — a scheduled sweep diffs the release manifest
-   against created tags and attached assets. Fully decoupled, laggy, and
+   against created tags and attached assets. Fully decoupled, slow to react,
+   and
    failure-agnostic on its own; valuable as the reconciliation layer for the
    dispatch bus rather than as the primary mechanism.
 
@@ -67,14 +68,14 @@ consumers honor), or have signing wait until the SBOM asset exists and retry.
 
 ## Decision
 
-Do not adopt yet. If adopted, pursue this phased path:
+Don't adopt yet. If adopted, pursue this phased path:
 
 1. **Phase 1 — add a dispatch emitter alongside the in-band calls.** The
    releasing workflows POST `repository_dispatch` events of type
    `release-created` with a versioned payload (`v1`, `tag`, `sha`), with a
    small retry-and-jitter loop. In-band attachment continues unchanged.
 2. **Phase 2 — move stateless consumers to the bus.** `release-verify.yml`
-   (and any future consumer that does not affect artifact ordering) subscribes
+   (and any future consumer that doesn't affect artifact ordering) subscribes
    to `release-created` instead of being called in-band. SBOM and signing stay
    in-band because their ordering matters.
 3. **Phase 3 — reconciliation sweep.** A scheduled workflow diffs tags against
@@ -84,12 +85,12 @@ Do not adopt yet. If adopted, pursue this phased path:
 4. **Phase 4 (optional) — GitHub App for native triggers.** If a maintainer
    stands up a GitHub App, the emitter switches from `repository_dispatch` to
    the app token, native triggers return, and the event bus disappears. This
-   substitutes an operational credential for pipeline complexity; do not do it
+   substitutes an operational credential for pipeline complexity; don't do it
    without an explicit cost decision.
 
 ## Consequences
 
-- **Pros:** consumers decouple from the release path — adding one does not
+- **Pros:** consumers decouple from the release path — adding one doesn't
   touch the production release workflow; each concern reverts to its own
   workflow, history, and retry semantics; the design matches the mental model
   of subscriptions to durable events; reconciliation makes the pipeline fail

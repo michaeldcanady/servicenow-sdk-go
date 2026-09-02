@@ -41,18 +41,18 @@ Alternatives considered:
    a missed event is still silent. Rejected for now; revisited in ADR 013.
 3. **`repository_dispatch` event bridge** — dispatch events are explicitly
    exempt from suppression, so an in-band POST reliably starts consumers.
-   The POST is fire-and-forget: ordering across consumers is not guaranteed,
+   The POST is fire-and-forget: ordering across consumers isn't guaranteed,
    and a lost dispatch fails silently. Rejected as the primary path; the
    payload versioning and reconciliation needed to make it reliable are
    deferred to ADR 013.
 4. **In-band `workflow_call` fan-out** (chosen) — the releasing workflow calls
    each dependent directly as a reusable workflow, gated on the release-please
    job's `release_created` output, passing the created tag as an input.
-   Deterministic, ordered, and auditable in one run; no new credentials.
+   Deterministic and ordered in one run; no new credentials.
 5. **State-file polling** — a scheduled workflow diffs the release manifest
    (`.release-please-manifest*.json`) against created tags. Fully decoupled
-   but laggy and failure-agnostic; not suitable as the only mechanism on the
-   release-critical path.
+   but slow to react and failure-agnostic; not suitable as the only mechanism
+   on the release-critical path.
 
 ## Decision
 
@@ -68,7 +68,7 @@ call each dependent as a reusable workflow via
   by `needs: attach-sbom` so the SHA256SUMS always cover the SBOM.
 - **Release verification** (`release-verify.yml`), which keeps its
   `push tags v*` trigger only for tags that a human pushes directly, because
-  those do not pass through the releasing workflows.
+  those don't pass through the releasing workflows.
 
 Each reusable workflow also keeps a `workflow_dispatch` trigger with the same
 `tag` input so a maintainer can backfill older releases, as happened for
@@ -84,7 +84,7 @@ v2.0.3 and v2.0.2.
   consumer is a change to the production release path; the gate expression is
   hand-maintained and a wrong `if` silently skips coverage; concerns that are
   logically separate share one run's history and retry semantics.
-- **Rule for future release questions:** do not add `release: published` or
+- **Rule for future release questions:** don't add `release: published` or
   `push tags v*` triggers for releases that release-please creates with the
   default token — the trigger is dead on arrival. Add the work as a reusable
   `workflow_call` workflow and invoke it from `stable-release.yml` and
