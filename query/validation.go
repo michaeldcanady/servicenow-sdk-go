@@ -15,8 +15,8 @@ import (
 const clauseSeparator = "^" //nolint:gochecknoglobals
 
 // The remaining metacharacters are structural only in the operator context
-// that renders them, and ordinary literals everywhere else (e.g., the comma
-// in "Smith, John" or the @ in "user@example.com").
+// that renders them, and ordinary literals everywhere else (for example, the
+// comma in "Smith, John" or the @ in "user@example.com").
 const (
 	// listSeparator joins the values of an IN / NOT IN list.
 	listSeparator = "," //nolint:gochecknoglobals
@@ -69,7 +69,7 @@ func validateQueryValue(field string, op ast.Operator, val any) error {
 // structural separators itself ("@" between composite segments), so both it
 // and the clause separator must come from the caller verbatim. Commas are
 // deliberately absent — they are ordinary literals inside JavaScript
-// expressions (e.g., multi-argument gs.* calls) and labels.
+// expressions (for example, multi-argument gs.* calls) and labels.
 const fragmentReservedCharacters = clauseSeparator + pairSeparator //nolint:gochecknoglobals
 
 // validateQueryFragment checks that a caller-supplied fragment composed into a

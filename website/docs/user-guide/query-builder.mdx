@@ -43,7 +43,8 @@ serialize one anyway, `String()` renders `<invalid query>` in place of the
 rejected part — an intentionally unusable term, never a silently weakened
 query. Date-time composite fragments (`Javascript()`, `JS()`, and
 `OnSpecialty()`) reject `^` and `@`, since the package inserts those
-separators itself; commas are allowed there, e.g. multi-argument `gs.*` calls.
+separators itself; commas are allowed there, for example in multi-argument
+`gs.*` calls.
 :::
 
 ## When to use this pattern

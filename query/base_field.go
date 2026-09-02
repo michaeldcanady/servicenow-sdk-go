@@ -39,7 +39,8 @@ func (f BaseField) pair(op ast.Operator, left, right interface{}) Condition {
 	return f.buildBinary(op, ast.NewPairNode(ast.NewLiteralNode(left), ast.NewLiteralNode(right)))
 }
 
-// multi builds a condition over multiple primitive values (e.g., IN / NOT IN),
+// multi builds a condition over multiple primitive values (for example,
+// IN / NOT IN),
 // validating each value before building the array node. It is a package-level
 // function because Go methods cannot declare type parameters.
 func multi[T ast.Primitive](f BaseField, op ast.Operator, values ...T) Condition {
