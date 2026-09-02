@@ -1,20 +1,33 @@
 name: Generate SBOM
 
-# Generates and attaches an SPDX SBOM to the GitHub release for the published
-# version tag. Runs on the release-published event (release-please creates the
-# tag and release via the GitHub API, which does not emit a git push event, so
-# a `push: tags` trigger never fires). The SBOM asset is uploaded (or replaced)
-# via the GitHub Releases API. Idempotent: if the asset already exists it is
-# deleted and re-uploaded with fresh scan output.
+# Generates and attaches an SPDX SBOM to the GitHub release for a published
+# version tag. Runs as a reusable workflow, called by Stable Release and
+# Weekly Preview Release after release-please has created the tag and release
+# in the same workflow run, and available as workflow_dispatch for backfilling
+# older releases (for example v2.0.3, which predates this flow).
+#
+# Why this is not a `release: published` trigger: release-please creates
+# releases as GitHub Actions using the default token, and GitHub deliberately
+# does not start new workflow runs from events created by GITHUB_TOKEN (the
+# anti-recursion rule). A release-event trigger therefore never fires for
+# release-please-created releases, which is exactly what happened to v2.0.3.
+# Calling the workflow from the releasing workflow is deterministic.
+#
+# The SBOM asset is uploaded (or replaced) via the GitHub Releases API.
+# Idempotent: if the asset already exists it is deleted and re-uploaded with
+# fresh scan output.
 
 on:
-  release:
-    types:
-      - published
+  workflow_call:
+    inputs:
+      tag:
+        description: Tag name to generate and attach an SBOM for (for example v2.0.3)
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       tag:
-        description: Tag name to generate and attach an SBOM for (for example v2.0.2)
+        description: Tag name to generate and attach an SBOM for (for example v2.0.3)
         required: true
 
 permissions: {}
@@ -60,7 +73,7 @@ jobs:
         id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          RELEASE_TAG: ${{ inputs.tag }}
         run: |
           TAG_NAME="${RELEASE_TAG}"
           RELEASE_ID=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
@@ -109,6 +122,6 @@ jobs:
       - name: Notify if no release found for tag
         if: steps.release.outputs.release_id == '' || steps.release.outputs.release_id == 'null'
         env:
-          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          RELEASE_TAG: ${{ inputs.tag }}
         run: |
           echo "::notice::No GitHub Release found for tag $RELEASE_TAG. The SBOM was generated at ./sbom.spdx.json but was not attached to a release. Ensure the release was published by the release-please process or manually create a release draft."

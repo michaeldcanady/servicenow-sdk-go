@@ -63,9 +63,39 @@ jobs:
       contents: write # create preview release PR and tag
       issues: write # label preview release PR
       pull-requests: write # open preview release PR
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - name: Create preview release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
         id: release
         with:
           config-file: weekly-release-please-config.json
+
+  # Attach provenance assets to the preview release, using the same reusable
+  # workflows as Stable Release so previews get the same SBOM and signatures.
+  attach-sbom:
+    name: Attach SBOM to Release
+    needs: release-please
+    if: >-
+      needs.release-please.result == 'success' &&
+      needs.release-please.outputs.release_created == 'true'
+    permissions:
+      contents: write # callee uploads the SBOM asset to the GitHub release
+    uses: ./.github/workflows/sbom.yml
+    with:
+      tag: ${{ needs.release-please.outputs.tag_name }}
+
+  attach-sign:
+    name: Sign Release Artifacts and Tag
+    needs: [attach-sbom, release-please]
+    if: >-
+      needs.release-please.result == 'success' &&
+      needs.release-please.outputs.release_created == 'true'
+    permissions:
+      contents: write # callee uploads signature assets and force-pushes the signed tag
+      id-token: write # callee signs keylessly with the OIDC identity
+    uses: ./.github/workflows/sign-release.yml
+    with:
+      tag: ${{ needs.release-please.outputs.tag_name }}
