@@ -67,6 +67,25 @@ func validateQueryValue(field string, op ast.Operator, val any) error {
 	)
 }
 
+// validateFieldName checks that a field name contains none of the
+// metacharacters that would break out of a clause. The clause separator "^"
+// is the only character that is always structural regardless of operator
+// context, and encoded queries provide no escape sequence for it. A field
+// name containing "^" appends attacker-controlled clauses to the query.
+// Returns nil for safe names and a descriptive error otherwise; callers turn
+// that error into an error Condition via [NewErrorCondition].
+func validateFieldName(name string) error {
+	index := strings.IndexByte(name, clauseSeparator[0])
+	if index < 0 {
+		return nil
+	}
+
+	return fmt.Errorf(
+		"field name %q contains reserved encoded-query character %q; it structures the query itself and cannot be escaped",
+		name, name[index],
+	)
+}
+
 // fragmentReservedCharacters lists the metacharacters rejected in fragments
 // composed into trusted DateTimeValues: the package inserts the only
 // structural separators itself ("@" between composite segments), so both it

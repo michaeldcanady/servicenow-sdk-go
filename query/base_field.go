@@ -15,10 +15,16 @@ type BaseField struct {
 }
 
 func (f BaseField) unary(op ast.Operator) Condition {
+	if err := validateFieldName(f.name); err != nil {
+		return NewErrorCondition(err)
+	}
 	return NewCondition(ast.NewUnaryNode(op, ast.NewLiteralNode(f.name)))
 }
 
 func (f BaseField) buildBinary(op ast.Operator, right ast.Node) Condition {
+	if err := validateFieldName(f.name); err != nil {
+		return NewErrorCondition(err)
+	}
 	return NewCondition(ast.NewBinaryNode(ast.NewLiteralNode(f.name), op, right))
 }
 
