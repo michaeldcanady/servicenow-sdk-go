@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package query
 
 import "errors"
