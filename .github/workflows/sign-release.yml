@@ -1,12 +1,19 @@
 name: Sign Release
 
 # Signs release artifacts and tags for supply-chain trust (issue #713).
-# release-please creates the tag and release asynchronously when the release
-# PR merges, so at the time stable-release.yml runs the release does not exist
-# yet and its assets are not uploadable. Signing therefore runs on the
-# release-published event instead, the same trigger sbom.yml uses. This one
-# workflow covers both stable releases and weekly preview releases, because
-# release-please publishes both through the GitHub Releases API.
+# Runs as a reusable workflow, called by Stable Release and Weekly Preview
+# Release after release-please has created the tag and release in the same
+# workflow run, and available as workflow_dispatch for backfilling older
+# releases (for example v2.0.3, which predates this flow).
+#
+# Why this is not a `release: published` trigger: release-please creates
+# releases as GitHub Actions using the default token, and GitHub deliberately
+# does not start new workflow runs from events created by GITHUB_TOKEN (the
+# anti-recursion rule). A release-event trigger therefore never fires for
+# release-please-created releases, which is exactly what happened to v2.0.3.
+# Calling the workflow from the releasing workflow is deterministic, and the
+# caller runs it only after the SBOM workflow has attached the SBOM, so the
+# checksums always cover it.
 #
 # Artifacts are signed keylessly with cosign (sigstore): the GitHub Actions
 # OIDC identity is the signing principal, so no secrets are required. The
@@ -36,21 +43,20 @@ name: Sign Release
 #      `git verify-tag` can resolve it.
 #        gpg --armor --export <fingerprint> | gpg --keyserver keys.openpgp.org --send-keys <fingerprint>
 #
-# Rehearsal before the first real release: dispatch this workflow with the
-# `tag` input set to an existing tag to exercise the artifact-signing job
-# (safe: it only adds assets). Rehearse the tag-signing job in a fork or on a
-# throwaway tag first, because it force-pushes the tag ref. If a tag
-# protection rule rejects the force push, add `github-actions[bot]` to the
-# rule's bypass list and re-run.
+# Backfill an older release by dispatching this workflow with the `tag` input
+# set to the existing tag.
 
 on:
-  release:
-    types:
-      - published
+  workflow_call:
+    inputs:
+      tag:
+        description: Tag name to sign (for example v2.0.3)
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       tag:
-        description: Tag name to sign (for example v2.0.2)
+        description: Tag name to sign (for example v2.0.3)
         required: true
 
 permissions: {}
@@ -74,7 +80,7 @@ jobs:
       - name: Find release ID for the tag
         id: release
         env:
-          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          RELEASE_TAG: ${{ inputs.tag }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           RELEASE_ID=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
@@ -89,7 +95,7 @@ jobs:
 
       - name: Download release artifacts
         env:
-          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          RELEASE_TAG: ${{ inputs.tag }}
         run: |
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
           mkdir -p artifacts
@@ -99,8 +105,9 @@ jobs:
             "https://github.com/${GITHUB_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz"
           curl -sSfL -o "artifacts/${REPO_NAME}-${RELEASE_TAG}.zip" \
             "https://github.com/${GITHUB_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.zip"
-          # The SBOM is attached by sbom.yml. Both workflows race on release
-          # publication, so a missing SBOM is a notice, not an error.
+          # Release workflows call this after the SBOM workflow, so the SBOM is
+          # already attached. A standalone backfill may run first, so a missing
+          # SBOM is a notice, not an error.
           if ! curl -sSfL -o "artifacts/sbom.spdx.json" \
             "https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/sbom.spdx.json"; then
             echo "::notice::sbom.spdx.json not available yet; SHA256SUMS covers only the source archives."
@@ -156,7 +163,7 @@ jobs:
       - name: Notify if no release found for tag
         if: steps.release.outputs.release_id == '' || steps.release.outputs.release_id == 'null'
         env:
-          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          RELEASE_TAG: ${{ inputs.tag }}
         run: |
           echo "::notice::No GitHub Release found for tag $RELEASE_TAG. The signature files were produced at ./SHA256SUMS and ./SHA256SUMS.sigstore.json but were not attached to a release."
 
@@ -183,7 +190,7 @@ jobs:
         if: steps.key.outputs.configured == 'true'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.release.tag_name || inputs.tag }}
+          ref: ${{ inputs.tag }}
           persist-credentials: false
 
       - name: Import GPG signing key
@@ -202,7 +209,7 @@ jobs:
       - name: Re-create and push signed annotated tag
         if: steps.key.outputs.configured == 'true'
         env:
-          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          RELEASE_TAG: ${{ inputs.tag }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail

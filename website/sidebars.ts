@@ -341,6 +341,8 @@ const sidebars: SidebarsConfig = {
             'contributing/adrs/009-requestbuilder-requestinformation-naming',
             'contributing/adrs/010-no-nerdit-tech-migration',
             'contributing/adrs/011-release-branches-and-cross-major-flow',
+            'contributing/adrs/012-release-provenance-in-band',
+            'contributing/adrs/013-event-driven-release-dispatch',
           ],
         },
       ],
