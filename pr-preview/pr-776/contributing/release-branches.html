@@ -1,0 +1,213 @@
+<!doctype html><html lang=en dir=ltr class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-contributing/release-branches" data-has-hydrated=false><head><meta charset=UTF-8><meta name=generator content="Docusaurus v3.10.2"><title data-rh=true>Release branches & cross-major flow | ServiceNow SDK for Go</title><meta data-rh=true name=viewport content="width=device-width, initial-scale=1.0"/><meta data-rh=true name=twitter:card content=summary_large_image /><meta data-rh=true property=og:url content=https://michaeldcanady.github.io/servicenow-sdk-go/pr-preview/pr-776/contributing/release-branches /><meta data-rh=true property=og:locale content=en /><meta data-rh=true name=docusaurus_locale content=en /><meta data-rh=true name=docsearch:language content=en /><meta data-rh=true name=docusaurus_version content=current /><meta data-rh=true name=docusaurus_tag content=docs-default-current /><meta data-rh=true name=docsearch:version content=current /><meta data-rh=true name=docsearch:docusaurus_tag content=docs-default-current /><meta data-rh=true property=og:title content="Release branches & cross-major flow | ServiceNow SDK for Go"/><meta data-rh=true name=description content="How fixes and features reach shipped majors while main develops the next one — lazily-cut release/vX.Y branches, label-driven backports, tracked forward-ports, and the rules that keep the lines from drifting apart."/><meta data-rh=true property=og:description content="How fixes and features reach shipped majors while main develops the next one — lazily-cut release/vX.Y branches, label-driven backports, tracked forward-ports, and the rules that keep the lines from drifting apart."/><link data-rh=true rel=icon href=/servicenow-sdk-go/pr-preview/pr-776/img/favicon.png /><link data-rh=true rel=canonical href=https://michaeldcanady.github.io/servicenow-sdk-go/pr-preview/pr-776/contributing/release-branches /><link data-rh=true rel=alternate href=https://michaeldcanady.github.io/servicenow-sdk-go/pr-preview/pr-776/contributing/release-branches hreflang=en /><link data-rh=true rel=alternate href=https://michaeldcanady.github.io/servicenow-sdk-go/pr-preview/pr-776/contributing/release-branches hreflang=x-default /><script data-rh=true type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://michaeldcanady.github.io/servicenow-sdk-go/pr-preview/pr-776/contributing/release-branches","name":"Release branches & cross-major flow","position":1}]}</script><link rel=stylesheet href=/servicenow-sdk-go/pr-preview/pr-776/assets/css/styles.01c86118.css /><script src=/servicenow-sdk-go/pr-preview/pr-776/assets/js/runtime~main.eabda922.js defer></script><script src=/servicenow-sdk-go/pr-preview/pr-776/assets/js/main.90c2d2bd.js defer></script></head><body><svg style="display: none;"><defs>
+<symbol id=theme-svg-external-link viewBox="0 0 24 24"><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme-360")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||"light"),document.documentElement.setAttribute("data-theme-choice",t||"light")}(),function(){try{for(var[t,e]of new URLSearchParams(window.location.search).entries())if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id=__docusaurus><link rel=preload as=image href=/servicenow-sdk-go/pr-preview/pr-776/img/logo.png /><div role=region aria-label="Skip to main content"><a class=skipToContent_fXgn href=#__docusaurus_skipToContent_fallback>Skip to main content</a></div><nav aria-label=Main class="theme-layout-navbar navbar navbar--fixed-top"><div class=navbar__inner><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded=false class="navbar__toggle clean-btn" type=button><svg width=30 height=30 viewBox="0 0 30 30" aria-hidden=true><path stroke=currentColor stroke-linecap=round stroke-miterlimit=10 stroke-width=2 d="M4 7h22M4 15h22M4 23h22"/></svg></button><a class=navbar__brand href=/servicenow-sdk-go/pr-preview/pr-776/><div class=navbar__logo><img src=/servicenow-sdk-go/pr-preview/pr-776/img/logo.png alt="ServiceNow SDK for Go logo" class="themedComponent_mlkZ themedComponent--light_NVdE"/><img src=/servicenow-sdk-go/pr-preview/pr-776/img/logo.png alt="ServiceNow SDK for Go logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"/></div><b class="navbar__title text--truncate">ServiceNow SDK for Go</b></a><a class="navbar__item navbar__link" href=/servicenow-sdk-go/pr-preview/pr-776/>User Guide</a><a class="navbar__item navbar__link" href=/servicenow-sdk-go/pr-preview/pr-776/apis>API Reference</a><a aria-current=page class="navbar__item navbar__link navbar__link--active" href=/servicenow-sdk-go/pr-preview/pr-776/contributing>Contributor Guide</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="navbar__item dropdown dropdown--hoverable dropdown--right"><a aria-current=page class="navbar__link active" aria-haspopup=true aria-expanded=false role=button href=/servicenow-sdk-go/pr-preview/pr-776/contributing/release-branches>main</a><ul class=dropdown__menu><li><a aria-current=page class="dropdown__link dropdown__link--active" href=/servicenow-sdk-go/pr-preview/pr-776/contributing/release-branches>main</a><li><a class=dropdown__link href=/servicenow-sdk-go/pr-preview/pr-776/2.0/contributing/release-branches>v2.0</a></ul></div><a href=https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go target=_blank rel="noopener noreferrer" class="navbar__item navbar__link">GoDoc<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><a href=https://github.com/michaeldcanady/servicenow-sdk-go target=_blank rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type=button disabled title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill=currentColor d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"/></svg><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill=currentColor d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"/></svg><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill=currentColor d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"/></svg></button></div><div class=navbarSearchContainer_Bca1><div class="navbar__search searchBarContainer_NW3z" dir=ltr><svg aria-hidden=true class=searchIcon_T3tP focusable=false viewBox="0 0 16 16"><path fill=currentColor d="M6.02945 10.20327a4.17382 4.17382 0 1 1 4.17382-4.17382 4.15609 4.15609 0 0 1-4.17382 4.17382Zm9.69195 4.2199-4.8225-4.82338A5.88021 5.88021 0 0 0 12.058 6.02856 6.00467 6.00467 0 1 0 9.59979 10.8989l4.82338 4.82338a.89729.89729 0 0 0 1.29912 0 .89749.89749 0 0 0-.00087-1.29909Z"/></svg><input placeholder=Search aria-label=Search class="navbar__search-input searchInput_YFbd" value="" /><div class="loadingRing_RJI3 searchBarLoadingRing_YnHq"><div></div><div></div><div></div><div></div></div></div></div></div></div><div role=presentation class=navbar-sidebar__backdrop></div></nav><div id=__docusaurus_skipToContent_fallback class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class=docsWrapper_hBAB><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type=button></button><div class=docRoot_UBD9><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class=sidebarViewport_aRkj><div class=sidebar_njMd><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class=menu__link href=/servicenow-sdk-go/pr-preview/pr-776/contributing><span class=linkLabel_WmDU>Contributor guide</span></a><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=true href=/servicenow-sdk-go/pr-preview/pr-776/contributing/setup><span class=categoryLinkLabel_W154>Your first contribution</span></a></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/servicenow-sdk-go/pr-preview/pr-776/contributing/setup><span class=linkLabel_WmDU>Development setup</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/servicenow-sdk-go/pr-preview/pr-776/contributing/first-pr><span class=linkLabel_WmDU>Your first PR</span></a></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=true href=/servicenow-sdk-go/pr-preview/pr-776/contributing/architecture><span class=categoryLinkLabel_W154>Understand the codebase</span></a></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/servicenow-sdk-go/pr-preview/pr-776/contributing/architecture><span class=linkLabel_WmDU>Architecture</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/servicenow-sdk-go/pr-preview/pr-776/contributing/testing><span class=linkLabel_WmDU>Testing guide</span></a></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role=button aria-expanded=true href=/servicenow-sdk-go/pr-preview/pr-776/contributing/conventions><span class=categoryLinkLabel_W154>Conventions & playbooks</span></a></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/servicenow-sdk-go/pr-preview/pr-776/contributing/conventions><span class=linkLabel_WmDU>Conventions reference</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/servicenow-sdk-go/pr-preview/pr-776/contributing/triage><span class=linkLabel_WmDU>Issue triage</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/servicenow-sdk-go/pr-preview/pr-776/contributing/add-api-module><span class=linkLabel_WmDU>Add a new API module</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current=page tabindex=0 href=/servicenow-sdk-go/pr-preview/pr-776/contributing/release-branches><span class=linkLabel_WmDU>Release branches & cross-major flow</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/servicenow-sdk-go/pr-preview/pr-776/contributing/release-branch-protection><span class=linkLabel_WmDU>Release branch protection runbook</span></a><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/servicenow-sdk-go/pr-preview/pr-776/contributing/blueprints/documents-api-blueprint><span class=categoryLinkLabel_W154>Blueprints</span></a></div></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/servicenow-sdk-go/pr-preview/pr-776/contributing/design-decisions><span class=categoryLinkLabel_W154>Why it's built this way</span></a><button aria-label="Expand sidebar category 'Why it's built this way'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div></ul></nav></div></div></aside><main class=docMainContainer_TBSr><div class="container padding-top--md padding-bottom--lg"><div class=row><div class="col docItemCol_VOVn"><div class="theme-doc-version-banner alert alert--warning margin-bottom--md" role=alert><div>This is unreleased documentation for <!-- -->ServiceNow SDK for Go<!-- --> <b>main</b> version.</div><div class=margin-top--md>For up-to-date documentation, see the <b><a href=/servicenow-sdk-go/pr-preview/pr-776/contributing/release-branches>latest version</a></b> (<!-- -->main<!-- -->).</div></div><div class=docItemContainer_Djhp><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label=Breadcrumbs><ul class=breadcrumbs><li class=breadcrumbs__item><a aria-label="Home page" class=breadcrumbs__link href=/servicenow-sdk-go/pr-preview/pr-776/><svg viewBox="0 0 24 24" class=breadcrumbHomeIcon_YNFT><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill=currentColor /></svg></a><li class=breadcrumbs__item><span class=breadcrumbs__link>Conventions & playbooks</span><li class="breadcrumbs__item breadcrumbs__item--active"><span class=breadcrumbs__link>Release branches & cross-major flow</span></ul></nav><span class="theme-doc-version-badge badge badge--secondary">Version: main</span><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type=button class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Release branches & cross-major flow</h1></header>
+<p>At most points in this project's life, two major lines are alive at once:
+<code>main</code> develops the next major, while consumers stay pinned to shipped ones.
+This page explains where your change lands, how patches and features reach an
+older major, and the rules that exist because we already lived the failure
+mode once — during the v1→v2 transition, <code>main</code> and <code>release/v2</code> drifted so
+far apart they effectively became different codebases.</p>
+<p>The deep rationale lives in <a class="" href=/servicenow-sdk-go/pr-preview/pr-776/contributing/adrs/011-release-branches-and-cross-major-flow>ADR 011</a>;
+this page is the day-to-day version.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=the-mental-model>The mental model<a href=#the-mental-model class=hash-link aria-label="Direct link to The mental model" title="Direct link to The mental model" translate=no>​</a></h2>
+<p>Four rules explain almost every decision on this page:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Rule<th>Meaning<tbody><tr><td><code>main</code> is next-major trunk<td>All new development lands on <code>main</code>, always. It's the tip of the next major version.<tr><td>Tags are cut points<td>Releases are tagged; branches merely give tags a place to grow from. You can branch from a tag at any time — even years later — so branches are created <strong>only when first needed</strong>, never preemptively.<tr><td>Maintenance branches flow downstream<td>A <code>release/vX.Y</code> branch only ever receives changes that came from (or are accounted to) <code>main</code>. It's never a second development trunk.<tr><td>Drift must be tracked, never silent<td>Every change that reaches a maintenance branch without coming from <code>main</code> automatically opens a tracking issue demanding an explicit port-or-won't-port decision.</table>
+<!-- -->
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=creating-a-maintenance-branch>Creating a maintenance branch<a href=#creating-a-maintenance-branch class=hash-link aria-label="Direct link to Creating a maintenance branch" title="Direct link to Creating a maintenance branch" translate=no>​</a></h2>
+<p>Create one only when something real needs it: a critical fix, a security
+patch, or an old-major-only feature. Cut it from the <strong>last tag</strong> of that
+minor line, not from <code>main</code>:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#393A34;--prism-background-color:#f6f8fa><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style=color:#393A34;background-color:#f6f8fa><code class=codeBlockLines_e6Vv><div class=token-line style=color:#393A34><span class="token function" style=color:#d73a49>git</span><span class="token plain"> fetch </span><span class="token parameter variable" style=color:#36acaa>--tags</span><span class="token plain"></span><br/></div><div class=token-line style=color:#393A34><span class="token plain"></span><span class="token function" style=color:#d73a49>git</span><span class="token plain"> branch release/v2.4 v2.4.5</span><br/></div><div class=token-line style=color:#393A34><span class="token plain"></span><span class="token function" style=color:#d73a49>git</span><span class="token plain"> push origin release/v2.4</span><br/></div></code></pre></div></div>
+<p>Naming rules:</p>
+<ul>
+<li class=""><code>release/vX.Y</code> — major plus <strong>minor</strong>, no patch segment.</li>
+<li class="">One branch per actively-patched minor line — in practice, the latest
+minor of each supported major. If a feature release ships <code>v2.5.0</code> from a
+<code>release/v2.4</code> branch, later <code>v2.5.*</code> patches get a fresh
+<code>release/v2.5</code> cut at <code>v2.5.0</code>; the older branch is retired unless it
+still has patch work in flight.</li>
+<li class="">Never create a branch "for symmetry" or ahead of need. An idle long-lived
+branch is how silent drift starts.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=where-does-my-change-land>Where does my change land?<a href=#where-does-my-change-land class=hash-link aria-label="Direct link to Where does my change land?" title="Direct link to Where does my change land?" translate=no>​</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Your change<th>Lands on<tbody><tr><td>Bug fix, dependency bump, doc fix affecting both majors<td><code>main</code>, then backport (next section)<tr><td>New ServiceNow feature useful for both majors, small/portable<td><code>main</code>, then port down to <code>release/vX.Y</code><tr><td>New ServiceNow feature useful for both majors, but touching core code that has diverged between majors<td><code>main</code> only, unless consumer demand justifies the port cost — document the decision in the PR<tr><td>Feature that only makes sense on the old major (depends on prior-major model shapes)<td><code>release/vX.Y</code> directly — see <a href=#landing-an-old-major-only-feature class="">old-major-only features</a><tr><td>Anything else speculative<td>Don't. Ask in an issue first.</table>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=backporting-fixes-main--releasevxy>Backporting fixes (<code>main</code> → <code>release/vX.Y</code>)<a href=#backporting-fixes-main--releasevxy class=hash-link aria-label="Direct link to backporting-fixes-main--releasevxy" title="Direct link to backporting-fixes-main--releasevxy" translate=no>​</a></h2>
+<p>Fixes land on <code>main</code> first, always — even if the reporter is stuck on the
+old major. Then:</p>
+<ol>
+<li class="">Add the label <strong><code>backport release/vX.Y</code></strong> to the merged PR (or ask a
+maintainer to).</li>
+<li class="">Automation (#656) opens a cherry-pick PR against the maintenance branch.</li>
+<li class="">Review and merge it like any other PR. Required CI runs there too.</li>
+</ol>
+<p>When the cherry-pick conflicts — common across majors — expect the import
+paths to be the culprit: every file's module suffix differs
+(<code>/v3/...</code> vs <code>/v2/...</code>). Rewrite the suffix mechanically, resolve the
+remainder by hand, and keep backport PRs small enough that this stays
+tractable. A fix too tangled to port cheaply is a signal to discuss whether
+it should be ported at all, not a reason to force it.</p>
+<p>Direct pushes to <code>release/*</code> are blocked. Everything arrives by PR.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=landing-an-old-major-only-feature>Landing an old-major-only feature<a href=#landing-an-old-major-only-feature class=hash-link aria-label="Direct link to Landing an old-major-only feature" title="Direct link to Landing an old-major-only feature" translate=no>​</a></h2>
+<p>Sometimes a new ServiceNow capability should ship to consumers who can't
+move majors yet. When the feature depends on prior-major shapes:</p>
+<ol>
+<li class="">Branch <code>feat/&lt;name>-v2</code> off <code>release/v2.4</code> and open the PR <strong>against the
+release branch</strong>.</li>
+<li class="">Use Conventional Commits as everywhere else — a <code>feat:</code> merge bumps the
+maintenance line's <strong>minor</strong> (<code>v2.(Y+1).0</code>), a <code>fix:</code> bumps the patch.
+<code>release-please</code> opens the release PR from the alternate config (#659);
+never hand-edit <code>VERSION</code> or <code>CHANGELOG.md</code> on any branch.</li>
+<li class="">Because this change didn't come from <code>main</code>, automation immediately
+opens a <strong><code>needs-forward-port</code></strong> issue asking whether the feature should
+also reach <code>main</code>. That's expected and fine — see next section.</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=forward-port-tracking-releasevxy--main>Forward-port tracking (<code>release/vX.Y</code> → <code>main</code>)<a href=#forward-port-tracking-releasevxy--main class=hash-link aria-label="Direct link to forward-port-tracking-releasevxy--main" title="Direct link to forward-port-tracking-releasevxy--main" translate=no>​</a></h2>
+<p>Any merge into <code>release/v*</code> without backport provenance triggers a
+<code>needs-forward-port</code> issue ("assess porting #N to <code>main</code>"). Closing it
+takes exactly one of two actions:</p>
+<ul>
+<li class=""><strong>Port it</strong>: open the matching PR against <code>main</code> (import suffix goes the
+other direction this time), and close the issue with its number.</li>
+<li class=""><strong>Decline it</strong>: close the issue with a short written rationale, for
+example: "v3 replaced the model layer this builds on." A recorded decision
+is progress; silence is drift.</li>
+</ul>
+<p>This is the mechanism that makes the one exception to "downstream-only"
+safe: divergence can happen, but it can never happen invisibly.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=worked-example-a-new-servicenow-api-ships-today>Worked example: A new ServiceNow API ships today<a href=#worked-example-a-new-servicenow-api-ships-today class=hash-link aria-label="Direct link to Worked example: A new ServiceNow API ships today" title="Direct link to Worked example: A new ServiceNow API ships today" translate=no>​</a></h2>
+<p><code>main</code> is mid-v3-development. ServiceNow publishes a new endpoint, and v2
+users are asking for it now.</p>
+<p><strong>Path A — both majors want it (the usual case):</strong></p>
+<ol>
+<li class="">Build the module on <code>main</code> against <code>/v3</code>, following the
+<a class="" href=/servicenow-sdk-go/pr-preview/pr-776/contributing/add-api-module>module playbook</a>. It ships in the next v3 release.</li>
+<li class="">Cut <code>release/v2.4</code> from the latest <code>v2.*</code> tag if it doesn't exist yet.</li>
+<li class="">Open a second PR carrying the same package to <code>release/v2.4</code>, rewriting
+import suffixes <code>/v3</code> → <code>/v2</code>. New modules port well — they're
+self-contained packages.</li>
+<li class="">Both lines ship the capability; the two PRs reference each other.</li>
+</ol>
+<p><strong>Path B — v2-only by design:</strong> the feature leans on v2-era model shapes,
+or v3 has restructured the area it touches. Land it directly on
+<code>release/v2.4</code> (previous section); answer the resulting
+<code>needs-forward-port</code> issue honestly — "will port once v3 settles" or
+"won't port because…" are both acceptable answers.</p>
+<p>Either way, batch the release: maintenance releases are demand-driven, not
+one-tag-per-merge.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=hard-rules>Hard rules<a href=#hard-rules class=hash-link aria-label="Direct link to Hard rules" title="Direct link to Hard rules" translate=no>​</a></h2>
+<ul>
+<li class="">❌ No direct pushes to <code>release/*</code> (branch protection, #658) — PRs only,
+required CI green.</li>
+<li class="">❌ No preemptive <code>release/*</code> branches.</li>
+<li class="">❌ No feature development on a maintenance branch without accepting the
+forward-port assessment that follows it.</li>
+<li class="">❌ No independent parallel implementation of the same concept on two
+major lines — one PR per concept per direction, cross-referenced.</li>
+<li class="">❌ Never hand-edit <code>VERSION</code> or <code>CHANGELOG.md</code> — on any branch.</li>
+<li class="">✅ Fixes on <code>main</code> first, labels second, cherry-pick third.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=docs-site-versions>Docs site versions<a href=#docs-site-versions class=hash-link aria-label="Direct link to Docs site versions" title="Direct link to Docs site versions" translate=no>​</a></h2>
+<p>The docs site keeps a frozen copy of the docs for each released minor line,
+selectable from the version dropdown in the top navigation. <code>main</code> is the
+default view; released lines live under a versioned prefix (<code>/2.0/</code> now,
+<code>/2.1/</code> when 2.1 ships).</p>
+<p>The <code>docs-version</code> workflow automates this: when release-please tags a
+stable <code>vX.Y.Z</code> on <code>main</code> for a minor line without a snapshot, it cuts the
+version and opens a <code>chore(website):</code> PR — merge it in the release window.
+Preview tags, patch releases on existing lines, and older-major maintenance
+tags are skipped automatically.</p>
+<p>Fallback, or to cut one by hand:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#393A34;--prism-background-color:#f6f8fa><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style=color:#393A34;background-color:#f6f8fa><code class=codeBlockLines_e6Vv><div class=token-line style=color:#393A34><span class="token builtin class-name">cd</span><span class="token plain"> website</span><br/></div><div class=token-line style=color:#393A34><span class="token plain"></span><span class="token function" style=color:#d73a49>node</span><span class="token plain"> scripts/cut-docs-version.mjs </span><span class="token number" style=color:#36acaa>2.1</span><span class="token plain">   </span><span class="token comment" style=color:#999988;font-style:italic># released minor, no "v" prefix</span><br/></div></code></pre></div></div>
+<p>This snapshots <code>docs/</code> and <code>sidebars.ts</code> into <code>versioned_docs/version-2.1/</code>,
+registers it in <code>versions.json</code>, and adds its dropdown entry to
+<code>docusaurus.config.ts</code>. Open the resulting changes in a <code>chore(website):</code> PR.</p>
+<p>Rules of thumb:</p>
+<ul>
+<li class="">One docs version per <strong>minor</strong> line, not per patch — patch releases don't
+warrant a new snapshot.</li>
+<li class="">Versioned copies are frozen. Fix content bugs in <code>main</code>'s <code>docs/</code> first,
+then apply the same fix to the relevant <code>versioned_docs/version-X.Y/</code>
+copy, the same way code backports work. Frozen pages offer no
+"Edit this page" link — every fix starts in <code>main</code>.</li>
+<li class="">Go snippets in <code>website/snippets/</code> are shared across all versions — a
+versioned page renders the <em>current</em> snippet source. If a snippet change
+would mislead an older version's readers, cut the new docs version
+<em>before</em> merging the snippet change.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=retiring-a-maintenance-branch>Retiring a maintenance branch<a href=#retiring-a-maintenance-branch class=hash-link aria-label="Direct link to Retiring a maintenance branch" title="Direct link to Retiring a maintenance branch" translate=no>​</a></h2>
+<p>Support windows are deliberate, not accidental (ADR 011, rule 7).
+Vocabulary: <em>current</em> means the highest tagged major; <em>prior</em> means any
+tagged major below it.</p>
+<ul>
+<li class="">The current major's latest minor receives fixes <strong>and</strong> selected features.</li>
+<li class="">The transition is explicit: the day the successor major tags its <strong>first
+stable release</strong>, every prior major drops to critical/security fixes only.
+Until that tag exists, the latest released major stays feature-eligible —
+that window is what makes <a href=#landing-an-old-major-only-feature class="">old-major-only features</a>
+possible while the next major is still in development.</li>
+<li class="">At end of support, the <code>release/*</code> branch is deleted and the retirement
+is announced in the release notes. If a maintenance branch starts feeling
+like active development again, that's the signal to revisit the EOL clock
+— not to keep growing the branch.</li>
+</ul>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class=admonitionHeading_Gvgb><span class=admonitionIcon_Rf37><svg viewBox="0 0 14 16"><path fill-rule=evenodd d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"/></svg></span>Status</div><div class=admonitionContent_BuS1><p>The automation described here (backport label action, forward-port tracker,
+maintenance-line release job, branch protection) lands incrementally; until
+each piece exists, perform its step manually and say so in the PR
+description. Tracking issues live under the
+<a href="https://github.com/michaeldcanady/servicenow-sdk-go/issues?q=is%3Aopen+label%3A%22type%3A+devops%22" target=_blank rel="noopener noreferrer" class=""><code>type: devops</code></a>
+label.</div></div></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href=https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/website/docs/contributing/release-branches.md target=_blank rel="noopener noreferrer" class=theme-edit-this-page><svg fill=currentColor height=20 width=20 viewBox="0 0 40 40" class=iconEdit_Z9Sw aria-hidden=true><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"/></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href=/servicenow-sdk-go/pr-preview/pr-776/contributing/add-api-module><div class=pagination-nav__sublabel>Previous</div><div class=pagination-nav__label>Add a new API module</div></a><a class="pagination-nav__link pagination-nav__link--next" href=/servicenow-sdk-go/pr-preview/pr-776/contributing/release-branch-protection><div class=pagination-nav__sublabel>Next</div><div class=pagination-nav__label>Release branch protection runbook</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href=#the-mental-model class="table-of-contents__link toc-highlight">The mental model</a><li><a href=#creating-a-maintenance-branch class="table-of-contents__link toc-highlight">Creating a maintenance branch</a><li><a href=#where-does-my-change-land class="table-of-contents__link toc-highlight">Where does my change land?</a><li><a href=#backporting-fixes-main--releasevxy class="table-of-contents__link toc-highlight">Backporting fixes (<code>main</code> → <code>release/vX.Y</code>)</a><li><a href=#landing-an-old-major-only-feature class="table-of-contents__link toc-highlight">Landing an old-major-only feature</a><li><a href=#forward-port-tracking-releasevxy--main class="table-of-contents__link toc-highlight">Forward-port tracking (<code>release/vX.Y</code> → <code>main</code>)</a><li><a href=#worked-example-a-new-servicenow-api-ships-today class="table-of-contents__link toc-highlight">Worked example: A new ServiceNow API ships today</a><li><a href=#hard-rules class="table-of-contents__link toc-highlight">Hard rules</a><li><a href=#docs-site-versions class="table-of-contents__link toc-highlight">Docs site versions</a><li><a href=#retiring-a-maintenance-branch class="table-of-contents__link toc-highlight">Retiring a maintenance branch</a></ul></div></div></div><div class=container_kuvk><span class=prompt_x5_U>Was this page helpful?</span><button type=button class="button button--sm button--outline button--secondary">Yes</button><button type=button class="button button--sm button--outline button--secondary">No</button></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Docs</div><ul class="footer__items clean-list"><li class=footer__item><a class=footer__link-item href=/servicenow-sdk-go/pr-preview/pr-776/getting-started>Getting Started</a><li class=footer__item><a class=footer__link-item href=/servicenow-sdk-go/pr-preview/pr-776/user-guide>User Guide</a><li class=footer__item><a class=footer__link-item href=/servicenow-sdk-go/pr-preview/pr-776/apis>API Reference</a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Project</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://github.com/michaeldcanady/servicenow-sdk-go/releases target=_blank rel="noopener noreferrer" class=footer__link-item>Releases<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://github.com/users/michaeldcanady/projects/7/views/9 target=_blank rel="noopener noreferrer" class=footer__link-item>Roadmap<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://github.com/michaeldcanady/servicenow-sdk-go/issues target=_blank rel="noopener noreferrer" class=footer__link-item>Issues<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div></div><div class="footer__bottom text--center"><div class=footer__copyright>Community-driven project — not an official ServiceNow product.</div></div></div></footer></div></body>
