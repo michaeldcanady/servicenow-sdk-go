@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.4](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.3...v2.0.4) (2026-09-02)
+
+
+### Bug Fixes
+
+* **query:** validate field names against encoded-query injection ([#784](https://github.com/michaeldcanady/servicenow-sdk-go/issues/784)) ([0fef8f1](https://github.com/michaeldcanady/servicenow-sdk-go/commit/0fef8f171b3df29da89a08e57dca9836efbc8fcc)), closes [#772](https://github.com/michaeldcanady/servicenow-sdk-go/issues/772)
+
 ## [2.0.3](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.2...v2.0.3) (2026-09-02)
 
 
