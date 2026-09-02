@@ -144,3 +144,19 @@ jobs:
     uses: ./.github/workflows/sign-release.yml
     with:
       tag: ${{ needs.release-please.outputs.tag_name || needs.release-please-maintenance.outputs.tag_name }}
+
+  # Runs the full quality gate against the tagged ref. The release-please
+  # tag push is invisible to the `push tags` trigger (GITHUB_TOKEN events do
+  # not start new runs), so this must be called in-band. See
+  # release-verify.yml for both trigger paths.
+  verify-release:
+    name: Verify Release Against Full Quality Gate
+    needs: [attach-sign, release-please, release-please-maintenance]
+    if: >-
+      (needs.release-please.result == 'success' && needs.release-please.outputs.release_created == 'true') ||
+      (needs.release-please-maintenance.result == 'success' && needs.release-please-maintenance.outputs.release_created == 'true')
+    permissions:
+      contents: read # checkout and verification
+    uses: ./.github/workflows/release-verify.yml
+    with:
+      tag: ${{ needs.release-please.outputs.tag_name || needs.release-please-maintenance.outputs.tag_name }}

@@ -1,19 +1,36 @@
 name: Release Verify
 
-# Tripwire for the release path: runs the full quality gate against the exact
-# tagged ref after a tag is pushed. Release PRs already run CI pre-merge (see
-# ci.yml `changes` job); this catches anything that slips through via direct
-# pushes or automation bugs. It cannot undo a published tag, so failures here
-# page a human to yank/patch the release immediately.
+# Tripwire for the release path: runs the full quality gate (modules, build,
+# lint, unit tests) against the exact tagged ref after a release is created.
+# Release PRs already run the same gate before merge (see ci.yml `changes`
+# job); this catches anything that slips through direct pushes or automation
+# bugs. It cannot undo a published tag, so a failure here pages a human to
+# yank or patch the release immediately.
+#
+# This workflow runs two ways:
+# - workflow_call: Stable Release and Weekly Preview Release call it in-band
+#   after the release-please step, passing the tag that run created. This is
+#   how release-please-created tags get verified. release-please creates tags
+#   as GitHub Actions using the default token, and GitHub does not start new
+#   workflow runs from events created by GITHUB_TOKEN, so the old
+#   `push tags v*` trigger never fired for those tags.
+# - push on v* tags: covers tags that a human pushes directly, which do not
+#   pass through the releasing workflows.
 on:
   push:
     tags:
       - "v*"
+  workflow_call:
+    inputs:
+      tag:
+        description: Tag name to verify (for example v2.0.3)
+        required: true
+        type: string
 
 permissions: {}
 
 concurrency:
-  group: release-verify-${{ github.ref }}
+  group: release-verify-${{ inputs.tag || github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -24,9 +41,13 @@ jobs:
     permissions:
       contents: read # checkout and verification
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Checkout the tagged ref
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Explicit ref when called in-band; a push event already points at
+          # the tag, so fall back to the event ref.
+          ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || github.ref }}
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
