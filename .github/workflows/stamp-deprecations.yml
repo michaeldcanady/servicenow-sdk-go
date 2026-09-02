@@ -34,8 +34,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
   stamp:
@@ -43,12 +42,18 @@ jobs:
     if: ${{ startsWith(github.head_ref, 'release-please--') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: write # push stamp commit to release-please branch
     steps:
       - name: Checkout release PR branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
+          # Credentials are not persisted; the push below authenticates via
+          # GH_TOKEN injected into the remote URL (same pattern as
+          # docs-version.yml), avoiding an on-disk token for artipacked.
+          persist-credentials: false
 
       - name: Read pending version
         id: version
@@ -84,6 +89,7 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
           HEAD_REF: ${{ github.head_ref }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git diff --quiet && exit 0
           git config user.name  "github-actions[bot]"
@@ -92,7 +98,7 @@ jobs:
           git commit -m "docs: stamp ${VERSION} into Deprecated notices"
           for attempt in 1 2 3; do
             SHA=$(git rev-parse HEAD)
-            if git push origin "HEAD:${HEAD_REF}"; then
+            if git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${HEAD_REF}"; then
               git fetch origin "${HEAD_REF}"
               # A trivially-successful no-op push must not read as green when it
               # dropped our commit; verify the remote tip actually contains it.

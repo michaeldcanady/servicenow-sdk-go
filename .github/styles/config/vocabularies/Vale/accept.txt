@@ -194,7 +194,7 @@ CIs?('s)?
 (?i)substrings?
 (?i)swappable
 (?i)toolchains?
-(?i)triag(ed|ing)
+(?i)triaging
 (?i)uncompilable
 (?i)ungrouped
 (?i)unsuffixed
@@ -214,3 +214,7 @@ Godog
 (?i)runtimes?('s)?
 (?i)rulesets?
 (?i)codeowners
+(?i)deliverable(s)?
+(?i)allowlist
+(?i)mergeable
+(?i)rebase

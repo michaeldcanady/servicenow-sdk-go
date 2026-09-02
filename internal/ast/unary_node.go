@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package ast
 
 // UnaryNode represents a unary operation (e.g., fieldISEMPTY).

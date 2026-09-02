@@ -1,3 +1,6 @@
+# Copyright (c) 2021 Michael Canady
+# SPDX-License-Identifier: MIT
+
 # Codecov coverage gate. `fail_ci_if_error` in ci.yml only guards the upload
 # itself; these status checks fail the check when coverage regresses.
 # `target: auto` ratchets against the base commit — no hardcoded number to

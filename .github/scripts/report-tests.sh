@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) 2021 Michael Canady
+# SPDX-License-Identifier: MIT
+
 set -o pipefail
 
 go test -coverprofile=coverage.out -json -v ./... > test-output.json

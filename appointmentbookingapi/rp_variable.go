@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package appointmentbookingapi // nolint:dupl // shares field-count shape with UserTimeFormatOptionsModel by coincidence, not copy-paste; distinct API concept, not worth sacrificing named accessors for
 
 import (

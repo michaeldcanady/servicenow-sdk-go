@@ -33,13 +33,17 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   detect-changes:
     name: Detect Changes
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read
+      contents: read # checkout for change detection
     outputs:
       docs: ${{ steps.diff.outputs.any_changed }}
     steps:
@@ -47,7 +51,9 @@ jobs:
       # out before the action below can be found at all — its internal
       # checkout step can never be the thing that bootstraps this.
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Detect site-output changes
         id: diff
@@ -66,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
-      contents: write # required: pushes built site to gh-pages branch
+      contents: write # pushes built site to gh-pages branch (auditor requires comment)
     needs: [detect-changes]
     if: needs.detect-changes.outputs.docs == 'true'
     # Serialize stable deploys: two rapid merges finishing out of order would
@@ -76,7 +82,9 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       # Whole-tree prose scan at the release gate (#661). Includes versioned
       # copies under website/versioned_docs — backport fixes to frozen pages
@@ -86,7 +94,7 @@ jobs:
       # vale-action only splits its files input when given one, and the
       # delimiter must survive the runner's input trimming.
       - name: Vale Linter (full site)
-        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # 3.0.0
+        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # v3.0.0
         with:
           fail_on_error: true
           files: website/docs,website/versioned_docs
@@ -106,7 +114,7 @@ jobs:
           analytics-domain: michaeldcanady.github.io
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
+        uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4.9.0
         with:
           branch: gh-pages
           folder: website/build

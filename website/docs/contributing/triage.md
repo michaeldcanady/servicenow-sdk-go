@@ -194,6 +194,42 @@ Revisit an issue's priority when:
 - It's reopened after being closed.
 - A milestone's scope changes.
 
+## Planning hierarchy
+
+Large bodies of work are planned through an Epic → Story → Task hierarchy.
+Each level is a GitHub issue:
+
+- An **epic** tracks a large body of work via its linked stories. It carries
+  the [`type: epic`](#type-labels) label.
+- A **story** delivers one slice of user-visible value toward an epic.
+- A **task** is a single unit of implementable work inside a story.
+
+### Templates
+
+Epics, stories, and tasks are maintainer-only planning artifacts. Maintainers
+file them from the templates in `.github/templates/` — one template per level:
+
+| Template                 | Contents                                                          |
+| ------------------------ | ----------------------------------------------------------------- |
+| `EPIC_TEMPLATE.md`       | Overview, user personas, success criteria, linked stories         |
+| `USER_STORY_TEMPLATE.md` | As-a/I-want/so-that statement, acceptance criteria, linked tasks  |
+| `TASK_TEMPLATE.md`       | Description, task type, sub-tasks, deliverables, parent story     |
+
+You won't find these levels in the public issue chooser. It exposes only two
+forms: **Bug report** and **Feature request** — a feature request becomes a
+story once planning starts. Blank issues are disabled, and questions go to
+[Discussions](https://github.com/michaeldcanady/servicenow-sdk-go/discussions),
+not issues.
+
+### Backlog hygiene
+
+A hierarchy is only useful while it reflects reality:
+
+- Keep `status:` labels current as work moves — see
+  [status labels](#status-labels-workflow-state).
+- Review epics during triage. Close epics whose success criteria are met,
+  and split stale ones into smaller, actionable stories.
+
 ## Quick reference
 
 ### Worked examples

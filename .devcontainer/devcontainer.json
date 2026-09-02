@@ -1,7 +1,6 @@
 {
   "name": "ServiceNow SDK Go",
-  "dockerComposeFile": "podman-compose.yml",
-  "service": "app",
+  "image": "mcr.microsoft.com/devcontainers/go:1.26",
   "workspaceFolder": "/workspaces/servicenow-sdk-go",
   "customizations": {
     "vscode": {
@@ -28,11 +27,7 @@
   "postCreateCommand": "just --version",
   "features": {
     "./xdg-utils": {},
-    "./gemini-persistence": {},
     "./go-cache": {},
-    "./antigravity": {},
-    "./ollama-cli": {},
-    "ghcr.io/stu-bell/devcontainer-features/gemini-cli:0": {},
     "ghcr.io/devcontainers/features/github-cli:1": {
       "version": "latest"
     },

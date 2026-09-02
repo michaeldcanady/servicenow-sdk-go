@@ -4,6 +4,20 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      go-dependencies:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: gomod
+    directory: /tests/integration/v2
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
     groups:
       go-dependencies:
         update-types:
@@ -14,6 +28,8 @@ updates:
     directory: "/website"
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
     groups:
       website-dependencies:
         update-types:
@@ -24,8 +40,12 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+    cooldown:
+      default-days: 7
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7

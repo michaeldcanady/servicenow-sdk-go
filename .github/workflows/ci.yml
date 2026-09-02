@@ -1,6 +1,11 @@
 name: CI
 on:
   workflow_dispatch:
+  # Run the full matrix weekly, independent of PR activity. Tuesdays 03:00 UTC
+  # avoids Scorecard (Mon 01:30), the weekly release (Mon 03:00), e2e-nightly
+  # (daily 04:00), the stale bot (daily 05:30), and CodeQL (Fri 03:00).
+  schedule:
+    - cron: "0 3 * * 2"
   push:
     branches:
       - main
@@ -21,7 +26,11 @@ on:
       - ".golangci.yml"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  # Scheduled runs carry no head_ref or ref, so without the run_id fallback
+  # every weekly run shares one bare group key and cancel-in-progress drops
+  # whichever started first. run_id gives each its own slot; push, PR, and
+  # dispatch grouping are unchanged.
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
   cancel-in-progress: true
 
 env:
@@ -31,20 +40,28 @@ permissions: {}
 
 jobs:
   changes:
+    name: Detect Changed Files
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read
+      contents: read # changed-files detection via checkout
     # Release-please PRs are no longer exempt: they bump version.go (compiled
     # code) and must pass the same gates as any other change before a tag is cut.
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    if: >-
+      github.event_name == 'push' ||
+      github.event_name == 'pull_request' ||
+      github.event_name == 'schedule'
     outputs:
-      code: ${{ steps.filter.outputs.any_changed }}
+      code: ${{ github.event_name == 'schedule' || steps.filter.outputs.any_changed == 'true' }}
+      headers: ${{ github.event_name == 'schedule' || steps.header_filter.outputs.any_changed == 'true' }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Changed Files
+        if: github.event_name != 'schedule'
         uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
         id: filter
         with:
@@ -55,6 +72,22 @@ jobs:
             **/*.feature
             .github/workflows/ci.yml
 
+      # Files in scope for the license-header check (matches scripts/add-license.sh:
+      # all .go/.sh plus root-level .yml/.yaml). A separate output keeps shell-only
+      # and config-only changes from unnecessarily re-running the Go build/test
+      # matrix while still gating the header check on the files it inspects.
+      - name: License Files Changed
+        if: github.event_name != 'schedule'
+        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
+        id: header_filter
+        with:
+          files: |
+            **.go
+            **/*.sh
+            *.yml
+            *.yaml
+            .github/workflows/ci.yml
+
   check-go:
     name: Check Go Modules
     needs:
@@ -63,21 +96,30 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: read
+      contents: read # checkout only; no push or release
     strategy:
       matrix:
         go-version: ["stable", "oldstable"]
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        # zizmor: ignore[cache-poisoning] -- check-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
           go-version: ${{ matrix.go-version }}
           cache: true
       - run: go mod download
       - run: go mod verify
-      - run: |
+      - name: Check root module tidiness
+        run: |
           go mod tidy
-          git diff --exit-code -- .
+          git diff --exit-code -- go.mod go.sum
+      - name: Check integration test module tidiness
+        run: |
+          cd tests/integration/v2
+          go mod tidy
+          git diff --exit-code -- go.mod go.sum
 
   build-go:
     name: Build Go Code
@@ -92,14 +134,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     permissions:
-      contents: read
-      pull-requests: write
+      contents: read # checkout and build
     defaults:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        # zizmor: ignore[cache-poisoning] -- build-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
           go-version: ${{ matrix.go-version }}
           cache: true
@@ -116,14 +160,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      contents: read
+      contents: read # checkout and lint
     strategy:
       fail-fast: false
       matrix:
         go-version: ["stable", "oldstable"]
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        # zizmor: ignore[cache-poisoning] -- lint-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
           go-version: ${{ matrix.go-version }}
       - name: Run golangci-lint
@@ -133,6 +180,26 @@ jobs:
           version: v2.13.0
           skip-cache: false
           args: --timeout=5m
+
+  check-license:
+    name: License Headers
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.headers == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read # checkout and verify license headers
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        # zizmor: ignore[cache-poisoning] -- check-license: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
+        with:
+          go-version: "stable"
+      - name: Verify license headers
+        run: ./scripts/add-license.sh --check-only
 
   test-go:
     name: Test Go Code
@@ -147,14 +214,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     permissions:
-      contents: read
-      pull-requests: write
+      contents: read # checkout and test
+      pull-requests: write # sticky PR comment on failure
     defaults:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        # zizmor: ignore[cache-poisoning] -- test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
           go-version: ${{ matrix.go-version }}
       - name: Install tparse
@@ -173,13 +243,13 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
       - name: Post Sticky Comment
         if: failure()
-        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
         with:
           header: test-failure-summary
           message: ${{ steps.create-summary.outputs.SUMMARY }}
       - name: Delete Test Failure Comment
         if: success()
-        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
         with:
           header: test-failure-summary
           delete: true
@@ -190,7 +260,8 @@ jobs:
         with:
           files: ./${{ env.COVERAGE_FILE }}
           fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration-test-go:
     name: Integration Tests (mocked)
@@ -200,10 +271,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      contents: read
+      contents: read # checkout and mocked integration tests
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        # zizmor: ignore[cache-poisoning] -- integration-test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
           go-version: "stable"
           cache: true
@@ -225,10 +299,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: read
+      contents: read # checkout and preview.query tests
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        # zizmor: ignore[cache-poisoning] -- tag-gated-test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
           go-version: "stable"
           cache: true
@@ -243,7 +320,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: read
+      contents: read # govulncheck via default checkout handled by action
     steps:
       - name: Run govulncheck
         uses: golang/govulncheck-action@032d45514ae346b1db93c04b0c90b841c370344f # v1

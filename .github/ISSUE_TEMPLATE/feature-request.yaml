@@ -62,3 +62,8 @@ body:
       description: Related issues/PRs, ServiceNow docs links, etc.
     validations:
       required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        Once you submit, maintainers triage your issue through a standard lifecycle — see the [issue lifecycle guide](https://michaeldcanady.github.io/servicenow-sdk-go/contributing/triage) to learn what happens next.

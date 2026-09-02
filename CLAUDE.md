@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI coding assistants (Claude Code and opencode) when working with code in this repository.
 
 ## What this is
 
@@ -9,6 +9,37 @@ fluent, typed client. It is built directly on Microsoft's Kiota abstractions
 (`kiota-abstractions-go`, `kiota-http-go`, `kiota-serialization-*-go`) rather than a generated
 Kiota client — the request-builder/parsable/backing-store pattern is hand-written to match Kiota's
 conventions so the SDK "feels" like other Kiota-generated SDKs (e.g. msgraph-sdk-go).
+
+## Write and speak to the Google technical writing standard
+
+Everything you write or say in this repo — replies to the user, commit messages, PR descriptions,
+issues, code comments, docs, specs, ADRs, and skill files — conforms to the **Google developer
+documentation style guide** (`developers.google.com/style`). Run the
+`google-tech-writing` skill (`.opencode/skills/google-tech-writing`) before drafting or editing
+any prose, and self-review against it before sending. The short version: active voice, second
+person ("you"), present tense, conditions before actions, short sentences, standard American
+spelling and punctuation, sentence-case headings, serial commas, descriptive link text; no
+jargon, buzzwords, placeholder phrases (such as "please note" and "at this time"), exclamation
+points, "let's", "simply"/"easy", anthropomorphism, or Latin abbreviations (write "for example",
+"that is", "and so on" instead of "e.g.", "i.e.", "etc."). **Every agent and every skill in
+`.opencode/` must be written to this standard and must stay that way when edited.** The skill files
+themselves are the reference: read one if you need a worked example.
+
+## Consult the ADRs before you act
+
+The repo's load-bearing design trade-offs are recorded as Architecture Decision Records (ADRs) in
+`website/docs/contributing/adrs/` (index: `index.md`; plain-language overview: `design-decisions.md`).
+They cover the request-builder/model architecture, error handling, pagination, nil-guard behavior,
+naming, module path, and the branch/release flow. **Before proposing or changing anything in that
+scope — and before answering "why does this repo do X" — read the covering ADR first**, and run the
+`design-decisions` skill (`.opencode/skills/design-decisions`) to get the rules applied to your
+situation. These trade-offs (hand-writing on Kiota over generating from OpenAPI — ADR 003; backing
+stores over plain fields — ADR 002; shared error sentinels — ADR 001; generic `core.PageIterator`
+over per-module wrappers — ADR 005; trunk-first lazily-cut `release/vX.Y` branches — ADR 011) were
+chosen over real alternatives; a change that contradicts one without saying so is the most common
+way good work goes wrong in this repo. If you hit a genuinely new trade-off (a rejected alternative
+plus a reason), flag it as an ADR candidate to the `product-manager` agent rather than silently
+codifying it — routine bug fixes and formatting don't need ADR backing.
 
 ## Commands
 
@@ -118,9 +149,10 @@ package follows:
   (`<resource>_request_builder_<verb>_query_parameters.go`,
   `..._request_configuration.go`), never inlined into the request builder file.
 - A `Readme.md` per package describing the endpoint.
-- A `.claude/skills/new-api-module` skill and `.claude/agents/api-module-consistency-reviewer`
-  agent exist in this repo specifically to scaffold/review new modules against this pattern — use
-  them instead of re-deriving the shape by hand.
+- `tableapi/` (canonical) and `policyapi/` (minimal) are the reference implementations to copy,
+  the `design-decisions` skill (`.opencode/skills/design-decisions`) captures the conventions
+  behind this pattern, and the `principal-software-engineer` agent (`.opencode/agents/`) reviews
+  new modules against it before they ship — use those instead of re-deriving the shape by hand.
 
 ### Error-sentinel layout (non-obvious — three separate places)
 
@@ -147,7 +179,7 @@ option.
 - **Unit tests**: co-located `_test.go` per file, table-driven with `testify` (`assert`/`require`),
   HTTP mocked via `httpmock` and internal `testify/mock`-based mocks in `internal/mocking`. Every new
   exported type/method needs a test — this is enforced by convention (and by the
-  `api-module-consistency-reviewer` agent), not tooling.
+  `principal-qa-engineer` agent), not tooling.
 - **Integration tests** (`tests/integration/v2/`, `//go:build integration`): Gherkin `.feature` files
   under `tests/integration/v2/features/` + step definitions using `godog`, `httpmock`, and `godotenv` for
   `.env`-based config — no live ServiceNow instance required.
@@ -157,12 +189,12 @@ option.
 
 ## Subagent conventions
 
-Every subagent defined in `.claude/agents/` — whether reviewing code, scanning for missing tests, or
+Every subagent defined in `.opencode/agents/` — whether reviewing code, scanning for missing tests, or
 triaging issues — **reports findings to the `product-manager` agent rather than fixing them
 immediately**, even when that same agent is the one who will eventually implement the fix. This
 keeps a single place (the product-manager's specs/issues/ADRs) as the record of what was found and
-why, before anyone starts changing code. `api-module-consistency-reviewer` already follows this
-(it only reports); a scan-and-write agent like `test-coverage-writer` still classifies and reports
+why, before anyone starts changing code. `principal-software-engineer` already follows this
+(it only reports); a scan-and-write agent like `principal-qa-engineer` still classifies and reports
 first, and only writes tests after an explicit go-ahead — never fix-as-it-scans.
 
 ## Versioning & commits

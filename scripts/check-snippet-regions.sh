@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2021 Michael Canady
+# SPDX-License-Identifier: MIT
+
 # Verifies the doc-snippet contract between website/docs and website/snippets:
 #   1. every region referenced from a page exists in a snippet file,
 #   2. every region defined in a snippet file is referenced by some page

@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.1...v2.0.2) (2026-09-01)
+
+
+### Bug Fixes
+
+* expand query params in facets instance URL ([#766](https://github.com/michaeldcanady/servicenow-sdk-go/issues/766)) ([b7af9d8](https://github.com/michaeldcanady/servicenow-sdk-go/commit/b7af9d80b1bc85d3df85406592748e9ef1b78558))
+
 ## [2.0.1](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.0...v2.0.1) (2026-08-21)
 
 

@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package credentials
 
 // Preparable is an interface for authentication providers or token providers

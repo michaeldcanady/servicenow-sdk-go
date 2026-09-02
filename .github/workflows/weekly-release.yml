@@ -8,10 +8,7 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
-permissions:
-  contents: write
-  issues: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   detect-changes:
@@ -19,12 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read
+      contents: read # checkout and change detection
     outputs:
       should_release: ${{ steps.determine.outputs.should_release }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0 # Needed to fetch all tags
 
       - name: Get latest tag
@@ -44,19 +42,27 @@ jobs:
 
       - name: Determine whether to release
         id: determine
+        env:
+          TAG: ${{ steps.latest_tag.outputs.tag }}
+          ANY_CHANGED: ${{ steps.diff.outputs.any_changed }}
         run: |
-          if [ -z "${{ steps.latest_tag.outputs.tag }}" ]; then
+          if [ -z "$TAG" ]; then
             echo "No prior tag found; defaulting should_release=true for first run."
             echo "should_release=true" >> "$GITHUB_OUTPUT"
           else
-            echo "should_release=${{ steps.diff.outputs.any_changed }}" >> "$GITHUB_OUTPUT"
+            echo "should_release=$ANY_CHANGED" >> "$GITHUB_OUTPUT"
           fi
 
   release-please:
+    name: Create Weekly Preview Release
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.should_release == 'true' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write # create preview release PR and tag
+      issues: write # label preview release PR
+      pull-requests: write # open preview release PR
     steps:
       - name: Create preview release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5

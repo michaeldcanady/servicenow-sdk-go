@@ -21,14 +21,16 @@ concurrency:
   group: docs-version-${{ github.ref }}
   cancel-in-progress: false
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   snapshot:
+    name: Snapshot Docs Version
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: write # push versioned docs branch and commit
+      pull-requests: write # open snapshot PR
     steps:
       - name: Check out main
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -85,15 +87,17 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '20'
-          cache: npm
-          cache-dependency-path: website/package-lock.json
+          cache: false # cache disabled per zizmor cache-poisoning audit
+          package-manager-cache: false
 
       - name: Cut docs version
         if: steps.guard.outputs.skip == 'false'
         working-directory: website
+        env:
+          LINE: ${{ steps.guard.outputs.line }}
         run: |
           npm ci
-          node scripts/cut-docs-version.mjs "${{ steps.guard.outputs.line }}"
+          node scripts/cut-docs-version.mjs "$LINE"
 
       - name: Open snapshot PR
         if: steps.guard.outputs.skip == 'false'
