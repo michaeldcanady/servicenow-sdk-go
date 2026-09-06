@@ -26,7 +26,10 @@
   "updateContentCommand": "go mod download",
   "postCreateCommand": "just --version",
   "features": {
-    "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils:0": {},
+    "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils:0": {
+      "hostBrowserPipePath": "/tmp/hostbrowserpipe",
+      "containerBrowserPipePath": "/tmp/hostbrowserpipe"
+    },
     "ghcr.io/nerdit-tech/devcontainer-features/go-cache:0": {},
     "ghcr.io/devcontainers/features/github-cli:1": {
       "version": "latest"
