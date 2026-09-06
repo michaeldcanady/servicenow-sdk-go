@@ -14,6 +14,16 @@
       "version": "0.1.0",
       "resolved": "ghcr.io/guiyomh/features/just@sha256:8311dff976bd153a54a879021353a7e149963e580022b25af49c45cfc5f13bec",
       "integrity": "sha256:8311dff976bd153a54a879021353a7e149963e580022b25af49c45cfc5f13bec"
+    },
+    "ghcr.io/nerdit-tech/devcontainer-features/go-cache:0": {
+      "version": "0.1.0",
+      "resolved": "ghcr.io/nerdit-tech/devcontainer-features/go-cache@sha256:a9d9c3f6230e0ad3284394f6d1292efc71cb589324eb1b7b0450dc417f83aa8b",
+      "integrity": "sha256:a9d9c3f6230e0ad3284394f6d1292efc71cb589324eb1b7b0450dc417f83aa8b"
+    },
+    "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils:0": {
+      "version": "0.1.0",
+      "resolved": "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils@sha256:70765622b534f8ea5d84ec20492dcffd63b0e5bb9f997396b23576a5a95d0261",
+      "integrity": "sha256:70765622b534f8ea5d84ec20492dcffd63b0e5bb9f997396b23576a5a95d0261"
     }
   }
 }
