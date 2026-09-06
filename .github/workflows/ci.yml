@@ -104,22 +104,16 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- check-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
-        with:
-          go-version: ${{ matrix.go-version }}
-          cache: true
-      - run: go mod download
-      - run: go mod verify
       - name: Check root module tidiness
-        run: |
-          go mod tidy
-          git diff --exit-code -- go.mod go.sum
+        uses: ./.github/actions/check-go-deps
+        with:
+          mod-path: ""
+          go-version: ${{ matrix.go-version }}
       - name: Check integration test module tidiness
-        run: |
-          cd tests/integration/v2
-          go mod tidy
-          git diff --exit-code -- go.mod go.sum
+        uses: ./.github/actions/check-go-deps
+        with:
+          mod-path: "tests/integration/v2"
+          go-version: ${{ matrix.go-version }}
 
   build-go:
     name: Build Go Code
