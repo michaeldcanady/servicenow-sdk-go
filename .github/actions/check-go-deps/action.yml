@@ -18,7 +18,7 @@ runs:
       id: resolve-mod-path
       shell: bash
       run: |
-        ROOT_PATH="${${{ inputs.mod-path }}:=$(git rev-parse --show-toplevel)}"
+        ROOT_PATH="${${{ inputs.mod-path }}:-$(git rev-parse --show-toplevel)}"
         GO_MOD_PATH="$ROOT_PATH/go.mod"
         GO_SUM_PATH="$ROOT_PATH/go.sum"
         if [[ ! -f "$GO_MOD_PATH" ]]; then
