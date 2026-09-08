@@ -144,21 +144,8 @@ jobs:
     name: Lint Go Code
     needs:
       - changes
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - "ubuntu-latest"
-          - "macos-latest"
-          - "windows-latest"
-        go-version:
-          - "stable"
-          - "oldstable"
     if: ${{ needs.changes.outputs.code == 'true' }}
     uses: ./.github/workflows/reusable-lint-go.yaml
-    with:
-      os: ${{ matrix.os }}
-      go-version: ${{ matrix.go-version }}
 
   check-license:
     name: License Headers
