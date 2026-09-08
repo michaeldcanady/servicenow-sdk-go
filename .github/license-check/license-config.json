@@ -1,0 +1,8 @@
+[
+    {
+        "include": [
+            "**/*.go"
+        ],
+        "license": "./.github/license-check/license.txt"
+    }
+]

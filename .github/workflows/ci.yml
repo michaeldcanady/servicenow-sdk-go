@@ -164,8 +164,11 @@ jobs:
         with:
           go-version: "stable"
       - name: Verify license headers
-        run: ./scripts/add-license.sh --check-only
-
+        uses: viperproject/check-license-header@v2
+        with:
+          path: "."
+          config: ".github/license-check/license-config.json"
+          strict: true
   test-go:
     name: Test Go Code
     needs:
