@@ -17,6 +17,9 @@ on:
       - "**/*.feature"
       - ".github/workflows/ci.yml"
       - ".github/workflows/reusable-lint-go.yaml"
+      - ".github/workflows/reusable-test-go.yaml"
+      - ".github/actions/check-go-deps"
+      - ".github/workflows/reusable-build-go.yaml"
   pull_request:
     paths:
       - "**.go"
@@ -26,7 +29,9 @@ on:
       - ".github/workflows/ci.yml"
       - ".golangci.yml"
       - ".github/workflows/reusable-lint-go.yaml"
-
+      - ".github/workflows/reusable-test-go.yaml"
+      - ".github/actions/check-go-deps/action.yml"
+      - ".github/workflows/reusable-build-go.yaml"
 concurrency:
   # Scheduled runs carry no head_ref or ref, so without the run_id fallback
   # every weekly run shares one bare group key and cancel-in-progress drops
@@ -74,7 +79,9 @@ jobs:
             **/*.feature
             .github/workflows/ci.yml
             .github/workflows/reusable-lint-go.yaml
-
+            .github/workflows/reusable-test-go.yaml
+            .github/workflows/reusable-build-go.yaml
+            .github/actions/check-go-deps/action.yml
       # Files in scope for the license-header check (matches scripts/add-license.sh:
       # all .go/.sh plus root-level .yml/.yaml). A separate output keeps shell-only
       # and config-only changes from unnecessarily re-running the Go build/test
@@ -90,33 +97,22 @@ jobs:
             *.yml
             *.yaml
             .github/workflows/ci.yml
-
+            .github/workflows/reusable-test-go.yaml
   check-go:
     name: Check Go Modules
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
     permissions:
       contents: read # checkout only; no push or release
     strategy:
       matrix:
         go-version: ["stable", "oldstable"]
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Check root module tidiness
-        uses: ./.github/actions/check-go-deps
-        with:
-          mod-path: "."
-          go-version: ${{ matrix.go-version }}
-      - name: Check integration test module tidiness
-        uses: ./.github/actions/check-go-deps
-        with:
-          mod-path: "tests/integration/v2"
-          go-version: ${{ matrix.go-version }}
+        mod-path: [".", "tests/integration/v2"]
+    uses: ./.github/workflows/reusable-check-go-deps.yaml
+    with:
+      go-version: ${{ matrix.go-version }}
+      package-path: ${{ matrix.mod-path }}
 
   build-go:
     name: Build Go Code
@@ -189,6 +185,7 @@ jobs:
     with:
       os: ${{ matrix.os }}
       go-version: ${{ matrix.go-version }}
+      package-path: "./..."
 
   integration-test-go:
     name: Integration Tests (mocked)
