@@ -164,7 +164,7 @@ jobs:
         with:
           go-version: "stable"
       - name: Verify license headers
-        uses: viperproject/check-license-header@v2
+        uses: viperproject/check-license-header@e06c65614fa9f32e099838df4dd25440c5344b32 # v2.0.3
         with:
           path: "."
           config: ".github/license-check/license-config.json"
