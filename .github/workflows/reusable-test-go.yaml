@@ -26,7 +26,7 @@ on:
       tparse-version:
         description: "tparse release version to be installed (e.g. v0.13.3, or 'latest')"
         type: string
-        default: "latest"
+        default: "v0.18.0"
       working-directory:
         description: "Working directory to run tests in (e.g. '.', 'tests/integration/v2')"
         type: string

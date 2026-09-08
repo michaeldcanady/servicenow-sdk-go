@@ -61,7 +61,10 @@ runs:
         args=()
         [ "${verbose}" = "true" ] && args+=("-v")
         [ "${format_json}" = "true" ] && args+=("-json")
-        [ -n "${build_flags}" ] && args+=("${build_flags}")
+        if [ -n "${build_flags}" ]; then
+          read -r -a flag_args <<< "${build_flags}"
+          args+=("${flag_args[@]}")
+        fi
 
         cover_path=""
         if [ -n "${coverage_profile}" ] && [ "${coverage_profile}" != "false" ]; then

@@ -15,7 +15,7 @@ on:
         type: string
 
 concurrency:
-  group: check-deps-go-${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}
+  group: check-deps-go-${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.go-version }}-${{ inputs.package-path }}
   cancel-in-progress: true
 
 permissions: {}
