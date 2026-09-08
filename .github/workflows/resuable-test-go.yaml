@@ -11,6 +11,10 @@ on:
         description: "Go version to use (e.g. stable, oldstable, 1.20)"
         type: string
         default: "stable"
+      go-build-flags:
+        description: "Additional flags to pass to 'go build' (e.g. '-tags=integration')"
+        type: string
+        default: ""
       coverage-file:
         description: "Coverage file path (e.g. coverage.out). Set to empty to skip coverage."
         type: string
@@ -55,6 +59,7 @@ jobs:
           format-json: true
           verbose: true
           coverage-profile: ${{ inputs.coverage-file }}
+          build-flags: ${{ inputs.go-build-flags }}
       - name: Post Sticky Comment
         if: failure()
         uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5

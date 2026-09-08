@@ -17,6 +17,10 @@ inputs:
     description: "Coverage output file path (e.g. coverage.out). Set to 'true' for the default 'coverage.out', or omit/leave empty to skip coverage."
     required: false
     default: ""
+  build-flags:
+    description: "Additional flags to pass to 'go build' (e.g. '-tags=integration')"
+    required: false
+    default: ""
   package-paths:
     description: "Packages to test, space- or newline-separated. e.g. ./... or './pkg1\n./pkg2'"
     required: true
@@ -36,12 +40,14 @@ runs:
         verbose: ${{ inputs.verbose }}
         coverage_profile: ${{ inputs.coverage-profile }}
         package_paths: ${{ inputs.package-paths }}
+        build_flags: ${{ inputs.build-flags }}
       run: |
         set -euo pipefail
 
         args=()
         [ "${verbose}" = "true" ] && args+=("-v")
         [ "${format_json}" = "true" ] && args+=("-json")
+        [ -n "${build_flags}" ] && args+=("${build_flags}")
 
         cover_path=""
         if [ -n "${coverage_profile}" ] && [ "${coverage_profile}" != "false" ]; then

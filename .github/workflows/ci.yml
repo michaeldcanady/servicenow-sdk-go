@@ -197,26 +197,20 @@ jobs:
     if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    uses: ./.github/workflows/resuable-test-go.yaml
     permissions:
       contents: read # checkout and mocked integration tests
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- integration-test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
-        with:
-          go-version: "stable"
-          cache: true
-      - name: Run integration tests
-        env:
-          SN_OFFLINE: "true"
-          SN_INSTANCE: mock_instance
-          SN_USERNAME: mock_user
-          SN_PASSWORD: mock_password
-        run: |
-          cd tests/integration/v2
-          go test -tags integration ./...
+      pull-requests: write
+    with:
+      os: "ubuntu-latest"
+      go-version: "stable"
+      go-build-flags: "-tags integration"
+      package-path: "./tests/integration/v2"
+    env:
+      SN_OFFLINE: "true"
+      SN_INSTANCE: mock_instance
+      SN_USERNAME: mock_user
+      SN_PASSWORD: mock_password
 
   tag-gated-test-go:
     name: Tag-Gated Tests (preview.query)
