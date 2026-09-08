@@ -1,7 +1,10 @@
 [
     {
         "include": [
-            "**/*.go"
+            "**/*.go",
+            "**/*.sh",
+            "*.yml",
+            "*.yaml"
         ],
         "license": "./.github/license-check/license.txt"
     }
