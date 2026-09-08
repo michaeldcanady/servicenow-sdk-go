@@ -31,6 +31,22 @@ on:
         description: "Working directory to run tests in (e.g. '.', 'tests/integration/v2')"
         type: string
         default: "."
+      sn-offline:
+        description: "Set SN_OFFLINE environment variable for integration tests"
+        type: string
+        default: ""
+      sn-instance:
+        description: "Set SN_INSTANCE environment variable for integration tests"
+        type: string
+        default: ""
+      sn-username:
+        description: "Set SN_USERNAME environment variable for integration tests"
+        type: string
+        default: ""
+      sn-password:
+        description: "Set SN_PASSWORD environment variable for integration tests"
+        type: string
+        default: ""
 
 permissions: {}
 
@@ -42,6 +58,11 @@ jobs:
     permissions:
       contents: read # checkout and build
       pull-requests: write # sticky PR comment on failure
+    env:
+      SN_OFFLINE: ${{ inputs.sn-offline }}
+      SN_INSTANCE: ${{ inputs.sn-instance }}
+      SN_USERNAME: ${{ inputs.sn-username }}
+      SN_PASSWORD: ${{ inputs.sn-password }}
     defaults:
       run:
         shell: bash

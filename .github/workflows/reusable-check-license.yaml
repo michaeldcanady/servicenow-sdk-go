@@ -1,0 +1,39 @@
+name: Check License Headers
+
+on:
+  workflow_call:
+    inputs:
+      go-version:
+        description: "Go version to use (e.g. stable, oldstable, 1.20)"
+        required: false
+        default: "stable"
+        type: string
+      config-path:
+        description: "Path to license check config file"
+        required: false
+        default: ".github/license-check/license-config.json"
+        type: string
+
+permissions: {}
+
+jobs:
+  check-license:
+    name: Check License Headers
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read # checkout and verify license headers
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        # zizmor: ignore[cache-poisoning] -- check-license: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
+        with:
+          go-version: ${{ inputs.go-version }}
+      - name: Verify license headers
+        uses: viperproject/check-license-header@e06c65614fa9f32e099838df4dd25440c5344b32 # v2.0.3
+        with:
+          path: "."
+          config: ${{ inputs.config-path }}
+          strict: true

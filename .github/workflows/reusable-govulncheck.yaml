@@ -1,0 +1,31 @@
+name: Go Vulnerability Check
+
+on:
+  workflow_call:
+    inputs:
+      go-version:
+        description: "Go version to use (e.g. stable, oldstable, 1.20)"
+        required: false
+        default: "stable"
+        type: string
+      go-package:
+        description: "Go package path to scan (e.g. ./...)"
+        required: false
+        default: "./..."
+        type: string
+
+permissions: {}
+
+jobs:
+  govulncheck:
+    name: Vulnerability Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read # govulncheck via default checkout handled by action
+    steps:
+      - name: Run govulncheck
+        uses: golang/govulncheck-action@032d45514ae346b1db93c04b0c90b841c370344f # v1
+        with:
+          go-version-input: ${{ inputs.go-version }}
+          go-package: ${{ inputs.go-package }}

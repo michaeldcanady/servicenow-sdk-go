@@ -21,6 +21,8 @@ on:
       - ".github/actions/check-go-deps"
       - ".github/workflows/reusable-build-go.yaml"
       - ".github/workflows/reusable-check-go-deps.yaml"
+      - ".github/workflows/reusable-check-license.yaml"
+      - ".github/workflows/reusable-govulncheck.yaml"
   pull_request:
     paths:
       - "**.go"
@@ -34,6 +36,8 @@ on:
       - ".github/actions/check-go-deps/action.yml"
       - ".github/workflows/reusable-build-go.yaml"
       - ".github/workflows/reusable-check-go-deps.yaml"
+      - ".github/workflows/reusable-check-license.yaml"
+      - ".github/workflows/reusable-govulncheck.yaml"
 concurrency:
   # Scheduled runs carry no head_ref or ref, so without the run_id fallback
   # every weekly run shares one bare group key and cancel-in-progress drops
@@ -85,6 +89,8 @@ jobs:
             .github/workflows/reusable-build-go.yaml
             .github/actions/check-go-deps/action.yml
             .github/workflows/reusable-check-go-deps.yaml
+            .github/workflows/reusable-check-license.yaml
+            .github/workflows/reusable-govulncheck.yaml
       # Files in scope for the license-header check (matches scripts/add-license.sh:
       # all .go/.sh plus root-level .yml/.yaml). A separate output keeps shell-only
       # and config-only changes from unnecessarily re-running the Go build/test
@@ -101,6 +107,8 @@ jobs:
             *.yaml
             .github/workflows/ci.yml
             .github/workflows/reusable-test-go.yaml
+            .github/workflows/reusable-check-license.yaml
+            .github/workflows/reusable-govulncheck.yaml
   check-go:
     name: Check Go Modules
     needs:
@@ -151,24 +159,9 @@ jobs:
     needs:
       - changes
     if: ${{ needs.changes.outputs.headers == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    uses: ./.github/workflows/reusable-check-license.yaml
     permissions:
       contents: read # checkout and verify license headers
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- check-license: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
-        with:
-          go-version: "stable"
-      - name: Verify license headers
-        uses: viperproject/check-license-header@e06c65614fa9f32e099838df4dd25440c5344b32 # v2.0.3
-        with:
-          path: "."
-          config: ".github/license-check/license-config.json"
-          strict: true
 
   test-go:
     name: Test Go Code
@@ -209,24 +202,16 @@ jobs:
       go-build-flags: "-tags integration"
       working-directory: "./tests/integration/v2"
       package-path: ./...
-    env:
-      SN_OFFLINE: "true"
-      SN_INSTANCE: mock_instance
-      SN_USERNAME: mock_user
-      SN_PASSWORD: mock_password
+      sn-offline: ${{ 'true' }}
+      sn-instance: mock_instance
+      sn-username: mock_user
+      sn-password: mock_password
 
   govulncheck:
     name: Vulnerability Scan
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    uses: ./.github/workflows/reusable-govulncheck.yaml
     permissions:
       contents: read # govulncheck via default checkout handled by action
-    steps:
-      - name: Run govulncheck
-        uses: golang/govulncheck-action@032d45514ae346b1db93c04b0c90b841c370344f # v1
-        with:
-          go-version-input: stable
-          go-package: ./...
