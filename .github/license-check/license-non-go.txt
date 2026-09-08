@@ -1,0 +1,2 @@
+# Copyright (c) %year% Michael Canady
+# SPDX-License-Identifier: MIT
