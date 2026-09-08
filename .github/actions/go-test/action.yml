@@ -71,7 +71,11 @@ runs:
         fi
 
         # package-paths accepts space- or newline-separated entries
-        mapfile -t pkgs < <(printf '%s' "${package_paths}" | tr ' ' '\n' | sed '/^[[:space:]]*$/d')
+        pkgs=()
+        while IFS= read -r p; do
+          [ -n "$p" ] && pkgs+=("$p")
+        done < <(printf '%s' "${package_paths}" | tr ' ' '
+        ' | sed '/^[[:space:]]*$/d')
         [ ${#pkgs[@]} -eq 0 ] && pkgs=("./...")
 
         echo "Running: go test ${args[*]} ${pkgs[*]}"
