@@ -208,6 +208,7 @@ jobs:
       go-version: "stable"
       go-build-flags: "-tags integration"
       working-directory: "./tests/integration/v2"
+      package-path: ./...
     env:
       SN_OFFLINE: "true"
       SN_INSTANCE: mock_instance
