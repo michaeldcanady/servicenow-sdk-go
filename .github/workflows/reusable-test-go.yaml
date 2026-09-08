@@ -27,6 +27,10 @@ on:
         description: "tparse release version to be installed (e.g. v0.13.3, or 'latest')"
         type: string
         default: "latest"
+      working-directory:
+        description: "Working directory to run tests in (e.g. '.', 'tests/integration/v2')"
+        type: string
+        default: "."
 
 permissions: {}
 
@@ -62,6 +66,7 @@ jobs:
           coverage-profile: ${{ inputs.coverage-file }}
           build-flags: ${{ inputs.go-build-flags }}
           package-paths: ${{ inputs.package-path }}
+          working-directory: ${{ inputs.working-directory }}
       - name: Post Sticky Comment
         if: failure()
         uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5

@@ -169,6 +169,7 @@ jobs:
           path: "."
           config: ".github/license-check/license-config.json"
           strict: true
+
   test-go:
     name: Test Go Code
     needs:
