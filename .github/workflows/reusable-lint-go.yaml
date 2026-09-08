@@ -18,27 +18,12 @@ on:
         required: false
         default: "."
         type: string
-  workflow_dispatch:
-    inputs:
-      go-version:
-        description: 'Go version(s) to use, as a JSON array string, e.g. ["1.22","1.23"]'
-        required: false
-        default: '["stable"]'
-        type: string
-      golangci-lint-version:
-        description: "golangci-lint version to use"
-        required: false
-        default: "v2.13.0"
-        type: string
-      working-directory:
-        description: "Directory containing the Go module to lint"
-        required: false
-        default: "."
-        type: string
 
 concurrency:
   group: lint-go-${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+permissions: {}
 
 jobs:
   lint:
