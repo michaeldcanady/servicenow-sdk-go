@@ -2,7 +2,7 @@ name: Go dependency checks
 description: Verifies that the go.sum file is consistent with the go.mod file.
 
 inputs:
-  mod-path:
+  package-path:
     description: "Path to the go.mod and go.sum files to check. Defaults to the root of the repository."
     required: false
     default: ""
@@ -18,7 +18,7 @@ runs:
       id: resolve-mod-path
       shell: bash
       run: |
-        ROOT_PATH="${INPUT_MOD_PATH:-$(git rev-parse --show-toplevel)}"
+        ROOT_PATH="${INPUT_PACKAGE_PATH:-$(git rev-parse --show-toplevel)}"
         GO_MOD_PATH="$ROOT_PATH/go.mod"
         GO_SUM_PATH="$ROOT_PATH/go.sum"
         if [[ ! -f "$GO_MOD_PATH" ]]; then
@@ -32,7 +32,7 @@ runs:
         echo "MOD_PATH=$GO_MOD_PATH" >> $GITHUB_OUTPUT
         echo "SUM_PATH=$GO_SUM_PATH" >> $GITHUB_OUTPUT
       env:
-        INPUT_MOD_PATH: ${{ inputs.mod-path }}
+        INPUT_PACKAGE_PATH: ${{ inputs.package-path }}
 
     - name: Set up Go
       uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
@@ -47,7 +47,7 @@ runs:
         go mod verify
       env:
         MOD_PATH: ${{ steps.resolve-mod-path.outputs.MOD_PATH }}
-    
+
     - name: Tidy dependencies
       shell: bash
       run: |
