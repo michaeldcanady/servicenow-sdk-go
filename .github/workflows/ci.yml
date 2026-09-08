@@ -151,29 +151,9 @@ jobs:
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: read # checkout and lint
-    strategy:
-      fail-fast: false
-      matrix:
-        go-version: ["stable", "oldstable"]
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- lint-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
-        with:
-          go-version: ${{ matrix.go-version }}
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9
-        with:
-          install-mode: goinstall
-          version: v2.13.0
-          skip-cache: false
-          args: --timeout=5m
+    uses: ./.github/workflows/reusable-lint-go.yaml
+    with:
+      go-version: '["1.22", "1.23"]'
 
   check-license:
     name: License Headers

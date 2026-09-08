@@ -7,6 +7,9 @@
     "usernamehw.errorlens",
     "msyrus.go-doc",
     "766b.go-outliner",
-    "yzhang.markdown-all-in-one"
+    "yzhang.markdown-all-in-one",
+    "alexkrechik.cucumberautocomplete",
+    "mermaidchart.vscode-mermaid-chart",
+    "redhat.vscode-yaml"
   ]
 }
