@@ -1,0 +1,72 @@
+name: tparse-installer
+author: michaeldcanady
+description: "Installs tparse and includes it in your path"
+branding:
+  icon: "package"
+  color: "blue"
+inputs:
+  tparse-version:
+    description: "tparse release version to be installed (e.g. v0.13.3, or 'latest')"
+    required: false
+    default: "latest"
+  install-dir:
+    description: "Where to install the tparse binary"
+    required: false
+    default: "$HOME/.tparse"
+  use-sudo:
+    description: "set to true if install-dir location requires sudo privs"
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        input_tparse_release: ${{ inputs.tparse-version }}
+        input_install_dir: ${{ inputs.install-dir }}
+        input_use_sudo: ${{ inputs.use-sudo }}
+        runner_os: ${{ runner.os }}
+      run: |
+        set -euo pipefail
+
+        if ! command -v go >/dev/null 2>&1; then
+          echo "::error::Go was not found on PATH. Run actions/setup-go before this action." >&2
+          exit 1
+        fi
+
+        # Expand $HOME / ~ in the install-dir input, then make it absolute.
+        install_dir=$(eval echo "${input_install_dir}")
+        mkdir -p "${install_dir}"
+        install_dir=$(cd "${install_dir}" && pwd)
+
+        version="${input_tparse_release}"
+        if [ "${version}" = "latest" ]; then
+          module="github.com/mfridman/tparse@latest"
+        else
+          case "${version}" in
+            v*) module="github.com/mfridman/tparse@${version}" ;;
+            *)  module="github.com/mfridman/tparse@v${version}" ;;
+          esac
+        fi
+
+        echo "Installing ${module} into ${install_dir}"
+
+        if [ "${input_use_sudo}" = "true" ]; then
+          sudo -E env "PATH=${PATH}" GOBIN="${install_dir}" go install "${module}"
+        else
+          GOBIN="${install_dir}" go install "${module}"
+        fi
+
+        binary="${install_dir}/tparse"
+        if [ "${runner_os}" = "Windows" ]; then
+          binary="${binary}.exe"
+        fi
+
+        if [ ! -x "${binary}" ]; then
+          echo "::error::tparse binary not found at ${binary} after install" >&2
+          exit 1
+        fi
+
+        echo "${install_dir}" >> "${GITHUB_PATH}"
+        echo "Installed: $(${binary} -h 2>&1 | head -n1 || true)"

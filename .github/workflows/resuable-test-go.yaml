@@ -1,0 +1,79 @@
+name: Test Go Code
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: "Operating system to run tests on (e.g. ubuntu-latest, macos-latest, windows-latest)"
+        type: string
+        default: "ubuntu-latest"
+      go-version:
+        description: "Go version to use (e.g. stable, oldstable, 1.20)"
+        type: string
+        default: "stable"
+      coverage-file:
+        description: "Coverage file path (e.g. coverage.out). Set to empty to skip coverage."
+        type: string
+        default: "coverage.txt"
+      package-path:
+        description: "Path to the Go package to test"
+        type: string
+        default: "."
+      tparse-version:
+        description: "tparse release version to be installed (e.g. v0.13.3, or 'latest')"
+        type: string
+        default: "latest"
+
+permissions: {}
+
+jobs:
+  build-go:
+    runs-on: ${{ inputs.os }}
+    timeout-minutes: 20
+    permissions:
+      contents: read # checkout and build
+      pull-requests: write # sticky PR comment on failure
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        # zizmor: ignore[cache-poisoning] -- test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
+        with:
+          go-version: ${{ inputs.go-version }}
+      - name: Install tparse
+        uses: ./.github/actions/install-tparse
+        with:
+          tparse-version: ${{ inputs.tparse-version }}
+      - name: Run Tests
+        id: test-run
+        uses: ./.github/actions/go-test
+        with:
+          format-json: true
+          verbose: true
+          coverage-profile: ${{ inputs.coverage-file }}
+      - name: Post Sticky Comment
+        if: failure()
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        with:
+          header: test-failure-summary
+          message: "One or more tests failed on ${{ inputs.os }} with Go ${{ inputs.go-version }}. See the [Actions tab](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details."
+
+      - name: Delete Test Failure Comment
+        if: success()
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        with:
+          header: test-failure-summary
+          delete: true
+
+      - name: Upload coverage to Codecov
+        if: runner.os == 'Linux' && inputs.go-version == 'stable' && inputs.coverage-file != ''
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
+        with:
+          files: ${{ inputs.coverage-file }}
+          fail_ci_if_error: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

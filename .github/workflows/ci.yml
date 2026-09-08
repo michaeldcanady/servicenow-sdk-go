@@ -129,14 +129,23 @@ jobs:
     with:
       os: '["ubuntu-latest", "macos-latest", "windows-latest"]'
       go-version: '["stable", "oldstable"]'
+
   lint-go:
     name: Lint Go Code
     needs:
       - changes
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "windows-latest"
+        go-version:
+          - "stable"
+          - "oldstable"
     if: ${{ needs.changes.outputs.code == 'true' }}
     uses: ./.github/workflows/reusable-lint-go.yaml
-    with:
-      go-version: '["stable", "oldstable"]'
 
   check-license:
     name: License Headers
@@ -166,59 +175,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        go-version: ["stable", "oldstable"]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+        os:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "windows-latest"
+        go-version:
+          - "stable"
+          - "oldstable"
+    uses: ./.github/workflows/resuable-test-go.yaml
     permissions:
-      contents: read # checkout and test
-      pull-requests: write # sticky PR comment on failure
-    defaults:
-      run:
-        shell: bash
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
-        with:
-          go-version: ${{ matrix.go-version }}
-      - name: Install tparse
-        run: |
-          go install github.com/mfridman/tparse@v0.18.0
-          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
-      - name: Run Tests & Report
-        run: .github/scripts/report-tests.sh
-        id: test-run
-      - name: Prepare Test Summary
-        if: failure()
-        id: create-summary
-        run: |
-          echo "SUMMARY<<EOF" >> $GITHUB_OUTPUT
-          head -c 60000 test-summary.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-      - name: Post Sticky Comment
-        if: failure()
-        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
-        with:
-          header: test-failure-summary
-          message: ${{ steps.create-summary.outputs.SUMMARY }}
-      - name: Delete Test Failure Comment
-        if: success()
-        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
-        with:
-          header: test-failure-summary
-          delete: true
-
-      - name: Upload coverage to Codecov
-        if: runner.os == 'Linux' && matrix.go-version == 'stable'
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
-        with:
-          files: ./${{ env.COVERAGE_FILE }}
-          fail_ci_if_error: true
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      contents: read
+      pull-requests: write
+    with:
+      os: ${{ matrix.os }}
+      go-version: ${{ matrix.go-version }}
 
   integration-test-go:
     name: Integration Tests (mocked)
