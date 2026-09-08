@@ -123,32 +123,12 @@ jobs:
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        go-version: ["stable", "oldstable"]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    uses: ./.github/workflows/reusable-build-go.yaml
     permissions:
-      contents: read # checkout and build
-    defaults:
-      run:
-        shell: bash
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- build-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
-        with:
-          go-version: ${{ matrix.go-version }}
-          cache: true
-      - name: Build Go Code
-        run: |
-          PACKAGES=$(go list ./... | grep -v "/docs")
-          go build $PACKAGES
-
+      contents: read
+    with:
+      os: '["ubuntu-latest", "macos-latest", "windows-latest"]'
+      go-version: '["stable", "oldstable"]'
   lint-go:
     name: Lint Go Code
     needs:
