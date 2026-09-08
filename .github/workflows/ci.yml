@@ -111,11 +111,11 @@ jobs:
     strategy:
       matrix:
         go-version: ["stable", "oldstable"]
-        mod-path: [".", "tests/integration/v2"]
+        package-path: [".", "tests/integration/v2"]
     uses: ./.github/workflows/reusable-check-go-deps.yaml
     with:
       go-version: ${{ matrix.go-version }}
-      package-path: ${{ matrix.mod-path }}
+      package-path: ${{ matrix.package-path }}
 
   build-go:
     name: Build Go Code
