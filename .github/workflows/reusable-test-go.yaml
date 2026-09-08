@@ -31,7 +31,8 @@ on:
 permissions: {}
 
 jobs:
-  build-go:
+  test-go:
+    name: Test Go Code
     runs-on: ${{ inputs.os }}
     timeout-minutes: 20
     permissions:

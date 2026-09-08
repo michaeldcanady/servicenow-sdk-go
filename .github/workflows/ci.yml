@@ -146,6 +146,9 @@ jobs:
           - "oldstable"
     if: ${{ needs.changes.outputs.code == 'true' }}
     uses: ./.github/workflows/reusable-lint-go.yaml
+    with:
+      os: ${{ matrix.os }}
+      go-version: ${{ matrix.go-version }}
 
   check-license:
     name: License Headers

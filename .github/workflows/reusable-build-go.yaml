@@ -4,24 +4,20 @@ on:
   workflow_call:
     inputs:
       os:
-        description: 'JSON array of runner OSes, e.g. ["ubuntu-latest","macos-latest","windows-latest"]'
+        description: "Operating system to run tests on (e.g. ubuntu-latest, macos-latest, windows-latest)"
         type: string
-        default: '["ubuntu-latest", "macos-latest", "windows-latest"]'
+        default: "ubuntu-latest"
       go-version:
-        description: 'JSON array of Go versions, e.g. ["stable","oldstable"]'
+        description: "Go version to use (e.g. stable, oldstable, 1.20)"
         type: string
-        default: '["stable", "oldstable"]'
+        default: "stable"
 
 permissions: {}
 
 jobs:
   build-go:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ${{ fromJSON(inputs.os) }}
-        go-version: ${{ fromJSON(inputs.go-version) }}
-    runs-on: ${{ matrix.os }}
+    name: Build Go Code
+    runs-on: ${{ inputs.os }}
     timeout-minutes: 20
     permissions:
       contents: read # checkout and build
@@ -35,7 +31,7 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         # zizmor: ignore[cache-poisoning] -- build-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: ${{ inputs.go-version }}
           cache: true
       - name: Build Go Code
         run: |
