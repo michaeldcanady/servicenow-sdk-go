@@ -207,7 +207,7 @@ jobs:
       os: "ubuntu-latest"
       go-version: "stable"
       go-build-flags: "-tags integration"
-      package-path: "./tests/integration/v2"
+      working-directory: "./tests/integration/v2"
     env:
       SN_OFFLINE: "true"
       SN_INSTANCE: mock_instance
