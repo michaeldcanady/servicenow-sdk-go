@@ -25,6 +25,7 @@ on:
       - "**/*.feature"
       - ".github/workflows/ci.yml"
       - ".golangci.yml"
+      - ".github/workflows/reusable-lint-go.yaml"
 
 concurrency:
   # Scheduled runs carry no head_ref or ref, so without the run_id fallback
@@ -72,6 +73,7 @@ jobs:
             tests/integration/**
             **/*.feature
             .github/workflows/ci.yml
+            .github/workflows/reusable-lint-go.yaml"
 
       # Files in scope for the license-header check (matches scripts/add-license.sh:
       # all .go/.sh plus root-level .yml/.yaml). A separate output keeps shell-only
