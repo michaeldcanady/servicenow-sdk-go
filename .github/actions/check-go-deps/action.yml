@@ -34,13 +34,8 @@ runs:
       env:
         INPUT_MOD_PATH: ${{ inputs.mod-path }}
 
-    - name: Change to module directory
-      shell: bash
-      run: |
-        cd "$(dirname "${{ steps.resolve-mod-path.outputs.MOD_PATH }}")"
-
     - name: Set up Go
-      uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
       with:
         go-version-file: ${{ steps.resolve-mod-path.outputs.MOD_PATH }}
         go-version: ${{ inputs.go-version }}
@@ -48,18 +43,17 @@ runs:
     - name: Verify dependencies
       shell: bash
       run: |
-        cd $MODULE_PATH
+        cd "$(dirname "$MOD_PATH")"
         go mod verify
       env:
-        MODULE_PATH: ${{ inputs.mod-path }}
+        MOD_PATH: ${{ steps.resolve-mod-path.outputs.MOD_PATH }}
     
     - name: Tidy dependencies
       shell: bash
       run: |
-        cd $MODULE_PATH
+        cd "$(dirname "$MOD_PATH")"
         go mod tidy
         git diff --exit-code --  $MOD_PATH $SUM_PATH
       env:
-        MODULE_PATH: ${{ inputs.mod-path }}
         MOD_PATH: ${{ steps.resolve-mod-path.outputs.MOD_PATH }}
         SUM_PATH: ${{ steps.resolve-mod-path.outputs.SUM_PATH }}
