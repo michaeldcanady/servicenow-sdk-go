@@ -20,7 +20,7 @@ on:
         type: string
 
 concurrency:
-  group: lint-go-${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}
+  group: lint-go-${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.go-version }}
   cancel-in-progress: true
 
 permissions: {}
