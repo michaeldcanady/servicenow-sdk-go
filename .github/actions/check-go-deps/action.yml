@@ -53,7 +53,7 @@ runs:
       run: |
         cd "$(dirname "$MOD_PATH")"
         go mod tidy
-        git diff --exit-code --  $MOD_PATH $SUM_PATH
+        git diff --exit-code -- $MOD_PATH $SUM_PATH
       env:
         MOD_PATH: ${{ steps.resolve-mod-path.outputs.MOD_PATH }}
         SUM_PATH: ${{ steps.resolve-mod-path.outputs.SUM_PATH }}
