@@ -122,13 +122,23 @@ jobs:
     name: Build Go Code
     needs:
       - changes
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "windows-latest"
+        go-version:
+          - "stable"
+          - "oldstable"
     if: ${{ needs.changes.outputs.code == 'true' }}
     uses: ./.github/workflows/reusable-build-go.yaml
     permissions:
       contents: read
     with:
-      os: '["ubuntu-latest", "macos-latest", "windows-latest"]'
-      go-version: '["stable", "oldstable"]'
+      os: ${{ matrix.os }}
+      go-version: ${{ matrix.go-version }}
 
   lint-go:
     name: Lint Go Code
@@ -198,8 +208,6 @@ jobs:
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
     uses: ./.github/workflows/reusable-test-go.yaml
     permissions:
       contents: read # checkout and mocked integration tests
