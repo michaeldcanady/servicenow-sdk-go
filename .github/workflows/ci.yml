@@ -182,7 +182,7 @@ jobs:
         go-version:
           - "stable"
           - "oldstable"
-    uses: ./.github/workflows/resuable-test-go.yaml
+    uses: ./.github/workflows/reusable-test-go.yaml
     permissions:
       contents: read
       pull-requests: write
@@ -197,7 +197,7 @@ jobs:
     if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    uses: ./.github/workflows/resuable-test-go.yaml
+    uses: ./.github/workflows/reusable-test-go.yaml
     permissions:
       contents: read # checkout and mocked integration tests
       pull-requests: write
