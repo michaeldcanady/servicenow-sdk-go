@@ -10,9 +10,9 @@ inputs:
     required: false
     default: "latest"
   install-dir:
-    description: "Where to install the tparse binary"
+    description: "Where to install the tparse binary (defaults to $HOME/go/bin which is on PATH)"
     required: false
-    default: "$HOME/.tparse"
+    default: "$HOME/go/bin"
   use-sudo:
     description: "set to true if install-dir location requires sudo privs"
     required: false
@@ -68,5 +68,4 @@ runs:
           exit 1
         fi
 
-        echo "${install_dir}" >> "${GITHUB_PATH}"
         echo "Installed: $(${binary} -h 2>&1 | head -n1 || true)"
