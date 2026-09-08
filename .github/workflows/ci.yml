@@ -187,8 +187,8 @@ jobs:
           - "oldstable"
     uses: ./.github/workflows/reusable-test-go.yaml
     permissions:
-      contents: read
-      pull-requests: write
+      contents: read # checkout and build
+      pull-requests: write # sticky PR comment on failure
     with:
       os: ${{ matrix.os }}
       go-version: ${{ matrix.go-version }}
@@ -203,7 +203,7 @@ jobs:
     uses: ./.github/workflows/reusable-test-go.yaml
     permissions:
       contents: read # checkout and mocked integration tests
-      pull-requests: write
+      pull-requests: write # sticky PR comment on failure
     with:
       os: "ubuntu-latest"
       go-version: "stable"
