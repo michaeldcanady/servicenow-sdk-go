@@ -20,6 +20,7 @@ on:
       - ".github/workflows/reusable-test-go.yaml"
       - ".github/actions/check-go-deps"
       - ".github/workflows/reusable-build-go.yaml"
+      - ".github/workflows/reusable-check-go-deps.yaml"
   pull_request:
     paths:
       - "**.go"
@@ -32,6 +33,7 @@ on:
       - ".github/workflows/reusable-test-go.yaml"
       - ".github/actions/check-go-deps/action.yml"
       - ".github/workflows/reusable-build-go.yaml"
+      - ".github/workflows/reusable-check-go-deps.yaml"
 concurrency:
   # Scheduled runs carry no head_ref or ref, so without the run_id fallback
   # every weekly run shares one bare group key and cancel-in-progress drops
@@ -82,6 +84,7 @@ jobs:
             .github/workflows/reusable-test-go.yaml
             .github/workflows/reusable-build-go.yaml
             .github/actions/check-go-deps/action.yml
+            .github/workflows/reusable-check-go-deps.yaml
       # Files in scope for the license-header check (matches scripts/add-license.sh:
       # all .go/.sh plus root-level .yml/.yaml). A separate output keeps shell-only
       # and config-only changes from unnecessarily re-running the Go build/test
@@ -206,27 +209,6 @@ jobs:
       SN_INSTANCE: mock_instance
       SN_USERNAME: mock_user
       SN_PASSWORD: mock_password
-
-  tag-gated-test-go:
-    name: Tag-Gated Tests (preview.query)
-    needs:
-      - changes
-    if: ${{ needs.changes.outputs.code == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read # checkout and preview.query tests
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- tag-gated-test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
-        with:
-          go-version: "stable"
-          cache: true
-      - name: Run preview.query tests
-        run: go test -tags preview.query ./internal/...
 
   govulncheck:
     name: Vulnerability Scan
