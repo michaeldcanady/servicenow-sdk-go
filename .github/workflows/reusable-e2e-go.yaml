@@ -1,0 +1,71 @@
+name: E2E Go Tests
+
+on:
+  workflow_call:
+    inputs:
+      go-version:
+        description: "Go version to use"
+        type: string
+        default: "stable"
+      test-timeout:
+        description: "Timeout for the test run (e.g. '40m')"
+        type: string
+        default: "40m"
+      working-directory:
+        description: "Directory containing the test modules"
+        type: string
+        default: "tests/integration/v2"
+      build-flags:
+        description: "Additional go test flags (e.g. '-tags e2e')"
+        type: string
+        default: "-tags e2e"
+    secrets:
+      inherit:
+
+permissions: {}
+
+jobs:
+  e2e:
+    name: Live Instance Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    env:
+      GO_TEST_TIMEOUT: ${{ inputs.test-timeout }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-go-env
+        with:
+          go-version: ${{ inputs.go-version }}
+          cache: "true"
+
+      - name: Run E2E suites
+        working-directory: ${{ inputs.working-directory }}
+        # pipefail is mandatory: without it the pipeline's exit code comes from
+        # tee, and go test failures silently produce a green job.
+        run: |
+          set -o pipefail
+          go test ${{ inputs.build-flags }} ./... -timeout "$GO_TEST_TIMEOUT" -v 2>&1 | tee e2e-output.txt
+
+      - name: Summarize failures
+        if: failure()
+        run: |
+          {
+            echo "### E2E Nightly failed"
+            echo ""
+            echo '```'
+            grep -E "^(=== RUN|--- FAIL|FAIL|ok )" e2e-output.txt | tail -50 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload raw output
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: e2e-output
+          path: ${{ inputs.working-directory }}/e2e-output.txt
+          retention-days: 7

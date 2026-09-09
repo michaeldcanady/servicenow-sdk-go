@@ -1,0 +1,64 @@
+name: Docs Quality Gate
+
+on:
+  workflow_call:
+    inputs:
+      vale-files:
+        description: "Comma-separated file/directory paths for Vale to lint"
+        type: string
+        default: "website/docs,website/versioned_docs"
+      vale-level:
+        description: "Minimum Vale severity level"
+        type: string
+        default: "error"
+      vale-version:
+        description: "Vale CLI version"
+        type: string
+        default: "3.18.0"
+      check-snippets:
+        description: "Run the doc snippet contract checks"
+        type: boolean
+        default: true
+
+permissions: {}
+
+jobs:
+  vale:
+    name: Vale Lint (full site)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Vale Linter
+        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # v3.0.0
+        with:
+          fail_on_error: true
+          files: ${{ inputs.vale-files }}
+          separator: ","
+          level: ${{ inputs.vale-level }}
+          version: ${{ inputs.vale-version }}
+
+  snippets:
+    name: Check Doc Snippets
+    if: ${{ inputs.check-snippets }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Vet Go snippets
+        uses: ./.github/actions/vet-go-snippets
+
+      - name: Check snippet regions
+        uses: ./.github/actions/check-snippet-regions

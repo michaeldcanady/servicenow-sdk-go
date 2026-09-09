@@ -1,0 +1,49 @@
+name: Vale Lint
+
+on:
+  workflow_call:
+    inputs:
+      files:
+        description: "Comma-separated file/directory paths to lint"
+        type: string
+        required: true
+      level:
+        description: "Minimum severity level to report (error, warning, suggestion)"
+        type: string
+        default: "error"
+      vale-version:
+        description: "Vale CLI version to install"
+        type: string
+        default: "3.18.0"
+      separator:
+        description: "Separator between file paths"
+        type: string
+        default: ","
+      fail-on-error:
+        description: "Fail the workflow on lint errors"
+        type: boolean
+        default: true
+
+permissions: {}
+
+jobs:
+  vale:
+    name: Vale Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read # checkout and Vale lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Vale Linter
+        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # v3.0.0
+        with:
+          fail_on_error: ${{ inputs.fail-on-error }}
+          files: ${{ inputs.files }}
+          separator: ${{ inputs.separator }}
+          level: ${{ inputs.level }}
+          version: ${{ inputs.vale-version }}

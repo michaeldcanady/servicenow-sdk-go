@@ -24,13 +24,10 @@ jobs:
     permissions:
       contents: read # checkout and verify license headers
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- check-license: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
+      - uses: ./.github/actions/setup-go-env
         with:
           go-version: ${{ inputs.go-version }}
+          cache: "false"
       - name: Verify license headers
         uses: viperproject/check-license-header@e06c65614fa9f32e099838df4dd25440c5344b32 # v2.0.3
         with:

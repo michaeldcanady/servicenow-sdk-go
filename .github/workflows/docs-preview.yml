@@ -4,7 +4,7 @@
 #
 # Pair file: docs-stable.yml owns the merge-to-main lifecycle (full-site scan
 # + publishing the canonical site). The two deliberately diverge on triggers:
-#   * .vale.ini / scripts/check-snippet-regions.sh are CHECKER configuration:
+  #   * .vale.ini / .github/actions/check-snippet-regions/** are CHECKER configuration:
 #     changing them must re-run checks (this file watches them) but produces
 #     no new site output, so detect-changes below excludes them and a
 #     rules-only PR never publishes a pointless preview.
@@ -30,10 +30,11 @@ on:
     paths:
       - "website/**"
       - ".vale.ini"
-      - "scripts/check-snippet-regions.sh"
+      - ".github/actions/check-snippet-regions/**"
       - ".github/workflows/docs-preview.yml"
       - ".github/actions/docs-build/**"
-      - ".github/actions/check-snippets/**"
+      - ".github/actions/vet-go-snippets/**"
+      - ".github/actions/check-snippet-regions/**"
 
 permissions: {}
 
@@ -52,15 +53,9 @@ jobs:
     if: github.event.action != 'closed'
     outputs:
       docs: ${{ steps.diff.outputs.any_changed }}
+      markdown: ${{ steps.changed-md.outputs.any_changed }}
+      markdown-files: ${{ steps.changed-md.outputs.all_changed_files }}
     steps:
-      # Local actions resolve from the workspace, so something must be checked
-      # out before the action below can be found at all — its internal
-      # checkout step can never be the thing that bootstraps this.
-      - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
       - name: Detect site-output changes
         id: diff
         uses: ./.github/actions/detect-changes
@@ -75,91 +70,63 @@ jobs:
             .github/workflows/docs-preview.yml
             .github/actions/docs-build/**
 
+      - name: Changed markdown files
+        id: changed-md
+        uses: ./.github/actions/detect-changes
+        with:
+          checkout: "false"
+
   lint-md:
     name: lint-md
     runs-on: ubuntu-latest
+    needs:
+      - detect-changes
     timeout-minutes: 10
     permissions:
       contents: read # checkout and Vale lint
-    # Dispatch is allowed so the full-site scan below — normally enforced
-    # only at the stable release gate — can be exercised by hand against a
-    # ref before relying on it (#683). PR behavior is unchanged.
-    if: >-
-      github.event_name == 'pull_request' ||
-      github.event_name == 'workflow_dispatch'
+    if: github.event.action != 'closed' && needs.detect-changes.outputs.markdown == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      # Scoping is done at the file level rather than handing reviewdog
-      # filter_mode: added — vale-action never passes a diff command, so that
-      # combination dies with "diff command is empty" even on clean runs.
-      # The Vale binary itself is pinned: rule packs drift between releases,
-      # and an unpinned bump once failed every docs PR overnight.
-      - name: Changed markdown files
-        id: changed-md
-        if: github.event_name == 'pull_request'
-        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
-        with:
-          # Comma-delimited on purpose (see the Vale steps below): vale-action
-          # only splits its files input when given a matching separator, and
-          # the delimiter must survive the runner, which trims action inputs
-          # (a "\n" arrives as "" after trimming). No repo path contains a
-          # comma.
-          separator: ","
-          files: |
-            website/docs/**/*.md
-            website/versioned_docs/**/*.md
-
-      - name: Vale Linter (full site)
-        if: github.event_name != 'pull_request'
-        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # v3.0.0
-        with:
-          fail_on_error: true
-          files: website/docs,website/versioned_docs
-          separator: ","
-          level: error
-          version: 3.18.0
-
       - name: Vale Linter (changed content)
-        if: >-
-          github.event_name == 'pull_request' &&
-          steps.changed-md.outputs.any_changed == 'true'
         uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # v3.0.0
         with:
           fail_on_error: true
-          files: ${{ steps.changed-md.outputs.all_changed_files }}
+          files: ${{ needs.detect-changes.outputs.markdown-files }}
           separator: ","
           level: error
           version: 3.18.0
 
   lint-snippets:
     name: lint-snippets
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
     permissions:
-      contents: read # checkout and snippet check
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
+      contents: read
+    uses: ./.github/workflows/reusable-check-snippets.yaml
 
-      - name: Check doc snippets
-        uses: ./.github/actions/check-snippets
+  verify-build:
+    name: verify-build
+    permissions:
+      contents: read # checkout and site build
+    if: github.event.action != 'closed'
+    uses: ./.github/workflows/reusable-docs-build.yaml
+    with:
+      base-url: ${{ github.event_name == 'pull_request' && format('/servicenow-sdk-go/pr-preview/pr-{0}/', github.event.number) || '/servicenow-sdk-go/' }}
+      upload-artifact: true
 
   deploy-preview:
     name: deploy-preview
+    needs:
+      - detect-changes
+      - verify-build
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: write # pushes PR preview to gh-pages branch
       pull-requests: write # pr-preview-action posts preview URL via sticky comment (auditor requires comment)
-    needs: [detect-changes, verify-build]
     if: >-
-      github.event_name == 'pull_request' &&
       github.event.action != 'closed' &&
       needs.detect-changes.outputs.docs == 'true'
     concurrency:
@@ -211,36 +178,3 @@ jobs:
           preview-branch: gh-pages
           umbrella-dir: pr-preview
           action: remove
-
-  verify-build:
-    name: verify-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: read # checkout and site build
-    # Every PR (forks included) proves the site compiles under a check named
-    # after building — not buried in a deploy job's log beside unrelated
-    # publish errors. Also the manual smoke test: on workflow_dispatch it
-    # exercises the exact recipe that path filters would otherwise skip.
-    #
-    # Built with the PR's preview base-url because deploy-preview consumes
-    # THIS artifact; Docusaurus bakes baseUrl at build time, so a production-
-    # flavored build published under /pr-preview/pr-N/ would 404 its assets.
-    # Dispatch runs have no PR number and fall back to production defaults.
-    if: github.event.action != 'closed'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - name: Build site
-        uses: ./.github/actions/docs-build
-        with:
-          base-url: ${{ github.event_name == 'pull_request' && format('/servicenow-sdk-go/pr-preview/pr-{0}/', github.event.number) || '/servicenow-sdk-go/' }}
-
-      - name: Upload site artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-        with:
-          name: site
-          path: website/build

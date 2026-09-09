@@ -1,0 +1,57 @@
+name: Sync Issue Labels
+
+on:
+  workflow_call:
+    inputs:
+      issues:
+        description: "Comma-separated list of issue numbers to update"
+        type: string
+        required: true
+      add-labels:
+        description: "Labels to add (comma-separated)"
+        type: string
+        default: ""
+      remove-labels:
+        description: "Labels to remove (comma-separated)"
+        type: string
+        default: ""
+
+permissions: {}
+
+jobs:
+  sync:
+    name: Update Issue Labels
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write # add/remove labels
+    steps:
+      - name: Update labels
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUES: ${{ inputs.issues }}
+          ADD_LABELS: ${{ inputs.add-labels }}
+          REMOVE_LABELS: ${{ inputs.remove-labels }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          IFS=',' read -ra nums <<< "$ISSUES"
+          for n in "${nums[@]}"; do
+            echo "Updating labels on issue #$n"
+
+            if [[ -n "$REMOVE_LABELS" ]]; then
+              IFS=',' read -ra rlabels <<< "$REMOVE_LABELS"
+              for label in "${rlabels[@]}"; do
+                echo "  Removing '$label'"
+                gh issue edit "$n" --repo "$REPO" --remove-label "$label" 2>/dev/null || true
+              done
+            fi
+
+            if [[ -n "$ADD_LABELS" ]]; then
+              IFS=',' read -ra alabels <<< "$ADD_LABELS"
+              for label in "${alabels[@]}"; do
+                echo "  Adding '$label'"
+                gh issue edit "$n" --repo "$REPO" --add-label "$label" 2>/dev/null || true
+              done
+            fi
+          done

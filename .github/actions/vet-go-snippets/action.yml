@@ -1,0 +1,24 @@
+name: Vet Go Snippets
+description: Compiles Go snippets under website/snippets/ with the snippets build tag to catch compile errors early.
+
+inputs:
+  go-version-file:
+    description: "Path to go.mod for resolving the Go version"
+    required: false
+    default: "go.mod"
+  snippets-path:
+    description: "Path to the snippets directory"
+    required: false
+    default: "./website/snippets/"
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+      with:
+        go-version-file: ${{ inputs.go-version-file }}
+
+    - name: Vet Go snippets
+      shell: bash
+      run: go vet -tags snippets ${{ inputs.snippets-path }}
