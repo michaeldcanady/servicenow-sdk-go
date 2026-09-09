@@ -184,7 +184,7 @@ jobs:
       working-directory: "./tests/integration/v2"
       package-path: ./...
       coverage-file: ""
-      sn-offline: ${{ 'true' }}
+      sn-offline: true
       sn-instance: mock_instance
       sn-username: mock_user
       sn-password: mock_password

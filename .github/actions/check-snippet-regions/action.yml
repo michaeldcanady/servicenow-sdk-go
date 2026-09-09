@@ -20,9 +20,9 @@ inputs:
     required: false
     default: "*.go"
   docs-patterns:
-    description: "Comma-separated glob patterns for docs files (e.g. '*.md,*.mdx')"
+    description: "Comma-separated glob patterns for docs files; use '*' to match any file type (e.g. '*.md,*.mdx')"
     required: false
-    default: "*.md"
+    default: "*"
 
 runs:
   using: composite
@@ -44,12 +44,14 @@ runs:
           local IFS=','
           local -n out=$1
           out=()
+          set -f # keep the glob patterns literal during IFS word splitting
           for pat in $2; do
             out+=("$pat")
           done
+          set +f
         }
 
-        # Collect files matching glob patterns under a directory.
+        # Collect files matching glob patterns under a directory (recursively).
         collect_files() {
           local dir=$1
           shift
@@ -58,7 +60,7 @@ runs:
           for pat in "${patterns[@]}"; do
             while IFS= read -r -d '' f; do
               files+=("$f")
-            done < <(find "$dir" -maxdepth 1 -name "$pat" -print0 2>/dev/null || true)
+            done < <(find "$dir" -type f -name "$pat" -print0 2>/dev/null || true)
           done
           printf '%s\n' "${files[@]}"
         }

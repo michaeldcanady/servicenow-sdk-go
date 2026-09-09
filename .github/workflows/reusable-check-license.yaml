@@ -24,10 +24,16 @@ jobs:
     permissions:
       contents: read # checkout and verify license headers
     steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
       - uses: ./.github/actions/setup-go-env
         with:
           go-version: ${{ inputs.go-version }}
           cache: "false"
+          checkout: "false"
       - name: Verify license headers
         uses: viperproject/check-license-header@e06c65614fa9f32e099838df4dd25440c5344b32 # v2.0.3
         with:

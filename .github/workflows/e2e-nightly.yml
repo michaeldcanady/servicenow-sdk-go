@@ -67,6 +67,7 @@ jobs:
         with:
           go-version: "stable"
           cache: "true"
+          checkout: "false"
 
       - name: Run E2E suites
         working-directory: tests/integration/v2

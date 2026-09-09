@@ -56,6 +56,14 @@ jobs:
       markdown: ${{ steps.changed-md.outputs.any_changed }}
       markdown-files: ${{ steps.changed-md.outputs.all_changed_files }}
     steps:
+      # Local actions resolve from the workspace, so something must be checked
+      # out before the action below can be found at all — its internal
+      # checkout step can never be the thing that bootstraps this.
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
       - name: Detect site-output changes
         id: diff
         uses: ./.github/actions/detect-changes

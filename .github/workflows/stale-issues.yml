@@ -91,7 +91,7 @@ jobs:
     name: Mark and close stale issues (active tier)
     needs: stale
     permissions:
-      issues: write
+      issues: write # labels, comments, and closes via actions/stale
     uses: ./.github/workflows/reusable-stale-issues.yaml
     with:
       days-before-stale: 14
@@ -111,7 +111,7 @@ jobs:
     name: Mark and close stale issues (backlog tier)
     needs: stale
     permissions:
-      issues: write
+      issues: write # labels, comments, and closes via actions/stale
     uses: ./.github/workflows/reusable-stale-issues.yaml
     with:
       days-before-stale: 90

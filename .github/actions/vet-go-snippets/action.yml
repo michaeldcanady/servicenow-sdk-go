@@ -21,4 +21,6 @@ runs:
 
     - name: Vet Go snippets
       shell: bash
-      run: go vet -tags snippets ${{ inputs.snippets-path }}
+      env:
+        SNIPPETS_PATH: ${{ inputs.snippets-path }}
+      run: go vet -tags snippets "$SNIPPETS_PATH"

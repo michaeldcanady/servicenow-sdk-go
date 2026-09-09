@@ -41,10 +41,15 @@ jobs:
       contents: write # push the license-backfill branch
       pull-requests: write # open the license-backfill PR
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
       - uses: ./.github/actions/setup-go-env
         with:
           go-version: "stable"
           cache: "false"
+          checkout: "false"
 
       - name: Apply license headers
         run: ./scripts/add-license.sh
