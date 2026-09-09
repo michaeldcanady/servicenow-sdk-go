@@ -47,6 +47,10 @@ on:
         description: "Set SN_PASSWORD environment variable for integration tests"
         type: string
         default: ""
+    secrets:
+      CODECOV_TOKEN:
+        description: "Codecov token used to upload coverage reports; empty skips authenticated upload"
+        required: false
 
 permissions: {}
 

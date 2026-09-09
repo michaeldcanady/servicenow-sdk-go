@@ -169,6 +169,8 @@ jobs:
       os: ${{ matrix.os }}
       go-version: ${{ matrix.go-version }}
       package-path: "./..."
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration-test-go:
     name: Integration Tests (mocked)
