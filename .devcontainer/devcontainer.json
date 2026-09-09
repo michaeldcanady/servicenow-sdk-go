@@ -30,7 +30,7 @@
       "hostBrowserPipePath": "/tmp/hostbrowserpipe",
       "containerBrowserPipePath": "/tmp/hostbrowserpipe"
     },
-    "ghcr.io/nerdit-tech/devcontainer-features/go-cache:0": {},
+    "ghcr.io/nerdit-tech/devcontainer-features/go-cache:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {
       "version": "latest"
     },
