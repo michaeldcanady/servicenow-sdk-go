@@ -20,10 +20,10 @@
       "resolved": "ghcr.io/nerdit-tech/devcontainer-features/go-cache@sha256:a9d9c3f6230e0ad3284394f6d1292efc71cb589324eb1b7b0450dc417f83aa8b",
       "integrity": "sha256:a9d9c3f6230e0ad3284394f6d1292efc71cb589324eb1b7b0450dc417f83aa8b"
     },
-    "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils:0": {
-      "version": "0.1.0",
-      "resolved": "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils@sha256:70765622b534f8ea5d84ec20492dcffd63b0e5bb9f997396b23576a5a95d0261",
-      "integrity": "sha256:70765622b534f8ea5d84ec20492dcffd63b0e5bb9f997396b23576a5a95d0261"
+    "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils:1": {
+      "version": "1.0.0",
+      "resolved": "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils@sha256:23a3cb96b21d977111023b30404988181d5041a4d0e0bbac19b1db63869016ed",
+      "integrity": "sha256:23a3cb96b21d977111023b30404988181d5041a4d0e0bbac19b1db63869016ed"
     }
   }
 }
