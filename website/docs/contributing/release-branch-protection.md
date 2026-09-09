@@ -44,9 +44,10 @@ schema:
 | trunk | `main` | PR + 1 CODEOWNERS approval, stale-review dismissal, conversation resolution, no deletion/force-push |
 | maintenance lines | `release/v*` | same as trunk **plus required linear history** |
 
-Both require only universally reporting status checks (`Check Branch Name`,
-`Check Linked Issue`, `Validate PR Title`, `CodeQL`) — path-filtered jobs
-would sit pending forever on PRs whose paths they skip.
+Both require the same universally reporting status checks: `Check Branch Name`,
+`Check Linked Issue`, `Validate PR Title`, `CodeQL`, and `Run zizmor 🌈 /
+Run zizmor -- blocking`. Path-filtered jobs are excluded, because they would
+sit pending forever on PRs whose paths they skip.
 
 The table below is the human-readable spec the declaration encodes; consult
 it to review changes or apply the settings by hand. For `main`, the Settings
@@ -76,14 +77,21 @@ Don't hand-enumerate check names at ruleset-creation time — a fresh
 have already reported on the branch. Instead:
 
 1. Cut the branch and open one throwaway PR against it.
-2. Let `codeql.yml`, `branch-policy.yml`, and `pr.yml` report once.
-3. Edit the ruleset and require the checks that appeared — exactly the four
+2. Let `codeql.yml`, `branch-policy.yml`, `pr.yml`, and `zizmor.yml` report once.
+3. Edit the ruleset and require the checks that appeared — exactly the five
    declared in `.github/policies/servicenow-sdk-go-branch-protection.yml`
-   ("Check Branch Name," "Check Linked Issue," "Validate PR Title," "CodeQL.")
-   Never add path-filtered jobs (the ci.yml build/test/lint matrix): they
-   skip docs-only or workflow-only PRs, and a required check that never
-   reports sticks "pending" forever, blocking every merge until an admin
-   bypasses.
+   ("Check Branch Name," "Check Linked Issue," "Validate PR Title," "CodeQL,"
+   and "Run zizmor 🌈 / Run zizmor -- blocking."). Never add path-filtered
+   jobs (the ci.yml build/test/lint matrix): they skip docs-only or
+   workflow-only PRs, and a required check that never reports sticks
+   "pending" forever, blocking every merge until an admin bypasses.
+
+The required context must be the job name exactly as GitHub reports it. The
+value is load-bearing: the 2026-09 refactor that moved zizmor into a reusable
+workflow renamed its job, so the required context `Run zizmor 🌈 — auditor ·
+all inputs · fail on any finding` stopped reporting and blocked every merge
+with "Expected — Waiting for status to be reported" until the ruleset was
+updated. Rename a required job only together with its ruleset context.
 
 ### Ruleset payload reference (live)
 
@@ -97,7 +105,7 @@ have already reported on the branch. Instead:
     {"type": "deletion"},
     {"type": "non_fast_forward"},
     {"type": "pull_request", "parameters": {"required_approving_review_count": 1, "dismiss_stale_reviews_on_push": true, "require_code_owner_review": true, "require_last_push_approval": true, "required_review_thread_resolution": true}},
-    {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": true, "required_status_checks": [{"context": "Check Branch Name"}, {"context": "Check Linked Issue"}, {"context": "Validate PR Title"}, {"context": "CodeQL"}]}}
+    {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": true, "required_status_checks": [{"context": "Check Branch Name"}, {"context": "Check Linked Issue"}, {"context": "Validate PR Title"}, {"context": "CodeQL"}, {"context": "Run zizmor 🌈 / Run zizmor -- blocking"}]}}
   ]
 }
 ```
@@ -113,7 +121,7 @@ have already reported on the branch. Instead:
     {"type": "non_fast_forward"},
     {"type": "required_linear_history"},
     {"type": "pull_request", "parameters": {"required_approving_review_count": 1, "dismiss_stale_reviews_on_push": true, "require_code_owner_review": true, "require_last_push_approval": true, "required_review_thread_resolution": true}},
-    {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": true, "required_status_checks": [{"context": "Check Branch Name"}, {"context": "Check Linked Issue"}, {"context": "Validate PR Title"}, {"context": "CodeQL"}]}}
+    {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": true, "required_status_checks": [{"context": "Check Branch Name"}, {"context": "Check Linked Issue"}, {"context": "Validate PR Title"}, {"context": "CodeQL"}, {"context": "Run zizmor 🌈 / Run zizmor -- blocking"}]}}
   ]
 }
 ```
@@ -180,7 +188,7 @@ Protection must not break `release-please`, `dependabot`, or backport
 automation. Rehearse after any live change:
 
 1. **Dry-run the declarative file:** `python3 -m json.tool .github/policies/servicenow-sdk-go-branch-protection.yml` — confirms schema parse.
-2. **Open a throwaway PR** against `main` and against `release/v1.0` (for example `chore/rehearse-branch-protection (#725)`) and verify the four required checks report and the PR is mergeable only with 1 CODEOWNERS approval and conversation resolution. With `strict:true`, the branch must be up-to-date before merging (rebase if behind). Close without merging.
+2. **Open a throwaway PR** against `main` and against `release/v1.0` (for example `chore/rehearse-branch-protection (#725)`) and verify the five required checks report and the PR is mergeable only with 1 CODEOWNERS approval and conversation resolution. With `strict:true`, the branch must be up-to-date before merging (rebase if behind). Close without merging.
 3. **Backport label:** label a dummy `main` PR with `backport release/v1.0` and confirm `backport.yml` would fan out (check `Select existing target branches` log); no actual backport PR needed.
 4. **Stable/maintenance release configs:** `stable-release.yml` (main) and `maintenance-label.yml`/`backport.yml` are branch-scoped and use `contents: write`/`pull-requests: write` — they push to `release-please--` branches and open PRs, never directly to `main`/`release/v*`, so the `admin(always)` bypass keeps them unblocked (admin actor bypasses the PR approval, not the branch creation). No `restrictions` (push allowlist) is set.
 

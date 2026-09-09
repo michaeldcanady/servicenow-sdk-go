@@ -49,11 +49,16 @@ configuration:
     # lint-md) would stick "pending" forever on PRs they skip. Values can be any
     # string, but if the value does not correspond to any existing status check,
     # the status check will be stuck on pending since nothing exists to push an actual status.
+    # The value must be the job name exactly as GitHub reports it (for example,
+    # "Run zizmor 🌈 / Run zizmor -- blocking" is the reported name for the
+    # reusable-workflow zizmor job). Renaming a job without updating the rulesets
+    # blocks every merge with "Expected — Waiting for status to be reported".
     requiredStatusChecks:
     - Check Branch Name
     - Check Linked Issue
     - Validate PR Title
     - CodeQL
+    - Run zizmor 🌈 / Run zizmor -- blocking
     # Require branches to be up to date before merging. Strict true is
     # Scorecard-compliant (Tier 2) and matches live rulesets
     # (strict_required_status_checks_policy:true) plus last-push approval
@@ -87,6 +92,7 @@ configuration:
     - Check Linked Issue
     - Validate PR Title
     - CodeQL
+    - Run zizmor 🌈 / Run zizmor -- blocking
     requiresStrictStatusChecks: true
     restrictsPushes: false
     restrictsReviewDismissals: false
