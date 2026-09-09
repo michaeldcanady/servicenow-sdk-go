@@ -19,6 +19,8 @@ on:
       - ".github/workflows/reusable-lint-go.yaml"
       - ".github/workflows/reusable-test-go.yaml"
       - ".github/actions/check-go-deps"
+      - ".github/actions/install-tparse"
+      - ".github/actions/go-test"
       - ".github/workflows/reusable-build-go.yaml"
       - ".github/workflows/reusable-check-go-deps.yaml"
       - ".github/workflows/reusable-govulncheck.yaml"
@@ -33,6 +35,8 @@ on:
       - ".github/workflows/reusable-lint-go.yaml"
       - ".github/workflows/reusable-test-go.yaml"
       - ".github/actions/check-go-deps/action.yml"
+      - ".github/actions/install-tparse/action.yml"
+      - ".github/actions/go-test/action.yml"
       - ".github/workflows/reusable-build-go.yaml"
       - ".github/workflows/reusable-check-go-deps.yaml"
       - ".github/workflows/reusable-govulncheck.yaml"
@@ -85,6 +89,8 @@ jobs:
             .github/workflows/reusable-test-go.yaml
             .github/workflows/reusable-build-go.yaml
             .github/actions/check-go-deps/action.yml
+            .github/actions/install-tparse/action.yml
+            .github/actions/go-test/action.yml
             .github/workflows/reusable-check-go-deps.yaml
             .github/workflows/reusable-govulncheck.yaml
   check-go:
@@ -178,7 +184,7 @@ jobs:
       working-directory: "./tests/integration/v2"
       package-path: ./...
       coverage-file: ""
-      sn-offline: "yes"
+      sn-offline: ${{ 'true' }}
       sn-instance: mock_instance
       sn-username: mock_user
       sn-password: mock_password
