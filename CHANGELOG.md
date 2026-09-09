@@ -1,5 +1,34 @@
 # Changelog
 
+## [2.0.5](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.4...v2.0.5) (2026-09-09)
+
+
+### Bug Fixes
+
+* add a working-directory input to reusable-test-go.yaml ([ae3ae16](https://github.com/michaeldcanady/servicenow-sdk-go/commit/ae3ae16c845af68ca4eb6d1ff0e1826adce403f0))
+* bad expansion ([3f8dd80](https://github.com/michaeldcanady/servicenow-sdk-go/commit/3f8dd80c00a278c5a12de07705cb7e83d574c186))
+* bad license path ([0dd541a](https://github.com/michaeldcanady/servicenow-sdk-go/commit/0dd541a9713c740ed9bead7aaf5e03bde6dc5ac7))
+* bad substitution ([c2bac68](https://github.com/michaeldcanady/servicenow-sdk-go/commit/c2bac68bfaa4b6e54acf8e280f002a3278165e5b))
+* bad substitution ([bca4f2b](https://github.com/michaeldcanady/servicenow-sdk-go/commit/bca4f2b1677036c91de4ab560dd4289c7f5e5772))
+* correcting oc recommended changes ([e702293](https://github.com/michaeldcanady/servicenow-sdk-go/commit/e702293b763f99f3cef97ac2fc891e4c1fcf890c))
+* default permissions used due to no permissions: block ([3729d63](https://github.com/michaeldcanady/servicenow-sdk-go/commit/3729d634fd6bd05e16ca073b6b230c9a57756650))
+* identified security issues ([14e5ab0](https://github.com/michaeldcanady/servicenow-sdk-go/commit/14e5ab05ee3586dbedc54808d37f76b21a79bcca))
+* include package for integration tests ([d7caeed](https://github.com/michaeldcanady/servicenow-sdk-go/commit/d7caeed8c969abedfb9fd97154fe08f943a0c291))
+* make not tests tag gated ([3c3ac7f](https://github.com/michaeldcanady/servicenow-sdk-go/commit/3c3ac7f831cd082e29376e7c19ba0b24fc274702))
+* mapfile only supported on bash 4+ ([541538b](https://github.com/michaeldcanady/servicenow-sdk-go/commit/541538bfdc237f170aa5f57163da42a53c6672f0))
+* missing validation references ([f51a30e](https://github.com/michaeldcanady/servicenow-sdk-go/commit/f51a30eb2ee61d69ccec5edc5133f519ee2c6342))
+* misspelling ([d3af18d](https://github.com/michaeldcanady/servicenow-sdk-go/commit/d3af18d957ff6d270069aa4b7ca113fc76c64971))
+* not passing package path ([cb88e34](https://github.com/michaeldcanady/servicenow-sdk-go/commit/cb88e3452f83e0a36181ff3cafde6ca41344157a))
+* not using runner settings ([a5e43be](https://github.com/michaeldcanady/servicenow-sdk-go/commit/a5e43be8b7e52afcea8ca6c5a1d375825018be20))
+* now enforce working-directory ([3057d49](https://github.com/michaeldcanady/servicenow-sdk-go/commit/3057d498d09c1dc0b4825ddb7d43cc22874c8920))
+* pin version ([ca55488](https://github.com/michaeldcanady/servicenow-sdk-go/commit/ca5548877bc2f1212270de9d6c6ca127d0d4fcd8))
+* regressed on checked types ([ea838e8](https://github.com/michaeldcanady/servicenow-sdk-go/commit/ea838e804e71e722421051d36409d0e8cb06844c))
+* single quote mark ([17b089a](https://github.com/michaeldcanady/servicenow-sdk-go/commit/17b089a6aa22900b9dd938456c48bdf04d0495ec))
+* swap mod-path for package-path ([73e91c9](https://github.com/michaeldcanady/servicenow-sdk-go/commit/73e91c9bfae9eab9529ab7207631652bc437d463))
+* use working-directory for integration tests ([15bde9e](https://github.com/michaeldcanady/servicenow-sdk-go/commit/15bde9e2d6591f06c298f6bc2670499768bed365))
+* wrong versions and not included in ci path filter ([1bc67aa](https://github.com/michaeldcanady/servicenow-sdk-go/commit/1bc67aa9dd36214d9b7fa68323dc4cac8d8bc040))
+* zizmor reports ([bca6a37](https://github.com/michaeldcanady/servicenow-sdk-go/commit/bca6a378ad18bd3fbd198d351dd234966c54b3b5))
+
 ## [2.0.4](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.3...v2.0.4) (2026-09-02)
 
 
