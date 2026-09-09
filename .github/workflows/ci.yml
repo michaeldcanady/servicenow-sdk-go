@@ -141,6 +141,8 @@ jobs:
       matrix:
         go-version: ["stable", "oldstable"]
     uses: ./.github/workflows/reusable-lint-go.yaml
+    permissions:
+      contents: read # checkout and lint
     with:
       go-version: ${{ matrix.go-version }}
 
