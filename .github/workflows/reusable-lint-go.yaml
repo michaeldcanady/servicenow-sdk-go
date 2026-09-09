@@ -4,9 +4,9 @@ on:
   workflow_call:
     inputs:
       go-version:
-        description: 'Go version(s) to use, as a JSON array string, e.g. ["1.22","1.23"]'
+        description: "Go version to use (e.g. stable, oldstable, 1.20)"
         required: false
-        default: '["stable"]'
+        default: "stable"
         type: string
       golangci-lint-version:
         description: "golangci-lint version to use"
@@ -20,18 +20,14 @@ on:
         type: string
 
 concurrency:
-  group: lint-go-${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}
+  group: lint-go-${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.go-version }}
   cancel-in-progress: true
 
 permissions: {}
 
 jobs:
   lint:
-    name: Lint Go Code (${{ matrix.go-version }})
-    strategy:
-      fail-fast: false
-      matrix:
-        go-version: ${{ fromJSON(inputs.go-version) }}
+    name: Lint Go Code
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -40,10 +36,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- lint-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
+      - uses: ./.github/actions/setup-go-env
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: ${{ inputs.go-version }}
+          checkout: "false"
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9
         with:

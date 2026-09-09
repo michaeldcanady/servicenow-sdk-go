@@ -1,0 +1,49 @@
+name: Build Docs Site
+
+on:
+  workflow_call:
+    inputs:
+      base-url:
+        description: "Path prefix the built site will be served under (trailing slash)"
+        type: string
+        default: "/servicenow-sdk-go/"
+      analytics-domain:
+        description: "Domain passed to Plausible; empty disables analytics injection"
+        type: string
+        default: ""
+      upload-artifact:
+        description: "Upload the built site as a GitHub Actions artifact"
+        type: boolean
+        default: false
+      artifact-name:
+        description: "Name of the uploaded artifact"
+        type: string
+        default: "site"
+
+permissions: {}
+
+jobs:
+  build:
+    name: Build Site
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read # checkout and site build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build site
+        uses: ./.github/actions/docs-build
+        with:
+          base-url: ${{ inputs.base-url }}
+          analytics-domain: ${{ inputs.analytics-domain }}
+
+      - name: Upload site artifact
+        if: ${{ inputs.upload-artifact }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: website/build

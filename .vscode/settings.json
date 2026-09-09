@@ -124,6 +124,7 @@
     "timeago",
     "timeonly",
     "tmpl",
+    "tparse",
     "typedheaders",
     "unconvert",
     "Unmarshall",

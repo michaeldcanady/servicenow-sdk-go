@@ -1,0 +1,150 @@
+name: Check Snippet Regions
+description: >
+  Verifies the doc-snippet region contract between a docs directory and a
+  snippets directory:
+  1. every region referenced by a docs page exists in a snippet file,
+  2. every defined region is referenced by some page (orphans rot silently),
+  3. every [START x] has a matching [END x] in the same file.
+
+inputs:
+  snippets-dir:
+    description: "Directory containing snippet files with [START x] / [END x] markers"
+    required: false
+    default: "website/snippets"
+  docs-dir:
+    description: "Directory containing documentation pages that reference regions"
+    required: false
+    default: "website/docs"
+  snippet-patterns:
+    description: "Comma-separated glob patterns for snippet files (e.g. '*.go,*.ts')"
+    required: false
+    default: "*.go"
+  docs-patterns:
+    description: "Comma-separated glob patterns for docs files; use '*' to match any file type (e.g. '*.md,*.mdx')"
+    required: false
+    default: "*"
+
+runs:
+  using: composite
+  steps:
+    - name: Check snippet regions
+      shell: bash
+      env:
+        SNIPPETS_DIR: ${{ inputs.snippets-dir }}
+        DOCS_DIR: ${{ inputs.docs-dir }}
+        SNIPPET_PATTERNS: ${{ inputs.snippet-patterns }}
+        DOCS_PATTERNS: ${{ inputs.docs-patterns }}
+      run: |
+        set -euo pipefail
+
+        # --- helpers ----------------------------------------------------------
+
+        # Expand a comma-separated list of glob patterns into a bash array.
+        expand() {
+          local IFS=','
+          local -n out=$1
+          out=()
+          set -f # keep the glob patterns literal during IFS word splitting
+          for pat in $2; do
+            out+=("$pat")
+          done
+          set +f
+        }
+
+        # Collect files matching glob patterns under a directory (recursively).
+        collect_files() {
+          local dir=$1
+          shift
+          local -a patterns=("$@")
+          local -a files=()
+          for pat in "${patterns[@]}"; do
+            while IFS= read -r -d '' f; do
+              files+=("$f")
+            done < <(find "$dir" -type f -name "$pat" -print0 2>/dev/null || true)
+          done
+          printf '%s\n' "${files[@]}"
+        }
+
+        # --- configuration ----------------------------------------------------
+
+        snippets_dir="${SNIPPETS_DIR:?snippets-dir is required}"
+        docs_dir="${DOCS_DIR:?docs-dir is required}"
+        fail=0
+
+        expand snippet_pats "${SNIPPET_PATTERNS:?snippet-patterns is required}"
+        expand docs_pats "${DOCS_PATTERNS:?docs-patterns is required}"
+
+        # Skip gracefully if directories are absent (first-time setup, partial
+        # checkouts, etc.).
+        if [ ! -d "$snippets_dir" ] && [ ! -d "$docs_dir" ]; then
+          echo "::notice::Neither '${snippets_dir}' nor '${docs_dir}' exist; nothing to check."
+          exit 0
+        fi
+
+        # --- collect file lists ------------------------------------------------
+
+        snippet_files=$(collect_files "$snippets_dir" "${snippet_pats[@]}")
+        docs_files=$(collect_files "$docs_dir" "${docs_pats[@]}")
+
+        # --- extract defined and referenced regions ---------------------------
+
+        defined=""
+        if [ -n "$snippet_files" ]; then
+          defined=$(echo "$snippet_files" | xargs grep -ho '\[START [A-Za-z0-9_]*\]' 2>/dev/null \
+            | sed 's/\[START \(.*\)\]/\1/' | sort -u || true)
+        fi
+
+        referenced=""
+        if [ -n "$docs_files" ]; then
+          referenced=$(echo "$docs_files" | xargs grep -rho 'region="[A-Za-z0-9_]*"' 2>/dev/null \
+            | sed 's/region="\(.*\)"/\1/' || true)
+          referenced+=$'\n'$(echo "$docs_files" | xargs grep -rho '{{[A-Za-z0-9_]*:[A-Za-z0-9_]*}}' 2>/dev/null \
+            | sed 's/{{.*:\(.*\)}}/\1/' || true)
+          referenced=$(echo "$referenced" | sed '/^$/d' | sort -u)
+        fi
+
+        # --- check for missing regions (referenced but not defined) -----------
+
+        if [ -n "$referenced" ]; then
+          missing=$(comm -13 <(echo "$defined") <(echo "$referenced"))
+          if [ -n "$missing" ]; then
+            echo "ERROR: regions referenced in ${docs_dir} but not defined in ${snippets_dir}:" >&2
+            echo "$missing" | sed 's/^/  /' >&2
+            fail=1
+          fi
+        fi
+
+        # --- check for orphaned regions (defined but never referenced) --------
+
+        if [ -n "$defined" ]; then
+          orphans=$(comm -23 <(echo "$defined") <(echo "$referenced"))
+          if [ -n "$orphans" ]; then
+            echo "ERROR: regions defined in ${snippets_dir} but never referenced by a page (delete the markers or wire them in):" >&2
+            echo "$orphans" | sed 's/^/  /' >&2
+            fail=1
+          fi
+        fi
+
+        # --- check balanced START/END markers ---------------------------------
+
+        if [ -n "$snippet_files" ]; then
+          while IFS= read -r f; do
+            starts=$(grep -o '\[START [A-Za-z0-9_]*\]' "$f" 2>/dev/null \
+              | sed 's/\[START \(.*\)\]/\1/' | sort || true)
+            ends=$(grep -o '\[END [A-Za-z0-9_]*\]' "$f" 2>/dev/null \
+              | sed 's/\[END \(.*\)\]/\1/' | sort || true)
+            if [ "$starts" != "$ends" ]; then
+              echo "ERROR: unbalanced START/END markers in $f:" >&2
+              diff <(echo "$starts") <(echo "$ends") | sed 's/^/  /' >&2 || true
+              fail=1
+            fi
+          done <<< "$snippet_files"
+        fi
+
+        # --- summary ----------------------------------------------------------
+
+        if [ "$fail" -eq 0 ]; then
+          count=$(echo "$defined" | grep -c . || echo 0)
+          echo "snippet regions OK: ${count} regions, all referenced and balanced"
+        fi
+        exit "$fail"

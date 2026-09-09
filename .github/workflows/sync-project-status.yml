@@ -31,17 +31,17 @@ jobs:
     timeout-minutes: 5
     permissions: {} # no permissions needed for token presence check
     outputs:
-      has-token: ${{ steps.check.outputs.has-token }}
+      has-token: ${{ steps.check.outputs.has-secrets }}
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - id: check
+        uses: ./.github/actions/check-secret
         env:
-          PROJECT_PAT: ${{ secrets.PROJECT_PAT }}
-        run: |
-          if [ -z "$PROJECT_PAT" ]; then
-            echo "has-token=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "has-token=true" >> "$GITHUB_OUTPUT"
-          fi
+          HAS_PAT: ${{ secrets.PROJECT_PAT != '' }}
+        with:
+          secret-names: "HAS_PAT"
 
   sync:
     name: Sync Project Status

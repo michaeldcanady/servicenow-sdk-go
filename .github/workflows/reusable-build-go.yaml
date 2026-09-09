@@ -1,0 +1,39 @@
+name: Build Go Code
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: "Operating system to run tests on (e.g. ubuntu-latest, macos-latest, windows-latest)"
+        type: string
+        default: "ubuntu-latest"
+      go-version:
+        description: "Go version to use (e.g. stable, oldstable, 1.20)"
+        type: string
+        default: "stable"
+
+permissions: {}
+
+jobs:
+  build-go:
+    name: Build Go Code
+    runs-on: ${{ inputs.os }}
+    timeout-minutes: 20
+    permissions:
+      contents: read # checkout and build
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-go-env
+        with:
+          go-version: ${{ inputs.go-version }}
+          cache: "true"
+          checkout: "false"
+      - name: Build Go Code
+        run: |
+          PACKAGES=$(go list ./... | grep -v "/docs")
+          go build $PACKAGES

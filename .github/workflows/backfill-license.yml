@@ -45,11 +45,11 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # cache disabled per zizmor cache-poisoning audit (mirrors release-verify.yml)
+      - uses: ./.github/actions/setup-go-env
         with:
           go-version: "stable"
-          cache: false
+          cache: "false"
+          checkout: "false"
 
       - name: Apply license headers
         run: ./scripts/add-license.sh
@@ -65,49 +65,14 @@ jobs:
 
       - name: Open license backfill PR
         if: steps.detect.outputs.changed == 'true'
-        env:
-          # Matches docs-version.yml: x-access-token injection + gh pr create,
-          # since checkout runs with persist-credentials: false.
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          # Matches branch-policy.yml's <type>/<kebab-description> convention.
-          BRANCH="chore/license-backfill"
+        uses: ./.github/actions/create-pr
+        with:
+          branch: chore/license-backfill
+          title: "chore: add license headers to source files"
+          body: |
+            Automated license-header backfill by `.github/workflows/backfill-license.yml`.
 
-          # A re-run while a previous backfill PR is still open must degrade
-          # into a green no-op (same pattern as docs-version.yml).
-          open_prs="$(gh pr list --head "$BRANCH" --state open --json number --jq 'length')"
-          if [[ "$open_prs" != "0" ]]; then
-            echo "::notice::A license backfill PR ($BRANCH) is already open; nothing to do."
-            exit 0
-          fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$BRANCH"
-          git add -A
-          # Conventional-Commits (chore:) so release-please never surfaces the
-          # header churn in CHANGELOG.md; the PR title also passes pr.yml.
-          git commit -m "chore: add license headers to source files"
-
-          # A stale remote branch left by a partial failure (push landed, PR
-          # create didn't) would reject the push as non-fast-forward; replace
-          # it since no PR references it anymore.
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
-            "--delete" "$BRANCH" 2>/dev/null || true
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
-
-          # The PR body is assembled with printf because a physically
-          # multi-line quoted string here would put an unindented line inside
-          # the run block, which terminates the YAML literal scalar and breaks
-          # the workflow file itself.
-          pr_body="$(printf '%s\n\n%s' \
-            "Automated license-header backfill by \`.github/workflows/backfill-license.yml\`." \
-            "Runs \`scripts/add-license.sh\` (google/addlicense) over the in-scope source files (\`**/*.go\`, \`**/*.sh\`, root \`*.yml\`/\`*.yaml\`) and opens this PR whenever the diff is non-empty. Existing headers are never rewritten (addlicense skips files that already carry one); new files receive the current year. No SDK behavior is affected.")"
-          # branch-policy.yml requires either an issue reference or this label.
-          gh pr create \
-            --base main \
-            --head "$BRANCH" \
-            --label "no-issue-required" \
-            --title "chore: add license headers to source files" \
-            --body "$pr_body"
+            Runs `scripts/add-license.sh` (google/addlicense) over the in-scope source files (`**/*.go`, `**/*.sh`, root `*.yml`/`*.yaml`) and opens this PR whenever the diff is non-empty. Existing headers are never rewritten (addlicense skips files that already carry one); new files receive the current year. No SDK behavior is affected.
+          label: no-issue-required
+          commit-message: "chore: add license headers to source files"
+          github-token: ${{ github.token }}

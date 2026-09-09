@@ -57,17 +57,16 @@ concurrency:
 
 jobs:
   stale:
-    name: Mark and close stale issues
+    name: Provision stale label
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     permissions:
-      issues: write # labels, comments, and closes all live under the Issues API
+      issues: write # label provisioning
+    # Skipped on dry runs: provisioning is a live write, and the header's
+    # dry-run promise is that nothing is touched at all.
+    if: inputs.dry_run != true
     steps:
-      # Skipped on dry runs: provisioning is a live write, and the header's
-      # dry-run promise is that nothing is touched at all. The stale passes
-      # below are safe to dry-run because debug-only suppresses all writes.
       - name: Ensure stale label exists
-        if: inputs.dry_run != true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -88,68 +87,43 @@ jobs:
             fi
           fi
 
-      - name: Mark and close stale issues (active tier)
-        uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
-        with:
-          # Issues only: negative PR windows disable PR processing entirely.
-          days-before-pr-stale: -1
-          days-before-pr-close: -1
-          days-before-issue-stale: 14
-          days-before-issue-close: 7
+  stale-active:
+    name: Mark and close stale issues (active tier)
+    needs: stale
+    permissions:
+      issues: write # labels, comments, and closes via actions/stale
+    uses: ./.github/workflows/reusable-stale-issues.yaml
+    with:
+      days-before-stale: 14
+      days-before-close: 7
+      exempt-labels: "good first issue,good-first-issue,pinned,status: reviewed,status: in progress"
+      stale-issue-message: |
+        This issue has had no activity for 14 days, so it may be waiting on information from the reporter.
 
-          stale-issue-label: stale
+        If this still affects you, comment with current details — your SDK version, Go version, and a minimal reproduction. If we hear nothing, this issue closes automatically in 7 days.
+      close-issue-message: |
+        This issue was closed automatically because it had no activity for 21 days and appeared to be waiting on reporter information.
 
-          exempt-issue-labels: "good first issue,good-first-issue,pinned,status: reviewed,status: in progress"
-          exempt-all-issue-assignees: true
+        If this is still a problem, comment below or reopen it. Include your SDK version, Go version, and a minimal reproduction so we can pick it up quickly.
+      dry-run: ${{ inputs.dry_run == true }}
 
-          close-issue-reason: not_planned
+  stale-backlog:
+    name: Mark and close stale issues (backlog tier)
+    needs: stale
+    permissions:
+      issues: write # labels, comments, and closes via actions/stale
+    uses: ./.github/workflows/reusable-stale-issues.yaml
+    with:
+      days-before-stale: 90
+      days-before-close: 7
+      only-labels: "status: reviewed"
+      exempt-labels: "good first issue,good-first-issue,pinned"
+      stale-issue-message: |
+        This issue was triaged some time ago and has now had no activity for 90 days.
 
-          # Each mark/close costs ~2 API operations, so this caps a first-run
-          # backlog sweep at roughly half the open issues per day instead of
-          # firing every warning at once.
-          operations-per-run: 30
+        If it still matters, comment below or remove the `stale` label. If we hear nothing, it closes automatically in 7 days.
+      close-issue-message: |
+        This issue was closed automatically because it stayed inactive for 97 days after triage.
 
-          debug-only: ${{ inputs.dry_run == true }}
-
-          stale-issue-message: |
-            This issue has had no activity for 14 days, so it may be waiting on information from the reporter.
-
-            If this still affects you, comment with current details — your SDK version, Go version, and a minimal reproduction. If we hear nothing, this issue closes automatically in 7 days.
-
-          close-issue-message: |
-            This issue was closed automatically because it had no activity for 21 days and appeared to be waiting on reporter information.
-
-            If this is still a problem, comment below or reopen it. Include your SDK version, Go version, and a minimal reproduction so we can pick it up quickly.
-
-      - name: Mark and close stale issues (backlog tier)
-        uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
-        with:
-          days-before-pr-stale: -1
-          days-before-pr-close: -1
-          days-before-issue-stale: 90
-          days-before-issue-close: 7
-
-          # Touch only triaged backlog issues; the active tier above handles
-          # everything else, so the two passes never process the same issue.
-          only-issue-labels: "status: reviewed"
-
-          stale-issue-label: stale
-
-          exempt-issue-labels: "good first issue,good-first-issue,pinned"
-          exempt-all-issue-assignees: true
-
-          close-issue-reason: not_planned
-
-          operations-per-run: 30
-
-          debug-only: ${{ inputs.dry_run == true }}
-
-          stale-issue-message: |
-            This issue was triaged some time ago and has now had no activity for 90 days.
-
-            If it still matters, comment below or remove the `stale` label. If we hear nothing, it closes automatically in 7 days.
-
-          close-issue-message: |
-            This issue was closed automatically because it stayed inactive for 97 days after triage.
-
-            If this is still relevant, comment below or reopen it — ideally with your current SDK version, Go version, and a minimal reproduction.
+        If this is still relevant, comment below or reopen it — ideally with your current SDK version, Go version, and a minimal reproduction.
+      dry-run: ${{ inputs.dry_run == true }}

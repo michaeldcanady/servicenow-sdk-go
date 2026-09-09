@@ -1,0 +1,63 @@
+name: Lint PR Title (Conventional Commits)
+
+on:
+  workflow_call:
+    inputs:
+      types:
+        description: "Accepted Conventional Commits types (newline-separated)"
+        type: string
+        default: |
+          fix
+          feat
+          chore
+          docs
+          style
+          refactor
+          perf
+          test
+      require-scope:
+        description: "Whether a scope is required after the type"
+        type: boolean
+        default: false
+
+permissions: {}
+
+jobs:
+  lint-title:
+    name: Validate PR Title
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write # post/remove sticky comment for title lint
+      contents: read # read PR metadata
+    steps:
+      - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6
+        id: lint_title
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: ${{ inputs.types }}
+          requireScope: ${{ inputs.require-scope }}
+          postErrorComment: false
+
+      - uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        if: always() && steps.lint_title.outputs.error_message != ''
+        with:
+          header: pr-title-lint-error
+          message: |
+            Hey there and thank you for opening this pull request!
+
+            We require that pull request titles follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
+
+            It looks like your proposed title needs to be adjusted.
+
+            Details:
+            ```
+            ${{ steps.lint_title.outputs.error_message }}
+            ```
+
+      - uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        if: ${{ !cancelled() && steps.lint_title.outputs.error_message == '' }}
+        with:
+          header: pr-title-lint-error
+          delete: true

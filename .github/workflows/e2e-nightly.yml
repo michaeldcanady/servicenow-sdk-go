@@ -16,9 +16,6 @@ concurrency:
   group: e2e-nightly
   cancel-in-progress: false
 
-env:
-  GO_TEST_TIMEOUT: 40m
-
 jobs:
   check-secret:
     name: Check Credentials
@@ -29,20 +26,19 @@ jobs:
     # them visible to the presence check below.
     environment: e2e-tests
     outputs:
-      has-creds: ${{ steps.check.outputs.has-creds }}
+      has-creds: ${{ steps.check.outputs.has-secrets }}
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - id: check
+        uses: ./.github/actions/check-secret
         env:
           HAS_INSTANCE: ${{ secrets.SN_INSTANCE != '' }}
           HAS_USER: ${{ secrets.SN_USERNAME != '' }}
           HAS_PASS: ${{ secrets.SN_PASSWORD != '' }}
-        run: |
-          if [ "$HAS_INSTANCE" = "true" ] && [ "$HAS_USER" = "true" ] && [ "$HAS_PASS" = "true" ]; then
-            echo "has-creds=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has-creds=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::SN_INSTANCE/SN_USERNAME/SN_PASSWORD secrets are not set; skipping E2E run."
-          fi
+        with:
+          secret-names: "HAS_INSTANCE,HAS_USER,HAS_PASS"
 
   e2e:
     name: Live Instance Tests
@@ -61,15 +57,17 @@ jobs:
       # secrets or config vars; prefer secrets for SN_CLIENT_SECRET.
       SN_CLIENT_ID: ${{ secrets.SN_CLIENT_ID || vars.SN_CLIENT_ID }}
       SN_CLIENT_SECRET: ${{ secrets.SN_CLIENT_SECRET || vars.SN_CLIENT_SECRET }}
+      GO_TEST_TIMEOUT: 40m
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: ./.github/actions/setup-go-env
         with:
           go-version: "stable"
-          cache: true
+          cache: "true"
+          checkout: "false"
 
       - name: Run E2E suites
         working-directory: tests/integration/v2

@@ -1,0 +1,35 @@
+name: Check Secret Exists
+description: >
+  Checks whether one or more GitHub Actions secrets are set and outputs a
+  boolean. Pass secrets as environment variables from the calling workflow
+  (composite actions cannot access the secrets context directly).
+
+inputs:
+  secret-names:
+    description: "Comma-separated list of secret environment variable names to check (e.g. 'HAS_INSTANCE,HAS_USER,HAS_PASS')"
+    required: true
+
+outputs:
+  has-secrets:
+    description: "'true' if every listed secret is set and non-empty"
+    value: ${{ steps.check.outputs.has-secrets }}
+
+runs:
+  using: composite
+  steps:
+    - id: check
+      shell: bash
+      env:
+        SECRET_NAMES: ${{ inputs.secret-names }}
+      run: |
+        set -euo pipefail
+        IFS=',' read -ra NAMES <<< "$SECRET_NAMES"
+        for name in "${NAMES[@]}"; do
+          val="${!name:-}"
+          if [ -z "$val" ]; then
+            echo "has-secrets=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Secret '${name}' is not set."
+            exit 0
+          fi
+        done
+        echo "has-secrets=true" >> "$GITHUB_OUTPUT"

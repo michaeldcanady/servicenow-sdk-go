@@ -17,6 +17,13 @@ on:
       - "**/*.feature"
       - ".github/workflows/ci.yml"
       - ".github/workflows/reusable-lint-go.yaml"
+      - ".github/workflows/reusable-test-go.yaml"
+      - ".github/actions/check-go-deps"
+      - ".github/actions/install-tparse"
+      - ".github/actions/go-test"
+      - ".github/workflows/reusable-build-go.yaml"
+      - ".github/workflows/reusable-check-go-deps.yaml"
+      - ".github/workflows/reusable-govulncheck.yaml"
   pull_request:
     paths:
       - "**.go"
@@ -26,7 +33,13 @@ on:
       - ".github/workflows/ci.yml"
       - ".golangci.yml"
       - ".github/workflows/reusable-lint-go.yaml"
-
+      - ".github/workflows/reusable-test-go.yaml"
+      - ".github/actions/check-go-deps/action.yml"
+      - ".github/actions/install-tparse/action.yml"
+      - ".github/actions/go-test/action.yml"
+      - ".github/workflows/reusable-build-go.yaml"
+      - ".github/workflows/reusable-check-go-deps.yaml"
+      - ".github/workflows/reusable-govulncheck.yaml"
 concurrency:
   # Scheduled runs carry no head_ref or ref, so without the run_id fallback
   # every weekly run shares one bare group key and cancel-in-progress drops
@@ -55,7 +68,6 @@ jobs:
       github.event_name == 'schedule'
     outputs:
       code: ${{ github.event_name == 'schedule' || steps.filter.outputs.any_changed == 'true' }}
-      headers: ${{ github.event_name == 'schedule' || steps.header_filter.outputs.any_changed == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -73,110 +85,66 @@ jobs:
             tests/integration/**
             **/*.feature
             .github/workflows/ci.yml
-            .github/workflows/reusable-lint-go.yaml"
-
-      # Files in scope for the license-header check (matches scripts/add-license.sh:
-      # all .go/.sh plus root-level .yml/.yaml). A separate output keeps shell-only
-      # and config-only changes from unnecessarily re-running the Go build/test
-      # matrix while still gating the header check on the files it inspects.
-      - name: License Files Changed
-        if: github.event_name != 'schedule'
-        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
-        id: header_filter
-        with:
-          files: |
-            **.go
-            **/*.sh
-            *.yml
-            *.yaml
-            .github/workflows/ci.yml
-
+            .github/workflows/reusable-lint-go.yaml
+            .github/workflows/reusable-test-go.yaml
+            .github/workflows/reusable-build-go.yaml
+            .github/actions/check-go-deps/action.yml
+            .github/actions/install-tparse/action.yml
+            .github/actions/go-test/action.yml
+            .github/workflows/reusable-check-go-deps.yaml
+            .github/workflows/reusable-govulncheck.yaml
   check-go:
     name: Check Go Modules
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
     permissions:
       contents: read # checkout only; no push or release
     strategy:
       matrix:
         go-version: ["stable", "oldstable"]
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Check root module tidiness
-        uses: ./.github/actions/check-go-deps
-        with:
-          mod-path: ""
-          go-version: ${{ matrix.go-version }}
-      - name: Check integration test module tidiness
-        uses: ./.github/actions/check-go-deps
-        with:
-          mod-path: "tests/integration/v2"
-          go-version: ${{ matrix.go-version }}
+        package-path: [".", "tests/integration/v2"]
+    uses: ./.github/workflows/reusable-check-go-deps.yaml
+    with:
+      go-version: ${{ matrix.go-version }}
+      package-path: ${{ matrix.package-path }}
 
   build-go:
     name: Build Go Code
     needs:
       - changes
-    if: ${{ needs.changes.outputs.code == 'true' }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        go-version: ["stable", "oldstable"]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+        os:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "windows-latest"
+        go-version:
+          - "stable"
+          - "oldstable"
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    uses: ./.github/workflows/reusable-build-go.yaml
     permissions:
-      contents: read # checkout and build
-    defaults:
-      run:
-        shell: bash
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- build-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
-        with:
-          go-version: ${{ matrix.go-version }}
-          cache: true
-      - name: Build Go Code
-        run: |
-          PACKAGES=$(go list ./... | grep -v "/docs")
-          go build $PACKAGES
+      contents: read
+    with:
+      os: ${{ matrix.os }}
+      go-version: ${{ matrix.go-version }}
 
   lint-go:
     name: Lint Go Code
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        go-version: ["stable", "oldstable"]
     uses: ./.github/workflows/reusable-lint-go.yaml
-    with:
-      go-version: '["stable", "oldstable"]'
-
-  check-license:
-    name: License Headers
-    needs:
-      - changes
-    if: ${{ needs.changes.outputs.headers == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
     permissions:
-      contents: read # checkout and verify license headers
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- check-license: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
-        with:
-          go-version: "stable"
-      - name: Verify license headers
-        run: ./scripts/add-license.sh --check-only
+      contents: read # checkout and lint
+    with:
+      go-version: ${{ matrix.go-version }}
 
   test-go:
     name: Test Go Code
@@ -186,121 +154,50 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        go-version: ["stable", "oldstable"]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+        os:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "windows-latest"
+        go-version:
+          - "stable"
+          - "oldstable"
+    uses: ./.github/workflows/reusable-test-go.yaml
     permissions:
-      contents: read # checkout and test
+      contents: read # checkout and build
       pull-requests: write # sticky PR comment on failure
-    defaults:
-      run:
-        shell: bash
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
-        with:
-          go-version: ${{ matrix.go-version }}
-      - name: Install tparse
-        run: |
-          go install github.com/mfridman/tparse@v0.18.0
-          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
-      - name: Run Tests & Report
-        run: .github/scripts/report-tests.sh
-        id: test-run
-      - name: Prepare Test Summary
-        if: failure()
-        id: create-summary
-        run: |
-          echo "SUMMARY<<EOF" >> $GITHUB_OUTPUT
-          head -c 60000 test-summary.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-      - name: Post Sticky Comment
-        if: failure()
-        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
-        with:
-          header: test-failure-summary
-          message: ${{ steps.create-summary.outputs.SUMMARY }}
-      - name: Delete Test Failure Comment
-        if: success()
-        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
-        with:
-          header: test-failure-summary
-          delete: true
-
-      - name: Upload coverage to Codecov
-        if: runner.os == 'Linux' && matrix.go-version == 'stable'
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
-        with:
-          files: ./${{ env.COVERAGE_FILE }}
-          fail_ci_if_error: true
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    with:
+      os: ${{ matrix.os }}
+      go-version: ${{ matrix.go-version }}
+      package-path: "./..."
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration-test-go:
     name: Integration Tests (mocked)
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    uses: ./.github/workflows/reusable-test-go.yaml
     permissions:
       contents: read # checkout and mocked integration tests
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- integration-test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
-        with:
-          go-version: "stable"
-          cache: true
-      - name: Run integration tests
-        env:
-          SN_OFFLINE: "true"
-          SN_INSTANCE: mock_instance
-          SN_USERNAME: mock_user
-          SN_PASSWORD: mock_password
-        run: |
-          cd tests/integration/v2
-          go test -tags integration ./...
-
-  tag-gated-test-go:
-    name: Tag-Gated Tests (preview.query)
-    needs:
-      - changes
-    if: ${{ needs.changes.outputs.code == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read # checkout and preview.query tests
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        # zizmor: ignore[cache-poisoning] -- tag-gated-test-go: setup-go saves caches only on default-branch refs; PR/fork runs only restore, so no fork-persisted cache reaches trusted runs
-        with:
-          go-version: "stable"
-          cache: true
-      - name: Run preview.query tests
-        run: go test -tags preview.query ./internal/...
+      pull-requests: write # sticky PR comment on failure
+    with:
+      os: "ubuntu-latest"
+      go-version: "stable"
+      go-build-flags: "-tags integration"
+      working-directory: "./tests/integration/v2"
+      package-path: ./...
+      coverage-file: ""
+      sn-offline: true
+      sn-instance: mock_instance
+      sn-username: mock_user
+      sn-password: mock_password
 
   govulncheck:
     name: Vulnerability Scan
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    uses: ./.github/workflows/reusable-govulncheck.yaml
     permissions:
       contents: read # govulncheck via default checkout handled by action
-    steps:
-      - name: Run govulncheck
-        uses: golang/govulncheck-action@032d45514ae346b1db93c04b0c90b841c370344f # v1
-        with:
-          go-version-input: stable
-          go-package: ./...

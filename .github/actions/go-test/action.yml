@@ -1,0 +1,97 @@
+name: go-test
+author: michaeldcanady
+description: "Runs go test across one or more packages, optionally with coverage and JSON output piped through tparse"
+branding:
+  icon: "package"
+  color: "blue"
+inputs:
+  format-json:
+    description: "If true, run tests with -json output and pipe through tparse (requires tparse on PATH)"
+    required: false
+    default: "true"
+  verbose:
+    description: "If true, run tests with -v"
+    required: false
+    default: "true"
+  coverage-profile:
+    description: "Coverage output file path (e.g. coverage.out). Set to 'true' for the default 'coverage.out', or omit/leave empty to skip coverage."
+    required: false
+    default: ""
+  build-flags:
+    description: "Additional flags to pass to 'go build' (e.g. '-tags=integration')"
+    required: false
+    default: ""
+  package-paths:
+    description: "Packages to test, space- or newline-separated. e.g. ./... or './pkg1\n./pkg2'"
+    required: true
+  working-directory:
+    description: "Working directory to run tests in (e.g. '.', 'tests/integration/v2')"
+    required: false
+    default: "."
+
+outputs:
+  coverage-profile:
+    description: "Path to the generated coverage profile, empty if coverage was not requested"
+    value: ${{ steps.run-tests.outputs.coverage-profile }}
+
+runs:
+  using: composite
+  steps:
+    - id: run-tests
+      shell: bash
+      env:
+        format_json: ${{ inputs.format-json }}
+        verbose: ${{ inputs.verbose }}
+        coverage_profile: ${{ inputs.coverage-profile }}
+        package_paths: ${{ inputs.package-paths }}
+        build_flags: ${{ inputs.build-flags }}
+        working_directory: ${{ inputs.working-directory }}
+      run: |
+        set -euo pipefail
+
+        if [ -n "${working_directory}" ] && [ "${working_directory}" != "." ]; then
+          if [ ! -d "${working_directory}" ]; then
+            echo "::error::Working directory '${working_directory}' does not exist" >&2
+            exit 1
+          fi
+        fi
+
+        cd "${working_directory}"
+
+        args=()
+        [ "${verbose}" = "true" ] && args+=("-v")
+        [ "${format_json}" = "true" ] && args+=("-json")
+        if [ -n "${build_flags}" ]; then
+          read -r -a flag_args <<< "${build_flags}"
+          args+=("${flag_args[@]}")
+        fi
+
+        cover_path=""
+        if [ -n "${coverage_profile}" ] && [ "${coverage_profile}" != "false" ]; then
+          cover_path="${coverage_profile}"
+          [ "${cover_path}" = "true" ] && cover_path="coverage.out"
+          args+=("-coverprofile=${cover_path}")
+        fi
+
+        # package-paths accepts space- or newline-separated entries
+        pkgs=()
+        while IFS= read -r p; do
+          [ -n "$p" ] && pkgs+=("$p")
+        done < <(printf '%s' "${package_paths}" | tr ' ' '
+        ' | sed '/^[[:space:]]*$/d')
+        [ ${#pkgs[@]} -eq 0 ] && pkgs=("./...")
+
+        echo "Running: go test ${args[*]} ${pkgs[*]}"
+
+        if [ "${format_json}" = "true" ]; then
+          if ! command -v tparse >/dev/null 2>&1; then
+            echo "::error::tparse not found on PATH. Run the tparse-installer action before this step." >&2
+            exit 1
+          fi
+          set -o pipefail
+          go test "${args[@]}" "${pkgs[@]}" | tparse -all
+        else
+          go test "${args[@]}" "${pkgs[@]}"
+        fi
+
+        echo "coverage-profile=${cover_path}" >> "${GITHUB_OUTPUT}"

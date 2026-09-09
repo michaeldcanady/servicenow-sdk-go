@@ -1,0 +1,74 @@
+name: Stale Issues
+
+on:
+  workflow_call:
+    inputs:
+      days-before-stale:
+        description: "Days of inactivity before an issue is marked stale"
+        type: number
+        required: true
+      days-before-close:
+        description: "Days after stale label before an issue is closed"
+        type: number
+        required: true
+      only-labels:
+        description: "Only process issues with these labels (comma-separated). Empty means all issues."
+        type: string
+        default: ""
+      exempt-labels:
+        description: "Labels that exempt an issue from staleness (comma-separated)"
+        type: string
+        default: "good first issue,good-first-issue,pinned"
+      exempt-all-assignees:
+        description: "Exempt issues that have any assignee"
+        type: boolean
+        default: true
+      stale-issue-message:
+        description: "Comment posted when an issue is marked stale"
+        type: string
+        required: true
+      close-issue-message:
+        description: "Comment posted when a stale issue is closed"
+        type: string
+        required: true
+      operations-per-run:
+        description: "Maximum API operations per run"
+        type: number
+        default: 30
+      dry-run:
+        description: "Log intended actions without touching live issues"
+        type: boolean
+        default: false
+
+permissions: {}
+
+jobs:
+  stale:
+    name: Mark and close stale issues
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      issues: write # labels, comments, and closes
+    steps:
+      - uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
+        with:
+          # Issues only: negative PR windows disable PR processing entirely.
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          days-before-issue-stale: ${{ inputs.days-before-stale }}
+          days-before-issue-close: ${{ inputs.days-before-close }}
+
+          stale-issue-label: stale
+
+          only-issue-labels: ${{ inputs.only-labels }}
+          exempt-issue-labels: ${{ inputs.exempt-labels }}
+          exempt-all-issue-assignees: ${{ inputs.exempt-all-assignees }}
+
+          close-issue-reason: not_planned
+
+          operations-per-run: ${{ inputs.operations-per-run }}
+
+          debug-only: ${{ inputs.dry-run }}
+
+          stale-issue-message: ${{ inputs.stale-issue-message }}
+          close-issue-message: ${{ inputs.close-issue-message }}

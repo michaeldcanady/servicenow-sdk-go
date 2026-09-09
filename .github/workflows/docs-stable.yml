@@ -6,7 +6,7 @@
 # lint, live previews, cleanup). Trigger divergence between the two is
 # deliberate — see that file's header:
 #   * This file does NOT watch .vale.ini, scripts/check-snippet-regions.sh,
-#     or .github/actions/check-snippets/** (checker configuration produces no
+#     or .github/actions/vet-go-snippets/**, .github/actions/check-snippet-regions/** (checker configuration produces no
 #     new site output; it is executed here, just never a rebuild trigger).
 #   * This workflow has no workflow_dispatch on purpose: the canonical site
 #     is only ever published by a main push, never by hand. To exercise the
@@ -67,14 +67,22 @@ jobs:
             .github/workflows/docs-stable.yml
             .github/actions/docs-build/**
 
+  gate-stable:
+    name: gate-stable
+    needs: [detect-changes]
+    if: needs.detect-changes.outputs.docs == 'true'
+    permissions:
+      contents: read # Vale lint and snippet checks
+    uses: ./.github/workflows/reusable-docs-gate.yaml
+
   deploy-stable:
     name: deploy-stable
+    needs: [detect-changes, gate-stable]
+    if: needs.detect-changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
       contents: write # pushes built site to gh-pages branch (auditor requires comment)
-    needs: [detect-changes]
-    if: needs.detect-changes.outputs.docs == 'true'
     # Serialize stable deploys: two rapid merges finishing out of order would
     # otherwise let the stale build win the last-write race.
     concurrency:
@@ -85,28 +93,6 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-
-      # Whole-tree prose scan at the release gate (#661). Includes versioned
-      # copies under website/versioned_docs — backport fixes to frozen pages
-      # must stay lint-clean too. Pinned Vale binary: rule packs drift
-      # between releases, and an unpinned bump once failed every docs PR
-      # overnight. Comma-delimited with a matching separator (#683):
-      # vale-action only splits its files input when given one, and the
-      # delimiter must survive the runner's input trimming.
-      - name: Vale Linter (full site)
-        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # v3.0.0
-        with:
-          fail_on_error: true
-          files: website/docs,website/versioned_docs
-          separator: ","
-          level: error
-          version: 3.18.0
-
-      # Same contract the preview lifecycle asserts per-PR (single-sourced in
-      # the check-snippets action); re-asserted here before publishing because
-      # a failed gate must stop the swap, not just show red next to it.
-      - name: Check doc snippets
-        uses: ./.github/actions/check-snippets
 
       - name: Build site
         uses: ./.github/actions/docs-build

@@ -101,50 +101,17 @@ jobs:
 
       - name: Open snapshot PR
         if: steps.guard.outputs.skip == 'false'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG_NAME: ${{ github.ref_name }}
-          LINE: ${{ steps.guard.outputs.line }}
+        uses: ./.github/actions/create-pr
+        with:
           # Dashes rather than dots keep the name kebab-case, per the
           # <type>/<kebab-description> branch convention (dots are legal in
           # Git branch names; this is a style choice).
-          BRANCH: chore/docs-version-${{ steps.guard.outputs.line }}
-        run: |
-          set -euo pipefail
-          BRANCH="${BRANCH//./-}"
+          branch: chore/docs-version-${{ steps.guard.outputs.line }}
+          title: "chore(website): cut docs version ${{ steps.guard.outputs.line }}"
+          label: no-issue-required
+          commit-message: "chore(website): cut docs version ${{ steps.guard.outputs.line }}"
+          github-token: ${{ github.token }}
+          body: |
+            Automated snapshot of `website/docs` for the ${{ steps.guard.outputs.line }} release line (tag `${{ github.ref_name }}`), created by the docs-version workflow.
 
-          # A re-run after partial failure (push landed, pr create didn't),
-          # or a second stable tag on the same minor while the first PR is
-          # still open, must degrade into a green no-op.
-          open_prs="$(gh pr list --head "$BRANCH" --state open --json number --jq 'length')"
-          if [[ "$open_prs" != "0" ]]; then
-            echo "::notice::A snapshot PR for ${LINE} (${BRANCH}) is already open; nothing to do."
-            exit 0
-          fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$BRANCH"
-          git add website
-          git commit -m "chore(website): cut docs version ${LINE}"
-
-          # A stale remote branch with divergent history (left by that same
-          # partial failure) would reject the push as non-fast-forward;
-          # replace it since no PR references it anymore.
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
-            "--delete" "$BRANCH" 2>/dev/null || true
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
-
-          # The PR body is assembled with printf because a physically
-          # multi-line quoted string here would put an unindented line
-          # inside the run block, which terminates the YAML literal scalar
-          # and breaks the workflow file itself.
-          pr_body="$(printf '%s\n\n%s' \
-            "Automated snapshot of \`website/docs\` for the ${LINE} release line (tag \`${TAG_NAME}\`), created by the docs-version workflow." \
-            "The \`docusaurus.config.ts\` hunk (dropdown label + banner) is the only hand-worth-reviewing change; everything under \`versioned_docs/\` is the mechanical \`docs:version\` snapshot. Documentation CI validates the build on this PR.")"
-          gh pr create \
-            --base main \
-            --head "$BRANCH" \
-            --label "no-issue-required" \
-            --title "chore(website): cut docs version ${LINE}" \
-            --body "$pr_body"
+            The `docusaurus.config.ts` hunk (dropdown label + banner) is the only hand-worth-reviewing change; everything under `versioned_docs/` is the mechanical `docs:version` snapshot. Documentation CI validates the build on this PR.

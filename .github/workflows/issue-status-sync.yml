@@ -87,19 +87,9 @@ jobs:
   cleanup-closed:
     name: Clear Active Status on Close
     if: github.event_name == 'issues' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
     permissions:
       issues: write # remove pipeline status labels from closed issue
-    steps:
-      - name: Remove pipeline status labels
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NUMBER: ${{ github.event.issue.number }}
-          REPO: ${{ github.repository }}
-        run: |
-          set -euo pipefail
-          for label in "status: new" "status: reviewed" "status: in progress" "status: in review"; do
-            echo "Removing '$label' from issue #$NUMBER"
-            gh issue edit "$NUMBER" --repo "$REPO" --remove-label "$label" 2>/dev/null || true
-          done
+    uses: ./.github/workflows/reusable-sync-issue-labels.yaml
+    with:
+      issues: "${{ github.event.issue.number }}"
+      remove-labels: "status: new,status: reviewed,status: in progress,status: in review"

@@ -1,0 +1,85 @@
+name: Create Pull Request
+description: >
+  Creates a branch, commits all staged changes, and opens a pull request.
+  Idempotent: skips if a PR for the branch already exists.
+
+inputs:
+  branch:
+    description: "Branch name to create and push"
+    required: true
+  title:
+    description: "Pull request title"
+    required: true
+  body:
+    description: "Pull request body text"
+    required: true
+  label:
+    description: "Label to apply to the PR (optional)"
+    required: false
+    default: ""
+  base-branch:
+    description: "Branch to target with the PR"
+    required: false
+    default: "main"
+  commit-message:
+    description: "Commit message for the branch"
+    required: true
+  github-token:
+    description: "Token used for gh CLI and git push"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Check for existing PR
+      id: existing
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        BRANCH: ${{ inputs.branch }}
+      run: |
+        open_prs="$(gh pr list --head "$BRANCH" --state open --json number --jq 'length')"
+        if [[ "$open_prs" != "0" ]]; then
+          echo "exists=true" >> "$GITHUB_OUTPUT"
+          echo "::notice::A PR for branch ${BRANCH} is already open; nothing to do."
+        else
+          echo "exists=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Create branch, commit, and push
+      if: steps.existing.outputs.exists != 'true'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        BRANCH: ${{ inputs.branch }}
+        COMMIT_MESSAGE: ${{ inputs.commit-message }}
+      run: |
+        set -euo pipefail
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git checkout -b "$BRANCH"
+        git add -A
+        git commit -m "$COMMIT_MESSAGE"
+
+        # A stale remote branch left by a partial failure must be replaced.
+        git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+          "--delete" "$BRANCH" 2>/dev/null || true
+        git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
+
+    - name: Open pull request
+      if: steps.existing.outputs.exists != 'true'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        BRANCH: ${{ inputs.branch }}
+        TITLE: ${{ inputs.title }}
+        BODY: ${{ inputs.body }}
+        LABEL: ${{ inputs.label }}
+        BASE: ${{ inputs.base-branch }}
+      run: |
+        set -euo pipefail
+        args=(pr create --base "$BASE" --head "$BRANCH" --title "$TITLE" --body "$BODY")
+        if [[ -n "$LABEL" ]]; then
+          args+=(--label "$LABEL")
+        fi
+        gh "${args[@]}"

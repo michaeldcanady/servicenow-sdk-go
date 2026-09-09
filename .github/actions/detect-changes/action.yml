@@ -23,6 +23,9 @@ outputs:
   any_changed:
     description: "'true' if any file matching the given patterns changed."
     value: ${{ steps.filter.outputs.any_changed }}
+  all_changed_files:
+    description: "Comma-separated list of all changed file paths, for passing to linters that need an explicit file list."
+    value: ${{ steps.filter.outputs.all_changed_files }}
 
 runs:
   using: "composite"
