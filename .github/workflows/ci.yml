@@ -1,5 +1,7 @@
 name: CI
 on:
+  # Dispatch forces the full matrix with no path filtering, for on-demand
+  # re-runs of the whole gate.
   workflow_dispatch:
   # Run the full matrix weekly, independent of PR activity. Tuesdays 03:00 UTC
   # avoids Scorecard (Mon 01:30), the weekly release (Mon 03:00), e2e-nightly
@@ -15,31 +17,16 @@ on:
       - "!docs/snippets/**"
       - "tests/integration/**"
       - "**/*.feature"
+      - ".golangci.yml"
       - ".github/workflows/ci.yml"
-      - ".github/workflows/reusable-lint-go.yaml"
-      - ".github/workflows/reusable-test-go.yaml"
-      - ".github/actions/check-go-deps"
-      - ".github/actions/install-tparse"
-      - ".github/actions/go-test"
-      - ".github/workflows/reusable-build-go.yaml"
-      - ".github/workflows/reusable-check-go-deps.yaml"
-      - ".github/workflows/reusable-govulncheck.yaml"
   pull_request:
     paths:
       - "**.go"
       - "!docs/snippets/**"
       - "tests/integration/**"
       - "**/*.feature"
-      - ".github/workflows/ci.yml"
       - ".golangci.yml"
-      - ".github/workflows/reusable-lint-go.yaml"
-      - ".github/workflows/reusable-test-go.yaml"
-      - ".github/actions/check-go-deps/action.yml"
-      - ".github/actions/install-tparse/action.yml"
-      - ".github/actions/go-test/action.yml"
-      - ".github/workflows/reusable-build-go.yaml"
-      - ".github/workflows/reusable-check-go-deps.yaml"
-      - ".github/workflows/reusable-govulncheck.yaml"
+      - ".github/workflows/ci.yml"
 concurrency:
   # Scheduled runs carry no head_ref or ref, so without the run_id fallback
   # every weekly run shares one bare group key and cancel-in-progress drops
@@ -65,9 +52,10 @@ jobs:
     if: >-
       github.event_name == 'push' ||
       github.event_name == 'pull_request' ||
-      github.event_name == 'schedule'
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch'
     outputs:
-      code: ${{ github.event_name == 'schedule' || steps.filter.outputs.any_changed == 'true' }}
+      code: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || steps.filter.outputs.any_changed == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -75,24 +63,19 @@ jobs:
           persist-credentials: false
 
       - name: Changed Files
-        if: github.event_name != 'schedule'
+        if: github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
         uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
         id: filter
         with:
+          # The single source of truth for the quality gate's footprint; keep in
+          # lockstep with the push/PR trigger paths above.
           files: |
             **.go
             !docs/snippets/**
             tests/integration/**
             **/*.feature
+            .golangci.yml
             .github/workflows/ci.yml
-            .github/workflows/reusable-lint-go.yaml
-            .github/workflows/reusable-test-go.yaml
-            .github/workflows/reusable-build-go.yaml
-            .github/actions/check-go-deps/action.yml
-            .github/actions/install-tparse/action.yml
-            .github/actions/go-test/action.yml
-            .github/workflows/reusable-check-go-deps.yaml
-            .github/workflows/reusable-govulncheck.yaml
   check-go:
     name: Check Go Modules
     needs:
