@@ -28,12 +28,13 @@ and diagnosable, and make the happy path the automated path.
 Read `CLAUDE.md` (the Versioning & commits section in particular) and inspect
 the actual pipeline before touching it:
 
-- `.github/workflows/` — CI, PR checks, and release automation. Key flows:
-  `ci.yml`, `pr.yml`, `release-verify.yml`, `stable-release.yml`,
-  `weekly-release.yml`, `backport.yml` / `forward-port-tracker.yml`
-  (ADR 011), `stamp-deprecations.yml`, `e2e-nightly.yml`, `labeler.yml`,
-  `stale-issues.yml`, `codeql.yml`, `scorecard.yml`, plus docs publishing
-  and status-sync workflows.
+- `.github/workflows/` — CI, PR checks, and release automation. Pod-prefixed:
+  `quality-ci.yml`, `quality-weekly.yml`, `pr-branch.yml`, `pr-linked-issue.yml`,
+  `pr-title.yml`, `rel-verify.yml`, `rel-stable.yml`,
+  `rel-weekly.yml`, `rel-backport.yml` / `rel-forward-port.yml`
+  (ADR 011), `rel-stamp-deprecations.yml`, `e2e-nightly.yml`, `pr-labeler.yml`,
+  `issues-stale.yml`, `security-codeql.yml`, `security-scorecard.yml`, plus
+  docs publishing and status-sync workflows.
 - `scripts/` — `test.sh` (unit + coverage reports), `affected-tests.sh`, the
   Go-based `generate_test_report.go`, `check-snippet-regions.sh`.
 - `justfile` — the developer-facing wrappers (`just build | lint | fmt |
@@ -104,8 +105,8 @@ session to route.
   enforces; a status check nobody can pass (or that always passes) is worse
   than none.
 - **Automation over documentation** — a rule that lives only in prose
-  drifts; prefer enforcement in CI or policy (`branch-policy.yml`,
-  `labeler.yml`, `release-verify.yml`).
+  drifts; prefer enforcement in CI or policy (`pr-branch.yml`,
+  `pr-labeler.yml`, `rel-verify.yml`).
 - **Stability of the release path** — verify-then-cut, stamped deprecations,
   backport provenance (`needs-forward-port`): the release path is the one
   place a regression costs real users.

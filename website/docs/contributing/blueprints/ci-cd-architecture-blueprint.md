@@ -12,15 +12,16 @@ structured, named, triggered, and enforced. All migrations described here are
 
 ## 1. Current state
 
-The fleet contains 27 workflows in `.github/workflows/`. They cluster into
-four concerns:
+The fleet contains 35 workflows in `.github/workflows/`. They cluster into
+five concerns:
 
 | Domain | Workflows | Trigger model |
 | :--- | :--- | :--- |
-| Quality gates | `ci.yml`, `quality-gate.yml`, `reusable-check-go-deps.yml`, `reusable-build-go.yml`, `reusable-lint-go.yml`, `reusable-test-go.yml`, `reusable-govulncheck.yml`, `license-check.yml`, `branch-policy.yml`, `pr.yml`, `labeler.yml`, `opencode-review.yml`, `codeql.yml`, `zizmor.yml`, `docs-preview.yml` | `pull_request`, `push`, `schedule` |
-| Release path | `stable-release.yml`, `weekly-release.yml`, `rel-pipeline.yml`, `release-verify.yml`, `docs-version.yml`, `backport.yml`, `forward-port-tracker.yml`, `stamp-deprecations.yml`, `maintenance-label.yml` | `push`, `workflow_call`, `workflow_dispatch`, `pull_request_target` |
-| Scheduled bots | `e2e-nightly.yml`, `stale-issues.yml`, `backfill-license.yml`, `sync-project-status.yml`, `scorecard.yml` | `schedule`, `workflow_dispatch` |
-| Issue automation | `issue-similarity-check.yml`, `issue-status-sync.yml` | `issues`, `pull_request_target` |
+| Quality gates | `quality-ci.yml`, `quality-weekly.yml`, `quality-gate.yml`, `reusable-check-go-deps.yml`, `reusable-build-go.yml`, `reusable-lint-go.yml`, `reusable-test-go.yml`, `reusable-govulncheck.yml`, `quality-license.yml`, `quality-license-backfill.yml`, `pr-branch.yml`, `pr-linked-issue.yml`, `pr-title.yml`, `pr-dependabot.yml`, `pr-labeler.yml`, `pr-opencode-review.yml`, `docs-preview.yml` | `pull_request`, `push`, `schedule` |
+| Release path | `rel-stable.yml`, `rel-weekly.yml`, `rel-pipeline.yml`, `rel-verify.yml`, `docs-version.yml`, `rel-backport.yml`, `rel-forward-port.yml`, `rel-stamp-deprecations.yml`, `rel-maintenance-label.yml` | `push`, `workflow_call`, `workflow_dispatch`, `pull_request_target` |
+| Scheduled bots | `e2e-nightly.yml`, `issues-stale.yml`, `issues-project-sync.yml`, `security-scorecard.yml` | `schedule`, `workflow_dispatch` |
+| Issue automation | `issues-similarity.yml`, `issues-status-sync.yml` | `issues`, `pull_request_target` |
+| Security | `security-codeql.yml`, `security-zizmor.yml` | `pull_request`, `schedule` |
 
 Shared building-block actions live in the org repository
 `NerdIT-Tech/.github`, pinned to tagged commits. The quality gate and the
@@ -147,7 +148,7 @@ and observable.
 
 Fix correctness findings without renames or new abstractions:
 
-- Make `workflow_dispatch` on `ci.yml` run the full matrix.
+- Make `workflow_dispatch` on `quality-ci.yml` run the full matrix.
 - Unify trigger paths, the change filter, and `.golangci.yml` coverage; drop
   the dead shared-org paths.
 - Deduplicate the `docs-preview.yml` trigger glob.
@@ -160,8 +161,9 @@ Exit criteria: zizmor and `actionlint` clean, CI green.
 Deduplicate behavior without visible check-run changes:
 
 - Add the gate: a local `quality-gate.yml` orchestrator over local
-  `reusable-*.yml` legs, each accepting a `checkout-ref` input; point `ci.yml`
-  and `release-verify.yml` at it while keeping the `Verify Tagged Ref` job name.
+  `reusable-*.yml` legs, each accepting a `checkout-ref` input; point
+  `quality-ci.yml` and `rel-verify.yml` at it while keeping the
+  `Verify Tagged Ref` job name.
 - Add the `rel-pipeline` workflow; rewrite both release orchestrations over it
   and drop the now-superseded `sbom.yml` and `sign-release.yml`.
 - Add the shared `gh-pages` concurrency group to both docs deploy workflows.
@@ -173,21 +175,52 @@ check renamed.
 ### Phase 2 — Event model and rename wave
 
 Apply the pod prefixes and sentence-case names. Drop the redundant `push: main`
-legs on `codeql.yml` and `zizmor.yml`. Replace local `changes` jobs with
-trigger-level paths plus a dedicated weekly matrix workflow. Codify concurrency
-formulas per event class. Move the repeated label-provisioning and
+legs on `security-codeql.yml` and `security-zizmor.yml`. Replace local `changes`
+jobs with trigger-level paths plus a dedicated weekly matrix workflow. Codify
+concurrency formulas per event class. Move the repeated label-provisioning and
 secret-presence code into shared composite actions.
 
-This phase must land in the same PR as the branch-protection ruleset update
-that renames the required checks, or merges block. Ship an old-name-to-new
-check-run migration table in the PR description.
+This phase changes one thing the branch-protection rulesets can see: the
+reported name of the zizmor job. For reusable workflows, GitHub reports a
+check as `caller job / callee job`, so dropping the emoji from the
+`security-zizmor.yml` job name changes the reported contexts like this:
+
+| Required check | Reported today | Reported after the wave |
+| :--- | :--- | :--- |
+| `security-zizmor.yml` zizmor job (blocking) | `Run zizmor 🌈 / Run zizmor -- blocking` | `Run zizmor / Run zizmor -- blocking` |
+| `security-zizmor.yml` zizmor job (SARIF) | `Run zizmor 🌈 / Run zizmor -- SARIF upload` | `Run zizmor / Run zizmor -- SARIF upload` |
+
+The live `main` and `release/v*` rulesets today require the context `Run
+zizmor 🌈 — auditor · all inputs · fail on any finding`, which no check has
+reported since the 2026-09 reusable-workflow move; merges stay unblocked
+because the repo is administered under the `admin(always)` bypass. Because of
+that drift, the wave itself needs no coordinated ruleset edit to keep merges
+working.
+
+Decision: fix the ruleset context to the real post-wave name. Update both
+rulesets to require `Run zizmor / Run zizmor -- blocking` in the same change
+as the wave, which makes zizmor gate merges again instead of leaving a phantom
+required check in place.
 
 Items already landed ahead of the wave (they rename nothing): the redundant
-`push: main` legs are gone from `codeql.yml` and `zizmor.yml`; the concurrency
-formulas from rule 7 are applied; label provisioning is shared through the
-local `.github/actions/ensure-label` composite; secret-presence checks already
-delegate to the org `check-secret` composite. Only the pod-prefix file renames,
-sentence-case names, and the `changes`-job replacement still belong to the wave.
+`push: main` legs are gone from `security-codeql.yml` and
+`security-zizmor.yml`; the concurrency formulas from rule 7 are applied; label
+provisioning is shared through the local `.github/actions/ensure-label`
+composite; secret-presence checks already delegate to the org `check-secret`
+composite.
+
+The wave itself is implemented on the `draft/gate-orchestrator` branch: files
+now use the pod prefixes (`quality-ci.yml`, `quality-weekly.yml`,
+`rel-stable.yml`, `rel-verify.yml`, `security-codeql.yml`, `issues-stale.yml`,
+and so on); `branch-policy.yml` split into `pr-branch.yml` and
+`pr-linked-issue.yml`, `pr.yml` into `pr-title.yml` and `pr-dependabot.yml`;
+`name:` values are sentence case; the `changes` job is gone from `quality-ci`
+(two-lived changed-files detection replaced by trigger-level paths), and its
+`schedule` leg moved to a dedicated `quality-weekly.yml` matrix workflow. The
+other four required contexts (`Check Branch Name`, `Check Linked Issue`,
+`Validate PR Title`, `CodeQL`) survive unchanged; the `pr-branch`,
+`pr-linked-issue`, and `pr-title` splits preserve the job names byte for byte
+so GitHub keeps reporting the same checks from the renamed files.
 
 Exit criteria: merges work, all checks map cleanly, dispatch and schedule run
 real pipelines.

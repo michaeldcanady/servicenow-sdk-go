@@ -17,7 +17,7 @@ whose Status then reads "Superseded by ADR-013."
 
 Context note (2026-09-18): the in-band follow-on work now lives in a single
 reusable pipeline, `rel-pipeline.yml` (see ADR 012's Status update), replacing
-the separate `sbom.yml`, `sign-release.yml`, and in-band `release-verify.yml`
+the separate `sbom.yml`, `sign-release.yml`, and in-band `rel-verify.yml`
 callbacks. This recasting doesn't change this ADR's proposed direction.
 
 ## Context
@@ -80,7 +80,7 @@ Don't adopt yet. If adopted, pursue this phased path:
    releasing workflows POST `repository_dispatch` events of type
    `release-created` with a versioned payload (`v1`, `tag`, `sha`), with a
    small retry-and-jitter loop. In-band attachment continues unchanged.
-2. **Phase 2 — move stateless consumers to the bus.** `release-verify.yml`
+2. **Phase 2 — move stateless consumers to the bus.** `rel-verify.yml`
    (and any future consumer that doesn't affect artifact ordering) subscribes
    to `release-created` instead of being called in-band. SBOM and signing stay
    in-band because their ordering matters.

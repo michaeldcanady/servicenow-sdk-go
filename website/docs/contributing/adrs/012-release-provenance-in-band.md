@@ -18,7 +18,7 @@ Updated (2026-09-18): the in-band dependents are consolidated into one reusable
 pipeline, `rel-pipeline.yml`, which composes SBOM generation, artifact and tag
 signing, and release verification in order. The releasing workflows now call
 that single pipeline instead of the separate `sbom.yml`, `sign-release.yml`, and
-`release-verify.yml` callbacks; `release-verify.yml` keeps only its `push tags
+`rel-verify.yml` callbacks; `rel-verify.yml` keeps only its `push tags
 v*` tripwire for directly pushed tags. The in-band coupling rule itself is
 unchanged.
 
@@ -32,7 +32,7 @@ by release-please; the follow-on work never ran.
 Root cause: GitHub suppresses new workflow runs for repository events created
 by the default `GITHUB_TOKEN`, with two explicit exceptions,
 `workflow_dispatch` and `repository_dispatch`. `sbom.yml` and `sign-release.yml`
-triggered on `release: published`, and `release-verify.yml` triggered on
+triggered on `release: published`, and `rel-verify.yml` triggered on
 `push tags v*`. release-please-action creates both the tag and the release as
 a GitHub Action running with the default token, so neither event ever arrived.
 `sign-release.yml` had never run once; `sbom.yml` had only manual runs.
@@ -65,7 +65,7 @@ Alternatives considered:
 ## Decision
 
 Couple release-please's follow-on work to the releasing workflow in-band.
-The releasing workflows (`stable-release.yml`, `weekly-release.yml`) publish
+The releasing workflows (`rel-stable.yml`, `rel-weekly.yml`) publish
 `release_created` and `tag_name` outputs from their release-please jobs, then
 call each dependent as a reusable workflow via
 `uses: ./.github/workflows/<name>.yml` with a `tag` input, gated on
@@ -74,7 +74,7 @@ call each dependent as a reusable workflow via
 - **SBOM generation and attachment** (`sbom.yml`).
 - **Artifact signing and optional tag signing** (`sign-release.yml`), ordered
   by `needs: attach-sbom` so the SHA256SUMS always cover the SBOM.
-- **Release verification** (`release-verify.yml`), which keeps its
+- **Release verification** (`rel-verify.yml`), which keeps its
   `push tags v*` trigger only for tags that a human pushes directly, because
   those don't pass through the releasing workflows.
 
@@ -95,7 +95,7 @@ v2.0.3 and v2.0.2.
 - **Rule for future release questions:** don't add `release: published` or
   `push tags v*` triggers for releases that release-please creates with the
   default token — the trigger is dead on arrival. Add the work as a reusable
-  `workflow_call` workflow and invoke it from `stable-release.yml` and
-  `weekly-release.yml`. Revisit this rule only under the conditions in
+  `workflow_call` workflow and invoke it from `rel-stable.yml` and
+  `rel-weekly.yml`. Revisit this rule only under the conditions in
   [ADR 013](013-event-driven-release-dispatch.md), which may supersede this
   record.
