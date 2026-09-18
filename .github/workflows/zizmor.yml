@@ -1,9 +1,10 @@
 name: GitHub Actions Security Analysis with zizmor 🌈
 
 on:
+  # No push: main leg: main only changes through PRs (branch ruleset), and the
+  # PR run already scans the exact head that gets merged.
   push:
     branches:
-      - main
       - "release/**"
   pull_request:
     branches:

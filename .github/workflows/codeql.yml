@@ -1,12 +1,12 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main", "release/**" ]
   schedule:
     - cron: '0 3 * * 5' # Weekly
+# No push: main trigger: main only changes through PRs (branch ruleset), and
+# the PR run already analyzes the exact head that gets merged.
 
 permissions: {}
 
