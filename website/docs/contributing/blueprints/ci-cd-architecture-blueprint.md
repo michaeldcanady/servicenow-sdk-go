@@ -136,8 +136,30 @@ Each pod reacts to the minimal event set that expresses its intent:
    `issue-similarity-${{ github.event.issue.number }}`). Shared physical
    resources get named groups (`gh-pages-deploy` for gh-pages writers,
    `release-publish` for tag and release writers), applied to the job that
-   writes and never to a workflow that delegates the write to a reusable, so a
-   caller and its callee cannot deadlock on the same group.
+writes and never to a workflow that delegates the write to a reusable, so a
+    caller and its callee cannot deadlock on the same group.
+8. **The boundary is the decision, not the size.** Ask three questions, in
+   order, for any candidate automation, and cut the smallest unit that
+   satisfies the first question that returns *yes*:
+   - **Does it claim an event, a concurrency policy, or a secret class that
+     its siblings lack?** Make it a workflow. Sharing a trigger does not mean
+     sharing a workflow: `pr-branch.yml` and `pr-linked-issue.yml` were split
+     out of `branch-policy.yml` because one failing metadata check must not
+     stall the others, and `quality-ci.yml` lost its `schedule` leg to
+     `quality-weekly.yml` so the event profiles can serialize independently.
+   - **Do the steps need a runner boundary — their own checkout, timeout,
+     permissions, env, or matrix axis?** Make it a job, or a reusable workflow
+     when the same job shape is called from two or more entry points (the
+     `quality-gate` and `rel-pipeline` legs). Job names are load-bearing: the
+     branch-protection rulesets name checks by job, and for reusables GitHub
+     reports `caller job / callee job`. Renaming a required job is a ruleset
+     dance (rule 6, and the release-branch-protection runbook).
+   - **Is it parameterized step logic, no runner boundary of its own, needed
+     by more than one call site?** Make it a composite action, local
+     (`.github/actions`) until a second repo needs it. One shared use is
+     inline code; two uses in this repo is a local composite (for example,
+     `ensure-label`); a use outside this repo is an org-level action, which
+     this repo only calls.
 
 ## 4. Migration plan
 

@@ -107,6 +107,11 @@ session to route.
 - **Automation over documentation** — a rule that lives only in prose
   drifts; prefer enforcement in CI or policy (`pr-branch.yml`,
   `pr-labeler.yml`, `rel-verify.yml`).
+- **Workflow vs job vs action** — cut the smallest unit that claims a
+  distinct event, concurrency policy, or secret class (workflow), a distinct
+  runner boundary (job or reusable workflow), or shared parameterized steps
+  (composite action). Job names are load-bearing check names: a rename is a
+  ruleset dance (blueprint rule 8, release-branch-protection runbook).
 - **Stability of the release path** — verify-then-cut, stamped deprecations,
   backport provenance (`needs-forward-port`): the release path is the one
   place a regression costs real users.
