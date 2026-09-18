@@ -21,4 +21,4 @@ jobs:
       contents: read # Scorecard branch-protection check via GraphQL
       security-events: write # SARIF upload to code scanning
       id-token: write # OIDC token for publish_results
-    uses: ./.github/workflows/reusable-scorecard.yaml
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-scorecard.yml@cdac11d7baa02b3f15c150aee1088568d07b3f3a  # v0.1.0

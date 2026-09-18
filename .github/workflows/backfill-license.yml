@@ -45,7 +45,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ./.github/actions/setup-go-env
+      - uses: NerdIT-Tech/.github/.github/actions/setup-go-env@f7b870591d8dd7c1194252741befba9766b45200  # v0.1.0
         with:
           go-version: "stable"
           cache: "false"
@@ -65,7 +65,7 @@ jobs:
 
       - name: Open license backfill PR
         if: steps.detect.outputs.changed == 'true'
-        uses: ./.github/actions/create-pr
+        uses: NerdIT-Tech/.github/.github/actions/create-pr@f798b57828224ae116cc8c8e4ccf4ce91da74886  # v0.1.0
         with:
           branch: chore/license-backfill
           title: "chore: add license headers to source files"

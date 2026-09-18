@@ -35,7 +35,7 @@ jobs:
       - name: Check for changes since latest tag
         id: diff
         if: ${{ steps.latest_tag.outputs.tag != '' }}
-        uses: ./.github/actions/detect-changes
+        uses: NerdIT-Tech/.github/.github/actions/detect-changes@56a6f78118ca762e717675dc48ba10ead5bf8b5c  # v0.1.0
         with:
           checkout: "false"
           base_sha: ${{ steps.latest_tag.outputs.tag }}

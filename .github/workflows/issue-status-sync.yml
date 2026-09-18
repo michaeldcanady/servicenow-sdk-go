@@ -89,7 +89,7 @@ jobs:
     if: github.event_name == 'issues' && github.event.action == 'closed'
     permissions:
       issues: write # remove pipeline status labels from closed issue
-    uses: ./.github/workflows/reusable-sync-issue-labels.yaml
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-sync-issue-labels.yml@fd44e1a2b54278864570e76fb4fb3a205c8be979  # v0.1.0
     with:
       issues: "${{ github.event.issue.number }}"
       remove-labels: "status: new,status: reviewed,status: in progress,status: in review"

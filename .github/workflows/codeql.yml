@@ -20,4 +20,4 @@ jobs:
       actions: read # CodeQL workflow metadata (private repo)
       contents: read # checkout
       security-events: write # SARIF upload
-    uses: ./.github/workflows/reusable-codeql.yaml
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-codeql.yml@5ba36a4cba31b491a93831de80cb389352d9b6b7  # v0.1.0
