@@ -34,7 +34,6 @@ on:
       - ".github/workflows/docs-preview.yml"
       - ".github/actions/docs-build/**"
       - ".github/actions/vet-go-snippets/**"
-      - ".github/actions/check-snippet-regions/**"
 
 permissions: {}
 
