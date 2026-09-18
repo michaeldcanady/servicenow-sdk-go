@@ -1,47 +1,25 @@
-name: Sign Release
+name: Release Pipeline
 
-# Signs release artifacts and tags for supply-chain trust (issue #713).
-# Runs as a reusable workflow, called by Stable Release and Weekly Preview
-# Release after release-please has created the tag and release in the same
-# workflow run, and available as workflow_dispatch for backfilling older
-# releases (for example v2.0.3, which predates this flow).
+# The single release pipeline for a version tag: attach an SPDX SBOM, sign
+# the release artifacts (cosign keyless) and the tag (GPG), then re-run the
+# quality gate against the tagged ref. Stable Release and Weekly Preview
+# Release each call this once after release-please has created the release in
+# the same workflow run; this file replaced the separate sbom.yml and
+# sign-release.yml workflows they used to call.
 #
-# Why this is not a `release: published` trigger: release-please creates
-# releases as GitHub Actions using the default token, and GitHub deliberately
-# does not start new workflow runs from events created by GITHUB_TOKEN (the
-# anti-recursion rule). A release-event trigger therefore never fires for
-# release-please-created releases, which is exactly what happened to v2.0.3.
-# Calling the workflow from the releasing workflow is deterministic, and the
-# caller runs it only after the SBOM workflow has attached the SBOM, so the
-# checksums always cover it.
+# Why this is a reusable called in-band, not a `release: published` trigger:
+# release-please creates releases as GitHub Actions using the default token,
+# and GitHub deliberately does not start new workflow runs from events created
+# by GITHUB_TOKEN (the anti-recursion rule). A release-event trigger therefore
+# never fires for release-please-created releases, which is exactly what
+# happened to v2.0.3. Calling this workflow from the releasing workflow is
+# deterministic.
 #
-# Artifacts are signed keylessly with cosign (sigstore): the GitHub Actions
-# OIDC identity is the signing principal, so no secrets are required. The
-# signature and Fulcio certificate are written as a single sigstore bundle and
-# attached to the GitHub release as SHA256SUMS.sigstore.json, which Scorecard's
-# signed_releases check recognizes (it looks for assets whose names end in
-# .sig, .sigstore, or .sigstore.json across the last five releases) and which
-# anyone can verify with `cosign verify-blob`.
-#
-# Tags: release-please creates a lightweight tag through the git API, which
-# cannot carry a signature. Scorecard's version_tags_signed check needs an
-# annotated tag signed with a key it can resolve, so this workflow re-creates
-# the tag as an annotated, GPG-signed tag over the same commit and force-pushes
-# it. This step is gated on the GPG_SIGNING_KEY secret and skips cleanly with a
-# notice until the key is configured.
-#
-# One-time setup for signed tags (a maintainer task, not part of this file):
-#   1. Generate a passphrase-less key used only for tag signing and capture
-#      its fingerprint from the output.
-#        gpg --batch --passphrase '' --quick-gen-key \
-#          "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" \
-#          ed25519 cert never
-#        gpg --batch --passphrase '' --quick-add-key <fingerprint> ed25519 sign 1y
-#   2. Store the armored private key as the repository secret GPG_SIGNING_KEY.
-#        gpg --armor --export-secret-keys <fingerprint>   # value goes in Secrets
-#   3. Publish the public key to a public keyserver so Scorecard and
-#      `git verify-tag` can resolve it.
-#        gpg --armor --export <fingerprint> | gpg --keyserver keys.openpgp.org --send-keys <fingerprint>
+# Job order inside the pipeline is load-bearing: the SBOM is attached first so
+# the source-archive checksums always cover it; verification runs last so a
+# broken artifact cannot pass a broken gate. The verification job is a thin
+# caller of the local quality gate with the `ref` set to the tagged ref, so
+# release verification is literally the same check as PR verification.
 #
 # Backfill an older release by dispatching this workflow with the `tag` input
 # set to the existing tag.
@@ -50,24 +28,120 @@ on:
   workflow_call:
     inputs:
       tag:
-        description: Tag name to sign (for example v2.0.3)
+        description: Tag name to attach provenance assets to and verify (for example v2.0.3)
         required: true
         type: string
+    secrets:
+      GPG_SIGNING_KEY:
+        description: "GPG key used to re-create the tag as a signed annotated tag; empty skips tag signing"
+        required: false
   workflow_dispatch:
     inputs:
       tag:
-        description: Tag name to sign (for example v2.0.3)
+        description: Tag name to attach provenance assets to and verify (for example v2.0.3)
         required: true
+        type: string
 
 permissions: {}
 
 concurrency:
-  group: sign-release-${{ github.ref }}
+  group: release-pipeline-${{ inputs.tag || github.ref }}
   cancel-in-progress: false
 
 jobs:
-  sign-artifacts:
+  sbom:
+    name: Generate and Attach SBOM
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write # upload SBOM asset to the GitHub release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ inputs.tag }}
+
+      - name: Install Syft (pinned version with checksum verification)
+        env:
+          SYFT_VERSION: "1.41.0"
+        run: |
+          curl -sSfL -o syft.tar.gz \
+            "https://github.com/anchore/syft/releases/download/v${SYFT_VERSION}/syft_${SYFT_VERSION}_linux_amd64.tar.gz"
+          curl -sSfL -o syft_checksums.txt \
+            "https://github.com/anchore/syft/releases/download/v${SYFT_VERSION}/syft_${SYFT_VERSION}_checksums.txt"
+          # Verify the downloaded archive against the published checksum for this exact asset.
+          EXPECTED=$(awk -v v="${SYFT_VERSION}" \
+            '$2 == ("syft_" v "_linux_amd64.tar.gz") {print $1}' syft_checksums.txt)
+          echo "${EXPECTED}  syft.tar.gz" | sha256sum -c -
+          tar -xzf syft.tar.gz syft
+          sudo mv syft /usr/local/bin/syft
+          rm -f syft.tar.gz syft_checksums.txt
+
+      - name: Generate SBOM (SPDX format)
+        run: |
+          syft . -o spdx-json=sbom.spdx.json
+
+      - name: Find release ID for the tag
+        id: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          TAG_NAME="${RELEASE_TAG}"
+          RELEASE_ID=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG_NAME}" \
+            | jq -r '.id')
+
+          if [ -z "${RELEASE_ID}" ] || [ "${RELEASE_ID}" = "null" ]; then
+            echo "release_id=" >> "${GITHUB_OUTPUT}"
+          else
+            echo "release_id=${RELEASE_ID}" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Check for existing SBOM asset and upload
+        if: steps.release.outputs.release_id != '' && steps.release.outputs.release_id != 'null'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_ID: ${{ steps.release.outputs.release_id }}
+        run: |
+          # Check if an SBOM asset with this name already exists in the release
+          ASSET_ID=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets" \
+            | jq -r ".[] | select(.name == \"sbom.spdx.json\") | .id")
+
+          if [ -n "${ASSET_ID}" ] && [ "${ASSET_ID}" != "null" ]; then
+            # Delete existing SBOM asset so we can re-upload the fresh scan
+            curl -s -X DELETE -H "Authorization: token ${GITHUB_TOKEN}" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/assets/${ASSET_ID}" > /dev/null
+            echo "Deleted existing sbom.spdx.json asset"
+          fi
+
+          # Upload the SBOM as a release asset. The name query parameter is
+          # required by the GitHub uploads API; without it the POST fails with
+          # an HTTP 422, so capture the response code and fail loudly rather
+          # than silently reporting success.
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            -H "Authorization: token ${GITHUB_TOKEN}" \
+            -H "Content-Type: application/spdx+json" \
+            --data-binary @sbom.spdx.json \
+            "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=sbom.spdx.json")
+          if [ "${HTTP_CODE}" != "201" ]; then
+            echo "::error::Failed to upload sbom.spdx.json to release ${RELEASE_ID} (HTTP ${HTTP_CODE})"
+            exit 1
+          fi
+          echo "Uploaded sbom.spdx.json to release ${RELEASE_ID}"
+
+      - name: Notify if no release found for tag
+        if: steps.release.outputs.release_id == '' || steps.release.outputs.release_id == 'null'
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          echo "::notice::No GitHub Release found for tag $RELEASE_TAG. The SBOM was generated at ./sbom.spdx.json but was not attached to a release. Ensure the release was published by the release-please process or manually create a release draft."
+
+  sign:
     name: Sign Release Artifacts (cosign keyless)
+    needs: sbom
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -105,9 +179,9 @@ jobs:
             "https://github.com/${GITHUB_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.tar.gz"
           curl -sSfL -o "artifacts/${REPO_NAME}-${RELEASE_TAG}.zip" \
             "https://github.com/${GITHUB_REPOSITORY}/archive/refs/tags/${RELEASE_TAG}.zip"
-          # Release workflows call this after the SBOM workflow, so the SBOM is
-          # already attached. A standalone backfill may run first, so a missing
-          # SBOM is a notice, not an error.
+          # The SBOM job runs first in this pipeline, so the SBOM is already
+          # attached. A standalone backfill may run first, so a missing SBOM is
+          # a notice, not an error.
           if ! curl -sSfL -o "artifacts/sbom.spdx.json" \
             "https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/sbom.spdx.json"; then
             echo "::notice::sbom.spdx.json not available yet; SHA256SUMS covers only the source archives."
@@ -127,7 +201,7 @@ jobs:
           # fails the job loudly instead of shipping garbage data.
           cosign verify-blob \
             --bundle SHA256SUMS.sigstore.json \
-            --certificate-identity-regexp "https://github.com/${GITHUB_REPOSITORY}/.github/workflows/sign-release\\.yml@.*" \
+            --certificate-identity-regexp "https://github.com/${GITHUB_REPOSITORY}/.github/workflows/rel-pipeline\\.yml@.*" \
             --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
             SHA256SUMS
 
@@ -169,6 +243,7 @@ jobs:
 
   sign-tag:
     name: Sign Release Tag (GPG)
+    needs: sbom
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -180,7 +255,7 @@ jobs:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
         run: |
           if [ -z "${GPG_SIGNING_KEY}" ]; then
-            echo "::notice::GPG_SIGNING_KEY secret not configured; skipping tag signing. See this workflow's header for the one-time setup."
+            echo "::notice::GPG_SIGNING_KEY secret not configured; skipping tag signing. See the signing setup notes in this repo's release docs."
             echo "configured=false" >> "$GITHUB_OUTPUT"
           else
             echo "configured=true" >> "$GITHUB_OUTPUT"
@@ -229,3 +304,12 @@ jobs:
             "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
             "refs/tags/${RELEASE_TAG}"
           echo "Pushed signed annotated tag ${RELEASE_TAG}"
+
+  verify:
+    name: Verify Release Against Full Quality Gate
+    needs: [sign, sign-tag]
+    permissions:
+      contents: read # checkout and verification via the quality gate
+    uses: ./.github/workflows/quality-gate.yml
+    with:
+      ref: ${{ format('refs/tags/{0}', inputs.tag) }}

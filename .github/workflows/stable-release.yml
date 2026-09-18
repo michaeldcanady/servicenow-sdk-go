@@ -112,51 +112,26 @@ jobs:
           # computes releases against the repository's default branch (main).
           target-branch: ${{ github.ref_name }}
 
-  # Attach provenance assets to whatever release this run created. The
-  # release-please jobs run the actual SBOM generation and signing as reusable
-  # workflows so the artifacts are produced in-band (deterministically, no
-  # reliance on GitHub delivering a `release` event from a GITHUB_TOKEN-created
-  # release) and so a manual backfill stays possible via workflow_dispatch on
-  # the reusable files. Exactly one of the two release-please jobs can create a
-  # release per push (main, or a release/v* line), and only when a conventional
-  # commit bumped the version; both conditions are encoded in the gate below.
-  attach-sbom:
-    name: Attach SBOM to Release
+  # Run the release pipeline for whatever release this run created. The
+  # release-please jobs run the SBOM generation, signing, and verification as
+  # one reusable pipeline so the artifacts are produced in-band
+  # (deterministically, no reliance on GitHub delivering a `release` event from
+  # a GITHUB_TOKEN-created release) and so a manual backfill stays possible via
+  # workflow_dispatch on rel-pipeline.yml. Exactly one of the two release-please
+  # jobs can create a release per push (main, or a release/v* line), and only
+  # when a conventional commit bumped the version; both conditions are encoded
+  # in the gate below.
+  release-pipeline:
+    name: Run Release Pipeline
     needs: [release-please, release-please-maintenance]
     if: >-
       (needs.release-please.result == 'success' && needs.release-please.outputs.release_created == 'true') ||
       (needs.release-please-maintenance.result == 'success' && needs.release-please-maintenance.outputs.release_created == 'true')
     permissions:
-      contents: write # callee uploads the SBOM asset to the GitHub release
-    uses: ./.github/workflows/sbom.yml
-    with:
-      tag: ${{ needs.release-please.outputs.tag_name || needs.release-please-maintenance.outputs.tag_name }}
-
-  attach-sign:
-    name: Sign Release Artifacts and Tag
-    needs: [attach-sbom, release-please, release-please-maintenance]
-    if: >-
-      (needs.release-please.result == 'success' && needs.release-please.outputs.release_created == 'true') ||
-      (needs.release-please-maintenance.result == 'success' && needs.release-please-maintenance.outputs.release_created == 'true')
-    permissions:
-      contents: write # callee uploads signature assets and force-pushes the signed tag
+      contents: write # callee uploads provenance assets and force-pushes the signed tag
       id-token: write # callee signs keylessly with the OIDC identity
-    uses: ./.github/workflows/sign-release.yml
+    uses: ./.github/workflows/rel-pipeline.yml
     with:
       tag: ${{ needs.release-please.outputs.tag_name || needs.release-please-maintenance.outputs.tag_name }}
-
-  # Runs the full quality gate against the tagged ref. The release-please
-  # tag push is invisible to the `push tags` trigger (GITHUB_TOKEN events do
-  # not start new runs), so this must be called in-band. See
-  # release-verify.yml for both trigger paths.
-  verify-release:
-    name: Verify Release Against Full Quality Gate
-    needs: [attach-sign, release-please, release-please-maintenance]
-    if: >-
-      (needs.release-please.result == 'success' && needs.release-please.outputs.release_created == 'true') ||
-      (needs.release-please-maintenance.result == 'success' && needs.release-please-maintenance.outputs.release_created == 'true')
-    permissions:
-      contents: read # checkout and verification
-    uses: ./.github/workflows/release-verify.yml
-    with:
-      tag: ${{ needs.release-please.outputs.tag_name || needs.release-please-maintenance.outputs.tag_name }}
+    secrets:
+      GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}

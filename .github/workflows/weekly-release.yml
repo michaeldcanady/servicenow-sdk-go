@@ -73,45 +73,20 @@ jobs:
         with:
           config-file: weekly-release-please-config.json
 
-  # Attach provenance assets to the preview release, using the same reusable
-  # workflows as Stable Release so previews get the same SBOM and signatures.
-  attach-sbom:
-    name: Attach SBOM to Release
+  # Attach provenance assets to the preview release and re-verify the tagged
+  # ref, using the same release pipeline as Stable Release so previews get the
+  # same SBOM, signatures, and gate.
+  release-pipeline:
+    name: Run Release Pipeline
     needs: release-please
     if: >-
       needs.release-please.result == 'success' &&
       needs.release-please.outputs.release_created == 'true'
     permissions:
-      contents: write # callee uploads the SBOM asset to the GitHub release
-    uses: ./.github/workflows/sbom.yml
-    with:
-      tag: ${{ needs.release-please.outputs.tag_name }}
-
-  attach-sign:
-    name: Sign Release Artifacts and Tag
-    needs: [attach-sbom, release-please]
-    if: >-
-      needs.release-please.result == 'success' &&
-      needs.release-please.outputs.release_created == 'true'
-    permissions:
-      contents: write # callee uploads signature assets and force-pushes the signed tag
+      contents: write # callee uploads provenance assets and force-pushes the signed tag
       id-token: write # callee signs keylessly with the OIDC identity
-    uses: ./.github/workflows/sign-release.yml
+    uses: ./.github/workflows/rel-pipeline.yml
     with:
       tag: ${{ needs.release-please.outputs.tag_name }}
-
-  # Runs the full quality gate against the tagged ref. The release-please
-  # tag push is invisible to the `push tags` trigger (GITHUB_TOKEN events do
-  # not start new runs), so this must be called in-band. See
-  # release-verify.yml for both trigger paths.
-  verify-release:
-    name: Verify Release Against Full Quality Gate
-    needs: [attach-sign, release-please]
-    if: >-
-      needs.release-please.result == 'success' &&
-      needs.release-please.outputs.release_created == 'true'
-    permissions:
-      contents: read # checkout and verification
-    uses: ./.github/workflows/release-verify.yml
-    with:
-      tag: ${{ needs.release-please.outputs.tag_name }}
+    secrets:
+      GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
