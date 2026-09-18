@@ -20,7 +20,7 @@
 #
 # release-please branches need no special-casing: their PRs touch only
 # CHANGELOG.md/VERSION/version.go (verified in .release-please-config.json).
-name: Documentation Preview
+name: Documentation preview
 
 on:
   workflow_dispatch:

@@ -1,4 +1,7 @@
-name: PR Checks
+name: Dependabot auto-merge
+
+# Auto-merges non-major Dependabot PRs so dependency bumps don't pile up.
+
 on:
   pull_request:
     types:
@@ -17,13 +20,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint-title:
-    name: Validate PR Title
-    permissions:
-      pull-requests: write # post/remove sticky comment for title lint
-      contents: read # read PR metadata
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-lint-pr-title.yml@310f71df718af6b5b0e1ea028f25a1ab9b70481f  # v0.1.0
-
   dependabot-merge:
     name: Auto-merge Dependabot PRs
     runs-on: ubuntu-latest

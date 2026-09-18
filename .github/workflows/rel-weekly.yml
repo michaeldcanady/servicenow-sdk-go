@@ -1,4 +1,4 @@
-name: Weekly Preview Release
+name: Release weekly preview
 
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: License Header Backfill
+name: License header backfill
 
 # Runs addlicense in apply mode over the in-scope source files (**/*.go,
 # **/*.sh, root *.yml/*.yaml) on the default branch, and opens a PR whenever
@@ -70,7 +70,7 @@ jobs:
           branch: chore/license-backfill
           title: "chore: add license headers to source files"
           body: |
-            Automated license-header backfill by `.github/workflows/backfill-license.yml`.
+            Automated license-header backfill by `.github/workflows/quality-license-backfill.yml`.
 
             Runs `scripts/add-license.sh` (google/addlicense) over the in-scope source files (`**/*.go`, `**/*.sh`, root `*.yml`/`*.yaml`) and opens this PR whenever the diff is non-empty. Existing headers are never rewritten (addlicense skips files that already carry one); new files receive the current year. No SDK behavior is affected.
           label: no-issue-required

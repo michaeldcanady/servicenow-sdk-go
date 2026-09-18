@@ -1,4 +1,4 @@
-name: E2E Nightly
+name: E2E nightly
 
 # Runs the -tags e2e suite against a REAL ServiceNow instance so API drift is
 # caught by CI instead of by users. Requires repo secrets SN_INSTANCE,

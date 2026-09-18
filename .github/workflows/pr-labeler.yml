@@ -1,4 +1,4 @@
-name: Labeler
+name: Apply path labels
 
 on:
   pull_request_target:

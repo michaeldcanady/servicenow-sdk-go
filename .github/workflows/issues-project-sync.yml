@@ -6,7 +6,7 @@
 #
 # Requires a classic PAT with `project` scope (fine-grained tokens don't support Projects v2).
 
-name: Sync Project Status
+name: Sync project status
 
 on:
   schedule:

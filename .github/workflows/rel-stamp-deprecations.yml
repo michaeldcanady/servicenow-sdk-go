@@ -1,4 +1,4 @@
-name: Stamp Deprecated Notices
+name: Stamp deprecation notices
 
 # Deprecation notices are authored as
 #   // Deprecated: deprecated since v{unreleased}. [use X instead.]

@@ -10,7 +10,7 @@ name: Backport
 #   target branch carrying the same commits. Multiple labels fan out to
 #   multiple branches independently. The labels themselves are provisioned
 #   automatically when a maintenance branch is opened
-#   (maintenance-label.yml), so cutting release/vX.Y makes its label usable.
+#   (rel-maintenance-label.yml), so cutting release/vX.Y makes its label usable.
 #
 # Behavior
 #   - Missing target: maintenance branches are cut lazily, so when a label

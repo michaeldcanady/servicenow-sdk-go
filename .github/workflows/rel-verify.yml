@@ -1,9 +1,9 @@
-name: Release Verify
+name: Verify tagged release
 
 # Tripwire for the release path: runs the full quality gate against a
 # directly pushed version tag after the fact. Release-please-created tags are
 # already verified in-band by rel-pipeline.yml (see that file and
-# stable-release.yml); GitHub does not start new workflow runs from events
+# rel-stable.yml); GitHub does not start new workflow runs from events
 # created by GITHUB_TOKEN, so the `push tags v*` trigger never fires for
 # those. It does fire for tags a human pushes directly, which is the gap this
 # workflow covers.

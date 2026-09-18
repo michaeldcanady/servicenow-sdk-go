@@ -1,4 +1,4 @@
-name: Docs Version Snapshot
+name: Docs version snapshot
 
 # When release-please tags a stable vX.Y.Z on main, snapshot the docs for
 # that minor line and open a PR adding it to the site's version dropdown.

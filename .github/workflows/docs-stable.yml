@@ -20,7 +20,7 @@
 # release-please branches need no special-casing: their PRs touch only
 # CHANGELOG.md/VERSION/version.go (verified in .release-please-config.json),
 # and this workflow triggers on pushes to main regardless of branch name.
-name: Documentation Stable
+name: Documentation stable
 
 on:
   push:

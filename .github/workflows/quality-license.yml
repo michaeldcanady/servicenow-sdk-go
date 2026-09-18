@@ -1,4 +1,4 @@
-name: License Check
+name: License check
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ on:
       - "**.sh"
       - "*.yml"
       - "*.yaml"
-      - ".github/workflows/license-check.yml"
+      - ".github/workflows/quality-license.yml"
       - ".github/license-check/license-config.json"
       - "scripts/add-license.sh"
   pull_request:
@@ -20,7 +20,7 @@ on:
       - "**.sh"
       - "*.yml"
       - "*.yaml"
-      - ".github/workflows/license-check.yml"
+      - ".github/workflows/quality-license.yml"
       - ".github/license-check/license-config.json"
       - "scripts/add-license.sh"
 

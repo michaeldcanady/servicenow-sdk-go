@@ -1,0 +1,31 @@
+name: PR title check
+
+# Lints the PR title against the Conventional Commits vocabulary. The job name
+# "Validate PR Title" is a required status check in the branch rulesets; change
+# it only in lockstep with the rulesets (see
+# website/docs/contributing/release-branch-protection.md).
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+    branches:
+      - main
+      - "release/**"
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-title:
+    name: Validate PR Title
+    permissions:
+      pull-requests: write # post/remove sticky comment for title lint
+      contents: read # read PR metadata
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-lint-pr-title.yml@310f71df718af6b5b0e1ea028f25a1ab9b70481f  # v0.1.0

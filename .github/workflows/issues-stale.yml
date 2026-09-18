@@ -7,7 +7,7 @@
 # is closed as not planned. Any comment, commit reference, or edit removes
 # the `stale` label and resets the clock, so a reporter who returns keeps
 # their issue open. In practice this tier sweeps quiet `status: new` issues
-# — `status: in progress` is exempt because issue-status-sync.yml applies
+# — `status: in progress` is exempt because issues-status-sync.yml applies
 # that label without assigning anyone, so an issue with work in flight is
 # not protected by the assignee rule alone.
 #
@@ -29,14 +29,14 @@
 #
 # Labels are mutable repo settings with no declarative file form, so the
 # `stale` label is provisioned idempotently here each run (same approach as
-# maintenance-label.yml); actions/stale cannot create labels itself and
+# rel-maintenance-label.yml); actions/stale cannot create labels itself and
 # silently fails to mark issues when its label is missing.
 #
 # Rollout/dry runs: trigger via workflow_dispatch with dry_run checked —
 # the stale passes log everything they would do but touch nothing live,
 # and label provisioning is skipped entirely.
 
-name: Stale Issues
+name: Stale issues
 
 on:
   schedule:

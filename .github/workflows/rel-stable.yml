@@ -1,4 +1,4 @@
-name: Stable Release
+name: Release stable
 
 # Releases are produced per-branch (#659 / ADR 011):
 #   * main          -> next-major line, driven by release-please-config.json

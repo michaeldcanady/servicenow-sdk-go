@@ -1,4 +1,4 @@
-name: GitHub Actions Security Analysis with zizmor 🌈
+name: GitHub Actions security analysis with zizmor
 
 on:
   # No push: main leg: main only changes through PRs (branch ruleset), and the

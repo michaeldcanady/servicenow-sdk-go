@@ -5,7 +5,7 @@
 #
 # Applies (or verifies) MIT license headers to this repo's in-scope source
 # files using google/addlicense, pinned via `go run ...@v1.2.0` so the tool
-# stays out of go.mod/go.sum (mirrors how tparse is pinned in ci.yml).
+# stays out of go.mod/go.sum (mirrors how tparse is pinned in quality-ci.yml).
 #
 # Scope (locked decision):
 #   - **/*.go            incl. website/snippets

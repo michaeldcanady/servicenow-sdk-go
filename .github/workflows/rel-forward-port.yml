@@ -1,4 +1,4 @@
-name: Forward Port Tracker
+name: Forward port tracker
 
 # ADR 011 rule 5: drift between `main` and the `release/v*` branches is tracked
 # debt, never silent divergence. When a PR merges directly into a release
@@ -121,7 +121,7 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_URL: ${{ github.event.pull_request.html_url }}
           BASE_REF: ${{ github.event.pull_request.base.ref }}
-          WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref }}/.github/workflows/forward-port-tracker.yml
+          WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref }}/.github/workflows/rel-forward-port.yml
         run: |
           set -euo pipefail
 
@@ -184,7 +184,7 @@ jobs:
 
           ---
           _Tracked automatically by
-          [`forward-port-tracker.yml`](@WORKFLOW_URL@);
+          [`rel-forward-port.yml`](@WORKFLOW_URL@);
           contributor-facing playbook:
           `website/docs/contributing/release-branches.md`._
           TEMPLATE

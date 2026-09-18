@@ -17,7 +17,7 @@
 # the script only through env vars, never interpolated into the program,
 # and the search query is built from sanitized keyword tokens alone.
 
-name: Issue Similarity Check
+name: Issue similarity check
 
 on:
   issues:
