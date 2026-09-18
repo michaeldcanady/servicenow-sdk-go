@@ -66,7 +66,7 @@ jobs:
 
       - name: Detect site-output changes
         id: diff
-        uses: ./.github/actions/detect-changes
+        uses: NerdIT-Tech/.github/.github/actions/detect-changes@56a6f78118ca762e717675dc48ba10ead5bf8b5c  # v0.1.0
         with:
           checkout: "false"
           # Site-output-affecting paths only — keep in lockstep with
@@ -80,7 +80,7 @@ jobs:
 
       - name: Changed markdown files
         id: changed-md
-        uses: ./.github/actions/detect-changes
+        uses: NerdIT-Tech/.github/.github/actions/detect-changes@56a6f78118ca762e717675dc48ba10ead5bf8b5c  # v0.1.0
         with:
           checkout: "false"
 
@@ -112,14 +112,14 @@ jobs:
     name: lint-snippets
     permissions:
       contents: read
-    uses: ./.github/workflows/reusable-check-snippets.yaml
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-check-snippets.yml@044515296e458d55350669b1048fc3b6574a3893  # v0.1.1
 
   verify-build:
     name: verify-build
     permissions:
       contents: read # checkout and site build
     if: github.event.action != 'closed'
-    uses: ./.github/workflows/reusable-docs-build.yaml
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-docs-build.yml@e00d4be6ae3375ad8d61fe83228a4f6b60c6735d  # v0.1.1
     with:
       base-url: ${{ github.event_name == 'pull_request' && format('/servicenow-sdk-go/pr-preview/pr-{0}/', github.event.number) || '/servicenow-sdk-go/' }}
       upload-artifact: true

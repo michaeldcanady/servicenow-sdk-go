@@ -37,7 +37,7 @@ jobs:
         with:
           persist-credentials: false
       - id: check
-        uses: ./.github/actions/check-secret
+        uses: NerdIT-Tech/.github/.github/actions/check-secret@f6a5468932cc932a125ecfb470c13501a37d0ace  # v0.1.0
         env:
           HAS_PAT: ${{ secrets.PROJECT_PAT != '' }}
         with:

@@ -92,7 +92,7 @@ jobs:
     needs: stale
     permissions:
       issues: write # labels, comments, and closes via actions/stale
-    uses: ./.github/workflows/reusable-stale-issues.yaml
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-stale-issues.yml@dd650af9c6dd417f9225814bde20c0b0335ce4db  # v0.1.0
     with:
       days-before-stale: 14
       days-before-close: 7
@@ -112,7 +112,7 @@ jobs:
     needs: stale
     permissions:
       issues: write # labels, comments, and closes via actions/stale
-    uses: ./.github/workflows/reusable-stale-issues.yaml
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-stale-issues.yml@dd650af9c6dd417f9225814bde20c0b0335ce4db  # v0.1.0
     with:
       days-before-stale: 90
       days-before-close: 7

@@ -101,7 +101,7 @@ jobs:
 
       - name: Open snapshot PR
         if: steps.guard.outputs.skip == 'false'
-        uses: ./.github/actions/create-pr
+        uses: NerdIT-Tech/.github/.github/actions/create-pr@f798b57828224ae116cc8c8e4ccf4ce91da74886  # v0.1.0
         with:
           # Dashes rather than dots keep the name kebab-case, per the
           # <type>/<kebab-description> branch convention (dots are legal in
