@@ -62,30 +62,22 @@ jobs:
     timeout-minutes: 5
     permissions:
       issues: write # label provisioning
+      contents: read # checkout before composite action
     # Skipped on dry runs: provisioning is a live write, and the header's
     # dry-run promise is that nothing is touched at all.
     if: inputs.dry_run != true
     steps:
-      - name: Ensure stale label exists
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-        run: |
-          set -euo pipefail
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-          # Idempotent create: "already exists" is success here; any other
-          # failure aborts loudly rather than leaving the bot unable to mark.
-          if ! gh label create "stale" \
-              --repo "$REPO" \
-              --color "EDEDED" \
-              --description "No recent activity; closes in 7 days without an update" ; then
-            if gh api "repos/$REPO/labels/stale" >/dev/null 2>&1; then
-              echo "Label 'stale' already exists; continuing."
-            else
-              echo "::error::Failed to create the 'stale' label."
-              exit 1
-            fi
-          fi
+      - name: Ensure stale label exists
+        uses: ./.github/actions/ensure-label
+        with:
+          label: stale
+          color: EDEDED
+          description: No recent activity; closes in 7 days without an update
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   stale-active:
     name: Mark and close stale issues (active tier)

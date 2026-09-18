@@ -64,6 +64,10 @@ jobs:
       pull-requests: read # read PR labels / branch for provenance check
       contents: read # read repo metadata
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
       - name: Assess backport provenance
         id: provenance
         env:
@@ -101,26 +105,12 @@ jobs:
 
       - name: Ensure needs-forward-port label exists
         if: steps.provenance.outputs.skip != 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-        run: |
-          set -euo pipefail
-
-          # Idempotent create: "already exists" is success here; any other
-          # failure aborts the run loudly instead of silently filing an
-          # unlabeled tracking issue.
-          if ! gh label create "needs-forward-port" \
-              --repo "$REPO" \
-              --color "D93F0B" \
-              --description "Merged into release/v* without backport provenance; assess porting to main" ; then
-            if gh label view "needs-forward-port" --repo "$REPO" >/dev/null 2>&1; then
-              echo "Label 'needs-forward-port' already exists; continuing."
-            else
-              echo "::error::Failed to create the 'needs-forward-port' label."
-              exit 1
-            fi
-          fi
+        uses: ./.github/actions/ensure-label
+        with:
+          label: needs-forward-port
+          color: D93F0B
+          description: Merged into release/v* without backport provenance; assess porting to main
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Open forward-port tracking issue
         if: steps.provenance.outputs.skip != 'true'

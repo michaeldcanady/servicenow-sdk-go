@@ -26,14 +26,18 @@ jobs:
     timeout-minutes: 5
     permissions:
       issues: write # labels live under the Issues API
+      contents: read # checkout before composite action
     if: >-
       github.event.ref_type == 'branch' &&
       startsWith(github.event.ref, 'release/v')
     steps:
-      - name: Ensure backport label exists
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Derive backport label
+        id: derive
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
           BRANCH: ${{ github.event.ref }}
         run: |
           set -euo pipefail
@@ -45,22 +49,22 @@ jobs:
           LABEL="backport release/${BRANCH#release/}"
           if [[ ! "$LABEL" =~ ^backport\ release/v[0-9]+\.[0-9]+$ ]]; then
             echo "::notice::'${BRANCH}' is not a release/vX.Y maintenance line; no label provisioned."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          # Idempotent create: "already exists" is success here (e.g. a branch
-          # re-created after deletion); any other failure aborts loudly rather
-          # than leaving the branch without its label.
-          if ! gh label create "$LABEL" \
-              --repo "$REPO" \
-              --color "76A5E8" \
-              --description "Cherry-pick merged changes into ${BRANCH}" ; then
-            if gh label view "$LABEL" --repo "$REPO" >/dev/null 2>&1; then
-              echo "Label '${LABEL}' already exists; continuing."
-            else
-              echo "::error::Failed to create the '${LABEL}' label."
-              exit 1
-            fi
-          fi
+          echo "label=$LABEL" >> "$GITHUB_OUTPUT"
 
-          echo "::notice::Label '${LABEL}' is available for backport targeting."
+      - name: Ensure backport label exists
+        if: steps.derive.outputs.skip != 'true'
+        uses: ./.github/actions/ensure-label
+        with:
+          label: ${{ steps.derive.outputs.label }}
+          color: 76A5E8
+          description: Cherry-pick merged changes into ${{ github.event.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Report backport label
+        if: steps.derive.outputs.skip != 'true'
+        run: |
+          echo "::notice::Backport label is available for backport targeting."

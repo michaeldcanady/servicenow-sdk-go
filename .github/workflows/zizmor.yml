@@ -17,7 +17,10 @@ on:
 permissions: {}
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  # Per PR on the head branch, per branch on push, per run on schedule. The
+  # run_id tail keeps scheduled and manual runs from sharing a bare group key
+  # with cancel-in-progress.
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:

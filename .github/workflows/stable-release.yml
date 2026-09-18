@@ -57,6 +57,12 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+    concurrency:
+      # Serialize every tag/release writer across release flows (same group as
+      # the maintenance job and Weekly Preview Release) so two lines can't race
+      # for an identical tag name.
+      group: release-publish
+      cancel-in-progress: false
     steps:
       - name: Create release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
@@ -81,6 +87,9 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+    concurrency:
+      group: release-publish
+      cancel-in-progress: false
     steps:
       # The manifest check inspects files, and runners start with an empty
       # workspace, so the pushed ref must be checked out before the guard.

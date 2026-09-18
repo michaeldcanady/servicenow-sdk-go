@@ -66,6 +66,12 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+    concurrency:
+      # Serialize every tag/release writer across release flows (same group as
+      # Stable Release's release-please jobs) so a preview and a stable release
+      # can't race for the same tag.
+      group: release-publish
+      cancel-in-progress: false
     steps:
       - name: Create preview release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
