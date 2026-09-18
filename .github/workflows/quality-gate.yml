@@ -1,0 +1,151 @@
+name: Quality Gate
+
+# The single definition of "passing" for this repository: module tidiness,
+# build, lint, unit tests, mocked integration tests, and the vulnerability
+# scan. This orchestrator owns the matrices and the module-path policy;
+# the individual checks live in the leg workflows it calls, so each leg
+# stays independently consumable and independently versioned.
+#
+# Callers pass at most two knobs:
+# - `ref`: the ref to run the gate against. Empty checks out the event ref
+#   (the default for PR and push runs). Release verification sets it to the
+#   tagged ref, which is the whole point: verifying a tag runs the exact
+#   same gate as verifying a PR, not a hand-rolled approximation.
+# - `golangci-lint-version`: the lint version, owned here instead of being
+#   re-declared by every caller.
+#
+# The CODECOV_TOKEN secret is optional; the test leg only uploads coverage
+# when it is present.
+#
+# This gate is owned locally by this repository. The leg workflows it calls
+# live next to it as reusable-*.yml, each accepting a `checkout-ref` input so
+# the gate can run against a concrete ref (for example a release tag) without
+# the legs duplicating the ref logic.
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: "Ref to run the gate against; empty checks out the event ref"
+        required: false
+        default: ""
+        type: string
+      golangci-lint-version:
+        description: "golangci-lint version used by the lint leg"
+        required: false
+        default: "v2.13.0"
+        type: string
+    secrets:
+      CODECOV_TOKEN:
+        description: "Codecov token used to upload coverage; empty skips the upload"
+        required: false
+
+concurrency:
+  group: quality-gate-${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  check-go-modules:
+    name: Check Go Modules
+    strategy:
+      fail-fast: false
+      matrix:
+        go-version: ["stable", "oldstable"]
+        package-path: [".", "tests/integration/v2"]
+    permissions:
+      contents: read # checkout only; no push or release
+    uses: ./.github/workflows/reusable-check-go-deps.yml
+    with:
+      go-version: ${{ matrix.go-version }}
+      package-path: ${{ matrix.package-path }}
+      checkout-ref: ${{ inputs.ref }}
+
+  build-go:
+    name: Build Go Code
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "windows-latest"
+        go-version:
+          - "stable"
+          - "oldstable"
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-build-go.yml
+    with:
+      os: ${{ matrix.os }}
+      go-version: ${{ matrix.go-version }}
+      checkout-ref: ${{ inputs.ref }}
+
+  lint-go:
+    name: Lint Go Code
+    strategy:
+      fail-fast: false
+      matrix:
+        go-version: ["stable", "oldstable"]
+    permissions:
+      contents: read # checkout and lint
+    uses: ./.github/workflows/reusable-lint-go.yml
+    with:
+      go-version: ${{ matrix.go-version }}
+      golangci-lint-version: ${{ inputs.golangci-lint-version }}
+      checkout-ref: ${{ inputs.ref }}
+
+  test-go:
+    name: Test Go Code
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "windows-latest"
+        go-version:
+          - "stable"
+          - "oldstable"
+    permissions:
+      contents: read # checkout and build
+      pull-requests: write # sticky PR comment on failure
+    uses: ./.github/workflows/reusable-test-go.yml
+    with:
+      os: ${{ matrix.os }}
+      go-version: ${{ matrix.go-version }}
+      package-path: "./..."
+      checkout-ref: ${{ inputs.ref }}
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  integration-test-go:
+    name: Integration Tests (mocked)
+    permissions:
+      contents: read # checkout and mocked integration tests
+      pull-requests: write # sticky PR comment on failure
+    uses: ./.github/workflows/reusable-test-go.yml
+    with:
+      os: "ubuntu-latest"
+      go-version: "stable"
+      go-build-flags: "-tags integration"
+      working-directory: "./tests/integration/v2"
+      package-path: ./...
+      coverage-file: ""
+      env-vars: |
+        SN_OFFLINE=true
+        SN_INSTANCE=mock_instance
+        SN_USERNAME=mock_user
+        SN_PASSWORD=mock_password
+      checkout-ref: ${{ inputs.ref }}
+
+  govulncheck:
+    name: Vulnerability Scan
+    permissions:
+      contents: read # checkout and govulncheck scan
+    uses: ./.github/workflows/reusable-govulncheck.yml
+    with:
+      go-version: "stable"
+      go-package: "./..."
+      checkout-ref: ${{ inputs.ref }}

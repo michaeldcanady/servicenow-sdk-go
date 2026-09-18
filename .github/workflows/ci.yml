@@ -19,6 +19,8 @@ on:
       - "**/*.feature"
       - ".golangci.yml"
       - ".github/workflows/ci.yml"
+      - ".github/workflows/quality-gate.yml"
+      - ".github/workflows/reusable-*.yml"
   pull_request:
     paths:
       - "**.go"
@@ -27,6 +29,8 @@ on:
       - "**/*.feature"
       - ".golangci.yml"
       - ".github/workflows/ci.yml"
+      - ".github/workflows/quality-gate.yml"
+      - ".github/workflows/reusable-*.yml"
 concurrency:
   # Scheduled runs carry no head_ref or ref, so without the run_id fallback
   # every weekly run shares one bare group key and cancel-in-progress drops
@@ -77,112 +81,15 @@ jobs:
             **/*.feature
             .golangci.yml
             .github/workflows/ci.yml
-  check-go:
-    name: Check Go Modules
+            .github/workflows/quality-gate.yml
+            .github/workflows/reusable-*.yml
+  quality-gate:
+    name: Quality Gate
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
     permissions:
-      contents: read # checkout only; no push or release
-    strategy:
-      matrix:
-        go-version: ["stable", "oldstable"]
-        package-path: [".", "tests/integration/v2"]
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-check-go-deps.yml@518c3ac639edb7c8bdecf70cedbca4763a31af35 # v0.1.1
-    with:
-      go-version: ${{ matrix.go-version }}
-      package-path: ${{ matrix.package-path }}
-
-  build-go:
-    name: Build Go Code
-    needs:
-      - changes
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - "ubuntu-latest"
-          - "macos-latest"
-          - "windows-latest"
-        go-version:
-          - "stable"
-          - "oldstable"
-    if: ${{ needs.changes.outputs.code == 'true' }}
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-build-go.yml@0744b42f50f33960c6135cb7fa2d8345067b5f6a # v0.1.1
-    permissions:
-      contents: read
-    with:
-      os: ${{ matrix.os }}
-      go-version: ${{ matrix.go-version }}
-
-  lint-go:
-    name: Lint Go Code
-    needs:
-      - changes
-    if: ${{ needs.changes.outputs.code == 'true' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        go-version: ["stable", "oldstable"]
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-lint-go.yml@606cae6a534ebfeac3db1a153921b85abde3c26f # v0.1.1
-    permissions:
-      contents: read # checkout and lint
-    with:
-      go-version: ${{ matrix.go-version }}
-
-  test-go:
-    name: Test Go Code
-    needs:
-      - changes
-    if: ${{ needs.changes.outputs.code == 'true' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - "ubuntu-latest"
-          - "macos-latest"
-          - "windows-latest"
-        go-version:
-          - "stable"
-          - "oldstable"
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-test-go.yml@3289533fd243ff3fdbc47df296c4f596d546f819 # v0.1.1
-    permissions:
-      contents: read # checkout and build
-      pull-requests: write # sticky PR comment on failure
-    with:
-      os: ${{ matrix.os }}
-      go-version: ${{ matrix.go-version }}
-      package-path: "./..."
+      contents: read # read-only gate; per-leg permissions live in the gate
+    uses: ./.github/workflows/quality-gate.yml
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-  integration-test-go:
-    name: Integration Tests (mocked)
-    needs:
-      - changes
-    if: ${{ needs.changes.outputs.code == 'true' }}
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-test-go.yml@3289533fd243ff3fdbc47df296c4f596d546f819 # v0.1.1
-    permissions:
-      contents: read # checkout and mocked integration tests
-      pull-requests: write # sticky PR comment on failure
-    with:
-      os: "ubuntu-latest"
-      go-version: "stable"
-      go-build-flags: "-tags integration"
-      working-directory: "./tests/integration/v2"
-      package-path: ./...
-      coverage-file: ""
-      env-vars: |
-        SN_OFFLINE=true
-        SN_INSTANCE=mock_instance
-        SN_USERNAME=mock_user
-        SN_PASSWORD=mock_password
-
-  govulncheck:
-    name: Vulnerability Scan
-    needs:
-      - changes
-    if: ${{ needs.changes.outputs.code == 'true' }}
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-govulncheck.yml@90df6901560cd004f015dd84b799b613b8af6001 # v0.1.0
-    permissions:
-      contents: read # govulncheck via default checkout handled by action
