@@ -1,0 +1,189 @@
+---
+title: CI/CD architecture blueprint
+description: Target architecture and phased migration plan for the GitHub Actions fleet — domain pods, canonical quality gate, canonical release pipeline, and event-model conventions.
+---
+
+# Technical Blueprint: CI/CD Architecture (`github/workflows`)
+
+This blueprint records the audit and target architecture for the repository's
+GitHub Actions fleet. It is the reference for how CI/CD workflows are
+structured, named, triggered, and enforced. All migrations described here are
+`chore(ci)` changes that land by PR in the sequence below.
+
+## 1. Current state
+
+The fleet contains 27 workflows in `.github/workflows/`. They cluster into
+four concerns:
+
+| Domain | Workflows | Trigger model |
+| :--- | :--- | :--- |
+| Quality gates | `ci.yml`, `license-check.yml`, `branch-policy.yml`, `pr.yml`, `labeler.yml`, `opencode-review.yml`, `codeql.yml`, `zizmor.yml`, `docs-preview.yml` | `pull_request`, `push`, `schedule` |
+| Release path | `stable-release.yml`, `weekly-release.yml`, `sbom.yml`, `sign-release.yml`, `release-verify.yml`, `docs-version.yml`, `backport.yml`, `forward-port-tracker.yml`, `stamp-deprecations.yml`, `maintenance-label.yml` | `push`, `workflow_call`, `workflow_dispatch`, `pull_request_target` |
+| Scheduled bots | `e2e-nightly.yml`, `stale-issues.yml`, `backfill-license.yml`, `sync-project-status.yml`, `scorecard.yml` | `schedule`, `workflow_dispatch` |
+| Issue automation | `issue-similarity-check.yml`, `issue-status-sync.yml` | `issues`, `pull_request_target` |
+
+Shared logic lives in the org repository `NerdIT-Tech/.github` as reusable
+workflows and composite actions, pinned to tagged commits. The release pipeline
+runs in-band (software bill of materials, SBOM, signing, and verification
+invoked by the releasing workflow, not by a `release` event) because GitHub
+does not start workflow runs from events that `GITHUB_TOKEN` created.
+
+Deliberate strengths to preserve:
+
+- `permissions: {}` workflow defaults with least-privilege job scoping.
+- SHA-pinned actions with tag comments everywhere.
+- Metadata-only `pull_request_target` use with documented zizmor ignores.
+- Environment-gated secrets for live instance e2e tests.
+- ADR 011-aligned backport, forward-port, stamp, and maintenance-label flows.
+
+## 2. Audit findings
+
+### Correctness
+
+| Severity | Finding | Location |
+| :--- | :--- | :--- |
+| High | `workflow_dispatch` on `ci.yml` runs no jobs: the `changes` job skips dispatch, so every gated job inherits an empty output. | `ci.yml` |
+| High | Trigger paths and the internal change filter disagree: `.golangci.yml` appears only in the PR trigger, so a `.golangci.yml`-only PR runs zero checks and the lint gate never re-runs under new config. | `ci.yml` |
+| High | Dead paths from the org migration: trigger and filter still watch `.github/workflows/reusable-*.yaml` and `.github/actions/*` that were deleted when shared logic moved to `NerdIT-Tech/.github`. Cross-repo changes cannot trigger this repo, so these entries can never fire. | `ci.yml` |
+| High | `release-verify.yml` re-implements the quality gate inline with its own pinned tool versions, so the tag gate and the PR gate are two divergent copies. | `release-verify.yml` |
+
+### Consistency
+
+| Severity | Finding | Location |
+| :--- | :--- | :--- |
+| Medium | `stable-release.yml` and `weekly-release.yml` duplicate the `release-please` → SBOM → sign → verify pipeline. | both files |
+| Medium | The two docs deploy workflows write `gh-pages` under different concurrency groups, so a stable deploy and a preview deploy can interleave on the same branch. | `docs-stable.yml`, `docs-preview.yml` |
+| Medium | The `docs-preview.yml` trigger lists `.github/actions/check-snippet-regions/**` twice. | `docs-preview.yml` |
+| Medium | Three copies of idempotent label provisioning and two copies of the secret-presence check repeat tactical bash. | `stale-issues.yml`, `maintenance-label.yml`, `forward-port-tracker.yml`, `e2e-nightly.yml`, `sync-project-status.yml` |
+| Medium | Two change-detection mechanisms coexist: `tj-actions/changed-files` in `ci.yml` and the org `detect-changes` action elsewhere. | `ci.yml`, `docs-preview.yml`, `weekly-release.yml` |
+| Medium | Concurrency group formulas and `cancel-in-progress` values vary per file without a written convention. | all files |
+| Medium | Workflow and file names are inconsistent: generic `pr.yml` and `ci.yml`, Title Case `name:` values, and emoji in the `zizmor.yml` name. Job and workflow names feed required-check names in branch-protection rulesets, so renames have merge-blocking consequences. | all files |
+| Low | `codeql.yml` and `zizmor.yml` run on `push: main` plus PR plus schedule; the push leg rescans a ref the PR leg just scanned. | both files |
+
+### Hygiene
+
+| Severity | Finding | Location |
+| :--- | :--- | :--- |
+| Low | `sync-project-status.yml` polls hourly with a classic PAT. Projects v2 has no webhook, so polling is forced; document the least-privilege and rotation expectation. | `sync-project-status.yml` |
+| Low | The local `ensure-backport-label` job lacks `timeout-minutes`. | `maintenance-label.yml` |
+| Low | No workflow-schema lint at PR time. zizmor audits security; `actionlint` catches YAML and event-model errors. | quality gate |
+
+## 3. Target architecture
+
+### 3.1. Naming
+
+GitHub does not support subdirectories under `.github/workflows/` for
+trigger-scanned files, so organization uses filename prefixes. Use `pr-`,
+`quality-`, `security-`, `docs-`, `rel-`, `issues-`, and `e2e-` prefixes. Use
+`rel-` rather than `release-` so the file namespace never reads as the ADR 011
+`release/vX.Y` branch namespace. Write `name:` values in sentence case.
+
+| Pod | Example files |
+| :--- | :--- |
+| `pr-` | `pr-title`, `pr-branch`, `pr-linked-issue`, `pr-dependabot`, `pr-labeler`, `pr-opencode-review` |
+| `quality-` | `quality-ci`, `quality-weekly`, `quality-license` |
+| `security-` | `security-codeql`, `security-zizmor`, `security-scorecard` |
+| `docs-` | `docs-preview`, `docs-stable`, `docs-version` |
+| `rel-` | `rel-stable`, `rel-weekly`, `rel-verify`, `rel-backport`, `rel-forward-port`, `rel-sbom`, `rel-sign`, `rel-stamp-deprecations`, `rel-maintenance-label` |
+| `issues-` | `issues-similarity`, `issues-status-sync`, `issues-stale`, `issues-project-sync` |
+| `e2e-` | `e2e-nightly` |
+
+### 3.2. Event model
+
+Each pod reacts to the minimal event set that expresses its intent:
+
+| Pod | Events |
+| :--- | :--- |
+| `pr-*` | `pull_request`, with `pull_request_target` only for metadata-only issue and PR writes |
+| `quality-*` | `pull_request` and `push` with path filters, plus `schedule` for the weekly matrix |
+| `security-*` | `pull_request` and `schedule`; `branch_protection_rule` for scorecard; no `push` leg |
+| `docs-*` | `pull_request` and `push` scoped to `website/**`, plus `push` on `v*` tags |
+| `rel-*` | `push` on `main` and `release/v*`, `schedule` for weekly, `workflow_dispatch`; `pull_request_target` on `closed` for backport and forward-port |
+| `issues-*` | `issues`, `pull_request_target`, `schedule` |
+| `e2e-*` | `schedule` and `workflow_dispatch` |
+
+### 3.3. Rules
+
+1. **Filter at the edge.** Put path intent in trigger `paths`. A job exists to
+   run, not to re-decide. Only events without path metadata (`schedule`,
+   `workflow_dispatch`) get a single gate job.
+2. **One canonical quality gate.** A `quality-gate` reusable in
+   `NerdIT-Tech/.github` encodes the Go build, lint, test, vulnerability, and
+   module-check matrices. The PR gate, the weekly matrix, and release
+   verification all call it, so the tagged ref and the merge commit pass
+   literally the same gate.
+3. **One canonical release pipeline.** A `rel-pipeline` reusable composes SBOM,
+   signing, and verification. Both the stable and weekly release entry points
+   call it.
+4. **Serialize shared physical resources globally.** Deploys to `gh-pages`
+   share one named concurrency group across workflows. Tag writes share a
+   `release-publish` group. Last-write races disappear by construction.
+5. **Cron is a first-class event.** Scheduled pods stay scheduled. Keep the
+   cron budget in one table in the docs so new slots stay provably
+   collision-free.
+6. **Machine-enforced conventions.** `actionlint` runs in the quality gate next
+   to zizmor. Both are required checks on PRs.
+
+## 4. Migration plan
+
+The migration proceeds in four phases. Each phase is independently shippable
+and observable.
+
+### Phase 0 — Stabilize
+
+Fix correctness findings without renames or new abstractions:
+
+- Make `workflow_dispatch` on `ci.yml` run the full matrix.
+- Unify trigger paths, the change filter, and `.golangci.yml` coverage; drop
+  the dead shared-org paths.
+- Deduplicate the `docs-preview.yml` trigger glob.
+- Add missing `timeout-minutes`.
+
+Exit criteria: zizmor and `actionlint` clean, CI green.
+
+### Phase 1 — One gate, one pipeline
+
+Deduplicate behavior without visible check-run changes:
+
+- Add the org `quality-gate` reusable; point `ci.yml` and `release-verify.yml`
+  at it while keeping the `Verify Tagged Ref` job name.
+- Add the `rel-pipeline` reusable; rewrite both release orchestrations over it.
+- Add the shared `gh-pages` concurrency group to both docs deploy workflows.
+- Replace `tj-actions/changed-files` with the org `detect-changes` action.
+
+Exit criteria: one source of truth for the gate and the pipeline, no required
+check renamed.
+
+### Phase 2 — Event model and rename wave
+
+Apply the pod prefixes and sentence-case names. Drop the redundant `push: main`
+legs on `codeql.yml` and `zizmor.yml`. Replace local `changes` jobs with
+trigger-level paths plus a dedicated weekly matrix workflow. Codify concurrency
+formulas per event class. Move the repeated label-provisioning and
+secret-presence code into shared composite actions.
+
+This phase must land in the same PR as the branch-protection ruleset update
+that renames the required checks, or merges block. Ship an old-name-to-new
+check-run migration table in the PR description.
+
+Exit criteria: merges work, all checks map cleanly, dispatch and schedule run
+real pipelines.
+
+### Phase 3 — Enforce and document
+
+Add `actionlint` to the quality gate. Write the CI conventions reference
+(naming, event model, concurrency, secrets pattern, cron budget) and file the
+design decisions that cross the ADR bar with the product-manager agent. Update
+`CLAUDE.md` if any relevant command changes.
+
+Exit criteria: a new workflow can be added from the conventions doc alone.
+
+## 5. Risks
+
+- **Required-check renames** block merges if the ruleset is not updated in
+  lockstep. That is why Phase 2 is isolated as its own phase.
+- **`NerdIT-Tech/.github` is org-owned.** Prefer additive reusable inputs that
+  preserve old behavior, and pin consumer upgrades to tags so each repo
+  migrates at its own pace.
+- **Reuse chains harden, they do not weaken, guarantees.** Release
+  verification must run the exact PR gate, which is the point of Phase 1.

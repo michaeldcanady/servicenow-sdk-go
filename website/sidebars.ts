@@ -313,6 +313,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'contributing/blueprints/documents-api-blueprint',
             'contributing/blueprints/cmdb-instance-api-blueprint',
+            'contributing/blueprints/ci-cd-architecture-blueprint',
           ],
         },
       ],
