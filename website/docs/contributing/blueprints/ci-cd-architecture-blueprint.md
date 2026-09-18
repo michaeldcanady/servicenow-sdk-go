@@ -124,6 +124,19 @@ Each pod reacts to the minimal event set that expresses its intent:
    collision-free.
 6. **Machine-enforced conventions.** `actionlint` runs in the quality gate next
    to zizmor. Both are required checks on PRs.
+7. **Concurrency is formulaic.** Match the group and `cancel-in-progress` to the
+   event profile. Multi-event check pods serialize per PR, per branch, and per
+   run: group `${{ github.workflow }}-${{ github.head_ref || github.ref ||
+   github.run_id }}` with `cancel-in-progress: true` — keying by `github.ref`
+   alone collapses every PR run onto the base branch and lets concurrent PRs
+   cancel each other. PR-only pods key by `github.event.pull_request.number`.
+   Push and release pods key by `ref` with `cancel-in-progress: false`. Mounted
+   pods keep a static per-entity key (for example `stale-issues`,
+   `issue-similarity-${{ github.event.issue.number }}`). Shared physical
+   resources get named groups (`gh-pages-deploy` for gh-pages writers,
+   `release-publish` for tag and release writers), applied to the job that
+   writes and never to a workflow that delegates the write to a reusable, so a
+   caller and its callee cannot deadlock on the same group.
 
 ## 4. Migration plan
 
@@ -168,6 +181,13 @@ secret-presence code into shared composite actions.
 This phase must land in the same PR as the branch-protection ruleset update
 that renames the required checks, or merges block. Ship an old-name-to-new
 check-run migration table in the PR description.
+
+Items already landed ahead of the wave (they rename nothing): the redundant
+`push: main` legs are gone from `codeql.yml` and `zizmor.yml`; the concurrency
+formulas from rule 7 are applied; label provisioning is shared through the
+local `.github/actions/ensure-label` composite; secret-presence checks already
+delegate to the org `check-secret` composite. Only the pod-prefix file renames,
+sentence-case names, and the `changes`-job replacement still belong to the wave.
 
 Exit criteria: merges work, all checks map cleanly, dispatch and schedule run
 real pipelines.
