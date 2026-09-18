@@ -17,13 +17,15 @@ four concerns:
 
 | Domain | Workflows | Trigger model |
 | :--- | :--- | :--- |
-| Quality gates | `ci.yml`, `license-check.yml`, `branch-policy.yml`, `pr.yml`, `labeler.yml`, `opencode-review.yml`, `codeql.yml`, `zizmor.yml`, `docs-preview.yml` | `pull_request`, `push`, `schedule` |
-| Release path | `stable-release.yml`, `weekly-release.yml`, `sbom.yml`, `sign-release.yml`, `release-verify.yml`, `docs-version.yml`, `backport.yml`, `forward-port-tracker.yml`, `stamp-deprecations.yml`, `maintenance-label.yml` | `push`, `workflow_call`, `workflow_dispatch`, `pull_request_target` |
+| Quality gates | `ci.yml`, `quality-gate.yml`, `reusable-check-go-deps.yml`, `reusable-build-go.yml`, `reusable-lint-go.yml`, `reusable-test-go.yml`, `reusable-govulncheck.yml`, `license-check.yml`, `branch-policy.yml`, `pr.yml`, `labeler.yml`, `opencode-review.yml`, `codeql.yml`, `zizmor.yml`, `docs-preview.yml` | `pull_request`, `push`, `schedule` |
+| Release path | `stable-release.yml`, `weekly-release.yml`, `rel-pipeline.yml`, `release-verify.yml`, `docs-version.yml`, `backport.yml`, `forward-port-tracker.yml`, `stamp-deprecations.yml`, `maintenance-label.yml` | `push`, `workflow_call`, `workflow_dispatch`, `pull_request_target` |
 | Scheduled bots | `e2e-nightly.yml`, `stale-issues.yml`, `backfill-license.yml`, `sync-project-status.yml`, `scorecard.yml` | `schedule`, `workflow_dispatch` |
 | Issue automation | `issue-similarity-check.yml`, `issue-status-sync.yml` | `issues`, `pull_request_target` |
 
-Shared logic lives in the org repository `NerdIT-Tech/.github` as reusable
-workflows and composite actions, pinned to tagged commits. The release pipeline
+Shared building-block actions live in the org repository
+`NerdIT-Tech/.github`, pinned to tagged commits. The quality gate and the
+release pipeline are reusable workflows owned locally (`quality-gate.yml`,
+`reusable-*.yml`, `rel-pipeline.yml`). The release pipeline
 runs in-band (software bill of materials, SBOM, signing, and verification
 invoked by the releasing workflow, not by a `release` event) because GitHub
 does not start workflow runs from events that `GITHUB_TOKEN` created.
@@ -107,12 +109,11 @@ Each pod reacts to the minimal event set that expresses its intent:
 1. **Filter at the edge.** Put path intent in trigger `paths`. A job exists to
    run, not to re-decide. Only events without path metadata (`schedule`,
    `workflow_dispatch`) get a single gate job.
-2. **One canonical quality gate.** A `quality-gate` reusable in
-   `NerdIT-Tech/.github` encodes the Go build, lint, test, vulnerability, and
-   module-check matrices. The PR gate, the weekly matrix, and release
-   verification all call it, so the tagged ref and the merge commit pass
-   literally the same gate.
-3. **One canonical release pipeline.** A `rel-pipeline` reusable composes SBOM,
+2. **One canonical quality gate.** A `quality-gate` workflow owned locally
+   encodes the Go build, lint, test, vulnerability, and module-check matrices.
+   The PR gate, the weekly matrix, and release verification all call it, so the
+   tagged ref and the merge commit pass literally the same gate.
+3. **One canonical release pipeline.** A `rel-pipeline` workflow composes SBOM,
    signing, and verification. Both the stable and weekly release entry points
    call it.
 4. **Serialize shared physical resources globally.** Deploys to `gh-pages`
@@ -145,9 +146,11 @@ Exit criteria: zizmor and `actionlint` clean, CI green.
 
 Deduplicate behavior without visible check-run changes:
 
-- Add the org `quality-gate` reusable; point `ci.yml` and `release-verify.yml`
-  at it while keeping the `Verify Tagged Ref` job name.
-- Add the `rel-pipeline` reusable; rewrite both release orchestrations over it.
+- Add the gate: a local `quality-gate.yml` orchestrator over local
+  `reusable-*.yml` legs, each accepting a `checkout-ref` input; point `ci.yml`
+  and `release-verify.yml` at it while keeping the `Verify Tagged Ref` job name.
+- Add the `rel-pipeline` workflow; rewrite both release orchestrations over it
+  and drop the now-superseded `sbom.yml` and `sign-release.yml`.
 - Add the shared `gh-pages` concurrency group to both docs deploy workflows.
 - Replace `tj-actions/changed-files` with the org `detect-changes` action.
 

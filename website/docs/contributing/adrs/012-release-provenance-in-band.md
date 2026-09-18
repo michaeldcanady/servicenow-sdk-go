@@ -14,6 +14,14 @@ Accepted (2026-09-02). This is the root record for the release-provenance
 pipeline. The rules apply to any workflow that must react to a release-please-
 created release.
 
+Updated (2026-09-18): the in-band dependents are consolidated into one reusable
+pipeline, `rel-pipeline.yml`, which composes SBOM generation, artifact and tag
+signing, and release verification in order. The releasing workflows now call
+that single pipeline instead of the separate `sbom.yml`, `sign-release.yml`, and
+`release-verify.yml` callbacks; `release-verify.yml` keeps only its `push tags
+v*` tripwire for directly pushed tags. The in-band coupling rule itself is
+unchanged.
+
 ## Context
 
 The v2.0.3 release (2026-09-02) shipped with zero provenance assets: no SBOM,
