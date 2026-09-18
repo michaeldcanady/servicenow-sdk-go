@@ -83,10 +83,11 @@ jobs:
     timeout-minutes: 25
     permissions:
       contents: write # pushes built site to gh-pages branch (auditor requires comment)
-    # Serialize stable deploys: two rapid merges finishing out of order would
-    # otherwise let the stale build win the last-write race.
+    # Serialize every writer to gh-pages: stable deploys, per-PR previews, and
+    # preview removals share one named group so last-write races can't let a
+    # stale build win (see docs-preview.yml for the shared group).
     concurrency:
-      group: docs-stable-deploy
+      group: gh-pages-deploy
       cancel-in-progress: false
     steps:
       - name: Checkout code

@@ -64,9 +64,10 @@ jobs:
 
       - name: Changed Files
         if: github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
-        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
         id: filter
+        uses: NerdIT-Tech/.github/.github/actions/detect-changes@56a6f78118ca762e717675dc48ba10ead5bf8b5c # v0.1.0
         with:
+          checkout: "false"
           # The single source of truth for the quality gate's footprint; keep in
           # lockstep with the push/PR trigger paths above.
           files: |
@@ -87,7 +88,7 @@ jobs:
       matrix:
         go-version: ["stable", "oldstable"]
         package-path: [".", "tests/integration/v2"]
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-check-go-deps.yml@518c3ac639edb7c8bdecf70cedbca4763a31af35  # v0.1.1
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-check-go-deps.yml@518c3ac639edb7c8bdecf70cedbca4763a31af35 # v0.1.1
     with:
       go-version: ${{ matrix.go-version }}
       package-path: ${{ matrix.package-path }}
@@ -107,7 +108,7 @@ jobs:
           - "stable"
           - "oldstable"
     if: ${{ needs.changes.outputs.code == 'true' }}
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-build-go.yml@0744b42f50f33960c6135cb7fa2d8345067b5f6a  # v0.1.1
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-build-go.yml@0744b42f50f33960c6135cb7fa2d8345067b5f6a # v0.1.1
     permissions:
       contents: read
     with:
@@ -123,7 +124,7 @@ jobs:
       fail-fast: false
       matrix:
         go-version: ["stable", "oldstable"]
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-lint-go.yml@606cae6a534ebfeac3db1a153921b85abde3c26f  # v0.1.1
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-lint-go.yml@606cae6a534ebfeac3db1a153921b85abde3c26f # v0.1.1
     permissions:
       contents: read # checkout and lint
     with:
@@ -144,7 +145,7 @@ jobs:
         go-version:
           - "stable"
           - "oldstable"
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-test-go.yml@3289533fd243ff3fdbc47df296c4f596d546f819  # v0.1.1
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-test-go.yml@3289533fd243ff3fdbc47df296c4f596d546f819 # v0.1.1
     permissions:
       contents: read # checkout and build
       pull-requests: write # sticky PR comment on failure
@@ -160,7 +161,7 @@ jobs:
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-test-go.yml@3289533fd243ff3fdbc47df296c4f596d546f819  # v0.1.1
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-test-go.yml@3289533fd243ff3fdbc47df296c4f596d546f819 # v0.1.1
     permissions:
       contents: read # checkout and mocked integration tests
       pull-requests: write # sticky PR comment on failure
@@ -182,6 +183,6 @@ jobs:
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
-    uses: NerdIT-Tech/.github/.github/workflows/reusable-govulncheck.yml@90df6901560cd004f015dd84b799b613b8af6001  # v0.1.0
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-govulncheck.yml@90df6901560cd004f015dd84b799b613b8af6001 # v0.1.0
     permissions:
       contents: read # govulncheck via default checkout handled by action

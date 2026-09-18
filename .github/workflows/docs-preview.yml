@@ -137,8 +137,12 @@ jobs:
       github.event.action != 'closed' &&
       needs.detect-changes.outputs.docs == 'true'
     concurrency:
-      group: docs-preview-${{ github.event.number }}
-      cancel-in-progress: true # a superseded push's preview is worthless
+      # Shared mutex with docs-stable.yml's deploy-stable and this workflow's
+      # remove-preview: every writer to gh-pages serializes under one group, so
+      # a stable deploy, a preview build, and a preview removal can never
+      # interleave on the branch.
+      group: gh-pages-deploy
+      cancel-in-progress: false
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -173,6 +177,11 @@ jobs:
     if: >-
       github.event.action == 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository
+    concurrency:
+      # Same shared gh-pages mutex as deploy-preview and deploy-stable, so a
+      # removal never races the deploy that supersedes it.
+      group: gh-pages-deploy
+      cancel-in-progress: false
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
