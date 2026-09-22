@@ -22,7 +22,7 @@ rewrites rather than merges. Drift between major lines therefore compounds
 fast and doesn't heal on its own.
 
 Tooling reinforces the problem today: release-please fires only on `main`
-(`.github/workflows/stable-release.yml`), so there is no supported path for
+(`.github/workflows/rel-stable.yml`), so there is no supported path for
 patching — or extending — a shipped major once `main` has moved on. That gap
 becomes acute whenever a new ServiceNow API surface ships mid-cycle that
 consumers still pinned to the previous major want *now*, not at the next
@@ -91,7 +91,7 @@ the docs site at `website/docs/contributing/release-branches.md`.
 Follow-up tooling work implied by this decision: a `stable-release` job
 keyed on `release/v*` refs with an alternate release-please config, the
 backport label action, the forward-port tracker workflow, and
-`branch-policy.yml` updates covering `release/*`.
+`pr-branch.yml and pr-linked-issue.yml` updates covering `release/*`.
 
 ## Consequences
 

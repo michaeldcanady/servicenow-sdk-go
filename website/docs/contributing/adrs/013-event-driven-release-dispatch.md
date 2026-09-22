@@ -15,15 +15,20 @@ release follow-on tasks from in-band coupling (ADR 012) to event-driven
 dispatch. If adopted, it supersedes [ADR 012](012-release-provenance-in-band.md),
 whose Status then reads "Superseded by ADR-013."
 
+Context note (2026-09-18): the in-band follow-on work now lives in a single
+reusable pipeline, `rel-pipeline.yml` (see ADR 012's Status update), replacing
+the separate `sbom.yml`, `sign-release.yml`, and in-band `rel-verify.yml`
+callbacks. This recasting doesn't change this ADR's proposed direction.
+
 ## Context
 
 [ADR 012](012-release-provenance-in-band.md) couples follow-on work to the
 releasing workflows because GitHub doesn't start new runs from events created
 by `GITHUB_TOKEN`. In-band coupling is correct today, but it has real costs:
 
-- The releasing workflows name every consumer (`attach-sbom`, `attach-sign`,
-  `verify-release`), so a new consumer is a change to the production release
-  path, and the fan-out list grows with each concern.
+- The releasing workflows name their follow-on work (a single `release-pipeline`
+  job calling `rel-pipeline.yml`), so adding a consumer still means touching the
+  production release path, and the pipeline's job list grows with each concern.
 - A skipped dependency or a subtly wrong `if` gate drops coverage silently.
 - Logically separate concerns share one run's history, retry, and concurrency
   semantics.
@@ -62,9 +67,10 @@ Options for true event delivery:
 
 SDK releases must ship SBOM before checksums: SHA256SUMS must cover the SBOM.
 Event delivery is unordered across consumers, so any event-driven design must
-either keep order-sensitive steps in-band (call `sbom.yml` before
-`sign-release.yml` as today), encode ordering in the payload (a `phase` that
-consumers honor), or have signing wait until the SBOM asset exists and retry.
+either keep order-sensitive steps in-band (the `sbom` job before the `sign`
+job in `rel-pipeline.yml`, as today), encode ordering in the payload (a
+`phase` that consumers honor), or have signing wait until the SBOM asset exists
+and retry.
 
 ## Decision
 
@@ -74,7 +80,7 @@ Don't adopt yet. If adopted, pursue this phased path:
    releasing workflows POST `repository_dispatch` events of type
    `release-created` with a versioned payload (`v1`, `tag`, `sha`), with a
    small retry-and-jitter loop. In-band attachment continues unchanged.
-2. **Phase 2 — move stateless consumers to the bus.** `release-verify.yml`
+2. **Phase 2 — move stateless consumers to the bus.** `rel-verify.yml`
    (and any future consumer that doesn't affect artifact ordering) subscribes
    to `release-created` instead of being called in-band. SBOM and signing stay
    in-band because their ordering matters.

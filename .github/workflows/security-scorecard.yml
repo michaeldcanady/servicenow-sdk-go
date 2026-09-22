@@ -1,0 +1,24 @@
+name: OpenSSF Scorecard
+
+on:
+  workflow_dispatch:
+  branch_protection_rule:
+  schedule:
+    - cron: "30 1 * * 1"
+  push:
+    branches:
+      - main
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false # needs to complete each time
+
+jobs:
+  analysis:
+    permissions:
+      contents: read # Scorecard branch-protection check via GraphQL
+      security-events: write # SARIF upload to code scanning
+      id-token: write # OIDC token for publish_results
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-scorecard.yml@cdac11d7baa02b3f15c150aee1088568d07b3f3a  # v0.1.0

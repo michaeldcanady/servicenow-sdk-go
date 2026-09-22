@@ -1,0 +1,55 @@
+name: Ensure label exists
+
+description: |
+  Idempotently create a repository label. "Already exists" counts as success;
+  any other create failure aborts the run so the calling workflow never runs
+  against a missing label.
+
+inputs:
+  label:
+    description: Label name to create.
+    required: true
+  color:
+    description: Label color as a hex triplet without the leading "#".
+    required: true
+  description:
+    description: Label description shown in the issue sidebar.
+    required: false
+    default: ""
+  token:
+    description: Token with issues:write permission.
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - name: Create or confirm label
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        REPO: ${{ github.repository }}
+        LABEL: ${{ inputs.label }}
+        COLOR: ${{ inputs.color }}
+        DESCRIPTION: ${{ inputs.description }}
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        args=(--repo "$REPO" --color "$COLOR")
+        if [ -n "$DESCRIPTION" ]; then
+          args+=(--description "$DESCRIPTION")
+        fi
+
+        # Idempotent create: "already exists" is success here (for example a
+        # label re-created after deletion); any other failure aborts loudly
+        # rather than leaving the calling workflow without its label.
+        if ! gh label create "$LABEL" "${args[@]}"; then
+          if gh label view "$LABEL" --repo "$REPO" >/dev/null 2>&1; then
+            echo "Label '${LABEL}' already exists; continuing."
+          else
+            echo "::error::Failed to create the '${LABEL}' label."
+            exit 1
+          fi
+        else
+          echo "::notice::Label '${LABEL}' is available."
+        fi

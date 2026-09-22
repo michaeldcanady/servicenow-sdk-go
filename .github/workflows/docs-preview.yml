@@ -20,7 +20,7 @@
 #
 # release-please branches need no special-casing: their PRs touch only
 # CHANGELOG.md/VERSION/version.go (verified in .release-please-config.json).
-name: Documentation Preview
+name: Documentation preview
 
 on:
   workflow_dispatch:
@@ -34,7 +34,6 @@ on:
       - ".github/workflows/docs-preview.yml"
       - ".github/actions/docs-build/**"
       - ".github/actions/vet-go-snippets/**"
-      - ".github/actions/check-snippet-regions/**"
 
 permissions: {}
 
@@ -66,7 +65,7 @@ jobs:
 
       - name: Detect site-output changes
         id: diff
-        uses: ./.github/actions/detect-changes
+        uses: NerdIT-Tech/.github/.github/actions/detect-changes@56a6f78118ca762e717675dc48ba10ead5bf8b5c  # v0.1.0
         with:
           checkout: "false"
           # Site-output-affecting paths only — keep in lockstep with
@@ -80,7 +79,7 @@ jobs:
 
       - name: Changed markdown files
         id: changed-md
-        uses: ./.github/actions/detect-changes
+        uses: NerdIT-Tech/.github/.github/actions/detect-changes@56a6f78118ca762e717675dc48ba10ead5bf8b5c  # v0.1.0
         with:
           checkout: "false"
 
@@ -112,14 +111,14 @@ jobs:
     name: lint-snippets
     permissions:
       contents: read
-    uses: ./.github/workflows/reusable-check-snippets.yaml
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-check-snippets.yml@044515296e458d55350669b1048fc3b6574a3893  # v0.1.1
 
   verify-build:
     name: verify-build
     permissions:
       contents: read # checkout and site build
     if: github.event.action != 'closed'
-    uses: ./.github/workflows/reusable-docs-build.yaml
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-docs-build.yml@e00d4be6ae3375ad8d61fe83228a4f6b60c6735d  # v0.1.1
     with:
       base-url: ${{ github.event_name == 'pull_request' && format('/servicenow-sdk-go/pr-preview/pr-{0}/', github.event.number) || '/servicenow-sdk-go/' }}
       upload-artifact: true
@@ -138,8 +137,12 @@ jobs:
       github.event.action != 'closed' &&
       needs.detect-changes.outputs.docs == 'true'
     concurrency:
-      group: docs-preview-${{ github.event.number }}
-      cancel-in-progress: true # a superseded push's preview is worthless
+      # Shared mutex with docs-stable.yml's deploy-stable and this workflow's
+      # remove-preview: every writer to gh-pages serializes under one group, so
+      # a stable deploy, a preview build, and a preview removal can never
+      # interleave on the branch.
+      group: gh-pages-deploy
+      cancel-in-progress: false
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -174,6 +177,11 @@ jobs:
     if: >-
       github.event.action == 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository
+    concurrency:
+      # Same shared gh-pages mutex as deploy-preview and deploy-stable, so a
+      # removal never races the deploy that supersedes it.
+      group: gh-pages-deploy
+      cancel-in-progress: false
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

@@ -1,4 +1,4 @@
-name: E2E Nightly
+name: E2E nightly
 
 # Runs the -tags e2e suite against a REAL ServiceNow instance so API drift is
 # caught by CI instead of by users. Requires repo secrets SN_INSTANCE,
@@ -32,7 +32,7 @@ jobs:
         with:
           persist-credentials: false
       - id: check
-        uses: ./.github/actions/check-secret
+        uses: NerdIT-Tech/.github/.github/actions/check-secret@f6a5468932cc932a125ecfb470c13501a37d0ace  # v0.1.0
         env:
           HAS_INSTANCE: ${{ secrets.SN_INSTANCE != '' }}
           HAS_USER: ${{ secrets.SN_USERNAME != '' }}
@@ -63,7 +63,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ./.github/actions/setup-go-env
+      - uses: NerdIT-Tech/.github/.github/actions/setup-go-env@f7b870591d8dd7c1194252741befba9766b45200  # v0.1.0
         with:
           go-version: "stable"
           cache: "true"

@@ -1,0 +1,56 @@
+name: Lint Go Code
+
+on:
+  workflow_call:
+    inputs:
+      go-version:
+        description: "Go version to use (e.g. stable, oldstable, 1.20)"
+        required: false
+        default: "stable"
+        type: string
+      golangci-lint-version:
+        description: "golangci-lint version to use"
+        required: false
+        default: "v2.13.0"
+        type: string
+      working-directory:
+        description: "Directory containing the Go module to lint"
+        required: false
+        default: "."
+        type: string
+      checkout-ref:
+        description: "Ref to check out before linting; empty checks out the event ref"
+        required: false
+        default: ""
+        type: string
+
+concurrency:
+  group: lint-go-${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.go-version }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  lint:
+    name: Lint Go Code
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read # checkout and lint
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ inputs.checkout-ref }}
+      - uses: NerdIT-Tech/.github/.github/actions/setup-go-env@f7b870591d8dd7c1194252741befba9766b45200 # v0.1.0
+        with:
+          go-version: ${{ inputs.go-version }}
+          checkout: "false"
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9
+        with:
+          install-mode: goinstall
+          version: ${{ inputs.golangci-lint-version }}
+          working-directory: ${{ inputs.working-directory }}
+          skip-cache: false
+          args: --timeout=5m

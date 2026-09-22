@@ -6,7 +6,7 @@ description: How release branch protection is declared as code in this repo and 
 # Release branch protection runbook
 
 Workflow-level hygiene for `release/v*` PRs is enforced in-repo
-(`.github/workflows/branch-policy.yml` now targets `release/**` too), but
+(`pr-branch.yml` and `pr-linked-issue.yml` now target `release/**` too), but
 the hard guarantees — no direct pushes, required reviews, protected history —
 are admin settings outside Actions. They're declared in this repo as code
 (`.github/policies/servicenow-sdk-go-branch-protection.yml`, #658, ADR 011
@@ -16,7 +16,7 @@ what Scorecard evaluates — both must stay aligned.
 
 ## How protection is applied (rulesets, Scorecard-compliant)
 
-Scorecard v5.5.0 (`ossf/scorecard-action@v2.4.4` in `.github/workflows/scorecard.yml`)
+Scorecard v5.5.0 (`ossf/scorecard-action@v2.4.4` in `.github/workflows/security-scorecard.yml`)
 detects **both** classic branch protection (REST `branches/*/protection`) and
 repository rulesets (GraphQL `rulesets`) — see
 `clients/githubrepo/branches.go` (`rulesets` + `branchProtectionRules`
@@ -45,7 +45,7 @@ schema:
 | maintenance lines | `release/v*` | same as trunk **plus required linear history** |
 
 Both require the same universally reporting status checks: `Check Branch Name`,
-`Check Linked Issue`, `Validate PR Title`, `CodeQL`, and `Run zizmor 🌈 /
+`Check Linked Issue`, `Validate PR Title`, `CodeQL`, and `Run zizmor /
 Run zizmor -- blocking`. Path-filtered jobs are excluded, because they would
 sit pending forever on PRs whose paths they skip.
 
@@ -77,12 +77,13 @@ Don't hand-enumerate check names at ruleset-creation time — a fresh
 have already reported on the branch. Instead:
 
 1. Cut the branch and open one throwaway PR against it.
-2. Let `codeql.yml`, `branch-policy.yml`, `pr.yml`, and `zizmor.yml` report once.
+2. Let `security-codeql.yml`, `pr-branch.yml`, `pr-linked-issue.yml`,
+   `pr-title.yml`, and `security-zizmor.yml` report once.
 3. Edit the ruleset and require the checks that appeared — exactly the five
    declared in `.github/policies/servicenow-sdk-go-branch-protection.yml`
    ("Check Branch Name," "Check Linked Issue," "Validate PR Title," "CodeQL,"
-   and "Run zizmor 🌈 / Run zizmor -- blocking."). Never add path-filtered
-   jobs (the ci.yml build/test/lint matrix): they skip docs-only or
+   and "Run zizmor / Run zizmor -- blocking."). Never add path-filtered
+   jobs (the quality-ci.yml build/test/lint matrix): they skip docs-only or
    workflow-only PRs, and a required check that never reports sticks
    "pending" forever, blocking every merge until an admin bypasses.
 
@@ -91,7 +92,15 @@ value is load-bearing: the 2026-09 refactor that moved zizmor into a reusable
 workflow renamed its job, so the required context `Run zizmor 🌈 — auditor ·
 all inputs · fail on any finding` stopped reporting and blocked every merge
 with "Expected — Waiting for status to be reported" until the ruleset was
-updated. Rename a required job only together with its ruleset context.
+updated. Rename a required job only together with its ruleset context. The
+rename wave repeats this dance in miniature: it drops the emoji from the
+`security-zizmor.yml` job name, so the reported context moves from `Run zizmor
+🌈 / Run zizmor -- blocking` to `Run zizmor / Run zizmor -- blocking`. The live
+rulesets still require the stale `Run zizmor 🌈 — auditor · all inputs · fail
+on any finding` phantom (which nothing reports; merges ride the `admin` bypass),
+so this wave's landing change updates both rulesets to the real post-wave name
+(`Run zizmor / Run zizmor -- blocking`) in the same change that merges
+`security-zizmor.yml`'s new name, making zizmor gate merges again.
 
 ### Ruleset payload reference (live)
 
@@ -105,7 +114,7 @@ updated. Rename a required job only together with its ruleset context.
     {"type": "deletion"},
     {"type": "non_fast_forward"},
     {"type": "pull_request", "parameters": {"required_approving_review_count": 1, "dismiss_stale_reviews_on_push": true, "require_code_owner_review": true, "require_last_push_approval": true, "required_review_thread_resolution": true}},
-    {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": true, "required_status_checks": [{"context": "Check Branch Name"}, {"context": "Check Linked Issue"}, {"context": "Validate PR Title"}, {"context": "CodeQL"}, {"context": "Run zizmor 🌈 / Run zizmor -- blocking"}]}}
+    {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": true, "required_status_checks": [{"context": "Check Branch Name"}, {"context": "Check Linked Issue"}, {"context": "Validate PR Title"}, {"context": "CodeQL"}, {"context": "Run zizmor / Run zizmor -- blocking"}]}}
   ]
 }
 ```
@@ -121,7 +130,7 @@ updated. Rename a required job only together with its ruleset context.
     {"type": "non_fast_forward"},
     {"type": "required_linear_history"},
     {"type": "pull_request", "parameters": {"required_approving_review_count": 1, "dismiss_stale_reviews_on_push": true, "require_code_owner_review": true, "require_last_push_approval": true, "required_review_thread_resolution": true}},
-    {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": true, "required_status_checks": [{"context": "Check Branch Name"}, {"context": "Check Linked Issue"}, {"context": "Validate PR Title"}, {"context": "CodeQL"}, {"context": "Run zizmor 🌈 / Run zizmor -- blocking"}]}}
+    {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": true, "required_status_checks": [{"context": "Check Branch Name"}, {"context": "Check Linked Issue"}, {"context": "Validate PR Title"}, {"context": "CodeQL"}, {"context": "Run zizmor / Run zizmor -- blocking"}]}}
   ]
 }
 ```
@@ -154,7 +163,7 @@ gh api graphql -f query='{repository(owner:"michaeldcanady", name:"servicenow-sd
 gh api repos/michaeldcanady/servicenow-sdk-go/branches/main/protection --jq . 2>&1 | head -n 5
 
 # Scorecard itself (workflow_dispatch, then check code-scanning alert 18)
-gh workflow run scorecard.yml --repo michaeldcanady/servicenow-sdk-go
+gh workflow run security-scorecard.yml --repo michaeldcanady/servicenow-sdk-go
 gh api repos/michaeldcanady/servicenow-sdk-go/code-scanning/alerts/18 \
   --jq '.most_recent_instance.message.text'
 ```
@@ -172,14 +181,15 @@ bypass actors can only be configured when applying the live rulesets:
 
 ## What workflows already cover (no admin action needed)
 
-- `branch-policy.yml`: branch naming (`backport/…` heads are exempt as
-  automation) and linked-issue checks now run on `release/**` PRs.
-- `pr.yml`: PR title lint already targeted `main` and `release/**`.
-- `codeql.yml`: analyzes `release/**` PRs too, so "CodeQL" can report on
-  maintenance-line merges (a required check must first be able to appear).
-- `ci.yml`: build/test/lint run for any PR touching Go paths, regardless of
-  base branch; pushes to `release/**` were already covered.
-- `labeler.yml` / `CODEOWNERS`: path-based and base-agnostic; the #658
+- `pr-branch.yml`: branch naming (`backport/…` heads are exempt as
+  automation) runs on `release/**` PRs.
+- `pr-linked-issue.yml`: linked-issue checks run on `release/**` PRs.
+- `pr-title.yml`: PR title lint already targeted `main` and `release/**`.
+- `security-codeql.yml`: analyzes `release/**` PRs too, so "CodeQL" can report
+  on maintenance-line merges (a required check must first be able to appear).
+- `quality-ci.yml`: build/test/lint run for any PR touching Go paths,
+  regardless of base branch; pushes to `release/**` were already covered.
+- `pr-labeler.yml` / `CODEOWNERS`: path-based and base-agnostic; the #658
   audit required no changes.
 
 ## Release automation rehearsal (must still function under protection)
@@ -189,10 +199,10 @@ automation. Rehearse after any live change:
 
 1. **Dry-run the declarative file:** `python3 -m json.tool .github/policies/servicenow-sdk-go-branch-protection.yml` — confirms schema parse.
 2. **Open a throwaway PR** against `main` and against `release/v1.0` (for example `chore/rehearse-branch-protection (#725)`) and verify the five required checks report and the PR is mergeable only with 1 CODEOWNERS approval and conversation resolution. With `strict:true`, the branch must be up-to-date before merging (rebase if behind). Close without merging.
-3. **Backport label:** label a dummy `main` PR with `backport release/v1.0` and confirm `backport.yml` would fan out (check `Select existing target branches` log); no actual backport PR needed.
-4. **Stable/maintenance release configs:** `stable-release.yml` (main) and `maintenance-label.yml`/`backport.yml` are branch-scoped and use `contents: write`/`pull-requests: write` — they push to `release-please--` branches and open PRs, never directly to `main`/`release/v*`, so the `admin(always)` bypass keeps them unblocked (admin actor bypasses the PR approval, not the branch creation). No `restrictions` (push allowlist) is set.
+3. **Backport label:** label a dummy `main` PR with `backport release/v1.0` and confirm `rel-backport.yml` would fan out (check `Select existing target branches` log); no actual backport PR needed.
+4. **Stable/maintenance release configs:** `rel-stable.yml` (main) and `rel-maintenance-label.yml`/`rel-backport.yml` are branch-scoped and use `contents: write`/`pull-requests: write` — they push to `release-please--` branches and open PRs, never directly to `main`/`release/v*`, so the `admin(always)` bypass keeps them unblocked (admin actor bypasses the PR approval, not the branch creation). No `restrictions` (push allowlist) is set.
 
-If any job would have been skipped as `pending` forever (path-filtered `ci.yml` matrix), it must **not** be a required status check — see Required status checks above.
+If any job would have been skipped as `pending` forever (path-filtered `quality-ci.yml` matrix), it must **not** be a required status check — see Required status checks above.
 
 ## Known gap
 

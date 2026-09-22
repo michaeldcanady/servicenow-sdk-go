@@ -1,0 +1,28 @@
+name: Quality gate weekly
+
+# Runs the full gate matrix on a schedule, independent of PR activity (the
+# weekly counterpart to quality-ci.yml's event-driven runs). Tuesdays 03:00 UTC
+# avoids Scorecard (Mon 01:30), the weekly release (Mon 03:00), e2e-nightly
+# (daily 04:00), the stale bot (daily 05:30), and CodeQL (Fri 03:00).
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 2"
+
+concurrency:
+  # Each scheduled run gets its own slot, so consecutive runs never cancel or
+  # queue on each other.
+  group: ${{ github.workflow }}-${{ github.run_id }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  quality-gate:
+    name: Quality Gate
+    permissions:
+      contents: read # read-only gate; per-leg permissions live in the gate
+    uses: ./.github/workflows/quality-gate.yml
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

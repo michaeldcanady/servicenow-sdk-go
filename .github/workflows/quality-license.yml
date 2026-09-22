@@ -1,0 +1,38 @@
+name: License check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "**.go"
+      - "**.sh"
+      - "*.yml"
+      - "*.yaml"
+      - ".github/workflows/quality-license.yml"
+      - ".github/license-check/license-config.json"
+      - "scripts/add-license.sh"
+  pull_request:
+    paths:
+      - "**.go"
+      - "**.sh"
+      - "*.yml"
+      - "*.yaml"
+      - ".github/workflows/quality-license.yml"
+      - ".github/license-check/license-config.json"
+      - "scripts/add-license.sh"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  check-license:
+    name: Check License Headers
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-check-license.yml@ffaa334756251a98b43a5b4dc3a4ee776a6c34ec  # v0.1.1
+    permissions:
+      contents: read

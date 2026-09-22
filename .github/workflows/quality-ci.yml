@@ -1,0 +1,51 @@
+name: Quality gate CI
+
+on:
+  # Filter at the edge: the push and PR paths are the gate's footprint, so PRs
+  # that don't touch code or gate files run nothing (the gate is not a required
+  # check, so a skipped run cannot block a merge). workflow_dispatch ignores
+  # path filters and always runs the full gate on demand.
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "**.go"
+      - "!docs/snippets/**"
+      - "tests/integration/**"
+      - "**/*.feature"
+      - ".golangci.yml"
+      - ".github/workflows/quality-ci.yml"
+      - ".github/workflows/quality-weekly.yml"
+      - ".github/workflows/quality-gate.yml"
+      - ".github/workflows/reusable-*.yml"
+  pull_request:
+    paths:
+      - "**.go"
+      - "!docs/snippets/**"
+      - "tests/integration/**"
+      - "**/*.feature"
+      - ".golangci.yml"
+      - ".github/workflows/quality-ci.yml"
+      - ".github/workflows/quality-weekly.yml"
+      - ".github/workflows/quality-gate.yml"
+      - ".github/workflows/reusable-*.yml"
+
+concurrency:
+  # Scheduled runs carry no head_ref here, and GitHub leaves ref empty for
+  # schedule, so the run_id fallback gives each week its own slot; push and PR
+  # groups are per branch and per PR.
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  quality-gate:
+    name: Quality Gate
+    permissions:
+      contents: read # read-only gate; per-leg permissions live in the gate
+    uses: ./.github/workflows/quality-gate.yml
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

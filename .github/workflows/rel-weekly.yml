@@ -1,0 +1,98 @@
+name: Release weekly preview
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 1" # Weekly preview release (every Monday at 3 AM UTC)
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+permissions: {}
+
+jobs:
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read # checkout and change detection
+    outputs:
+      should_release: ${{ steps.determine.outputs.should_release }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0 # Needed to fetch all tags
+
+      - name: Get latest tag
+        id: latest_tag
+        run: echo "tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")" >> $GITHUB_OUTPUT
+
+      # Only runs when a prior tag exists. On a first run (no tags yet) there's
+      # nothing to diff against, so this step is skipped rather than relying on
+      # tj-actions/changed-files' undocumented behavior for an empty base_sha.
+      - name: Check for changes since latest tag
+        id: diff
+        if: ${{ steps.latest_tag.outputs.tag != '' }}
+        uses: NerdIT-Tech/.github/.github/actions/detect-changes@56a6f78118ca762e717675dc48ba10ead5bf8b5c  # v0.1.0
+        with:
+          checkout: "false"
+          base_sha: ${{ steps.latest_tag.outputs.tag }}
+
+      - name: Determine whether to release
+        id: determine
+        env:
+          TAG: ${{ steps.latest_tag.outputs.tag }}
+          ANY_CHANGED: ${{ steps.diff.outputs.any_changed }}
+        run: |
+          if [ -z "$TAG" ]; then
+            echo "No prior tag found; defaulting should_release=true for first run."
+            echo "should_release=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_release=$ANY_CHANGED" >> "$GITHUB_OUTPUT"
+          fi
+
+  release-please:
+    name: Create Weekly Preview Release
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.should_release == 'true' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # create preview release PR and tag
+      issues: write # label preview release PR
+      pull-requests: write # open preview release PR
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    concurrency:
+      # Serialize every tag/release writer across release flows (same group as
+      # Stable Release's release-please jobs) so a preview and a stable release
+      # can't race for the same tag.
+      group: release-publish
+      cancel-in-progress: false
+    steps:
+      - name: Create preview release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
+        id: release
+        with:
+          config-file: weekly-release-please-config.json
+
+  # Attach provenance assets to the preview release and re-verify the tagged
+  # ref, using the same release pipeline as Stable Release so previews get the
+  # same SBOM, signatures, and gate.
+  release-pipeline:
+    name: Run Release Pipeline
+    needs: release-please
+    if: >-
+      needs.release-please.result == 'success' &&
+      needs.release-please.outputs.release_created == 'true'
+    permissions:
+      contents: write # callee uploads provenance assets and force-pushes the signed tag
+      id-token: write # callee signs keylessly with the OIDC identity
+    uses: ./.github/workflows/rel-pipeline.yml
+    with:
+      tag: ${{ needs.release-please.outputs.tag_name }}
+    secrets:
+      GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}

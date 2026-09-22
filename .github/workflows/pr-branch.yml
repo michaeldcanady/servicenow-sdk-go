@@ -1,0 +1,65 @@
+name: Branch name check
+
+# Enforces the <type>/<kebab-description> branch convention on every PR.
+# The job name "Check Branch Name" is a required status check in the branch
+# rulesets; change it only in lockstep with the rulesets (see
+# website/docs/contributing/release-branch-protection.md).
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+      - labeled
+      - unlabeled
+    branches:
+      - main
+      # Maintenance lines get the same PR hygiene as main (#658); the
+      # ruleset-level protections they also need are admin settings — see
+      # website/docs/contributing/release-branch-protection.md for the runbook.
+      - "release/**"
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  branch-name:
+    name: Check Branch Name
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read # read PR branch metadata (auditor requires comment)
+    steps:
+      # Automated branches (release-please, dependabot, backports) don't follow
+      # the human-authored <type>/<kebab-description> convention, so they're
+      # exempt. The job always runs (never skips) because the main ruleset
+      # requires this status check to report a conclusion; a skipped job would
+      # show as neutral and block the merge. Exempted branches report success.
+      - name: Validate branch name matches <type>/<kebab-description>
+        if: ${{ !startsWith(github.head_ref, 'release-please--') && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'backport/') }}
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          # Same type vocabulary as the PR title lint, so branch names and PR
+          # titles stay in sync.
+          PATTERN='^(fix|feat|chore|docs|style|refactor|perf|test|release)/[a-z0-9]+(-[a-z0-9]+)*$'
+
+          if [[ ! "$HEAD_REF" =~ $PATTERN ]]; then
+            echo "::error::Branch name '$HEAD_REF' does not match the required '<type>/<kebab-description>' pattern (e.g. 'fix/nil-pointer-in-tableapi')."
+            echo "Allowed types: fix, feat, chore, docs, style, refactor, perf, test, release"
+            exit 1
+          fi
+
+          echo "Branch name '$HEAD_REF' is valid."
+
+      - name: Report success for exempt automated branch
+        if: ${{ startsWith(github.head_ref, 'release-please--') || startsWith(github.head_ref, 'dependabot/') || startsWith(github.head_ref, 'backport/') }}
+        run: |
+          echo "Branch name '$GITHUB_HEAD_REF' is an automated branch and is exempt from the '<type>/<kebab-description>' convention."
+        env:
+          GITHUB_HEAD_REF: ${{ github.head_ref }}

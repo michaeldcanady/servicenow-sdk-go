@@ -38,14 +38,14 @@ rules:
 
 # Inline ignores still required at the audit configuration above:
 #
-# - cache-poisoning x6 (ci.yml setup-go steps): the module cache is retained
+# - cache-poisoning x6 (quality-ci.yml setup-go steps): the module cache is retained
 #   for CI speed. setup-go saves caches only on default-branch refs; PR/fork
 #   runs only restore, so no fork-persisted cache reaches trusted runs or
 #   release artifacts.
-# - dangerous-triggers x3 (backport.yml, forward-port-tracker.yml,
-#   issue-status-sync.yml): pull_request_target is required so GITHUB_TOKEN
+# - dangerous-triggers x3 (rel-backport.yml, rel-forward-port.yml,
+#   issues-status-sync.yml): pull_request_target is required so GITHUB_TOKEN
 #   holds write access for fork-sourced PRs (backports, forward-port labels,
 #   issue labels). None of these workflows checkout or execute PR code; each
 #   reads only PR metadata via env and enforces author-association checks.
-# - artipacked x1 (backport.yml): the backport action must push cherry-pick
+# - artipacked x1 (rel-backport.yml): the backport action must push cherry-pick
 #   branches using the persisted checkout credential; no artifact is uploaded.

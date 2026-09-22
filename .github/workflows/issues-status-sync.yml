@@ -1,0 +1,95 @@
+# Sync issue status labels when PRs open/close and when issues close.
+#
+# - PR opened/reopened → linked issues get "status: in progress"
+# - PR closed (not merged) → linked issues revert to "status: reviewed"
+# - PR merged → GitHub auto-closes issues natively via "Closes #N";
+#   issue closure then strips active-work status labels
+# - Issue closed (any path) → pipeline status labels removed
+#   ("status: new" / "status: reviewed" / "status: in progress" / "status: in review")
+#
+# Uses mondeja/pr-linked-issues-action for finding linked issues (well-maintained,
+# 1k+ stars), with minimal bash for the label updates.
+#
+# Security: Runs on pull_request_target with author association check;
+# the issues.closed cleanup is self-scoped to the closing issue.
+
+name: Issue status sync
+
+on:
+  pull_request_target: # zizmor: ignore[dangerous-triggers] -- pull_request_target is required so GITHUB_TOKEN can manage issue labels for fork PRs; workflow never checks out PR code, only uses author_association and label data via env
+    types: [opened, reopened, closed]
+  issues:
+    types: [closed]
+
+permissions: {}
+
+# Event-aware: PR runs serialize per-PR, issue-close runs serialize per-issue.
+concurrency:
+  group: ${{ github.event_name == 'pull_request_target' && format('issue-status-sync-pr-{0}', github.event.pull_request.number) || format('issue-status-sync-issue-{0}', github.event.issue.number) }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Sync Issue Status
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write # add/remove status labels on linked issues
+      pull-requests: read # read PR-linked-issues metadata
+    steps:
+      - name: Get linked issues
+        id: linked
+        uses: mondeja/pr-linked-issues-action@15e15b5aa999ae8a742117c9489aa63b1a007b76 # v2.2.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          include-closed-issues: false
+
+      - name: Mark issues in-progress (PR opened)
+        if: >-
+          steps.linked.outputs.issues != '' &&
+          (github.event.action == 'opened' || github.event.action == 'reopened') &&
+          contains(fromJson('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.pull_request.author_association)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUES: ${{ steps.linked.outputs.issues }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          IFS=',' read -ra nums <<< "$ISSUES"
+          for n in "${nums[@]}"; do
+            echo "Marking issue #$n as in-progress"
+            gh issue edit "$n" --repo "$REPO" --remove-label "status: new" 2>/dev/null || true
+            gh issue edit "$n" --repo "$REPO" --remove-label "status: reviewed" 2>/dev/null || true
+            gh issue edit "$n" --repo "$REPO" --add-label "status: in progress" 2>/dev/null || true
+          done
+
+      - name: Revert issue status (PR closed without merge)
+        if: >-
+          steps.linked.outputs.issues != '' &&
+          github.event.action == 'closed' &&
+          github.event.pull_request.merged == false &&
+          contains(fromJson('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.pull_request.author_association)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUES: ${{ steps.linked.outputs.issues }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          IFS=',' read -ra nums <<< "$ISSUES"
+          for n in "${nums[@]}"; do
+            echo "Reverting issue #$n to reviewed"
+            gh issue edit "$n" --repo "$REPO" --remove-label "status: in progress" 2>/dev/null || true
+            gh issue edit "$n" --repo "$REPO" --add-label "status: reviewed" 2>/dev/null || true
+          done
+
+  cleanup-closed:
+    name: Clear Active Status on Close
+    if: github.event_name == 'issues' && github.event.action == 'closed'
+    permissions:
+      issues: write # remove pipeline status labels from closed issue
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-sync-issue-labels.yml@fd44e1a2b54278864570e76fb4fb3a205c8be979  # v0.1.0
+    with:
+      issues: "${{ github.event.issue.number }}"
+      remove-labels: "status: new,status: reviewed,status: in progress,status: in review"

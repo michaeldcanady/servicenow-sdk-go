@@ -20,7 +20,7 @@
 # release-please branches need no special-casing: their PRs touch only
 # CHANGELOG.md/VERSION/version.go (verified in .release-please-config.json),
 # and this workflow triggers on pushes to main regardless of branch name.
-name: Documentation Stable
+name: Documentation stable
 
 on:
   push:
@@ -57,7 +57,7 @@ jobs:
 
       - name: Detect site-output changes
         id: diff
-        uses: ./.github/actions/detect-changes
+        uses: NerdIT-Tech/.github/.github/actions/detect-changes@56a6f78118ca762e717675dc48ba10ead5bf8b5c  # v0.1.0
         with:
           checkout: "false"
           # Keep in lockstep with docs-preview.yml's copy so "should
@@ -73,7 +73,7 @@ jobs:
     if: needs.detect-changes.outputs.docs == 'true'
     permissions:
       contents: read # Vale lint and snippet checks
-    uses: ./.github/workflows/reusable-docs-gate.yaml
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-docs-gate.yml@9bb3bee679bd6bf6f3915701803eaeb089ee769c  # v0.1.1
 
   deploy-stable:
     name: deploy-stable
@@ -83,10 +83,11 @@ jobs:
     timeout-minutes: 25
     permissions:
       contents: write # pushes built site to gh-pages branch (auditor requires comment)
-    # Serialize stable deploys: two rapid merges finishing out of order would
-    # otherwise let the stale build win the last-write race.
+    # Serialize every writer to gh-pages: stable deploys, per-PR previews, and
+    # preview removals share one named group so last-write races can't let a
+    # stale build win (see docs-preview.yml for the shared group).
     concurrency:
-      group: docs-stable-deploy
+      group: gh-pages-deploy
       cancel-in-progress: false
     steps:
       - name: Checkout code
@@ -95,7 +96,7 @@ jobs:
           persist-credentials: false
 
       - name: Build site
-        uses: ./.github/actions/docs-build
+        uses: NerdIT-Tech/.github/.github/actions/docs-build@c83e367706b5593dc2e74adb4e486e13e052ed43  # v0.1.0
         with:
           analytics-domain: michaeldcanady.github.io
 

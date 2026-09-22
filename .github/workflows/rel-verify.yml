@@ -1,0 +1,35 @@
+name: Verify tagged release
+
+# Tripwire for the release path: runs the full quality gate against a
+# directly pushed version tag after the fact. Release-please-created tags are
+# already verified in-band by rel-pipeline.yml (see that file and
+# rel-stable.yml); GitHub does not start new workflow runs from events
+# created by GITHUB_TOKEN, so the `push tags v*` trigger never fires for
+# those. It does fire for tags a human pushes directly, which is the gap this
+# workflow covers.
+#
+# Verifying the tag runs the exact same gate as verifying a PR: this workflow
+# is a thin caller of the Quality Gate reusable with `ref` set to the tag. It
+# carries no checks of its own, so the two paths can never drift. It cannot
+# undo a published tag, so a failure here pages a human to yank or patch the
+# release immediately.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions: {}
+
+concurrency:
+  group: release-verify-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify Tagged Ref
+    permissions:
+      contents: read # checkout and verification
+    uses: ./.github/workflows/quality-gate.yml
+    with:
+      # A push event already points at the tag.
+      ref: ${{ github.ref }}

@@ -1,0 +1,35 @@
+name: GitHub Actions security analysis with zizmor
+
+on:
+  # No push: main leg: main only changes through PRs (branch ruleset), and the
+  # PR run already scans the exact head that gets merged.
+  push:
+    branches:
+      - "release/**"
+  pull_request:
+    branches:
+      - main
+      - "release/**"
+  workflow_dispatch:
+  schedule:
+    - cron: "0 5 * * 1" # Weekly Monday 05:00 UTC — after Scorecard (01:30), release (03:00), CI (Tue 03:00)
+
+permissions: {}
+
+concurrency:
+  # Per PR on the head branch, per branch on push, per run on schedule. The
+  # run_id tail keeps scheduled and manual runs from sharing a bare group key
+  # with cancel-in-progress.
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  zizmor:
+    name: Run zizmor 🌈
+    permissions:
+      contents: read # checkout
+      security-events: write # SARIF upload to code scanning
+      actions: read # upload-sarif workflow metadata (private repos)
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-zizmor.yml@5d910afb62f08f2efb059c58d6276a92512d32e3  # v0.1.0
+    with:
+      advanced-security: true

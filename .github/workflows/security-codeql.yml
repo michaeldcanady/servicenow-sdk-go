@@ -1,0 +1,26 @@
+name: "CodeQL"
+
+on:
+  pull_request:
+    branches: [ "main", "release/**" ]
+  schedule:
+    - cron: '0 3 * * 5' # Weekly
+# No push: main trigger: main only changes through PRs (branch ruleset), and
+# the PR run already analyzes the exact head that gets merged.
+
+permissions: {}
+
+concurrency:
+  # Per PR on the head branch, per branch on push, per run on schedule. Using
+  # github.ref alone would key every PR run to the base branch and let
+  # concurrent PRs cancel each other.
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    permissions:
+      actions: read # CodeQL workflow metadata (private repo)
+      contents: read # checkout
+      security-events: write # SARIF upload
+    uses: NerdIT-Tech/.github/.github/workflows/reusable-codeql.yml@5ba36a4cba31b491a93831de80cb389352d9b6b7  # v0.1.0
