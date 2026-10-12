@@ -243,6 +243,40 @@ func TestServiceNowError_Error(t *testing.T) {
 	}
 }
 
+func TestUnauthorizedError_Is(t *testing.T) {
+	t.Run("matches the not-authenticated sentinel", func(t *testing.T) {
+		err := &UnauthorizedError{*NewServiceNowError()}
+		assert.ErrorIs(t, err, snerrors.ErrNotAuthenticated)
+	})
+
+	t.Run("does not match unrelated sentinels", func(t *testing.T) {
+		err := &UnauthorizedError{*NewServiceNowError()}
+		require.NotErrorIs(t, err, snerrors.ErrNilRequestBuilder)
+	})
+
+	t.Run("only a 401 matches the sentinel", func(t *testing.T) {
+		require.NotErrorIs(t, &BadRequestError{*NewServiceNowError()}, snerrors.ErrNotAuthenticated)
+		require.NotErrorIs(t, &ForbiddenError{*NewServiceNowError()}, snerrors.ErrNotAuthenticated)
+		require.NotErrorIs(t, &NotFoundError{*NewServiceNowError()}, snerrors.ErrNotAuthenticated)
+		require.NotErrorIs(t, NewServiceNowError(), snerrors.ErrNotAuthenticated)
+	})
+
+	t.Run("nil receiver does not panic", func(t *testing.T) {
+		var err *UnauthorizedError
+		assert.NotPanics(t, func() { _ = err.Is(snerrors.ErrNotAuthenticated) })
+	})
+}
+
+func TestUnauthorizedError_MatchesServiceNowRejectionMessage(t *testing.T) {
+	e := &UnauthorizedError{*NewServiceNowError()}
+	mainErr := NewMainError()
+	_ = mainErr.SetMessage(func() *string { s := "User Not Authenticated"; return &s }())
+	_ = e.setError(mainErr)
+
+	assert.Equal(t, "User Not Authenticated", e.Error())
+	assert.ErrorIs(t, e, snerrors.ErrNotAuthenticated)
+}
+
 // TODO: improve test table design
 func TestServiceNowError_ErrorBranches(t *testing.T) {
 	eWrongType := NewServiceNowError()

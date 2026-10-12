@@ -4,6 +4,7 @@
 package core
 
 import (
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/serialization"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/store"
@@ -158,4 +159,13 @@ func (exc *ServiceNowError) Error() string {
 	}
 
 	return unknownErrorMessage
+}
+
+// Is reports whether the error matches a target sentinel. A ServiceNow 401
+// matches snerrors.ErrNotAuthenticated, so callers can distinguish ServiceNow
+// rejecting the credentials from an identity provider that failed to issue a
+// token (credentials.ErrTokenAcquisition) with errors.Is instead of asserting
+// on the concrete type.
+func (e *UnauthorizedError) Is(target error) bool {
+	return target == snerrors.ErrNotAuthenticated
 }

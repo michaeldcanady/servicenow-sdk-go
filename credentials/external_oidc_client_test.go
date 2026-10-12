@@ -221,12 +221,34 @@ func TestExternalOIDCClient_PresentedTokenSelection(t *testing.T) {
 
 			if test.wantErr != nil {
 				require.ErrorIs(t, err, test.wantErr)
+				require.ErrorIs(t, err, ErrTokenAcquisition)
 				return
 			}
 			require.NoError(t, err)
 			assert.Equal(t, test.want, token.AccessToken)
 		})
 	}
+}
+
+func TestExternalOIDCClient_AcquireTokenByCode_ProviderError(t *testing.T) {
+	server := newRecordingTokenServer(t, func(url.Values) (int, string) {
+		return http.StatusBadRequest, `{"error":"invalid_grant","error_description":"bad code"}`
+	})
+	client := newClientForServer(t, server, []string{"openid"}, false)
+	client.verifier = "verifier-123"
+
+	_, err := client.acquireTokenByCode(context.Background(), "auth-code", "http://localhost:5001/callback", "state-123")
+	require.ErrorIs(t, err, ErrTokenAcquisition)
+}
+
+func TestExternalOIDCClient_AcquireTokenByRefreshToken_ProviderError(t *testing.T) {
+	server := newRecordingTokenServer(t, func(url.Values) (int, string) {
+		return http.StatusBadRequest, `{"error":"invalid_grant"}`
+	})
+	client := newClientForServer(t, server, []string{"openid"}, false)
+
+	_, err := client.acquireTokenByRefreshToken(context.Background(), "refresh-token")
+	require.ErrorIs(t, err, ErrTokenAcquisition)
 }
 
 func TestExternalOIDCClient_AcquireTokenByRefreshToken(t *testing.T) {
