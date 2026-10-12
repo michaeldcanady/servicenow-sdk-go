@@ -20,9 +20,9 @@ type jwtClient interface {
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
 }
 
-// JWTCredential implements the OAuth2 JWT Bearer Token flow.
-type JWTCredential struct {
-	*BaseAccessTokenProvider
+// jwtCredential implements the OAuth2 JWT Bearer Token flow.
+type jwtCredential struct {
+	*baseAccessTokenProvider
 	tokenProvider authentication.AccessTokenProvider
 	client        jwtClient
 }
@@ -66,9 +66,9 @@ func validateJWT(rawToken string) error {
 	return nil
 }
 
-// NewJWTCredential creates a new JWTCredential.
-func NewJWTCredential(client jwtClient, tokenProvider authentication.AccessTokenProvider) (*JWTCredential, error) {
-	c := &JWTCredential{
+// newJWTCredential creates a new jwtCredential.
+func newJWTCredential(client jwtClient, tokenProvider authentication.AccessTokenProvider) *jwtCredential {
+	c := &jwtCredential{
 		client:        client,
 		tokenProvider: tokenProvider,
 	}
@@ -77,19 +77,19 @@ func NewJWTCredential(client jwtClient, tokenProvider authentication.AccessToken
 	base.retrieveInitialToken = c.GetToken
 	base.revokeToken = client.revokeToken
 
-	c.BaseAccessTokenProvider = base
+	c.baseAccessTokenProvider = base
 
-	return c, nil
+	return c
 }
 
 // Initialize initializes the provider and its internal client with the base URL.
-func (c *JWTCredential) Initialize(baseURL string) {
-	c.BaseAccessTokenProvider.Initialize(baseURL)
+func (c *jwtCredential) Initialize(baseURL string) {
+	c.baseAccessTokenProvider.Initialize(baseURL)
 	c.client.Initialize(baseURL)
 }
 
 // GetToken acquires a token using the JWT assertion.
-func (c *JWTCredential) GetToken(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (*AccessToken, error) {
+func (c *jwtCredential) GetToken(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (*AccessToken, error) {
 	assertion, err := c.tokenProvider.GetAuthorizationToken(ctx, uri, additionalAuthenticationContext)
 	if err != nil {
 		return nil, err
@@ -114,17 +114,14 @@ func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.
 		return nil, snerrors.ErrEmptyTokenProvider
 	}
 
-	client, err := newConfidentialClient(clientID, clientSecret, "", func(co *clientOptions) {
+	client, err := newConfidentialClient(clientID, clientSecret, authority(""), func(co *clientOptions) {
 		co.httpClient = opts.HTTPClient
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	snTokenProvider, err := NewJWTCredential(client, tokenProvider)
-	if err != nil {
-		return nil, err
-	}
+	snTokenProvider := newJWTCredential(client, tokenProvider)
 
 	snTokenProvider.clientID = clientID
 	snTokenProvider.SetAllowedHosts(opts.AllowedHosts)

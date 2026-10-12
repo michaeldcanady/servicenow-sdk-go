@@ -19,16 +19,16 @@ type clientCredentialsClient interface {
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
 }
 
-// ClientCredentialsCredential implements the OAuth2 Client Credentials flow.
-type ClientCredentialsCredential struct {
-	*BaseAccessTokenProvider
+// clientCredentialsCredential implements the OAuth2 Client Credentials flow.
+type clientCredentialsCredential struct {
+	*baseAccessTokenProvider
 	client clientCredentialsClient
 	scopes []string
 }
 
-// NewClientCredentialsCredential creates a new ClientCredentialsCredential.
-func NewClientCredentialsCredential(client clientCredentialsClient, scopes []string) (*ClientCredentialsCredential, error) {
-	c := &ClientCredentialsCredential{
+// newClientCredentialsCredential creates a new clientCredentialsCredential.
+func newClientCredentialsCredential(client clientCredentialsClient, scopes []string) *clientCredentialsCredential {
+	c := &clientCredentialsCredential{
 		client: client,
 		scopes: scopes,
 	}
@@ -38,19 +38,19 @@ func NewClientCredentialsCredential(client clientCredentialsClient, scopes []str
 	base.refreshToken = client.acquireTokenByRefreshToken
 	base.revokeToken = client.revokeToken
 
-	c.BaseAccessTokenProvider = base
+	c.baseAccessTokenProvider = base
 
-	return c, nil
+	return c
 }
 
 // Initialize initializes the provider and its internal client with the base URL.
-func (c *ClientCredentialsCredential) Initialize(baseURL string) {
-	c.BaseAccessTokenProvider.Initialize(baseURL)
+func (c *clientCredentialsCredential) Initialize(baseURL string) {
+	c.baseAccessTokenProvider.Initialize(baseURL)
 	c.client.Initialize(baseURL)
 }
 
 // GetToken acquires a token using the client credentials.
-func (c *ClientCredentialsCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
+func (c *clientCredentialsCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
 	return c.client.acquireTokenByClientCredentials(ctx, c.scopes)
 }
 
@@ -63,17 +63,14 @@ func NewClientCredentialsProvider(clientID, clientSecret string, opts ClientCred
 		return nil, errors.ErrEmptyClientSecret
 	}
 
-	client, err := newConfidentialClient(clientID, clientSecret, "", func(co *clientOptions) {
+	client, err := newConfidentialClient(clientID, clientSecret, authority(""), func(co *clientOptions) {
 		co.httpClient = opts.HTTPClient
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	tokenProvider, err := NewClientCredentialsCredential(client, opts.Scopes)
-	if err != nil {
-		return nil, err
-	}
+	tokenProvider := newClientCredentialsCredential(client, opts.Scopes)
 
 	tokenProvider.clientID = clientID
 	tokenProvider.SetAllowedHosts(opts.AllowedHosts)

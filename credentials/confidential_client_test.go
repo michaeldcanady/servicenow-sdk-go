@@ -42,7 +42,7 @@ func TestNewConfidentialClient(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			client, err := newConfidentialClient(test.clientID, test.clientSecret, Authority("https://dev12345.service-now.com"))
+			client, err := newConfidentialClient(test.clientID, test.clientSecret, authority("https://dev12345.service-now.com"))
 
 			if test.wantErr != nil {
 				require.Error(t, err)

@@ -69,8 +69,7 @@ func TestROPCCredential_GetToken(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			credential, err := NewROPCCredential(test.client, test.username, test.password)
-			require.NoError(t, err)
+			credential := newROPCCredential(test.client, test.username, test.password)
 
 			token, err := credential.GetToken(context.Background(), nil, nil)
 
@@ -89,8 +88,7 @@ func TestROPCCredential_GetToken(t *testing.T) {
 
 func TestROPCCredential_Initialize(t *testing.T) {
 	client := &ropcTestClient{}
-	credential, err := NewROPCCredential(client, "user", "pass")
-	require.NoError(t, err)
+	credential := newROPCCredential(client, "user", "pass")
 
 	credential.Initialize("https://dev12345.service-now.com")
 

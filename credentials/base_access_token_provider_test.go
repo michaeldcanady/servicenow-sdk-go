@@ -188,7 +188,7 @@ func TestBaseAccessTokenProvider_GetAuthorizationToken(t *testing.T) {
 		name         string
 		allowedHosts []string
 		uri          *url.URL
-		setup        func(p *BaseAccessTokenProvider)
+		setup        func(p *baseAccessTokenProvider)
 		wantToken    string
 		wantErr      string
 	}{
@@ -196,13 +196,13 @@ func TestBaseAccessTokenProvider_GetAuthorizationToken(t *testing.T) {
 			name:         "url host not allowed returns empty token",
 			allowedHosts: []string{"allowed.example.com"},
 			uri:          mustParseURL(t, "https://not-allowed.example.com/path"),
-			setup:        func(_ *BaseAccessTokenProvider) {},
+			setup:        func(_ *baseAccessTokenProvider) {},
 			wantToken:    "",
 		},
 		{
 			name: "valid cached token is returned without refresh",
 			uri:  nil,
-			setup: func(p *BaseAccessTokenProvider) {
+			setup: func(p *baseAccessTokenProvider) {
 				p.token = &AccessToken{AccessToken: "cached", ExpiresAt: time.Now().Add(time.Hour)}
 			},
 			wantToken: "cached",
@@ -210,7 +210,7 @@ func TestBaseAccessTokenProvider_GetAuthorizationToken(t *testing.T) {
 		{
 			name: "expired token with successful refresh returns new token",
 			uri:  nil,
-			setup: func(p *BaseAccessTokenProvider) {
+			setup: func(p *baseAccessTokenProvider) {
 				p.token = &AccessToken{AccessToken: "old", RefreshToken: "refresh", ExpiresAt: time.Now().Add(-time.Minute)}
 				p.refreshToken = func(_ context.Context, refreshToken string) (*AccessToken, error) {
 					return &AccessToken{AccessToken: "refreshed-" + refreshToken, ExpiresAt: time.Now().Add(time.Hour)}, nil
@@ -221,7 +221,7 @@ func TestBaseAccessTokenProvider_GetAuthorizationToken(t *testing.T) {
 		{
 			name: "expired token with failing refresh falls back to initial retrieval",
 			uri:  nil,
-			setup: func(p *BaseAccessTokenProvider) {
+			setup: func(p *baseAccessTokenProvider) {
 				p.token = &AccessToken{AccessToken: "old", RefreshToken: "refresh", ExpiresAt: time.Now().Add(-time.Minute)}
 				p.refreshToken = func(_ context.Context, _ string) (*AccessToken, error) {
 					return nil, errors.New("refresh failed")
@@ -235,13 +235,13 @@ func TestBaseAccessTokenProvider_GetAuthorizationToken(t *testing.T) {
 		{
 			name:    "no token and no retrieval function errors",
 			uri:     nil,
-			setup:   func(_ *BaseAccessTokenProvider) {},
+			setup:   func(_ *baseAccessTokenProvider) {},
 			wantErr: "token acquisition failed: no initial retrieval function available",
 		},
 		{
 			name: "retrieval function error is wrapped",
 			uri:  nil,
-			setup: func(p *BaseAccessTokenProvider) {
+			setup: func(p *baseAccessTokenProvider) {
 				p.retrieveInitialToken = func(_ context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
 					return nil, acquisitionErr
 				}
@@ -251,7 +251,7 @@ func TestBaseAccessTokenProvider_GetAuthorizationToken(t *testing.T) {
 		{
 			name: "successful initial retrieval sets token",
 			uri:  nil,
-			setup: func(p *BaseAccessTokenProvider) {
+			setup: func(p *baseAccessTokenProvider) {
 				p.retrieveInitialToken = func(_ context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
 					return &AccessToken{AccessToken: "brand-new", ExpiresAt: time.Now().Add(time.Hour)}, nil
 				}

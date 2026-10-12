@@ -12,8 +12,8 @@ import (
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
-// BaseAccessTokenProvider provides common functionality for OAuth2 token providers.
-type BaseAccessTokenProvider struct {
+// baseAccessTokenProvider provides common functionality for OAuth2 token providers.
+type baseAccessTokenProvider struct {
 	// token the current valid access token
 	token *AccessToken
 	// inflight is the single token request shared by concurrent callers.
@@ -46,13 +46,13 @@ type tokenFlight struct {
 	err error
 }
 
-func newBaseAccessTokenProvider() *BaseAccessTokenProvider {
-	return &BaseAccessTokenProvider{}
+func newBaseAccessTokenProvider() *baseAccessTokenProvider {
+	return &baseAccessTokenProvider{}
 }
 
 // SetAllowedHosts configures the allowed hosts validator after construction.
 // This allows the instance URL to be set separately from the allowed hosts.
-func (p *BaseAccessTokenProvider) SetAllowedHosts(hosts []string) {
+func (p *baseAccessTokenProvider) SetAllowedHosts(hosts []string) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	if len(hosts) > 0 {
@@ -62,7 +62,7 @@ func (p *BaseAccessTokenProvider) SetAllowedHosts(hosts []string) {
 }
 
 // storeKey returns the key used to persist tokens for this provider.
-func (p *BaseAccessTokenProvider) storeKey() TokenKey {
+func (p *baseAccessTokenProvider) storeKey() TokenKey {
 	return TokenKey{
 		Authority: p.baseURL,
 		ClientID:  p.clientID,
@@ -70,7 +70,7 @@ func (p *BaseAccessTokenProvider) storeKey() TokenKey {
 }
 
 // Initialize initializes the provider with the base URL.
-func (p *BaseAccessTokenProvider) Initialize(baseURL string) {
+func (p *baseAccessTokenProvider) Initialize(baseURL string) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
@@ -86,7 +86,7 @@ func (p *BaseAccessTokenProvider) Initialize(baseURL string) {
 }
 
 // SetTokenStore sets the token store for the provider.
-func (p *BaseAccessTokenProvider) SetTokenStore(store TokenStore) {
+func (p *baseAccessTokenProvider) SetTokenStore(store TokenStore) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	p.tokenStore = store
@@ -94,7 +94,7 @@ func (p *BaseAccessTokenProvider) SetTokenStore(store TokenStore) {
 
 // Revoke revokes the current access token and refresh token and deletes the
 // persisted token.
-func (p *BaseAccessTokenProvider) Revoke(ctx context.Context) error {
+func (p *baseAccessTokenProvider) Revoke(ctx context.Context) error {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
@@ -126,7 +126,7 @@ func (p *BaseAccessTokenProvider) Revoke(ctx context.Context) error {
 
 // deleteStoredLocked removes the persisted token. It must be called with the
 // mutex held. A provider without a store deletes nothing and succeeds.
-func (p *BaseAccessTokenProvider) deleteStoredLocked(ctx context.Context) error {
+func (p *baseAccessTokenProvider) deleteStoredLocked(ctx context.Context) error {
 	if p.tokenStore == nil {
 		return nil
 	}
@@ -134,12 +134,12 @@ func (p *BaseAccessTokenProvider) deleteStoredLocked(ctx context.Context) error 
 }
 
 // GetAllowedHostsValidator returns the allowed hosts validator.
-func (p *BaseAccessTokenProvider) GetAllowedHostsValidator() *authentication.AllowedHostsValidator {
+func (p *baseAccessTokenProvider) GetAllowedHostsValidator() *authentication.AllowedHostsValidator {
 	return p.allowedHostsValidator
 }
 
 // GetAuthorizationToken gets the authorization token.
-func (p *BaseAccessTokenProvider) GetAuthorizationToken(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (string, error) {
+func (p *baseAccessTokenProvider) GetAuthorizationToken(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (string, error) {
 	if uri != nil && p.allowedHostsValidator != nil && !p.allowedHostsValidator.IsUrlHostValid(uri) {
 		return "", nil
 	}
@@ -202,7 +202,7 @@ func (p *BaseAccessTokenProvider) GetAuthorizationToken(ctx context.Context, uri
 
 // fetch performs the single token request. It prefers a refresh when the
 // caller holds a refresh token, and falls back to a fresh acquisition.
-func (p *BaseAccessTokenProvider) fetch(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}, refreshToken string) (*AccessToken, error) {
+func (p *baseAccessTokenProvider) fetch(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}, refreshToken string) (*AccessToken, error) {
 	if refreshToken != "" && p.refreshToken != nil {
 		if newToken, err := p.refreshToken(ctx, refreshToken); err == nil {
 			return newToken, nil
@@ -221,7 +221,7 @@ func (p *BaseAccessTokenProvider) fetch(ctx context.Context, uri *url.URL, addit
 }
 
 // await blocks until the in-flight token request completes or ctx is done.
-func (p *BaseAccessTokenProvider) await(ctx context.Context, flight *tokenFlight) (string, error) {
+func (p *baseAccessTokenProvider) await(ctx context.Context, flight *tokenFlight) (string, error) {
 	select {
 	case <-flight.done:
 		if flight.err != nil {
@@ -236,7 +236,7 @@ func (p *BaseAccessTokenProvider) await(ctx context.Context, flight *tokenFlight
 // persist stores the token for restart recovery. It must be called with the
 // mutex held. Persistence is best-effort: the token was acquired successfully,
 // so a store failure must not fail the request that triggered the acquisition.
-func (p *BaseAccessTokenProvider) persist(ctx context.Context, token *AccessToken) {
+func (p *baseAccessTokenProvider) persist(ctx context.Context, token *AccessToken) {
 	if p.tokenStore == nil {
 		return
 	}

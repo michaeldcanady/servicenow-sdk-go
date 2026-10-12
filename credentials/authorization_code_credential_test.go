@@ -154,8 +154,7 @@ func TestAuthorizationCodeCredential_GetToken(t *testing.T) {
 				urlOpener = func(_ string) error { return nil }
 			}
 
-			credential, err := NewAuthorizationCodeCredential(test.client, 0, func() string { return "state" }, urlOpener, test.serverFactory)
-			require.NoError(t, err)
+			credential := newAuthorizationCodeCredential(test.client, 0, func() string { return "state" }, urlOpener, test.serverFactory)
 
 			token, err := credential.GetToken(context.Background(), nil, nil)
 
@@ -173,8 +172,7 @@ func TestAuthorizationCodeCredential_GetToken(t *testing.T) {
 
 func TestAuthorizationCodeCredential_Initialize(t *testing.T) {
 	client := &authCodeTestClient{}
-	credential, err := NewAuthorizationCodeCredential(client, 0, nil, nil, nil)
-	require.NoError(t, err)
+	credential := newAuthorizationCodeCredential(client, 0, nil, nil, nil)
 
 	credential.Initialize("https://dev12345.service-now.com")
 
@@ -183,9 +181,7 @@ func TestAuthorizationCodeCredential_Initialize(t *testing.T) {
 
 func TestNewAuthorizationCodeCredential_Defaults(t *testing.T) {
 	client := &authCodeTestClient{}
-	credential, err := NewAuthorizationCodeCredential(client, 0, nil, nil, nil)
-
-	require.NoError(t, err)
+	credential := newAuthorizationCodeCredential(client, 0, nil, nil, nil)
 	require.NotNil(t, credential)
 	assert.Equal(t, 5001, credential.port)
 	assert.NotNil(t, credential.stateGenerator)

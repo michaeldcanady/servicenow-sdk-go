@@ -34,7 +34,7 @@ func TestNewPublicClient(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			client, err := newPublicClient(test.clientID, Authority("https://dev12345.service-now.com"))
+			client, err := newPublicClient(test.clientID, authority("https://dev12345.service-now.com"))
 
 			if test.wantErr != nil {
 				require.Error(t, err)

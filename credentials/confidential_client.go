@@ -15,7 +15,7 @@ type confidentialClient struct {
 }
 
 // newConfidentialClient creates a new confidentialClient.
-func newConfidentialClient(clientID, clientSecret string, authority Authority, options ...clientOption) (*confidentialClient, error) {
+func newConfidentialClient(clientID, clientSecret string, authority authority, options ...clientOption) (*confidentialClient, error) {
 	if clientID == "" {
 		return nil, snerrors.ErrEmptyClientID
 	}

@@ -30,7 +30,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
-				tp := bearer.tokenProvider.(*ROPCCredential)
+				tp := bearer.tokenProvider.(*ropcCredential)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
 			},
 		},
@@ -47,7 +47,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
-				tp := bearer.tokenProvider.(*ClientCredentialsCredential)
+				tp := bearer.tokenProvider.(*clientCredentialsCredential)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
 			},
 		},
@@ -64,7 +64,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
-				tp := bearer.tokenProvider.(*AuthorizationCodeCredential)
+				tp := bearer.tokenProvider.(*authorizationCodeCredential)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
 				assert.Equal(t, 5001, tp.port)
 			},
@@ -87,7 +87,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
-				tp := bearer.tokenProvider.(*AuthorizationCodeCredential)
+				tp := bearer.tokenProvider.(*authorizationCodeCredential)
 				assert.Equal(t, 8080, tp.port)
 				assert.NotNil(t, tp.stateGenerator)
 				assert.Equal(t, "custom-state", tp.stateGenerator())
@@ -113,7 +113,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
-				tp := bearer.tokenProvider.(*AuthorizationCodeCredential)
+				tp := bearer.tokenProvider.(*authorizationCodeCredential)
 				assert.NotNil(t, tp.serverFactory)
 				s, _ := tp.serverFactory("state", 0)
 				assert.Equal(t, "http://localhost:1234", s.GetAddr())
@@ -122,7 +122,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 		{
 			name: "JWT Provider with Options",
 			provider: func() (authentication.AuthenticationProvider, error) {
-				mockTP := &BaseAccessTokenProvider{}
+				mockTP := &baseAccessTokenProvider{}
 				return NewJWTProvider("client-id", "client-secret", mockTP,
 					JWTOptions{
 						CommonOptions: CommonOptions{
@@ -133,7 +133,7 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
-				tp := bearer.tokenProvider.(*JWTCredential)
+				tp := bearer.tokenProvider.(*jwtCredential)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
 			},
 		},
