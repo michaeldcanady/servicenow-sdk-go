@@ -38,6 +38,15 @@ var (
 	// so callers can match the class of failure with errors.Is regardless of which enum
 	// produced it.
 	ErrUnknownEnumValue = errors.New("unknown enum value")
+
+// ErrOIDCDiscoveryFailed reports that the OIDC discovery document could not be fetched or parsed.
+ErrOIDCDiscoveryFailed = errors.New("OIDC discovery failed")
+
+// ErrOIDCDiscoveryMissingEndpoint reports that a required endpoint is missing from the discovery document.
+ErrOIDCDiscoveryMissingEndpoint = errors.New("OIDC discovery document missing required endpoint")
+
+// ErrOIDCDiscoveryIssuerMismatch reports that the discovery document's issuer does not match the expected issuer.
+ErrOIDCDiscoveryIssuerMismatch = errors.New("OIDC discovery document issuer mismatch")
 )
 
 // NewValidationError creates a standardized validation error message.
