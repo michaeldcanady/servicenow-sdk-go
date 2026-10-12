@@ -27,6 +27,8 @@ type BaseAccessTokenProvider struct {
 	revokeToken func(ctx context.Context, token, tokenTypeHint string) error
 	// tokenStore is an optional store for persisting and retrieving access tokens.
 	tokenStore TokenStore
+	// clientID is the key under which tokens are persisted in the token store.
+	clientID string
 	// baseURL is the base URL for the ServiceNow instance.
 	baseURL string
 }
@@ -65,12 +67,30 @@ func (p *BaseAccessTokenProvider) SetTokenStore(store TokenStore) {
 	p.tokenStore = store
 }
 
-// Revoke revokes the current access token and refresh token.
+// setClientID sets the identifier used as the token store key. Tokens are only
+// persisted when both a store and a client ID are set.
+func (p *BaseAccessTokenProvider) setClientID(clientID string) {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	p.clientID = clientID
+}
+
+// Revoker is implemented by token providers that can revoke their current token.
+type Revoker interface {
+	// Revoke revokes the current access token and refresh token.
+	Revoke(ctx context.Context) error
+}
+
+// Revoke revokes the current access token and refresh token and then clears the
+// cached and persisted token. It is best-effort: when the identity provider
+// cannot be asked to revoke (for example it advertises no revocation endpoint),
+// the token is still cleared locally and revocation succeeds.
 func (p *BaseAccessTokenProvider) Revoke(ctx context.Context) error {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
 	if p.token == nil {
+		p.deleteToken(ctx)
 		return nil
 	}
 
@@ -91,6 +111,7 @@ func (p *BaseAccessTokenProvider) Revoke(ctx context.Context) error {
 	}
 
 	p.token = nil
+	p.deleteToken(ctx)
 	return nil
 }
 
@@ -108,6 +129,10 @@ func (p *BaseAccessTokenProvider) GetAuthorizationToken(ctx context.Context, uri
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
+	if p.token == nil {
+		p.token = p.loadToken(ctx)
+	}
+
 	if p.token != nil && !p.token.IsExpired() {
 		return p.token.AccessToken, nil
 	}
@@ -115,6 +140,7 @@ func (p *BaseAccessTokenProvider) GetAuthorizationToken(ctx context.Context, uri
 	if p.token != nil && p.token.RefreshToken != "" && p.refreshToken != nil {
 		if newToken, err := p.refreshToken(ctx, p.token.RefreshToken); err == nil {
 			p.token = newToken
+			p.saveToken(ctx)
 			return p.token.AccessToken, nil
 		}
 	}
@@ -129,5 +155,41 @@ func (p *BaseAccessTokenProvider) GetAuthorizationToken(ctx context.Context, uri
 	}
 
 	p.token = newToken
+	p.saveToken(ctx)
 	return p.token.AccessToken, nil
+}
+
+// loadToken retrieves a persisted token. Persistence is best-effort, so a
+// missing store or client ID, or a store error, yields no token.
+func (p *BaseAccessTokenProvider) loadToken(ctx context.Context) *AccessToken {
+	if p.tokenStore == nil || p.clientID == "" {
+		return nil
+	}
+
+	token, err := p.tokenStore.Load(ctx, p.clientID)
+	if err != nil {
+		return nil
+	}
+
+	return token
+}
+
+// saveToken persists the current token. Persistence is best-effort: store
+// failures are ignored so they never break authentication.
+func (p *BaseAccessTokenProvider) saveToken(ctx context.Context) {
+	if p.tokenStore == nil || p.clientID == "" || p.token == nil {
+		return
+	}
+
+	_ = p.tokenStore.Save(ctx, p.clientID, p.token)
+}
+
+// deleteToken removes the persisted token. Persistence is best-effort: store
+// failures are ignored.
+func (p *BaseAccessTokenProvider) deleteToken(ctx context.Context) {
+	if p.tokenStore == nil || p.clientID == "" {
+		return
+	}
+
+	_ = p.tokenStore.Delete(ctx, p.clientID)
 }

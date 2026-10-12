@@ -127,6 +127,7 @@ func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.
 
 	snTokenProvider.Initialize(string(authority))
 
+	snTokenProvider.setClientID(clientID)
 	if config.tokenStore != nil {
 		snTokenProvider.SetTokenStore(config.tokenStore)
 	}

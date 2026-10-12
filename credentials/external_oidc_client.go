@@ -95,11 +95,22 @@ func (c *externalOIDCClient) acquireTokenByRefreshToken(ctx context.Context, ref
 	return c.toAccessToken(token)
 }
 
-// revokeToken revokes a token at the provider. It fails when the provider's
-// discovery document did not advertise a revocation endpoint; the shared base
-// provider treats revocation as best-effort.
+// revokeToken revokes a token at the identity provider. Revocation is
+// best-effort: when the provider's discovery document does not advertise a
+// revocation endpoint there is nothing to revoke at the provider, so this is a
+// successful no-op and the shared base provider clears the cached token.
 func (c *externalOIDCClient) revokeToken(ctx context.Context, token, tokenTypeHint string) error {
+	if !c.revocationSupported() {
+		return nil
+	}
+
 	return c.oauthClient.Revoke(ctx, token, tokenTypeHint)
+}
+
+// revocationSupported reports whether the identity provider advertised a
+// revocation endpoint in its discovery document.
+func (c *externalOIDCClient) revocationSupported() bool {
+	return c.oauthClient.Endpoints != nil && strings.TrimSpace(c.oauthClient.Endpoints.RevocationURL) != ""
 }
 
 // toAccessToken maps the provider's token response onto the SDK token, choosing
