@@ -8,60 +8,40 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"sync"
-	"time"
 
-	"github.com/google/uuid"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
-	"github.com/pkg/browser"
 )
 
 var _ authentication.AccessTokenProvider = (*AuthorizationCodeCredential)(nil)
 
 type authorizationCodeClient interface {
+	authorizationCodeSource
+
 	Initialize(baseURL string)
-	getAuthorizationURL(redirectURI, state string, scopes []string) (string, error)
-	acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error)
 	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
 }
 
 // AuthorizationCodeCredential implements the OAuth2 Authorization Code flow.
+//
+// The interactive redirect machinery (redirect server, state, PKCE, code
+// exchange) lives in the embedded authorizationCodeFlow, shared with the other
+// browser-redirect credentials.
 type AuthorizationCodeCredential struct {
 	*BaseAccessTokenProvider
-	client         authorizationCodeClient
-	port           int
-	stateGenerator func() string
-	urlOpener      func(string) error
-	serverFactory  ServerFactory
-	tokenMutex     sync.Mutex
+	*authorizationCodeFlow
+
+	client authorizationCodeClient
 }
 
 // NewAuthorizationCodeCredential creates a new AuthorizationCodeCredential.
 // This credential uses the provided authorization code to acquire an access token.
 // The code is one-time use. Subsequent token acquisitions will use the refresh token.
 func NewAuthorizationCodeCredential(client authorizationCodeClient, allowedHosts []string, port int, stateGenerator func() string, urlOpener func(string) error, serverFactory ServerFactory) (*AuthorizationCodeCredential, error) {
-	if port == 0 {
-		port = 5001
-	}
-	if stateGenerator == nil {
-		stateGenerator = uuid.NewString
-	}
-	if urlOpener == nil {
-		urlOpener = browser.OpenURL
-	}
-	if serverFactory == nil {
-		serverFactory = defaultServerFactory
-	}
-
 	c := &AuthorizationCodeCredential{
-		client:         client,
-		port:           port,
-		stateGenerator: stateGenerator,
-		urlOpener:      urlOpener,
-		serverFactory:  serverFactory,
-		tokenMutex:     sync.Mutex{},
+		client:                client,
+		authorizationCodeFlow: newAuthorizationCodeFlow(port, stateGenerator, urlOpener, serverFactory),
 	}
 
 	base := newBaseAccessTokenProvider(allowedHosts)
@@ -81,55 +61,15 @@ func (c *AuthorizationCodeCredential) Initialize(baseURL string) {
 }
 
 // GetToken acquires a token using the authorization code flow.
-func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (token *AccessToken, err error) {
-	c.tokenMutex.Lock()
-	defer c.tokenMutex.Unlock()
-	state := c.stateGenerator()
-
-	server, err := c.serverFactory(state, c.port)
-	if err != nil {
-		return nil, err
-	}
-
-	// Create a context with timeout for the entire code acquisition process
-	authCtx, cancelAuth := context.WithTimeout(ctx, 100*time.Second)
-	defer cancelAuth()
-
-	shutdownCtx, cancelShutdown := context.WithTimeout(authCtx, 5*time.Second)
-	defer cancelShutdown()
-
-	defer func() {
-		if shutdownErr := server.Shutdown(shutdownCtx); shutdownErr != nil && err == nil {
-			err = shutdownErr
-		}
-	}()
-
-	authURL, err := c.client.getAuthorizationURL(server.GetAddr(), state, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := c.urlOpener(authURL); err != nil {
-		return nil, err
-	}
-
-	code, _, err := server.Result(shutdownCtx)
-	if err != nil {
-		return nil, err
-	}
-
-	token, err = c.client.acquireTokenByCode(authCtx, code, server.GetAddr(), state)
-	if err != nil {
-		return nil, err
-	}
-	return token, nil
+func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
+	return c.acquire(ctx, c.client)
 }
 
 // NewAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization Code flow using functional options.
 func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
 	config := &AuthConfig{
 		httpClient: http.DefaultClient,
-		port:       5001,
+		port:       defaultAuthorizationCodePort,
 	}
 	for _, opt := range opts {
 		opt(config)
