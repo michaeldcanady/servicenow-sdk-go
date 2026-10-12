@@ -6,8 +6,12 @@ package credentials
 import (
 	"context"
 	"errors"
+	"net/http"
+	"net/url"
 	"testing"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -19,23 +23,26 @@ var mockAnyContext = mock.Anything
 type authCodeTestClient struct {
 	initializedWith string
 	authURL         string
+	authVerifier    string
 	authURLErr      error
 	acquireToken    *AccessToken
 	acquireErr      error
 	refreshToken    *AccessToken
 	refreshErr      error
 	revokeErr       error
+	lastVerifier    string
 }
 
 func (c *authCodeTestClient) Initialize(baseURL string) {
 	c.initializedWith = baseURL
 }
 
-func (c *authCodeTestClient) getAuthorizationURL(_, _ string, _ []string) (string, error) {
-	return c.authURL, c.authURLErr
+func (c *authCodeTestClient) getAuthorizationURL(_, _ string, _ []string) (string, string, error) {
+	return c.authURL, c.authVerifier, c.authURLErr
 }
 
-func (c *authCodeTestClient) acquireTokenByCode(_ context.Context, _, _, _ string) (*AccessToken, error) {
+func (c *authCodeTestClient) acquireTokenByCode(_ context.Context, _, _, _, verifier string) (*AccessToken, error) {
+	c.lastVerifier = verifier
 	return c.acquireToken, c.acquireErr
 }
 
@@ -119,7 +126,7 @@ func TestAuthorizationCodeCredential_GetToken(t *testing.T) {
 		},
 		{
 			name:   "successful flow returns token",
-			client: &authCodeTestClient{authURL: "https://auth.example.com", acquireToken: &AccessToken{AccessToken: "final"}},
+			client: &authCodeTestClient{authURL: "https://auth.example.com", authVerifier: "test-verifier", acquireToken: &AccessToken{AccessToken: "final"}},
 			serverFactory: authCodeTestServerFactory(func() *mockAuthorizationCodeServer {
 				m := &mockAuthorizationCodeServer{}
 				m.On("GetAddr").Return("http://localhost:5001")
@@ -162,6 +169,7 @@ func TestAuthorizationCodeCredential_GetToken(t *testing.T) {
 			}
 			require.NoError(t, err)
 			assert.Equal(t, test.wantToken, token)
+			assert.Equal(t, test.client.authVerifier, test.client.lastVerifier, "GetToken must thread the verifier from the authorization URL to the code exchange")
 		})
 	}
 }
@@ -229,6 +237,53 @@ func TestNewPrivateAuthorizationCodeProvider(t *testing.T) {
 			assert.NotNil(t, provider)
 		})
 	}
+}
+
+func TestPublicAuthorizationCodeProvider_EndToEnd(t *testing.T) {
+	rt := &capturingTokenEndpoint{body: []byte(`{"access_token":"e2e-token","expires_in":3600}`)}
+
+	var authURL string
+	urlOpener := func(u string) error {
+		authURL = u
+		return nil
+	}
+
+	server := &mockAuthorizationCodeServer{}
+	server.On("GetAddr").Return("http://localhost:5001")
+	server.On("Result", mockAnyContext).Return("e2e-code", "state", nil)
+	server.On("Shutdown", mockAnyContext).Return(nil)
+
+	provider, err := NewPublicAuthorizationCodeProvider("public-client",
+		WithURL("https://dev12345.service-now.com"),
+		WithHTTPClient(&http.Client{Transport: rt}),
+		WithURLOpener(urlOpener),
+		WithServerFactory(func(_ string, _ int) (AuthorizationCodeServer, error) { return server, nil }),
+	)
+	require.NoError(t, err)
+
+	request := abstractions.NewRequestInformation()
+	request.SetUri(*mustParseURL(t, "https://dev12345.service-now.com/now/table/incident"))
+	require.NoError(t, provider.AuthenticateRequest(context.Background(), request, nil))
+
+	header := request.Headers.Get("Authorization")
+	require.Len(t, header, 1)
+	assert.Equal(t, "Bearer e2e-token", header[0])
+
+	// The token request must present the verifier matching the authorization
+	// URL's challenge and must not carry a client secret.
+	require.NotNil(t, rt.lastForm)
+	assert.Equal(t, "public-client", rt.lastForm.Get("client_id"))
+	assert.Empty(t, rt.lastForm.Get("client_secret"))
+
+	u, err := url.Parse(authURL)
+	require.NoError(t, err)
+	challenge := u.Query().Get("code_challenge")
+	require.NotEmpty(t, challenge)
+	verifier := rt.lastForm.Get("code_verifier")
+	require.NotEmpty(t, verifier)
+	want, err := pkce.NewPKCEChallenge(pkce.MethodS256, verifier)
+	require.NoError(t, err)
+	assert.Equal(t, want, challenge)
 }
 
 func TestNewPublicAuthorizationCodeProvider(t *testing.T) {
