@@ -344,6 +344,7 @@ const sidebars: SidebarsConfig = {
             'contributing/adrs/011-release-branches-and-cross-major-flow',
             'contributing/adrs/012-release-provenance-in-band',
             'contributing/adrs/013-event-driven-release-dispatch',
+            'contributing/adrs/014-external-oidc-verbatim-token',
           ],
         },
       ],
