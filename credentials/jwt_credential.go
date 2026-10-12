@@ -130,5 +130,5 @@ func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.
 		snTokenProvider.SetTokenStore(opts.TokenStore)
 	}
 
-	return NewBearerTokenAuthenticationProvider(snTokenProvider), nil
+	return NewBearerTokenAuthenticationProvider(snTokenProvider, BearerOptions{})
 }

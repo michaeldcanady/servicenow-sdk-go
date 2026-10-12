@@ -29,7 +29,7 @@ func (s *authSteps) iInitializeAClientWithBasicAuthentication(ctx context.Contex
 
 func (s *authSteps) iInitializeAClientWithBasicAuthUsingEmptyUsername(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
-	ap := credentials.NewBasicProvider("", "password")
+	ap := credentials.NewBasicProvider("", "password", credentials.BasicOptions{})
 	err := support.NewClientWithAuthProvider(w, ap)
 	if err != nil {
 		w.AuthErr = err
@@ -41,7 +41,7 @@ func (s *authSteps) iInitializeAClientWithBasicAuthUsingEmptyUsername(ctx contex
 
 func (s *authSteps) iInitializeAClientWithBasicAuthUsingEmptyPassword(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
-	ap := credentials.NewBasicProvider("admin", "")
+	ap := credentials.NewBasicProvider("admin", "", credentials.BasicOptions{})
 	err := support.NewClientWithAuthProvider(w, ap)
 	if err != nil {
 		w.AuthErr = err
@@ -63,6 +63,7 @@ func (s *authSteps) iInitializeAClientWithAStaticBearerToken(ctx context.Context
 
 	bearer := credentials.NewBearerTokenAuthenticationProvider(
 		&support.StaticTokenProvider{Token: token},
+		credentials.BearerOptions{},
 	)
 	err := support.NewClientWithAuthProvider(w, bearer)
 	if err != nil {

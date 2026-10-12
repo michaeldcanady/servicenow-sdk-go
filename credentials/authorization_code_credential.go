@@ -154,7 +154,7 @@ func NewAuthorizationCodeProvider(clientID, clientSecret string, opts Authorizat
 		tokenProvider.SetTokenStore(opts.TokenStore)
 	}
 
-	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
+	return NewBearerTokenAuthenticationProvider(tokenProvider, BearerOptions{})
 }
 
 // NewPrivateAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization

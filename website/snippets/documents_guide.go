@@ -20,7 +20,7 @@ import (
 func _() {
 	// [START dg_main]
 	// Step 1: Authenticate and initialize the client
-	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
+	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx", credentials.BasicOptions{})
 
 	client, err := servicenow.NewServiceNowServiceClient(
 		servicenow.WithAuthenticationProvider(cred),

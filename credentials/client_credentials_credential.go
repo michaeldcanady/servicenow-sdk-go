@@ -79,5 +79,5 @@ func NewClientCredentialsProvider(clientID, clientSecret string, opts ClientCred
 		tokenProvider.SetTokenStore(opts.TokenStore)
 	}
 
-	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
+	return NewBearerTokenAuthenticationProvider(tokenProvider, BearerOptions{})
 }

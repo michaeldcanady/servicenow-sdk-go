@@ -89,5 +89,5 @@ func NewROPCProvider(clientID, clientSecret, username, password string, opts ROP
 		tokenProvider.SetTokenStore(opts.TokenStore)
 	}
 
-	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
+	return NewBearerTokenAuthenticationProvider(tokenProvider, BearerOptions{})
 }

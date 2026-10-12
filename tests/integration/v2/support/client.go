@@ -171,5 +171,5 @@ func newBasicAuthProvider() (*credentials.BasicAuthenticationProvider, error) {
 			password = "mock"
 		}
 	}
-	return credentials.NewBasicProvider(username, password), nil
+	return credentials.NewBasicProvider(username, password, credentials.BasicOptions{}), nil
 }
