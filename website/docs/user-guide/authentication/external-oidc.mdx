@@ -1,0 +1,154 @@
+# External OIDC
+
+import GoSnippet from '@site/src/components/GoSnippet';
+import authGo from '@site/snippets/auth.go';
+
+
+External OIDC authentication signs a user in through your organization's
+third-party identity provider (external IdP), such as Microsoft Entra ID,
+Okta, Auth0, Google, or ADFS, and lets the SDK call ServiceNow on that user's
+behalf. The SDK acts as an OIDC client: it resolves the IdP's discovery
+document, runs an authorization code + PKCE grant as a public client, and
+presents the resulting token verbatim to ServiceNow.
+
+The external IdP is the token authority for this flow, not ServiceNow. ServiceNow
+validates the token through an OIDP record; the SDK performs no token validation.
+
+## Objective
+
+Configure and use external OIDC authentication with the ServiceNow SDK against
+a standards-compliant OpenID Connect issuer, using values from your identity
+administrator and your ServiceNow administrator.
+
+## Required values
+
+Your identity administrator registers the application and provides:
+
+| Value         | Description                                                                          |
+| ------------- | ------------------------------------------------------------------------------------ |
+| Client ID     | The application (client) ID from the IdP app registration                             |
+| Issuer URL    | The IdP's issuer, or its full `/.well-known/openid-configuration` URL                 |
+| Redirect URL  | Must match a redirect URL registered on the IdP app                                   |
+| Audience scope | Only for an audience-scoped access token, for example `api://{clientId}/.default` on Entra ID |
+
+Your ServiceNow administrator configures an OIDP record with:
+
+| Value            | Description                                                                         |
+| ---------------- | ----------------------------------------------------------------------------------- |
+| Client ID        | Must equal the `aud` claim in the token the SDK presents                             |
+| User claim       | A claim, such as `upn` or `preferred_username`, that maps to a `sys_user` record     |
+| Metadata URL     | The IdP's OpenID Connect metadata URL; for Entra ID, use the v1 URL                  |
+| JTI verification | Off when the IdP doesn't emit a `jti` claim, which Entra ID doesn't                  |
+
+## SDK flow
+
+```mermaid
+flowchart TD
+    A([App code]):::app --> B(NewExternalOIDCProvider<br/>client ID + issuer):::sdk
+    B --> C(Resolve IdP discovery document):::sdk
+
+    subgraph acquire ["Getting the first token (interactive)"]
+        H(Start local redirect listener<br/>on port 5001):::sdk --> J[[Browser opens the IdP authorization URL<br/>with the PKCE challenge]]:::external
+        J --> K[[User signs in at the external IdP<br/>and approves]]:::external
+        K --> L(Redirect delivers the<br/>authorization code):::sdk
+        L --> M(Exchange code at the IdP<br/>with the PKCE verifier):::sdk
+        M --> N(IdP token<br/>ID token or access token):::token
+        N --> O(Token cache):::token
+    end
+    C --> H
+
+    subgraph request ["On every request"]
+        P{Token<br/>expired?}:::decision
+        P -- yes --> Q(Refresh-token grant<br/>no user interaction):::sdk
+        P -- no --> R[[Kiota request adapter]]:::sdk
+    end
+    O --> P
+    Q --> O
+    R --> S[[ServiceNow OIDP record<br/>validates the token]]:::external
+    S --> T[[ServiceNow instance]]:::external
+
+    classDef app fill:#c7d2fe,stroke:#4f46e5,color:#1e1b4b
+    classDef sdk fill:#e2e8f0,stroke:#64748b,color:#0f172a
+    classDef decision fill:#fde68a,stroke:#d97706,color:#78350f
+    classDef token fill:#bbf7d0,stroke:#16a34a,color:#14532d
+    classDef external fill:#bae6fd,stroke:#0284c7,color:#0c4a6e
+    style acquire fill:transparent,stroke:#94a3b8,stroke-dasharray:4 4
+    style request fill:transparent,stroke:#94a3b8,stroke-dasharray:4 4
+```
+
+## Set up the identity provider
+
+1. Register an application in the external IdP, and add the redirect URL that
+   the SDK's local listener uses. The default redirect URL uses port `5001`;
+   change the port with `WithPort` or supply your own redirect setup with
+   `WithServerFactory`.
+2. For the default ID token path, grant the `openid` scope. Add an audience
+   scope instead when you want an audience-scoped access token.
+3. Record the application (client) ID and the issuer URL for the SDK and the
+   OIDP record.
+
+## Set up the ServiceNow OIDP record
+
+Create an OIDP record that trusts the external IdP, then set:
+
+- **Client ID** to the token's `aud` claim. For the ID token path, this is the
+  IdP application (client) ID. For the access token path, this is the token
+  audience, for example `api://{clientId}`.
+- **User claim** to a claim that identifies the user, so ServiceNow can resolve
+  a `sys_user` record.
+- **Metadata URL** to the IdP's OpenID Connect metadata URL. For Entra ID, use
+  the v1 URL; v2 access tokens don't validate.
+- **JTI verification** off when the IdP doesn't emit a `jti` claim.
+
+## Choose the presented token
+
+The SDK presents one token verbatim. Pick the path that matches how the IdP app
+and the OIDP record are configured:
+
+| Path                       | Configure with                          | Presented token     | OIDP record Client ID       |
+| -------------------------- | --------------------------------------- | ------------------- | --------------------------- |
+| ID token (default)         | No scopes (scope `openid`)              | The ID token        | The IdP application (client) ID |
+| Audience-scoped access token | `WithScopes("api://{clientId}/.default")` | The user access token | The token audience, such as `api://{clientId}` |
+
+The SDK performs no token-type detection. It presents whichever JWT the
+configured scopes produce, and the OIDP record validates it.
+
+## Initialize the SDK
+
+Use the default ID token path when the OIDP record's Client ID is your IdP
+application (client) ID:
+
+<GoSnippet language="go" src={authGo} region="auth_external_oidc" />
+
+For an audience-scoped access token, add the audience scope:
+
+<GoSnippet language="go" src={authGo} region="auth_external_oidc_scopes" />
+
+## Troubleshooting "User Not Authenticated"
+
+ServiceNow returns `User Not Authenticated` (HTTP 401) when the OIDP record
+rejects the token. The SDK performs no token validation, so this response is
+always an OIDP configuration problem. Check these causes:
+
+| Cause                                                        | Fix                                                                                                     |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| The OIDP record's Client ID doesn't equal the token's `aud`   | Set the record's Client ID to the token audience: the IdP client ID for the ID token path, or `api://{clientId}` for the access token path |
+| No user claim maps to a `sys_user` record                     | Map a claim that carries the user identity, such as `upn` or `preferred_username`, in the OIDP record    |
+| JTI verification rejects a token that has no `jti` claim      | Turn off JTI verification when the IdP, such as Entra ID, doesn't emit `jti`                             |
+| The token is a v2 access token or an opaque token             | Use the Entra ID v1 metadata URL and an ID token or a v1 audience-scoped access token                    |
+| The token is a client-credentials (machine) token             | Machine identity is unsupported through the OIDP; use the native [Client Credentials](./client-credentials.mdx) grant |
+
+To tell the failure sides apart in code: a token the IdP couldn't issue
+surfaces as `credentials.ErrTokenAcquisition`, and a ServiceNow rejection
+surfaces as `*core.UnauthorizedError`, which matches `errors.ErrNotAuthenticated`
+through `errors.Is`.
+
+## IdP compatibility
+
+| IdP                | Notes                                                                                                                        |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| Microsoft Entra ID | Use the v1 metadata URL on the OIDP record. Entra ID doesn't emit `jti`; turn off JTI verification. The user claim is typically `upn`. |
+| Okta               | Configure the audience and user claim on the OIDP record; the Okta `sub` claim is provider-internal.                          |
+| Auth0              | Custom claims require an Action before the user claim is present in the token.                                                |
+| Google             | Access tokens are opaque, so the OIDP can't validate them; use the ID token.                                                  |
+| ADFS               | Standards-compliant, but no published OIDP walkthrough; verify the configuration before you rely on it.                       |

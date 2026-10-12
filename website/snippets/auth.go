@@ -173,6 +173,55 @@ func authCodePublic() {
 	// [END auth_code_public]
 }
 
+func authExternalOIDC() {
+	// [START auth_external_oidc]
+	provider, err := credentials.NewExternalOIDCProvider(
+		"{clientID}",
+		credentials.WithInstance("xSDK_SN_INSTANCEx"),
+		credentials.WithOIDCIssuer("https://login.microsoftonline.com/{tenantID}/v2.0"),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	client, err := servicenowsdkgo.NewServiceNowServiceClient(
+		servicenowsdkgo.WithAuthenticationProvider(provider),
+		servicenowsdkgo.WithInstance("xSDK_SN_INSTANCEx"),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Client is now authenticated and ready to use
+	_ = client
+	// [END auth_external_oidc]
+}
+
+func authExternalOIDCScopes() {
+	// [START auth_external_oidc_scopes]
+	provider, err := credentials.NewExternalOIDCProvider(
+		"{clientID}",
+		credentials.WithInstance("xSDK_SN_INSTANCEx"),
+		credentials.WithOIDCIssuer("https://login.microsoftonline.com/{tenantID}/v2.0"),
+		credentials.WithScopes("api://{clientID}/.default"),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END auth_external_oidc_scopes]
+
+	client, err := servicenowsdkgo.NewServiceNowServiceClient(
+		servicenowsdkgo.WithAuthenticationProvider(provider),
+		servicenowsdkgo.WithInstance("xSDK_SN_INSTANCEx"),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Client is now authenticated and ready to use
+	_ = client
+}
+
 func authJWT() {
 	// tokenProvider must generate signed JWT assertions; it is user-provided
 	// and must satisfy kiota's authentication.AccessTokenProvider.
@@ -208,5 +257,7 @@ func _() {
 	authClientCredentials()
 	authCodePrivate()
 	authCodePublic()
+	authExternalOIDC()
+	authExternalOIDCScopes()
 	authJWT()
 }
