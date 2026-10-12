@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -75,24 +76,36 @@ func (c *externalOIDCClient) getAuthorizationURL(redirectURI, state string, _ []
 }
 
 // acquireTokenByCode exchanges the authorization code for the presented token.
+// Failures wrap ErrTokenAcquisition so callers can distinguish identity-provider
+// problems from ServiceNow rejecting the token.
 func (c *externalOIDCClient) acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error) {
 	token, err := c.oauthClient.ExchangeCode(ctx, code, redirectURI, c.verifier, state)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", ErrTokenAcquisition, err)
 	}
 
-	return c.toAccessToken(token)
+	accessToken, err := c.toAccessToken(token)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %w", ErrTokenAcquisition, err)
+	}
+
+	return accessToken, nil
 }
 
 // acquireTokenByRefreshToken refreshes the presented token using the provider's
-// refresh token.
+// refresh token. Failures wrap ErrTokenAcquisition.
 func (c *externalOIDCClient) acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error) {
 	token, err := c.oauthClient.ExchangeRefreshToken(ctx, refreshToken)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", ErrTokenAcquisition, err)
 	}
 
-	return c.toAccessToken(token)
+	accessToken, err := c.toAccessToken(token)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %w", ErrTokenAcquisition, err)
+	}
+
+	return accessToken, nil
 }
 
 // revokeToken revokes a token at the identity provider. Revocation is

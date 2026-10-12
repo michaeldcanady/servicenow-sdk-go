@@ -63,9 +63,14 @@ func (r *revokingStubTokenProvider) Revoke(_ context.Context) error {
 
 // newTestRequest builds a RequestInformation with a resolvable URI.
 func newTestRequest() *abstractions.RequestInformation {
+	return newTestRequestForHost("https://dev12345.service-now.com")
+}
+
+// newTestRequestForHost builds a RequestInformation whose base URL is host.
+func newTestRequestForHost(host string) *abstractions.RequestInformation {
 	request := abstractions.NewRequestInformation()
 	request.UrlTemplate = "{+baseurl}/api/now/table/incident"
-	request.PathParameters = map[string]string{"baseurl": "https://dev12345.service-now.com"}
+	request.PathParameters = map[string]string{"baseurl": host}
 
 	return request
 }

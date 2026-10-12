@@ -38,6 +38,12 @@ var (
 	// so callers can match the class of failure with errors.Is regardless of which enum
 	// produced it.
 	ErrUnknownEnumValue = errors.New("unknown enum value")
+	// ErrNotAuthenticated reports that ServiceNow rejected the credentials with a
+	// "User Not Authenticated" response. core.UnauthorizedError matches it through
+	// errors.Is, so callers can distinguish ServiceNow rejection from an identity
+	// provider that failed to issue a token (credentials.ErrTokenAcquisition)
+	// without asserting on the concrete error type.
+	ErrNotAuthenticated = errors.New("user not authenticated")
 )
 
 // NewValidationError creates a standardized validation error message.

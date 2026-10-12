@@ -4,8 +4,10 @@
 package credentials
 
 import (
+	"bytes"
 	"context"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -13,6 +15,7 @@ import (
 	"testing"
 	"time"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -221,6 +224,52 @@ func TestExternalOIDCProvider_RevokesAtProviderWithEndpoint(t *testing.T) {
 	assert.Equal(t, 1, idp.revocationCalls())
 }
 
+func TestExternalOIDCProvider_AllowedHostsGating(t *testing.T) {
+	idToken := fakeJWT(t, map[string]any{"exp": time.Now().Add(time.Hour).Unix()})
+	idp := newMockIDP(t, func(string) string { return idTokenResponse(idToken) })
+	provider := mustTestOIDCProvider(t, idp, nil, WithAllowedHosts("dev12345.service-now.com"))
+
+	// A host outside the allow list is rejected before any token is acquired.
+	blocked := newTestRequestForHost("https://evil.example.com")
+	require.NoError(t, provider.AuthenticateRequest(context.Background(), blocked, nil))
+	assert.Empty(t, blocked.Headers.Get("Authorization"))
+
+	codeCalls, _ := idp.tokenCalls()
+	assert.Equal(t, 0, codeCalls, "a blocked host must not trigger token acquisition")
+
+	// The configured host receives the token.
+	allowed := newTestRequest()
+	require.NoError(t, provider.AuthenticateRequest(context.Background(), allowed, nil))
+	assert.Equal(t, []string{"Bearer " + idToken}, allowed.Headers.Get("Authorization"))
+}
+
+func TestExternalOIDCProvider_AcquisitionFailureIsSentinel(t *testing.T) {
+	idp := newMockIDP(t, func(string) string { return `{"error":"invalid_grant"}` })
+	idp.tokenStatus = http.StatusBadRequest
+	provider := mustTestOIDCProvider(t, idp, nil)
+
+	err := provider.AuthenticateRequest(context.Background(), newTestRequest(), nil)
+	require.ErrorIs(t, err, ErrTokenAcquisition)
+	require.NotErrorIs(t, err, snerrors.ErrNotAuthenticated)
+}
+
+func TestExternalOIDCProvider_DoesNotLogToken(t *testing.T) {
+	idToken := fakeJWT(t, map[string]any{"exp": time.Now().Add(time.Hour).Unix()})
+	idp := newMockIDP(t, func(string) string { return idTokenResponse(idToken) })
+
+	var logs bytes.Buffer
+	previous := log.Writer()
+	log.SetOutput(&logs)
+	t.Cleanup(func() { log.SetOutput(previous) })
+
+	provider := mustTestOIDCProvider(t, idp, nil)
+	request := newTestRequest()
+	require.NoError(t, provider.AuthenticateRequest(context.Background(), request, nil))
+	assert.Equal(t, []string{"Bearer " + idToken}, request.Headers.Get("Authorization"))
+
+	assert.NotContains(t, logs.String(), idToken, "the token must never be logged")
+}
+
 // mustTestOIDCProvider builds an external OIDC provider wired to a mock IdP and a
 // mock redirect server, so no browser or local listener is required.
 func mustTestOIDCProvider(t *testing.T, idp *mockIDP, captured *string, extra ...AuthOption) *BearerTokenAuthenticationProvider {
@@ -260,6 +309,7 @@ type mockIDP struct {
 	server       *httptest.Server
 	tokenFunc    func(grantType string) string
 	revoke       bool
+	tokenStatus  int
 	mu           sync.Mutex
 	codeCalls    int
 	refreshCalls int
@@ -273,7 +323,7 @@ func newMockIDP(t *testing.T, tokenFunc func(grantType string) string) *mockIDP 
 
 func newMockIDPWithRevocation(t *testing.T, tokenFunc func(grantType string) string, revoke bool) *mockIDP {
 	t.Helper()
-	idp := &mockIDP{tokenFunc: tokenFunc, revoke: revoke}
+	idp := &mockIDP{tokenFunc: tokenFunc, revoke: revoke, tokenStatus: http.StatusOK}
 	idp.server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/.well-known/openid-configuration":
@@ -293,6 +343,7 @@ func newMockIDPWithRevocation(t *testing.T, tokenFunc func(grantType string) str
 				idp.codeCalls++
 			}
 			idp.mu.Unlock()
+			w.WriteHeader(idp.tokenStatus)
 			_, _ = io.WriteString(w, tokenFunc(grant))
 		case "/revoke":
 			idp.mu.Lock()
