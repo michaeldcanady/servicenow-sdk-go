@@ -30,6 +30,7 @@ type AuthConfig struct {
 	stateGenerator func() string
 	urlOpener      func(string) error
 	serverFactory  ServerFactory
+	oidcIssuer     string
 }
 
 // AuthOption is a function type that modifies the AuthConfig.
@@ -106,5 +107,16 @@ func WithURLOpener(opener func(string) error) AuthOption {
 func WithServerFactory(factory ServerFactory) AuthOption {
 	return func(c *AuthConfig) {
 		c.serverFactory = factory
+	}
+}
+
+// --- External OIDC Specific Options ---
+
+// WithOIDCIssuer sets the external OIDC issuer URL. It accepts either a plain
+// issuer URL (the well-known discovery path is appended) or a full OIDC metadata
+// URL (used as-is).
+func WithOIDCIssuer(url string) AuthOption {
+	return func(c *AuthConfig) {
+		c.oidcIssuer = url
 	}
 }
