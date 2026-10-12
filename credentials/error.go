@@ -38,9 +38,14 @@ func (e *CredentialError) Error() string {
 
 // Sentinel Oauth2Error values for missing required credential fields.
 var (
-	ErrEmptyClientID     = NewOauth2Error("clientId is empty")
-	ErrEmptyClientSecret = NewOauth2Error("clientSecret is empty")
-	ErrEmptyBaseURL      = NewOauth2Error("baseURL is empty")
-	ErrEmptyUsername     = NewOauth2Error("username is empty")
-	ErrEmptyPassword     = NewOauth2Error("password is empty")
+	ErrEmptyClientID      = NewOauth2Error("clientId is empty")
+	ErrEmptyClientSecret  = NewOauth2Error("clientSecret is empty")
+	ErrEmptyBaseURL       = NewOauth2Error("baseURL is empty")
+	ErrEmptyUsername      = NewOauth2Error("username is empty")
+	ErrEmptyPassword      = NewOauth2Error("password is empty")
+	ErrEmptyOIDCIssuer    = NewOauth2Error("oidcIssuer is empty")
+	ErrMissingIDToken     = NewOauth2Error("token response does not include an id_token")
+	ErrMissingAccessToken = NewOauth2Error("token response does not include an access_token")
+	ErrUnparseableToken   = NewOauth2Error("token is not a parseable JWT")
+	ErrMissingTokenExpiry = NewOauth2Error("token does not contain a parseable exp claim")
 )
