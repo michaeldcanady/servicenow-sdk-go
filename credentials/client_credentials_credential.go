@@ -5,9 +5,10 @@ package credentials
 
 import (
 	"context"
-	"net/http"
+
 	"net/url"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
@@ -26,13 +27,13 @@ type ClientCredentialsCredential struct {
 }
 
 // NewClientCredentialsCredential creates a new ClientCredentialsCredential.
-func NewClientCredentialsCredential(client clientCredentialsClient, scopes []string, allowedHosts []string) (*ClientCredentialsCredential, error) {
+func NewClientCredentialsCredential(client clientCredentialsClient, scopes []string) (*ClientCredentialsCredential, error) {
 	c := &ClientCredentialsCredential{
 		client: client,
 		scopes: scopes,
 	}
 
-	base := newBaseAccessTokenProvider(allowedHosts)
+	base := newBaseAccessTokenProvider()
 	base.retrieveInitialToken = c.GetToken
 	base.refreshToken = client.acquireTokenByRefreshToken
 	base.revokeToken = client.revokeToken
@@ -53,34 +54,32 @@ func (c *ClientCredentialsCredential) GetToken(ctx context.Context, _ *url.URL, 
 	return c.client.acquireTokenByClientCredentials(ctx, c.scopes)
 }
 
-// NewClientCredentialsProvider creates a new AuthenticationProvider for the Client Credentials flow using functional options.
-func NewClientCredentialsProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
-	config := &AuthConfig{
-		httpClient: http.DefaultClient,
+// NewClientCredentialsProvider creates a new AuthenticationProvider for the Client Credentials flow.
+func NewClientCredentialsProvider(clientID, clientSecret string, opts ClientCredentialsOptions) (authentication.AuthenticationProvider, error) {
+	if clientID == "" {
+		return nil, errors.ErrEmptyClientID
 	}
-	for _, opt := range opts {
-		opt(config)
+	if clientSecret == "" {
+		return nil, errors.ErrEmptyClientSecret
 	}
 
-	authority := Authority(config.baseURL)
-
-	client, err := newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
-		co.httpClient = config.httpClient
+	client, err := newConfidentialClient(clientID, clientSecret, "", func(co *clientOptions) {
+		co.httpClient = opts.HTTPClient
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	tokenProvider, err := NewClientCredentialsCredential(client, config.scopes, config.allowedHosts)
+	tokenProvider, err := NewClientCredentialsCredential(client, opts.Scopes)
 	if err != nil {
 		return nil, err
 	}
 
 	tokenProvider.clientID = clientID
-	tokenProvider.Initialize(string(authority))
+	tokenProvider.SetAllowedHosts(opts.AllowedHosts)
 
-	if config.tokenStore != nil {
-		tokenProvider.SetTokenStore(config.tokenStore)
+	if opts.TokenStore != nil {
+		tokenProvider.SetTokenStore(opts.TokenStore)
 	}
 
 	return NewBearerTokenAuthenticationProvider(tokenProvider), nil

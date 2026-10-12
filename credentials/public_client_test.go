@@ -88,7 +88,7 @@ func TestPublicClient_AcquireTokenByCode(t *testing.T) {
 				c.oauthClient = test.fake
 			}
 
-			token, err := c.acquireTokenByCode(context.Background(), "code", "https://redirect", "state")
+			token, err := c.acquireTokenByCode(context.Background(), "code", "https://redirect", "state", "verifier")
 
 			if test.wantErr != "" {
 				require.Error(t, err)
@@ -133,7 +133,7 @@ func TestPublicClient_GenerateChallenge(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			c := &publicClient{baseClient: &baseClient{clientID: "id"}, method: test.method}
 
-			challenge, err := c.generateChallenge()
+			challenge, verifier, err := c.generateChallenge()
 
 			if test.wantErr {
 				require.Error(t, err)
@@ -142,11 +142,11 @@ func TestPublicClient_GenerateChallenge(t *testing.T) {
 			require.NoError(t, err)
 			if test.wantEmpty {
 				assert.Empty(t, challenge)
-				assert.Empty(t, c.verifier)
+				assert.Empty(t, verifier)
 				return
 			}
 			assert.NotEmpty(t, challenge)
-			assert.NotEmpty(t, c.verifier)
+			assert.NotEmpty(t, verifier)
 		})
 	}
 }
@@ -192,7 +192,7 @@ func TestPublicClient_GetAuthorizationURL(t *testing.T) {
 				c.oauthClient = test.fake
 			}
 
-			url, err := c.getAuthorizationURL("https://redirect", "state", nil)
+			url, _, err := c.getAuthorizationURL("https://redirect", "state", nil)
 
 			if test.wantErr != "" {
 				require.Error(t, err)

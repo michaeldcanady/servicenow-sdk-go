@@ -46,14 +46,18 @@ type tokenFlight struct {
 	err error
 }
 
-func newBaseAccessTokenProvider(allowedHosts []string) *BaseAccessTokenProvider {
-	var validator *authentication.AllowedHostsValidator
-	if len(allowedHosts) > 0 {
-		validator, _ = authentication.NewAllowedHostsValidatorErrorCheck(allowedHosts)
-	}
+func newBaseAccessTokenProvider() *BaseAccessTokenProvider {
+	return &BaseAccessTokenProvider{}
+}
 
-	return &BaseAccessTokenProvider{
-		allowedHostsValidator: validator,
+// SetAllowedHosts configures the allowed hosts validator after construction.
+// This allows the instance URL to be set separately from the allowed hosts.
+func (p *BaseAccessTokenProvider) SetAllowedHosts(hosts []string) {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	if len(hosts) > 0 {
+		validator, _ := authentication.NewAllowedHostsValidatorErrorCheck(hosts)
+		p.allowedHostsValidator = validator
 	}
 }
 

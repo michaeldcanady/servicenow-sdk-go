@@ -34,7 +34,8 @@ func TestNewBaseAccessTokenProvider(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := newBaseAccessTokenProvider(tt.allowedHosts)
+			p := newBaseAccessTokenProvider()
+			p.SetAllowedHosts(tt.allowedHosts)
 			if tt.wantNilValidator {
 				assert.Nil(t, p.GetAllowedHostsValidator())
 			} else {
@@ -79,7 +80,8 @@ func TestBaseAccessTokenProvider_Initialize(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := newBaseAccessTokenProvider(tt.allowedHosts)
+			p := newBaseAccessTokenProvider()
+			p.SetAllowedHosts(tt.allowedHosts)
 			p.Initialize(tt.baseURL)
 
 			assert.Equal(t, tt.baseURL, p.baseURL)
@@ -93,7 +95,7 @@ func TestBaseAccessTokenProvider_Initialize(t *testing.T) {
 }
 
 func TestBaseAccessTokenProvider_SetTokenStore(t *testing.T) {
-	p := newBaseAccessTokenProvider(nil)
+	p := newBaseAccessTokenProvider()
 	store := &fakeTokenStore{}
 	p.SetTokenStore(store)
 	assert.Equal(t, store, p.tokenStore)
@@ -157,7 +159,7 @@ func TestBaseAccessTokenProvider_Revoke(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := newBaseAccessTokenProvider(nil)
+			p := newBaseAccessTokenProvider()
 			p.token = tt.token
 			p.revokeToken = tt.revokeToken
 
@@ -260,7 +262,8 @@ func TestBaseAccessTokenProvider_GetAuthorizationToken(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := newBaseAccessTokenProvider(tt.allowedHosts)
+			p := newBaseAccessTokenProvider()
+			p.SetAllowedHosts(tt.allowedHosts)
 			tt.setup(p)
 
 			token, err := p.GetAuthorizationToken(context.Background(), tt.uri, nil)

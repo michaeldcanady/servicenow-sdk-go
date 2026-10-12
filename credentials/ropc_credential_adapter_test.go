@@ -33,7 +33,7 @@ func TestROPCCredential_GetAuthentication(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			credential, err := NewROPCCredential(test.client, "user", "pass", nil)
+			credential, err := NewROPCCredential(test.client, "user", "pass")
 			require.NoError(t, err)
 
 			auth, err := credential.GetAuthentication()

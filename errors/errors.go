@@ -38,6 +38,7 @@ var (
 	ErrEmptyUsername           = errors.New("username is empty")
 	ErrEmptyPassword           = errors.New("password is empty")
 	ErrNilWriter               = errors.New("serialization writer is nil")
+	ErrEmptyTokenProvider  = errors.New("tokenProvider is empty")
 	// ErrUnknownEnumValue reports a wire value that does not correspond to any member of
 	// an enum. Parse<Enum> functions wrap this with the enum name and the offending value,
 	// so callers can match the class of failure with errors.Is regardless of which enum

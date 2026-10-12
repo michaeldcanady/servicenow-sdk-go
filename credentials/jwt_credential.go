@@ -6,11 +6,11 @@ package credentials
 import (
 	"context"
 	"errors"
-	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
@@ -67,13 +67,13 @@ func validateJWT(rawToken string) error {
 }
 
 // NewJWTCredential creates a new JWTCredential.
-func NewJWTCredential(client jwtClient, tokenProvider authentication.AccessTokenProvider, allowedHosts []string) (*JWTCredential, error) {
+func NewJWTCredential(client jwtClient, tokenProvider authentication.AccessTokenProvider) (*JWTCredential, error) {
 	c := &JWTCredential{
 		client:        client,
 		tokenProvider: tokenProvider,
 	}
 
-	base := newBaseAccessTokenProvider(allowedHosts)
+	base := newBaseAccessTokenProvider()
 	base.retrieveInitialToken = c.GetToken
 	base.revokeToken = client.revokeToken
 
@@ -102,34 +102,35 @@ func (c *JWTCredential) GetToken(ctx context.Context, uri *url.URL, additionalAu
 	return c.client.acquireTokenByJWT(ctx, assertion)
 }
 
-// NewJWTProvider creates a new AuthenticationProvider for the JWT Bearer Token flow using functional options.
-func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.AccessTokenProvider, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
-	config := &AuthConfig{
-		httpClient: http.DefaultClient,
+// NewJWTProvider creates a new AuthenticationProvider for the JWT Bearer Token flow.
+func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.AccessTokenProvider, opts JWTOptions) (authentication.AuthenticationProvider, error) {
+	if clientID == "" {
+		return nil, snerrors.ErrEmptyClientID
 	}
-	for _, opt := range opts {
-		opt(config)
+	if clientSecret == "" {
+		return nil, snerrors.ErrEmptyClientSecret
+	}
+	if tokenProvider == nil {
+		return nil, snerrors.ErrEmptyTokenProvider
 	}
 
-	authority := Authority(config.baseURL)
-
-	client, err := newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
-		co.httpClient = config.httpClient
+	client, err := newConfidentialClient(clientID, clientSecret, "", func(co *clientOptions) {
+		co.httpClient = opts.HTTPClient
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	snTokenProvider, err := NewJWTCredential(client, tokenProvider, config.allowedHosts)
+	snTokenProvider, err := NewJWTCredential(client, tokenProvider)
 	if err != nil {
 		return nil, err
 	}
 
 	snTokenProvider.clientID = clientID
-	snTokenProvider.Initialize(string(authority))
+	snTokenProvider.SetAllowedHosts(opts.AllowedHosts)
 
-	if config.tokenStore != nil {
-		snTokenProvider.SetTokenStore(config.tokenStore)
+	if opts.TokenStore != nil {
+		snTokenProvider.SetTokenStore(opts.TokenStore)
 	}
 
 	return NewBearerTokenAuthenticationProvider(snTokenProvider), nil

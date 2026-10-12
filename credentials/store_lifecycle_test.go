@@ -98,11 +98,19 @@ func mustInPackageURL(t *testing.T, raw string) *url.URL {
 func newInPackageProvider(t *testing.T, store TokenStore) (authentication.AuthenticationProvider, *ClientCredentialsCredential) {
 	t.Helper()
 	provider, err := NewClientCredentialsProvider(revokeTestClientID, "test-secret",
-		WithURL(revokeTestInstance),
-		WithHTTPClient(&http.Client{Transport: okJSONRoundTripper{body: []byte(revokeTestTokenBody)}}),
-		WithTokenStore(store),
+		ClientCredentialsOptions{
+			CommonOptions: CommonOptions{
+				HTTPClient: &http.Client{Transport: okJSONRoundTripper{body: []byte(revokeTestTokenBody)}},
+				TokenStore: store,
+			},
+		},
 	)
 	require.NoError(t, err)
+
+	// Initialize the provider with the instance URL
+	if prep, ok := provider.(interface{ Initialize(string) }); ok {
+		prep.Initialize(revokeTestInstance)
+	}
 
 	bearer, ok := provider.(*BearerTokenAuthenticationProvider)
 	require.True(t, ok)

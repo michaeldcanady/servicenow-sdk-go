@@ -95,7 +95,7 @@ func TestBearerTokenAuthenticationProvider_Initialize(t *testing.T) {
 	})
 
 	t.Run("BaseAccessTokenProvider records the base URL and derives a host validator", func(t *testing.T) {
-		tokenProvider := newBaseAccessTokenProvider(nil)
+		tokenProvider := newBaseAccessTokenProvider()
 
 		NewBearerTokenAuthenticationProvider(tokenProvider).Initialize("https://dev12345.service-now.com")
 

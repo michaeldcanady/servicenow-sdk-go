@@ -95,7 +95,7 @@ func TestConfidentialClient_AcquireTokenByCode(t *testing.T) {
 				c.oauthClient = test.fake
 			}
 
-			token, err := c.acquireTokenByCode(context.Background(), "code", "https://redirect", "state")
+			token, err := c.acquireTokenByCode(context.Background(), "code", "https://redirect", "state", "verifier")
 
 			if test.wantErr != "" {
 				require.Error(t, err)
@@ -185,7 +185,7 @@ func TestConfidentialClient_GetAuthorizationURL(t *testing.T) {
 				c.oauthClient = test.fake
 			}
 
-			url, err := c.getAuthorizationURL("https://redirect", "state", nil)
+			url, _, err := c.getAuthorizationURL("https://redirect", "state", nil)
 
 			if test.wantErr != "" {
 				require.Error(t, err)
