@@ -108,6 +108,7 @@ func NewExternalOIDCProvider(clientID string, opts ...AuthOption) (authenticatio
 	credential := newExternalOIDCCredential(client, config.allowedHosts, config.port, config.stateGenerator, config.urlOpener, config.serverFactory)
 	credential.Initialize(config.baseURL)
 
+	credential.setClientID(clientID)
 	if config.tokenStore != nil {
 		credential.SetTokenStore(config.tokenStore)
 	}

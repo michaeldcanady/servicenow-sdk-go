@@ -32,6 +32,16 @@ func (p *BearerTokenAuthenticationProvider) Initialize(baseURL string) {
 	}
 }
 
+// Revoke revokes the current token through the underlying token provider. It is
+// a no-op success when the provider does not support revocation.
+func (p *BearerTokenAuthenticationProvider) Revoke(ctx context.Context) error {
+	if revoker, ok := p.tokenProvider.(Revoker); ok {
+		return revoker.Revoke(ctx)
+	}
+
+	return nil
+}
+
 // AuthenticateRequest authenticates the provided RequestInformation.
 func (p *BearerTokenAuthenticationProvider) AuthenticateRequest(ctx context.Context, request *abstractions.RequestInformation, additionalAuthenticationContext map[string]interface{}) error {
 	return p.BaseBearerTokenAuthenticationProvider.AuthenticateRequest(ctx, request, additionalAuthenticationContext)

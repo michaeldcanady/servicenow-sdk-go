@@ -78,6 +78,7 @@ func NewClientCredentialsProvider(clientID, clientSecret string, opts ...AuthOpt
 
 	tokenProvider.Initialize(string(authority))
 
+	tokenProvider.setClientID(clientID)
 	if config.tokenStore != nil {
 		tokenProvider.SetTokenStore(config.tokenStore)
 	}

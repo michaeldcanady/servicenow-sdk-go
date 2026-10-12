@@ -49,6 +49,18 @@ func (p *preparableStubTokenProvider) Initialize(baseURL string) {
 	p.initializeCalls++
 }
 
+// revokingStubTokenProvider is a stubTokenProvider that also implements Revoker.
+type revokingStubTokenProvider struct {
+	stubTokenProvider
+	revokeErr   error
+	revokeCalls int
+}
+
+func (r *revokingStubTokenProvider) Revoke(_ context.Context) error {
+	r.revokeCalls++
+	return r.revokeErr
+}
+
 // newTestRequest builds a RequestInformation with a resolvable URI.
 func newTestRequest() *abstractions.RequestInformation {
 	request := abstractions.NewRequestInformation()
@@ -114,6 +126,29 @@ func TestBearerTokenAuthenticationProvider_Initialize(t *testing.T) {
 		provider := NewBearerTokenAuthenticationProvider(nil)
 
 		assert.NotPanics(t, func() { provider.Initialize("https://dev12345.service-now.com") })
+	})
+}
+
+func TestBearerTokenAuthenticationProvider_Revoke(t *testing.T) {
+	t.Run("delegates to a revoking token provider", func(t *testing.T) {
+		tokenProvider := &revokingStubTokenProvider{}
+		provider := NewBearerTokenAuthenticationProvider(tokenProvider)
+
+		require.NoError(t, provider.Revoke(context.Background()))
+		assert.Equal(t, 1, tokenProvider.revokeCalls)
+	})
+
+	t.Run("revocation error propagates", func(t *testing.T) {
+		tokenProvider := &revokingStubTokenProvider{revokeErr: errors.New("revoke failed")}
+		provider := NewBearerTokenAuthenticationProvider(tokenProvider)
+
+		require.ErrorContains(t, provider.Revoke(context.Background()), "revoke failed")
+	})
+
+	t.Run("non-revoking token provider is a no-op", func(t *testing.T) {
+		provider := NewBearerTokenAuthenticationProvider(&stubTokenProvider{})
+
+		require.NoError(t, provider.Revoke(context.Background()))
 	})
 }
 

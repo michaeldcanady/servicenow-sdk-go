@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"net/url"
+	"sync"
 	"testing"
 	"time"
 
@@ -288,3 +289,113 @@ type fakeTokenStore struct{}
 func (f *fakeTokenStore) Save(_ context.Context, _ string, _ *AccessToken) error { return nil }
 func (f *fakeTokenStore) Load(_ context.Context, _ string) (*AccessToken, error) { return nil, nil }
 func (f *fakeTokenStore) Delete(_ context.Context, _ string) error               { return nil }
+
+// memoryTokenStore is an in-memory TokenStore used to exercise persistence.
+type memoryTokenStore struct {
+	mu     sync.Mutex
+	tokens map[string]*AccessToken
+}
+
+func newMemoryTokenStore() *memoryTokenStore {
+	return &memoryTokenStore{tokens: map[string]*AccessToken{}}
+}
+
+func (m *memoryTokenStore) Save(_ context.Context, clientID string, token *AccessToken) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.tokens[clientID] = token
+	return nil
+}
+
+func (m *memoryTokenStore) Load(_ context.Context, clientID string) (*AccessToken, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	return m.tokens[clientID], nil
+}
+
+func (m *memoryTokenStore) Delete(_ context.Context, clientID string) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	delete(m.tokens, clientID)
+	return nil
+}
+
+func TestBaseAccessTokenProvider_Persistence(t *testing.T) {
+	t.Run("valid persisted token is loaded without retrieval", func(t *testing.T) {
+		store := newMemoryTokenStore()
+		store.tokens["client-id"] = &AccessToken{AccessToken: "persisted", ExpiresAt: time.Now().Add(time.Hour)}
+
+		p := newBaseAccessTokenProvider(nil)
+		p.setClientID("client-id")
+		p.SetTokenStore(store)
+		p.retrieveInitialToken = func(_ context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
+			return nil, errors.New("retrieval should not be called")
+		}
+
+		token, err := p.GetAuthorizationToken(context.Background(), nil, nil)
+		require.NoError(t, err)
+		assert.Equal(t, "persisted", token)
+	})
+
+	t.Run("expired persisted token is refreshed and re-saved", func(t *testing.T) {
+		store := newMemoryTokenStore()
+		store.tokens["client-id"] = &AccessToken{AccessToken: "old", RefreshToken: "refresh", ExpiresAt: time.Now().Add(-time.Minute)}
+
+		p := newBaseAccessTokenProvider(nil)
+		p.setClientID("client-id")
+		p.SetTokenStore(store)
+		p.refreshToken = func(_ context.Context, _ string) (*AccessToken, error) {
+			return &AccessToken{AccessToken: "refreshed", RefreshToken: "refresh-2", ExpiresAt: time.Now().Add(time.Hour)}, nil
+		}
+
+		token, err := p.GetAuthorizationToken(context.Background(), nil, nil)
+		require.NoError(t, err)
+		assert.Equal(t, "refreshed", token)
+		assert.Equal(t, "refreshed", store.tokens["client-id"].AccessToken)
+	})
+
+	t.Run("initial retrieval is persisted", func(t *testing.T) {
+		store := newMemoryTokenStore()
+
+		p := newBaseAccessTokenProvider(nil)
+		p.setClientID("client-id")
+		p.SetTokenStore(store)
+		p.retrieveInitialToken = func(_ context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
+			return &AccessToken{AccessToken: "new", ExpiresAt: time.Now().Add(time.Hour)}, nil
+		}
+
+		token, err := p.GetAuthorizationToken(context.Background(), nil, nil)
+		require.NoError(t, err)
+		assert.Equal(t, "new", token)
+		assert.Equal(t, "new", store.tokens["client-id"].AccessToken)
+	})
+
+	t.Run("revoke deletes the persisted token", func(t *testing.T) {
+		store := newMemoryTokenStore()
+		store.tokens["client-id"] = &AccessToken{AccessToken: "token", ExpiresAt: time.Now().Add(time.Hour)}
+
+		p := newBaseAccessTokenProvider(nil)
+		p.setClientID("client-id")
+		p.SetTokenStore(store)
+		p.token = &AccessToken{AccessToken: "token"}
+		p.revokeToken = func(_ context.Context, _, _ string) error { return nil }
+
+		require.NoError(t, p.Revoke(context.Background()))
+		assert.NotContains(t, store.tokens, "client-id")
+	})
+
+	t.Run("no client id skips persistence", func(t *testing.T) {
+		store := newMemoryTokenStore()
+
+		p := newBaseAccessTokenProvider(nil)
+		p.SetTokenStore(store)
+		p.retrieveInitialToken = func(_ context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
+			return &AccessToken{AccessToken: "new", ExpiresAt: time.Now().Add(time.Hour)}, nil
+		}
+
+		token, err := p.GetAuthorizationToken(context.Background(), nil, nil)
+		require.NoError(t, err)
+		assert.Equal(t, "new", token)
+		assert.Empty(t, store.tokens)
+	})
+}

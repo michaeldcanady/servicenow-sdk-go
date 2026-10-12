@@ -246,13 +246,14 @@ func TestExternalOIDCClient_AcquireTokenByRefreshToken(t *testing.T) {
 }
 
 func TestExternalOIDCClient_RevokeToken(t *testing.T) {
-	t.Run("without a revocation endpoint fails", func(t *testing.T) {
+	t.Run("without a revocation endpoint succeeds as a no-op", func(t *testing.T) {
 		client, err := newExternalOIDCClient("client-id",
 			&oauth2.Endpoints{AuthURL: "https://idp.example.com/authorize", TokenURL: "https://idp.example.com/token"},
 			[]string{"openid"}, false, nil)
 		require.NoError(t, err)
 
-		require.Error(t, client.revokeToken(context.Background(), "token", "access_token"))
+		assert.False(t, client.revocationSupported())
+		require.NoError(t, client.revokeToken(context.Background(), "token", "access_token"))
 	})
 
 	t.Run("with a revocation endpoint succeeds", func(t *testing.T) {
@@ -265,6 +266,7 @@ func TestExternalOIDCClient_RevokeToken(t *testing.T) {
 		client, err := newExternalOIDCClient("client-id", endpoints, []string{"openid"}, false, server.server.Client())
 		require.NoError(t, err)
 
+		assert.True(t, client.revocationSupported())
 		require.NoError(t, client.revokeToken(context.Background(), "token", "access_token"))
 	})
 }

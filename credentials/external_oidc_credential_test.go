@@ -13,7 +13,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -165,9 +164,66 @@ func TestExternalOIDCProvider_RefreshesExpiredToken(t *testing.T) {
 	assert.Equal(t, 1, refreshCalls)
 }
 
+func TestExternalOIDCProvider_PersistsTokensAcrossRestarts(t *testing.T) {
+	idToken := fakeJWT(t, map[string]any{"exp": time.Now().Add(time.Hour).Unix()})
+	idp := newMockIDP(t, func(string) string { return idTokenResponse(idToken) })
+	store := newMemoryTokenStore()
+
+	first := mustTestOIDCProvider(t, idp, nil, WithTokenStore(store))
+	request := newTestRequest()
+	require.NoError(t, first.AuthenticateRequest(context.Background(), request, nil))
+	assert.Equal(t, []string{"Bearer " + idToken}, request.Headers.Get("Authorization"))
+	require.Contains(t, store.tokens, "client-id")
+
+	// A fresh provider sharing the store (simulating a restart) reuses the token
+	// without contacting the identity provider again.
+	second := mustTestOIDCProvider(t, idp, nil, WithTokenStore(store))
+	restarted := newTestRequest()
+	require.NoError(t, second.AuthenticateRequest(context.Background(), restarted, nil))
+	assert.Equal(t, []string{"Bearer " + idToken}, restarted.Headers.Get("Authorization"))
+
+	codeCalls, _ := idp.tokenCalls()
+	assert.Equal(t, 1, codeCalls, "the restarted provider should reuse the persisted token")
+}
+
+func TestExternalOIDCProvider_RevokeClearsTokenWithoutEndpoint(t *testing.T) {
+	idToken := fakeJWT(t, map[string]any{"exp": time.Now().Add(time.Hour).Unix()})
+	idp := newMockIDP(t, func(string) string { return idTokenResponse(idToken) })
+	store := newMemoryTokenStore()
+	provider := mustTestOIDCProvider(t, idp, nil, WithTokenStore(store))
+
+	request := newTestRequest()
+	require.NoError(t, provider.AuthenticateRequest(context.Background(), request, nil))
+	require.Contains(t, store.tokens, "client-id")
+
+	require.NoError(t, provider.Revoke(context.Background()))
+	assert.NotContains(t, store.tokens, "client-id")
+	assert.Equal(t, 0, idp.revocationCalls(), "no revocation endpoint should be contacted")
+
+	again := newTestRequest()
+	require.NoError(t, provider.AuthenticateRequest(context.Background(), again, nil))
+
+	codeCalls, _ := idp.tokenCalls()
+	assert.Equal(t, 2, codeCalls, "revoke should clear the cached token")
+}
+
+func TestExternalOIDCProvider_RevokesAtProviderWithEndpoint(t *testing.T) {
+	idToken := fakeJWT(t, map[string]any{"exp": time.Now().Add(time.Hour).Unix()})
+	idp := newMockIDPWithRevocation(t, func(string) string {
+		return `{"access_token":"` + idToken + `","id_token":"` + idToken + `","token_type":"Bearer","expires_in":3600}`
+	}, true)
+	provider := mustTestOIDCProvider(t, idp, nil)
+
+	request := newTestRequest()
+	require.NoError(t, provider.AuthenticateRequest(context.Background(), request, nil))
+
+	require.NoError(t, provider.Revoke(context.Background()))
+	assert.Equal(t, 1, idp.revocationCalls())
+}
+
 // mustTestOIDCProvider builds an external OIDC provider wired to a mock IdP and a
 // mock redirect server, so no browser or local listener is required.
-func mustTestOIDCProvider(t *testing.T, idp *mockIDP, captured *string, extra ...AuthOption) authentication.AuthenticationProvider {
+func mustTestOIDCProvider(t *testing.T, idp *mockIDP, captured *string, extra ...AuthOption) *BearerTokenAuthenticationProvider {
 	t.Helper()
 
 	server := &mockAuthorizationCodeServer{}
@@ -191,26 +247,42 @@ func mustTestOIDCProvider(t *testing.T, idp *mockIDP, captured *string, extra ..
 
 	provider, err := NewExternalOIDCProvider("client-id", opts...)
 	require.NoError(t, err)
-	return provider
+
+	wrapper, ok := provider.(*BearerTokenAuthenticationProvider)
+	require.True(t, ok)
+
+	return wrapper
 }
 
-// mockIDP serves an OIDC discovery document and a token endpoint, and counts the
-// token requests it receives by grant type.
+// mockIDP serves an OIDC discovery document, a token endpoint, and optionally a
+// revocation endpoint. It counts the requests it receives.
 type mockIDP struct {
 	server       *httptest.Server
 	tokenFunc    func(grantType string) string
+	revoke       bool
 	mu           sync.Mutex
 	codeCalls    int
 	refreshCalls int
+	revokeCalls  int
 }
 
 func newMockIDP(t *testing.T, tokenFunc func(grantType string) string) *mockIDP {
 	t.Helper()
-	idp := &mockIDP{tokenFunc: tokenFunc}
+	return newMockIDPWithRevocation(t, tokenFunc, false)
+}
+
+func newMockIDPWithRevocation(t *testing.T, tokenFunc func(grantType string) string, revoke bool) *mockIDP {
+	t.Helper()
+	idp := &mockIDP{tokenFunc: tokenFunc, revoke: revoke}
 	idp.server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/.well-known/openid-configuration":
-			_, _ = io.WriteString(w, `{"issuer":"`+idp.server.URL+`","authorization_endpoint":"`+idp.server.URL+`/authorize","token_endpoint":"`+idp.server.URL+`/token"}`)
+			document := `{"issuer":"` + idp.server.URL + `","authorization_endpoint":"` + idp.server.URL + `/authorize","token_endpoint":"` + idp.server.URL + `/token"`
+			if idp.revoke {
+				document += `,"revocation_endpoint":"` + idp.server.URL + `/revoke"`
+			}
+			document += `}`
+			_, _ = io.WriteString(w, document)
 		case "/token":
 			_ = r.ParseForm()
 			grant := r.PostForm.Get("grant_type")
@@ -222,6 +294,11 @@ func newMockIDP(t *testing.T, tokenFunc func(grantType string) string) *mockIDP 
 			}
 			idp.mu.Unlock()
 			_, _ = io.WriteString(w, tokenFunc(grant))
+		case "/revoke":
+			idp.mu.Lock()
+			idp.revokeCalls++
+			idp.mu.Unlock()
+			w.WriteHeader(http.StatusOK)
 		default:
 			w.WriteHeader(http.StatusNotFound)
 		}
@@ -234,4 +311,10 @@ func (m *mockIDP) tokenCalls() (code, refresh int) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	return m.codeCalls, m.refreshCalls
+}
+
+func (m *mockIDP) revocationCalls() int {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	return m.revokeCalls
 }
