@@ -16,7 +16,9 @@ import (
 type BaseAccessTokenProvider struct {
 	// token the current valid access token
 	token *AccessToken
-	// mutex ensures only one token operation is happening at a time
+	// inflight is the single token request shared by concurrent callers.
+	inflight *tokenFlight
+	// mutex guards the token, inflight, and configuration fields.
 	mutex                 sync.RWMutex
 	allowedHostsValidator *authentication.AllowedHostsValidator
 	// retrieveInitialToken is a function to get the ServiceNow token.
@@ -29,6 +31,19 @@ type BaseAccessTokenProvider struct {
 	tokenStore TokenStore
 	// baseURL is the base URL for the ServiceNow instance.
 	baseURL string
+	// clientID is the OAuth2 client ID the tokens are requested for.
+	clientID string
+}
+
+// tokenFlight tracks the single in-flight token request so concurrent callers
+// coalesce onto it instead of stampeding the token endpoint.
+type tokenFlight struct {
+	// done is closed once the request completes and the result is published.
+	done chan struct{}
+	// token is the acquired token, valid after done is closed.
+	token *AccessToken
+	// err is the acquisition error, valid after done is closed.
+	err error
 }
 
 func newBaseAccessTokenProvider(allowedHosts []string) *BaseAccessTokenProvider {
@@ -39,6 +54,14 @@ func newBaseAccessTokenProvider(allowedHosts []string) *BaseAccessTokenProvider 
 
 	return &BaseAccessTokenProvider{
 		allowedHostsValidator: validator,
+	}
+}
+
+// storeKey returns the key used to persist tokens for this provider.
+func (p *BaseAccessTokenProvider) storeKey() TokenKey {
+	return TokenKey{
+		Authority: p.baseURL,
+		ClientID:  p.clientID,
 	}
 }
 
@@ -65,13 +88,16 @@ func (p *BaseAccessTokenProvider) SetTokenStore(store TokenStore) {
 	p.tokenStore = store
 }
 
-// Revoke revokes the current access token and refresh token.
+// Revoke revokes the current access token and refresh token and deletes the
+// persisted token.
 func (p *BaseAccessTokenProvider) Revoke(ctx context.Context) error {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
+	// With no in-memory token there is nothing to revoke at the endpoint, but
+	// a token may still be persisted from an earlier run: delete it.
 	if p.token == nil {
-		return nil
+		return p.deleteStoredLocked(ctx)
 	}
 
 	if p.revokeToken == nil {
@@ -91,7 +117,16 @@ func (p *BaseAccessTokenProvider) Revoke(ctx context.Context) error {
 	}
 
 	p.token = nil
-	return nil
+	return p.deleteStoredLocked(ctx)
+}
+
+// deleteStoredLocked removes the persisted token. It must be called with the
+// mutex held. A provider without a store deletes nothing and succeeds.
+func (p *BaseAccessTokenProvider) deleteStoredLocked(ctx context.Context) error {
+	if p.tokenStore == nil {
+		return nil
+	}
+	return p.tokenStore.Delete(ctx, p.storeKey())
 }
 
 // GetAllowedHostsValidator returns the allowed hosts validator.
@@ -106,28 +141,100 @@ func (p *BaseAccessTokenProvider) GetAuthorizationToken(ctx context.Context, uri
 	}
 
 	p.mutex.Lock()
-	defer p.mutex.Unlock()
 
-	if p.token != nil && !p.token.IsExpired() {
-		return p.token.AccessToken, nil
+	// Load a persisted token when we hold nothing in memory yet.
+	if p.token == nil && p.tokenStore != nil {
+		stored, err := p.tokenStore.Load(ctx, p.storeKey())
+		if err != nil {
+			p.mutex.Unlock()
+			return "", fmt.Errorf("token store load failed: %w", err)
+		}
+		p.token = stored
 	}
 
-	if p.token != nil && p.token.RefreshToken != "" && p.refreshToken != nil {
-		if newToken, err := p.refreshToken(ctx, p.token.RefreshToken); err == nil {
-			p.token = newToken
-			return p.token.AccessToken, nil
+	if p.token != nil && !p.token.IsExpired() {
+		token := p.token.AccessToken
+		p.mutex.Unlock()
+		return token, nil
+	}
+
+	// Another caller is already fetching a token: wait for its outcome
+	// instead of starting a second token request.
+	if p.inflight != nil {
+		flight := p.inflight
+		p.mutex.Unlock()
+		return p.await(ctx, flight)
+	}
+
+	// This caller becomes the leader and performs the single token request
+	// without holding the lock.
+	flight := &tokenFlight{done: make(chan struct{})}
+	p.inflight = flight
+
+	refreshToken := ""
+	if p.token != nil {
+		refreshToken = p.token.RefreshToken
+	}
+	p.mutex.Unlock()
+
+	newToken, err := p.fetch(ctx, uri, additionalAuthenticationContext, refreshToken)
+
+	p.mutex.Lock()
+	if err == nil && newToken != nil {
+		p.token = newToken
+		p.persist(ctx, newToken)
+	}
+	flight.token = newToken
+	flight.err = err
+	p.inflight = nil
+	p.mutex.Unlock()
+	close(flight.done)
+
+	if err != nil {
+		return "", err
+	}
+	return newToken.AccessToken, nil
+}
+
+// fetch performs the single token request. It prefers a refresh when the
+// caller holds a refresh token, and falls back to a fresh acquisition.
+func (p *BaseAccessTokenProvider) fetch(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}, refreshToken string) (*AccessToken, error) {
+	if refreshToken != "" && p.refreshToken != nil {
+		if newToken, err := p.refreshToken(ctx, refreshToken); err == nil {
+			return newToken, nil
 		}
 	}
 
 	if p.retrieveInitialToken == nil {
-		return "", fmt.Errorf("token acquisition failed: no initial retrieval function available")
+		return nil, fmt.Errorf("token acquisition failed: no initial retrieval function available")
 	}
 
 	newToken, err := p.retrieveInitialToken(ctx, uri, additionalAuthenticationContext)
 	if err != nil {
-		return "", fmt.Errorf("initial token acquisition failed: %w", err)
+		return nil, fmt.Errorf("initial token acquisition failed: %w", err)
 	}
+	return newToken, nil
+}
 
-	p.token = newToken
-	return p.token.AccessToken, nil
+// await blocks until the in-flight token request completes or ctx is done.
+func (p *BaseAccessTokenProvider) await(ctx context.Context, flight *tokenFlight) (string, error) {
+	select {
+	case <-flight.done:
+		if flight.err != nil {
+			return "", flight.err
+		}
+		return flight.token.AccessToken, nil
+	case <-ctx.Done():
+		return "", ctx.Err()
+	}
+}
+
+// persist stores the token for restart recovery. It must be called with the
+// mutex held. Persistence is best-effort: the token was acquired successfully,
+// so a store failure must not fail the request that triggered the acquisition.
+func (p *BaseAccessTokenProvider) persist(ctx context.Context, token *AccessToken) {
+	if p.tokenStore == nil {
+		return
+	}
+	_ = p.tokenStore.Save(ctx, p.storeKey(), token)
 }
