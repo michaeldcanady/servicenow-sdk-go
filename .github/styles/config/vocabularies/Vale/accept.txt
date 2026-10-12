@@ -81,7 +81,7 @@ GitHub
 (?i)jwk
 (?i)jwks
 (?i)jws
-(?i)jwt
+(?i)jwts?
 (?i)Kiota
 (?i)login
 (?i)mapping
@@ -218,3 +218,6 @@ Godog
 (?i)allowlist
 (?i)mergeable
 (?i)rebase
+(?i)entra
+(?i)idps?('s)?
+(?i)okta('s)?

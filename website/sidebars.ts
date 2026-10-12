@@ -20,6 +20,7 @@ const sidebars: SidebarsConfig = {
         'user-guide/authentication/ropc',
         'user-guide/authentication/auth-code-private',
         'user-guide/authentication/auth-code-public',
+        'user-guide/authentication/external-oidc',
         'user-guide/authentication/basic',
         'user-guide/authentication/client-credentials',
         'user-guide/authentication/jwt-token',
