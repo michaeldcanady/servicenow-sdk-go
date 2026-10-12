@@ -145,10 +145,22 @@ through `errors.Is`.
 
 ## IdP compatibility
 
-| IdP                | Notes                                                                                                                        |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| Microsoft Entra ID | Use the v1 metadata URL on the OIDP record. Entra ID doesn't emit `jti`; turn off JTI verification. The user claim is typically `upn`. |
-| Okta               | Configure the audience and user claim on the OIDP record; the Okta `sub` claim is provider-internal.                          |
-| Auth0              | Custom claims require an Action before the user claim is present in the token.                                                |
-| Google             | Access tokens are opaque, so the OIDP can't validate them; use the ID token.                                                  |
-| ADFS               | Standards-compliant, but no published OIDP walkthrough; verify the configuration before you rely on it.                       |
+ServiceNow's OIDP record accepts either an ID token or a user access token,
+as long as the token is a JWT whose `aud` equals the record's Client ID. The
+table captures the per-provider specifics.
+
+| IdP                | Accepted token                   | OIDP Client ID (`aud`)                     | User claim       | Notes                                                         |
+| ------------------ | -------------------------------- | ------------------------------------------ | ---------------- | ------------------------------------------------------------- |
+| Microsoft Entra ID | ID token (default) or v1 access token | IdP client ID, or `api://{clientId}`   | `upn`            | Use the v1 metadata URL; Entra ID doesn't emit `jti`, so turn off JTI verification |
+| Okta               | ID token                         | IdP client ID                              | `sub`            | ServiceNow publishes an Okta ID-token example                 |
+| Auth0              | ID token or access token         | Client ID, or the Auth0 API identifier     | `sub`            | Custom claims require an Auth0 Action before they appear      |
+| Google             | ID token only                    | IdP client ID                              | `email` or `sub` | Google access tokens are opaque, so the OIDP can't validate them |
+| AD FS              | ID token or access token         | Client ID, or the AD FS resource identifier | `upn` or `email` | Both tokens are JWTs; no ServiceNow walkthrough is published  |
+
+## Sources
+
+- ServiceNow docs, [Configure an OAuth OIDC provider for accepting third-party token](https://www.servicenow.com/docs/r/platform-security/authentication/add-OIDC-entity.html): the record verifies ID tokens; the Client ID must equal the `aud` claim; templates exist for ADFS, Auth0, Azure AD, Google, and Okta.
+- ServiceNow blog, [Federated Token Authentication for ServiceNow API Access (Inbound)](https://www.servicenow.com/community/platform-privacy-security-blog/federated-token-authentication-for-servicenow-api-access-inbound/ba-p/3367827): ServiceNow accepts either ID tokens or access tokens.
+- ServiceNow community, [External OIDC provider with an inbound REST call](https://www.servicenow.com/community/developer-forum/is-it-possible-to-use-an-external-oidc-provider-with-an-inbound/m-p/1673997): for Auth0, set the OIDP Client ID to the token audience, not the client ID.
+- Microsoft Learn, [AD FS OpenID Connect/OAuth concepts](https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/development/ad-fs-openid-connect-oauth-concepts): AD FS issues both an ID token and an access token as JWTs.
+- Google OAuth access tokens are opaque, not JWTs.

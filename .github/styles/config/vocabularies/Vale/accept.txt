@@ -81,7 +81,7 @@ GitHub
 (?i)jwk
 (?i)jwks
 (?i)jws
-(?i)jwt
+(?i)jwts?
 (?i)Kiota
 (?i)login
 (?i)mapping
