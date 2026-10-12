@@ -5,6 +5,8 @@ package credentials
 
 import (
 	"context"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 )
 
 // confidentialClient represents an application that has a client secret.
@@ -15,10 +17,10 @@ type confidentialClient struct {
 // newConfidentialClient creates a new confidentialClient.
 func newConfidentialClient(clientID, clientSecret string, authority Authority, options ...clientOption) (*confidentialClient, error) {
 	if clientID == "" {
-		return nil, ErrEmptyClientID
+		return nil, snerrors.ErrEmptyClientID
 	}
 	if clientSecret == "" {
-		return nil, ErrEmptyClientSecret
+		return nil, snerrors.ErrEmptyClientSecret
 	}
 
 	opts := defaultOptions()
