@@ -13,6 +13,8 @@ type Token struct {
 	ExpiresIn int64 `json:"expires_in"`
 	// RefreshToken is an optional token used to obtain new access tokens.
 	RefreshToken string `json:"refresh_token,omitempty"` //nolint:gosec // G117: DTO field, not a hardcoded credential
+	// IDToken is an optional OpenID Connect ID token returned alongside the access token.
+	IDToken string `json:"id_token,omitempty"` //nolint:gosec // G117: DTO field, not a hardcoded credential
 	// Scope is the list of scopes granted by the token.
 	Scope string `json:"scope,omitempty"`
 	// Raw holds all returned metadata for the token.
