@@ -19,7 +19,7 @@ import (
 
 func _() {
 	// [START quickstart]
-	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
+	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx", credentials.BasicOptions{})
 	client, err := servicenowsdkgo.NewServiceNowServiceClient(
 		servicenowsdkgo.WithAuthenticationProvider(cred),
 		servicenowsdkgo.WithURL("xSDK_SN_URLx"),

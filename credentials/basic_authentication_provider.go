@@ -10,22 +10,32 @@ import (
 	"fmt"
 	"strings"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
+
+// BasicOptions contains options for the Basic authentication provider.
+type BasicOptions struct {
+	CommonOptions
+}
 
 // BasicAuthenticationProvider is an authentication.AuthenticationProvider implementing HTTP
 // Basic authentication with a static username/password pair.
 type BasicAuthenticationProvider struct {
-	username string
-	password string
+	username              string
+	password              string
+	allowedHostsValidator *authentication.AllowedHostsValidator
 }
 
-// NewBasicProvider instantiates a new BasicAuthenticationProvider.
-func NewBasicProvider(username, password string) *BasicAuthenticationProvider {
+// NewBasicProvider creates a new BasicAuthenticationProvider with positional
+// credentials and shared options.
+func NewBasicProvider(username, password string, opts BasicOptions) *BasicAuthenticationProvider {
 	return &BasicAuthenticationProvider{
-		username: username,
-		password: password,
+		username:              username,
+		password:              password,
+		allowedHostsValidator: createAllowedHostsValidator(opts.AllowedHosts),
 	}
 }
 
@@ -40,16 +50,36 @@ func (b *BasicAuthenticationProvider) AuthenticateRequest(context context.Contex
 	}
 
 	if strings.TrimSpace(b.username) == "" {
-		return errors.New("username is empty")
+		return snerrors.ErrEmptyUsername
 	}
 
 	if strings.TrimSpace(b.password) == "" {
-		return errors.New("password is empty")
+		return snerrors.ErrEmptyPassword
+	}
+
+	// Check allowed hosts if configured
+	if b.allowedHostsValidator != nil {
+		uri, err := request.GetUri()
+		if err != nil {
+			return err
+		}
+		if uri != nil && !b.allowedHostsValidator.IsUrlHostValid(uri) {
+			return nil // Host not allowed, skip auth
+		}
 	}
 
 	auth := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", b.username, b.password)))
 
 	request.Headers.Add("Authorization", fmt.Sprintf("Basic %s", auth))
 
+	return nil
+}
+
+// createAllowedHostsValidator creates a host validator from the allowed hosts list.
+func createAllowedHostsValidator(hosts []string) *authentication.AllowedHostsValidator {
+	if len(hosts) > 0 {
+		validator, _ := authentication.NewAllowedHostsValidatorErrorCheck(hosts)
+		return validator
+	}
 	return nil
 }

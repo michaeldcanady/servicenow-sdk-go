@@ -5,9 +5,10 @@ package credentials
 
 import (
 	"context"
-	"net/http"
+
 	"net/url"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
@@ -18,69 +19,65 @@ type clientCredentialsClient interface {
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
 }
 
-// ClientCredentialsCredential implements the OAuth2 Client Credentials flow.
-type ClientCredentialsCredential struct {
-	*BaseAccessTokenProvider
+// clientCredentialsCredential implements the OAuth2 Client Credentials flow.
+type clientCredentialsCredential struct {
+	*baseAccessTokenProvider
 	client clientCredentialsClient
 	scopes []string
 }
 
-// NewClientCredentialsCredential creates a new ClientCredentialsCredential.
-func NewClientCredentialsCredential(client clientCredentialsClient, scopes []string, allowedHosts []string) (*ClientCredentialsCredential, error) {
-	c := &ClientCredentialsCredential{
+// newClientCredentialsCredential creates a new clientCredentialsCredential.
+func newClientCredentialsCredential(client clientCredentialsClient, scopes []string) *clientCredentialsCredential {
+	c := &clientCredentialsCredential{
 		client: client,
 		scopes: scopes,
 	}
 
-	base := newBaseAccessTokenProvider(allowedHosts)
+	base := newBaseAccessTokenProvider()
 	base.retrieveInitialToken = c.GetToken
 	base.refreshToken = client.acquireTokenByRefreshToken
 	base.revokeToken = client.revokeToken
 
-	c.BaseAccessTokenProvider = base
+	c.baseAccessTokenProvider = base
 
-	return c, nil
+	return c
 }
 
 // Initialize initializes the provider and its internal client with the base URL.
-func (c *ClientCredentialsCredential) Initialize(baseURL string) {
-	c.BaseAccessTokenProvider.Initialize(baseURL)
+func (c *clientCredentialsCredential) Initialize(baseURL string) {
+	c.baseAccessTokenProvider.Initialize(baseURL)
 	c.client.Initialize(baseURL)
 }
 
 // GetToken acquires a token using the client credentials.
-func (c *ClientCredentialsCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
+func (c *clientCredentialsCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
 	return c.client.acquireTokenByClientCredentials(ctx, c.scopes)
 }
 
-// NewClientCredentialsProvider creates a new AuthenticationProvider for the Client Credentials flow using functional options.
-func NewClientCredentialsProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
-	config := &AuthConfig{
-		httpClient: http.DefaultClient,
+// NewClientCredentialsProvider creates a new AuthenticationProvider for the Client Credentials flow.
+func NewClientCredentialsProvider(clientID, clientSecret string, opts ClientCredentialsOptions) (authentication.AuthenticationProvider, error) {
+	if clientID == "" {
+		return nil, errors.ErrEmptyClientID
 	}
-	for _, opt := range opts {
-		opt(config)
+	if clientSecret == "" {
+		return nil, errors.ErrEmptyClientSecret
 	}
 
-	authority := Authority(config.baseURL)
-
-	client, err := newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
-		co.httpClient = config.httpClient
+	client, err := newConfidentialClient(clientID, clientSecret, authority(""), func(co *clientOptions) {
+		co.httpClient = opts.HTTPClient
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	tokenProvider, err := NewClientCredentialsCredential(client, config.scopes, config.allowedHosts)
-	if err != nil {
-		return nil, err
+	tokenProvider := newClientCredentialsCredential(client, opts.Scopes)
+
+	tokenProvider.clientID = clientID
+	tokenProvider.SetAllowedHosts(opts.AllowedHosts)
+
+	if opts.TokenStore != nil {
+		tokenProvider.SetTokenStore(opts.TokenStore)
 	}
 
-	tokenProvider.Initialize(string(authority))
-
-	if config.tokenStore != nil {
-		tokenProvider.SetTokenStore(config.tokenStore)
-	}
-
-	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
+	return NewBearerTokenAuthenticationProvider(tokenProvider, BearerOptions{})
 }

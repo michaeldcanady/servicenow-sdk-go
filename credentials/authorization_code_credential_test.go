@@ -8,6 +8,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -19,23 +20,26 @@ var mockAnyContext = mock.Anything
 type authCodeTestClient struct {
 	initializedWith string
 	authURL         string
+	authVerifier    string
 	authURLErr      error
 	acquireToken    *AccessToken
 	acquireErr      error
 	refreshToken    *AccessToken
 	refreshErr      error
 	revokeErr       error
+	lastVerifier    string
 }
 
 func (c *authCodeTestClient) Initialize(baseURL string) {
 	c.initializedWith = baseURL
 }
 
-func (c *authCodeTestClient) getAuthorizationURL(_, _ string, _ []string) (string, error) {
-	return c.authURL, c.authURLErr
+func (c *authCodeTestClient) getAuthorizationURL(_, _ string, _ []string) (string, string, error) {
+	return c.authURL, c.authVerifier, c.authURLErr
 }
 
-func (c *authCodeTestClient) acquireTokenByCode(_ context.Context, _, _, _ string) (*AccessToken, error) {
+func (c *authCodeTestClient) acquireTokenByCode(_ context.Context, _, _, _, verifier string) (*AccessToken, error) {
+	c.lastVerifier = verifier
 	return c.acquireToken, c.acquireErr
 }
 
@@ -119,7 +123,7 @@ func TestAuthorizationCodeCredential_GetToken(t *testing.T) {
 		},
 		{
 			name:   "successful flow returns token",
-			client: &authCodeTestClient{authURL: "https://auth.example.com", acquireToken: &AccessToken{AccessToken: "final"}},
+			client: &authCodeTestClient{authURL: "https://auth.example.com", authVerifier: "test-verifier", acquireToken: &AccessToken{AccessToken: "final"}},
 			serverFactory: authCodeTestServerFactory(func() *mockAuthorizationCodeServer {
 				m := &mockAuthorizationCodeServer{}
 				m.On("GetAddr").Return("http://localhost:5001")
@@ -131,7 +135,7 @@ func TestAuthorizationCodeCredential_GetToken(t *testing.T) {
 		},
 		{
 			name:   "shutdown error propagates when no other error occurred",
-			client: &authCodeTestClient{authURL: "https://auth.example.com", acquireToken: &AccessToken{AccessToken: "final"}},
+			client: &authCodeTestClient{authURL: "https://auth.example.com", authVerifier: "test-verifier", acquireToken: &AccessToken{AccessToken: "final"}},
 			serverFactory: authCodeTestServerFactory(func() *mockAuthorizationCodeServer {
 				m := &mockAuthorizationCodeServer{}
 				m.On("GetAddr").Return("http://localhost:5001")
@@ -150,8 +154,7 @@ func TestAuthorizationCodeCredential_GetToken(t *testing.T) {
 				urlOpener = func(_ string) error { return nil }
 			}
 
-			credential, err := NewAuthorizationCodeCredential(test.client, nil, 0, func() string { return "state" }, urlOpener, test.serverFactory)
-			require.NoError(t, err)
+			credential := newAuthorizationCodeCredential(test.client, 0, func() string { return "state" }, urlOpener, test.serverFactory)
 
 			token, err := credential.GetToken(context.Background(), nil, nil)
 
@@ -162,14 +165,14 @@ func TestAuthorizationCodeCredential_GetToken(t *testing.T) {
 			}
 			require.NoError(t, err)
 			assert.Equal(t, test.wantToken, token)
+			assert.Equal(t, test.client.authVerifier, test.client.lastVerifier, "GetToken must thread the verifier from the authorization URL to the code exchange")
 		})
 	}
 }
 
 func TestAuthorizationCodeCredential_Initialize(t *testing.T) {
 	client := &authCodeTestClient{}
-	credential, err := NewAuthorizationCodeCredential(client, nil, 0, nil, nil, nil)
-	require.NoError(t, err)
+	credential := newAuthorizationCodeCredential(client, 0, nil, nil, nil)
 
 	credential.Initialize("https://dev12345.service-now.com")
 
@@ -178,9 +181,7 @@ func TestAuthorizationCodeCredential_Initialize(t *testing.T) {
 
 func TestNewAuthorizationCodeCredential_Defaults(t *testing.T) {
 	client := &authCodeTestClient{}
-	credential, err := NewAuthorizationCodeCredential(client, nil, 0, nil, nil, nil)
-
-	require.NoError(t, err)
+	credential := newAuthorizationCodeCredential(client, 0, nil, nil, nil)
 	require.NotNil(t, credential)
 	assert.Equal(t, 5001, credential.port)
 	assert.NotNil(t, credential.stateGenerator)
@@ -199,7 +200,7 @@ func TestNewPrivateAuthorizationCodeProvider(t *testing.T) {
 			name:         "empty client id fails",
 			clientID:     "",
 			clientSecret: "secret",
-			wantErr:      ErrEmptyClientID,
+			wantErr:      snerrors.ErrEmptyClientID,
 		},
 		{
 			// NewPrivateAuthorizationCodeProvider still falls back to a public (PKCE) client
@@ -217,7 +218,11 @@ func TestNewPrivateAuthorizationCodeProvider(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			provider, err := NewPrivateAuthorizationCodeProvider(test.clientID, test.clientSecret, WithInstance("dev12345"))
+			provider, err := NewPrivateAuthorizationCodeProvider(test.clientID, test.clientSecret, AuthorizationCodeOptions{
+				CommonOptions: CommonOptions{
+					AllowedHosts: []string{"dev12345.service-now.com"},
+				},
+			})
 
 			if test.wantErr != nil {
 				require.Error(t, err)
@@ -240,7 +245,7 @@ func TestNewPublicAuthorizationCodeProvider(t *testing.T) {
 		{
 			name:     "empty client id fails",
 			clientID: "",
-			wantErr:  ErrEmptyClientID,
+			wantErr:  snerrors.ErrEmptyClientID,
 		},
 		{
 			name:     "valid client id succeeds",
@@ -250,7 +255,11 @@ func TestNewPublicAuthorizationCodeProvider(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			provider, err := NewPublicAuthorizationCodeProvider(test.clientID, WithInstance("dev12345"))
+			provider, err := NewPublicAuthorizationCodeProvider(test.clientID, AuthorizationCodeOptions{
+				CommonOptions: CommonOptions{
+					AllowedHosts: []string{"dev12345.service-now.com"},
+				},
+			})
 
 			if test.wantErr != nil {
 				require.Error(t, err)

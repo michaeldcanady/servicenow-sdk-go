@@ -6,11 +6,11 @@ package credentials
 import (
 	"context"
 	"errors"
-	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
@@ -20,9 +20,9 @@ type jwtClient interface {
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
 }
 
-// JWTCredential implements the OAuth2 JWT Bearer Token flow.
-type JWTCredential struct {
-	*BaseAccessTokenProvider
+// jwtCredential implements the OAuth2 JWT Bearer Token flow.
+type jwtCredential struct {
+	*baseAccessTokenProvider
 	tokenProvider authentication.AccessTokenProvider
 	client        jwtClient
 }
@@ -66,30 +66,30 @@ func validateJWT(rawToken string) error {
 	return nil
 }
 
-// NewJWTCredential creates a new JWTCredential.
-func NewJWTCredential(client jwtClient, tokenProvider authentication.AccessTokenProvider, allowedHosts []string) (*JWTCredential, error) {
-	c := &JWTCredential{
+// newJWTCredential creates a new jwtCredential.
+func newJWTCredential(client jwtClient, tokenProvider authentication.AccessTokenProvider) *jwtCredential {
+	c := &jwtCredential{
 		client:        client,
 		tokenProvider: tokenProvider,
 	}
 
-	base := newBaseAccessTokenProvider(allowedHosts)
+	base := newBaseAccessTokenProvider()
 	base.retrieveInitialToken = c.GetToken
 	base.revokeToken = client.revokeToken
 
-	c.BaseAccessTokenProvider = base
+	c.baseAccessTokenProvider = base
 
-	return c, nil
+	return c
 }
 
 // Initialize initializes the provider and its internal client with the base URL.
-func (c *JWTCredential) Initialize(baseURL string) {
-	c.BaseAccessTokenProvider.Initialize(baseURL)
+func (c *jwtCredential) Initialize(baseURL string) {
+	c.baseAccessTokenProvider.Initialize(baseURL)
 	c.client.Initialize(baseURL)
 }
 
 // GetToken acquires a token using the JWT assertion.
-func (c *JWTCredential) GetToken(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (*AccessToken, error) {
+func (c *jwtCredential) GetToken(ctx context.Context, uri *url.URL, additionalAuthenticationContext map[string]interface{}) (*AccessToken, error) {
 	assertion, err := c.tokenProvider.GetAuthorizationToken(ctx, uri, additionalAuthenticationContext)
 	if err != nil {
 		return nil, err
@@ -102,34 +102,33 @@ func (c *JWTCredential) GetToken(ctx context.Context, uri *url.URL, additionalAu
 	return c.client.acquireTokenByJWT(ctx, assertion)
 }
 
-// NewJWTProvider creates a new AuthenticationProvider for the JWT Bearer Token flow using functional options.
-func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.AccessTokenProvider, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
-	config := &AuthConfig{
-		httpClient: http.DefaultClient,
+// NewJWTProvider creates a new AuthenticationProvider for the JWT Bearer Token flow.
+func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.AccessTokenProvider, opts JWTOptions) (authentication.AuthenticationProvider, error) {
+	if clientID == "" {
+		return nil, snerrors.ErrEmptyClientID
 	}
-	for _, opt := range opts {
-		opt(config)
+	if clientSecret == "" {
+		return nil, snerrors.ErrEmptyClientSecret
+	}
+	if tokenProvider == nil {
+		return nil, snerrors.ErrEmptyTokenProvider
 	}
 
-	authority := Authority(config.baseURL)
-
-	client, err := newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
-		co.httpClient = config.httpClient
+	client, err := newConfidentialClient(clientID, clientSecret, authority(""), func(co *clientOptions) {
+		co.httpClient = opts.HTTPClient
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	snTokenProvider, err := NewJWTCredential(client, tokenProvider, config.allowedHosts)
-	if err != nil {
-		return nil, err
+	snTokenProvider := newJWTCredential(client, tokenProvider)
+
+	snTokenProvider.clientID = clientID
+	snTokenProvider.SetAllowedHosts(opts.AllowedHosts)
+
+	if opts.TokenStore != nil {
+		snTokenProvider.SetTokenStore(opts.TokenStore)
 	}
 
-	snTokenProvider.Initialize(string(authority))
-
-	if config.tokenStore != nil {
-		snTokenProvider.SetTokenStore(config.tokenStore)
-	}
-
-	return NewBearerTokenAuthenticationProvider(snTokenProvider), nil
+	return NewBearerTokenAuthenticationProvider(snTokenProvider, BearerOptions{})
 }

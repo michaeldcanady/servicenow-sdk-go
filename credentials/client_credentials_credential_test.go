@@ -8,6 +8,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -62,8 +63,7 @@ func TestClientCredentialsCredential_GetToken(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			credential, err := NewClientCredentialsCredential(test.client, test.scopes, nil)
-			require.NoError(t, err)
+			credential := newClientCredentialsCredential(test.client, test.scopes)
 
 			token, err := credential.GetToken(context.Background(), nil, nil)
 
@@ -81,8 +81,7 @@ func TestClientCredentialsCredential_GetToken(t *testing.T) {
 
 func TestClientCredentialsCredential_Initialize(t *testing.T) {
 	client := &clientCredsTestClient{}
-	credential, err := NewClientCredentialsCredential(client, nil, nil)
-	require.NoError(t, err)
+	credential := newClientCredentialsCredential(client, nil)
 
 	credential.Initialize("https://dev12345.service-now.com")
 
@@ -100,13 +99,13 @@ func TestNewClientCredentialsProvider(t *testing.T) {
 			name:         "empty client id fails",
 			clientID:     "",
 			clientSecret: "secret",
-			wantErr:      ErrEmptyClientID,
+			wantErr:      snerrors.ErrEmptyClientID,
 		},
 		{
 			name:         "empty client secret fails",
 			clientID:     "id",
 			clientSecret: "",
-			wantErr:      ErrEmptyClientSecret,
+			wantErr:      snerrors.ErrEmptyClientSecret,
 		},
 		{
 			name:         "valid credentials succeed",
@@ -117,7 +116,11 @@ func TestNewClientCredentialsProvider(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			provider, err := NewClientCredentialsProvider(test.clientID, test.clientSecret, WithInstance("dev12345"))
+			provider, err := NewClientCredentialsProvider(test.clientID, test.clientSecret, ClientCredentialsOptions{
+				CommonOptions: CommonOptions{
+					AllowedHosts: []string{"dev12345.service-now.com"},
+				},
+			})
 
 			if test.wantErr != nil {
 				require.Error(t, err)

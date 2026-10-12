@@ -8,6 +8,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
 	"github.com/stretchr/testify/assert"
@@ -23,7 +24,7 @@ func TestNewPublicClient(t *testing.T) {
 		{
 			name:     "empty client id returns error",
 			clientID: "",
-			wantErr:  ErrEmptyClientID,
+			wantErr:  snerrors.ErrEmptyClientID,
 		},
 		{
 			name:     "valid client id succeeds",
@@ -33,7 +34,7 @@ func TestNewPublicClient(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			client, err := newPublicClient(test.clientID, Authority("https://dev12345.service-now.com"))
+			client, err := newPublicClient(test.clientID, authority("https://dev12345.service-now.com"))
 
 			if test.wantErr != nil {
 				require.Error(t, err)
@@ -87,7 +88,7 @@ func TestPublicClient_AcquireTokenByCode(t *testing.T) {
 				c.oauthClient = test.fake
 			}
 
-			token, err := c.acquireTokenByCode(context.Background(), "code", "https://redirect", "state")
+			token, err := c.acquireTokenByCode(context.Background(), "code", "https://redirect", "state", "verifier")
 
 			if test.wantErr != "" {
 				require.Error(t, err)
@@ -132,7 +133,7 @@ func TestPublicClient_GenerateChallenge(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			c := &publicClient{baseClient: &baseClient{clientID: "id"}, method: test.method}
 
-			challenge, err := c.generateChallenge()
+			challenge, verifier, err := c.generateChallenge()
 
 			if test.wantErr {
 				require.Error(t, err)
@@ -141,11 +142,11 @@ func TestPublicClient_GenerateChallenge(t *testing.T) {
 			require.NoError(t, err)
 			if test.wantEmpty {
 				assert.Empty(t, challenge)
-				assert.Empty(t, c.verifier)
+				assert.Empty(t, verifier)
 				return
 			}
 			assert.NotEmpty(t, challenge)
-			assert.NotEmpty(t, c.verifier)
+			assert.NotEmpty(t, verifier)
 		})
 	}
 }
@@ -191,7 +192,7 @@ func TestPublicClient_GetAuthorizationURL(t *testing.T) {
 				c.oauthClient = test.fake
 			}
 
-			url, err := c.getAuthorizationURL("https://redirect", "state", nil)
+			url, _, err := c.getAuthorizationURL("https://redirect", "state", nil)
 
 			if test.wantErr != "" {
 				require.Error(t, err)

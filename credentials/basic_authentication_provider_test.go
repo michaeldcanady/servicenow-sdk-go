@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -21,6 +22,7 @@ func TestBasicAuthenticationProvider_AuthenticateRequest(t *testing.T) {
 		password       string
 		ctx            context.Context
 		wantErr        bool
+		wantErrIs      error
 		expectedHeader string
 	}{
 		{
@@ -32,18 +34,20 @@ func TestBasicAuthenticationProvider_AuthenticateRequest(t *testing.T) {
 			expectedHeader: fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte("admin:password"))),
 		},
 		{
-			name:     "Empty Username",
-			username: "",
-			password: "password",
-			ctx:      context.Background(),
-			wantErr:  true,
+			name:      "Empty Username",
+			username:  "",
+			password:  "password",
+			ctx:       context.Background(),
+			wantErr:   true,
+			wantErrIs: snerrors.ErrEmptyUsername,
 		},
 		{
-			name:     "Empty Password",
-			username: "admin",
-			password: "",
-			ctx:      context.Background(),
-			wantErr:  true,
+			name:      "Empty Password",
+			username:  "admin",
+			password:  "",
+			ctx:       context.Background(),
+			wantErr:   true,
+			wantErrIs: snerrors.ErrEmptyPassword,
 		},
 		{
 			name:     "Cancelled Context",
@@ -60,12 +64,14 @@ func TestBasicAuthenticationProvider_AuthenticateRequest(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			provider := NewBasicProvider(tt.username, tt.password)
+			provider := NewBasicProvider(tt.username, tt.password, BasicOptions{})
 			request := abstractions.NewRequestInformation()
 
 			err := provider.AuthenticateRequest(tt.ctx, request, nil)
 
-			if tt.wantErr {
+			if tt.wantErrIs != nil {
+				require.ErrorIs(t, err, tt.wantErrIs)
+			} else if tt.wantErr {
 				assert.Error(t, err)
 			} else {
 				require.NoError(t, err)

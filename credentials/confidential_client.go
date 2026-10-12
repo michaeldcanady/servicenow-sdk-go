@@ -5,6 +5,8 @@ package credentials
 
 import (
 	"context"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 )
 
 // confidentialClient represents an application that has a client secret.
@@ -13,12 +15,12 @@ type confidentialClient struct {
 }
 
 // newConfidentialClient creates a new confidentialClient.
-func newConfidentialClient(clientID, clientSecret string, authority Authority, options ...clientOption) (*confidentialClient, error) {
+func newConfidentialClient(clientID, clientSecret string, authority authority, options ...clientOption) (*confidentialClient, error) {
 	if clientID == "" {
-		return nil, ErrEmptyClientID
+		return nil, snerrors.ErrEmptyClientID
 	}
 	if clientSecret == "" {
-		return nil, ErrEmptyClientSecret
+		return nil, snerrors.ErrEmptyClientSecret
 	}
 
 	opts := defaultOptions()
@@ -42,12 +44,12 @@ func newConfidentialClient(clientID, clientSecret string, authority Authority, o
 }
 
 // acquireTokenByCode acquires a token using the authorization code flow.
-func (c *confidentialClient) acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error) {
+func (c *confidentialClient) acquireTokenByCode(ctx context.Context, code, redirectURI, state, verifier string) (*AccessToken, error) {
 	client, err := c.getOAuthClient()
 	if err != nil {
 		return nil, err
 	}
-	token, err := client.ExchangeCode(ctx, code, redirectURI, "", state)
+	token, err := client.ExchangeCode(ctx, code, redirectURI, verifier, state)
 	if err != nil {
 		return nil, err
 	}
@@ -68,12 +70,16 @@ func (c *confidentialClient) acquireTokenByClientCredentials(ctx context.Context
 }
 
 // getAuthorizationURL returns the authorization URL for the authorization code flow.
-func (c *confidentialClient) getAuthorizationURL(redirectURI, state string, scopes []string) (string, error) {
+func (c *confidentialClient) getAuthorizationURL(redirectURI, state string, scopes []string) (string, string, error) {
 	client, err := c.getOAuthClient()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return client.AuthCodeURL(redirectURI, state, "", "", scopes)
+	authURL, err := client.AuthCodeURL(redirectURI, state, "", "", scopes)
+	if err != nil {
+		return "", "", err
+	}
+	return authURL, "", nil
 }
 
 func (c *confidentialClient) Initialize(baseURL string) {

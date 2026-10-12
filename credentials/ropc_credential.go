@@ -5,9 +5,10 @@ package credentials
 
 import (
 	"context"
-	"net/http"
+
 	"net/url"
 
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
@@ -18,71 +19,75 @@ type ropcClient interface {
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
 }
 
-// ROPCCredential implements the ROPC (Resource Owner Password Credentials) flow.
-type ROPCCredential struct {
-	*BaseAccessTokenProvider
+// ropcCredential implements the ROPC (Resource Owner Password Credentials) flow.
+type ropcCredential struct {
+	*baseAccessTokenProvider
 	client   ropcClient
 	username string
 	password string
 }
 
-// NewROPCCredential creates a new ROPCCredential.
-func NewROPCCredential(client ropcClient, username, password string, allowedHosts []string) (*ROPCCredential, error) {
-	c := &ROPCCredential{
+// newROPCCredential creates a new ropcCredential.
+func newROPCCredential(client ropcClient, username, password string) *ropcCredential {
+	c := &ropcCredential{
 		client:   client,
 		username: username,
 		password: password,
 	}
 
-	base := newBaseAccessTokenProvider(allowedHosts)
+	base := newBaseAccessTokenProvider()
 	base.retrieveInitialToken = c.GetToken
 	base.refreshToken = client.acquireTokenByRefreshToken
 	base.revokeToken = client.revokeToken
 
-	c.BaseAccessTokenProvider = base
+	c.baseAccessTokenProvider = base
 
-	return c, nil
+	return c
 }
 
 // Initialize initializes the provider and its internal client with the base URL.
-func (c *ROPCCredential) Initialize(baseURL string) {
-	c.BaseAccessTokenProvider.Initialize(baseURL)
+func (c *ropcCredential) Initialize(baseURL string) {
+	c.baseAccessTokenProvider.Initialize(baseURL)
 	c.client.Initialize(baseURL)
 }
 
 // GetToken acquires a token using the username and password.
-func (c *ROPCCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
+func (c *ropcCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (*AccessToken, error) {
 	return c.client.acquireTokenByUsernamePassword(ctx, c.username, c.password)
 }
 
-// NewROPCProvider creates a new AuthenticationProvider for the ROPC flow using functional options.
-func NewROPCProvider(clientID, clientSecret, username, password string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
-	config := &AuthConfig{
-		httpClient: http.DefaultClient,
+// NewROPCProvider creates a new AuthenticationProvider for the ROPC flow.
+// The ROPC flow is available but discouraged; see the package documentation
+// for why you should prefer other flows (ADR-016).
+func NewROPCProvider(clientID, clientSecret, username, password string, opts ROPCOptions) (authentication.AuthenticationProvider, error) {
+	if clientID == "" {
+		return nil, errors.ErrEmptyClientID
 	}
-	for _, opt := range opts {
-		opt(config)
+	if clientSecret == "" {
+		return nil, errors.ErrEmptyClientSecret
+	}
+	if username == "" {
+		return nil, errors.ErrEmptyUsername
+	}
+	if password == "" {
+		return nil, errors.ErrEmptyPassword
 	}
 
-	authority := Authority(config.baseURL)
-
-	client, err := newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
-		co.httpClient = config.httpClient
+	client, err := newConfidentialClient(clientID, clientSecret, authority(""), func(co *clientOptions) {
+		co.httpClient = opts.HTTPClient
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	tokenProvider, err := NewROPCCredential(client, username, password, config.allowedHosts)
-	if err != nil {
-		return nil, err
+	tokenProvider := newROPCCredential(client, username, password)
+
+	tokenProvider.clientID = clientID
+	tokenProvider.SetAllowedHosts(opts.AllowedHosts)
+
+	if opts.TokenStore != nil {
+		tokenProvider.SetTokenStore(opts.TokenStore)
 	}
 
-	tokenProvider.Initialize(string(authority))
-
-	if config.tokenStore != nil {
-		tokenProvider.SetTokenStore(config.tokenStore)
-	}
-
-	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
+	return NewBearerTokenAuthenticationProvider(tokenProvider, BearerOptions{})
 }

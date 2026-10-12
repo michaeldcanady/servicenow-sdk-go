@@ -8,6 +8,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -24,13 +25,13 @@ func TestNewConfidentialClient(t *testing.T) {
 			name:         "empty client id returns error",
 			clientID:     "",
 			clientSecret: "secret",
-			wantErr:      ErrEmptyClientID,
+			wantErr:      snerrors.ErrEmptyClientID,
 		},
 		{
 			name:         "empty client secret returns error",
 			clientID:     "id",
 			clientSecret: "",
-			wantErr:      ErrEmptyClientSecret,
+			wantErr:      snerrors.ErrEmptyClientSecret,
 		},
 		{
 			name:         "valid credentials succeed",
@@ -41,7 +42,7 @@ func TestNewConfidentialClient(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			client, err := newConfidentialClient(test.clientID, test.clientSecret, Authority("https://dev12345.service-now.com"))
+			client, err := newConfidentialClient(test.clientID, test.clientSecret, authority("https://dev12345.service-now.com"))
 
 			if test.wantErr != nil {
 				require.Error(t, err)
@@ -94,7 +95,7 @@ func TestConfidentialClient_AcquireTokenByCode(t *testing.T) {
 				c.oauthClient = test.fake
 			}
 
-			token, err := c.acquireTokenByCode(context.Background(), "code", "https://redirect", "state")
+			token, err := c.acquireTokenByCode(context.Background(), "code", "https://redirect", "state", "verifier")
 
 			if test.wantErr != "" {
 				require.Error(t, err)
@@ -184,7 +185,7 @@ func TestConfidentialClient_GetAuthorizationURL(t *testing.T) {
 				c.oauthClient = test.fake
 			}
 
-			url, err := c.getAuthorizationURL("https://redirect", "state", nil)
+			url, _, err := c.getAuthorizationURL("https://redirect", "state", nil)
 
 			if test.wantErr != "" {
 				require.Error(t, err)

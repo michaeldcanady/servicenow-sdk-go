@@ -19,7 +19,7 @@ import "github.com/microsoft/kiota-abstractions-go/authentication"
 
 func _() {
 	// [START auth_basic_admin]
-	credAdmin := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
+	credAdmin := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx", credentials.BasicOptions{})
 	// [END auth_basic_admin]
 
 	// [START client_init_panic]
@@ -33,7 +33,7 @@ func _() {
 	// [END client_init_panic]
 
 	// [START auth_basic]
-	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
+	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx", credentials.BasicOptions{})
 	// [END auth_basic]
 
 	// You'll need your Client ID.
@@ -61,7 +61,7 @@ func _() {
 
 func authBasicFull() {
 	// [START auth_basic_full]
-	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
+	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx", credentials.BasicOptions{})
 
 	client, err := servicenowsdkgo.NewServiceNowServiceClient(
 		servicenowsdkgo.WithAuthenticationProvider(cred),
