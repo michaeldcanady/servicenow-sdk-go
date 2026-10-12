@@ -56,20 +56,8 @@ func (c *publicClient) acquireTokenByCode(ctx context.Context, code, redirectURI
 }
 
 func (c *publicClient) generateChallenge() (string, error) {
-	if c.method == pkce.MethodUnset {
-		return "", nil
-	}
-
-	gen := pkce.NewVerifierGenerator(pkce.DefaultVerifierEntropy)
-
-	verifier, err := gen.Generate()
-	if err != nil {
-		return "", err
-	}
-
+	challenge, verifier, err := generatePKCEChallenge(c.method)
 	c.verifier = verifier
-
-	challenge, err := pkce.NewPKCEChallenge(c.method, verifier)
 	if err != nil {
 		return "", err
 	}
