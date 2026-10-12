@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"strings"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
@@ -40,11 +41,11 @@ func (b *BasicAuthenticationProvider) AuthenticateRequest(context context.Contex
 	}
 
 	if strings.TrimSpace(b.username) == "" {
-		return errors.New("username is empty")
+		return snerrors.ErrEmptyUsername
 	}
 
 	if strings.TrimSpace(b.password) == "" {
-		return errors.New("password is empty")
+		return snerrors.ErrEmptyPassword
 	}
 
 	auth := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", b.username, b.password)))
