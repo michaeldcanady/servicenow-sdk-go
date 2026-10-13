@@ -39,7 +39,7 @@ updates:
   - package-ecosystem: "devcontainers"
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
     cooldown:
       default-days: 7
 
@@ -49,3 +49,8 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 7
+    groups:
+      codeql-action:
+        update-types:
+          - security-updates
+    open-pull-requests-limit: 5
