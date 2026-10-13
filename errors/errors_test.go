@@ -36,6 +36,11 @@ func TestSentinels_ErrorsIs(t *testing.T) {
 		"ErrWrongResponseType":       snerrors.ErrWrongResponseType,
 		"ErrParsing":                 snerrors.ErrParsing,
 		"ErrEmptyURI":                snerrors.ErrEmptyURI,
+		"ErrEmptyBaseURL":            snerrors.ErrEmptyBaseURL,
+		"ErrEmptyClientID":           snerrors.ErrEmptyClientID,
+		"ErrEmptyClientSecret":       snerrors.ErrEmptyClientSecret,
+		"ErrEmptyUsername":           snerrors.ErrEmptyUsername,
+		"ErrEmptyPassword":           snerrors.ErrEmptyPassword,
 		"ErrNilCallback":             snerrors.ErrNilCallback,
 		"ErrNilParams":               snerrors.ErrNilParams,
 	}
@@ -73,6 +78,11 @@ func TestSentinels_Distinct(t *testing.T) {
 		snerrors.ErrWrongResponseType,
 		snerrors.ErrParsing,
 		snerrors.ErrEmptyURI,
+		snerrors.ErrEmptyBaseURL,
+		snerrors.ErrEmptyClientID,
+		snerrors.ErrEmptyClientSecret,
+		snerrors.ErrEmptyUsername,
+		snerrors.ErrEmptyPassword,
 		snerrors.ErrNilCallback,
 		snerrors.ErrNilParams,
 	}
@@ -84,6 +94,29 @@ func TestSentinels_Distinct(t *testing.T) {
 			}
 			assert.NotErrorIsf(t, a, b, "sentinel %d (%v) should not satisfy errors.Is against distinct sentinel %d (%v)", i, a, j, b)
 		}
+	}
+}
+
+func TestSentinels_EmptyCredentialMessages(t *testing.T) {
+	want := map[string]string{
+		"ErrEmptyClientID":     "clientId is empty",
+		"ErrEmptyClientSecret": "clientSecret is empty",
+		"ErrEmptyBaseURL":      "baseURL is empty",
+		"ErrEmptyUsername":     "username is empty",
+		"ErrEmptyPassword":     "password is empty",
+	}
+	sentinels := map[string]error{
+		"ErrEmptyClientID":     snerrors.ErrEmptyClientID,
+		"ErrEmptyClientSecret": snerrors.ErrEmptyClientSecret,
+		"ErrEmptyBaseURL":      snerrors.ErrEmptyBaseURL,
+		"ErrEmptyUsername":     snerrors.ErrEmptyUsername,
+		"ErrEmptyPassword":     snerrors.ErrEmptyPassword,
+	}
+
+	for name, sentinel := range sentinels {
+		t.Run(name, func(t *testing.T) {
+			assert.EqualError(t, sentinel, want[name])
+		})
 	}
 }
 

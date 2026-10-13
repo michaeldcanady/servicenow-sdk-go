@@ -152,14 +152,14 @@ func TestWithScopes(t *testing.T) {
 // TODO: should be a Mock token store
 type optionsFakeTokenStore struct{}
 
-func (f *optionsFakeTokenStore) Save(_ context.Context, _ string, _ *AccessToken) error {
+func (f *optionsFakeTokenStore) Save(_ context.Context, _ TokenKey, _ *AccessToken) error {
 	return nil
 }
 
-func (f *optionsFakeTokenStore) Load(_ context.Context, _ string) (*AccessToken, error) {
+func (f *optionsFakeTokenStore) Load(_ context.Context, _ TokenKey) (*AccessToken, error) {
 	return nil, nil
 }
 
-func (f *optionsFakeTokenStore) Delete(_ context.Context, _ string) error {
+func (f *optionsFakeTokenStore) Delete(_ context.Context, _ TokenKey) error {
 	return nil
 }

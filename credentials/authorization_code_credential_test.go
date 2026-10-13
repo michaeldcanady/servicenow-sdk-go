@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
@@ -207,7 +208,7 @@ func TestNewPrivateAuthorizationCodeProvider(t *testing.T) {
 			name:         "empty client id fails",
 			clientID:     "",
 			clientSecret: "secret",
-			wantErr:      ErrEmptyClientID,
+			wantErr:      snerrors.ErrEmptyClientID,
 		},
 		{
 			// NewPrivateAuthorizationCodeProvider still falls back to a public (PKCE) client
@@ -295,7 +296,7 @@ func TestNewPublicAuthorizationCodeProvider(t *testing.T) {
 		{
 			name:     "empty client id fails",
 			clientID: "",
-			wantErr:  ErrEmptyClientID,
+			wantErr:  snerrors.ErrEmptyClientID,
 		},
 		{
 			name:     "valid client id succeeds",

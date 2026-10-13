@@ -6,35 +6,48 @@ package credentials
 import (
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAccessToken_IsExpired(t *testing.T) {
+	const skewBuffer = 20 * time.Second
+
 	tests := []struct {
 		name     string
-		token    AccessToken
+		token    *AccessToken
 		expected bool
 	}{
 		{
-			name: "ExpiredToken",
-			token: AccessToken{
-				ExpiresAt: time.Now().Add(-time.Minute), // An expired token
-			},
+			name:     "nil receiver is not expired",
+			token:    nil,
+			expected: false,
+		},
+		{
+			name:     "expired token",
+			token:    &AccessToken{ExpiresAt: time.Now().Add(-time.Minute)},
 			expected: true,
 		},
 		{
-			name: "NonExpiredToken",
-			token: AccessToken{
-				ExpiresAt: time.Now().Add(time.Minute), // A non-expired token
-			},
+			name:     "non-expired token",
+			token:    &AccessToken{ExpiresAt: time.Now().Add(time.Minute)},
+			expected: false,
+		},
+		{
+			name:     "token within the clock-skew buffer is expired",
+			token:    &AccessToken{ExpiresAt: time.Now().Add(skewBuffer / 2)},
+			expected: true,
+		},
+		{
+			name:     "token beyond the clock-skew buffer is valid",
+			token:    &AccessToken{ExpiresAt: time.Now().Add(skewBuffer * 2)},
 			expected: false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.token.IsExpired(); got != tt.expected {
-				t.Errorf("AccessToken.IsExpired() = %v, expected %v", got, tt.expected)
-			}
+			assert.Equal(t, tt.expected, tt.token.IsExpired())
 		})
 	}
 }

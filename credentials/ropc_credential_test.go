@@ -8,6 +8,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -107,13 +108,13 @@ func TestNewROPCProvider(t *testing.T) {
 			name:         "empty client id fails",
 			clientID:     "",
 			clientSecret: "secret",
-			wantErr:      ErrEmptyClientID,
+			wantErr:      snerrors.ErrEmptyClientID,
 		},
 		{
 			name:         "empty client secret fails",
 			clientID:     "id",
 			clientSecret: "",
-			wantErr:      ErrEmptyClientSecret,
+			wantErr:      snerrors.ErrEmptyClientSecret,
 		},
 		{
 			name:         "valid credentials succeed",
