@@ -7,14 +7,14 @@ import (
 	"context"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
 )
 
 // publicClient represents an application that does not have a client secret.
 type publicClient struct {
 	*baseClient
-	method   pkce.Method
-	verifier string
+	method pkce.Method
 }
 
 // newPublicClient creates a new publicClient.
@@ -32,6 +32,7 @@ func newPublicClient(clientID string, authority Authority, options ...clientOpti
 		baseClient: &baseClient{
 			clientID:   clientID,
 			httpClient: opts.httpClient,
+			authMethod: oauth2.AuthMethodNone,
 		},
 		method: opts.method,
 	}
@@ -44,52 +45,59 @@ func newPublicClient(clientID string, authority Authority, options ...clientOpti
 }
 
 // acquireTokenByCode acquires a token using the authorization code flow.
-func (c *publicClient) acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error) {
+func (c *publicClient) acquireTokenByCode(ctx context.Context, code, redirectURI, state, verifier string) (*AccessToken, error) {
 	client, err := c.getOAuthClient()
 	if err != nil {
 		return nil, err
 	}
-	token, err := client.ExchangeCode(ctx, code, redirectURI, c.verifier, state)
+	token, err := client.ExchangeCode(ctx, code, redirectURI, verifier, state)
 	if err != nil {
 		return nil, err
 	}
 	return convertToken(token), nil
 }
 
-func (c *publicClient) generateChallenge() (string, error) {
+// generateChallenge creates a PKCE challenge and the verifier it was derived
+// from. The verifier is returned to the caller rather than stored on the
+// client so each authorization presents its own proof.
+func (c *publicClient) generateChallenge() (string, string, error) {
 	if c.method == pkce.MethodUnset {
-		return "", nil
+		return "", "", nil
 	}
 
 	gen := pkce.NewVerifierGenerator(pkce.DefaultVerifierEntropy)
 
 	verifier, err := gen.Generate()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-
-	c.verifier = verifier
 
 	challenge, err := pkce.NewPKCEChallenge(c.method, verifier)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return challenge, nil
+	return challenge, verifier, nil
 }
 
-// getAuthorizationURL returns the authorization URL for the authorization code flow.
-func (c *publicClient) getAuthorizationURL(redirectURI, state string, scopes []string) (string, error) {
+// getAuthorizationURL returns the authorization URL for the authorization code flow
+// along with the PKCE verifier that must be presented when exchanging its code.
+func (c *publicClient) getAuthorizationURL(redirectURI, state string, scopes []string) (string, string, error) {
 	client, err := c.getOAuthClient()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	challenge, err := c.generateChallenge()
+	challenge, verifier, err := c.generateChallenge()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return client.AuthCodeURL(redirectURI, state, challenge, c.method.String(), scopes)
+	authURL, err := client.AuthCodeURL(redirectURI, state, challenge, c.method.String(), scopes)
+	if err != nil {
+		return "", "", err
+	}
+
+	return authURL, verifier, nil
 }
 
 func (c *publicClient) Initialize(baseURL string) {

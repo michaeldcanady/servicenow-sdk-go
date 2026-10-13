@@ -21,8 +21,8 @@ var _ authentication.AccessTokenProvider = (*AuthorizationCodeCredential)(nil)
 
 type authorizationCodeClient interface {
 	Initialize(baseURL string)
-	getAuthorizationURL(redirectURI, state string, scopes []string) (string, error)
-	acquireTokenByCode(ctx context.Context, code, redirectURI, state string) (*AccessToken, error)
+	getAuthorizationURL(redirectURI, state string, scopes []string) (string, string, error)
+	acquireTokenByCode(ctx context.Context, code, redirectURI, state, verifier string) (*AccessToken, error)
 	acquireTokenByRefreshToken(ctx context.Context, refreshToken string) (*AccessToken, error)
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
 }
@@ -104,7 +104,7 @@ func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, 
 		}
 	}()
 
-	authURL, err := c.client.getAuthorizationURL(server.GetAddr(), state, nil)
+	authURL, verifier, err := c.client.getAuthorizationURL(server.GetAddr(), state, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +118,7 @@ func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, 
 		return nil, err
 	}
 
-	token, err = c.client.acquireTokenByCode(authCtx, code, server.GetAddr(), state)
+	token, err = c.client.acquireTokenByCode(authCtx, code, server.GetAddr(), state, verifier)
 	if err != nil {
 		return nil, err
 	}
