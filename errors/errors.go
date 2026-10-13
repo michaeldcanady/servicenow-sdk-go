@@ -38,21 +38,26 @@ var (
 	ErrEmptyUsername           = errors.New("username is empty")
 	ErrEmptyPassword           = errors.New("password is empty")
 	ErrNilWriter               = errors.New("serialization writer is nil")
-	ErrEmptyTokenProvider  = errors.New("tokenProvider is empty")
+	ErrEmptyTokenProvider      = errors.New("tokenProvider is empty")
 	// ErrUnknownEnumValue reports a wire value that does not correspond to any member of
 	// an enum. Parse<Enum> functions wrap this with the enum name and the offending value,
 	// so callers can match the class of failure with errors.Is regardless of which enum
 	// produced it.
 	ErrUnknownEnumValue = errors.New("unknown enum value")
 
-// ErrOIDCDiscoveryFailed reports that the OIDC discovery document could not be fetched or parsed.
-ErrOIDCDiscoveryFailed = errors.New("OIDC discovery failed")
+	// ErrOIDCDiscoveryFailed reports that the OIDC discovery document could not be fetched or parsed.
+	ErrOIDCDiscoveryFailed = errors.New("OIDC discovery failed")
 
-// ErrOIDCDiscoveryMissingEndpoint reports that a required endpoint is missing from the discovery document.
-ErrOIDCDiscoveryMissingEndpoint = errors.New("OIDC discovery document missing required endpoint")
+	// ErrOIDCDiscoveryMissingEndpoint reports that a required endpoint is missing from the discovery document.
+	ErrOIDCDiscoveryMissingEndpoint = errors.New("OIDC discovery document missing required endpoint")
 
-// ErrOIDCDiscoveryIssuerMismatch reports that the discovery document's issuer does not match the expected issuer.
-ErrOIDCDiscoveryIssuerMismatch = errors.New("OIDC discovery document issuer mismatch")
+	// ErrOIDCDiscoveryIssuerMismatch reports that the discovery document's issuer does not match the expected issuer.
+	ErrOIDCDiscoveryIssuerMismatch = errors.New("OIDC discovery document issuer mismatch")
+
+	// ErrRevocationEndpointNotSet reports that the authorization server has no
+	// revocation endpoint, so no revocation request can be sent. Callers treat
+	// this as a best-effort success and clear local token state.
+	ErrRevocationEndpointNotSet = errors.New("revocation endpoint is not set")
 )
 
 // NewValidationError creates a standardized validation error message.

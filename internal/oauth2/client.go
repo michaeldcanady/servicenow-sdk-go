@@ -14,6 +14,8 @@ import (
 	"net/url"
 	"strings"
 	"time"
+
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 )
 
 // Client is a generic OAuth2 client that handles various grant types and management operations.
@@ -283,7 +285,7 @@ func (c *Client) ExchangeDeviceCode(ctx context.Context, deviceCode string) (*To
 // Revoke invalidates the provided token (RFC 7009).
 func (c *Client) Revoke(ctx context.Context, token, tokenTypeHint string) error {
 	if c.Endpoints == nil || strings.TrimSpace(c.Endpoints.RevocationURL) == "" {
-		return errors.New("revocation endpoint is not set")
+		return snerrors.ErrRevocationEndpointNotSet
 	}
 
 	params := url.Values{}

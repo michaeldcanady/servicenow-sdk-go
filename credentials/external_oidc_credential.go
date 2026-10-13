@@ -5,6 +5,7 @@ package credentials
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -192,8 +193,8 @@ func (c *externalOIDCCredential) refreshTokenFunc(ctx context.Context, refreshTo
 func (c *externalOIDCCredential) revokeTokenFunc(ctx context.Context, token, tokenTypeHint string) error {
 	err := c.client.revokeToken(ctx, token, tokenTypeHint)
 	if err != nil {
-		// Check if the error is because the revocation endpoint is not set
-		if strings.Contains(err.Error(), "revocation endpoint is not set") {
+		// A missing revocation endpoint is a best-effort success: clear local state.
+		if errors.Is(err, snerrors.ErrRevocationEndpointNotSet) {
 			// Best-effort: clear local state and succeed
 			c.tokenMutex.Lock()
 			c.idToken = ""
@@ -211,10 +212,10 @@ func (c *externalOIDCCredential) revokeTokenFunc(ctx context.Context, token, tok
 	return nil
 }
 
-// extractIDToken extracts the ID token from the token response.
+// extractIDToken returns the ID token from the token response.
 func extractIDToken(token *AccessToken) string {
-	// The ID token is not currently exposed in the AccessToken struct.
-	// This would need to be passed through from the OAuth2 layer.
-	// For now, return empty - the caller would need to handle this.
-	return ""
+	if token == nil {
+		return ""
+	}
+	return token.IDToken
 }
