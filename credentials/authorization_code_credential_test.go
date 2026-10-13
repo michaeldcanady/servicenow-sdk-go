@@ -254,13 +254,18 @@ func TestPublicAuthorizationCodeProvider_EndToEnd(t *testing.T) {
 	server.On("Result", mockAnyContext).Return("e2e-code", "state", nil)
 	server.On("Shutdown", mockAnyContext).Return(nil)
 
-	provider, err := NewPublicAuthorizationCodeProvider("public-client",
-		WithURL("https://dev12345.service-now.com"),
-		WithHTTPClient(&http.Client{Transport: rt}),
-		WithURLOpener(urlOpener),
-		WithServerFactory(func(_ string, _ int) (AuthorizationCodeServer, error) { return server, nil }),
-	)
+	provider, err := NewPublicAuthorizationCodeProvider("public-client", AuthorizationCodeOptions{
+		CommonOptions: CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
+			HTTPClient:   &http.Client{Transport: rt},
+		},
+		URLOpener:     urlOpener,
+		ServerFactory: func(_ string, _ int) (AuthorizationCodeServer, error) { return server, nil },
+	})
 	require.NoError(t, err)
+	preparable, ok := provider.(Preparable)
+	require.True(t, ok)
+	preparable.Initialize("https://dev12345.service-now.com")
 
 	request := abstractions.NewRequestInformation()
 	request.SetUri(*mustParseURL(t, "https://dev12345.service-now.com/now/table/incident"))
