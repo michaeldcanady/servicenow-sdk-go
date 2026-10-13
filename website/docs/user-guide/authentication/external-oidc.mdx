@@ -164,54 +164,15 @@ cred, err := credentials.NewExternalOIDCProvider(
 
 ## Redirect URI and port
 
-The SDK starts a local HTTP server on port `5001` by default to receive the
-authorization code redirect. Configure a custom port or redirect URI via
-`AuthorizationCodeOptions`:
+The external OIDC flow starts a local HTTP server on port `5001` to receive
+the authorization code redirect, and opens the authorization URL in the
+system browser. Register `http://localhost:5001/callback` as the redirect URI
+in your identity provider.
 
-```go
-cred, err := credentials.NewExternalOIDCProvider(
-    "client-id",
-    credentials.ExternalOIDCOptions{
-        CommonOptions: credentials.CommonOptions{
-            AllowedHosts: []string{"myinstance.service-now.com"},
-        },
-        Issuer: "https://login.microsoftonline.com/{tenant}/v2.0",
-    },
-    credentials.AuthorizationCodeOptions{
-        CommonOptions: credentials.CommonOptions{
-            AllowedHosts: []string{"myinstance.service-now.com"},
-        },
-        Port: 8080, // custom port
-    },
-)
-```
-
-Wait - the current API doesn't support mixing `ExternalOIDCOptions` with
-`AuthorizationCodeOptions` directly. The external OIDC provider uses
-hardcoded defaults for the authorization code flow (port 5001, default
-state generator, browser opener). If you need custom redirect behavior,
-see the **Advanced** section below.
-
-## Advanced: Custom redirect server
-
-For advanced scenarios (custom redirect URI, custom port, non-browser
-environments), you can provide a custom `ServerFactory`:
-
-```go
-cred, err := credentials.NewExternalOIDCProvider(
-    "client-id",
-    credentials.ExternalOIDCOptions{
-        CommonOptions: credentials.CommonOptions{
-            AllowedHosts: []string{"myinstance.service-now.com"},
-        },
-        Issuer: "https://login.microsoftonline.com/{tenant}/v2.0",
-    },
-    // Note: Current API requires customization through the underlying
-    // authorization code client. See the provider source for details.
-)
-```
-
-For most users, the defaults (port 5001, system browser) work correctly.
+The redirect port, the state generator, and the browser opener are fixed for
+the external OIDC flow. `ExternalOIDCOptions` carries the issuer, the token
+source, the audience, and the shared `CommonOptions`; it does not carry the
+authorization code redirect settings.
 
 ## IdP-specific guidance
 
@@ -249,14 +210,14 @@ For most users, the defaults (port 5001, system browser) work correctly.
 ## Token lifecycle
 
 - **Cache**: Tokens are cached in memory and optionally persisted via
-  `TokenStore`. The ID token's `exp` claim determines the cache TTL (with a
+  `KeyedTokenStore`. The ID token's `exp` claim determines the cache TTL (with a
   20-second clock skew buffer).
 - **Refresh**: On cache miss or expiry, the SDK uses the refresh token to
   obtain a new token set from the IdP (no user interaction).
 - **Revocation**: On revoke, the SDK attempts to revoke at the IdP's
   revocation endpoint. If the IdP has no revocation endpoint, the local
   token is cleared and the operation succeeds (best-effort).
-- **Persistence**: Configure a `TokenStore` in `CommonOptions` to survive
+- **Persistence**: Configure a `KeyedTokenStore` in `CommonOptions` to survive
   process restarts.
 
 ## Troubleshooting

@@ -75,7 +75,7 @@ request is made.
 
 ## Token persistence and lifecycle
 
-The SDK supports optional token persistence through the `TokenStore` interface.
+The SDK supports optional token persistence through the `KeyedTokenStore` interface.
 When a token store is configured, tokens are loaded before acquisition, saved
 after successful acquisition or refresh, and deleted on revocation. This
 enables token reuse across process restarts without re-authentication.
@@ -87,7 +87,7 @@ cred, err := credentials.NewClientCredentialsProvider(
     credentials.ClientCredentialsOptions{
         CommonOptions: credentials.CommonOptions{
             AllowedHosts: []string{"myinstance.service-now.com"},
-            TokenStore:   myTokenStore, // implements credentials.TokenStore
+            TokenStore:   myTokenStore, // implements credentials.KeyedTokenStore
         },
     },
 )
