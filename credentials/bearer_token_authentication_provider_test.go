@@ -75,11 +75,13 @@ func TestNewBearerTokenAuthenticationProvider(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			provider := NewBearerTokenAuthenticationProvider(test.tokenProvider)
+			provider, err := NewBearerTokenAuthenticationProvider(test.tokenProvider, BearerOptions{})
+			require.NoError(t, err)
+			p := provider.(*BearerTokenAuthenticationProvider)
 
-			require.NotNil(t, provider)
-			require.NotNil(t, provider.BaseBearerTokenAuthenticationProvider)
-			assert.Equal(t, test.tokenProvider, provider.tokenProvider)
+			require.NotNil(t, p)
+			require.NotNil(t, p.BaseBearerTokenAuthenticationProvider)
+			assert.Equal(t, test.tokenProvider, p.tokenProvider)
 		})
 	}
 }
@@ -88,16 +90,22 @@ func TestBearerTokenAuthenticationProvider_Initialize(t *testing.T) {
 	t.Run("preparable token provider is initialized", func(t *testing.T) {
 		tokenProvider := &preparableStubTokenProvider{}
 
-		NewBearerTokenAuthenticationProvider(tokenProvider).Initialize("https://dev12345.service-now.com")
+		provider, err := NewBearerTokenAuthenticationProvider(tokenProvider, BearerOptions{})
+		require.NoError(t, err)
+		p := provider.(*BearerTokenAuthenticationProvider)
+		p.Initialize("https://dev12345.service-now.com")
 
 		assert.Equal(t, 1, tokenProvider.initializeCalls)
 		assert.Equal(t, "https://dev12345.service-now.com", tokenProvider.initializedWith)
 	})
 
 	t.Run("BaseAccessTokenProvider records the base URL and derives a host validator", func(t *testing.T) {
-		tokenProvider := newBaseAccessTokenProvider(nil)
+		tokenProvider := newBaseAccessTokenProvider()
 
-		NewBearerTokenAuthenticationProvider(tokenProvider).Initialize("https://dev12345.service-now.com")
+		provider, err := NewBearerTokenAuthenticationProvider(tokenProvider, BearerOptions{})
+		require.NoError(t, err)
+		p := provider.(*BearerTokenAuthenticationProvider)
+		p.Initialize("https://dev12345.service-now.com")
 
 		assert.Equal(t, "https://dev12345.service-now.com", tokenProvider.baseURL)
 		require.NotNil(t, tokenProvider.GetAllowedHostsValidator())
@@ -105,15 +113,19 @@ func TestBearerTokenAuthenticationProvider_Initialize(t *testing.T) {
 	})
 
 	t.Run("non-preparable token provider is a no-op", func(t *testing.T) {
-		provider := NewBearerTokenAuthenticationProvider(&stubTokenProvider{})
+		provider, err := NewBearerTokenAuthenticationProvider(&stubTokenProvider{}, BearerOptions{})
+		require.NoError(t, err)
+		p := provider.(*BearerTokenAuthenticationProvider)
 
-		assert.NotPanics(t, func() { provider.Initialize("https://dev12345.service-now.com") })
+		assert.NotPanics(t, func() { p.Initialize("https://dev12345.service-now.com") })
 	})
 
 	t.Run("nil token provider is a no-op", func(t *testing.T) {
-		provider := NewBearerTokenAuthenticationProvider(nil)
+		provider, err := NewBearerTokenAuthenticationProvider(nil, BearerOptions{})
+		require.NoError(t, err)
+		p := provider.(*BearerTokenAuthenticationProvider)
 
-		assert.NotPanics(t, func() { provider.Initialize("https://dev12345.service-now.com") })
+		assert.NotPanics(t, func() { p.Initialize("https://dev12345.service-now.com") })
 	})
 }
 
@@ -193,10 +205,11 @@ func TestBearerTokenAuthenticationProvider_AuthenticateRequest(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			provider := NewBearerTokenAuthenticationProvider(test.tokenProvider)
+			provider, err := NewBearerTokenAuthenticationProvider(test.tokenProvider, BearerOptions{})
+			require.NoError(t, err)
 			request := test.request()
 
-			err := provider.AuthenticateRequest(context.Background(), request, test.additional)
+			err = provider.AuthenticateRequest(context.Background(), request, test.additional)
 
 			if test.expectedErr != "" {
 				require.ErrorContains(t, err, test.expectedErr)
@@ -210,16 +223,18 @@ func TestBearerTokenAuthenticationProvider_AuthenticateRequest(t *testing.T) {
 	}
 
 	t.Run("nil token provider fails", func(t *testing.T) {
-		provider := NewBearerTokenAuthenticationProvider(nil)
+		provider, err := NewBearerTokenAuthenticationProvider(nil, BearerOptions{})
+		require.NoError(t, err)
 
-		err := provider.AuthenticateRequest(context.Background(), newTestRequest(), nil)
+		authErr := provider.AuthenticateRequest(context.Background(), newTestRequest(), nil)
 
-		require.ErrorContains(t, err, "needs to be initialized with an access token provider")
+		require.ErrorContains(t, authErr, "needs to be initialized with an access token provider")
 	})
 
 	t.Run("request URI is forwarded to the token provider", func(t *testing.T) {
 		tokenProvider := &stubTokenProvider{token: "token123"}
-		provider := NewBearerTokenAuthenticationProvider(tokenProvider)
+		provider, err := NewBearerTokenAuthenticationProvider(tokenProvider, BearerOptions{})
+		require.NoError(t, err)
 
 		require.NoError(t, provider.AuthenticateRequest(context.Background(), newTestRequest(), nil))
 

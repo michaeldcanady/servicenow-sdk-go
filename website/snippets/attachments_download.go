@@ -24,7 +24,7 @@ import (
 func _() {
 	// [START ag_download]
 	// Step 1: Authenticate with your ServiceNow instance
-	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
+	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx", credentials.BasicOptions{})
 
 	clientOpts := []servicenow.ServiceNowServiceClientOption{
 		servicenow.WithAuthenticationProvider(cred),

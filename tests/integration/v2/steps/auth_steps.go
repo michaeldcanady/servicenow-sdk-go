@@ -29,7 +29,7 @@ func (s *authSteps) iInitializeAClientWithBasicAuthentication(ctx context.Contex
 
 func (s *authSteps) iInitializeAClientWithBasicAuthUsingEmptyUsername(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
-	ap := credentials.NewBasicProvider("", "password")
+	ap := credentials.NewBasicProvider("", "password", credentials.BasicOptions{})
 	err := support.NewClientWithAuthProvider(w, ap)
 	if err != nil {
 		w.AuthErr = err
@@ -41,7 +41,7 @@ func (s *authSteps) iInitializeAClientWithBasicAuthUsingEmptyUsername(ctx contex
 
 func (s *authSteps) iInitializeAClientWithBasicAuthUsingEmptyPassword(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
-	ap := credentials.NewBasicProvider("admin", "")
+	ap := credentials.NewBasicProvider("admin", "", credentials.BasicOptions{})
 	err := support.NewClientWithAuthProvider(w, ap)
 	if err != nil {
 		w.AuthErr = err
@@ -63,6 +63,7 @@ func (s *authSteps) iInitializeAClientWithAStaticBearerToken(ctx context.Context
 
 	bearer := credentials.NewBearerTokenAuthenticationProvider(
 		&support.StaticTokenProvider{Token: token},
+		credentials.BearerOptions{},
 	)
 	err := support.NewClientWithAuthProvider(w, bearer)
 	if err != nil {
@@ -87,14 +88,14 @@ func (s *authSteps) iInitializeAClientWithClientCredentialsAuth(ctx context.Cont
 
 func (s *authSteps) iAttemptToCreateClientCredentialsWithEmptyClientID(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
-	_, err := credentials.NewClientCredentialsProvider("", "some-secret")
+	_, err := credentials.NewClientCredentialsProvider("", "some-secret", credentials.ClientCredentialsOptions{})
 	w.AuthErr = err
 	return support.WithWorld(ctx, w), nil
 }
 
 func (s *authSteps) iAttemptToCreateClientCredentialsWithEmptyClientSecret(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
-	_, err := credentials.NewClientCredentialsProvider("some-client-id", "")
+	_, err := credentials.NewClientCredentialsProvider("some-client-id", "", credentials.ClientCredentialsOptions{})
 	w.AuthErr = err
 	return support.WithWorld(ctx, w), nil
 }
@@ -251,14 +252,12 @@ func (s *authSteps) iInitializeAClientWithJWTBearerTokenAuth(ctx context.Context
 
 	tokenProvider := &support.StaticTokenProvider{Token: validJWT}
 	oauth2HTTP := support.GetOAuth2HTTPClient()
-	authOpts := []credentials.AuthOption{
-		credentials.WithInstance(support.IntegrationInstance()),
-	}
-	if oauth2HTTP != nil {
-		authOpts = append(authOpts, credentials.WithHTTPClient(oauth2HTTP))
-	}
 
-	jwt, err := credentials.NewJWTProvider("jwt-client-id", "jwt-client-secret", tokenProvider, authOpts...)
+	jwt, err := credentials.NewJWTProvider("jwt-client-id", "jwt-client-secret", tokenProvider, credentials.JWTOptions{
+		CommonOptions: credentials.CommonOptions{
+			HTTPClient: oauth2HTTP,
+		},
+	})
 	if err != nil {
 		w.AuthErr = err
 		return support.WithWorld(ctx, w), nil
@@ -289,14 +288,12 @@ func (s *authSteps) iInitializeAClientWithAFailingJWTTokenProvider(ctx context.C
 
 	tokenProvider := &support.FailingTokenProvider{Err: fmt.Errorf("token provider failed")}
 	oauth2HTTP := support.GetOAuth2HTTPClient()
-	authOpts := []credentials.AuthOption{
-		credentials.WithInstance(support.IntegrationInstance()),
-	}
-	if oauth2HTTP != nil {
-		authOpts = append(authOpts, credentials.WithHTTPClient(oauth2HTTP))
-	}
 
-	jwt, err := credentials.NewJWTProvider("jwt-client-id", "jwt-client-secret", tokenProvider, authOpts...)
+	jwt, err := credentials.NewJWTProvider("jwt-client-id", "jwt-client-secret", tokenProvider, credentials.JWTOptions{
+		CommonOptions: credentials.CommonOptions{
+			HTTPClient: oauth2HTTP,
+		},
+	})
 	if err != nil {
 		w.AuthErr = err
 		return support.WithWorld(ctx, w), nil
@@ -327,14 +324,12 @@ func (s *authSteps) iInitializeAClientWithAnInvalidJWTAssertionProvider(ctx cont
 
 	tokenProvider := &support.StaticTokenProvider{Token: "not-a-valid-jwt"}
 	oauth2HTTP := support.GetOAuth2HTTPClient()
-	authOpts := []credentials.AuthOption{
-		credentials.WithInstance(support.IntegrationInstance()),
-	}
-	if oauth2HTTP != nil {
-		authOpts = append(authOpts, credentials.WithHTTPClient(oauth2HTTP))
-	}
 
-	jwt, err := credentials.NewJWTProvider("jwt-client-id", "jwt-client-secret", tokenProvider, authOpts...)
+	jwt, err := credentials.NewJWTProvider("jwt-client-id", "jwt-client-secret", tokenProvider, credentials.JWTOptions{
+		CommonOptions: credentials.CommonOptions{
+			HTTPClient: oauth2HTTP,
+		},
+	})
 	if err != nil {
 		w.AuthErr = err
 		return support.WithWorld(ctx, w), nil
@@ -366,14 +361,12 @@ func (s *authSteps) iInitializeAClientWithAJWTMissingRequiredClaims(ctx context.
 	incompleteJWT := support.GenerateJWTWithMissingClaims()
 	tokenProvider := &support.StaticTokenProvider{Token: incompleteJWT}
 	oauth2HTTP := support.GetOAuth2HTTPClient()
-	authOpts := []credentials.AuthOption{
-		credentials.WithInstance(support.IntegrationInstance()),
-	}
-	if oauth2HTTP != nil {
-		authOpts = append(authOpts, credentials.WithHTTPClient(oauth2HTTP))
-	}
 
-	jwt, err := credentials.NewJWTProvider("jwt-client-id", "jwt-client-secret", tokenProvider, authOpts...)
+	jwt, err := credentials.NewJWTProvider("jwt-client-id", "jwt-client-secret", tokenProvider, credentials.JWTOptions{
+		CommonOptions: credentials.CommonOptions{
+			HTTPClient: oauth2HTTP,
+		},
+	})
 	if err != nil {
 		w.AuthErr = err
 		return support.WithWorld(ctx, w), nil
@@ -405,14 +398,12 @@ func (s *authSteps) iInitializeAClientWithAJWTUsingWrongAlgorithm(ctx context.Co
 	wrongAlgJWT := support.GenerateJWTWithWrongAlgorithm()
 	tokenProvider := &support.StaticTokenProvider{Token: wrongAlgJWT}
 	oauth2HTTP := support.GetOAuth2HTTPClient()
-	authOpts := []credentials.AuthOption{
-		credentials.WithInstance(support.IntegrationInstance()),
-	}
-	if oauth2HTTP != nil {
-		authOpts = append(authOpts, credentials.WithHTTPClient(oauth2HTTP))
-	}
 
-	jwt, err := credentials.NewJWTProvider("jwt-client-id", "jwt-client-secret", tokenProvider, authOpts...)
+	jwt, err := credentials.NewJWTProvider("jwt-client-id", "jwt-client-secret", tokenProvider, credentials.JWTOptions{
+		CommonOptions: credentials.CommonOptions{
+			HTTPClient: oauth2HTTP,
+		},
+	})
 	if err != nil {
 		w.AuthErr = err
 		return support.WithWorld(ctx, w), nil
@@ -444,14 +435,12 @@ func (s *authSteps) iInitializeAnAuthCodePublicClientWithValidParams(ctx context
 	w := support.WorldFrom(ctx)
 
 	oauth2HTTP := support.GetOAuth2HTTPClient()
-	authOpts := []credentials.AuthOption{
-		credentials.WithInstance(support.IntegrationInstance()),
-	}
-	if oauth2HTTP != nil {
-		authOpts = append(authOpts, credentials.WithHTTPClient(oauth2HTTP))
-	}
 
-	provider, err := credentials.NewPublicAuthorizationCodeProvider("mock-client-id", authOpts...)
+	provider, err := credentials.NewPublicAuthorizationCodeProvider("mock-client-id", credentials.AuthorizationCodeOptions{
+		CommonOptions: credentials.CommonOptions{
+			HTTPClient: oauth2HTTP,
+		},
+	})
 	if err != nil {
 		w.AuthErr = err
 		return support.WithWorld(ctx, w), nil
@@ -466,14 +455,12 @@ func (s *authSteps) iInitializeAnAuthCodeConfidentialClientWithValidParams(ctx c
 	w := support.WorldFrom(ctx)
 
 	oauth2HTTP := support.GetOAuth2HTTPClient()
-	authOpts := []credentials.AuthOption{
-		credentials.WithInstance(support.IntegrationInstance()),
-	}
-	if oauth2HTTP != nil {
-		authOpts = append(authOpts, credentials.WithHTTPClient(oauth2HTTP))
-	}
 
-	provider, err := credentials.NewAuthorizationCodeProvider("mock-client-id", "mock-client-secret", authOpts...)
+	provider, err := credentials.NewAuthorizationCodeProvider("mock-client-id", "mock-client-secret", credentials.AuthorizationCodeOptions{
+		CommonOptions: credentials.CommonOptions{
+			HTTPClient: oauth2HTTP,
+		},
+	})
 	if err != nil {
 		w.AuthErr = err
 		return support.WithWorld(ctx, w), nil
@@ -505,7 +492,7 @@ func (s *authSteps) theClientShouldSupportPKCEChallengeGeneration(ctx context.Co
 
 func (s *authSteps) iAttemptToCreateAuthCodeCredentialsWithEmptyClientID(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
-	_, err := credentials.NewPublicAuthorizationCodeProvider("")
+	_, err := credentials.NewPublicAuthorizationCodeProvider("", credentials.AuthorizationCodeOptions{})
 	w.AuthErr = err
 	return support.WithWorld(ctx, w), nil
 }

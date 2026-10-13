@@ -187,8 +187,7 @@ func TestJWTCredential_GetToken(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			credential, err := NewJWTCredential(test.client, test.provider, nil)
-			require.NoError(t, err)
+			credential := newJWTCredential(test.client, test.provider)
 
 			token, err := credential.GetToken(context.Background(), nil, nil)
 

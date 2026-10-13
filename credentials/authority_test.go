@@ -12,18 +12,18 @@ import (
 func TestAuthority_Constructors(t *testing.T) {
 	tests := []struct {
 		name     string
-		build    func() Authority
-		expected Authority
+		build    func() authority
+		expected authority
 	}{
 		{
 			name:     "instance authority",
-			build:    func() Authority { return NewInstanceAuthority("dev12345") },
-			expected: Authority("https://dev12345.service-now.com"),
+			build:    func() authority { return newInstanceAuthority("dev12345") },
+			expected: authority("https://dev12345.service-now.com"),
 		},
 		{
 			name:     "custom authority",
-			build:    func() Authority { return NewCustomAuthority("mycustomerservicenowurl.com") },
-			expected: Authority("https://mycustomerservicenowurl.com"),
+			build:    func() authority { return newCustomAuthority("mycustomerservicenowurl.com") },
+			expected: authority("https://mycustomerservicenowurl.com"),
 		},
 	}
 
@@ -34,9 +34,8 @@ func TestAuthority_Constructors(t *testing.T) {
 	}
 }
 
-// TODO: only tests happy path, should also test invalid authority strings (e.g., empty, missing https, etc.)
 func TestAuthority_URLs(t *testing.T) {
-	authority := Authority("https://dev12345.service-now.com")
+	authority := authority("https://dev12345.service-now.com")
 
 	tests := []struct {
 		name     string
@@ -45,17 +44,17 @@ func TestAuthority_URLs(t *testing.T) {
 	}{
 		{
 			name:     "token url",
-			build:    authority.TokenURL,
+			build:    authority.tokenURL,
 			expected: "https://dev12345.service-now.com/oauth_token.do",
 		},
 		{
 			name:     "auth url",
-			build:    authority.AuthURL,
+			build:    authority.authURL,
 			expected: "https://dev12345.service-now.com/oauth_auth.do",
 		},
 		{
 			name:     "revocation url",
-			build:    authority.RevocationURL,
+			build:    authority.revocationURL,
 			expected: "https://dev12345.service-now.com/oauth_revoke.do",
 		},
 	}

@@ -12,8 +12,6 @@ import (
 )
 
 func TestAuthenticationProviders_Initialization(t *testing.T) {
-	baseURL := "https://dev12345.service-now.com"
-
 	tests := []struct {
 		name     string
 		provider func() (authentication.AuthenticationProvider, error)
@@ -23,13 +21,16 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			name: "ROPC Provider with Options",
 			provider: func() (authentication.AuthenticationProvider, error) {
 				return NewROPCProvider("client-id", "client-secret", "username", "password",
-					WithURL(baseURL),
+					ROPCOptions{
+						CommonOptions: CommonOptions{
+							AllowedHosts: []string{"dev12345.service-now.com"},
+						},
+					},
 				)
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
-				tp := bearer.tokenProvider.(*ROPCCredential)
-				assert.Equal(t, baseURL, tp.baseURL)
+				tp := bearer.tokenProvider.(*ropcCredential)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
 			},
 		},
@@ -37,13 +38,16 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			name: "Client Credentials Provider with Options",
 			provider: func() (authentication.AuthenticationProvider, error) {
 				return NewClientCredentialsProvider("client-id", "client-secret",
-					WithURL(baseURL),
+					ClientCredentialsOptions{
+						CommonOptions: CommonOptions{
+							AllowedHosts: []string{"dev12345.service-now.com"},
+						},
+					},
 				)
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
-				tp := bearer.tokenProvider.(*ClientCredentialsCredential)
-				assert.Equal(t, baseURL, tp.baseURL)
+				tp := bearer.tokenProvider.(*clientCredentialsCredential)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
 			},
 		},
@@ -51,15 +55,18 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 			name: "Authorization Code Provider with Options",
 			provider: func() (authentication.AuthenticationProvider, error) {
 				return NewAuthorizationCodeProvider("client-id", "client-secret",
-					WithURL(baseURL),
+					AuthorizationCodeOptions{
+						CommonOptions: CommonOptions{
+							AllowedHosts: []string{"dev12345.service-now.com"},
+						},
+					},
 				)
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
-				tp := bearer.tokenProvider.(*AuthorizationCodeCredential)
-				assert.Equal(t, baseURL, tp.baseURL)
+				tp := bearer.tokenProvider.(*authorizationCodeCredential)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
-				assert.Equal(t, 5001, tp.port) // Default port
+				assert.Equal(t, 5001, tp.port)
 			},
 		},
 		{
@@ -68,14 +75,19 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 				customStateGen := func() string { return "custom-state" }
 				customURLOpener := func(_ string) error { return nil }
 				return NewAuthorizationCodeProvider("client-id", "client-secret",
-					WithPort(8080),
-					WithStateGenerator(customStateGen),
-					WithURLOpener(customURLOpener),
+					AuthorizationCodeOptions{
+						CommonOptions: CommonOptions{
+							AllowedHosts: []string{"dev12345.service-now.com"},
+						},
+						Port:           8080,
+						StateGenerator: customStateGen,
+						URLOpener:      customURLOpener,
+					},
 				)
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
-				tp := bearer.tokenProvider.(*AuthorizationCodeCredential)
+				tp := bearer.tokenProvider.(*authorizationCodeCredential)
 				assert.Equal(t, 8080, tp.port)
 				assert.NotNil(t, tp.stateGenerator)
 				assert.Equal(t, "custom-state", tp.stateGenerator())
@@ -91,12 +103,17 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 					return m, nil
 				}
 				return NewAuthorizationCodeProvider("client-id", "client-secret",
-					WithServerFactory(customServerFactory),
+					AuthorizationCodeOptions{
+						CommonOptions: CommonOptions{
+							AllowedHosts: []string{"dev12345.service-now.com"},
+						},
+						ServerFactory: customServerFactory,
+					},
 				)
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
-				tp := bearer.tokenProvider.(*AuthorizationCodeCredential)
+				tp := bearer.tokenProvider.(*authorizationCodeCredential)
 				assert.NotNil(t, tp.serverFactory)
 				s, _ := tp.serverFactory("state", 0)
 				assert.Equal(t, "http://localhost:1234", s.GetAddr())
@@ -105,16 +122,18 @@ func TestAuthenticationProviders_Initialization(t *testing.T) {
 		{
 			name: "JWT Provider with Options",
 			provider: func() (authentication.AuthenticationProvider, error) {
-				// Mock token provider for JWT
-				mockTP := &BaseAccessTokenProvider{}
+				mockTP := &baseAccessTokenProvider{}
 				return NewJWTProvider("client-id", "client-secret", mockTP,
-					WithURL(baseURL),
+					JWTOptions{
+						CommonOptions: CommonOptions{
+							AllowedHosts: []string{"dev12345.service-now.com"},
+						},
+					},
 				)
 			},
 			verify: func(t *testing.T, p authentication.AuthenticationProvider) {
 				bearer := p.(*BearerTokenAuthenticationProvider)
-				tp := bearer.tokenProvider.(*JWTCredential)
-				assert.Equal(t, baseURL, tp.baseURL)
+				tp := bearer.tokenProvider.(*jwtCredential)
 				assert.NotNil(t, tp.GetAllowedHostsValidator())
 			},
 		},

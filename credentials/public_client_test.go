@@ -38,7 +38,7 @@ func TestNewPublicClient(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			client, err := newPublicClient(test.clientID, Authority("https://dev12345.service-now.com"))
+			client, err := newPublicClient(test.clientID, authority("https://dev12345.service-now.com"))
 
 			if test.wantErr != nil {
 				require.Error(t, err)
@@ -322,7 +322,7 @@ func TestPublicClient_PKCEVerifierIsPerAuthorization(t *testing.T) {
 }
 
 func TestNewPublicClient_UsesNoSecretAuthMethod(t *testing.T) {
-	client, err := newPublicClient("client-id", Authority("https://dev12345.service-now.com"))
+	client, err := newPublicClient("client-id", authority("https://dev12345.service-now.com"))
 	require.NoError(t, err)
 	require.NotNil(t, client)
 
@@ -332,7 +332,7 @@ func TestNewPublicClient_UsesNoSecretAuthMethod(t *testing.T) {
 }
 
 func TestNewConfidentialClient_UsesClientSecretPost(t *testing.T) {
-	client, err := newConfidentialClient("client-id", "secret", Authority("https://dev12345.service-now.com"))
+	client, err := newConfidentialClient("client-id", "secret", authority("https://dev12345.service-now.com"))
 	require.NoError(t, err)
 	require.NotNil(t, client)
 

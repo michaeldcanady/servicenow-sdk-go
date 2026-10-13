@@ -69,8 +69,7 @@ func TestROPCCredential_GetToken(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			credential, err := NewROPCCredential(test.client, test.username, test.password, nil)
-			require.NoError(t, err)
+			credential := newROPCCredential(test.client, test.username, test.password)
 
 			token, err := credential.GetToken(context.Background(), nil, nil)
 
@@ -89,8 +88,7 @@ func TestROPCCredential_GetToken(t *testing.T) {
 
 func TestROPCCredential_Initialize(t *testing.T) {
 	client := &ropcTestClient{}
-	credential, err := NewROPCCredential(client, "user", "pass", nil)
-	require.NoError(t, err)
+	credential := newROPCCredential(client, "user", "pass")
 
 	credential.Initialize("https://dev12345.service-now.com")
 
@@ -125,7 +123,11 @@ func TestNewROPCProvider(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			provider, err := NewROPCProvider(test.clientID, test.clientSecret, "user", "pass", WithInstance("dev12345"))
+			provider, err := NewROPCProvider(test.clientID, test.clientSecret, "user", "pass", ROPCOptions{
+				CommonOptions: CommonOptions{
+					AllowedHosts: []string{"dev12345.service-now.com"},
+				},
+			})
 
 			if test.wantErr != nil {
 				require.Error(t, err)

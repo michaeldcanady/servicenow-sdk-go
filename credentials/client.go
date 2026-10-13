@@ -49,16 +49,16 @@ func (c *baseClient) Initialize(baseURL string) {
 		return
 	}
 
-	authority := Authority(baseURL)
+	authority := authority(baseURL)
 
 	c.oauthClient = &oauth2.Client{
 		ClientID:     c.clientID,
 		ClientSecret: c.clientSecret,
 		Endpoints: &oauth2.Endpoints{
-			TokenURL:         authority.TokenURL(),
-			AuthURL:          authority.AuthURL(),
+			TokenURL:         authority.tokenURL(),
+			AuthURL:          authority.authURL(),
 			DeviceURL:        "",
-			RevocationURL:    authority.RevocationURL(),
+			RevocationURL:    authority.revocationURL(),
 			IntrospectionURL: "",
 		},
 		AuthMethod: c.authMethod,

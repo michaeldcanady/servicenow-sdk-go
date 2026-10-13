@@ -122,12 +122,6 @@ func (s *lifecycleStore) saveCount() int {
 	return len(s.saved)
 }
 
-func (s *lifecycleStore) deleteCount() int {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	return len(s.deleted)
-}
-
 func newLifecycleStore() *lifecycleStore {
 	return &lifecycleStore{tokens: make(map[credentials.TokenKey]*credentials.AccessToken)}
 }
@@ -146,17 +140,17 @@ func storedValidToken() *credentials.AccessToken {
 	}
 }
 
-func buildProvider(t *testing.T, endpoint *mockTokenEndpoint, store credentials.TokenStore, opts ...credentials.AuthOption) authentication.AuthenticationProvider {
+func buildProvider(t *testing.T, endpoint *mockTokenEndpoint, store credentials.TokenStore, opts credentials.ClientCredentialsOptions) authentication.AuthenticationProvider {
 	t.Helper()
-	baseOpts := []credentials.AuthOption{
-		credentials.WithURL(testInstanceURL),
-		credentials.WithHTTPClient(&http.Client{Transport: endpoint}),
-	}
-	if store != nil {
-		baseOpts = append(baseOpts, credentials.WithTokenStore(store))
-	}
-	provider, err := credentials.NewClientCredentialsProvider(testClientID, testClientSecret, append(baseOpts, opts...)...)
+	opts.HTTPClient = &http.Client{Transport: endpoint}
+	opts.TokenStore = store
+	provider, err := credentials.NewClientCredentialsProvider(testClientID, testClientSecret, opts)
 	require.NoError(t, err)
+	// The provider now expects the client to call Initialize with the base URL.
+	// In production the client does this; in tests we call it directly.
+	if prep, ok := provider.(interface{ Initialize(string) }); ok {
+		prep.Initialize(testInstanceURL)
+	}
 	return provider
 }
 
@@ -182,7 +176,11 @@ func TestTokenLifecycle_ValidStoredTokenServedWithoutRequest(t *testing.T) {
 	store.tokens[credentials.TokenKey{Authority: testInstanceURL, ClientID: testClientID}] = storedValidToken()
 	endpoint := newMockTokenEndpoint()
 
-	provider := buildProvider(t, endpoint, store)
+	provider := buildProvider(t, endpoint, store, credentials.ClientCredentialsOptions{
+		CommonOptions: credentials.CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
+		},
+	})
 
 	header, err := authenticate(t, provider, mustURL(t, testInstanceURL+"/now/table/incident"))
 	require.NoError(t, err)
@@ -194,7 +192,11 @@ func TestTokenLifecycle_AbsentKeyLoadsNilAndAcquires(t *testing.T) {
 	store := newLifecycleStore() // no token under the key
 	endpoint := newMockTokenEndpoint()
 
-	provider := buildProvider(t, endpoint, store)
+	provider := buildProvider(t, endpoint, store, credentials.ClientCredentialsOptions{
+		CommonOptions: credentials.CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
+		},
+	})
 
 	header, err := authenticate(t, provider, mustURL(t, testInstanceURL+"/now/table/incident"))
 	require.NoError(t, err)
@@ -207,7 +209,11 @@ func TestTokenLifecycle_AcquireSavesToStore(t *testing.T) {
 	endpoint := newMockTokenEndpoint()
 	key := credentials.TokenKey{Authority: testInstanceURL, ClientID: testClientID}
 
-	provider := buildProvider(t, endpoint, store)
+	provider := buildProvider(t, endpoint, store, credentials.ClientCredentialsOptions{
+		CommonOptions: credentials.CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
+		},
+	})
 
 	header, err := authenticate(t, provider, mustURL(t, testInstanceURL+"/now/table/incident"))
 	require.NoError(t, err)
@@ -231,7 +237,11 @@ func TestTokenLifecycle_ExpiredStoredTokenRefreshesAndSaves(t *testing.T) {
 	endpoint := newMockTokenEndpoint()
 	endpoint.body = []byte(`{"access_token":"refreshed-token","refresh_token":"new-refresh","token_type":"Bearer","expires_in":3600}`)
 
-	provider := buildProvider(t, endpoint, store)
+	provider := buildProvider(t, endpoint, store, credentials.ClientCredentialsOptions{
+		CommonOptions: credentials.CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
+		},
+	})
 
 	header, err := authenticate(t, provider, mustURL(t, testInstanceURL+"/now/table/incident"))
 	require.NoError(t, err)
@@ -255,7 +265,11 @@ func TestTokenLifecycle_ConcurrentRequestsCoalesceToOneRequest(t *testing.T) {
 	}
 	endpoint := newMockTokenEndpoint()
 	endpoint.delay = 50 * time.Millisecond
-	provider := buildProvider(t, endpoint, store)
+	provider := buildProvider(t, endpoint, store, credentials.ClientCredentialsOptions{
+		CommonOptions: credentials.CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
+		},
+	})
 	uri := mustURL(t, testInstanceURL+"/now/table/incident")
 
 	const n = 8
@@ -288,7 +302,11 @@ func TestTokenLifecycle_FailedStampedeCoalescesToOneRequest(t *testing.T) {
 	endpoint.status = http.StatusInternalServerError
 	endpoint.body = []byte(`{"error":"server_error"}`)
 	endpoint.delay = 50 * time.Millisecond
-	provider := buildProvider(t, endpoint, store)
+	provider := buildProvider(t, endpoint, store, credentials.ClientCredentialsOptions{
+		CommonOptions: credentials.CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
+		},
+	})
 	uri := mustURL(t, testInstanceURL+"/now/table/incident")
 
 	const n = 8
@@ -317,11 +335,15 @@ func TestTokenLifecycle_LoadErrorIsPropagated(t *testing.T) {
 	store := newLifecycleStore()
 	store.loadErr = errors.New("store unavailable")
 	endpoint := newMockTokenEndpoint()
-	provider := buildProvider(t, endpoint, store)
+	provider := buildProvider(t, endpoint, store, credentials.ClientCredentialsOptions{
+		CommonOptions: credentials.CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
+		},
+	})
 
 	_, err := authenticate(t, provider, mustURL(t, testInstanceURL+"/now/table/incident"))
 	require.Error(t, err)
-	assert.ErrorIs(t, err, store.loadErr)
+	require.ErrorIs(t, err, store.loadErr)
 	assert.Zero(t, endpoint.count(), "a store load failure must not trigger a token request")
 }
 
@@ -329,7 +351,11 @@ func TestTokenLifecycle_SaveFailureStillServesToken(t *testing.T) {
 	store := newLifecycleStore()
 	store.saveErr = errors.New("store unavailable")
 	endpoint := newMockTokenEndpoint()
-	provider := buildProvider(t, endpoint, store)
+	provider := buildProvider(t, endpoint, store, credentials.ClientCredentialsOptions{
+		CommonOptions: credentials.CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
+		},
+	})
 
 	header, err := authenticate(t, provider, mustURL(t, testInstanceURL+"/now/table/incident"))
 	require.NoError(t, err, "a persistence failure must not fail an otherwise successful request")
@@ -340,7 +366,11 @@ func TestTokenLifecycle_SaveFailureStillServesToken(t *testing.T) {
 func TestTokenLifecycle_DisallowedHostIsNotAuthenticated(t *testing.T) {
 	store := newLifecycleStore()
 	endpoint := newMockTokenEndpoint()
-	provider := buildProvider(t, endpoint, store, credentials.WithAllowedHosts("allowed.example.com"))
+	provider := buildProvider(t, endpoint, store, credentials.ClientCredentialsOptions{
+		CommonOptions: credentials.CommonOptions{
+			AllowedHosts: []string{"allowed.example.com"},
+		},
+	})
 
 	header, err := authenticate(t, provider, mustURL(t, "https://not-allowed.example.com/now/table/incident"))
 	require.NoError(t, err)

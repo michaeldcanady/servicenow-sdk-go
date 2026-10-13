@@ -82,7 +82,7 @@ func _() {
 func _() {
 	// [START config_full]
 	// Step 1: Credentials (see the Authentication guide for OAuth2 flows)
-	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
+	cred := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx", credentials.BasicOptions{})
 
 	// Step 2: Extend the default middleware chain — keep the built-in
 	// retries, redirects, and compression, and add your own handler

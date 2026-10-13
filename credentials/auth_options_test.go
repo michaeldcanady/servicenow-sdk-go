@@ -11,142 +11,70 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestWithInstance(t *testing.T) {
-	tests := []struct {
-		name        string
-		instance    string
-		wantBaseURL string
-	}{
-		{
-			name:        "builds https url from instance name",
-			instance:    "dev12345",
-			wantBaseURL: "https://dev12345.service-now.com",
-		},
-		{
-			name:        "empty instance still builds a url",
-			instance:    "",
-			wantBaseURL: "https://.service-now.com",
-		},
+func TestCommonOptions(t *testing.T) {
+	opts := CommonOptions{
+		AllowedHosts: []string{"dev12345.service-now.com"},
+		HTTPClient:   &http.Client{},
+		TokenStore:   &optionsFakeTokenStore{},
+		Scopes:       []string{"read", "write"},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			config := &AuthConfig{}
-			WithInstance(test.instance)(config)
-
-			assert.Equal(t, test.wantBaseURL, config.baseURL)
-		})
-	}
+	assert.Equal(t, []string{"dev12345.service-now.com"}, opts.AllowedHosts)
+	assert.NotNil(t, opts.HTTPClient)
+	assert.NotNil(t, opts.TokenStore)
+	assert.Equal(t, []string{"read", "write"}, opts.Scopes)
 }
 
-func TestWithAllowedHosts(t *testing.T) {
-	tests := []struct {
-		name  string
-		hosts []string
-	}{
-		{
-			name:  "sets a single host",
-			hosts: []string{"dev12345.service-now.com"},
-		},
-		{
-			name:  "sets multiple hosts",
-			hosts: []string{"a.example.com", "b.example.com"},
-		},
-		{
-			name:  "no hosts clears to empty slice",
-			hosts: []string{},
+func TestClientCredentialsOptions(t *testing.T) {
+	opts := ClientCredentialsOptions{
+		CommonOptions: CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
+			Scopes:       []string{"read"},
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			config := &AuthConfig{}
-			WithAllowedHosts(test.hosts...)(config)
-
-			assert.Equal(t, test.hosts, config.allowedHosts)
-		})
-	}
+	assert.Equal(t, []string{"dev12345.service-now.com"}, opts.AllowedHosts)
+	assert.Equal(t, []string{"read"}, opts.Scopes)
 }
 
-func TestWithTokenStore(t *testing.T) {
-	tests := []struct {
-		name  string
-		store TokenStore
-	}{
-		{
-			name:  "sets a non-nil token store",
-			store: &optionsFakeTokenStore{},
+func TestJWTOptions(t *testing.T) {
+	opts := JWTOptions{
+		CommonOptions: CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
 		},
-		{
-			name:  "nil token store is accepted",
-			store: nil,
-		},
+		TokenProvider: nil,
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			config := &AuthConfig{}
-			WithTokenStore(test.store)(config)
-
-			assert.Equal(t, test.store, config.tokenStore)
-		})
-	}
+	assert.Equal(t, []string{"dev12345.service-now.com"}, opts.AllowedHosts)
+	assert.Nil(t, opts.TokenProvider)
 }
 
-func TestWithHTTPClient(t *testing.T) {
-	customClient := &http.Client{}
-
-	tests := []struct {
-		name   string
-		client *http.Client
-	}{
-		{
-			name:   "sets a custom http client",
-			client: customClient,
+func TestAuthorizationCodeOptions(t *testing.T) {
+	opts := AuthorizationCodeOptions{
+		CommonOptions: CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
 		},
-		{
-			name:   "nil http client is accepted",
-			client: nil,
-		},
+		Port:           5001,
+		StateGenerator: func() string { return "state" },
+		URLOpener:      func(string) error { return nil },
+		ServerFactory:  nil,
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			config := &AuthConfig{}
-			WithHTTPClient(test.client)(config)
-
-			assert.Equal(t, test.client, config.httpClient)
-		})
-	}
+	assert.Equal(t, []string{"dev12345.service-now.com"}, opts.AllowedHosts)
+	assert.Equal(t, 5001, opts.Port)
+	assert.NotNil(t, opts.StateGenerator)
+	assert.NotNil(t, opts.URLOpener)
+	assert.Nil(t, opts.ServerFactory)
 }
 
-func TestWithScopes(t *testing.T) {
-	tests := []struct {
-		name   string
-		scopes []string
-	}{
-		{
-			name:   "sets a single scope",
-			scopes: []string{"read"},
-		},
-		{
-			name:   "sets multiple scopes",
-			scopes: []string{"read", "write"},
-		},
-		{
-			name:   "no scopes clears to empty slice",
-			scopes: []string{},
+func TestROPCOptions(t *testing.T) {
+	opts := ROPCOptions{
+		CommonOptions: CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			config := &AuthConfig{}
-			WithScopes(test.scopes...)(config)
-
-			assert.Equal(t, test.scopes, config.scopes)
-		})
-	}
+	assert.Equal(t, []string{"dev12345.service-now.com"}, opts.AllowedHosts)
 }
 
 // TODO: should be a Mock token store

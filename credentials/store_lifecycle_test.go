@@ -95,18 +95,26 @@ func mustInPackageURL(t *testing.T, raw string) *url.URL {
 
 // newInPackageProvider builds a client-credentials provider and returns the
 // underlying credential so its Revoke can be exercised.
-func newInPackageProvider(t *testing.T, store TokenStore) (authentication.AuthenticationProvider, *ClientCredentialsCredential) {
+func newInPackageProvider(t *testing.T, store TokenStore) (authentication.AuthenticationProvider, *clientCredentialsCredential) {
 	t.Helper()
 	provider, err := NewClientCredentialsProvider(revokeTestClientID, "test-secret",
-		WithURL(revokeTestInstance),
-		WithHTTPClient(&http.Client{Transport: okJSONRoundTripper{body: []byte(revokeTestTokenBody)}}),
-		WithTokenStore(store),
+		ClientCredentialsOptions{
+			CommonOptions: CommonOptions{
+				HTTPClient: &http.Client{Transport: okJSONRoundTripper{body: []byte(revokeTestTokenBody)}},
+				TokenStore: store,
+			},
+		},
 	)
 	require.NoError(t, err)
 
+	// Initialize the provider with the instance URL
+	if prep, ok := provider.(interface{ Initialize(string) }); ok {
+		prep.Initialize(revokeTestInstance)
+	}
+
 	bearer, ok := provider.(*BearerTokenAuthenticationProvider)
 	require.True(t, ok)
-	credential, ok := bearer.GetAuthorizationTokenProvider().(*ClientCredentialsCredential)
+	credential, ok := bearer.GetAuthorizationTokenProvider().(*clientCredentialsCredential)
 	require.True(t, ok)
 	return provider, credential
 }

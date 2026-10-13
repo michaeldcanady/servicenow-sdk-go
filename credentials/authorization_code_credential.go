@@ -5,7 +5,7 @@ package credentials
 
 import (
 	"context"
-	"net/http"
+
 	"net/url"
 	"strings"
 	"sync"
@@ -17,7 +17,7 @@ import (
 	"github.com/pkg/browser"
 )
 
-var _ authentication.AccessTokenProvider = (*AuthorizationCodeCredential)(nil)
+var _ authentication.AccessTokenProvider = (*authorizationCodeCredential)(nil)
 
 type authorizationCodeClient interface {
 	Initialize(baseURL string)
@@ -27,9 +27,9 @@ type authorizationCodeClient interface {
 	revokeToken(ctx context.Context, token, tokenTypeHint string) error
 }
 
-// AuthorizationCodeCredential implements the OAuth2 Authorization Code flow.
-type AuthorizationCodeCredential struct {
-	*BaseAccessTokenProvider
+// authorizationCodeCredential implements the OAuth2 Authorization Code flow.
+type authorizationCodeCredential struct {
+	*baseAccessTokenProvider
 	client         authorizationCodeClient
 	port           int
 	stateGenerator func() string
@@ -38,10 +38,10 @@ type AuthorizationCodeCredential struct {
 	tokenMutex     sync.Mutex
 }
 
-// NewAuthorizationCodeCredential creates a new AuthorizationCodeCredential.
+// newAuthorizationCodeCredential creates a new authorizationCodeCredential.
 // This credential uses the provided authorization code to acquire an access token.
 // The code is one-time use. Subsequent token acquisitions will use the refresh token.
-func NewAuthorizationCodeCredential(client authorizationCodeClient, allowedHosts []string, port int, stateGenerator func() string, urlOpener func(string) error, serverFactory ServerFactory) (*AuthorizationCodeCredential, error) {
+func newAuthorizationCodeCredential(client authorizationCodeClient, port int, stateGenerator func() string, urlOpener func(string) error, serverFactory ServerFactory) *authorizationCodeCredential {
 	if port == 0 {
 		port = 5001
 	}
@@ -55,7 +55,7 @@ func NewAuthorizationCodeCredential(client authorizationCodeClient, allowedHosts
 		serverFactory = defaultServerFactory
 	}
 
-	c := &AuthorizationCodeCredential{
+	c := &authorizationCodeCredential{
 		client:         client,
 		port:           port,
 		stateGenerator: stateGenerator,
@@ -64,24 +64,24 @@ func NewAuthorizationCodeCredential(client authorizationCodeClient, allowedHosts
 		tokenMutex:     sync.Mutex{},
 	}
 
-	base := newBaseAccessTokenProvider(allowedHosts)
+	base := newBaseAccessTokenProvider()
 	base.retrieveInitialToken = c.GetToken
 	base.refreshToken = client.acquireTokenByRefreshToken
 	base.revokeToken = client.revokeToken
 
-	c.BaseAccessTokenProvider = base
+	c.baseAccessTokenProvider = base
 
-	return c, nil
+	return c
 }
 
 // Initialize initializes the provider and its internal client with the base URL.
-func (c *AuthorizationCodeCredential) Initialize(baseURL string) {
-	c.BaseAccessTokenProvider.Initialize(baseURL)
+func (c *authorizationCodeCredential) Initialize(baseURL string) {
+	c.baseAccessTokenProvider.Initialize(baseURL)
 	c.client.Initialize(baseURL)
 }
 
 // GetToken acquires a token using the authorization code flow.
-func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (token *AccessToken, err error) {
+func (c *authorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]interface{}) (token *AccessToken, err error) {
 	c.tokenMutex.Lock()
 	defer c.tokenMutex.Unlock()
 	state := c.stateGenerator()
@@ -125,59 +125,46 @@ func (c *AuthorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, 
 	return token, nil
 }
 
-// NewAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization Code flow using functional options.
-func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
-	config := &AuthConfig{
-		httpClient: http.DefaultClient,
-		port:       5001,
-	}
-	for _, opt := range opts {
-		opt(config)
-	}
-
-	authority := Authority(config.baseURL)
-
+// NewAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization Code flow.
+func NewAuthorizationCodeProvider(clientID, clientSecret string, opts AuthorizationCodeOptions) (authentication.AuthenticationProvider, error) {
 	var (
 		client authorizationCodeClient
 		err    error
 	)
 
 	if strings.TrimSpace(clientSecret) != "" {
-		client, err = newConfidentialClient(clientID, clientSecret, authority, func(co *clientOptions) {
-			co.httpClient = config.httpClient
+		client, err = newConfidentialClient(clientID, clientSecret, authority(""), func(co *clientOptions) {
+			co.httpClient = opts.HTTPClient
 		})
 	} else {
-		client, err = newPublicClient(clientID, authority, withPKCEChallenge(pkce.MethodS256), func(co *clientOptions) {
-			co.httpClient = config.httpClient
+		client, err = newPublicClient(clientID, authority(""), withPKCEChallenge(pkce.MethodS256), func(co *clientOptions) {
+			co.httpClient = opts.HTTPClient
 		})
 	}
 	if err != nil {
 		return nil, err
 	}
 
-	tokenProvider, err := NewAuthorizationCodeCredential(client, config.allowedHosts, config.port, config.stateGenerator, config.urlOpener, config.serverFactory)
-	if err != nil {
-		return nil, err
-	}
+	tokenProvider := newAuthorizationCodeCredential(client, opts.Port, opts.StateGenerator, opts.URLOpener, opts.ServerFactory)
 
 	tokenProvider.clientID = clientID
-	tokenProvider.Initialize(string(authority))
+	tokenProvider.SetAllowedHosts(opts.AllowedHosts)
 
-	if config.tokenStore != nil {
-		tokenProvider.SetTokenStore(config.tokenStore)
+	if opts.TokenStore != nil {
+		tokenProvider.SetTokenStore(opts.TokenStore)
 	}
 
-	return NewBearerTokenAuthenticationProvider(tokenProvider), nil
+	return NewBearerTokenAuthenticationProvider(tokenProvider, BearerOptions{})
 }
 
 // NewPrivateAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization
 // Code flow using a confidential (client-secret-bearing) client.
-func NewPrivateAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
-	return NewAuthorizationCodeProvider(clientID, clientSecret, opts...)
+func NewPrivateAuthorizationCodeProvider(clientID, clientSecret string, opts AuthorizationCodeOptions) (authentication.AuthenticationProvider, error) {
+	return NewAuthorizationCodeProvider(clientID, clientSecret, opts)
 }
 
 // NewPublicAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization
 // Code flow using a public (no client-secret) client.
-func NewPublicAuthorizationCodeProvider(clientID string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
-	return NewAuthorizationCodeProvider(clientID, "", opts...)
+func NewPublicAuthorizationCodeProvider(clientID string, opts AuthorizationCodeOptions) (authentication.AuthenticationProvider, error) {
+	return NewAuthorizationCodeProvider(clientID, "", opts)
 }

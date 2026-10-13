@@ -112,16 +112,15 @@ func NewClientWithClientCredentials(w *World, clientID, clientSecret string) err
 }
 
 // NewClientWithROPC creates a client using OAuth2 ROPC.
+// The ROPC flow is available but discouraged; prefer Authorization Code with PKCE
+// or Client Credentials for machine-to-machine scenarios (ADR-016).
 func NewClientWithROPC(w *World, clientID, clientSecret, username, password string) error {
 	oauth2HTTP := GetOAuth2HTTPClient()
-	authOpts := []credentials.AuthOption{
-		credentials.WithInstance(IntegrationInstance()),
-	}
-	if oauth2HTTP != nil {
-		authOpts = append(authOpts, credentials.WithHTTPClient(oauth2HTTP))
-	}
-
-	ropc, err := credentials.NewROPCProvider(clientID, clientSecret, username, password, authOpts...)
+	ropc, err := credentials.NewROPCProvider(clientID, clientSecret, username, password, credentials.ROPCOptions{
+		CommonOptions: credentials.CommonOptions{
+			HTTPClient: oauth2HTTP,
+		},
+	})
 	if err != nil {
 		return err
 	}
@@ -172,5 +171,5 @@ func newBasicAuthProvider() (*credentials.BasicAuthenticationProvider, error) {
 			password = "mock"
 		}
 	}
-	return credentials.NewBasicProvider(username, password), nil
+	return credentials.NewBasicProvider(username, password, credentials.BasicOptions{}), nil
 }

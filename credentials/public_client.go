@@ -18,7 +18,7 @@ type publicClient struct {
 }
 
 // newPublicClient creates a new publicClient.
-func newPublicClient(clientID string, authority Authority, options ...clientOption) (*publicClient, error) {
+func newPublicClient(clientID string, authority authority, options ...clientOption) (*publicClient, error) {
 	if clientID == "" {
 		return nil, snerrors.ErrEmptyClientID
 	}
