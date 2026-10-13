@@ -22,14 +22,12 @@ Your administrator must provide:
 | Service‑Now URL   | Base URL of the instance                             |
 | Client ID         | From a ServiceNow OAuth application registry entry   |
 | Redirect URL      | Must match the redirect URL configured in ServiceNow |
-| Authorization URL | OAuth authorization endpoint                         |
-| Token URL         | OAuth token endpoint                                 |
 
 ## SDK flow
 
 ```mermaid
 flowchart TD
-    A([App code]):::app --> B(NewPublicAuthorizationCodeProvider<br/>client ID only — no secret):::sdk
+    A([App code]):::app --> B(NewPublicAuthorizationCodeProvider<br/>client ID + options):::sdk
     B --> C(Public client<br/>secured with PKCE S256):::sdk
 
     subgraph acquire ["Getting the first token (interactive)"]

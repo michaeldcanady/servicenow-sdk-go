@@ -7,6 +7,7 @@ import (
 	"context"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
 )
 
@@ -31,6 +32,7 @@ func newPublicClient(clientID string, authority authority, options ...clientOpti
 		baseClient: &baseClient{
 			clientID:   clientID,
 			httpClient: opts.httpClient,
+			authMethod: oauth2.AuthMethodNone,
 		},
 		method: opts.method,
 	}

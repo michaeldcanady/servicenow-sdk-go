@@ -31,7 +31,7 @@ Your administrator must provide:
 
 ```mermaid
 flowchart TD
-    A([App code]):::app --> B(NewROPCProvider<br/>client ID + secret,<br/>username + password):::sdk
+    A([App code]):::app --> B(NewROPCProvider<br/>client ID + secret,<br/>username + password + options):::sdk
 
     subgraph acquire ["Getting the first token"]
         F(Exchange username/password<br/>for tokens):::sdk --> G(Access token<br/>+ refresh token):::token
