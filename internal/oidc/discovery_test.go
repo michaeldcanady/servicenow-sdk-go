@@ -28,8 +28,8 @@ func (m *mockHTTPClient) Do(req *http.Request) (*http.Response, error) {
 	// Default: make a real HTTP request
 	return http.DefaultClient.Do(req)
 }
-func TestDiscover_Success(t *testing.T) {
 
+func TestDiscover_Success(t *testing.T) {
 	var server *httptest.Server //nolint:staticcheck
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "GET", r.Method)
@@ -55,8 +55,8 @@ func TestDiscover_Success(t *testing.T) {
 	assert.Equal(t, server.URL+"/token", endpoints.TokenURL)
 	assert.Equal(t, server.URL+"/revoke", endpoints.RevocationURL)
 }
-func TestDiscover_SuccessWithoutRevocationEndpoint(t *testing.T) {
 
+func TestDiscover_SuccessWithoutRevocationEndpoint(t *testing.T) {
 	var server *httptest.Server //nolint:staticcheck
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		doc := map[string]interface{}{
@@ -74,8 +74,8 @@ func TestDiscover_SuccessWithoutRevocationEndpoint(t *testing.T) {
 	require.NoError(t, err)
 	assert.Empty(t, endpoints.RevocationURL)
 }
-func TestDiscover_MissingIssuer(t *testing.T) {
 
+func TestDiscover_MissingIssuer(t *testing.T) {
 	var server *httptest.Server //nolint:staticcheck
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		doc := map[string]interface{}{
@@ -93,13 +93,13 @@ func TestDiscover_MissingIssuer(t *testing.T) {
 	require.ErrorIs(t, err, errors.ErrOIDCDiscoveryMissingEndpoint)
 	assert.Contains(t, err.Error(), "issuer")
 }
-func TestDiscover_MissingAuthorizationEndpoint(t *testing.T) {
 
+func TestDiscover_MissingAuthorizationEndpoint(t *testing.T) {
 	var server *httptest.Server //nolint:staticcheck
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		doc := map[string]interface{}{
-			"issuer":         "https://idp.example.com",
-			"token_endpoint": "https://idp.example.com/token",
+			"issuer":         server.URL,
+			"token_endpoint": server.URL + "/token",
 		}
 		json.NewEncoder(w).Encode(doc)
 	}))
@@ -112,8 +112,8 @@ func TestDiscover_MissingAuthorizationEndpoint(t *testing.T) {
 	require.ErrorIs(t, err, errors.ErrOIDCDiscoveryMissingEndpoint)
 	assert.Contains(t, err.Error(), "authorization_endpoint")
 }
-func TestDiscover_MissingTokenEndpoint(t *testing.T) {
 
+func TestDiscover_MissingTokenEndpoint(t *testing.T) {
 	var server *httptest.Server //nolint:staticcheck
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		doc := map[string]interface{}{
@@ -131,8 +131,8 @@ func TestDiscover_MissingTokenEndpoint(t *testing.T) {
 	require.ErrorIs(t, err, errors.ErrOIDCDiscoveryMissingEndpoint)
 	assert.Contains(t, err.Error(), "token_endpoint")
 }
-func TestDiscover_IssuerMismatch(t *testing.T) {
 
+func TestDiscover_IssuerMismatch(t *testing.T) {
 	var server *httptest.Server //nolint:staticcheck
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		doc := map[string]interface{}{
@@ -148,10 +148,10 @@ func TestDiscover_IssuerMismatch(t *testing.T) {
 	_, err := Discover(context.Background(), server.URL, client)
 
 	require.Error(t, err)
-	require.ErrorIs(t, err, errors.ErrOIDCDiscoveryIssuerMismatch)
+	assert.ErrorIs(t, err, errors.ErrOIDCDiscoveryIssuerMismatch)
 }
-func TestDiscover_HTTPError(t *testing.T) {
 
+func TestDiscover_HTTPError(t *testing.T) {
 	var server *httptest.Server //nolint:staticcheck
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
@@ -165,6 +165,7 @@ func TestDiscover_HTTPError(t *testing.T) {
 	require.ErrorIs(t, err, errors.ErrOIDCDiscoveryFailed)
 	assert.Contains(t, err.Error(), "HTTP 404")
 }
+
 func TestDiscover_NetworkError(t *testing.T) {
 	client := &mockHTTPClient{
 		handler: func(req *http.Request) (*http.Response, error) {
@@ -176,8 +177,8 @@ func TestDiscover_NetworkError(t *testing.T) {
 	require.Error(t, err)
 	require.ErrorIs(t, err, errors.ErrOIDCDiscoveryFailed)
 }
-func TestDiscover_InvalidJSON(t *testing.T) {
 
+func TestDiscover_InvalidJSON(t *testing.T) {
 	var server *httptest.Server //nolint:staticcheck
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("{invalid json"))
@@ -190,8 +191,8 @@ func TestDiscover_InvalidJSON(t *testing.T) {
 	require.Error(t, err)
 	require.ErrorIs(t, err, errors.ErrOIDCDiscoveryFailed)
 }
-func TestDiscover_FullMetadataURL(t *testing.T) {
 
+func TestDiscover_FullMetadataURL(t *testing.T) {
 	var server *httptest.Server //nolint:staticcheck
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "/.well-known/openid-configuration", r.URL.Path)
@@ -211,8 +212,8 @@ func TestDiscover_FullMetadataURL(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, server.URL+"/authorize", endpoints.AuthURL)
 }
-func TestDiscover_IssuerWithTrailingSlash(t *testing.T) {
 
+func TestDiscover_IssuerWithTrailingSlash(t *testing.T) {
 	var server *httptest.Server //nolint:staticcheck
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		doc := map[string]interface{}{
@@ -229,8 +230,8 @@ func TestDiscover_IssuerWithTrailingSlash(t *testing.T) {
 
 	require.NoError(t, err)
 }
-func TestDiscover_IssuerCaseInsensitiveHost(t *testing.T) {
 
+func TestDiscover_IssuerCaseInsensitiveHost(t *testing.T) {
 	var server *httptest.Server //nolint:staticcheck
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		doc := map[string]interface{}{
@@ -247,6 +248,7 @@ func TestDiscover_IssuerCaseInsensitiveHost(t *testing.T) {
 
 	require.NoError(t, err)
 }
+
 func TestResolveMetadataURL(t *testing.T) {
 	tests := []struct {
 		input    string
