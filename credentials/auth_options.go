@@ -52,6 +52,27 @@ type ROPCOptions struct {
 	CommonOptions
 }
 
+// ExternalOIDCTokenSource specifies which token to use from the OIDC response.
+type ExternalOIDCTokenSource int
+
+const (
+	// ExternalOIDCTokenSourceIDToken uses the ID token as the bearer token (default).
+	ExternalOIDCTokenSourceIDToken ExternalOIDCTokenSource = iota
+	// ExternalOIDCTokenSourceAccessToken uses the access token as the bearer token.
+	ExternalOIDCTokenSourceAccessToken
+)
+
+// ExternalOIDCOptions configures the external OIDC provider.
+type ExternalOIDCOptions struct {
+	CommonOptions
+	// Issuer is the OIDC issuer URL or the full metadata URL.
+	Issuer string
+	// TokenSource specifies which token to present as the bearer token.
+	TokenSource ExternalOIDCTokenSource
+	// Audience is the expected audience for the access token (when using access token).
+	Audience string
+}
+
 // AuthorizationCodeServer is the interface for the local callback server used in Authorization Code flow.
 type AuthorizationCodeServer interface {
 	GetAddr() string
