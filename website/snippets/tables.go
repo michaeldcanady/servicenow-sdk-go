@@ -11,8 +11,8 @@ import (
 	"fmt"
 	"log"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v3"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v3/tableapi"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi"
 )
 
 // [END table_imports]

@@ -6,10 +6,10 @@ package cmdbinstanceapi
 import (
 	"context"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

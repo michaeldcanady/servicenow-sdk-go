@@ -7,8 +7,8 @@ import (
 	"errors"
 	"testing"
 
-	internal "github.com/michaeldcanady/servicenow-sdk-go/v3/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/mocking"
+	internal "github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

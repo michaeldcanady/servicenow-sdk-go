@@ -11,9 +11,9 @@ import (
 	"fmt"
 	"log"
 
-	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v3"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/credentials"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v3/tableapi"
+	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi"
 )
 
 // [END tgc_imports]

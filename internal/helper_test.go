@@ -6,7 +6,7 @@ package internal
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 )
 
 func TestIsNil(t *testing.T) {

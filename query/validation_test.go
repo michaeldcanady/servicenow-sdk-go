@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/ast"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/ast"
 )
 
 // injectionPayload is the encoded-query injection payload from issue #645: a

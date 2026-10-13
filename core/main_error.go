@@ -4,9 +4,9 @@
 package core
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
-	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/v3/internal/serialization"
-	internalStore "github.com/michaeldcanady/servicenow-sdk-go/v3/internal/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/serialization"
+	internalStore "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 

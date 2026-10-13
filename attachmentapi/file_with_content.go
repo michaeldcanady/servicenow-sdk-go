@@ -4,8 +4,8 @@
 package attachmentapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 

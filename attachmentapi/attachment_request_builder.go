@@ -8,12 +8,12 @@ import (
 	"errors"
 	"maps"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
-	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v3/internal/http"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )

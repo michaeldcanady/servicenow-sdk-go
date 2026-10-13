@@ -9,16 +9,16 @@ import (
 	"context"
 	"log"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v3"
-	activitysubscriptionsapi "github.com/michaeldcanady/servicenow-sdk-go/v3/activitysubscriptionsapi"
-	aggregationapi "github.com/michaeldcanady/servicenow-sdk-go/v3/aggregationapi"
-	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/v3/appointmentbookingapi"
-	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/v3/appserviceapi"
-	batchapi "github.com/michaeldcanady/servicenow-sdk-go/v3/batchapi"
-	caseapi "github.com/michaeldcanady/servicenow-sdk-go/v3/caseapi"
-	cdmapplicationsapi "github.com/michaeldcanady/servicenow-sdk-go/v3/cdmapplicationsapi"
-	cdmeditorapi "github.com/michaeldcanady/servicenow-sdk-go/v3/cdmeditorapi"
-	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/v3/cmdbinstanceapi"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	activitysubscriptionsapi "github.com/michaeldcanady/servicenow-sdk-go/v2/activitysubscriptionsapi"
+	aggregationapi "github.com/michaeldcanady/servicenow-sdk-go/v2/aggregationapi"
+	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/v2/appointmentbookingapi"
+	appserviceapi "github.com/michaeldcanady/servicenow-sdk-go/v2/appserviceapi"
+	batchapi "github.com/michaeldcanady/servicenow-sdk-go/v2/batchapi"
+	caseapi "github.com/michaeldcanady/servicenow-sdk-go/v2/caseapi"
+	cdmapplicationsapi "github.com/michaeldcanady/servicenow-sdk-go/v2/cdmapplicationsapi"
+	cdmeditorapi "github.com/michaeldcanady/servicenow-sdk-go/v2/cdmeditorapi"
+	cmdbinstanceapi "github.com/michaeldcanady/servicenow-sdk-go/v2/cmdbinstanceapi"
 )
 
 func _() {

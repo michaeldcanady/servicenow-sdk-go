@@ -7,9 +7,9 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
-	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v3/internal/http"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/microsoft/kiota-abstractions-go/store"

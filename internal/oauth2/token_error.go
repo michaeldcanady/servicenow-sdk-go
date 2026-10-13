@@ -6,7 +6,7 @@ package oauth2
 import (
 	"fmt"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 )
 
 // TokenError represents an error returned by the OAuth2 server during token exchange or management.

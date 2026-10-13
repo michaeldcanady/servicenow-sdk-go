@@ -7,9 +7,9 @@ import (
 	"context"
 	"testing"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"

@@ -6,7 +6,7 @@ package credentials
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/oauth2/pkce"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
 	"github.com/stretchr/testify/assert"
 )
 

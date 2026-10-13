@@ -6,10 +6,10 @@ package appserviceapi
 import (
 	"context"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

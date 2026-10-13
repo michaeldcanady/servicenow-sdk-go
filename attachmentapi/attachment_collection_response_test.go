@@ -6,8 +6,8 @@ package attachmentapi
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

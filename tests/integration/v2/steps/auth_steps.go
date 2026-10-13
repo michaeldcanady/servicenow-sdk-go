@@ -9,9 +9,9 @@ import (
 	"strings"
 
 	"github.com/cucumber/godog"
-	sdk "github.com/michaeldcanady/servicenow-sdk-go/v3"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/credentials"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/tests/integration/v2/support"
+	sdk "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2/support"
 )
 
 type authSteps struct{}

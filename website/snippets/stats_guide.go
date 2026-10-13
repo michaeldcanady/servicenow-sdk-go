@@ -11,9 +11,9 @@ import (
 	"fmt"
 	"log"
 
-	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v3"
-	aggregationapi "github.com/michaeldcanady/servicenow-sdk-go/v3/aggregationapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/credentials"
+	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	aggregationapi "github.com/michaeldcanady/servicenow-sdk-go/v2/aggregationapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
 )
 
 // [END sg_imports]

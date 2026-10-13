@@ -12,10 +12,10 @@ import (
 	"log"
 	"time"
 
-	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v3"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v3/attachmentapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/credentials"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/query"
+	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachmentapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/query"
 )
 
 // [END ag_delete_aging_imports]

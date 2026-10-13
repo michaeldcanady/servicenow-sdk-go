@@ -12,7 +12,7 @@ import (
 
 	"github.com/jarcoal/httpmock"
 	"github.com/joho/godotenv"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/tests/integration/v2/support"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2/support"
 )
 
 func TestMain(m *testing.M) {

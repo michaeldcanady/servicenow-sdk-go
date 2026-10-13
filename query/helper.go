@@ -4,7 +4,7 @@
 package query
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/ast"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/ast"
 )
 
 // convertSliceToArrayNode converts the provided slice of values to an array of literal nodes.

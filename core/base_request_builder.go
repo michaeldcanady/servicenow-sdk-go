@@ -7,8 +7,8 @@ import (
 	"errors"
 	"strings"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

@@ -10,9 +10,9 @@ import (
 	"errors"
 	"log"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v3"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/core"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 )
 
 func errorsGuideStatus() error {

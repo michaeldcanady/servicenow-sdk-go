@@ -14,7 +14,7 @@
 package query
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 )
 
 // Where starts a new query on the specified field as a string field.

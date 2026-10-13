@@ -6,7 +6,7 @@ package core
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	kiotaStore "github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

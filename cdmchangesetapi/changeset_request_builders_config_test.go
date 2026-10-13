@@ -7,8 +7,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"

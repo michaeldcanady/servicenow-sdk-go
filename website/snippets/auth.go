@@ -10,8 +10,8 @@ import (
 	"context"
 	"log"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v3"
-	"github.com/michaeldcanady/servicenow-sdk-go/v3/credentials"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
 )
 // [END auth_imports]
 

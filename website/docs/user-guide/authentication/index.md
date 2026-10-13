@@ -43,8 +43,8 @@ when the client makes its first request:
 
 ```go
 import (
-    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v3"
-    "github.com/michaeldcanady/servicenow-sdk-go/v3/credentials"
+    servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+    "github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
 )
 
 cred, err := credentials.NewClientCredentialsProvider(
