@@ -28,7 +28,7 @@ type baseAccessTokenProvider struct {
 	// revokeToken is a function to revoke the token.
 	revokeToken func(ctx context.Context, token, tokenTypeHint string) error
 	// tokenStore is an optional store for persisting and retrieving access tokens.
-	tokenStore TokenStore
+	tokenStore KeyedTokenStore
 	// baseURL is the base URL for the ServiceNow instance.
 	baseURL string
 	// clientID is the OAuth2 client ID the tokens are requested for.
@@ -85,8 +85,18 @@ func (p *baseAccessTokenProvider) Initialize(baseURL string) {
 	}
 }
 
-// SetTokenStore sets the token store for the provider.
+// SetTokenStore sets a client-ID-keyed token store for the provider.
+//
+// Deprecated: set CommonOptions.TokenStore to a KeyedTokenStore instead.
 func (p *baseAccessTokenProvider) SetTokenStore(store TokenStore) {
+	if store == nil {
+		return
+	}
+	p.setKeyedTokenStore(clientIDTokenStore{store: store})
+}
+
+// setKeyedTokenStore sets the keyed token store for the provider.
+func (p *baseAccessTokenProvider) setKeyedTokenStore(store KeyedTokenStore) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	p.tokenStore = store

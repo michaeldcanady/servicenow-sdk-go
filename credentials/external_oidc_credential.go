@@ -89,7 +89,7 @@ func NewExternalOIDCProvider(clientID string, opts ExternalOIDCOptions) (authent
 
 	cred.SetAllowedHosts(opts.AllowedHosts)
 	if opts.TokenStore != nil {
-		cred.SetTokenStore(opts.TokenStore)
+		cred.setKeyedTokenStore(opts.TokenStore)
 	}
 
 	provider, err := NewBearerTokenAuthenticationProvider(cred, BearerOptions{})

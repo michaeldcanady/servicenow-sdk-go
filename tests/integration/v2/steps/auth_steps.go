@@ -61,11 +61,15 @@ func (s *authSteps) iInitializeAClientWithAStaticBearerToken(ctx context.Context
 		return support.WithWorld(ctx, w), nil
 	}
 
-	bearer := credentials.NewBearerTokenAuthenticationProvider(
+	bearer, err := credentials.NewBearerTokenAuthenticationProvider(
 		&support.StaticTokenProvider{Token: token},
 		credentials.BearerOptions{},
 	)
-	err := support.NewClientWithAuthProvider(w, bearer)
+	if err != nil {
+		w.AuthErr = err
+		return support.WithWorld(ctx, w), nil
+	}
+	err = support.NewClientWithAuthProvider(w, bearer)
 	if err != nil {
 		w.AuthErr = err
 	}

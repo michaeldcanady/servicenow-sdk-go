@@ -97,8 +97,43 @@ func TestBaseAccessTokenProvider_Initialize(t *testing.T) {
 func TestBaseAccessTokenProvider_SetTokenStore(t *testing.T) {
 	p := newBaseAccessTokenProvider()
 	store := &fakeTokenStore{}
-	p.SetTokenStore(store)
+	p.setKeyedTokenStore(store)
 	assert.Equal(t, store, p.tokenStore)
+}
+
+func TestBaseAccessTokenProvider_SetTokenStore_LegacyClientID(t *testing.T) {
+	p := newBaseAccessTokenProvider()
+	store := &legacyClientIDTokenStore{}
+	p.SetTokenStore(store)
+
+	adapter, ok := p.tokenStore.(clientIDTokenStore)
+	require.True(t, ok)
+	assert.Equal(t, store, adapter.store)
+
+	// The adapter projects the key onto its client ID.
+	require.NoError(t, p.tokenStore.Save(context.Background(), TokenKey{ClientID: "client-1"}, &AccessToken{}))
+	assert.Equal(t, "client-1", store.lastClientID)
+}
+
+// legacyClientIDTokenStore is a client-ID-keyed store that exercises the
+// deprecated SetTokenStore path.
+type legacyClientIDTokenStore struct {
+	lastClientID string
+}
+
+func (s *legacyClientIDTokenStore) Save(_ context.Context, clientID string, _ *AccessToken) error {
+	s.lastClientID = clientID
+	return nil
+}
+
+func (s *legacyClientIDTokenStore) Load(_ context.Context, clientID string) (*AccessToken, error) {
+	s.lastClientID = clientID
+	return nil, nil
+}
+
+func (s *legacyClientIDTokenStore) Delete(_ context.Context, clientID string) error {
+	s.lastClientID = clientID
+	return nil
 }
 
 func TestBaseAccessTokenProvider_Revoke(t *testing.T) {

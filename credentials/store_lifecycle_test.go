@@ -95,7 +95,7 @@ func mustInPackageURL(t *testing.T, raw string) *url.URL {
 
 // newInPackageProvider builds a client-credentials provider and returns the
 // underlying credential so its Revoke can be exercised.
-func newInPackageProvider(t *testing.T, store TokenStore) (authentication.AuthenticationProvider, *clientCredentialsCredential) {
+func newInPackageProvider(t *testing.T, store KeyedTokenStore) (authentication.AuthenticationProvider, *clientCredentialsCredential) {
 	t.Helper()
 	provider, err := NewClientCredentialsProvider(revokeTestClientID, "test-secret",
 		ClientCredentialsOptions{

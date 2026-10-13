@@ -126,7 +126,9 @@ func (c *authorizationCodeCredential) GetToken(ctx context.Context, _ *url.URL, 
 }
 
 // NewAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization Code flow.
-func NewAuthorizationCodeProvider(clientID, clientSecret string, opts AuthorizationCodeOptions) (authentication.AuthenticationProvider, error) {
+func NewAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	config := buildAuthConfig(opts)
+
 	var (
 		client authorizationCodeClient
 		err    error
@@ -134,37 +136,39 @@ func NewAuthorizationCodeProvider(clientID, clientSecret string, opts Authorizat
 
 	if strings.TrimSpace(clientSecret) != "" {
 		client, err = newConfidentialClient(clientID, clientSecret, authority(""), func(co *clientOptions) {
-			co.httpClient = opts.HTTPClient
+			co.httpClient = config.httpClient
 		})
 	} else {
 		client, err = newPublicClient(clientID, authority(""), withPKCEChallenge(pkce.MethodS256), func(co *clientOptions) {
-			co.httpClient = opts.HTTPClient
+			co.httpClient = config.httpClient
 		})
 	}
 	if err != nil {
 		return nil, err
 	}
 
-	tokenProvider := newAuthorizationCodeCredential(client, opts.Port, opts.StateGenerator, opts.URLOpener, opts.ServerFactory)
+	tokenProvider := newAuthorizationCodeCredential(client, config.port, config.stateGenerator, config.urlOpener, config.serverFactory)
 
 	tokenProvider.clientID = clientID
-	tokenProvider.SetAllowedHosts(opts.AllowedHosts)
+	tokenProvider.SetAllowedHosts(config.allowedHosts)
 
-	if opts.TokenStore != nil {
-		tokenProvider.SetTokenStore(opts.TokenStore)
+	if config.tokenStore != nil {
+		tokenProvider.setKeyedTokenStore(config.tokenStore)
 	}
+
+	tokenProvider.Initialize(config.baseURL)
 
 	return NewBearerTokenAuthenticationProvider(tokenProvider, BearerOptions{})
 }
 
 // NewPrivateAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization
 // Code flow using a confidential (client-secret-bearing) client.
-func NewPrivateAuthorizationCodeProvider(clientID, clientSecret string, opts AuthorizationCodeOptions) (authentication.AuthenticationProvider, error) {
-	return NewAuthorizationCodeProvider(clientID, clientSecret, opts)
+func NewPrivateAuthorizationCodeProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	return NewAuthorizationCodeProvider(clientID, clientSecret, opts...)
 }
 
 // NewPublicAuthorizationCodeProvider creates a new AuthenticationProvider for the Authorization
 // Code flow using a public (no client-secret) client.
-func NewPublicAuthorizationCodeProvider(clientID string, opts AuthorizationCodeOptions) (authentication.AuthenticationProvider, error) {
-	return NewAuthorizationCodeProvider(clientID, "", opts)
+func NewPublicAuthorizationCodeProvider(clientID string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	return NewAuthorizationCodeProvider(clientID, "", opts...)
 }

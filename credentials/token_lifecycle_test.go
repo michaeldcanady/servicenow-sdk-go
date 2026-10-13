@@ -140,7 +140,7 @@ func storedValidToken() *credentials.AccessToken {
 	}
 }
 
-func buildProvider(t *testing.T, endpoint *mockTokenEndpoint, store credentials.TokenStore, opts credentials.ClientCredentialsOptions) authentication.AuthenticationProvider {
+func buildProvider(t *testing.T, endpoint *mockTokenEndpoint, store credentials.KeyedTokenStore, opts credentials.ClientCredentialsOptions) authentication.AuthenticationProvider {
 	t.Helper()
 	opts.HTTPClient = &http.Client{Transport: endpoint}
 	opts.TokenStore = store

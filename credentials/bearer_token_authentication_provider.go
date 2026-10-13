@@ -24,11 +24,15 @@ type BearerTokenAuthenticationProvider struct {
 }
 
 // NewBearerTokenAuthenticationProvider creates a new BearerTokenAuthenticationProvider.
-func NewBearerTokenAuthenticationProvider(tokenProvider authentication.AccessTokenProvider, opts BearerOptions) (authentication.AuthenticationProvider, error) {
+func NewBearerTokenAuthenticationProvider(tokenProvider authentication.AccessTokenProvider, opts ...BearerOptions) (authentication.AuthenticationProvider, error) {
+	var o BearerOptions
+	if len(opts) > 0 {
+		o = opts[0]
+	}
 	return &BearerTokenAuthenticationProvider{
 		BaseBearerTokenAuthenticationProvider: authentication.NewBaseBearerTokenAuthenticationProvider(tokenProvider),
 		tokenProvider:                         tokenProvider,
-		allowedHostsValidator:                 createAllowedHostsValidator(opts.AllowedHosts),
+		allowedHostsValidator:                 createAllowedHostsValidator(o.AllowedHosts),
 	}, nil
 }
 

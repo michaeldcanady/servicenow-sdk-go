@@ -103,7 +103,9 @@ func (c *jwtCredential) GetToken(ctx context.Context, uri *url.URL, additionalAu
 }
 
 // NewJWTProvider creates a new AuthenticationProvider for the JWT Bearer Token flow.
-func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.AccessTokenProvider, opts JWTOptions) (authentication.AuthenticationProvider, error) {
+func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.AccessTokenProvider, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	config := buildAuthConfig(opts)
+
 	if clientID == "" {
 		return nil, snerrors.ErrEmptyClientID
 	}
@@ -115,7 +117,7 @@ func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.
 	}
 
 	client, err := newConfidentialClient(clientID, clientSecret, authority(""), func(co *clientOptions) {
-		co.httpClient = opts.HTTPClient
+		co.httpClient = config.httpClient
 	})
 	if err != nil {
 		return nil, err
@@ -124,11 +126,13 @@ func NewJWTProvider(clientID, clientSecret string, tokenProvider authentication.
 	snTokenProvider := newJWTCredential(client, tokenProvider)
 
 	snTokenProvider.clientID = clientID
-	snTokenProvider.SetAllowedHosts(opts.AllowedHosts)
+	snTokenProvider.SetAllowedHosts(config.allowedHosts)
 
-	if opts.TokenStore != nil {
-		snTokenProvider.SetTokenStore(opts.TokenStore)
+	if config.tokenStore != nil {
+		snTokenProvider.setKeyedTokenStore(config.tokenStore)
 	}
+
+	snTokenProvider.Initialize(config.baseURL)
 
 	return NewBearerTokenAuthenticationProvider(snTokenProvider, BearerOptions{})
 }

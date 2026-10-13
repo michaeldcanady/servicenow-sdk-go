@@ -55,7 +55,9 @@ func (c *clientCredentialsCredential) GetToken(ctx context.Context, _ *url.URL, 
 }
 
 // NewClientCredentialsProvider creates a new AuthenticationProvider for the Client Credentials flow.
-func NewClientCredentialsProvider(clientID, clientSecret string, opts ClientCredentialsOptions) (authentication.AuthenticationProvider, error) {
+func NewClientCredentialsProvider(clientID, clientSecret string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	config := buildAuthConfig(opts)
+
 	if clientID == "" {
 		return nil, errors.ErrEmptyClientID
 	}
@@ -64,20 +66,22 @@ func NewClientCredentialsProvider(clientID, clientSecret string, opts ClientCred
 	}
 
 	client, err := newConfidentialClient(clientID, clientSecret, authority(""), func(co *clientOptions) {
-		co.httpClient = opts.HTTPClient
+		co.httpClient = config.httpClient
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	tokenProvider := newClientCredentialsCredential(client, opts.Scopes)
+	tokenProvider := newClientCredentialsCredential(client, config.scopes)
 
 	tokenProvider.clientID = clientID
-	tokenProvider.SetAllowedHosts(opts.AllowedHosts)
+	tokenProvider.SetAllowedHosts(config.allowedHosts)
 
-	if opts.TokenStore != nil {
-		tokenProvider.SetTokenStore(opts.TokenStore)
+	if config.tokenStore != nil {
+		tokenProvider.setKeyedTokenStore(config.tokenStore)
 	}
+
+	tokenProvider.Initialize(config.baseURL)
 
 	return NewBearerTokenAuthenticationProvider(tokenProvider, BearerOptions{})
 }

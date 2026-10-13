@@ -59,7 +59,9 @@ func (c *ropcCredential) GetToken(ctx context.Context, _ *url.URL, _ map[string]
 // NewROPCProvider creates a new AuthenticationProvider for the ROPC flow.
 // The ROPC flow is available but discouraged; see the package documentation
 // for why you should prefer other flows (ADR-016).
-func NewROPCProvider(clientID, clientSecret, username, password string, opts ROPCOptions) (authentication.AuthenticationProvider, error) {
+func NewROPCProvider(clientID, clientSecret, username, password string, opts ...AuthOption) (authentication.AuthenticationProvider, error) {
+	config := buildAuthConfig(opts)
+
 	if clientID == "" {
 		return nil, errors.ErrEmptyClientID
 	}
@@ -74,7 +76,7 @@ func NewROPCProvider(clientID, clientSecret, username, password string, opts ROP
 	}
 
 	client, err := newConfidentialClient(clientID, clientSecret, authority(""), func(co *clientOptions) {
-		co.httpClient = opts.HTTPClient
+		co.httpClient = config.httpClient
 	})
 	if err != nil {
 		return nil, err
@@ -83,11 +85,24 @@ func NewROPCProvider(clientID, clientSecret, username, password string, opts ROP
 	tokenProvider := newROPCCredential(client, username, password)
 
 	tokenProvider.clientID = clientID
-	tokenProvider.SetAllowedHosts(opts.AllowedHosts)
+	tokenProvider.SetAllowedHosts(config.allowedHosts)
 
-	if opts.TokenStore != nil {
-		tokenProvider.SetTokenStore(opts.TokenStore)
+	if config.tokenStore != nil {
+		tokenProvider.setKeyedTokenStore(config.tokenStore)
 	}
 
+	tokenProvider.Initialize(config.baseURL)
+
 	return NewBearerTokenAuthenticationProvider(tokenProvider, BearerOptions{})
+}
+
+// GetAuthentication implements the core.Credential interface.
+//
+// Deprecated: use the provider returned by NewROPCProvider with the client.
+func (c *ropcCredential) GetAuthentication() (string, error) {
+	token, err := c.GetAuthorizationToken(context.Background(), nil, nil)
+	if err != nil {
+		return "", err
+	}
+	return "Bearer " + token, nil
 }

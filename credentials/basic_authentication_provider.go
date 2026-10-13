@@ -31,11 +31,15 @@ type BasicAuthenticationProvider struct {
 
 // NewBasicProvider creates a new BasicAuthenticationProvider with positional
 // credentials and shared options.
-func NewBasicProvider(username, password string, opts BasicOptions) *BasicAuthenticationProvider {
+func NewBasicProvider(username, password string, opts ...BasicOptions) *BasicAuthenticationProvider {
+	var o BasicOptions
+	if len(opts) > 0 {
+		o = opts[0]
+	}
 	return &BasicAuthenticationProvider{
 		username:              username,
 		password:              password,
-		allowedHostsValidator: createAllowedHostsValidator(opts.AllowedHosts),
+		allowedHostsValidator: createAllowedHostsValidator(o.AllowedHosts),
 	}
 }
 
