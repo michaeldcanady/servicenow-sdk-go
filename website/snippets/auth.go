@@ -7,12 +7,12 @@ package snippets
 
 // [START auth_imports]
 import (
+	"context"
 	"log"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
 )
-
 // [END auth_imports]
 
 import "github.com/microsoft/kiota-abstractions-go/authentication"
@@ -39,6 +39,11 @@ func _() {
 	// You'll need your Client ID.
 	credToken, err := credentials.NewPublicAuthorizationCodeProvider(
 		"your-client-id",
+		credentials.AuthorizationCodeOptions{
+			CommonOptions: credentials.CommonOptions{
+				AllowedHosts: []string{"myinstance.service-now.com"},
+			},
+		},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -83,7 +88,11 @@ func authROPC() {
 		"{clientSecret}",
 		"xSDK_USERNAMEx",
 		"xSDK_PASSWORDx",
-		credentials.WithInstance("xSDK_SN_INSTANCEx"),
+		credentials.ROPCOptions{
+			CommonOptions: credentials.CommonOptions{
+				AllowedHosts: []string{"xSDK_SN_INSTANCEx"},
+			},
+		},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -107,7 +116,11 @@ func authClientCredentials() {
 	cred, err := credentials.NewClientCredentialsProvider(
 		"{clientID}",
 		"{clientSecret}",
-		credentials.WithInstance("xSDK_SN_INSTANCEx"),
+		credentials.ClientCredentialsOptions{
+			CommonOptions: credentials.CommonOptions{
+				AllowedHosts: []string{"xSDK_SN_INSTANCEx"},
+			},
+		},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -131,7 +144,11 @@ func authCodePrivate() {
 	cred, err := credentials.NewPrivateAuthorizationCodeProvider(
 		"{clientID}",
 		"{clientSecret}",
-		credentials.WithInstance("xSDK_SN_INSTANCEx"),
+		credentials.AuthorizationCodeOptions{
+			CommonOptions: credentials.CommonOptions{
+				AllowedHosts: []string{"xSDK_SN_INSTANCEx"},
+			},
+		},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -154,7 +171,11 @@ func authCodePublic() {
 	// [START auth_code_public]
 	cred, err := credentials.NewPublicAuthorizationCodeProvider(
 		"{clientID}",
-		credentials.WithInstance("xSDK_SN_INSTANCEx"),
+		credentials.AuthorizationCodeOptions{
+			CommonOptions: credentials.CommonOptions{
+				AllowedHosts: []string{"xSDK_SN_INSTANCEx"},
+			},
+		},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -183,7 +204,11 @@ func authJWT() {
 		"{clientID}",
 		"{clientSecret}",
 		tokenProvider,
-		credentials.WithInstance("xSDK_SN_INSTANCEx"),
+		credentials.JWTOptions{
+			CommonOptions: credentials.CommonOptions{
+				AllowedHosts: []string{"xSDK_SN_INSTANCEx"},
+			},
+		},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -202,6 +227,36 @@ func authJWT() {
 	// [END auth_jwt]
 }
 
+func authExternalOIDC() {
+	// [START auth_external_oidc]
+	cred, err := credentials.NewExternalOIDCProvider(
+		"your-client-id",
+		credentials.ExternalOIDCOptions{
+			CommonOptions: credentials.CommonOptions{
+				AllowedHosts: []string{"myinstance.service-now.com"},
+				Scopes:       []string{"openid", "profile", "email"},
+			},
+			Issuer:      "https://login.microsoftonline.com/{tenant}/v2.0",
+			TokenSource: credentials.ExternalOIDCTokenSourceIDToken, // default
+		},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	client, err := servicenowsdkgo.NewServiceNowServiceClient(
+		servicenowsdkgo.WithAuthenticationProvider(cred),
+		servicenowsdkgo.WithInstance("https://myinstance.service-now.com"),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Client is now authenticated and ready to use
+	_ = client
+	// [END auth_external_oidc]
+}
+
 func _() {
 	authBasicFull()
 	authROPC()
@@ -209,4 +264,5 @@ func _() {
 	authCodePrivate()
 	authCodePublic()
 	authJWT()
+	authExternalOIDC()
 }

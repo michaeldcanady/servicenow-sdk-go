@@ -6,9 +6,13 @@ package credentials
 import (
 	"context"
 	"errors"
+	"net/http"
+	"net/url"
 	"testing"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -234,6 +238,58 @@ func TestNewPrivateAuthorizationCodeProvider(t *testing.T) {
 			assert.NotNil(t, provider)
 		})
 	}
+}
+
+func TestPublicAuthorizationCodeProvider_EndToEnd(t *testing.T) {
+	rt := &capturingTokenEndpoint{body: []byte(`{"access_token":"e2e-token","expires_in":3600}`)}
+
+	var authURL string
+	urlOpener := func(u string) error {
+		authURL = u
+		return nil
+	}
+
+	server := &mockAuthorizationCodeServer{}
+	server.On("GetAddr").Return("http://localhost:5001")
+	server.On("Result", mockAnyContext).Return("e2e-code", "state", nil)
+	server.On("Shutdown", mockAnyContext).Return(nil)
+
+	provider, err := NewPublicAuthorizationCodeProvider("public-client", AuthorizationCodeOptions{
+		CommonOptions: CommonOptions{
+			AllowedHosts: []string{"dev12345.service-now.com"},
+			HTTPClient:   &http.Client{Transport: rt},
+		},
+		URLOpener:     urlOpener,
+		ServerFactory: func(_ string, _ int) (AuthorizationCodeServer, error) { return server, nil },
+	})
+	require.NoError(t, err)
+	preparable, ok := provider.(Preparable)
+	require.True(t, ok)
+	preparable.Initialize("https://dev12345.service-now.com")
+
+	request := abstractions.NewRequestInformation()
+	request.SetUri(*mustParseURL(t, "https://dev12345.service-now.com/now/table/incident"))
+	require.NoError(t, provider.AuthenticateRequest(context.Background(), request, nil))
+
+	header := request.Headers.Get("Authorization")
+	require.Len(t, header, 1)
+	assert.Equal(t, "Bearer e2e-token", header[0])
+
+	// The token request must present the verifier matching the authorization
+	// URL's challenge and must not carry a client secret.
+	require.NotNil(t, rt.lastForm)
+	assert.Equal(t, "public-client", rt.lastForm.Get("client_id"))
+	assert.Empty(t, rt.lastForm.Get("client_secret"))
+
+	u, err := url.Parse(authURL)
+	require.NoError(t, err)
+	challenge := u.Query().Get("code_challenge")
+	require.NotEmpty(t, challenge)
+	verifier := rt.lastForm.Get("code_verifier")
+	require.NotEmpty(t, verifier)
+	want, err := pkce.NewPKCEChallenge(pkce.MethodS256, verifier)
+	require.NoError(t, err)
+	assert.Equal(t, want, challenge)
 }
 
 func TestNewPublicAuthorizationCodeProvider(t *testing.T) {

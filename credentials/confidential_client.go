@@ -7,6 +7,7 @@ import (
 	"context"
 
 	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
 )
 
 // confidentialClient represents an application that has a client secret.
@@ -33,6 +34,7 @@ func newConfidentialClient(clientID, clientSecret string, authority authority, o
 			clientID:     clientID,
 			clientSecret: clientSecret,
 			httpClient:   opts.httpClient,
+			authMethod:   oauth2.AuthMethodClientSecretPost,
 		},
 	}
 

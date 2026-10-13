@@ -30,8 +30,11 @@ type baseClient struct {
 	clientID string
 	// clientSecret stored to be injected into oauth client later
 	clientSecret string
-	httpClient   *http.Client
-	mutex        sync.RWMutex
+	// authMethod identifies the client to the authorization server. The zero
+	// value is AuthMethodClientSecretPost, matching the previous default.
+	authMethod oauth2.AuthMethod
+	httpClient *http.Client
+	mutex      sync.RWMutex
 }
 
 func (c *baseClient) Initialize(baseURL string) {
@@ -58,7 +61,7 @@ func (c *baseClient) Initialize(baseURL string) {
 			RevocationURL:    authority.revocationURL(),
 			IntrospectionURL: "",
 		},
-		AuthMethod: oauth2.AuthMethodClientSecretPost,
+		AuthMethod: c.authMethod,
 		HTTPClient: c.httpClient,
 	}
 }

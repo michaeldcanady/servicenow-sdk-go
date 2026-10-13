@@ -9,6 +9,7 @@ const sidebars: SidebarsConfig = {
     'getting-started',
     'core-concepts',
     'user-guide/migrate-v1-to-v2',
+    'user-guide/migration-v2-to-v3',
     'release-notes-v2',
     'user-guide/support-policy',
     'user-guide/configuration',
@@ -23,6 +24,7 @@ const sidebars: SidebarsConfig = {
         'user-guide/authentication/basic',
         'user-guide/authentication/client-credentials',
         'user-guide/authentication/jwt-token',
+        'user-guide/authentication/external-oidc',
       ],
     },
     {

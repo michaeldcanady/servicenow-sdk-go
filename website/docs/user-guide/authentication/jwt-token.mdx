@@ -34,7 +34,7 @@ Your application must also provide:
 
 ```mermaid
 flowchart TD
-    A([App code]):::app --> B(NewJWTProvider<br/>client ID + secret,<br/>your token provider):::sdk
+    A([App code]):::app --> B(NewJWTProvider<br/>client ID + secret,<br/>your token provider + options):::sdk
 
     subgraph acquire ["Getting a token"]
         F(Your provider generates<br/>a signed JWT assertion):::app --> G(SDK validates the JWT<br/>claims, iat, alg):::sdk

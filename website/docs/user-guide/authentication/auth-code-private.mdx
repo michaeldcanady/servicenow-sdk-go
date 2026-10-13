@@ -4,10 +4,9 @@ import GoSnippet from '@site/src/components/GoSnippet';
 import authGo from '@site/snippets/auth.go';
 
 
-The Authorization Code (private) flow works for applications that can
-securely store a client secret (for example, server-side services, desktop apps). A user
-authenticates interactively, and the SDK exchanges the authorization code for
-tokens.
+The Authorization Code (private) flow works for applications that
+authenticate users interactively and can securely store a client secret
+(server‑side web applications, desktop apps).
 
 ## Objective
 
@@ -24,20 +23,18 @@ Your administrator must provide:
 | Client ID         | From a ServiceNow OAuth application registry entry   |
 | Client Secret     | From the same registry entry                         |
 | Redirect URL      | Must match the redirect URL configured in ServiceNow |
-| Authorization URL | OAuth authorization endpoint                         |
-| Token URL         | OAuth token endpoint                                 |
 
 ## SDK flow
 
 ```mermaid
 flowchart TD
-    A([App code]):::app --> B(NewPrivateAuthorizationCodeProvider<br/>client ID + secret):::sdk
+    A([App code]):::app --> B(NewPrivateAuthorizationCodeProvider<br/>client ID + secret + options):::sdk
 
     subgraph acquire ["Getting the first token (interactive)"]
-        H(Start local redirect listener<br/>on port 5001):::sdk --> J[[Browser opens the<br/>authorization URL]]:::external
+        H(Start local redirect listener<br/>on port 5001):::sdk --> J[[Browser opens the authorization URL<br/>with PKCE challenge]]:::external
         J --> K[[User signs in<br/>and approves]]:::external
         K --> L(Redirect delivers the<br/>authorization code):::sdk
-        L --> M(Exchange code<br/>for tokens):::sdk
+        L --> M(Exchange code for tokens<br/>with PKCE verifier):::sdk
         M --> N(Access token<br/>+ refresh token):::token
         N --> O(Token cache):::token
     end
