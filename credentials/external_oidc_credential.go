@@ -44,11 +44,16 @@ func NewExternalOIDCProvider(clientID string, opts ExternalOIDCOptions) (authent
 		return nil, snerrors.ErrEmptyClientID
 	}
 	if strings.TrimSpace(opts.Issuer) == "" {
-		return nil, fmt.Errorf("%w: issuer", snerrors.ErrEmptyClientID)
+		return nil, snerrors.ErrEmptyIssuer
 	}
 
-	// Resolve issuer through discovery
-	endpoints, err := oidc.Discover(context.Background(), opts.Issuer, http.DefaultClient)
+	// Resolve issuer through discovery. Discovery uses the same HTTP client as
+	// the token requests so callers can inject one client for both.
+	discoveryClient := opts.HTTPClient
+	if discoveryClient == nil {
+		discoveryClient = http.DefaultClient
+	}
+	endpoints, err := oidc.Discover(context.Background(), opts.Issuer, discoveryClient)
 	if err != nil {
 		return nil, fmt.Errorf("external OIDC discovery failed: %w", err)
 	}
