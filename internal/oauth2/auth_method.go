@@ -4,7 +4,7 @@
 // Package oauth2 provides a spec-compliant OAuth2 client for various grant types.
 package oauth2
 
-import "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+import "github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
 
 // AuthMethod represents the method used by the client to authenticate with the authorization server.
 type AuthMethod int

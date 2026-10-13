@@ -6,7 +6,7 @@ package support
 import (
 	"context"
 
-	sdk "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	sdk "github.com/michaeldcanady/servicenow-sdk-go/v3"
 )
 
 type worldKey struct{}

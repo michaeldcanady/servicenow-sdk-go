@@ -8,9 +8,9 @@ import (
 	"errors"
 	"testing"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/mocking"
 	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

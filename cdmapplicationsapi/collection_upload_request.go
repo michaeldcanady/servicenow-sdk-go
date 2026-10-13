@@ -4,10 +4,10 @@
 package cdmapplicationsapi // nolint:dupl // shares field-count shape with ComponentUploadRequest/ExportStatusResult by coincidence, not copy-paste; distinct API concept, not worth sacrificing named accessors for
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
-	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/serialization"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
+	internalSerialization "github.com/michaeldcanady/servicenow-sdk-go/v3/internal/serialization"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/store"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 

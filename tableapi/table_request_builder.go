@@ -8,12 +8,12 @@ import (
 	"fmt"
 	"maps"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
-	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/model"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v3/internal/http"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/model"
 
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"

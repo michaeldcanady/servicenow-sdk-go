@@ -11,9 +11,9 @@ import (
 	"fmt"
 	"log"
 
-	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v2"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachmentapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
+	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v3"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v3/attachmentapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/credentials"
 )
 
 // [END ag_recent_imports]

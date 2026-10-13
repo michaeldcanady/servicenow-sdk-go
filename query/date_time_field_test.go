@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/ast"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/ast"
 )
 
 func TestDateTimeField_On(t *testing.T) {

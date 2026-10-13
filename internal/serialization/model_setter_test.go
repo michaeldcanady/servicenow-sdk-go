@@ -7,7 +7,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
-	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal"
+	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v3/internal/http"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 )
 

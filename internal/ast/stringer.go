@@ -6,7 +6,7 @@ package ast
 import (
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
 )
 
 type StringerVisitor struct {

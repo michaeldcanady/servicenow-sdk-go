@@ -4,9 +4,9 @@
 package core
 
 import (
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
 	"github.com/microsoft/kiota-abstractions-go/store"
 )
 

@@ -6,9 +6,9 @@ package batchapi
 import (
 	"testing"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/mocking"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/mocking"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/microsoft/kiota-abstractions-go/store"
 	"github.com/stretchr/testify/assert"

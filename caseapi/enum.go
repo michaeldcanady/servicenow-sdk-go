@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
 )
 
 // unknownEnumValueError reports that s is not a recognized wire value for the named

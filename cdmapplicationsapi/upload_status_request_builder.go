@@ -6,7 +6,7 @@ package cdmapplicationsapi
 import (
 	"maps"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/core"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

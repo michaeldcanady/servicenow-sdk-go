@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	sdk "github.com/michaeldcanady/servicenow-sdk-go/v2"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
+	sdk "github.com/michaeldcanady/servicenow-sdk-go/v3"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/credentials"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 

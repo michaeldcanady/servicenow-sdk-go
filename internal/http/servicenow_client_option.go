@@ -4,8 +4,8 @@
 package internalhttp
 
 import (
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
 	nethttplibrary "github.com/microsoft/kiota-http-go"
 )
 

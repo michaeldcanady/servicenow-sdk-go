@@ -11,8 +11,8 @@ import (
 	"fmt"
 	"log"
 
-	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v2"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
+	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v3"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/credentials"
 )
 
 // [END ceg_imports]

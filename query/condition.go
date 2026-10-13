@@ -6,8 +6,8 @@ package query
 import (
 	"errors"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/ast"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/ast"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
 )
 
 // Condition represents a part of a ServiceNow query.

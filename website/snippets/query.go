@@ -10,9 +10,9 @@ import (
 	"fmt"
 	"log"
 
-	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/query"
-	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v2/tableapi"
+	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v3"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/query"
+	tableapi "github.com/michaeldcanady/servicenow-sdk-go/v3/tableapi"
 )
 
 func _() {

@@ -4,8 +4,8 @@
 package tableapi
 
 import (
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/store"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/core"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/store"
 )
 
 // RecordElement represents a single field in a TableRecord.

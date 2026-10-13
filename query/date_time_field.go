@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/ast"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/ast"
 )
 
 // DateTimeField represents a date-time field in ServiceNow.

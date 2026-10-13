@@ -8,8 +8,8 @@ import (
 	"fmt"
 
 	"github.com/cucumber/godog"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/batchapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/tests/integration/v2/support"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/batchapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/tests/integration/v2/support"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

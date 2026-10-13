@@ -6,7 +6,7 @@ package credentials
 import (
 	"time"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/oauth2"
 )
 
 func convertToken(t *oauth2.Token) *AccessToken {

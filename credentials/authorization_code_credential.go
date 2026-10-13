@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/oauth2/pkce"
 	"github.com/microsoft/kiota-abstractions-go/authentication"
 	"github.com/pkg/browser"
 )

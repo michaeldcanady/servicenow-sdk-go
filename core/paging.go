@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/internal/conversion"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 )
 

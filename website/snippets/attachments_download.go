@@ -13,10 +13,10 @@ import (
 	"os"
 	"path/filepath"
 
-	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v2"
-	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v2/attachmentapi"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
-	"github.com/michaeldcanady/servicenow-sdk-go/v2/query"
+	servicenow "github.com/michaeldcanady/servicenow-sdk-go/v3"
+	attachmentapi "github.com/michaeldcanady/servicenow-sdk-go/v3/attachmentapi"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/credentials"
+	"github.com/michaeldcanady/servicenow-sdk-go/v3/query"
 )
 
 // [END ag_download_imports]

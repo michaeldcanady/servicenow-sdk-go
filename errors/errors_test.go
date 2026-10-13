@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"testing"
 
-	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v3/errors"
 	"github.com/stretchr/testify/assert"
 )
 
