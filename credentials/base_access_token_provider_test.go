@@ -285,6 +285,6 @@ func mustParseURL(t *testing.T, raw string) *url.URL {
 
 type fakeTokenStore struct{}
 
-func (f *fakeTokenStore) Save(_ context.Context, _ string, _ *AccessToken) error { return nil }
-func (f *fakeTokenStore) Load(_ context.Context, _ string) (*AccessToken, error) { return nil, nil }
-func (f *fakeTokenStore) Delete(_ context.Context, _ string) error               { return nil }
+func (f *fakeTokenStore) Save(_ context.Context, _ TokenKey, _ *AccessToken) error { return nil }
+func (f *fakeTokenStore) Load(_ context.Context, _ TokenKey) (*AccessToken, error) { return nil, nil }
+func (f *fakeTokenStore) Delete(_ context.Context, _ TokenKey) error               { return nil }

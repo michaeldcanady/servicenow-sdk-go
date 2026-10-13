@@ -78,6 +78,7 @@ func NewROPCProvider(clientID, clientSecret, username, password string, opts ...
 		return nil, err
 	}
 
+	tokenProvider.clientID = clientID
 	tokenProvider.Initialize(string(authority))
 
 	if config.tokenStore != nil {
