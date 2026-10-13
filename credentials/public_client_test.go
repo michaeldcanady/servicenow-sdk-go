@@ -8,6 +8,7 @@ import (
 	"errors"
 	"testing"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
 	"github.com/stretchr/testify/assert"
@@ -23,7 +24,7 @@ func TestNewPublicClient(t *testing.T) {
 		{
 			name:     "empty client id returns error",
 			clientID: "",
-			wantErr:  ErrEmptyClientID,
+			wantErr:  snerrors.ErrEmptyClientID,
 		},
 		{
 			name:     "valid client id succeeds",

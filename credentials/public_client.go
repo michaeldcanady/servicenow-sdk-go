@@ -6,6 +6,7 @@ package credentials
 import (
 	"context"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2/pkce"
 )
 
@@ -19,7 +20,7 @@ type publicClient struct {
 // newPublicClient creates a new publicClient.
 func newPublicClient(clientID string, authority Authority, options ...clientOption) (*publicClient, error) {
 	if clientID == "" {
-		return nil, ErrEmptyClientID
+		return nil, snerrors.ErrEmptyClientID
 	}
 
 	opts := defaultOptions()
