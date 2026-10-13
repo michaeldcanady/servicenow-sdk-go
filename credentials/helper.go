@@ -20,5 +20,6 @@ func convertToken(t *oauth2.Token) *AccessToken {
 		RefreshToken: t.RefreshToken,
 		Scope:        t.Scope,
 		TokenType:    t.TokenType,
+		IDToken:      t.IDToken,
 	}
 }

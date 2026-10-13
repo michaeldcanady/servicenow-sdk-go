@@ -29,6 +29,7 @@ func TestConvertToken(t *testing.T) {
 				ExpiresIn:    3600,
 				RefreshToken: "refresh",
 				Scope:        "read",
+				IDToken:      "id-token",
 			},
 			expected: &AccessToken{
 				AccessToken:  "access",
@@ -36,6 +37,7 @@ func TestConvertToken(t *testing.T) {
 				ExpiresIn:    3600,
 				RefreshToken: "refresh",
 				Scope:        "read",
+				IDToken:      "id-token",
 			},
 		},
 	}
@@ -52,6 +54,7 @@ func TestConvertToken(t *testing.T) {
 			assert.Equal(t, tt.expected.ExpiresIn, got.ExpiresIn)
 			assert.Equal(t, tt.expected.RefreshToken, got.RefreshToken)
 			assert.Equal(t, tt.expected.Scope, got.Scope)
+			assert.Equal(t, tt.expected.IDToken, got.IDToken)
 			assert.False(t, got.ExpiresAt.IsZero())
 		})
 	}
