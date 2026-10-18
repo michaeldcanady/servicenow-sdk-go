@@ -32,6 +32,8 @@ below are the primary sources.
 | [012](012-release-provenance-in-band.md) | Release provenance (SBOM, signatures, verification) is generated in-band, not event-driven | Accepted |
 | [013](013-event-driven-release-dispatch.md) | Proposed direction: decouple release tasks via `repository_dispatch` events with reconciliation, ending at a GitHub App for native triggers | Proposed |
 | [014](014-external-oidc-verbatim-token.md) | External OIDC tokens are presented verbatim; ServiceNow's OIDP validates identity | Accepted |
+| [015](015-credentials-provider-surface.md) | The credentials package exposes providers; a credential is internal | Accepted |
+| [016](016-keep-ropc-discouraged.md) | Keep the ROPC grant, but steer callers away from it | Accepted |
 
 ## Proposing a new ADR
 

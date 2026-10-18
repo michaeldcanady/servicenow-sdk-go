@@ -345,6 +345,8 @@ const sidebars: SidebarsConfig = {
             'contributing/adrs/012-release-provenance-in-band',
             'contributing/adrs/013-event-driven-release-dispatch',
             'contributing/adrs/014-external-oidc-verbatim-token',
+            'contributing/adrs/015-credentials-provider-surface',
+            'contributing/adrs/016-keep-ropc-discouraged',
           ],
         },
       ],
