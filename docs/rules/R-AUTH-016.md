@@ -6,21 +6,25 @@ supersedes: []
 conflicts_checked: true
 ---
 
-<!-- Keywords: ROPC, resource owner password, deprecated, removal, legacy,
-guidance, discouraged, client credentials, authorization code -->
+# ROPC stays available and is documented as not recommended
 
-MUST keep `NewROPCProvider` and its credential available.
-MUST recommend against the grant in the `NewROPCProvider` godoc and the authentication guide, pointing to client credentials for machine identity and the authorization code flow for user identity.
-MUST NOT remove the ROPC grant.
-MUST NOT mark ROPC with a `// Deprecated:` godoc marker — it implies a removal that is not planned.
+<!-- Keywords MUST, MUST NOT, SHOULD, SHOULD NOT, MAY are interpreted per RFC 2119 / RFC 8174 (https://www.rfc-editor.org/rfc/rfc2119). -->
+
+MUST: Keep `NewROPCProvider` and its credential available.
+MUST NOT: Remove the ROPC grant.
+MUST: Give `NewROPCProvider` a godoc paragraph beginning `Not recommended:` that points to client credentials for machine identity and the authorization code flow for user identity.
+MUST: Repeat the same recommendation in the authentication guide.
+MUST NOT: Mark ROPC with a `// Deprecated:` marker (R-REL-025).
 
 ## Verify
 
 ```bash
-# Fails (non-zero) if a `// Deprecated:` marker is added to the ROPC provider.
-! grep -RInE '// Deprecated:' --include='*.go' credentials/ | grep -i ropc
+# The doc comment must carry a Not recommended: paragraph and no Deprecated: marker. Fails closed if the function is missing.
+doc=$(grep -RIn -B8 'func NewROPCProvider' --include='*.go' credentials/) && [ -n "$doc" ] \
+  && printf '%s\n' "$doc" | grep -q 'Not recommended:' \
+  && { printf '%s\n' "$doc" | grep -q 'Deprecated:'; [ $? -eq 1 ]; }
 ```
 
 ## Rationale
 
-OAuth 2.1 deprecates ROPC, but some legacy ServiceNow setups have no substitute and the SDK has no removal plan; keeping it with documented guidance warns callers without promising a break that will not come (see ADR 016).
+OAuth 2.1 drops ROPC, but some legacy ServiceNow setups have no substitute and the SDK has no removal plan. This SDK reserves `Deprecated:` for APIs being replaced or removed (R-REL-025), so ROPC gets an explicit not-recommended paragraph instead.

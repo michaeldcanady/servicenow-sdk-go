@@ -57,6 +57,6 @@ codebase.
 - **Cons:** breaking — any caller relying on `(nil, nil)` as a success-shaped
   no-op must be updated to handle the returned error.
 - **Enforced by:** the `principal-software-engineer` agent (consulting the
-  `.opencode/skills/design-decisions` conventions) checks for this pattern in
+  `.agents/skills/design-decisions` conventions) checks for this pattern in
   new-module reviews; a guard that returns bare `nil`/`(nil, nil)` instead of
   the sentinel is a consistency-review finding, not a style nit.

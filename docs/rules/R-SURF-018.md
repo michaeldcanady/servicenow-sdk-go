@@ -1,29 +1,33 @@
 ---
 id: R-SURF-018
-applies_to: ["now_request_builder.go", "core/**/*.go", "**/*.go"]
+applies_to: ["now_request_builder.go", "tableapi/**/*.go"]
 status: proposed
 supersedes: []
 conflicts_checked: true
 ---
 
-<!-- Keywords: Table2, collection builder, ByName, table entry, raw table,
-method overload, number suffix, url segment, rename to Table -->
+# Table2 and ByName bridge the v2 table entry point
 
-MUST expose the raw-table escape hatch as `.ByName(name)` on the collection builder returned by `Table2()`.
-MUST name the v2 collection-builder method `Table2()` and rename it to `Table()` at the next major once the legacy `Table(name string)` is removed.
-MUST keep the legacy `Now().Table(name string) *TableRecord` working for all of v2.
-MUST map a builder method name to its URL path segment; on a name collision append a number (`Table2`).
-MUST NOT remove the legacy `Table(name string)` before the next major version.
-MUST NOT attempt to overload `Table` for both shapes — Go has no method overloading.
-SHOULD document the URL mapping for scoped APIs that keep semantic (non-path) names.
+<!-- Keywords MUST, MUST NOT, SHOULD, SHOULD NOT, MAY are interpreted per RFC 2119 / RFC 8174 (https://www.rfc-editor.org/rfc/rfc2119). -->
+<!-- TODO(owner): Kiota convention for index builders is `ByTableName`; confirm `ByName` is intentional (R-BUILD-003 makes msgraph-sdk-go the tie-breaker). -->
+
+MUST: Expose the raw-table escape hatch as `.ByName(name)` on the collection builder returned by `Table2()`.
+MUST: Name the v2 collection-builder method `Table2()`.
+MUST: Rename `Table2()` to `Table()` at the next major, once the legacy `Table(name string)` is removed.
+MUST: Keep the legacy `Now().Table(name string) *TableRecord` working for all of v2.
+MUST: Mark the legacy `Table(name string)` with a `// Deprecated:` paragraph naming `Table2().ByName` as the replacement (R-REL-025).
+MUST NOT: Remove the legacy `Table(name string)` before the next major version.
+SHOULD NOT: Use number-suffixed builder names outside this Table2 transition.
+SHOULD: Document the URL mapping for scoped APIs that keep semantic (non-path) names.
 
 ## Verify
 
 ```bash
-# Passes (zero) while the v2 collection-builder entry exists.
-grep -RInE 'func .*Table2\(' --include='*.go' .
+# Fails closed (exit 1) if Table2 is missing or the legacy Table(name) lacks a Deprecated: paragraph.
+grep -RqE 'func \([a-zA-Z]+ \*?[A-Za-z]+\) Table2\(' --include='*.go' . \
+  && grep -RIn -B6 -E 'func \([a-zA-Z]+ \*?[A-Za-z]+\) Table\(name string\)' --include='*.go' . | grep -q 'Deprecated:'
 ```
 
 ## Rationale
 
-Go can't overload methods, so the collection-builder entry and the legacy `Table(name)` share v2 under a number-suffixed `Table2`, renamed to `Table` at the next major; `.ByName` preserves the raw escape hatch and the name still mirrors the URL segment (see ADRs 008, 018).
+Go cannot overload methods, so the collection-builder entry and the legacy `Table(name)` share v2 under a number-suffixed `Table2()`, renamed to `Table()` at the next major. `.ByName` preserves the raw escape hatch, and the name still mirrors its URL segment.

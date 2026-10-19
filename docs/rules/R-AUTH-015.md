@@ -6,22 +6,24 @@ supersedes: []
 conflicts_checked: true
 ---
 
-<!-- Keywords: credentials surface, providers, credential internal, BaseAccessTokenProvider,
-Authority, WithInstance, WithURL, token store, provider constructors -->
+# The credentials package exports providers, not credential types
 
-MUST expose only provider constructors (`NewXProvider`), `TokenStore`, per-flow option types, and shared error sentinels from `credentials/`.
-MUST keep the credential types, `BaseAccessTokenProvider`, and `Authority` unexported.
-MUST name the ServiceNow URL once, on the client, passed to the provider via `Initialize`.
-MUST NOT export credential types whose constructors take unexported interfaces no external caller can implement.
-MUST NOT add `WithInstance` or `WithURL` back to credential options (the external OIDC issuer stays a credential option because it names the IdP, not the instance).
+<!-- Keywords MUST, MUST NOT, SHOULD, SHOULD NOT, MAY are interpreted per RFC 2119 / RFC 8174 (https://www.rfc-editor.org/rfc/rfc2119). -->
+
+MUST: Export from `credentials/` only provider constructors (`NewXProvider`), `TokenStore`, per-flow option types, and shared error sentinels.
+MUST: Keep credential types, `BaseAccessTokenProvider`, and `Authority` unexported.
+MUST: Name the ServiceNow URL once, on the client, and pass it to each provider through `Initialize`.
+MUST NOT: Export a credential type whose constructor takes an unexported interface that no external caller can implement.
+MUST NOT: Define `WithInstance*` or `WithURL*` options on credentials.
+MAY: Keep the external OIDC issuer as a credential option, because it names the IdP, not the instance.
 
 ## Verify
 
 ```bash
-# Fails (non-zero) if WithInstance/WithURL is reintroduced on credentials.
-! grep -RInE 'func With(Instance|URL)\(' --include='*.go' credentials/
+# grep exit 1 = no match = pass; exit 2 fails closed.
+grep -RInE 'func With(Instance|URL)' --include='*.go' credentials/; [ $? -eq 1 ]
 ```
 
 ## Rationale
 
-The exported credential types were API surface no consumer could construct, and the instance was set twice (credential + client); exposing providers only keeps the public surface usable and the URL single-sourced (see ADR 015).
+Exported credential types were API surface no consumer could construct, and the instance was set twice (credential and client). Exposing providers only keeps the public surface usable and the URL single-sourced.

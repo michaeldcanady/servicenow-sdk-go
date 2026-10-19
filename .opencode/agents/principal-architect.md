@@ -1,0 +1,1 @@
+../../.agents/agents/principal-architect/agent.md
