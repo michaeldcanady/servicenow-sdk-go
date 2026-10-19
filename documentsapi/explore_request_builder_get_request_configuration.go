@@ -9,8 +9,8 @@ import (
 
 // ExploreRequestBuilderGetQueryParameters ...
 type ExploreRequestBuilderGetQueryParameters struct {
-	Page        *int    `uriparametername:"page"`
-	Limit       *int    `uriparametername:"limit"`
+	Page        *int32  `uriparametername:"page"`
+	Limit       *int32  `uriparametername:"limit"`
 	Query       *string `uriparametername:"query"`
 	TableName   *string `uriparametername:"table_name"`
 	FolderSysID *string `uriparametername:"folder_sys_id"`
