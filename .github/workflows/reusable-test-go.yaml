@@ -47,10 +47,6 @@ on:
         description: "Set SN_PASSWORD environment variable for integration tests"
         type: string
         default: ""
-    secrets:
-      CODECOV_TOKEN:
-        description: "Codecov token used to upload coverage reports; empty skips authenticated upload"
-        required: false
 
 permissions: {}
 
@@ -62,6 +58,7 @@ jobs:
     permissions:
       contents: read # checkout and build
       pull-requests: write # sticky PR comment on failure
+      id-token: write # Codecov OIDC upload
     env:
       SN_OFFLINE: ${{ inputs.sn-offline }}
       SN_INSTANCE: ${{ inputs.sn-instance }}
@@ -112,5 +109,6 @@ jobs:
         with:
           files: ${{ inputs.coverage-file }}
           fail_ci_if_error: true
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          # OIDC authenticates the upload, so the step needs no secret and
+          # Dependabot and fork runs (which get no repository secrets) work too.
+          use_oidc: true
