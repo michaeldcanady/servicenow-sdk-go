@@ -73,3 +73,116 @@ func TestClientCredentials(t *testing.T) {
 		})
 	}
 }
+
+// modeEnvKeys are cleared so ambient SN_*/SNOW_* values cannot leak into the
+// mode assertions below.
+var modeEnvKeys = []string{
+	"SN_OFFLINE",
+	"SN_USERNAME", "SN_PASSWORD",
+	"SNOW_USERNAME", "SNOW_PASSWORD",
+}
+
+func TestRunMode(t *testing.T) {
+	tests := []struct {
+		name        string
+		env         map[string]string
+		wantE2E     bool
+		wantOffline bool
+	}{
+		{
+			name:        "nothing set defaults to mocked",
+			env:         map[string]string{},
+			wantE2E:     false,
+			wantOffline: true,
+		},
+		{
+			name:        "SN_OFFLINE unset with credentials stays mocked",
+			env:         map[string]string{"SN_USERNAME": "live_user", "SN_PASSWORD": "live_pass"},
+			wantE2E:     false,
+			wantOffline: true,
+		},
+		{
+			name:        "explicit SN_OFFLINE=true is mocked",
+			env:         map[string]string{"SN_OFFLINE": "true", "SN_USERNAME": "live_user"},
+			wantE2E:     false,
+			wantOffline: true,
+		},
+		{
+			name:        "explicit SN_OFFLINE=false is live",
+			env:         map[string]string{"SN_OFFLINE": "false", "SN_USERNAME": "live_user"},
+			wantE2E:     true,
+			wantOffline: false,
+		},
+		{
+			name:        "unrecognized SN_OFFLINE value stays mocked",
+			env:         map[string]string{"SN_OFFLINE": "yes", "SN_USERNAME": "live_user"},
+			wantE2E:     false,
+			wantOffline: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			for _, k := range modeEnvKeys {
+				t.Setenv(k, tt.env[k]) // empty string == unset
+			}
+			assert.Equal(t, tt.wantE2E, IsE2E())
+			assert.Equal(t, tt.wantOffline, IsOffline())
+			// IsOffline must always be the exact negation of IsE2E.
+			assert.Equal(t, !IsE2E(), IsOffline())
+		})
+	}
+}
+
+func TestRequireCredentials(t *testing.T) {
+	tests := []struct {
+		name    string
+		env     map[string]string
+		wantErr bool
+	}{
+		{
+			name:    "mocked mode requires nothing",
+			env:     map[string]string{},
+			wantErr: false,
+		},
+		{
+			name:    "mocked mode with partial credentials still requires nothing",
+			env:     map[string]string{"SN_USERNAME": "live_user"},
+			wantErr: false,
+		},
+		{
+			name:    "live mode without credentials errors",
+			env:     map[string]string{"SN_OFFLINE": "false"},
+			wantErr: true,
+		},
+		{
+			name:    "live mode with username but no password errors",
+			env:     map[string]string{"SN_OFFLINE": "false", "SN_USERNAME": "live_user"},
+			wantErr: true,
+		},
+		{
+			name:    "live mode with full credentials passes",
+			env:     map[string]string{"SN_OFFLINE": "false", "SN_USERNAME": "live_user", "SN_PASSWORD": "live_pass"},
+			wantErr: false,
+		},
+		{
+			name:    "live mode accepts SNOW_ aliases",
+			env:     map[string]string{"SN_OFFLINE": "false", "SNOW_USERNAME": "live_user", "SNOW_PASSWORD": "live_pass"},
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			for _, k := range modeEnvKeys {
+				t.Setenv(k, tt.env[k])
+			}
+			err := RequireCredentials()
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
