@@ -26,7 +26,7 @@
   "updateContentCommand": "go mod download",
   "postCreateCommand": "just --version",
   "features": {
-    "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils:0": {
+    "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils:1": {
       "hostBrowserPipePath": "/tmp/hostbrowserpipe",
       "containerBrowserPipePath": "/tmp/hostbrowserpipe"
     },
