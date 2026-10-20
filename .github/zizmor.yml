@@ -15,12 +15,12 @@
 # only exceptions are the inline `# zizmor: ignore[...]` comments documented
 # below.
 #
-# secrets-outside-env: CODECOV_TOKEN, OPENCODE_API_KEY, and PROJECT_PAT are
-# repository-level secrets used as API credentials for coverage upload, code
-# review, and Projects v2 sync respectively -- not deployment secrets. Each is
-# scoped to a single step's `env` and is never exposed to default-checked-out
-# code. Allowing them here (per secret name) is the zizmor-blessed alternative
-# to scattered per-site `# zizmor: ignore[secrets-outside-env]` comments.
+# secrets-outside-env: OPENCODE_API_KEY and PROJECT_PAT are repository-level
+# secrets used as API credentials for code review and Projects v2 sync
+# respectively -- not deployment secrets. Each is scoped to a single step's
+# `env` and is never exposed to default-checked-out code. Allowing them here
+# (per secret name) is the zizmor-blessed alternative to scattered per-site
+# `# zizmor: ignore[secrets-outside-env]` comments.
 #
 # GPG_SIGNING_KEY is a repository-level passphrase-less tag-signing key for
 # sign-release.yml. It exists only in repository secrets (value is masked by
@@ -31,7 +31,6 @@ rules:
   secrets-outside-env:
     config:
       allow:
-        - CODECOV_TOKEN
         - OPENCODE_API_KEY
         - PROJECT_PAT
         - GPG_SIGNING_KEY
