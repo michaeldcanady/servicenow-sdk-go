@@ -9,9 +9,27 @@ import (
 	"strings"
 )
 
-// IsOffline returns true when running with httpmock (no live instance).
+// IsOffline returns true when requests run against httpmock (no live instance).
+// It is the exact negation of IsE2E, so the two never disagree: a run is mocked
+// unless it explicitly sets SN_OFFLINE=false.
 func IsOffline() bool {
-	return os.Getenv("SN_OFFLINE") == "true"
+	return !IsE2E()
+}
+
+// WarnAmbiguousMode writes a diagnostic to stderr when credentials are present
+// but SN_OFFLINE is unset. Callers that resolve the ambiguity toward mock mode
+// (the integration suite) use this so the choice is visible in the log.
+func WarnAmbiguousMode() {
+	if os.Getenv("SN_OFFLINE") != "" {
+		return
+	}
+	if FirstEnv("SN_USERNAME", "SNOW_USERNAME") == "" {
+		return
+	}
+	fmt.Fprintln(os.Stderr,
+		"integration: SN_USERNAME is set but SN_OFFLINE is unset; running in "+
+			"mocked mode. Set SN_OFFLINE=false to run against a live instance, "+
+			"or SN_OFFLINE=true to silence this notice.")
 }
 
 // FirstEnv returns the first non-empty environment variable from the given names.
@@ -53,7 +71,7 @@ func ClientCredentials() (clientID, clientSecret string) {
 // RequireCredentials validates that required env vars are set for online mode.
 // Returns an error if running online without credentials.
 func RequireCredentials() error {
-	if IsOffline() {
+	if !IsE2E() {
 		return nil
 	}
 	if FirstEnv("SN_USERNAME", "SNOW_USERNAME") == "" {
@@ -65,19 +83,22 @@ func RequireCredentials() error {
 	return nil
 }
 
-// IsE2E returns true when running against a live ServiceNow instance (not mocked).
+// IsE2E returns true when the environment explicitly asks to run against a
+// live ServiceNow instance. It requires SN_OFFLINE=false, so an unset
+// SN_OFFLINE never counts as live. The mocked integration suite therefore runs
+// under httpmock unless you set SN_OFFLINE=false deliberately.
 func IsE2E() bool {
-	return !IsOffline()
+	return os.Getenv("SN_OFFLINE") == "false"
 }
 
 // GodogTags returns the tag expression for godog integration (mocked) runs.
-// Offline: includes @offline scenarios, excludes @e2e-only scenarios.
-// Online: excludes them (~ is NOT in godog).
+// Live mode: excludes scenarios that only make sense against httpmock.
+// Mocked mode: includes @offline scenarios, excludes @e2e-only scenarios.
 func GodogTags() string {
-	if IsOffline() {
-		return "integration && mock && ~e2e"
+	if IsE2E() {
+		return "integration && mock && ~offline && ~e2e"
 	}
-	return "integration && mock && ~offline && ~e2e"
+	return "integration && mock && ~e2e"
 }
 
 // E2EGodogTags returns the tag expression for godog E2E (live) runs.
