@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 Michael Canady
+# SPDX-License-Identifier: MIT
+
 # Human-in-the-loop reproduction loop.
 # Copy this file, edit the steps below, and run it.
 # The agent runs the script; the user follows prompts in their terminal.
