@@ -19,8 +19,8 @@ import (
 func TestMain(m *testing.M) {
 	_ = godotenv.Load("../../../.env")
 
-	if support.IsOffline() {
-		fmt.Fprintln(os.Stderr, "e2e: SN_OFFLINE=true — skipping E2E tests (use integration build tag for mocked tests)")
+	if !support.IsE2E() {
+		fmt.Fprintln(os.Stderr, "e2e: set SN_OFFLINE=false to run against a live instance; skipping E2E tests (use the integration build tag for mocked tests)")
 		os.Exit(0)
 	}
 
@@ -116,11 +116,11 @@ func TestE2EAppServiceScenarios(t *testing.T) {
 	runE2ESuite(t, "features/app_service", steps.InitializeAppServiceScenario)
 }
 
-// skipE2E returns true if the test should be skipped (e.g. missing env vars mid-run).
+// skipE2E returns true if the test should be skipped (e.g. not running live).
 func skipE2E(t *testing.T) bool {
 	t.Helper()
-	if support.IsOffline() {
-		t.Skip("Skipping E2E test: SN_OFFLINE=true")
+	if !support.IsE2E() {
+		t.Skip("Skipping E2E test: SN_OFFLINE is not false")
 		return true
 	}
 	return false

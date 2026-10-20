@@ -12,6 +12,8 @@ on:
       - "release/**"
     paths:
       - "**.go"
+      - "**/go.mod"
+      - "**/go.sum"
       - "!docs/snippets/**"
       - "tests/integration/**"
       - "**/*.feature"
@@ -27,6 +29,8 @@ on:
   pull_request:
     paths:
       - "**.go"
+      - "**/go.mod"
+      - "**/go.sum"
       - "!docs/snippets/**"
       - "tests/integration/**"
       - "**/*.feature"
@@ -81,6 +85,8 @@ jobs:
         with:
           files: |
             **.go
+            **/go.mod
+            **/go.sum
             !docs/snippets/**
             tests/integration/**
             **/*.feature

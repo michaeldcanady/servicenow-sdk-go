@@ -30,7 +30,6 @@ runs:
           exit 1
         fi
         echo "MOD_PATH=$GO_MOD_PATH" >> $GITHUB_OUTPUT
-        echo "SUM_PATH=$GO_SUM_PATH" >> $GITHUB_OUTPUT
       env:
         INPUT_PACKAGE_PATH: ${{ inputs.package-path }}
 
@@ -48,12 +47,15 @@ runs:
       env:
         MOD_PATH: ${{ steps.resolve-mod-path.outputs.MOD_PATH }}
 
+    # `go mod tidy -diff` reports what tidy would change and exits 1 without
+    # writing to the tree. The previous `go mod tidy && git diff --exit-code`
+    # form was a no-op: tidy rewrote go.mod and go.sum in place, so the diff
+    # compared the corrected files against the corrected index and always
+    # passed, even on a module that needed tidying.
     - name: Tidy dependencies
       shell: bash
       run: |
         cd "$(dirname "$MOD_PATH")"
-        go mod tidy
-        git diff --exit-code -- $MOD_PATH $SUM_PATH
+        go mod tidy -diff
       env:
         MOD_PATH: ${{ steps.resolve-mod-path.outputs.MOD_PATH }}
-        SUM_PATH: ${{ steps.resolve-mod-path.outputs.SUM_PATH }}
