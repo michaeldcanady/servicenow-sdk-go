@@ -101,7 +101,7 @@ shape from scratch.
 
 Validate the frontmatter mechanically before running anything:
 ```bash
-python3 .opencode/skills/subagent-creator/scripts/quick_validate.py .opencode/agents/<name>.md
+python3 .agents/skills/subagent-creator/scripts/quick_validate.py .opencode/agents/<name>.md
 ```
 
 ## Running and evaluating test cases
@@ -158,7 +158,7 @@ Once everything's done:
    ```bash
    python3 -m scripts.aggregate_benchmark <workspace>/iteration-N --agent-name <name>
    ```
-   (run from inside `.opencode/skills/subagent-creator/`, or adjust
+   (run from inside `.agents/skills/subagent-creator/`, or adjust
    `PYTHONPATH`/cwd accordingly — it's a package-relative import).
 3. **Analyze** — read `agents/analyzer.md` for what to look for (assertions
    that never fail regardless of config, high-variance evals, time/token

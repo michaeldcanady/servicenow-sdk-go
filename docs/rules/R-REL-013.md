@@ -6,21 +6,23 @@ supersedes: []
 conflicts_checked: true
 ---
 
-<!-- Keywords: repository_dispatch, event bus, event-driven, reconciliation,
-at-least-once, github app, dispatch emitter, phased -->
+# Event-driven provenance is phased in beside in-band calls
 
-MUST NOT make an event bus the only mechanism for a step that must not be missed.
-MUST keep SBOM and signing in-band until both ordering and at-least-once delivery are guaranteed.
-SHOULD add a reconciliation sweep before treating any dispatch consumer as reliable.
-MAY phase in `repository_dispatch` emitters alongside the in-band calls.
+<!-- Keywords MUST, MUST NOT, SHOULD, SHOULD NOT, MAY are interpreted per RFC 2119 / RFC 8174 (https://www.rfc-editor.org/rfc/rfc2119). -->
+
+MUST NOT: Make an event bus the only delivery mechanism for SBOM generation or signing.
+MUST: Keep SBOM generation and signing in-band (R-REL-012) until both ordering and at-least-once delivery are guaranteed.
+SHOULD: Add a reconciliation sweep before treating any dispatch consumer as reliable.
+MAY: Phase in `repository_dispatch` emitters alongside the in-band calls.
 
 ## Verify
 
 ```bash
-# Passes (zero) while SBOM is still called in-band from the releasing workflows.
-grep -RInE 'uses:\s*\./\.github/workflows/sbom\.yml' .github/workflows/stable-release.yml .github/workflows/weekly-release.yml
+# Both releasing workflows must still call SBOM in-band. Fails closed if either file is missing.
+grep -qE 'uses:\s*\./\.github/workflows/sbom\.yml' .github/workflows/stable-release.yml \
+  && grep -qE 'uses:\s*\./\.github/workflows/sbom\.yml' .github/workflows/weekly-release.yml
 ```
 
 ## Rationale
 
-Event delivery is fire-and-forget and unordered, so an event bus alone can silently drop order-sensitive steps like SBOM-before-signing; the phased design keeps in-band calls until reconciliation proves at-least-once delivery (see ADR 013, ADR 012).
+Event delivery is fire-and-forget and unordered, so an event bus alone can silently drop order-sensitive steps such as SBOM-before-signing. The phased design keeps in-band calls until reconciliation proves at-least-once delivery.
