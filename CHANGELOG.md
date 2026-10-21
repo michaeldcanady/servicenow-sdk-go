@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.1.0...v2.1.1) (2026-10-20)
+
+
+### Bug Fixes
+
+* **documentsapi:** use *int32 for explore params ([#889](https://github.com/michaeldcanady/servicenow-sdk-go/issues/889)) ([9d166a7](https://github.com/michaeldcanady/servicenow-sdk-go/commit/9d166a7dcc10f9c81340cb2ebe673686139a5cce)), closes [#880](https://github.com/michaeldcanady/servicenow-sdk-go/issues/880)
+
 ## [2.1.0](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.4...v2.1.0) (2026-10-20)
 
 
