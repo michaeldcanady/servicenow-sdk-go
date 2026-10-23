@@ -22,6 +22,7 @@ const (
 	GrantTypeKey           = "grant_type"
 	ScopeKey               = "scope"
 	CodeKey                = "code"
+	AccessTokenKey         = "access_token"
 	RefreshTokenKey        = "refresh_token"
 	UsernameKey            = "username"
 	PasswordKey            = "password"

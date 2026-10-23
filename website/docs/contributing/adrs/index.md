@@ -39,6 +39,7 @@ below are the primary sources.
 | [019](019-typed-tables.md) | Typed tables — built-in and user-defined, full parity, uniform shape | Proposed |
 | [020](020-record-scoped-resources.md) | Record-scoped resources are explicit-args helpers, not nested builders | Proposed |
 | [021](021-best-effort-error-categorization.md) | Best-effort error categorization with raw ServiceNow details attached | Proposed |
+| [022](022-credential-package.md) | The credential package replaces credentials with typed providers and one shared token lifecycle | Proposed |
 
 ## Proposing a new ADR
 

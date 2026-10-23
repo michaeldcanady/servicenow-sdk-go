@@ -4,6 +4,18 @@ A typed Go client for ServiceNow's REST APIs, built on Kiota abstractions.
 
 ## Language
 
+**Provider**:
+The exported Kiota-facing object that authenticates a ServiceNow request. A provider either presents a token from an internal credential or authenticates each request directly.
+_Avoid_: auth handler, credential (for the exported object)
+
+**Credential**:
+The internal token lifecycle for one OAuth flow. It acquires, caches, refreshes, persists, and revokes tokens; callers construct a provider, not a credential.
+_Avoid_: provider (for the internal object), token provider
+
+**Direct provider**:
+A provider that authenticates each request without a token lifecycle: Basic, static Bearer, API key, or HMAC. Mutual TLS is a transport helper, not a provider.
+_Avoid_: tokenless credential, stateless provider
+
 **OIDP**:
 ServiceNow's Application Registry record that validates an ID token or user access token issued by an external IdP on inbound API calls, using the provider's JWKS endpoint.
 _Avoid_: OIDC provider, OAuth OIDC entity, external OAuth entity

@@ -7,6 +7,8 @@ import (
 	"context"
 
 	sdk "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	abstractions "github.com/microsoft/kiota-abstractions-go"
+	"github.com/microsoft/kiota-abstractions-go/authentication"
 )
 
 type worldKey struct{}
@@ -27,6 +29,10 @@ type World struct {
 	FetchedToken  string
 	RevocationErr error
 	TokenExpired  bool
+
+	// Credential package state
+	CredentialProvider authentication.AuthenticationProvider
+	CredentialRequest  *abstractions.RequestInformation
 
 	// Pagination state
 	PageCount int

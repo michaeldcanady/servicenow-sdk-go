@@ -40,7 +40,7 @@ func TestWithAuthenticationProvider(t *testing.T) {
 				option := WithAuthenticationProvider(nil)
 				config := &ServiceNowServiceClientConfig{}
 				err := option(config)
-				assert.Equal(t, errors.New("authenticationProvider is nil"), err)
+				assert.ErrorIs(t, err, snerrors.ErrNilAuthenticationProvider)
 			},
 		},
 	}
@@ -105,7 +105,7 @@ func TestWithURL(t *testing.T) {
 				option := WithURL(input)
 				config := &ServiceNowServiceClientConfig{}
 				err := option(config)
-				assert.Equal(t, errors.New("url is empty"), err)
+				require.ErrorIs(t, err, snerrors.ErrEmptyURI)
 				assert.Empty(t, config.rawURI)
 			},
 		},
@@ -226,7 +226,7 @@ func TestWithInstance(t *testing.T) {
 				option := WithInstance(instance)
 				err := option(config)
 
-				assert.Equal(t, errors.New("instance is empty"), err)
+				require.ErrorIs(t, err, snerrors.ErrEmptyInstance)
 				assert.Empty(t, config.rawURI)
 			},
 		},

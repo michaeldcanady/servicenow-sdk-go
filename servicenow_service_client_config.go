@@ -4,9 +4,9 @@
 package servicenowsdkgo
 
 import (
-	"errors"
 	"strings"
 
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/conversion"
 	internalhttp "github.com/michaeldcanady/servicenow-sdk-go/v2/internal/http"
@@ -56,7 +56,7 @@ func buildServiceClientConfig(opts ...ServiceNowServiceClientOption) (*ServiceNo
 // Validate checks if the configuration is valid.
 func (c *ServiceNowServiceClientConfig) Validate() error {
 	if conversion.IsNil(c.requestAdapter) && conversion.IsNil(c.authenticationProvider) {
-		return errors.New("must provide either an AuthenticationProvider or a RequestAdapter")
+		return snerrors.ErrMissingAuthentication
 	}
 
 	return nil
@@ -86,12 +86,21 @@ func (c *ServiceNowServiceClientConfig) getRequestAdapter() (abstractions.Reques
 	baseURL := c.getBaseURL()
 	requestAdapter.SetBaseUrl(baseURL)
 
-	type preparable interface {
-		Initialize(baseURL string)
-	}
+	if !conversion.IsNil(c.authenticationProvider) {
+		type errorInitializer interface {
+			Initialize(baseURL string) error
+		}
+		type legacyInitializer interface {
+			Initialize(baseURL string)
+		}
 
-	if p, ok := c.authenticationProvider.(preparable); ok {
-		p.Initialize(baseURL)
+		if initializer, ok := c.authenticationProvider.(errorInitializer); ok && !conversion.IsNil(initializer) {
+			if err := initializer.Initialize(baseURL); err != nil {
+				return nil, err
+			}
+		} else if initializer, ok := c.authenticationProvider.(legacyInitializer); ok && !conversion.IsNil(initializer) {
+			initializer.Initialize(baseURL)
+		}
 	}
 
 	return requestAdapter, nil

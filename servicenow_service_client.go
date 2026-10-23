@@ -4,7 +4,6 @@
 package servicenowsdkgo
 
 import (
-	"errors"
 	"maps"
 	"strings"
 	"sync"
@@ -12,6 +11,7 @@ import (
 	appointmentbookingapi "github.com/michaeldcanady/servicenow-sdk-go/v2/appointmentbookingapi"
 	caseapi "github.com/michaeldcanady/servicenow-sdk-go/v2/caseapi"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/core"
+	snerrors "github.com/michaeldcanady/servicenow-sdk-go/v2/errors"
 	abstractions "github.com/microsoft/kiota-abstractions-go"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
 	formserialization "github.com/microsoft/kiota-serialization-form-go"
@@ -73,15 +73,14 @@ func NewServiceNowServiceClient(opts ...ServiceNowServiceClientOption) (*Service
 		return nil, err
 	}
 
+	baseURL := config.getBaseURL()
+	if strings.TrimSpace(baseURL) == "" {
+		return nil, snerrors.ErrEmptyURI
+	}
+
 	requestAdapter, err := config.getRequestAdapter()
 	if err != nil {
 		return nil, err
-	}
-
-	baseURL := config.getBaseURL()
-	if strings.TrimSpace(baseURL) == "" {
-		// TODO: sentinel-ize this error message
-		return nil, errors.New("baseURL is empty")
 	}
 
 	pathParameters := map[string]string{baseURLParameter: baseURL}

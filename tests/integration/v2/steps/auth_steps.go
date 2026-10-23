@@ -740,6 +740,8 @@ func InitializeAuthScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^the API request should fail with an authentication error$`, s.theAPIRequestShouldFailWithAuthError)
 	sc.Step(`^the authentication token should be a non-empty Bearer token$`, s.theAuthTokenShouldBeNonEmptyBearerToken)
 
+	registerCredentialSteps(sc)
+
 	sc.Before(BeforeScenario)
 	sc.After(AfterScenario)
 }

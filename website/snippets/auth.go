@@ -10,6 +10,7 @@ import (
 	"log"
 
 	servicenowsdkgo "github.com/michaeldcanady/servicenow-sdk-go/v2"
+	"github.com/michaeldcanady/servicenow-sdk-go/v2/credential"
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/credentials"
 )
 
@@ -21,6 +22,16 @@ func _() {
 	// [START auth_basic_admin]
 	credAdmin := credentials.NewBasicProvider("xSDK_USERNAMEx", "xSDK_PASSWORDx")
 	// [END auth_basic_admin]
+
+	// [START auth_basic_credential_package]
+	basicCred, err := credential.NewBasicProvider(credential.BasicConfig{
+		Username: "xSDK_USERNAMEx",
+		Password: "xSDK_PASSWORDx",
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END auth_basic_credential_package]
 
 	// [START client_init_panic]
 	clientPanic, err := servicenowsdkgo.NewServiceNowServiceClient(
@@ -54,9 +65,37 @@ func _() {
 	}
 	// [END client_init]
 
+	// [START auth_bearer_credential_package]
+	bearerCred, err := credential.NewBearerProvider(credential.BearerConfig{Token: "xSDK_TOKENx"})
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END auth_bearer_credential_package]
+
+	// [START auth_apikey_credential_package]
+	apiKeyCred, err := credential.NewAPIKeyProvider(credential.APIKeyConfig{Key: "xSDK_APIKEYx"})
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END auth_apikey_credential_package]
+
+	// [START client_init_credential_package]
+	clientV2, err := servicenowsdkgo.NewServiceNowServiceClient(
+		servicenowsdkgo.WithAuthenticationProvider(bearerCred),
+		servicenowsdkgo.WithInstance("xSDK_SN_INSTANCEx"),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// [END client_init_credential_package]
+
 	_ = clientPanic
 	_ = client
+	_ = clientV2
 	_ = credToken
+	_ = basicCred
+	_ = bearerCred
+	_ = apiKeyCred
 }
 
 func authBasicFull() {
@@ -74,6 +113,29 @@ func authBasicFull() {
 	// Client is now authenticated and ready to use
 	_ = client
 	// [END auth_basic_full]
+}
+
+func authBasicCredentialPackage() {
+	// [START auth_basic_full_credential_package]
+	cred, err := credential.NewBasicProvider(credential.BasicConfig{
+		Username: "xSDK_USERNAMEx",
+		Password: "xSDK_PASSWORDx",
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	client, err := servicenowsdkgo.NewServiceNowServiceClient(
+		servicenowsdkgo.WithAuthenticationProvider(cred),
+		servicenowsdkgo.WithInstance("xSDK_SN_INSTANCEx"),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Client is now authenticated and ready to use
+	_ = client
+	// [END auth_basic_full_credential_package]
 }
 
 func authROPC() {
@@ -124,6 +186,29 @@ func authClientCredentials() {
 	// Client is now authenticated and ready to use
 	_ = client
 	// [END auth_client_credentials]
+}
+
+func authClientCredentialsCredentialPackage() {
+	// [START auth_client_credentials_credential_package]
+	cred, err := credential.NewClientCredentialsProvider(credential.ClientCredentialsConfig{
+		ClientID:     "{clientID}",
+		ClientSecret: "{clientSecret}",
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	client, err := servicenowsdkgo.NewServiceNowServiceClient(
+		servicenowsdkgo.WithAuthenticationProvider(cred),
+		servicenowsdkgo.WithInstance("xSDK_SN_INSTANCEx"),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Client is now authenticated and ready to use
+	_ = client
+	// [END auth_client_credentials_credential_package]
 }
 
 func authCodePrivate() {

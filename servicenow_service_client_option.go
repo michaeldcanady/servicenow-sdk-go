@@ -28,7 +28,7 @@ type ServiceNowServiceClientOption func(*ServiceNowServiceClientConfig) error
 func WithAuthenticationProvider(authenticationProvider authentication.AuthenticationProvider) ServiceNowServiceClientOption {
 	return func(config *ServiceNowServiceClientConfig) error {
 		if conversion.IsNil(authenticationProvider) {
-			return errors.New("authenticationProvider is nil")
+			return snerrors.ErrNilAuthenticationProvider
 		}
 		config.authenticationProvider = authenticationProvider
 		return nil
@@ -55,7 +55,7 @@ func WithURL(uri string) ServiceNowServiceClientOption {
 		}
 		uri = strings.TrimSpace(uri)
 		if uri == "" {
-			return errors.New("url is empty")
+			return snerrors.ErrEmptyURI
 		}
 
 		if _, err := url.ParseRequestURI(uri); err != nil {
@@ -91,7 +91,7 @@ func WithInstance(instance string) ServiceNowServiceClientOption {
 	instance = strings.TrimSpace(instance)
 	if instance == "" {
 		return func(_ *ServiceNowServiceClientConfig) error {
-			return errors.New("instance is empty")
+			return snerrors.ErrEmptyInstance
 		}
 	}
 	return WithURL(fmt.Sprintf("https://%s.%s", instance, defaultServiceNowHost))
