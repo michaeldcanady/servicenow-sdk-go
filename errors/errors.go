@@ -55,6 +55,8 @@ var (
 	ErrInvalidAssertion          = errors.New("invalid JWT assertion")
 	ErrMissingTokenExpiry        = errors.New("token has no parseable expiry")
 	ErrMissingAccessToken        = errors.New("token response does not include an access_token")
+	ErrEmptySecret               = errors.New("secret is empty")
+	ErrInvalidHMACAlgorithm      = errors.New("HMAC algorithm is invalid")
 	// ErrUnknownEnumValue reports a wire value that does not correspond to any member of
 	// an enum. Parse<Enum> functions wrap this with the enum name and the offending value,
 	// so callers can match the class of failure with errors.Is regardless of which enum
