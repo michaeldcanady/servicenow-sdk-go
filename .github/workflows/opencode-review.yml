@@ -105,7 +105,7 @@ jobs:
         # without changing action behavior. The action installs the latest
         # opencode CLI itself and runs `opencode github run`, which handles
         # both pull_request and issue_comment triggers.
-        uses: anomalyco/opencode/github@e7a34f09bfd9134dfade5a8ddb843f7030bc9a69 # v2.0.24
+        uses: anomalyco/opencode/github@042d0832f5f3a73eaa039a58a7d565776f6d4290 # v2.0.29
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
