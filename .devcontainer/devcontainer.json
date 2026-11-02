@@ -24,7 +24,7 @@
   },
   "remoteUser": "vscode",
   "updateContentCommand": "go mod download",
-  "postCreateCommand": "just --version && mise trust && mise install",
+  "postCreateCommand": "mise trust && mise install && (grep -qsF 'mise activate bash' ~/.bashrc || echo 'eval \"$(mise activate bash)\"' >> ~/.bashrc)",
   "features": {
     "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils:1": {
       "hostBrowserPipePath": "/tmp/hostbrowserpipe",
@@ -37,7 +37,6 @@
     "ghcr.io/devcontainers/features/powershell:2": {
       "version": "latest"
     },
-    "ghcr.io/guiyomh/features/just:0": {},
     "ghcr.io/devcontainers-extra/features/mise:1": {
       "version": "2026.10.25"
     }

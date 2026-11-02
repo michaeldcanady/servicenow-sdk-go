@@ -15,11 +15,6 @@
       "resolved": "ghcr.io/devcontainers/features/powershell@sha256:460fb241f4f9e098a30f9e1ea4a6ac8cac8cdf5df89ba2edfcf177f66e17d8b7",
       "integrity": "sha256:460fb241f4f9e098a30f9e1ea4a6ac8cac8cdf5df89ba2edfcf177f66e17d8b7"
     },
-    "ghcr.io/guiyomh/features/just:0": {
-      "version": "0.1.0",
-      "resolved": "ghcr.io/guiyomh/features/just@sha256:8311dff976bd153a54a879021353a7e149963e580022b25af49c45cfc5f13bec",
-      "integrity": "sha256:8311dff976bd153a54a879021353a7e149963e580022b25af49c45cfc5f13bec"
-    },
     "ghcr.io/nerdit-tech/devcontainer-features/go-cache:1": {
       "version": "1.0.0",
       "resolved": "ghcr.io/nerdit-tech/devcontainer-features/go-cache@sha256:58f138cae75759576998d978e028a6e8ab554d2415a6cc763530acb2c2053c8a",
