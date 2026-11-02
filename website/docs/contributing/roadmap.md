@@ -62,6 +62,7 @@ around it isn't:
 | Agent configuration | `AGENTS.md` and `.agents/` are the only sources. `CLAUDE.md`, `.claude/`, and `.opencode/` are generated shims. |
 | Agent skills | The repository uses only skills it authors. |
 | Prose style | The Google developer documentation style guide, enforced by Vale. |
+| Task runner | mise replaces `just`. It pins the tool versions that CI uses, and every CI check with a local equivalent has a mise task. |
 
 ## Guardrails
 
@@ -91,6 +92,9 @@ and 2:
 > P0-15 → P3-24 through P3-39 → P3-59 and P3-60 → P3-65 (v2.2.0) → P4-01 →
 > P4-02 → P4-07 → P4-10 through P4-13 → P4-18 → P4-21 (v3.0.0)
 
+Step 0 comes first. It's short, and the tasks it adds are how you verify every
+later unit before you push.
+
 These tracks run in parallel with the credentials chain:
 
 - The Phase 0 tracks, after the merge gate is fixed (P0-06).
@@ -113,6 +117,38 @@ Size key:
 Units marked **Action** are non-code steps. A unit with "new" in the Issue
 column gets a new issue when work starts.
 
+### Step 0: Local tooling with mise
+
+Goal: [mise](https://mise.jdx.dev/) replaces `just` as the task runner and
+pins every tool that CI uses. You can run each CI check that has a local
+equivalent before you push, with the same tool versions that CI uses. Every
+later phase uses these tasks to verify its units.
+
+Task names group by area, for example `test:integration` and `docs:lint`. A
+short task becomes an entry in `mise.toml`. A task that needs a script becomes
+a file task under `.mise/tasks/`.
+
+| ID | Unit | Size | Depends on | Issue |
+|---|---|---|---|---|
+| T-01 | `chore(tooling)`: add `mise.toml` that pins Go, Node 20, golangci-lint v2.14.0, Vale 3.18.0, zizmor 1.29.0, actionlint, shellcheck, govulncheck, and tparse at the versions CI uses | XS | — | new |
+| T-02 | `chore(tooling)`: port every `just` recipe to a mise task with the same behavior: `build`, `test`, `fmt`, `lint`, `docs:setup`, `docs:serve`, `docs:build`, `docs:clean`, `docs:snippets`, `license:add`, and `license:check` | S | T-01 | new |
+| T-03 | `chore(tooling)`: add `test:integration` and `test:e2e` tasks for the tagged suites, and `test:coverage` and `test:report` tasks that wrap `scripts/test.sh` | XS | T-02 | new |
+| T-04 | `chore(tooling)`: add a `test:oldstable` task that runs the unit tests on the `oldstable` Go version, matching the CI matrix | XS | T-02 | new |
+| T-05 | `chore(tooling)`: add a `deps:check` task that checks `go mod tidy` drift and runs `go mod verify` in both Go modules, matching the `check-go-deps` action | S | T-02 | new |
+| T-06 | `chore(tooling)`: add a `vuln` task that runs govulncheck on both Go modules | XS | T-02 | new |
+| T-07 | `chore(tooling)`: add a `docs:lint` task that runs Vale with the repository configuration on the same paths as Documentation Stable | XS | T-02 | new |
+| T-08 | `chore(tooling)`: add a `ci:lint` task that runs zizmor and actionlint on `.github/`, and shellcheck on `scripts/` | XS | T-02 | new |
+| T-09 | `chore(tooling)`: add `pr:branch` and `pr:title` tasks that apply the branch-name rule and the Conventional Commits title rule that the PR checks enforce | S | T-02 | new |
+| T-10 | `chore(tooling)`: add `check` (everything a pull request runs) and `check:all` (adds the merge-only checks, such as the full-site Vale run and the docs build), and list the checks that only CI can run | S | T-03 through T-09 | new |
+| T-11 | `chore(devcontainer)`: install mise in the devcontainer, run `mise install` after creation, and stop installing `just` | XS | T-01 | new |
+| T-12 | `docs(contributing)`: replace `just` with mise in the setup, first pull request, and conventions pages, and in `AGENTS.md` and `CLAUDE.md` | S | T-10 | new |
+| T-13 | `chore(tooling)`: delete the `justfile` | XS | T-11, T-12 | new |
+| T-14 | `chore(ci)`: install CI tools from `mise.toml` so that local and CI versions can't drift; required check names stay unchanged | S | T-01, P0-06 | new |
+
+Some checks have no local equivalent: CodeQL, OpenSSF Scorecard, OpenCode
+Review, GitGuardian, and the linked-issue check. They stay CI-only, and T-10
+documents them.
+
 ### Phase 0: Foundation
 
 Goal: merges work without a bypass, `main` is green, the shipped defects are
@@ -128,9 +164,9 @@ fixed, and the backlog reflects this roadmap.
 | P0-06 | Action: apply the rulesets, and confirm that a pull request merges without a bypass | — | P0-05 | #917 |
 | P0-07 | `chore(ci)`: rerun pull request workflows when the base branch changes | S | P0-05 | #580 |
 | P0-08 | `chore(docs)`: switch Vale from the Microsoft package to the Google package | XS | — | new |
-| P0-09 | `docs(contributing)`: fix the Vale errors under `contributing/` | S | P0-08 | new |
-| P0-10 | `docs(apis)`: fix the Vale errors under `apis/` | S | P0-08 | new |
-| P0-11 | `docs`: fix the Vale errors in the user guide and landing pages | S | P0-08 | new |
+| P0-09 | `docs(contributing)`: fix the Vale errors under `contributing/` | S | P0-08, T-07 | new |
+| P0-10 | `docs(apis)`: fix the Vale errors under `apis/` | S | P0-08, T-07 | new |
+| P0-11 | `docs`: fix the Vale errors in the user guide and landing pages | S | P0-08, T-07 | new |
 | P0-12 | Action: re-scope #881 to Go error strings | — | P0-08 | #881 |
 | P0-13 | `chore(deps)`: keep both Go modules tidy when Dependabot updates a dependency | S | — | new |
 | P0-14 | Action: recreate and merge the stalled Dependabot pull requests | — | P0-06, P0-13 | #906, #907 |
@@ -183,7 +219,7 @@ gone.
 | P2-04 | `chore(agents)`: move `docs/rules/` to `.agents/rules/`, and update every reference | S | P2-03 | new |
 | P2-05 | `docs(adrs)`: reconcile the rule-file IDs with the ADR catalog | S | P2-04 | new |
 | P2-06 | `chore(agents)`: limit agent frontmatter to `name`, `description`, and `tools` | XS | P0-02 | new |
-| P2-07 | `chore(agents)`: add a script and a `just` recipe that regenerate the shims | S | P0-03, P2-02, P2-03 | new |
+| P2-07 | `chore(agents)`: add an `agents:sync` mise task that regenerates the shims | S | P0-03, P2-02, P2-03, T-02 | new |
 | P2-08 | `chore(ci)`: fail CI when the shims drift, using a step in `ci.yml` | XS | P2-07 | new |
 | P2-09 | `chore(agents)`: delete `skills-lock.json` | XS | P0-01 | new |
 | P2-10 | `chore(agents)`: rewrite `google-tech-writing` as a repository-authored skill | S | P0-01 | new |
@@ -415,13 +451,20 @@ tooling (P4-03 to P4-05).
 
 Each code unit passes these checks before it merges:
 
-- `go build ./...`, `go test ./...`,
-  `go test -tags integration ./tests/integration/...`, and
-  `golangci-lint run ./...` all pass.
+- `mise run check` passes locally. Until Step 0 is done, run `go build ./...`,
+  `go test ./...`, `go test -tags integration ./tests/integration/...`, and
+  `golangci-lint run ./...` directly.
 - New exported API has table-driven tests.
 - Documentation changes pass Vale.
 
 Each phase is done when its checks pass:
+
+- **Step 0:**
+  - On a fresh devcontainer, `mise install` installs every pinned tool.
+  - `mise run check` passes on `main`.
+  - Each `just` recipe has a mise task that does the same thing.
+  - The `justfile` is gone, and no page or instruction file mentions `just`.
+  - CI and `mise.toml` pin the same tool versions.
 
 - **Phase 0:**
   - A pull request merges without an admin bypass.
