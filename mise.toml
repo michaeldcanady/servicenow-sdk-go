@@ -35,3 +35,62 @@ zizmor = "1.29.0"
 # Not run in CI yet. Used by the local ci:lint task.
 actionlint = "1.7.12"
 shellcheck = "0.11.0"
+
+# Tasks. Run `mise tasks` to list them, and `mise run <task>` to run one.
+# Each task matches the `just` recipe of the old name, noted next to it.
+
+# Go
+
+[tasks."go:build"] # just build
+description = "Build every package"
+run = "go build ./..."
+
+[tasks."go:test"] # just test
+description = "Run the unit tests"
+run = "go test -v ./..."
+
+[tasks."go:fmt"] # just fmt
+description = "Format all Go files"
+run = "gofmt -s -w ."
+
+[tasks."go:lint"] # just lint
+description = "Run golangci-lint"
+run = "golangci-lint run ./..."
+
+# Docs site
+
+[tasks."docs:setup"] # just setup-docs
+description = "Install the docs site dependencies"
+dir = "{{config_root}}/website"
+run = "npm ci"
+
+[tasks."docs:serve"] # just serve-docs
+description = "Serve the docs site locally with live reload"
+dir = "{{config_root}}/website"
+run = "npm start"
+
+[tasks."docs:build"] # just generate-docs
+description = "Build the static docs site without serving it"
+dir = "{{config_root}}/website"
+run = "npm run build"
+
+[tasks."docs:clean"] # just clean-docs
+description = "Remove the docs site build output"
+run = "rm -rf website/build website/.docusaurus"
+
+[tasks."docs:snippets"] # just check-docs
+description = "Vet the doc code snippets and check their region markers"
+run = [
+  "go vet -tags snippets ./website/snippets/",
+  "./scripts/check-snippet-regions.sh",
+]
+
+# License headers
+
+[tasks."license:add"] # just add-license
+description = "Add license headers to in-scope source files"
+run = "./scripts/add-license.sh"
+
+[tasks."license:check"] # just check-license
+description = "Check that in-scope source files carry license headers"
+run = "./scripts/add-license.sh --check-only"
