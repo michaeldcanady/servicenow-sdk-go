@@ -41,19 +41,19 @@ shellcheck = "0.11.0"
 
 # Go
 
-[tasks.build] # just build
+[tasks."go:build"] # just build
 description = "Build every package"
 run = "go build ./..."
 
-[tasks.test] # just test
+[tasks."go:test"] # just test
 description = "Run the unit tests"
 run = "go test -v ./..."
 
-[tasks.fmt] # just fmt
+[tasks."go:fmt"] # just fmt
 description = "Format all Go files"
 run = "gofmt -s -w ."
 
-[tasks.lint] # just lint
+[tasks."go:lint"] # just lint
 description = "Run golangci-lint"
 run = "golangci-lint run ./..."
 
