@@ -124,18 +124,18 @@ pins every tool that CI uses. You can run each CI check that has a local
 equivalent before you push, with the same tool versions that CI uses. Every
 later phase uses these tasks to verify its units.
 
-Task names group by area, for example `test:integration` and `docs:lint`. A
+Task names group by area, for example `go:test:integration` and `docs:lint`. A
 short task becomes an entry in `mise.toml`. A task that needs a script becomes
 a file task under `.mise/tasks/`.
 
 | ID | Unit | Size | Depends on | Issue |
 |---|---|---|---|---|
 | T-01 | `chore(tooling)`: add `mise.toml` that pins Go, Node 20, golangci-lint v2.14.0, Vale 3.18.0, zizmor 1.29.0, actionlint, shellcheck, govulncheck, and tparse at the versions CI uses | XS | — | new |
-| T-02 | `chore(tooling)`: port every `just` recipe to a mise task with the same behavior: `build`, `test`, `fmt`, `lint`, `docs:setup`, `docs:serve`, `docs:build`, `docs:clean`, `docs:snippets`, `license:add`, and `license:check` | S | T-01 | new |
-| T-03 | `chore(tooling)`: add `test:integration` and `test:e2e` tasks for the tagged suites, and `test:coverage` and `test:report` tasks that wrap `scripts/test.sh` | XS | T-02 | new |
-| T-04 | `chore(tooling)`: add a `test:oldstable` task that runs the unit tests on the `oldstable` Go version, matching the CI matrix | XS | T-02 | new |
-| T-05 | `chore(tooling)`: add a `deps:check` task that checks `go mod tidy` drift and runs `go mod verify` in both Go modules, matching the `check-go-deps` action | S | T-02 | new |
-| T-06 | `chore(tooling)`: add a `vuln` task that runs govulncheck on both Go modules | XS | T-02 | new |
+| T-02 | `chore(tooling)`: port every `just` recipe to a mise task with the same behavior: `go:build`, `go:test`, `go:fmt`, `go:lint`, `docs:setup`, `docs:serve`, `docs:build`, `docs:clean`, `docs:snippets`, `license:add`, and `license:check` | S | T-01 | new |
+| T-03 | `chore(tooling)`: add `go:test:integration` and `go:test:e2e` tasks for the tagged suites, and `go:test:coverage` and `go:test:report` tasks that wrap `scripts/test.sh` | XS | T-02 | new |
+| T-04 | `chore(tooling)`: add a `go:test:oldstable` task that runs the unit tests on the `oldstable` Go version, matching the CI matrix | XS | T-02 | new |
+| T-05 | `chore(tooling)`: add a `go:deps:check` task that checks `go mod tidy` drift and runs `go mod verify` in both Go modules, matching the `check-go-deps` action | S | T-02 | new |
+| T-06 | `chore(tooling)`: add a `go:vuln` task that runs govulncheck on both Go modules | XS | T-02 | new |
 | T-07 | `chore(tooling)`: add a `docs:lint` task that runs Vale with the repository configuration on the same paths as Documentation Stable | XS | T-02 | new |
 | T-08 | `chore(tooling)`: add a `ci:lint` task that runs zizmor and actionlint on `.github/`, and shellcheck on `scripts/` | XS | T-02 | new |
 | T-09 | `chore(tooling)`: add `pr:branch` and `pr:title` tasks that apply the branch-name rule and the Conventional Commits title rule that the PR checks enforce | S | T-02 | new |
