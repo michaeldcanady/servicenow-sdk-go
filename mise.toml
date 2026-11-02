@@ -1,0 +1,37 @@
+# Tool versions for local development and checks.
+#
+# Run `mise install` to install every tool below. Where CI pins a version,
+# this file uses the same one, so a check you run locally matches the check
+# that runs on your pull request. Where CI installs the latest release, this
+# file pins the release that was current when it was last updated.
+#
+# When you change a version that CI also pins, change the CI pin in the same
+# pull request. The CI location is noted next to each tool.
+
+[tools]
+# CI runs a matrix of the "stable" and "oldstable" Go releases
+# (.github/workflows/ci.yml). This pin tracks "stable"; the oldstable leg is
+# run separately.
+go = "1.27"
+
+# Docs site build (.github/actions/docs-build, node-version).
+node = "20"
+
+# .github/workflows/reusable-lint-go.yaml, golangci-lint-version default.
+golangci-lint = "2.14.0"
+
+# .github/workflows/reusable-docs-gate.yaml and docs-preview.yml, vale-version.
+vale = "3.18.0"
+
+# .github/workflows/reusable-zizmor.yaml, version default.
+zizmor = "1.29.0"
+
+# CI installs the latest govulncheck (golang/govulncheck-action).
+"go:golang.org/x/vuln/cmd/govulncheck" = "1.9.0"
+
+# CI installs the latest tparse (.github/actions/install-tparse).
+"go:github.com/mfridman/tparse" = "0.18.0"
+
+# Not run in CI yet. Used by the local ci:lint task.
+actionlint = "1.7.12"
+shellcheck = "0.11.0"
