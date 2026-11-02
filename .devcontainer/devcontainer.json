@@ -24,7 +24,7 @@
   },
   "remoteUser": "vscode",
   "updateContentCommand": "go mod download",
-  "postCreateCommand": "just --version",
+  "postCreateCommand": "just --version && mise trust && mise install",
   "features": {
     "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils:1": {
       "hostBrowserPipePath": "/tmp/hostbrowserpipe",
@@ -37,7 +37,10 @@
     "ghcr.io/devcontainers/features/powershell:2": {
       "version": "latest"
     },
-    "ghcr.io/guiyomh/features/just:0": {}
+    "ghcr.io/guiyomh/features/just:0": {},
+    "ghcr.io/devcontainers-extra/features/mise:1": {
+      "version": "2026.10.25"
+    }
   },
   "containerUser": "vscode",
   "mounts": [
