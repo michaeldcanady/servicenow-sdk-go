@@ -10,8 +10,8 @@
 
 [tools]
 # CI runs a matrix of the "stable" and "oldstable" Go releases
-# (.github/workflows/ci.yml). This pin tracks "stable"; the oldstable leg is
-# run separately.
+# (.github/workflows/ci.yml). This pin tracks "stable"; the go:test:oldstable
+# task pins "oldstable".
 go = "1.27"
 
 # Docs site build (.github/actions/docs-build, node-version).
@@ -47,6 +47,12 @@ run = "go build ./..."
 
 [tasks."go:test"] # just test
 description = "Run the unit tests"
+run = "go test -v ./..."
+
+[tasks."go:test:oldstable"]
+description = "Run the unit tests on the oldstable Go release, as CI does"
+# CI's "oldstable" Go release. Update this when go above moves to a new release.
+tools = { go = "1.26" }
 run = "go test -v ./..."
 
 [tasks."go:test:integration"]
