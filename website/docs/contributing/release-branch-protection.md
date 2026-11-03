@@ -45,8 +45,8 @@ schema:
 | maintenance lines | `release/v*` | same as trunk **plus required linear history** |
 
 Both require the same universally reporting status checks: `Check Branch Name`,
-`Check Linked Issue`, `Validate PR Title`, `CodeQL`, and `Run zizmor 🌈 /
-Run zizmor -- blocking`. Path-filtered jobs are excluded, because they would
+`Check Linked Issue`, `Validate PR Title / Validate PR Title`, `CodeQL`, and
+`Run zizmor 🌈 / Run zizmor -- blocking`. Path-filtered jobs are excluded, because they would
 sit pending forever on PRs whose paths they skip.
 
 The table below is the human-readable spec the declaration encodes; consult
@@ -79,19 +79,22 @@ have already reported on the branch. Instead:
 1. Cut the branch and open one throwaway PR against it.
 2. Let `codeql.yml`, `branch-policy.yml`, `pr.yml`, and `zizmor.yml` report once.
 3. Edit the ruleset and require the checks that appeared — exactly the five
-   declared in `.github/policies/servicenow-sdk-go-branch-protection.yml`
-   ("Check Branch Name," "Check Linked Issue," "Validate PR Title," "CodeQL,"
-   and "Run zizmor 🌈 / Run zizmor -- blocking."). Never add path-filtered
-   jobs (the ci.yml build/test/lint matrix): they skip docs-only or
-   workflow-only PRs, and a required check that never reports sticks
-   "pending" forever, blocking every merge until an admin bypasses.
+   declared in `.github/policies/servicenow-sdk-go-branch-protection.yml`:
+   `Check Branch Name`, `Check Linked Issue`,
+   `Validate PR Title / Validate PR Title`, `CodeQL`, and
+   `Run zizmor 🌈 / Run zizmor -- blocking`. Never add path-filtered jobs
+   (the ci.yml build/test/lint matrix): they skip docs-only or workflow-only
+   PRs, and a required check that never reports sticks "pending" forever,
+   blocking every merge until an admin bypasses.
 
 The required context must be the job name exactly as GitHub reports it. The
-value is load-bearing: the 2026-09 refactor that moved zizmor into a reusable
-workflow renamed its job, so the required context `Run zizmor 🌈 — auditor ·
-all inputs · fail on any finding` stopped reporting and blocked every merge
-with "Expected — Waiting for status to be reported" until the ruleset was
-updated. Rename a required job only together with its ruleset context.
+value is load-bearing. GitHub reports a job in a reusable workflow as
+`<caller job> / <called job>`, so the 2026-09 refactor that moved the
+`zizmor.yml` and `pr.yml` jobs into reusable workflows changed both reported
+names. The old contexts, `Run zizmor 🌈 — auditor · all inputs · fail on any
+finding` and `Validate PR Title`, stopped reporting, and every merge waited at
+"Expected — Waiting for status to be reported" until an admin bypassed it
+(#917). Rename a required job only together with its ruleset context.
 
 ### Ruleset payload reference (live)
 
@@ -105,7 +108,7 @@ updated. Rename a required job only together with its ruleset context.
     {"type": "deletion"},
     {"type": "non_fast_forward"},
     {"type": "pull_request", "parameters": {"required_approving_review_count": 1, "dismiss_stale_reviews_on_push": true, "require_code_owner_review": true, "require_last_push_approval": true, "required_review_thread_resolution": true}},
-    {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": true, "required_status_checks": [{"context": "Check Branch Name"}, {"context": "Check Linked Issue"}, {"context": "Validate PR Title"}, {"context": "CodeQL"}, {"context": "Run zizmor 🌈 / Run zizmor -- blocking"}]}}
+    {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": true, "required_status_checks": [{"context": "Check Branch Name"}, {"context": "Check Linked Issue"}, {"context": "Validate PR Title / Validate PR Title"}, {"context": "CodeQL"}, {"context": "Run zizmor 🌈 / Run zizmor -- blocking"}]}}
   ]
 }
 ```
@@ -121,7 +124,7 @@ updated. Rename a required job only together with its ruleset context.
     {"type": "non_fast_forward"},
     {"type": "required_linear_history"},
     {"type": "pull_request", "parameters": {"required_approving_review_count": 1, "dismiss_stale_reviews_on_push": true, "require_code_owner_review": true, "require_last_push_approval": true, "required_review_thread_resolution": true}},
-    {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": true, "required_status_checks": [{"context": "Check Branch Name"}, {"context": "Check Linked Issue"}, {"context": "Validate PR Title"}, {"context": "CodeQL"}, {"context": "Run zizmor 🌈 / Run zizmor -- blocking"}]}}
+    {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": true, "required_status_checks": [{"context": "Check Branch Name"}, {"context": "Check Linked Issue"}, {"context": "Validate PR Title / Validate PR Title"}, {"context": "CodeQL"}, {"context": "Run zizmor 🌈 / Run zizmor -- blocking"}]}}
   ]
 }
 ```

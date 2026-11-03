@@ -50,13 +50,14 @@ configuration:
     # string, but if the value does not correspond to any existing status check,
     # the status check will be stuck on pending since nothing exists to push an actual status.
     # The value must be the job name exactly as GitHub reports it (for example,
-    # "Run zizmor 🌈 / Run zizmor -- blocking" is the reported name for the
-    # reusable-workflow zizmor job). Renaming a job without updating the rulesets
+    # "Run zizmor 🌈 / Run zizmor -- blocking" and "Validate PR Title / Validate
+    # PR Title" are the reported names for the reusable-workflow zizmor and PR
+    # title jobs). Renaming a job without updating the rulesets
     # blocks every merge with "Expected — Waiting for status to be reported".
     requiredStatusChecks:
     - Check Branch Name
     - Check Linked Issue
-    - Validate PR Title
+    - Validate PR Title / Validate PR Title
     - CodeQL
     - Run zizmor 🌈 / Run zizmor -- blocking
     # Require branches to be up to date before merging. Strict true is
@@ -90,7 +91,7 @@ configuration:
     requiredStatusChecks:
     - Check Branch Name
     - Check Linked Issue
-    - Validate PR Title
+    - Validate PR Title / Validate PR Title
     - CodeQL
     - Run zizmor 🌈 / Run zizmor -- blocking
     requiresStrictStatusChecks: true
