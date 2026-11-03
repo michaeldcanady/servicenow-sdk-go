@@ -57,6 +57,17 @@ run = "gofmt -s -w ."
 description = "Run golangci-lint"
 run = "golangci-lint run ./..."
 
+[tasks."go:deps:check"]
+description = "Verify and check go mod tidy drift in both Go modules, as CI does"
+run = """
+status=0
+for dir in . tests/integration/v2; do
+  echo "== $dir"
+  (cd "$dir" && go mod verify && go mod tidy -diff) || status=1
+done
+exit "$status"
+"""
+
 # Docs site
 
 [tasks."docs:setup"] # just setup-docs
