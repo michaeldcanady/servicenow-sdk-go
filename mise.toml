@@ -49,6 +49,26 @@ run = "go build ./..."
 description = "Run the unit tests"
 run = "go test -v ./..."
 
+[tasks."go:test:integration"]
+description = "Run the mocked integration tests, as CI does"
+dir = "{{config_root}}/tests/integration/v2"
+env = { SN_OFFLINE = "true", SN_INSTANCE = "mock_instance", SN_USERNAME = "mock_user", SN_PASSWORD = "mock_password" }
+run = "go test -tags integration ./..."
+
+[tasks."go:test:e2e"]
+description = "Run the e2e tests against the live instance in .env"
+dir = "{{config_root}}/tests/integration/v2"
+env = { SN_OFFLINE = "false" }
+run = "go test -tags e2e ./... -timeout 40m -v"
+
+[tasks."go:test:coverage"]
+description = "Run the unit tests and write coverage.html"
+run = "./scripts/test.sh --report"
+
+[tasks."go:test:report"]
+description = "Run the unit tests and print a Markdown test report"
+run = "./scripts/test.sh --md-report"
+
 [tasks."go:fmt"] # just fmt
 description = "Format all Go files"
 run = "gofmt -s -w ."
