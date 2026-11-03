@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Copyright (c) 2021 Michael Canady
+# SPDX-License-Identifier: MIT
+#MISE description="Run Vale on the Markdown files that changed from origin/main, as the pull request check does"
+#USAGE arg "[base]" help="Ref to compare with. Defaults to origin/main."
+#
+# Mirrors the "lint-md" job in .github/workflows/docs-preview.yml, which lints
+# only the files that a pull request changes.
+set -euo pipefail
+
+base="${1:-origin/main}"
+mapfile -t files < <(
+  {
+    git diff --name-only --diff-filter=d "$(git merge-base "$base" HEAD)" -- '*.md' '*.mdx'
+    git ls-files --others --exclude-standard -- '*.md' '*.mdx'
+  } | sort -u
+)
+
+if [[ ${#files[@]} -eq 0 ]]; then
+  echo "No changed Markdown files."
+  exit 0
+fi
+
+vale sync >/dev/null
+vale --minAlertLevel=error "${files[@]}"

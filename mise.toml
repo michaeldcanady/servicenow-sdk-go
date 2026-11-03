@@ -37,15 +37,15 @@ actionlint = "1.7.12"
 shellcheck = "0.11.0"
 
 # Tasks. Run `mise tasks` to list them, and `mise run <task>` to run one.
-# Each task matches the `just` recipe of the old name, noted next to it.
+# Tasks that need a script live in .mise/tasks/.
 
 # Go
 
-[tasks."go:build"] # just build
+[tasks."go:build"]
 description = "Build every package"
 run = "go build ./..."
 
-[tasks."go:test"] # just test
+[tasks."go:test"]
 description = "Run the unit tests"
 run = "go test -v ./..."
 
@@ -75,11 +75,11 @@ run = "./scripts/test.sh --report"
 description = "Run the unit tests and print a Markdown test report"
 run = "./scripts/test.sh --md-report"
 
-[tasks."go:fmt"] # just fmt
+[tasks."go:fmt"]
 description = "Format all Go files"
 run = "gofmt -s -w ."
 
-[tasks."go:lint"] # just lint
+[tasks."go:lint"]
 description = "Run golangci-lint"
 run = "golangci-lint run ./..."
 
@@ -94,40 +94,102 @@ done
 exit "$status"
 """
 
+[tasks."go:vuln"]
+description = "Run govulncheck in both Go modules"
+# CI's Vulnerability Scan job scans only the root module.
+run = """
+status=0
+for dir in . tests/integration/v2; do
+  echo "== $dir"
+  (cd "$dir" && govulncheck ./...) || status=1
+done
+exit "$status"
+"""
+
 # Docs site
 
-[tasks."docs:setup"] # just setup-docs
+[tasks."docs:setup"]
 description = "Install the docs site dependencies"
 dir = "{{config_root}}/website"
 run = "npm ci"
 
-[tasks."docs:serve"] # just serve-docs
+[tasks."docs:serve"]
 description = "Serve the docs site locally with live reload"
 dir = "{{config_root}}/website"
 run = "npm start"
 
-[tasks."docs:build"] # just generate-docs
+[tasks."docs:build"]
 description = "Build the static docs site without serving it"
 dir = "{{config_root}}/website"
 run = "npm run build"
 
-[tasks."docs:clean"] # just clean-docs
+[tasks."docs:clean"]
 description = "Remove the docs site build output"
 run = "rm -rf website/build website/.docusaurus"
 
-[tasks."docs:snippets"] # just check-docs
+[tasks."docs:snippets"]
 description = "Vet the doc code snippets and check their region markers"
 run = [
   "go vet -tags snippets ./website/snippets/",
   "./scripts/check-snippet-regions.sh",
 ]
 
+[tasks."docs:lint"]
+description = "Run Vale on the whole docs site, as Documentation Stable does"
+run = [
+  "vale sync",
+  "vale --minAlertLevel=error website/docs website/versioned_docs",
+]
+
 # License headers
 
-[tasks."license:add"] # just add-license
+[tasks."license:add"]
 description = "Add license headers to in-scope source files"
 run = "./scripts/add-license.sh"
 
-[tasks."license:check"] # just check-license
+[tasks."license:check"]
 description = "Check that in-scope source files carry license headers"
 run = "./scripts/add-license.sh --check-only"
+
+# CI configuration
+
+[tasks."ci:lint"]
+description = "Run zizmor, actionlint, and shellcheck on the CI configuration and scripts"
+# CI runs zizmor with these settings (reusable-zizmor.yaml). actionlint and
+# shellcheck don't run in CI yet, so they fail only on warnings and errors.
+# Set GH_TOKEN to run the zizmor audits that need the GitHub API, as CI does.
+env = { SHELLCHECK_OPTS = "--severity=warning" }
+run = [
+  "zizmor --persona=auditor --collect=all --min-severity=informational --min-confidence=low .",
+  "actionlint",
+  "shellcheck scripts/*.sh .mise/tasks/pr/* .mise/tasks/docs/lint/*",
+]
+
+# Pre-push checks
+#
+# These checks run only in CI, because they need GitHub or a service account:
+# CodeQL, OpenSSF Scorecard, OpenCode Review, GitGuardian, the linked-issue
+# check, and the e2e tests on the live instance (run go:test:e2e with your own
+# .env instead).
+
+[tasks.check]
+description = "Run every check that a pull request runs and that works locally"
+depends = [
+  "go:build",
+  "go:lint",
+  "go:test",
+  "go:test:oldstable",
+  "go:test:integration",
+  "go:deps:check",
+  "go:vuln",
+  "docs:snippets",
+  "docs:lint:changed",
+  "license:check",
+  "ci:lint",
+  "pr:branch",
+  "pr:title",
+]
+
+[tasks."check:all"]
+description = "Run check, plus the full-site Vale run and the docs build that run after merge"
+depends = ["check", "docs:lint", "docs:build"]
