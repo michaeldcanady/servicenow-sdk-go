@@ -737,6 +737,65 @@ func TestCaseFieldValuesRequestBuilder_ToGetRequestInformation(t *testing.T) {
 	}
 }
 
+// Regression for #742: both field values builders share one query parameter
+// type, so both must put every parameter on the request URL.
+func TestCaseFieldValuesRequestBuilder_ToGetRequestInformation_QueryParameters(t *testing.T) {
+	dependentValue := "dep"
+	limit := int64(10)
+	offset := int64(20)
+	query := "active=true"
+	refQualInput := "ref"
+	config := &CaseFieldValuesRequestBuilderGetRequestConfiguration{
+		QueryParameters: &CaseFieldValuesRequestBuilderGetQueryParameters{
+			DependentValue:        &dependentValue,
+			Limit:                 &limit,
+			Offset:                &offset,
+			ReferenceFieldColumns: []string{"name", "number"},
+			Query:                 &query,
+			RefQualInput:          &refQualInput,
+		},
+	}
+	wantQuery := map[string]string{
+		"sysparm_dependent_value":         "dep",
+		"sysparm_limit":                   "10",
+		"sysparm_offset":                  "20",
+		"sysparm_reference_field_columns": "name,number",
+		"sysparm_query":                   "active=true",
+		"sysparm_ref_qual_input":          "ref",
+	}
+
+	tests := []struct {
+		name     string
+		builder  *CaseFieldValuesRequestBuilder
+		wantPath string
+	}{
+		{
+			name:     "case-level field values",
+			builder:  NewCaseFieldValuesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "field_name": "state"}, &mocking.MockRequestAdapter{}),
+			wantPath: "/api/sn_customerservice/v1/case/field_values/state",
+		},
+		{
+			name:     "item-level field values",
+			builder:  NewItemFieldValuesRequestBuilderInternal(map[string]string{"baseurl": "https://example.com", "id": "case-1", "field_name": "state"}, &mocking.MockRequestAdapter{}),
+			wantPath: "/api/sn_customerservice/v1/case/case-1/field_values/state",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			requestInfo, err := tt.builder.ToGetRequestInformation(context.Background(), config)
+			require.NoError(t, err)
+
+			uri, err := requestInfo.GetUri()
+			require.NoError(t, err)
+			assert.Equal(t, tt.wantPath, uri.Path)
+			for key, want := range wantQuery {
+				assert.Equal(t, want, uri.Query().Get(key), "query parameter %q", key)
+			}
+		})
+	}
+}
+
 func TestCaseFieldValuesRequestBuilder_Get(t *testing.T) {
 	tests := []struct {
 		name       string
