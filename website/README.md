@@ -17,9 +17,9 @@ The public documentation site for the ServiceNow SDK for Go, built with
 ## Commands
 
 ```bash
-npm ci        # install (or: just setup-docs)
-npm start     # live-reload dev server (or: just serve-docs)
-npm run build # production build into build/ (or: just generate-docs)
+npm ci        # install (or: mise run docs:setup)
+npm start     # live-reload dev server (or: mise run docs:serve)
+npm run build # production build into build/ (or: mise run docs:build)
 ```
 
 The build fails on broken internal links (`onBrokenLinks: 'throw'`), so run
