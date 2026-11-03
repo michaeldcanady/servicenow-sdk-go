@@ -84,7 +84,8 @@
           - ".github/scripts/**"
           - ".github/dependabot.yml"
           - ".github/labeler.yml"
-          - "justfile"
+          - "mise.toml"
+          - ".mise/**"
           - "scripts/**"
 
 "tests":
