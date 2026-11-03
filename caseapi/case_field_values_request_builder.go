@@ -17,7 +17,7 @@ import (
 
 const (
 	fieldValuesURLTemplate     = "{+baseurl}/api/sn_customerservice/v1/case/field_values/{field_name}{?sysparm_dependent_value,sysparm_limit,sysparm_offset,sysparm_reference_field_columns,sysparm_query,sysparm_ref_qual_input}"
-	itemFieldValuesURLTemplate = "{+baseurl}/api/sn_customerservice/v1/case/{id}/field_values/{field_name}"
+	itemFieldValuesURLTemplate = "{+baseurl}/api/sn_customerservice/v1/case/{id}/field_values/{field_name}{?sysparm_dependent_value,sysparm_limit,sysparm_offset,sysparm_reference_field_columns,sysparm_query,sysparm_ref_qual_input}"
 )
 
 // CaseFieldValuesRequestBuilder provides operations to manage field values.
