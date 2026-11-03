@@ -367,6 +367,9 @@ func TestClient_ExchangeWrappers(t *testing.T) {
 		wantGrantType string
 		wantParams    map[string]string
 		absentParams  []string
+		// clientSecret, when set, makes the client confidential with
+		// client_secret_post; otherwise the client uses AuthMethodNone.
+		clientSecret string
 	}{
 		{
 			name: "client credentials with scopes",
@@ -422,6 +425,17 @@ func TestClient_ExchangeWrappers(t *testing.T) {
 			absentParams:  []string{RedirectURIKey, StateKey, CodeVerifierKey},
 		},
 		{
+			// The secret that AuthCodeURL leaves out (#851) still reaches the
+			// token endpoint, in the request body.
+			name: "authorization code for a confidential client sends the secret in the body",
+			call: func(c *Client) (*Token, error) {
+				return c.ExchangeCode(context.Background(), "code123", "http://redirect", "", "")
+			},
+			clientSecret:  "sec",
+			wantGrantType: GrantTypeAuthCode,
+			wantParams:    map[string]string{CodeKey: "code123", ClientIDKey: "id", ClientSecretKey: "sec"},
+		},
+		{
 			name:          "jwt bearer",
 			call:          func(c *Client) (*Token, error) { return c.ExchangeJWT(context.Background(), "assertion") },
 			wantGrantType: GrantTypeJWTBearer,
@@ -444,6 +458,10 @@ func TestClient_ExchangeWrappers(t *testing.T) {
 			}).Return(newResponse(200, `{"access_token":"tok","token_type":"bearer"}`), nil)
 
 			c := &Client{ClientID: "id", Endpoints: testEndpoints(), AuthMethod: AuthMethodNone, HTTPClient: mockClient}
+			if tt.clientSecret != "" {
+				c.ClientSecret = tt.clientSecret
+				c.AuthMethod = AuthMethodClientSecretPost
+			}
 			tok, err := tt.call(c)
 			require.NoError(t, err)
 			require.Equal(t, "tok", tok.AccessToken)
@@ -922,10 +940,14 @@ func TestClient_AuthCodeURL(t *testing.T) {
 			},
 		},
 		{
-			name: "includes trimmed client secret when set",
+			// Regression for #851: the authorization URL reaches the browser,
+			// its history, server logs, and Referer headers, so it must never
+			// carry the client secret. Clients authenticate at the token
+			// endpoint instead.
+			name: "omits client secret when set",
 			client: &Client{
 				ClientID:     "id",
-				ClientSecret: "  sec  ",
+				ClientSecret: "sec",
 				Endpoints: &Endpoints{
 					AuthURL:  "http://auth",
 					TokenURL: "http://auth/token",
@@ -934,7 +956,26 @@ func TestClient_AuthCodeURL(t *testing.T) {
 			check: func(t *testing.T, u string) {
 				parsed, err := url.Parse(u)
 				require.NoError(t, err)
-				require.Equal(t, "sec", parsed.Query().Get(ClientSecretKey))
+				require.False(t, parsed.Query().Has(ClientSecretKey))
+				require.NotContains(t, u, "sec")
+				require.Equal(t, "id", parsed.Query().Get(ClientIDKey))
+			},
+		},
+		{
+			name: "omits client secret when the auth URL already has query parameters",
+			client: &Client{
+				ClientID:     "id",
+				ClientSecret: "sec",
+				Endpoints: &Endpoints{
+					AuthURL:  "http://auth?prompt=login",
+					TokenURL: "http://auth/token",
+				},
+			},
+			check: func(t *testing.T, u string) {
+				parsed, err := url.Parse(u)
+				require.NoError(t, err)
+				require.False(t, parsed.Query().Has(ClientSecretKey))
+				require.Equal(t, "login", parsed.Query().Get("prompt"))
 			},
 		},
 		{
