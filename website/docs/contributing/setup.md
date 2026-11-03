@@ -21,9 +21,11 @@ prefer their own environment.
 
 ## Path 1: Dev container (recommended)
 
-The repository ships a dev-container definition with Go, `golangci-lint`,
-`just`, and the editor extensions already installed — the environment CI runs
-is the environment you develop in.
+The repository ships a dev-container definition with
+[mise](https://mise.jdx.dev/) and the editor extensions already installed.
+When the container is created, it runs `mise install`, which installs Go,
+`golangci-lint`, Vale, and every other tool at the versions that CI uses, and
+it activates mise in bash.
 
 1.  Install [Docker](https://www.docker.com/get-started/) or
     [Podman](https://podman.io/), plus the
@@ -38,17 +40,21 @@ is the environment you develop in.
 
 ## Path 2: Local toolchain
 
-- **Go** 1.25 or higher.
-- **[golangci-lint](https://golangci-lint.run/usage/install/)** — the lint
-  gate CI enforces (config: `.golangci.yml`).
-- **[just](https://github.com/casey/just)** *(optional)* — a command runner
-  wrapping the common tasks (`just build`, `just lint`, `just fmt`).
+- **[mise](https://mise.jdx.dev/getting-started.html)**: installs the tools
+  that `mise.toml` pins, at the versions that CI uses, and runs the repository
+  tasks. Follow the mise guide to activate it in your shell.
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/servicenow-sdk-go.git
 cd servicenow-sdk-go
+mise trust
+mise install
 go mod download
 ```
+
+If you don't want to use mise, install Go 1.25 or later and
+[golangci-lint](https://golangci-lint.run/usage/install/). The plain `go` and
+`golangci-lint` commands on this page work without mise.
 
 ## The moment of success
 
@@ -61,9 +67,29 @@ go test ./...             # unit tests (fast, no network, no instance)
 golangci-lint run ./...   # the same lint gate as CI
 ```
 
-If all three pass on a fresh clone, your environment is correct. If you'll be
-editing docs too, `just setup-docs` then `just serve-docs` runs this site
-locally (Node 20+).
+If all three pass on a fresh clone, your environment is correct. If you're
+editing docs too, run `mise run docs:setup` and then `mise run docs:serve` to
+serve this site locally (Node 20 or later).
+
+## Run the pull request checks before you push
+
+The repository tasks live in `mise.toml` and `.mise/tasks/`. To list them, run
+`mise tasks`. These two tasks run the checks as CI does, so you can fix a
+failure before you push:
+
+- `mise run check` runs every pull request check that works locally: build,
+  lint, unit tests on both Go releases that CI tests, mocked integration tests,
+  the Go dependency and vulnerability checks, the docs snippet check, Vale on
+  your changed Markdown files, the license-header check, the CI configuration
+  linters, and the branch-name and pull request title rules.
+- `mise run check:all` also runs the checks that run after merge: Vale on the
+  whole docs site, and the docs build.
+
+Some checks run only in CI, because they need GitHub or a service account:
+CodeQL, OpenSSF Scorecard, OpenCode Review, GitGuardian, and the linked-issue
+check. The e2e tests need a live ServiceNow instance. To run them against
+your own instance, set up the credentials in the next section, and then run
+`mise run go:test:e2e`.
 
 ## Credentials for integration and e2e tests
 

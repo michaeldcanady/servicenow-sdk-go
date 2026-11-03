@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Copyright (c) 2021 Michael Canady
+# SPDX-License-Identifier: MIT
+#MISE description="Check a branch name against the Check Branch Name rule"
+#USAGE arg "[branch]" help="Branch to check. Defaults to the current branch."
+#
+# Mirrors the "Check Branch Name" job in .github/workflows/branch-policy.yml.
+# Keep the pattern and the exempt prefixes in sync with that job.
+set -euo pipefail
+
+branch="${1:-$(git rev-parse --abbrev-ref HEAD)}"
+
+case "$branch" in
+  release-please--* | dependabot/* | backport/*)
+    echo "Branch name '$branch' is an automated branch and is exempt."
+    exit 0
+    ;;
+esac
+
+pattern='^(fix|feat|chore|docs|style|refactor|perf|test|release)/[a-z0-9]+(-[a-z0-9]+)*$'
+if [[ ! "$branch" =~ $pattern ]]; then
+  echo "Branch name '$branch' doesn't match '<type>/<kebab-description>', for example 'fix/nil-pointer-in-tableapi'." >&2
+  echo "Allowed types: fix, feat, chore, docs, style, refactor, perf, test, release" >&2
+  exit 1
+fi
+
+echo "Branch name '$branch' is valid."

@@ -162,9 +162,10 @@ contract in brief:
   `CHANGELOG.md` as a fix or feature.
 - **Never edit `VERSION` or `CHANGELOG.md`** — `release-please` generates
   both from commit messages.
-- **Local gate before review:** `gofmt -s -w .`, `golangci-lint run ./...`,
-  `go test ./...` (config: `.golangci.yml`; `just build|lint|fmt` wrap the
-  same commands).
+- **Local gate before review:** run `mise run check`, which runs the pull
+  request checks that work locally. To run the Go checks on their own, run
+  `mise run go:fmt`, `mise run go:lint`, and `mise run go:test` (config:
+  `.golangci.yml`).
 
 ## Issue triage and labels
 
@@ -205,7 +206,7 @@ For the full triage workflow, scoring rubric, and examples, see [Issue triage](t
   `GoSnippet`/`GoExample` components. CI compiles every snippet
   (`go vet -tags snippets ./website/snippets/`), so samples can't rot.
 - New pages register in `website/sidebars.ts`; preview with
-  `just serve-docs` (Node 20+, `just setup-docs` first).
+  `mise run docs:serve` (Node 20+, `mise run docs:setup` first).
 - Design changes get an [ADR](adrs/index.md) plus a summary page here —
   see [Why it's built this way](design-decisions.md). New modules get a
   blueprint first — see the [documents API

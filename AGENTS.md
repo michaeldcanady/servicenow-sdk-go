@@ -43,24 +43,31 @@ codifying it — routine bug fixes and formatting don't need ADR backing.
 
 ## Commands
 
+Tasks are defined in `mise.toml` and `.mise/tasks/`; `mise install` installs the tools at the versions CI uses, and `mise tasks` lists every task.
+
 ```bash
-go build ./...                      # build everything
-go test ./...                       # unit tests only (integration/e2e are build-tag gated, see below)
+mise run check                      # every PR check that runs locally; run before you push
+mise run check:all                  # check + full-site Vale + docs build (the post-merge checks)
+mise run go:build                   # go build ./...
+mise run go:test                    # unit tests only (integration/e2e are build-tag gated, see below)
 go test ./tableapi/... -run TestXxx -v   # single package / single test
-golangci-lint run ./...             # lint (config: .golangci.yml)
-gofmt -s -w .                       # format (also: `just fmt`)
-just build | just lint | just fmt   # justfile wraps the above
-./scripts/test.sh --report          # unit tests + HTML coverage report (coverage.html)
-./scripts/test.sh --md-report       # unit tests + Markdown test report
+mise run go:lint                    # golangci-lint run ./... (config: .golangci.yml)
+mise run go:fmt                     # gofmt -s -w .
+mise run go:test:oldstable          # unit tests on CI's oldstable Go release
+mise run go:test:coverage           # unit tests + HTML coverage report (coverage.html)
+mise run go:test:report             # unit tests + Markdown test report
+mise run go:deps:check              # go mod verify + go mod tidy -diff in both modules
+mise run go:vuln                    # govulncheck in both modules
+mise run ci:lint                    # zizmor, actionlint, shellcheck
 ```
 
-Integration and e2e tests are excluded from a plain `go test ./...` by build tags:
+Integration and e2e tests are excluded from a plain `go test ./...` by build tags. Both live in the separate `tests/integration/v2` module:
 ```bash
-go test -tags integration ./tests/integration/...   # godog/BDD, uses httpmock — no live instance needed
-go test -tags e2e ./tests/integration/v2/...        # hits a real ServiceNow instance via .env credentials
+mise run go:test:integration   # godog/BDD, uses httpmock — no live instance needed
+mise run go:test:e2e           # hits a real ServiceNow instance via .env credentials (sets SN_OFFLINE=false)
 ```
 
-Docs (Docusaurus, in `website/`) are built via `just generate-docs` / served via `just serve-docs` (Node 20+; `just setup-docs` first). Site pages live in `website/docs/`; Go code samples are single-sourced from `website/snippets/*.go` via the `GoSnippet`/`GoExample` MDX components (`// [START x]` / `// [END x]` region markers). All engineering docs live on the docs site: contributor guides under `website/docs/contributing/`, ADRs at `website/docs/contributing/adrs/` (new ones must be added to `adrs/index.md` and `website/sidebars.ts`), module design blueprints at `website/docs/contributing/blueprints/`, and the release-branch-protection runbook at `website/docs/contributing/release-branch-protection.md`. The repo keeps no top-level `docs/` directory.
+Docs (Docusaurus, in `website/`) are built via `mise run docs:build` / served via `mise run docs:serve` (Node 20+; `mise run docs:setup` first). `mise run docs:lint` runs Vale on the whole site; `mise run docs:lint:changed` runs it on the Markdown files you changed. Site pages live in `website/docs/`; Go code samples are single-sourced from `website/snippets/*.go` via the `GoSnippet`/`GoExample` MDX components (`// [START x]` / `// [END x]` region markers). All engineering docs live on the docs site: contributor guides under `website/docs/contributing/`, ADRs at `website/docs/contributing/adrs/` (new ones must be added to `adrs/index.md` and `website/sidebars.ts`), module design blueprints at `website/docs/contributing/blueprints/`, and the release-branch-protection runbook at `website/docs/contributing/release-branch-protection.md`. The repo keeps no top-level `docs/` directory.
 
 ## Architecture
 

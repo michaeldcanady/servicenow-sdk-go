@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Copyright (c) 2021 Michael Canady
+# SPDX-License-Identifier: MIT
+#MISE description="Check a pull request title against the Conventional Commits rule"
+#USAGE arg "[title]" help="Title to check. Defaults to the current branch's pull request title, or the latest commit subject."
+#
+# Mirrors the "Validate PR Title" job in .github/workflows/reusable-lint-pr-title.yaml.
+# Keep the types in sync with that workflow's "types" input.
+set -euo pipefail
+
+title="${1:-}"
+if [[ -z "$title" ]] && command -v gh >/dev/null 2>&1; then
+  title="$(gh pr view --json title --jq .title 2>/dev/null || true)"
+fi
+if [[ -z "$title" ]]; then
+  title="$(git log -1 --format=%s)"
+fi
+
+pattern='^(fix|feat|chore|docs|style|refactor|perf|test)(\([^)]+\))?!?: [^ ].*$'
+if [[ ! "$title" =~ $pattern ]]; then
+  echo "Title '$title' doesn't follow Conventional Commits, for example 'fix(tableapi): handle a nil response'." >&2
+  echo "Allowed types: fix, feat, chore, docs, style, refactor, perf, test" >&2
+  exit 1
+fi
+
+echo "Title '$title' is valid."

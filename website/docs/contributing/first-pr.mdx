@@ -32,8 +32,8 @@ timeline
 
 ## 0:00 — Get a working environment (~10 min)
 
-The repository ships a dev container with Go, `golangci-lint`, and `just`
-preinstalled — the same environment CI runs.
+The repository ships a dev container with mise preinstalled. mise installs
+Go, `golangci-lint`, and the other tools at the versions that CI uses.
 
 1.  Fork the repo on GitHub, then:
     ```bash
@@ -80,7 +80,7 @@ the surrounding file is the style guide.
   applies it, and CI fails without one.
 - Changing docs? Go samples live in `website/snippets/*.go` behind
   `// [START x]` / `// [END x]` markers — never inline in the page — so CI
-  can compile them. Preview locally with `just serve-docs`.
+  can compile them. Preview locally with `mise run docs:serve`.
 - Fixing a bug? Write the test that fails first; it becomes your regression
   guard and your proof.
 
@@ -97,6 +97,10 @@ go test ./...             # unit tests — fast, no network, no instance
 That's the whole local gate for a small change. (No ServiceNow instance is
 needed — the integration and e2e suites are opt-in and not expected for a
 first PR.)
+
+To run every pull request check that works locally, including the mocked
+integration tests and the branch-name and title rules, run `mise run check`.
+Run it after you name your branch and commit in the next step.
 
 ## 0:45 — Ship it (~15 min)
 
