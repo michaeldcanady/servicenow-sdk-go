@@ -6,6 +6,7 @@ package credentials
 import (
 	"context"
 	"errors"
+	"net/url"
 	"testing"
 
 	"github.com/michaeldcanady/servicenow-sdk-go/v2/internal/oauth2"
@@ -184,7 +185,7 @@ func TestConfidentialClient_GetAuthorizationURL(t *testing.T) {
 				c.oauthClient = test.fake
 			}
 
-			url, err := c.getAuthorizationURL("https://redirect", "state", nil)
+			got, err := c.getAuthorizationURL("https://redirect", "state", nil)
 
 			if test.wantErr != "" {
 				require.Error(t, err)
@@ -192,9 +193,25 @@ func TestConfidentialClient_GetAuthorizationURL(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			assert.Equal(t, "https://auth.example.com", url)
+			assert.Equal(t, "https://auth.example.com", got)
 		})
 	}
+}
+
+// Regression for #851: a confidential client's authorization URL, built by
+// the real OAuth2 client, never carries the client secret.
+func TestConfidentialClient_getAuthorizationURL_OmitsClientSecret(t *testing.T) {
+	c := &confidentialClient{baseClient: &baseClient{clientID: "id", clientSecret: "super-secret"}}
+	c.Initialize("https://dev12345.service-now.com")
+
+	raw, err := c.getAuthorizationURL("https://redirect", "state", nil)
+	require.NoError(t, err)
+
+	parsed, err := url.Parse(raw)
+	require.NoError(t, err)
+	assert.False(t, parsed.Query().Has("client_secret"))
+	assert.NotContains(t, raw, "super-secret")
+	assert.Equal(t, "id", parsed.Query().Get("client_id"))
 }
 
 func TestConfidentialClient_Initialize(t *testing.T) {

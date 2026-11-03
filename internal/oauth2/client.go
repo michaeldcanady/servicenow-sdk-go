@@ -407,9 +407,9 @@ func (c *Client) AuthCodeURL(redirectURI, state, codeChallenge, codeChallengeMet
 	q := u.Query()
 	q.Set(ResponseTypeKey, ResponseTypeCode)
 	q.Set(ClientIDKey, c.ClientID)
-	if secret := strings.TrimSpace(c.ClientSecret); secret != "" {
-		q.Set(ClientSecretKey, secret)
-	}
+	// The client secret never goes in the authorization URL: the URL reaches
+	// the browser, its history, server logs, and Referer headers. Confidential
+	// clients authenticate at the token endpoint (see AuthMethod).
 	if redirectURI != "" {
 		q.Set(RedirectURIKey, redirectURI)
 	}
