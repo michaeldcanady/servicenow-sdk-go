@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.1.1](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.1.0...v2.1.1) (2026-11-04)
+
+
+### Bug Fixes
+
+* **caseapi:** forward query parameters on the item field values request ([#935](https://github.com/michaeldcanady/servicenow-sdk-go/issues/935)) ([f8f9854](https://github.com/michaeldcanady/servicenow-sdk-go/commit/f8f9854b6859da6e58c95812f12f2a56b76bff36)), closes [#742](https://github.com/michaeldcanady/servicenow-sdk-go/issues/742)
+* **credentials:** keep client_secret out of the authorization URL ([#934](https://github.com/michaeldcanady/servicenow-sdk-go/issues/934)) ([a1aa70c](https://github.com/michaeldcanady/servicenow-sdk-go/commit/a1aa70c57ea7a5017edbd7572530b82426ab39ab)), closes [#851](https://github.com/michaeldcanady/servicenow-sdk-go/issues/851)
+* **documentsapi:** use *int32 for explore params ([#889](https://github.com/michaeldcanady/servicenow-sdk-go/issues/889)) ([9d166a7](https://github.com/michaeldcanady/servicenow-sdk-go/commit/9d166a7dcc10f9c81340cb2ebe673686139a5cce)), closes [#880](https://github.com/michaeldcanady/servicenow-sdk-go/issues/880)
+
 ## [2.1.0](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.0.4...v2.1.0) (2026-10-20)
 
 
