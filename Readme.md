@@ -13,7 +13,7 @@ A type-safe, idiomatic Go client for the ServiceNow REST APIs.
 ```bash
 go get github.com/michaeldcanady/servicenow-sdk-go/v2@latest
 ```
-> Requires **Go 1.25+**
+> Requires **Go 1.26+**
 
 ## Quickstart
 

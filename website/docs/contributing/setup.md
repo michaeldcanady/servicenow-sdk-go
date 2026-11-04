@@ -52,7 +52,7 @@ mise install
 go mod download
 ```
 
-If you don't want to use mise, install Go 1.25 or later and
+If you don't want to use mise, install Go 1.26 or later and
 [golangci-lint](https://golangci-lint.run/usage/install/). The plain `go` and
 `golangci-lint` commands on this page work without mise.
 
