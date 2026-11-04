@@ -76,7 +76,7 @@ jobs:
       # PRs. We deliberately contain it:
       #
       #   * pull_request trigger (NOT pull_request_target) — so fork PRs never
-      #     receive OPENCODE_CLIENT_ID or an OIDC token, and the GITHUB_TOKEN handed out on forks is
+      #     receive an OIDC token or an OpenCode token, and the GITHUB_TOKEN handed out on forks is
       #     GitHub's read-only token. This preserves the fork-secret gating of
       #     the previous reviewer: secret stays gated to trusted associations.
       #   * use_github_token: true — opencode uses the repo-scoped GITHUB_TOKEN
@@ -101,6 +101,8 @@ jobs:
       # is still limited to this repo's PR comments and is read-only on forks.
 
       # Trades the job's GitHub OIDC token for a short-lived OpenCode token.
+      # OPENCODE_CLIENT_ID is a public client identifier, so it's a repository
+      # variable, not a secret.
       # The value is masked before anything else can print it, and it reaches
       # the review step only as a step output, not through GITHUB_ENV.
       - name: Sign in to OpenCode
@@ -108,7 +110,7 @@ jobs:
         shell: bash
         env:
           AUDIENCE: https://opencode.ai/console
-          OPENCODE_CLIENT_ID: ${{ secrets.OPENCODE_CLIENT_ID }}
+          OPENCODE_CLIENT_ID: ${{ vars.OPENCODE_CLIENT_ID }}
         run: |
           oidc="$(curl -sSf --oauth2-bearer "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=$AUDIENCE" | jq -r .value)"
