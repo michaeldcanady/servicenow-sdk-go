@@ -141,6 +141,10 @@ jobs:
         uses: anomalyco/opencode/github@042d0832f5f3a73eaa039a58a7d565776f6d4290 # v2.0.29
         env:
           OPENCODE_API_KEY: ${{ steps.opencode-auth.outputs.token }}
+          # OpenCode names each session with a separate small model, which
+          # defaults to a paid one. Use the free review model for titles too,
+          # so the job never spends the paid budget.
+          OPENCODE_CONFIG_CONTENT: '{"small_model":"opencode/big-pickle"}'
         with:
           model: opencode/big-pickle
           # Use the repo-scoped GITHUB_TOKEN (set in job env) instead of the
