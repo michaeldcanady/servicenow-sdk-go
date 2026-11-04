@@ -15,10 +15,10 @@
 # only exceptions are the inline `# zizmor: ignore[...]` comments documented
 # below.
 #
-# secrets-outside-env: OPENCODE_API_KEY and PROJECT_PAT are repository-level
-# secrets used as API credentials for code review and Projects v2 sync
-# respectively -- not deployment secrets. Each is scoped to a single step's
-# `env` and is never exposed to default-checked-out code. Allowing them here
+# secrets-outside-env: OPENCODE_CLIENT_ID and PROJECT_PAT are repository-level
+# secrets used as API credentials for the code review sign-in and Projects v2
+# sync respectively -- not deployment secrets. Each is scoped to a single
+# step's `env` and is never exposed to default-checked-out code. Allowing them here
 # (per secret name) is the zizmor-blessed alternative to scattered per-site
 # `# zizmor: ignore[secrets-outside-env]` comments.
 #
@@ -31,7 +31,7 @@ rules:
   secrets-outside-env:
     config:
       allow:
-        - OPENCODE_API_KEY
+        - OPENCODE_CLIENT_ID
         - PROJECT_PAT
         - GPG_SIGNING_KEY
 
