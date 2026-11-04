@@ -24,6 +24,9 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
+    # Review every push. The default pauses automatic reviews after five
+    # reviewed commits.
+    auto_pause_after_reviewed_commits: 0
     base_branches:
       - ^main$
       - ^release/v.*$
