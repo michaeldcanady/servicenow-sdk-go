@@ -85,11 +85,11 @@ failure before you push:
 - `mise run check:all` also runs the checks that run after merge: Vale on the
   whole docs site, and the docs build.
 
-Some checks run only in CI, because they need GitHub or a service account:
-CodeQL, OpenSSF Scorecard, OpenCode Review, GitGuardian, and the linked-issue
-check. The e2e tests need a live ServiceNow instance. To run them against
-your own instance, set up the credentials in the next section, and then run
-`mise run go:test:e2e`.
+Some checks run only on GitHub, because they need GitHub or a service account:
+CodeQL, OpenSSF Scorecard, the CodeRabbit review, GitGuardian, and the
+linked-issue check. The e2e tests need a live ServiceNow instance. To run them
+against your own instance, set up the credentials in the next section, and
+then run `mise run go:test:e2e`.
 
 ## Credentials for integration and e2e tests
 

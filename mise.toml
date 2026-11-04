@@ -168,9 +168,9 @@ run = [
 # Pre-push checks
 #
 # These checks run only in CI, because they need GitHub or a service account:
-# CodeQL, OpenSSF Scorecard, OpenCode Review, GitGuardian, the linked-issue
-# check, and the e2e tests on the live instance (run go:test:e2e with your own
-# .env instead).
+# CodeQL, OpenSSF Scorecard, the CodeRabbit review, GitGuardian, the
+# linked-issue check, and the e2e tests on the live instance (run go:test:e2e
+# with your own .env instead).
 
 [tasks.check]
 description = "Run every check that a pull request runs and that works locally"

@@ -1,0 +1,115 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+#
+# CodeRabbit reviews pull requests in this repository. It replaces the
+# OpenCode review workflow (#897). Configuration reference:
+# https://docs.coderabbit.ai/reference/configuration
+#
+# CodeRabbit only reviews here. The features that push commits or approve
+# pull requests are off, because the app has write access to code and
+# workflows that this configuration can't narrow.
+
+language: en-US
+tone_instructions: >-
+  Be concise and direct. Flag real bugs, security problems, and defects that
+  will cause confusion later. Skip style nits that gofmt or linters already
+  catch. Write in the Google developer documentation style.
+
+reviews:
+  profile: chill
+  high_level_summary: true
+  poem: false
+  sequence_diagrams: false
+  in_progress_fortune: false
+  collapse_walkthrough: true
+  auto_review:
+    enabled: true
+    drafts: false
+    # Review every push. The default pauses automatic reviews after five
+    # reviewed commits.
+    auto_pause_after_reviewed_commits: 0
+    base_branches:
+      - ^main$
+      - ^release/v.*$
+  auto_approvals:
+    enabled: false
+  auto_apply_labels: false
+  auto_assign_reviewers: false
+  finishing_touches:
+    docstrings:
+      enabled: false
+    unit_tests:
+      enabled: false
+    autofix:
+      enabled: false
+    fix_ci:
+      enabled: false
+    resolve_merge_conflict:
+      enabled: false
+  pre_merge_checks:
+    # PR Checks already enforces the title and the linked issue.
+    title:
+      mode: "off"
+    issue_assessment:
+      mode: "off"
+    docstrings:
+      mode: "off"
+  path_filters:
+    - "!CHANGELOG.md"
+    - "!VERSION"
+    - "!**/go.sum"
+    - "!website/package-lock.json"
+  path_instructions:
+    - path: "**/*.go"
+      instructions: |
+        Review against the conventions in CLAUDE.md and the ADRs in
+        website/docs/contributing/adrs/. In particular:
+        - Every request builder verb method starts with nil guards that return
+          shared sentinels from errors/errors.go (imported as snerrors), never
+          (nil, nil) and never a fresh errors.New with the same text.
+        - Models are backed by a Kiota backing store through internal/store
+          accessor and mutator functions, not plain struct fields.
+        - Query parameter fields are pointers. Query parameters and request
+          configuration types live in their own per-verb files.
+        - Paginated endpoints use the generic core.PageIterator, not a
+          per-module wrapper.
+        - API errors go through core.DefaultErrorMapping().
+        - Deprecation notices use the v{unreleased} placeholder.
+        Flag a change that contradicts an ADR without saying so.
+    - path: "**/*_test.go"
+      instructions: |
+        Unit tests are table-driven with testify (assert and require) and
+        mock HTTP with httpmock. Every new exported type or method needs a
+        test. Flag tests that can't fail or that only assert on mocks.
+    - path: "tests/integration/**"
+      instructions: |
+        Integration tests use godog feature files with httpmock and need no
+        live instance. E2E scenarios carry the @e2e tag and run against a
+        live instance. Check that new steps match the feature files.
+    - path: ".github/workflows/**"
+      instructions: |
+        Pin every action to a full commit SHA with a version comment. Keep
+        permissions at the least the job needs, and declare them per job.
+        Don't interpolate untrusted event data into run scripts; pass it
+        through env. Required status check names must stay unchanged unless
+        .github/policies/ changes too.
+    - path: "website/docs/**"
+      instructions: |
+        Docs follow the Google developer documentation style guide: second
+        person, active voice, present tense, sentence-case headings, serial
+        commas, and no Latin abbreviations. Go samples are single-sourced from
+        website/snippets/ through the GoSnippet and GoExample components.
+  tools:
+    golangci-lint:
+      enabled: true
+      config_file: .golangci.yml
+
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - CLAUDE.md
+      - AGENTS.md
+      - website/docs/contributing/adrs/*.md
+
+chat:
+  auto_reply: true
