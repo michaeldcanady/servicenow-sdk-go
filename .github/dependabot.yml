@@ -1,56 +1,120 @@
+# Dependabot version and security updates.
+# Reference: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
+#
+# Conventions for every ecosystem:
+#
+# - Minor and patch updates are grouped, so each run opens at most one PR per
+#   group. Major updates open their own PRs, because they need a person to
+#   read the changelog.
+# - Security updates are grouped separately and skip the cooldown, so they
+#   land as soon as a fix is published.
+# - Commit messages use `chore(deps): ...`, so release-please keeps dependency
+#   bumps out of CHANGELOG.md.
 version: 2
 updates:
+  # Both Go modules are one entry on purpose. tests/integration/v2 replaces
+  # the root module with the local copy (`replace ... => ../../../`), so a
+  # root bump also changes the integration module's go.mod and go.sum. With
+  # separate entries, each PR changed one module and failed `go mod tidy
+  # -diff` in the other (#941). `allow: all` lets Dependabot update the
+  # integration module's indirect requirements that the root module pulls in.
   - package-ecosystem: gomod
+    directories:
+      - /
+      - /tests/integration/v2
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+    allow:
+      - dependency-type: all
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-patch-days: 3
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      # The SDK builds on the Kiota libraries, which release together.
+      kiota:
+        patterns:
+          - github.com/microsoft/kiota-*
+        update-types:
+          - minor
+          - patch
+      go-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+      go-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+
+  - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+      day: monday
+      time: "06:00"
     cooldown:
       default-days: 7
-    groups:
-      go-dependencies:
-        update-types:
-          - minor
-          - patch
-
-  - package-ecosystem: gomod
-    directory: /tests/integration/v2
-    schedule:
-      interval: weekly
-    cooldown:
-      default-days: 7
-    groups:
-      go-dependencies:
-        update-types:
-          - minor
-          - patch
-
-  - package-ecosystem: "npm"
-    directory: "/website"
-    schedule:
-      interval: weekly
-    cooldown:
-      default-days: 7
-    groups:
-      website-dependencies:
-        update-types:
-          - minor
-          - patch
-
-  - package-ecosystem: "devcontainers"
-    directory: "/"
-    schedule:
-      interval: weekly
-    cooldown:
-      default-days: 7
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    cooldown:
-      default-days: 7
-    groups:
-      codeql-action:
-        update-types:
-          - security-updates
     open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+      github-actions-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+
+  # The docs site changes slowly, so it updates monthly.
+  - package-ecosystem: npm
+    directory: /website
+    schedule:
+      interval: monthly
+      time: "06:00"
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      # Docusaurus packages must stay on the same version, majors included.
+      docusaurus:
+        patterns:
+          - "@docusaurus/*"
+      website-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+      website-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+
+  - package-ecosystem: devcontainers
+    directory: /
+    schedule:
+      interval: monthly
+      time: "06:00"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: chore
+      include: scope
