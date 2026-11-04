@@ -76,6 +76,15 @@ updates:
       prefix: chore
       include: scope
     groups:
+      # Dependabot treats each CodeQL sub-action (init, autobuild, analyze,
+      # upload-sarif) as its own dependency. They come from one release and
+      # must stay on the same version, so they move together, majors
+      # included. This group comes first because an update joins the first
+      # group that matches it.
+      codeql-action:
+        patterns:
+          - github/codeql-action
+          - github/codeql-action/*
       github-actions:
         patterns:
           - "*"
