@@ -10,6 +10,9 @@
 #   land as soon as a fix is published.
 # - Commit messages use `chore(deps): ...`, so release-please keeps dependency
 #   bumps out of CHANGELOG.md.
+#
+# Dependabot can't update the tool pins in mise.toml or the `go` directive in
+# go.mod. Bump those by hand.
 version: 2
 updates:
   # Both Go modules are one entry on purpose. tests/integration/v2 replaces
@@ -55,8 +58,13 @@ updates:
         patterns:
           - "*"
 
+  # "/" covers .github/workflows. The composite actions under
+  # .github/actions/ pin actions too, and Dependabot only finds them when
+  # their directories are listed.
   - package-ecosystem: github-actions
-    directory: /
+    directories:
+      - /
+      - /.github/actions/*
     schedule:
       interval: weekly
       day: monday
