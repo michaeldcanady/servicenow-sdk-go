@@ -97,7 +97,7 @@ later unit before you push.
 
 These tracks run in parallel with the credentials chain:
 
-- The Phase 0 tracks, after the merge gate is fixed (P0-06).
+- The Phase 0 tracks.
 - The Phase 1 removals.
 - The Phase 2 chain P2-01 → P2-04 → P2-05 → P3-01, which gates the table
   work.
@@ -143,7 +143,7 @@ a file task under `.mise/tasks/`.
 | T-11 | `chore(devcontainer)`: install mise in the devcontainer, run `mise install` after creation, and stop installing `just` | XS | T-01 | new |
 | T-12 | `docs(contributing)`: replace `just` with mise in the setup, first pull request, and conventions pages, and in `AGENTS.md` and `CLAUDE.md` | S | T-10 | new |
 | T-13 | `chore(tooling)`: delete the `justfile` | XS | T-11, T-12 | new |
-| T-14 | `chore(ci)`: install CI tools from `mise.toml` so that local and CI versions can't drift; required check names stay unchanged | S | T-01, P0-06 | new |
+| T-14 | `chore(ci)`: install CI tools from `mise.toml` so that local and CI versions can't drift; required check names stay unchanged | S | T-01 | new |
 
 Some checks have no local equivalent: CodeQL, OpenSSF Scorecard, OpenCode
 Review, GitGuardian, and the linked-issue check. They stay CI-only, and T-10
@@ -151,8 +151,13 @@ documents them.
 
 ### Phase 0: Foundation
 
-Goal: merges work without a bypass, `main` is green, the shipped defects are
-fixed, and the backlog reflects this roadmap.
+Goal: `main` is green, the shipped defects are fixed, and the backlog reflects
+this roadmap.
+
+P0-06 is on hold. GitHub doesn't apply the policy file in
+`.github/policies/` on its own, so branch protection moves to Terraform in
+`NerdIT-Tech/infra-terraform`. Until that migration lands, `main` and
+`release/v*` have no rulesets, and no unit waits for P0-06.
 
 | ID | Unit | Size | Depends on | Issue |
 |---|---|---|---|---|
@@ -161,7 +166,7 @@ fixed, and the backlog reflects this roadmap.
 | P0-03 | `chore(agents)`: track the `.claude/` symlink shims, and ignore local settings files | XS | P0-01 | new |
 | P0-04 | `chore`: remove `specs/` after you file an issue for any spec that has no matching issue or ADR | XS | — | new |
 | P0-05 | `chore(ci)`: align the required check names in both rulesets | XS | — | #917 |
-| P0-06 | Action: apply the rulesets, and confirm that a pull request merges without a bypass | — | P0-05 | #917 |
+| P0-06 | On hold: after the Terraform migration applies the rulesets, confirm that a pull request merges without a bypass | — | P0-05, Terraform migration | #917 |
 | P0-07 | `chore(ci)`: rerun pull request workflows when the base branch changes | S | P0-05 | #580 |
 | P0-08 | `chore(docs)`: switch Vale from the Microsoft package to the Google package | XS | — | new |
 | P0-09 | `docs(contributing)`: fix the Vale errors under `contributing/` | S | P0-08, T-07 | new |
@@ -169,10 +174,10 @@ fixed, and the backlog reflects this roadmap.
 | P0-11 | `docs`: fix the Vale errors in the user guide and landing pages | S | P0-08, T-07 | new |
 | P0-12 | Action: re-scope #881 to Go error strings | — | P0-08 | #881 |
 | P0-13 | `chore(deps)`: keep both Go modules tidy when Dependabot updates a dependency | S | — | new |
-| P0-14 | Action: recreate and merge the stalled Dependabot pull requests | — | P0-06, P0-13 | #906, #907 |
+| P0-14 | Action: recreate and merge the stalled Dependabot pull requests | — | P0-13 | #906, #907 |
 | P0-15 | `fix(credentials)`: keep `client_secret` out of the authorization URL | S | — | #851 |
 | P0-16 | `fix(caseapi)`: forward query parameters on the field values request | XS | — | #742 |
-| P0-17 | Action: merge the release pull request for v2.1.1 | — | P0-06, P0-15, P0-16 | #894 |
+| P0-17 | Action: merge the release pull request for v2.1.1 | — | P0-15, P0-16 | #894 |
 | P0-18 | Action: publish a GitHub security advisory for #851, with guidance on rotating secrets | — | P0-17 | #851 |
 | P0-19 | Action: renew the OpenCode Review API key | — | — | #897 |
 | P0-20 | Action: close milestone v2.0.0, and create milestones v2.2.0 and v3.0.0 | — | — | — |
@@ -184,7 +189,7 @@ fixed, and the backlog reflects this roadmap.
 | P0-26 | Action: close #812 and #813, and point to Phase 5 | — | — | — |
 | P0-27 | Action: delete branches that are already merged into `main` | — | — | — |
 | P0-28 | Action: review the unmerged branches in batches | M | P0-27 | — |
-| P0-29 | Action: run the Phase 0 exit check | — | P0-06, P0-11, P0-14, P0-17 | — |
+| P0-29 | Action: run the Phase 0 exit check | — | P0-11, P0-14, P0-17 | — |
 
 ### Phase 1: Contract CI
 
@@ -192,11 +197,11 @@ Goal: about 34 workflow files, down from 44, all green.
 
 | ID | Unit | Size | Depends on | Issue |
 |---|---|---|---|---|
-| P1-01 | `chore(ci)`: remove the weekly preview release workflow, its configuration, and every reference to it; amend ADRs 011 and 012 | S | P0-06 | new |
-| P1-02 | `chore(ci)`: remove the backport, forward-port tracker, and maintenance-label workflows and their zizmor exceptions; add a note to ADR 011 | S | P0-06 | new |
+| P1-01 | `chore(ci)`: remove the weekly preview release workflow, its configuration, and every reference to it; amend ADRs 011 and 012 | S | — | new |
+| P1-02 | `chore(ci)`: remove the backport, forward-port tracker, and maintenance-label workflows and their zizmor exceptions; add a note to ADR 011 | S | — | new |
 | P1-03 | Action: file the v3.0.0 issue to restore the maintenance-branch tooling | — | P0-20, P1-02 | new |
-| P1-04 | `chore(ci)`: remove issue status sync and its reusable workflow | XS | P0-06 | new |
-| P1-05 | `chore(ci)`: remove project status sync and `project-label-sync.yml` | XS | P0-06 | new |
+| P1-04 | `chore(ci)`: remove issue status sync and its reusable workflow | XS | — | new |
+| P1-05 | `chore(ci)`: remove project status sync and `project-label-sync.yml` | XS | — | new |
 | P1-06 | `docs(contributing)`: remove the GitHub Projects steps from the triage docs, the issue templates, and the agent definitions | S | P1-04, P1-05 | new |
 | P1-07 | `chore(ci)`: remove the one-time license backfill workflow | XS | — | new |
 | P1-08 | `chore(ci)`: remove the reusable workflows that nothing calls | XS | — | new |
@@ -467,7 +472,8 @@ Each phase is done when its checks pass:
   - CI and `mise.toml` pin the same tool versions.
 
 - **Phase 0:**
-  - A pull request merges without an admin bypass.
+  - A pull request merges without an admin bypass. This criterion waits for
+    the Terraform migration (P0-06).
   - CI, Documentation Stable, CodeQL, and zizmor are green on `main`.
   - The Dependabot pull requests merge.
   - v2.1.1 and its security advisory are published.
