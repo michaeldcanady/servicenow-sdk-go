@@ -39,9 +39,30 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Enable auto-merge for Dependabot PRs
-        if: ${{steps.metadata.outputs.update-type != 'version-update:semver-major'}}
-        run: gh pr merge --auto --merge "$PR_URL"
+      # Auto-merge waits for the base branch's required checks. Without any
+      # branch protection, nothing makes it wait, and `gh pr merge --auto`
+      # would merge before CI finishes. So skip auto-merge until the base
+      # branch has rules again (NerdIT-Tech/infra-terraform#134).
+      - name: Check that the base branch is protected
+        id: protection
+        if: ${{ steps.metadata.outputs.update-type != 'version-update:semver-major' }}
         env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          rules="$(gh api "repos/$REPO/rules/branches/$BASE_REF" --jq 'length')"
+          if [[ "$rules" -gt 0 ]]; then
+            echo "protected=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "protected=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::$BASE_REF has no branch rules, so auto-merge is skipped. Merge this PR by hand after CI passes."
+          fi
+
+      # The repository allows squash and rebase merges, not merge commits.
+      - name: Enable auto-merge for Dependabot PRs
+        if: ${{ steps.protection.outputs.protected == 'true' }}
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
