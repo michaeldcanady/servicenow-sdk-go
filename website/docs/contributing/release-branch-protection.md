@@ -1,6 +1,6 @@
 ---
 title: Release branch protection runbook
-description: How branch protection is declared as code in this repo and applied to the live rulesets with mise tasks.
+description: How release branch protection is declared as code in this repo and applied by hand when needed.
 ---
 
 # Release branch protection runbook
@@ -14,36 +14,6 @@ rule 3) **and** applied in GitHub as live settings so OpenSSF Scorecard can
 detect them. The file is the reviewed source of truth; the live settings are
 what Scorecard evaluates — both must stay aligned.
 
-## Apply the policy file
-
-Change branch protection only through the policy file. Never edit a live
-ruleset in Settings or with a one-off API call, because the next apply
-overwrites the change and the file no longer describes the live state.
-
-1. Change `.github/policies/servicenow-sdk-go-branch-protection.yml` in a pull
-   request, and merge it.
-2. On an up-to-date `main`, preview the change. This task only reads from
-   GitHub:
-   ```bash
-   mise run rulesets:plan
-   ```
-   It prints a diff for each ruleset that differs from the file, and the exact
-   payload that the apply step sends.
-3. As a repository admin, apply the file:
-   ```bash
-   mise run rulesets:apply
-   ```
-   The task asks for confirmation, and then updates only the rulesets that
-   differ.
-4. Confirm that the live rulesets match the file. `mise run rulesets:check`
-   exits 1 if any ruleset still differs.
-
-Each `branchProtectionRules` entry maps to the live ruleset whose only
-included ref is `refs/heads/<branchNamePattern>`. The tasks set every setting
-that the file declares, and keep each live setting that the file doesn't
-declare, such as `allowed_merge_methods`. A rule type that the file doesn't
-declare is removed. The tasks don't create or delete rulesets.
-
 ## How protection is applied (rulesets, Scorecard-compliant)
 
 Scorecard v5.5.0 (`ossf/scorecard-action@v2.4.4` in `.github/workflows/scorecard.yml`)
@@ -56,12 +26,12 @@ correctly detects them; older Scorecard would have required classic.
 
 Live state as of #725 (verify with commands under Verification):
 
-| Branch / pattern | Ruleset | Id | How to change |
+| Branch / pattern | Ruleset | Id | Where to edit |
 | --- | --- | --- | --- |
-| `main` | `servicenow-sdk-go-branch-protection-main` | `21693268` (renamed from `main-2`) | Policy file, then `mise run rulesets:apply` |
-| `release/v*` (pattern, covers `release/v1.0` and future `release/vX.Y`) | `servicenow-sdk-go-branch-protection` (original `servicenow*` base, id `21692927`) | `21692927` | Policy file, then `mise run rulesets:apply` |
+| `main` | `servicenow-sdk-go-branch-protection-main` | `21693268` (renamed from `main-2`) | Settings → Rules → Rulesets |
+| `release/v*` (pattern, covers `release/v1.0` and future `release/vX.Y`) | `servicenow-sdk-go-branch-protection` (original `servicenow*` base, id `21692927`) | `21692927` | Settings → Rules → Rulesets |
 
-Both are the consolidated successors of the fragmented import (`main-1`, `release/v1.0-*` removed). The `release/v*` wildcard covers existing `release/v1.0` without a per-branch ruleset. When the declarative file changes, apply it as described in [Apply the policy file](#apply-the-policy-file).
+Both are the consolidated successors of the fragmented import (`main-1`, `release/v1.0-*` removed). The `release/v*` wildcard covers existing `release/v1.0` without a per-branch ruleset. Keep live rulesets in sync with the declarative file when it changes.
 
 ## Ruleset definition (declared in `.github/policies/`)
 
@@ -79,9 +49,10 @@ Both require the same universally reporting status checks: `Check Branch Name`,
 `Run zizmor 🌈 / Run zizmor -- blocking`. Path-filtered jobs are excluded, because they would
 sit pending forever on PRs whose paths they skip.
 
-The table below is the human-readable spec that the declaration encodes.
-Use it to review changes; to apply them, see
-[Apply the policy file](#apply-the-policy-file).
+The table below is the human-readable spec the declaration encodes; consult
+it to review changes or apply the settings by hand. For `main`, the Settings
+→ Branches UI maps one-to-one; for `release/v*`, use Settings → Rules →
+Rulesets.
 
 | Setting | Value |
 | --- | --- |
@@ -101,23 +72,20 @@ Use it to review changes; to apply them, see
 
 ### Required status checks
 
-The policy file lists the required checks:
-`Check Branch Name`, `Check Linked Issue`,
-`Validate PR Title / Validate PR Title`, `CodeQL`, and
-`Run zizmor 🌈 / Run zizmor -- blocking`. The `release/v*` ruleset already
-covers a new `release/vX.Y` branch. To confirm that every required check
-reports on it:
+Don't hand-enumerate check names at ruleset-creation time — a fresh
+`release/vX.Y` branch has no runs yet, and GitHub only offers checks that
+have already reported on the branch. Instead:
 
 1. Cut the branch and open one throwaway PR against it.
-2. Confirm that `codeql.yml`, `branch-policy.yml`, `pr.yml`, and `zizmor.yml`
-   report each of the five checks under exactly those names.
-3. Run `mise run rulesets:check` to confirm that the live rulesets still match
-   the policy file.
-
-To change a required check, change the policy file and apply it. Never add
-path-filtered jobs (the ci.yml build/test/lint matrix): they skip docs-only or
-workflow-only PRs, and a required check that never reports sticks "pending"
-forever, blocking every merge until an admin bypasses.
+2. Let `codeql.yml`, `branch-policy.yml`, `pr.yml`, and `zizmor.yml` report once.
+3. Edit the ruleset and require the checks that appeared — exactly the five
+   declared in `.github/policies/servicenow-sdk-go-branch-protection.yml`:
+   `Check Branch Name`, `Check Linked Issue`,
+   `Validate PR Title / Validate PR Title`, `CodeQL`, and
+   `Run zizmor 🌈 / Run zizmor -- blocking`. Never add path-filtered jobs
+   (the ci.yml build/test/lint matrix): they skip docs-only or workflow-only
+   PRs, and a required check that never reports sticks "pending" forever,
+   blocking every merge until an admin bypasses.
 
 The required context must be the job name exactly as GitHub reports it. The
 value is load-bearing. GitHub reports a job in a reusable workflow as
@@ -171,12 +139,9 @@ The declarative file is still the source of truth for review — the live payloa
 
 ## Verification
 
-Run after any change to the declarative file:
+Run after any change to the declarative file or live settings:
 
 ```bash
-# Drift between the policy file and the live rulesets (exit 1 on drift)
-mise run rulesets:check
-
 # Rulesets — both patterns
 gh api repos/michaeldcanady/servicenow-sdk-go/rulesets \
   --jq '.[] | {id, name, enforcement, target, conditions, bypass_actors, rules: [.rules[].type]}'
@@ -202,11 +167,10 @@ Expect `BranchProtectionID` to be `score is 8: branch protection is not maximal 
 ## Bypass actors
 
 The human spec lists a repository-admin bypass for emergency use. The
-`branchProtectionRules` schema in the declarative file has no field for
-bypass actors, so the rulesets tasks derive them from `isAdminEnforced`:
+`branchProtectionRules` schema in the declarative file has no field for it —
+bypass actors can only be configured when applying the live rulesets:
 
-- `isAdminEnforced: false`, which both rules declare, sets `bypass_actors: [{"actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always"}]` (role `5` = Repository admin). This lets a single maintainer merge without a second approval — at the cost of Scorecard `EnforceAdmins:false` (hence `8/10` not `10`).
-- `isAdminEnforced: true` sets no bypass actors.
+- Both `servicenow-sdk-go-branch-protection-main` and `servicenow-sdk-go-branch-protection` use `bypass_actors: [{"actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always"}]` (role `5` = Repository admin). This lets a single maintainer merge without a second approval — at the cost of Scorecard `EnforceAdmins:false` (hence `8/10` not `10`). The declared file is therefore the source of truth for everything except bypasses; record any bypass grant here in this runbook when it happens.
 - Previously classic used `enforce_admins: false` for the same effect; now rulesets carry the bypass.
 
 ## What workflows already cover (no admin action needed)
@@ -226,7 +190,7 @@ bypass actors, so the rulesets tasks derive them from `isAdminEnforced`:
 Protection must not break `release-please`, `dependabot`, or backport
 automation. Rehearse after any live change:
 
-1. **Check the declarative file:** `mise run rulesets:check` — parses the file and confirms that the live rulesets match it.
+1. **Dry-run the declarative file:** `python3 -m json.tool .github/policies/servicenow-sdk-go-branch-protection.yml` — confirms schema parse.
 2. **Open a throwaway PR** against `main` and against `release/v1.0` (for example `chore/rehearse-branch-protection (#725)`) and verify the five required checks report and the PR is mergeable only with 1 CODEOWNERS approval and conversation resolution. With `strict:true`, the branch must be up-to-date before merging (rebase if behind). Close without merging.
 3. **Backport label:** label a dummy `main` PR with `backport release/v1.0` and confirm `backport.yml` would fan out (check `Select existing target branches` log); no actual backport PR needed.
 4. **Stable/maintenance release configs:** `stable-release.yml` (main) and `maintenance-label.yml`/`backport.yml` are branch-scoped and use `contents: write`/`pull-requests: write` — they push to `release-please--` branches and open PRs, never directly to `main`/`release/v*`, so the `admin(always)` bypass keeps them unblocked (admin actor bypasses the PR approval, not the branch creation). No `restrictions` (push allowlist) is set.

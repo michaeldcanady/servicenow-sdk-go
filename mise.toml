@@ -36,10 +36,6 @@ zizmor = "1.29.0"
 actionlint = "1.7.12"
 shellcheck = "0.11.0"
 
-# Not run in CI. Used by the rulesets:check and rulesets:apply tasks.
-yq = "4.54.1"
-jq = "1.8.2"
-
 # Tasks. Run `mise tasks` to list them, and `mise run <task>` to run one.
 # Tasks that need a script live in .mise/tasks/.
 
@@ -168,19 +164,6 @@ run = [
   "actionlint",
   "shellcheck scripts/*.sh .mise/tasks/pr/* .mise/tasks/docs/lint/*",
 ]
-
-[tasks."rulesets:check"]
-description = "Compare the live branch rulesets with the policy file"
-run = "./scripts/rulesets.sh check"
-
-[tasks."rulesets:plan"]
-description = "Show the changes and the payload that rulesets:apply would send"
-run = "./scripts/rulesets.sh plan"
-
-[tasks."rulesets:apply"]
-description = "Apply the policy file to the live branch rulesets (repository admin only)"
-confirm = "Apply .github/policies/servicenow-sdk-go-branch-protection.yml to the live rulesets?"
-run = "./scripts/rulesets.sh apply"
 
 # Pre-push checks
 #

@@ -59,7 +59,6 @@ mise run go:test:report             # unit tests + Markdown test report
 mise run go:deps:check              # go mod verify + go mod tidy -diff in both modules
 mise run go:vuln                    # govulncheck in both modules
 mise run ci:lint                    # zizmor, actionlint, shellcheck
-mise run rulesets:check             # live branch rulesets vs .github/policies/ (rulesets:plan / rulesets:apply to apply; admin)
 ```
 
 Integration and e2e tests are excluded from a plain `go test ./...` by build tags. Both live in the separate `tests/integration/v2` module:
