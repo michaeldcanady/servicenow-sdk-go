@@ -6,7 +6,7 @@ on:
       vale-files:
         description: "Comma-separated file/directory paths for Vale to lint"
         type: string
-        default: "website/docs,website/versioned_docs"
+        default: "website/docs"
       vale-level:
         description: "Minimum Vale severity level"
         type: string

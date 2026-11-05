@@ -1,6 +1,7 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import archivedVersions from './archived-versions.json';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -12,6 +13,14 @@ import type * as Preset from '@docusaurus/preset-classic';
 const baseUrl = process.env.DOCS_BASE_URL || '/servicenow-sdk-go/';
 const analyticsDomain = process.env.DOCS_ANALYTICS_DOMAIN;
 
+// Release lines the docs-archive workflow has published to GitHub Pages,
+// newest first. Each one is a frozen build of its release tag, served under
+// /servicenow-sdk-go/<line>/. Links use the production URL, so they also work
+// from PR previews.
+const siteUrl = 'https://michaeldcanady.github.io';
+const archiveUrl = (line: string) => `${siteUrl}/servicenow-sdk-go/${line}/`;
+const latestRelease = archivedVersions[0];
+
 const config: Config = {
   title: 'ServiceNow SDK for Go',
   tagline: 'A fluent, type-safe Go client for ServiceNow REST APIs',
@@ -21,7 +30,7 @@ const config: Config = {
     v4: true,
   },
 
-  url: 'https://michaeldcanady.github.io',
+  url: siteUrl,
   baseUrl,
 
   organizationName: 'michaeldcanady',
@@ -97,22 +106,15 @@ const config: Config = {
           // Keep numeric prefixes (e.g. adrs/001-error-standardization) in doc
           // ids and URLs — ADR numbering is referenced as "ADR 003" everywhere.
           numberPrefixParser: false,
-          // Only "main" offers edit links. Frozen versioned copies are fixed
-          // in docs/ first, then backported (see contributing/release-branches),
-          // so pointing "Edit this page" at a snapshot would invite edits in
-          // the wrong direction.
-          editUrl: ({version, docPath}) =>
-            version === 'current'
-              ? `https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/website/docs/${docPath}`
-              : undefined,
-          // "/" serves the docs from main; released doc lines live under
-          // their version prefix (e.g. /2.0/...) via the navbar dropdown.
+          // Released lines are archived builds of their release tags, not
+          // copies in this tree (see contributing/release-branches), so every
+          // page here is the live source.
+          editUrl: 'https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/website/docs/',
+          // "/" serves the docs from main. The version dropdown links to the
+          // archived release lines listed in archived-versions.json.
           lastVersion: 'current',
           versions: {
-            // The unreleased banner points readers at the newest released
-            // line (/2.0/) instead of silently documenting unreleased code.
-            current: {label: 'main', banner: 'unreleased'},
-            '2.0': {label: 'v2.0', banner: 'none'},
+            current: {label: 'main', banner: 'none'},
           },
         },
         blog: false,
@@ -124,6 +126,14 @@ const config: Config = {
   ],
 
   themeConfig: {
+    // main can document changes that haven't shipped yet, so point readers at
+    // the newest release.
+    announcementBar: latestRelease
+      ? {
+          id: `main-docs-${latestRelease}`,
+          content: `These docs follow the main branch and can describe unreleased changes. For the latest release, see the <a href="${archiveUrl(latestRelease)}">v${latestRelease} docs</a>.`,
+        }
+      : undefined,
     navbar: {
       title: 'ServiceNow SDK for Go',
       logo: {
@@ -137,6 +147,10 @@ const config: Config = {
         {
           type: 'docsVersionDropdown',
           position: 'right',
+          dropdownItemsAfter: archivedVersions.map((line) => ({
+            href: archiveUrl(line),
+            label: `v${line}`,
+          })),
         },
         {
           href: 'https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go',

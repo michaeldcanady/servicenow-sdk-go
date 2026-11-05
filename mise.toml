@@ -138,7 +138,7 @@ run = [
 description = "Run Vale on the whole docs site, as Documentation Stable does"
 run = [
   "vale sync",
-  "vale --minAlertLevel=error website/docs website/versioned_docs",
+  "vale --minAlertLevel=error website/docs",
 ]
 
 # License headers
