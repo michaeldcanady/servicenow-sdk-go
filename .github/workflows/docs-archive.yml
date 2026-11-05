@@ -1,8 +1,9 @@
 name: Docs Archive
 
 # Publishes a frozen build of the docs site for a release line, built from the
-# release tag, to GitHub Pages under /servicenow-sdk-go/<X.Y>/. The main site's
-# version dropdown links to each line listed in website/archived-versions.json.
+# release tag, to GitHub Pages under /servicenow-sdk-go/<X.Y>/. Then it
+# redeploys the main site, whose version dropdown and banner list every X.Y/
+# folder on gh-pages.
 #
 # Runs on every stable vX.Y.Z tag, so a patch release refreshes its line's
 # archive. Older-major maintenance tags archive their own line too, because
@@ -142,52 +143,14 @@ jobs:
           # Replaces only this line's folder; the rest of gh-pages stays.
           clean: true
 
-  register:
-    name: Add Line to the Version Dropdown
-    needs: [resolve, archive]
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+  redeploy:
+    name: Redeploy the Main Site
+    needs: archive
     permissions:
-      contents: write # push the dropdown update branch
-      pull-requests: write # open the dropdown update PR
-    steps:
-      - name: Check out main
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: main
-          persist-credentials: false
-
-      - name: Add the line to archived-versions.json
-        id: list
-        env:
-          LINE: ${{ needs.resolve.outputs.line }}
-        run: |
-          set -euo pipefail
-          file=website/archived-versions.json
-          if jq -e --arg line "$LINE" 'index($line) != null' "$file" > /dev/null; then
-            echo "::notice::${LINE} is already in the version dropdown."
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          # Newest first, compared as versions rather than strings.
-          jq --arg line "$LINE" \
-            '. + [$line] | sort_by(split(".") | map(tonumber)) | reverse' \
-            "$file" > "${file}.tmp"
-          mv "${file}.tmp" "$file"
-          echo "changed=true" >> "$GITHUB_OUTPUT"
-
-      - name: Open the dropdown PR
-        if: steps.list.outputs.changed == 'true'
-        uses: ./.github/actions/create-pr
-        with:
-          # Dashes rather than dots keep the name kebab-case, per the
-          # <type>/<kebab-description> branch convention.
-          branch: chore/docs-archive-${{ needs.resolve.outputs.line }}
-          title: "chore(website): link the v${{ needs.resolve.outputs.line }} docs archive"
-          label: no-issue-required
-          commit-message: "chore(website): link the v${{ needs.resolve.outputs.line }} docs archive"
-          github-token: ${{ github.token }}
-          body: |
-            The docs-archive workflow published the v${{ needs.resolve.outputs.line }} docs, built from `${{ needs.resolve.outputs.tag }}`, to GitHub Pages under `/servicenow-sdk-go/${{ needs.resolve.outputs.line }}/`.
-
-            This PR adds the line to `website/archived-versions.json`, so the version dropdown links to it and the main site's banner points to it as the latest release.
+      contents: write # the stable deploy pushes the main site to gh-pages
+    # Rebuilds main with the new archive in the version dropdown and banner.
+    # The stable deploy lists the X.Y/ folders on gh-pages, so no file in the
+    # repository needs to change. It runs the full docs gate first.
+    uses: ./.github/workflows/docs-stable.yml
+    with:
+      force: true

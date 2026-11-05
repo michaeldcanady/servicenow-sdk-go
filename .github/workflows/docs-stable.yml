@@ -30,6 +30,14 @@ on:
       - "website/**"
       - ".github/workflows/docs-stable.yml"
       - ".github/actions/docs-build/**"
+  # docs-archive.yml calls this after it publishes an archive, so the version
+  # dropdown and banner pick up the new line. The call always deploys main.
+  workflow_call:
+    inputs:
+      force:
+        description: "Deploy even when no site files changed"
+        type: boolean
+        default: false
 
 permissions: {}
 
@@ -45,7 +53,7 @@ jobs:
     permissions:
       contents: read # checkout for change detection
     outputs:
-      docs: ${{ steps.diff.outputs.any_changed }}
+      docs: ${{ inputs.force && 'true' || steps.diff.outputs.any_changed }}
     steps:
       # Local actions resolve from the workspace, so something must be checked
       # out before the action below can be found at all — its internal
@@ -57,6 +65,7 @@ jobs:
 
       - name: Detect site-output changes
         id: diff
+        if: ${{ !inputs.force }}
         uses: ./.github/actions/detect-changes
         with:
           checkout: "false"
@@ -74,6 +83,9 @@ jobs:
     permissions:
       contents: read # Vale lint and snippet checks
     uses: ./.github/workflows/reusable-docs-gate.yaml
+    with:
+      # A call from docs-archive.yml runs on a tag event; lint main.
+      ref: main
 
   deploy-stable:
     name: deploy-stable
@@ -92,12 +104,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # A call from docs-archive.yml runs on a tag event; build main.
+          ref: main
           persist-credentials: false
+
+      # The X.Y/ folders on gh-pages are the release archives. The version
+      # dropdown and the banner list them, newest first.
+      - name: List release archives
+        id: archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          lines="$(gh api "repos/${REPO}/contents?ref=gh-pages" \
+            --jq '.[] | select(.type == "dir") | .name' \
+            | { grep -E '^[0-9]+\.[0-9]+$' || true; } \
+            | sort -rV | paste -sd, -)"
+          echo "Release archives: ${lines:-none}"
+          echo "lines=${lines}" >> "$GITHUB_OUTPUT"
 
       - name: Build site
         uses: ./.github/actions/docs-build
         with:
           analytics-domain: michaeldcanady.github.io
+          archived-versions: ${{ steps.archives.outputs.lines }}
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4.9.0

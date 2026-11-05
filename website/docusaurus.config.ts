@@ -1,7 +1,6 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-import archivedVersions from './archived-versions.json';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -13,10 +12,15 @@ import archivedVersions from './archived-versions.json';
 const baseUrl = process.env.DOCS_BASE_URL || '/servicenow-sdk-go/';
 const analyticsDomain = process.env.DOCS_ANALYTICS_DOMAIN;
 
-// Release lines the docs-archive workflow has published to GitHub Pages,
-// newest first. Each one is a frozen build of its release tag, served under
-// /servicenow-sdk-go/<line>/. Links use the production URL, so they also work
-// from PR previews.
+// Release lines with an archive on GitHub Pages, newest first, such as
+// "2.1,2.0". The stable deploy reads them from the X.Y/ folders on gh-pages;
+// local builds and PR previews leave this unset and show no archive links.
+// Each archive is a frozen build of its release tag, served under
+// /servicenow-sdk-go/<line>/. Links use the production URL.
+const archivedVersions = (process.env.DOCS_ARCHIVED_VERSIONS ?? '')
+  .split(',')
+  .map((line) => line.trim())
+  .filter((line) => /^\d+\.\d+$/.test(line));
 const siteUrl = 'https://michaeldcanady.github.io';
 const archiveUrl = (line: string) => `${siteUrl}/servicenow-sdk-go/${line}/`;
 const latestRelease = archivedVersions[0];
@@ -111,7 +115,7 @@ const config: Config = {
           // page here is the live source.
           editUrl: 'https://github.com/michaeldcanady/servicenow-sdk-go/tree/main/website/docs/',
           // "/" serves the docs from main. The version dropdown links to the
-          // archived release lines listed in archived-versions.json.
+          // release archives in DOCS_ARCHIVED_VERSIONS.
           lastVersion: 'current',
           versions: {
             current: {label: 'main', banner: 'none'},
