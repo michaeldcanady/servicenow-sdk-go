@@ -21,14 +21,14 @@ APIs. The obvious options:
 3. **Hand-write** the client surface on top of Kiota's runtime libraries.
 
 ServiceNow doesn't publish complete, accurate OpenAPI documents for its REST
-APIs, so option 1 generates an incomplete SDK — or requires hand-maintaining
+APIs, so option 1 generates an incomplete SDK—or requires hand-maintaining
 specs, which moves the hand-work one step earlier without removing it.
 ServiceNow's response shapes (the `result` envelope, three-faceted fields with
 value/display-value/link, table-generic endpoints serving every schema) also
 map poorly onto generator output.
 
 Option 2 reinvents URI-template expansion, auth plumbing, serialization
-registries, retry middleware, and backing stores — none of which are
+registries, retry middleware, and backing stores—none of which are
 differentiating.
 
 ## Decision
@@ -49,7 +49,7 @@ factories, backed models.
   idioms.
 - **Cons:** the uniformity a generator would enforce mechanically must be
   enforced by convention instead. This is the root cause of the repo's strict
-  module pattern — the constructor triad, one-file-per-verb layout, and the
+  module pattern—the constructor triad, one-file-per-verb layout, and the
   "Add a new API module" playbook are the hand-written substitute for
   generated code.
 - **Tie-breaker rule for reviews:** when a structural question has no local

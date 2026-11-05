@@ -1,7 +1,7 @@
 ---
 title: Contributor guide
 description: >-
-  Pick your path — ship a first PR in under an hour, build a feature the way
+  Pick your path—ship a first PR in under an hour, build a feature the way
   the codebase expects, or dig into why the SDK is designed the way it is.
 ---
 
@@ -9,9 +9,9 @@ import Link from '@docusaurus/Link';
 
 # Contributor guide
 
-Thank you for your interest in contributing to the ServiceNow SDK for Go!
+Thank you for your interest in contributing to the ServiceNow SDK for Go.
 Whether you're fixing a typo or adding an entire API module, there's a path
-here sized to what you're trying to do — you don't need to read everything
+here sized to what you're trying to do—you don't need to read everything
 before you ship something.
 
 ## Pick your path
@@ -23,7 +23,7 @@ before you ship something.
         <h3>🚀 I'm new here</h3>
       </div>
       <div className="card__body">
-          Ship your first PR <strong>in under an hour</strong> — a doc fix, a
+          Ship your first PR <strong>in under an hour</strong>—a doc fix, a
           test, a small bug. No architecture reading required; the dev
           container gives you a working environment in one click.
       </div>
@@ -41,8 +41,7 @@ before you ship something.
       </div>
       <div className="card__body">
           Adding features or fixing real bugs? Follow one request through the
-          codebase, learn the testing rings, and — for a whole new API surface
-          — use the module playbook.
+          codebase, learn the testing rings, and—for a whole new API surface—use the module playbook.
       </div>
       <div className="card__footer">
         <Link className="button button--secondary button--block" to="/contributing/architecture">
@@ -58,8 +57,8 @@ before you ship something.
       </div>
       <div className="card__body">
           The conventions reference is the seasoned contributor's field guide,
-          and the design decisions explain — in plain language, with ADRs one
-          click deeper — why the SDK is shaped the way it is.
+          and the design decisions explain—in plain language, with ADRs one
+          click deeper—why the SDK is shaped the way it is.
       </div>
       <div className="card__footer">
         <Link className="button button--secondary button--block" to="/contributing/conventions">
@@ -71,7 +70,7 @@ before you ship something.
 </div>
 
 One thing to know up front: this SDK is **hand-written but convention-bound**.
-There's no code generator enforcing uniformity — the conventions do that job
+There's no code generator enforcing uniformity—the conventions do that job
 instead. A change that follows the conventions usually merges quickly; most
 review friction is structural, and it's all learnable in advance.
 
@@ -81,12 +80,12 @@ review friction is structural, and it's all learnable in advance.
   purpose; a reader who learns one has learned them all. Novelty in structure
   is a cost, even when it's elegant.
 - **The compiler is our reviewer of first resort.** Typed per-verb
-  configurations, sentinel errors, compiled doc samples — wherever possible,
+  configurations, sentinel errors, compiled doc samples—wherever possible,
   wrongness is made uncompilable rather than caught in review.
 - **Reliability is a feature.** Every change carries tests; every API error is
   typed; nil never propagates silently.
 - **Docs are part of the change.** If a PR alters what users see, it updates
-  what users read — in the same PR.
+  what users read—in the same PR.
 
 ## Ways to contribute
 
@@ -107,14 +106,13 @@ repository's `CONTRIBUTING.md` points here). If it's your first time through,
     or `docs/error-sentinel-notes`.
 2.  **Write [Conventional Commits](https://www.conventionalcommits.org/):**
     `feat(scope): description`, `fix: ...`, `docs: ...`, with a
-    `BREAKING CHANGE:` footer for breaking changes. This isn't just style —
-    `release-please` parses commit messages to generate the version number and
+    `BREAKING CHANGE:` footer for breaking changes. This isn't just style—`release-please` parses commit messages to generate the version number and
     changelog. For the same reason, **never edit `VERSION` or `CHANGELOG.md`
     by hand.**
 3.  **Verify locally:** run `gofmt -s -w .`, `golangci-lint run ./...`, and
     `go test ./...`. All three must pass before review.
 4.  **Update the documentation:** a PR that adds or changes exported API
-    surface must also update the docs site (`website/`) — or say in the PR
+    surface must also update the docs site (`website/`)—or say in the PR
     description why no docs change is needed. Code samples belong in
     `website/snippets/*.go` region markers, never inline, so CI can compile
     them.
@@ -130,4 +128,4 @@ Significant design changes follow a lightweight norm: write an ADR in the
 [Why it's built this way](design-decisions.md)
 explains the norm and indexes the existing decisions.
 
-The project looks forward to your contributions!
+The project looks forward to your contributions.

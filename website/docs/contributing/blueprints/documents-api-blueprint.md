@@ -1,6 +1,6 @@
 ---
 title: Documents API blueprint
-description: Reference format for a module design blueprint — request-builder hierarchy, operations, models, and implementation strategy.
+description: Reference format for a module design blueprint—request-builder hierarchy, operations, models, and implementation strategy.
 ---
 
 > Historical design blueprint for the shipped `documentsapi` module, kept as

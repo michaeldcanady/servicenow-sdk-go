@@ -2,19 +2,18 @@
 title: Why aren't models plain structs?
 description: >-
   Models keep their data in a change-tracking backing store instead of struct
-  fields — so "absent" and "zero" stay distinguishable and Patch bodies stay
+  fields—so "absent" and "zero" stay distinguishable and Patch bodies stay
   minimal.
 ---
 
 # Why aren't models plain structs?
 
-*Primary source: [ADR 002 — Backing-store-backed models](adrs/002-backing-store-models.md).*
+*Primary source: [ADR 002—Backing-store-backed models](adrs/002-backing-store-models.md).*
 
 ## The decision
 
 Models aren't plain structs. Every model embeds `core.BaseModel` and stores
-its data in a Kiota `BackingStore` — a key/value store with change tracking —
-rather than in struct fields. Accessors are generated from the helpers in
+its data in a Kiota `BackingStore`—a key/value store with change tracking—rather than in struct fields. Accessors are generated from the helpers in
 `internal/store` (`DefaultBackedModelAccessorFunc` /
 `DefaultBackedModelMutatorFunc`), so every property is a `GetX() (T, error)` /
 `setX(T) error` pair around the store.
@@ -29,8 +28,7 @@ This replaced plain struct fields during the v2 rework
   empty string" from "the instance didn't send this field"; a store lookup
   can, which is why getters return pointers and errors.
 - **Dirty tracking.** The store records which properties changed, so a
-  `Put`/`Patch` body serializes only the fields the caller actually set —
-  not a full struct with zero values that would overwrite server data.
+  `Put`/`Patch` body serializes only the fields the caller actually set—not a full struct with zero values that would overwrite server data.
 - **Kiota parity.** The SDK deliberately matches the conventions of
   Kiota-generated SDKs (msgraph-sdk-go and friends). Backed models are how
   those SDKs behave; deviating would make this the one Kiota-style SDK whose
@@ -41,7 +39,7 @@ This replaced plain struct fields during the v2 rework
 - Embed `core.BaseModel`; never add plain data fields to a model.
 - Build each accessor pair on `internal/store` helpers, and each
   `Serialize`/`GetFieldDeserializers` on the `internal/serialization`
-  generators — no hand-rolled property plumbing.
+  generators—no hand-rolled property plumbing.
 - Generic code should constrain models with `model.ServiceNowItem`
   (`store.BackedModel` + `serialization.Parsable` + `GetSysID()`).
 

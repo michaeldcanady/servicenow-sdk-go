@@ -2,7 +2,7 @@
 title: 'ADR 002: Backing-store-backed models'
 description: >-
   Models keep their data in a change-tracking Kiota BackingStore, not struct
-  fields — so absent and zero stay distinguishable.
+  fields—so absent and zero stay distinguishable.
 ---
 
 # ADR 002: Backing-store-backed models
@@ -22,7 +22,7 @@ Two problems followed:
    send this field", which forced callers into guesswork and produced
    accidental data loss on write.
 2. **Writes serialized whole objects.** Without change tracking, a `PUT`/`PATCH`
-   body contained every field — including zero values that overwrote server-side
+   body contained every field—including zero values that overwrote server-side
    data the caller never touched.
 
 The SDK also aims to feel like Kiota-generated SDKs (see ADR 003), whose
@@ -31,7 +31,7 @@ models are store-backed.
 ## Decision
 
 Every model embeds `core.BaseModel` and stores property data in a Kiota
-`BackingStore` — a key/value store with change tracking — instead of struct
+`BackingStore`—a key/value store with change tracking—instead of struct
 fields.
 
 - Accessors are generated from `internal/store` helpers
@@ -49,7 +49,7 @@ fields.
 - **Pros:** absent/zero distinction; minimal request bodies with no
   read-modify-write races on untouched fields; parity with msgraph-sdk-go and
   other Kiota SDKs; a single mechanical pattern for every model.
-- **Cons:** accessors are more verbose than field access — reads are a
+- **Cons:** accessors are more verbose than field access—reads are a
   `(value, error)` pair and a pointer dereference; models can't be
   constructed as struct literals; contributors must learn the
   `internal/store` / `internal/serialization` helper idiom.

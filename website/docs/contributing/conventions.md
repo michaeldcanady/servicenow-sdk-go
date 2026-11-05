@@ -1,7 +1,7 @@
 ---
 title: Conventions reference
 description: >-
-  The field guide for seasoned contributors — module anatomy, the error
+  The field guide for seasoned contributors—module anatomy, the error
   taxonomy, model rules, helper composition, and the git/release conventions,
   in one dense page.
 ---
@@ -11,7 +11,7 @@ description: >-
 This is the dense page: every convention reviewers hold a PR to, in one
 place, organized for lookup rather than reading order. If you're new, the
 [first PR walkthrough](first-pr.mdx) and [architecture](architecture.md)
-pages teach these gradually — come back here when you want the whole contract.
+pages teach these gradually—come back here when you want the whole contract.
 
 Each convention exists for a reason; where the reason isn't obvious, the link
 goes to the [design decision](design-decisions.md) behind it.
@@ -19,7 +19,7 @@ goes to the [design decision](design-decisions.md) behind it.
 ## Module anatomy
 
 One package per ServiceNow API surface (`tableapi/`, `attachmentapi/`, …),
-all structurally identical — the uniformity is the hand-written substitute
+all structurally identical—the uniformity is the hand-written substitute
 for generated code ([why?](design-hand-written-kiota.md)).
 
 | Rule | Detail |
@@ -34,13 +34,13 @@ for generated code ([why?](design-hand-written-kiota.md)).
 
 **Reference implementations:** `tableapi/` is the canonical, fullest example
 (every verb, paging, generics); `policyapi/` is the minimal one. When in
-doubt, look there — and if msgraph-sdk-go does it a certain way, that's the
+doubt, look there—and if msgraph-sdk-go does it a certain way, that's the
 default answer here too.
 
 ## The nil-guard prologue
 
 Every verb method opens with the same two guards, returning **shared**
-sentinels — never a fresh `errors.New`:
+sentinels—never a fresh `errors.New`:
 
 ```go
 if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
@@ -62,19 +62,18 @@ interchangeable ([why?](design-error-handling.mdx)):
 
 | Location | Import | What belongs there |
 | -------- | ------ | ------------------ |
-| `errors/errors.go` | `snerrors` | The shared cross-package sentinels (`ErrNilRequestBuilder`, `ErrNilRequestAdapter`, `ErrNilResponse`, `ErrNilConfig`, `ErrNilBody`, …). **Check here first** — almost every nil-guard uses one of these. |
+| `errors/errors.go` | `snerrors` | The shared cross-package sentinels (`ErrNilRequestBuilder`, `ErrNilRequestAdapter`, `ErrNilResponse`, `ErrNilConfig`, `ErrNilBody`, …). **Check here first**—almost every nil-guard uses one of these. |
 | Root `errors.go` | `servicenowsdkgo` | A couple of client-configuration sentinels only. |
 | `<module>api/errors.go` | package-local | Conditions genuinely specific to that module. |
 
 Rules:
 
-- Reuse a sentinel **by identity**, not by matching text — duplicating the
+- Reuse a sentinel **by identity**, not by matching text—duplicating the
   message as a fresh `errors.New` breaks `errors.Is` for callers, which is
   exactly the v1 bug the standardization fixed.
 - Message phrasing: `"[parameter] cannot be nil"` for nil checks,
   `"[parameter] is required"` for missing inputs; no contractions.
-- HTTP error mapping always goes through `core.DefaultErrorMapping()` —
-  never a bespoke error struct. Per-module mappings register via
+- HTTP error mapping always goes through `core.DefaultErrorMapping()`—never a bespoke error struct. Per-module mappings register via
   `internal.GetErrorRegistryInstance()`.
 
 ## Model rules
@@ -87,7 +86,7 @@ Models are backing-store-backed, not plain structs
   `internal/store` (`DefaultBackedModelAccessorFunc` /
   `DefaultBackedModelMutatorFunc`).
 - `Serialize()` / `GetFieldDeserializers()` are built from the
-  `internal/serialization` generators — no hand-rolled property plumbing.
+  `internal/serialization` generators—no hand-rolled property plumbing.
 
 ## License headers
 
@@ -114,14 +113,14 @@ example:
 ```
 
 - Existing files keep their original creation year. Add or verify headers
-  with `./scripts/add-license.sh` — `--check-only` verifies without editing,
+  with `./scripts/add-license.sh`—`--check-only` verifies without editing,
   and a bare run applies the current year to new files.
 - New files receive the current year automatically.
 
 ## Compose `internal/`, don't reinvent
 
 If you're writing a nil check, a header string, an accessor, or serializer
-plumbing inside a module, stop — the helper almost certainly exists:
+plumbing inside a module, stop—the helper almost certainly exists:
 
 | Package | Use it for |
 | ------- | ---------- |
@@ -131,7 +130,7 @@ plumbing inside a module, stop — the helper almost certainly exists:
 | `internal/http` | `RequestHeader`/`HTTPHeader`/`ContentType` enums, default middleware/client |
 | `internal/ast` + `query/` | The fluent query-condition builder and its `sysparm_query` renderer |
 
-`internal/` is never imported by consumers — it's implementation surface,
+`internal/` is never imported by consumers—it's implementation surface,
 so helpers can evolve freely.
 
 ## Testing conventions
@@ -139,8 +138,7 @@ so helpers can evolve freely.
 The full treatment is the [testing guide](testing.md); the reviewable
 contract in brief:
 
-- **Every exported type and method ships with tests, in the same PR** —
-  co-located `_test.go`, table-driven with `testify`, HTTP stubbed with
+- **Every exported type and method ships with tests, in the same PR**—co-located `_test.go`, table-driven with `testify`, HTTP stubbed with
   `httpmock` (plus `internal/mocking` doubles).
 - Tables include the **failure rows**: nil-guard sentinels, at least one
   mapped API error, and the success path.
@@ -150,17 +148,16 @@ contract in brief:
 
 ## Git, commits, and releases
 
-- **Branches:** `type/kebab-description` off `main` —
-  `fix/tableapi-nil-pointer`, `docs/error-sentinel-notes`.
+- **Branches:** `type/kebab-description` off `main`—`fix/tableapi-nil-pointer`, `docs/error-sentinel-notes`.
 - **Commits and PR titles:** [Conventional Commits](https://www.conventionalcommits.org/)
   (`feat(scope): …`, `fix: …`, `BREAKING CHANGE:` footer for majors). CI
   lints the PR title; it becomes the squash commit.
-- **CI/workflow changes are always `chore`** — anything touching
+- **CI/workflow changes are always `chore`**—anything touching
   `.github/workflows/`, `scripts/` CI helpers, or other pipeline plumbing
   is `chore:`, never `fix:`/`feat:`, even if it fixes a broken run. These
   changes don't affect the published SDK, so they must not surface in
   `CHANGELOG.md` as a fix or feature.
-- **Never edit `VERSION` or `CHANGELOG.md`** — `release-please` generates
+- **Never edit `VERSION` or `CHANGELOG.md`**—`release-please` generates
   both from commit messages.
 - **Local gate before review:** run `mise run check`, which runs the pull
   request checks that work locally. To run the Go checks on their own, run
@@ -200,16 +197,15 @@ For the full triage workflow, scoring rubric, and examples, see [Issue triage](t
 ## Documentation conventions
 
 - A PR that changes exported API surface updates the docs site (`website/`)
-  in the same PR — or says why not in the description.
+  in the same PR—or says why not in the description.
 - Go samples are single-sourced from `website/snippets/*.go` behind
   `// [START x]` / `// [END x]` region markers and rendered with the
   `GoSnippet`/`GoExample` components. CI compiles every snippet
   (`go vet -tags snippets ./website/snippets/`), so samples can't rot.
 - New pages register in `website/sidebars.ts`; preview with
   `mise run docs:serve` (Node 20+, `mise run docs:setup` first).
-- Design changes get an [ADR](adrs/index.md) plus a summary page here —
-  see [Why it's built this way](design-decisions.md). New modules get a
-  blueprint first — see the [documents API
+- Design changes get an [ADR](adrs/index.md) plus a summary page here—see [Why it's built this way](design-decisions.md). New modules get a
+  blueprint first—see the [documents API
   blueprint](blueprints/documents-api-blueprint.md) for the format.
 
 ## The playbook, when you need it

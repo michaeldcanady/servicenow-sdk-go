@@ -15,8 +15,7 @@ Proposed. Accepted on merge; this record and its rule file
 
 ## Context
 
-Callers naturally expect a record-scoped child builder —
-`ByID(sysID).Attachments()` — because that is how nested resources read in
+Callers naturally expect a record-scoped child builder—`ByID(sysID).Attachments()`—because that is how nested resources read in
 most SDKs, including Kiota-generated ones. But ServiceNow's attachment API is
 **flat**: it lives at `/api/now/attachment` and targets a specific record via a
 `table_name=...^table_sys_id=...` query filter, **not** at a nested path like
@@ -30,8 +29,7 @@ That mismatch creates two problems if we nest a builder:
   packages), when the two are independently useful.
 
 Alternatives considered: a nested builder anyway (dishonest URL, unwanted
-coupling); a generic "record-scoped resource" seam generalized now (speculative
-— there is only one such resource today, which ADR-007 warns against); or an
+coupling); a generic "record-scoped resource" seam generalized now (speculative—there is only one such resource today, which ADR-007 warns against); or an
 explicit-args helper that builds the real flat filter (chosen).
 
 ## Decision
@@ -55,11 +53,11 @@ explicit-args helper that builds the real flat filter (chosen).
   `attachmentapi` stays decoupled from `tableapi` and the typed tables; callers
   get an ergonomic record-scoped entry that reads correctly against the wire.
 - **Cons:** `ByID(sysID).Attachments()` is not available, which surprises
-  callers who expect nesting — the docs must explain *why* (the API is flat);
+  callers who expect nesting—the docs must explain *why* (the API is flat);
   generalizing the pattern waits for a second consumer, so the first instance is
   deliberately bespoke.
 - **Rule for future record-scoped work:** model a record-scoped helper against
-  the endpoint's real URL shape; if the API is flat, use explicit args; do not
+  the endpoint's real URL shape; if the API is flat, use explicit arguments; do not
   nest a builder to imply a path that does not exist, and do not generalize the
   seam until a second consumer justifies it.
 

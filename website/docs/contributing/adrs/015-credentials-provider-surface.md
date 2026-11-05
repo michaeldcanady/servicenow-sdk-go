@@ -30,19 +30,19 @@ in-package tests are their only real caller. The package also exported
 `BaseAccessTokenProvider` and `Authority`, whose only callers are in-package.
 
 The interface between the two was also inconsistent: a caller set the
-ServiceNow instance twice — once as a credential option and once as a client
-option — even though the client requires a URL and passes it to the provider
+ServiceNow instance twice—once as a credential option and once as a client
+option—even though the client requires a URL and passes it to the provider
 through `Initialize` regardless.
 
 Alternatives considered:
 
 1. **Keep both surfaces and document the credential types as an extension
-   point** — rejected: no external caller can construct one, so the extension
+   point**—rejected: no external caller can construct one, so the extension
    point does not exist.
 2. **Keep the credential types exported but change their constructors to take
-   exported interfaces** — rejected: it publishes internal protocol-client
+   exported interfaces**—rejected: it publishes internal protocol-client
    seams as public API with no consumer need.
-3. **Collapse to one public register** — chosen.
+3. **Collapse to one public register**—chosen.
 
 ## Decision
 
@@ -68,8 +68,8 @@ the IdP, not the instance.
 
 - **Pros:** the public surface matches what callers can actually use; the
   provider/credential vocabulary is unambiguous; the ServiceNow URL has one
-  source, so callers stop setting it twice; and no consumer-facing break comes
-  from unexporting types they could not construct.
+  source, so callers stop setting it twice; and the types that become
+  unexported are ones callers could not construct.
 - **Cons:** renaming exported symbols is a breaking change, so it ships in a
   major release, and the documented `credentials.WithInstance(...)` call style
   disappears from the auth snippets.

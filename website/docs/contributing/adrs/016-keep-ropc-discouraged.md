@@ -23,13 +23,13 @@ grant requires.
 
 Alternatives considered:
 
-1. **Remove the grant** — rejected: it breaks working legacy setups with no
+1. **Remove the grant**—rejected: it breaks working legacy setups with no
    migration target.
-2. **Mark it `// Deprecated:` and plan removal** — rejected: the marker reads
-   as "this will break", which is not true; the SDK has no removal plan and
+2. **Mark it `// Deprecated:` and plan removal**—rejected: the marker reads
+   as "this will break," which is not true; the SDK has no removal plan and
    should not imply one.
-3. **Keep it without comment** — rejected: callers miss the security trade-off.
-4. **Keep it and recommend against it in the docs** — chosen.
+3. **Keep it without comment**—rejected: callers miss the security trade-off.
+4. **Keep it and recommend against it in the docs**—chosen.
 
 ## Decision
 

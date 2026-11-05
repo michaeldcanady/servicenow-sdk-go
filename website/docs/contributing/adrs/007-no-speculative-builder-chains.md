@@ -2,7 +2,7 @@
 title: 'ADR 007: Don''t scaffold a builder chain ahead of an implemented operation'
 description: >-
   A request-builder accessor exists only once the operations behind it are
-  implemented — never speculatively.
+  implemented—never speculatively.
 ---
 
 # ADR 007: Don't scaffold a builder chain ahead of an implemented operation
@@ -13,8 +13,7 @@ Accepted
 
 ## Context
 
-`Cdm().Policies().Mappings().Inputs().Resolved()` could be constructed —
-both `Inputs()` and `Resolved()` existed as request-builder accessors — but
+`Cdm().Policies().Mappings().Inputs().Resolved()` could be constructed—both `Inputs()` and `Resolved()` existed as request-builder accessors—but
 neither had a verb method (`Get`/`Post`/etc.) or a `To*RequestInformation`
 method. The resolved-inputs endpoint was advertised in the fluent chain and
 in docs/snippets, but was actually unreachable: calling it did nothing,
@@ -23,12 +22,10 @@ stepping stone to reach `Resolved()` (#489).
 
 Alternatives considered:
 
-1. **Implement the missing verb methods to make the chain functional** —
-   rejected for this PR specifically because the endpoint's actual behavior
+1. **Implement the missing verb methods to make the chain functional**—rejected for this PR specifically because the endpoint's actual behavior
    wasn't yet scoped; forcing an implementation just to match the existing
    (accidental) shape risked guessing at the wrong contract.
-2. **Leave the dead-end chain in place as a documented "coming soon"** —
-   rejected; an SDK builder chain that compiles and can be navigated but
+2. **Leave the dead-end chain in place as a documented "coming soon"**—rejected; an SDK builder chain that compiles and can be navigated but
    silently does nothing on every verb is worse than a compile error, and
    contradicts the nil-receiver-guard principle in ADR-006 of failing loud
    and early rather than silently.
@@ -39,7 +36,7 @@ Alternatives considered:
 
 Remove builder-chain segments that have no reachable verb operation, rather
 than leaving them in place as a stub. A request-builder accessor should only
-exist once the operations it leads to are actually implemented — not
+exist once the operations it leads to are actually implemented—not
 speculatively, to reserve a URL segment or match an API's documented shape
 in advance.
 

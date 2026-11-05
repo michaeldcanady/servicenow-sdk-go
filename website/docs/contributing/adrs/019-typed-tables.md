@@ -1,5 +1,5 @@
 ---
-title: 'ADR 019: Typed tables — built-in and user-defined, full parity, uniform shape'
+title: 'ADR 019: Typed tables—built-in and user-defined, full parity, uniform shape'
 description: >-
   Strongly-typed tables ship built-in and are user-extensible via a wrapper
   variable over the exported foundation; typed fields come from field
@@ -7,7 +7,7 @@ description: >-
   actions.
 ---
 
-# ADR 019: Typed tables — built-in and user-defined, full parity, uniform shape
+# ADR 019: Typed tables—built-in and user-defined, full parity, uniform shape
 
 ## Status
 
@@ -16,8 +16,8 @@ Proposed. Accepted on merge; this record and its rule file
 
 ## Context
 
-The hybrid surface (ADR 017) needs strongly-typed tables — Incident, Case, and
-whatever a consumer's own instance holds (`MyCoolTable`) — with typed fields
+The hybrid surface (ADR 017) needs strongly typed tables—Incident, Case, and
+whatever a consumer's own instance holds (`MyCoolTable`)—with typed fields
 for both query and access. Several design questions had to be settled together
 because they constrain each other:
 
@@ -29,14 +29,14 @@ because they constrain each other:
   tables second-class?** The `internal/store` and `internal/serialization`
   helpers are currently unreachable by SDK consumers, so without change a user
   table could not match a built-in.
-- **Do typed tables carry domain actions** (e.g. "close this incident", "add a
+- **Do typed tables carry domain actions** (for example, "close this incident," "add a
   comment to this case")? That pulls every module toward bespoke wrapper types,
   which ADR-005 already rejected for pagination.
 - **Do typed references navigate?** A field referencing another record could
   lazily fetch it, or just carry its identity.
 
 Alternatives considered for user extension: generic field accessors only (no
-methods, so no ergonomic user API); mandatory codegen (heavyweight, and not
+methods, so no ergonomic user API); mandatory code generation (heavyweight, and not
 every consumer wants a build step); or a closed set of built-in tables only
 (fails the "build your own" requirement).
 
@@ -53,7 +53,7 @@ every consumer wants a build step); or a closed set of built-in tables only
   fields and typed query (`inc.Priority().Eq(IncidentPriority.High)`), coexisting
   with the fluent builder (`query.Where(...)`).
 - **Full parity.** The `internal/store` and `internal/serialization` helpers are
-  exported — or a convenience base type wraps them — so a user table has the
+  exported—or a convenience base type wraps them—so a user table has the
   same accessor generation and backing-store behavior as a built-in. No
   second-class citizen.
 - **Uniformity.** Typed tables expose record CRUD and query, **not** domain
@@ -61,8 +61,8 @@ every consumer wants a build step); or a closed set of built-in tables only
   one-generic-pattern philosophy and ADR-007's restraint).
 - **References** are a typed wrapper carrying sys_id, display value, and link;
   they do **not** auto-navigate to the referenced record.
-- Optional codegen may generate field descriptors, but the exported helpers are
-  the contract — codegen is convenience, not a requirement.
+- Optional code generation may generate field descriptors, but the exported helpers are
+  the contract—codegen is convenience, not a requirement.
 
 ## Consequences
 

@@ -1,7 +1,7 @@
 ---
 title: Issue triage
 description: >-
-  How issues get labeled, scored, and prioritized — the lifecycle, the
+  How issues get labeled, scored, and prioritized—the lifecycle, the
   scoring rubric, and the steps a maintainer follows during triage.
 ---
 
@@ -15,7 +15,7 @@ repeatable rubric, not gut feeling:
 - Status labels track workflow state; priority labels track importance.
 - Milestone membership is a priority signal, not a duplicate taxonomy.
 
-Contributors mostly need the [label taxonomy](#label-taxonomy) — it's what
+Contributors mostly need the [label taxonomy](#label-taxonomy)—it's what
 you see on issues. Maintainers follow the full [workflow](#triage-workflow).
 
 ## Issue lifecycle
@@ -91,8 +91,8 @@ How many consumers are affected, and how badly?
 
 | Score | Description                                                                                                    |
 | ----- | -------------------------------------------------------------------------------------------------------------- |
-| 1     | Cosmetic, docs-only, or affects an edge case / rarely-used module                                              |
-| 2     | Affects a commonly-used module (`tableapi`, `core`, `credentials`) or degrades DX without breaking correctness |
+| 1     | Cosmetic, docs-only, or affects an edge case / rarely used module                                              |
+| 2     | Affects a commonly used module (`tableapi`, `core`, `credentials`) or degrades DX without breaking correctness |
 | 3     | Silent-failure / incorrect-behavior risk, a breaking change forced onto consumers, or blocks a milestone       |
 
 ### Risk-of-delay (1–3)
@@ -207,7 +207,7 @@ Each level is a GitHub issue:
 ### Templates
 
 Epics, stories, and tasks are maintainer-only planning artifacts. Maintainers
-file them from the templates in `.github/templates/` — one template per level:
+file them from the templates in `.github/templates/`—one template per level:
 
 | Template                 | Contents                                                          |
 | ------------------------ | ----------------------------------------------------------------- |
@@ -216,7 +216,7 @@ file them from the templates in `.github/templates/` — one template per level:
 | `TASK_TEMPLATE.md`       | Description, task type, sub-tasks, deliverables, parent story     |
 
 You won't find these levels in the public issue chooser. It exposes only two
-forms: **Bug report** and **Feature request** — a feature request becomes a
+forms: **Bug report** and **Feature request**—a feature request becomes a
 story once planning starts. Blank issues are disabled, and questions go to
 [Discussions](https://github.com/michaeldcanady/servicenow-sdk-go/discussions),
 not issues.
@@ -225,7 +225,7 @@ not issues.
 
 A hierarchy is only useful while it reflects reality:
 
-- Keep `status:` labels current as work moves — see
+- Keep `status:` labels current as work moves—see
   [status labels](#status-labels-workflow-state).
 - Review epics during triage. Close epics whose success criteria are met,
   and split stale ones into smaller, actionable stories.
@@ -236,7 +236,7 @@ A hierarchy is only useful while it reflects reality:
 
 **Bug in tableapi pagination returns wrong cursor**
 
-- Impact: 3 (commonly-used module, incorrect behavior)
+- Impact: 3 (commonly used module, incorrect behavior)
 - Risk-of-delay: 2 (accumulates tech debt, blocks users)
 - Score: 5 → `priority: high`
 

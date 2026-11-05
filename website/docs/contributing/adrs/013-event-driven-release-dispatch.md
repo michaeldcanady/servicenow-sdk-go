@@ -10,7 +10,7 @@ description: >-
 
 ## Status
 
-Proposed (2026-09-02). Not adopted — this records a direction for moving
+Proposed (2026-09-02). Not adopted—this records a direction for moving
 release follow-on tasks from in-band coupling (ADR 012) to event-driven
 dispatch. If adopted, it supersedes [ADR 012](012-release-provenance-in-band.md),
 whose Status then reads "Superseded by ADR-013."
@@ -37,22 +37,22 @@ can't carry a custom payload.
 
 Options for true event delivery:
 
-1. **`repository_dispatch` event bus** — the releasing workflow POSTs a
+1. **`repository_dispatch` event bus**—the releasing workflow POSTs a
    `release-created` dispatch with `client_payload` (`tag`, `sha`) after the
    release-please step; every consumer subscribes independently. Fire-and-
    forget: a lost dispatch is silent, so the bus needs a reconciliation sweep
    (see Decision) to become at-least-once. Payload must be versioned.
-2. **GitHub App installation token** — events created with an app token start
+2. **GitHub App installation token**—events created with an app token start
    new runs, restoring native triggers such as `release: published` and
    `push tags v*`. Adds an org-installed GitHub App, key storage and rotation,
    permitting scope, and a write-credential security review. This is the
    "real principal" end state, but it's a heavy operational lift.
-3. **`workflow_run` trigger** — keys off a dedicated "emit release events"
+3. **`workflow_run` trigger**—keys off a dedicated "emit release events"
    workflow run rather than a repository event. The consumer receives no
    inputs and must resolve state from run metadata or artifacts, and the
    written security guidance prefers `workflow_call` chains over
    `workflow_run`. Kept out of scope.
-4. **State-file polling** — a scheduled sweep diffs the release manifest
+4. **State-file polling**—a scheduled sweep diffs the release manifest
    against created tags and attached assets. Fully decoupled, slow to react,
    and
    failure-agnostic on its own; valuable as the reconciliation layer for the
@@ -70,19 +70,19 @@ consumers honor), or have signing wait until the SBOM asset exists and retry.
 
 Don't adopt yet. If adopted, pursue this phased path:
 
-1. **Phase 1 — add a dispatch emitter alongside the in-band calls.** The
+1. **Phase 1—add a dispatch emitter alongside the in-band calls.** The
    releasing workflows POST `repository_dispatch` events of type
    `release-created` with a versioned payload (`v1`, `tag`, `sha`), with a
    small retry-and-jitter loop. In-band attachment continues unchanged.
-2. **Phase 2 — move stateless consumers to the bus.** `release-verify.yml`
+2. **Phase 2—move stateless consumers to the bus.** `release-verify.yml`
    (and any future consumer that doesn't affect artifact ordering) subscribes
    to `release-created` instead of being called in-band. SBOM and signing stay
    in-band because their ordering matters.
-3. **Phase 3 — reconciliation sweep.** A scheduled workflow diffs tags against
+3. **Phase 3—reconciliation sweep.** A scheduled workflow diffs tags against
    attached assets and re-dispatches anything missing, converting the bus from
    fire-and-forget to at-least-once with observable drift. Only when this sweep
    has proven itself in production would the in-band calls become redundant.
-4. **Phase 4 (optional) — GitHub App for native triggers.** If a maintainer
+4. **Phase 4 (optional)—GitHub App for native triggers.** If a maintainer
    stands up a GitHub App, the emitter switches from `repository_dispatch` to
    the app token, native triggers return, and the event bus disappears. This
    substitutes an operational credential for pipeline complexity; don't do it
@@ -90,7 +90,7 @@ Don't adopt yet. If adopted, pursue this phased path:
 
 ## Consequences
 
-- **Pros:** consumers decouple from the release path — adding one doesn't
+- **Pros:** consumers decouple from the release path—adding one doesn't
   touch the production release workflow; each concern reverts to its own
   workflow, history, and retry semantics; the design matches the mental model
   of subscriptions to durable events; reconciliation makes the pipeline fail
