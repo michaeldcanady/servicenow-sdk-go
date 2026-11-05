@@ -18,7 +18,7 @@ Proposed. Accepted on merge; this record and its rule file
 The raw-table escape hatch today is `client.Now().Table(name string)`, which
 hardcodes a `*TableRecord` return. The hybrid surface (ADR 017) needs the entry
 point to do more: expose built-in typed tables, and expose a raw escape hatch
-for an arbitrary table — i.e. a **collection builder**, not a single hardcoded
+for an arbitrary table—that is, a **collection builder**, not a single hardcoded
 call.
 
 Two constraints collide:
@@ -41,12 +41,12 @@ new shape something unrelated to the URL segment (violates ADR-008's axis).
   typed tables (literal chaining) and a raw escape hatch **`.ByName(name)`**
   that reaches `/now/table/{name}`.
 - Because the legacy `Table(name string)` must coexist until the next major, the
-  new collection-builder method ships as **`Table2()`** in v2 — the naming rule
-  appends a number on a collision — and is renamed to **`Table()`** at the next
+  new collection-builder method ships as **`Table2()`** in v2—the naming rule
+  appends a number on a collision—and is renamed to **`Table()`** at the next
   major once the legacy form is removed.
-- Path segments map to method calls. Scoped APIs (caseapi, cmdbinstanceapi,
-  appointmentbookingapi, …) keep semantic names with a documented URL mapping
-  rather than strict pathing.
+- Path segments map to method calls. Scoped APIs (`caseapi`, `cmdbinstanceapi`,
+  `appointmentbookingapi`, and so on) keep semantic names with a documented URL mapping
+  rather than a strict path mapping.
 - The legacy `Now().Table(name string) *TableRecord` keeps working for all of v2.
 
 ## Consequences
@@ -57,9 +57,8 @@ new shape something unrelated to the URL segment (violates ADR-008's axis).
 - **Cons:** `Table2` is temporarily surprising and must be renamed at the next
   major (a scheduled follow-up, not optional); two entry shapes coexist across
   v2, so docs must be explicit about which to use; scoped APIs deliberately do
-  not follow strict pathing, which needs the mapping documented.
-- **Rule for future naming on this entry:** `Table2` is a bridge, not a name —
-  rename it to `Table` when the legacy `Table(name string)` is removed at the
+  not follow a strict path mapping, which needs the mapping documented.
+- **Rule for future naming on this entry:** `Table2` is a bridge, not a name—rename it to `Table` when the legacy `Table(name string)` is removed at the
   next major, and do not introduce a third spelling in the meantime.
 
 See also: ADR 008 (naming axes), ADR 017 (hybrid surface), ADR 019 (typed tables).

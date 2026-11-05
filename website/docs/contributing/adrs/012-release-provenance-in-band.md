@@ -31,25 +31,25 @@ a GitHub Action running with the default token, so neither event ever arrived.
 
 Alternatives considered:
 
-1. **Repository-event triggers (`release: published`, `push tags v*`)** — this
+1. **Repository-event triggers (`release: published`, `push tags v*`)**—this
    is what shipped and what broke. Dead on arrival for any release created by
    automation running on the default token. Rejected as the operating model.
 2. **A real principal for release-please (PAT or GitHub App installation
-   token)** — events created by an app or PAT do start new workflow runs, so
+   token)**—events created by an app or PAT do start new workflow runs, so
    this restores the event-driven design. It adds a secret or key lifecycle,
    a security review of a write-scoped credential, and no delivery guarantee:
    a missed event is still silent. Rejected for now; revisited in ADR 013.
-3. **`repository_dispatch` event bridge** — dispatch events are explicitly
+3. **`repository_dispatch` event bridge**—dispatch events are explicitly
    exempt from suppression, so an in-band POST reliably starts consumers.
    The POST is fire-and-forget: ordering across consumers isn't guaranteed,
    and a lost dispatch fails silently. Rejected as the primary path; the
    payload versioning and reconciliation needed to make it reliable are
    deferred to ADR 013.
-4. **In-band `workflow_call` fan-out** (chosen) — the releasing workflow calls
+4. **In-band `workflow_call` fan-out** (chosen)—the releasing workflow calls
    each dependent directly as a reusable workflow, gated on the release-please
    job's `release_created` output, passing the created tag as an input.
    Deterministic and ordered in one run; no new credentials.
-5. **State-file polling** — a scheduled workflow diffs the release manifest
+5. **State-file polling**—a scheduled workflow diffs the release manifest
    (`.release-please-manifest*.json`) against created tags. Fully decoupled
    but slow to react and failure-agnostic; not suitable as the only mechanism
    on the release-critical path.
@@ -76,7 +76,7 @@ v2.0.3 and v2.0.2.
 
 ## Consequences
 
-- **Pros:** deterministic — the follow-on work fires in the same run that
+- **Pros:** deterministic—the follow-on work fires in the same run that
   created the release, with no reliance on event delivery; ordered, so signing
   always sees the SBOM; one workflow run to inspect after a release; manual
   backfill stays available; no new secrets or credentials.
@@ -86,7 +86,7 @@ v2.0.3 and v2.0.2.
   logically separate share one run's history and retry semantics.
 - **Rule for future release questions:** don't add `release: published` or
   `push tags v*` triggers for releases that release-please creates with the
-  default token — the trigger is dead on arrival. Add the work as a reusable
+  default token—the trigger is dead on arrival. Add the work as a reusable
   `workflow_call` workflow and invoke it from `stable-release.yml` and
   `weekly-release.yml`. Revisit this rule only under the conditions in
   [ADR 013](013-event-driven-release-dispatch.md), which may supersede this

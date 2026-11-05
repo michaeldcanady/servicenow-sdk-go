@@ -1,21 +1,21 @@
 ---
 title: Development setup
 description: >-
-  Clone to green build in under ten minutes — one click with the dev
+  Clone to green build in under ten minutes—one click with the dev
   container, or a short local-toolchain path.
 ---
 
 # Development setup
 
 Goal: from clone to a green build in under ten minutes, with the same
-toolchain CI uses. You have two paths — the dev container gives you
+toolchain CI uses. You have two paths—the dev container gives you
 everything preconfigured in one click; the local path is for people who
 prefer their own environment.
 
 ## Prerequisites
 
 - **Git**, and a GitHub account for your fork.
-- **A ServiceNow instance** — only needed for integration/e2e work, not for
+- **A ServiceNow instance**—only needed for integration/e2e work, not for
   building or unit tests. A free
   [Personal Developer Instance](https://developer.servicenow.com/) is enough.
 
@@ -58,7 +58,7 @@ If you don't want to use mise, install Go 1.26 or later and
 
 ## The moment of success
 
-Three commands, three green results — after this you're ready to make
+Three commands, three green results—after this you're ready to make
 changes:
 
 ```bash
@@ -93,7 +93,7 @@ then run `mise run go:test:e2e`.
 
 ## Credentials for integration and e2e tests
 
-Unit tests never need credentials. The integration suite mocks HTTP too — but
+Unit tests never need credentials. The integration suite mocks HTTP too—but
 its configuration, and the e2e suite's real connections, read a `.env` file
 in the project root (git ignores it):
 
@@ -108,10 +108,10 @@ them.
 
 ## Next steps
 
-Environment ready — where next depends on what you came to do:
+Environment ready—where next depends on what you came to do:
 
 - **Shipping your first contribution?** Go straight to
-  [Your first PR](first-pr.mdx) — it picks up exactly here, with the timer
+  [Your first PR](first-pr.mdx)—it picks up exactly here, with the timer
   already running.
 - **Building features?** Read the [architecture](architecture.md) page to
   follow one request through the codebase before you start changing it.

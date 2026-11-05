@@ -13,7 +13,7 @@ Accepted
 
 ## Context
 
-Every API module exposes a `*QueryParameters` struct per verb (e.g.
+Every API module exposes a `*QueryParameters` struct per verb (for example,
 `TableRequestBuilderGetQueryParameters`) that gets applied to the outgoing
 request. Historically these used plain value fields (`Limit int`,
 `Query string`, `DisplayValue DisplayValue`) and were encoded onto the
@@ -31,13 +31,13 @@ nil-checkable pointers.
 
 Alternatives considered:
 
-1. **Keep the value-typed structs and the go-querystring wrapper** — rejected
+1. **Keep the value-typed structs and the go-querystring wrapper**—rejected
    because it's the thing ADR-003 already argues against: reinventing a
    Kiota runtime capability (`AddQueryParameters`) that ships by default, and
    it keeps the SDK's query-parameter shape looking different from every
    Kiota-generated SDK a caller might already know.
 2. **Pointer fields wired through `abstractions.ConfigureRequestInformation`
-   directly** — matches msgraph-sdk-go's convention exactly and removes a
+   directly**—matches msgraph-sdk-go's convention exactly and removes a
    dependency.
 
 A timeboxed spike (#494) was run specifically to classify this as breaking
@@ -54,7 +54,7 @@ wrapper. The `internal.ConfigureRequestInformation` / `internal.KiotaRequestInfo
 wrapper and the `go-querystring` dependency are removed entirely (#511).
 
 A non-obvious constraint this decision carries: the native encoder only
-recognizes `*int32` explicitly — a bare `*int` (even as a pointer) is
+recognizes `*int32` explicitly—a bare `*int` (even as a pointer) is
 silently dropped from the request. Any new integer query parameter must be
 declared as `*int32`, not `*int`, or it will vanish without error.
 
@@ -65,8 +65,8 @@ declared as `*int32`, not `*int`, or it will vanish without error.
   distinguishable the same way ADR-002 already made models' properties
   distinguishable; one fewer third-party dependency.
 - **Cons:** breaking for every caller constructing these structs with value
-  literals — they must switch to pointers (see `internal.ToPointer`).
+  literals—they must switch to pointers (see `internal.ToPointer`).
   Landed as a breaking v2.0 change specifically because it couldn't wait
   for v3.
 - **Sharp edge to guard in review:** a new `*int` query-parameter field is a
-  silent bug, not a compile error — it must be `*int32`.
+  silent bug, not a compile error—it must be `*int32`.

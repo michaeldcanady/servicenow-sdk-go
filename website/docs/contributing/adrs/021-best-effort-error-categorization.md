@@ -18,7 +18,7 @@ Proposed. Accepted on merge; this record and its rule file
 ADR 001 centralized error sentinels and a status-code-to-type mapping, and
 ADR 006 made nil-receiver guards fail loud with a shared sentinel. What remains
 is categorizing the errors ServiceNow itself returns. The error body has a
-stable envelope — `{"error": {"detail", "message", "status"}}` — but the set of
+stable envelope—`{"error": {"detail", "message", "status"}}`—but the set of
 situations it can describe is open-ended, so no fixed set of SDK error types can
 exhaustively categorize it.
 
@@ -27,8 +27,8 @@ common cases, and the **raw payload** so nothing is lost when they need exact
 handling. A fixed, exhaustive taxonomy would drop detail; a pass-through-only
 design would give no ergonomic category.
 
-Options considered: exhaustive categorization (rejected — impossible to cover
-open-ended ServiceNow errors); pure pass-through with no types (rejected — no
+Options considered: exhaustive categorization (rejected—impossible to cover
+open-ended ServiceNow errors); pure pass-through with no types (rejected—no
 ergonomic `errors.As`/switch target); best-effort categorization with the raw
 details always attached and a generic fallback (chosen). Feasibility was
 confirmed by inspecting `core.DefaultErrorMapping()` and the existing typed
@@ -44,7 +44,7 @@ errors.
 - Add **`ConflictError`** (HTTP 409) and **`ValidationError`** to the default
   mapping.
 - An **un-categorizable error degrades to a generic SDK error** that still
-  carries the raw payload — never drop the raw details.
+  carries the raw payload—never drop the raw details.
 - Keep `UnauthorizedError.Is` matching `snerrors.ErrNotAuthenticated` (already in
   place).
 - Map additional status codes incrementally as they are encountered.
@@ -55,7 +55,7 @@ errors.
   raw access for everything else; new status codes can be added incrementally
   without a breaking change; no error detail is ever discarded.
 - **Cons:** categorization is best-effort, so a category is a convenience, not a
-  guarantee — callers doing exact handling must unwrap; the typed categories
+  guarantee—callers doing exact handling must unwrap; the typed categories
   must not be over-trusted, which is a documentation responsibility.
 - **Rule for future error work:** when adding an error category, attach the raw
   details and keep the generic fallback intact; a change that drops the raw

@@ -221,3 +221,8 @@ Godog
 (?i)entra
 (?i)idps?('s)?
 (?i)okta('s)?
+(?i)godoc
+(?i)hardcod(e|es|ed|ing)
+(?i)misconfigured
+(?i)parseable
+(?i)validators?
