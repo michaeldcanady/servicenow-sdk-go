@@ -13,14 +13,13 @@ Condition values are written into the encoded query verbatim, and ServiceNow's
 encoded-query syntax has no way to escape its structural characters. Which
 characters are rejected depends on where the value lands:
 
-- `^` separates clauses — rejected in every value and fragment
-- `,` separates list values — rejected in `IsOneOf` / `IsNotOneOf` values only
-- `@` separates pair halves — rejected in `Between` values only
+- `^` separates clauses—rejected in every value and fragment
+- `,` separates list values—rejected in `IsOneOf` / `IsNotOneOf` values only
+- `@` separates pair halves—rejected in `Between` values only
 
 Elsewhere `,` and `@` are ordinary literal characters, so values like
 `"Smith, John"` or `"user@example.com"` pass through unchanged. A value
-containing a rejected character — for example, text taken from user input —
-could otherwise break out of its term and append arbitrary clauses, so the
+containing a rejected character—for example, text taken from user input—could otherwise break out of its term and append arbitrary clauses, so the
 builder rejects it at construction time instead.
 
 Always check `Error()` on the finished condition before serializing or
@@ -40,7 +39,7 @@ sysparmQuery := q.String()
 
 A condition that reports an error has no valid encoded-query form. If you
 serialize one anyway, `String()` renders `<invalid query>` in place of the
-rejected part — an intentionally unusable term, never a silently weakened
+rejected part—an intentionally unusable term, never a silently weakened
 query. Date-time composite fragments (`Javascript()`, `JS()`, and
 `OnSpecialty()`) reject `^` and `@`, since the package inserts those
 separators itself; commas are allowed there, for example in multi-argument
@@ -54,8 +53,7 @@ separators itself; commas are allowed there, for example in multi-argument
 - You want the compiler to catch operator/type mismatches instead of
   discovering a malformed encoded query at runtime
 - For a short, static filter, passing the encoded-query string directly (as
-  in [List and query records](tables/list-and-query-records.mdx)) is fine —
-  the builder earns its keep when composing conditions by hand gets
+  in [List and query records](tables/list-and-query-records.mdx)) is fine—the builder earns its keep when composing conditions by hand gets
   error-prone
 
 ## Required values
@@ -80,7 +78,7 @@ func main() {
 ### Inspect the encoded query
 
 `String()` renders the condition tree into ServiceNow's encoded-query
-syntax — print it to see exactly what will be sent:
+syntax—print it to see exactly what will be sent:
 
 <GoSnippet language="go" src={queryGo} region="query_basic" />
 
@@ -92,8 +90,8 @@ Pass the rendered string as the `Query` query parameter of a list request:
 
 ### Field types and operators
 
-Conditions start from a typed field constructor — `query.String`,
-`query.Number`, `query.Boolean`, `query.Date`/`query.DateTime` — each
+Conditions start from a typed field constructor—`query.String`,
+`query.Number`, `query.Boolean`, `query.Date`/`query.DateTime`—each
 exposing the operators valid for that type (`Is`, `Contains`, `IsOneOf`,
 `Before`, …). Combine conditions with `.And(...)`/`.Or(...)` or the
 top-level `query.And(...)`/`query.Or(...)`.
@@ -101,7 +99,7 @@ top-level `query.And(...)`/`query.Or(...)`.
 ## Tips
 
 - Encoded-query cheat sheet: `^` joins with AND, `^OR` with OR, `LIKE`
-  matches substrings — the builder emits these for you.
+  matches substrings—the builder emits these for you.
 - The same encoded string works anywhere a `sysparm_query` is accepted (for
   example, [filtering attachments](attachments/download-record-attachments.mdx)).
 

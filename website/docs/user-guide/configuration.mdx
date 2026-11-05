@@ -10,7 +10,7 @@ transport, and logging.
 ## When to use this pattern
 
 - You're going beyond the two-option default (`WithAuthenticationProvider` +
-  `WithInstance`) — adding middleware, timeouts, or logging
+  `WithInstance`)—adding middleware, timeouts, or logging
 - You need request/response visibility for debugging or metrics
 - You're running behind a proxy or with custom TLS and need transport control
 
@@ -64,7 +64,7 @@ To control transport-level settings (timeouts, TLS, proxies), supply your own
 
 ### Custom logger
 
-Route the SDK's diagnostic output through your own logger — anything with a
+Route the SDK's diagnostic output through your own logger—anything with a
 `Log(message string, args ...interface{})` method:
 
 <GoSnippet language="go" src={configGo} region="config_std_logger" />
@@ -73,18 +73,18 @@ Route the SDK's diagnostic output through your own logger — anything with a
 
 ### Advanced options
 
-- **`WithRequestAdapter`** — supply a fully custom Kiota
+- **`WithRequestAdapter`**—supply a fully custom Kiota
   `abstractions.RequestAdapter`, taking over serialization and transport
   entirely. The other pipeline options are ignored when you provide one.
-- **`WithBackingStoreFactory`** — replace the backing store implementation
+- **`WithBackingStoreFactory`**—replace the backing store implementation
   used by models, for example to add change tracking.
 
 ## Tips
 
 - Out of the box the client already retries transient failures with backoff
-  (including 429s honoring `Retry-After`), follows redirects, and handles
-  compression — you don't need any options for that.
-- For request/response logging, prefer a middleware over `WithLogger` — the
+  (including `429` responses, honoring `Retry-After`), follows redirects, and handles
+  compression—you don't need any options for that.
+- For request/response logging, prefer a middleware over `WithLogger`—the
   middleware sees the actual HTTP traffic; the logger only carries the SDK's
   internal diagnostics.
 - A middleware is any type implementing `Intercept(pipeline, index, req)`;

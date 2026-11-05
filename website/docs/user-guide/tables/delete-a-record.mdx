@@ -9,7 +9,7 @@ Permanently remove a record by its `sys_id`.
 
 - You're cleaning up test or imported data
 - You're implementing retention rules for records your integration owns
-- You're sure you want a hard delete — deletion is permanent, and cascade
+- You're sure you want a hard delete—deletion is permanent, and cascade
   rules on the table may delete related records too
 
 ## Required values
@@ -31,7 +31,7 @@ func main() {
 
 ## Tips
 
-- `Delete` returns only an `error` — no response body. `nil` means the
+- `Delete` returns only an `error`—no response body. `nil` means the
   record is gone.
 - Deleting an already-deleted record returns `core.NotFoundError`; decide
   whether that's a failure for your workflow or an "already done."

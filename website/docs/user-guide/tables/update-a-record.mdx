@@ -12,7 +12,7 @@ untouched.
   work notes)
 - You're writing back results from an external process to the record that
   requested it
-- You have the record's `sys_id` — if you don't,
+- You have the record's `sys_id`—if you don't,
   [find it first](list-and-query-records.mdx)
 
 ## Required values
@@ -35,7 +35,7 @@ func main() {
 
 ## Tips
 
-- Only the fields you `SetValue` are serialized into the request — there's no
+- Only the fields you `SetValue` are serialized into the request—there's no
   read-modify-write cycle to race with other writers on untouched fields.
 - `Put` on a wrong `sys_id` returns `core.NotFoundError`; match it with
   `errors.As` ([error handling](../error-handling.mdx)).

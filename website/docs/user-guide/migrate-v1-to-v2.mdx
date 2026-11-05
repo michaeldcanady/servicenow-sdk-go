@@ -14,7 +14,7 @@ v1 surface is removed, and models move to backing-store-backed accessors.
 This guide maps every v1 construct to its v2 replacement.
 
 If your code compiled against v1.9 **without deprecation warnings**, you are
-already using the v2 shapes — your migration is mostly renames. If you're
+already using the v2 shapes—your migration is mostly renames. If you're
 coming from an older v1 style (`NewServiceNowClient`, `TableEntry`,
 `response.Result`), work through each section below.
 
@@ -65,7 +65,7 @@ name. See [Configuration](configuration.mdx) for the other options
 
 If you implemented v1's `Credential` interface (`GetAuthentication() (string,
 error)`) yourself, implement Kiota's
-`authentication.AuthenticationProvider` instead — see
+`authentication.AuthenticationProvider` instead—see
 [Authentication](authentication/index.md) for the built-in providers before
 writing your own.
 
@@ -160,7 +160,7 @@ for _, entry := range response.Result {
 - v1 methods sometimes returned `nil, nil` when called on a nil builder; v2
   nil-guards always return a sentinel error (`snerrors.ErrNilRequestBuilder`
   and friends). Code that relied on silently getting `nil` back will now see
-  an error — which is almost certainly what you wanted.
+  an error—which is almost certainly what you wanted.
 - API failures are now typed: match `*core.ServiceNowError` (or a specific
   subtype like `*core.NotFoundError`) with `errors.As`. See
   [Error handling](error-handling.mdx).
@@ -168,7 +168,7 @@ for _, entry := range response.Result {
 ## Attachments
 
 v1 imported `attachment-api`; v2 moves to the hyphen-free `attachmentapi`.
-The fluent chain changes too — `Attachment()` is now on the `Now()` builder,
+The fluent chain changes too—`Attachment()` is now on the `Now()` builder,
 and `File()`/`Upload()` sit underneath it:
 
 ```go title="v1"
@@ -198,7 +198,7 @@ guides.
 
 ## Pagination
 
-v1 had no built-in pagination helper — callers used `Offset`/`Limit` query
+v1 had no built-in pagination helper—callers used `Offset`/`Limit` query
 parameters and looped manually. v2 introduces
 [`core.PageIterator`](pagination.mdx), which follows `Link` headers across
 pages automatically:
@@ -228,14 +228,13 @@ for {
 
 <GoSnippet language="go" title="v2 — item by item" src={paginationGo} region="pagination_item_by_item" />
 
-The iterator also works for attachments and other collection endpoints —
-see [Pagination](pagination.mdx) for the full API including reverse
+The iterator also works for attachments and other collection endpoints—see [Pagination](pagination.mdx) for the full API including reverse
 iteration and state management.
 
 ## Queries
 
 The `query2` package is now simply `query`. The fluent builder API is
-unchanged — build conditions, chain them, and call `.String()`:
+unchanged—build conditions, chain them, and call `.String()`:
 
 ```go title="v1"
 import "github.com/michaeldcanady/servicenow-sdk-go/query2"
@@ -258,7 +257,7 @@ See [Query builder](query-builder.mdx) for the full condition API.
 
 v1's `Credential` interface (`GetAuthentication() (string, error)`) is
 replaced by Kiota's `authentication.AuthenticationProvider`. The built-in
-providers follow the same construction pattern — create a provider, pass it
+providers follow the same construction pattern—create a provider, pass it
 to the client:
 
 ```go title="v1"
@@ -270,14 +269,14 @@ client, _ := servicenowsdkgo.NewServiceNowClient2(cred, url)
 
 {{authGo:client_init}}`} />
 
-OAuth2 providers use the same shape — `NewROPCProvider`, `NewClientCredentialsProvider`,
+OAuth2 providers use the same shape—`NewROPCProvider`, `NewClientCredentialsProvider`,
 `NewPrivateAuthorizationCodeProvider`, and `NewJWTProvider` all satisfy
 `AuthenticationProvider`:
 
 <GoExample language="go" title="v2 — ROPC" files={{ authGo: authGo }} template={`{{authGo:auth_ropc}}`} />
 
 If you implemented v1's `Credential` interface yourself, implement Kiota's
-`authentication.AuthenticationProvider` instead — see
+`authentication.AuthenticationProvider` instead—see
 [Authentication](authentication/index.md) for the full provider reference.
 
 ## Migration checklist
@@ -288,11 +287,10 @@ If you implemented v1's `Credential` interface yourself, implement Kiota's
    (`NewBasicProvider` or an OAuth2 provider).
 4. Rename chain methods (`Now2`→`Now`, `TableV2`→`Table`, `ById`→`ByID`) and
    strip `2` suffixes from types.
-5. Convert `TableEntry` code to `TableRecord` accessors — this is where the
+5. Convert `TableEntry` code to `TableRecord` accessors—this is where the
    compiler will do most of the finding for you.
 6. Replace `.Result` field access with `GetResult()` and handle the error.
 7. Re-check error handling: add `errors.Is`/`errors.As` where you previously
    compared strings or ignored `nil, nil`.
 
-If something doesn't map cleanly, [open an issue](https://github.com/michaeldcanady/servicenow-sdk-go/issues) —
-gaps in this guide are release blockers for us.
+If something doesn't map cleanly, [open an issue](https://github.com/michaeldcanady/servicenow-sdk-go/issues)—gaps in this guide are release blockers for us.

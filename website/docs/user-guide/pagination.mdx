@@ -14,7 +14,7 @@ pagination links for you.
   of them
 - You're streaming records through a process one at a time rather than
   loading the whole set into memory
-- You'd otherwise be hand-assembling `offset`/`limit` loops — the iterator
+- You'd otherwise be hand-assembling `offset`/`limit` loops—the iterator
   works on the [response envelope](../core-concepts.mdx#3-response-envelopes)
   and follows its links instead
 
@@ -23,7 +23,7 @@ pagination links for you.
 | Value          | Description                                          |
 | -------------- | ---------------------------------------------------- |
 | Table name     | The table to read (for example, `incident`)          |
-| A first page   | Any list response — its links seed the iterator      |
+| A first page   | Any list response—its links seed the iterator      |
 
 ## Example
 
@@ -70,7 +70,7 @@ Fetch the next page yourself when you need page-level control:
 
 ## Tips
 
-- Return `false` from the callback to stop early — already-fetched pages
+- Return `false` from the callback to stop early—already-fetched pages
   aren't refetched on a later `Iterate`.
 - Combine with a [query](query-builder.mdx) so you page through only the
   records you actually need.
