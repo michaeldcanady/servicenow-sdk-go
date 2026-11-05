@@ -98,11 +98,12 @@ jobs:
       group: docs-stable-deploy
       cancel-in-progress: false
     steps:
+      # main goes in the workspace root, because the deploy action runs git
+      # there to push to gh-pages. The tag goes in a subfolder.
       - name: Check out main
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: main
-          path: main
           persist-credentials: false
 
       - name: Check out the release tag
@@ -128,7 +129,7 @@ jobs:
           DOCS_ANALYTICS_DOMAIN: michaeldcanady.github.io
         run: |
           set -euo pipefail
-          cp ../../main/website/archive/docusaurus.archive.config.ts .
+          cp ../../website/archive/docusaurus.archive.config.ts .
           npm ci
           npx docusaurus build --config docusaurus.archive.config.ts
 
