@@ -12,7 +12,7 @@ Whether you're automating incident management, synchronizing user records, or ha
 - [**Attachment API**](attachment/index.mdx): Manage files and raw file content attached to records.
 - [**Batch API**](batch/index.mdx): Group multiple requests into a single efficient call.
 - [**Aggregation API**](aggregation/index.mdx): Aggregate statistics (count, sum, avg, min, max) over table records.
-- [**Documents API**](documents/index.mdx): Document Management — create, explore, version, and stream documents.
+- [**Documents API**](documents/index.mdx): Document Management—create, explore, version, and stream documents.
 - [**Activity Subscriptions API**](activity-subscriptions/index.mdx): Follow objects and manage activity-stream subscriptions.
 
 ### CMDB & CSDM
@@ -36,7 +36,7 @@ Whether you're automating incident management, synchronizing user records, or ha
 ## Design philosophy
 
 - **Idiomatic Go**: Uses standard Go patterns for error handling, context support, and naming.
-- **Fluent & Standard Builders**: Offers both a fluent API for ease of use and standard builders for more manual control — see [Core Concepts](../core-concepts.mdx#fluent-vs-standard) for when to use which.
+- **Fluent & Standard Builders**: Offers both a fluent API for ease of use and standard builders for more manual control—see [Core Concepts](../core-concepts.mdx#fluent-vs-standard) for when to use which.
 - **Cross-module consistency**: Every module follows the same structural pattern (constructor triad, per-verb configurations, shared error mapping), so learning one module means learning them all. The pattern is documented in [Add a new API module](../contributing/add-api-module.md).
 
 Explore the following subsections for implementation details, code snippets, and specific endpoint documentation.
