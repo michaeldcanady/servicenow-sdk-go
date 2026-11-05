@@ -26,6 +26,9 @@
 #   hyphenated; GitHub treats those as distinct labels.
 # - Issues with any assignee never go stale — an assignee means someone owns
 #   the work, which is the opposite of waiting on the reporter.
+# - Issues in any milestone never go stale. A milestone means the work is
+#   planned for a release, so silence means it hasn't started yet, not that
+#   it's abandoned.
 #
 # Labels are mutable repo settings with no declarative file form, so the
 # `stale` label is provisioned idempotently here each run (same approach as
@@ -97,6 +100,7 @@ jobs:
       days-before-stale: 14
       days-before-close: 7
       exempt-labels: "good first issue,good-first-issue,pinned,status: reviewed,status: in progress"
+      exempt-all-milestones: true
       stale-issue-message: |
         This issue has had no activity for 14 days, so it may be waiting on information from the reporter.
 
@@ -118,6 +122,7 @@ jobs:
       days-before-close: 7
       only-labels: "status: reviewed"
       exempt-labels: "good first issue,good-first-issue,pinned"
+      exempt-all-milestones: true
       stale-issue-message: |
         This issue was triaged some time ago and has now had no activity for 90 days.
 

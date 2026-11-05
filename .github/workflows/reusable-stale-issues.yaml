@@ -23,6 +23,10 @@ on:
         description: "Exempt issues that have any assignee"
         type: boolean
         default: true
+      exempt-all-milestones:
+        description: "Exempt issues that belong to any milestone"
+        type: boolean
+        default: false
       stale-issue-message:
         description: "Comment posted when an issue is marked stale"
         type: string
@@ -63,6 +67,7 @@ jobs:
           only-issue-labels: ${{ inputs.only-labels }}
           exempt-issue-labels: ${{ inputs.exempt-labels }}
           exempt-all-issue-assignees: ${{ inputs.exempt-all-assignees }}
+          exempt-all-issue-milestones: ${{ inputs.exempt-all-milestones }}
 
           close-issue-reason: not_planned
 
