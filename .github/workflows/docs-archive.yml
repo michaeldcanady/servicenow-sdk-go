@@ -27,6 +27,12 @@ on:
         type: string
         required: true
 
+# One run per tag at a time. A second run for the same tag waits instead of
+# canceling the first, so a publish is never cut off halfway.
+concurrency:
+  group: docs-archive-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
 permissions: {}
 
 jobs:
