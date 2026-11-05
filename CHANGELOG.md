@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.1.1...v2.2.0) (2026-11-05)
+
+
+### Features
+
+* **deps:** require Go 1.26 and update the Kiota libraries ([#947](https://github.com/michaeldcanady/servicenow-sdk-go/issues/947)) ([101a2b0](https://github.com/michaeldcanady/servicenow-sdk-go/commit/101a2b0d855b2a9d4fbeceee8eeb71b0fe8c4676))
+
 ## [2.1.1](https://github.com/michaeldcanady/servicenow-sdk-go/compare/v2.1.0...v2.1.1) (2026-11-04)
 
 
