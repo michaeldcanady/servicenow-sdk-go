@@ -51,9 +51,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read # checkout for change detection
+      contents: read # checkout for change detection, read the main ref
     outputs:
       docs: ${{ inputs.force && 'true' || steps.diff.outputs.any_changed }}
+      sha: ${{ steps.commit.outputs.sha }}
     steps:
       # Local actions resolve from the workspace, so something must be checked
       # out before the action below can be found at all — its internal
@@ -62,6 +63,27 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      # The gate and the deploy both use this commit, so a commit that lands
+      # on main while the gate runs can't publish without being gated. A push
+      # uses its own commit. A call from docs-archive.yml runs on a tag
+      # event, so it resolves the current main commit instead.
+      - name: Resolve the commit to deploy
+        id: commit
+        env:
+          FORCE: ${{ inputs.force }}
+          GH_TOKEN: ${{ github.token }}
+          PUSH_SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [[ "$FORCE" == "true" ]]; then
+            sha="$(gh api "repos/${REPO}/git/ref/heads/main" --jq '.object.sha')"
+          else
+            sha="$PUSH_SHA"
+          fi
+          echo "Deploying ${sha}"
+          echo "sha=${sha}" >> "$GITHUB_OUTPUT"
 
       - name: Detect site-output changes
         id: diff
@@ -84,8 +106,7 @@ jobs:
       contents: read # Vale lint and snippet checks
     uses: ./.github/workflows/reusable-docs-gate.yaml
     with:
-      # A call from docs-archive.yml runs on a tag event; lint main.
-      ref: main
+      ref: ${{ needs.detect-changes.outputs.sha }}
 
   deploy-stable:
     name: deploy-stable
@@ -104,8 +125,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          # A call from docs-archive.yml runs on a tag event; build main.
-          ref: main
+          ref: ${{ needs.detect-changes.outputs.sha }}
           persist-credentials: false
 
       # The X.Y/ folders on gh-pages are the release archives. The version
