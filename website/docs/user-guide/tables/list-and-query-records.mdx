@@ -36,9 +36,9 @@ func main() {
 - Compose non-trivial filters with the [query builder](../query-builder.mdx)
   instead of concatenating encoded-query strings.
 - Reading a field is a three-step unwrap (`Get` → `GetValue` →
-  `GetStringValue`) — [Core Concepts](../../core-concepts.mdx#4-backed-models-and-the-pointer-getter-pattern)
+  `GetStringValue`)—[Core Concepts](../../core-concepts.mdx#4-backed-models-and-the-pointer-getter-pattern)
   explains why.
-- `Limit` caps one page, not the result set — iterate with
+- `Limit` caps one page, not the result set—iterate with
   [pagination](../pagination.mdx) when the match count can exceed it.
 
 ## Next steps

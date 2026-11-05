@@ -42,13 +42,12 @@ through `GetError()`:
 
 <GoSnippet language="go" src={errorsGo} region="errors_details" />
 
-The getters return `*string`; check for `nil` before dereferencing — the
+The getters return `*string`; check for `nil` before dereferencing—the
 platform doesn't populate every field for every failure.
 
 ## Usage errors (sentinels)
 
-Misusing the SDK — calling a method on a nil builder, passing a nil body —
-returns a sentinel from the
+Misusing the SDK—calling a method on a nil builder, passing a nil body—returns a sentinel from the
 [`errors` package](https://pkg.go.dev/github.com/michaeldcanady/servicenow-sdk-go/errors).
 Sentinels compare with `errors.Is`:
 
@@ -56,22 +55,22 @@ Sentinels compare with `errors.Is`:
 
 Commonly encountered sentinels:
 
-- `ErrNilRequestBuilder` — a builder method was called on a nil builder,
+- `ErrNilRequestBuilder`—a builder method was called on a nil builder,
   usually because client construction failed and the error was ignored.
-- `ErrNilRequestAdapter` — the client has no request adapter; check the
+- `ErrNilRequestAdapter`—the client has no request adapter; check the
   options passed to `NewServiceNowServiceClient`.
-- `ErrNilBody` — a `Post`/`Put`/`Patch` was given a nil body.
-- `ErrNilContext` — a nil `context.Context` was passed.
+- `ErrNilBody`—a `Post`/`Put`/`Patch` was given a nil body.
+- `ErrNilContext`—a nil `context.Context` was passed.
 
 Compare sentinels by identity (`errors.Is`), never by matching the message
-string — wording isn't part of the compatibility contract.
+string—wording isn't part of the compatibility contract.
 
 ## Retries and 429
 
 The default HTTP pipeline already retries transient failures with backoff
 (see [Configuring the client](configuration.mdx)). If you handle
 `core.TooManyRequestsError` yourself, you are seeing a request that exhausted
-those retries — back off at the workflow level rather than retrying
+those retries—back off at the workflow level rather than retrying
 immediately.
 
 ## Next steps

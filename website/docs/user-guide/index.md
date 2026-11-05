@@ -2,14 +2,14 @@
 
 Task-oriented guides for the SDK's core features. If you're new, start with
 [Getting Started](../getting-started.mdx) and then
-[Core Concepts](../core-concepts.mdx) — the rules the guides below build on.
+[Core Concepts](../core-concepts.mdx)—the rules the guides below build on.
 
 - **[Migrating from v1 to v2](migrate-v1-to-v2.mdx):** Coming from a 1.x
   release? Map every v1 construct to its v2 replacement.
 - **[Support Policy](support-policy.md):** Which Go versions and SDK
   versions are supported, and for how long.
 - **[Authentication](authentication/index.md):** Choose and configure a
-  credential flow — Basic, OAuth2 authorization code, client credentials,
+  credential flow—Basic, OAuth2 authorization code, client credentials,
   JWT bearer, or ROPC.
 - **[Table Operations](tables/index.mdx):** Create, read, update, and delete
   records in any ServiceNow table.
@@ -19,7 +19,7 @@ Task-oriented guides for the SDK's core features. If you're new, start with
   HTTP call.
 - **[Pagination](pagination.mdx):** Iterate over large result sets with page
   iterators.
-- **More APIs:** Task guides for every other supported module — from
+- **More APIs:** Task guides for every other supported module—from
   [aggregate stats](apis/aggregation/aggregate-records.mdx) and
   [CMDB queries](apis/cmdb-instance/query-configuration-items.mdx) to
   [CSM cases](apis/case/read-cases.mdx) and the
