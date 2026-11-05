@@ -166,23 +166,25 @@ one-tag-per-merge.
 The docs site at `/servicenow-sdk-go/` shows the docs from `main`. Each
 released minor line has an archive: a frozen build of the docs site from
 that line's newest release tag, served under its own prefix, such as
-`/servicenow-sdk-go/2.1/`. The version dropdown in the top navigation links
-to each archive, and a banner on the `main` docs points to the newest one.
+`/servicenow-sdk-go/2.1/`. Readers open an archive from the version dropdown
+in the top navigation, and a banner on the `main` docs links to the newest
+one.
 
-The `docs-archive` workflow publishes the archives:
+The `docs-archive` workflow builds and publishes each archive:
 
-- **On a stable release tag:** When release-please pushes a stable `vX.Y.Z`
-  tag, the workflow builds the site from that tag and publishes it to the `X.Y/`
-  folder of the `gh-pages` branch. A patch release replaces its line's
-  archive, so patch fixes to the docs reach the archive. Preview tags are
-  skipped.
-- **On a new minor line:** If the line isn't in
-  `website/archived-versions.json` yet, the workflow opens a
-  `chore(website):` PR that adds it. Merge that PR to add the line to the
-  version dropdown.
-- **By hand:** To archive or rebuild a line from an existing tag, run the
-  workflow from the Actions tab and enter the tag, such as `v2.1.1`. The
-  workflow refuses a tag that isn't the newest patch of its line.
+- **When release-please pushes a stable `vX.Y.Z` tag,** the workflow builds
+  the site from that tag and publishes it to the `X.Y/` folder of the
+  `gh-pages` branch. A patch release replaces its line's archive, so your
+  patch fixes to the docs reach the archive. The workflow ignores preview
+  tags.
+- **When a tag starts a new minor line,** the workflow opens a
+  `chore(website):` PR that adds the line to
+  `website/archived-versions.json`. Merge that PR to add the line to the
+  version dropdown. The PR comes from the workflow token, so CI doesn't run
+  on it. Close and reopen the PR to run CI.
+- **To archive or rebuild a line from an existing tag,** run the workflow
+  from the Actions tab and enter the tag, such as `v2.1.1`. The workflow
+  refuses a tag that isn't the newest patch of its line.
 
 The build uses the tag's own `docs/`, sidebars, components, and Go snippets,
 so an archive shows exactly what shipped with that release.
@@ -191,10 +193,11 @@ label the build, hide "Edit this page" links, and add the archive banner.
 
 Rules of thumb:
 
-- One archive per **minor** line. The newest patch tag of the line builds it.
-- Archives are never edited. To fix a released line's docs, fix `docs/` on
-  the line's branch (`main`, or `release/vX.Y` after the line has moved on),
-  release a patch, and the patch tag rebuilds the archive.
+- Keep one archive per **minor** line. The newest patch tag of the line
+  builds it.
+- Don't edit an archive. To fix a released line's docs, fix `docs/` on the
+  line's branch (`main`, or `release/vX.Y` after the line moves on), and
+  release a patch. The patch tag rebuilds the archive.
 - The stable deploy keeps every folder named like `X.Y/` on `gh-pages`, so
   publishing `main` never deletes an archive.
 

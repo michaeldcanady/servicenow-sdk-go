@@ -9,8 +9,10 @@
 //   * Only the tag's docs/ directory is built, labeled with the release line.
 //     Any versioned_docs/ copies at the tag are skipped.
 //   * "Edit this page" links are removed, because an archive is never edited.
-//   * The version dropdown is replaced with a link to the latest docs.
-//   * An announcement bar says the reader is on archived docs.
+//   * The version dropdown is replaced with a link to the main docs site,
+//     whose dropdown lists every release.
+//   * An announcement bar says the reader is on archived docs. It doesn't
+//     name a latest release, so it stays true after newer releases ship.
 //
 // Environment:
 //   * DOCS_ARCHIVE_VERSION: the release line, such as 2.1. Required.
@@ -25,7 +27,7 @@ if (!version || !/^\d+\.\d+$/.test(version)) {
   throw new Error(`DOCS_ARCHIVE_VERSION must look like 2.1; got "${version ?? ''}".`);
 }
 
-const latestUrl = `${base.url}/${base.projectName}/`;
+const mainSiteUrl = `${base.url}/${base.projectName}/`;
 
 type PresetEntry = [string, Record<string, any>];
 
@@ -53,7 +55,7 @@ const themeConfig = (base.themeConfig ?? {}) as Record<string, any>;
 const navbar = themeConfig.navbar ?? {};
 const navbarItems = (navbar.items ?? []).map((item: Record<string, any>) =>
   item.type === 'docsVersionDropdown'
-    ? {href: latestUrl, label: `v${version} (archived)`, position: item.position ?? 'right'}
+    ? {href: mainSiteUrl, label: `v${version} (archived)`, position: item.position ?? 'right'}
     : item,
 );
 
@@ -65,7 +67,7 @@ const config: Config = {
     navbar: {...navbar, items: navbarItems},
     announcementBar: {
       id: `archived-${version}`,
-      content: `You're reading the archived docs for v${version}. For the current release, see the <a href="${latestUrl}">latest docs</a>.`,
+      content: `You're reading the archived docs for v${version}. For other releases, or for the docs on the main branch, go to the <a href="${mainSiteUrl}">main docs site</a>.`,
       isCloseable: false,
     },
   },
