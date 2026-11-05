@@ -90,9 +90,9 @@ The required context must be the job name exactly as GitHub reports it. The
 value is load-bearing. GitHub reports a job in a reusable workflow as
 `<caller job> / <called job>`, so the 2026-09 refactor that moved the
 `zizmor.yml` and `pr.yml` jobs into reusable workflows changed both reported
-names. The old contexts, `Run zizmor 🌈—auditor · all inputs · fail on any
+names. The old contexts, `Run zizmor 🌈 — auditor · all inputs · fail on any
 finding` and `Validate PR Title`, stopped reporting, and every merge waited at
-"Expected—Waiting for status to be reported" until an admin bypassed it
+`Expected — Waiting for status to be reported` until an admin bypassed it
 (#917). Rename a required job only together with its ruleset context.
 
 ### Ruleset payload reference (live)

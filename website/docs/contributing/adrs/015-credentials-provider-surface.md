@@ -68,8 +68,8 @@ the IdP, not the instance.
 
 - **Pros:** the public surface matches what callers can actually use; the
   provider/credential vocabulary is unambiguous; the ServiceNow URL has one
-  source, so callers stop setting it twice; and no consumer breaks when the
-  types they could not construct become unexported.
+  source, so callers stop setting it twice; and the types that become
+  unexported are ones callers could not construct.
 - **Cons:** renaming exported symbols is a breaking change, so it ships in a
   major release, and the documented `credentials.WithInstance(...)` call style
   disappears from the auth snippets.

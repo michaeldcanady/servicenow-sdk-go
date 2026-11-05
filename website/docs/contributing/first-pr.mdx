@@ -30,7 +30,7 @@ timeline
     0:45 : Branch, commit, push, open the PR
 ```
 
-## 0:00—Get a working environment (~10 min)
+## 0:00—Get a working environment (~10 min) {/* #000--get-a-working-environment-10-min */}
 
 The repository ships a dev container with mise preinstalled. mise installs
 Go, `golangci-lint`, and the other tools at the versions that CI uses.
@@ -46,7 +46,7 @@ Prefer your own toolchain, or want the details? The full
 [development setup](setup.md) covers both paths—but don't let it eat your
 hour; the container is the fast lane.
 
-## 0:10—Pick something small (~10 min)
+## 0:10—Pick something small (~10 min) {/* #010--pick-something-small-10-min */}
 
 Good first-hour targets, in rough order of speed:
 
@@ -66,7 +66,7 @@ blueprint or an ADR first. Open an issue to discuss it, ship something small
 today, and come back with the [playbook](add-api-module.md).
 :::
 
-## 0:20—Make the change (~15 min)
+## 0:20—Make the change (~15 min) {/* #020--make-the-change-15-min */}
 
 The one rule that covers almost everything: **match the shape of the code
 (or prose) around you.** Modules are deliberately structurally identical, so
@@ -83,7 +83,7 @@ the surrounding file is the style guide.
 - Fixing a bug? Write the test that fails first; it becomes your regression
   guard and your proof.
 
-## 0:35—Prove it (~10 min)
+## 0:35—Prove it (~10 min) {/* #035--prove-it-10-min */}
 
 Three commands, three green results:
 
@@ -101,7 +101,7 @@ To run every pull request check that works locally, including the mocked
 integration tests and the branch-name and title rules, run `mise run check`.
 Run it after you name your branch and commit in the next step.
 
-## 0:45—Ship it (~15 min)
+## 0:45—Ship it (~15 min) {/* #045--ship-it-15-min */}
 
 1.  **Branch** from `main` as `type/kebab-description`—for example,
     `docs/fix-auth-typo`, `fix/tableapi-nil-pointer`, `test/batch-error-rows`.
