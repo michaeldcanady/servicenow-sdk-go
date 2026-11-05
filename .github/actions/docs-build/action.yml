@@ -14,6 +14,9 @@
 #                         no analytics script is injected (local dev and PR
 #                         previews leave it unset). Never overload base-url
 #                         with this decision again.
+#   * archived-versions — comma-separated release lines with an archive on
+#                         gh-pages, such as "2.1,2.0". Empty means the site
+#                         shows no archive links.
 #
 # Expects the caller to have checked out the repository first. Build outputs
 # land in workspace `website/build` — callers consume them directly, no
@@ -28,6 +31,10 @@ inputs:
     default: /servicenow-sdk-go/
   analytics-domain:
     description: Domain passed to Plausible; empty disables analytics injection.
+    required: false
+    default: ""
+  archived-versions:
+    description: Comma-separated release lines with an archive, newest first.
     required: false
     default: ""
 
@@ -52,4 +59,5 @@ runs:
       env:
         DOCS_BASE_URL: ${{ inputs.base-url }}
         DOCS_ANALYTICS_DOMAIN: ${{ inputs.analytics-domain }}
+        DOCS_ARCHIVED_VERSIONS: ${{ inputs.archived-versions }}
       run: npm run build

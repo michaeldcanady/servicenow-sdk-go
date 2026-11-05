@@ -177,11 +177,11 @@ The `docs-archive` workflow builds and publishes each archive:
   `gh-pages` branch. A patch release replaces its line's archive, so your
   patch fixes to the docs reach the archive. The workflow ignores preview
   tags.
-- **When a tag starts a new minor line,** the workflow opens a
-  `chore(website):` PR that adds the line to
-  `website/archived-versions.json`. Merge that PR to add the line to the
-  version dropdown. The PR comes from the workflow token, so CI doesn't run
-  on it. Close and reopen the PR to run CI.
+- **After it publishes an archive,** the workflow redeploys the main site.
+  The stable deploy lists the `X.Y/` folders on `gh-pages`, so a new line
+  appears in the version dropdown and the banner without a PR. The redeploy
+  runs the same Vale and snippet checks as a merge to `main`, and it fails
+  if they fail.
 - **To archive or rebuild a line from an existing tag,** run the workflow
   from the Actions tab and enter the tag, such as `v2.1.1`. The workflow
   refuses a tag that isn't the newest patch of its line.
