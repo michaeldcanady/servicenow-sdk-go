@@ -105,5 +105,9 @@ jobs:
           branch: gh-pages
           folder: website/build
           clean: true
-          # Keep live PR previews intact on stable deploys.
-          clean-exclude: pr-preview/
+          # Keep live PR previews and the release archives that
+          # docs-archive.yml publishes (2.0/, 2.1/, and so on) intact on
+          # stable deploys.
+          clean-exclude: |
+            pr-preview/
+            /[0-9]*.[0-9]*/

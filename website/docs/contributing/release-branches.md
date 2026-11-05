@@ -163,40 +163,40 @@ one-tag-per-merge.
 
 ## Docs site versions
 
-The docs site keeps a frozen copy of the docs for each released minor line,
-selectable from the version dropdown in the top navigation. `main` is the
-default view; released lines live under a versioned prefix (`/2.0/` now,
-`/2.1/` when 2.1 ships).
+The docs site at `/servicenow-sdk-go/` shows the docs from `main`. Each
+released minor line has an archive: a frozen build of the docs site from
+that line's newest release tag, served under its own prefix, such as
+`/servicenow-sdk-go/2.1/`. The version dropdown in the top navigation links
+to each archive, and a banner on the `main` docs points to the newest one.
 
-The `docs-version` workflow automates this: when release-please tags a
-stable `vX.Y.Z` on `main` for a minor line without a snapshot, it cuts the
-version and opens a `chore(website):` PR—merge it in the release window.
-Preview tags, patch releases on existing lines, and older-major maintenance
-tags are skipped automatically.
+The `docs-archive` workflow publishes the archives:
 
-Fallback, or to cut one by hand:
+- **On a stable release tag:** When release-please pushes a stable `vX.Y.Z`
+  tag, the workflow builds the site from that tag and publishes it to the `X.Y/`
+  folder of the `gh-pages` branch. A patch release replaces its line's
+  archive, so patch fixes to the docs reach the archive. Preview tags are
+  skipped.
+- **On a new minor line:** If the line isn't in
+  `website/archived-versions.json` yet, the workflow opens a
+  `chore(website):` PR that adds it. Merge that PR to add the line to the
+  version dropdown.
+- **By hand:** To archive or rebuild a line from an existing tag, run the
+  workflow from the Actions tab and enter the tag, such as `v2.1.1`. The
+  workflow refuses a tag that isn't the newest patch of its line.
 
-```bash
-cd website
-node scripts/cut-docs-version.mjs 2.1   # released minor, no "v" prefix
-```
-
-This snapshots `docs/` and `sidebars.ts` into `versioned_docs/version-2.1/`,
-registers it in `versions.json`, and adds its dropdown entry to
-`docusaurus.config.ts`. Open the resulting changes in a `chore(website):` PR.
+The build uses the tag's own `docs/`, sidebars, components, and Go snippets,
+so an archive shows exactly what shipped with that release.
+`website/archive/docusaurus.archive.config.ts` wraps the tag's config to
+label the build, hide "Edit this page" links, and add the archive banner.
 
 Rules of thumb:
 
-- One docs version per **minor** line, not per patch—patch releases don't
-  warrant a new snapshot.
-- Versioned copies are frozen. Fix content bugs in `main`'s `docs/` first,
-  then apply the same fix to the relevant `versioned_docs/version-X.Y/`
-  copy, the same way code backports work. Frozen pages offer no
-  "Edit this page" link—every fix starts in `main`.
-- Go snippets in `website/snippets/` are shared across all versions—a
-  versioned page renders the *current* snippet source. If a snippet change
-  would mislead an older version's readers, cut the new docs version
-  *before* merging the snippet change.
+- One archive per **minor** line. The newest patch tag of the line builds it.
+- Archives are never edited. To fix a released line's docs, fix `docs/` on
+  the line's branch (`main`, or `release/vX.Y` after the line has moved on),
+  release a patch, and the patch tag rebuilds the archive.
+- The stable deploy keeps every folder named like `X.Y/` on `gh-pages`, so
+  publishing `main` never deletes an archive.
 
 ## Retiring a maintenance branch
 
