@@ -25,7 +25,7 @@ require (
 	github.com/hashicorp/golang-lru v1.0.2 // indirect
 	github.com/microsoft/kiota-serialization-form-go v1.1.6 // indirect
 	github.com/microsoft/kiota-serialization-json-go v1.1.5 // indirect
-	github.com/microsoft/kiota-serialization-multipart-go v1.1.4 // indirect
+	github.com/microsoft/kiota-serialization-multipart-go v1.1.5 // indirect
 	github.com/microsoft/kiota-serialization-text-go v1.1.6 // indirect
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
