@@ -352,6 +352,7 @@ const sidebars: SidebarsConfig = {
             'contributing/adrs/019-typed-tables',
             'contributing/adrs/020-record-scoped-resources',
             'contributing/adrs/021-best-effort-error-categorization',
+            'contributing/adrs/022-request-builder-guard-helper',
           ],
         },
       ],
