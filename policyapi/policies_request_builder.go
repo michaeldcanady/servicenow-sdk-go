@@ -32,7 +32,7 @@ func NewPolicyRequestBuilderInternal(
 
 // Mappings provides the way to access Service-Now's policy definitions API
 func (rB *PoliciesRequestBuilder) Mappings() *PoliciesMappingsRequestBuilder {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
+	if err := core.ValidateBuilder(rB); err != nil {
 		return nil
 	}
 
