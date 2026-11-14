@@ -17,6 +17,18 @@ type dummyRequestBuilder struct {
 	core.RequestBuilder
 }
 
+// Fixtures for Go's selector rule: outer.RequestBuilder resolves to the shallow
+// (nil) field, so the deeper valid builder must not satisfy the guard.
+type (
+	selectorLeaf    struct{ core.RequestBuilder }
+	selectorDeep    struct{ selectorLeaf }
+	selectorShallow struct{ core.RequestBuilder }
+	selectorOuter   struct {
+		selectorDeep
+		selectorShallow
+	}
+)
+
 func newDummyRequestBuilder() *dummyRequestBuilder {
 	return &dummyRequestBuilder{
 		RequestBuilder: core.NewBaseRequestBuilder(nil, "{+baseurl}/test", nil),
@@ -53,6 +65,15 @@ func TestValidateBuilder(t *testing.T) {
 			builder: &struct {
 				core.RequestBuilder
 			}{},
+			want: snerrors.ErrNilRequestBuilder,
+		},
+		{
+			name: "shallower nil builder wins over a deeper valid one (Go selector rule)",
+			builder: selectorOuter{
+				selectorDeep: selectorDeep{selectorLeaf{
+					RequestBuilder: core.NewBaseRequestBuilder(nil, "{+baseurl}/t", nil),
+				}},
+			},
 			want: snerrors.ErrNilRequestBuilder,
 		},
 		{
@@ -146,25 +167,4 @@ func newMockAdapter() abstractions.RequestAdapter {
 
 type mockRequestAdapter struct {
 	abstractions.RequestAdapter
-}
-
-// Go selects the shallowest promoted field, so a valid builder buried one level
-// deeper must not hide a nil builder that rB.RequestBuilder actually reaches.
-func TestValidateBuilderFollowsGoFieldSelection(t *testing.T) {
-	t.Parallel()
-
-	type leaf struct{ core.RequestBuilder }
-	type deep struct{ leaf }
-	type shallow struct{ core.RequestBuilder }
-	type outer struct {
-		deep
-		shallow
-	}
-
-	value := outer{
-		deep:    deep{leaf{RequestBuilder: core.NewBaseRequestBuilder(nil, "{+baseurl}/t", nil)}},
-		shallow: shallow{},
-	}
-
-	assert.ErrorIs(t, core.ValidateBuilder(value), snerrors.ErrNilRequestBuilder)
 }
