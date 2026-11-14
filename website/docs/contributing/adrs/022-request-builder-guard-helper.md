@@ -77,8 +77,8 @@ its existing position between other checks.
   the totality and differential-oracle properties are proven by an adversarial
   suite (`request_builder_guard_test.go`,
   `request_builder_guard_adversarial_test.go`) rather than asserted; future
-  modules stop hand-typing the guard (#632 exit criteria feeds the
-  `new-api-module` skill).
+  modules stop hand-typing the guard, and `docs/rules/R-BUILD-022.md` makes
+  the rule checkable.
 - **Cons:** the embedding contract ("field literally named `RequestBuilder`,
   interface kind") becomes load-bearing in runtime code, not just convention;
   reflection costs a small constant per call, irrelevant next to any HTTP

@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package core_test
 
 import (
@@ -105,7 +108,7 @@ func TestValidateBuilderSentinelIdentity(t *testing.T) {
 
 	require.Error(t, err)
 	assert.Same(t, snerrors.ErrNilRequestBuilder, err, "must reuse the shared sentinel by identity, never errors.New a lookalike")
-	assert.True(t, err == snerrors.ErrNilRequestBuilder, "exact identity is what makes errors.Is work across modules")
+	assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder, "exact identity is what makes errors.Is work across modules")
 }
 
 func TestValidateBuilderDoesNotPanicOnTypedNilChain(t *testing.T) {
@@ -143,4 +146,25 @@ func newMockAdapter() abstractions.RequestAdapter {
 
 type mockRequestAdapter struct {
 	abstractions.RequestAdapter
+}
+
+// Go selects the shallowest promoted field, so a valid builder buried one level
+// deeper must not hide a nil builder that rB.RequestBuilder actually reaches.
+func TestValidateBuilderFollowsGoFieldSelection(t *testing.T) {
+	t.Parallel()
+
+	type leaf struct{ core.RequestBuilder }
+	type deep struct{ leaf }
+	type shallow struct{ core.RequestBuilder }
+	type outer struct {
+		deep
+		shallow
+	}
+
+	value := outer{
+		deep:    deep{leaf{RequestBuilder: core.NewBaseRequestBuilder(nil, "{+baseurl}/t", nil)}},
+		shallow: shallow{},
+	}
+
+	assert.ErrorIs(t, core.ValidateBuilder(value), snerrors.ErrNilRequestBuilder)
 }
