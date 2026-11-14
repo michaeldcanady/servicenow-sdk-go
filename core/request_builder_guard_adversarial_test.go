@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package core_test
 
 // Adversarial suite for core.ValidateBuilder (request_builder_guard.go).
@@ -10,7 +13,6 @@ package core_test
 // determinism, documentation conformance.
 
 import (
-	"errors"
 	"testing"
 	"unsafe"
 
@@ -58,7 +60,7 @@ func assertOnlySentinelOrFail(t *testing.T, err error) {
 		return
 	}
 	assert.Same(t, snerrors.ErrNilRequestBuilder, err, "codomain violation: not the shared sentinel")
-	assert.True(t, errors.Is(err, snerrors.ErrNilRequestBuilder), "errors.Is must reach the shared sentinel")
+	assert.ErrorIs(t, err, snerrors.ErrNilRequestBuilder, "errors.Is must reach the shared sentinel")
 }
 
 // TestAdversarialValidateBuilderNeverPanics attacks claim 2 (totality).

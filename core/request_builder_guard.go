@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Michael Canady
+// SPDX-License-Identifier: MIT
+
 package core
 
 import (
@@ -61,7 +64,7 @@ func ValidateBuilder(builder any) error {
 		value = value.Elem()
 	}
 
-	if !hasEmbeddedRequestBuilder(value, 0) {
+	if !hasEmbeddedRequestBuilder(value) {
 		return snerrors.ErrNilRequestBuilder
 	}
 
@@ -70,50 +73,29 @@ func ValidateBuilder(builder any) error {
 
 // hasEmbeddedRequestBuilder reports whether value (a struct) carries an embedded
 // core.RequestBuilder satisfying the contract described on ValidateBuilder.
-func hasEmbeddedRequestBuilder(value reflect.Value, depth int) bool {
+//
+// The field is resolved with reflect's FieldByName, which applies Go's own
+// selector rules: the shallowest promoted RequestBuilder wins, and two at the
+// same depth are ambiguous (not found). That keeps the guard in step with what
+// rB.RequestBuilder actually selects, instead of accepting a deeper non-nil
+// field the selector never reaches.
+func hasEmbeddedRequestBuilder(value reflect.Value) bool {
 	if value.Kind() != reflect.Struct {
 		return false
 	}
 
-	structType := value.Type()
-
-	for i := 0; i < structType.NumField(); i++ {
-		if structType.Field(i).Name != "RequestBuilder" {
-			continue
-		}
-
-		field := value.Field(i)
-
-		return field.Kind() == reflect.Interface && !isNilValue(field)
-	}
-
-	if depth >= maxEmbedDepth {
+	field, ok := value.Type().FieldByName("RequestBuilder")
+	if !ok || len(field.Index) > maxEmbedDepth+1 {
 		return false
 	}
 
-	for i := 0; i < structType.NumField(); i++ {
-		fieldType := structType.Field(i)
-		if !fieldType.Anonymous {
-			continue
-		}
-
-		field := value.Field(i)
-
-		switch {
-		case fieldType.Type.Kind() == reflect.Struct:
-			if hasEmbeddedRequestBuilder(field, depth+1) {
-				return true
-			}
-		case fieldType.Type.Kind() == reflect.Pointer &&
-			fieldType.Type.Elem().Kind() == reflect.Struct &&
-			!isNilValue(field):
-			if hasEmbeddedRequestBuilder(field.Elem(), depth+1) {
-				return true
-			}
-		}
+	// FieldByIndexErr reports a nil embedded pointer on the path instead of panicking.
+	resolved, err := value.FieldByIndexErr(field.Index)
+	if err != nil {
+		return false
 	}
 
-	return false
+	return resolved.Kind() == reflect.Interface && !isNilValue(resolved)
 }
 
 // isNilValue reports whether v is nil at the value level: either a nilable-kind
