@@ -28,7 +28,7 @@ require (
 	github.com/microsoft/kiota-serialization-multipart-go v1.1.6 // indirect
 	github.com/microsoft/kiota-serialization-text-go v1.1.7 // indirect
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect
-	github.com/spf13/pflag v1.0.10 // indirect
+	github.com/spf13/pflag v1.1.0 // indirect
 	github.com/std-uritemplate/std-uritemplate/go/v2 v2.0.13 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/otel v1.47.0 // indirect
@@ -36,7 +36,7 @@ require (
 	go.opentelemetry.io/otel/metric v1.47.0 // indirect
 	go.opentelemetry.io/otel/trace v1.47.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.6 // indirect
-	golang.org/x/sys v0.49.0 // indirect
+	golang.org/x/sys v0.50.0 // indirect
 )
 
 replace github.com/michaeldcanady/servicenow-sdk-go/v2 => ../../../
