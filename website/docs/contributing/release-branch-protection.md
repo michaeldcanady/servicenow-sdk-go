@@ -172,8 +172,7 @@ The human spec lists a repository-admin bypass for emergency use. The
 
 ## What workflows already cover (no admin action needed)
 
-- `branch-policy.yml`: branch naming (`backport/…` heads are exempt as
-  automation) and linked-issue checks now run on `release/**` PRs.
+- `branch-policy.yml`: the linked-issue check now runs on `release/**` PRs.
 - `pr.yml`: PR title lint already targeted `main` and `release/**`.
 - `codeql.yml`: analyzes `release/**` PRs too, so "CodeQL" can report on
   maintenance-line merges (a required check must first be able to appear).
