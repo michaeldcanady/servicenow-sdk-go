@@ -24,7 +24,7 @@
   },
   "remoteUser": "vscode",
   "updateContentCommand": "go mod download",
-  "postCreateCommand": "mise trust && mise install && (grep -qsF 'mise activate bash' ~/.bashrc || echo 'eval \"$(mise activate bash)\"' >> ~/.bashrc)",
+  "postCreateCommand": "mise trust && mise install && mise run hooks:install && (grep -qsF 'mise activate bash' ~/.bashrc || echo 'eval \"$(mise activate bash)\"' >> ~/.bashrc)",
   "features": {
     "ghcr.io/nerdit-tech/devcontainer-features/xdg-utils:1": {
       "hostBrowserPipePath": "/tmp/hostbrowserpipe",
