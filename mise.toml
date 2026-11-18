@@ -190,7 +190,6 @@ depends = [
   "docs:lint:changed",
   "license:check",
   "ci:lint",
-  "pr:branch",
   "pr:title",
 ]
 

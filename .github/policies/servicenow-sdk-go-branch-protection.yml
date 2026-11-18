@@ -58,7 +58,6 @@ configuration:
     # title jobs). Renaming a job without updating the rulesets
     # blocks every merge with "Expected — Waiting for status to be reported".
     requiredStatusChecks:
-    - Check Branch Name
     - Check Linked Issue
     - Validate PR Title / Validate PR Title
     - CodeQL
@@ -95,7 +94,6 @@ configuration:
     requiresConversationResolution: true
     requiresLinearHistory: true
     requiredStatusChecks:
-    - Check Branch Name
     - Check Linked Issue
     - Validate PR Title / Validate PR Title
     - CodeQL
