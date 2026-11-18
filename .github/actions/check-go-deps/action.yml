@@ -34,7 +34,7 @@ runs:
         INPUT_PACKAGE_PATH: ${{ inputs.package-path }}
 
     - name: Set up Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
       with:
         go-version-file: ${{ steps.resolve-mod-path.outputs.MOD_PATH }}
         go-version: ${{ inputs.go-version }}
