@@ -70,7 +70,7 @@ branches (maintainer decision, 2026-08-21):
    change up or by recording an explicit "won't port" rationale.
 6. **Releases off maintenance lines are batched and demand-driven**, driven
    by Conventional Commits through a second release-please configuration
-   scoped to `release/v*` refs. Weekly preview releases remain `main`-only.
+   scoped to `release/v*` refs.
    `VERSION` and `CHANGELOG.md` stay release-please-owned on every branch—never hand-edited.
 7. **EOL policy:** vocabulary—*current* means the highest tagged major,
    *prior* any tagged major below it. The current major's latest minor
