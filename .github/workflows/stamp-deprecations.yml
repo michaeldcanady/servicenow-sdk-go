@@ -15,11 +15,8 @@ name: Stamp Deprecated Notices
 # {unreleased} never ships in a tagged maintenance line. Base-branch caveat:
 # GitHub evaluates this file from the PR's base ref, so lines cut before this
 # filter landed need the updated file synced onto them via PR.
-# Weekly preview releases are intentionally NOT stamped; placeholders survive
-# preview cycles until the next stable release stamps them. Both release flows
-# use the same `release-please--` branch prefix, so the discriminator is the
-# VERSION content: only a full-line strict `x.y.z` (stable) is stamped, while a
-# prerelease version (e.g. `2.0.3-rc.1`) skips cleanly.
+# Only a full-line strict `x.y.z` in VERSION is stamped. Any other VERSION
+# content (for example `2.0.3-rc.1`) skips cleanly.
 
 on:
   pull_request:
@@ -65,11 +62,10 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          # End-anchored strict semver only. Weekly preview branches carry a
-          # prerelease VERSION, so no match -> skip cleanly (placeholders survive
-          # preview cycles by design) rather than leaving the check red.
+          # End-anchored strict semver only. No match -> skip cleanly rather
+          # than leaving the check red.
           if [ -z "$VERSION" ]; then
-            echo "::notice::No stable x.y.z line in VERSION (weekly preview or missing); skipping stamp."
+            echo "::notice::No stable x.y.z line in VERSION (prerelease or missing); skipping stamp."
             exit 0
           fi
           # Guard the value before it reaches shell/sed contexts; with digits and

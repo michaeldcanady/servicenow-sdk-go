@@ -30,7 +30,7 @@ the actual pipeline before touching it:
 
 - `.github/workflows/` — CI, PR checks, and release automation. Key flows:
   `ci.yml`, `pr.yml`, `release-verify.yml`, `stable-release.yml`,
-  `weekly-release.yml`, `backport.yml` / `forward-port-tracker.yml`
+  `backport.yml` / `forward-port-tracker.yml`
   (ADR 011), `stamp-deprecations.yml`, `e2e-nightly.yml`, `labeler.yml`,
   `stale-issues.yml`, `codeql.yml`, `scorecard.yml`, plus docs publishing
   and status-sync workflows.

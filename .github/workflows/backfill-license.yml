@@ -19,8 +19,7 @@ name: License Header Backfill
 on:
   workflow_dispatch:
   schedule:
-    # Weekly Tuesday 06:00 UTC — clear of CI weekly (Tue 03:00), the weekly
-    # release (Mon 03:00), Scorecard (Mon 01:30), zizmor (Mon 05:00),
+    # Weekly Tuesday 06:00 UTC — clear of CI weekly (Tue 03:00), Scorecard (Mon 01:30), zizmor (Mon 05:00),
     # e2e-nightly (daily 04:00), the stale bot (daily 05:30), and
     # CodeQL (Fri 03:00).
     - cron: "0 6 * * 2"

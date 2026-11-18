@@ -18,9 +18,8 @@ MAY: Phase in `repository_dispatch` emitters alongside the in-band calls.
 ## Verify
 
 ```bash
-# Both releasing workflows must still call SBOM in-band. Fails closed if either file is missing.
-grep -qE 'uses:\s*\./\.github/workflows/sbom\.yml' .github/workflows/stable-release.yml \
-  && grep -qE 'uses:\s*\./\.github/workflows/sbom\.yml' .github/workflows/weekly-release.yml
+# The releasing workflow must still call SBOM in-band. Fails closed if the file is missing.
+grep -qE 'uses:\s*\./\.github/workflows/sbom\.yml' .github/workflows/stable-release.yml
 ```
 
 ## Rationale

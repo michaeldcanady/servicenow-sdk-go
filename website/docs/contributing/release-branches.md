@@ -175,7 +175,7 @@ The `docs-archive` workflow builds and publishes each archive:
 - **When release-please pushes a stable `vX.Y.Z` tag,** the workflow builds
   the site from that tag and publishes it to the `X.Y/` folder of the
   `gh-pages` branch. A patch release replaces its line's archive, so your
-  patch fixes to the docs reach the archive. The workflow ignores preview
+  patch fixes to the docs reach the archive. The workflow ignores prerelease
   tags.
 - **After it publishes an archive,** the workflow redeploys the main site.
   The stable deploy lists the `X.Y/` folders on `gh-pages`, so a new line
