@@ -11,7 +11,7 @@ on:
       - "release/**"
   workflow_dispatch:
   schedule:
-    - cron: "0 5 * * 1" # Weekly Monday 05:00 UTC — after Scorecard (01:30), release (03:00), CI (Tue 03:00)
+    - cron: "0 5 * * 1" # Weekly Monday 05:00 UTC — after Scorecard (01:30), CI (Tue 03:00)
 
 permissions: {}
 

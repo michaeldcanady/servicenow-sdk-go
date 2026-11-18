@@ -8,7 +8,7 @@ name: Release Verify
 # yank or patch the release immediately.
 #
 # This workflow runs two ways:
-# - workflow_call: Stable Release and Weekly Preview Release call it in-band
+# - workflow_call: Stable Release calls it in-band
 #   after the release-please step, passing the tag that run created. This is
 #   how release-please-created tags get verified. release-please creates tags
 #   as GitHub Actions using the default token, and GitHub does not start new

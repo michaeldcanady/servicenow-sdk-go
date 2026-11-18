@@ -57,9 +57,9 @@ Alternatives considered:
 ## Decision
 
 Couple release-please's follow-on work to the releasing workflow in-band.
-The releasing workflows (`stable-release.yml`, `weekly-release.yml`) publish
-`release_created` and `tag_name` outputs from their release-please jobs, then
-call each dependent as a reusable workflow via
+The releasing workflow (`stable-release.yml`) publishes
+`release_created` and `tag_name` outputs from its release-please job, then
+calls each dependent as a reusable workflow via
 `uses: ./.github/workflows/<name>.yml` with a `tag` input, gated on
 `release_created == 'true'`. The pattern covers:
 
@@ -87,7 +87,6 @@ v2.0.3 and v2.0.2.
 - **Rule for future release questions:** don't add `release: published` or
   `push tags v*` triggers for releases that release-please creates with the
   default token—the trigger is dead on arrival. Add the work as a reusable
-  `workflow_call` workflow and invoke it from `stable-release.yml` and
-  `weekly-release.yml`. Revisit this rule only under the conditions in
+  `workflow_call` workflow and invoke it from `stable-release.yml`. Revisit this rule only under the conditions in
   [ADR 013](013-event-driven-release-dispatch.md), which may supersede this
   record.

@@ -151,6 +151,10 @@ run = "./scripts/add-license.sh"
 description = "Check that in-scope source files carry license headers"
 run = "./scripts/add-license.sh --check-only"
 
+[tasks."hooks:install"]
+description = "Install the git pre-commit hook that adds license headers to staged files"
+run = "git config core.hooksPath .githooks"
+
 # CI configuration
 
 [tasks."ci:lint"]
