@@ -15,8 +15,9 @@ name: Stamp Deprecated Notices
 # {unreleased} never ships in a tagged maintenance line. Base-branch caveat:
 # GitHub evaluates this file from the PR's base ref, so lines cut before this
 # filter landed need the updated file synced onto them via PR.
-# Only a full-line strict `x.y.z` in VERSION is stamped. Any other VERSION
-# content (for example `2.0.3-rc.1`) skips cleanly.
+# After spaces and carriage returns are removed, the first line in VERSION that
+# is a strict `x.y.z` is stamped. Other lines, such as `2.0.3-rc.1`, are
+# ignored. A VERSION with no such line skips cleanly.
 
 on:
   pull_request:
