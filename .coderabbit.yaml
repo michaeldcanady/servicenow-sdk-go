@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Michael Canady
+# SPDX-License-Identifier: MIT
+
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 #
 # CodeRabbit reviews pull requests in this repository. It replaces the
