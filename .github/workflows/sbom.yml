@@ -1,8 +1,8 @@
 name: Generate SBOM
 
 # Generates and attaches an SPDX SBOM to the GitHub release for a published
-# version tag. Runs as a reusable workflow, called by Stable Release and
-# Weekly Preview Release after release-please has created the tag and release
+# version tag. Runs as a reusable workflow, called by Stable Release
+# after release-please has created the tag and release
 # in the same workflow run, and available as workflow_dispatch for backfilling
 # older releases (for example v2.0.3, which predates this flow).
 #

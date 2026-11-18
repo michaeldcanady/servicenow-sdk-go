@@ -2,8 +2,7 @@ name: CI
 on:
   workflow_dispatch:
   # Run the full matrix weekly, independent of PR activity. Tuesdays 03:00 UTC
-  # avoids Scorecard (Mon 01:30), the weekly release (Mon 03:00), e2e-nightly
-  # (daily 04:00), the stale bot (daily 05:30), and CodeQL (Fri 03:00).
+  # avoids Scorecard (Mon 01:30), e2e-nightly (daily 04:00), the stale bot (daily 05:30), and CodeQL (Fri 03:00).
   schedule:
     - cron: "0 3 * * 2"
   push:
