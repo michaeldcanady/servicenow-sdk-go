@@ -86,7 +86,7 @@ failure before you push:
   lint, unit tests on both Go releases that CI tests, mocked integration tests,
   the Go dependency and vulnerability checks, the docs snippet check, Vale on
   your changed Markdown files, the license-header check, the CI configuration
-  linters, and the branch-name and pull request title rules.
+  linters, and the pull request title rule.
 - `mise run check:all` also runs the checks that run after merge: Vale on the
   whole docs site, and the docs build.
 
