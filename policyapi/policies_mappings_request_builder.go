@@ -35,8 +35,8 @@ func NewPoliciesMappingsRequestBuilderInternal(
 
 // Delete removes a policy mapping.
 func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) error {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return snerrors.ErrNilRequestBuilder
+	if err := core.ValidateBuilder(rB); err != nil {
+		return err
 	}
 
 	if conversion.IsNil(requestConfiguration) {
@@ -74,8 +74,8 @@ func (rB *PoliciesMappingsRequestBuilder) Delete(ctx context.Context, requestCon
 
 // Post creates a new policy mapping.
 func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (core.ServiceNowItemResponse[*PoliciesMapping], error) {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, snerrors.ErrNilRequestBuilder
+	if err := core.ValidateBuilder(rB); err != nil {
+		return nil, err
 	}
 
 	if conversion.IsNil(requestConfiguration) {
@@ -127,8 +127,8 @@ func (rB *PoliciesMappingsRequestBuilder) Post(ctx context.Context, requestConfi
 
 // ToPostRequestInformation builds the request information for the Post method.
 func (rB *PoliciesMappingsRequestBuilder) ToPostRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsRequestBuilderPostRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, snerrors.ErrNilRequestBuilder
+	if err := core.ValidateBuilder(rB); err != nil {
+		return nil, err
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.POST, rB.GetURLTemplate(), rB.GetPathParameters())
@@ -141,8 +141,8 @@ func (rB *PoliciesMappingsRequestBuilder) ToPostRequestInformation(_ context.Con
 
 // ToDeleteRequestInformation builds the request information for the Delete method.
 func (rB *PoliciesMappingsRequestBuilder) ToDeleteRequestInformation(_ context.Context, requestConfiguration *PoliciesMappingsRequestBuilderDeleteRequestConfiguration) (*abstractions.RequestInformation, error) {
-	if conversion.IsNil(rB) || conversion.IsNil(rB.RequestBuilder) {
-		return nil, snerrors.ErrNilRequestBuilder
+	if err := core.ValidateBuilder(rB); err != nil {
+		return nil, err
 	}
 
 	requestInfo := abstractions.NewRequestInformationWithMethodAndUrlTemplateAndPathParameters(abstractions.DELETE, rB.GetURLTemplate(), rB.GetPathParameters())
