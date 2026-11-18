@@ -1,0 +1,10 @@
+#!/bin/bash
+# Copyright (c) 2026 Michael Canady
+# SPDX-License-Identifier: MIT
+
+# Adds license headers to staged source files before each commit, so the
+# license-check workflow has nothing to report. Install with
+# `mise run hooks:install`. Bypass in an emergency with `git commit --no-verify`.
+set -euo pipefail
+
+exec "$(git rev-parse --show-toplevel)/scripts/add-license.sh" --staged

@@ -25,7 +25,7 @@ The repository ships a dev-container definition with
 [mise](https://mise.jdx.dev/) and the editor extensions already installed.
 When the container is created, it runs `mise install`, which installs Go,
 `golangci-lint`, Vale, and every other tool at the versions that CI uses, and
-it activates mise in bash.
+it installs the pre-commit hook and activates mise in bash.
 
 1.  Install [Docker](https://www.docker.com/get-started/) or
     [Podman](https://podman.io/), plus the
@@ -49,8 +49,13 @@ git clone https://github.com/YOUR_USERNAME/servicenow-sdk-go.git
 cd servicenow-sdk-go
 mise trust
 mise install
+mise run hooks:install
 go mod download
 ```
+
+The `hooks:install` task installs a pre-commit hook. When you commit, the hook
+adds a license header to each staged `.go`, `.sh`, and root YAML file that
+lacks one, and stages the result. The dev container installs the hook for you.
 
 If you don't want to use mise, install Go 1.26 or later and
 [golangci-lint](https://golangci-lint.run/usage/install/). The plain `go` and
