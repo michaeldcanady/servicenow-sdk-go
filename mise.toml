@@ -32,7 +32,8 @@ zizmor = "1.29.0"
 # CI installs the latest tparse (.github/actions/install-tparse).
 "go:github.com/mfridman/tparse" = "0.18.0"
 
-# Not run in CI yet. Used by the local ci:lint task.
+# Used by the ci:lint and ci:lint:static tasks. CI installs these two pins
+# for the "Lint workflows and scripts" job in zizmor.yml.
 actionlint = "1.7.12"
 shellcheck = "0.11.0"
 
@@ -159,14 +160,21 @@ run = "git config core.hooksPath .githooks"
 
 [tasks."ci:lint"]
 description = "Run zizmor, actionlint, and shellcheck on the CI configuration and scripts"
-# CI runs zizmor with these settings (reusable-zizmor.yaml). actionlint and
-# shellcheck don't run in CI yet, so they fail only on warnings and errors.
-# Set GH_TOKEN to run the zizmor audits that need the GitHub API, as CI does.
-env = { SHELLCHECK_OPTS = "--severity=warning" }
+# CI runs zizmor with these settings (reusable-zizmor.yaml). Set GH_TOKEN to
+# run the zizmor audits that need the GitHub API, as CI does.
 run = [
   "zizmor --persona=auditor --collect=all --min-severity=informational --min-confidence=low .",
+  "mise run ci:lint:static",
+]
+
+[tasks."ci:lint:static"]
+description = "Run actionlint and shellcheck, as the CI lint job does"
+# The CI job in zizmor.yml runs this task, so local and CI cover the same
+# files. shellcheck fails only on warnings and errors.
+env = { SHELLCHECK_OPTS = "--severity=warning" }
+run = [
   "actionlint",
-  "shellcheck scripts/*.sh .mise/tasks/pr/* .mise/tasks/docs/lint/*",
+  "shellcheck scripts/*.sh .githooks/* .mise/tasks/pr/* .mise/tasks/docs/lint/*",
 ]
 
 # Pre-push checks
