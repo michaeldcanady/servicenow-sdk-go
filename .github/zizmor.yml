@@ -7,26 +7,15 @@
 #   zizmor .github --persona auditor --min-severity informational --min-confidence low --collect all
 #
 # That gate must pin the zizmor version and fail on any finding, so a config
-# regression (for example this allow-list being dropped or renamed by a future
+# regression (for example this policy file being dropped or renamed by a future
 # zizmor release) is caught loudly instead of silently letting findings
 # reappear.
 #
-# The repository is audited clean at the configuration above (0 findings); the
+# The repository is audited clean (0 findings); the
 # only exceptions are the inline `# zizmor: ignore[...]` comments documented
 # below.
 #
-# secrets-outside-env: PROJECT_PAT is a repository-level secret used as an API
-# credential for Projects v2 sync -- not a deployment secret. It is scoped to a
-# single step's `env` and is never exposed to default-checked-out code.
-# Allowing it here (per secret name) is the zizmor-blessed alternative to
-# scattered per-site `# zizmor: ignore[secrets-outside-env]` comments.
-rules:
-  secrets-outside-env:
-    config:
-      allow:
-        - PROJECT_PAT
-
-# Inline ignores still required at the audit configuration above:
+# Inline ignores still required:
 #
 # - cache-poisoning x6 (ci.yml setup-go steps): the module cache is retained
 #   for CI speed. setup-go saves caches only on default-branch refs; PR/fork
