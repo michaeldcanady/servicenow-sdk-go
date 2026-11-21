@@ -57,6 +57,7 @@ func errorsGuideSentinels(err error) {
 	// [START errors_sentinels]
 	if errors.Is(err, snerrors.ErrNilRequestBuilder) {
 		// The builder chain was constructed from a nil client.
+		log.Print("request builder chain has a nil client")
 	}
 	// [END errors_sentinels]
 }

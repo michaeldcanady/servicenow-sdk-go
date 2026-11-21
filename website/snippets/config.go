@@ -7,6 +7,7 @@ package snippets
 
 // [START config_imports]
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -28,7 +29,9 @@ func (m *myLoggingMiddleware) Intercept(
 ) (*http.Response, error) {
 	start := time.Now()
 	resp, err := pipeline.Next(req, middlewareIndex)
-	log.Printf("%s %s -> %v (%s)", req.Method, req.URL.Path, err, time.Since(start))
+	// The %q verb escapes control characters, so request data can't inject
+	// extra lines into your logs. gosec can't see that, so it needs the nolint.
+	log.Printf("%q %q -> %q (%s)", req.Method, req.URL.Path, fmt.Sprint(err), time.Since(start)) //nolint:gosec // G706: every tainted value is quoted with %q.
 	return resp, err
 }
 
