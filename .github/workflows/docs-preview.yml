@@ -8,8 +8,11 @@
 #     changing them must re-run checks (this file watches them) but produces
 #     no new site output, so detect-changes below excludes them and a
 #     rules-only PR never publishes a pointless preview.
-#   * Whole-repo prose scanning never gates a PR — PRs lint changed files
-#     only (#666); drift in untouched files is caught at the stable gate.
+#   * Whole-repo prose scanning does not gate an ordinary PR — PRs lint
+#     changed files only (#666); drift in untouched files is caught at the
+#     stable gate. The exception is a Vale configuration change (.vale.ini,
+#     .github/styles/**, or the pinned Vale version): it can change the result
+#     for every file, so lint-md scans the whole site.
 #     A dispatch run CAN scan the full site, so the exact stable scoping can
 #     be proven by hand before relying on it (#683).
 #
@@ -32,7 +35,11 @@ on:
       - ".vale.ini"
       - ".github/actions/check-snippet-regions/**"
       - ".github/workflows/docs-preview.yml"
+      - ".github/styles/**"
+      - ".github/workflows/reusable-docs-build.yaml"
+      - ".github/workflows/reusable-docs-gate.yaml"
       - ".github/actions/docs-build/**"
+      - ".github/actions/list-docs-archives/**"
       - ".github/actions/vet-go-snippets/**"
       - ".github/actions/check-snippet-regions/**"
 
@@ -54,6 +61,7 @@ jobs:
     outputs:
       docs: ${{ steps.diff.outputs.any_changed }}
       markdown: ${{ steps.changed-md.outputs.any_changed }}
+      vale-config: ${{ steps.vale-config.outputs.any_changed }}
       markdown-files: ${{ steps.changed-md.outputs.all_changed_files }}
     steps:
       # Local actions resolve from the workspace, so something must be checked
@@ -84,6 +92,20 @@ jobs:
         with:
           checkout: "false"
 
+      # A change to the Vale rules or the pinned Vale version can change the
+      # result for any file, so it needs a whole-site scan. The version pin
+      # lives in this file and in reusable-docs-gate.yaml.
+      - name: Detect Vale configuration changes
+        id: vale-config
+        uses: ./.github/actions/detect-changes
+        with:
+          checkout: "false"
+          files: |
+            .vale.ini
+            .github/styles/**
+            .github/workflows/docs-preview.yml
+            .github/workflows/reusable-docs-gate.yaml
+
   lint-md:
     name: lint-md
     runs-on: ubuntu-latest
@@ -92,7 +114,10 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read # checkout and Vale lint
-    if: github.event.action != 'closed' && needs.detect-changes.outputs.markdown == 'true'
+    if: >-
+      github.event.action != 'closed' &&
+      (needs.detect-changes.outputs.markdown == 'true' ||
+      needs.detect-changes.outputs.vale-config == 'true')
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -100,10 +125,23 @@ jobs:
           persist-credentials: false
 
       - name: Vale Linter (changed content)
+        if: needs.detect-changes.outputs.vale-config != 'true'
         uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # v3.0.0
         with:
           fail_on_error: true
           files: ${{ needs.detect-changes.outputs.markdown-files }}
+          separator: ","
+          level: error
+          version: 3.18.0
+
+      # Same scope as the stable gate (reusable-docs-gate.yaml), so a rule
+      # change can't pass here and fail after the merge.
+      - name: Vale Linter (full site)
+        if: needs.detect-changes.outputs.vale-config == 'true'
+        uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff # v3.0.0
+        with:
+          fail_on_error: true
+          files: website/docs
           separator: ","
           level: error
           version: 3.18.0

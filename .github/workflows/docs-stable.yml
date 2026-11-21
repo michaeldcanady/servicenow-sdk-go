@@ -129,20 +129,14 @@ jobs:
           persist-credentials: false
 
       # The X.Y/ folders on gh-pages are the release archives. The version
-      # dropdown and the banner list them, newest first.
+      # dropdown and the banner list them, newest first. The PR docs build
+      # calls the same action, so a PR build matches this one.
       - name: List release archives
         id: archives
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-        run: |
-          set -euo pipefail
-          lines="$(gh api "repos/${REPO}/contents?ref=gh-pages" \
-            --jq '.[] | select(.type == "dir") | .name' \
-            | { grep -E '^[0-9]+\.[0-9]+$' || true; } \
-            | sort -rV | paste -sd, -)"
-          echo "Release archives: ${lines:-none}"
-          echo "lines=${lines}" >> "$GITHUB_OUTPUT"
+        uses: ./.github/actions/list-docs-archives
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
 
       - name: Build site
         uses: ./.github/actions/docs-build

@@ -35,11 +35,22 @@ jobs:
         with:
           persist-credentials: false
 
+      # Production passes the release archives to the build. Pass the same
+      # value here, so a docs change that breaks with archive links fails on
+      # the PR instead of after the merge.
+      - name: List release archives
+        id: archives
+        uses: ./.github/actions/list-docs-archives
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+
       - name: Build site
         uses: ./.github/actions/docs-build
         with:
           base-url: ${{ inputs.base-url }}
           analytics-domain: ${{ inputs.analytics-domain }}
+          archived-versions: ${{ steps.archives.outputs.lines }}
 
       - name: Upload site artifact
         if: ${{ inputs.upload-artifact }}
