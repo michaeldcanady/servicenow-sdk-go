@@ -15,13 +15,7 @@
 # only exceptions are the inline `# zizmor: ignore[...]` comments documented
 # below.
 #
-# secrets-outside-env: PROJECT_PAT is a repository-level secret used as an API
-# credential for Projects v2 sync -- not a deployment secret. It is scoped to a
-# single step's `env` and is never exposed to default-checked-out code.
-# Allowing it here (per secret name) is the zizmor-blessed alternative to
-# scattered per-site `# zizmor: ignore[secrets-outside-env]` comments.
-#
-# GPG_SIGNING_KEY is a repository-level passphrase-less tag-signing key for
+# secrets-outside-env: GPG_SIGNING_KEY is a repository-level passphrase-less tag-signing key for
 # sign-release.yml. It exists only in repository secrets (value is masked by
 # GitHub), is consumed only inside the sign-tag job's shell steps, and is
 # never exposed to default-checked-out code. It cannot live in a job-level
@@ -30,7 +24,6 @@ rules:
   secrets-outside-env:
     config:
       allow:
-        - PROJECT_PAT
         - GPG_SIGNING_KEY
 
 # Inline ignores still required at the audit configuration above:
