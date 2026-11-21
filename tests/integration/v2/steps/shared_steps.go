@@ -63,7 +63,7 @@ func iHaveInitializedTheClient(ctx context.Context) (context.Context, error) {
 func theResponseShouldNotBeAnError(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 	if w.Err != nil {
-		return ctx, fmt.Errorf("expected no error, got: %v", w.Err)
+		return ctx, fmt.Errorf("expected no error, got: %w", w.Err)
 	}
 	return ctx, nil
 }
@@ -87,7 +87,7 @@ func theResponseShouldBeAnAPIError(ctx context.Context) (context.Context, error)
 func authenticationShouldSucceed(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 	if w.AuthErr != nil {
-		return ctx, fmt.Errorf("expected authentication to succeed, got: %v", w.AuthErr)
+		return ctx, fmt.Errorf("expected authentication to succeed, got: %w", w.AuthErr)
 	}
 	return ctx, nil
 }
@@ -144,7 +144,7 @@ func theErrorMessageShouldIndicateMissingParameters(ctx context.Context) (contex
 func allRequestsShouldSucceed(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 	if w.Err != nil {
-		return ctx, fmt.Errorf("expected all requests to succeed, but got: %v", w.Err)
+		return ctx, fmt.Errorf("expected all requests to succeed, but got: %w", w.Err)
 	}
 	return ctx, nil
 }
@@ -152,7 +152,7 @@ func allRequestsShouldSucceed(ctx context.Context) (context.Context, error) {
 func theRevocationShouldSucceed(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 	if w.RevocationErr != nil {
-		return ctx, fmt.Errorf("expected revocation to succeed, got: %v", w.RevocationErr)
+		return ctx, fmt.Errorf("expected revocation to succeed, got: %w", w.RevocationErr)
 	}
 	return ctx, nil
 }

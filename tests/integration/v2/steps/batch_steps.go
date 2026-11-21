@@ -158,7 +158,7 @@ func (s *batchSteps) theBatchResponseShouldContainAtLeastServicedRequests(ctx co
 
 	serviced, err := batchResp.GetServicedRequests()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get serviced requests: %v", err)
+		return ctx, fmt.Errorf("failed to get serviced requests: %w", err)
 	}
 
 	if len(serviced) < minCount {
@@ -181,13 +181,13 @@ func (s *batchSteps) allBatchServicedRequestsShouldHaveSuccessfulStatusCodes(ctx
 
 	serviced, err := batchResp.GetServicedRequests()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get serviced requests: %v", err)
+		return ctx, fmt.Errorf("failed to get serviced requests: %w", err)
 	}
 
 	for i, req := range serviced {
 		code, err := req.GetStatusCode()
 		if err != nil {
-			return ctx, fmt.Errorf("failed to get status code for request %d: %v", i, err)
+			return ctx, fmt.Errorf("failed to get status code for request %d: %w", i, err)
 		}
 		if code == nil {
 			return ctx, fmt.Errorf("status code is nil for request %d", i)

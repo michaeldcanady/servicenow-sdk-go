@@ -3,6 +3,7 @@
 
 package mockdata
 
+//nolint:gosec // mock value
 var TokenResponse = `{
   "access_token": "mock_access_token_abc123",
   "token_type": "Bearer",
@@ -11,6 +12,7 @@ var TokenResponse = `{
   "scope": "user_role"
 }`
 
+//nolint:gosec // mock value
 var RefreshTokenResponse = `{
   "access_token": "mock_refreshed_access_token_def456",
   "token_type": "Bearer",
@@ -19,6 +21,7 @@ var RefreshTokenResponse = `{
   "scope": "user_role"
 }`
 
+//nolint:gosec // mock value
 var TokenErrorResponse = `{
   "error": "invalid_grant",
   "error_description": "The provided credentials are invalid."

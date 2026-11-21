@@ -51,7 +51,10 @@ func (s *accountSteps) iRequestAccountsWithQuery(ctx context.Context, query stri
 func (s *accountSteps) iRequestAccountsWithLimit(ctx context.Context, limit int) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 
-	l := int32(limit)
+	l, err := support.ToInt32(limit)
+	if err != nil {
+		return ctx, err
+	}
 	cfg := &accountapi.AccountRequestBuilderGetRequestConfiguration{
 		QueryParameters: &accountapi.AccountRequestBuilderGetQueryParameters{
 			Limit: &l,
@@ -71,7 +74,10 @@ func (s *accountSteps) iRequestAccountsWithLimit(ctx context.Context, limit int)
 func (s *accountSteps) iHaveAtLeastAccountInTheInstance(ctx context.Context, count int) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 
-	limit := int32(count)
+	limit, err := support.ToInt32(count)
+	if err != nil {
+		return ctx, err
+	}
 	cfg := &accountapi.AccountRequestBuilderGetRequestConfiguration{
 		QueryParameters: &accountapi.AccountRequestBuilderGetQueryParameters{
 			Limit: &limit,
@@ -84,9 +90,9 @@ func (s *accountSteps) iHaveAtLeastAccountInTheInstance(ctx context.Context, cou
 		return support.WithWorld(ctx, w), nil
 	}
 
-	colResp, ok := resp.(accountapi.AccountCollectionResponse)
-	if !ok {
-		w.Err = fmt.Errorf("unexpected response type: %T", resp)
+	colResp := resp
+	if colResp == nil {
+		w.Err = fmt.Errorf("unexpected nil response")
 		return support.WithWorld(ctx, w), nil
 	}
 
@@ -164,7 +170,7 @@ func (s *accountSteps) theAccountResultsShouldContainAtLeastRecords(ctx context.
 
 	results, err := colResp.GetResult()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get results: %v", err)
+		return ctx, fmt.Errorf("failed to get results: %w", err)
 	}
 
 	if len(results) < minCount {
@@ -187,12 +193,12 @@ func (s *accountSteps) theAccountResultShouldHaveTheCorrectSysID(ctx context.Con
 
 	result, err := itemResp.GetResult()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get result: %v", err)
+		return ctx, fmt.Errorf("failed to get result: %w", err)
 	}
 
 	sysID, err := result.GetSysID()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get sys_id: %v", err)
+		return ctx, fmt.Errorf("failed to get sys_id: %w", err)
 	}
 
 	if sysID == nil || *sysID == "" {

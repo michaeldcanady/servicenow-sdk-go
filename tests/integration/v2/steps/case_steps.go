@@ -25,8 +25,7 @@ func (s *caseSteps) iListAllCases(ctx context.Context) (context.Context, error) 
 		return support.WithWorld(ctx, w), nil
 	}
 
-	colResp, ok := resp.(caseapi.CaseCollectionResponse)
-	if ok {
+	if colResp := resp; colResp != nil {
 		results, err := colResp.GetResult()
 		if err == nil && len(results) > 0 {
 			sysID, err := results[0].GetSysID()
@@ -53,9 +52,9 @@ func (s *caseSteps) iCreateACaseWithShortDescriptionAndDescription(ctx context.C
 		return support.WithWorld(ctx, w), nil
 	}
 
-	itemResp, ok := resp.(caseapi.CaseItemResponse)
-	if !ok {
-		w.Err = fmt.Errorf("unexpected response type: %T", resp)
+	itemResp := resp
+	if itemResp == nil {
+		w.Err = fmt.Errorf("unexpected nil response")
 		return support.WithWorld(ctx, w), nil
 	}
 
@@ -195,7 +194,7 @@ func (s *caseSteps) theCaseCollectionShouldContainAtLeast(ctx context.Context, m
 
 	results, err := colResp.GetResult()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get results: %v", err)
+		return ctx, fmt.Errorf("failed to get results: %w", err)
 	}
 
 	if len(results) < minCount {
@@ -218,12 +217,12 @@ func (s *caseSteps) theCreatedCaseShouldHaveAValidSysID(ctx context.Context) (co
 
 	result, err := itemResp.GetResult()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get result: %v", err)
+		return ctx, fmt.Errorf("failed to get result: %w", err)
 	}
 
 	sysID, err := result.GetSysID()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get sys_id: %v", err)
+		return ctx, fmt.Errorf("failed to get sys_id: %w", err)
 	}
 
 	if sysID == nil || *sysID == "" {
@@ -246,12 +245,12 @@ func (s *caseSteps) theRetrievedCaseShouldHaveShortDescription(ctx context.Conte
 
 	result, err := itemResp.GetResult()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get result: %v", err)
+		return ctx, fmt.Errorf("failed to get result: %w", err)
 	}
 
 	shortDesc, err := result.GetShortDescription()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get short_description: %v", err)
+		return ctx, fmt.Errorf("failed to get short_description: %w", err)
 	}
 
 	if shortDesc == nil || *shortDesc != expected {

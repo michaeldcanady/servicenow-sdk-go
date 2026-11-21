@@ -63,7 +63,7 @@ func ClientCredentials() (clientID, clientSecret string) {
 	}
 	clientSecret = FirstEnv("SN_CLIENT_SECRET", "SNOW_CLIENT_SECRET")
 	if clientSecret == "" {
-		clientSecret = "mock-client-secret"
+		clientSecret = "mock-client-secret" //nolint:gosec // mock value
 	}
 	return clientID, clientSecret
 }
