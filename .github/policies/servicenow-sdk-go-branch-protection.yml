@@ -75,8 +75,8 @@ configuration:
     restrictsReviewDismissals: false
 
   # Maintenance lines (ADR 011 rule 3): downstream-only, cut lazily from
-  # tags. Same guarantees as main plus required linear history — cherry-pick
-  # backports must stay reviewable one-to-one without merge bubbles hiding
+  # tags. Same guarantees as main plus required linear history — manual
+  # cherry-pick backports must stay reviewable one-to-one without merge bubbles hiding
   # what actually shipped on the line.
   - branchNamePattern: release/v*
 

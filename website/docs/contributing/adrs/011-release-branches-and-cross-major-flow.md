@@ -9,7 +9,10 @@ description: >-
 
 ## Status
 
-Accepted
+Accepted. The label-triggered backport action in rule 3 and the
+automatic `needs-forward-port` issue in rule 5 are superseded by
+[ADR 023](023-manual-backports-and-forward-port-assessments.md). The other
+rules stand.
 
 ## Context
 

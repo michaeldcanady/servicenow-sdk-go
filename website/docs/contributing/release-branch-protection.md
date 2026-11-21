@@ -62,7 +62,7 @@ Rulesets.
 | Require status checks to pass | On (see below) |
 | Require branches to be up to date | **On** (`strict_required_status_checks_policy: true`)—Scorecard-compliant (Tier 2); admin bypass avoids blocking emergency merges |
 | Require last push approval | **On** (`require_last_push_approval: true`)—Scorecard-compliant (Tier 2) |
-| Require linear history | Off for `main`, **On** for `release/v*` (cherry-pick backports must stay one-to-one) |
+| Require linear history | Off for `main`, **On** for `release/v*` (manual cherry-pick backports must stay one-to-one) |
 | Block force pushes | On (`non_fast_forward`) |
 | Block deletions | On (`deletion`) |
 | Require conversation resolution | On |
@@ -82,7 +82,7 @@ have already reported on the branch. Instead:
    `Validate PR Title / Validate PR Title`, `CodeQL`, and
    `Run zizmor 🌈 / Run zizmor -- blocking`. Never add path-filtered jobs
    (the ci.yml build/test/lint matrix): they skip docs-only or workflow-only
-   PRs, and a required check that never reports sticks "pending" forever,
+   PRs, and a required check that never reports sticks “pending” forever,
    blocking every merge until an admin bypasses.
 
 The required context must be the job name exactly as GitHub reports it. The
@@ -174,7 +174,7 @@ The human spec lists a repository-admin bypass for emergency use. The
 
 - `branch-policy.yml`: the linked-issue check now runs on `release/**` PRs.
 - `pr.yml`: PR title lint already targeted `main` and `release/**`.
-- `codeql.yml`: analyzes `release/**` PRs too, so "CodeQL" can report on
+- `codeql.yml`: analyzes `release/**` PRs too, so “CodeQL” can report on
   maintenance-line merges (a required check must first be able to appear).
 - `ci.yml`: build/test/lint run for any PR touching Go paths, regardless of
   base branch; pushes to `release/**` were already covered.
@@ -183,13 +183,11 @@ The human spec lists a repository-admin bypass for emergency use. The
 
 ## Release automation rehearsal (must still function under protection)
 
-Protection must not break `release-please`, `dependabot`, or backport
-automation. Rehearse after any live change:
+Protection must not break `release-please` or `dependabot`. Rehearse after any live change:
 
 1. **Dry-run the declarative file:** `python3 -m json.tool .github/policies/servicenow-sdk-go-branch-protection.yml`—confirms schema parse.
 2. **Open a throwaway PR** against `main` and against `release/v1.0` (for example `chore/rehearse-branch-protection (#725)`) and verify the four required checks report and the PR is mergeable only with 1 CODEOWNERS approval and conversation resolution. With `strict:true`, the branch must be up-to-date before merging (rebase if behind). Close without merging.
-3. **Backport label:** label a dummy `main` PR with `backport release/v1.0` and confirm `backport.yml` would fan out (check `Select existing target branches` log); no actual backport PR needed.
-4. **Stable/maintenance release configs:** `stable-release.yml` (main) and `maintenance-label.yml`/`backport.yml` are branch-scoped and use `contents: write`/`pull-requests: write`—they push to `release-please--` branches and open PRs, never directly to `main`/`release/v*`, so the `admin(always)` bypass keeps them unblocked (admin actor bypasses the PR approval, not the branch creation). No `restrictions` (push allowlist) is set.
+3. **Stable/maintenance release configs:** `stable-release.yml` (main) is branch-scoped and use `contents: write`/`pull-requests: write`—they push to `release-please--` branches and open PRs, never directly to `main`/`release/v*`, so the `admin(always)` bypass keeps them unblocked (admin actor bypasses the PR approval, not the branch creation). No `restrictions` (push allowlist) is set.
 
 If any job would have been skipped as `pending` forever (path-filtered `ci.yml` matrix), it must **not** be a required status check—see Required status checks above.
 

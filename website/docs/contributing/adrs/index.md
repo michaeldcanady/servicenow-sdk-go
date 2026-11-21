@@ -28,7 +28,7 @@ below are the primary sources.
 | [008](008-package-symbol-url-naming-independence.md) | Package names, exported symbol names, and URL segments are independent naming axes | Accepted |
 | [009](009-requestbuilder-requestinformation-naming.md) | Keep `RequestBuilder`/`RequestInformation` naming (Kiota parity)—settled through v3 | Accepted |
 | [010](010-no-nerdit-tech-migration.md) | Stay at `github.com/michaeldcanady/servicenow-sdk-go`—settled through v3 | Accepted |
-| [011](011-release-branches-and-cross-major-flow.md) | Release branches are lazily cut, downstream-only, and never silently diverge | Accepted |
+| [011](011-release-branches-and-cross-major-flow.md) | Release branches are lazily cut, downstream-only, and never silently diverge | Accepted (partly superseded by ADR-023) |
 | [012](012-release-provenance-in-band.md) | Release provenance (SBOM, signatures, verification) is generated in-band, not event-driven | Accepted |
 | [013](013-event-driven-release-dispatch.md) | Proposed direction: decouple release tasks via `repository_dispatch` events with reconciliation, ending at a GitHub App for native triggers | Proposed |
 | [014](014-external-oidc-verbatim-token.md) | External OIDC tokens are presented verbatim; ServiceNow's OIDP validates identity | Accepted |
@@ -39,6 +39,7 @@ below are the primary sources.
 | [019](019-typed-tables.md) | Typed tables—built-in and user-defined, full parity, uniform shape | Proposed |
 | [020](020-record-scoped-resources.md) | Record-scoped resources are explicit-args helpers, not nested builders | Proposed |
 | [021](021-best-effort-error-categorization.md) | Best-effort error categorization with raw ServiceNow details attached | Proposed |
+| [023](023-manual-backports-and-forward-port-assessments.md) | Backports are manual cherry-pick PRs, and forward-port assessments live in the PR description | Accepted |
 
 ## Proposing a new ADR
 

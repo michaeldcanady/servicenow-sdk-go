@@ -31,9 +31,9 @@
 #   it's abandoned.
 #
 # Labels are mutable repo settings with no declarative file form, so the
-# `stale` label is provisioned idempotently here each run (same approach as
-# maintenance-label.yml); actions/stale cannot create labels itself and
-# silently fails to mark issues when its label is missing.
+# `stale` label is provisioned idempotently here each run. actions/stale cannot
+# create labels itself and silently fails to mark issues when its label is
+# missing.
 #
 # Rollout/dry runs: trigger via workflow_dispatch with dry_run checked —
 # the stale passes log everything they would do but touch nothing live,

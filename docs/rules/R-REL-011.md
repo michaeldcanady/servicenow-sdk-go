@@ -1,7 +1,7 @@
 ---
 id: R-REL-011
 applies_to: [".github/workflows/*.yml", ".github/workflows/*.yaml", "VERSION", "CHANGELOG.md"]
-status: accepted
+status: superseded
 supersedes: []
 conflicts_checked: true
 ---
