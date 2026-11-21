@@ -89,7 +89,6 @@ func _() {
 			Attachment().
 			ByID(*sysID).
 			Delete(context.Background(), deleteConfig); err != nil {
-
 			log.Printf("failed to delete attachment %s: %v", *sysID, err)
 			continue
 		}

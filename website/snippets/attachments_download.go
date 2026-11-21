@@ -100,7 +100,7 @@ func _() {
 
 		// Write the file to disk
 		outputPath := filepath.Join("./downloads", *fileName)
-		if err := os.WriteFile(outputPath, content, 0644); err != nil {
+		if err := os.WriteFile(outputPath, content, 0o600); err != nil {
 			log.Printf("failed to write file %s: %v", outputPath, err)
 			continue
 		}
