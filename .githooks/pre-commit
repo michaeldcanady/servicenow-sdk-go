@@ -2,9 +2,36 @@
 # Copyright (c) 2026 Michael Canady
 # SPDX-License-Identifier: MIT
 
-# Adds license headers to staged source files before each commit, so the
-# license-check workflow has nothing to report. Install with
-# `mise run hooks:install`. Bypass in an emergency with `git commit --no-verify`.
+# Runs two fixers on staged files before each commit, so the license-check
+# and format checks have nothing to report:
+#   1. Adds license headers (scripts/add-license.sh --staged).
+#   2. Runs `gofmt -s -w` on staged .go files and stages the result. A file
+#      with unstaged changes is skipped with a warning, so the hook never
+#      commits or loses work you left out of the commit.
+# Install with `mise run hooks:install`. Bypass in an emergency with
+# `git commit --no-verify`.
 set -euo pipefail
 
-exec "$(git rev-parse --show-toplevel)/scripts/add-license.sh" --staged
+root="$(git rev-parse --show-toplevel)"
+cd "$root"
+
+"$root/scripts/add-license.sh" --staged
+
+# Added, copied, modified, or renamed files only: deleted files are excluded.
+while IFS= read -r -d '' file; do
+    case $file in
+        *.go) ;;
+        *) continue ;;
+    esac
+    # Skip files with unstaged changes: gofmt -w would mix them into the commit.
+    if ! git diff --quiet -- "$file"; then
+        echo "pre-commit: skipping gofmt for '$file': it has unstaged changes." >&2
+        echo "pre-commit: run 'gofmt -s -w \"$file\"' yourself if needed." >&2
+        continue
+    fi
+    if [[ -n "$(gofmt -s -l -- "$file")" ]]; then
+        gofmt -s -w -- "$file"
+        git add -- "$file"
+        echo "pre-commit: gofmt -s reformatted '$file'." >&2
+    fi
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
