@@ -58,3 +58,62 @@ jobs:
         run: |
           echo "This automated or 'no-issue-required' PR is exempt from the linked-issue requirement."
 
+
+  forward-port-assessment:
+    name: Check Forward-Port Assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read # read PR body for the assessment line
+    steps:
+      # ADR 023 requires a forward-port assessment in every PR into release/v*
+      # that doesn't come from main, and ADR 025 removes the required review
+      # that used to enforce it. This job enforces it instead. Like the job
+      # above, it always runs and reports success when it doesn't apply, so
+      # a ruleset can require it without blocking PRs into main.
+      #
+      # release-please PRs are generated from the release branch itself, so
+      # there is nothing to forward-port. The exemption requires a same-repo
+      # head branch so a fork can't claim it by naming a branch.
+      #
+      # On a release branch, a pull_request run uses the workflow file from
+      # the PR's merge commit. The job reports on a release-branch PR only
+      # after this file reaches that branch.
+      - name: Require an assessment line in the PR body
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          THIS_REPO: ${{ github.repository }}
+        run: |
+          case "$BASE_REF" in
+            release/*) ;;
+            *)
+              echo "PR targets '$BASE_REF', not a release branch. No forward-port assessment is required."
+              exit 0
+              ;;
+          esac
+
+          if [[ "$HEAD_REF" == release-please--* && "$HEAD_REPO" == "$THIS_REPO" ]]; then
+            echo "release-please PRs originate on the release branch. No forward-port assessment is required."
+            exit 0
+          fi
+
+          # One of these lines, at the start of a line (case-insensitive):
+          #   Backport of #N        the PR cherry-picks a fix from main
+          #   Forward-port: #N      the matching PR against main
+          #   Won't port: <reason>  the decision not to port, with a reason
+          # The apostrophe may be straight or curly. Strip CRs first because
+          # GitHub stores the body with CRLF line endings.
+          body="${PR_BODY//$'\r'/}"
+          if grep -qiE "^[[:space:]]*(backport of #[0-9]+|forward-port: *#[0-9]+|won['’]t port: *[^[:space:]])" <<< "$body"; then
+            echo "Forward-port assessment found."
+            exit 0
+          fi
+
+          echo "::error::A PR into '$BASE_REF' must include a forward-port assessment (ADR 023). Add one of these lines to the PR description:"
+          echo "::error::  Backport of #<main PR number>"
+          echo "::error::  Forward-port: #<matching main PR number>"
+          echo "::error::  Won't port: <reason>"
+          exit 1

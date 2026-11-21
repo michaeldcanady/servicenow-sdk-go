@@ -34,3 +34,11 @@
 - [ ] `VERSION` and `CHANGELOG.md` are untouched (release-please manages them)
 
 <!-- If docs or tests are intentionally untouched, say why: -->
+
+## Forward-port assessment (release branches only)
+
+<!-- Delete this section for PRs into `main`. A PR into `release/*` fails the Branch Policy check unless the description has one of these lines at the start of a line (ADR 023):
+  Backport of #123
+  Forward-port: #123
+  Won't port: <reason>
+-->
