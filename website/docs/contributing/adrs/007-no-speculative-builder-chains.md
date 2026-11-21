@@ -25,7 +25,7 @@ Alternatives considered:
 1. **Implement the missing verb methods to make the chain functional**—rejected for this PR specifically because the endpoint's actual behavior
    wasn't yet scoped; forcing an implementation just to match the existing
    (accidental) shape risked guessing at the wrong contract.
-2. **Leave the dead-end chain in place as a documented "coming soon"**—rejected; an SDK builder chain that compiles and can be navigated but
+2. **Leave the dead-end chain in place as a documented “coming soon”**—rejected; an SDK builder chain that compiles and can be navigated but
    silently does nothing on every verb is worse than a compile error, and
    contradicts the nil-receiver-guard principle in ADR-006 of failing loud
    and early rather than silently.
@@ -44,11 +44,11 @@ in advance.
 
 - **Pros:** every reachable point in a fluent chain does something; a
   builder existing is a reliable signal that its operations work, matching
-  the "fail loud" spirit of ADR-006 rather than silently advertising
+  the “fail loud” spirit of ADR-006 rather than silently advertising
   unreachable surface area.
 - **Cons:** breaking removal for anyone who had already started depending on
   the chain shape (even though no verb ever worked). Re-adding the
   Inputs/Resolved endpoint later is an additive change, not a revert.
 - **Rule for new modules and reviews:** don't scaffold a full URL-segment
-  chain "for completeness" ahead of the operation being implemented. Add the
+  chain “for completeness” ahead of the operation being implemented. Add the
   builder when the verb methods it exposes are ready to ship together.

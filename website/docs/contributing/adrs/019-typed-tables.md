@@ -29,8 +29,8 @@ because they constrain each other:
   tables second-class?** The `internal/store` and `internal/serialization`
   helpers are currently unreachable by SDK consumers, so without change a user
   table could not match a built-in.
-- **Do typed tables carry domain actions** (for example, "close this incident," "add a
-  comment to this case")? That pulls every module toward bespoke wrapper types,
+- **Do typed tables carry domain actions** (for example, “close this incident,” “add a
+  comment to this case”)? That pulls every module toward bespoke wrapper types,
   which ADR-005 already rejected for pagination.
 - **Do typed references navigate?** A field referencing another record could
   lazily fetch it, or just carry its identity.
@@ -38,7 +38,7 @@ because they constrain each other:
 Alternatives considered for user extension: generic field accessors only (no
 methods, so no ergonomic user API); mandatory code generation (heavyweight, and not
 every consumer wants a build step); or a closed set of built-in tables only
-(fails the "build your own" requirement).
+(fails the “build your own” requirement).
 
 ## Decision
 

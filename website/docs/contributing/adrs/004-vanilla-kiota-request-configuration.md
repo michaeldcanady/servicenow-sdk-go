@@ -23,8 +23,8 @@ library.
 
 This diverged from how Kiota-generated SDKs (for example, msgraph-sdk-go) shape query
 parameters, and the divergence had a real cost: value fields can't represent
-"the caller didn't set this" separately from "the caller explicitly set the
-zero value," so `go-querystring` either always emitted a field or needed
+“the caller didn't set this” separately from “the caller explicitly set the
+zero value,” so `go-querystring` either always emitted a field or needed
 extra `omitempty`-style conventions layered on top to approximate what
 `abstractions.RequestInformation.AddQueryParameters` gives you out of the box with
 nil-checkable pointers.
@@ -61,7 +61,7 @@ declared as `*int32`, not `*int`, or it will vanish without error.
 ## Consequences
 
 - **Pros:** query-parameter structs now look and behave like every other
-  Kiota-generated SDK's `*QueryParameters`; "unset" and "zero" are
+  Kiota-generated SDK's `*QueryParameters`; “unset” and “zero” are
   distinguishable the same way ADR-002 already made models' properties
   distinguishable; one fewer third-party dependency.
 - **Cons:** breaking for every caller constructing these structs with value

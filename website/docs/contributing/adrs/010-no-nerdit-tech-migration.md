@@ -21,7 +21,7 @@ across the repo, issue tracker, and docs at release time),
 so folding an org migration into that same bump would have been free from a
 consumer-churn standpoint. Migrating the org *after* v2 ships would mean
 either a v3 major bump just for the path change, or a permanent
-redirect/fork story—"TBD" wasn't viable, since v2.0.0 is the only point
+redirect/fork story—“TBD” wasn't viable, since v2.0.0 is the only point
 where this decision is free.
 
 Alternatives considered:

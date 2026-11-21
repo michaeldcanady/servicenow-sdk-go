@@ -10,7 +10,7 @@
 
 - **Backing-store models.** Every model property is stored in a Kiota
   `BackingStore` with change tracking. Getters return pointers—`nil`
-  means "absent," a zero value means "the server sent zero." Request
+  means “absent,” a zero value means “the server sent zero.” Request
   bodies contain only the properties you set, eliminating accidental
   overwrites on `PUT`/`PATCH`.
 
