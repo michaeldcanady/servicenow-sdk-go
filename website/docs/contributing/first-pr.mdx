@@ -35,11 +35,11 @@ timeline
 The repository ships a dev container with mise preinstalled. mise installs
 Go, `golangci-lint`, and the other tools at the versions that CI uses.
 
-1.  Fork the repo on GitHub, then:
+1. Fork the repo on GitHub, then:
     ```bash
     git clone https://github.com/YOUR_USERNAME/servicenow-sdk-go.git
     ```
-2.  Open the folder in VS Code and click **Reopen in Container**. While the
+2. Open the folder in VS Code and click **Reopen in Container**. While the
     image builds (first launch only), move on to the next step.
 
 Prefer your own toolchain, or want the details? The full
@@ -103,9 +103,9 @@ Run it after you name your branch and commit in the next step.
 
 ## 0:45—Ship it (~15 min) {/* #045--ship-it-15-min */}
 
-1.  **Branch** from `main` as `type/kebab-description`—for example,
+1. **Branch** from `main` as `type/kebab-description`—for example,
     `docs/fix-auth-typo`, `fix/tableapi-nil-pointer`, `test/batch-error-rows`.
-2.  **Commit** in [Conventional Commits](https://www.conventionalcommits.org/)
+2. **Commit** in [Conventional Commits](https://www.conventionalcommits.org/)
     format:
     ```bash
     git commit -m "docs: fix typo in authentication guide"
@@ -113,7 +113,7 @@ Run it after you name your branch and commit in the next step.
     This matters more than it looks: `release-please` builds the version
     number and changelog from commit messages (so never edit `VERSION` or
     `CHANGELOG.md` by hand).
-3.  **Push and open the PR** against `main`. The PR title must itself be a
+3. **Push and open the PR** against `main`. The PR title must itself be a
     valid Conventional Commit line—CI lints it, and it becomes the squash
     commit. Link the issue in the body.
 
@@ -122,8 +122,8 @@ Run it after you name your branch and commit in the next step.
 CI will lint your PR title, run the linter and full test suite, and compile
 every doc snippet. If a check fails, the log almost always names the exact
 line—fix, push, and the checks rerun automatically. Review feedback here
-is mostly structural ("use the shared sentinel," "move this to its own
-file") rather than subjective; it's the conventions doing their job, not a
+is mostly structural (“use the shared sentinel,” “move this to its own
+file”) rather than subjective; it's the conventions doing their job, not a
 verdict on you.
 
 **Merged? Congratulations—you're a contributor.** 🎉

@@ -27,15 +27,15 @@ When the container is created, it runs `mise install`, which installs Go,
 `golangci-lint`, Vale, and every other tool at the versions that CI uses, and
 it installs the pre-commit hook and activates mise in bash.
 
-1.  Install [Docker](https://www.docker.com/get-started/) or
+1. Install [Docker](https://www.docker.com/get-started/) or
     [Podman](https://podman.io/), plus the
     [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
     for VS Code.
-2.  **Fork and clone**:
+2. **Fork and clone**:
     ```bash
     git clone https://github.com/YOUR_USERNAME/servicenow-sdk-go.git
     ```
-3.  Open the folder in VS Code and click **"Reopen in Container"** when
+3. Open the folder in VS Code and click **“Reopen in Container”** when
     prompted. First launch builds the image; later launches are instant.
 
 ## Path 2: Local toolchain

@@ -23,7 +23,7 @@ checks, `"[parameter] is required"` for missing inputs, no contractions.
 ## Why
 
 v1 accumulated hundreds of ad-hoc `errors.New("...")` calls with
-similar-but-different wording ("can't be nil" vs "is nil"). Two consequences:
+similar-but-different wording (“can't be nil” vs “is nil”). Two consequences:
 
 - **`errors.Is` didn't work.** Two call sites returning the same *message*
   as different error *values* can't be matched programmatically; consumers

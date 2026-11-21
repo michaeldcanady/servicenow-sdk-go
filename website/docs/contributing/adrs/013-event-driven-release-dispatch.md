@@ -46,8 +46,8 @@ Options for true event delivery:
    new runs, restoring native triggers such as `release: published` and
    `push tags v*`. Adds an org-installed GitHub App, key storage and rotation,
    permitting scope, and a write-credential security review. This is the
-   "real principal" end state, but it's a heavy operational lift.
-3. **`workflow_run` trigger**—keys off a dedicated "emit release events"
+   “real principal” end state, but it's a heavy operational lift.
+3. **`workflow_run` trigger**—keys off a dedicated “emit release events”
    workflow run rather than a repository event. The consumer receives no
    inputs and must resolve state from run metadata or artifacts, and the
    written security guidance prefers `workflow_call` chains over

@@ -17,8 +17,8 @@ serialization registries, retry middleware—and this repo hand-writes the
 ServiceNow-specific surface on top, deliberately mimicking the conventions of
 Kiota-*generated* SDKs like msgraph-sdk-go
 ([why?](design-hand-written-kiota.md)). Keep that in mind throughout: whenever
-a component seems to exist "just because," the answer is usually "because
-that's how Kiota SDKs work, and familiarity is the feature."
+a component seems to exist “just because,” the answer is usually “because
+that's how Kiota SDKs work, and familiarity is the feature.”
 
 ## The life of a request
 
