@@ -19,12 +19,17 @@ on:
       - ".github/workflows/ci.yml"
       - ".github/workflows/reusable-lint-go.yaml"
       - ".github/workflows/reusable-test-go.yaml"
-      - ".github/actions/check-go-deps"
-      - ".github/actions/install-tparse"
-      - ".github/actions/go-test"
       - ".github/workflows/reusable-build-go.yaml"
       - ".github/workflows/reusable-check-go-deps.yaml"
       - ".github/workflows/reusable-govulncheck.yaml"
+      - ".github/actions/check-go-deps/**"
+      - ".github/actions/install-tparse/**"
+      - ".github/actions/go-test/**"
+      - ".github/actions/setup-go-env/**"
+      - ".golangci.yml"
+      - ".codecov.yml"
+      - "mise.toml"
+      - "scripts/**"
   pull_request:
     paths:
       - "**.go"
@@ -34,15 +39,19 @@ on:
       - "tests/integration/**"
       - "**/*.feature"
       - ".github/workflows/ci.yml"
-      - ".golangci.yml"
       - ".github/workflows/reusable-lint-go.yaml"
       - ".github/workflows/reusable-test-go.yaml"
-      - ".github/actions/check-go-deps/action.yml"
-      - ".github/actions/install-tparse/action.yml"
-      - ".github/actions/go-test/action.yml"
       - ".github/workflows/reusable-build-go.yaml"
       - ".github/workflows/reusable-check-go-deps.yaml"
       - ".github/workflows/reusable-govulncheck.yaml"
+      - ".github/actions/check-go-deps/**"
+      - ".github/actions/install-tparse/**"
+      - ".github/actions/go-test/**"
+      - ".github/actions/setup-go-env/**"
+      - ".golangci.yml"
+      - ".codecov.yml"
+      - "mise.toml"
+      - "scripts/**"
 concurrency:
   # Scheduled runs carry no head_ref or ref, so without the run_id fallback
   # every weekly run shares one bare group key and cancel-in-progress drops
@@ -93,11 +102,16 @@ jobs:
             .github/workflows/reusable-lint-go.yaml
             .github/workflows/reusable-test-go.yaml
             .github/workflows/reusable-build-go.yaml
-            .github/actions/check-go-deps/action.yml
-            .github/actions/install-tparse/action.yml
-            .github/actions/go-test/action.yml
             .github/workflows/reusable-check-go-deps.yaml
             .github/workflows/reusable-govulncheck.yaml
+            .github/actions/check-go-deps/**
+            .github/actions/install-tparse/**
+            .github/actions/go-test/**
+            .github/actions/setup-go-env/**
+            .golangci.yml
+            .codecov.yml
+            mise.toml
+            scripts/**
   check-go:
     name: Check Go Modules
     needs:
