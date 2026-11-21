@@ -55,7 +55,10 @@ go mod download
 
 The `hooks:install` task installs a pre-commit hook. When you commit, the hook
 adds a license header to each staged `.go`, `.sh`, and root YAML file that
-lacks one, and stages the result. The dev container installs the hook for you.
+lacks one, and stages the result. The hook also runs `gofmt -s -w` on each
+staged `.go` file and stages the formatted file. If a `.go` file has unstaged
+changes, the hook skips it and prints a warning, so your unstaged work stays out
+of the commit. The dev container installs the hook for you.
 
 If you don't want to use mise, install Go 1.26 or later and
 [golangci-lint](https://golangci-lint.run/usage/install/). The plain `go` and
