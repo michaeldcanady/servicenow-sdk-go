@@ -1,0 +1,42 @@
+# Lists the release archives on the gh-pages branch. The X.Y/ folders there
+# are the archives that docs-archive.yml publishes. The version dropdown and
+# the banner show them, newest first.
+#
+# Both the stable deploy and the PR docs build call this action, so a PR build
+# receives the same `archived-versions` value as production.
+#
+# A read-only token is enough, including on fork PRs, because the repository
+# is public.
+name: List docs archives
+description: Lists the X.Y release archive folders on gh-pages, newest first.
+
+inputs:
+  github-token:
+    description: Token that reads the gh-pages branch.
+    required: true
+  repository:
+    description: Repository in owner/name form.
+    required: true
+
+outputs:
+  lines:
+    description: Comma-separated release lines, newest first, such as "2.1,2.0". Empty when there are none.
+    value: ${{ steps.list.outputs.lines }}
+
+runs:
+  using: composite
+  steps:
+    - name: List release archives
+      id: list
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        REPO: ${{ inputs.repository }}
+      run: |
+        set -euo pipefail
+        lines="$(gh api "repos/${REPO}/contents?ref=gh-pages" \
+          --jq '.[] | select(.type == "dir") | .name' \
+          | { grep -E '^[0-9]+\.[0-9]+$' || true; } \
+          | sort -rV | paste -sd, -)"
+        echo "Release archives: ${lines:-none}"
+        echo "lines=${lines}" >> "$GITHUB_OUTPUT"
