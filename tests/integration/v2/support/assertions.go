@@ -114,7 +114,7 @@ func CleanupResourceLog(ctx context.Context, w *World, sysID string) {
 // RequireRevocationSuccess asserts the revocation succeeded.
 func RequireRevocationSuccess(ctx context.Context, w *World) (context.Context, error) {
 	if w.RevocationErr != nil {
-		return ctx, fmt.Errorf("expected revocation to succeed, got: %v", w.RevocationErr)
+		return ctx, fmt.Errorf("expected revocation to succeed, got: %w", w.RevocationErr)
 	}
 	return ctx, nil
 }

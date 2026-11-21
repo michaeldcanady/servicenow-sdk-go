@@ -18,7 +18,10 @@ type cmdbSteps struct{}
 func (s *cmdbSteps) iRequestCIsForClassWithLimit(ctx context.Context, className string, limit int) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 
-	l := int32(limit)
+	l, err := support.ToInt32(limit)
+	if err != nil {
+		return ctx, err
+	}
 	cfg := &cmdbinstanceapi.CmdbClassRequestBuilderGetRequestConfiguration{
 		QueryParameters: &cmdbinstanceapi.CmdbClassRequestBuilderGetQueryParameters{
 			Limit: &l,
@@ -57,7 +60,10 @@ func (s *cmdbSteps) iRequestCIsForClassWithQuery(ctx context.Context, className,
 func (s *cmdbSteps) iHaveAtLeastCIInClass(ctx context.Context, count int, className string) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 
-	l := int32(count)
+	l, err := support.ToInt32(count)
+	if err != nil {
+		return ctx, err
+	}
 	cfg := &cmdbinstanceapi.CmdbClassRequestBuilderGetRequestConfiguration{
 		QueryParameters: &cmdbinstanceapi.CmdbClassRequestBuilderGetQueryParameters{
 			Limit: &l,
@@ -175,7 +181,7 @@ func (s *cmdbSteps) theCmdbResultsShouldContainAtLeastRecords(ctx context.Contex
 
 	results, err := colResp.GetResult()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get results: %v", err)
+		return ctx, fmt.Errorf("failed to get results: %w", err)
 	}
 
 	if len(results) < minCount {
@@ -198,12 +204,12 @@ func (s *cmdbSteps) theCmdbResultShouldHaveTheCorrectSysID(ctx context.Context, 
 
 	result, err := itemResp.GetResult()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get result: %v", err)
+		return ctx, fmt.Errorf("failed to get result: %w", err)
 	}
 
 	sysID, err := result.GetSysID()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get sys_id: %v", err)
+		return ctx, fmt.Errorf("failed to get sys_id: %w", err)
 	}
 
 	if sysID == nil || *sysID == "" {

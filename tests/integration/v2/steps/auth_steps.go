@@ -168,7 +168,7 @@ func (s *authSteps) iRevokeTheCurrentAccessToken(ctx context.Context) (context.C
 func (s *authSteps) aNewAccessTokenShouldBeReturned(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 	if w.Err != nil {
-		return ctx, fmt.Errorf("expected new token, but got error: %v", w.Err)
+		return ctx, fmt.Errorf("expected new token, but got error: %w", w.Err)
 	}
 	return ctx, nil
 }
@@ -186,7 +186,7 @@ func (s *authSteps) theCachedTokenShouldBeCleared(ctx context.Context) (context.
 func (s *authSteps) theRevocationShouldSucceed(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 	if w.RevocationErr != nil {
-		return ctx, fmt.Errorf("expected revocation to succeed, got: %v", w.RevocationErr)
+		return ctx, fmt.Errorf("expected revocation to succeed, got: %w", w.RevocationErr)
 	}
 	return ctx, nil
 }
@@ -231,7 +231,7 @@ func (s *authSteps) theROPCGetAuthMethodShouldReturnBearerHeader(ctx context.Con
 	}
 	resp, err := w.Client.Now().Table("incident").Get(ctx, nil)
 	if err != nil {
-		return ctx, fmt.Errorf("API request failed: %v", err)
+		return ctx, fmt.Errorf("API request failed: %w", err)
 	}
 	if resp == nil {
 		return ctx, fmt.Errorf("expected non-nil response")
@@ -246,7 +246,7 @@ func (s *authSteps) iInitializeAClientWithJWTBearerTokenAuth(ctx context.Context
 
 	validJWT, err := support.GenerateValidRS256JWT()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to generate test JWT: %v", err)
+		return ctx, fmt.Errorf("failed to generate test JWT: %w", err)
 	}
 
 	tokenProvider := &support.StaticTokenProvider{Token: validJWT}
@@ -325,7 +325,7 @@ func (s *authSteps) iInitializeAClientWithAFailingJWTTokenProvider(ctx context.C
 func (s *authSteps) iInitializeAClientWithAnInvalidJWTAssertionProvider(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 
-	tokenProvider := &support.StaticTokenProvider{Token: "not-a-valid-jwt"}
+	tokenProvider := &support.StaticTokenProvider{Token: "not-a-valid-jwt"} //nolint:gosec // mock value
 	oauth2HTTP := support.GetOAuth2HTTPClient()
 	authOpts := []credentials.AuthOption{
 		credentials.WithInstance(support.IntegrationInstance()),
@@ -487,7 +487,7 @@ func (s *authSteps) iInitializeAnAuthCodeConfidentialClientWithValidParams(ctx c
 func (s *authSteps) theAuthCodeCredentialShouldBeInitialized(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 	if w.AuthErr != nil {
-		return ctx, fmt.Errorf("expected credential to initialize, but got error: %v", w.AuthErr)
+		return ctx, fmt.Errorf("expected credential to initialize, but got error: %w", w.AuthErr)
 	}
 	if w.Response == nil {
 		return ctx, fmt.Errorf("expected credential to be initialized, but it is nil")
@@ -515,7 +515,7 @@ func (s *authSteps) iAttemptToCreateAuthCodeCredentialsWithEmptyClientID(ctx con
 func (s *authSteps) authenticationShouldSucceed(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 	if w.AuthErr != nil {
-		return ctx, fmt.Errorf("expected authentication to succeed, got: %v", w.AuthErr)
+		return ctx, fmt.Errorf("expected authentication to succeed, got: %w", w.AuthErr)
 	}
 	if w.Client == nil {
 		return ctx, fmt.Errorf("expected client to be initialized, but it is nil")
@@ -538,7 +538,7 @@ func (s *authSteps) iShouldBeAbleToMakeAnAPIRequest(ctx context.Context) (contex
 	}
 	_, err := w.Client.Now().Table("incident").Get(ctx, nil)
 	if err != nil {
-		return ctx, fmt.Errorf("expected successful API request, but got error: %v", err)
+		return ctx, fmt.Errorf("expected successful API request, but got error: %w", err)
 	}
 	return ctx, nil
 }
@@ -546,7 +546,7 @@ func (s *authSteps) iShouldBeAbleToMakeAnAPIRequest(ctx context.Context) (contex
 func (s *authSteps) theResponseShouldNotBeAnError(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 	if w.Err != nil {
-		return ctx, fmt.Errorf("expected no error, but got: %v", w.Err)
+		return ctx, fmt.Errorf("expected no error, but got: %w", w.Err)
 	}
 	return ctx, nil
 }
@@ -598,7 +598,7 @@ func (s *authSteps) theErrorMessageShouldIndicateMissingParameters(ctx context.C
 		!strings.Contains(errMsg, "username") &&
 		!strings.Contains(errMsg, "password") &&
 		!strings.Contains(errMsg, "empty") {
-		return ctx, fmt.Errorf("expected error about missing parameters, but got: %v", w.AuthErr)
+		return ctx, fmt.Errorf("expected error about missing parameters, but got: %w", w.AuthErr)
 	}
 	return ctx, nil
 }
