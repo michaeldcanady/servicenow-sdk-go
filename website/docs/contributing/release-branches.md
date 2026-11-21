@@ -108,6 +108,14 @@ move majors yet. When the feature depends on prior-major shapes:
    maintenance line's **minor** (`v2.(Y+1).0`), a `fix:` bumps the patch.
    `release-please` opens the release PR from the alternate config (#659);
    never hand-edit `VERSION` or `CHANGELOG.md` on any branch.
+
+   Release-please creates the release PR with `GITHUB_TOKEN`, so GitHub
+   holds the workflow runs for the PR until a maintainer approves them. To
+   release, take these two steps:
+
+   1. Select **Approve workflows to run** on the release PR, and wait for
+      the checks to pass.
+   2. Merge the release PR.
 3. Because this change didn't come from `main`, the PR description must
    include a forward-port assessment: whether the feature should also reach
    `main`. That's expected and fine—see next section.
