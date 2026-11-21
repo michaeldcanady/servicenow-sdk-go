@@ -7,26 +7,18 @@
 #   zizmor .github --persona auditor --min-severity informational --min-confidence low --collect all
 #
 # That gate must pin the zizmor version and fail on any finding, so a config
-# regression (for example this allow-list being dropped or renamed by a future
+# regression (for example this policy file being dropped or renamed by a future
 # zizmor release) is caught loudly instead of silently letting findings
 # reappear.
 #
-# The repository is audited clean at the configuration above (0 findings); the
+# The repository is audited clean (0 findings); the
 # only exceptions are the inline `# zizmor: ignore[...]` comments documented
 # below.
 #
-# secrets-outside-env: GPG_SIGNING_KEY is a repository-level passphrase-less tag-signing key for
-# sign-release.yml. It exists only in repository secrets (value is masked by
-# GitHub), is consumed only inside the sign-tag job's shell steps, and is
-# never exposed to default-checked-out code. It cannot live in a job-level
-# environment because the release event carries no branch to bind one to.
-rules:
-  secrets-outside-env:
-    config:
-      allow:
-        - GPG_SIGNING_KEY
+# No rules need configuration. zizmor requires the `rules` key, so keep it empty.
+rules: {}
 
-# Inline ignores still required at the audit configuration above:
+# Inline ignores still required:
 #
 # - cache-poisoning x6 (ci.yml setup-go steps): the module cache is retained
 #   for CI speed. setup-go saves caches only on default-branch refs; PR/fork
