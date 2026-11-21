@@ -108,7 +108,28 @@ jobs:
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           files: ${{ inputs.coverage-file }}
-          fail_ci_if_error: true
+          # Codecov is informational. The patch coverage floor below is the gate.
+          fail_ci_if_error: false
           # OIDC authenticates the upload, so the step needs no secret and
           # Dependabot and fork runs (which get no repository secrets) work too.
           use_oidc: true
+
+      # Patch coverage floor. This step reads the diff only, so it needs no token
+      # and also runs for fork PRs. It skips on pushes and on PRs that change no
+      # non-test Go statements. It runs last so a failure does not trigger the
+      # "tests failed" sticky comment or block the Codecov upload.
+      #
+      # Floor: 80%. Chosen from data: `main` has 85.7% total statement coverage
+      # (2026-11-21); the old Codecov patch target was "auto" with a 5% threshold
+      # (about 80%); the only recent PR with a Codecov patch figure (#971) had
+      # 91.7%. 80% sits below what PRs reach today, so it blocks only clear
+      # regressions. Change COVERAGE_FLOOR to move it.
+      - name: Check patch coverage floor
+        if: github.event_name == 'pull_request' && runner.os == 'Linux' && inputs.go-version == 'stable' && inputs.coverage-file != ''
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          COVERAGE_FILE: ${{ inputs.coverage-file }}
+          COVERAGE_FLOOR: "80"
+        run: |
+          git fetch --no-tags --depth=1 origin "${BASE_SHA}"
+          ./scripts/check-patch-coverage.sh "${COVERAGE_FILE}" "${BASE_SHA}" "${COVERAGE_FLOOR}"
