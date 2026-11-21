@@ -15,6 +15,9 @@
 # only exceptions are the inline `# zizmor: ignore[...]` comments documented
 # below.
 #
+# No rules need configuration. zizmor requires the `rules` key, so keep it empty.
+rules: {}
+
 # Inline ignores still required:
 #
 # - cache-poisoning x6 (ci.yml setup-go steps): the module cache is retained
