@@ -2,8 +2,8 @@
 title: Release branches & cross-major flow
 description: >-
   How fixes and features reach shipped majors while main develops the next
-  one—lazily-cut release/vX.Y branches, label-driven backports, tracked
-  forward-ports, and the rules that keep the lines from drifting apart.
+  one—lazily-cut release/vX.Y branches, manual backports, forward-port
+  assessments, and the rules that keep the lines from drifting apart.
 ---
 
 # Release branches & cross-major flow
@@ -63,7 +63,7 @@ Naming rules:
   `release/v2.4` branch, later `v2.5.*` patches get a fresh
   `release/v2.5` cut at `v2.5.0`; the older branch is retired unless it
   still has patch work in flight.
-- Never create a branch "for symmetry" or ahead of need. An idle long-lived
+- Never create a branch “for symmetry” or ahead of need. An idle long-lived
   branch is how silent drift starts.
 
 ## Where does my change land?
@@ -81,9 +81,10 @@ Naming rules:
 Fixes land on `main` first, always—even if the reporter is stuck on the
 old major. Then:
 
-1. Add the label **`backport release/vX.Y`** to the merged PR (or ask a
-   maintainer to).
-2. Automation (#656) opens a cherry-pick PR against the maintenance branch.
+1. Create a branch off `release/vX.Y` and cherry-pick the merge commit
+   from `main` (`git cherry-pick -x <sha>`).
+2. Open a PR against the maintenance branch. Link the original PR in the
+   description.
 3. Review and merge it like any other PR. Required CI runs there too.
 
 When the cherry-pick conflicts—common across majors—expect the import
@@ -106,21 +107,23 @@ move majors yet. When the feature depends on prior-major shapes:
    maintenance line's **minor** (`v2.(Y+1).0`), a `fix:` bumps the patch.
    `release-please` opens the release PR from the alternate config (#659);
    never hand-edit `VERSION` or `CHANGELOG.md` on any branch.
-3. Because this change didn't come from `main`, automation immediately
-   opens a **`needs-forward-port`** issue asking whether the feature should
-   also reach `main`. That's expected and fine—see next section.
+3. Because this change didn't come from `main`, the PR description must
+   include a forward-port assessment: whether the feature should also reach
+   `main`. That's expected and fine—see next section.
 
-## Forward-port tracking (`release/vX.Y` → `main`)
+## Forward-port assessment (`release/vX.Y` → `main`)
 
-Any merge into `release/v*` without backport provenance triggers a
-`needs-forward-port` issue ("assess porting #N to `main`"). Closing it
-takes exactly one of two actions:
+Any PR into `release/v*` that didn't come from `main` includes a
+forward-port assessment in its description. The assessment takes exactly one
+of two forms:
 
 - **Port it**: open the matching PR against `main` (import suffix goes the
-  other direction this time), and close the issue with its number.
-- **Decline it**: close the issue with a short written rationale, for
+  other direction this time), and link it in the description.
+- **Decline it**: write a short rationale in the description, for
   example: "v3 replaced the model layer this builds on." A recorded decision
   is progress; silence is drift.
+
+Reviewers don't approve a PR into `release/v*` without this assessment.
 
 This is the mechanism that makes the one exception to "downstream-only"
 safe: divergence can happen, but it can never happen invisibly.
@@ -142,9 +145,9 @@ users are asking for it now.
 
 **Path B—v2-only by design:** the feature leans on v2-era model shapes,
 or v3 has restructured the area it touches. Land it directly on
-`release/v2.4` (previous section); answer the resulting
-`needs-forward-port` issue honestly—"will port once v3 settles" or
-"won't port because…" are both acceptable answers.
+`release/v2.4` (previous section); answer the forward-port assessment
+honestly—“will port once v3 settles” or “won't port because…” are both
+acceptable answers.
 
 Either way, batch the release: maintenance releases are demand-driven, not
 one-tag-per-merge.
@@ -154,12 +157,12 @@ one-tag-per-merge.
 - ❌ No direct pushes to `release/*` (branch protection, #658)—PRs only,
   required CI green.
 - ❌ No preemptive `release/*` branches.
-- ❌ No feature development on a maintenance branch without accepting the
-  forward-port assessment that follows it.
+- ❌ No feature development on a maintenance branch without completing the
+  forward-port assessment in the PR.
 - ❌ No independent parallel implementation of the same concept on two
   major lines—one PR per concept per direction, cross-referenced.
 - ❌ Never hand-edit `VERSION` or `CHANGELOG.md`—on any branch.
-- ✅ Fixes on `main` first, labels second, cherry-pick third.
+- ✅ Fixes on `main` first, cherry-pick second.
 
 ## Docs site versions
 
@@ -186,10 +189,10 @@ The `docs-archive` workflow builds and publishes each archive:
   from the Actions tab and enter the tag, such as `v2.1.1`. The workflow
   refuses a tag that isn't the newest patch of its line.
 
-The build uses the tag's own `docs/`, sidebars, components, and Go snippets,
-so an archive shows exactly what shipped with that release.
+The build uses the tag's own `docs/`, sidebars, components, and Go snippets.
+An archive shows exactly what shipped with that release.
 `website/archive/docusaurus.archive.config.ts` wraps the tag's config to
-label the build, hide "Edit this page" links, and add the archive banner.
+label the build, hide “Edit this page” links, and add the archive banner.
 
 Rules of thumb:
 
@@ -217,10 +220,10 @@ tagged major below it.
   like active development again, that's the signal to revisit the EOL clock—not to keep growing the branch.
 
 :::note[Status]
-The automation described here (backport label action, forward-port tracker,
-maintenance-line release job, branch protection) lands incrementally; until
-each piece exists, perform its step manually and say so in the PR
-description. Tracking issues live under the
+The automation described here (maintenance-line release job, branch
+protection) lands incrementally; until each piece exists, perform its step
+manually and say so in the PR description. Backports and forward-port
+assessments are always manual. Tracking issues live under the
 [`type: devops`](https://github.com/michaeldcanady/servicenow-sdk-go/issues?q=is%3Aopen+label%3A%22type%3A+devops%22)
 label.
 :::

@@ -2,7 +2,7 @@
 title: 'ADR 011: Release branches are lazily cut, downstream-only, and never silently diverge'
 description: >-
   Trunk-first development with lazily cut release/vX.Y maintenance branches,
-  label-driven backports, and tracked forward-ports.
+  manual backports, and forward-port assessments.
 ---
 
 # ADR 011: Release branches are lazily cut, downstream-only, and never silently diverge
@@ -51,9 +51,9 @@ branches (maintainer decision, 2026-08-21):
    are immutable, so when the branch is cut is irrelevant; never cut one
    preemptively.
 3. **Downstream-only within a major:** fixes land on `main` first, then move
-   down via a label-triggered backport action (`backport release/v2.x`
-   opens the cherry-pick PR). Direct pushes to `release/*` are blocked;
-   all changes arrive by PR with required CI.
+   down through a cherry-pick PR that a maintainer opens by hand. Direct
+   pushes to `release/*` are blocked; all changes arrive by PR with
+   required CI.
 4. **Cross-major features** (a new ServiceNow capability arriving while
    `main` develops the next major):
    - Useful for both majors and small/portable (typical new API module)—build on `main`, ship in the next major, then open a matching PR
@@ -65,9 +65,9 @@ branches (maintainer decision, 2026-08-21):
      targets `release/vX.Y` directly and ships as a **minor** bump
      (`feat:` → `vX.(Y+1).0`), but triggers rule 5 below.
 5. **Drift is tracked debt, never silent:** any merge into `release/v*`
-   without backport provenance automatically opens a `needs-forward-port`
-   issue ("assess porting #N to `main`"). It closes only by porting the
-   change up or by recording an explicit "won't port" rationale.
+   that doesn't come from `main` includes a forward-port assessment in its
+   PR description. The assessment either links the matching PR against
+   `main` or records an explicit "won't port" rationale.
 6. **Releases off maintenance lines are batched and demand-driven**, driven
    by Conventional Commits through a second release-please configuration
    scoped to `release/v*` refs.
@@ -81,25 +81,28 @@ branches (maintainer decision, 2026-08-21):
    are how the v2 incident happens twice.
 
 The contributor-facing walkthrough of these rules—where changes land,
-how to manage backports and forward-ports, and worked examples—lives on
+how to manage backports and forward-port assessments, and worked examples—lives on
 the docs site at `website/docs/contributing/release-branches.md`.
 
 Follow-up tooling work implied by this decision: a `stable-release` job
-keyed on `release/v*` refs with an alternate release-please config, the
-backport label action, the forward-port tracker workflow, and
+keyed on `release/v*` refs with an alternate release-please config, and
 `branch-policy.yml` updates covering `release/*`.
+
+On 2026-11-21, the team removed the backport action, the forward-port
+tracker workflow, and the workflow that created the `backport` labels.
+Backports and forward-port assessments are manual steps. Rules 3 and 5
+still apply; reviewers enforce them instead of automation.
 
 ## Consequences
 
-- **Pros:** drift becomes visible, tracked debt instead of silent
+- **Pros:** drift becomes visible, recorded debt instead of silent
   divergence; consumers on shipped majors get a predictable path to fixes
   and selected features; maintenance releases gain real CI, changelogs, and
   tagging via release-please instead of hand-run tags.
 - **Cons:** cross-major ports stay semi-manual—import-suffix differences
   conflict in nearly every touched file, so ports must be kept small;
-  two release-please configs and several new workflows add maintenance
-  surface; rules 4–5 depend on reviewer discipline that automation only
-  partially enforces.
+  a second release-please configuration adds maintenance surface; rules
+  3–5 depend on reviewer discipline because no automation enforces them.
 - **Rule for future release questions:** don't create preemptive
   `release/*` branches, never land feature work on a maintenance branch
   without completing the forward-port assessment, and don't treat a
