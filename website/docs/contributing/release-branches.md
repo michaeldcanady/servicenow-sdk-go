@@ -15,7 +15,8 @@ older major, and the rules that exist because we already lived the failure
 mode once—during the v1→v2 transition, `main` and `release/v2` drifted so
 far apart they effectively became different codebases.
 
-The deep rationale lives in [ADR 011](adrs/011-release-branches-and-cross-major-flow.md);
+The deep rationale lives in [ADR 011](adrs/011-release-branches-and-cross-major-flow.md) and
+[ADR 023](adrs/023-manual-backports-and-forward-port-assessments.md);
 this page is the day-to-day version.
 
 ## The mental model
@@ -27,7 +28,7 @@ Four rules explain almost every decision on this page:
 | `main` is next-major trunk | All new development lands on `main`, always. It's the tip of the next major version. |
 | Tags are cut points | Releases are tagged; branches merely give tags a place to grow from. You can branch from a tag at any time—even years later—so branches are created **only when first needed**, never preemptively. |
 | Maintenance branches flow downstream | A `release/vX.Y` branch only ever receives changes that came from (or are accounted to) `main`. It's never a second development trunk. |
-| Drift must be tracked, never silent | Every change that reaches a maintenance branch without coming from `main` automatically opens a tracking issue demanding an explicit port-or-won't-port decision. |
+| Drift must be tracked, never silent | Every change that reaches a maintenance branch without coming from `main` carries a forward-port assessment in its PR description: a link to the matching `main` PR, or a “won't port” rationale. |
 
 ```mermaid
 gitGraph
@@ -82,7 +83,7 @@ Fixes land on `main` first, always—even if the reporter is stuck on the
 old major. Then:
 
 1. Create a branch off `release/vX.Y` and cherry-pick the merge commit
-   from `main` (`git cherry-pick -x <sha>`).
+   from `main` (`git cherry-pick -x <sha>`). If the commit is a true merge commit, add `-m 1` to select `main` as the mainline parent. Squash commits need no `-m`.
 2. Open a PR against the maintenance branch. Link the original PR in the
    description.
 3. Review and merge it like any other PR. Required CI runs there too.
@@ -146,8 +147,8 @@ users are asking for it now.
 **Path B—v2-only by design:** the feature leans on v2-era model shapes,
 or v3 has restructured the area it touches. Land it directly on
 `release/v2.4` (previous section); answer the forward-port assessment
-honestly—“will port once v3 settles” or “won't port because…” are both
-acceptable answers.
+honestly. Link the matching `main` PR, or write a “won't port because…”
+rationale. A promise to port later doesn't satisfy the assessment.
 
 Either way, batch the release: maintenance releases are demand-driven, not
 one-tag-per-merge.
