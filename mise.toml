@@ -81,7 +81,17 @@ run = "gofmt -s -w ."
 
 [tasks."go:lint"]
 description = "Run golangci-lint"
-run = "golangci-lint run ./..."
+# Mirrors the lint-go matrix in ci.yml: the root module (the "snippets" tag
+# comes from .golangci.yml), then tests/integration/v2 once per tag.
+run = """
+status=0
+golangci-lint run ./... || status=1
+for tag in integration e2e; do
+  echo "== tests/integration/v2 (-tags $tag)"
+  (cd tests/integration/v2 && golangci-lint run --build-tags "$tag" ./...) || status=1
+done
+exit "$status"
+"""
 
 [tasks."go:deps:check"]
 description = "Verify and check go mod tidy drift in both Go modules, as CI does"
@@ -96,13 +106,13 @@ exit "$status"
 
 [tasks."go:vuln"]
 description = "Run govulncheck in both Go modules"
-# CI's Vulnerability Scan job scans only the root module.
+# Mirrors the govulncheck matrix in ci.yml. govulncheck reads build tags from GOFLAGS.
 run = """
 status=0
-for dir in . tests/integration/v2; do
-  echo "== $dir"
-  (cd "$dir" && govulncheck ./...) || status=1
-done
+echo "== . (-tags snippets)"
+GOFLAGS=-tags=snippets govulncheck ./... || status=1
+echo "== tests/integration/v2 (-tags integration,e2e)"
+(cd tests/integration/v2 && GOFLAGS=-tags=integration,e2e govulncheck ./...) || status=1
 exit "$status"
 """
 

@@ -18,9 +18,14 @@ on:
         required: false
         default: "."
         type: string
+      build-tags:
+        description: "Comma-separated Go build tags to lint with, in addition to the tags in .golangci.yml"
+        required: false
+        default: ""
+        type: string
 
 concurrency:
-  group: lint-go-${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.go-version }}
+  group: lint-go-${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.go-version }}-${{ inputs.working-directory }}-${{ inputs.build-tags }}
   cancel-in-progress: true
 
 permissions: {}
@@ -47,4 +52,4 @@ jobs:
           version: ${{ inputs.golangci-lint-version }}
           working-directory: ${{ inputs.working-directory }}
           skip-cache: false
-          args: --timeout=5m
+          args: --timeout=5m ${{ inputs.build-tags != '' && format('--build-tags={0}', inputs.build-tags) || '' }}

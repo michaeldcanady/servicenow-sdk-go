@@ -13,6 +13,16 @@ on:
         required: false
         default: "./..."
         type: string
+      work-dir:
+        description: "Directory of the Go module to scan"
+        required: false
+        default: "."
+        type: string
+      build-tags:
+        description: "Comma-separated Go build tags to scan with"
+        required: false
+        default: ""
+        type: string
 
 permissions: {}
 
@@ -25,7 +35,12 @@ jobs:
       contents: read # govulncheck via default checkout handled by action
     steps:
       - name: Run govulncheck
+        env:
+          # The action has no build-tags input; govulncheck reads the tags from GOFLAGS.
+          GOFLAGS: ${{ inputs.build-tags != '' && format('-tags={0}', inputs.build-tags) || '' }}
         uses: golang/govulncheck-action@032d45514ae346b1db93c04b0c90b841c370344f # v1
         with:
           go-version-input: ${{ inputs.go-version }}
           go-package: ${{ inputs.go-package }}
+          work-dir: ${{ inputs.work-dir }}
+          cache-dependency-path: ${{ inputs.work-dir }}/go.sum
