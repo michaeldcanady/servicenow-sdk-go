@@ -144,12 +144,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: ["stable", "oldstable"]
+        include:
+          # Root module. The "snippets" tag comes from .golangci.yml.
+          - go-version: "stable"
+            working-directory: "."
+          - go-version: "oldstable"
+            working-directory: "."
+          # tests/integration/v2. The "integration" and "e2e" tags both
+          # declare TestMain, so each needs its own run.
+          - go-version: "stable"
+            working-directory: "tests/integration/v2"
+            build-tags: "integration"
+          - go-version: "stable"
+            working-directory: "tests/integration/v2"
+            build-tags: "e2e"
     uses: ./.github/workflows/reusable-lint-go.yaml
     permissions:
       contents: read # checkout and lint
     with:
       go-version: ${{ matrix.go-version }}
+      working-directory: ${{ matrix.working-directory }}
+      build-tags: ${{ matrix.build-tags }}
 
   test-go:
     name: Test Go Code
@@ -203,6 +218,17 @@ jobs:
     needs:
       - changes
     if: ${{ needs.changes.outputs.code == 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - work-dir: "."
+            build-tags: "snippets"
+          - work-dir: "tests/integration/v2"
+            build-tags: "integration,e2e"
     uses: ./.github/workflows/reusable-govulncheck.yaml
     permissions:
       contents: read # govulncheck via default checkout handled by action
+    with:
+      work-dir: ${{ matrix.work-dir }}
+      build-tags: ${{ matrix.build-tags }}
