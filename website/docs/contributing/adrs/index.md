@@ -40,6 +40,11 @@ below are the primary sources.
 | [020](020-record-scoped-resources.md) | Record-scoped resources are explicit-args helpers, not nested builders | Proposed |
 | [021](021-best-effort-error-categorization.md) | Best-effort error categorization with raw ServiceNow details attached | Proposed |
 | [023](023-manual-backports-and-forward-port-assessments.md) | Backports are manual cherry-pick PRs, and forward-port assessments live in the PR description | Accepted |
+| [024](024-no-long-lived-ci-secrets.md) | CI stores no long-lived secrets, except listed exceptions that expire; bot PRs use the built-in run approval | Proposed |
+| [025](025-delivery-system-boundary-and-merge-gate.md) | `PR Gate`, `PR Policy`, and `CodeQL` are the only required checks; no required approvals; logged admin bypass; external systems have named owners | Proposed |
+| [026](026-tool-version-pins-and-drift-check.md) | `mise.toml` is the source of tool versions; CI keeps native actions with a drift check | Proposed |
+| [027](027-release-verification-without-signing-or-sbom.md) | Releases ship without signing or an SBOM; supersedes ADR 012 and withdraws ADR 013 | Proposed |
+| [028](028-api-compatibility-check.md) | An API-compatibility check blocks incompatible changes on `release/*` and advises on `main` | Proposed |
 
 ## Proposing a new ADR
 
@@ -102,7 +107,8 @@ distillation an agent consults before touching code in that area.
    (construction/builders), `PAGE` (pagination), `NAME` (naming/identity),
    `REL` (release/branch flow), `AUTH` (credentials/auth), `SURF` (public
    surface/entry points), `TBL` (typed tables), `ATT` (record-scoped
-   resources). Add a new token when a genuinely new concern appears.
+   resources), `CI` (CI and delivery pipeline). Add a new token when a
+   genuinely new concern appears.
 4. Rule files live under root `docs/rules/`, **outside** `website/docs/`, so
    Docusaurus does not publish them as pages—they are for agents reading the
    filesystem, not the human docs site. Do not register them in
