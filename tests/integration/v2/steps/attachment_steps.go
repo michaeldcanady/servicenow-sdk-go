@@ -87,15 +87,17 @@ func (s *attachmentSteps) iUploadAFileToAnIncident(ctx context.Context) (context
 
 	incident := tableapi.NewTableRecord()
 	desc := "Attachment Test Incident"
-	incident.SetValue("short_description", desc)
+	if err := incident.SetValue("short_description", desc); err != nil {
+		return ctx, fmt.Errorf("failed to set short_description: %w", err)
+	}
 	incidentResp, err := w.Client.Now().Table("incident").Post(ctx, incident, nil)
 	if err != nil {
 		w.Err = fmt.Errorf("failed to create test incident: %w", err)
 		return support.WithWorld(ctx, w), nil
 	}
-	itemResp, ok := incidentResp.(core.ServiceNowItemResponse[*tableapi.TableRecord])
-	if !ok {
-		w.Err = fmt.Errorf("unexpected incident response type: %T", incidentResp)
+	itemResp := incidentResp
+	if itemResp == nil {
+		w.Err = fmt.Errorf("unexpected nil incident response")
 		return support.WithWorld(ctx, w), nil
 	}
 	incidentRecord, err := itemResp.GetResult()
@@ -151,15 +153,17 @@ func (s *attachmentSteps) iUploadASecondFileToAnIncident(ctx context.Context) (c
 
 	incident := tableapi.NewTableRecord()
 	desc := "Attachment Test Incident 2"
-	incident.SetValue("short_description", desc)
+	if err := incident.SetValue("short_description", desc); err != nil {
+		return ctx, fmt.Errorf("failed to set short_description: %w", err)
+	}
 	incidentResp, err := w.Client.Now().Table("incident").Post(ctx, incident, nil)
 	if err != nil {
 		w.Err = fmt.Errorf("failed to create test incident: %w", err)
 		return support.WithWorld(ctx, w), nil
 	}
-	itemResp, ok := incidentResp.(core.ServiceNowItemResponse[*tableapi.TableRecord])
-	if !ok {
-		w.Err = fmt.Errorf("unexpected incident response type: %T", incidentResp)
+	itemResp := incidentResp
+	if itemResp == nil {
+		w.Err = fmt.Errorf("unexpected nil incident response")
 		return support.WithWorld(ctx, w), nil
 	}
 	incidentRecord, err := itemResp.GetResult()
@@ -269,7 +273,7 @@ func (s *attachmentSteps) theResponseShouldContainAtLeastAttachments(ctx context
 
 	results, err := colResp.GetResult()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get results: %v", err)
+		return ctx, fmt.Errorf("failed to get results: %w", err)
 	}
 
 	if len(results) < minCount {

@@ -165,8 +165,14 @@ func (s *tableSteps) iRequestAllIncidentsFromTableWithFields(ctx context.Context
 func (s *tableSteps) iRequestAllIncidentsFromTableWithLimitAndOffset(ctx context.Context, table string, limit, offset int) (context.Context, error) {
 	w := support.WorldFrom(ctx)
 
-	l := int32(limit)
-	o := int32(offset)
+	l, err := support.ToInt32(limit)
+	if err != nil {
+		return ctx, err
+	}
+	o, err := support.ToInt32(offset)
+	if err != nil {
+		return ctx, err
+	}
 	cfg := &tableapi.TableRequestBuilderGetRequestConfiguration{
 		QueryParameters: &tableapi.TableRequestBuilderGetQueryParameters{
 			Limit:  &l,
@@ -298,13 +304,9 @@ func (s *tableSteps) iDeleteLastIncident(ctx context.Context) (context.Context, 
 
 func (s *tableSteps) iSendAHEADRequestForTheLastIncident(ctx context.Context) (context.Context, error) {
 	w := support.WorldFrom(ctx)
-	sysID := w.LastSysID
-	if sysID == "" {
-		if support.IsOffline() {
-			sysID = "mock_sys_id_1"
-		} else {
-			return ctx, fmt.Errorf("no record sys_id available — create a record first")
-		}
+	// The HEAD request targets the table, so the sys_id only gates the online run.
+	if w.LastSysID == "" && !support.IsOffline() {
+		return ctx, fmt.Errorf("no record sys_id available — create a record first")
 	}
 
 	resp, err := w.Client.Now().Table("incident").Head(ctx, nil)
@@ -336,7 +338,7 @@ func (s *tableSteps) theResultsShouldContainAtLeastRecords(ctx context.Context, 
 	}
 	results, err := colResp.GetResult()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get results: %v", err)
+		return ctx, fmt.Errorf("failed to get results: %w", err)
 	}
 	if len(results) < minCount {
 		return ctx, fmt.Errorf("expected at least %d records, got %d", minCount, len(results))
@@ -355,7 +357,7 @@ func (s *tableSteps) theRetrievedRecordShouldHaveFieldContaining(ctx context.Con
 	}
 	result, err := itemResp.GetResult()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get result: %v", err)
+		return ctx, fmt.Errorf("failed to get result: %w", err)
 	}
 	elem, err := result.Get(field)
 	if err != nil || elem == nil {
@@ -363,7 +365,7 @@ func (s *tableSteps) theRetrievedRecordShouldHaveFieldContaining(ctx context.Con
 	}
 	val, err := elem.GetValue()
 	if err != nil {
-		return ctx, fmt.Errorf("failed to get value for field %q: %v", field, err)
+		return ctx, fmt.Errorf("failed to get value for field %q: %w", field, err)
 	}
 	valStr := fmt.Sprintf("%v", val)
 	if !strings.Contains(valStr, expectedSubstring) {
