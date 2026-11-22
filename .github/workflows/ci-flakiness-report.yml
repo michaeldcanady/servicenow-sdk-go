@@ -1,0 +1,53 @@
+name: CI Flakiness Report
+
+# Purpose: report per-job re-run and cancel rates for the past week, so an
+# unreliable runner (for example, the macOS jobs) shows up before a required
+# check turns it into blocked merges (SNSFG1-27).
+#
+# Trigger: weekly on a schedule, plus workflow_dispatch for an on-demand
+# report. Per spec 010's cron rule, this runs on a schedule because no PR or
+# release check can see trends across runs.
+#
+# What it catches that no other check catches: every other check judges one
+# run. A job that fails once in ten runs, or whose runner is cancelled and
+# re-run by hand, passes each individual check yet slows every merge. Only a
+# view across a week of runs shows that rate.
+#
+# Output: the report goes to the run's job summary. The job opens no issues
+# (work tracking is in Jira, ADR 022) and uses only the job's GITHUB_TOKEN
+# with `actions: read` (no stored secret, ADR 024).
+#
+# macOS follow-up threshold: when a macOS job has at least 20 executions and
+# a combined re-run plus cancel rate of 10% or more in two consecutive
+# reports, open the follow-up to move the macOS jobs. The report flags such
+# rows. Tune the numbers in scripts/ci-flakiness-report.sh.
+on:
+  workflow_dispatch:
+  schedule:
+    # Mondays 06:30 UTC. Avoids Scorecard (Mon 01:30), e2e-nightly (04:00),
+    # and the stale bot (05:30), so the report does not compete for runners.
+    - cron: "30 6 * * 1"
+
+permissions: {}
+
+concurrency:
+  group: ci-flakiness-report
+  cancel-in-progress: false
+
+jobs:
+  report:
+    name: Report CI flakiness
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      actions: read # list workflow runs and jobs
+      contents: read # checkout the report script
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Build the report
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: ./scripts/ci-flakiness-report.sh >>"$GITHUB_STEP_SUMMARY"
