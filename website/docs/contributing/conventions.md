@@ -130,8 +130,8 @@ plumbing inside a module, stop—the helper almost certainly exists:
 | `internal/http` | `RequestHeader`/`HTTPHeader`/`ContentType` enums, default middleware/client |
 | `internal/ast` + `query/` | The fluent query-condition builder and its `sysparm_query` renderer |
 
-`internal/` is never imported by consumers—it's implementation surface,
-so helpers can evolve freely.
+`internal/` is never imported by consumers—it's implementation surface, and
+helpers can evolve freely.
 
 ## Testing conventions
 

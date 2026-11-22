@@ -50,7 +50,7 @@ factories, backed models.
 - **Cons:** the uniformity a generator would enforce mechanically must be
   enforced by convention instead. This is the root cause of the repo's strict
   module pattern—the constructor triad, one-file-per-verb layout, and the
-  "Add a new API module" playbook are the hand-written substitute for
+  “Add a new API module” playbook are the hand-written substitute for
   generated code.
 - **Tie-breaker rule for reviews:** when a structural question has no local
   precedent, the answer is whatever msgraph-sdk-go does.

@@ -16,7 +16,7 @@ Accepted
 The module behind ServiceNow's `/api/now/stats` endpoint was implemented as
 package `statsapi`. ServiceNow's own documentation calls this the
 **Aggregate API**, and the SDK's docs site already labeled the module
-"Aggregation"—the package name (`statsapi`) was the one remaining place
+“Aggregation”—the package name (`statsapi`) was the one remaining place
 still using the old name, creating a naming inconsistency between the code,
 the docs, and ServiceNow's own terminology (#491, #505).
 
@@ -30,7 +30,7 @@ do with what the *package* should be called for discoverability.
 Alternatives considered:
 
 1. **Rename nothing, live with the inconsistency**—rejected; a
-   contributor searching ServiceNow's docs for "Aggregate API" would not
+   contributor searching ServiceNow's docs for “Aggregate API” would not
    find `statsapi` by name.
 2. **Rename everything (package, types, accessor) to `aggregation*`**—rejected; it would break the correspondence between `Stats*` types and
    the actual `stats` wire field, and between `.Stats()` and the actual URL

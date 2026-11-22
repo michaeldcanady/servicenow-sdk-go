@@ -22,9 +22,9 @@ review let me just…" is almost always one of these three.
 
 | The question you were about to ask | The short answer | Deep dive |
 | --- | --- | --- |
-| *"Why is everything hand-written when Kiota has a generator?"* | ServiceNow publishes no reliable OpenAPI specs, and its response shapes need human judgment—so the repo hand-writes the surface on Kiota's runtime, and enforces generator-grade uniformity by convention instead. | [Why hand-written on Kiota?](design-hand-written-kiota.md) · [ADR 003](adrs/003-hand-written-on-kiota.md) |
-| *"Why aren't models just structs?"* | A struct field can't tell "the instance sent an empty value" from "the instance didn't send this field"—a backing store can, and it dirty-tracks so `Patch` bodies only carry what you actually set. | [Why aren't models plain structs?](design-backed-models.md) · [ADR 002](adrs/002-backing-store-models.md) |
-| *"Why can't I just `errors.New` here?"* | v1 had hundreds of similar-but-different error strings, which broke `errors.Is` for every consumer. Shared sentinels and one status-code mapping fixed that—a fresh `errors.New` reintroduces the bug. | [Why sentinel errors everywhere?](design-error-handling.mdx) · [ADR 001](adrs/001-error-standardization.md) |
+| *“Why is everything hand-written when Kiota has a generator?”* | ServiceNow publishes no reliable OpenAPI specs, and its response shapes need human judgment—so the repo hand-writes the surface on Kiota's runtime, and enforces generator-grade uniformity by convention instead. | [Why hand-written on Kiota?](design-hand-written-kiota.md) · [ADR 003](adrs/003-hand-written-on-kiota.md) |
+| *“Why aren't models just structs?”* | A struct field can't tell “the instance sent an empty value” from “the instance didn't send this field”—a backing store can, and it dirty-tracks so `Patch` bodies only carry what you actually set. | [Why aren't models plain structs?](design-backed-models.md) · [ADR 002](adrs/002-backing-store-models.md) |
+| *“Why can't I just `errors.New` here?”* | v1 had hundreds of similar-but-different error strings, which broke `errors.Is` for every consumer. Shared sentinels and one status-code mapping fixed that—a fresh `errors.New` reintroduces the bug. | [Why sentinel errors everywhere?](design-error-handling.mdx) · [ADR 001](adrs/001-error-standardization.md) |
 
 ## Making a decision of your own
 

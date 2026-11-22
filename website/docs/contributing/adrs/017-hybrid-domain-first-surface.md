@@ -15,8 +15,8 @@ Proposed. Accepted on merge; this record and its rule file
 
 ## Context
 
-The SDK's core premise should be: a ServiceNow developer says *"I want to do
-X"* and reaches for the SDK—not for ServiceNow's REST documentation. Today
+The SDK's core premise should be: a ServiceNow developer says *“I want to do
+X”* and reaches for the SDK—not for ServiceNow's REST documentation. Today
 the surface is a faithful but low-level mirror of the raw API, so callers must
 already think in ServiceNow terms (table names, `sys_id` values, encoded query strings,
 `sysparm_*` parameters) to get anything done.

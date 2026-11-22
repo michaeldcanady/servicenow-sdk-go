@@ -82,8 +82,8 @@ Models aren't plain structs. Each model wraps a *backing store*—a key/value
 map tracking which fields the instance actually sent and which you changed.
 That design is why the accessors look the way they do:
 
-- **Getters return `(value, error)`**—the store distinguishes "field absent"
-  from "field empty," and reports it instead of silently zeroing.
+- **Getters return `(value, error)`**—the store distinguishes “field absent”
+  from “field empty,” and reports it instead of silently zeroing.
 - **Values come back as pointers**—`nil` means the instance sent no value,
   which is different from `""` or `0`.
 

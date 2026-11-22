@@ -18,8 +18,8 @@ Two problems followed:
 
 1. **Absent vs. zero was indistinguishable.** ServiceNow omits fields freely
    (and `sysparm_fields` makes partial records routine). A struct field can't
-   distinguish "the instance sent an empty string" from "the instance didn't
-   send this field", which forced callers into guesswork and produced
+   distinguish “the instance sent an empty string” from “the instance didn't
+   send this field”, which forced callers into guesswork and produced
    accidental data loss on write.
 2. **Writes serialized whole objects.** Without change tracking, a `PUT`/`PATCH`
    body contained every field—including zero values that overwrote server-side

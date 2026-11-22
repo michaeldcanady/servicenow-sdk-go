@@ -124,7 +124,7 @@ For an audience-scoped access token, add the audience scope:
 
 <GoSnippet language="go" src={authGo} region="auth_external_oidc_scopes" />
 
-## Troubleshooting "User Not Authenticated"
+## Troubleshooting “User Not Authenticated”
 
 ServiceNow returns `User Not Authenticated` (HTTP 401) when the OIDP record
 rejects the token. The SDK performs no token validation, so this response is

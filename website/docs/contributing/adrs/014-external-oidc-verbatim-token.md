@@ -18,7 +18,7 @@ through a third-party identity provider (for example Microsoft Entra ID). The
 SDK acts as an OIDC client: it resolves the IdP's discovery document, runs the
 authorization code + PKCE grant, and sends the resulting token as a Bearer
 token on API calls. ServiceNow validates it against an OIDP record
-("Configure an OIDC provider to verify ID tokens")—signature via the IdP's
+(“Configure an OIDC provider to verify ID tokens”)—signature via the IdP's
 JWKS endpoint, expiry, the rule that `aud` equals the record's Client ID, and
 a user claim that resolves to a `sys_user` record.
 
@@ -65,7 +65,7 @@ for IdPs and setups that require them (for example Entra ID's v1
   configuration ServiceNow accepts; the external surface is one constructor
   plus a small set of options.
 - **Cons:** a misconfigured OIDP surfaces only at request time as a live
-  "User Not Authenticated" instead of failing fast in the SDK; there is no
+  “User Not Authenticated” instead of failing fast in the SDK; there is no
   client-side defense in depth; security depends on the ServiceNow OIDP
   configuration (user-claim mapping to `sys_user`, `aud` match, JTI policy).
   Mitigation is documentation and a troubleshooting guide, deliberately not

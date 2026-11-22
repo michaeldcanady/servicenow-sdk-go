@@ -104,7 +104,7 @@ care more about the failure rows in your tables than the percentage.
 ## Next steps
 
 - Adding a whole module? The [playbook](add-api-module.md) includes the
-  test expectations per file, and its "verify against a live instance" step
+  test expectations per file, and its “verify against a live instance” step
   is exactly the e2e discipline described above.
 - Not sure which sentinel an error path should return? See
   [error-handling design](design-error-handling.mdx).
