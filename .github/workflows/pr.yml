@@ -66,3 +66,52 @@ jobs:
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Fails a PR that adds or updates a dependency with a high-severity advisory
+  # or a license outside the allowlist. The action compares the dependency
+  # graph of the base and head commits, so it reports nothing on a PR that
+  # changes no dependencies (go.mod, go.sum, website/package-lock.json).
+  # govulncheck (reusable-govulncheck.yaml) still checks reachable
+  # vulnerabilities in the code; the two checks complement each other.
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read # read the dependency diff between base and head
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The allowlist comes from the licenses the repository's dependency graph
+      # reports today (Go modules and website npm packages). Add a license here
+      # only after you confirm it fits the project's license.
+      # No PR comment: Dependabot PRs get a read-only token, so the result goes
+      # to the job summary instead.
+      - name: Review dependency changes
+        uses: actions/dependency-review-action@bbc44d14a204704ccc493733616cd1e93a0321ec # v5.0.1
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: never
+          allow-licenses: >-
+            0BSD,
+            Apache-2.0,
+            BlueOak-1.0.0,
+            BSD-2-Clause,
+            BSD-3-Clause,
+            CC-BY-4.0,
+            CC0-1.0,
+            EPL-2.0,
+            ISC,
+            LicenseRef-scancode-google-patent-license-golang,
+            LicenseRef-scancode-public-domain,
+            LicenseRef-scancode-unicode,
+            MIT,
+            MIT-0,
+            MPL-1.1,
+            MPL-2.0,
+            Python-2.0,
+            Unlicense,
+            WTFPL
