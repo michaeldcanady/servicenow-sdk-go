@@ -226,3 +226,12 @@ Godog
 (?i)misconfigured
 (?i)parseable
 (?i)validators?
+(?i)jira
+(?i)atlassian
+(?i)dependabot
+(?i)zizmor
+(?i)actionlint
+(?i)shellcheck
+(?i)cutover
+(?i)cron
+(?i)shas?
