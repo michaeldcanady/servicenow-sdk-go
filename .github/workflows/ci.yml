@@ -73,7 +73,10 @@ jobs:
     permissions:
       contents: read # changed-files detection via checkout
     # Release-please PRs are no longer exempt: they bump version.go (compiled
-    # code) and must pass the same gates as any other change before a tag is cut.
+    # code), so the gates must run before a tag is cut. Release-please creates
+    # the PR with GITHUB_TOKEN, so GitHub holds its workflow runs until a
+    # maintainer selects "Approve workflows to run". Approve the runs, wait
+    # for them to pass, and then merge.
     if: >-
       github.event_name == 'push' ||
       github.event_name == 'pull_request' ||
