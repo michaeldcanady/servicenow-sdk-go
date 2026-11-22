@@ -307,6 +307,7 @@ const sidebars: SidebarsConfig = {
         'contributing/add-api-module',
         'contributing/release-branches',
         'contributing/release-branch-protection',
+        'contributing/roadmap',
         {
           type: 'category',
           label: 'Blueprints',
