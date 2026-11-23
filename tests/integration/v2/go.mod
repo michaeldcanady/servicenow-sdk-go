@@ -7,7 +7,7 @@ require (
 	github.com/jarcoal/httpmock v1.4.2
 	github.com/joho/godotenv v1.5.1
 	github.com/michaeldcanady/servicenow-sdk-go/v2 v2.0.0-00010101000000-000000000000
-	github.com/microsoft/kiota-abstractions-go v1.12.1
+	github.com/microsoft/kiota-abstractions-go v1.12.2
 	github.com/microsoft/kiota-http-go v1.6.1
 	github.com/stretchr/testify v1.12.1
 )
@@ -23,10 +23,10 @@ require (
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-memdb v1.3.5 // indirect
 	github.com/hashicorp/golang-lru v1.0.2 // indirect
-	github.com/microsoft/kiota-serialization-form-go v1.1.7 // indirect
+	github.com/microsoft/kiota-serialization-form-go v1.1.8 // indirect
 	github.com/microsoft/kiota-serialization-json-go v1.1.5 // indirect
-	github.com/microsoft/kiota-serialization-multipart-go v1.1.6 // indirect
-	github.com/microsoft/kiota-serialization-text-go v1.1.7 // indirect
+	github.com/microsoft/kiota-serialization-multipart-go v1.1.7 // indirect
+	github.com/microsoft/kiota-serialization-text-go v1.1.8 // indirect
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect
 	github.com/spf13/pflag v1.1.0 // indirect
 	github.com/std-uritemplate/std-uritemplate/go/v2 v2.0.13 // indirect
